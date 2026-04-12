@@ -1,0 +1,104 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Person {
+  id           String        @id @default(cuid())
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  first        String
+  last         String
+  headline     String?
+  email        String?
+  phone        String?
+  birthday     String?
+  closeness    Int           @default(2)
+  tags         String        @default("[]")
+  values       String        @default("[]")
+  notes        String?
+  company      String?
+  location     String?
+  linkedin     String?
+  twitter      String?
+  website      String?
+  color        String?
+  colorSoft    String?
+  interactions Interaction[]
+  plans        Plan[]
+}
+
+model Event {
+  id           String        @id @default(cuid())
+  createdAt    DateTime      @default(now())
+  name         String
+  type         String
+  timestamp    DateTime
+  placeId      String?
+  place        Place?        @relation(fields: [placeId], references: [id])
+  notes        String?
+  transcript   String?
+  metadata     String?
+  interactions Interaction[]
+}
+
+model Interaction {
+  id              String        @id @default(cuid())
+  createdAt       DateTime      @default(now())
+  personId        String
+  person          Person        @relation(fields: [personId], references: [id], onDelete: Cascade)
+  eventId         String?
+  event           Event?        @relation(fields: [eventId], references: [id])
+  type            String
+  timestamp       DateTime
+  duration        Int?
+  emotionalWeight String?
+  outcome         String?
+  summary         String?
+  notes           String?
+  actionItems     String?
+  billable        Boolean       @default(false)
+  amount          Float?
+  direction       String?
+  sourceFileId    String?
+  sourceFile      ImportedFile? @relation(fields: [sourceFileId], references: [id])
+}
+
+model Plan {
+  id             String   @id @default(cuid())
+  createdAt      DateTime @default(now())
+  personId       String?
+  person         Person?  @relation(fields: [personId], references: [id], onDelete: Cascade)
+  text           String
+  timescale      String?
+  successSignals String?
+  status         String   @default("active")
+  parentId       String?
+  children       Plan[]   @relation("PlanHierarchy")
+  parent         Plan?    @relation("PlanHierarchy", fields: [parentId], references: [id])
+}
+
+model Place {
+  id          String  @id @default(cuid())
+  name        String
+  type        String?
+  address     String?
+  coordinates String?
+  meaning     String?
+  events      Event[]
+}
+
+model ImportedFile {
+  id           String        @id @default(cuid())
+  createdAt    DateTime      @default(now())
+  filename     String
+  format       String
+  filePath     String
+  sizeBytes    Int
+  content      String?
+  interactions Interaction[]
+}

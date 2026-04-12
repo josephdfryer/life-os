@@ -1,0 +1,50 @@
+import Link from "next/link"
+import PersonAvatar from "@/components/persons/PersonAvatar"
+import { relativeTime, closenessLabel } from "@/lib/utils"
+import type { PersonWithAttention } from "@/types"
+
+type Props = {
+  person: PersonWithAttention
+}
+
+export default function AttentionCard({ person }: Props) {
+  const score = person.attentionScore
+  const overduePct = Math.min(Math.round((score - 1) * 100), 999)
+
+  return (
+    <Link href={`/contacts/${person.id}`} style={{ textDecoration: "none" }}>
+      <div style={{
+        display: "flex",
+        alignItems: "center",
+        gap: "12px",
+        padding: "12px 16px",
+        background: "var(--surface)",
+        border: "1px solid var(--border)",
+        borderLeft: `3px solid ${person.color ?? "var(--accent)"}`,
+        borderRadius: "8px",
+        cursor: "pointer",
+      }}>
+        <PersonAvatar
+          first={person.first}
+          last={person.last}
+          color={person.color}
+          colorSoft={person.colorSoft}
+          size={34}
+        />
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ fontSize: "13px", fontWeight: 500, color: "var(--ink)" }}>
+            {person.first} {person.last}
+          </div>
+          <div style={{ fontSize: "11px", color: "var(--ink-3)" }}>
+            {closenessLabel(person.closeness)} · Last: {relativeTime(person.lastInteractionDate)}
+          </div>
+        </div>
+        <div style={{ textAlign: "right", flexShrink: 0 }}>
+          <div style={{ fontSize: "12px", color: "var(--accent)", fontWeight: 500 }}>
+            +{overduePct}% overdue
+          </div>
+        </div>
+      </div>
+    </Link>
+  )
+}

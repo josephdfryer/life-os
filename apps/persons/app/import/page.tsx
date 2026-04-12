@@ -1,0 +1,577 @@
+"use client"
+
+import { useState, useRef } from "react"
+import { useRouter } from "next/navigation"
+import ProcessingState from "@/components/import/ProcessingState"
+import ResultCard from "@/components/import/ResultCard"
+import type { ImportedPerson } from "@/types"
+
+type Step = "input" | "processing" | "resolve" | "review" | "done"
+
+type ContactRef = {
+  id: string
+  first: string
+  last: string
+  headline: string | null
+  email: string | null
+  phone: string | null
+}
+
+const ACCEPTED = [".json", ".txt", ".mbox", ".pdf", ".csv", ".html", ".xml", ".md"]
+
+export default function ImportConversationsPage() {
+  const router = useRouter()
+  const [step, setStep] = useState<Step>("input")
+  const [text, setText] = useState("")
+  const [files, setFiles] = useState<File[]>([])
+  const [results, setResults] = useState<ImportedPerson[]>([])
+  const [existingContacts, setExistingContacts] = useState<ContactRef[]>([])
+  const [unresolvedQueue, setUnresolvedQueue] = useState<number[]>([])
+  const [fileDataForStore, setFileDataForStore] = useState<{ name: string; format: string; content: string } | null>(null)
+  const [error, setError] = useState<string | null>(null)
+  const [confirming, setConfirming] = useState(false)
+  const [dragging, setDragging] = useState(false)
+  const inputRef = useRef<HTMLInputElement>(null)
+
+  async function handleFiles(incoming: File[]) {
+    if (!incoming.length) return
+    const firstFile = incoming[0]
+    if (firstFile.name.endsWith(".vcf")) {
+      router.push("/import/contacts")
+      return
+    }
+    setFiles(incoming)
+    const content = await readFiles(incoming)
+    setText(content)
+  }
+
+  function handleDrop(e: React.DragEvent) {
+    e.preventDefault()
+    setDragging(false)
+    const dropped = Array.from(e.dataTransfer.files)
+    if (dropped.length) handleFiles(dropped)
+  }
+
+  async function handleAnalyze() {
+    const content = text.trim()
+    if (!content) {
+      setError("Paste some content or drop a file to get started.")
+      return
+    }
+    setError(null)
+    setStep("processing")
+    setFileDataForStore(
+      files.length ? { name: files[0].name, format: "auto", content } : null
+    )
+
+    try {
+      // Fetch existing contacts to pass to Claude for matching
+      const contactsRes = await fetch("/api/persons")
+      const contactsData = contactsRes.ok ? await contactsRes.json() : []
+      const contacts: ContactRef[] = contactsData.map((p: ContactRef) => ({
+        id: p.id,
+        first: p.first,
+        last: p.last,
+        headline: p.headline ?? null,
+        email: p.email ?? null,
+        phone: p.phone ?? null,
+      }))
+      setExistingContacts(contacts)
+
+      const res = await fetch("/api/import/analyze", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          content,
+          filename: files[0]?.name ?? "pasted content",
+          existingContacts: contacts,
+        }),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || "Analysis failed")
+
+      const parsed: ImportedPerson[] = data.results
+
+      // Find persons that need manual resolution:
+      // - not new (Claude thinks they exist) but no matchedPersonId was found
+      const needsResolution = parsed
+        .map((r, i) => ({ r, i }))
+        .filter(({ r }) => !r.isNew && !r.matchedPersonId)
+        .map(({ i }) => i)
+
+      setResults(parsed)
+
+      if (needsResolution.length > 0) {
+        setUnresolvedQueue(needsResolution)
+        setStep("resolve")
+      } else {
+        setStep("review")
+      }
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Analysis failed")
+      setStep("input")
+    }
+  }
+
+  function resolveWithContact(resultIdx: number, contact: ContactRef) {
+    setResults(prev => prev.map((r, i) =>
+      i === resultIdx
+        ? { ...r, matchedPersonId: contact.id, matchedPersonName: `${contact.first} ${contact.last}`, isNew: false }
+        : r
+    ))
+    advanceQueue()
+  }
+
+  function resolveAsNew(resultIdx: number) {
+    setResults(prev => prev.map((r, i) =>
+      i === resultIdx
+        ? { ...r, isNew: true, matchedPersonId: null, matchedPersonName: null }
+        : r
+    ))
+    advanceQueue()
+  }
+
+  function advanceQueue() {
+    setUnresolvedQueue(prev => {
+      const next = prev.slice(1)
+      if (next.length === 0) setStep("review")
+      return next
+    })
+  }
+
+  async function handleConfirm() {
+    setConfirming(true)
+    setError(null)
+    try {
+      const res = await fetch("/api/import/confirm", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ results, fileData: fileDataForStore }),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || "Import failed")
+      setStep("done")
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Import failed")
+    } finally {
+      setConfirming(false)
+    }
+  }
+
+  const currentUnresolvedIdx = unresolvedQueue[0] ?? null
+  const currentUnresolved = currentUnresolvedIdx !== null ? results[currentUnresolvedIdx] : null
+
+  return (
+    <div className="import-page" style={{ minHeight: "100vh" }}>
+      <div style={{ maxWidth: "720px", margin: "0 auto", padding: "40px 24px" }}>
+
+        <div style={{ marginBottom: "32px" }}>
+          <h1 style={{
+            fontFamily: "'Playfair Display', serif",
+            fontSize: "28px",
+            fontWeight: 600,
+            color: "var(--ink)",
+            margin: "0 0 6px",
+          }}>
+            Import Conversations
+          </h1>
+          <p style={{ color: "var(--ink-2)", fontSize: "13px", margin: 0 }}>
+            Drop anything — Slack, iMessage, email, meeting notes, WhatsApp. Claude will figure it out.
+          </p>
+        </div>
+
+        {step === "input" && (
+          <>
+            <div
+              onDragOver={e => { e.preventDefault(); setDragging(true) }}
+              onDragLeave={() => setDragging(false)}
+              onDrop={handleDrop}
+              onClick={() => inputRef.current?.click()}
+              style={{
+                border: `2px dashed ${dragging ? "var(--accent)" : "var(--border)"}`,
+                borderRadius: "12px",
+                padding: "32px 24px",
+                textAlign: "center",
+                cursor: "pointer",
+                background: dragging ? "var(--accent-soft)" : "transparent",
+                transition: "all 0.15s",
+                marginBottom: "16px",
+              }}
+            >
+              <input
+                ref={inputRef}
+                type="file"
+                multiple
+                accept={ACCEPTED.join(",")}
+                onChange={e => { if (e.target.files) handleFiles(Array.from(e.target.files)); e.target.value = "" }}
+                style={{ display: "none" }}
+              />
+              <div style={{ fontSize: "22px", marginBottom: "8px", color: "var(--ink-4)" }}>↑</div>
+              <div style={{ color: "var(--ink)", fontSize: "13px", marginBottom: "4px" }}>
+                Drop a file or click to browse
+              </div>
+              <div style={{ color: "var(--ink-4)", fontSize: "11px" }}>
+                {ACCEPTED.join("  ·  ")}
+              </div>
+            </div>
+
+            {files.length > 0 && (
+              <div style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+                padding: "8px 12px",
+                background: "var(--surface)",
+                border: "1px solid var(--border)",
+                borderRadius: "7px",
+                marginBottom: "14px",
+                fontSize: "11px",
+                color: "var(--ink-3)",
+              }}>
+                <span>📄</span>
+                <span>{files.map(f => f.name).join(", ")}</span>
+                <button
+                  onClick={() => { setFiles([]); setText("") }}
+                  style={{ marginLeft: "auto", background: "none", border: "none", color: "var(--ink-4)", cursor: "pointer", fontSize: "13px", padding: "0 2px" }}
+                >×</button>
+              </div>
+            )}
+
+            <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "14px" }}>
+              <div style={{ flex: 1, height: "1px", background: "var(--border)" }} />
+              <span style={{ fontSize: "11px", color: "var(--ink-3)" }}>or paste directly</span>
+              <div style={{ flex: 1, height: "1px", background: "var(--border)" }} />
+            </div>
+
+            <textarea
+              value={text}
+              onChange={e => setText(e.target.value)}
+              placeholder="Paste anything — Slack export, iMessage thread, email chain, WhatsApp conversation, meeting notes…"
+              rows={10}
+              style={{
+                width: "100%",
+                padding: "14px",
+                background: "var(--surface)",
+                border: "1px solid var(--border)",
+                borderRadius: "10px",
+                color: "var(--ink)",
+                fontFamily: "inherit",
+                fontSize: "12px",
+                lineHeight: 1.6,
+                resize: "vertical",
+                marginBottom: "16px",
+              }}
+            />
+
+            {error && <p style={{ color: "var(--accent)", fontSize: "12px", marginBottom: "12px" }}>{error}</p>}
+
+            <button
+              onClick={handleAnalyze}
+              disabled={!text.trim()}
+              style={{
+                width: "100%",
+                padding: "14px",
+                background: text.trim() ? "var(--accent)" : "var(--border)",
+                color: text.trim() ? "#fff" : "var(--ink-4)",
+                border: "none",
+                borderRadius: "8px",
+                cursor: text.trim() ? "pointer" : "not-allowed",
+                fontFamily: "inherit",
+                fontSize: "13px",
+                fontWeight: 500,
+                transition: "background 0.15s",
+              }}
+            >
+              Analyze with Claude →
+            </button>
+          </>
+        )}
+
+        {step === "processing" && <ProcessingState />}
+
+        {step === "resolve" && currentUnresolved && currentUnresolvedIdx !== null && (
+          <ResolveModal
+            person={currentUnresolved}
+            contacts={existingContacts}
+            remaining={unresolvedQueue.length}
+            onMatch={contact => resolveWithContact(currentUnresolvedIdx, contact)}
+            onNew={() => resolveAsNew(currentUnresolvedIdx)}
+          />
+        )}
+
+        {step === "review" && (
+          <>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "20px" }}>
+              <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "20px", fontWeight: 600, margin: 0, color: "var(--ink)" }}>
+                Review Results
+                <span style={{ fontSize: "13px", fontWeight: 400, color: "var(--ink-3)", marginLeft: "8px" }}>
+                  {results.length} people found
+                </span>
+              </h2>
+              <button
+                onClick={() => setStep("input")}
+                style={{ padding: "6px 14px", borderRadius: "6px", border: "1px solid var(--border)", background: "transparent", color: "var(--ink-3)", cursor: "pointer", fontFamily: "inherit", fontSize: "11px" }}
+              >
+                ← Back
+              </button>
+            </div>
+
+            <div style={{ display: "flex", flexDirection: "column", gap: "10px", marginBottom: "24px" }}>
+              {results.map((result, i) => (
+                <ResultCard
+                  key={i}
+                  result={result}
+                  index={i}
+                  onChange={updated => setResults(prev => prev.map((r, idx) => idx === i ? updated : r))}
+                />
+              ))}
+            </div>
+
+            {error && <p style={{ color: "var(--accent)", fontSize: "12px", marginBottom: "12px" }}>{error}</p>}
+
+            <button
+              onClick={handleConfirm}
+              disabled={confirming}
+              style={{
+                width: "100%",
+                padding: "14px",
+                background: "var(--accent)",
+                color: "#fff",
+                border: "none",
+                borderRadius: "8px",
+                cursor: confirming ? "not-allowed" : "pointer",
+                fontFamily: "inherit",
+                fontSize: "13px",
+                fontWeight: 500,
+                opacity: confirming ? 0.7 : 1,
+              }}
+            >
+              {confirming ? "Importing…" : `Confirm Import (${results.length} people)`}
+            </button>
+          </>
+        )}
+
+        {step === "done" && (
+          <div style={{ textAlign: "center", padding: "60px 32px", background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "12px" }}>
+            <div style={{ fontSize: "32px", marginBottom: "16px" }}>✓</div>
+            <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "22px", fontWeight: 600, color: "var(--ink)", margin: "0 0 8px" }}>
+              Import Complete
+            </h2>
+            <p style={{ color: "var(--ink-3)", fontSize: "13px", marginBottom: "24px" }}>
+              {results.length} people and their interactions have been added.
+            </p>
+            <div style={{ display: "flex", gap: "10px", justifyContent: "center" }}>
+              <button onClick={() => router.push("/contacts")} style={{ padding: "10px 24px", background: "var(--accent)", color: "#fff", border: "none", borderRadius: "7px", cursor: "pointer", fontFamily: "inherit", fontSize: "12px", fontWeight: 500 }}>
+                View Contacts →
+              </button>
+              <button
+                onClick={() => { setStep("input"); setText(""); setFiles([]); setResults([]); setError(null) }}
+                style={{ padding: "10px 24px", background: "transparent", color: "var(--ink-3)", border: "1px solid var(--border)", borderRadius: "7px", cursor: "pointer", fontFamily: "inherit", fontSize: "12px" }}
+              >
+                Import More
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+// ─── Resolve Modal ────────────────────────────────────────────────────────────
+
+function getSuggestions(name: string, contacts: ContactRef[]): ContactRef[] {
+  const parts = name.toLowerCase().trim().split(/\s+/)
+  const firstName = parts[0] ?? ""
+  const lastInitial = parts[1]?.[0] ?? ""
+
+  const scored = contacts.map(c => {
+    const cFirst = c.first.toLowerCase()
+    const cLast = c.last.toLowerCase()
+    let score = 0
+    if (cFirst === firstName) score += 3
+    else if (cFirst.startsWith(firstName) || firstName.startsWith(cFirst)) score += 1
+    if (lastInitial && cLast.startsWith(lastInitial)) score += 2
+    return { c, score }
+  })
+
+  return scored
+    .filter(({ score }) => score > 0)
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 5)
+    .map(({ c }) => c)
+}
+
+function ResolveModal({
+  person,
+  contacts,
+  remaining,
+  onMatch,
+  onNew,
+}: {
+  person: ImportedPerson
+  contacts: ContactRef[]
+  remaining: number
+  onMatch: (c: ContactRef) => void
+  onNew: () => void
+}) {
+  const [search, setSearch] = useState("")
+
+  const suggestions = getSuggestions(person.name, contacts)
+
+  const searchResults = search.trim()
+    ? contacts.filter(c => {
+        const q = search.toLowerCase()
+        return (
+          c.first.toLowerCase().includes(q) ||
+          c.last.toLowerCase().includes(q) ||
+          `${c.first} ${c.last}`.toLowerCase().includes(q)
+        )
+      }).slice(0, 6)
+    : []
+
+  const showList = search.trim() ? searchResults : suggestions
+
+  return (
+    <div style={{
+      background: "var(--surface)",
+      border: "1px solid var(--border)",
+      borderRadius: "12px",
+      padding: "28px 28px 24px",
+      maxWidth: "480px",
+      margin: "0 auto",
+    }}>
+      {remaining > 1 && (
+        <div style={{ fontSize: "10px", color: "var(--ink-4)", marginBottom: "14px", textTransform: "uppercase", letterSpacing: "0.06em" }}>
+          {remaining} to resolve
+        </div>
+      )}
+
+      <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "20px", fontWeight: 600, color: "var(--ink)", margin: "0 0 6px" }}>
+        Who is "{person.name}"?
+      </h2>
+      <p style={{ fontSize: "12px", color: "var(--ink-3)", margin: "0 0 20px", lineHeight: 1.5 }}>
+        {contacts.length > 0
+          ? "This person wasn't automatically matched. Pick an existing contact or add them as new."
+          : "No existing contacts to match against. Add as a new person?"}
+      </p>
+
+      {contacts.length > 0 && (
+        <>
+          {suggestions.length > 0 && !search && (
+            <div style={{ marginBottom: "14px" }}>
+              <div style={{ fontSize: "10px", color: "var(--ink-4)", fontWeight: 500, letterSpacing: "0.06em", textTransform: "uppercase", marginBottom: "7px" }}>
+                Suggestions
+              </div>
+              <div style={{ display: "flex", flexDirection: "column", gap: "5px" }}>
+                {suggestions.map(c => (
+                  <ContactRow key={c.id} contact={c} onClick={() => onMatch(c)} />
+                ))}
+              </div>
+            </div>
+          )}
+
+          <div style={{ marginBottom: "16px" }}>
+            <input
+              type="text"
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+              placeholder="Search all contacts…"
+              autoFocus={suggestions.length === 0}
+              style={{
+                width: "100%",
+                padding: "8px 12px",
+                background: "var(--bg)",
+                border: "1px solid var(--border)",
+                borderRadius: "7px",
+                color: "var(--ink)",
+                fontFamily: "inherit",
+                fontSize: "12px",
+                boxSizing: "border-box",
+              }}
+            />
+            {search && (
+              <div style={{ display: "flex", flexDirection: "column", gap: "5px", marginTop: "7px" }}>
+                {searchResults.length > 0
+                  ? searchResults.map(c => (
+                      <ContactRow key={c.id} contact={c} onClick={() => onMatch(c)} />
+                    ))
+                  : <div style={{ fontSize: "11px", color: "var(--ink-4)", padding: "6px 0" }}>No contacts found.</div>
+                }
+              </div>
+            )}
+          </div>
+        </>
+      )}
+
+      <button
+        onClick={onNew}
+        style={{
+          width: "100%",
+          padding: "10px",
+          background: "var(--accent)",
+          color: "#fff",
+          border: "none",
+          borderRadius: "7px",
+          cursor: "pointer",
+          fontFamily: "inherit",
+          fontSize: "12px",
+          fontWeight: 500,
+        }}
+      >
+        Add "{person.name}" as new contact
+      </button>
+    </div>
+  )
+}
+
+function ContactRow({ contact, onClick }: { contact: ContactRef; onClick: () => void }) {
+  const [hovered, setHovered] = useState(false)
+  return (
+    <button
+      onClick={onClick}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        display: "flex",
+        alignItems: "center",
+        gap: "10px",
+        padding: "9px 12px",
+        background: hovered ? "var(--accent-soft)" : "var(--surface2)",
+        border: `1px solid ${hovered ? "var(--accent)" : "var(--border)"}`,
+        borderRadius: "7px",
+        cursor: "pointer",
+        fontFamily: "inherit",
+        textAlign: "left",
+        width: "100%",
+        transition: "all 0.1s",
+      }}
+    >
+      <div style={{
+        width: 28, height: 28, borderRadius: "50%",
+        background: hovered ? "var(--accent)" : "var(--border)",
+        color: hovered ? "#fff" : "var(--ink-3)",
+        display: "flex", alignItems: "center", justifyContent: "center",
+        fontSize: "10px", fontWeight: 600, flexShrink: 0,
+        transition: "all 0.1s",
+      }}>
+        {contact.first[0]}{contact.last[0]}
+      </div>
+      <div>
+        <div style={{ fontSize: "12px", fontWeight: 500, color: hovered ? "var(--accent)" : "var(--ink)" }}>
+          {contact.first} {contact.last}
+        </div>
+        {contact.headline && (
+          <div style={{ fontSize: "10px", color: "var(--ink-4)" }}>{contact.headline}</div>
+        )}
+      </div>
+    </button>
+  )
+}
+
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+
+async function readFiles(files: File[]): Promise<string> {
+  const contents = await Promise.all(files.map(f => f.text()))
+  return contents.join("\n\n---\n\n")
+}

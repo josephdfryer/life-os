@@ -1,0 +1,14 @@
+{
+  "name": "@life-os/db",
+  "version": "0.0.1",
+  "private": true,
+  "main": "./index.ts",
+  "types": "./index.ts",
+  "exports": {
+    ".": "./index.ts"
+  },
+  "dependencies": {
+    "@prisma/adapter-better-sqlite3": "*",
+    "@prisma/adapter-libsql": "*"
+  }
+}

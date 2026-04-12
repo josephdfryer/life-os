@@ -1,0 +1,32 @@
+# Turbo
+.turbo
+
+# Node
+node_modules
+.npm
+
+# Next.js
+.next
+out
+
+# Build outputs
+dist
+
+# Env files
+.env
+.env.local
+.env*.local
+
+# DB files
+*.db
+*.db-shm
+*.db-wal
+
+# Uploads (may contain sensitive content)
+apps/*/uploads/
+
+# Claude Code local settings (may contain keys in curl commands)
+.claude/settings.local.json
+
+# OS
+.DS_Store

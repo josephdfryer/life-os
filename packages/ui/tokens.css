@@ -1,0 +1,33 @@
+/* Life OS design tokens — import this in any app's globals.css */
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&display=swap');
+
+:root {
+  --bg: #f5f2ec;
+  --surface: #faf8f4;
+  --surface2: #eeebe3;
+  --border: #ddd9cf;
+  --ink: #1a1814;
+  --ink-2: #4a4640;
+  --ink-3: #8a8680;
+  --ink-4: #b8b4ae;
+  --accent: #c4572a;
+  --accent-soft: #f5ede8;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--ink);
+  font-family: 'DM Mono', monospace;
+  font-size: 13px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
