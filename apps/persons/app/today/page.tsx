@@ -4,130 +4,78 @@ import { enrichWithAttention } from "@/lib/attention"
 import { isBirthdayToday, isBirthdayThisWeek } from "@/lib/utils"
 import AttentionCard from "@/components/today/AttentionCard"
 import BirthdayCard from "@/components/today/BirthdayCard"
-import type { Person, Interaction } from "@/types"
+import type { Person } from "@/types"
 
 export const dynamic = "force-dynamic"
 
-function parsePersonFromDb(raw: {
-  id: string
-  createdAt: Date
-  updatedAt: Date
-  first: string
-  last: string
-  headline: string | null
-  email: string | null
-  phone: string | null
-  birthday: string | null
-  closeness: number
-  tags: string
-  values: string
-  notes: string | null
-  color: string | null
-  colorSoft: string | null
-  interactions: {
-    id: string
-    createdAt: Date
-    personId: string
-    eventId: string | null
-    event: {
-      id: string
-      createdAt: Date
-      name: string
-      type: string
-      timestamp: Date
-      placeId: string | null
-      notes: string | null
-      transcript: string | null
-      metadata: string | null
-    } | null
-    type: string
-    timestamp: Date
-    duration: number | null
-    emotionalWeight: string | null
-    outcome: string | null
-    summary: string | null
-    notes: string | null
-    actionItems: string | null
-    billable: boolean
-    amount: number | null
-    direction: string | null
-    sourceFileId: string | null
-    sourceFile: {
-      id: string
-      createdAt: Date
-      filename: string
-      format: string
-      filePath: string
-      sizeBytes: number
-    } | null
-  }[]
-}): Person & { interactions: Interaction[] } {
-  return {
-    ...raw,
-    tags: parseTags(raw.tags) as unknown as string[],
-    values: parseTags(raw.values) as unknown as string[],
-    interactions: raw.interactions.map(ix => ({
-      ...ix,
-      actionItems: parseTags(ix.actionItems) as unknown as string[],
-      event: ix.event
-        ? { ...ix.event, metadata: ix.event.metadata ? JSON.parse(ix.event.metadata) : null }
-        : null,
-    })),
-  } as unknown as Person & { interactions: Interaction[] }
-}
-
 export default async function TodayPage() {
+  // Only load persons who are relevant to today:
+  //   - closeness >= 2 (Friends / Inner Circle) for attention tracking
+  //   - OR have a birthday set
+  // Only fetch the last 5 interaction timestamps per person — no event/sourceFile joins.
   const raw = await db.person.findMany({
-    include: {
+    where: {
+      OR: [
+        { closeness: { gte: 2 } },
+        { birthday: { not: null } },
+      ],
+    },
+    select: {
+      id: true, createdAt: true, updatedAt: true,
+      first: true, last: true, headline: true,
+      email: true, phone: true, birthday: true,
+      closeness: true, tags: true, values: true,
+      notes: true, company: true, location: true,
+      linkedin: true, twitter: true, website: true,
+      color: true, colorSoft: true,
       interactions: {
-        include: {
-          event: true,
-          sourceFile: true,
-        },
+        select: { id: true, createdAt: true, personId: true, eventId: true,
+          type: true, timestamp: true, duration: true, emotionalWeight: true,
+          outcome: true, summary: true, notes: true, actionItems: true,
+          billable: true, amount: true, direction: true, sourceFileId: true },
         orderBy: { timestamp: "desc" },
+        take: 5,
       },
     },
     orderBy: { createdAt: "asc" },
   })
 
-  const persons = raw.map(parsePersonFromDb).map(enrichWithAttention)
-
-  // Birthdays today
-  const birthdaysToday = persons.filter(p => isBirthdayToday(p.birthday))
-
-  // Birthdays this week (but not today)
-  const birthdaysThisWeek = persons.filter(
-    p => !isBirthdayToday(p.birthday) && isBirthdayThisWeek(p.birthday)
+  const persons = raw.map(p =>
+    enrichWithAttention({
+      ...(p as unknown as Person),
+      tags:   parseTags(p.tags)   as unknown as string[],
+      values: parseTags(p.values) as unknown as string[],
+      interactions: p.interactions.map(ix => ({
+        ...ix,
+        actionItems: parseTags(ix.actionItems) as unknown as string[],
+        event: null,
+        sourceFile: null,
+      })) as never,
+      plans: [],
+    })
   )
 
-  // Active today — had interaction today
+  const birthdaysToday    = persons.filter(p => isBirthdayToday(p.birthday))
+  const birthdaysThisWeek = persons.filter(p => !isBirthdayToday(p.birthday) && isBirthdayThisWeek(p.birthday))
+
   const todayStart = new Date()
   todayStart.setHours(0, 0, 0, 0)
   const activeToday = persons.filter(p =>
     p.interactions.some(ix => new Date(ix.timestamp) >= todayStart)
   )
 
-  // Overdue — sorted descending
   const overdue = persons
     .filter(p => p.attentionScore >= 1.0)
     .sort((a, b) => b.attentionScore - a.attentionScore)
 
   const date = new Date().toLocaleDateString("en-US", {
-    weekday: "long",
-    month: "long",
-    day: "numeric",
+    weekday: "long", month: "long", day: "numeric",
   })
 
   return (
     <div style={{ maxWidth: "680px", margin: "0 auto", padding: "32px 24px" }}>
       <div style={{ marginBottom: "32px" }}>
-        <h1 style={{
-          fontFamily: "'Playfair Display', serif",
-          fontSize: "28px",
-          fontWeight: 600,
-          color: "var(--ink)",
-          margin: "0 0 4px",
-        }}>
+        <h1 style={{ fontFamily: "var(--font-playfair), serif", fontSize: "28px", fontWeight: 600, color: "var(--ink)", margin: "0 0 4px" }}>
           Today
         </h1>
         <div style={{ fontSize: "12px", color: "var(--ink-3)" }}>{date}</div>
@@ -135,77 +83,43 @@ export default async function TodayPage() {
 
       {birthdaysToday.length > 0 && (
         <Section title="🎂 Birthdays Today">
-          {birthdaysToday.map(p => (
-            <BirthdayCard key={p.id} person={p} isToday={true} />
-          ))}
+          {birthdaysToday.map(p => <BirthdayCard key={p.id} person={p} isToday={true} />)}
         </Section>
       )}
 
       {birthdaysThisWeek.length > 0 && (
         <Section title="Birthdays This Week">
-          {birthdaysThisWeek.map(p => (
-            <BirthdayCard key={p.id} person={p} isToday={false} />
-          ))}
+          {birthdaysThisWeek.map(p => <BirthdayCard key={p.id} person={p} isToday={false} />)}
         </Section>
       )}
 
       {activeToday.length > 0 && (
         <Section title="Active Today">
-          {activeToday.map(p => (
-            <AttentionCard key={p.id} person={p} />
-          ))}
+          {activeToday.map(p => <AttentionCard key={p.id} person={p} />)}
         </Section>
       )}
 
       {overdue.length > 0 ? (
         <Section title={`Overdue for Contact (${overdue.length})`}>
-          {overdue.map(p => (
-            <AttentionCard key={p.id} person={p} />
-          ))}
+          {overdue.map(p => <AttentionCard key={p.id} person={p} />)}
         </Section>
       ) : (
         persons.length > 0 && (
-          <div style={{
-            padding: "32px",
-            background: "var(--surface)",
-            border: "1px solid var(--border)",
-            borderRadius: "10px",
-            textAlign: "center",
-            color: "var(--ink-3)",
-            fontSize: "13px",
-          }}>
-            You're all caught up. No one is overdue for contact.
+          <div style={{ padding: "32px", background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "10px", textAlign: "center", color: "var(--ink-3)", fontSize: "13px" }}>
+            You&apos;re all caught up. No one is overdue for contact.
           </div>
         )
       )}
 
       {persons.length === 0 && (
-        <div style={{
-          padding: "48px 32px",
-          background: "var(--surface)",
-          border: "1px solid var(--border)",
-          borderRadius: "12px",
-          textAlign: "center",
-        }}>
-          <div style={{ fontFamily: "'Playfair Display', serif", fontSize: "20px", color: "var(--ink)", marginBottom: "8px" }}>
+        <div style={{ padding: "48px 32px", background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "12px", textAlign: "center" }}>
+          <div style={{ fontFamily: "var(--font-playfair), serif", fontSize: "20px", color: "var(--ink)", marginBottom: "8px" }}>
             Welcome to Persons
           </div>
           <div style={{ fontSize: "12px", color: "var(--ink-3)", marginBottom: "20px" }}>
             Add your first contact to get started.
           </div>
-          <a
-            href="/contacts"
-            style={{
-              display: "inline-block",
-              padding: "9px 20px",
-              background: "var(--accent)",
-              color: "#fff",
-              borderRadius: "7px",
-              textDecoration: "none",
-              fontSize: "12px",
-              fontWeight: 500,
-            }}
-          >
+          <a href="/contacts" style={{ display: "inline-block", padding: "9px 20px", background: "var(--accent)", color: "#fff", borderRadius: "7px", textDecoration: "none", fontSize: "12px", fontWeight: 500 }}>
             Go to Contacts →
           </a>
         </div>
@@ -217,14 +131,7 @@ export default async function TodayPage() {
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div style={{ marginBottom: "32px" }}>
-      <h2 style={{
-        fontSize: "10px",
-        fontWeight: 500,
-        letterSpacing: "0.08em",
-        textTransform: "uppercase",
-        color: "var(--ink-4)",
-        margin: "0 0 10px",
-      }}>
+      <h2 style={{ fontSize: "10px", fontWeight: 500, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--ink-4)", margin: "0 0 10px" }}>
         {title}
       </h2>
       <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>

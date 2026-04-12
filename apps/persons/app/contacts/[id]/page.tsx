@@ -103,7 +103,7 @@ export default function PersonDetailPage({ params }: { params: Promise<{ id: str
             fontSize={18}
           />
           <div style={{ flex: 1, minWidth: 0 }}>
-            <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: "22px", fontWeight: 600, margin: "0 0 4px", color: "var(--ink)" }}>
+            <h1 style={{ fontFamily: "var(--font-playfair), serif", fontSize: "22px", fontWeight: 600, margin: "0 0 4px", color: "var(--ink)" }}>
               {person.first} {person.last}
             </h1>
             {person.headline && (

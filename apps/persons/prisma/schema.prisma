@@ -30,6 +30,12 @@ model Person {
   colorSoft    String?
   interactions Interaction[]
   plans        Plan[]
+
+  @@index([last, first])
+  @@index([email])
+  @@index([closeness])
+  @@index([birthday])
+  @@index([createdAt])
 }
 
 model Event {
@@ -66,6 +72,9 @@ model Interaction {
   direction       String?
   sourceFileId    String?
   sourceFile      ImportedFile? @relation(fields: [sourceFileId], references: [id])
+
+  @@index([personId, timestamp(sort: Desc)])
+  @@index([timestamp(sort: Desc)])
 }
 
 model Plan {

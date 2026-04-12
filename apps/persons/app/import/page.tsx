@@ -66,9 +66,9 @@ export default function ImportConversationsPage() {
 
     try {
       // Fetch existing contacts to pass to Claude for matching
-      const contactsRes = await fetch("/api/persons")
-      const contactsData = contactsRes.ok ? await contactsRes.json() : []
-      const contacts: ContactRef[] = contactsData.map((p: ContactRef) => ({
+      const contactsRes = await fetch("/api/persons?minimal=true&limit=200")
+      const contactsData = contactsRes.ok ? await contactsRes.json() : {}
+      const contacts: ContactRef[] = (contactsData.persons ?? []).map((p: ContactRef) => ({
         id: p.id,
         first: p.first,
         last: p.last,
@@ -162,20 +162,13 @@ export default function ImportConversationsPage() {
   const currentUnresolved = currentUnresolvedIdx !== null ? results[currentUnresolvedIdx] : null
 
   return (
-    <div className="import-page" style={{ minHeight: "100vh" }}>
-      <div style={{ maxWidth: "720px", margin: "0 auto", padding: "40px 24px" }}>
+    <div style={{ maxWidth: "720px", margin: "0 auto", padding: "32px 24px" }}>
 
-        <div style={{ marginBottom: "32px" }}>
-          <h1 style={{
-            fontFamily: "'Playfair Display', serif",
-            fontSize: "28px",
-            fontWeight: 600,
-            color: "var(--ink)",
-            margin: "0 0 6px",
-          }}>
+        <div style={{ marginBottom: "28px" }}>
+          <h1 style={{ fontFamily: "var(--font-playfair), serif", fontSize: "28px", fontWeight: 600, color: "var(--ink)", margin: "0 0 6px" }}>
             Import Conversations
           </h1>
-          <p style={{ color: "var(--ink-2)", fontSize: "13px", margin: 0 }}>
+          <p style={{ color: "var(--ink-3)", fontSize: "12px", margin: 0 }}>
             Drop anything — Slack, iMessage, email, meeting notes, WhatsApp. Claude will figure it out.
           </p>
         </div>
@@ -260,6 +253,7 @@ export default function ImportConversationsPage() {
                 lineHeight: 1.6,
                 resize: "vertical",
                 marginBottom: "16px",
+                boxSizing: "border-box",
               }}
             />
 
@@ -302,7 +296,7 @@ export default function ImportConversationsPage() {
         {step === "review" && (
           <>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "20px" }}>
-              <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "20px", fontWeight: 600, margin: 0, color: "var(--ink)" }}>
+              <h2 style={{ fontFamily: "var(--font-playfair), serif", fontSize: "20px", fontWeight: 600, margin: 0, color: "var(--ink)" }}>
                 Review Results
                 <span style={{ fontSize: "13px", fontWeight: 400, color: "var(--ink-3)", marginLeft: "8px" }}>
                   {results.length} people found
@@ -354,7 +348,7 @@ export default function ImportConversationsPage() {
         {step === "done" && (
           <div style={{ textAlign: "center", padding: "60px 32px", background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "12px" }}>
             <div style={{ fontSize: "32px", marginBottom: "16px" }}>✓</div>
-            <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "22px", fontWeight: 600, color: "var(--ink)", margin: "0 0 8px" }}>
+            <h2 style={{ fontFamily: "var(--font-playfair), serif", fontSize: "22px", fontWeight: 600, color: "var(--ink)", margin: "0 0 8px" }}>
               Import Complete
             </h2>
             <p style={{ color: "var(--ink-3)", fontSize: "13px", marginBottom: "24px" }}>
@@ -362,7 +356,7 @@ export default function ImportConversationsPage() {
             </p>
             <div style={{ display: "flex", gap: "10px", justifyContent: "center" }}>
               <button onClick={() => router.push("/contacts")} style={{ padding: "10px 24px", background: "var(--accent)", color: "#fff", border: "none", borderRadius: "7px", cursor: "pointer", fontFamily: "inherit", fontSize: "12px", fontWeight: 500 }}>
-                View Contacts →
+                View People →
               </button>
               <button
                 onClick={() => { setStep("input"); setText(""); setFiles([]); setResults([]); setError(null) }}
@@ -373,7 +367,6 @@ export default function ImportConversationsPage() {
             </div>
           </div>
         )}
-      </div>
     </div>
   )
 }
@@ -447,7 +440,7 @@ function ResolveModal({
         </div>
       )}
 
-      <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "20px", fontWeight: 600, color: "var(--ink)", margin: "0 0 6px" }}>
+      <h2 style={{ fontFamily: "var(--font-playfair), serif", fontSize: "20px", fontWeight: 600, color: "var(--ink)", margin: "0 0 6px" }}>
         Who is "{person.name}"?
       </h2>
       <p style={{ fontSize: "12px", color: "var(--ink-3)", margin: "0 0 20px", lineHeight: 1.5 }}>

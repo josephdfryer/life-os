@@ -88,6 +88,9 @@ function scoreBg(s: number) {
   return "#fefce8"
 }
 
+type AutoDedupeResult = { keepId: string; deleteId: string; score: number; reason: string; keepName: string; deleteName: string }
+type AutoDedupeState = { status: "idle" | "confirm" | "running" | "done" | "error"; merged: number; results: AutoDedupeResult[]; error?: string }
+
 export default function MergePage() {
   const [pairs, setPairs]         = useState<DupePair[]>([])
   const [loading, setLoading]     = useState(true)
@@ -95,6 +98,7 @@ export default function MergePage() {
   const [choices, setChoices]     = useState<Record<string, Choice>>({})
   const [swapped, setSwapped]     = useState(false)
   const [merging, setMerging]     = useState(false)
+  const [autoDedupe, setAutoDedupe] = useState<AutoDedupeState>({ status: "idle", merged: 0, results: [] })
 
   const load = useCallback(async () => {
     setLoading(true)
@@ -177,6 +181,20 @@ export default function MergePage() {
     if (nextIdx !== null) setChoices(initChoices(remaining[0].a, remaining[0].b))
   }
 
+  async function runAutoDedupe() {
+    setAutoDedupe({ status: "running", merged: 0, results: [] })
+    try {
+      const res = await fetch("/api/contacts/auto-dedupe", { method: "POST" })
+      if (!res.ok) throw new Error(`${res.status}`)
+      const data = await res.json()
+      setAutoDedupe({ status: "done", merged: data.merged, results: data.results })
+      // Reload the manual dedupe list
+      if (data.merged > 0) load()
+    } catch (e) {
+      setAutoDedupe({ status: "error", merged: 0, results: [], error: String(e) })
+    }
+  }
+
   const pair = selected !== null ? pairs[selected] : null
   const a    = pair ? (swapped ? pair.b : pair.a) : null
   const b    = pair ? (swapped ? pair.a : pair.b) : null
@@ -188,16 +206,86 @@ export default function MergePage() {
       <Link href="/contacts" style={{ fontSize: "11px", color: "var(--ink-3)", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: "4px", marginBottom: "16px" }}>
         ← Contacts
       </Link>
-      <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: "24px" }}>
-        <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: "24px", fontWeight: 600, color: "var(--ink)", margin: 0 }}>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "24px" }}>
+        <h1 style={{ fontFamily: "var(--font-playfair), serif", fontSize: "24px", fontWeight: 600, color: "var(--ink)", margin: 0 }}>
           Merge Duplicates
+          {!loading && pairs.length > 0 && (
+            <span style={{ fontSize: "13px", fontWeight: 400, color: "var(--ink-4)", marginLeft: "10px" }}>
+              {pairs.length} potential duplicate{pairs.length === 1 ? "" : "s"}
+            </span>
+          )}
         </h1>
-        {!loading && (
-          <span style={{ fontSize: "11px", color: "var(--ink-4)" }}>
-            {pairs.length === 0 ? "No duplicates found" : `${pairs.length} potential duplicate${pairs.length === 1 ? "" : "s"}`}
-          </span>
-        )}
+        <button
+          onClick={() => setAutoDedupe(s => s.status === "confirm" ? { ...s, status: "idle" } : { ...s, status: "confirm" })}
+          style={{ padding: "9px 16px", background: "transparent", color: "var(--ink-3)", border: "1px solid var(--border)", borderRadius: "7px", fontFamily: "inherit", fontSize: "12px", cursor: "pointer" }}
+        >
+          ⚡ Auto-dedupe
+        </button>
       </div>
+
+      {/* Auto-dedupe panel */}
+      {autoDedupe.status === "confirm" && (
+        <div style={{ marginBottom: "20px", padding: "16px 18px", background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "10px" }}>
+          <div style={{ fontSize: "13px", fontWeight: 500, color: "var(--ink)", marginBottom: "6px" }}>Auto-merge high-confidence duplicates?</div>
+          <div style={{ fontSize: "12px", color: "var(--ink-3)", marginBottom: "14px" }}>
+            Scans all contacts and automatically merges pairs with ≥93% similarity (exact email, exact phone, or very similar names). The contact with more interactions is kept; data is merged, never lost.
+          </div>
+          <div style={{ display: "flex", gap: "8px" }}>
+            <button
+              onClick={runAutoDedupe}
+              style={{ padding: "8px 18px", background: "var(--accent)", border: "none", borderRadius: "7px", color: "#fff", fontFamily: "inherit", fontSize: "12px", fontWeight: 500, cursor: "pointer" }}
+            >
+              Run auto-dedupe
+            </button>
+            <button
+              onClick={() => setAutoDedupe(s => ({ ...s, status: "idle" }))}
+              style={{ padding: "8px 14px", background: "transparent", border: "1px solid var(--border)", borderRadius: "7px", color: "var(--ink-3)", fontFamily: "inherit", fontSize: "12px", cursor: "pointer" }}
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
+
+      {autoDedupe.status === "running" && (
+        <div style={{ marginBottom: "20px", padding: "16px 18px", background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "10px", display: "flex", alignItems: "center", gap: "10px" }}>
+          <div style={{ width: "14px", height: "14px", border: "2px solid var(--accent)", borderTopColor: "transparent", borderRadius: "50%", animation: "spin 0.7s linear infinite", flexShrink: 0 }} />
+          <span style={{ fontSize: "12px", color: "var(--ink-3)" }}>Scanning all contacts… this may take up to a minute.</span>
+        </div>
+      )}
+
+      {autoDedupe.status === "error" && (
+        <div style={{ marginBottom: "20px", padding: "14px 18px", background: "#fef2f2", border: "1px solid #fecaca", borderRadius: "10px", fontSize: "12px", color: "#b91c1c" }}>
+          Auto-dedupe failed: {autoDedupe.error}
+          <button onClick={() => setAutoDedupe(s => ({ ...s, status: "idle" }))} style={{ marginLeft: "12px", fontSize: "11px", color: "#b91c1c", background: "transparent", border: "none", cursor: "pointer", textDecoration: "underline" }}>dismiss</button>
+        </div>
+      )}
+
+      {autoDedupe.status === "done" && (
+        <div style={{ marginBottom: "20px", padding: "16px 18px", background: autoDedupe.merged > 0 ? "#f0fdf4" : "var(--surface)", border: `1px solid ${autoDedupe.merged > 0 ? "#bbf7d0" : "var(--border)"}`, borderRadius: "10px" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+            <div>
+              <div style={{ fontSize: "13px", fontWeight: 600, color: autoDedupe.merged > 0 ? "#16a34a" : "var(--ink)", marginBottom: autoDedupe.merged > 0 ? "10px" : 0 }}>
+                {autoDedupe.merged > 0 ? `✓ Merged ${autoDedupe.merged} duplicate${autoDedupe.merged === 1 ? "" : "s"}` : "✓ No high-confidence duplicates found"}
+              </div>
+              {autoDedupe.results.length > 0 && (
+                <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+                  {autoDedupe.results.map((r, i) => (
+                    <div key={i} style={{ fontSize: "11px", color: "#166534", display: "flex", alignItems: "center", gap: "6px" }}>
+                      <span style={{ color: "#16a34a" }}>→</span>
+                      <span style={{ fontWeight: 500 }}>{r.keepName}</span>
+                      <span style={{ color: "#4ade80" }}>absorbed</span>
+                      <span>{r.deleteName}</span>
+                      <span style={{ color: "#86efac", fontSize: "10px" }}>({r.reason}, {Math.round(r.score * 100)}%)</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+            <button onClick={() => setAutoDedupe(s => ({ ...s, status: "idle" }))} style={{ fontSize: "11px", color: "var(--ink-4)", background: "transparent", border: "none", cursor: "pointer", flexShrink: 0, marginLeft: "12px" }}>✕</button>
+          </div>
+        </div>
+      )}
 
       {loading ? (
         <div style={{ textAlign: "center", padding: "64px", color: "var(--ink-4)", fontSize: "12px" }}>

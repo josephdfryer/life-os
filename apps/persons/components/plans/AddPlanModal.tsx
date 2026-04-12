@@ -66,7 +66,7 @@ export default function AddPlanModal({ personId, personName, onClose, onSaved }:
         }}
       >
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "24px" }}>
-          <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "20px", fontWeight: 600, margin: 0, color: "var(--ink)" }}>
+          <h2 style={{ fontFamily: "var(--font-playfair), serif", fontSize: "20px", fontWeight: 600, margin: 0, color: "var(--ink)" }}>
             Add Plan for {personName}
           </h2>
           <button onClick={onClose} style={{ background: "none", border: "none", cursor: "pointer", color: "var(--ink-3)", fontSize: "18px", padding: "4px" }}>×</button>

@@ -27,7 +27,7 @@ function LoginContent() {
         boxShadow: "0 4px 24px rgba(26,24,20,0.07)",
       }}>
         <div style={{
-          fontFamily: "'Playfair Display', serif",
+          fontFamily: "var(--font-playfair), serif",
           fontSize: "28px",
           fontWeight: 600,
           color: "var(--ink)",

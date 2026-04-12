@@ -45,7 +45,7 @@ export default function Header() {
       zIndex: 50,
     }}>
       <Link href="/today" style={{
-        fontFamily: "'Playfair Display', serif",
+        fontFamily: "var(--font-playfair), serif",
         fontSize: "18px",
         fontWeight: 600,
         color: "var(--ink)",
@@ -59,8 +59,8 @@ export default function Header() {
         {/* Today */}
         <NavLink href="/today" label="Today" active={pathname === "/today"} />
 
-        {/* Contacts */}
-        <NavLink href="/contacts" label="Contacts" active={pathname === "/contacts" || (pathname.startsWith("/contacts/") && !pathname.startsWith("/contacts/import"))} />
+        {/* People */}
+        <NavLink href="/contacts" label="People" active={pathname === "/contacts" || (pathname.startsWith("/contacts/") && !pathname.startsWith("/contacts/import"))} />
 
         {/* Import dropdown */}
         <div ref={dropdownRef} style={{ position: "relative" }}>

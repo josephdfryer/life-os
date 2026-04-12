@@ -48,8 +48,14 @@ function parseGoogleRow(header: string[], row: string[]): ParsedContact {
   const fn = get("name") || `${first} ${last}`.trim()
   const org = get("organization 1 - name") || get("organization name") || get("company") || null
   const title = get("organization 1 - title") || get("title") || get("job title") || null
-  const email = getPrefix("email 1") || getPrefix("e-mail 1") || getPrefix("email address") || null
-  const phone = getPrefix("phone 1") || getPrefix("mobile phone") || null
+  const email = colNumberedValue(header, row, "e-mail")
+             || colNumberedValue(header, row, "email")
+             || getPrefix("email address")
+             || null
+  const phone = colNumberedValue(header, row, "phone")
+             || colNumberedValue(header, row, "mobile")
+             || getPrefix("mobile phone")
+             || null
   const birthday = parseBday(get("birthday"))
   const notes = get("notes") || null
 
@@ -158,6 +164,21 @@ function colPrefix(header: string[], row: string[], prefix: string): string | nu
   return row[idx]?.trim() || null
 }
 
+/**
+ * For Google-style "Field N - Type / Field N - Value" column pairs.
+ * Scans up to 10 numbered slots and returns the first non-empty Value.
+ * e.g. colNumberedValue(h, r, "e-mail") finds "E-mail 1 - Value", "E-mail 2 - Value", …
+ */
+function colNumberedValue(header: string[], row: string[], prefix: string): string | null {
+  const p = prefix.toLowerCase()
+  for (let n = 1; n <= 10; n++) {
+    const key = `${p} ${n} - value`
+    const idx = header.findIndex(h => h.toLowerCase().trim() === key)
+    if (idx !== -1 && row[idx]?.trim()) return row[idx].trim()
+  }
+  return null
+}
+
 function parseBday(raw: string | null | undefined): string | null {
   if (!raw) return null
   const m1 = raw.match(/^(\d{4})-(\d{2})-(\d{2})$/)
@@ -171,7 +192,12 @@ function parseBday(raw: string | null | undefined): string | null {
 
 /**
  * Minimal RFC-4180 CSV parser. Handles quoted fields and embedded commas/newlines.
+ * Exported so the API route can access raw rows for Claude mapping.
  */
+export function parseCSVRows(raw: string): string[][] {
+  return parseCSV(raw)
+}
+
 function parseCSV(raw: string): string[][] {
   const rows: string[][] = []
   let row: string[] = []
