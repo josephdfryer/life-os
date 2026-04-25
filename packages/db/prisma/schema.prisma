@@ -1,0 +1,255 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+// ─────────────────────────────────────────────
+// PRIMARY: Person
+// ─────────────────────────────────────────────
+
+model Person {
+  id           String        @id @default(cuid())
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  first        String
+  last         String
+  headline     String?
+  email        String?
+  phone        String?
+  birthday     String?
+  closeness    Int           @default(2)
+  tags         String        @default("[]")
+  values       String        @default("[]")
+  notes        String?
+  company      String?
+  location     String?
+  linkedin     String?
+  twitter      String?
+  website      String?
+  color        String?
+  colorSoft    String?
+  interactions Interaction[]
+  plans        Plan[]
+  ownedItems   Item[]
+  assembledBy  Assembly[]    @relation("AssembledBy")
+  disassembledBy Assembly[]  @relation("DisassembledBy")
+
+  @@index([last, first])
+  @@index([email])
+  @@index([closeness])
+  @@index([birthday])
+  @@index([createdAt])
+}
+
+// ─────────────────────────────────────────────
+// PRIMARY: Event
+// ─────────────────────────────────────────────
+
+model Event {
+  id           String        @id @default(cuid())
+  createdAt    DateTime      @default(now())
+  name         String
+  type         String
+  timestamp    DateTime
+  placeId      String?
+  place        Place?        @relation(fields: [placeId], references: [id])
+  notes        String?
+  transcript   String?
+  metadata     String?
+  interactions Interaction[]
+}
+
+// ─────────────────────────────────────────────
+// PRIMARY: Interaction (universal linker)
+// ─────────────────────────────────────────────
+
+model Interaction {
+  id              String            @id @default(cuid())
+  createdAt       DateTime          @default(now())
+  // Person is optional — interactions can involve any combination of primaries
+  personId        String?
+  person          Person?           @relation(fields: [personId], references: [id], onDelete: Cascade)
+  eventId         String?
+  event           Event?            @relation(fields: [eventId], references: [id])
+  // Context place (where this interaction happened)
+  placeId         String?
+  place           Place?            @relation(fields: [placeId], references: [id])
+  type            String
+  timestamp       DateTime
+  duration        Int?
+  emotionalWeight String?
+  outcome         String?
+  summary         String?
+  notes           String?
+  actionItems     String?
+  billable        Boolean           @default(false)
+  amount          Float?
+  direction       String?
+  sourceFileId    String?
+  sourceFile      ImportedFile?     @relation(fields: [sourceFileId], references: [id])
+  itemInteractions ItemInteraction[]
+
+  @@index([personId, timestamp(sort: Desc)])
+  @@index([timestamp(sort: Desc)])
+  @@index([placeId])
+}
+
+// ─────────────────────────────────────────────
+// PRIMARY: Plan
+// ─────────────────────────────────────────────
+
+model Plan {
+  id             String   @id @default(cuid())
+  createdAt      DateTime @default(now())
+  personId       String?
+  person         Person?  @relation(fields: [personId], references: [id], onDelete: Cascade)
+  text           String
+  timescale      String?
+  successSignals String?
+  status         String   @default("active")
+  parentId       String?
+  children       Plan[]   @relation("PlanHierarchy")
+  parent         Plan?    @relation("PlanHierarchy", fields: [parentId], references: [id])
+}
+
+// ─────────────────────────────────────────────
+// PRIMARY: Place (hierarchical locations)
+// ─────────────────────────────────────────────
+
+model Place {
+  id            String        @id @default(cuid())
+  name          String
+  type          String?
+  address       String?
+  coordinates   String?
+  meaning       String?
+  // Self-referencing hierarchy: Earth → Country → City → Home → Room → Shelf
+  parentPlaceId String?
+  parentPlace   Place?        @relation("PlaceHierarchy", fields: [parentPlaceId], references: [id])
+  childPlaces   Place[]       @relation("PlaceHierarchy")
+  events        Event[]
+  interactions  Interaction[]
+  items         Item[]
+
+  @@index([parentPlaceId])
+}
+
+// ─────────────────────────────────────────────
+// PRIMARY: Item (Object — anything physical you own)
+// ─────────────────────────────────────────────
+
+model Item {
+  id               String           @id @default(cuid())
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+  name             String
+  description      String?
+  category         String?
+  make             String?
+  model            String?
+  serialNumber     String?
+  // Auto-generated QR-printable identifier e.g. "#001-042"
+  assetId          String           @unique
+  quantity         Float            @default(1)
+
+  // Acquisition
+  purchaseDate     DateTime?
+  purchasePrice    Float?
+  purchaseFrom     String?
+
+  // Warranty
+  warrantyExpires  DateTime?
+  lifetimeWarranty Boolean          @default(false)
+  warrantyDetails  String?
+
+  // Direct location — null when assembled inside another item (location is inherited)
+  placeId          String?
+  place            Place?           @relation(fields: [placeId], references: [id])
+
+  // Owner
+  ownedById        String?
+  ownedBy          Person?          @relation(fields: [ownedById], references: [id])
+
+  // Assembly tree
+  assembledInto    Assembly[]       @relation("ChildItem")   // this item is inside something
+  components       Assembly[]       @relation("ParentItem")  // things currently inside this item
+
+  itemInteractions ItemInteraction[]
+
+  tags             String?
+  notes            String?
+  color            String?
+  colorSoft        String?
+
+  @@index([name])
+  @@index([category])
+  @@index([assetId])
+  @@index([placeId])
+  @@index([ownedById])
+  @@index([createdAt])
+}
+
+// ─────────────────────────────────────────────
+// STRUCTURAL: Assembly
+// Records that one item is (or was) inside another.
+// disassembledAt = null means currently installed.
+// ─────────────────────────────────────────────
+
+model Assembly {
+  id               String    @id @default(cuid())
+  createdAt        DateTime  @default(now())
+
+  childItemId      String
+  childItem        Item      @relation("ChildItem",      fields: [childItemId],      references: [id])
+
+  parentItemId     String
+  parentItem       Item      @relation("ParentItem",     fields: [parentItemId],     references: [id])
+
+  assembledAt      DateTime  @default(now())
+  assembledById    String?
+  assembledBy      Person?   @relation("AssembledBy",    fields: [assembledById],    references: [id])
+
+  // null = currently installed; set when item is removed
+  disassembledAt   DateTime?
+  disassembledById String?
+  disassembledBy   Person?   @relation("DisassembledBy", fields: [disassembledById], references: [id])
+
+  notes            String?
+
+  @@index([childItemId])
+  @@index([parentItemId])
+  @@index([disassembledAt])
+}
+
+// ─────────────────────────────────────────────
+// JUNCTION: ItemInteraction (Item ↔ Interaction M:M)
+// ─────────────────────────────────────────────
+
+model ItemInteraction {
+  itemId        String
+  item          Item        @relation(fields: [itemId],        references: [id], onDelete: Cascade)
+  interactionId String
+  interaction   Interaction @relation(fields: [interactionId], references: [id], onDelete: Cascade)
+  role          String?     // "subject", "target", "context" — optional semantic hint
+
+  @@id([itemId, interactionId])
+}
+
+// ─────────────────────────────────────────────
+// SUPPORT: ImportedFile
+// ─────────────────────────────────────────────
+
+model ImportedFile {
+  id           String        @id @default(cuid())
+  createdAt    DateTime      @default(now())
+  filename     String
+  format       String
+  filePath     String
+  sizeBytes    Int
+  content      String?
+  interactions Interaction[]
+}
