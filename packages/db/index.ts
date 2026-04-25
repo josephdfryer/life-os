@@ -1,11 +1,13 @@
-import { PrismaClient } from "@/app/generated/prisma/client"
+import { PrismaClient } from "./generated/prisma"
+
+export type { Prisma } from "./generated/prisma"
+export * from "./generated/prisma"
 
 function createClient(): PrismaClient {
   const log = ["error"] as const
 
   if (process.env.TURSO_DATABASE_URL) {
     // Production: Turso (hosted libSQL / SQLite-compatible)
-    // PrismaLibSql takes a config object directly — NOT a libsql client instance
     // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-explicit-any
     const { PrismaLibSql } = require("@prisma/adapter-libsql") as any
     const adapter = new PrismaLibSql({
@@ -19,7 +21,7 @@ function createClient(): PrismaClient {
   // Local dev: SQLite file
   // eslint-disable-next-line @typescript-eslint/no-require-imports
   const { PrismaBetterSqlite3 } = require("@prisma/adapter-better-sqlite3") as typeof import("@prisma/adapter-better-sqlite3")
-  const url = process.env.DATABASE_URL ?? "file:./persons.db"
+  const url = process.env.DATABASE_URL ?? "file:./life-os.db"
   const adapter = new PrismaBetterSqlite3({ url })
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return new PrismaClient({ adapter, log: log as any })

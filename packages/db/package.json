@@ -7,8 +7,19 @@
   "exports": {
     ".": "./index.ts"
   },
+  "scripts": {
+    "build": "prisma generate",
+    "generate": "prisma generate",
+    "migrate:dev": "prisma migrate dev",
+    "migrate:deploy": "prisma migrate deploy"
+  },
   "dependencies": {
+    "@libsql/client": "^0.17.2",
     "@prisma/adapter-better-sqlite3": "*",
-    "@prisma/adapter-libsql": "*"
+    "@prisma/adapter-libsql": "*",
+    "@prisma/client": "^7.7.0",
+    "better-sqlite3": "^12.8.0",
+    "dotenv": "^17.4.1",
+    "prisma": "^7.7.0"
   }
 }
