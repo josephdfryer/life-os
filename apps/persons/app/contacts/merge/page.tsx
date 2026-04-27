@@ -19,8 +19,6 @@ const FIELDS: { key: keyof Person; label: string; multiline?: boolean }[] = [
   { key: "first",    label: "First name" },
   { key: "last",     label: "Last name" },
   { key: "headline", label: "Headline" },
-  { key: "email",    label: "Email" },
-  { key: "phone",    label: "Phone" },
   { key: "company",  label: "Company" },
   { key: "location", label: "Location" },
   { key: "birthday", label: "Birthday" },
@@ -76,6 +74,14 @@ function buildFields(a: Person, b: Person, choices: Record<string, Choice>) {
   const aVals = Array.isArray(a.values) ? a.values : []
   const bVals = Array.isArray(b.values) ? b.values : []
   fields.values = [...new Set([...aVals, ...bVals])]
+
+  const aEmails = Array.isArray(a.emails) ? a.emails : []
+  const bEmails = Array.isArray(b.emails) ? b.emails : []
+  fields.emails = [...new Set([...aEmails, ...bEmails])]
+
+  const aPhones = Array.isArray(a.phones) ? a.phones : []
+  const bPhones = Array.isArray(b.phones) ? b.phones : []
+  fields.phones = [...new Set([...aPhones, ...bPhones])]
 
   return fields
 }
@@ -554,6 +560,48 @@ export default function MergePage() {
                     </div>
                   )
                 })}
+
+                {/* Emails row — always union */}
+                {(() => {
+                  const aEmails = Array.isArray(a.emails) ? a.emails : []
+                  const bEmails = Array.isArray(b.emails) ? b.emails : []
+                  const merged = [...new Set([...aEmails, ...bEmails])]
+                  if (merged.length === 0) return null
+                  return (
+                    <div style={{ display: "grid", gridTemplateColumns: "108px 1fr", padding: "8px 18px", borderBottom: "1px solid var(--border)", gap: "10px", alignItems: "flex-start" }}>
+                      <div style={{ fontSize: "10px", color: "var(--ink-4)", paddingTop: "5px" }}>Emails</div>
+                      <div style={{ display: "flex", flexWrap: "wrap", gap: "4px", alignItems: "center" }}>
+                        {merged.map(e => (
+                          <span key={e} style={{ padding: "2px 8px", borderRadius: "20px", background: "var(--surface2)", color: "var(--ink-2)", fontSize: "11px", border: "1px solid var(--border)" }}>
+                            {e}
+                          </span>
+                        ))}
+                        <span style={{ fontSize: "10px", color: "var(--ink-4)", marginLeft: "2px" }}>merged</span>
+                      </div>
+                    </div>
+                  )
+                })()}
+
+                {/* Phones row — always union */}
+                {(() => {
+                  const aPhones = Array.isArray(a.phones) ? a.phones : []
+                  const bPhones = Array.isArray(b.phones) ? b.phones : []
+                  const merged = [...new Set([...aPhones, ...bPhones])]
+                  if (merged.length === 0) return null
+                  return (
+                    <div style={{ display: "grid", gridTemplateColumns: "108px 1fr", padding: "8px 18px", borderBottom: "1px solid var(--border)", gap: "10px", alignItems: "flex-start" }}>
+                      <div style={{ fontSize: "10px", color: "var(--ink-4)", paddingTop: "5px" }}>Phones</div>
+                      <div style={{ display: "flex", flexWrap: "wrap", gap: "4px", alignItems: "center" }}>
+                        {merged.map(p => (
+                          <span key={p} style={{ padding: "2px 8px", borderRadius: "20px", background: "var(--surface2)", color: "var(--ink-2)", fontSize: "11px", border: "1px solid var(--border)" }}>
+                            {p}
+                          </span>
+                        ))}
+                        <span style={{ fontSize: "10px", color: "var(--ink-4)", marginLeft: "2px" }}>merged</span>
+                      </div>
+                    </div>
+                  )
+                })()}
 
                 {/* Tags row */}
                 {(() => {

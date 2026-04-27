@@ -47,7 +47,7 @@ export async function PATCH(req: NextRequest, { params }: Params) {
   if (!person) return NextResponse.json({ error: "Not found" }, { status: 404 })
 
   const {
-    first, last, headline, company, email, phone, birthday,
+    first, last, headline, company, emails, phones, birthday,
     closeness, tags, notes, location, linkedin, twitter, website,
   } = body
 
@@ -58,8 +58,8 @@ export async function PATCH(req: NextRequest, { params }: Params) {
       ...(last !== undefined && { last: last.trim() }),
       ...(headline !== undefined && { headline: headline?.trim() || null }),
       ...(company !== undefined && { company: company?.trim() || null }),
-      ...(email !== undefined && { email: email?.trim() || null }),
-      ...(phone !== undefined && { phone: phone?.trim() || null }),
+      ...(emails !== undefined && { emails: JSON.stringify(Array.isArray(emails) ? emails.map((e: string) => e.trim()).filter(Boolean) : []) }),
+      ...(phones !== undefined && { phones: JSON.stringify(Array.isArray(phones) ? phones.map((p: string) => p.trim()).filter(Boolean) : []) }),
       ...(birthday !== undefined && { birthday: birthday?.trim() || null }),
       ...(closeness !== undefined && { closeness: Number(closeness) }),
       ...(tags !== undefined && { tags: JSON.stringify(Array.isArray(tags) ? tags : []) }),

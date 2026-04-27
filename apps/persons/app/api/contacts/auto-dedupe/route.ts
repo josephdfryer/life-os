@@ -53,8 +53,8 @@ type MinPerson = {
   createdAt: Date
   first: string
   last: string
-  email: string | null
-  phone: string | null
+  emails: string  // JSON array
+  phones: string  // JSON array
   company: string | null
   location: string | null
   headline: string | null
@@ -76,15 +76,23 @@ type PairResult = { keepId: string; deleteId: string; score: number; reason: str
 // ── Scoring ───────────────────────────────────────────────────────────────────
 
 function scoreMinimal(a: MinPerson, b: MinPerson): { score: number; reason: string } | null {
-  // Exact email
-  if (a.email && b.email && a.email.toLowerCase().trim() === b.email.toLowerCase().trim()) {
-    return { score: 1.0, reason: "Same email address" }
+  // Any shared email
+  const aEmails = parseTags(a.emails) as string[]
+  const bEmails = parseTags(b.emails) as string[]
+  if (aEmails.length && bEmails.length) {
+    const bSet = new Set(bEmails.map(e => e.toLowerCase().trim()))
+    if (aEmails.some(e => bSet.has(e.toLowerCase().trim()))) {
+      return { score: 1.0, reason: "Same email address" }
+    }
   }
-  // Exact phone
-  const ap = (a.phone ?? "").replace(/\D/g, "")
-  const bp = (b.phone ?? "").replace(/\D/g, "")
-  if (ap.length >= 7 && ap === bp) {
-    return { score: 0.97, reason: "Same phone number" }
+  // Any shared phone
+  const aPhones = (parseTags(a.phones) as string[]).map(p => p.replace(/\D/g, "")).filter(p => p.length >= 7)
+  const bPhones = (parseTags(b.phones) as string[]).map(p => p.replace(/\D/g, "")).filter(p => p.length >= 7)
+  if (aPhones.length && bPhones.length) {
+    const bSet = new Set(bPhones)
+    if (aPhones.some(p => bSet.has(p))) {
+      return { score: 0.97, reason: "Same phone number" }
+    }
   }
   // Name similarity
   const an = norm(`${a.first} ${a.last}`)
@@ -111,10 +119,10 @@ function pickKeeper(a: MinPerson, b: MinPerson): [MinPerson, MinPerson] {
   return a.createdAt <= b.createdAt ? [a, b] : [b, a]
 }
 
-// Fill null fields on keeper from loser
+// Merge non-null fields onto keeper from loser
 function buildPatch(keeper: MinPerson, loser: MinPerson): Record<string, unknown> {
   const patch: Record<string, unknown> = {}
-  const scalar = ["headline", "email", "phone", "company", "location",
+  const scalar = ["headline", "company", "location",
     "birthday", "linkedin", "twitter", "website"] as const
   for (const key of scalar) {
     if (!keeper[key] && loser[key]) patch[key] = loser[key]
@@ -124,11 +132,21 @@ function buildPatch(keeper: MinPerson, loser: MinPerson): Record<string, unknown
   else if (keeper.notes && loser.notes && keeper.notes !== loser.notes) {
     patch.notes = `${keeper.notes}\n\n---\n${loser.notes}`
   }
+  // Union emails
+  const ke = parseTags(keeper.emails) as string[]
+  const le = parseTags(loser.emails) as string[]
+  const mergedEmails = [...new Set([...ke, ...le])]
+  if (mergedEmails.length > ke.length) patch.emails = JSON.stringify(mergedEmails)
+  // Union phones
+  const kp = parseTags(keeper.phones) as string[]
+  const lp = parseTags(loser.phones) as string[]
+  const mergedPhones = [...new Set([...kp, ...lp])]
+  if (mergedPhones.length > kp.length) patch.phones = JSON.stringify(mergedPhones)
   // Union tags
   const kt = parseTags(keeper.tags) as string[]
   const lt = parseTags(loser.tags) as string[]
-  const merged = Array.from(new Set([...kt, ...lt]))
-  if (merged.length > kt.length) patch.tags = JSON.stringify(merged)
+  const mergedTags = Array.from(new Set([...kt, ...lt]))
+  if (mergedTags.length > kt.length) patch.tags = JSON.stringify(mergedTags)
   // Higher closeness wins
   if (loser.closeness > keeper.closeness) patch.closeness = loser.closeness
   return patch
@@ -141,7 +159,7 @@ export async function POST() {
   const all = await db.person.findMany({
     select: {
       id: true, createdAt: true,
-      first: true, last: true, email: true, phone: true,
+      first: true, last: true, emails: true, phones: true,
       company: true, location: true, headline: true,
       birthday: true, notes: true, linkedin: true,
       twitter: true, website: true, tags: true, values: true,
@@ -153,12 +171,15 @@ export async function POST() {
   const deleted  = new Set<string>()
   const toMerge: PairResult[] = []
 
-  // 2a. Exact email matches — O(n) via Map
+  // 2a. Exact email matches — O(n) via Map (iterate each email in each person's array)
   const byEmail = new Map<string, MinPerson[]>()
   for (const p of all) {
-    if (!p.email?.trim()) continue
-    const key = p.email.toLowerCase().trim()
-    const bucket = byEmail.get(key) ?? []; bucket.push(p as MinPerson); byEmail.set(key, bucket)
+    const emails = parseTags(p.emails) as string[]
+    for (const email of emails) {
+      if (!email?.trim()) continue
+      const key = email.toLowerCase().trim()
+      const bucket = byEmail.get(key) ?? []; bucket.push(p as MinPerson); byEmail.set(key, bucket)
+    }
   }
   for (const bucket of byEmail.values()) {
     if (bucket.length < 2) continue
@@ -171,12 +192,15 @@ export async function POST() {
     }
   }
 
-  // 2b. Exact phone matches — O(n) via Map
+  // 2b. Exact phone matches — O(n) via Map (iterate each phone in each person's array)
   const byPhone = new Map<string, MinPerson[]>()
   for (const p of all) {
-    const digits = (p.phone ?? "").replace(/\D/g, "")
-    if (digits.length < 7) continue
-    const bucket = byPhone.get(digits) ?? []; bucket.push(p as MinPerson); byPhone.set(digits, bucket)
+    const phones = parseTags(p.phones) as string[]
+    for (const phone of phones) {
+      const digits = phone.replace(/\D/g, "")
+      if (digits.length < 7) continue
+      const bucket = byPhone.get(digits) ?? []; bucket.push(p as MinPerson); byPhone.set(digits, bucket)
+    }
   }
   for (const bucket of byPhone.values()) {
     if (bucket.length < 2) continue

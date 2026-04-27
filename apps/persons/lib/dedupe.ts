@@ -63,15 +63,17 @@ export function scorePair(
   a: Person,
   b: Person,
 ): { score: number; reason: string } | null {
-  // Exact email → definite duplicate
-  if (a.email && b.email && norm(a.email) === norm(b.email)) {
+  // Any shared email → definite duplicate
+  const aEmails = a.emails.map(e => norm(e)).filter(Boolean)
+  const bEmailSet = new Set(b.emails.map(e => norm(e)).filter(Boolean))
+  if (aEmails.length && bEmailSet.size && aEmails.some(e => bEmailSet.has(e))) {
     return { score: 1.0, reason: "Same email address" }
   }
 
-  // Exact phone (digits only)
-  const aPhone = (a.phone ?? "").replace(/\D/g, "")
-  const bPhone = (b.phone ?? "").replace(/\D/g, "")
-  if (aPhone.length >= 7 && aPhone === bPhone) {
+  // Any shared phone (digits only)
+  const aPhones = a.phones.map(p => p.replace(/\D/g, "")).filter(p => p.length >= 7)
+  const bPhoneSet = new Set(b.phones.map(p => p.replace(/\D/g, "")).filter(p => p.length >= 7))
+  if (aPhones.length && bPhoneSet.size && aPhones.some(p => bPhoneSet.has(p))) {
     return { score: 0.97, reason: "Same phone number" }
   }
 
