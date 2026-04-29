@@ -5,8 +5,8 @@ export type Person = {
   first: string
   last: string
   headline: string | null
-  email: string | null
-  phone: string | null
+  emails: string[]
+  phones: string[]
   birthday: string | null
   closeness: number
   tags: string[]

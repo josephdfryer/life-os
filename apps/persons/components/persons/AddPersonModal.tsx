@@ -14,13 +14,13 @@ export default function AddPersonModal({ onClose, onSaved, totalPersons }: Props
     first: "",
     last: "",
     headline: "",
-    email: "",
-    phone: "",
     birthday: "",
     closeness: 2,
     tags: "",
     notes: "",
   })
+  const [emails, setEmails] = useState<string[]>([""])
+  const [phones, setPhones] = useState<string[]>([""])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -43,7 +43,15 @@ export default function AddPersonModal({ onClose, onSaved, totalPersons }: Props
     const res = await fetch("/api/persons", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ...form, tags, values: [], color, colorSoft }),
+      body: JSON.stringify({
+        ...form,
+        emails: emails.map(e => e.trim()).filter(Boolean),
+        phones: phones.map(p => p.trim()).filter(Boolean),
+        tags,
+        values: [],
+        color,
+        colorSoft,
+      }),
     })
     setLoading(false)
     if (!res.ok) {
@@ -90,8 +98,22 @@ export default function AddPersonModal({ onClose, onSaved, totalPersons }: Props
             <Field label="Last name *" value={form.last} onChange={v => set("last", v)} placeholder="Chen" />
           </div>
           <Field label="Headline" value={form.headline} onChange={v => set("headline", v)} placeholder="Product Lead at Notion" />
-          <Field label="Email" value={form.email} onChange={v => set("email", v)} placeholder="marcus@example.com" type="email" />
-          <Field label="Phone" value={form.phone} onChange={v => set("phone", v)} placeholder="+1 (555) 000-0000" />
+
+          <MultiField
+            label="Email"
+            values={emails}
+            onChange={setEmails}
+            placeholder="marcus@example.com"
+            type="email"
+          />
+          <MultiField
+            label="Phone"
+            values={phones}
+            onChange={setPhones}
+            placeholder="+1 (555) 000-0000"
+            type="tel"
+          />
+
           <Field label="Birthday" value={form.birthday} onChange={v => set("birthday", v)} placeholder="YYYY-MM-DD" />
 
           <div>
@@ -139,6 +161,63 @@ export default function AddPersonModal({ onClose, onSaved, totalPersons }: Props
   )
 }
 
+function MultiField({
+  label,
+  values,
+  onChange,
+  placeholder,
+  type = "text",
+}: {
+  label: string
+  values: string[]
+  onChange: (v: string[]) => void
+  placeholder?: string
+  type?: string
+}) {
+  const update = (i: number, v: string) => {
+    const next = [...values]
+    next[i] = v
+    onChange(next)
+  }
+  const add = () => onChange([...values, ""])
+  const remove = (i: number) => onChange(values.filter((_, idx) => idx !== i))
+
+  return (
+    <div>
+      <label style={labelStyle}>{label}</label>
+      <div style={{ display: "flex", flexDirection: "column", gap: "5px", marginTop: "5px" }}>
+        {values.map((v, i) => (
+          <div key={i} style={{ display: "flex", gap: "5px", alignItems: "center" }}>
+            <input
+              type={type}
+              value={v}
+              onChange={e => update(i, e.target.value)}
+              placeholder={i === 0 ? placeholder : undefined}
+              style={inputStyle}
+            />
+            {values.length > 1 && (
+              <button
+                type="button"
+                onClick={() => remove(i)}
+                style={{ background: "none", border: "none", cursor: "pointer", color: "var(--ink-4)", fontSize: "16px", lineHeight: 1, padding: "0 2px", flexShrink: 0 }}
+              >
+                ×
+              </button>
+            )}
+          </div>
+        ))}
+        <button
+          type="button"
+          onClick={add}
+          style={{ alignSelf: "flex-start", background: "none", border: "none", cursor: "pointer", color: "var(--ink-4)", fontSize: "11px", padding: "2px 0" }}
+        >
+          + Add {label.toLowerCase()}
+        </button>
+      </div>
+    </div>
+  )
+}
+
 function Field({
   label,
   value,
@@ -154,19 +233,6 @@ function Field({
   type?: string
   multiline?: boolean
 }) {
-  const inputStyle: React.CSSProperties = {
-    width: "100%",
-    padding: "8px 10px",
-    background: "var(--bg)",
-    border: "1px solid var(--border)",
-    borderRadius: "6px",
-    color: "var(--ink)",
-    fontFamily: "inherit",
-    fontSize: "12px",
-    marginTop: "5px",
-    resize: multiline ? "vertical" : undefined,
-  }
-
   return (
     <div>
       <label style={labelStyle}>{label}</label>
@@ -176,7 +242,7 @@ function Field({
           onChange={e => onChange(e.target.value)}
           placeholder={placeholder}
           rows={3}
-          style={inputStyle}
+          style={{ ...inputStyle, resize: "vertical" }}
         />
       ) : (
         <input
@@ -189,6 +255,18 @@ function Field({
       )}
     </div>
   )
+}
+
+const inputStyle: React.CSSProperties = {
+  width: "100%",
+  padding: "8px 10px",
+  background: "var(--bg)",
+  border: "1px solid var(--border)",
+  borderRadius: "6px",
+  color: "var(--ink)",
+  fontFamily: "inherit",
+  fontSize: "12px",
+  boxSizing: "border-box",
 }
 
 const labelStyle: React.CSSProperties = {

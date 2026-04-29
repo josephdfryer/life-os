@@ -52,7 +52,7 @@ function norm(s: string) { return s.toLowerCase().trim().replace(/[^a-z0-9 ]/g, 
 type MatchResult = {
   personId:      string
   personName:    string
-  personEmail:   string | null
+  personEmail:   string | null  // first email for display
   personCompany: string | null
   score:         number
   reason:        string
@@ -127,11 +127,21 @@ function sortByStatus(contacts: ReviewContact[]): ReviewContact[] {
 
 function computeFillableFields(contact: ParsedContact, person: Person): Record<string, string> {
   const result: Record<string, string> = {}
+  // email: fillable if contact has an email not already in person's list
+  if (contact.email?.trim() && !person.emails.some(e => e.toLowerCase() === contact.email!.toLowerCase().trim())) {
+    result.email = contact.email.trim()
+  }
+  // phone: fillable if contact has a phone not already in person's list
+  if (contact.phone?.trim()) {
+    const cp = contact.phone.trim().replace(/\D/g, "")
+    if (cp.length >= 7 && !person.phones.some(p => p.replace(/\D/g, "") === cp)) {
+      result.phone = contact.phone.trim()
+    }
+  }
   const pairs: [keyof ParsedContact, keyof Person][] = [
-    ["email", "email"], ["phone", "phone"], ["company", "company"],
-    ["headline", "headline"], ["birthday", "birthday"], ["location", "location"],
-    ["linkedin", "linkedin"], ["twitter", "twitter"], ["website", "website"],
-    ["notes", "notes"],
+    ["company", "company"], ["headline", "headline"], ["birthday", "birthday"],
+    ["location", "location"], ["linkedin", "linkedin"], ["twitter", "twitter"],
+    ["website", "website"], ["notes", "notes"],
   ]
   for (const [ck, pk] of pairs) {
     const cv = (contact[ck] as string | null)?.trim()
@@ -145,15 +155,16 @@ function findMatch(contact: ParsedContact, persons: Person[]): MatchResult | nul
   let best: { score: number; reason: string; person: Person } | null = null
 
   for (const p of persons) {
-    // Exact email
-    if (contact.email && p.email &&
-        contact.email.toLowerCase().trim() === p.email.toLowerCase().trim()) {
-      if (!best || 1.0 > best.score) { best = { score: 1.0, reason: "Same email address", person: p }; continue }
+    // Any matching email
+    if (contact.email?.trim() && p.emails.length) {
+      const ce = contact.email.toLowerCase().trim()
+      if (p.emails.some(e => e.toLowerCase().trim() === ce)) {
+        if (!best || 1.0 > best.score) { best = { score: 1.0, reason: "Same email address", person: p }; continue }
+      }
     }
-    // Exact phone
+    // Any matching phone
     const cp = (contact.phone ?? "").replace(/\D/g, "")
-    const pp = (p.phone ?? "").replace(/\D/g, "")
-    if (cp.length >= 7 && cp === pp) {
+    if (cp.length >= 7 && p.phones.some(ph => ph.replace(/\D/g, "") === cp)) {
       if (!best || 0.97 > best.score) { best = { score: 0.97, reason: "Same phone number", person: p }; continue }
     }
     // Name similarity
@@ -186,7 +197,7 @@ function findMatch(contact: ParsedContact, persons: Person[]): MatchResult | nul
   return {
     personId:      best.person.id,
     personName:    `${best.person.first} ${best.person.last}`.trim(),
-    personEmail:   best.person.email,
+    personEmail:   best.person.emails[0] ?? null,
     personCompany: best.person.company,
     score:         best.score,
     reason:        best.reason,

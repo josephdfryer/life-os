@@ -155,8 +155,12 @@ export default function PersonDetailPage({ params }: { params: Promise<{ id: str
 
         {/* Contact info */}
         <div style={{ display: "flex", flexWrap: "wrap", gap: "16px" }}>
-          {person.email && <ContactInfo icon="✉" label={person.email} href={`mailto:${person.email}`} />}
-          {person.phone && <ContactInfo icon="↗" label={person.phone} href={`tel:${person.phone}`} />}
+          {person.emails.map((email, i) => (
+            <ContactInfo key={i} icon="✉" label={email} href={`mailto:${email}`} />
+          ))}
+          {person.phones.map((phone, i) => (
+            <ContactInfo key={i} icon="↗" label={phone} href={`tel:${phone}`} />
+          ))}
           {person.birthday && <ContactInfo icon="◎" label={formatBirthday(person.birthday) ?? ""} />}
         </div>
       </div>

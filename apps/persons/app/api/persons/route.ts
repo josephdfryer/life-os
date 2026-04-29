@@ -22,7 +22,7 @@ export async function GET(req: NextRequest) {
       OR: [
         { first:    { contains: search } },
         { last:     { contains: search } },
-        { email:    { contains: search } },
+        { emails:   { contains: search } },
         { company:  { contains: search } },
         { headline: { contains: search } },
       ],
@@ -30,8 +30,8 @@ export async function GET(req: NextRequest) {
     for (const f of fields) {
       if (f === "first")    AND.push({ first:    { not: "" } })
       if (f === "last")     AND.push({ last:     { not: "" } })
-      if (f === "email")    AND.push({ email:    { not: null } })
-      if (f === "phone")    AND.push({ phone:    { not: null } })
+      if (f === "email")    AND.push({ emails:   { not: "[]" } })
+      if (f === "phone")    AND.push({ phones:   { not: "[]" } })
       if (f === "company")  AND.push({ company:  { not: null } })
       if (f === "headline") AND.push({ headline: { not: null } })
       if (f === "birthday") AND.push({ birthday: { not: null } })
@@ -54,7 +54,7 @@ export async function GET(req: NextRequest) {
     ])
 
     return NextResponse.json({
-      persons:  rows.map(p => ({ ...p, tags: parseTags(p.tags), values: parseTags(p.values) })),
+      persons:  rows.map(p => ({ ...p, tags: parseTags(p.tags), values: parseTags(p.values), emails: parseTags(p.emails), phones: parseTags(p.phones) })),
       total,
       page,
       limit,
@@ -92,6 +92,8 @@ export async function GET(req: NextRequest) {
       ...p,
       tags:   parseTags(p.tags),
       values: parseTags(p.values),
+      emails: parseTags(p.emails),
+      phones: parseTags(p.phones),
       interactions,
       plans: p.plans,
     }
@@ -105,7 +107,7 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   const body = await req.json()
   const {
-    first, last, headline, company, email, phone, birthday,
+    first, last, headline, company, emails, phones, birthday,
     closeness, tags, values, notes, location, linkedin, twitter, website,
     color, colorSoft,
   } = body
@@ -116,8 +118,8 @@ export async function POST(req: NextRequest) {
       last: last.trim(),
       headline: headline?.trim() || null,
       company:  company?.trim()  || null,
-      email:    email?.trim()    || null,
-      phone:    phone?.trim()    || null,
+      emails:   JSON.stringify(Array.isArray(emails) ? emails.map((e: string) => e.trim()).filter(Boolean) : (emails?.trim() ? [emails.trim()] : [])),
+      phones:   JSON.stringify(Array.isArray(phones) ? phones.map((p: string) => p.trim()).filter(Boolean) : (phones?.trim() ? [phones.trim()] : [])),
       birthday: birthday?.trim() || null,
       closeness: Number(closeness) || 2,
       tags:   JSON.stringify(Array.isArray(tags)   ? tags   : []),
@@ -132,5 +134,5 @@ export async function POST(req: NextRequest) {
     },
   })
 
-  return NextResponse.json(person, { status: 201 })
+  return NextResponse.json({ ...person, emails: parseTags(person.emails), phones: parseTags(person.phones) }, { status: 201 })
 }

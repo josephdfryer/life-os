@@ -32,8 +32,10 @@ export async function GET(_req: NextRequest, { params }: Params) {
 
   return NextResponse.json({
     ...person,
-    tags: parseTags(person.tags),
+    tags:   parseTags(person.tags),
     values: parseTags(person.values),
+    emails: parseTags(person.emails),
+    phones: parseTags(person.phones),
     interactions,
     plans: person.plans.map(p => ({
       ...p,
@@ -47,7 +49,7 @@ export async function PATCH(req: NextRequest, { params }: Params) {
   const { id } = await params
   const body = await req.json()
   const {
-    first, last, headline, company, email, phone, birthday,
+    first, last, headline, company, emails, phones, birthday,
     closeness, tags, values, notes, location, linkedin, twitter, website,
   } = body
 
@@ -58,8 +60,8 @@ export async function PATCH(req: NextRequest, { params }: Params) {
       ...(last !== undefined && { last: last.trim() }),
       ...(headline !== undefined && { headline: headline?.trim() || null }),
       ...(company !== undefined && { company: company?.trim() || null }),
-      ...(email !== undefined && { email: email?.trim() || null }),
-      ...(phone !== undefined && { phone: phone?.trim() || null }),
+      ...(emails !== undefined && { emails: JSON.stringify(Array.isArray(emails) ? emails.map((e: string) => e.trim()).filter(Boolean) : []) }),
+      ...(phones !== undefined && { phones: JSON.stringify(Array.isArray(phones) ? phones.map((p: string) => p.trim()).filter(Boolean) : []) }),
       ...(birthday !== undefined && { birthday: birthday?.trim() || null }),
       ...(closeness !== undefined && { closeness: Number(closeness) }),
       ...(tags !== undefined && { tags: JSON.stringify(Array.isArray(tags) ? tags : []) }),
@@ -72,7 +74,7 @@ export async function PATCH(req: NextRequest, { params }: Params) {
     },
   })
 
-  return NextResponse.json(person)
+  return NextResponse.json({ ...person, emails: parseTags(person.emails), phones: parseTags(person.phones) })
 }
 
 export async function DELETE(_req: NextRequest, { params }: Params) {

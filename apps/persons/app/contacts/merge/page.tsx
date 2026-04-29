@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState, useCallback } from "react"
+import { useEffect, useState, useCallback, useMemo } from "react"
 import Link from "next/link"
 import type { Person } from "@/types"
 
@@ -19,8 +19,6 @@ const FIELDS: { key: keyof Person; label: string; multiline?: boolean }[] = [
   { key: "first",    label: "First name" },
   { key: "last",     label: "Last name" },
   { key: "headline", label: "Headline" },
-  { key: "email",    label: "Email" },
-  { key: "phone",    label: "Phone" },
   { key: "company",  label: "Company" },
   { key: "location", label: "Location" },
   { key: "birthday", label: "Birthday" },
@@ -30,6 +28,10 @@ const FIELDS: { key: keyof Person; label: string; multiline?: boolean }[] = [
   { key: "website",  label: "Website" },
   { key: "notes",    label: "Notes", multiline: true },
 ]
+
+function pairKey(p: DupePair) {
+  return `${p.a.id}-${p.b.id}`
+}
 
 function initChoices(a: Person, b: Person): Record<string, Choice> {
   const out: Record<string, Choice> = {}
@@ -73,6 +75,14 @@ function buildFields(a: Person, b: Person, choices: Record<string, Choice>) {
   const bVals = Array.isArray(b.values) ? b.values : []
   fields.values = [...new Set([...aVals, ...bVals])]
 
+  const aEmails = Array.isArray(a.emails) ? a.emails : []
+  const bEmails = Array.isArray(b.emails) ? b.emails : []
+  fields.emails = [...new Set([...aEmails, ...bEmails])]
+
+  const aPhones = Array.isArray(a.phones) ? a.phones : []
+  const bPhones = Array.isArray(b.phones) ? b.phones : []
+  fields.phones = [...new Set([...aPhones, ...bPhones])]
+
   return fields
 }
 
@@ -94,11 +104,31 @@ type AutoDedupeState = { status: "idle" | "confirm" | "running" | "done" | "erro
 export default function MergePage() {
   const [pairs, setPairs]         = useState<DupePair[]>([])
   const [loading, setLoading]     = useState(true)
-  const [selected, setSelected]   = useState<number | null>(null)
+  const [selectedKey, setSelectedKey] = useState<string | null>(null)
+  const [search, setSearch]       = useState("")
   const [choices, setChoices]     = useState<Record<string, Choice>>({})
   const [swapped, setSwapped]     = useState(false)
   const [merging, setMerging]     = useState(false)
   const [autoDedupe, setAutoDedupe] = useState<AutoDedupeState>({ status: "idle", merged: 0, results: [] })
+
+  const filteredPairs = useMemo(() => {
+    if (!search.trim()) return pairs
+    const q = search.toLowerCase()
+    return pairs.filter(p =>
+      `${p.a.first} ${p.a.last}`.toLowerCase().includes(q) ||
+      `${p.b.first} ${p.b.last}`.toLowerCase().includes(q)
+    )
+  }, [pairs, search])
+
+  // how many pairs each person appears in across all pairs
+  const personPairCount = useMemo(() => {
+    const counts: Record<string, number> = {}
+    for (const p of pairs) {
+      counts[p.a.id] = (counts[p.a.id] || 0) + 1
+      counts[p.b.id] = (counts[p.b.id] || 0) + 1
+    }
+    return counts
+  }, [pairs])
 
   const load = useCallback(async () => {
     setLoading(true)
@@ -107,7 +137,7 @@ export default function MergePage() {
       const data: DupePair[] = await res.json()
       setPairs(data)
       if (data.length > 0) {
-        setSelected(0)
+        setSelectedKey(pairKey(data[0]))
         setChoices(initChoices(data[0].a, data[0].b))
       }
     }
@@ -116,10 +146,10 @@ export default function MergePage() {
 
   useEffect(() => { load() }, [load])
 
-  function selectPair(idx: number) {
-    setSelected(idx)
+  function selectPair(p: DupePair) {
+    setSelectedKey(pairKey(p))
     setSwapped(false)
-    setChoices(initChoices(pairs[idx].a, pairs[idx].b))
+    setChoices(initChoices(p.a, p.b))
   }
 
   function swap() {
@@ -136,7 +166,6 @@ export default function MergePage() {
   function setChoice(key: string, side: "a" | "b") {
     setChoices(prev => {
       const cur = prev[key]
-      // For notes: toggle to "both" when clicking the other side
       if (key === "notes") {
         if (cur === "both") return { ...prev, [key]: side }
         if (cur !== side)   return { ...prev, [key]: "both" }
@@ -146,10 +175,9 @@ export default function MergePage() {
   }
 
   async function handleMerge() {
-    if (selected === null) return
-    const pair = pairs[selected]
-    const a = swapped ? pair.b : pair.a
-    const b = swapped ? pair.a : pair.b
+    if (!pair || !a || !b) return
+    const deletedId = b.id
+    const currentKey = selectedKey
 
     setMerging(true)
     const res = await fetch("/api/contacts/merge", {
@@ -159,26 +187,25 @@ export default function MergePage() {
     })
 
     if (res.ok) {
-      const deletedId = b.id
-      const remaining = pairs.filter((p, i) =>
-        i !== selected && p.a.id !== deletedId && p.b.id !== deletedId
+      const remaining = pairs.filter(p =>
+        pairKey(p) !== currentKey && p.a.id !== deletedId && p.b.id !== deletedId
       )
       setPairs(remaining)
-      const nextIdx = remaining.length > 0 ? 0 : null
-      setSelected(nextIdx)
+      const next = remaining.length > 0 ? remaining[0] : null
+      setSelectedKey(next ? pairKey(next) : null)
       setSwapped(false)
-      if (nextIdx !== null) setChoices(initChoices(remaining[0].a, remaining[0].b))
+      if (next) setChoices(initChoices(next.a, next.b))
     }
     setMerging(false)
   }
 
   function skipPair() {
-    const remaining = pairs.filter((_, i) => i !== selected)
+    const remaining = pairs.filter(p => pairKey(p) !== selectedKey)
     setPairs(remaining)
-    const nextIdx = remaining.length > 0 ? 0 : null
-    setSelected(nextIdx)
+    const next = remaining.length > 0 ? remaining[0] : null
+    setSelectedKey(next ? pairKey(next) : null)
     setSwapped(false)
-    if (nextIdx !== null) setChoices(initChoices(remaining[0].a, remaining[0].b))
+    if (next) setChoices(initChoices(next.a, next.b))
   }
 
   async function runAutoDedupe() {
@@ -188,14 +215,13 @@ export default function MergePage() {
       if (!res.ok) throw new Error(`${res.status}`)
       const data = await res.json()
       setAutoDedupe({ status: "done", merged: data.merged, results: data.results })
-      // Reload the manual dedupe list
       if (data.merged > 0) load()
     } catch (e) {
       setAutoDedupe({ status: "error", merged: 0, results: [], error: String(e) })
     }
   }
 
-  const pair = selected !== null ? pairs[selected] : null
+  const pair = selectedKey ? pairs.find(p => pairKey(p) === selectedKey) ?? null : null
   const a    = pair ? (swapped ? pair.b : pair.a) : null
   const b    = pair ? (swapped ? pair.a : pair.b) : null
 
@@ -302,47 +328,116 @@ export default function MergePage() {
 
           {/* ── Pair list ─────────────────────────────────────────── */}
           <div style={{ display: "flex", flexDirection: "column", gap: "5px" }}>
-            {pairs.map((p, idx) => {
-              const active = selected === idx
-              return (
+
+            {/* Search input */}
+            <div style={{ position: "relative", marginBottom: "2px" }}>
+              <input
+                type="text"
+                placeholder="Search by name…"
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+                style={{
+                  width: "100%",
+                  padding: "7px 28px 7px 10px",
+                  fontSize: "12px",
+                  fontFamily: "inherit",
+                  color: "var(--ink)",
+                  background: "var(--surface)",
+                  border: "1px solid var(--border)",
+                  borderRadius: "8px",
+                  outline: "none",
+                  boxSizing: "border-box",
+                }}
+              />
+              {search && (
                 <button
-                  key={`${p.a.id}-${p.b.id}`}
-                  onClick={() => selectPair(idx)}
+                  onClick={() => setSearch("")}
                   style={{
-                    textAlign: "left",
-                    padding: "11px 13px",
-                    background: active ? "var(--accent-soft)" : "var(--surface)",
-                    border: `1px solid ${active ? "var(--accent)" : "var(--border)"}`,
-                    borderRadius: "10px",
+                    position: "absolute",
+                    right: "7px",
+                    top: "50%",
+                    transform: "translateY(-50%)",
+                    background: "transparent",
+                    border: "none",
                     cursor: "pointer",
-                    fontFamily: "inherit",
-                    transition: "all 0.1s",
+                    color: "var(--ink-4)",
+                    fontSize: "12px",
+                    padding: "0",
+                    lineHeight: 1,
                   }}
                 >
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "4px" }}>
-                    <span style={{ fontSize: "12px", fontWeight: 500, color: "var(--ink)" }}>
-                      {p.a.first} {p.a.last}
-                    </span>
-                    <span style={{
-                      fontSize: "10px",
-                      fontWeight: 600,
-                      color: scoreColor(p.score),
-                      background: scoreBg(p.score),
-                      padding: "2px 7px",
-                      borderRadius: "20px",
-                      flexShrink: 0,
-                      marginLeft: "6px",
-                    }}>
-                      {Math.round(p.score * 100)}%
-                    </span>
-                  </div>
-                  <div style={{ fontSize: "11px", color: "var(--ink-3)", marginBottom: "3px" }}>
-                    {p.b.first} {p.b.last}
-                  </div>
-                  <div style={{ fontSize: "10px", color: "var(--ink-4)" }}>{p.reason}</div>
+                  ✕
                 </button>
-              )
-            })}
+              )}
+            </div>
+
+            {/* Filtered count */}
+            {search.trim() && (
+              <div style={{ fontSize: "10px", color: "var(--ink-4)", padding: "0 2px 2px" }}>
+                {filteredPairs.length} of {pairs.length} pair{pairs.length === 1 ? "" : "s"}
+              </div>
+            )}
+
+            {filteredPairs.length === 0 && search.trim() ? (
+              <div style={{ padding: "20px 12px", textAlign: "center", fontSize: "11px", color: "var(--ink-4)", background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "10px" }}>
+                No pairs match "{search}"
+              </div>
+            ) : (
+              filteredPairs.map((p) => {
+                const key = pairKey(p)
+                const active = selectedKey === key
+                const aCount = personPairCount[p.a.id] ?? 0
+                const bCount = personPairCount[p.b.id] ?? 0
+                return (
+                  <button
+                    key={key}
+                    onClick={() => selectPair(p)}
+                    style={{
+                      textAlign: "left",
+                      padding: "11px 13px",
+                      background: active ? "var(--accent-soft)" : "var(--surface)",
+                      border: `1px solid ${active ? "var(--accent)" : "var(--border)"}`,
+                      borderRadius: "10px",
+                      cursor: "pointer",
+                      fontFamily: "inherit",
+                      transition: "all 0.1s",
+                    }}
+                  >
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "4px" }}>
+                      <span style={{ fontSize: "12px", fontWeight: 500, color: "var(--ink)" }}>
+                        {p.a.first} {p.a.last}
+                        {aCount > 1 && (
+                          <span style={{ fontSize: "9px", fontWeight: 400, color: "var(--ink-4)", marginLeft: "5px" }}>
+                            {aCount} pairs
+                          </span>
+                        )}
+                      </span>
+                      <span style={{
+                        fontSize: "10px",
+                        fontWeight: 600,
+                        color: scoreColor(p.score),
+                        background: scoreBg(p.score),
+                        padding: "2px 7px",
+                        borderRadius: "20px",
+                        flexShrink: 0,
+                        marginLeft: "6px",
+                      }}>
+                        {Math.round(p.score * 100)}%
+                      </span>
+                    </div>
+                    <div style={{ fontSize: "11px", color: "var(--ink-3)", marginBottom: "3px" }}>
+                      {p.b.first} {p.b.last}
+                      {bCount > 1 && (
+                        <span style={{ fontSize: "9px", color: "var(--ink-4)", marginLeft: "5px" }}>
+                          {bCount} pairs
+                        </span>
+                      )}
+                    </div>
+                    <div style={{ fontSize: "10px", color: "var(--ink-4)" }}>{p.reason}</div>
+                  </button>
+                )
+              })
+            )}
           </div>
 
           {/* ── Merge panel ───────────────────────────────────────── */}
@@ -465,6 +560,48 @@ export default function MergePage() {
                     </div>
                   )
                 })}
+
+                {/* Emails row — always union */}
+                {(() => {
+                  const aEmails = Array.isArray(a.emails) ? a.emails : []
+                  const bEmails = Array.isArray(b.emails) ? b.emails : []
+                  const merged = [...new Set([...aEmails, ...bEmails])]
+                  if (merged.length === 0) return null
+                  return (
+                    <div style={{ display: "grid", gridTemplateColumns: "108px 1fr", padding: "8px 18px", borderBottom: "1px solid var(--border)", gap: "10px", alignItems: "flex-start" }}>
+                      <div style={{ fontSize: "10px", color: "var(--ink-4)", paddingTop: "5px" }}>Emails</div>
+                      <div style={{ display: "flex", flexWrap: "wrap", gap: "4px", alignItems: "center" }}>
+                        {merged.map(e => (
+                          <span key={e} style={{ padding: "2px 8px", borderRadius: "20px", background: "var(--surface2)", color: "var(--ink-2)", fontSize: "11px", border: "1px solid var(--border)" }}>
+                            {e}
+                          </span>
+                        ))}
+                        <span style={{ fontSize: "10px", color: "var(--ink-4)", marginLeft: "2px" }}>merged</span>
+                      </div>
+                    </div>
+                  )
+                })()}
+
+                {/* Phones row — always union */}
+                {(() => {
+                  const aPhones = Array.isArray(a.phones) ? a.phones : []
+                  const bPhones = Array.isArray(b.phones) ? b.phones : []
+                  const merged = [...new Set([...aPhones, ...bPhones])]
+                  if (merged.length === 0) return null
+                  return (
+                    <div style={{ display: "grid", gridTemplateColumns: "108px 1fr", padding: "8px 18px", borderBottom: "1px solid var(--border)", gap: "10px", alignItems: "flex-start" }}>
+                      <div style={{ fontSize: "10px", color: "var(--ink-4)", paddingTop: "5px" }}>Phones</div>
+                      <div style={{ display: "flex", flexWrap: "wrap", gap: "4px", alignItems: "center" }}>
+                        {merged.map(p => (
+                          <span key={p} style={{ padding: "2px 8px", borderRadius: "20px", background: "var(--surface2)", color: "var(--ink-2)", fontSize: "11px", border: "1px solid var(--border)" }}>
+                            {p}
+                          </span>
+                        ))}
+                        <span style={{ fontSize: "10px", color: "var(--ink-4)", marginLeft: "2px" }}>merged</span>
+                      </div>
+                    </div>
+                  )
+                })()}
 
                 {/* Tags row */}
                 {(() => {

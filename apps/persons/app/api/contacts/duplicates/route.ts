@@ -13,8 +13,10 @@ export async function GET() {
 
   const parsed = persons.map(p => ({
     ...(p as unknown as Person),
-    tags: parseTags(p.tags),
+    tags:   parseTags(p.tags),
     values: parseTags(p.values),
+    emails: parseTags(p.emails),
+    phones: parseTags(p.phones),
     interactionCount: p._count.interactions,
     planCount: p._count.plans,
   }))
