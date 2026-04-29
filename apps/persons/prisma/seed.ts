@@ -1,11 +1,6 @@
 import "dotenv/config"
-import { PrismaClient } from "../app/generated/prisma/client"
-import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3"
+import { db } from "@life-os/db"
 import { assignColor } from "../lib/colors"
-
-const url = process.env.DATABASE_URL ?? "file:./persons.db"
-const adapter = new PrismaBetterSqlite3({ url })
-const db = new PrismaClient({ adapter })
 
 async function main() {
   // Clear existing data
@@ -307,7 +302,7 @@ async function main() {
 
 main()
   .then(() => db.$disconnect())
-  .catch(e => {
+  .catch((e: unknown) => {
     console.error(e)
     db.$disconnect()
     process.exit(1)
