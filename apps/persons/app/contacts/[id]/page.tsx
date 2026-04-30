@@ -4,7 +4,7 @@ import { useEffect, useState, use } from "react"
 import { useRouter } from "next/navigation"
 import {
   Avatar, BackLink, Button, Card, Chip,
-  EmptyState, ProgressBar, Spinner, StatBlock,
+  EmptyState, Spinner,
 } from "@life-os/ui"
 import InteractionCard from "@/components/interactions/InteractionCard"
 import EditPersonModal from "@/components/persons/EditPersonModal"
@@ -98,6 +98,7 @@ export default function PersonDetailPage({ params }: { params: Promise<{ id: str
             size="lg"
             color={person.colorSoft ?? undefined}
             textColor={person.color ?? undefined}
+            style={{ borderRadius: "50%", border: `1.5px solid ${person.color ?? "var(--border)"}22` }}
           />
           <div style={{ flex: 1, minWidth: 0 }}>
             <h1 style={{
@@ -131,8 +132,8 @@ export default function PersonDetailPage({ params }: { params: Promise<{ id: str
             )}
           </div>
           <div style={{ display: "flex", gap: "8px", flexShrink: 0 }}>
-            <Button variant="ghost" size="sm" onClick={() => setShowEdit(true)}>Edit</Button>
-            <Button variant="danger" size="sm" onClick={handleDelete}>Delete</Button>
+            <Button variant="ghost" size="sm" onClick={() => setShowEdit(true)} style={{ borderRadius: "6px", textTransform: "none", letterSpacing: 0 }}>Edit</Button>
+            <Button variant="danger" size="sm" onClick={handleDelete} style={{ borderRadius: "6px", textTransform: "none", letterSpacing: 0 }}>Delete</Button>
           </div>
         </div>
 
@@ -147,19 +148,15 @@ export default function PersonDetailPage({ params }: { params: Promise<{ id: str
           alignItems: "center",
         }}>
           <div style={{ display: "flex", gap: "28px", flex: 1 }}>
-            <StatBlock
-              label="Last contact"
-              value={relativeTime(person.lastInteractionDate)}
-              accent={person.attentionScore >= 1}
-            />
-            <StatBlock label="Interactions" value={person.interactions.length} />
-            <StatBlock label="Closeness" value={closenessLabel(person.closeness)} />
+            <Stat label="Last contact" value={relativeTime(person.lastInteractionDate)} accent={person.attentionScore >= 1} />
+            <Stat label="Interactions" value={String(person.interactions.length)} />
+            <Stat label="Closeness" value={closenessLabel(person.closeness)} />
           </div>
-          <ProgressBar
-            value={closenessPercent[person.closeness] ?? 0}
-            color={person.color ?? "var(--accent)"}
-            style={{ width: "140px", flexShrink: 0 }}
-          />
+          <div style={{ width: "120px", flexShrink: 0 }}>
+            <div style={{ width: "100%", height: "4px", background: "var(--surface2)", borderRadius: "2px", overflow: "hidden" }}>
+              <div style={{ width: `${closenessPercent[person.closeness] ?? 0}%`, height: "100%", background: person.color ?? "var(--accent)", borderRadius: "2px" }} />
+            </div>
+          </div>
         </div>
 
         {/* Contact info */}
@@ -204,7 +201,7 @@ export default function PersonDetailPage({ params }: { params: Promise<{ id: str
       <Card
         title="Active Plans"
         headerAction={
-          <Button variant="ghost" size="sm" onClick={() => setShowAddPlan(true)}>+ Plan</Button>
+          <Button variant="ghost" size="sm" onClick={() => setShowAddPlan(true)} style={{ borderRadius: "6px", textTransform: "none", letterSpacing: 0 }}>+ Plan</Button>
         }
         style={{ borderRadius: "14px", marginBottom: "20px", overflow: "hidden" }}
       >
@@ -249,6 +246,7 @@ export default function PersonDetailPage({ params }: { params: Promise<{ id: str
                   variant="ghost"
                   size="sm"
                   onClick={() => handleMarkPlanDone(plan.id)}
+                  style={{ borderRadius: "6px", textTransform: "none", letterSpacing: 0 }}
                 >
                   Done
                 </Button>
@@ -262,7 +260,7 @@ export default function PersonDetailPage({ params }: { params: Promise<{ id: str
       <Card
         title={`Interaction Log (${person.interactions.length})`}
         headerAction={
-          <Button variant="ghost" size="sm" onClick={() => setShowLogInteraction(true)}>+ Log</Button>
+          <Button variant="ghost" size="sm" onClick={() => setShowLogInteraction(true)} style={{ borderRadius: "6px", textTransform: "none", letterSpacing: 0 }}>+ Log</Button>
         }
         style={{ borderRadius: "14px", overflow: "hidden" }}
       >
@@ -304,6 +302,15 @@ export default function PersonDetailPage({ params }: { params: Promise<{ id: str
           onSaved={() => { setShowAddPlan(false); load() }}
         />
       )}
+    </div>
+  )
+}
+
+function Stat({ label, value, accent }: { label: string; value: string; accent?: boolean }) {
+  return (
+    <div>
+      <div style={{ fontSize: "10px", color: "var(--ink-4)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: "3px" }}>{label}</div>
+      <div style={{ fontSize: "13px", fontWeight: 500, color: accent ? "var(--accent)" : "var(--ink)" }}>{value}</div>
     </div>
   )
 }
