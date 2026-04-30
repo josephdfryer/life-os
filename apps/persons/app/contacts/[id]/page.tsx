@@ -2,12 +2,17 @@
 
 import { useEffect, useState, use } from "react"
 import { useRouter } from "next/navigation"
-import PersonAvatar from "@/components/persons/PersonAvatar"
+import {
+  Avatar, BackLink, Button, Card, Chip,
+  EmptyState, ProgressBar, Spinner, StatBlock,
+} from "@life-os/ui"
 import InteractionCard from "@/components/interactions/InteractionCard"
 import EditPersonModal from "@/components/persons/EditPersonModal"
 import LogInteractionModal from "@/components/interactions/LogInteractionModal"
 import AddPlanModal from "@/components/plans/AddPlanModal"
-import { relativeTime, closenessLabel, closenessWidth, parseTags, parseJsonArray, formatBirthday } from "@/lib/utils"
+import {
+  relativeTime, closenessLabel, parseTags, parseJsonArray, formatBirthday,
+} from "@/lib/utils"
 import { enrichWithAttention } from "@/lib/attention"
 import type { Person, Interaction, Plan } from "@/types"
 
@@ -18,6 +23,8 @@ type FullPerson = Person & {
   lastInteractionDate: Date | null
   daysSinceLast: number | null
 }
+
+const closenessPercent: Record<number, number> = { 1: 33, 2: 66, 3: 100 }
 
 export default function PersonDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params)
@@ -33,8 +40,7 @@ export default function PersonDetailPage({ params }: { params: Promise<{ id: str
     const res = await fetch(`/api/persons/${id}`)
     if (res.ok) {
       const data = await res.json()
-      const enriched = enrichWithAttention(data)
-      setPerson(enriched as FullPerson)
+      setPerson(enrichWithAttention(data) as FullPerson)
     }
     setLoading(false)
   }
@@ -58,110 +64,110 @@ export default function PersonDetailPage({ params }: { params: Promise<{ id: str
 
   if (loading) {
     return (
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "200px", color: "var(--ink-4)", fontSize: "12px" }}>
-        Loading…
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "200px" }}>
+        <Spinner size={20} color="var(--ink-4)" />
       </div>
     )
   }
 
   if (!person) {
     return (
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "200px", color: "var(--ink-4)", fontSize: "12px" }}>
-        Person not found.
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "200px" }}>
+        <EmptyState icon="?" title="Person not found" subtitle="This contact may have been deleted." />
       </div>
     )
   }
 
-  const tags = Array.isArray(person.tags) ? person.tags as unknown as string[] : parseTags(person.tags as unknown as string)
+  const tags = Array.isArray(person.tags)
+    ? person.tags as unknown as string[]
+    : parseTags(person.tags as unknown as string)
   const activePlans = person.plans.filter(p => p.status === "active")
 
   return (
     <div style={{ maxWidth: "720px", margin: "0 auto", padding: "32px 24px" }}>
-      {/* Back */}
-      <a
-        href="/contacts"
-        style={{ fontSize: "11px", color: "var(--ink-4)", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: "4px", marginBottom: "20px" }}
-      >
-        ← All Contacts
-      </a>
 
-      {/* Header */}
-      <div style={{
-        background: "var(--surface)",
-        border: "1px solid var(--border)",
-        borderRadius: "12px",
-        padding: "24px",
-        marginBottom: "20px",
-      }}>
-        <div style={{ display: "flex", alignItems: "flex-start", gap: "16px", marginBottom: "16px" }}>
-          <PersonAvatar
-            first={person.first}
-            last={person.last}
-            color={person.color}
-            colorSoft={person.colorSoft}
-            size={52}
-            fontSize={18}
+      <BackLink label="All Contacts" href="/contacts" style={{ marginBottom: "20px" }} />
+
+      {/* ── Header card ─────────────────────────────────────────── */}
+      <Card style={{ borderRadius: "14px", marginBottom: "20px", overflow: "hidden" }}>
+
+        {/* Name row */}
+        <div style={{ display: "flex", alignItems: "flex-start", gap: "16px", padding: "22px 22px 0" }}>
+          <Avatar
+            name={`${person.first} ${person.last}`}
+            size="lg"
+            color={person.colorSoft ?? undefined}
+            textColor={person.color ?? undefined}
           />
           <div style={{ flex: 1, minWidth: 0 }}>
-            <h1 style={{ fontFamily: "var(--font-playfair), serif", fontSize: "22px", fontWeight: 600, margin: "0 0 4px", color: "var(--ink)" }}>
+            <h1 style={{
+              fontFamily: "var(--font-display)",
+              fontSize: "22px",
+              fontWeight: 600,
+              margin: "0 0 4px",
+              color: "var(--ink)",
+            }}>
               {person.first} {person.last}
             </h1>
             {person.headline && (
-              <div style={{ fontSize: "12px", color: "var(--ink-3)", marginBottom: "8px" }}>{person.headline}</div>
+              <div style={{ fontSize: "12px", color: "var(--ink-3)", marginBottom: "8px" }}>
+                {person.headline}
+              </div>
             )}
-            <div style={{ display: "flex", flexWrap: "wrap", gap: "5px" }}>
-              {tags.map(tag => (
-                <span key={tag} style={{
-                  background: person.colorSoft ?? "var(--surface2)",
-                  color: person.color ?? "var(--ink-2)",
-                  padding: "2px 8px",
-                  borderRadius: "4px",
-                  fontSize: "10px",
-                  fontWeight: 500,
-                }}>
-                  {tag}
-                </span>
-              ))}
-            </div>
+            {tags.length > 0 && (
+              <div style={{ display: "flex", flexWrap: "wrap", gap: "5px" }}>
+                {tags.map(tag => (
+                  <Chip
+                    key={tag}
+                    label={tag}
+                    style={{
+                      background: person.colorSoft ?? "var(--surface2)",
+                      color: person.color ?? "var(--ink-2)",
+                      border: "none",
+                    }}
+                  />
+                ))}
+              </div>
+            )}
           </div>
           <div style={{ display: "flex", gap: "8px", flexShrink: 0 }}>
-            <button
-              onClick={() => setShowEdit(true)}
-              style={ghostBtnStyle}
-            >
-              Edit
-            </button>
-            <button
-              onClick={handleDelete}
-              style={{ ...ghostBtnStyle, color: "var(--accent)" }}
-            >
-              Delete
-            </button>
+            <Button variant="ghost" size="sm" onClick={() => setShowEdit(true)}>Edit</Button>
+            <Button variant="danger" size="sm" onClick={handleDelete}>Delete</Button>
           </div>
         </div>
 
         {/* Stats row */}
-        <div style={{ display: "flex", gap: "24px", padding: "14px 0", borderTop: "1px solid var(--border)", borderBottom: "1px solid var(--border)", marginBottom: "14px" }}>
-          <Stat label="Last contact" value={relativeTime(person.lastInteractionDate)} accent={person.attentionScore >= 1} />
-          <Stat label="Interactions" value={String(person.interactions.length)} />
-          <Stat label="Closeness" value={closenessLabel(person.closeness)} />
-          <div style={{ flex: 1 }}>
-            <div style={{ fontSize: "10px", color: "var(--ink-4)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: "5px" }}>Closeness</div>
-            <div style={{ width: "100%", height: "4px", background: "var(--surface2)", borderRadius: "2px", overflow: "hidden" }}>
-              <div style={{ width: closenessWidth(person.closeness), height: "100%", background: person.color ?? "var(--accent)", borderRadius: "2px" }} />
-            </div>
+        <div style={{
+          display: "flex",
+          gap: "0",
+          padding: "16px 22px",
+          marginTop: "18px",
+          borderTop: "1px solid var(--separator)",
+          borderBottom: "1px solid var(--separator)",
+          alignItems: "center",
+        }}>
+          <div style={{ display: "flex", gap: "28px", flex: 1 }}>
+            <StatBlock
+              label="Last contact"
+              value={relativeTime(person.lastInteractionDate)}
+              accent={person.attentionScore >= 1}
+            />
+            <StatBlock label="Interactions" value={person.interactions.length} />
+            <StatBlock label="Closeness" value={closenessLabel(person.closeness)} />
           </div>
+          <ProgressBar
+            value={closenessPercent[person.closeness] ?? 0}
+            color={person.color ?? "var(--accent)"}
+            style={{ width: "140px", flexShrink: 0 }}
+          />
         </div>
 
-        {/* Contact info — grouped by type */}
-        {(person.emails.length > 0 || person.phones.length > 0 || person.birthday || person.company || person.location || person.linkedin || person.twitter || person.website) && (
-          <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-            {person.company && (
-              <ContactRow icon="○" items={[person.company]} />
-            )}
-            {person.location && (
-              <ContactRow icon="◎" items={[person.location]} />
-            )}
+        {/* Contact info */}
+        {(person.emails.length > 0 || person.phones.length > 0 || person.birthday ||
+          person.company || person.location || person.linkedin || person.twitter || person.website) && (
+          <div style={{ display: "flex", flexDirection: "column", gap: "8px", padding: "16px 22px" }}>
+            {person.company && <ContactRow icon="○" items={[person.company]} />}
+            {person.location && <ContactRow icon="◎" items={[person.location]} />}
             {person.emails.length > 0 && (
               <ContactRow icon="✉" items={person.emails} hrefPrefix="mailto:" />
             )}
@@ -172,31 +178,42 @@ export default function PersonDetailPage({ params }: { params: Promise<{ id: str
               <ContactRow icon="◑" items={[formatBirthday(person.birthday) ?? person.birthday]} />
             )}
             {(person.linkedin || person.twitter || person.website) && (
-              <ContactRow icon="⊕" items={[person.linkedin, person.twitter, person.website].filter(Boolean) as string[]} hrefPrefix="" isLinks />
+              <ContactRow
+                icon="⊕"
+                items={[person.linkedin, person.twitter, person.website].filter(Boolean) as string[]}
+                isLinks
+              />
             )}
           </div>
         )}
-      </div>
+      </Card>
 
-      {/* Notes */}
+      {/* ── Notes ───────────────────────────────────────────────── */}
       {person.notes && (
-        <Card title="Notes" style={{ marginBottom: "20px" }}>
-          <p style={{ margin: 0, fontSize: "12px", color: "var(--ink-2)", lineHeight: 1.6, whiteSpace: "pre-wrap" }}>
+        <Card
+          title="Notes"
+          style={{ borderRadius: "14px", marginBottom: "20px", overflow: "hidden" }}
+        >
+          <p style={{ margin: 0, fontSize: "12px", color: "var(--ink-2)", lineHeight: 1.7, whiteSpace: "pre-wrap" }}>
             {person.notes}
           </p>
         </Card>
       )}
 
-      {/* Plans */}
+      {/* ── Active Plans ─────────────────────────────────────────── */}
       <Card
         title="Active Plans"
-        action={
-          <button onClick={() => setShowAddPlan(true)} style={inlineActionStyle}>+ Plan</button>
+        headerAction={
+          <Button variant="ghost" size="sm" onClick={() => setShowAddPlan(true)}>+ Plan</Button>
         }
-        style={{ marginBottom: "20px" }}
+        style={{ borderRadius: "14px", marginBottom: "20px", overflow: "hidden" }}
       >
         {activePlans.length === 0 ? (
-          <div style={{ fontSize: "12px", color: "var(--ink-4)", padding: "8px 0" }}>No active plans.</div>
+          <EmptyState
+            icon="◇"
+            title="No active plans"
+            subtitle="Add a plan to track what you want to do with this person."
+          />
         ) : (
           <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
             {activePlans.map(plan => (
@@ -204,7 +221,7 @@ export default function PersonDetailPage({ params }: { params: Promise<{ id: str
                 padding: "10px 12px",
                 background: "var(--bg)",
                 border: "1px solid var(--border)",
-                borderRadius: "7px",
+                borderRadius: "8px",
                 display: "flex",
                 alignItems: "flex-start",
                 gap: "10px",
@@ -212,9 +229,12 @@ export default function PersonDetailPage({ params }: { params: Promise<{ id: str
                 <div style={{ flex: 1 }}>
                   <div style={{ fontSize: "12px", color: "var(--ink)", lineHeight: 1.5 }}>{plan.text}</div>
                   {plan.timescale && (
-                    <div style={{ fontSize: "10px", color: "var(--ink-4)", marginTop: "3px" }}>{plan.timescale}</div>
+                    <div style={{ fontSize: "10px", color: "var(--ink-4)", marginTop: "3px" }}>
+                      {plan.timescale}
+                    </div>
                   )}
-                  {plan.successSignals && parseJsonArray(plan.successSignals as unknown as string).length > 0 && (
+                  {plan.successSignals &&
+                    parseJsonArray(plan.successSignals as unknown as string).length > 0 && (
                     <div style={{ marginTop: "6px" }}>
                       {parseJsonArray(plan.successSignals as unknown as string).map((s, i) => (
                         <div key={i} style={{ display: "flex", gap: "6px", marginBottom: "2px" }}>
@@ -225,34 +245,38 @@ export default function PersonDetailPage({ params }: { params: Promise<{ id: str
                     </div>
                   )}
                 </div>
-                <button
+                <Button
+                  variant="ghost"
+                  size="sm"
                   onClick={() => handleMarkPlanDone(plan.id)}
-                  style={{ ...ghostBtnStyle, fontSize: "10px", padding: "4px 10px" }}
                 >
                   Done
-                </button>
+                </Button>
               </div>
             ))}
           </div>
         )}
       </Card>
 
-      {/* Interaction Log */}
+      {/* ── Interaction Log ──────────────────────────────────────── */}
       <Card
         title={`Interaction Log (${person.interactions.length})`}
-        action={
-          <button onClick={() => setShowLogInteraction(true)} style={inlineActionStyle}>+ Log</button>
+        headerAction={
+          <Button variant="ghost" size="sm" onClick={() => setShowLogInteraction(true)}>+ Log</Button>
         }
+        style={{ borderRadius: "14px", overflow: "hidden" }}
       >
         {person.interactions.length === 0 ? (
-          <div style={{ fontSize: "12px", color: "var(--ink-4)", padding: "8px 0" }}>No interactions logged yet.</div>
+          <EmptyState
+            icon="○"
+            title="No interactions yet"
+            subtitle="Log a call, coffee, or message to start tracking this relationship."
+          />
         ) : (
           <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
             {[...person.interactions]
               .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
-              .map(ix => (
-                <InteractionCard key={ix.id} interaction={ix} />
-              ))}
+              .map(ix => <InteractionCard key={ix.id} interaction={ix} />)}
           </div>
         )}
       </Card>
@@ -264,7 +288,6 @@ export default function PersonDetailPage({ params }: { params: Promise<{ id: str
           onSaved={() => { setShowEdit(false); load() }}
         />
       )}
-
       {showLogInteraction && (
         <LogInteractionModal
           personId={person.id}
@@ -273,7 +296,6 @@ export default function PersonDetailPage({ params }: { params: Promise<{ id: str
           onSaved={() => { setShowLogInteraction(false); load() }}
         />
       )}
-
       {showAddPlan && (
         <AddPlanModal
           personId={person.id}
@@ -286,104 +308,48 @@ export default function PersonDetailPage({ params }: { params: Promise<{ id: str
   )
 }
 
-function Stat({ label, value, accent }: { label: string; value: string; accent?: boolean }) {
-  return (
-    <div>
-      <div style={{ fontSize: "10px", color: "var(--ink-4)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: "3px" }}>{label}</div>
-      <div style={{ fontSize: "13px", fontWeight: 500, color: accent ? "var(--accent)" : "var(--ink)" }}>{value}</div>
-    </div>
-  )
-}
-
-function ContactRow({ icon, items, hrefPrefix, isLinks }: { icon: string; items: string[]; hrefPrefix?: string; isLinks?: boolean }) {
+function ContactRow({
+  icon, items, hrefPrefix, isLinks,
+}: {
+  icon: string
+  items: string[]
+  hrefPrefix?: string
+  isLinks?: boolean
+}) {
   return (
     <div style={{ display: "flex", alignItems: "flex-start", gap: "10px" }}>
-      <span style={{ fontSize: "12px", color: "var(--ink-4)", width: "16px", textAlign: "center", flexShrink: 0, paddingTop: "3px" }}>{icon}</span>
+      <span style={{
+        fontSize: "12px", color: "var(--ink-4)", width: "16px",
+        textAlign: "center", flexShrink: 0, paddingTop: "4px",
+      }}>
+        {icon}
+      </span>
       <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
         {items.map((item, i) => {
-          const href = hrefPrefix != null
-            ? isLinks ? item : `${hrefPrefix}${item}`
-            : undefined
+          const href = isLinks ? item : hrefPrefix ? `${hrefPrefix}${item}` : undefined
           const chip = (
-            <span style={{
-              display: "inline-block",
-              fontSize: "12px",
-              color: href ? "var(--accent)" : "var(--ink-2)",
-              padding: "3px 10px",
-              borderRadius: "6px",
-              background: href ? "var(--accent-soft)" : "var(--bg)",
-              border: `1px solid ${href ? "var(--accent)" : "var(--border)"}`,
-              lineHeight: 1.5,
-              wordBreak: "break-all",
-            }}>
-              {item}
-            </span>
+            <Chip
+              key={i}
+              label={item}
+              variant={href ? "accent" : "default"}
+              style={{ wordBreak: "break-all" }}
+            />
           )
           return href
-            ? <a key={i} href={href} target={isLinks ? "_blank" : undefined} rel={isLinks ? "noopener noreferrer" : undefined} style={{ textDecoration: "none" }}>{chip}</a>
-            : <span key={i}>{chip}</span>
+            ? (
+              <a
+                key={i}
+                href={href}
+                target={isLinks ? "_blank" : undefined}
+                rel={isLinks ? "noopener noreferrer" : undefined}
+                style={{ textDecoration: "none" }}
+              >
+                {chip}
+              </a>
+            )
+            : chip
         })}
       </div>
     </div>
   )
-}
-
-function Card({
-  title,
-  action,
-  children,
-  style,
-}: {
-  title: string
-  action?: React.ReactNode
-  children: React.ReactNode
-  style?: React.CSSProperties
-}) {
-  return (
-    <div style={{
-      background: "var(--surface)",
-      border: "1px solid var(--border)",
-      borderRadius: "12px",
-      overflow: "hidden",
-      ...style,
-    }}>
-      <div style={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        padding: "14px 18px",
-        borderBottom: "1px solid var(--border)",
-      }}>
-        <h3 style={{ margin: 0, fontSize: "11px", fontWeight: 500, color: "var(--ink-3)", textTransform: "uppercase", letterSpacing: "0.07em" }}>
-          {title}
-        </h3>
-        {action}
-      </div>
-      <div style={{ padding: "16px 18px" }}>
-        {children}
-      </div>
-    </div>
-  )
-}
-
-const ghostBtnStyle: React.CSSProperties = {
-  padding: "6px 14px",
-  borderRadius: "6px",
-  border: "1px solid var(--border)",
-  background: "transparent",
-  color: "var(--ink-3)",
-  cursor: "pointer",
-  fontFamily: "inherit",
-  fontSize: "11px",
-}
-
-const inlineActionStyle: React.CSSProperties = {
-  padding: "4px 12px",
-  borderRadius: "5px",
-  border: "1px solid var(--border)",
-  background: "transparent",
-  color: "var(--ink-3)",
-  cursor: "pointer",
-  fontFamily: "inherit",
-  fontSize: "10px",
 }
