@@ -103,19 +103,6 @@ export function scorePair(
     }
   }
 
-  // Same first + matching last initial
-  const firstSim = jaroWinkler(norm(a.first), norm(b.first))
-  if (
-    firstSim >= 0.92 &&
-    a.last && b.last &&
-    a.last[0].toLowerCase() === b.last[0].toLowerCase()
-  ) {
-    const score = firstSim * 0.86
-    if (score >= 0.78) {
-      return { score, reason: "Same first name, matching last initial" }
-    }
-  }
-
   return null
 }
 
