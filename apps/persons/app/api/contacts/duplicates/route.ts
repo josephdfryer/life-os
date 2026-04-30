@@ -11,7 +11,7 @@ export async function GET() {
     },
   })
 
-  const parsed = persons.map(p => ({
+  const parsed = persons.map((p: typeof persons[number]) => ({
     ...(p as unknown as Person),
     tags:   parseTags(p.tags),
     values: parseTags(p.values),

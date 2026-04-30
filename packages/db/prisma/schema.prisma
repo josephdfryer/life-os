@@ -18,8 +18,8 @@ model Person {
   first        String
   last         String
   headline     String?
-  email        String?
-  phone        String?
+  emails       String        @default("[]")
+  phones       String        @default("[]")
   birthday     String?
   closeness    Int           @default(2)
   tags         String        @default("[]")
@@ -39,7 +39,6 @@ model Person {
   disassembledBy Assembly[]  @relation("DisassembledBy")
 
   @@index([last, first])
-  @@index([email])
   @@index([closeness])
   @@index([birthday])
   @@index([createdAt])

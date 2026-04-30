@@ -41,8 +41,8 @@ export type PersonMinAggregateOutputType = {
   first: string | null
   last: string | null
   headline: string | null
-  email: string | null
-  phone: string | null
+  emails: string | null
+  phones: string | null
   birthday: string | null
   closeness: number | null
   tags: string | null
@@ -64,8 +64,8 @@ export type PersonMaxAggregateOutputType = {
   first: string | null
   last: string | null
   headline: string | null
-  email: string | null
-  phone: string | null
+  emails: string | null
+  phones: string | null
   birthday: string | null
   closeness: number | null
   tags: string | null
@@ -87,8 +87,8 @@ export type PersonCountAggregateOutputType = {
   first: number
   last: number
   headline: number
-  email: number
-  phone: number
+  emails: number
+  phones: number
   birthday: number
   closeness: number
   tags: number
@@ -120,8 +120,8 @@ export type PersonMinAggregateInputType = {
   first?: true
   last?: true
   headline?: true
-  email?: true
-  phone?: true
+  emails?: true
+  phones?: true
   birthday?: true
   closeness?: true
   tags?: true
@@ -143,8 +143,8 @@ export type PersonMaxAggregateInputType = {
   first?: true
   last?: true
   headline?: true
-  email?: true
-  phone?: true
+  emails?: true
+  phones?: true
   birthday?: true
   closeness?: true
   tags?: true
@@ -166,8 +166,8 @@ export type PersonCountAggregateInputType = {
   first?: true
   last?: true
   headline?: true
-  email?: true
-  phone?: true
+  emails?: true
+  phones?: true
   birthday?: true
   closeness?: true
   tags?: true
@@ -276,8 +276,8 @@ export type PersonGroupByOutputType = {
   first: string
   last: string
   headline: string | null
-  email: string | null
-  phone: string | null
+  emails: string
+  phones: string
   birthday: string | null
   closeness: number
   tags: string
@@ -322,8 +322,8 @@ export type PersonWhereInput = {
   first?: Prisma.StringFilter<"Person"> | string
   last?: Prisma.StringFilter<"Person"> | string
   headline?: Prisma.StringNullableFilter<"Person"> | string | null
-  email?: Prisma.StringNullableFilter<"Person"> | string | null
-  phone?: Prisma.StringNullableFilter<"Person"> | string | null
+  emails?: Prisma.StringFilter<"Person"> | string
+  phones?: Prisma.StringFilter<"Person"> | string
   birthday?: Prisma.StringNullableFilter<"Person"> | string | null
   closeness?: Prisma.IntFilter<"Person"> | number
   tags?: Prisma.StringFilter<"Person"> | string
@@ -350,8 +350,8 @@ export type PersonOrderByWithRelationInput = {
   first?: Prisma.SortOrder
   last?: Prisma.SortOrder
   headline?: Prisma.SortOrderInput | Prisma.SortOrder
-  email?: Prisma.SortOrderInput | Prisma.SortOrder
-  phone?: Prisma.SortOrderInput | Prisma.SortOrder
+  emails?: Prisma.SortOrder
+  phones?: Prisma.SortOrder
   birthday?: Prisma.SortOrderInput | Prisma.SortOrder
   closeness?: Prisma.SortOrder
   tags?: Prisma.SortOrder
@@ -381,8 +381,8 @@ export type PersonWhereUniqueInput = Prisma.AtLeast<{
   first?: Prisma.StringFilter<"Person"> | string
   last?: Prisma.StringFilter<"Person"> | string
   headline?: Prisma.StringNullableFilter<"Person"> | string | null
-  email?: Prisma.StringNullableFilter<"Person"> | string | null
-  phone?: Prisma.StringNullableFilter<"Person"> | string | null
+  emails?: Prisma.StringFilter<"Person"> | string
+  phones?: Prisma.StringFilter<"Person"> | string
   birthday?: Prisma.StringNullableFilter<"Person"> | string | null
   closeness?: Prisma.IntFilter<"Person"> | number
   tags?: Prisma.StringFilter<"Person"> | string
@@ -409,8 +409,8 @@ export type PersonOrderByWithAggregationInput = {
   first?: Prisma.SortOrder
   last?: Prisma.SortOrder
   headline?: Prisma.SortOrderInput | Prisma.SortOrder
-  email?: Prisma.SortOrderInput | Prisma.SortOrder
-  phone?: Prisma.SortOrderInput | Prisma.SortOrder
+  emails?: Prisma.SortOrder
+  phones?: Prisma.SortOrder
   birthday?: Prisma.SortOrderInput | Prisma.SortOrder
   closeness?: Prisma.SortOrder
   tags?: Prisma.SortOrder
@@ -440,8 +440,8 @@ export type PersonScalarWhereWithAggregatesInput = {
   first?: Prisma.StringWithAggregatesFilter<"Person"> | string
   last?: Prisma.StringWithAggregatesFilter<"Person"> | string
   headline?: Prisma.StringNullableWithAggregatesFilter<"Person"> | string | null
-  email?: Prisma.StringNullableWithAggregatesFilter<"Person"> | string | null
-  phone?: Prisma.StringNullableWithAggregatesFilter<"Person"> | string | null
+  emails?: Prisma.StringWithAggregatesFilter<"Person"> | string
+  phones?: Prisma.StringWithAggregatesFilter<"Person"> | string
   birthday?: Prisma.StringNullableWithAggregatesFilter<"Person"> | string | null
   closeness?: Prisma.IntWithAggregatesFilter<"Person"> | number
   tags?: Prisma.StringWithAggregatesFilter<"Person"> | string
@@ -463,8 +463,8 @@ export type PersonCreateInput = {
   first: string
   last: string
   headline?: string | null
-  email?: string | null
-  phone?: string | null
+  emails?: string
+  phones?: string
   birthday?: string | null
   closeness?: number
   tags?: string
@@ -491,8 +491,8 @@ export type PersonUncheckedCreateInput = {
   first: string
   last: string
   headline?: string | null
-  email?: string | null
-  phone?: string | null
+  emails?: string
+  phones?: string
   birthday?: string | null
   closeness?: number
   tags?: string
@@ -519,8 +519,8 @@ export type PersonUpdateInput = {
   first?: Prisma.StringFieldUpdateOperationsInput | string
   last?: Prisma.StringFieldUpdateOperationsInput | string
   headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emails?: Prisma.StringFieldUpdateOperationsInput | string
+  phones?: Prisma.StringFieldUpdateOperationsInput | string
   birthday?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   closeness?: Prisma.IntFieldUpdateOperationsInput | number
   tags?: Prisma.StringFieldUpdateOperationsInput | string
@@ -547,8 +547,8 @@ export type PersonUncheckedUpdateInput = {
   first?: Prisma.StringFieldUpdateOperationsInput | string
   last?: Prisma.StringFieldUpdateOperationsInput | string
   headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emails?: Prisma.StringFieldUpdateOperationsInput | string
+  phones?: Prisma.StringFieldUpdateOperationsInput | string
   birthday?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   closeness?: Prisma.IntFieldUpdateOperationsInput | number
   tags?: Prisma.StringFieldUpdateOperationsInput | string
@@ -575,8 +575,8 @@ export type PersonCreateManyInput = {
   first: string
   last: string
   headline?: string | null
-  email?: string | null
-  phone?: string | null
+  emails?: string
+  phones?: string
   birthday?: string | null
   closeness?: number
   tags?: string
@@ -598,8 +598,8 @@ export type PersonUpdateManyMutationInput = {
   first?: Prisma.StringFieldUpdateOperationsInput | string
   last?: Prisma.StringFieldUpdateOperationsInput | string
   headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emails?: Prisma.StringFieldUpdateOperationsInput | string
+  phones?: Prisma.StringFieldUpdateOperationsInput | string
   birthday?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   closeness?: Prisma.IntFieldUpdateOperationsInput | number
   tags?: Prisma.StringFieldUpdateOperationsInput | string
@@ -621,8 +621,8 @@ export type PersonUncheckedUpdateManyInput = {
   first?: Prisma.StringFieldUpdateOperationsInput | string
   last?: Prisma.StringFieldUpdateOperationsInput | string
   headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emails?: Prisma.StringFieldUpdateOperationsInput | string
+  phones?: Prisma.StringFieldUpdateOperationsInput | string
   birthday?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   closeness?: Prisma.IntFieldUpdateOperationsInput | number
   tags?: Prisma.StringFieldUpdateOperationsInput | string
@@ -644,8 +644,8 @@ export type PersonCountOrderByAggregateInput = {
   first?: Prisma.SortOrder
   last?: Prisma.SortOrder
   headline?: Prisma.SortOrder
-  email?: Prisma.SortOrder
-  phone?: Prisma.SortOrder
+  emails?: Prisma.SortOrder
+  phones?: Prisma.SortOrder
   birthday?: Prisma.SortOrder
   closeness?: Prisma.SortOrder
   tags?: Prisma.SortOrder
@@ -671,8 +671,8 @@ export type PersonMaxOrderByAggregateInput = {
   first?: Prisma.SortOrder
   last?: Prisma.SortOrder
   headline?: Prisma.SortOrder
-  email?: Prisma.SortOrder
-  phone?: Prisma.SortOrder
+  emails?: Prisma.SortOrder
+  phones?: Prisma.SortOrder
   birthday?: Prisma.SortOrder
   closeness?: Prisma.SortOrder
   tags?: Prisma.SortOrder
@@ -694,8 +694,8 @@ export type PersonMinOrderByAggregateInput = {
   first?: Prisma.SortOrder
   last?: Prisma.SortOrder
   headline?: Prisma.SortOrder
-  email?: Prisma.SortOrder
-  phone?: Prisma.SortOrder
+  emails?: Prisma.SortOrder
+  phones?: Prisma.SortOrder
   birthday?: Prisma.SortOrder
   closeness?: Prisma.SortOrder
   tags?: Prisma.SortOrder
@@ -826,8 +826,8 @@ export type PersonCreateWithoutInteractionsInput = {
   first: string
   last: string
   headline?: string | null
-  email?: string | null
-  phone?: string | null
+  emails?: string
+  phones?: string
   birthday?: string | null
   closeness?: number
   tags?: string
@@ -853,8 +853,8 @@ export type PersonUncheckedCreateWithoutInteractionsInput = {
   first: string
   last: string
   headline?: string | null
-  email?: string | null
-  phone?: string | null
+  emails?: string
+  phones?: string
   birthday?: string | null
   closeness?: number
   tags?: string
@@ -896,8 +896,8 @@ export type PersonUpdateWithoutInteractionsInput = {
   first?: Prisma.StringFieldUpdateOperationsInput | string
   last?: Prisma.StringFieldUpdateOperationsInput | string
   headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emails?: Prisma.StringFieldUpdateOperationsInput | string
+  phones?: Prisma.StringFieldUpdateOperationsInput | string
   birthday?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   closeness?: Prisma.IntFieldUpdateOperationsInput | number
   tags?: Prisma.StringFieldUpdateOperationsInput | string
@@ -923,8 +923,8 @@ export type PersonUncheckedUpdateWithoutInteractionsInput = {
   first?: Prisma.StringFieldUpdateOperationsInput | string
   last?: Prisma.StringFieldUpdateOperationsInput | string
   headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emails?: Prisma.StringFieldUpdateOperationsInput | string
+  phones?: Prisma.StringFieldUpdateOperationsInput | string
   birthday?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   closeness?: Prisma.IntFieldUpdateOperationsInput | number
   tags?: Prisma.StringFieldUpdateOperationsInput | string
@@ -950,8 +950,8 @@ export type PersonCreateWithoutPlansInput = {
   first: string
   last: string
   headline?: string | null
-  email?: string | null
-  phone?: string | null
+  emails?: string
+  phones?: string
   birthday?: string | null
   closeness?: number
   tags?: string
@@ -977,8 +977,8 @@ export type PersonUncheckedCreateWithoutPlansInput = {
   first: string
   last: string
   headline?: string | null
-  email?: string | null
-  phone?: string | null
+  emails?: string
+  phones?: string
   birthday?: string | null
   closeness?: number
   tags?: string
@@ -1020,8 +1020,8 @@ export type PersonUpdateWithoutPlansInput = {
   first?: Prisma.StringFieldUpdateOperationsInput | string
   last?: Prisma.StringFieldUpdateOperationsInput | string
   headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emails?: Prisma.StringFieldUpdateOperationsInput | string
+  phones?: Prisma.StringFieldUpdateOperationsInput | string
   birthday?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   closeness?: Prisma.IntFieldUpdateOperationsInput | number
   tags?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1047,8 +1047,8 @@ export type PersonUncheckedUpdateWithoutPlansInput = {
   first?: Prisma.StringFieldUpdateOperationsInput | string
   last?: Prisma.StringFieldUpdateOperationsInput | string
   headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emails?: Prisma.StringFieldUpdateOperationsInput | string
+  phones?: Prisma.StringFieldUpdateOperationsInput | string
   birthday?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   closeness?: Prisma.IntFieldUpdateOperationsInput | number
   tags?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1074,8 +1074,8 @@ export type PersonCreateWithoutOwnedItemsInput = {
   first: string
   last: string
   headline?: string | null
-  email?: string | null
-  phone?: string | null
+  emails?: string
+  phones?: string
   birthday?: string | null
   closeness?: number
   tags?: string
@@ -1101,8 +1101,8 @@ export type PersonUncheckedCreateWithoutOwnedItemsInput = {
   first: string
   last: string
   headline?: string | null
-  email?: string | null
-  phone?: string | null
+  emails?: string
+  phones?: string
   birthday?: string | null
   closeness?: number
   tags?: string
@@ -1144,8 +1144,8 @@ export type PersonUpdateWithoutOwnedItemsInput = {
   first?: Prisma.StringFieldUpdateOperationsInput | string
   last?: Prisma.StringFieldUpdateOperationsInput | string
   headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emails?: Prisma.StringFieldUpdateOperationsInput | string
+  phones?: Prisma.StringFieldUpdateOperationsInput | string
   birthday?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   closeness?: Prisma.IntFieldUpdateOperationsInput | number
   tags?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1171,8 +1171,8 @@ export type PersonUncheckedUpdateWithoutOwnedItemsInput = {
   first?: Prisma.StringFieldUpdateOperationsInput | string
   last?: Prisma.StringFieldUpdateOperationsInput | string
   headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emails?: Prisma.StringFieldUpdateOperationsInput | string
+  phones?: Prisma.StringFieldUpdateOperationsInput | string
   birthday?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   closeness?: Prisma.IntFieldUpdateOperationsInput | number
   tags?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1198,8 +1198,8 @@ export type PersonCreateWithoutAssembledByInput = {
   first: string
   last: string
   headline?: string | null
-  email?: string | null
-  phone?: string | null
+  emails?: string
+  phones?: string
   birthday?: string | null
   closeness?: number
   tags?: string
@@ -1225,8 +1225,8 @@ export type PersonUncheckedCreateWithoutAssembledByInput = {
   first: string
   last: string
   headline?: string | null
-  email?: string | null
-  phone?: string | null
+  emails?: string
+  phones?: string
   birthday?: string | null
   closeness?: number
   tags?: string
@@ -1257,8 +1257,8 @@ export type PersonCreateWithoutDisassembledByInput = {
   first: string
   last: string
   headline?: string | null
-  email?: string | null
-  phone?: string | null
+  emails?: string
+  phones?: string
   birthday?: string | null
   closeness?: number
   tags?: string
@@ -1284,8 +1284,8 @@ export type PersonUncheckedCreateWithoutDisassembledByInput = {
   first: string
   last: string
   headline?: string | null
-  email?: string | null
-  phone?: string | null
+  emails?: string
+  phones?: string
   birthday?: string | null
   closeness?: number
   tags?: string
@@ -1327,8 +1327,8 @@ export type PersonUpdateWithoutAssembledByInput = {
   first?: Prisma.StringFieldUpdateOperationsInput | string
   last?: Prisma.StringFieldUpdateOperationsInput | string
   headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emails?: Prisma.StringFieldUpdateOperationsInput | string
+  phones?: Prisma.StringFieldUpdateOperationsInput | string
   birthday?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   closeness?: Prisma.IntFieldUpdateOperationsInput | number
   tags?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1354,8 +1354,8 @@ export type PersonUncheckedUpdateWithoutAssembledByInput = {
   first?: Prisma.StringFieldUpdateOperationsInput | string
   last?: Prisma.StringFieldUpdateOperationsInput | string
   headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emails?: Prisma.StringFieldUpdateOperationsInput | string
+  phones?: Prisma.StringFieldUpdateOperationsInput | string
   birthday?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   closeness?: Prisma.IntFieldUpdateOperationsInput | number
   tags?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1392,8 +1392,8 @@ export type PersonUpdateWithoutDisassembledByInput = {
   first?: Prisma.StringFieldUpdateOperationsInput | string
   last?: Prisma.StringFieldUpdateOperationsInput | string
   headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emails?: Prisma.StringFieldUpdateOperationsInput | string
+  phones?: Prisma.StringFieldUpdateOperationsInput | string
   birthday?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   closeness?: Prisma.IntFieldUpdateOperationsInput | number
   tags?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1419,8 +1419,8 @@ export type PersonUncheckedUpdateWithoutDisassembledByInput = {
   first?: Prisma.StringFieldUpdateOperationsInput | string
   last?: Prisma.StringFieldUpdateOperationsInput | string
   headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emails?: Prisma.StringFieldUpdateOperationsInput | string
+  phones?: Prisma.StringFieldUpdateOperationsInput | string
   birthday?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   closeness?: Prisma.IntFieldUpdateOperationsInput | number
   tags?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1513,8 +1513,8 @@ export type PersonSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   first?: boolean
   last?: boolean
   headline?: boolean
-  email?: boolean
-  phone?: boolean
+  emails?: boolean
+  phones?: boolean
   birthday?: boolean
   closeness?: boolean
   tags?: boolean
@@ -1542,8 +1542,8 @@ export type PersonSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   first?: boolean
   last?: boolean
   headline?: boolean
-  email?: boolean
-  phone?: boolean
+  emails?: boolean
+  phones?: boolean
   birthday?: boolean
   closeness?: boolean
   tags?: boolean
@@ -1565,8 +1565,8 @@ export type PersonSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   first?: boolean
   last?: boolean
   headline?: boolean
-  email?: boolean
-  phone?: boolean
+  emails?: boolean
+  phones?: boolean
   birthday?: boolean
   closeness?: boolean
   tags?: boolean
@@ -1588,8 +1588,8 @@ export type PersonSelectScalar = {
   first?: boolean
   last?: boolean
   headline?: boolean
-  email?: boolean
-  phone?: boolean
+  emails?: boolean
+  phones?: boolean
   birthday?: boolean
   closeness?: boolean
   tags?: boolean
@@ -1604,7 +1604,7 @@ export type PersonSelectScalar = {
   colorSoft?: boolean
 }
 
-export type PersonOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "first" | "last" | "headline" | "email" | "phone" | "birthday" | "closeness" | "tags" | "values" | "notes" | "company" | "location" | "linkedin" | "twitter" | "website" | "color" | "colorSoft", ExtArgs["result"]["person"]>
+export type PersonOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "first" | "last" | "headline" | "emails" | "phones" | "birthday" | "closeness" | "tags" | "values" | "notes" | "company" | "location" | "linkedin" | "twitter" | "website" | "color" | "colorSoft", ExtArgs["result"]["person"]>
 export type PersonInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   interactions?: boolean | Prisma.Person$interactionsArgs<ExtArgs>
   plans?: boolean | Prisma.Person$plansArgs<ExtArgs>
@@ -1632,8 +1632,8 @@ export type $PersonPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     first: string
     last: string
     headline: string | null
-    email: string | null
-    phone: string | null
+    emails: string
+    phones: string
     birthday: string | null
     closeness: number
     tags: string
@@ -2080,8 +2080,8 @@ export interface PersonFieldRefs {
   readonly first: Prisma.FieldRef<"Person", 'String'>
   readonly last: Prisma.FieldRef<"Person", 'String'>
   readonly headline: Prisma.FieldRef<"Person", 'String'>
-  readonly email: Prisma.FieldRef<"Person", 'String'>
-  readonly phone: Prisma.FieldRef<"Person", 'String'>
+  readonly emails: Prisma.FieldRef<"Person", 'String'>
+  readonly phones: Prisma.FieldRef<"Person", 'String'>
   readonly birthday: Prisma.FieldRef<"Person", 'String'>
   readonly closeness: Prisma.FieldRef<"Person", 'Int'>
   readonly tags: Prisma.FieldRef<"Person", 'String'>

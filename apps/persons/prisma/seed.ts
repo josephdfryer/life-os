@@ -18,8 +18,8 @@ async function main() {
       first: "Marcus",
       last: "Chen",
       headline: "Founder & CEO at BuildStack",
-      email: "marcus@buildstack.io",
-      phone: "+1 415 555 0101",
+      emails: JSON.stringify(["marcus@buildstack.io"]),
+      phones: JSON.stringify(["+1 415 555 0101"]),
       birthday: "1988-03-15",
       closeness: 3, // Inner Circle
       tags: JSON.stringify(["founder", "investor", "bay area", "YC"]),
@@ -34,7 +34,7 @@ async function main() {
       first: "Sarah",
       last: "Okafor",
       headline: "Partner at Meridian Ventures",
-      email: "sarah@meridianvc.com",
+      emails: JSON.stringify(["sarah@meridianvc.com"]),
       birthday: "1984-07-22",
       closeness: 2, // Friend
       tags: JSON.stringify(["vc", "investor", "new york", "fintech"]),
@@ -49,7 +49,7 @@ async function main() {
       first: "Lily",
       last: "Torres",
       headline: "Head of Design at Vercel",
-      email: "lily@vercel.com",
+      emails: JSON.stringify(["lily@vercel.com"]),
       birthday: "1992-11-03",
       closeness: 2, // Friend
       tags: JSON.stringify(["design", "product", "remote"]),
@@ -64,7 +64,7 @@ async function main() {
       first: "Jordan",
       last: "Reeves",
       headline: "Staff Eng at Stripe",
-      email: "jordan@stripe.com",
+      emails: JSON.stringify(["jordan@stripe.com"]),
       birthday: "1990-05-30",
       closeness: 1, // Acquaintance (plan attached to reconnect)
       tags: JSON.stringify(["engineering", "payments", "ex-colleague"]),
@@ -79,7 +79,7 @@ async function main() {
       first: "Derek",
       last: "Ashworth",
       headline: "Angel Investor / ex-CTO at Brex",
-      email: "derek.ashworth@gmail.com",
+      emails: JSON.stringify(["derek.ashworth@gmail.com"]),
       birthday: "1980-09-14",
       closeness: 1, // Acquaintance (plan attached to revive)
       tags: JSON.stringify(["angel", "ex-cto", "advisor"]),

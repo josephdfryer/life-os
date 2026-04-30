@@ -39,7 +39,7 @@ export async function POST(req: NextRequest) {
 
     // Load existing contacts for matching
     const existingPersons = await db.person.findMany({
-      select: { id: true, first: true, last: true, headline: true, email: true, phone: true },
+      select: { id: true, first: true, last: true, headline: true, emails: true, phones: true },
     })
 
     // Run Claude analysis
@@ -150,7 +150,7 @@ export async function POST(req: NextRequest) {
 
 // ─── Claude analysis ─────────────────────────────────────────────────────────
 
-type ContactRef = { id: string; first: string; last: string; headline: string | null; email: string | null; phone: string | null }
+type ContactRef = { id: string; first: string; last: string; headline: string | null; emails: string; phones: string }
 type AnalyzedPerson = {
   name: string
   isNew: boolean
@@ -171,8 +171,10 @@ async function analyzeWithClaude(
     ? contacts.map(c => {
         const parts = [`id: "${c.id}"`, `name: "${c.first} ${c.last}"`]
         if (c.headline) parts.push(`role: "${c.headline}"`)
-        if (c.email) parts.push(`email: "${c.email}"`)
-        if (c.phone) parts.push(`phone: "${c.phone}"`)
+        const emails = JSON.parse(c.emails) as string[]
+        const phones = JSON.parse(c.phones) as string[]
+        if (emails[0]) parts.push(`email: "${emails[0]}"`)
+        if (phones[0]) parts.push(`phone: "${phones[0]}"`)
         return `  - ${parts.join(", ")}`
       }).join("\n")
     : "  (none yet)"

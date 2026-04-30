@@ -23,7 +23,7 @@ export default async function TodayPage() {
     select: {
       id: true, createdAt: true, updatedAt: true,
       first: true, last: true, headline: true,
-      email: true, phone: true, birthday: true,
+      emails: true, phones: true, birthday: true,
       closeness: true, tags: true, values: true,
       notes: true, company: true, location: true,
       linkedin: true, twitter: true, website: true,
@@ -45,6 +45,8 @@ export default async function TodayPage() {
       ...(p as unknown as Person),
       tags:   parseTags(p.tags)   as unknown as string[],
       values: parseTags(p.values) as unknown as string[],
+      emails: parseTags(p.emails) as unknown as string[],
+      phones: parseTags(p.phones) as unknown as string[],
       interactions: p.interactions.map(ix => ({
         ...ix,
         actionItems: parseTags(ix.actionItems) as unknown as string[],
