@@ -153,16 +153,29 @@ export default function PersonDetailPage({ params }: { params: Promise<{ id: str
           </div>
         </div>
 
-        {/* Contact info */}
-        <div style={{ display: "flex", flexWrap: "wrap", gap: "16px" }}>
-          {person.emails.map((email, i) => (
-            <ContactInfo key={i} icon="✉" label={email} href={`mailto:${email}`} />
-          ))}
-          {person.phones.map((phone, i) => (
-            <ContactInfo key={i} icon="↗" label={phone} href={`tel:${phone}`} />
-          ))}
-          {person.birthday && <ContactInfo icon="◎" label={formatBirthday(person.birthday) ?? ""} />}
-        </div>
+        {/* Contact info — grouped by type */}
+        {(person.emails.length > 0 || person.phones.length > 0 || person.birthday || person.company || person.location || person.linkedin || person.twitter || person.website) && (
+          <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+            {person.company && (
+              <ContactRow icon="○" items={[person.company]} />
+            )}
+            {person.location && (
+              <ContactRow icon="◎" items={[person.location]} />
+            )}
+            {person.emails.length > 0 && (
+              <ContactRow icon="✉" items={person.emails} hrefPrefix="mailto:" />
+            )}
+            {person.phones.length > 0 && (
+              <ContactRow icon="↗" items={person.phones} hrefPrefix="tel:" />
+            )}
+            {person.birthday && (
+              <ContactRow icon="◑" items={[formatBirthday(person.birthday) ?? person.birthday]} />
+            )}
+            {(person.linkedin || person.twitter || person.website) && (
+              <ContactRow icon="⊕" items={[person.linkedin, person.twitter, person.website].filter(Boolean) as string[]} hrefPrefix="" isLinks />
+            )}
+          </div>
+        )}
       </div>
 
       {/* Notes */}
@@ -282,17 +295,37 @@ function Stat({ label, value, accent }: { label: string; value: string; accent?:
   )
 }
 
-function ContactInfo({ icon, label, href }: { icon: string; label: string; href?: string }) {
-  const content = (
-    <span style={{ display: "flex", alignItems: "center", gap: "5px", fontSize: "12px", color: "var(--ink-2)" }}>
-      <span style={{ color: "var(--ink-4)" }}>{icon}</span>
-      {label}
-    </span>
+function ContactRow({ icon, items, hrefPrefix, isLinks }: { icon: string; items: string[]; hrefPrefix?: string; isLinks?: boolean }) {
+  return (
+    <div style={{ display: "flex", alignItems: "flex-start", gap: "10px" }}>
+      <span style={{ fontSize: "12px", color: "var(--ink-4)", width: "16px", textAlign: "center", flexShrink: 0, paddingTop: "3px" }}>{icon}</span>
+      <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
+        {items.map((item, i) => {
+          const href = hrefPrefix != null
+            ? isLinks ? item : `${hrefPrefix}${item}`
+            : undefined
+          const chip = (
+            <span style={{
+              display: "inline-block",
+              fontSize: "12px",
+              color: href ? "var(--accent)" : "var(--ink-2)",
+              padding: "3px 10px",
+              borderRadius: "6px",
+              background: href ? "var(--accent-soft)" : "var(--bg)",
+              border: `1px solid ${href ? "var(--accent)" : "var(--border)"}`,
+              lineHeight: 1.5,
+              wordBreak: "break-all",
+            }}>
+              {item}
+            </span>
+          )
+          return href
+            ? <a key={i} href={href} target={isLinks ? "_blank" : undefined} rel={isLinks ? "noopener noreferrer" : undefined} style={{ textDecoration: "none" }}>{chip}</a>
+            : <span key={i}>{chip}</span>
+        })}
+      </div>
+    </div>
   )
-  if (href) {
-    return <a href={href} style={{ textDecoration: "none" }}>{content}</a>
-  }
-  return content
 }
 
 function Card({
