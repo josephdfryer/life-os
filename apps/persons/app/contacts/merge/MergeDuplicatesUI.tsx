@@ -104,6 +104,7 @@ export default function MergeDuplicatesUI({ initialPairs }: { initialPairs: Dupe
   const [swapped, setSwapped]     = useState(false)
   const [merging, setMerging]     = useState(false)
   const [autoDedupe, setAutoDedupe] = useState<AutoDedupeState>({ status: "idle", merged: 0, results: [] })
+  const [reviewedCount, setReviewedCount] = useState(0)
 
   // Sync when server re-renders with new data after router.refresh()
   const initializedRef = useRef(false)
@@ -115,6 +116,18 @@ export default function MergeDuplicatesUI({ initialPairs }: { initialPairs: Dupe
     setChoices(first ? initChoices(first.a, first.b) : {})
     setSwapped(false)
   }, [initialPairs])
+
+  const stats = useMemo(() => {
+    const definite  = pairs.filter(p => p.score >= 1.0).length    // same email
+    const high      = pairs.filter(p => p.score >= 0.95 && p.score < 1.0).length  // same phone / very similar
+    const medium    = pairs.filter(p => p.score >= 0.87 && p.score < 0.95).length
+    const lower     = pairs.filter(p => p.score < 0.87).length
+    const byReason  = pairs.reduce<Record<string, number>>((acc, p) => {
+      acc[p.reason] = (acc[p.reason] ?? 0) + 1
+      return acc
+    }, {})
+    return { definite, high, medium, lower, byReason }
+  }, [pairs])
 
   const filteredPairs = useMemo(() => {
     if (!search.trim()) return pairs
@@ -177,6 +190,7 @@ export default function MergeDuplicatesUI({ initialPairs }: { initialPairs: Dupe
         pairKey(p) !== currentKey && p.a.id !== deletedId && p.b.id !== deletedId
       )
       setPairs(remaining)
+      setReviewedCount(c => c + 1)
       const next = remaining[0] ?? null
       setSelectedKey(next ? pairKey(next) : null)
       setSwapped(false)
@@ -188,6 +202,7 @@ export default function MergeDuplicatesUI({ initialPairs }: { initialPairs: Dupe
   function skipPair() {
     const remaining = pairs.filter(p => pairKey(p) !== selectedKey)
     setPairs(remaining)
+    setReviewedCount(c => c + 1)
     const next = remaining[0] ?? null
     setSelectedKey(next ? pairKey(next) : null)
     setSwapped(false)
@@ -216,14 +231,9 @@ export default function MergeDuplicatesUI({ initialPairs }: { initialPairs: Dupe
 
       <BackLink label="Contacts" href="/contacts" component={Link} style={{ marginBottom: "16px" }} />
 
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "24px" }}>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: pairs.length > 0 ? "14px" : "24px" }}>
         <h1 style={{ fontFamily: "var(--font-display)", fontSize: "24px", fontWeight: 600, color: "var(--ink)", margin: 0 }}>
           Merge Duplicates
-          {pairs.length > 0 && (
-            <span style={{ fontSize: "13px", fontWeight: 400, color: "var(--ink-4)", marginLeft: "10px" }}>
-              {pairs.length} potential duplicate{pairs.length === 1 ? "" : "s"}
-            </span>
-          )}
         </h1>
         <Button
           variant="ghost"
@@ -234,6 +244,26 @@ export default function MergeDuplicatesUI({ initialPairs }: { initialPairs: Dupe
           ⚡ Auto-dedupe
         </Button>
       </div>
+
+      {/* Stats strip */}
+      {pairs.length > 0 && (
+        <div style={{
+          display: "flex",
+          gap: "0",
+          marginBottom: "24px",
+          background: "var(--surface)",
+          border: "1px solid var(--border)",
+          borderRadius: "10px",
+          overflow: "hidden",
+        }}>
+          <StatCell label="Remaining" value={String(pairs.length)} accent />
+          {reviewedCount > 0 && <StatCell label="Done this session" value={String(reviewedCount)} />}
+          {stats.definite > 0 && <StatCell label="Same email" value={String(stats.definite)} dot="#c4572a" />}
+          {stats.high > 0 && <StatCell label="Very similar" value={String(stats.high)} dot="#b45309" />}
+          {stats.medium > 0 && <StatCell label="Similar name" value={String(stats.medium)} dot="#7c6d00" />}
+          {stats.lower > 0 && <StatCell label="Needs review" value={String(stats.lower)} dot="var(--ink-4)" />}
+        </div>
+      )}
 
       {/* Auto-dedupe panel */}
       {autoDedupe.status === "confirm" && (
@@ -510,6 +540,27 @@ export default function MergeDuplicatesUI({ initialPairs }: { initialPairs: Dupe
           )}
         </div>
       )}
+    </div>
+  )
+}
+
+function StatCell({ label, value, accent, dot }: { label: string; value: string; accent?: boolean; dot?: string }) {
+  return (
+    <div style={{
+      flex: "1 1 0",
+      padding: "12px 16px",
+      borderRight: "1px solid var(--border)",
+      minWidth: 0,
+    }}>
+      <div style={{ display: "flex", alignItems: "center", gap: "5px", marginBottom: "3px" }}>
+        {dot && <span style={{ width: "5px", height: "5px", borderRadius: "50%", background: dot, flexShrink: 0, display: "inline-block" }} />}
+        <span style={{ fontSize: "9px", color: "var(--ink-4)", textTransform: "uppercase", letterSpacing: "0.08em", whiteSpace: "nowrap" }}>
+          {label}
+        </span>
+      </div>
+      <div style={{ fontSize: "20px", fontWeight: 600, fontFamily: "var(--font-display)", color: accent ? "var(--accent)" : "var(--ink)", lineHeight: 1 }}>
+        {value}
+      </div>
     </div>
   )
 }
