@@ -11,6 +11,7 @@
     "lint": "turbo run lint",
     "type-check": "turbo run type-check"
   },
+  "packageManager": "npm@11.12.1",
   "devDependencies": {
     "turbo": "latest"
   }
