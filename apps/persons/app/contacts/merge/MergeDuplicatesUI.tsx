@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useMemo, useRef } from "react"
+import React, { useState, useEffect, useMemo, useRef } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { BackLink, Button, Spinner } from "@life-os/ui"
@@ -105,6 +105,7 @@ export default function MergeDuplicatesUI({ initialPairs }: { initialPairs: Dupe
   const [merging, setMerging]     = useState(false)
   const [autoDedupe, setAutoDedupe] = useState<AutoDedupeState>({ status: "idle", merged: 0, results: [] })
   const [reviewedCount, setReviewedCount] = useState(0)
+  const [mergingEmail, setMergingEmail] = useState(false)
 
   // Sync when server re-renders with new data after router.refresh()
   const initializedRef = useRef(false)
@@ -222,6 +223,38 @@ export default function MergeDuplicatesUI({ initialPairs }: { initialPairs: Dupe
     }
   }
 
+  async function mergeAllSameEmail() {
+    const emailPairs = pairs.filter(p => p.reason === "Same email address")
+    if (emailPairs.length === 0) return
+    setMergingEmail(true)
+    try {
+      // Pick keeper by interaction count, fall back to the one listed as `a`
+      const pairInputs = emailPairs.map(p => {
+        const keepId = p.a.interactionCount >= p.b.interactionCount ? p.a.id : p.b.id
+        const deleteId = keepId === p.a.id ? p.b.id : p.a.id
+        return { keepId, deleteId }
+      })
+      const res = await fetch("/api/contacts/merge-batch", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ pairs: pairInputs }),
+      })
+      if (!res.ok) throw new Error(`${res.status}`)
+      const data = await res.json()
+      const deletedIds = new Set<string>(data.deletedIds ?? [])
+      const remaining = pairs.filter(p => !deletedIds.has(p.a.id) && !deletedIds.has(p.b.id))
+      setPairs(remaining)
+      setReviewedCount(c => c + data.merged)
+      const next = remaining[0] ?? null
+      setSelectedKey(next ? pairKey(next) : null)
+      setSwapped(false)
+      if (next) setChoices(initChoices(next.a, next.b))
+    } catch (e) {
+      console.error("merge-all-email failed", e)
+    }
+    setMergingEmail(false)
+  }
+
   const pair = selectedKey ? pairs.find(p => pairKey(p) === selectedKey) ?? null : null
   const a    = pair ? (swapped ? pair.b : pair.a) : null
   const b    = pair ? (swapped ? pair.a : pair.b) : null
@@ -258,7 +291,22 @@ export default function MergeDuplicatesUI({ initialPairs }: { initialPairs: Dupe
         }}>
           <StatCell label="Remaining" value={String(pairs.length)} accent />
           {reviewedCount > 0 && <StatCell label="Done this session" value={String(reviewedCount)} />}
-          {stats.definite > 0 && <StatCell label="Same email" value={String(stats.definite)} dot="#c4572a" />}
+          {stats.definite > 0 && (
+            <StatCell
+              label="Same email"
+              value={String(stats.definite)}
+              dot="#c4572a"
+              action={
+                <button
+                  onClick={mergeAllSameEmail}
+                  disabled={mergingEmail}
+                  style={{ marginTop: "6px", fontSize: "9px", fontFamily: "inherit", background: "var(--accent)", color: "#fff", border: "none", borderRadius: "4px", padding: "3px 7px", cursor: mergingEmail ? "wait" : "pointer", opacity: mergingEmail ? 0.6 : 1, letterSpacing: "0.04em" }}
+                >
+                  {mergingEmail ? "merging…" : "merge all"}
+                </button>
+              }
+            />
+          )}
           {stats.high > 0 && <StatCell label="Very similar" value={String(stats.high)} dot="#b45309" />}
           {stats.medium > 0 && <StatCell label="Similar name" value={String(stats.medium)} dot="#7c6d00" />}
           {stats.lower > 0 && <StatCell label="Needs review" value={String(stats.lower)} dot="var(--ink-4)" />}
@@ -544,7 +592,7 @@ export default function MergeDuplicatesUI({ initialPairs }: { initialPairs: Dupe
   )
 }
 
-function StatCell({ label, value, accent, dot }: { label: string; value: string; accent?: boolean; dot?: string }) {
+function StatCell({ label, value, accent, dot, action }: { label: string; value: string; accent?: boolean; dot?: string; action?: React.ReactNode }) {
   return (
     <div style={{
       flex: "1 1 0",
@@ -561,6 +609,7 @@ function StatCell({ label, value, accent, dot }: { label: string; value: string;
       <div style={{ fontSize: "20px", fontWeight: 600, fontFamily: "var(--font-display)", color: accent ? "var(--accent)" : "var(--ink)", lineHeight: 1 }}>
         {value}
       </div>
+      {action}
     </div>
   )
 }
