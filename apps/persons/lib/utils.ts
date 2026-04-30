@@ -21,12 +21,19 @@ export function closenessWidth(n: number): string {
   return { 1: "33%", 2: "66%", 3: "100%" }[n] ?? "0%"
 }
 
-export function parseTags(raw: string | null | undefined): string[] {
+export function parseTags(raw: string | string[] | null | undefined): string[] {
   if (!raw) return []
+  // Already a parsed array — flatten any legacy ::: elements within
+  if (Array.isArray(raw)) {
+    return raw.flatMap(item =>
+      typeof item === "string"
+        ? item.split(" ::: ").map(s => s.trim()).filter(Boolean)
+        : []
+    )
+  }
   try {
     const parsed = JSON.parse(raw)
     if (!Array.isArray(parsed)) return []
-    // Flatten elements that still contain the legacy " ::: " separator
     return parsed.flatMap((item: unknown) =>
       typeof item === "string"
         ? item.split(" ::: ").map(s => s.trim()).filter(Boolean)
