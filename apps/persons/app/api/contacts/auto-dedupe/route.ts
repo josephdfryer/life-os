@@ -213,14 +213,16 @@ export async function POST() {
     }
   }
 
-  // 2c. Name similarity — bucketed by last-name initial to avoid O(n²)
-  const byInitial = new Map<string, MinPerson[]>()
+  // 2c. Name similarity — 3-char prefix buckets keep each bucket small (~10-30 people)
+  //     even for large datasets, avoiding runaway O(n²) within common initials like "S".
+  //     JW > 0.92 almost always means shared first 3 chars, so we don't miss real dupes.
+  const byPrefix = new Map<string, MinPerson[]>()
   for (const p of all) {
     if (deleted.has(p.id) || !p.last) continue
-    const key = p.last[0].toLowerCase()
-    const bucket = byInitial.get(key) ?? []; bucket.push(p as MinPerson); byInitial.set(key, bucket)
+    const key = norm(p.last).slice(0, 3).padEnd(3, "_")
+    const bucket = byPrefix.get(key) ?? []; bucket.push(p as MinPerson); byPrefix.set(key, bucket)
   }
-  for (const bucket of byInitial.values()) {
+  for (const bucket of byPrefix.values()) {
     for (let i = 0; i < bucket.length; i++) {
       if (deleted.has(bucket[i].id)) continue
       for (let j = i + 1; j < bucket.length; j++) {
@@ -234,36 +236,46 @@ export async function POST() {
     }
   }
 
-  // 3. Execute all merges
+  // Build a fast ID lookup from the already-loaded data
+  const byId = new Map<string, MinPerson>(all.map(p => [p.id, p as MinPerson]))
+
+  // 3. Execute merges in batched transactions — each batch = 1 Turso round trip
+  //    instead of N sequential round trips (N * ~200ms killed the 10s timeout).
+  //    Operations within each batch are ordered: reassign → delete (CASCADE safety).
+  const BATCH_SIZE = 80
   let merged = 0
   const results: PairResult[] = []
 
-  for (const m of toMerge) {
-    try {
-      const [keeper, loser] = await Promise.all([
-        db.person.findUnique({ where: { id: m.keepId } }),
-        db.person.findUnique({ where: { id: m.deleteId } }),
-      ])
+  for (let start = 0; start < toMerge.length; start += BATCH_SIZE) {
+    const batch = toMerge.slice(start, start + BATCH_SIZE)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const ops: any[] = []
+    const batchValid: PairResult[] = []
+
+    for (const m of batch) {
+      const keeper = byId.get(m.keepId)
+      const loser  = byId.get(m.deleteId)
       if (!keeper || !loser) continue
 
-      const patch = buildPatch(
-        { ...keeper, _count: { interactions: 0 } } as MinPerson,
-        { ...loser,  _count: { interactions: 0 } } as MinPerson,
-      )
+      const patch = buildPatch(keeper, loser)
+      if (Object.keys(patch).length > 0) {
+        ops.push(db.person.update({ where: { id: m.keepId }, data: patch }))
+      }
+      // reassign before delete — avoids CASCADE wiping interactions/plans
+      ops.push(db.interaction.updateMany({ where: { personId: m.deleteId }, data: { personId: m.keepId } }))
+      ops.push(db.plan.updateMany({ where: { personId: m.deleteId }, data: { personId: m.keepId } }))
+      ops.push(db.person.delete({ where: { id: m.deleteId } }))
+      batchValid.push(m)
+    }
 
-      await db.$transaction(async tx => {
-        if (Object.keys(patch).length > 0) {
-          await tx.person.update({ where: { id: m.keepId }, data: patch })
-        }
-        await tx.interaction.updateMany({ where: { personId: m.deleteId }, data: { personId: m.keepId } })
-        await tx.plan.updateMany({ where: { personId: m.deleteId }, data: { personId: m.keepId } })
-        await tx.person.delete({ where: { id: m.deleteId } })
-      })
-
-      merged++
-      results.push(m)
-    } catch (e) {
-      console.error("Auto-merge failed for pair", m.keepId, m.deleteId, e)
+    if (ops.length > 0) {
+      try {
+        await db.$transaction(ops)
+        merged += batchValid.length
+        results.push(...batchValid)
+      } catch (e) {
+        console.error(`Batch ${start / BATCH_SIZE} failed:`, e)
+      }
     }
   }
 

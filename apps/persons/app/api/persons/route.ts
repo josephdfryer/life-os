@@ -18,15 +18,21 @@ export async function GET(req: NextRequest) {
     const fields = searchParams.get("fields")?.split(",").filter(Boolean) ?? []
 
     const AND: Record<string, unknown>[] = []
-    if (search) AND.push({
-      OR: [
-        { first:    { contains: search } },
-        { last:     { contains: search } },
-        { emails:   { contains: search } },
-        { company:  { contains: search } },
-        { headline: { contains: search } },
-      ],
-    })
+    // Split into tokens so "Paul G" matches first="Paul" AND last starts with "G"
+    const tokens = search.split(/\s+/).filter(Boolean)
+    for (const token of tokens) {
+      AND.push({
+        OR: [
+          { first:    { contains: token } },
+          { last:     { contains: token } },
+          { emails:   { contains: token } },
+          { company:  { contains: token } },
+          { headline: { contains: token } },
+          { notes:    { contains: token } },
+          { location: { contains: token } },
+        ],
+      })
+    }
     for (const f of fields) {
       if (f === "first")    AND.push({ first:    { not: "" } })
       if (f === "last")     AND.push({ last:     { not: "" } })
