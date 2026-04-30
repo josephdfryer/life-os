@@ -1,3 +1,3 @@
-// Shared UI components will live here as the design system grows.
+// @life-os/ui — shared design system
 // Import tokens in any app: import "@life-os/ui/tokens.css"
-export {}
+export * from './src/index';

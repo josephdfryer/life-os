@@ -13,6 +13,22 @@
   --ink-4: #b8b4ae;
   --accent: #c4572a;
   --accent-soft: #f5ede8;
+
+  /* Typography */
+  --font-display: 'Playfair Display', serif;
+  --font-mono: 'DM Mono', monospace;
+  --font-body: 'DM Mono', monospace;
+
+  /* Aliases used by UI components */
+  --separator: #ddd9cf;         /* same as --border */
+  --surface-raised: #fdfcfa;    /* slightly above --surface */
+
+  /* Status tokens (light-theme values) */
+  --status-watch-text: #8a7060;
+  --status-watch-bg: #fef5ee;
+  --status-pending-text: #8a8680;
+  --status-pending-bg: #f0ede8;
+  --status-done: #b8b4ae;
 }
 
 * { box-sizing: border-box; }
