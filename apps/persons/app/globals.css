@@ -11,6 +11,13 @@
   --ink-4: #b8b4ae;
   --accent: #c4572a;
   --accent-soft: #f5ede8;
+
+  /* Aliases used by @life-os/ui components */
+  --separator: #ddd9cf;
+  --surface-raised: #fdfcfa;
+  --font-display: var(--font-playfair), serif;
+  --font-mono: var(--font-dm-mono), monospace;
+  --font-body: var(--font-dm-mono), monospace;
 }
 
 * {
