@@ -106,6 +106,7 @@ export default function MergeDuplicatesUI({ initialPairs }: { initialPairs: Dupe
   const [autoDedupe, setAutoDedupe] = useState<AutoDedupeState>({ status: "idle", merged: 0, results: [] })
   const [reviewedCount, setReviewedCount] = useState(0)
   const [mergingEmail, setMergingEmail] = useState(false)
+  const [emailMergeError, setEmailMergeError] = useState<string | null>(null)
 
   // Sync when server re-renders with new data after router.refresh()
   const initializedRef = useRef(false)
@@ -224,22 +225,17 @@ export default function MergeDuplicatesUI({ initialPairs }: { initialPairs: Dupe
   }
 
   async function mergeAllSameEmail() {
-    const emailPairs = pairs.filter(p => p.reason === "Same email address")
-    if (emailPairs.length === 0) return
+    if (stats.definite === 0) return
     setMergingEmail(true)
+    setEmailMergeError(null)
     try {
-      // Pick keeper by interaction count, fall back to the one listed as `a`
-      const pairInputs = emailPairs.map(p => {
-        const keepId = p.a.interactionCount >= p.b.interactionCount ? p.a.id : p.b.id
-        const deleteId = keepId === p.a.id ? p.b.id : p.a.id
-        return { keepId, deleteId }
-      })
-      const res = await fetch("/api/contacts/merge-batch", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ pairs: pairInputs }),
-      })
-      if (!res.ok) throw new Error(`${res.status}`)
+      // Server groups by email and resolves multi-person clusters correctly —
+      // avoids the pairwise conflict where B appears as both keeper and loser.
+      const res = await fetch("/api/contacts/merge-same-email", { method: "POST" })
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}))
+        throw new Error(body.error ?? `HTTP ${res.status}`)
+      }
       const data = await res.json()
       const deletedIds = new Set<string>(data.deletedIds ?? [])
       const remaining = pairs.filter(p => !deletedIds.has(p.a.id) && !deletedIds.has(p.b.id))
@@ -250,7 +246,7 @@ export default function MergeDuplicatesUI({ initialPairs }: { initialPairs: Dupe
       setSwapped(false)
       if (next) setChoices(initChoices(next.a, next.b))
     } catch (e) {
-      console.error("merge-all-email failed", e)
+      setEmailMergeError(String(e))
     }
     setMergingEmail(false)
   }
@@ -310,6 +306,13 @@ export default function MergeDuplicatesUI({ initialPairs }: { initialPairs: Dupe
           {stats.high > 0 && <StatCell label="Very similar" value={String(stats.high)} dot="#b45309" />}
           {stats.medium > 0 && <StatCell label="Similar name" value={String(stats.medium)} dot="#7c6d00" />}
           {stats.lower > 0 && <StatCell label="Needs review" value={String(stats.lower)} dot="var(--ink-4)" />}
+        </div>
+      )}
+
+      {emailMergeError && (
+        <div style={{ marginBottom: "16px", padding: "10px 14px", background: "#fef2f2", border: "1px solid #fecaca", borderRadius: "8px", fontSize: "12px", color: "#b91c1c", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+          <span>Same-email merge failed: {emailMergeError}</span>
+          <button onClick={() => setEmailMergeError(null)} style={{ background: "transparent", border: "none", cursor: "pointer", color: "#b91c1c", fontSize: "13px", marginLeft: "10px" }}>✕</button>
         </div>
       )}
 
