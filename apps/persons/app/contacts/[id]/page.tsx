@@ -2,6 +2,7 @@
 
 import { useEffect, useState, use } from "react"
 import { useRouter } from "next/navigation"
+import Link from "next/link"
 import {
   Avatar, BackLink, Button, Card, Chip,
   EmptyState, Spinner,
@@ -86,7 +87,7 @@ export default function PersonDetailPage({ params }: { params: Promise<{ id: str
   return (
     <div style={{ maxWidth: "720px", margin: "0 auto", padding: "32px 24px" }}>
 
-      <BackLink label="All Contacts" href="/contacts" style={{ marginBottom: "20px" }} />
+      <BackLink label="All Contacts" href="/contacts" component={Link} style={{ marginBottom: "20px" }} />
 
       {/* ── Header card ─────────────────────────────────────────── */}
       <Card style={{ borderRadius: "14px", marginBottom: "20px", overflow: "hidden" }}>

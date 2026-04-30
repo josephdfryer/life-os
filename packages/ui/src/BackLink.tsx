@@ -3,16 +3,20 @@ import React from 'react';
 export interface BackLinkProps {
   label: string;
   href: string;
+  /** Override the rendered element — pass `Link` from next/link for soft navigation */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  component?: React.ElementType<any>;
   style?: React.CSSProperties;
 }
 
 /**
  * BackLink — "← label" navigation
  * Usage: <BackLink label="All Accounts" href="/crm/accounts" />
+ *        <BackLink label="All Accounts" href="/crm/accounts" component={Link} />  // next/link
  */
-export function BackLink({ label, href, style }: BackLinkProps) {
+export function BackLink({ label, href, component: Component = 'a', style }: BackLinkProps) {
   return (
-    <a
+    <Component
       href={href}
       style={{
         fontFamily: 'var(--font-mono)',
@@ -27,10 +31,10 @@ export function BackLink({ label, href, style }: BackLinkProps) {
         transition: 'color 0.12s',
         ...style,
       }}
-      onMouseEnter={e => (e.currentTarget.style.color = 'var(--ink-2)')}
-      onMouseLeave={e => (e.currentTarget.style.color = 'var(--ink-4)')}
+      onMouseEnter={(e: React.MouseEvent<HTMLElement>) => (e.currentTarget.style.color = 'var(--ink-2)')}
+      onMouseLeave={(e: React.MouseEvent<HTMLElement>) => (e.currentTarget.style.color = 'var(--ink-4)')}
     >
       ←&nbsp;{label}
-    </a>
+    </Component>
   );
 }

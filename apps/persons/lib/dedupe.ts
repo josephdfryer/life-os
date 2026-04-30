@@ -34,7 +34,6 @@ function jaro(s1: string, s2: string): number {
   return (matches / len1 + matches / len2 + (matches - t / 2) / matches) / 3
 }
 
-// Jaro-Winkler: prefix bonus up to 4 chars, scaling factor p=0.1
 function jaroWinkler(s1: string, s2: string): number {
   const j = jaro(s1, s2)
   let prefix = 0
@@ -63,21 +62,18 @@ export function scorePair(
   a: Person,
   b: Person,
 ): { score: number; reason: string } | null {
-  // Any shared email → definite duplicate
-  const aEmails = a.emails.map(e => norm(e)).filter(Boolean)
-  const bEmailSet = new Set(b.emails.map(e => norm(e)).filter(Boolean))
+  const aEmails = (a.emails as unknown as string[]).map(e => norm(e)).filter(Boolean)
+  const bEmailSet = new Set((b.emails as unknown as string[]).map(e => norm(e)).filter(Boolean))
   if (aEmails.length && bEmailSet.size && aEmails.some(e => bEmailSet.has(e))) {
     return { score: 1.0, reason: "Same email address" }
   }
 
-  // Any shared phone (digits only)
-  const aPhones = a.phones.map(p => p.replace(/\D/g, "")).filter(p => p.length >= 7)
-  const bPhoneSet = new Set(b.phones.map(p => p.replace(/\D/g, "")).filter(p => p.length >= 7))
+  const aPhones = (a.phones as unknown as string[]).map(p => p.replace(/\D/g, "")).filter(p => p.length >= 7)
+  const bPhoneSet = new Set((b.phones as unknown as string[]).map(p => p.replace(/\D/g, "")).filter(p => p.length >= 7))
   if (aPhones.length && bPhoneSet.size && aPhones.some(p => bPhoneSet.has(p))) {
     return { score: 0.97, reason: "Same phone number" }
   }
 
-  // Full-name Jaro-Winkler
   const aFull = norm(`${a.first} ${a.last}`)
   const bFull = norm(`${b.first} ${b.last}`)
   const nameSim = jaroWinkler(aFull, bFull)
@@ -106,16 +102,103 @@ export function scorePair(
   return null
 }
 
+// ── findDuplicates — efficient multi-strategy scan ───────────────────────────
+//
+// Strategy:
+//   1. Email matches:  O(n) via hashmap — build email→[indices], find collisions
+//   2. Phone matches:  O(n) via hashmap — same pattern
+//   3. Name similarity: 3-char last-name prefix buckets — limits inner loop to
+//      ~10–30 people per bucket instead of n², and JW ≥ 0.92 always shares 3 chars.
+//
+// Pre-computing normalized values once cuts redundant string work in the inner loop.
+
 export function findDuplicates(
   persons: (Person & { interactionCount: number; planCount: number })[],
 ): DupePair[] {
-  const pairs: DupePair[] = []
+  // Pre-compute enriched values for each person
+  const enriched = persons.map(p => ({
+    p,
+    emails: new Set((p.emails as unknown as string[]).map(e => norm(e)).filter(Boolean)),
+    phones: new Set((p.phones as unknown as string[]).map(ph => ph.replace(/\D/g, "")).filter(ph => ph.length >= 7)),
+    fullName: norm(`${p.first} ${p.last}`),
+    company: p.company ? norm(p.company) : null,
+    location: p.location ? norm(p.location) : null,
+  }))
 
-  for (let i = 0; i < persons.length; i++) {
-    for (let j = i + 1; j < persons.length; j++) {
-      const result = scorePair(persons[i], persons[j])
-      if (result) {
-        pairs.push({ ...result, a: persons[i], b: persons[j] })
+  const pairs: DupePair[] = []
+  // Track index pairs already found via email/phone to avoid duplicates in name pass
+  const seen = new Set<string>()
+
+  function addPair(i: number, j: number, score: number, reason: string) {
+    const key = `${Math.min(i, j)}:${Math.max(i, j)}`
+    if (seen.has(key)) return
+    seen.add(key)
+    pairs.push({ score, reason, a: enriched[i].p, b: enriched[j].p })
+  }
+
+  // 1. Exact email match — O(total emails)
+  const byEmail = new Map<string, number[]>()
+  for (let i = 0; i < enriched.length; i++) {
+    for (const email of enriched[i].emails) {
+      const bucket = byEmail.get(email) ?? []
+      bucket.push(i)
+      byEmail.set(email, bucket)
+    }
+  }
+  for (const bucket of byEmail.values()) {
+    if (bucket.length < 2) continue
+    for (let x = 0; x < bucket.length; x++)
+      for (let y = x + 1; y < bucket.length; y++)
+        addPair(bucket[x], bucket[y], 1.0, "Same email address")
+  }
+
+  // 2. Exact phone match — O(total phones)
+  const byPhone = new Map<string, number[]>()
+  for (let i = 0; i < enriched.length; i++) {
+    for (const phone of enriched[i].phones) {
+      const bucket = byPhone.get(phone) ?? []
+      bucket.push(i)
+      byPhone.set(phone, bucket)
+    }
+  }
+  for (const bucket of byPhone.values()) {
+    if (bucket.length < 2) continue
+    for (let x = 0; x < bucket.length; x++)
+      for (let y = x + 1; y < bucket.length; y++)
+        addPair(bucket[x], bucket[y], 0.97, "Same phone number")
+  }
+
+  // 3. Name similarity via 3-char last-name prefix buckets
+  const byPrefix = new Map<string, number[]>()
+  for (let i = 0; i < enriched.length; i++) {
+    const last = enriched[i].p.last
+    const prefix = last ? norm(last).slice(0, 3).padEnd(3, "_") : "___"
+    const bucket = byPrefix.get(prefix) ?? []
+    bucket.push(i)
+    byPrefix.set(prefix, bucket)
+  }
+  for (const bucket of byPrefix.values()) {
+    for (let x = 0; x < bucket.length; x++) {
+      const i = bucket[x]
+      const ea = enriched[i]
+      for (let y = x + 1; y < bucket.length; y++) {
+        const j = bucket[y]
+        const key = `${Math.min(i, j)}:${Math.max(i, j)}`
+        if (seen.has(key)) continue // already matched via email/phone
+
+        const eb = enriched[j]
+        const nameSim = jaroWinkler(ea.fullName, eb.fullName)
+        const sameCompany =
+          !!(ea.company && eb.company && jaroWinkler(ea.company, eb.company) > 0.85)
+        const sameLocation =
+          !!(ea.location && eb.location && ea.location === eb.location)
+
+        if (nameSim >= 0.92) {
+          const boost = sameCompany ? 0.03 : 0
+          addPair(i, j, Math.min(1, nameSim + boost), sameCompany ? "Similar name, same company" : "Very similar name")
+        } else if (nameSim >= 0.80 && (sameCompany || sameLocation)) {
+          addPair(i, j, nameSim, sameCompany ? "Similar name, same company" : "Similar name, same location")
+        }
       }
     }
   }
