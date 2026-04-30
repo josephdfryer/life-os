@@ -24,9 +24,17 @@ export function closenessWidth(n: number): string {
 export function parseTags(raw: string | null | undefined): string[] {
   if (!raw) return []
   try {
-    return JSON.parse(raw)
+    const parsed = JSON.parse(raw)
+    if (!Array.isArray(parsed)) return []
+    // Flatten elements that still contain the legacy " ::: " separator
+    return parsed.flatMap((item: unknown) =>
+      typeof item === "string"
+        ? item.split(" ::: ").map(s => s.trim()).filter(Boolean)
+        : []
+    )
   } catch {
-    return []
+    // Raw legacy string (not JSON at all)
+    return raw.split(" ::: ").map(s => s.trim()).filter(Boolean)
   }
 }
 
