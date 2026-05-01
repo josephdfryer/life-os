@@ -90,6 +90,7 @@ function scoreBg(s: number) {
 
 type AutoDedupeResult = { keepId: string; deleteId: string; score: number; reason: string; keepName: string; deleteName: string }
 type AutoDedupeState = { status: "idle" | "confirm" | "running" | "done" | "error"; merged: number; results: AutoDedupeResult[]; error?: string }
+type FilterKey = "all" | "definite" | "high" | "medium" | "lower"
 
 export default function MergeDuplicatesUI({ initialPairs }: { initialPairs: DupePair[] }) {
   const router = useRouter()
@@ -105,8 +106,7 @@ export default function MergeDuplicatesUI({ initialPairs }: { initialPairs: Dupe
   const [merging, setMerging]     = useState(false)
   const [autoDedupe, setAutoDedupe] = useState<AutoDedupeState>({ status: "idle", merged: 0, results: [] })
   const [reviewedCount, setReviewedCount] = useState(0)
-  const [mergingEmail, setMergingEmail] = useState(false)
-  const [emailMergeError, setEmailMergeError] = useState<string | null>(null)
+  const [activeFilter, setActiveFilter] = useState<FilterKey>("all")
 
   // Sync when server re-renders with new data after router.refresh()
   const initializedRef = useRef(false)
@@ -132,13 +132,18 @@ export default function MergeDuplicatesUI({ initialPairs }: { initialPairs: Dupe
   }, [pairs])
 
   const filteredPairs = useMemo(() => {
-    if (!search.trim()) return pairs
+    let base = pairs
+    if (activeFilter === "definite") base = base.filter(p => p.score >= 1.0)
+    else if (activeFilter === "high")    base = base.filter(p => p.score >= 0.95 && p.score < 1.0)
+    else if (activeFilter === "medium")  base = base.filter(p => p.score >= 0.87 && p.score < 0.95)
+    else if (activeFilter === "lower")   base = base.filter(p => p.score < 0.87)
+    if (!search.trim()) return base
     const q = search.toLowerCase()
-    return pairs.filter(p =>
+    return base.filter(p =>
       `${p.a.first} ${p.a.last}`.toLowerCase().includes(q) ||
       `${p.b.first} ${p.b.last}`.toLowerCase().includes(q)
     )
-  }, [pairs, search])
+  }, [pairs, search, activeFilter])
 
   const personPairCount = useMemo(() => {
     const counts: Record<string, number> = {}
@@ -188,12 +193,13 @@ export default function MergeDuplicatesUI({ initialPairs }: { initialPairs: Dupe
       body: JSON.stringify({ keepId: a.id, deleteId: b.id, fields: buildFields(a, b, choices) }),
     })
     if (res.ok) {
-      const remaining = pairs.filter(p =>
+      setPairs(prev => prev.filter(p =>
         pairKey(p) !== currentKey && p.a.id !== deletedId && p.b.id !== deletedId
-      )
-      setPairs(remaining)
+      ))
       setReviewedCount(c => c + 1)
-      const next = remaining[0] ?? null
+      const next = filteredPairs.find(p =>
+        pairKey(p) !== currentKey && p.a.id !== deletedId && p.b.id !== deletedId
+      ) ?? null
       setSelectedKey(next ? pairKey(next) : null)
       setSwapped(false)
       if (next) setChoices(initChoices(next.a, next.b))
@@ -202,13 +208,27 @@ export default function MergeDuplicatesUI({ initialPairs }: { initialPairs: Dupe
   }
 
   function skipPair() {
-    const remaining = pairs.filter(p => pairKey(p) !== selectedKey)
-    setPairs(remaining)
+    setPairs(prev => prev.filter(p => pairKey(p) !== selectedKey))
     setReviewedCount(c => c + 1)
-    const next = remaining[0] ?? null
+    const next = filteredPairs.find(p => pairKey(p) !== selectedKey) ?? null
     setSelectedKey(next ? pairKey(next) : null)
     setSwapped(false)
     if (next) setChoices(initChoices(next.a, next.b))
+  }
+
+  function toggleFilter(key: FilterKey) {
+    const next = activeFilter === key ? "all" : key
+    setActiveFilter(next)
+    // Select first pair in the new filtered view
+    let base = pairs
+    if (next === "definite") base = pairs.filter(p => p.score >= 1.0)
+    else if (next === "high")   base = pairs.filter(p => p.score >= 0.95 && p.score < 1.0)
+    else if (next === "medium") base = pairs.filter(p => p.score >= 0.87 && p.score < 0.95)
+    else if (next === "lower")  base = pairs.filter(p => p.score < 0.87)
+    const first = base[0] ?? null
+    setSelectedKey(first ? pairKey(first) : null)
+    setSwapped(false)
+    if (first) setChoices(initChoices(first.a, first.b))
   }
 
   async function runAutoDedupe() {
@@ -222,33 +242,6 @@ export default function MergeDuplicatesUI({ initialPairs }: { initialPairs: Dupe
     } catch (e) {
       setAutoDedupe({ status: "error", merged: 0, results: [], error: String(e) })
     }
-  }
-
-  async function mergeAllSameEmail() {
-    if (stats.definite === 0) return
-    setMergingEmail(true)
-    setEmailMergeError(null)
-    try {
-      // Server groups by email and resolves multi-person clusters correctly —
-      // avoids the pairwise conflict where B appears as both keeper and loser.
-      const res = await fetch("/api/contacts/merge-same-email", { method: "POST" })
-      if (!res.ok) {
-        const body = await res.json().catch(() => ({}))
-        throw new Error(body.error ?? `HTTP ${res.status}`)
-      }
-      const data = await res.json()
-      const deletedIds = new Set<string>(data.deletedIds ?? [])
-      const remaining = pairs.filter(p => !deletedIds.has(p.a.id) && !deletedIds.has(p.b.id))
-      setPairs(remaining)
-      setReviewedCount(c => c + data.merged)
-      const next = remaining[0] ?? null
-      setSelectedKey(next ? pairKey(next) : null)
-      setSwapped(false)
-      if (next) setChoices(initChoices(next.a, next.b))
-    } catch (e) {
-      setEmailMergeError(String(e))
-    }
-    setMergingEmail(false)
   }
 
   const pair = selectedKey ? pairs.find(p => pairKey(p) === selectedKey) ?? null : null
@@ -288,31 +281,17 @@ export default function MergeDuplicatesUI({ initialPairs }: { initialPairs: Dupe
           <StatCell label="Remaining" value={String(pairs.length)} accent />
           {reviewedCount > 0 && <StatCell label="Done this session" value={String(reviewedCount)} />}
           {stats.definite > 0 && (
-            <StatCell
-              label="Same email"
-              value={String(stats.definite)}
-              dot="#c4572a"
-              action={
-                <button
-                  onClick={mergeAllSameEmail}
-                  disabled={mergingEmail}
-                  style={{ marginTop: "6px", fontSize: "9px", fontFamily: "inherit", background: "var(--accent)", color: "#fff", border: "none", borderRadius: "4px", padding: "3px 7px", cursor: mergingEmail ? "wait" : "pointer", opacity: mergingEmail ? 0.6 : 1, letterSpacing: "0.04em" }}
-                >
-                  {mergingEmail ? "merging…" : "merge all"}
-                </button>
-              }
-            />
+            <StatCell label="Same email"   value={String(stats.definite)} dot="#c4572a"       onClick={() => toggleFilter("definite")} active={activeFilter === "definite"} />
           )}
-          {stats.high > 0 && <StatCell label="Very similar" value={String(stats.high)} dot="#b45309" />}
-          {stats.medium > 0 && <StatCell label="Similar name" value={String(stats.medium)} dot="#7c6d00" />}
-          {stats.lower > 0 && <StatCell label="Needs review" value={String(stats.lower)} dot="var(--ink-4)" />}
-        </div>
-      )}
-
-      {emailMergeError && (
-        <div style={{ marginBottom: "16px", padding: "10px 14px", background: "#fef2f2", border: "1px solid #fecaca", borderRadius: "8px", fontSize: "12px", color: "#b91c1c", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <span>Same-email merge failed: {emailMergeError}</span>
-          <button onClick={() => setEmailMergeError(null)} style={{ background: "transparent", border: "none", cursor: "pointer", color: "#b91c1c", fontSize: "13px", marginLeft: "10px" }}>✕</button>
+          {stats.high > 0 && (
+            <StatCell label="Very similar" value={String(stats.high)}     dot="#b45309"       onClick={() => toggleFilter("high")}     active={activeFilter === "high"} />
+          )}
+          {stats.medium > 0 && (
+            <StatCell label="Similar name" value={String(stats.medium)}   dot="#7c6d00"       onClick={() => toggleFilter("medium")}   active={activeFilter === "medium"} />
+          )}
+          {stats.lower > 0 && (
+            <StatCell label="Needs review" value={String(stats.lower)}    dot="var(--ink-4)"  onClick={() => toggleFilter("lower")}    active={activeFilter === "lower"} />
+          )}
         </div>
       )}
 
@@ -595,24 +574,31 @@ export default function MergeDuplicatesUI({ initialPairs }: { initialPairs: Dupe
   )
 }
 
-function StatCell({ label, value, accent, dot, action }: { label: string; value: string; accent?: boolean; dot?: string; action?: React.ReactNode }) {
+function StatCell({ label, value, accent, dot, onClick, active }: {
+  label: string; value: string; accent?: boolean; dot?: string; onClick?: () => void; active?: boolean
+}) {
   return (
-    <div style={{
-      flex: "1 1 0",
-      padding: "12px 16px",
-      borderRight: "1px solid var(--border)",
-      minWidth: 0,
-    }}>
+    <div
+      onClick={onClick}
+      style={{
+        flex: "1 1 0",
+        padding: "12px 16px",
+        borderRight: "1px solid var(--border)",
+        minWidth: 0,
+        cursor: onClick ? "pointer" : "default",
+        background: active ? "var(--accent-soft)" : "transparent",
+        transition: "background 0.12s",
+      }}
+    >
       <div style={{ display: "flex", alignItems: "center", gap: "5px", marginBottom: "3px" }}>
-        {dot && <span style={{ width: "5px", height: "5px", borderRadius: "50%", background: dot, flexShrink: 0, display: "inline-block" }} />}
-        <span style={{ fontSize: "9px", color: "var(--ink-4)", textTransform: "uppercase", letterSpacing: "0.08em", whiteSpace: "nowrap" }}>
-          {label}
+        {dot && <span style={{ width: "5px", height: "5px", borderRadius: "50%", background: active ? "var(--accent)" : dot, flexShrink: 0, display: "inline-block" }} />}
+        <span style={{ fontSize: "9px", color: active ? "var(--accent)" : "var(--ink-4)", textTransform: "uppercase", letterSpacing: "0.08em", whiteSpace: "nowrap" }}>
+          {label}{active ? " ×" : ""}
         </span>
       </div>
-      <div style={{ fontSize: "20px", fontWeight: 600, fontFamily: "var(--font-display)", color: accent ? "var(--accent)" : "var(--ink)", lineHeight: 1 }}>
+      <div style={{ fontSize: "20px", fontWeight: 600, fontFamily: "var(--font-display)", color: accent || active ? "var(--accent)" : "var(--ink)", lineHeight: 1 }}>
         {value}
       </div>
-      {action}
     </div>
   )
 }
