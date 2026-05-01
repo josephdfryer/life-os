@@ -68,13 +68,14 @@ export default function ImportConversationsPage() {
       // Fetch existing contacts to pass to Claude for matching
       const contactsRes = await fetch("/api/persons?minimal=true&limit=200")
       const contactsData = contactsRes.ok ? await contactsRes.json() : {}
-      const contacts: ContactRef[] = (contactsData.persons ?? []).map((p: ContactRef) => ({
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const contacts: ContactRef[] = (contactsData.persons ?? []).map((p: any) => ({
         id: p.id,
         first: p.first,
         last: p.last,
         headline: p.headline ?? null,
-        email: p.email ?? null,
-        phone: p.phone ?? null,
+        email: Array.isArray(p.emails) ? (p.emails[0] ?? null) : null,
+        phone: Array.isArray(p.phones) ? (p.phones[0] ?? null) : null,
       }))
       setExistingContacts(contacts)
 
@@ -92,14 +93,32 @@ export default function ImportConversationsPage() {
 
       const parsed: ImportedPerson[] = data.results
 
+      // Deterministic fallback: run Jaro-Winkler on persons Claude didn't match
+      const enriched: ImportedPerson[] = parsed.map(r => {
+        if (r.matchedPersonId || contacts.length === 0) return r
+        const match = findBestContactMatch(r.name, contacts)
+        if (!match) return r
+        if (match.score >= 0.92) {
+          return {
+            ...r,
+            isNew: false,
+            matchedPersonId: match.contact.id,
+            matchedPersonName: `${match.contact.first} ${match.contact.last}`,
+          }
+        }
+        // Medium confidence — flag for manual review so suggestions appear
+        return { ...r, needsReview: true }
+      })
+
       // Find persons that need manual resolution:
-      // - not new (Claude thinks they exist) but no matchedPersonId was found
-      const needsResolution = parsed
+      // - Claude thinks they exist but couldn't find a match
+      // - Flagged needsReview (ambiguous or medium-confidence fuzzy match)
+      const needsResolution = enriched
         .map((r, i) => ({ r, i }))
-        .filter(({ r }) => !r.isNew && !r.matchedPersonId)
+        .filter(({ r }) => !r.matchedPersonId && (!r.isNew || r.needsReview))
         .map(({ i }) => i)
 
-      setResults(parsed)
+      setResults(enriched)
 
       if (needsResolution.length > 0) {
         setUnresolvedQueue(needsResolution)
@@ -371,25 +390,65 @@ export default function ImportConversationsPage() {
   )
 }
 
+// ─── Jaro-Winkler helpers ─────────────────────────────────────────────────────
+
+function jaro(s1: string, s2: string): number {
+  if (s1 === s2) return 1
+  const len1 = s1.length, len2 = s2.length
+  if (!len1 || !len2) return 0
+  const matchDist = Math.max(Math.floor(Math.max(len1, len2) / 2) - 1, 0)
+  const s1m = new Array(len1).fill(false)
+  const s2m = new Array(len2).fill(false)
+  let matches = 0
+  for (let i = 0; i < len1; i++) {
+    const lo = Math.max(0, i - matchDist)
+    const hi = Math.min(i + matchDist + 1, len2)
+    for (let j = lo; j < hi; j++) {
+      if (s2m[j] || s1[i] !== s2[j]) continue
+      s1m[i] = true; s2m[j] = true; matches++; break
+    }
+  }
+  if (!matches) return 0
+  let t = 0, k = 0
+  for (let i = 0; i < len1; i++) {
+    if (!s1m[i]) continue
+    while (!s2m[k]) k++
+    if (s1[i] !== s2[k]) t++
+    k++
+  }
+  return (matches / len1 + matches / len2 + (matches - t / 2) / matches) / 3
+}
+
+function jaroWinkler(s1: string, s2: string): number {
+  const j = jaro(s1, s2)
+  let prefix = 0
+  for (let i = 0; i < Math.min(4, s1.length, s2.length); i++) {
+    if (s1[i] === s2[i]) prefix++; else break
+  }
+  return j + prefix * 0.1 * (1 - j)
+}
+
+function normStr(s: string): string {
+  return s.toLowerCase().trim().replace(/[^a-z0-9 ]/g, "")
+}
+
+function findBestContactMatch(name: string, contacts: ContactRef[]): { contact: ContactRef; score: number } | null {
+  const n = normStr(name)
+  let best: { contact: ContactRef; score: number } | null = null
+  for (const c of contacts) {
+    const score = jaroWinkler(n, normStr(`${c.first} ${c.last}`))
+    if (!best || score > best.score) best = { contact: c, score }
+  }
+  return best && best.score >= 0.82 ? best : null
+}
+
 // ─── Resolve Modal ────────────────────────────────────────────────────────────
 
 function getSuggestions(name: string, contacts: ContactRef[]): ContactRef[] {
-  const parts = name.toLowerCase().trim().split(/\s+/)
-  const firstName = parts[0] ?? ""
-  const lastInitial = parts[1]?.[0] ?? ""
-
-  const scored = contacts.map(c => {
-    const cFirst = c.first.toLowerCase()
-    const cLast = c.last.toLowerCase()
-    let score = 0
-    if (cFirst === firstName) score += 3
-    else if (cFirst.startsWith(firstName) || firstName.startsWith(cFirst)) score += 1
-    if (lastInitial && cLast.startsWith(lastInitial)) score += 2
-    return { c, score }
-  })
-
-  return scored
-    .filter(({ score }) => score > 0)
+  const n = normStr(name)
+  return contacts
+    .map(c => ({ c, score: jaroWinkler(n, normStr(`${c.first} ${c.last}`)) }))
+    .filter(({ score }) => score >= 0.65)
     .sort((a, b) => b.score - a.score)
     .slice(0, 5)
     .map(({ c }) => c)
