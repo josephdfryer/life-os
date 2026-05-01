@@ -107,12 +107,15 @@ export default function MergeDuplicatesUI({ initialPairs }: { initialPairs: Dupe
   const [autoDedupe, setAutoDedupe] = useState<AutoDedupeState>({ status: "idle", merged: 0, results: [] })
   const [reviewedCount, setReviewedCount] = useState(0)
   const [activeFilter, setActiveFilter] = useState<FilterKey>("all")
+  const [checkedKeys, setCheckedKeys] = useState<Set<string>>(new Set())
+  const [bulkMerging, setBulkMerging] = useState(false)
 
   // Sync when server re-renders with new data after router.refresh()
   const initializedRef = useRef(false)
   useEffect(() => {
     if (!initializedRef.current) { initializedRef.current = true; return }
     setPairs(initialPairs)
+    setCheckedKeys(new Set())
     const first = initialPairs[0] ?? null
     setSelectedKey(first ? pairKey(first) : null)
     setChoices(first ? initChoices(first.a, first.b) : {})
@@ -229,6 +232,64 @@ export default function MergeDuplicatesUI({ initialPairs }: { initialPairs: Dupe
     setSelectedKey(first ? pairKey(first) : null)
     setSwapped(false)
     if (first) setChoices(initChoices(first.a, first.b))
+  }
+
+  function toggleCheck(key: string) {
+    setCheckedKeys(prev => {
+      const next = new Set(prev)
+      if (next.has(key)) next.delete(key); else next.add(key)
+      return next
+    })
+  }
+
+  function toggleCheckAll() {
+    if (checkedKeys.size === filteredPairs.length) {
+      setCheckedKeys(new Set())
+    } else {
+      setCheckedKeys(new Set(filteredPairs.map(pairKey)))
+    }
+  }
+
+  async function handleBulkMerge() {
+    const toMerge = filteredPairs.filter(p => checkedKeys.has(pairKey(p)))
+    if (!toMerge.length) return
+    setBulkMerging(true)
+
+    // De-conflict: skip pairs where either person was already queued for deletion
+    const willDelete = new Set<string>()
+    const safe: Array<{ keepId: string; deleteId: string }> = []
+    for (const p of toMerge) {
+      if (willDelete.has(p.a.id) || willDelete.has(p.b.id)) continue
+      safe.push({ keepId: p.a.id, deleteId: p.b.id })
+      willDelete.add(p.b.id)
+    }
+
+    try {
+      const res = await fetch("/api/contacts/merge-batch", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ pairs: safe }),
+      })
+      if (!res.ok) throw new Error(`HTTP ${res.status}`)
+      const data = await res.json()
+      const deletedIds = new Set<string>(data.deletedIds ?? [])
+      const mergedPairKeys = new Set(toMerge.map(pairKey))
+
+      setPairs(prev => prev.filter(p => !deletedIds.has(p.a.id) && !deletedIds.has(p.b.id)))
+      setCheckedKeys(new Set())
+      setReviewedCount(c => c + safe.length)
+
+      if (selectedKey && mergedPairKeys.has(selectedKey)) {
+        const remaining = pairs.filter(p => !deletedIds.has(p.a.id) && !deletedIds.has(p.b.id))
+        const next = remaining[0] ?? null
+        setSelectedKey(next ? pairKey(next) : null)
+        setSwapped(false)
+        if (next) setChoices(initChoices(next.a, next.b))
+      }
+    } catch (e) {
+      console.error("[bulk-merge]", e)
+    }
+    setBulkMerging(false)
   }
 
   async function runAutoDedupe() {
@@ -407,40 +468,117 @@ export default function MergeDuplicatesUI({ initialPairs }: { initialPairs: Dupe
               filteredPairs.map((p) => {
                 const key = pairKey(p)
                 const active = selectedKey === key
+                const checked = checkedKeys.has(key)
                 const aCount = personPairCount[p.a.id] ?? 0
                 const bCount = personPairCount[p.b.id] ?? 0
+                const borderColor = checked ? "var(--accent)" : active ? "var(--accent)" : "var(--border)"
                 return (
-                  <button
-                    key={key}
-                    onClick={() => selectPair(p)}
-                    style={{
-                      textAlign: "left",
-                      padding: "11px 13px",
-                      background: active ? "var(--accent-soft)" : "var(--surface)",
-                      border: `1px solid ${active ? "var(--accent)" : "var(--border)"}`,
-                      borderRadius: "10px",
-                      cursor: "pointer",
-                      fontFamily: "inherit",
-                      transition: "all 0.1s",
-                    }}
-                  >
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "4px" }}>
-                      <span style={{ fontSize: "12px", fontWeight: 500, color: "var(--ink)" }}>
-                        {p.a.first} {p.a.last}
-                        {aCount > 1 && <span style={{ fontSize: "9px", fontWeight: 400, color: "var(--ink-4)", marginLeft: "5px" }}>{aCount} pairs</span>}
+                  <div key={key} style={{ display: "flex", alignItems: "stretch" }}>
+                    {/* Checkbox */}
+                    <button
+                      onClick={() => toggleCheck(key)}
+                      style={{
+                        flexShrink: 0,
+                        width: "30px",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        background: checked ? "var(--accent-soft)" : "var(--surface)",
+                        border: `1px solid ${borderColor}`,
+                        borderRight: "none",
+                        borderRadius: "10px 0 0 10px",
+                        cursor: "pointer",
+                        padding: 0,
+                      }}
+                    >
+                      <span style={{
+                        width: "13px", height: "13px",
+                        border: `1.5px solid ${checked ? "var(--accent)" : "var(--border)"}`,
+                        borderRadius: "3px",
+                        background: checked ? "var(--accent)" : "transparent",
+                        display: "flex", alignItems: "center", justifyContent: "center",
+                        flexShrink: 0,
+                        transition: "all 0.1s",
+                      }}>
+                        {checked && <span style={{ color: "#fff", fontSize: "9px", lineHeight: 1, marginTop: "1px" }}>✓</span>}
                       </span>
-                      <span style={{ fontSize: "10px", fontWeight: 600, color: scoreColor(p.score), background: scoreBg(p.score), padding: "2px 7px", borderRadius: "20px", flexShrink: 0, marginLeft: "6px" }}>
-                        {Math.round(p.score * 100)}%
-                      </span>
-                    </div>
-                    <div style={{ fontSize: "11px", color: "var(--ink-3)", marginBottom: "3px" }}>
-                      {p.b.first} {p.b.last}
-                      {bCount > 1 && <span style={{ fontSize: "9px", color: "var(--ink-4)", marginLeft: "5px" }}>{bCount} pairs</span>}
-                    </div>
-                    <div style={{ fontSize: "10px", color: "var(--ink-4)" }}>{p.reason}</div>
-                  </button>
+                    </button>
+                    {/* Content */}
+                    <button
+                      onClick={() => selectPair(p)}
+                      style={{
+                        flex: 1,
+                        textAlign: "left",
+                        padding: "11px 13px",
+                        background: active ? "var(--accent-soft)" : "var(--surface)",
+                        border: `1px solid ${borderColor}`,
+                        borderLeft: "none",
+                        borderRadius: "0 10px 10px 0",
+                        cursor: "pointer",
+                        fontFamily: "inherit",
+                        transition: "all 0.1s",
+                      }}
+                    >
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "4px" }}>
+                        <span style={{ fontSize: "12px", fontWeight: 500, color: "var(--ink)" }}>
+                          {p.a.first} {p.a.last}
+                          {aCount > 1 && <span style={{ fontSize: "9px", fontWeight: 400, color: "var(--ink-4)", marginLeft: "5px" }}>{aCount} pairs</span>}
+                        </span>
+                        <span style={{ fontSize: "10px", fontWeight: 600, color: scoreColor(p.score), background: scoreBg(p.score), padding: "2px 7px", borderRadius: "20px", flexShrink: 0, marginLeft: "6px" }}>
+                          {Math.round(p.score * 100)}%
+                        </span>
+                      </div>
+                      <div style={{ fontSize: "11px", color: "var(--ink-3)", marginBottom: "3px" }}>
+                        {p.b.first} {p.b.last}
+                        {bCount > 1 && <span style={{ fontSize: "9px", color: "var(--ink-4)", marginLeft: "5px" }}>{bCount} pairs</span>}
+                      </div>
+                      <div style={{ fontSize: "10px", color: "var(--ink-4)" }}>{p.reason}</div>
+                    </button>
+                  </div>
                 )
               })
+            )}
+
+            {/* Bulk action bar */}
+            {checkedKeys.size > 0 && (
+              <div style={{
+                marginTop: "4px",
+                padding: "10px 13px",
+                background: "var(--accent-soft)",
+                border: "1px solid var(--accent)",
+                borderRadius: "10px",
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+              }}>
+                <span style={{ fontSize: "11px", color: "var(--accent)", fontWeight: 500, flex: 1 }}>
+                  {checkedKeys.size} selected
+                </span>
+                <button
+                  onClick={toggleCheckAll}
+                  style={{ fontSize: "10px", color: "var(--accent)", background: "transparent", border: "none", cursor: "pointer", fontFamily: "inherit", padding: "0 4px", textDecoration: "underline" }}
+                >
+                  {checkedKeys.size === filteredPairs.length ? "Deselect all" : "Select all"}
+                </button>
+                <button
+                  onClick={() => setCheckedKeys(new Set())}
+                  style={{ fontSize: "10px", color: "var(--ink-3)", background: "transparent", border: "1px solid var(--border)", borderRadius: "5px", cursor: "pointer", fontFamily: "inherit", padding: "3px 8px" }}
+                >
+                  Clear
+                </button>
+                <button
+                  onClick={handleBulkMerge}
+                  disabled={bulkMerging}
+                  style={{
+                    fontSize: "11px", fontWeight: 500, color: "#fff",
+                    background: bulkMerging ? "var(--ink-4)" : "var(--accent)",
+                    border: "none", borderRadius: "6px", cursor: bulkMerging ? "wait" : "pointer",
+                    fontFamily: "inherit", padding: "5px 12px", transition: "background 0.12s",
+                  }}
+                >
+                  {bulkMerging ? "Merging…" : `Merge ${checkedKeys.size}`}
+                </button>
+              </div>
             )}
           </div>
 
