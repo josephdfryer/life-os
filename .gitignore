@@ -29,6 +29,9 @@ apps/*/uploads/
 # Claude Code local settings (may contain keys in curl commands)
 .claude/settings.local.json
 
+# Local cross-agent state for Claude Code / Codex handoffs
+.agent-sync/
+
 # OS
 .DS_Store
 apps/persons/package-lock.json
