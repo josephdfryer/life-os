@@ -41,8 +41,13 @@ export default function ImportConversationsPage() {
       return
     }
     setFiles(incoming)
-    const content = await readFiles(incoming)
-    setText(content)
+    setError(null)
+    try {
+      const content = await readFiles(incoming)
+      setText(content)
+    } catch (e) {
+      setError(`Could not read file: ${e instanceof Error ? e.message : String(e)}`)
+    }
   }
 
   function handleDrop(e: React.DragEvent) {
@@ -53,7 +58,19 @@ export default function ImportConversationsPage() {
   }
 
   async function handleAnalyze() {
-    const content = text.trim()
+    let content = text.trim()
+
+    // If text didn't populate (e.g. silent read failure), try reading files again
+    if (!content && files.length > 0) {
+      try {
+        content = (await readFiles(files)).trim()
+        setText(content)
+      } catch (e) {
+        setError(`Could not read file: ${e instanceof Error ? e.message : String(e)}`)
+        return
+      }
+    }
+
     if (!content) {
       setError("Paste some content or drop a file to get started.")
       return
@@ -280,15 +297,15 @@ export default function ImportConversationsPage() {
 
             <button
               onClick={handleAnalyze}
-              disabled={!text.trim()}
+              disabled={!text.trim() && files.length === 0}
               style={{
                 width: "100%",
                 padding: "14px",
-                background: text.trim() ? "var(--accent)" : "var(--border)",
-                color: text.trim() ? "#fff" : "var(--ink-4)",
+                background: (text.trim() || files.length > 0) ? "var(--accent)" : "var(--border)",
+                color: (text.trim() || files.length > 0) ? "#fff" : "var(--ink-4)",
                 border: "none",
                 borderRadius: "8px",
-                cursor: text.trim() ? "pointer" : "not-allowed",
+                cursor: (text.trim() || files.length > 0) ? "pointer" : "not-allowed",
                 fontFamily: "inherit",
                 fontSize: "13px",
                 fontWeight: 500,
