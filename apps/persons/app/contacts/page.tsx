@@ -44,9 +44,17 @@ export default function PeoplePage() {
   const [loadingMore, setLoadingMore] = useState(false)
   const [page, setPage]               = useState(0)
   const searchTimer                   = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const sentinelRef                   = useRef<HTMLDivElement | null>(null)
+  const loadingMoreRef                = useRef(false)
 
   const fetchPage = useCallback(async (p: number, q: string, s: SortKey, fields: Set<FieldKey>, reset: boolean) => {
-    if (reset) setLoading(true); else setLoadingMore(true)
+    if (!reset && loadingMoreRef.current) return
+    if (reset) {
+      setLoading(true)
+    } else {
+      loadingMoreRef.current = true
+      setLoadingMore(true)
+    }
     try {
       const params = new URLSearchParams({
         minimal: "true",
@@ -65,11 +73,22 @@ export default function PeoplePage() {
         hasMore:  json.hasMore,
       }))
     } finally {
-      if (reset) setLoading(false); else setLoadingMore(false)
+      if (reset) {
+        setLoading(false)
+      } else {
+        loadingMoreRef.current = false
+        setLoadingMore(false)
+      }
     }
   }, [])
 
   useEffect(() => { fetchPage(0, "", "name", new Set(), true) }, [fetchPage])
+
+  useEffect(() => {
+    return () => {
+      if (searchTimer.current) clearTimeout(searchTimer.current)
+    }
+  }, [])
 
   function handleSearch(q: string) {
     setSearch(q)
@@ -103,11 +122,27 @@ export default function PeoplePage() {
     fetchPage(0, search, sort, empty, true)
   }
 
-  function loadMore() {
+  const loadMore = useCallback(() => {
+    if (loading || loadingMoreRef.current || !data.hasMore) return
     const next = page + 1
     setPage(next)
     fetchPage(next, search, sort, requiredFields, false)
-  }
+  }, [data.hasMore, fetchPage, loading, page, requiredFields, search, sort])
+
+  useEffect(() => {
+    const sentinel = sentinelRef.current
+    if (!sentinel || loading || !data.hasMore) return
+
+    const observer = new IntersectionObserver(
+      entries => {
+        if (entries[0]?.isIntersecting) loadMore()
+      },
+      { rootMargin: "640px 0px 320px" },
+    )
+
+    observer.observe(sentinel)
+    return () => observer.disconnect()
+  }, [data.hasMore, loadMore, loading])
 
   function reload() {
     setPage(0)
@@ -243,13 +278,13 @@ export default function PeoplePage() {
           </div>
 
           {hasMore && (
-            <div style={{ textAlign: "center", marginTop: "20px" }}>
+            <div ref={sentinelRef} style={{ textAlign: "center", marginTop: "20px", minHeight: "44px" }}>
               <button
                 onClick={loadMore}
                 disabled={loadingMore}
                 style={{ padding: "10px 28px", background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "8px", color: "var(--ink-3)", cursor: loadingMore ? "wait" : "pointer", fontFamily: "inherit", fontSize: "12px" }}
               >
-                {loadingMore ? "Loading…" : `Load more · ${total - persons.length} remaining`}
+                {loadingMore ? "Loading more…" : `Load more now · ${total - persons.length} remaining`}
               </button>
             </div>
           )}
