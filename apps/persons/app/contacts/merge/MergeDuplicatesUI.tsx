@@ -314,7 +314,7 @@ export default function MergeDuplicatesUI({ initialPairs }: { initialPairs: Dupe
   return (
     <div style={{ maxWidth: "1020px", margin: "0 auto", padding: "32px 24px" }}>
 
-      <BackLink label="Contacts" href="/contacts" component={Link} style={{ marginBottom: "16px" }} />
+      <BackLink label="People" href="/contacts" component={Link} style={{ marginBottom: "16px" }} />
 
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: pairs.length > 0 ? "14px" : "24px" }}>
         <h1 style={{ fontFamily: "var(--font-display)", fontSize: "24px", fontWeight: 600, color: "var(--ink)", margin: 0 }}>
@@ -363,7 +363,7 @@ export default function MergeDuplicatesUI({ initialPairs }: { initialPairs: Dupe
         <div style={{ marginBottom: "20px", padding: "16px 18px", background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "10px" }}>
           <div style={{ fontSize: "13px", fontWeight: 500, color: "var(--ink)", marginBottom: "6px" }}>Auto-merge high-confidence duplicates?</div>
           <div style={{ fontSize: "12px", color: "var(--ink-3)", marginBottom: "14px" }}>
-            Scans all contacts and automatically merges pairs with ≥93% similarity (exact email, exact phone, or very similar names). The contact with more interactions is kept; data is merged, never lost.
+            Scans all people and automatically merges pairs with ≥93% similarity (exact email, exact phone, or very similar names). The person with more interactions is kept; data is merged, never lost.
           </div>
           <div style={{ display: "flex", gap: "8px" }}>
             <Button variant="primary" size="sm" onClick={runAutoDedupe} style={{ borderRadius: "7px", textTransform: "none", letterSpacing: 0 }}>
@@ -379,7 +379,7 @@ export default function MergeDuplicatesUI({ initialPairs }: { initialPairs: Dupe
       {autoDedupe.status === "running" && (
         <div style={{ marginBottom: "20px", padding: "16px 18px", background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "10px", display: "flex", alignItems: "center", gap: "12px" }}>
           <Spinner size={14} color="var(--accent)" />
-          <span style={{ fontSize: "12px", color: "var(--ink-3)" }}>Scanning all contacts… this may take a moment.</span>
+          <span style={{ fontSize: "12px", color: "var(--ink-3)" }}>Scanning all people… this may take a moment.</span>
         </div>
       )}
 

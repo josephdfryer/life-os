@@ -2,6 +2,7 @@ export type ParsedContact = {
   first: string
   last: string
   fullName: string
+  title: string | null
   headline: string | null
   company: string | null
   email: string | null
@@ -129,6 +130,7 @@ function parseOneVCard(card: string): ParsedContact {
     first: first || fn.split(" ")[0] || "",
     last: last || fn.split(" ").slice(1).join(" ") || "",
     fullName: fn || `${first} ${last}`.trim(),
+    title,
     headline,
     company,
     email,

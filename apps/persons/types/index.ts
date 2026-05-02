@@ -4,6 +4,7 @@ export type Person = {
   updatedAt: Date
   first: string
   last: string
+  title: string | null
   headline: string | null
   emails: string[]
   phones: string[]

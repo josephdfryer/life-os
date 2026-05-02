@@ -3,13 +3,14 @@ import Anthropic from "@anthropic-ai/sdk"
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
 
-type ContactRef = { id: string; first: string; last: string; headline: string | null; email: string | null; phone: string | null }
+type ContactRef = { id: string; first: string; last: string; title: string | null; headline: string | null; email: string | null; phone: string | null }
 
 function buildSystemPrompt(contacts: ContactRef[]): string {
   const contactList = contacts.length
     ? contacts.map(c => {
         const parts = [`id: "${c.id}"`, `name: "${c.first} ${c.last}"`]
-        if (c.headline) parts.push(`role: "${c.headline}"`)
+        if (c.title) parts.push(`title: "${c.title}"`)
+        if (c.headline) parts.push(`headline: "${c.headline}"`)
         if (c.email) parts.push(`email: "${c.email}"`)
         if (c.phone) parts.push(`phone: "${c.phone}"`)
         return `  - ${parts.join(", ")}`
@@ -24,7 +25,7 @@ Known contacts already in the CRM:
 ${contactList}
 
 Data model:
-- Person nodes: name, headline/role, tags, closeness (1=acquaintance/no cadence, 2=nurture/professional contact to stay top of mind, 3=friend, 4=inner circle)
+- Person nodes: name, title, headline/context, tags, closeness (1=acquaintance/no cadence, 2=nurture/professional contact to stay top of mind, 3=friend, 4=inner circle)
 - Event nodes: exist independently, have a type (meeting, call, dinner, message, etc)
 - Interactions: connect Person nodes TO Events, carry personal metadata
 

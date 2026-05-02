@@ -72,9 +72,10 @@ export default function PersonCard({ person }: Props) {
             )}
           </div>
 
-          {person.headline && (
+          {(person.title || person.headline) && (
             <div style={{ color: "var(--ink-3)", fontSize: "11px", marginBottom: "4px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-              {person.headline}
+              {person.title ?? person.headline}
+              {person.title && person.company ? ` at ${person.company}` : ""}
             </div>
           )}
 

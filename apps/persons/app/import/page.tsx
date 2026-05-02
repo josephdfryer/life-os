@@ -12,6 +12,7 @@ type ContactRef = {
   id: string
   first: string
   last: string
+  title: string | null
   headline: string | null
   email: string | null
   phone: string | null
@@ -90,6 +91,7 @@ export default function ImportConversationsPage() {
         id: p.id,
         first: p.first,
         last: p.last,
+        title: p.title ?? null,
         headline: p.headline ?? null,
         email: Array.isArray(p.emails) ? (p.emails[0] ?? null) : null,
         phone: Array.isArray(p.phones) ? (p.phones[0] ?? null) : null,
@@ -500,6 +502,7 @@ function ResolveModal({
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         setApiResults((data.persons ?? []).map((p: any) => ({
           id: p.id, first: p.first, last: p.last,
+          title: p.title ?? null,
           headline: p.headline ?? null,
           email: Array.isArray(p.emails) ? (p.emails[0] ?? null) : null,
           phone: Array.isArray(p.phones) ? (p.phones[0] ?? null) : null,
@@ -533,7 +536,7 @@ function ResolveModal({
       <p style={{ fontSize: "12px", color: "var(--ink-3)", margin: "0 0 20px", lineHeight: 1.5 }}>
         {contacts.length > 0
           ? "This person wasn't automatically matched. Pick an existing contact or add them as new."
-          : "No existing contacts to match against. Add as a new person?"}
+          : "No existing people to match against. Add as a new person?"}
       </p>
 
       {contacts.length > 0 && (
@@ -556,7 +559,7 @@ function ResolveModal({
               type="text"
               value={search}
               onChange={e => setSearch(e.target.value)}
-              placeholder="Search all contacts…"
+              placeholder="Search all people…"
               autoFocus={suggestions.length === 0}
               style={{
                 width: "100%",
@@ -578,7 +581,7 @@ function ResolveModal({
                     ? apiResults.map(c => (
                         <ContactRow key={c.id} contact={c} onClick={() => onMatch(c)} />
                       ))
-                    : <div style={{ fontSize: "11px", color: "var(--ink-4)", padding: "6px 0" }}>No contacts found.</div>
+                    : <div style={{ fontSize: "11px", color: "var(--ink-4)", padding: "6px 0" }}>No people found.</div>
                 }
               </div>
             )}
@@ -643,8 +646,8 @@ function ContactRow({ contact, onClick }: { contact: ContactRef; onClick: () => 
         <div style={{ fontSize: "12px", fontWeight: 500, color: hovered ? "var(--accent)" : "var(--ink)" }}>
           {contact.first} {contact.last}
         </div>
-        {contact.headline && (
-          <div style={{ fontSize: "10px", color: "var(--ink-4)" }}>{contact.headline}</div>
+        {(contact.title || contact.headline) && (
+          <div style={{ fontSize: "10px", color: "var(--ink-4)" }}>{contact.title ?? contact.headline}</div>
         )}
       </div>
     </button>

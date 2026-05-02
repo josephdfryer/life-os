@@ -39,7 +39,7 @@ export async function POST(req: NextRequest) {
 
     // Load existing contacts for matching
     const existingPersons = await db.person.findMany({
-      select: { id: true, first: true, last: true, headline: true, emails: true, phones: true },
+      select: { id: true, first: true, last: true, title: true, headline: true, emails: true, phones: true },
     })
 
     // Run Claude analysis
@@ -87,6 +87,7 @@ export async function POST(req: NextRequest) {
           data: {
             first,
             last,
+            title: result.guessedHeadline || null,
             headline: result.guessedHeadline || null,
             closeness: result.guessedCloseness ?? 2,
             tags: JSON.stringify(result.guessedTags ?? []),
@@ -150,7 +151,7 @@ export async function POST(req: NextRequest) {
 
 // ─── Claude analysis ─────────────────────────────────────────────────────────
 
-type ContactRef = { id: string; first: string; last: string; headline: string | null; emails: string; phones: string }
+type ContactRef = { id: string; first: string; last: string; title: string | null; headline: string | null; emails: string; phones: string }
 type AnalyzedPerson = {
   name: string
   isNew: boolean
@@ -170,7 +171,8 @@ async function analyzeWithClaude(
   const contactList = contacts.length
     ? contacts.map(c => {
         const parts = [`id: "${c.id}"`, `name: "${c.first} ${c.last}"`]
-        if (c.headline) parts.push(`role: "${c.headline}"`)
+        if (c.title) parts.push(`title: "${c.title}"`)
+        if (c.headline) parts.push(`headline: "${c.headline}"`)
         const emails = JSON.parse(c.emails) as string[]
         const phones = JSON.parse(c.phones) as string[]
         if (emails[0]) parts.push(`email: "${emails[0]}"`)

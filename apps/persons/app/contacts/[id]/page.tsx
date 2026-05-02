@@ -87,7 +87,7 @@ export default function PersonDetailPage({ params }: { params: Promise<{ id: str
   return (
     <div style={{ maxWidth: "720px", margin: "0 auto", padding: "32px 24px" }}>
 
-      <BackLink label="All Contacts" href="/contacts" component={Link} style={{ marginBottom: "20px" }} />
+      <BackLink label="All People" href="/contacts" component={Link} style={{ marginBottom: "20px" }} />
 
       {/* ── Header card ─────────────────────────────────────────── */}
       <Card style={{ borderRadius: "14px", marginBottom: "20px", overflow: "hidden" }}>
@@ -111,9 +111,10 @@ export default function PersonDetailPage({ params }: { params: Promise<{ id: str
             }}>
               {person.first} {person.last}
             </h1>
-            {person.headline && (
+            {(person.title || person.headline) && (
               <div style={{ fontSize: "12px", color: "var(--ink-3)", marginBottom: "8px" }}>
-                {person.headline}
+                {person.title ?? person.headline}
+                {person.title && person.company ? ` at ${person.company}` : ""}
               </div>
             )}
             {tags.length > 0 && (
@@ -162,8 +163,9 @@ export default function PersonDetailPage({ params }: { params: Promise<{ id: str
 
         {/* Contact info */}
         {(person.emails.length > 0 || person.phones.length > 0 || person.birthday ||
-          person.company || person.location || person.linkedin || person.twitter || person.website) && (
+          person.title || person.company || person.location || person.linkedin || person.twitter || person.website) && (
           <div style={{ display: "flex", flexDirection: "column", gap: "8px", padding: "16px 22px" }}>
+            {person.title && <ContactRow icon="◌" items={[person.title]} />}
             {person.company && <ContactRow icon="○" items={[person.company]} />}
             {person.location && <ContactRow icon="◎" items={[person.location]} />}
             {person.emails.length > 0 && (

@@ -129,6 +129,7 @@ export function applyMapping(
         first,
         last,
         fullName:  `${first} ${last}`.trim(),
+        title,
         headline:  title && company ? `${title} at ${company}` : title ?? company ?? null,
         company,
         email:     get(row, mapping.email),

@@ -13,7 +13,7 @@ function buildPatch(
 ): Record<string, unknown> {
   const patch: Record<string, unknown> = {}
 
-  for (const key of ["headline", "company", "location", "birthday", "linkedin", "twitter", "website"]) {
+  for (const key of ["title", "headline", "company", "location", "birthday", "linkedin", "twitter", "website"]) {
     if (!keeper[key] && loser[key]) patch[key] = loser[key]
   }
 
@@ -55,7 +55,7 @@ export async function POST() {
     select: {
       id: true, createdAt: true,
       first: true, last: true,
-      headline: true, company: true, location: true,
+      title: true, headline: true, company: true, location: true,
       birthday: true, linkedin: true, twitter: true, website: true,
       notes: true, closeness: true,
       emails: true, phones: true, tags: true, values: true,

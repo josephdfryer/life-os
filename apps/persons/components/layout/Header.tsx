@@ -7,7 +7,7 @@ import { useSession, signOut } from "next-auth/react"
 
 const IMPORT_ITEMS = [
   { href: "/import", label: "Import Conversations", desc: "Slack, iMessage, email, any chat" },
-  { href: "/import/contacts", label: "Import Contacts", desc: "vCard, Google CSV, LinkedIn CSV" },
+  { href: "/import/contacts", label: "Import People", desc: "vCard, Google CSV, LinkedIn CSV" },
 ]
 
 export default function Header() {

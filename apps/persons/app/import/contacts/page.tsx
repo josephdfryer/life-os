@@ -139,7 +139,7 @@ function computeFillableFields(contact: ParsedContact, person: Person): Record<s
     }
   }
   const pairs: [keyof ParsedContact, keyof Person][] = [
-    ["company", "company"], ["headline", "headline"], ["birthday", "birthday"],
+    ["title", "title"], ["company", "company"], ["headline", "headline"], ["birthday", "birthday"],
     ["location", "location"], ["linkedin", "linkedin"], ["twitter", "twitter"],
     ["website", "website"], ["notes", "notes"],
   ]
@@ -224,7 +224,7 @@ function guessNameFromEmail(email: string): { first: string; last: string } | nu
 
 // ── Field filter chips ────────────────────────────────────────────────────────
 
-type FieldKey = "first" | "last" | "email" | "phone" | "company" | "headline" | "birthday" | "location" | "linkedin" | "twitter" | "website" | "notes" | "guessed"
+type FieldKey = "first" | "last" | "email" | "phone" | "company" | "title" | "headline" | "birthday" | "location" | "linkedin" | "twitter" | "website" | "notes" | "guessed"
 
 type FieldChip = { key: FieldKey; label: string; check: (c: ReviewContact) => boolean }
 
@@ -234,7 +234,8 @@ const FIELD_CHIPS: FieldChip[] = [
   { key: "email",    label: "Email",      check: c => !!(c.email?.trim()) },
   { key: "phone",    label: "Phone",      check: c => !!(c.phone?.trim()) },
   { key: "company",  label: "Company",    check: c => !!(c.company?.trim()) },
-  { key: "headline", label: "Title",      check: c => !!(c.headline?.trim()) },
+  { key: "title",    label: "Title",      check: c => !!(c.title?.trim()) },
+  { key: "headline", label: "Headline",   check: c => !!(c.headline?.trim()) },
   { key: "birthday", label: "Birthday",   check: c => !!(c.birthday?.trim() && !c.birthday.startsWith("0000")) },
   { key: "location", label: "Location",   check: c => !!(c.location?.trim()) },
   { key: "linkedin", label: "LinkedIn",   check: c => !!(c.linkedin?.trim()) },
@@ -290,7 +291,7 @@ export default function ImportContactsPage() {
   useEffect(() => {
     fetch("/api/persons?minimal=true")
       .then(r => r.json())
-      .then((data: Person[]) => setExistingPersons(Array.isArray(data) ? data : []))
+      .then(data => setExistingPersons(Array.isArray(data) ? data : data.persons ?? []))
       .catch(() => {})
   }, [])
 
@@ -392,8 +393,8 @@ export default function ImportContactsPage() {
     try {
       // Fetch current count for color assignment only
       const countRes = await fetch("/api/persons?minimal=true")
-      const existing = countRes.ok ? await countRes.json() : []
-      const offset   = existing.length
+      const existing = countRes.ok ? await countRes.json() : {}
+      const offset   = Array.isArray(existing) ? existing.length : existing.total ?? 0
       let created = 0, updated = 0
 
       for (const c of toProcess) {
@@ -414,7 +415,7 @@ export default function ImportContactsPage() {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-              first: c.first, last: c.last, headline: c.headline, company: c.company,
+              first: c.first, last: c.last, title: c.title, headline: c.headline, company: c.company,
               email: c.email, phone: c.phone,
               birthday: c.birthday && !c.birthday.startsWith("0000") ? c.birthday : null,
               closeness: c.closeness, tags, values: [], notes: c.notes, location: c.location,
@@ -811,14 +812,14 @@ export default function ImportContactsPage() {
           </h2>
           <p style={{ color: "var(--ink-3)", fontSize: "12px", marginBottom: "24px" }}>
             {savedCount > 0 && updatedCount > 0
-              ? `${savedCount} new contact${savedCount !== 1 ? "s" : ""} added and ${updatedCount} existing updated.`
+              ? `${savedCount} new ${savedCount === 1 ? "person" : "people"} added and ${updatedCount} existing updated.`
               : savedCount > 0
-              ? `${savedCount} new contact${savedCount !== 1 ? "s" : ""} added.`
-              : `${updatedCount} existing contact${updatedCount !== 1 ? "s" : ""} updated with new info.`}
+              ? `${savedCount} new ${savedCount === 1 ? "person" : "people"} added.`
+              : `${updatedCount} existing ${updatedCount === 1 ? "person" : "people"} updated with new info.`}
           </p>
           <div style={{ display: "flex", gap: "10px", justifyContent: "center" }}>
             <button onClick={() => router.push("/contacts")} style={{ padding: "10px 24px", background: "var(--accent)", color: "#fff", border: "none", borderRadius: "7px", cursor: "pointer", fontFamily: "inherit", fontSize: "12px", fontWeight: 500 }}>
-              View Contacts →
+              View People →
             </button>
             <button onClick={() => { setStep("upload"); setContacts([]) }} style={{ padding: "10px 24px", background: "transparent", color: "var(--ink-3)", border: "1px solid var(--border)", borderRadius: "7px", cursor: "pointer", fontFamily: "inherit", fontSize: "12px" }}>
               Import More
@@ -1076,7 +1077,8 @@ function ContactReviewCard({
             <Field label="Last Name"><input type="text" value={contact.last} onChange={e => onChange({ last: e.target.value })} style={inputStyle} /></Field>
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px", marginBottom: "10px" }}>
-            <Field label="Headline / Role"><input type="text" value={contact.headline ?? ""} onChange={e => onChange({ headline: e.target.value || null })} placeholder="e.g. Product Designer" style={inputStyle} /></Field>
+            <Field label="Title"><input type="text" value={contact.title ?? ""} onChange={e => onChange({ title: e.target.value || null })} placeholder="e.g. Product Designer" style={inputStyle} /></Field>
+            <Field label="Headline"><input type="text" value={contact.headline ?? ""} onChange={e => onChange({ headline: e.target.value || null })} placeholder="e.g. Climate, board games, old teammate" style={inputStyle} /></Field>
             <Field label="Company"><input type="text" value={contact.company ?? ""} onChange={e => onChange({ company: e.target.value || null })} placeholder="e.g. Acme Corp" style={inputStyle} /></Field>
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px", marginBottom: "10px" }}>

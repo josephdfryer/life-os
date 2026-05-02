@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
 
   const body = await req.json()
   const {
-    first, last, headline, company, email, phone, emails, phones, birthday,
+    first, last, title, headline, company, email, phone, emails, phones, birthday,
     closeness, tags, notes, location, linkedin, twitter, website,
   } = body
 
@@ -39,6 +39,7 @@ export async function POST(req: NextRequest) {
     data: {
       first: first.trim(),
       last: last.trim(),
+      title: title?.trim() || null,
       headline: headline?.trim() || null,
       company: company?.trim() || null,
       emails: JSON.stringify(emailList.map((e: string) => e.trim()).filter(Boolean)),

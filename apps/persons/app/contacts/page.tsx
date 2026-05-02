@@ -8,7 +8,8 @@ import type { PersonWithAttention } from "@/types"
 
 type SortKey = "name" | "closeness" | "recent"
 
-type FieldKey = "first" | "last" | "email" | "phone" | "company" | "headline" | "birthday" | "location" | "linkedin" | "twitter" | "website" | "notes"
+type FieldKey = "first" | "last" | "email" | "phone" | "company" | "title" | "headline" | "birthday" | "location" | "linkedin" | "twitter" | "website" | "notes"
+type ValueFilterKey = "location" | "title" | "company" | "headline"
 
 const FIELD_CHIPS: { key: FieldKey; label: string }[] = [
   { key: "first",    label: "First name" },
@@ -16,6 +17,7 @@ const FIELD_CHIPS: { key: FieldKey; label: string }[] = [
   { key: "email",    label: "Email"      },
   { key: "phone",    label: "Phone"      },
   { key: "company",  label: "Company"    },
+  { key: "title",    label: "Title"      },
   { key: "headline", label: "Headline"   },
   { key: "birthday", label: "Birthday"   },
   { key: "location", label: "Location"   },
@@ -23,6 +25,13 @@ const FIELD_CHIPS: { key: FieldKey; label: string }[] = [
   { key: "twitter",  label: "Twitter"    },
   { key: "website",  label: "Website"    },
   { key: "notes",    label: "Notes"      },
+]
+
+const VALUE_FILTERS: { key: ValueFilterKey; label: string; placeholder: string }[] = [
+  { key: "location", label: "Location", placeholder: "Start typing a city, region, or country" },
+  { key: "title",    label: "Title",    placeholder: "Start typing a role or job title" },
+  { key: "company",  label: "Company",  placeholder: "Start typing an employer or org" },
+  { key: "headline", label: "Headline", placeholder: "Start typing anything from a headline" },
 ]
 
 const LIMIT = 50
@@ -38,6 +47,7 @@ export default function PeoplePage() {
   const [search, setSearch]           = useState("")
   const [sort, setSort]               = useState<SortKey>("name")
   const [requiredFields, setRequiredFields] = useState<Set<FieldKey>>(new Set())
+  const [valueFilters, setValueFilters] = useState<Record<ValueFilterKey, string>>({ location: "", title: "", company: "", headline: "" })
   const [showFieldFilters, setShowFieldFilters] = useState(false)
   const [showAdd, setShowAdd]         = useState(false)
   const [loading, setLoading]         = useState(true)
@@ -47,7 +57,7 @@ export default function PeoplePage() {
   const sentinelRef                   = useRef<HTMLDivElement | null>(null)
   const loadingMoreRef                = useRef(false)
 
-  const fetchPage = useCallback(async (p: number, q: string, s: SortKey, fields: Set<FieldKey>, reset: boolean) => {
+  const fetchPage = useCallback(async (p: number, q: string, s: SortKey, fields: Set<FieldKey>, values: Record<ValueFilterKey, string>, reset: boolean) => {
     if (!reset && loadingMoreRef.current) return
     if (reset) {
       setLoading(true)
@@ -63,6 +73,7 @@ export default function PeoplePage() {
         sort:    s,
         ...(q ? { search: q } : {}),
         ...(fields.size > 0 ? { fields: Array.from(fields).join(",") } : {}),
+        ...Object.fromEntries(Object.entries(values).filter(([, v]) => v.trim())),
       })
       const res = await fetch(`/api/persons?${params}`)
       if (!res.ok) return
@@ -82,7 +93,7 @@ export default function PeoplePage() {
     }
   }, [])
 
-  useEffect(() => { fetchPage(0, "", "name", new Set(), true) }, [fetchPage])
+  useEffect(() => { fetchPage(0, "", "name", new Set(), valueFilters, true) }, [fetchPage])
 
   useEffect(() => {
     return () => {
@@ -95,14 +106,14 @@ export default function PeoplePage() {
     if (searchTimer.current) clearTimeout(searchTimer.current)
     searchTimer.current = setTimeout(() => {
       setPage(0)
-      fetchPage(0, q, sort, requiredFields, true)
+      fetchPage(0, q, sort, requiredFields, valueFilters, true)
     }, 300)
   }
 
   function handleSort(s: SortKey) {
     setSort(s)
     setPage(0)
-    fetchPage(0, search, s, requiredFields, true)
+    fetchPage(0, search, s, requiredFields, valueFilters, true)
   }
 
   function toggleField(key: FieldKey) {
@@ -110,24 +121,33 @@ export default function PeoplePage() {
       const next = new Set(prev)
       next.has(key) ? next.delete(key) : next.add(key)
       setPage(0)
-      fetchPage(0, search, sort, next, true)
+      fetchPage(0, search, sort, next, valueFilters, true)
       return next
     })
   }
 
+  function setValueFilter(key: ValueFilterKey, value: string) {
+    const next = { ...valueFilters, [key]: value }
+    setValueFilters(next)
+    setPage(0)
+    fetchPage(0, search, sort, requiredFields, next, true)
+  }
+
   function clearFieldFilters() {
     const empty = new Set<FieldKey>()
+    const emptyValues = { location: "", title: "", company: "", headline: "" }
     setRequiredFields(empty)
+    setValueFilters(emptyValues)
     setPage(0)
-    fetchPage(0, search, sort, empty, true)
+    fetchPage(0, search, sort, empty, emptyValues, true)
   }
 
   const loadMore = useCallback(() => {
     if (loading || loadingMoreRef.current || !data.hasMore) return
     const next = page + 1
     setPage(next)
-    fetchPage(next, search, sort, requiredFields, false)
-  }, [data.hasMore, fetchPage, loading, page, requiredFields, search, sort])
+    fetchPage(next, search, sort, requiredFields, valueFilters, false)
+  }, [data.hasMore, fetchPage, loading, page, requiredFields, search, sort, valueFilters])
 
   useEffect(() => {
     const sentinel = sentinelRef.current
@@ -146,11 +166,12 @@ export default function PeoplePage() {
 
   function reload() {
     setPage(0)
-    fetchPage(0, search, sort, requiredFields, true)
+    fetchPage(0, search, sort, requiredFields, valueFilters, true)
   }
 
   const { persons, total, hasMore } = data
-  const filtersActive = requiredFields.size > 0
+  const valueFilterCount = Object.values(valueFilters).filter(Boolean).length
+  const filtersActive = requiredFields.size > 0 || valueFilterCount > 0
 
   return (
     <div style={{ maxWidth: "760px", margin: "0 auto", padding: "32px 24px" }}>
@@ -221,7 +242,7 @@ export default function PeoplePage() {
               color: filtersActive ? "var(--accent)" : "var(--ink-3)",
             }}
           >
-            {filtersActive ? `⊙ ${requiredFields.size} filter${requiredFields.size === 1 ? "" : "s"}` : "⊙ Filter fields"}
+            {filtersActive ? `⊙ ${requiredFields.size + valueFilterCount} filter${requiredFields.size + valueFilterCount === 1 ? "" : "s"}` : "⊙ Filters"}
           </button>
         </div>
       </div>
@@ -229,6 +250,18 @@ export default function PeoplePage() {
       {/* Field filter chips */}
       {showFieldFilters && (
         <div style={{ marginBottom: "16px", padding: "12px 14px", background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "10px" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(170px, 1fr))", gap: "10px", marginBottom: "14px" }}>
+            {VALUE_FILTERS.map(filter => (
+              <FacetFilter
+                key={filter.key}
+                field={filter.key}
+                label={filter.label}
+                value={valueFilters[filter.key]}
+                placeholder={filter.placeholder}
+                onChange={value => setValueFilter(filter.key, value)}
+              />
+            ))}
+          </div>
           <div style={{ fontSize: "10px", color: "var(--ink-4)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: "8px" }}>
             Show only people with…
           </div>
@@ -254,7 +287,10 @@ export default function PeoplePage() {
           </div>
           {filtersActive && (
             <div style={{ marginTop: "8px", fontSize: "10px", color: "var(--ink-4)" }}>
-              Showing people with: <span style={{ color: "var(--ink-3)" }}>{Array.from(requiredFields).map(k => FIELD_CHIPS.find(c => c.key === k)?.label).join(" + ")}</span>
+              Showing people with: <span style={{ color: "var(--ink-3)" }}>{[
+                ...VALUE_FILTERS.flatMap(f => valueFilters[f.key] ? [`${f.label}: ${valueFilters[f.key]}`] : []),
+                ...Array.from(requiredFields).map(k => FIELD_CHIPS.find(c => c.key === k)?.label).filter(Boolean),
+              ].join(" + ")}</span>
             </div>
           )}
         </div>
@@ -301,6 +337,96 @@ export default function PeoplePage() {
           onSaved={() => { setShowAdd(false); reload() }}
           totalPersons={total}
         />
+      )}
+    </div>
+  )
+}
+
+function FacetFilter({
+  field,
+  label,
+  value,
+  placeholder,
+  onChange,
+}: {
+  field: ValueFilterKey
+  label: string
+  value: string
+  placeholder: string
+  onChange: (value: string) => void
+}) {
+  const [draft, setDraft] = useState(value)
+  const [suggestions, setSuggestions] = useState<{ value: string; count: number }[]>([])
+  const [open, setOpen] = useState(false)
+  const timer = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  useEffect(() => setDraft(value), [value])
+
+  useEffect(() => {
+    if (timer.current) clearTimeout(timer.current)
+    timer.current = setTimeout(async () => {
+      const params = new URLSearchParams({ field, q: draft, limit: "8" })
+      const res = await fetch(`/api/persons/facets?${params}`)
+      if (!res.ok) return
+      const json = await res.json()
+      setSuggestions(json.values ?? [])
+    }, 150)
+
+    return () => {
+      if (timer.current) clearTimeout(timer.current)
+    }
+  }, [draft, field])
+
+  function commit(next: string) {
+    setDraft(next)
+    onChange(next.trim())
+    setOpen(false)
+  }
+
+  return (
+    <div style={{ position: "relative" }}>
+      <label style={{ display: "block", fontSize: "10px", color: "var(--ink-4)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: "5px" }}>
+        {label}
+      </label>
+      <input
+        value={draft}
+        onChange={e => {
+          setDraft(e.target.value)
+          setOpen(true)
+        }}
+        onFocus={() => setOpen(true)}
+        onBlur={() => setTimeout(() => setOpen(false), 120)}
+        onKeyDown={e => {
+          if (e.key === "Enter") commit(draft)
+          if (e.key === "Escape") setOpen(false)
+        }}
+        placeholder={placeholder}
+        style={{ width: "100%", boxSizing: "border-box", padding: "8px 28px 8px 10px", background: "var(--surface2)", border: `1px solid ${value ? "var(--accent)" : "var(--border)"}`, borderRadius: "7px", color: "var(--ink)", fontFamily: "inherit", fontSize: "11px" }}
+      />
+      {value && (
+        <button
+          type="button"
+          onClick={() => commit("")}
+          style={{ position: "absolute", right: "7px", bottom: "7px", border: "none", background: "transparent", color: "var(--ink-4)", cursor: "pointer", fontSize: "13px", lineHeight: 1 }}
+        >
+          ×
+        </button>
+      )}
+      {open && suggestions.length > 0 && (
+        <div style={{ position: "absolute", left: 0, right: 0, top: "100%", marginTop: "4px", background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "8px", boxShadow: "0 12px 30px rgba(0,0,0,0.12)", zIndex: 20, overflow: "hidden" }}>
+          {suggestions.map(item => (
+            <button
+              key={item.value}
+              type="button"
+              onMouseDown={e => e.preventDefault()}
+              onClick={() => commit(item.value)}
+              style={{ width: "100%", display: "flex", justifyContent: "space-between", gap: "10px", padding: "8px 10px", border: "none", background: item.value === value ? "var(--accent-soft)" : "transparent", color: item.value === value ? "var(--accent)" : "var(--ink-2)", cursor: "pointer", fontFamily: "inherit", fontSize: "11px", textAlign: "left" }}
+            >
+              <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{item.value}</span>
+              <span style={{ color: "var(--ink-4)", flexShrink: 0 }}>{item.count}</span>
+            </button>
+          ))}
+        </div>
       )}
     </div>
   )

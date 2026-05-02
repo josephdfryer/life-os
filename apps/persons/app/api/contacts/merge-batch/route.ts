@@ -11,7 +11,7 @@ function buildPatch(
   const patch: Record<string, unknown> = {}
 
   // Scalar fields: use keeper's value, fall back to loser's if keeper is empty
-  for (const key of ["headline", "company", "location", "birthday", "linkedin", "twitter", "website"]) {
+  for (const key of ["title", "headline", "company", "location", "birthday", "linkedin", "twitter", "website"]) {
     if (!keeper[key] && loser[key]) patch[key] = loser[key]
   }
 

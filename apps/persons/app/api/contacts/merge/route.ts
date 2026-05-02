@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
 
   const data: Record<string, unknown> = {}
   const scalars = [
-    "first", "last", "headline", "company",
+    "first", "last", "title", "headline", "company",
     "location", "birthday", "closeness", "linkedin", "twitter",
     "website", "notes", "color", "colorSoft",
   ]

@@ -14,7 +14,10 @@ export default function EditPersonModal({ person, onClose, onSaved }: Props) {
   const [form, setForm] = useState({
     first: person.first,
     last: person.last,
+    title: person.title ?? "",
     headline: person.headline ?? "",
+    company: person.company ?? "",
+    location: person.location ?? "",
     birthday: person.birthday ?? "",
     closeness: person.closeness,
     tags: parseTags(person.tags as unknown as string).join(", "),
@@ -98,7 +101,12 @@ export default function EditPersonModal({ person, onClose, onSaved }: Props) {
             <Field label="First name *" value={form.first} onChange={v => set("first", v)} />
             <Field label="Last name *" value={form.last} onChange={v => set("last", v)} />
           </div>
+          <Field label="Title" value={form.title} onChange={v => set("title", v)} />
           <Field label="Headline" value={form.headline} onChange={v => set("headline", v)} />
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
+            <Field label="Company" value={form.company} onChange={v => set("company", v)} />
+            <Field label="Location" value={form.location} onChange={v => set("location", v)} />
+          </div>
 
           <MultiField
             label="Email"

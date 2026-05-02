@@ -16,6 +16,12 @@ export async function GET(req: NextRequest) {
     const sort   = searchParams.get("sort") ?? "name"
 
     const fields = searchParams.get("fields")?.split(",").filter(Boolean) ?? []
+    const valueFilters = {
+      title:    searchParams.get("title")?.trim() ?? "",
+      company:  searchParams.get("company")?.trim() ?? "",
+      location: searchParams.get("location")?.trim() ?? "",
+      headline: searchParams.get("headline")?.trim() ?? "",
+    }
 
     const AND: Record<string, unknown>[] = []
     // Split into tokens so "Paul G" matches first="Paul" AND last starts with "G"
@@ -26,6 +32,7 @@ export async function GET(req: NextRequest) {
           { first:    { contains: token } },
           { last:     { contains: token } },
           { emails:   { contains: token } },
+          { title:    { contains: token } },
           { company:  { contains: token } },
           { headline: { contains: token } },
           { notes:    { contains: token } },
@@ -38,6 +45,7 @@ export async function GET(req: NextRequest) {
       if (f === "last")     AND.push({ last:     { not: "" } })
       if (f === "email")    AND.push({ emails:   { not: "[]" } })
       if (f === "phone")    AND.push({ phones:   { not: "[]" } })
+      if (f === "title")    AND.push({ title:    { not: null } })
       if (f === "company")  AND.push({ company:  { not: null } })
       if (f === "headline") AND.push({ headline: { not: null } })
       if (f === "birthday") AND.push({ birthday: { not: null } })
@@ -47,6 +55,10 @@ export async function GET(req: NextRequest) {
       if (f === "website")  AND.push({ website:  { not: null } })
       if (f === "notes")    AND.push({ notes:    { not: null } })
     }
+    if (valueFilters.title)    AND.push({ title:    { contains: valueFilters.title } })
+    if (valueFilters.company)  AND.push({ company:  { contains: valueFilters.company } })
+    if (valueFilters.location) AND.push({ location: { contains: valueFilters.location } })
+    if (valueFilters.headline) AND.push({ headline: { contains: valueFilters.headline } })
     const where = AND.length ? { AND } : {}
 
     const orderBy =
@@ -141,7 +153,7 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   const body = await req.json()
   const {
-    first, last, headline, company, emails, phones, birthday,
+    first, last, title, headline, company, emails, phones, birthday,
     closeness, tags, values, notes, location, linkedin, twitter, website,
     color, colorSoft,
   } = body
@@ -150,6 +162,7 @@ export async function POST(req: NextRequest) {
     data: {
       first: first.trim(),
       last: last.trim(),
+      title: title?.trim() || null,
       headline: headline?.trim() || null,
       company:  company?.trim()  || null,
       emails:   JSON.stringify(Array.isArray(emails) ? emails.map((e: string) => e.trim()).filter(Boolean) : (emails?.trim() ? [emails.trim()] : [])),

@@ -17,6 +17,7 @@ model Person {
   updatedAt    DateTime      @updatedAt
   first        String
   last         String
+  title        String?
   headline     String?
   emails       String        @default("[]")
   phones       String        @default("[]")
@@ -39,6 +40,7 @@ model Person {
   disassembledBy Assembly[]  @relation("DisassembledBy")
 
   @@index([last, first])
+  @@index([title])
   @@index([closeness])
   @@index([birthday])
   @@index([createdAt])

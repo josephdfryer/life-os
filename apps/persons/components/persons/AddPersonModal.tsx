@@ -13,7 +13,10 @@ export default function AddPersonModal({ onClose, onSaved, totalPersons }: Props
   const [form, setForm] = useState({
     first: "",
     last: "",
+    title: "",
     headline: "",
+    company: "",
+    location: "",
     birthday: "",
     closeness: 2,
     tags: "",
@@ -97,7 +100,12 @@ export default function AddPersonModal({ onClose, onSaved, totalPersons }: Props
             <Field label="First name *" value={form.first} onChange={v => set("first", v)} placeholder="Marcus" />
             <Field label="Last name *" value={form.last} onChange={v => set("last", v)} placeholder="Chen" />
           </div>
-          <Field label="Headline" value={form.headline} onChange={v => set("headline", v)} placeholder="Product Lead at Notion" />
+          <Field label="Title" value={form.title} onChange={v => set("title", v)} placeholder="Product Lead" />
+          <Field label="Headline" value={form.headline} onChange={v => set("headline", v)} placeholder="Design systems, angel investing, old friend from YC" />
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
+            <Field label="Company" value={form.company} onChange={v => set("company", v)} placeholder="Notion" />
+            <Field label="Location" value={form.location} onChange={v => set("location", v)} placeholder="San Francisco" />
+          </div>
 
           <MultiField
             label="Email"

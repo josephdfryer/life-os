@@ -57,6 +57,7 @@ type MinPerson = {
   phones: string  // JSON array
   company: string | null
   location: string | null
+  title: string | null
   headline: string | null
   birthday: string | null
   notes: string | null
@@ -122,7 +123,7 @@ function pickKeeper(a: MinPerson, b: MinPerson): [MinPerson, MinPerson] {
 // Merge non-null fields onto keeper from loser
 function buildPatch(keeper: MinPerson, loser: MinPerson): Record<string, unknown> {
   const patch: Record<string, unknown> = {}
-  const scalar = ["headline", "company", "location",
+  const scalar = ["title", "headline", "company", "location",
     "birthday", "linkedin", "twitter", "website"] as const
   for (const key of scalar) {
     if (!keeper[key] && loser[key]) patch[key] = loser[key]
@@ -160,7 +161,7 @@ export async function POST() {
     select: {
       id: true, createdAt: true,
       first: true, last: true, emails: true, phones: true,
-      company: true, location: true, headline: true,
+      company: true, location: true, title: true, headline: true,
       birthday: true, notes: true, linkedin: true,
       twitter: true, website: true, tags: true, values: true,
       closeness: true, color: true, colorSoft: true,

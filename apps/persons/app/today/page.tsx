@@ -22,7 +22,7 @@ export default async function TodayPage() {
     },
     select: {
       id: true, createdAt: true, updatedAt: true,
-      first: true, last: true, headline: true,
+      first: true, last: true, title: true, headline: true,
       emails: true, phones: true, birthday: true,
       closeness: true, tags: true, values: true,
       notes: true, company: true, location: true,
@@ -119,10 +119,10 @@ export default async function TodayPage() {
             Welcome to Persons
           </div>
           <div style={{ fontSize: "12px", color: "var(--ink-3)", marginBottom: "20px" }}>
-            Add your first contact to get started.
+            Add your first person to get started.
           </div>
           <a href="/contacts" style={{ display: "inline-block", padding: "9px 20px", background: "var(--accent)", color: "#fff", borderRadius: "7px", textDecoration: "none", fontSize: "12px", fontWeight: 500 }}>
-            Go to Contacts →
+            Go to People →
           </a>
         </div>
       )}

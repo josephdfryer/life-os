@@ -52,6 +52,7 @@ export async function POST(req: NextRequest) {
           data: {
             first,
             last,
+            title: result.guessedHeadline || null,
             headline: result.guessedHeadline || null,
             closeness: result.guessedCloseness ?? 2,
             tags: JSON.stringify(result.guessedTags ?? []),
