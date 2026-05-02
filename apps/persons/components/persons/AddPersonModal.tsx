@@ -121,8 +121,9 @@ export default function AddPersonModal({ onClose, onSaved, totalPersons }: Props
             <div style={{ display: "flex", gap: "8px", marginTop: "6px" }}>
               {[
                 [1, "Acquaintance"],
-                [2, "Friend"],
-                [3, "Inner Circle"],
+                [2, "Nurture"],
+                [3, "Friend"],
+                [4, "Inner Circle"],
               ].map(([val, lbl]) => (
                 <button
                   key={val}

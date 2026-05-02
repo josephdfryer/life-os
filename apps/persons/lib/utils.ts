@@ -14,11 +14,11 @@ export function relativeTime(date: Date | string | null): string {
 }
 
 export function closenessLabel(n: number): string {
-  return { 1: "Acquaintance", 2: "Friend", 3: "Inner Circle" }[n] ?? "Unknown"
+  return { 1: "Acquaintance", 2: "Nurture", 3: "Friend", 4: "Inner Circle" }[n] ?? "Unknown"
 }
 
 export function closenessWidth(n: number): string {
-  return { 1: "33%", 2: "66%", 3: "100%" }[n] ?? "0%"
+  return { 1: "25%", 2: "50%", 3: "75%", 4: "100%" }[n] ?? "0%"
 }
 
 export function parseTags(raw: string | string[] | null | undefined): string[] {

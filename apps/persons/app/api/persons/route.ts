@@ -55,12 +55,40 @@ export async function GET(req: NextRequest) {
       :                      [{ last: "asc" as const }, { first: "asc" as const }]
 
     const [rows, total] = await Promise.all([
-      db.person.findMany({ where, orderBy, skip: page * limit, take: limit }),
+      db.person.findMany({
+        where, orderBy, skip: page * limit, take: limit,
+        include: {
+          interactions: { take: 1, orderBy: { timestamp: "desc" }, select: { timestamp: true } },
+        },
+      }),
       db.person.count({ where }),
     ])
 
     return NextResponse.json({
-      persons:  rows.map(p => ({ ...p, tags: parseTags(p.tags), values: parseTags(p.values), emails: parseTags(p.emails), phones: parseTags(p.phones) })),
+      persons: rows.map(p => {
+        const lastTs = p.interactions[0]?.timestamp ?? null
+        const lastInteractionDate = lastTs ? new Date(lastTs) : null
+        const daysSinceLast = lastInteractionDate
+          ? Math.floor((Date.now() - lastInteractionDate.getTime()) / 86400000)
+          : null
+        const cadence = p.closeness === 4 ? 10 : p.closeness === 3 ? 21 : p.closeness === 2 ? 90 : 0
+        const attentionScore = p.closeness === 1
+          ? 0
+          : daysSinceLast !== null
+            ? (cadence > 0 ? daysSinceLast / cadence : 0)
+            : 99
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { interactions: _ix, ...rest } = p
+        return {
+          ...rest,
+          tags: parseTags(p.tags), values: parseTags(p.values),
+          emails: parseTags(p.emails), phones: parseTags(p.phones),
+          interactions: [],
+          lastInteractionDate,
+          daysSinceLast,
+          attentionScore,
+        }
+      }),
       total,
       page,
       limit,

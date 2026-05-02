@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useRef } from "react"
+import { useState, useRef, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import ProcessingState from "@/components/import/ProcessingState"
 import ResultCard from "@/components/import/ResultCard"
@@ -115,7 +115,7 @@ export default function ImportConversationsPage() {
         if (r.matchedPersonId || contacts.length === 0) return r
         const match = findBestContactMatch(r.name, contacts)
         if (!match) return r
-        if (match.score >= 0.92) {
+        if (match.score >= 0.95) {
           return {
             ...r,
             isNew: false,
@@ -152,7 +152,7 @@ export default function ImportConversationsPage() {
   function resolveWithContact(resultIdx: number, contact: ContactRef) {
     setResults(prev => prev.map((r, i) =>
       i === resultIdx
-        ? { ...r, matchedPersonId: contact.id, matchedPersonName: `${contact.first} ${contact.last}`, isNew: false }
+        ? { ...r, matchedPersonId: contact.id, matchedPersonName: `${contact.first} ${contact.last}`, isNew: false, needsReview: false }
         : r
     ))
     advanceQueue()
@@ -484,22 +484,33 @@ function ResolveModal({
   onMatch: (c: ContactRef) => void
   onNew: () => void
 }) {
-  const [search, setSearch] = useState("")
-
   const suggestions = getSuggestions(person.name, contacts)
+  // Pre-fill with the person's name when there are no fuzzy suggestions (first-name-only case)
+  const [search, setSearch] = useState(suggestions.length === 0 ? person.name : "")
+  const [apiResults, setApiResults] = useState<ContactRef[]>([])
+  const [searching, setSearching] = useState(false)
 
-  const searchResults = search.trim()
-    ? contacts.filter(c => {
-        const q = search.toLowerCase()
-        return (
-          c.first.toLowerCase().includes(q) ||
-          c.last.toLowerCase().includes(q) ||
-          `${c.first} ${c.last}`.toLowerCase().includes(q)
-        )
-      }).slice(0, 6)
-    : []
+  useEffect(() => {
+    if (!search.trim()) { setApiResults([]); return }
+    setSearching(true)
+    const t = setTimeout(async () => {
+      try {
+        const res = await fetch(`/api/persons?minimal=true&search=${encodeURIComponent(search)}&limit=8`)
+        const data = res.ok ? await res.json() : {}
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        setApiResults((data.persons ?? []).map((p: any) => ({
+          id: p.id, first: p.first, last: p.last,
+          headline: p.headline ?? null,
+          email: Array.isArray(p.emails) ? (p.emails[0] ?? null) : null,
+          phone: Array.isArray(p.phones) ? (p.phones[0] ?? null) : null,
+        })))
+      } catch { setApiResults([]) }
+      finally { setSearching(false) }
+    }, 200)
+    return () => clearTimeout(t)
+  }, [search])
 
-  const showList = search.trim() ? searchResults : suggestions
+  const showList = search.trim() ? apiResults : suggestions
 
   return (
     <div style={{
@@ -561,11 +572,13 @@ function ResolveModal({
             />
             {search && (
               <div style={{ display: "flex", flexDirection: "column", gap: "5px", marginTop: "7px" }}>
-                {searchResults.length > 0
-                  ? searchResults.map(c => (
-                      <ContactRow key={c.id} contact={c} onClick={() => onMatch(c)} />
-                    ))
-                  : <div style={{ fontSize: "11px", color: "var(--ink-4)", padding: "6px 0" }}>No contacts found.</div>
+                {searching
+                  ? <div style={{ fontSize: "11px", color: "var(--ink-4)", padding: "6px 0" }}>Searching…</div>
+                  : apiResults.length > 0
+                    ? apiResults.map(c => (
+                        <ContactRow key={c.id} contact={c} onClick={() => onMatch(c)} />
+                      ))
+                    : <div style={{ fontSize: "11px", color: "var(--ink-4)", padding: "6px 0" }}>No contacts found.</div>
                 }
               </div>
             )}

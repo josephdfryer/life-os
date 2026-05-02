@@ -25,7 +25,7 @@ type FullPerson = Person & {
   daysSinceLast: number | null
 }
 
-const closenessPercent: Record<number, number> = { 1: 33, 2: 66, 3: 100 }
+const closenessPercent: Record<number, number> = { 1: 25, 2: 50, 3: 75, 4: 100 }
 
 export default function PersonDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params)
@@ -275,7 +275,7 @@ export default function PersonDetailPage({ params }: { params: Promise<{ id: str
           <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
             {[...person.interactions]
               .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
-              .map(ix => <InteractionCard key={ix.id} interaction={ix} />)}
+              .map(ix => <InteractionCard key={ix.id} interaction={ix} onDelete={load} />)}
           </div>
         )}
       </Card>

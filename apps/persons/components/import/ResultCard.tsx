@@ -63,6 +63,19 @@ export default function ResultCard({ result, onChange }: Props) {
 
       {expanded && (
         <div style={{ padding: "16px" }}>
+          {result.matchedPersonId ? (
+            <div style={{
+              padding: "10px 14px",
+              background: "#e8f1f8",
+              border: "1px solid #b8d4ec",
+              borderRadius: "7px",
+              marginBottom: "12px",
+              fontSize: "12px",
+              color: "#2a6ea3",
+            }}>
+              Interactions will be added to <strong>{result.matchedPersonName}</strong> — no new contact will be created.
+            </div>
+          ) : (
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px", marginBottom: "12px" }}>
             <Field
               label="Name"
@@ -75,14 +88,16 @@ export default function ResultCard({ result, onChange }: Props) {
               onChange={v => update("guessedHeadline", v || null)}
             />
           </div>
+          )}
 
           <div style={{ marginBottom: "12px" }}>
             <label style={labelStyle}>Closeness</label>
             <div style={{ display: "flex", gap: "6px", marginTop: "6px" }}>
               {([
                 [1, "Acquaintance"],
-                [2, "Friend"],
-                [3, "Inner Circle"],
+                [2, "Nurture"],
+                [3, "Friend"],
+                [4, "Inner Circle"],
               ] as [number, string][]).map(([val, lbl]) => (
                 <button
                   key={val}

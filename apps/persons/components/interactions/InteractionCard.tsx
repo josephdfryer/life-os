@@ -1,8 +1,12 @@
+"use client"
+
+import { useState } from "react"
 import { relativeTime, parseJsonArray } from "@/lib/utils"
 import type { Interaction } from "@/types"
 
 type Props = {
   interaction: Interaction
+  onDelete?: () => void
 }
 
 const WEIGHT_COLORS: Record<string, string> = {
@@ -30,8 +34,16 @@ const TYPE_ICONS: Record<string, string> = {
   other: "·",
 }
 
-export default function InteractionCard({ interaction }: Props) {
+export default function InteractionCard({ interaction, onDelete }: Props) {
   const actionItems = parseJsonArray(interaction.actionItems as unknown as string)
+  const [deleting, setDeleting] = useState(false)
+
+  async function handleDelete() {
+    if (!confirm("Delete this interaction? This cannot be undone.")) return
+    setDeleting(true)
+    await fetch(`/api/interactions/${interaction.id}`, { method: "DELETE" })
+    onDelete?.()
+  }
 
   return (
     <div style={{
@@ -39,6 +51,7 @@ export default function InteractionCard({ interaction }: Props) {
       border: "1px solid var(--border)",
       borderRadius: "8px",
       padding: "14px 16px",
+      opacity: deleting ? 0.5 : 1,
     }}>
       <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "8px" }}>
         <span style={{
@@ -87,6 +100,25 @@ export default function InteractionCard({ interaction }: Props) {
         <span style={{ fontSize: "11px", color: "var(--ink-4)", flexShrink: 0 }}>
           {relativeTime(interaction.timestamp)}
         </span>
+        {onDelete && (
+          <button
+            onClick={handleDelete}
+            disabled={deleting}
+            title="Delete interaction"
+            style={{
+              background: "none",
+              border: "none",
+              cursor: "pointer",
+              color: "var(--ink-4)",
+              fontSize: "14px",
+              lineHeight: 1,
+              padding: "0 2px",
+              flexShrink: 0,
+            }}
+          >
+            ×
+          </button>
+        )}
       </div>
 
       {interaction.summary && (

@@ -24,15 +24,23 @@ Known contacts already in the CRM:
 ${contactList}
 
 Data model:
-- Person nodes: name, headline/role, tags, closeness (1=acquaintance, 2=friend, 3=inner circle)
+- Person nodes: name, headline/role, tags, closeness (1=acquaintance/no cadence, 2=nurture/professional contact to stay top of mind, 3=friend, 4=inner circle)
 - Event nodes: exist independently, have a type (meeting, call, dinner, message, etc)
 - Interactions: connect Person nodes TO Events, carry personal metadata
 
-First, identify the format (Slack, iMessage, WhatsApp, email, SMS, meeting notes, etc). Then extract ALL people and their interactions.
+Filename parsing: The source filename often contains critical context — parse it before reading the content:
+- Participant names: "Joseph _ Steve 1_1..." → the other participant is Steve
+- Meeting type/cadence: "BiWeekly", "Weekly", "1_1", "Standup", "AllHands" → use as eventType hint and in summary
+- Dates: filenames like "2024-01-15_meeting.txt" or "Meeting_Jan15.txt" → use as the interaction date
+- Match first-name-only participants in the filename against the known contacts list to resolve full names
+
+First, identify the format (Slack, iMessage, WhatsApp, email, SMS, meeting transcript, etc). Then extract ALL people and their interactions.
+
+For meeting transcripts (Zoom, Teams, etc): treat the whole file as one interaction unless there are clearly distinct sessions. Use the filename's meeting type (e.g. "BiWeekly 1:1") as the event title context.
 
 For multi-message threads (text chains, chat exports): group messages into meaningful conversation sessions or topics — NOT one entry per message. A week of back-and-forth about planning a trip is one interaction. Daily check-ins over a month might be 3–5 interactions.
 
-Matching: if a person's name closely matches one in the known contacts list above, set matchedPersonId to their id. Only set it when confident (full name match, or unambiguous first name + context).
+Matching: if a person's name closely matches one in the known contacts list above, set matchedPersonId to their id. Only set it when confident (full name match, or unambiguous first name + context). If the filename names a participant and only one known contact has that first name, use that as the match.
 
 Respond ONLY with a JSON array, no markdown:
 [
@@ -61,9 +69,9 @@ Respond ONLY with a JSON array, no markdown:
 Rules:
 - isNew: true if this person is NOT in the known contacts list
 - matchedPersonId: the id string from the known contacts list if matched, otherwise null
-- needsReview: true if name is ambiguous or only first name known
+- needsReview: true if name is ambiguous AND cannot be resolved from filename context
 - Never include Joseph Fryer as a person entry
-- closeness: 1=acquaintance, 2=friend, 3=inner circle`
+- closeness: 1=acquaintance (no follow-up cadence), 2=nurture (professional, stay top of mind), 3=friend, 4=inner circle`
 }
 
 export async function POST(req: NextRequest) {

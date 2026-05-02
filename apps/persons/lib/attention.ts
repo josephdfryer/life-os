@@ -2,8 +2,9 @@ import type { Person, Interaction, Plan, PersonWithAttention } from "@/types"
 
 // Acquaintance has no threshold — only surfaces if they have an active plan
 const THRESHOLDS: Record<number, number> = {
-  2: 21,  // Friend
-  3: 10,  // Inner Circle
+  2: 90,  // Nurture
+  3: 21,  // Friend
+  4: 10,  // Inner Circle
 }
 
 // Threshold used for an Acquaintance who has at least one active plan

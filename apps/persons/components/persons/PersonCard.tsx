@@ -1,6 +1,6 @@
 import Link from "next/link"
 import PersonAvatar from "./PersonAvatar"
-import { relativeTime, closenessWidth, parseTags } from "@/lib/utils"
+import { relativeTime, parseTags } from "@/lib/utils"
 import type { PersonWithAttention } from "@/types"
 
 type Props = {
@@ -9,9 +9,21 @@ type Props = {
 
 const MAX_TAGS = 3
 
+// Cadence thresholds matching attention.ts
+const CADENCE_DAYS: Record<number, number> = { 1: 0, 2: 90, 3: 21, 4: 10 }
+
+function urgencyColor(score: number, personColor: string | null | undefined): string {
+  if (score < 0.5) return personColor ?? "var(--accent)"
+  if (score < 1.0) return "#d4873a"
+  return "#c44040"
+}
+
 export default function PersonCard({ person }: Props) {
   const tags = parseTags(person.tags as unknown as string)
   const overdue = person.attentionScore >= 1.0
+  const cadenceDays = CADENCE_DAYS[person.closeness] ?? 21
+  const urgencyRatio = Math.min(1, person.attentionScore)
+  const hasEverContacted = person.lastInteractionDate !== null
 
   return (
     <Link href={`/contacts/${person.id}`} style={{ textDecoration: "none", display: "block" }}>
@@ -86,21 +98,25 @@ export default function PersonCard({ person }: Props) {
           </div>
         </div>
 
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "6px", flexShrink: 0 }}>
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "5px", flexShrink: 0 }}>
           <span style={{
-            color: overdue ? "var(--accent)" : "var(--ink-4)",
+            color: overdue ? "#c44040" : "var(--ink-4)",
             fontSize: "11px",
           }}>
             {relativeTime(person.lastInteractionDate)}
           </span>
 
-          <div style={{ width: "48px", height: "3px", background: "var(--surface2)", borderRadius: "2px", overflow: "hidden" }}>
-            <div style={{
-              width: closenessWidth(person.closeness),
-              height: "100%",
-              background: person.color ?? "var(--accent)",
-              borderRadius: "2px",
-            }} />
+          {/* Contact urgency bar — fills and turns red as relationship goes overdue */}
+          <div title={hasEverContacted ? `${person.daysSinceLast}d ago · target every ${cadenceDays}d` : "Never contacted"} style={{ width: "48px", height: "3px", background: "var(--surface2)", borderRadius: "2px", overflow: "hidden" }}>
+            {hasEverContacted && (
+              <div style={{
+                width: `${Math.round(urgencyRatio * 100)}%`,
+                height: "100%",
+                background: urgencyColor(urgencyRatio, person.color),
+                borderRadius: "2px",
+                transition: "width 0.3s, background 0.3s",
+              }} />
+            )}
           </div>
         </div>
       </div>
