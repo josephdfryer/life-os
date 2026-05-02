@@ -157,6 +157,14 @@ export default function MergeDuplicatesUI({ initialPairs }: { initialPairs: Dupe
     return counts
   }, [pairs])
 
+  const checkedPersonCount = useMemo(() => {
+    const ids = new Set<string>()
+    for (const p of filteredPairs) {
+      if (checkedKeys.has(pairKey(p))) { ids.add(p.a.id); ids.add(p.b.id) }
+    }
+    return ids.size
+  }, [checkedKeys, filteredPairs])
+
   function selectPair(p: DupePair) {
     setSelectedKey(pairKey(p))
     setSwapped(false)
@@ -255,32 +263,26 @@ export default function MergeDuplicatesUI({ initialPairs }: { initialPairs: Dupe
     if (!toMerge.length) return
     setBulkMerging(true)
 
-    // De-conflict: skip pairs where either person was already queued for deletion
-    const willDelete = new Set<string>()
-    const safe: Array<{ keepId: string; deleteId: string }> = []
-    for (const p of toMerge) {
-      if (willDelete.has(p.a.id) || willDelete.has(p.b.id)) continue
-      safe.push({ keepId: p.a.id, deleteId: p.b.id })
-      willDelete.add(p.b.id)
-    }
-
     try {
-      const res = await fetch("/api/contacts/merge-batch", {
+      // Send pairs to server — it does union-find clustering so overlapping pairs
+      // (e.g. 6 Hannah Nguyens) correctly collapse into one record, not pairwise.
+      const pairInput = toMerge.map(p => ({ aId: p.a.id, bId: p.b.id }))
+      const res = await fetch("/api/contacts/merge-cluster", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ pairs: safe }),
+        body: JSON.stringify({ pairs: pairInput }),
       })
       if (!res.ok) throw new Error(`HTTP ${res.status}`)
       const data = await res.json()
       const deletedIds = new Set<string>(data.deletedIds ?? [])
-      const mergedPairKeys = new Set(toMerge.map(pairKey))
 
-      setPairs(prev => prev.filter(p => !deletedIds.has(p.a.id) && !deletedIds.has(p.b.id)))
+      const remaining = pairs.filter(p => !deletedIds.has(p.a.id) && !deletedIds.has(p.b.id))
+      setPairs(remaining)
       setCheckedKeys(new Set())
-      setReviewedCount(c => c + safe.length)
+      setReviewedCount(c => c + data.merged)
 
-      if (selectedKey && mergedPairKeys.has(selectedKey)) {
-        const remaining = pairs.filter(p => !deletedIds.has(p.a.id) && !deletedIds.has(p.b.id))
+      const currentPair = pairs.find(p => pairKey(p) === selectedKey)
+      if (!currentPair || deletedIds.has(currentPair.a.id) || deletedIds.has(currentPair.b.id)) {
         const next = remaining[0] ?? null
         setSelectedKey(next ? pairKey(next) : null)
         setSwapped(false)
@@ -421,6 +423,57 @@ export default function MergeDuplicatesUI({ initialPairs }: { initialPairs: Dupe
           <div style={{ fontSize: "12px", color: "var(--ink-4)" }}>No potential duplicates found.</div>
         </div>
       ) : (
+        <>
+        {/* ── Bulk action banner ────────────────────────────────────── */}
+        {checkedKeys.size > 0 && (
+          <div style={{
+            marginBottom: "14px",
+            padding: "14px 20px",
+            background: "var(--accent)",
+            borderRadius: "10px",
+            display: "flex",
+            alignItems: "center",
+            gap: "14px",
+          }}>
+            <div style={{ flex: 1 }}>
+              <span style={{ fontSize: "13px", fontWeight: 600, color: "#fff" }}>
+                {checkedPersonCount} people selected
+              </span>
+              <span style={{ fontSize: "11px", color: "rgba(255,255,255,0.75)", marginLeft: "8px" }}>
+                across {checkedKeys.size} pair{checkedKeys.size !== 1 ? "s" : ""} — will merge into the contact with most interactions
+              </span>
+            </div>
+            <button
+              onClick={toggleCheckAll}
+              style={{ fontSize: "11px", color: "rgba(255,255,255,0.85)", background: "transparent", border: "1px solid rgba(255,255,255,0.35)", borderRadius: "6px", cursor: "pointer", fontFamily: "inherit", padding: "5px 12px", whiteSpace: "nowrap" }}
+            >
+              {checkedKeys.size === filteredPairs.length ? "Deselect all" : "Select all"}
+            </button>
+            <button
+              onClick={() => setCheckedKeys(new Set())}
+              style={{ fontSize: "11px", color: "rgba(255,255,255,0.75)", background: "transparent", border: "none", cursor: "pointer", fontFamily: "inherit", padding: "5px 8px" }}
+            >
+              Clear
+            </button>
+            <button
+              onClick={handleBulkMerge}
+              disabled={bulkMerging}
+              style={{
+                fontSize: "13px", fontWeight: 600,
+                color: "var(--accent)", background: "#fff",
+                border: "none", borderRadius: "8px",
+                cursor: bulkMerging ? "wait" : "pointer",
+                fontFamily: "inherit", padding: "8px 22px",
+                opacity: bulkMerging ? 0.7 : 1,
+                whiteSpace: "nowrap",
+                transition: "opacity 0.12s",
+              }}
+            >
+              {bulkMerging ? "Merging…" : "Accept Merge →"}
+            </button>
+          </div>
+        )}
+
         <div style={{ display: "grid", gridTemplateColumns: "260px 1fr", gap: "14px", alignItems: "start" }}>
 
           {/* ── Pair list ─────────────────────────────────────────── */}
@@ -539,47 +592,6 @@ export default function MergeDuplicatesUI({ initialPairs }: { initialPairs: Dupe
               })
             )}
 
-            {/* Bulk action bar */}
-            {checkedKeys.size > 0 && (
-              <div style={{
-                marginTop: "4px",
-                padding: "10px 13px",
-                background: "var(--accent-soft)",
-                border: "1px solid var(--accent)",
-                borderRadius: "10px",
-                display: "flex",
-                alignItems: "center",
-                gap: "8px",
-              }}>
-                <span style={{ fontSize: "11px", color: "var(--accent)", fontWeight: 500, flex: 1 }}>
-                  {checkedKeys.size} selected
-                </span>
-                <button
-                  onClick={toggleCheckAll}
-                  style={{ fontSize: "10px", color: "var(--accent)", background: "transparent", border: "none", cursor: "pointer", fontFamily: "inherit", padding: "0 4px", textDecoration: "underline" }}
-                >
-                  {checkedKeys.size === filteredPairs.length ? "Deselect all" : "Select all"}
-                </button>
-                <button
-                  onClick={() => setCheckedKeys(new Set())}
-                  style={{ fontSize: "10px", color: "var(--ink-3)", background: "transparent", border: "1px solid var(--border)", borderRadius: "5px", cursor: "pointer", fontFamily: "inherit", padding: "3px 8px" }}
-                >
-                  Clear
-                </button>
-                <button
-                  onClick={handleBulkMerge}
-                  disabled={bulkMerging}
-                  style={{
-                    fontSize: "11px", fontWeight: 500, color: "#fff",
-                    background: bulkMerging ? "var(--ink-4)" : "var(--accent)",
-                    border: "none", borderRadius: "6px", cursor: bulkMerging ? "wait" : "pointer",
-                    fontFamily: "inherit", padding: "5px 12px", transition: "background 0.12s",
-                  }}
-                >
-                  {bulkMerging ? "Merging…" : `Merge ${checkedKeys.size}`}
-                </button>
-              </div>
-            )}
           </div>
 
           {/* ── Merge panel ───────────────────────────────────────── */}
@@ -707,6 +719,7 @@ export default function MergeDuplicatesUI({ initialPairs }: { initialPairs: Dupe
             </div>
           )}
         </div>
+        </>
       )}
     </div>
   )
