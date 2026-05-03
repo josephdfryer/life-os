@@ -2,6 +2,7 @@ import { db } from "@/lib/db"
 import { badRequest, notFound, optionalString } from "@/server/api/errors"
 import { auditAction, type DomainActor } from "./audit"
 import { appendDailySourceInteraction } from "./interactions"
+import { runRulesForTarget } from "./rules"
 
 type InboxAction = "accept" | "dismiss" | "update"
 
@@ -74,5 +75,25 @@ async function acceptInboxItem(id: string, body: Record<string, unknown>, actor?
     },
   })
   await auditAction({ actor, action: "inbox.accept", targetType: "stagedInteraction", targetId: id, metadata: result })
+  await runRulesForTarget({
+    trigger: "inbox.accept",
+    targetType: "stagedInteraction",
+    targetId: id,
+    payload: {
+      stagedInteractionId: id,
+      interactionId: result.interactionId,
+      personId,
+      source: item.source,
+      sourceId: item.sourceId,
+      type: item.type,
+      timestamp: timestamp.toISOString(),
+      summary: summary || item.body || "(no text)",
+      direction: optionalString(body.direction) ?? item.direction,
+      contactName: item.contactName,
+      contactEmail: item.contactEmail,
+      contactPhone: item.contactPhone,
+    },
+    actor,
+  })
   return updated
 }

@@ -6,6 +6,7 @@ import { auditAction, type DomainActor } from "./audit"
 import { createEvent, parseTimestamp } from "./events"
 import { createInteraction } from "./interactions"
 import { createPerson } from "./people"
+import { runRulesForTarget } from "./rules"
 
 type ImportFileInput = {
   name: string
@@ -38,6 +39,22 @@ export async function confirmImport(results: ImportedPerson[], options: PersistO
   const created: PersistedImportPerson[] = []
   for (const result of results) {
     const { personId, action } = await resolveImportedPerson(result, options.actor)
+    await runRulesForTarget({
+      trigger: "import.person",
+      targetType: "person",
+      targetId: personId,
+      payload: {
+        personId,
+        action,
+        name: result.name,
+        matchedPersonId: result.matchedPersonId,
+        isNew: result.isNew,
+        guessedHeadline: result.guessedHeadline,
+        guessedTags: result.guessedTags,
+        importedFileId,
+      },
+      actor: options.actor,
+    })
     let interactionCount = 0
 
     for (const interaction of result.interactions ?? []) {
@@ -48,7 +65,7 @@ export async function confirmImport(results: ImportedPerson[], options: PersistO
         timestamp,
       }, options.actor)
 
-      await createInteraction({
+      const createdInteraction = await createInteraction({
         personId,
         eventId: event.id,
         type: interaction.eventType,
@@ -59,6 +76,25 @@ export async function confirmImport(results: ImportedPerson[], options: PersistO
         actionItems: interaction.keyTopics,
         sourceFileId: importedFileId,
       }, options.actor)
+      await runRulesForTarget({
+        trigger: "import.interaction",
+        targetType: "interaction",
+        targetId: createdInteraction.id,
+        payload: {
+          interactionId: createdInteraction.id,
+          personId,
+          personName: result.name,
+          eventId: event.id,
+          type: interaction.eventType,
+          timestamp: timestamp.toISOString(),
+          summary: interaction.summary,
+          emotionalWeight: interaction.emotionalWeight,
+          outcome: interaction.outcome,
+          keyTopics: interaction.keyTopics,
+          importedFileId,
+        },
+        actor: options.actor,
+      })
       interactionCount++
     }
 

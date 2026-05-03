@@ -3,6 +3,7 @@ import { badRequest, notFound, optionalString, optionalStringArray, requiredStri
 import { auditAction, type DomainActor } from "./audit"
 import { formatInteraction, jsonList } from "./dto"
 import { appendUniqueLine, findInteractionByExactSource, normalizeSourceMarker } from "./idempotency"
+import { runRulesForTarget } from "./rules"
 
 const DAY_TIME_ZONE = "America/Los_Angeles"
 
@@ -71,6 +72,24 @@ export async function createInteraction(input: InteractionInput, actor?: DomainA
   })
 
   await auditAction({ actor, action: "interaction.create", targetType: "interaction", targetId: interaction.id })
+  await runRulesForTarget({
+    trigger: "interaction.create",
+    targetType: "interaction",
+    targetId: interaction.id,
+    payload: {
+      interactionId: interaction.id,
+      personId,
+      eventId: resolvedEventId,
+      type,
+      timestamp: timestamp.toISOString(),
+      summary,
+      emotionalWeight: interaction.emotionalWeight,
+      outcome: interaction.outcome,
+      direction: interaction.direction,
+      sourceFileId: interaction.sourceFileId,
+    },
+    actor,
+  })
   return formatInteraction(interaction)
 }
 
@@ -120,6 +139,13 @@ export async function appendDailySourceInteraction(input: {
       select: { id: true },
     })
     await auditAction({ actor: input.actor, action: "interaction.create", targetType: "interaction", targetId: interaction.id, metadata: { mode: "append", source: input.source, sourceId: input.sourceId } })
+    await runRulesForTarget({
+      trigger: "interaction.append",
+      targetType: "interaction",
+      targetId: interaction.id,
+      payload: interactionRulePayload(input, interaction.id, "append"),
+      actor: input.actor,
+    })
     return { interactionId: interaction.id, created: false, updated: true }
   }
 
@@ -145,7 +171,38 @@ export async function appendDailySourceInteraction(input: {
     select: { id: true },
   })
   await auditAction({ actor: input.actor, action: "interaction.create", targetType: "interaction", targetId: interaction.id, metadata: { mode: "create", source: input.source, sourceId: input.sourceId } })
+  await runRulesForTarget({
+    trigger: "interaction.create",
+    targetType: "interaction",
+    targetId: interaction.id,
+    payload: interactionRulePayload(input, interaction.id, "create"),
+    actor: input.actor,
+  })
   return { interactionId: interaction.id, created: true, updated: false }
+}
+
+function interactionRulePayload(input: {
+  personId: string
+  source: string
+  sourceId: string
+  type: string
+  timestamp: Date
+  summary: string
+  body?: string | null
+  direction?: string | null
+}, interactionId: string, mode: "create" | "append") {
+  return {
+    interactionId,
+    personId: input.personId,
+    source: input.source,
+    sourceId: input.sourceId,
+    type: input.type,
+    timestamp: input.timestamp.toISOString(),
+    summary: input.summary,
+    body: input.body,
+    direction: input.direction,
+    mode,
+  }
 }
 
 function parseTimestamp(value: unknown) {

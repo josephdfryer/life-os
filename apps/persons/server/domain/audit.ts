@@ -21,6 +21,7 @@ export type AuditAction =
   | "rule.create"
   | "rule.update"
   | "rule.run"
+  | "rule.apply"
   | "event.create"
   | "plan.create"
   | "plan.update"

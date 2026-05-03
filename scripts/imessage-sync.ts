@@ -56,6 +56,18 @@ type ExistingPerson = {
   phones: string
 }
 
+type RuleCondition = {
+  field: string
+  operator: "equals" | "not_equals" | "contains" | "in" | "exists" | "not_exists"
+  value?: unknown
+}
+
+type RuleAction = {
+  type: string
+  field?: string
+  value?: unknown
+}
+
 const require = createRequire(import.meta.url)
 const Database = require("better-sqlite3") as new (
   filename: string,
@@ -425,7 +437,14 @@ async function stageMessageInteraction(input: {
   body: string
   sourceId: string
 }) {
-  await db.stagedInteraction.upsert({
+  const timestamp = appleDateToDate(input.message.appleDate)
+  const metadata = {
+    guid: input.message.guid,
+    chatIdentifier: input.message.chatIdentifier,
+    chatDisplayName: input.message.chatDisplayName,
+    service: input.message.service ?? input.message.chatServiceName ?? "iMessage",
+  }
+  const staged = await db.stagedInteraction.upsert({
     where: {
       source_sourceId: {
         source: "imessage",
@@ -436,16 +455,11 @@ async function stageMessageInteraction(input: {
       contactName: input.contact.displayName,
       contactEmail: input.contact.email,
       contactPhone: input.contact.phone,
-      timestamp: appleDateToDate(input.message.appleDate),
+      timestamp,
       summary: snippet(input.body),
       body: input.body,
       direction: input.contact.direction,
-      metadata: JSON.stringify({
-        guid: input.message.guid,
-        chatIdentifier: input.message.chatIdentifier,
-        chatDisplayName: input.message.chatDisplayName,
-        service: input.message.service ?? input.message.chatServiceName ?? "iMessage",
-      }),
+      metadata: JSON.stringify(metadata),
     },
     create: {
       source: "imessage",
@@ -455,18 +469,168 @@ async function stageMessageInteraction(input: {
       contactEmail: input.contact.email,
       contactPhone: input.contact.phone,
       type: "message",
-      timestamp: appleDateToDate(input.message.appleDate),
+      timestamp,
       summary: snippet(input.body),
       body: input.body,
       direction: input.contact.direction,
-      metadata: JSON.stringify({
-        guid: input.message.guid,
-        chatIdentifier: input.message.chatIdentifier,
-        chatDisplayName: input.message.chatDisplayName,
-        service: input.message.service ?? input.message.chatServiceName ?? "iMessage",
-      }),
+      metadata: JSON.stringify(metadata),
     },
+    select: { id: true },
   })
+
+  await runRulesForStagedInteraction({
+    stagedInteractionId: staged.id,
+    source: "imessage",
+    sourceId: input.sourceId,
+    type: "message",
+    timestamp,
+    summary: snippet(input.body),
+    body: input.body,
+    direction: input.contact.direction,
+    contactName: input.contact.displayName,
+    contactEmail: input.contact.email,
+    contactPhone: input.contact.phone,
+    metadata,
+  })
+}
+
+async function runRulesForStagedInteraction(payload: Record<string, unknown> & { stagedInteractionId: string }) {
+  const rules = await db.rule.findMany({
+    where: { trigger: "ingest.message", status: "active" },
+    orderBy: [{ priority: "asc" }, { createdAt: "asc" }],
+  })
+
+  for (const rule of rules) {
+    const conditions = parseStoredArray(rule.conditions) as RuleCondition[]
+    const actions = parseStoredArray(rule.actions) as RuleAction[]
+    const result = evaluateRule(conditions, actions, payload)
+    const applied = result.matched && ["auto", "block"].includes(rule.mode)
+      ? await applyStagedRuleActions(payload.stagedInteractionId, actions)
+      : []
+    await db.ruleRun.create({
+      data: {
+        ruleId: rule.id,
+        trigger: rule.trigger,
+        targetType: "stagedInteraction",
+        targetId: payload.stagedInteractionId,
+        matched: result.matched,
+        mode: rule.mode,
+        status: runStatus(rule.mode, result.matched, applied.length),
+        input: JSON.stringify(payload),
+        actionsPlanned: JSON.stringify(result.matched ? actions : []),
+        actionsApplied: JSON.stringify(applied),
+        message: result.message,
+      },
+    })
+    if (result.matched && rule.stopProcessing) break
+  }
+}
+
+function evaluateRule(conditions: RuleCondition[], actions: RuleAction[], payload: Record<string, unknown>) {
+  const failures: string[] = []
+  for (const condition of conditions) {
+    if (!matchesCondition(condition, payload)) {
+      failures.push(`${condition.field} ${condition.operator}`)
+    }
+  }
+  const matched = failures.length === 0
+  return {
+    matched,
+    actionsPlanned: matched ? actions : [],
+    message: matched ? "Rule matched" : `No match: ${failures.join(", ")}`,
+  }
+}
+
+function matchesCondition(condition: RuleCondition, payload: Record<string, unknown>) {
+  const actual = getPath(payload, condition.field)
+  switch (condition.operator) {
+    case "equals":
+      return normalize(actual) === normalize(condition.value)
+    case "not_equals":
+      return normalize(actual) !== normalize(condition.value)
+    case "contains":
+      return normalize(actual).includes(normalize(condition.value))
+    case "in":
+      return Array.isArray(condition.value) && condition.value.map(normalize).includes(normalize(actual))
+    case "exists":
+      return actual !== undefined && actual !== null && actual !== ""
+    case "not_exists":
+      return actual === undefined || actual === null || actual === ""
+    default:
+      return false
+  }
+}
+
+async function applyStagedRuleActions(stagedInteractionId: string, actions: RuleAction[]) {
+  const patch: Record<string, unknown> = {}
+  const applied: RuleAction[] = []
+  for (const action of actions) {
+    const type = normalize(action.type)
+    if (type === "block") {
+      patch.status = "blocked"
+      applied.push({ type: action.type, field: "status", value: "blocked" })
+      continue
+    }
+    if (!["set", "set_field", "assign"].includes(type) || !action.field) continue
+    if (!isStagedInteractionField(action.field)) continue
+    patch[action.field] = action.value
+    applied.push(action)
+  }
+
+  if (Object.keys(patch).length) {
+    await db.stagedInteraction.update({
+      where: { id: stagedInteractionId },
+      data: patch,
+    })
+  }
+
+  return applied
+}
+
+function runStatus(mode: string, matched: boolean, appliedCount: number) {
+  if (!matched) return "skipped"
+  if (mode === "dry_run") return "dry_run"
+  if (mode === "suggest") return "suggested"
+  if (mode === "block") return "blocked"
+  if (mode === "auto") return appliedCount > 0 ? "applied" : "planned"
+  return "processed"
+}
+
+function isStagedInteractionField(field: string) {
+  return [
+    "candidatePersonId",
+    "confidence",
+    "matchReason",
+    "status",
+    "summary",
+    "direction",
+    "contactName",
+    "contactEmail",
+    "contactPhone",
+  ].includes(field)
+}
+
+function parseStoredArray(value: string | null) {
+  if (!value) return []
+  try {
+    const parsed = JSON.parse(value)
+    return Array.isArray(parsed) ? parsed : []
+  } catch {
+    return []
+  }
+}
+
+function getPath(payload: Record<string, unknown>, path: string) {
+  return path.split(".").reduce<unknown>((current, segment) => {
+    if (current && typeof current === "object" && segment in current) {
+      return (current as Record<string, unknown>)[segment]
+    }
+    return undefined
+  }, payload)
+}
+
+function normalize(value: unknown) {
+  return String(value ?? "").trim().toLowerCase()
 }
 
 function contactFromMessage(message: MessageRow, identifier: string) {

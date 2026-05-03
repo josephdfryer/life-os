@@ -1,6 +1,6 @@
 import { db } from "@/lib/db"
 import { badRequest, notFound, optionalString, requiredString } from "@/server/api/errors"
-import { auditAction } from "./audit"
+import { auditAction, type DomainActor } from "./audit"
 import type { AccessActor } from "./access"
 
 type RuleCondition = {
@@ -13,6 +13,24 @@ type RuleAction = {
   type: string
   field?: string
   value?: unknown
+}
+
+type EvaluatedRule = {
+  id: string
+  trigger: string
+  mode: string
+  conditions: RuleCondition[]
+  actions: RuleAction[]
+  stopProcessing: boolean
+}
+
+export type RuleExecutionInput = {
+  trigger: string
+  payload: Record<string, unknown>
+  targetType?: string | null
+  targetId?: string | null
+  actor?: DomainActor
+  apply?: boolean
 }
 
 export type RuleInput = {
@@ -154,6 +172,84 @@ export async function testRule(input: { ruleId?: string | null; rule?: RuleInput
   return { ...result, run }
 }
 
+export async function runRulesForTarget(input: RuleExecutionInput) {
+  const rules = await db.rule.findMany({
+    where: { trigger: input.trigger, status: "active" },
+    orderBy: [{ priority: "asc" }, { createdAt: "asc" }],
+  })
+
+  const runs = []
+  const actionsPlanned: RuleAction[] = []
+  const actionsApplied: RuleAction[] = []
+  let blocked = false
+
+  for (const storedRule of rules) {
+    const rule: EvaluatedRule = {
+      id: storedRule.id,
+      trigger: storedRule.trigger,
+      mode: storedRule.mode,
+      conditions: parseStoredArray(storedRule.conditions) as RuleCondition[],
+      actions: parseStoredArray(storedRule.actions) as RuleAction[],
+      stopProcessing: storedRule.stopProcessing,
+    }
+    const result = evaluateRule(rule.conditions, rule.actions, input.payload)
+    const matched = result.matched
+    const planned = matched ? result.actionsPlanned : []
+    const applied = matched && input.apply && shouldApply(rule.mode)
+      ? await applyRuleActions(planned, input)
+      : []
+    const status = runStatus(rule.mode, matched, input.apply, applied.length)
+
+    if (matched && rule.mode === "block") blocked = true
+    actionsPlanned.push(...planned)
+    actionsApplied.push(...applied)
+
+    const run = await db.ruleRun.create({
+      data: {
+        ruleId: rule.id,
+        trigger: input.trigger,
+        targetType: input.targetType ?? null,
+        targetId: input.targetId ?? null,
+        matched,
+        mode: rule.mode,
+        status,
+        input: JSON.stringify(input.payload),
+        actionsPlanned: JSON.stringify(planned),
+        actionsApplied: JSON.stringify(applied),
+        message: result.message,
+      },
+    })
+    runs.push(run)
+
+    if (matched) {
+      await auditAction({
+        actor: input.actor,
+        action: applied.length ? "rule.apply" : "rule.run",
+        targetType: input.targetType ?? "rule",
+        targetId: input.targetId ?? rule.id,
+        metadata: {
+          ruleId: rule.id,
+          trigger: input.trigger,
+          mode: rule.mode,
+          actionsApplied: applied.length,
+        },
+      })
+    }
+
+    if (matched && rule.stopProcessing) break
+  }
+
+  return {
+    trigger: input.trigger,
+    matched: runs.some(run => run.matched),
+    blocked,
+    runCount: runs.length,
+    runs,
+    actionsPlanned,
+    actionsApplied,
+  }
+}
+
 export async function listRuleRuns(ruleId?: string | null) {
   const runs = await db.ruleRun.findMany({
     where: ruleId ? { ruleId } : undefined,
@@ -205,6 +301,62 @@ function matchesCondition(condition: RuleCondition, payload: Record<string, unkn
     default:
       return false
   }
+}
+
+function shouldApply(mode: string) {
+  return mode === "auto" || mode === "block"
+}
+
+function runStatus(mode: string, matched: boolean, apply: boolean | undefined, appliedCount: number) {
+  if (!matched) return "skipped"
+  if (mode === "dry_run") return "dry_run"
+  if (mode === "suggest") return "suggested"
+  if (mode === "block") return apply ? "blocked" : "planned"
+  if (mode === "auto") return appliedCount > 0 ? "applied" : "planned"
+  return apply ? "processed" : "planned"
+}
+
+async function applyRuleActions(actions: RuleAction[], input: RuleExecutionInput) {
+  if (input.targetType !== "stagedInteraction" || !input.targetId) return []
+
+  const patch: Record<string, unknown> = {}
+  const applied: RuleAction[] = []
+  for (const action of actions) {
+    const type = normalize(action.type)
+    if (type === "block") {
+      patch.status = "blocked"
+      applied.push({ type: action.type, field: "status", value: "blocked" })
+      continue
+    }
+
+    if (!["set", "set_field", "assign"].includes(type) || !action.field) continue
+    if (!isStagedInteractionField(action.field)) continue
+    patch[action.field] = action.value
+    applied.push(action)
+  }
+
+  if (Object.keys(patch).length) {
+    await db.stagedInteraction.update({
+      where: { id: input.targetId },
+      data: patch,
+    })
+  }
+
+  return applied
+}
+
+function isStagedInteractionField(field: string) {
+  return [
+    "candidatePersonId",
+    "confidence",
+    "matchReason",
+    "status",
+    "summary",
+    "direction",
+    "contactName",
+    "contactEmail",
+    "contactPhone",
+  ].includes(field)
 }
 
 function getPath(payload: Record<string, unknown>, path: string) {
