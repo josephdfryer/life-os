@@ -454,21 +454,86 @@ function extractMessageText(message: MessageRow): string | null {
 function decodeAttributedBody(body: Buffer): string {
   const utf8 = body.toString("utf8")
   const nsStringMatch = utf8.match(/NSString[\s\S]{0,80}?[+][^\x00-\x08\x0e-\x1f]{1,200}/)
-  if (nsStringMatch) return cleanDecodedText(nsStringMatch[0].replace(/^.*?\+/, ""))
+  if (nsStringMatch) {
+    const decoded = cleanDecodedText(nsStringMatch[0].replace(/^.*?\+/, ""))
+    if (isUsefulDecodedText(decoded)) return decoded
+  }
 
   const printableRuns = utf8
     .split(/[^\x20-\x7e\n\r\t]+/)
     .map(part => part.trim())
-    .filter(part => part.length >= 2 && !/^(NSString|NSDictionary|NSColor|NSNumber|NSObject)$/.test(part))
+    .filter(part => part.length > 0)
 
-  return cleanDecodedText(printableRuns.at(-1) ?? "")
+  const archivedString = extractArchivedString(printableRuns)
+  if (archivedString) return archivedString
+
+  const link = findLast(printableRuns, part => /^https?:\/\//.test(part) || /^[a-z0-9.-]+\.[a-z]{2,}\//i.test(part))
+  if (link) return cleanDecodedText(link)
+
+  const fallback = findLast(printableRuns, part => isUsefulDecodedText(cleanDecodedText(part)))
+  return cleanDecodedText(fallback ?? "")
 }
 
 function cleanDecodedText(value: string): string {
-  return value
+  const normalized = value
     .replace(/\s+/g, " ")
     .replace(/\u0000/g, "")
+    .replace(/\uFFFD+/g, "")
+    .replace(/\s+”/g, "”")
     .trim()
+    .replace(/^\+/, "")
+    .trim()
+
+  return stripArchiveLengthPrefix(normalized)
+}
+
+function extractArchivedString(runs: string[]): string | null {
+  const stop = /^(iI|NSDictionary|NSMutableData|NSData|NSNumber|NSValue|NSObject|NSAttributedString|NSMutableAttributedString|NSMutableString|__kIM)/
+  const candidates: string[] = []
+
+  for (let i = 0; i < runs.length; i++) {
+    if (runs[i] !== "NSString" && runs[i] !== "NSMutableString") continue
+
+    const parts: string[] = []
+    for (let j = i + 1; j < runs.length; j++) {
+      const part = runs[j]
+      if (part === "+") continue
+      if (stop.test(part)) break
+      if (part.length === 1 && !parts.length) continue
+      parts.push(part)
+    }
+
+    const decoded = cleanDecodedText(parts.join(" "))
+    if (isUsefulDecodedText(decoded)) candidates.push(decoded)
+  }
+
+  return candidates.sort((a, b) => b.length - a.length)[0] ?? null
+}
+
+function isUsefulDecodedText(value: string): boolean {
+  const trimmed = value.trim()
+  if (trimmed.length < 2) return false
+  if (/^(streamtyped|NSString|NSDictionary|NSColor|NSNumber|NSObject|NSValue|NSURL|__kIM)/.test(trimmed)) return false
+  return /[\p{L}\p{N}]/u.test(trimmed)
+}
+
+function stripArchiveLengthPrefix(value: string): string {
+  let clean = value.trim()
+  for (let i = 0; i < 3; i++) {
+    const before = clean
+    clean = clean.replace(/^SString\s+/, "").trim()
+    if (/^[^A-Za-z0-9]\s*[A-Za-z0-9]/.test(clean)) clean = clean.replace(/^[^A-Za-z0-9]\s*/, "").trim()
+    if (/^[A-Za-z][A-Z]/.test(clean)) clean = clean.slice(1).trim()
+    if (clean === before || clean.length < 2) break
+  }
+  return clean
+}
+
+function findLast<T>(items: T[], predicate: (item: T) => boolean): T | undefined {
+  for (let i = items.length - 1; i >= 0; i--) {
+    if (predicate(items[i])) return items[i]
+  }
+  return undefined
 }
 
 function appleDateToDate(value: MessageRow["appleDate"]): Date {
