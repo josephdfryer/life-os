@@ -9,6 +9,7 @@
  * 🟢 You can import this file directly.
  */
 export type * from './models/Person.ts'
+export type * from './models/StagedInteraction.ts'
 export type * from './models/Event.ts'
 export type * from './models/Interaction.ts'
 export type * from './models/Plan.ts'

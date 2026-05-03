@@ -23,6 +23,11 @@ export * from './enums.ts';
  */
 export type Person = Prisma.PersonModel
 /**
+ * Model StagedInteraction
+ * 
+ */
+export type StagedInteraction = Prisma.StagedInteractionModel
+/**
  * Model Event
  * 
  */

@@ -52,6 +52,7 @@ export const AnyNull = runtime.AnyNull
 
 export const ModelName = {
   Person: 'Person',
+  StagedInteraction: 'StagedInteraction',
   Event: 'Event',
   Interaction: 'Interaction',
   Plan: 'Plan',
@@ -100,6 +101,33 @@ export const PersonScalarFieldEnum = {
 } as const
 
 export type PersonScalarFieldEnum = (typeof PersonScalarFieldEnum)[keyof typeof PersonScalarFieldEnum]
+
+
+export const StagedInteractionScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  source: 'source',
+  sourceId: 'sourceId',
+  status: 'status',
+  contactName: 'contactName',
+  contactEmail: 'contactEmail',
+  contactPhone: 'contactPhone',
+  candidatePersonId: 'candidatePersonId',
+  confidence: 'confidence',
+  matchReason: 'matchReason',
+  type: 'type',
+  timestamp: 'timestamp',
+  summary: 'summary',
+  body: 'body',
+  direction: 'direction',
+  metadata: 'metadata',
+  acceptedAt: 'acceptedAt',
+  acceptedPersonId: 'acceptedPersonId',
+  interactionId: 'interactionId'
+} as const
+
+export type StagedInteractionScalarFieldEnum = (typeof StagedInteractionScalarFieldEnum)[keyof typeof StagedInteractionScalarFieldEnum]
 
 
 export const EventScalarFieldEnum = {

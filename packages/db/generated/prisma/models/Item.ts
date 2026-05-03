@@ -883,10 +883,6 @@ export type FloatFieldUpdateOperationsInput = {
   divide?: number
 }
 
-export type NullableDateTimeFieldUpdateOperationsInput = {
-  set?: Date | string | null
-}
-
 export type ItemCreateNestedOneWithoutAssembledIntoInput = {
   create?: Prisma.XOR<Prisma.ItemCreateWithoutAssembledIntoInput, Prisma.ItemUncheckedCreateWithoutAssembledIntoInput>
   connectOrCreate?: Prisma.ItemCreateOrConnectWithoutAssembledIntoInput

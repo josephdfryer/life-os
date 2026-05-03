@@ -345,6 +345,7 @@ export type PersonWhereInput = {
   color?: Prisma.StringNullableFilter<"Person"> | string | null
   colorSoft?: Prisma.StringNullableFilter<"Person"> | string | null
   interactions?: Prisma.InteractionListRelationFilter
+  stagedInteractions?: Prisma.StagedInteractionListRelationFilter
   plans?: Prisma.PlanListRelationFilter
   ownedItems?: Prisma.ItemListRelationFilter
   assembledBy?: Prisma.AssemblyListRelationFilter
@@ -374,6 +375,7 @@ export type PersonOrderByWithRelationInput = {
   color?: Prisma.SortOrderInput | Prisma.SortOrder
   colorSoft?: Prisma.SortOrderInput | Prisma.SortOrder
   interactions?: Prisma.InteractionOrderByRelationAggregateInput
+  stagedInteractions?: Prisma.StagedInteractionOrderByRelationAggregateInput
   plans?: Prisma.PlanOrderByRelationAggregateInput
   ownedItems?: Prisma.ItemOrderByRelationAggregateInput
   assembledBy?: Prisma.AssemblyOrderByRelationAggregateInput
@@ -406,6 +408,7 @@ export type PersonWhereUniqueInput = Prisma.AtLeast<{
   color?: Prisma.StringNullableFilter<"Person"> | string | null
   colorSoft?: Prisma.StringNullableFilter<"Person"> | string | null
   interactions?: Prisma.InteractionListRelationFilter
+  stagedInteractions?: Prisma.StagedInteractionListRelationFilter
   plans?: Prisma.PlanListRelationFilter
   ownedItems?: Prisma.ItemListRelationFilter
   assembledBy?: Prisma.AssemblyListRelationFilter
@@ -491,6 +494,7 @@ export type PersonCreateInput = {
   color?: string | null
   colorSoft?: string | null
   interactions?: Prisma.InteractionCreateNestedManyWithoutPersonInput
+  stagedInteractions?: Prisma.StagedInteractionCreateNestedManyWithoutCandidatePersonInput
   plans?: Prisma.PlanCreateNestedManyWithoutPersonInput
   ownedItems?: Prisma.ItemCreateNestedManyWithoutOwnedByInput
   assembledBy?: Prisma.AssemblyCreateNestedManyWithoutAssembledByInput
@@ -520,6 +524,7 @@ export type PersonUncheckedCreateInput = {
   color?: string | null
   colorSoft?: string | null
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutPersonInput
+  stagedInteractions?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutCandidatePersonInput
   plans?: Prisma.PlanUncheckedCreateNestedManyWithoutPersonInput
   ownedItems?: Prisma.ItemUncheckedCreateNestedManyWithoutOwnedByInput
   assembledBy?: Prisma.AssemblyUncheckedCreateNestedManyWithoutAssembledByInput
@@ -549,6 +554,7 @@ export type PersonUpdateInput = {
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   interactions?: Prisma.InteractionUpdateManyWithoutPersonNestedInput
+  stagedInteractions?: Prisma.StagedInteractionUpdateManyWithoutCandidatePersonNestedInput
   plans?: Prisma.PlanUpdateManyWithoutPersonNestedInput
   ownedItems?: Prisma.ItemUpdateManyWithoutOwnedByNestedInput
   assembledBy?: Prisma.AssemblyUpdateManyWithoutAssembledByNestedInput
@@ -578,6 +584,7 @@ export type PersonUncheckedUpdateInput = {
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutPersonNestedInput
+  stagedInteractions?: Prisma.StagedInteractionUncheckedUpdateManyWithoutCandidatePersonNestedInput
   plans?: Prisma.PlanUncheckedUpdateManyWithoutPersonNestedInput
   ownedItems?: Prisma.ItemUncheckedUpdateManyWithoutOwnedByNestedInput
   assembledBy?: Prisma.AssemblyUncheckedUpdateManyWithoutAssembledByNestedInput
@@ -761,6 +768,22 @@ export type IntFieldUpdateOperationsInput = {
   divide?: number
 }
 
+export type PersonCreateNestedOneWithoutStagedInteractionsInput = {
+  create?: Prisma.XOR<Prisma.PersonCreateWithoutStagedInteractionsInput, Prisma.PersonUncheckedCreateWithoutStagedInteractionsInput>
+  connectOrCreate?: Prisma.PersonCreateOrConnectWithoutStagedInteractionsInput
+  connect?: Prisma.PersonWhereUniqueInput
+}
+
+export type PersonUpdateOneWithoutStagedInteractionsNestedInput = {
+  create?: Prisma.XOR<Prisma.PersonCreateWithoutStagedInteractionsInput, Prisma.PersonUncheckedCreateWithoutStagedInteractionsInput>
+  connectOrCreate?: Prisma.PersonCreateOrConnectWithoutStagedInteractionsInput
+  upsert?: Prisma.PersonUpsertWithoutStagedInteractionsInput
+  disconnect?: Prisma.PersonWhereInput | boolean
+  delete?: Prisma.PersonWhereInput | boolean
+  connect?: Prisma.PersonWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.PersonUpdateToOneWithWhereWithoutStagedInteractionsInput, Prisma.PersonUpdateWithoutStagedInteractionsInput>, Prisma.PersonUncheckedUpdateWithoutStagedInteractionsInput>
+}
+
 export type PersonCreateNestedOneWithoutInteractionsInput = {
   create?: Prisma.XOR<Prisma.PersonCreateWithoutInteractionsInput, Prisma.PersonUncheckedCreateWithoutInteractionsInput>
   connectOrCreate?: Prisma.PersonCreateOrConnectWithoutInteractionsInput
@@ -841,6 +864,138 @@ export type PersonUpdateOneWithoutDisassembledByNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.PersonUpdateToOneWithWhereWithoutDisassembledByInput, Prisma.PersonUpdateWithoutDisassembledByInput>, Prisma.PersonUncheckedUpdateWithoutDisassembledByInput>
 }
 
+export type PersonCreateWithoutStagedInteractionsInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  first: string
+  last: string
+  title?: string | null
+  headline?: string | null
+  emails?: string
+  phones?: string
+  birthday?: string | null
+  closeness?: number
+  tags?: string
+  values?: string
+  notes?: string | null
+  company?: string | null
+  location?: string | null
+  linkedin?: string | null
+  twitter?: string | null
+  website?: string | null
+  color?: string | null
+  colorSoft?: string | null
+  interactions?: Prisma.InteractionCreateNestedManyWithoutPersonInput
+  plans?: Prisma.PlanCreateNestedManyWithoutPersonInput
+  ownedItems?: Prisma.ItemCreateNestedManyWithoutOwnedByInput
+  assembledBy?: Prisma.AssemblyCreateNestedManyWithoutAssembledByInput
+  disassembledBy?: Prisma.AssemblyCreateNestedManyWithoutDisassembledByInput
+}
+
+export type PersonUncheckedCreateWithoutStagedInteractionsInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  first: string
+  last: string
+  title?: string | null
+  headline?: string | null
+  emails?: string
+  phones?: string
+  birthday?: string | null
+  closeness?: number
+  tags?: string
+  values?: string
+  notes?: string | null
+  company?: string | null
+  location?: string | null
+  linkedin?: string | null
+  twitter?: string | null
+  website?: string | null
+  color?: string | null
+  colorSoft?: string | null
+  interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutPersonInput
+  plans?: Prisma.PlanUncheckedCreateNestedManyWithoutPersonInput
+  ownedItems?: Prisma.ItemUncheckedCreateNestedManyWithoutOwnedByInput
+  assembledBy?: Prisma.AssemblyUncheckedCreateNestedManyWithoutAssembledByInput
+  disassembledBy?: Prisma.AssemblyUncheckedCreateNestedManyWithoutDisassembledByInput
+}
+
+export type PersonCreateOrConnectWithoutStagedInteractionsInput = {
+  where: Prisma.PersonWhereUniqueInput
+  create: Prisma.XOR<Prisma.PersonCreateWithoutStagedInteractionsInput, Prisma.PersonUncheckedCreateWithoutStagedInteractionsInput>
+}
+
+export type PersonUpsertWithoutStagedInteractionsInput = {
+  update: Prisma.XOR<Prisma.PersonUpdateWithoutStagedInteractionsInput, Prisma.PersonUncheckedUpdateWithoutStagedInteractionsInput>
+  create: Prisma.XOR<Prisma.PersonCreateWithoutStagedInteractionsInput, Prisma.PersonUncheckedCreateWithoutStagedInteractionsInput>
+  where?: Prisma.PersonWhereInput
+}
+
+export type PersonUpdateToOneWithWhereWithoutStagedInteractionsInput = {
+  where?: Prisma.PersonWhereInput
+  data: Prisma.XOR<Prisma.PersonUpdateWithoutStagedInteractionsInput, Prisma.PersonUncheckedUpdateWithoutStagedInteractionsInput>
+}
+
+export type PersonUpdateWithoutStagedInteractionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  first?: Prisma.StringFieldUpdateOperationsInput | string
+  last?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emails?: Prisma.StringFieldUpdateOperationsInput | string
+  phones?: Prisma.StringFieldUpdateOperationsInput | string
+  birthday?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  closeness?: Prisma.IntFieldUpdateOperationsInput | number
+  tags?: Prisma.StringFieldUpdateOperationsInput | string
+  values?: Prisma.StringFieldUpdateOperationsInput | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  company?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  linkedin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  interactions?: Prisma.InteractionUpdateManyWithoutPersonNestedInput
+  plans?: Prisma.PlanUpdateManyWithoutPersonNestedInput
+  ownedItems?: Prisma.ItemUpdateManyWithoutOwnedByNestedInput
+  assembledBy?: Prisma.AssemblyUpdateManyWithoutAssembledByNestedInput
+  disassembledBy?: Prisma.AssemblyUpdateManyWithoutDisassembledByNestedInput
+}
+
+export type PersonUncheckedUpdateWithoutStagedInteractionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  first?: Prisma.StringFieldUpdateOperationsInput | string
+  last?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emails?: Prisma.StringFieldUpdateOperationsInput | string
+  phones?: Prisma.StringFieldUpdateOperationsInput | string
+  birthday?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  closeness?: Prisma.IntFieldUpdateOperationsInput | number
+  tags?: Prisma.StringFieldUpdateOperationsInput | string
+  values?: Prisma.StringFieldUpdateOperationsInput | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  company?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  linkedin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  interactions?: Prisma.InteractionUncheckedUpdateManyWithoutPersonNestedInput
+  plans?: Prisma.PlanUncheckedUpdateManyWithoutPersonNestedInput
+  ownedItems?: Prisma.ItemUncheckedUpdateManyWithoutOwnedByNestedInput
+  assembledBy?: Prisma.AssemblyUncheckedUpdateManyWithoutAssembledByNestedInput
+  disassembledBy?: Prisma.AssemblyUncheckedUpdateManyWithoutDisassembledByNestedInput
+}
+
 export type PersonCreateWithoutInteractionsInput = {
   id?: string
   createdAt?: Date | string
@@ -863,6 +1018,7 @@ export type PersonCreateWithoutInteractionsInput = {
   website?: string | null
   color?: string | null
   colorSoft?: string | null
+  stagedInteractions?: Prisma.StagedInteractionCreateNestedManyWithoutCandidatePersonInput
   plans?: Prisma.PlanCreateNestedManyWithoutPersonInput
   ownedItems?: Prisma.ItemCreateNestedManyWithoutOwnedByInput
   assembledBy?: Prisma.AssemblyCreateNestedManyWithoutAssembledByInput
@@ -891,6 +1047,7 @@ export type PersonUncheckedCreateWithoutInteractionsInput = {
   website?: string | null
   color?: string | null
   colorSoft?: string | null
+  stagedInteractions?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutCandidatePersonInput
   plans?: Prisma.PlanUncheckedCreateNestedManyWithoutPersonInput
   ownedItems?: Prisma.ItemUncheckedCreateNestedManyWithoutOwnedByInput
   assembledBy?: Prisma.AssemblyUncheckedCreateNestedManyWithoutAssembledByInput
@@ -935,6 +1092,7 @@ export type PersonUpdateWithoutInteractionsInput = {
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stagedInteractions?: Prisma.StagedInteractionUpdateManyWithoutCandidatePersonNestedInput
   plans?: Prisma.PlanUpdateManyWithoutPersonNestedInput
   ownedItems?: Prisma.ItemUpdateManyWithoutOwnedByNestedInput
   assembledBy?: Prisma.AssemblyUpdateManyWithoutAssembledByNestedInput
@@ -963,6 +1121,7 @@ export type PersonUncheckedUpdateWithoutInteractionsInput = {
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stagedInteractions?: Prisma.StagedInteractionUncheckedUpdateManyWithoutCandidatePersonNestedInput
   plans?: Prisma.PlanUncheckedUpdateManyWithoutPersonNestedInput
   ownedItems?: Prisma.ItemUncheckedUpdateManyWithoutOwnedByNestedInput
   assembledBy?: Prisma.AssemblyUncheckedUpdateManyWithoutAssembledByNestedInput
@@ -992,6 +1151,7 @@ export type PersonCreateWithoutPlansInput = {
   color?: string | null
   colorSoft?: string | null
   interactions?: Prisma.InteractionCreateNestedManyWithoutPersonInput
+  stagedInteractions?: Prisma.StagedInteractionCreateNestedManyWithoutCandidatePersonInput
   ownedItems?: Prisma.ItemCreateNestedManyWithoutOwnedByInput
   assembledBy?: Prisma.AssemblyCreateNestedManyWithoutAssembledByInput
   disassembledBy?: Prisma.AssemblyCreateNestedManyWithoutDisassembledByInput
@@ -1020,6 +1180,7 @@ export type PersonUncheckedCreateWithoutPlansInput = {
   color?: string | null
   colorSoft?: string | null
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutPersonInput
+  stagedInteractions?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutCandidatePersonInput
   ownedItems?: Prisma.ItemUncheckedCreateNestedManyWithoutOwnedByInput
   assembledBy?: Prisma.AssemblyUncheckedCreateNestedManyWithoutAssembledByInput
   disassembledBy?: Prisma.AssemblyUncheckedCreateNestedManyWithoutDisassembledByInput
@@ -1064,6 +1225,7 @@ export type PersonUpdateWithoutPlansInput = {
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   interactions?: Prisma.InteractionUpdateManyWithoutPersonNestedInput
+  stagedInteractions?: Prisma.StagedInteractionUpdateManyWithoutCandidatePersonNestedInput
   ownedItems?: Prisma.ItemUpdateManyWithoutOwnedByNestedInput
   assembledBy?: Prisma.AssemblyUpdateManyWithoutAssembledByNestedInput
   disassembledBy?: Prisma.AssemblyUpdateManyWithoutDisassembledByNestedInput
@@ -1092,6 +1254,7 @@ export type PersonUncheckedUpdateWithoutPlansInput = {
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutPersonNestedInput
+  stagedInteractions?: Prisma.StagedInteractionUncheckedUpdateManyWithoutCandidatePersonNestedInput
   ownedItems?: Prisma.ItemUncheckedUpdateManyWithoutOwnedByNestedInput
   assembledBy?: Prisma.AssemblyUncheckedUpdateManyWithoutAssembledByNestedInput
   disassembledBy?: Prisma.AssemblyUncheckedUpdateManyWithoutDisassembledByNestedInput
@@ -1120,6 +1283,7 @@ export type PersonCreateWithoutOwnedItemsInput = {
   color?: string | null
   colorSoft?: string | null
   interactions?: Prisma.InteractionCreateNestedManyWithoutPersonInput
+  stagedInteractions?: Prisma.StagedInteractionCreateNestedManyWithoutCandidatePersonInput
   plans?: Prisma.PlanCreateNestedManyWithoutPersonInput
   assembledBy?: Prisma.AssemblyCreateNestedManyWithoutAssembledByInput
   disassembledBy?: Prisma.AssemblyCreateNestedManyWithoutDisassembledByInput
@@ -1148,6 +1312,7 @@ export type PersonUncheckedCreateWithoutOwnedItemsInput = {
   color?: string | null
   colorSoft?: string | null
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutPersonInput
+  stagedInteractions?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutCandidatePersonInput
   plans?: Prisma.PlanUncheckedCreateNestedManyWithoutPersonInput
   assembledBy?: Prisma.AssemblyUncheckedCreateNestedManyWithoutAssembledByInput
   disassembledBy?: Prisma.AssemblyUncheckedCreateNestedManyWithoutDisassembledByInput
@@ -1192,6 +1357,7 @@ export type PersonUpdateWithoutOwnedItemsInput = {
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   interactions?: Prisma.InteractionUpdateManyWithoutPersonNestedInput
+  stagedInteractions?: Prisma.StagedInteractionUpdateManyWithoutCandidatePersonNestedInput
   plans?: Prisma.PlanUpdateManyWithoutPersonNestedInput
   assembledBy?: Prisma.AssemblyUpdateManyWithoutAssembledByNestedInput
   disassembledBy?: Prisma.AssemblyUpdateManyWithoutDisassembledByNestedInput
@@ -1220,6 +1386,7 @@ export type PersonUncheckedUpdateWithoutOwnedItemsInput = {
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutPersonNestedInput
+  stagedInteractions?: Prisma.StagedInteractionUncheckedUpdateManyWithoutCandidatePersonNestedInput
   plans?: Prisma.PlanUncheckedUpdateManyWithoutPersonNestedInput
   assembledBy?: Prisma.AssemblyUncheckedUpdateManyWithoutAssembledByNestedInput
   disassembledBy?: Prisma.AssemblyUncheckedUpdateManyWithoutDisassembledByNestedInput
@@ -1248,6 +1415,7 @@ export type PersonCreateWithoutAssembledByInput = {
   color?: string | null
   colorSoft?: string | null
   interactions?: Prisma.InteractionCreateNestedManyWithoutPersonInput
+  stagedInteractions?: Prisma.StagedInteractionCreateNestedManyWithoutCandidatePersonInput
   plans?: Prisma.PlanCreateNestedManyWithoutPersonInput
   ownedItems?: Prisma.ItemCreateNestedManyWithoutOwnedByInput
   disassembledBy?: Prisma.AssemblyCreateNestedManyWithoutDisassembledByInput
@@ -1276,6 +1444,7 @@ export type PersonUncheckedCreateWithoutAssembledByInput = {
   color?: string | null
   colorSoft?: string | null
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutPersonInput
+  stagedInteractions?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutCandidatePersonInput
   plans?: Prisma.PlanUncheckedCreateNestedManyWithoutPersonInput
   ownedItems?: Prisma.ItemUncheckedCreateNestedManyWithoutOwnedByInput
   disassembledBy?: Prisma.AssemblyUncheckedCreateNestedManyWithoutDisassembledByInput
@@ -1309,6 +1478,7 @@ export type PersonCreateWithoutDisassembledByInput = {
   color?: string | null
   colorSoft?: string | null
   interactions?: Prisma.InteractionCreateNestedManyWithoutPersonInput
+  stagedInteractions?: Prisma.StagedInteractionCreateNestedManyWithoutCandidatePersonInput
   plans?: Prisma.PlanCreateNestedManyWithoutPersonInput
   ownedItems?: Prisma.ItemCreateNestedManyWithoutOwnedByInput
   assembledBy?: Prisma.AssemblyCreateNestedManyWithoutAssembledByInput
@@ -1337,6 +1507,7 @@ export type PersonUncheckedCreateWithoutDisassembledByInput = {
   color?: string | null
   colorSoft?: string | null
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutPersonInput
+  stagedInteractions?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutCandidatePersonInput
   plans?: Prisma.PlanUncheckedCreateNestedManyWithoutPersonInput
   ownedItems?: Prisma.ItemUncheckedCreateNestedManyWithoutOwnedByInput
   assembledBy?: Prisma.AssemblyUncheckedCreateNestedManyWithoutAssembledByInput
@@ -1381,6 +1552,7 @@ export type PersonUpdateWithoutAssembledByInput = {
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   interactions?: Prisma.InteractionUpdateManyWithoutPersonNestedInput
+  stagedInteractions?: Prisma.StagedInteractionUpdateManyWithoutCandidatePersonNestedInput
   plans?: Prisma.PlanUpdateManyWithoutPersonNestedInput
   ownedItems?: Prisma.ItemUpdateManyWithoutOwnedByNestedInput
   disassembledBy?: Prisma.AssemblyUpdateManyWithoutDisassembledByNestedInput
@@ -1409,6 +1581,7 @@ export type PersonUncheckedUpdateWithoutAssembledByInput = {
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutPersonNestedInput
+  stagedInteractions?: Prisma.StagedInteractionUncheckedUpdateManyWithoutCandidatePersonNestedInput
   plans?: Prisma.PlanUncheckedUpdateManyWithoutPersonNestedInput
   ownedItems?: Prisma.ItemUncheckedUpdateManyWithoutOwnedByNestedInput
   disassembledBy?: Prisma.AssemblyUncheckedUpdateManyWithoutDisassembledByNestedInput
@@ -1448,6 +1621,7 @@ export type PersonUpdateWithoutDisassembledByInput = {
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   interactions?: Prisma.InteractionUpdateManyWithoutPersonNestedInput
+  stagedInteractions?: Prisma.StagedInteractionUpdateManyWithoutCandidatePersonNestedInput
   plans?: Prisma.PlanUpdateManyWithoutPersonNestedInput
   ownedItems?: Prisma.ItemUpdateManyWithoutOwnedByNestedInput
   assembledBy?: Prisma.AssemblyUpdateManyWithoutAssembledByNestedInput
@@ -1476,6 +1650,7 @@ export type PersonUncheckedUpdateWithoutDisassembledByInput = {
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutPersonNestedInput
+  stagedInteractions?: Prisma.StagedInteractionUncheckedUpdateManyWithoutCandidatePersonNestedInput
   plans?: Prisma.PlanUncheckedUpdateManyWithoutPersonNestedInput
   ownedItems?: Prisma.ItemUncheckedUpdateManyWithoutOwnedByNestedInput
   assembledBy?: Prisma.AssemblyUncheckedUpdateManyWithoutAssembledByNestedInput
@@ -1488,6 +1663,7 @@ export type PersonUncheckedUpdateWithoutDisassembledByInput = {
 
 export type PersonCountOutputType = {
   interactions: number
+  stagedInteractions: number
   plans: number
   ownedItems: number
   assembledBy: number
@@ -1496,6 +1672,7 @@ export type PersonCountOutputType = {
 
 export type PersonCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   interactions?: boolean | PersonCountOutputTypeCountInteractionsArgs
+  stagedInteractions?: boolean | PersonCountOutputTypeCountStagedInteractionsArgs
   plans?: boolean | PersonCountOutputTypeCountPlansArgs
   ownedItems?: boolean | PersonCountOutputTypeCountOwnedItemsArgs
   assembledBy?: boolean | PersonCountOutputTypeCountAssembledByArgs
@@ -1517,6 +1694,13 @@ export type PersonCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Exten
  */
 export type PersonCountOutputTypeCountInteractionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.InteractionWhereInput
+}
+
+/**
+ * PersonCountOutputType without action
+ */
+export type PersonCountOutputTypeCountStagedInteractionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.StagedInteractionWhereInput
 }
 
 /**
@@ -1571,6 +1755,7 @@ export type PersonSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   color?: boolean
   colorSoft?: boolean
   interactions?: boolean | Prisma.Person$interactionsArgs<ExtArgs>
+  stagedInteractions?: boolean | Prisma.Person$stagedInteractionsArgs<ExtArgs>
   plans?: boolean | Prisma.Person$plansArgs<ExtArgs>
   ownedItems?: boolean | Prisma.Person$ownedItemsArgs<ExtArgs>
   assembledBy?: boolean | Prisma.Person$assembledByArgs<ExtArgs>
@@ -1653,6 +1838,7 @@ export type PersonSelectScalar = {
 export type PersonOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "first" | "last" | "title" | "headline" | "emails" | "phones" | "birthday" | "closeness" | "tags" | "values" | "notes" | "company" | "location" | "linkedin" | "twitter" | "website" | "color" | "colorSoft", ExtArgs["result"]["person"]>
 export type PersonInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   interactions?: boolean | Prisma.Person$interactionsArgs<ExtArgs>
+  stagedInteractions?: boolean | Prisma.Person$stagedInteractionsArgs<ExtArgs>
   plans?: boolean | Prisma.Person$plansArgs<ExtArgs>
   ownedItems?: boolean | Prisma.Person$ownedItemsArgs<ExtArgs>
   assembledBy?: boolean | Prisma.Person$assembledByArgs<ExtArgs>
@@ -1666,6 +1852,7 @@ export type $PersonPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
   name: "Person"
   objects: {
     interactions: Prisma.$InteractionPayload<ExtArgs>[]
+    stagedInteractions: Prisma.$StagedInteractionPayload<ExtArgs>[]
     plans: Prisma.$PlanPayload<ExtArgs>[]
     ownedItems: Prisma.$ItemPayload<ExtArgs>[]
     assembledBy: Prisma.$AssemblyPayload<ExtArgs>[]
@@ -2088,6 +2275,7 @@ readonly fields: PersonFieldRefs;
 export interface Prisma__PersonClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   interactions<T extends Prisma.Person$interactionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Person$interactionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InteractionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  stagedInteractions<T extends Prisma.Person$stagedInteractionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Person$stagedInteractionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StagedInteractionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   plans<T extends Prisma.Person$plansArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Person$plansArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PlanPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   ownedItems<T extends Prisma.Person$ownedItemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Person$ownedItemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   assembledBy<T extends Prisma.Person$assembledByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Person$assembledByArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AssemblyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -2554,6 +2742,30 @@ export type Person$interactionsArgs<ExtArgs extends runtime.Types.Extensions.Int
   take?: number
   skip?: number
   distinct?: Prisma.InteractionScalarFieldEnum | Prisma.InteractionScalarFieldEnum[]
+}
+
+/**
+ * Person.stagedInteractions
+ */
+export type Person$stagedInteractionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the StagedInteraction
+   */
+  select?: Prisma.StagedInteractionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the StagedInteraction
+   */
+  omit?: Prisma.StagedInteractionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.StagedInteractionInclude<ExtArgs> | null
+  where?: Prisma.StagedInteractionWhereInput
+  orderBy?: Prisma.StagedInteractionOrderByWithRelationInput | Prisma.StagedInteractionOrderByWithRelationInput[]
+  cursor?: Prisma.StagedInteractionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.StagedInteractionScalarFieldEnum | Prisma.StagedInteractionScalarFieldEnum[]
 }
 
 /**

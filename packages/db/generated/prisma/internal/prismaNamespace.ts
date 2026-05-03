@@ -385,6 +385,7 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 export const ModelName = {
   Person: 'Person',
+  StagedInteraction: 'StagedInteraction',
   Event: 'Event',
   Interaction: 'Interaction',
   Plan: 'Plan',
@@ -408,7 +409,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "person" | "event" | "interaction" | "plan" | "place" | "item" | "assembly" | "itemInteraction" | "importedFile"
+    modelProps: "person" | "stagedInteraction" | "event" | "interaction" | "plan" | "place" | "item" | "assembly" | "itemInteraction" | "importedFile"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -483,6 +484,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.PersonCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.PersonCountAggregateOutputType> | number
+        }
+      }
+    }
+    StagedInteraction: {
+      payload: Prisma.$StagedInteractionPayload<ExtArgs>
+      fields: Prisma.StagedInteractionFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.StagedInteractionFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StagedInteractionPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.StagedInteractionFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StagedInteractionPayload>
+        }
+        findFirst: {
+          args: Prisma.StagedInteractionFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StagedInteractionPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.StagedInteractionFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StagedInteractionPayload>
+        }
+        findMany: {
+          args: Prisma.StagedInteractionFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StagedInteractionPayload>[]
+        }
+        create: {
+          args: Prisma.StagedInteractionCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StagedInteractionPayload>
+        }
+        createMany: {
+          args: Prisma.StagedInteractionCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.StagedInteractionCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StagedInteractionPayload>[]
+        }
+        delete: {
+          args: Prisma.StagedInteractionDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StagedInteractionPayload>
+        }
+        update: {
+          args: Prisma.StagedInteractionUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StagedInteractionPayload>
+        }
+        deleteMany: {
+          args: Prisma.StagedInteractionDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.StagedInteractionUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.StagedInteractionUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StagedInteractionPayload>[]
+        }
+        upsert: {
+          args: Prisma.StagedInteractionUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StagedInteractionPayload>
+        }
+        aggregate: {
+          args: Prisma.StagedInteractionAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateStagedInteraction>
+        }
+        groupBy: {
+          args: Prisma.StagedInteractionGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.StagedInteractionGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.StagedInteractionCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.StagedInteractionCountAggregateOutputType> | number
         }
       }
     }
@@ -1141,6 +1216,33 @@ export const PersonScalarFieldEnum = {
 export type PersonScalarFieldEnum = (typeof PersonScalarFieldEnum)[keyof typeof PersonScalarFieldEnum]
 
 
+export const StagedInteractionScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  source: 'source',
+  sourceId: 'sourceId',
+  status: 'status',
+  contactName: 'contactName',
+  contactEmail: 'contactEmail',
+  contactPhone: 'contactPhone',
+  candidatePersonId: 'candidatePersonId',
+  confidence: 'confidence',
+  matchReason: 'matchReason',
+  type: 'type',
+  timestamp: 'timestamp',
+  summary: 'summary',
+  body: 'body',
+  direction: 'direction',
+  metadata: 'metadata',
+  acceptedAt: 'acceptedAt',
+  acceptedPersonId: 'acceptedPersonId',
+  interactionId: 'interactionId'
+} as const
+
+export type StagedInteractionScalarFieldEnum = (typeof StagedInteractionScalarFieldEnum)[keyof typeof StagedInteractionScalarFieldEnum]
+
+
 export const EventScalarFieldEnum = {
   id: 'id',
   createdAt: 'createdAt',
@@ -1316,16 +1418,16 @@ export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'In
 
 
 /**
- * Reference to a field of type 'Boolean'
+ * Reference to a field of type 'Float'
  */
-export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
     
 
 
 /**
- * Reference to a field of type 'Float'
+ * Reference to a field of type 'Boolean'
  */
-export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
+export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
     
 
 /**
@@ -1439,6 +1541,7 @@ export type PrismaClientOptions = ({
 }
 export type GlobalOmitConfig = {
   person?: Prisma.PersonOmit
+  stagedInteraction?: Prisma.StagedInteractionOmit
   event?: Prisma.EventOmit
   interaction?: Prisma.InteractionOmit
   plan?: Prisma.PlanOmit

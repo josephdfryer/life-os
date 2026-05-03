@@ -34,6 +34,7 @@ model Person {
   color        String?
   colorSoft    String?
   interactions Interaction[]
+  stagedInteractions StagedInteraction[]
   plans        Plan[]
   ownedItems   Item[]
   assembledBy  Assembly[]    @relation("AssembledBy")
@@ -44,6 +45,41 @@ model Person {
   @@index([closeness])
   @@index([birthday])
   @@index([createdAt])
+}
+
+// ─────────────────────────────────────────────
+// SUPPORT: StagedInteraction
+// Review queue for automated imports before they become canonical interactions.
+// ─────────────────────────────────────────────
+
+model StagedInteraction {
+  id                String   @id @default(cuid())
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  source            String
+  sourceId          String
+  status            String   @default("pending")
+  contactName       String?
+  contactEmail      String?
+  contactPhone      String?
+  candidatePersonId String?
+  candidatePerson   Person?  @relation(fields: [candidatePersonId], references: [id], onDelete: SetNull)
+  confidence        Float?
+  matchReason       String?
+  type              String   @default("message")
+  timestamp         DateTime
+  summary           String?
+  body              String?
+  direction         String?
+  metadata          String?
+  acceptedAt        DateTime?
+  acceptedPersonId  String?
+  interactionId     String?
+
+  @@unique([source, sourceId])
+  @@index([status, createdAt])
+  @@index([candidatePersonId])
+  @@index([timestamp])
 }
 
 // ─────────────────────────────────────────────

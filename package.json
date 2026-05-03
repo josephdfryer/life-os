@@ -9,6 +9,7 @@
     "agent:start": "node scripts/agent-sync.mjs start",
     "agent:finish": "node scripts/agent-sync.mjs finish",
     "agent:status": "node scripts/agent-sync.mjs status",
+    "imessage:sync": "tsx scripts/imessage-sync.ts",
     "build": "turbo run build",
     "dev": "turbo run dev",
     "lint": "turbo run lint",
