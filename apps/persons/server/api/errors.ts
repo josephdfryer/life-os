@@ -24,6 +24,14 @@ export function conflict(message: string, details?: unknown) {
   return new AppError(409, "conflict", message, details)
 }
 
+export function unauthorized(message = "Unauthorized", details?: unknown) {
+  return new AppError(401, "unauthorized", message, details)
+}
+
+export function forbidden(message = "Forbidden", details?: unknown) {
+  return new AppError(403, "forbidden", message, details)
+}
+
 export function requiredString(value: unknown, field: string) {
   if (typeof value !== "string" || !value.trim()) {
     throw badRequest(`${field} is required`, { field })

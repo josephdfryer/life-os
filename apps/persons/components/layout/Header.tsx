@@ -63,6 +63,7 @@ export default function Header() {
         <NavLink href="/contacts" label="People" active={pathname === "/contacts" || (pathname.startsWith("/contacts/") && !pathname.startsWith("/contacts/import"))} />
 
         <NavLink href="/inbox" label="Inbox" active={pathname === "/inbox"} />
+        <NavLink href="/admin" label="Admin" active={pathname.startsWith("/admin")} />
 
         {/* Import dropdown */}
         <div ref={dropdownRef} style={{ position: "relative" }}>
