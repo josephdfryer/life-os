@@ -3,6 +3,8 @@ import { db } from "@/lib/db"
 import { parseTags } from "@/lib/utils"
 import { enrichWithAttention } from "@/lib/attention"
 import type { Interaction } from "@/types"
+import { createPerson } from "@/server/domain/people"
+import { created, handleRouteError } from "@/server/api/respond"
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url)
@@ -151,35 +153,10 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
-  const body = await req.json()
-  const {
-    first, last, title, headline, company, emails, phones, birthday,
-    closeness, tags, values, notes, location, linkedin, twitter, website,
-    color, colorSoft,
-  } = body
-
-  const person = await db.person.create({
-    data: {
-      first: first.trim(),
-      last: last.trim(),
-      title: title?.trim() || null,
-      headline: headline?.trim() || null,
-      company:  company?.trim()  || null,
-      emails:   JSON.stringify(Array.isArray(emails) ? emails.map((e: string) => e.trim()).filter(Boolean) : (emails?.trim() ? [emails.trim()] : [])),
-      phones:   JSON.stringify(Array.isArray(phones) ? phones.map((p: string) => p.trim()).filter(Boolean) : (phones?.trim() ? [phones.trim()] : [])),
-      birthday: birthday?.trim() || null,
-      closeness: Number(closeness) || 2,
-      tags:   JSON.stringify(Array.isArray(tags)   ? tags   : []),
-      values: JSON.stringify(Array.isArray(values) ? values : []),
-      notes:    notes?.trim()    || null,
-      location: location?.trim() || null,
-      linkedin: linkedin?.trim() || null,
-      twitter:  twitter?.trim()  || null,
-      website:  website?.trim()  || null,
-      color:    color    || null,
-      colorSoft: colorSoft || null,
-    },
-  })
-
-  return NextResponse.json({ ...person, emails: parseTags(person.emails), phones: parseTags(person.phones) }, { status: 201 })
+  try {
+    const person = await createPerson(await req.json())
+    return created(person)
+  } catch (error) {
+    return handleRouteError(error)
+  }
 }

@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server"
 import { db } from "@/lib/db"
 import { parseTags } from "@/lib/utils"
 import type { Interaction } from "@/types"
+import { deletePerson, updatePerson } from "@/server/domain/people"
+import { handleRouteError, noContent } from "@/server/api/respond"
 
 type Params = { params: Promise<{ id: string }> }
 
@@ -46,40 +48,20 @@ export async function GET(_req: NextRequest, { params }: Params) {
 }
 
 export async function PATCH(req: NextRequest, { params }: Params) {
-  const { id } = await params
-  const body = await req.json()
-  const {
-    first, last, title, headline, company, emails, phones, birthday,
-    closeness, tags, values, notes, location, linkedin, twitter, website,
-  } = body
-
-  const person = await db.person.update({
-    where: { id },
-    data: {
-      ...(first !== undefined && { first: first.trim() }),
-      ...(last !== undefined && { last: last.trim() }),
-      ...(title !== undefined && { title: title?.trim() || null }),
-      ...(headline !== undefined && { headline: headline?.trim() || null }),
-      ...(company !== undefined && { company: company?.trim() || null }),
-      ...(emails !== undefined && { emails: JSON.stringify(Array.isArray(emails) ? emails.map((e: string) => e.trim()).filter(Boolean) : []) }),
-      ...(phones !== undefined && { phones: JSON.stringify(Array.isArray(phones) ? phones.map((p: string) => p.trim()).filter(Boolean) : []) }),
-      ...(birthday !== undefined && { birthday: birthday?.trim() || null }),
-      ...(closeness !== undefined && { closeness: Number(closeness) }),
-      ...(tags !== undefined && { tags: JSON.stringify(Array.isArray(tags) ? tags : []) }),
-      ...(values !== undefined && { values: JSON.stringify(Array.isArray(values) ? values : []) }),
-      ...(notes !== undefined && { notes: notes?.trim() || null }),
-      ...(location !== undefined && { location: location?.trim() || null }),
-      ...(linkedin !== undefined && { linkedin: linkedin?.trim() || null }),
-      ...(twitter !== undefined && { twitter: twitter?.trim() || null }),
-      ...(website !== undefined && { website: website?.trim() || null }),
-    },
-  })
-
-  return NextResponse.json({ ...person, emails: parseTags(person.emails), phones: parseTags(person.phones) })
+  try {
+    const { id } = await params
+    return NextResponse.json(await updatePerson(id, await req.json()))
+  } catch (error) {
+    return handleRouteError(error)
+  }
 }
 
 export async function DELETE(_req: NextRequest, { params }: Params) {
-  const { id } = await params
-  await db.person.delete({ where: { id } })
-  return new NextResponse(null, { status: 204 })
+  try {
+    const { id } = await params
+    await deletePerson(id)
+    return noContent()
+  } catch (error) {
+    return handleRouteError(error)
+  }
 }
