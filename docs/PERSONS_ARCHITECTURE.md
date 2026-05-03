@@ -153,10 +153,12 @@ Plain English: import is a bulk way to turn messy text into structured People, E
 ```mermaid
 flowchart TD
   Inbox["Inbox staging item"] --> Review["You review and edit"]
-  Review --> Choice{"Decision"}
+  Review --> Trace["Automation trace shows matched rules"]
+  Trace --> Choice{"Decision"}
   Choice -->|Accept| Person["Attach to correct Person"]
   Choice -->|Dismiss| Dismissed["Mark dismissed"]
   Choice -->|Update| Pending["Keep pending with edits"]
+  Choice -->|Return to Review| Pending
 
   Person --> DailyInteraction["Append/create daily Interaction"]
   DailyInteraction --> Rules["Run inbox.accept and interaction rules"]
@@ -261,6 +263,7 @@ flowchart TD
   Auto --> SaveRun
   Block --> SaveRun
   SaveRun --> Audit["Write audit when matched/applied"]
+  SaveRun --> AdminHistory["Admin run history filters"]
 ```
 
 Current triggers include:
@@ -380,6 +383,8 @@ This phase is about trust and control:
 - Inbox review should show why automation did something.
 - Rule runs should act like receipts beside the records they affected.
 - Low-confidence automation should stay reviewable instead of silently creating canonical records.
+- Admins can filter rule-run history by rule, trigger, outcome, and status.
+- Blocked Inbox records can be dismissed or returned to normal review after edits.
 
 ### Future
 

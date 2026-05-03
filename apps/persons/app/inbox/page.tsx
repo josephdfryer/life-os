@@ -160,6 +160,40 @@ export default function InboxPage() {
     }
   }
 
+  async function updateSelected(nextStatus?: "pending") {
+    if (!selected) return
+    setSaving(true)
+    setError(null)
+    try {
+      const res = await fetch(`/api/inbox/${selected.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "update",
+          personId: selectedPerson?.id ?? selected.candidatePersonId,
+          summary,
+          direction: selected.direction,
+          status: nextStatus,
+        }),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || "Could not update item")
+      setItems(prev => prev.map(item => item.id === selected.id
+        ? {
+          ...item,
+          status: nextStatus ?? item.status,
+          candidatePersonId: selectedPerson?.id ?? item.candidatePersonId,
+          candidatePerson: selectedPerson ?? item.candidatePerson,
+          summary,
+        }
+        : item))
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Could not update item")
+    } finally {
+      setSaving(false)
+    }
+  }
+
   function removeItem(id: string) {
     setItems(prev => {
       const idx = prev.findIndex(item => item.id === id)
@@ -241,7 +275,10 @@ export default function InboxPage() {
               <section style={{ border: "1px solid var(--border)", background: "var(--surface)", borderRadius: "8px", padding: "18px" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", gap: "18px", marginBottom: "16px" }}>
                   <div>
-                    <div style={{ color: "var(--ink-4)", fontSize: "11px", marginBottom: "4px" }}>{selected.source}</div>
+                    <div style={{ display: "flex", gap: "7px", alignItems: "center", color: "var(--ink-4)", fontSize: "11px", marginBottom: "4px" }}>
+                      <span>{selected.source}</span>
+                      {selected.status !== "pending" && <TinyPill tone={selected.status === "blocked" ? "warn" : "muted"}>{selected.status}</TinyPill>}
+                    </div>
                     <h2 style={{ margin: 0, color: "var(--ink)", fontSize: "22px", fontWeight: 600 }}>
                       {selected.contactName || selected.contactEmail || selected.contactPhone || "Unknown contact"}
                     </h2>
@@ -251,6 +288,12 @@ export default function InboxPage() {
                     <div>{selected.direction || "message"}</div>
                   </div>
                 </div>
+
+                {selected.status === "blocked" && (
+                  <div style={{ border: "1px solid #d28a5d", background: "#fff4eb", color: "#914a22", borderRadius: "8px", padding: "10px 12px", fontSize: "12px", lineHeight: 1.45, marginBottom: "14px" }}>
+                    A rule blocked this record. You can dismiss it, or return it to review after choosing the right Person.
+                  </div>
+                )}
 
                 <textarea
                   value={summary}
@@ -371,6 +414,22 @@ export default function InboxPage() {
 
               <div style={{ display: "flex", gap: "10px", justifyContent: "flex-end" }}>
                 <button
+                  onClick={() => updateSelected()}
+                  disabled={saving}
+                  style={{ padding: "10px 16px", borderRadius: "7px", border: "1px solid var(--border)", background: "transparent", color: "var(--ink-3)", font: "inherit", fontSize: "12px", cursor: saving ? "not-allowed" : "pointer" }}
+                >
+                  Save Edits
+                </button>
+                {selected.status === "blocked" && (
+                  <button
+                    onClick={() => updateSelected("pending")}
+                    disabled={saving}
+                    style={{ padding: "10px 16px", borderRadius: "7px", border: "1px solid #d28a5d", background: "#fff4eb", color: "#914a22", font: "inherit", fontSize: "12px", cursor: saving ? "not-allowed" : "pointer" }}
+                  >
+                    Return to Review
+                  </button>
+                )}
+                <button
                   onClick={dismissSelected}
                   disabled={saving}
                   style={{ padding: "10px 16px", borderRadius: "7px", border: "1px solid var(--border)", background: "transparent", color: "var(--ink-3)", font: "inherit", fontSize: "12px", cursor: saving ? "not-allowed" : "pointer" }}
@@ -382,7 +441,7 @@ export default function InboxPage() {
                   disabled={saving || !selectedPerson}
                   style={{ padding: "10px 18px", borderRadius: "7px", border: "none", background: selectedPerson ? "var(--accent)" : "var(--border)", color: selectedPerson ? "#fff" : "var(--ink-4)", font: "inherit", fontSize: "12px", fontWeight: 600, cursor: saving || !selectedPerson ? "not-allowed" : "pointer" }}
                 >
-                  Accept
+                  Approve & Accept
                 </button>
               </div>
             </div>

@@ -58,10 +58,14 @@ type RuleRun = {
   id: string
   createdAt: string
   trigger: string
+  targetType: string | null
+  targetId: string | null
   matched: boolean
   mode: string
   status: string
   message: string | null
+  actionsPlanned: unknown
+  actionsApplied: unknown
   rule: { id: string; name: string; trigger: string }
 }
 type Overview = {
@@ -89,6 +93,19 @@ const DEFAULT_PAYLOAD = `{
   "summary": "Lunch next week"
 }`
 const TRIGGER_OPTIONS = ["ingest.message", "import.person", "import.interaction", "interaction.create", "interaction.append", "inbox.accept"]
+const RUN_STATUS_OPTIONS = ["all", "applied", "blocked", "suggested", "dry_run", "skipped", "planned"]
+const CONDITION_HELPERS = [
+  { label: "source is iMessage", item: { field: "source", operator: "equals", value: "imessage" } },
+  { label: "no matched person", item: { field: "candidatePersonId", operator: "not_exists" } },
+  { label: "has message text", item: { field: "summary", operator: "exists" } },
+  { label: "stressful weight", item: { field: "emotionalWeight", operator: "in", value: ["Draining", "Stressful"] } },
+]
+const ACTION_HELPERS = [
+  { label: "send to review", item: { type: "set", field: "status", value: "pending" } },
+  { label: "block record", item: { type: "block" } },
+  { label: "set match note", item: { type: "set", field: "matchReason", value: "Needs human review" } },
+  { label: "suggest follow-up", item: { type: "suggest", field: "followUp", value: "Review cadence or create a plan" } },
+]
 const RULE_TEMPLATES = [
   {
     name: "Review unknown iMessages",
@@ -191,6 +208,10 @@ export default function AdminClient({
   const [ruleActions, setRuleActions] = useState(DEFAULT_ACTIONS)
   const [testPayload, setTestPayload] = useState(DEFAULT_PAYLOAD)
   const [testResult, setTestResult] = useState<string | null>(null)
+  const [runFilterRuleId, setRunFilterRuleId] = useState("all")
+  const [runFilterTrigger, setRunFilterTrigger] = useState("all")
+  const [runFilterMatched, setRunFilterMatched] = useState("all")
+  const [runFilterStatus, setRunFilterStatus] = useState("all")
 
   const selectedRole = useMemo(
     () => overview?.roles.find(role => role.id === selectedRoleId) ?? overview?.roles[0] ?? null,
@@ -199,6 +220,13 @@ export default function AdminClient({
   const selectedRule = useMemo(
     () => selectedRuleId ? rules.find(rule => rule.id === selectedRuleId) ?? null : null,
     [rules, selectedRuleId],
+  )
+  const ruleFilterOptions = useMemo(
+    () => [
+      { value: "all", label: "All rules" },
+      ...rules.map(rule => ({ value: rule.id, label: rule.name })),
+    ],
+    [rules],
   )
 
   useEffect(() => {
@@ -214,6 +242,10 @@ export default function AdminClient({
       loadRuleRuns()
     }
   }, [tab])
+
+  useEffect(() => {
+    if (tab === "rules") loadRuleRuns()
+  }, [runFilterRuleId, runFilterTrigger, runFilterMatched, runFilterStatus])
 
   useEffect(() => {
     if (!selectedRule) return
@@ -272,7 +304,13 @@ export default function AdminClient({
 
   async function loadRuleRuns() {
     try {
-      const res = await fetch("/api/admin/rule-runs")
+      const params = new URLSearchParams()
+      if (runFilterRuleId !== "all") params.set("ruleId", runFilterRuleId)
+      if (runFilterTrigger !== "all") params.set("trigger", runFilterTrigger)
+      if (runFilterMatched !== "all") params.set("matched", runFilterMatched)
+      if (runFilterStatus !== "all") params.set("status", runFilterStatus)
+      const query = params.toString()
+      const res = await fetch(`/api/admin/rule-runs${query ? `?${query}` : ""}`)
       const data = await res.json()
       if (!res.ok) throw new Error(data.error?.message || data.error || "Could not load rule runs")
       setRuleRuns(data.runs ?? [])
@@ -495,6 +533,31 @@ export default function AdminClient({
     setRuleActions(JSON.stringify(template.actions, null, 2))
     setTestPayload(JSON.stringify(template.payload, null, 2))
     setTestResult(null)
+  }
+
+  function appendCondition(item: unknown) {
+    appendJsonArrayItem(ruleConditions, item, setRuleConditions, "conditions")
+  }
+
+  function appendAction(item: unknown) {
+    appendJsonArrayItem(ruleActions, item, setRuleActions, "actions")
+  }
+
+  function focusRunsOnSelectedRule() {
+    if (!selectedRule) return
+    setRunFilterRuleId(selectedRule.id)
+    setRunFilterTrigger("all")
+  }
+
+  function appendJsonArrayItem(current: string, item: unknown, onChange: (value: string) => void, field: string) {
+    setError(null)
+    try {
+      const parsed = JSON.parse(current)
+      if (!Array.isArray(parsed)) throw new Error("not array")
+      onChange(JSON.stringify([...parsed, item], null, 2))
+    } catch {
+      setError(`${field} must be valid JSON before adding a shortcut`)
+    }
   }
 
   function toggleScope(scope: string, selected: string[], setSelected: (next: string[]) => void) {
@@ -720,7 +783,21 @@ export default function AdminClient({
                   </label>
                 </div>
                 <Field label="Description" value={ruleDescription} onChange={setRuleDescription} placeholder="What this rule should do" />
+                <HelperRow label="Condition shortcuts">
+                  {CONDITION_HELPERS.map(helper => (
+                    <button key={helper.label} type="button" style={chipButtonStyle} onClick={() => appendCondition(helper.item)}>
+                      {helper.label}
+                    </button>
+                  ))}
+                </HelperRow>
                 <CodeField label="Conditions" value={ruleConditions} onChange={setRuleConditions} />
+                <HelperRow label="Action shortcuts">
+                  {ACTION_HELPERS.map(helper => (
+                    <button key={helper.label} type="button" style={chipButtonStyle} onClick={() => appendAction(helper.item)}>
+                      {helper.label}
+                    </button>
+                  ))}
+                </HelperRow>
                 <CodeField label="Actions" value={ruleActions} onChange={setRuleActions} />
                 <div style={{ display: "flex", gap: "8px" }}>
                   <button style={primaryButtonStyle} disabled={saving || !ruleName.trim() || !ruleTrigger.trim()} onClick={selectedRule ? updateRule : createRule}>
@@ -732,6 +809,19 @@ export default function AdminClient({
 
               <Panel title="Test & Runs" meta={`${ruleRuns.length} runs`}>
                 <CodeField label="Payload" value={testPayload} onChange={setTestPayload} />
+                <div style={{ borderTop: "1px solid var(--border)", paddingTop: "10px", marginBottom: "12px" }}>
+                  <div style={{ fontSize: "10px", color: "var(--ink-4)", marginBottom: "8px" }}>Run filters</div>
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px" }}>
+                    <SelectOptionField label="Rule" value={runFilterRuleId} onChange={setRunFilterRuleId} options={ruleFilterOptions} />
+                    <SelectField label="Trigger" value={runFilterTrigger} onChange={setRunFilterTrigger} options={["all", ...TRIGGER_OPTIONS]} />
+                    <SelectField label="Outcome" value={runFilterMatched} onChange={setRunFilterMatched} options={["all", "matched", "skipped"]} />
+                    <SelectField label="Status" value={runFilterStatus} onChange={setRunFilterStatus} options={RUN_STATUS_OPTIONS} />
+                  </div>
+                  <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+                    <button style={smallButtonStyle} disabled={saving} onClick={loadRuleRuns}>Refresh</button>
+                    <button style={smallButtonStyle} disabled={!selectedRule} onClick={focusRunsOnSelectedRule}>Selected Rule</button>
+                  </div>
+                </div>
                 {testResult && (
                   <div style={{ marginBottom: "12px" }}>
                     <div style={{ fontSize: "10px", color: "var(--ink-4)", marginBottom: "5px" }}>Result</div>
@@ -745,8 +835,16 @@ export default function AdminClient({
                         <span style={{ fontSize: "11px", color: "var(--ink)", fontWeight: 600 }}>{run.rule.name}</span>
                         <span style={{ fontSize: "10px", color: run.matched ? "#526b37" : "var(--ink-4)" }}>{run.matched ? "matched" : "skipped"}</span>
                       </div>
-                      <div style={{ fontSize: "10px", color: "var(--ink-4)" }}>{formatDate(run.createdAt)} · {run.status}</div>
+                      <div style={{ fontSize: "10px", color: "var(--ink-4)" }}>
+                        {formatDate(run.createdAt)} · {run.status}{run.targetType ? ` · ${run.targetType}${run.targetId ? `:${run.targetId.slice(0, 8)}` : ""}` : ""}
+                      </div>
                       {run.message && <div style={{ fontSize: "10px", color: "var(--ink-3)", marginTop: "4px" }}>{run.message}</div>}
+                      {(actionCount(run.actionsPlanned) > 0 || actionCount(run.actionsApplied) > 0) && (
+                        <div style={{ display: "flex", gap: "6px", marginTop: "6px", flexWrap: "wrap" }}>
+                          {actionCount(run.actionsPlanned) > 0 && <StatusPill status={`${actionCount(run.actionsPlanned)} planned`} />}
+                          {actionCount(run.actionsApplied) > 0 && <StatusPill status={`${actionCount(run.actionsApplied)} applied`} />}
+                        </div>
+                      )}
                     </div>
                   ))}
                 </div>
@@ -887,6 +985,49 @@ function SelectField({ label, value, onChange, options }: { label: string; value
   )
 }
 
+function SelectOptionField({
+  label,
+  value,
+  onChange,
+  options,
+}: {
+  label: string
+  value: string
+  onChange: (value: string) => void
+  options: { value: string; label: string }[]
+}) {
+  return (
+    <label style={{ display: "grid", gap: "5px", marginBottom: "10px" }}>
+      <span style={{ fontSize: "10px", color: "var(--ink-4)" }}>{label}</span>
+      <select
+        value={value}
+        onChange={event => onChange(event.target.value)}
+        style={{
+          height: "34px",
+          border: "1px solid var(--border)",
+          borderRadius: "7px",
+          background: "var(--bg)",
+          color: "var(--ink)",
+          padding: "0 9px",
+          fontFamily: "inherit",
+          fontSize: "12px",
+        }}
+      >
+        {options.map(option => <option key={option.value} value={option.value}>{option.label}</option>)}
+      </select>
+    </label>
+  )
+}
+
+function HelperRow({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <div style={{ margin: "2px 0 8px" }}>
+      <div style={{ fontSize: "10px", color: "var(--ink-4)", marginBottom: "6px" }}>{label}</div>
+      <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>{children}</div>
+    </div>
+  )
+}
+
 function CodeField({ label, value, onChange }: { label: string; value: string; onChange: (value: string) => void }) {
   return (
     <label style={{ display: "grid", gap: "5px", marginBottom: "10px" }}>
@@ -987,6 +1128,17 @@ const templateButtonStyle: React.CSSProperties = {
   cursor: "pointer",
 }
 
+const chipButtonStyle: React.CSSProperties = {
+  border: "1px solid var(--border)",
+  background: "var(--bg)",
+  color: "var(--ink-3)",
+  borderRadius: "999px",
+  padding: "4px 8px",
+  fontSize: "10px",
+  fontFamily: "inherit",
+  cursor: "pointer",
+}
+
 const preStyle: React.CSSProperties = {
   margin: 0,
   border: "1px solid var(--border)",
@@ -1015,4 +1167,8 @@ function formatMetadata(value: unknown) {
   if (!value) return ""
   const text = typeof value === "string" ? value : JSON.stringify(value)
   return text.length > 140 ? `${text.slice(0, 140)}...` : text
+}
+
+function actionCount(value: unknown) {
+  return Array.isArray(value) ? value.length : 0
 }

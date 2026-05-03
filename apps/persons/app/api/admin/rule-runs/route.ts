@@ -7,7 +7,14 @@ export async function GET(req: NextRequest) {
   try {
     await requireAccess("rules.manage")
     const { searchParams } = new URL(req.url)
-    return json(await listRuleRuns(searchParams.get("ruleId")))
+    return json(await listRuleRuns({
+      ruleId: searchParams.get("ruleId"),
+      trigger: searchParams.get("trigger"),
+      matched: searchParams.get("matched"),
+      status: searchParams.get("status"),
+      targetType: searchParams.get("targetType"),
+      targetId: searchParams.get("targetId"),
+    }))
   } catch (error) {
     return handleRouteError(error)
   }

@@ -1,4 +1,5 @@
 import { db } from "@/lib/db"
+import type { Prisma } from "@life-os/db"
 import { badRequest, notFound, optionalString, requiredString } from "@/server/api/errors"
 import { auditAction, type DomainActor } from "./audit"
 import type { AccessActor } from "./access"
@@ -250,9 +251,27 @@ export async function runRulesForTarget(input: RuleExecutionInput) {
   }
 }
 
-export async function listRuleRuns(ruleId?: string | null) {
+export type RuleRunFilters = {
+  ruleId?: string | null
+  trigger?: string | null
+  matched?: string | null
+  status?: string | null
+  targetType?: string | null
+  targetId?: string | null
+}
+
+export async function listRuleRuns(filters: RuleRunFilters = {}) {
+  const where: Prisma.RuleRunWhereInput = {}
+  if (filters.ruleId) where.ruleId = filters.ruleId
+  if (filters.trigger) where.trigger = filters.trigger
+  if (filters.status) where.status = filters.status
+  if (filters.targetType) where.targetType = filters.targetType
+  if (filters.targetId) where.targetId = filters.targetId
+  const matched = parseMatchedFilter(filters.matched)
+  if (matched !== null) where.matched = matched
+
   const runs = await db.ruleRun.findMany({
-    where: ruleId ? { ruleId } : undefined,
+    where,
     include: { rule: true },
     orderBy: { createdAt: "desc" },
     take: 150,
@@ -266,6 +285,13 @@ export async function listRuleRuns(ruleId?: string | null) {
       rule: { id: run.rule.id, name: run.rule.name, trigger: run.rule.trigger },
     })),
   }
+}
+
+function parseMatchedFilter(value: string | null | undefined) {
+  const normalized = normalize(value)
+  if (["matched", "true", "1", "yes"].includes(normalized)) return true
+  if (["skipped", "false", "0", "no"].includes(normalized)) return false
+  return null
 }
 
 function evaluateRule(conditions: RuleCondition[], actions: RuleAction[], payload: Record<string, unknown>) {
