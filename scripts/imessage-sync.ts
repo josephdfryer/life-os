@@ -68,6 +68,7 @@ let db: PrismaClient
 
 const APPLE_EPOCH_MS = Date.UTC(2001, 0, 1)
 const SOURCE_PREFIX = "imessage:"
+const DAY_TIME_ZONE = process.env.IMESSAGE_SYNC_DAY_TIME_ZONE ?? "America/Los_Angeles"
 
 async function main() {
   db = (await import("@life-os/db")).db
@@ -87,7 +88,7 @@ async function main() {
   do {
     const result = await syncOnce(options)
     console.log(
-      `iMessage sync: scanned=${result.scanned} createdPersons=${result.createdPersons} updatedPersons=${result.updatedPersons} createdInteractions=${result.createdInteractions} stagedInteractions=${result.stagedInteractions} watermark=${result.watermark}`
+      `iMessage sync: scanned=${result.scanned} createdPersons=${result.createdPersons} updatedPersons=${result.updatedPersons} createdInteractions=${result.createdInteractions} updatedInteractions=${result.updatedInteractions} stagedInteractions=${result.stagedInteractions} watermark=${result.watermark}`
     )
 
     if (!options.watch || shuttingDown) break
@@ -104,6 +105,7 @@ async function syncOnce(options: Options) {
   let createdPersons = 0
   let updatedPersons = 0
   let createdInteractions = 0
+  let updatedInteractions = 0
   let stagedInteractions = 0
   let watermark = state.lastMessageRowId
   const people = await loadPeopleIndex({ includeAutoCreated: options.createMissing })
@@ -147,13 +149,7 @@ async function syncOnce(options: Options) {
     people.byId.set(personResult.person.id, personResult.person)
     indexPerson(people, personResult.person)
 
-    const existingInteraction = await db.interaction.findFirst({
-      where: { notes: sourceId },
-      select: { id: true },
-    })
-    if (existingInteraction) continue
-
-    await createMessageInteraction({
+    const interactionResult = await upsertDailyMessageInteraction({
       personId: personResult.person.id,
       timestamp: appleDateToDate(message.appleDate),
       direction: contact.direction,
@@ -161,14 +157,15 @@ async function syncOnce(options: Options) {
       sourceId,
       service: message.service ?? message.chatServiceName ?? "iMessage",
     })
-    createdInteractions++
+    if (interactionResult === "created") createdInteractions++
+    if (interactionResult === "updated") updatedInteractions++
   }
 
   if (!options.dryRun && watermark > state.lastMessageRowId) {
     writeState(options.statePath, { lastMessageRowId: watermark, updatedAt: new Date().toISOString() })
   }
 
-  return { scanned: messages.length, createdPersons, updatedPersons, createdInteractions, stagedInteractions, watermark }
+  return { scanned: messages.length, createdPersons, updatedPersons, createdInteractions, updatedInteractions, stagedInteractions, watermark }
 }
 
 function readMessages(chatDbPath: string, afterRowId: number, limit: number): MessageRow[] {
@@ -316,20 +313,55 @@ async function updatePersonContact(existing: ExistingPerson, contact: ReturnType
   return { person, updated }
 }
 
-async function createMessageInteraction(input: {
+async function upsertDailyMessageInteraction(input: {
   personId: string
   timestamp: Date
   direction: string
   summary: string
   sourceId: string
   service: string
-}) {
+}): Promise<"created" | "updated" | "skipped"> {
+  const sourceMarker = normalizeSourceMarker(input.sourceId)
+  const dayMarker = `imessage-day:${dayKey(input.timestamp)}`
+
+  const duplicate = await db.interaction.findFirst({
+    where: {
+      personId: input.personId,
+      notes: { contains: sourceMarker },
+    },
+    select: { id: true },
+  })
+  if (duplicate) return "skipped"
+
+  const existing = await db.interaction.findFirst({
+    where: {
+      personId: input.personId,
+      type: "message",
+      notes: { contains: dayMarker },
+    },
+    select: { id: true, eventId: true, summary: true, notes: true, direction: true },
+    orderBy: { timestamp: "asc" },
+  })
+
+  const line = messageLine(input.timestamp, input.direction, input.summary)
+  if (existing) {
+    await db.interaction.update({
+      where: { id: existing.id },
+      data: {
+        summary: appendLine(existing.summary, line),
+        notes: appendLine(existing.notes, sourceMarker),
+        direction: existing.direction === input.direction ? existing.direction : "mixed",
+      },
+    })
+    return "updated"
+  }
+
   const event = await db.event.create({
     data: {
-      name: input.summary.slice(0, 80) || "iMessage",
+      name: `iMessage ${dayKey(input.timestamp)}`,
       type: "message",
       timestamp: input.timestamp,
-      metadata: JSON.stringify({ source: "imessage", sourceId: input.sourceId, service: input.service }),
+      metadata: JSON.stringify({ source: "imessage", day: dayKey(input.timestamp), service: input.service }),
     },
   })
 
@@ -339,11 +371,12 @@ async function createMessageInteraction(input: {
       eventId: event.id,
       type: "message",
       timestamp: input.timestamp,
-      summary: input.summary,
-      notes: input.sourceId,
+      summary: line,
+      notes: `${dayMarker}\n${sourceMarker}`,
       direction: input.direction,
     },
   })
+  return "created"
 }
 
 async function stageMessageInteraction(input: {
@@ -444,6 +477,37 @@ function appleDateToDate(value: MessageRow["appleDate"]): Date {
   if (raw > 100_000_000_000_000) return new Date(APPLE_EPOCH_MS + raw / 1_000_000)
   if (raw > 100_000_000_000) return new Date(APPLE_EPOCH_MS + raw / 1_000)
   return new Date(APPLE_EPOCH_MS + raw * 1000)
+}
+
+function dayKey(date: Date): string {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: DAY_TIME_ZONE,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(date)
+  const get = (type: string) => parts.find(part => part.type === type)?.value ?? ""
+  return `${get("year")}-${get("month")}-${get("day")}`
+}
+
+function messageLine(timestamp: Date, direction: string, summary: string) {
+  const time = new Intl.DateTimeFormat("en-US", {
+    timeZone: DAY_TIME_ZONE,
+    hour: "numeric",
+    minute: "2-digit",
+  }).format(timestamp)
+  return `[${time} ${direction}] ${summary}`
+}
+
+function normalizeSourceMarker(sourceId: string) {
+  return sourceId.startsWith(SOURCE_PREFIX) ? sourceId : `${SOURCE_PREFIX}${sourceId}`
+}
+
+function appendLine(existing: string | null | undefined, next: string) {
+  const clean = existing?.trim()
+  if (!clean) return next
+  if (clean.includes(next)) return clean
+  return `${clean}\n${next}`
 }
 
 function readState(statePath: string): State {
