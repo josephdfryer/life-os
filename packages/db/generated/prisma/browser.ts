@@ -63,6 +63,16 @@ export type ApiKeyScope = Prisma.ApiKeyScopeModel
  */
 export type AuditLog = Prisma.AuditLogModel
 /**
+ * Model Rule
+ *
+ */
+export type Rule = Prisma.RuleModel
+/**
+ * Model RuleRun
+ *
+ */
+export type RuleRun = Prisma.RuleRunModel
+/**
  * Model StagedInteraction
  *
  */

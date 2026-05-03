@@ -393,6 +393,8 @@ export const ModelName = {
   ApiKey: 'ApiKey',
   ApiKeyScope: 'ApiKeyScope',
   AuditLog: 'AuditLog',
+  Rule: 'Rule',
+  RuleRun: 'RuleRun',
   StagedInteraction: 'StagedInteraction',
   Event: 'Event',
   Interaction: 'Interaction',
@@ -417,7 +419,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "person" | "user" | "role" | "permission" | "userRole" | "rolePermission" | "apiKey" | "apiKeyScope" | "auditLog" | "stagedInteraction" | "event" | "interaction" | "plan" | "place" | "item" | "assembly" | "itemInteraction" | "importedFile"
+    modelProps: "person" | "user" | "role" | "permission" | "userRole" | "rolePermission" | "apiKey" | "apiKeyScope" | "auditLog" | "rule" | "ruleRun" | "stagedInteraction" | "event" | "interaction" | "plan" | "place" | "item" | "assembly" | "itemInteraction" | "importedFile"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1084,6 +1086,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.AuditLogCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.AuditLogCountAggregateOutputType> | number
+        }
+      }
+    }
+    Rule: {
+      payload: Prisma.$RulePayload<ExtArgs>
+      fields: Prisma.RuleFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.RuleFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RulePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.RuleFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RulePayload>
+        }
+        findFirst: {
+          args: Prisma.RuleFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RulePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.RuleFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RulePayload>
+        }
+        findMany: {
+          args: Prisma.RuleFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RulePayload>[]
+        }
+        create: {
+          args: Prisma.RuleCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RulePayload>
+        }
+        createMany: {
+          args: Prisma.RuleCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.RuleCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RulePayload>[]
+        }
+        delete: {
+          args: Prisma.RuleDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RulePayload>
+        }
+        update: {
+          args: Prisma.RuleUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RulePayload>
+        }
+        deleteMany: {
+          args: Prisma.RuleDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.RuleUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.RuleUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RulePayload>[]
+        }
+        upsert: {
+          args: Prisma.RuleUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RulePayload>
+        }
+        aggregate: {
+          args: Prisma.RuleAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateRule>
+        }
+        groupBy: {
+          args: Prisma.RuleGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.RuleGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.RuleCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.RuleCountAggregateOutputType> | number
+        }
+      }
+    }
+    RuleRun: {
+      payload: Prisma.$RuleRunPayload<ExtArgs>
+      fields: Prisma.RuleRunFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.RuleRunFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RuleRunPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.RuleRunFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RuleRunPayload>
+        }
+        findFirst: {
+          args: Prisma.RuleRunFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RuleRunPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.RuleRunFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RuleRunPayload>
+        }
+        findMany: {
+          args: Prisma.RuleRunFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RuleRunPayload>[]
+        }
+        create: {
+          args: Prisma.RuleRunCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RuleRunPayload>
+        }
+        createMany: {
+          args: Prisma.RuleRunCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.RuleRunCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RuleRunPayload>[]
+        }
+        delete: {
+          args: Prisma.RuleRunDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RuleRunPayload>
+        }
+        update: {
+          args: Prisma.RuleRunUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RuleRunPayload>
+        }
+        deleteMany: {
+          args: Prisma.RuleRunDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.RuleRunUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.RuleRunUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RuleRunPayload>[]
+        }
+        upsert: {
+          args: Prisma.RuleRunUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RuleRunPayload>
+        }
+        aggregate: {
+          args: Prisma.RuleRunAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateRuleRun>
+        }
+        groupBy: {
+          args: Prisma.RuleRunGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.RuleRunGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.RuleRunCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.RuleRunCountAggregateOutputType> | number
         }
       }
     }
@@ -1911,6 +2061,44 @@ export const AuditLogScalarFieldEnum = {
 export type AuditLogScalarFieldEnum = (typeof AuditLogScalarFieldEnum)[keyof typeof AuditLogScalarFieldEnum]
 
 
+export const RuleScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  name: 'name',
+  description: 'description',
+  trigger: 'trigger',
+  status: 'status',
+  priority: 'priority',
+  mode: 'mode',
+  conditions: 'conditions',
+  actions: 'actions',
+  stopProcessing: 'stopProcessing',
+  createdByUserId: 'createdByUserId'
+} as const
+
+export type RuleScalarFieldEnum = (typeof RuleScalarFieldEnum)[keyof typeof RuleScalarFieldEnum]
+
+
+export const RuleRunScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  ruleId: 'ruleId',
+  trigger: 'trigger',
+  targetType: 'targetType',
+  targetId: 'targetId',
+  matched: 'matched',
+  mode: 'mode',
+  status: 'status',
+  input: 'input',
+  actionsPlanned: 'actionsPlanned',
+  actionsApplied: 'actionsApplied',
+  message: 'message'
+} as const
+
+export type RuleRunScalarFieldEnum = (typeof RuleRunScalarFieldEnum)[keyof typeof RuleRunScalarFieldEnum]
+
+
 export const StagedInteractionScalarFieldEnum = {
   id: 'id',
   createdAt: 'createdAt',
@@ -2113,16 +2301,16 @@ export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'In
 
 
 /**
- * Reference to a field of type 'Float'
+ * Reference to a field of type 'Boolean'
  */
-export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
+export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
     
 
 
 /**
- * Reference to a field of type 'Boolean'
+ * Reference to a field of type 'Float'
  */
-export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
     
 
 /**
@@ -2244,6 +2432,8 @@ export type GlobalOmitConfig = {
   apiKey?: Prisma.ApiKeyOmit
   apiKeyScope?: Prisma.ApiKeyScopeOmit
   auditLog?: Prisma.AuditLogOmit
+  rule?: Prisma.RuleOmit
+  ruleRun?: Prisma.RuleRunOmit
   stagedInteraction?: Prisma.StagedInteractionOmit
   event?: Prisma.EventOmit
   interaction?: Prisma.InteractionOmit

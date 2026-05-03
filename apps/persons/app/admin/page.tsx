@@ -41,6 +41,29 @@ type AuditLog = {
   actorLabel: string | null
   metadata: unknown
 }
+type Rule = {
+  id: string
+  name: string
+  description: string | null
+  trigger: string
+  status: string
+  priority: number
+  mode: string
+  conditions: unknown[]
+  actions: unknown[]
+  stopProcessing: boolean
+  lastRun: { createdAt: string; matched: boolean; status: string; message: string | null } | null
+}
+type RuleRun = {
+  id: string
+  createdAt: string
+  trigger: string
+  matched: boolean
+  mode: string
+  status: string
+  message: string | null
+  rule: { id: string; name: string; trigger: string }
+}
 type Overview = {
   currentUser: { id: string; email: string; scopes: string[] }
   users: User[]
@@ -50,12 +73,27 @@ type Overview = {
   auditCount: number
 }
 
-const TABS = ["apiKeys", "roles", "permissions", "audit"] as const
+const TABS = ["apiKeys", "roles", "rules", "permissions", "audit"] as const
 type Tab = typeof TABS[number]
+
+const DEFAULT_CONDITIONS = `[
+  { "field": "source", "operator": "equals", "value": "imessage" }
+]`
+const DEFAULT_ACTIONS = `[
+  { "type": "suggest", "field": "candidatePersonId", "value": "review" }
+]`
+const DEFAULT_PAYLOAD = `{
+  "source": "imessage",
+  "type": "message",
+  "contactName": "Jane Example",
+  "summary": "Lunch next week"
+}`
 
 export default function AdminPage() {
   const [overview, setOverview] = useState<Overview | null>(null)
   const [auditLogs, setAuditLogs] = useState<AuditLog[]>([])
+  const [rules, setRules] = useState<Rule[]>([])
+  const [ruleRuns, setRuleRuns] = useState<RuleRun[]>([])
   const [tab, setTab] = useState<Tab>("apiKeys")
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
@@ -70,10 +108,26 @@ export default function AdminPage() {
   const [selectedRoleId, setSelectedRoleId] = useState<string | null>(null)
   const [selectedRoleScopes, setSelectedRoleScopes] = useState<string[]>([])
   const [userRoleDraft, setUserRoleDraft] = useState<Record<string, string[]>>({})
+  const [selectedRuleId, setSelectedRuleId] = useState<string | null>(null)
+  const [ruleName, setRuleName] = useState("")
+  const [ruleDescription, setRuleDescription] = useState("")
+  const [ruleTrigger, setRuleTrigger] = useState("ingest.message")
+  const [ruleStatus, setRuleStatus] = useState("active")
+  const [ruleMode, setRuleMode] = useState("suggest")
+  const [rulePriority, setRulePriority] = useState("100")
+  const [ruleStopProcessing, setRuleStopProcessing] = useState(false)
+  const [ruleConditions, setRuleConditions] = useState(DEFAULT_CONDITIONS)
+  const [ruleActions, setRuleActions] = useState(DEFAULT_ACTIONS)
+  const [testPayload, setTestPayload] = useState(DEFAULT_PAYLOAD)
+  const [testResult, setTestResult] = useState<string | null>(null)
 
   const selectedRole = useMemo(
     () => overview?.roles.find(role => role.id === selectedRoleId) ?? overview?.roles[0] ?? null,
     [overview?.roles, selectedRoleId],
+  )
+  const selectedRule = useMemo(
+    () => selectedRuleId ? rules.find(rule => rule.id === selectedRuleId) ?? null : null,
+    [rules, selectedRuleId],
   )
 
   useEffect(() => {
@@ -88,7 +142,26 @@ export default function AdminPage() {
 
   useEffect(() => {
     if (tab === "audit") loadAudit()
+    if (tab === "rules") {
+      loadRules()
+      loadRuleRuns()
+    }
   }, [tab])
+
+  useEffect(() => {
+    if (!selectedRule) return
+    setSelectedRuleId(selectedRule.id)
+    setRuleName(selectedRule.name)
+    setRuleDescription(selectedRule.description ?? "")
+    setRuleTrigger(selectedRule.trigger)
+    setRuleStatus(selectedRule.status)
+    setRuleMode(selectedRule.mode)
+    setRulePriority(String(selectedRule.priority))
+    setRuleStopProcessing(selectedRule.stopProcessing)
+    setRuleConditions(JSON.stringify(selectedRule.conditions, null, 2))
+    setRuleActions(JSON.stringify(selectedRule.actions, null, 2))
+    setTestResult(null)
+  }, [selectedRule?.id])
 
   async function loadOverview() {
     setLoading(true)
@@ -117,6 +190,29 @@ export default function AdminPage() {
       setAuditLogs(data.logs ?? [])
     } catch (e) {
       setError(e instanceof Error ? e.message : "Could not load audit log")
+    }
+  }
+
+  async function loadRules() {
+    try {
+      const res = await fetch("/api/admin/rules")
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error?.message || data.error || "Could not load rules")
+      setRules(data.rules ?? [])
+      setSelectedRuleId((data.rules ?? [])[0]?.id ?? null)
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Could not load rules")
+    }
+  }
+
+  async function loadRuleRuns() {
+    try {
+      const res = await fetch("/api/admin/rule-runs")
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error?.message || data.error || "Could not load rule runs")
+      setRuleRuns(data.runs ?? [])
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Could not load rule runs")
     }
   }
 
@@ -225,6 +321,102 @@ export default function AdminPage() {
     }
   }
 
+  async function createRule() {
+    setSaving(true)
+    setError(null)
+    setTestResult(null)
+    try {
+      const res = await fetch("/api/admin/rules", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(rulePayload()),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error?.message || data.error || "Could not create rule")
+      await loadRules()
+      setSelectedRuleId(data.id)
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Could not create rule")
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  async function updateRule() {
+    if (!selectedRule) return
+    setSaving(true)
+    setError(null)
+    setTestResult(null)
+    try {
+      const res = await fetch(`/api/admin/rules/${selectedRule.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(rulePayload()),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error?.message || data.error || "Could not update rule")
+      await loadRules()
+      setSelectedRuleId(data.id)
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Could not update rule")
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  async function testCurrentRule() {
+    setSaving(true)
+    setError(null)
+    setTestResult(null)
+    try {
+      const res = await fetch("/api/admin/rules/test", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ruleId: selectedRule?.id ?? null,
+          rule: selectedRule ? undefined : rulePayload(),
+          payload: testPayload,
+        }),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error?.message || data.error || "Could not test rule")
+      setTestResult(JSON.stringify(data, null, 2))
+      await loadRuleRuns()
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Could not test rule")
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  function rulePayload() {
+    return {
+      name: ruleName,
+      description: ruleDescription,
+      trigger: ruleTrigger,
+      status: ruleStatus,
+      mode: ruleMode,
+      priority: Number(rulePriority),
+      stopProcessing: ruleStopProcessing,
+      conditions: ruleConditions,
+      actions: ruleActions,
+    }
+  }
+
+  function resetRuleForm() {
+    setSelectedRuleId(null)
+    setRuleName("")
+    setRuleDescription("")
+    setRuleTrigger("ingest.message")
+    setRuleStatus("active")
+    setRuleMode("suggest")
+    setRulePriority("100")
+    setRuleStopProcessing(false)
+    setRuleConditions(DEFAULT_CONDITIONS)
+    setRuleActions(DEFAULT_ACTIONS)
+    setTestResult(null)
+  }
+
   function toggleScope(scope: string, selected: string[], setSelected: (next: string[]) => void) {
     setSelected(selected.includes(scope)
       ? selected.filter(item => item !== scope)
@@ -241,6 +433,7 @@ export default function AdminPage() {
           <div style={{ display: "grid", gap: "6px" }}>
             <TabButton active={tab === "apiKeys"} onClick={() => setTab("apiKeys")} label="API Keys" />
             <TabButton active={tab === "roles"} onClick={() => setTab("roles")} label="Roles" />
+            <TabButton active={tab === "rules"} onClick={() => setTab("rules")} label="Rules" />
             <TabButton active={tab === "permissions"} onClick={() => setTab("permissions")} label="Permissions" />
             <TabButton active={tab === "audit"} onClick={() => setTab("audit")} label="Audit" />
           </div>
@@ -395,6 +588,84 @@ export default function AdminPage() {
             </section>
           )}
 
+          {!loading && overview && tab === "rules" && (
+            <section style={{ display: "grid", gridTemplateColumns: "280px minmax(0, 1fr) 340px", gap: "18px" }}>
+              <Panel title="Rules" meta={`${rules.length} rules`}>
+                <button style={{ ...smallButtonStyle, marginBottom: "10px" }} onClick={resetRuleForm}>New Rule</button>
+                <div style={{ display: "grid", gap: "8px" }}>
+                  {rules.map(rule => (
+                    <button
+                      key={rule.id}
+                      onClick={() => setSelectedRuleId(rule.id)}
+                      style={{
+                        textAlign: "left",
+                        border: `1px solid ${rule.id === selectedRule?.id ? "var(--accent)" : "var(--border)"}`,
+                        background: rule.id === selectedRule?.id ? "var(--accent-soft)" : "var(--bg)",
+                        borderRadius: "8px",
+                        padding: "10px",
+                        cursor: "pointer",
+                        fontFamily: "inherit",
+                      }}
+                    >
+                      <div style={{ display: "flex", justifyContent: "space-between", gap: "8px" }}>
+                        <span style={{ fontSize: "12px", fontWeight: 600 }}>{rule.name}</span>
+                        <StatusPill status={rule.status} />
+                      </div>
+                      <div style={{ fontSize: "10px", color: "var(--ink-4)", marginTop: "4px" }}>
+                        {rule.trigger} · {rule.mode} · p{rule.priority}
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </Panel>
+
+              <Panel title={selectedRule ? "Edit Rule" : "New Rule"} meta={selectedRule?.id.slice(0, 8)}>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}>
+                  <Field label="Name" value={ruleName} onChange={setRuleName} placeholder="Stage unknown iMessages" />
+                  <Field label="Trigger" value={ruleTrigger} onChange={setRuleTrigger} placeholder="ingest.message" />
+                  <SelectField label="Status" value={ruleStatus} onChange={setRuleStatus} options={["active", "paused", "draft"]} />
+                  <SelectField label="Mode" value={ruleMode} onChange={setRuleMode} options={["auto", "suggest", "block", "dry_run"]} />
+                  <Field label="Priority" value={rulePriority} onChange={setRulePriority} placeholder="100" />
+                  <label style={{ display: "flex", gap: "8px", alignItems: "center", marginTop: "20px", fontSize: "11px", color: "var(--ink-3)" }}>
+                    <input type="checkbox" checked={ruleStopProcessing} onChange={event => setRuleStopProcessing(event.target.checked)} />
+                    Stop after match
+                  </label>
+                </div>
+                <Field label="Description" value={ruleDescription} onChange={setRuleDescription} placeholder="What this rule should do" />
+                <CodeField label="Conditions" value={ruleConditions} onChange={setRuleConditions} />
+                <CodeField label="Actions" value={ruleActions} onChange={setRuleActions} />
+                <div style={{ display: "flex", gap: "8px" }}>
+                  <button style={primaryButtonStyle} disabled={saving || !ruleName.trim() || !ruleTrigger.trim()} onClick={selectedRule ? updateRule : createRule}>
+                    {selectedRule ? "Save Rule" : "Create Rule"}
+                  </button>
+                  <button style={smallButtonStyle} disabled={saving} onClick={testCurrentRule}>Dry Run</button>
+                </div>
+              </Panel>
+
+              <Panel title="Test & Runs" meta={`${ruleRuns.length} runs`}>
+                <CodeField label="Payload" value={testPayload} onChange={setTestPayload} />
+                {testResult && (
+                  <div style={{ marginBottom: "12px" }}>
+                    <div style={{ fontSize: "10px", color: "var(--ink-4)", marginBottom: "5px" }}>Result</div>
+                    <pre style={preStyle}>{testResult}</pre>
+                  </div>
+                )}
+                <div style={{ display: "grid", gap: "8px", maxHeight: "420px", overflowY: "auto" }}>
+                  {ruleRuns.map(run => (
+                    <div key={run.id} style={{ border: "1px solid var(--border)", borderRadius: "8px", background: "var(--bg)", padding: "8px" }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", gap: "8px", marginBottom: "4px" }}>
+                        <span style={{ fontSize: "11px", color: "var(--ink)", fontWeight: 600 }}>{run.rule.name}</span>
+                        <span style={{ fontSize: "10px", color: run.matched ? "#526b37" : "var(--ink-4)" }}>{run.matched ? "matched" : "skipped"}</span>
+                      </div>
+                      <div style={{ fontSize: "10px", color: "var(--ink-4)" }}>{formatDate(run.createdAt)} · {run.status}</div>
+                      {run.message && <div style={{ fontSize: "10px", color: "var(--ink-3)", marginTop: "4px" }}>{run.message}</div>}
+                    </div>
+                  ))}
+                </div>
+              </Panel>
+            </section>
+          )}
+
           {!loading && overview && tab === "permissions" && (
             <Panel title="Permissions" meta={`${permissions.length} scopes`}>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: "10px" }}>
@@ -498,6 +769,55 @@ function Field({ label, value, onChange, placeholder }: { label: string; value: 
   )
 }
 
+function SelectField({ label, value, onChange, options }: { label: string; value: string; onChange: (value: string) => void; options: string[] }) {
+  return (
+    <label style={{ display: "grid", gap: "5px", marginBottom: "10px" }}>
+      <span style={{ fontSize: "10px", color: "var(--ink-4)" }}>{label}</span>
+      <select
+        value={value}
+        onChange={event => onChange(event.target.value)}
+        style={{
+          height: "34px",
+          border: "1px solid var(--border)",
+          borderRadius: "7px",
+          background: "var(--bg)",
+          color: "var(--ink)",
+          padding: "0 9px",
+          fontFamily: "inherit",
+          fontSize: "12px",
+        }}
+      >
+        {options.map(option => <option key={option} value={option}>{option}</option>)}
+      </select>
+    </label>
+  )
+}
+
+function CodeField({ label, value, onChange }: { label: string; value: string; onChange: (value: string) => void }) {
+  return (
+    <label style={{ display: "grid", gap: "5px", marginBottom: "10px" }}>
+      <span style={{ fontSize: "10px", color: "var(--ink-4)" }}>{label}</span>
+      <textarea
+        value={value}
+        onChange={event => onChange(event.target.value)}
+        rows={7}
+        spellCheck={false}
+        style={{
+          border: "1px solid var(--border)",
+          borderRadius: "7px",
+          background: "var(--bg)",
+          color: "var(--ink)",
+          padding: "9px",
+          fontFamily: "var(--font-dm-mono), monospace",
+          fontSize: "11px",
+          lineHeight: 1.45,
+          resize: "vertical",
+        }}
+      />
+    </label>
+  )
+}
+
 function ScopePicker({ permissions, selected, onToggle, compact = false }: { permissions: Permission[]; selected: string[]; onToggle: (scope: string) => void; compact?: boolean }) {
   return (
     <div style={{ display: "grid", gridTemplateColumns: compact ? "1fr" : "repeat(auto-fill, minmax(220px, 1fr))", gap: "8px", marginBottom: "12px", maxHeight: compact ? "360px" : "none", overflowY: compact ? "auto" : "visible" }}>
@@ -560,6 +880,20 @@ const smallButtonStyle: React.CSSProperties = {
   fontSize: "10px",
   fontFamily: "inherit",
   cursor: "pointer",
+}
+
+const preStyle: React.CSSProperties = {
+  margin: 0,
+  border: "1px solid var(--border)",
+  borderRadius: "8px",
+  background: "var(--bg)",
+  color: "var(--ink-2)",
+  padding: "9px",
+  fontFamily: "var(--font-dm-mono), monospace",
+  fontSize: "10px",
+  lineHeight: 1.45,
+  whiteSpace: "pre-wrap",
+  wordBreak: "break-word",
 }
 
 function formatDate(value: string | null) {

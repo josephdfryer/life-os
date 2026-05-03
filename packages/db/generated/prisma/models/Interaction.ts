@@ -741,10 +741,6 @@ export type NullableIntFieldUpdateOperationsInput = {
   divide?: number
 }
 
-export type BoolFieldUpdateOperationsInput = {
-  set?: boolean
-}
-
 export type InteractionCreateNestedManyWithoutPlaceInput = {
   create?: Prisma.XOR<Prisma.InteractionCreateWithoutPlaceInput, Prisma.InteractionUncheckedCreateWithoutPlaceInput> | Prisma.InteractionCreateWithoutPlaceInput[] | Prisma.InteractionUncheckedCreateWithoutPlaceInput[]
   connectOrCreate?: Prisma.InteractionCreateOrConnectWithoutPlaceInput | Prisma.InteractionCreateOrConnectWithoutPlaceInput[]

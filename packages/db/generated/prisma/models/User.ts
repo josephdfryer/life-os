@@ -210,6 +210,7 @@ export type UserWhereInput = {
   roles?: Prisma.UserRoleListRelationFilter
   apiKeys?: Prisma.ApiKeyListRelationFilter
   auditLogs?: Prisma.AuditLogListRelationFilter
+  rules?: Prisma.RuleListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -225,6 +226,7 @@ export type UserOrderByWithRelationInput = {
   roles?: Prisma.UserRoleOrderByRelationAggregateInput
   apiKeys?: Prisma.ApiKeyOrderByRelationAggregateInput
   auditLogs?: Prisma.AuditLogOrderByRelationAggregateInput
+  rules?: Prisma.RuleOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -243,6 +245,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   roles?: Prisma.UserRoleListRelationFilter
   apiKeys?: Prisma.ApiKeyListRelationFilter
   auditLogs?: Prisma.AuditLogListRelationFilter
+  rules?: Prisma.RuleListRelationFilter
 }, "id" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -285,6 +288,7 @@ export type UserCreateInput = {
   roles?: Prisma.UserRoleCreateNestedManyWithoutUserInput
   apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutCreatedByUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  rules?: Prisma.RuleCreateNestedManyWithoutCreatedByUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -299,6 +303,7 @@ export type UserUncheckedCreateInput = {
   roles?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
   apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutCreatedByUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  rules?: Prisma.RuleUncheckedCreateNestedManyWithoutCreatedByUserInput
 }
 
 export type UserUpdateInput = {
@@ -313,6 +318,7 @@ export type UserUpdateInput = {
   roles?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
   apiKeys?: Prisma.ApiKeyUpdateManyWithoutCreatedByUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  rules?: Prisma.RuleUpdateManyWithoutCreatedByUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -327,6 +333,7 @@ export type UserUncheckedUpdateInput = {
   roles?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
   apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutCreatedByUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  rules?: Prisma.RuleUncheckedUpdateManyWithoutCreatedByUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -502,6 +509,22 @@ export type UserUpdateOneWithoutAuditLogsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutAuditLogsInput, Prisma.UserUpdateWithoutAuditLogsInput>, Prisma.UserUncheckedUpdateWithoutAuditLogsInput>
 }
 
+export type UserCreateNestedOneWithoutRulesInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutRulesInput, Prisma.UserUncheckedCreateWithoutRulesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutRulesInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutRulesNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutRulesInput, Prisma.UserUncheckedCreateWithoutRulesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutRulesInput
+  upsert?: Prisma.UserUpsertWithoutRulesInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutRulesInput, Prisma.UserUpdateWithoutRulesInput>, Prisma.UserUncheckedUpdateWithoutRulesInput>
+}
+
 export type UserCreateWithoutPersonInput = {
   id?: string
   createdAt?: Date | string
@@ -513,6 +536,7 @@ export type UserCreateWithoutPersonInput = {
   roles?: Prisma.UserRoleCreateNestedManyWithoutUserInput
   apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutCreatedByUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  rules?: Prisma.RuleCreateNestedManyWithoutCreatedByUserInput
 }
 
 export type UserUncheckedCreateWithoutPersonInput = {
@@ -526,6 +550,7 @@ export type UserUncheckedCreateWithoutPersonInput = {
   roles?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
   apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutCreatedByUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  rules?: Prisma.RuleUncheckedCreateNestedManyWithoutCreatedByUserInput
 }
 
 export type UserCreateOrConnectWithoutPersonInput = {
@@ -578,6 +603,7 @@ export type UserCreateWithoutRolesInput = {
   person?: Prisma.PersonCreateNestedOneWithoutUsersInput
   apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutCreatedByUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  rules?: Prisma.RuleCreateNestedManyWithoutCreatedByUserInput
 }
 
 export type UserUncheckedCreateWithoutRolesInput = {
@@ -591,6 +617,7 @@ export type UserUncheckedCreateWithoutRolesInput = {
   personId?: string | null
   apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutCreatedByUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  rules?: Prisma.RuleUncheckedCreateNestedManyWithoutCreatedByUserInput
 }
 
 export type UserCreateOrConnectWithoutRolesInput = {
@@ -620,6 +647,7 @@ export type UserUpdateWithoutRolesInput = {
   person?: Prisma.PersonUpdateOneWithoutUsersNestedInput
   apiKeys?: Prisma.ApiKeyUpdateManyWithoutCreatedByUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  rules?: Prisma.RuleUpdateManyWithoutCreatedByUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutRolesInput = {
@@ -633,6 +661,7 @@ export type UserUncheckedUpdateWithoutRolesInput = {
   personId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutCreatedByUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  rules?: Prisma.RuleUncheckedUpdateManyWithoutCreatedByUserNestedInput
 }
 
 export type UserCreateWithoutApiKeysInput = {
@@ -646,6 +675,7 @@ export type UserCreateWithoutApiKeysInput = {
   person?: Prisma.PersonCreateNestedOneWithoutUsersInput
   roles?: Prisma.UserRoleCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  rules?: Prisma.RuleCreateNestedManyWithoutCreatedByUserInput
 }
 
 export type UserUncheckedCreateWithoutApiKeysInput = {
@@ -659,6 +689,7 @@ export type UserUncheckedCreateWithoutApiKeysInput = {
   personId?: string | null
   roles?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  rules?: Prisma.RuleUncheckedCreateNestedManyWithoutCreatedByUserInput
 }
 
 export type UserCreateOrConnectWithoutApiKeysInput = {
@@ -688,6 +719,7 @@ export type UserUpdateWithoutApiKeysInput = {
   person?: Prisma.PersonUpdateOneWithoutUsersNestedInput
   roles?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  rules?: Prisma.RuleUpdateManyWithoutCreatedByUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutApiKeysInput = {
@@ -701,6 +733,7 @@ export type UserUncheckedUpdateWithoutApiKeysInput = {
   personId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   roles?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  rules?: Prisma.RuleUncheckedUpdateManyWithoutCreatedByUserNestedInput
 }
 
 export type UserCreateWithoutAuditLogsInput = {
@@ -714,6 +747,7 @@ export type UserCreateWithoutAuditLogsInput = {
   person?: Prisma.PersonCreateNestedOneWithoutUsersInput
   roles?: Prisma.UserRoleCreateNestedManyWithoutUserInput
   apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutCreatedByUserInput
+  rules?: Prisma.RuleCreateNestedManyWithoutCreatedByUserInput
 }
 
 export type UserUncheckedCreateWithoutAuditLogsInput = {
@@ -727,6 +761,7 @@ export type UserUncheckedCreateWithoutAuditLogsInput = {
   personId?: string | null
   roles?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
   apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutCreatedByUserInput
+  rules?: Prisma.RuleUncheckedCreateNestedManyWithoutCreatedByUserInput
 }
 
 export type UserCreateOrConnectWithoutAuditLogsInput = {
@@ -756,6 +791,7 @@ export type UserUpdateWithoutAuditLogsInput = {
   person?: Prisma.PersonUpdateOneWithoutUsersNestedInput
   roles?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
   apiKeys?: Prisma.ApiKeyUpdateManyWithoutCreatedByUserNestedInput
+  rules?: Prisma.RuleUpdateManyWithoutCreatedByUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAuditLogsInput = {
@@ -769,6 +805,79 @@ export type UserUncheckedUpdateWithoutAuditLogsInput = {
   personId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   roles?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
   apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutCreatedByUserNestedInput
+  rules?: Prisma.RuleUncheckedUpdateManyWithoutCreatedByUserNestedInput
+}
+
+export type UserCreateWithoutRulesInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  email: string
+  name?: string | null
+  image?: string | null
+  status?: string
+  person?: Prisma.PersonCreateNestedOneWithoutUsersInput
+  roles?: Prisma.UserRoleCreateNestedManyWithoutUserInput
+  apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutCreatedByUserInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutRulesInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  email: string
+  name?: string | null
+  image?: string | null
+  status?: string
+  personId?: string | null
+  roles?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
+  apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutCreatedByUserInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutRulesInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutRulesInput, Prisma.UserUncheckedCreateWithoutRulesInput>
+}
+
+export type UserUpsertWithoutRulesInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutRulesInput, Prisma.UserUncheckedUpdateWithoutRulesInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutRulesInput, Prisma.UserUncheckedCreateWithoutRulesInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutRulesInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutRulesInput, Prisma.UserUncheckedUpdateWithoutRulesInput>
+}
+
+export type UserUpdateWithoutRulesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  person?: Prisma.PersonUpdateOneWithoutUsersNestedInput
+  roles?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
+  apiKeys?: Prisma.ApiKeyUpdateManyWithoutCreatedByUserNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutRulesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  personId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  roles?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
+  apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutCreatedByUserNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyPersonInput = {
@@ -792,6 +901,7 @@ export type UserUpdateWithoutPersonInput = {
   roles?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
   apiKeys?: Prisma.ApiKeyUpdateManyWithoutCreatedByUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  rules?: Prisma.RuleUpdateManyWithoutCreatedByUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPersonInput = {
@@ -805,6 +915,7 @@ export type UserUncheckedUpdateWithoutPersonInput = {
   roles?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
   apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutCreatedByUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  rules?: Prisma.RuleUncheckedUpdateManyWithoutCreatedByUserNestedInput
 }
 
 export type UserUncheckedUpdateManyWithoutPersonInput = {
@@ -826,12 +937,14 @@ export type UserCountOutputType = {
   roles: number
   apiKeys: number
   auditLogs: number
+  rules: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   roles?: boolean | UserCountOutputTypeCountRolesArgs
   apiKeys?: boolean | UserCountOutputTypeCountApiKeysArgs
   auditLogs?: boolean | UserCountOutputTypeCountAuditLogsArgs
+  rules?: boolean | UserCountOutputTypeCountRulesArgs
 }
 
 /**
@@ -865,6 +978,13 @@ export type UserCountOutputTypeCountAuditLogsArgs<ExtArgs extends runtime.Types.
   where?: Prisma.AuditLogWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountRulesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.RuleWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -879,6 +999,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   roles?: boolean | Prisma.User$rolesArgs<ExtArgs>
   apiKeys?: boolean | Prisma.User$apiKeysArgs<ExtArgs>
   auditLogs?: boolean | Prisma.User$auditLogsArgs<ExtArgs>
+  rules?: boolean | Prisma.User$rulesArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -923,6 +1044,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   roles?: boolean | Prisma.User$rolesArgs<ExtArgs>
   apiKeys?: boolean | Prisma.User$apiKeysArgs<ExtArgs>
   auditLogs?: boolean | Prisma.User$auditLogsArgs<ExtArgs>
+  rules?: boolean | Prisma.User$rulesArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -939,6 +1061,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     roles: Prisma.$UserRolePayload<ExtArgs>[]
     apiKeys: Prisma.$ApiKeyPayload<ExtArgs>[]
     auditLogs: Prisma.$AuditLogPayload<ExtArgs>[]
+    rules: Prisma.$RulePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1347,6 +1470,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   roles<T extends Prisma.User$rolesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$rolesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserRolePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   apiKeys<T extends Prisma.User$apiKeysArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$apiKeysArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ApiKeyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   auditLogs<T extends Prisma.User$auditLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$auditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  rules<T extends Prisma.User$rulesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$rulesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RulePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1871,6 +1995,30 @@ export type User$auditLogsArgs<ExtArgs extends runtime.Types.Extensions.Internal
   take?: number
   skip?: number
   distinct?: Prisma.AuditLogScalarFieldEnum | Prisma.AuditLogScalarFieldEnum[]
+}
+
+/**
+ * User.rules
+ */
+export type User$rulesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Rule
+   */
+  select?: Prisma.RuleSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Rule
+   */
+  omit?: Prisma.RuleOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RuleInclude<ExtArgs> | null
+  where?: Prisma.RuleWhereInput
+  orderBy?: Prisma.RuleOrderByWithRelationInput | Prisma.RuleOrderByWithRelationInput[]
+  cursor?: Prisma.RuleWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.RuleScalarFieldEnum | Prisma.RuleScalarFieldEnum[]
 }
 
 /**

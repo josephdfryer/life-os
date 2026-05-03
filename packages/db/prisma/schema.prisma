@@ -67,6 +67,7 @@ model User {
   roles     UserRole[]
   apiKeys   ApiKey[]
   auditLogs AuditLog[]
+  rules     Rule[]
 
   @@index([email])
   @@index([status])
@@ -166,6 +167,53 @@ model AuditLog {
   @@index([userId])
   @@index([apiKeyId])
   @@index([personId])
+}
+
+// ─────────────────────────────────────────────
+// RULES: deterministic policy and enrichment engine
+// ─────────────────────────────────────────────
+
+model Rule {
+  id              String    @id @default(cuid())
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  name            String
+  description     String?
+  trigger         String
+  status          String    @default("active")
+  priority        Int       @default(100)
+  mode            String    @default("suggest")
+  conditions      String    @default("[]")
+  actions         String    @default("[]")
+  stopProcessing  Boolean   @default(false)
+  createdByUserId String?
+  createdByUser   User?     @relation(fields: [createdByUserId], references: [id], onDelete: SetNull)
+  runs            RuleRun[]
+
+  @@index([trigger, status, priority])
+  @@index([createdByUserId])
+}
+
+model RuleRun {
+  id             String   @id @default(cuid())
+  createdAt      DateTime @default(now())
+  ruleId         String
+  rule           Rule     @relation(fields: [ruleId], references: [id], onDelete: Cascade)
+  trigger        String
+  targetType     String?
+  targetId       String?
+  matched        Boolean
+  mode           String
+  status         String
+  input          String?
+  actionsPlanned String?
+  actionsApplied String?
+  message        String?
+
+  @@index([ruleId, createdAt])
+  @@index([trigger, createdAt])
+  @@index([matched, createdAt])
+  @@index([targetType, targetId])
 }
 
 // ─────────────────────────────────────────────

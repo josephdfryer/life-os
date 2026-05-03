@@ -13,9 +13,11 @@ const IMPORT_ITEMS = [
 export default function Header() {
   const pathname = usePathname()
   const [importOpen, setImportOpen] = useState(false)
+  const [profileOpen, setProfileOpen] = useState(false)
 
   if (pathname === "/login") return null
   const dropdownRef = useRef<HTMLDivElement>(null)
+  const profileRef = useRef<HTMLDivElement>(null)
   const { data: session } = useSession()
 
   const importActive = pathname === "/import" || pathname.startsWith("/import/")
@@ -25,6 +27,9 @@ export default function Header() {
     function handle(e: MouseEvent) {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
         setImportOpen(false)
+      }
+      if (profileRef.current && !profileRef.current.contains(e.target as Node)) {
+        setProfileOpen(false)
       }
     }
     document.addEventListener("mousedown", handle)
@@ -63,7 +68,6 @@ export default function Header() {
         <NavLink href="/contacts" label="People" active={pathname === "/contacts" || (pathname.startsWith("/contacts/") && !pathname.startsWith("/contacts/import"))} />
 
         <NavLink href="/inbox" label="Inbox" active={pathname === "/inbox"} />
-        <NavLink href="/admin" label="Admin" active={pathname.startsWith("/admin")} />
 
         {/* Import dropdown */}
         <div ref={dropdownRef} style={{ position: "relative" }}>
@@ -139,41 +143,84 @@ export default function Header() {
 
       {/* User avatar + sign out — pushed to right */}
       {session?.user && (
-        <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: "10px" }}>
-          {session.user.image && (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={session.user.image}
-              alt={session.user.name ?? ""}
-              width={24}
-              height={24}
-              style={{ borderRadius: "50%", opacity: 0.85 }}
-            />
-          )}
+        <div ref={profileRef} style={{ marginLeft: "auto", position: "relative" }}>
           <button
-            onClick={() => signOut({ callbackUrl: "/login" })}
+            onClick={() => setProfileOpen(open => !open)}
+            aria-label="Open profile menu"
             style={{
-              padding: "4px 10px",
-              borderRadius: "6px",
-              fontSize: "11px",
-              color: "var(--ink-3)",
+              width: "32px",
+              height: "32px",
+              borderRadius: "50%",
               background: "transparent",
-              border: "1px solid var(--border)",
+              border: pathname.startsWith("/admin") ? "1px solid var(--accent)" : "1px solid transparent",
               cursor: "pointer",
-              fontFamily: "inherit",
-              transition: "all 0.1s",
-            }}
-            onMouseEnter={e => {
-              e.currentTarget.style.color = "var(--ink)"
-              e.currentTarget.style.borderColor = "var(--ink-3)"
-            }}
-            onMouseLeave={e => {
-              e.currentTarget.style.color = "var(--ink-3)"
-              e.currentTarget.style.borderColor = "var(--border)"
+              padding: "2px",
+              display: "grid",
+              placeItems: "center",
             }}
           >
-            Sign out
+            {session.user.image ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={session.user.image}
+                alt={session.user.name ?? ""}
+                width={26}
+                height={26}
+                style={{ borderRadius: "50%", opacity: 0.9, display: "block" }}
+              />
+            ) : (
+              <span style={{ fontSize: "12px", color: "var(--ink-3)" }}>{session.user.email?.[0]?.toUpperCase() ?? "P"}</span>
+            )}
           </button>
+
+          {profileOpen && (
+            <div style={{
+              position: "absolute",
+              top: "calc(100% + 8px)",
+              right: 0,
+              width: "210px",
+              background: "var(--surface)",
+              border: "1px solid var(--border)",
+              borderRadius: "10px",
+              padding: "6px",
+              boxShadow: "0 4px 16px rgba(26,24,20,0.10)",
+              zIndex: 100,
+              animation: "slideUp 0.12s ease",
+            }}>
+              <Link
+                href="/admin"
+                onClick={() => setProfileOpen(false)}
+                style={{
+                  display: "block",
+                  padding: "9px 10px",
+                  borderRadius: "7px",
+                  textDecoration: "none",
+                  color: pathname.startsWith("/admin") ? "var(--accent)" : "var(--ink)",
+                  background: pathname.startsWith("/admin") ? "var(--accent-soft)" : "transparent",
+                  fontSize: "12px",
+                }}
+              >
+                Admin
+              </Link>
+              <button
+                onClick={() => signOut({ callbackUrl: "/login" })}
+                style={{
+                  width: "100%",
+                  textAlign: "left",
+                  padding: "9px 10px",
+                  borderRadius: "7px",
+                  fontSize: "12px",
+                  color: "var(--ink-3)",
+                  background: "transparent",
+                  border: "none",
+                  cursor: "pointer",
+                  fontFamily: "inherit",
+                }}
+              >
+                Sign out
+              </button>
+            </div>
+          )}
         </div>
       )}
     </header>

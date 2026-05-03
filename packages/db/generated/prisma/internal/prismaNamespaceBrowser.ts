@@ -60,6 +60,8 @@ export const ModelName = {
   ApiKey: 'ApiKey',
   ApiKeyScope: 'ApiKeyScope',
   AuditLog: 'AuditLog',
+  Rule: 'Rule',
+  RuleRun: 'RuleRun',
   StagedInteraction: 'StagedInteraction',
   Event: 'Event',
   Interaction: 'Interaction',
@@ -204,6 +206,44 @@ export const AuditLogScalarFieldEnum = {
 } as const
 
 export type AuditLogScalarFieldEnum = (typeof AuditLogScalarFieldEnum)[keyof typeof AuditLogScalarFieldEnum]
+
+
+export const RuleScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  name: 'name',
+  description: 'description',
+  trigger: 'trigger',
+  status: 'status',
+  priority: 'priority',
+  mode: 'mode',
+  conditions: 'conditions',
+  actions: 'actions',
+  stopProcessing: 'stopProcessing',
+  createdByUserId: 'createdByUserId'
+} as const
+
+export type RuleScalarFieldEnum = (typeof RuleScalarFieldEnum)[keyof typeof RuleScalarFieldEnum]
+
+
+export const RuleRunScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  ruleId: 'ruleId',
+  trigger: 'trigger',
+  targetType: 'targetType',
+  targetId: 'targetId',
+  matched: 'matched',
+  mode: 'mode',
+  status: 'status',
+  input: 'input',
+  actionsPlanned: 'actionsPlanned',
+  actionsApplied: 'actionsApplied',
+  message: 'message'
+} as const
+
+export type RuleRunScalarFieldEnum = (typeof RuleRunScalarFieldEnum)[keyof typeof RuleRunScalarFieldEnum]
 
 
 export const StagedInteractionScalarFieldEnum = {
