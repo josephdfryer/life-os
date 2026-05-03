@@ -23,3 +23,11 @@ npm run agent:finish -- --agent claude --summary "What changed and why" --next "
 
 The local state lives in `.agent-sync/` and is intentionally ignored by git.
 <!-- END:cross-agent-sync -->
+
+<!-- BEGIN:persons-architecture-doc -->
+# Living Persons Architecture Map
+
+`docs/PERSONS_ARCHITECTURE.md` is the shared plain-English architecture map for the Persons app. Codex and Claude must keep it current whenever a change affects how data enters the app, moves through APIs/domain commands/rules, lands in the database, or leaves through UI/API outputs.
+
+Prefer accessible language and Mermaid diagrams over code-heavy explanations. If implementation names are useful, include them as supporting labels rather than making the doc require code knowledge.
+<!-- END:persons-architecture-doc -->

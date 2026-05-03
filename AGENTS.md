@@ -21,3 +21,9 @@ The local state lives in `.agent-sync/` and is intentionally ignored by git. See
 ## App-Specific Notes
 
 Read the nearest app-level `AGENTS.md` or `CLAUDE.md` before editing app code. For the persons CRM, start with `apps/persons/AGENTS.md`.
+
+## Living Architecture Docs
+
+Treat architecture documentation as part of the codebase, not a one-time artifact. When Codex or Claude changes the Persons app in a way that affects inputs, outputs, APIs, domain command flow, rules/automation behavior, data models, integrations, or deployment/runtime shape, update `docs/PERSONS_ARCHITECTURE.md` in the same change.
+
+Keep that document understandable to a non-code reader first. Use plain-English labels and diagrams, then include concrete route, script, table, or module names only where they help future agents keep the map accurate.
