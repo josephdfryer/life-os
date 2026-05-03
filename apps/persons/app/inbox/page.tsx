@@ -1,5 +1,6 @@
 "use client"
 
+import type React from "react"
 import { useEffect, useMemo, useState } from "react"
 import Link from "next/link"
 
@@ -31,6 +32,20 @@ type InboxItem = {
   body: string | null
   direction: string | null
   createdAt: string
+  ruleRuns: RuleRun[]
+}
+
+type RuleRun = {
+  id: string
+  createdAt: string
+  trigger: string
+  matched: boolean
+  mode: string
+  status: string
+  message: string | null
+  actionsPlanned: unknown
+  actionsApplied: unknown
+  rule: { id: string; name: string; trigger: string }
 }
 
 type SearchResult = {
@@ -88,7 +103,7 @@ export default function InboxPage() {
     setLoading(true)
     setError(null)
     try {
-      const res = await fetch("/api/inbox?status=pending&limit=200")
+      const res = await fetch("/api/inbox?status=review&limit=200")
       const data = await res.json()
       if (!res.ok) throw new Error(data.error || "Could not load inbox")
       setItems(data.items ?? [])
@@ -164,7 +179,7 @@ export default function InboxPage() {
         <aside style={{ borderRight: "1px solid var(--border)", background: "var(--surface)", padding: "18px 14px" }}>
           <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: "14px" }}>
             <h1 style={{ margin: 0, fontSize: "18px", color: "var(--ink)", fontWeight: 600 }}>Inbox</h1>
-            <span style={{ fontSize: "11px", color: "var(--ink-4)" }}>{items.length} pending</span>
+            <span style={{ fontSize: "11px", color: "var(--ink-4)" }}>{items.length} to review</span>
           </div>
 
           {loading && <p style={{ fontSize: "12px", color: "var(--ink-3)" }}>Loading...</p>}
@@ -201,6 +216,11 @@ export default function InboxPage() {
                   </div>
                   <div style={{ fontSize: "11px", color: "var(--ink-3)", lineHeight: 1.35, overflow: "hidden", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical" }}>
                     {item.summary || item.body || "(no text)"}
+                  </div>
+                  <div style={{ display: "flex", gap: "6px", alignItems: "center", marginTop: "8px", flexWrap: "wrap" }}>
+                    {item.status !== "pending" && <TinyPill tone={item.status === "blocked" ? "warn" : "muted"}>{item.status}</TinyPill>}
+                    {item.ruleRuns.some(run => run.matched) && <TinyPill tone="ok">rule matched</TinyPill>}
+                    {item.ruleRuns.some(run => actionCount(run.actionsApplied) > 0) && <TinyPill tone="accent">auto updated</TinyPill>}
                   </div>
                 </button>
               )
@@ -250,6 +270,40 @@ export default function InboxPage() {
                     resize: "vertical",
                   }}
                 />
+              </section>
+
+              <section style={{ border: "1px solid var(--border)", background: "var(--surface)", borderRadius: "8px", padding: "18px" }}>
+                <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: "12px", marginBottom: "12px" }}>
+                  <h3 style={{ margin: 0, fontSize: "14px", color: "var(--ink)" }}>Automation Trace</h3>
+                  <span style={{ fontSize: "10px", color: "var(--ink-4)" }}>{selected.ruleRuns.length} checks</span>
+                </div>
+
+                {selected.ruleRuns.length === 0 && (
+                  <p style={{ margin: 0, fontSize: "12px", color: "var(--ink-3)" }}>No rules have evaluated this item yet.</p>
+                )}
+
+                {selected.ruleRuns.length > 0 && (
+                  <div style={{ display: "grid", gap: "8px" }}>
+                    {selected.ruleRuns.map(run => (
+                      <div key={run.id} style={{ border: "1px solid var(--border)", borderRadius: "8px", background: "var(--bg)", padding: "10px" }}>
+                        <div style={{ display: "flex", justifyContent: "space-between", gap: "10px", alignItems: "center" }}>
+                          <div>
+                            <div style={{ fontSize: "12px", color: "var(--ink)", fontWeight: 600 }}>{run.rule.name}</div>
+                            <div style={{ fontSize: "10px", color: "var(--ink-4)", marginTop: "2px" }}>{run.trigger} · {run.mode} · {formatDateTime(run.createdAt)}</div>
+                          </div>
+                          <TinyPill tone={run.matched ? "ok" : "muted"}>{run.matched ? "matched" : "skipped"}</TinyPill>
+                        </div>
+                        {run.message && <div style={{ fontSize: "11px", color: "var(--ink-3)", marginTop: "8px" }}>{run.message}</div>}
+                        {(actionCount(run.actionsPlanned) > 0 || actionCount(run.actionsApplied) > 0) && (
+                          <div style={{ display: "flex", gap: "8px", marginTop: "8px", flexWrap: "wrap" }}>
+                            {actionCount(run.actionsPlanned) > 0 && <TinyPill tone="muted">{actionCount(run.actionsPlanned)} planned</TinyPill>}
+                            {actionCount(run.actionsApplied) > 0 && <TinyPill tone="accent">{actionCount(run.actionsApplied)} applied</TinyPill>}
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
               </section>
 
               <section style={{ border: "1px solid var(--border)", background: "var(--surface)", borderRadius: "8px", padding: "18px" }}>
@@ -350,4 +404,22 @@ function formatDateTime(value: string) {
     hour: "numeric",
     minute: "2-digit",
   }).format(new Date(value))
+}
+
+function actionCount(value: unknown) {
+  return Array.isArray(value) ? value.length : 0
+}
+
+function TinyPill({ children, tone = "muted" }: { children: React.ReactNode; tone?: "muted" | "ok" | "warn" | "accent" }) {
+  const styles = {
+    muted: { border: "var(--border)", color: "var(--ink-4)", background: "var(--surface)" },
+    ok: { border: "#88a06a", color: "#526b37", background: "#f3f7ee" },
+    warn: { border: "#d28a5d", color: "#914a22", background: "#fff4eb" },
+    accent: { border: "var(--accent)", color: "var(--accent)", background: "var(--accent-soft)" },
+  }[tone]
+  return (
+    <span style={{ display: "inline-flex", border: `1px solid ${styles.border}`, color: styles.color, background: styles.background, borderRadius: "999px", padding: "2px 7px", fontSize: "10px", lineHeight: 1.3 }}>
+      {children}
+    </span>
+  )
 }

@@ -8,7 +8,7 @@ export async function GET(req: NextRequest) {
   const limit = Math.min(200, Math.max(1, Number(searchParams.get("limit") ?? 100)))
 
   const items = await db.stagedInteraction.findMany({
-    where: status === "all" ? undefined : { status },
+    where: inboxStatusWhere(status),
     orderBy: [{ createdAt: "desc" }],
     take: limit,
     include: {
@@ -25,6 +25,22 @@ export async function GET(req: NextRequest) {
       },
     },
   })
+  const itemIds = items.map(item => item.id)
+  const runs = itemIds.length
+    ? await db.ruleRun.findMany({
+      where: { targetType: "stagedInteraction", targetId: { in: itemIds } },
+      include: { rule: { select: { id: true, name: true, trigger: true } } },
+      orderBy: { createdAt: "desc" },
+      take: itemIds.length * 5,
+    })
+    : []
+  const runsByTarget = new Map<string, typeof runs>()
+  for (const run of runs) {
+    if (!run.targetId) continue
+    const current = runsByTarget.get(run.targetId) ?? []
+    if (current.length < 5) current.push(run)
+    runsByTarget.set(run.targetId, current)
+  }
 
   return NextResponse.json({
     items: items.map(item => ({
@@ -34,6 +50,33 @@ export async function GET(req: NextRequest) {
         emails: parseTags(item.candidatePerson.emails),
         phones: parseTags(item.candidatePerson.phones),
       } : null,
+      ruleRuns: (runsByTarget.get(item.id) ?? []).map(run => ({
+        id: run.id,
+        createdAt: run.createdAt,
+        trigger: run.trigger,
+        matched: run.matched,
+        mode: run.mode,
+        status: run.status,
+        message: run.message,
+        actionsPlanned: parseJson(run.actionsPlanned),
+        actionsApplied: parseJson(run.actionsApplied),
+        rule: run.rule,
+      })),
     })),
   })
+}
+
+function inboxStatusWhere(status: string) {
+  if (status === "all") return undefined
+  if (status === "review") return { status: { in: ["pending", "blocked"] } }
+  return { status }
+}
+
+function parseJson(value: string | null) {
+  if (!value) return null
+  try {
+    return JSON.parse(value)
+  } catch {
+    return value
+  }
 }

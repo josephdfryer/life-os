@@ -88,6 +88,71 @@ const DEFAULT_PAYLOAD = `{
   "contactName": "Jane Example",
   "summary": "Lunch next week"
 }`
+const TRIGGER_OPTIONS = ["ingest.message", "import.person", "import.interaction", "interaction.create", "interaction.append", "inbox.accept"]
+const RULE_TEMPLATES = [
+  {
+    name: "Review unknown iMessages",
+    description: "When an iMessage staging item has no candidate person, mark it for human review.",
+    trigger: "ingest.message",
+    mode: "auto",
+    priority: "100",
+    stopProcessing: false,
+    conditions: [
+      { field: "source", operator: "equals", value: "imessage" },
+      { field: "candidatePersonId", operator: "not_exists" },
+    ],
+    actions: [
+      { type: "set", field: "matchReason", value: "Needs review: no confident person match" },
+      { type: "set", field: "status", value: "pending" },
+    ],
+    payload: {
+      source: "imessage",
+      type: "message",
+      contactName: "Jane Example",
+      summary: "Lunch next week",
+    },
+  },
+  {
+    name: "Block empty staged messages",
+    description: "Keep empty automation records out of the review queue.",
+    trigger: "ingest.message",
+    mode: "block",
+    priority: "20",
+    stopProcessing: true,
+    conditions: [
+      { field: "summary", operator: "not_exists" },
+    ],
+    actions: [
+      { type: "block" },
+    ],
+    payload: {
+      source: "imessage",
+      type: "message",
+      contactName: "Jane Example",
+      summary: "",
+    },
+  },
+  {
+    name: "Review draining imports",
+    description: "Surface imported interactions that may need a follow-up plan.",
+    trigger: "import.interaction",
+    mode: "suggest",
+    priority: "120",
+    stopProcessing: false,
+    conditions: [
+      { field: "emotionalWeight", operator: "in", value: ["Draining", "Stressful"] },
+    ],
+    actions: [
+      { type: "suggest", field: "followUp", value: "Review cadence or create a plan" },
+    ],
+    payload: {
+      personName: "Jane Example",
+      type: "message",
+      emotionalWeight: "Stressful",
+      summary: "Follow-up needed after a tense exchange",
+    },
+  },
+] as const
 
 export default function AdminClient({
   initialOverview,
@@ -417,6 +482,21 @@ export default function AdminClient({
     setTestResult(null)
   }
 
+  function applyRuleTemplate(template: typeof RULE_TEMPLATES[number]) {
+    setSelectedRuleId(null)
+    setRuleName(template.name)
+    setRuleDescription(template.description)
+    setRuleTrigger(template.trigger)
+    setRuleStatus("active")
+    setRuleMode(template.mode)
+    setRulePriority(template.priority)
+    setRuleStopProcessing(template.stopProcessing)
+    setRuleConditions(JSON.stringify(template.conditions, null, 2))
+    setRuleActions(JSON.stringify(template.actions, null, 2))
+    setTestPayload(JSON.stringify(template.payload, null, 2))
+    setTestResult(null)
+  }
+
   function toggleScope(scope: string, selected: string[], setSelected: (next: string[]) => void) {
     setSelected(selected.includes(scope)
       ? selected.filter(item => item !== scope)
@@ -592,6 +672,14 @@ export default function AdminClient({
             <section style={{ display: "grid", gridTemplateColumns: "280px minmax(0, 1fr) 340px", gap: "18px" }}>
               <Panel title="Rules" meta={`${rules.length} rules`}>
                 <button style={{ ...smallButtonStyle, marginBottom: "10px" }} onClick={resetRuleForm}>New Rule</button>
+                <div style={{ display: "grid", gap: "7px", marginBottom: "12px" }}>
+                  {RULE_TEMPLATES.map(template => (
+                    <button key={template.name} style={templateButtonStyle} onClick={() => applyRuleTemplate(template)}>
+                      <span style={{ display: "block", fontSize: "11px", color: "var(--ink)", fontWeight: 600 }}>{template.name}</span>
+                      <span style={{ display: "block", fontSize: "10px", color: "var(--ink-4)", marginTop: "3px", lineHeight: 1.35 }}>{template.trigger} · {template.mode}</span>
+                    </button>
+                  ))}
+                </div>
                 <div style={{ display: "grid", gap: "8px" }}>
                   {rules.map(rule => (
                     <button
@@ -622,7 +710,7 @@ export default function AdminClient({
               <Panel title={selectedRule ? "Edit Rule" : "New Rule"} meta={selectedRule?.id.slice(0, 8)}>
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}>
                   <Field label="Name" value={ruleName} onChange={setRuleName} placeholder="Stage unknown iMessages" />
-                  <Field label="Trigger" value={ruleTrigger} onChange={setRuleTrigger} placeholder="ingest.message" />
+                  <SelectField label="Trigger" value={ruleTrigger} onChange={setRuleTrigger} options={TRIGGER_OPTIONS} />
                   <SelectField label="Status" value={ruleStatus} onChange={setRuleStatus} options={["active", "paused", "draft"]} />
                   <SelectField label="Mode" value={ruleMode} onChange={setRuleMode} options={["auto", "suggest", "block", "dry_run"]} />
                   <Field label="Priority" value={rulePriority} onChange={setRulePriority} placeholder="100" />
@@ -884,6 +972,17 @@ const smallButtonStyle: React.CSSProperties = {
   borderRadius: "6px",
   padding: "5px 8px",
   fontSize: "10px",
+  fontFamily: "inherit",
+  cursor: "pointer",
+}
+
+const templateButtonStyle: React.CSSProperties = {
+  border: "1px solid var(--border)",
+  background: "var(--bg)",
+  color: "var(--ink-2)",
+  borderRadius: "8px",
+  padding: "8px 9px",
+  textAlign: "left",
   fontFamily: "inherit",
   cursor: "pointer",
 }

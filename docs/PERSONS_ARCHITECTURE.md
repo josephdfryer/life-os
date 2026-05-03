@@ -347,3 +347,46 @@ The architecture goal is:
 - You stay the filter when confidence is low.
 - The database remains clean and traceable.
 - APIs make everything programmable later.
+
+## Current Journey
+
+```mermaid
+flowchart LR
+  P1["Phase 1: Domain/API foundation"] --> P2["Phase 2: Access, audit, RBAC"]
+  P2 --> P3["Phase 3: Rules engine"]
+  P3 --> P4["Phase 4: Trust and control"]
+  P4 --> P5["Phase 5: Broader automation engine"]
+
+  P1 --> Done1["Done"]
+  P2 --> Done2["Done"]
+  P3 --> Done3["Done"]
+  P4 --> Now["Current"]
+  P5 --> Future["Future"]
+```
+
+### Done
+
+- Core writes now move through domain commands instead of scattered UI/database calls.
+- API keys, roles, permissions, and audit logs exist.
+- Rules can be created, tested, run, and recorded.
+- iMessage, import, interaction, and inbox acceptance paths now trigger rule evaluation.
+- Admin is hidden under the profile menu, and the architecture map is a living document.
+
+### Current
+
+This phase is about trust and control:
+
+- Rules should be easier to create with templates and known triggers.
+- Inbox review should show why automation did something.
+- Rule runs should act like receipts beside the records they affected.
+- Low-confidence automation should stay reviewable instead of silently creating canonical records.
+
+### Future
+
+The next larger step is the broader automation engine:
+
+- Scheduled jobs and event triggers.
+- Notifications or digests.
+- Safer action approval flows.
+- More rule actions beyond staged inbox fields.
+- APIs for every meaningful UI operation.
