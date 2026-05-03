@@ -88,7 +88,7 @@ async function main() {
   do {
     const result = await syncOnce(options)
     console.log(
-      `iMessage sync: scanned=${result.scanned} createdPersons=${result.createdPersons} updatedPersons=${result.updatedPersons} createdInteractions=${result.createdInteractions} updatedInteractions=${result.updatedInteractions} stagedInteractions=${result.stagedInteractions} watermark=${result.watermark}`
+      `iMessage sync: scanned=${result.scanned} createdPersons=${result.createdPersons} updatedPersons=${result.updatedPersons} createdInteractions=${result.createdInteractions} updatedInteractions=${result.updatedInteractions} stagedInteractions=${result.stagedInteractions} skippedExisting=${result.skippedExisting} watermark=${result.watermark}`
     )
 
     if (!options.watch || shuttingDown) break
@@ -107,6 +107,7 @@ async function syncOnce(options: Options) {
   let createdInteractions = 0
   let updatedInteractions = 0
   let stagedInteractions = 0
+  let skippedExisting = 0
   let watermark = state.lastMessageRowId
   const people = await loadPeopleIndex({ includeAutoCreated: options.createMissing })
 
@@ -125,6 +126,11 @@ async function syncOnce(options: Options) {
 
     if (options.dryRun) {
       console.log(`[dry-run] ${sourceId} ${contact.displayName} ${contact.direction}: ${snippet(body)}`)
+      continue
+    }
+
+    if (await hasImportedMessage(sourceId, String(message.messageId))) {
+      skippedExisting++
       continue
     }
 
@@ -165,7 +171,7 @@ async function syncOnce(options: Options) {
     writeState(options.statePath, { lastMessageRowId: watermark, updatedAt: new Date().toISOString() })
   }
 
-  return { scanned: messages.length, createdPersons, updatedPersons, createdInteractions, updatedInteractions, stagedInteractions, watermark }
+  return { scanned: messages.length, createdPersons, updatedPersons, createdInteractions, updatedInteractions, stagedInteractions, skippedExisting, watermark }
 }
 
 function readMessages(chatDbPath: string, afterRowId: number, limit: number): MessageRow[] {
@@ -324,13 +330,7 @@ async function upsertDailyMessageInteraction(input: {
   const sourceMarker = normalizeSourceMarker(input.sourceId)
   const dayMarker = `imessage-day:${dayKey(input.timestamp)}`
 
-  const duplicate = await db.interaction.findFirst({
-    where: {
-      personId: input.personId,
-      notes: { contains: sourceMarker },
-    },
-    select: { id: true },
-  })
+  const duplicate = await findInteractionWithSource(sourceMarker, input.personId)
   if (duplicate) return "skipped"
 
   const existing = await db.interaction.findFirst({
@@ -377,6 +377,40 @@ async function upsertDailyMessageInteraction(input: {
     },
   })
   return "created"
+}
+
+async function hasImportedMessage(sourceMarker: string, stagedSourceId: string) {
+  const imported = await findInteractionWithSource(sourceMarker)
+  if (imported) return true
+
+  const staged = await db.stagedInteraction.findUnique({
+    where: {
+      source_sourceId: {
+        source: "imessage",
+        sourceId: stagedSourceId,
+      },
+    },
+    select: { status: true },
+  })
+
+  return Boolean(staged)
+}
+
+async function findInteractionWithSource(sourceMarker: string, personId?: string) {
+  const marker = normalizeSourceMarker(sourceMarker)
+  const candidates = await db.interaction.findMany({
+    where: {
+      ...(personId ? { personId } : {}),
+      notes: { contains: marker },
+    },
+    select: { id: true, notes: true },
+    take: 20,
+  })
+  return candidates.find(candidate => sourceMarkers(candidate.notes).includes(marker)) ?? null
+}
+
+function sourceMarkers(notes: string | null | undefined) {
+  return (notes ?? "").split(/\s+/).filter(part => part.startsWith(SOURCE_PREFIX))
 }
 
 async function stageMessageInteraction(input: {
