@@ -1,3 +1,5 @@
+import { db } from "@/lib/db"
+
 export type DomainActor = {
   type: "user" | "api_key" | "system"
   id?: string | null
@@ -8,8 +10,15 @@ export type AuditAction =
   | "person.create"
   | "person.update"
   | "person.delete"
+  | "person.merge"
+  | "person.dedupe"
+  | "event.create"
+  | "plan.create"
+  | "plan.update"
+  | "plan.delete"
   | "interaction.create"
   | "interaction.delete"
+  | "import.confirm"
   | "inbox.update"
   | "inbox.dismiss"
   | "inbox.accept"
@@ -23,12 +32,25 @@ type AuditInput = {
 }
 
 export async function auditAction(input: AuditInput) {
-  // Phase 1 seam: this is intentionally centralized before adding an AuditLog table.
-  console.info("[audit]", {
-    actor: input.actor ?? { type: "system" },
-    action: input.action,
-    targetType: input.targetType,
-    targetId: input.targetId ?? null,
-    metadata: input.metadata ?? {},
-  })
+  const actor = input.actor ?? { type: "system" as const }
+  const actorId = actor.id ?? null
+
+  try {
+    await db.auditLog.create({
+      data: {
+        action: input.action,
+        targetType: input.targetType,
+        targetId: input.targetId ?? null,
+        actorType: actor.type,
+        actorId,
+        actorLabel: actor.label ?? null,
+        userId: actor.type === "user" ? actorId : null,
+        apiKeyId: actor.type === "api_key" && actorId !== "env" ? actorId : null,
+        personId: input.targetType === "person" ? input.targetId ?? null : null,
+        metadata: input.metadata ? JSON.stringify(input.metadata) : null,
+      },
+    })
+  } catch (error) {
+    console.warn("[audit] failed to write AuditLog", error)
+  }
 }

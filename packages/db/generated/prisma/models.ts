@@ -9,6 +9,14 @@
  * 🟢 You can import this file directly.
  */
 export type * from './models/Person.ts'
+export type * from './models/User.ts'
+export type * from './models/Role.ts'
+export type * from './models/Permission.ts'
+export type * from './models/UserRole.ts'
+export type * from './models/RolePermission.ts'
+export type * from './models/ApiKey.ts'
+export type * from './models/ApiKeyScope.ts'
+export type * from './models/AuditLog.ts'
 export type * from './models/StagedInteraction.ts'
 export type * from './models/Event.ts'
 export type * from './models/Interaction.ts'

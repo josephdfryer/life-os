@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from "next/server"
 import { db } from "@/lib/db"
-import { validateApiKey, unauthorized } from "@/lib/api-auth"
-import { assignColor } from "@/lib/colors"
+import { authorizeApiRequest, unauthorized } from "@/lib/api-auth"
 import { storeFile } from "@/lib/file-storage"
+import { handleRouteError } from "@/server/api/respond"
+import { confirmImport } from "@/server/domain/imports"
+import type { ImportedPerson } from "@/types"
 import Anthropic from "@anthropic-ai/sdk"
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
@@ -10,7 +12,8 @@ const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
 // ─── Route ────────────────────────────────────────────────────────────────────
 
 export async function POST(req: NextRequest) {
-  if (!validateApiKey(req)) return unauthorized()
+  const auth = await authorizeApiRequest(req, "ingest.write")
+  if (!auth) return unauthorized()
 
   try {
     let content: string
@@ -48,104 +51,28 @@ export async function POST(req: NextRequest) {
     // Store the file
     const fileRecord = await storeFile(filename, source ?? "api", content)
 
-    // Persist everything — auto-confirm, no UI interaction needed
-    const existingCount = await db.person.count()
-    const created: { action: string; personId: string; name: string; interactionsCreated: number }[] = []
-
-    for (let i = 0; i < analysisResult.length; i++) {
-      const result = analysisResult[i]
-
-      let personId: string | null = null
-
-      // 1. Use Claude's explicit match if valid
-      if (result.matchedPersonId) {
-        const match = await db.person.findUnique({ where: { id: result.matchedPersonId } })
-        if (match) personId = match.id
-      }
-
-      // 2. Fallback: exact name match
-      if (!personId && !result.isNew) {
-        const parts = result.name.trim().split(/\s+/)
-        const first = parts[0]
-        const last = parts.slice(1).join(" ")
-        const match = await db.person.findFirst({
-          where: { first: { equals: first }, last: { equals: last } },
-        })
-        if (match) personId = match.id
-      }
-
-      // 3. Create new person
-      let action = "matched"
-      if (!personId) {
-        action = "created"
-        const parts = result.name.trim().split(/\s+/)
-        const first = parts[0] || result.name
-        const last = parts.slice(1).join(" ") || ""
-        const { color, colorSoft } = assignColor(existingCount + i)
-
-        const person = await db.person.create({
-          data: {
-            first,
-            last,
-            title: result.guessedHeadline || null,
-            headline: result.guessedHeadline || null,
-            closeness: result.guessedCloseness ?? 2,
-            tags: JSON.stringify(result.guessedTags ?? []),
-            values: JSON.stringify([]),
-            color,
-            colorSoft,
-          },
-        })
-        personId = person.id
-      }
-
-      // Create interaction + event for each entry
-      let interactionsCreated = 0
-      for (const ix of result.interactions) {
-        const timestamp = parseDate(ix.date)
-
-        const event = await db.event.create({
-          data: {
-            name: ix.summary?.slice(0, 80) ?? `${ix.eventType} with ${result.name}`,
-            type: ix.eventType,
-            timestamp,
-          },
-        })
-
-        await db.interaction.create({
-          data: {
-            personId: personId!,
-            eventId: event.id,
-            type: ix.eventType,
-            timestamp,
-            summary: ix.summary || null,
-            emotionalWeight: ix.emotionalWeight || null,
-            outcome: ix.outcome || null,
-            actionItems: ix.keyTopics?.length ? JSON.stringify(ix.keyTopics) : null,
-            sourceFileId: fileRecord.id,
-          },
-        })
-        interactionsCreated++
-      }
-
-      created.push({ action, personId: personId!, name: result.name, interactionsCreated })
-    }
+    const { created } = await confirmImport(toImportedPersons(analysisResult), {
+      importedFileId: fileRecord.id,
+      actor: auth.actor,
+    })
+    const persons = created.map(person => ({
+      action: person.action,
+      personId: person.personId,
+      name: person.name,
+      interactionsCreated: person.interactionCount,
+    }))
 
     return NextResponse.json({
       fileId: fileRecord.id,
       filename: fileRecord.filename,
       retrieveUrl: `/api/v1/files/${fileRecord.id}`,
       source,
-      persons: created,
-      totalInteractions: created.reduce((s, p) => s + p.interactionsCreated, 0),
+      persons,
+      totalInteractions: persons.reduce((s, p) => s + p.interactionsCreated, 0),
     }, { status: 201 })
 
   } catch (error) {
-    console.error("Ingest error:", error)
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Ingest failed" },
-      { status: 500 }
-    )
+    return handleRouteError(error)
   }
 }
 
@@ -250,9 +177,11 @@ ${content.slice(0, 40000)}
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
-function parseDate(dateStr: string): Date {
-  if (!dateStr) return new Date()
-  const match = dateStr.match(/(\d{4})-(\d{2})-(\d{2})/)
-  if (match) return new Date(dateStr)
-  return new Date()
+function toImportedPersons(results: AnalyzedPerson[]): ImportedPerson[] {
+  return results.map(result => ({
+    ...result,
+    needsReview: false,
+    closenessReason: "",
+    matchedPersonName: null,
+  }))
 }

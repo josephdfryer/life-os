@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import { db } from "@/lib/db"
-import { validateApiKey, unauthorized } from "@/lib/api-auth"
+import { authorizeApiRequest, unauthorized } from "@/lib/api-auth"
 import { parseTags } from "@/lib/utils"
 import { formatPerson } from "@/server/domain/dto"
 import { deletePerson, updatePerson } from "@/server/domain/people"
@@ -9,7 +9,7 @@ import { handleRouteError, noContent } from "@/server/api/respond"
 type Params = { params: Promise<{ id: string }> }
 
 export async function GET(req: NextRequest, { params }: Params) {
-  if (!validateApiKey(req)) return unauthorized()
+  if (!(await authorizeApiRequest(req, "contacts.read"))) return unauthorized()
   const { id } = await params
 
   const person = await db.person.findUnique({
@@ -41,20 +41,22 @@ export async function GET(req: NextRequest, { params }: Params) {
 }
 
 export async function PATCH(req: NextRequest, { params }: Params) {
-  if (!validateApiKey(req)) return unauthorized()
+  const auth = await authorizeApiRequest(req, "contacts.write")
+  if (!auth) return unauthorized()
   try {
     const { id } = await params
-    return NextResponse.json(await updatePerson(id, await req.json(), { type: "api_key", label: "v1" }))
+    return NextResponse.json(await updatePerson(id, await req.json(), auth.actor))
   } catch (error) {
     return handleRouteError(error)
   }
 }
 
 export async function DELETE(req: NextRequest, { params }: Params) {
-  if (!validateApiKey(req)) return unauthorized()
+  const auth = await authorizeApiRequest(req, "contacts.write")
+  if (!auth) return unauthorized()
   try {
     const { id } = await params
-    await deletePerson(id, { type: "api_key", label: "v1" })
+    await deletePerson(id, auth.actor)
     return noContent()
   } catch (error) {
     return handleRouteError(error)

@@ -30,6 +30,11 @@ export async function createInteraction(input: InteractionInput, actor?: DomainA
   const personId = optionalString(input.personId)
   const eventId = optionalString(input.eventId)
 
+  if (personId) {
+    const person = await db.person.findUnique({ where: { id: personId }, select: { id: true } })
+    if (!person) throw notFound("Person not found", { personId })
+  }
+
   let resolvedEventId = eventId
   if (!resolvedEventId) {
     const event = await db.event.create({
@@ -40,6 +45,9 @@ export async function createInteraction(input: InteractionInput, actor?: DomainA
       },
     })
     resolvedEventId = event.id
+  } else {
+    const event = await db.event.findUnique({ where: { id: resolvedEventId }, select: { id: true } })
+    if (!event) throw notFound("Event not found", { eventId: resolvedEventId })
   }
 
   const interaction = await db.interaction.create({

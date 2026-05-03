@@ -52,6 +52,14 @@ export const AnyNull = runtime.AnyNull
 
 export const ModelName = {
   Person: 'Person',
+  User: 'User',
+  Role: 'Role',
+  Permission: 'Permission',
+  UserRole: 'UserRole',
+  RolePermission: 'RolePermission',
+  ApiKey: 'ApiKey',
+  ApiKeyScope: 'ApiKeyScope',
+  AuditLog: 'AuditLog',
   StagedInteraction: 'StagedInteraction',
   Event: 'Event',
   Interaction: 'Interaction',
@@ -101,6 +109,101 @@ export const PersonScalarFieldEnum = {
 } as const
 
 export type PersonScalarFieldEnum = (typeof PersonScalarFieldEnum)[keyof typeof PersonScalarFieldEnum]
+
+
+export const UserScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  email: 'email',
+  name: 'name',
+  image: 'image',
+  status: 'status',
+  personId: 'personId'
+} as const
+
+export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+export const RoleScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  key: 'key',
+  name: 'name',
+  description: 'description'
+} as const
+
+export type RoleScalarFieldEnum = (typeof RoleScalarFieldEnum)[keyof typeof RoleScalarFieldEnum]
+
+
+export const PermissionScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  scope: 'scope',
+  description: 'description'
+} as const
+
+export type PermissionScalarFieldEnum = (typeof PermissionScalarFieldEnum)[keyof typeof PermissionScalarFieldEnum]
+
+
+export const UserRoleScalarFieldEnum = {
+  userId: 'userId',
+  roleId: 'roleId'
+} as const
+
+export type UserRoleScalarFieldEnum = (typeof UserRoleScalarFieldEnum)[keyof typeof UserRoleScalarFieldEnum]
+
+
+export const RolePermissionScalarFieldEnum = {
+  roleId: 'roleId',
+  permissionId: 'permissionId'
+} as const
+
+export type RolePermissionScalarFieldEnum = (typeof RolePermissionScalarFieldEnum)[keyof typeof RolePermissionScalarFieldEnum]
+
+
+export const ApiKeyScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  name: 'name',
+  keyPrefix: 'keyPrefix',
+  keyHash: 'keyHash',
+  status: 'status',
+  expiresAt: 'expiresAt',
+  lastUsedAt: 'lastUsedAt',
+  createdByUserId: 'createdByUserId',
+  ownerPersonId: 'ownerPersonId'
+} as const
+
+export type ApiKeyScalarFieldEnum = (typeof ApiKeyScalarFieldEnum)[keyof typeof ApiKeyScalarFieldEnum]
+
+
+export const ApiKeyScopeScalarFieldEnum = {
+  apiKeyId: 'apiKeyId',
+  scope: 'scope'
+} as const
+
+export type ApiKeyScopeScalarFieldEnum = (typeof ApiKeyScopeScalarFieldEnum)[keyof typeof ApiKeyScopeScalarFieldEnum]
+
+
+export const AuditLogScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  action: 'action',
+  targetType: 'targetType',
+  targetId: 'targetId',
+  actorType: 'actorType',
+  actorId: 'actorId',
+  actorLabel: 'actorLabel',
+  userId: 'userId',
+  apiKeyId: 'apiKeyId',
+  personId: 'personId',
+  metadata: 'metadata'
+} as const
+
+export type AuditLogScalarFieldEnum = (typeof AuditLogScalarFieldEnum)[keyof typeof AuditLogScalarFieldEnum]
 
 
 export const StagedInteractionScalarFieldEnum = {

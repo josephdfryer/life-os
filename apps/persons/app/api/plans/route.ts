@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { db } from "@/lib/db"
+import { created, handleRouteError } from "@/server/api/respond"
+import { createPlan } from "@/server/domain/plans"
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url)
@@ -14,19 +16,10 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
-  const body = await req.json()
-  const { personId, text, timescale, successSignals, parentId } = body
-
-  const plan = await db.plan.create({
-    data: {
-      personId: personId || null,
-      text: text.trim(),
-      timescale: timescale?.trim() || null,
-      successSignals: Array.isArray(successSignals) ? JSON.stringify(successSignals) : null,
-      status: "active",
-      parentId: parentId || null,
-    },
-  })
-
-  return NextResponse.json(plan, { status: 201 })
+  try {
+    const plan = await createPlan(await req.json())
+    return created(plan)
+  } catch (error) {
+    return handleRouteError(error)
+  }
 }

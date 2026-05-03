@@ -1,12 +1,14 @@
 import { NextRequest, NextResponse } from "next/server"
 import { db } from "@/lib/db"
-import { validateApiKey, unauthorized } from "@/lib/api-auth"
+import { authorizeApiRequest, unauthorized } from "@/lib/api-auth"
 import { parseTags } from "@/lib/utils"
+import { created, handleRouteError } from "@/server/api/respond"
+import { createInteraction } from "@/server/domain/interactions"
 
 type Params = { params: Promise<{ id: string }> }
 
 export async function GET(req: NextRequest, { params }: Params) {
-  if (!validateApiKey(req)) return unauthorized()
+  if (!(await authorizeApiRequest(req, "interactions.read"))) return unauthorized()
   const { id } = await params
 
   const person = await db.person.findUnique({ where: { id } })
@@ -35,57 +37,34 @@ export async function GET(req: NextRequest, { params }: Params) {
 }
 
 export async function POST(req: NextRequest, { params }: Params) {
-  if (!validateApiKey(req)) return unauthorized()
-  const { id } = await params
-
-  const person = await db.person.findUnique({ where: { id } })
-  if (!person) return NextResponse.json({ error: "Not found" }, { status: 404 })
-
-  const body = await req.json()
-  const {
-    type = "other",
-    date,
-    summary,
-    emotionalWeight,
-    outcome,
-    keyTopics,
-    duration,
-    notes,
-  } = body
-
-  const timestamp = date ? new Date(date) : new Date()
-
-  const event = await db.event.create({
-    data: {
-      name: summary?.slice(0, 80) ?? `${type} with ${person.first} ${person.last}`,
-      type,
-      timestamp,
-    },
-  })
-
-  const interaction = await db.interaction.create({
-    data: {
+  const auth = await authorizeApiRequest(req, "interactions.write")
+  if (!auth) return unauthorized()
+  try {
+    const { id } = await params
+    const body = await req.json()
+    const interaction = await createInteraction({
       personId: id,
-      eventId: event.id,
-      type,
-      timestamp,
-      summary: summary || null,
-      emotionalWeight: emotionalWeight || null,
-      outcome: outcome || null,
-      duration: duration ? Number(duration) : null,
-      notes: notes || null,
-      actionItems: keyTopics?.length ? JSON.stringify(keyTopics) : null,
-    },
-  })
+      type: body.type ?? "other",
+      timestamp: body.date,
+      summary: body.summary,
+      emotionalWeight: body.emotionalWeight,
+      outcome: body.outcome,
+      actionItems: body.keyTopics,
+      duration: body.duration,
+      notes: body.notes,
+    }, auth.actor)
 
-  return NextResponse.json({
-    id: interaction.id,
-    type: interaction.type,
-    timestamp: interaction.timestamp,
-    summary: interaction.summary,
-    emotionalWeight: interaction.emotionalWeight,
-    outcome: interaction.outcome,
-    keyTopics: parseTags(interaction.actionItems),
-    eventId: event.id,
-  }, { status: 201 })
+    return created({
+      id: interaction.id,
+      type: interaction.type,
+      timestamp: interaction.timestamp,
+      summary: interaction.summary,
+      emotionalWeight: interaction.emotionalWeight,
+      outcome: interaction.outcome,
+      keyTopics: parseTags(interaction.actionItems),
+      eventId: interaction.eventId,
+    })
+  } catch (error) {
+    return handleRouteError(error)
+  }
 }

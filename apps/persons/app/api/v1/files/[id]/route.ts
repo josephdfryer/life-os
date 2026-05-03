@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from "next/server"
-import { validateApiKey, unauthorized } from "@/lib/api-auth"
+import { authorizeApiRequest, unauthorized } from "@/lib/api-auth"
 import { getFileContent } from "@/lib/file-storage"
 
 type Params = { params: Promise<{ id: string }> }
 
 export async function GET(req: NextRequest, { params }: Params) {
-  if (!validateApiKey(req)) return unauthorized()
+  if (!(await authorizeApiRequest(req, "files.read"))) return unauthorized()
   const { id } = await params
 
   const file = await getFileContent(id)

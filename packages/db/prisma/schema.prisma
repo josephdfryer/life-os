@@ -39,12 +39,133 @@ model Person {
   ownedItems   Item[]
   assembledBy  Assembly[]    @relation("AssembledBy")
   disassembledBy Assembly[]  @relation("DisassembledBy")
+  users        User[]
+  apiKeys      ApiKey[]
+  auditLogs    AuditLog[]
 
   @@index([last, first])
   @@index([title])
   @@index([closeness])
   @@index([birthday])
   @@index([createdAt])
+}
+
+// ─────────────────────────────────────────────
+// ACCESS: User, roles, permissions, and API keys
+// ─────────────────────────────────────────────
+
+model User {
+  id        String    @id @default(cuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  email     String    @unique
+  name      String?
+  image     String?
+  status    String    @default("active")
+  personId  String?
+  person    Person?   @relation(fields: [personId], references: [id], onDelete: SetNull)
+  roles     UserRole[]
+  apiKeys   ApiKey[]
+  auditLogs AuditLog[]
+
+  @@index([email])
+  @@index([status])
+}
+
+model Role {
+  id          String           @id @default(cuid())
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  key         String           @unique
+  name        String
+  description String?
+  users       UserRole[]
+  permissions RolePermission[]
+}
+
+model Permission {
+  id          String           @id @default(cuid())
+  createdAt   DateTime         @default(now())
+  scope       String           @unique
+  description String?
+  roles       RolePermission[]
+}
+
+model UserRole {
+  userId String
+  roleId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role   Role   @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  @@id([userId, roleId])
+  @@index([roleId])
+}
+
+model RolePermission {
+  roleId       String
+  permissionId String
+  role         Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@id([roleId, permissionId])
+  @@index([permissionId])
+}
+
+model ApiKey {
+  id            String        @id @default(cuid())
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  name          String
+  keyPrefix     String        @unique
+  keyHash       String        @unique
+  status        String        @default("active")
+  expiresAt     DateTime?
+  lastUsedAt    DateTime?
+  createdByUserId String?
+  createdByUser User?         @relation(fields: [createdByUserId], references: [id], onDelete: SetNull)
+  ownerPersonId String?
+  ownerPerson   Person?       @relation(fields: [ownerPersonId], references: [id], onDelete: SetNull)
+  scopes        ApiKeyScope[]
+  auditLogs     AuditLog[]
+
+  @@index([status])
+  @@index([createdByUserId])
+  @@index([ownerPersonId])
+}
+
+model ApiKeyScope {
+  apiKeyId String
+  scope    String
+  apiKey   ApiKey @relation(fields: [apiKeyId], references: [id], onDelete: Cascade)
+
+  @@id([apiKeyId, scope])
+  @@index([scope])
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  createdAt  DateTime @default(now())
+  action     String
+  targetType String
+  targetId   String?
+  actorType  String
+  actorId    String?
+  actorLabel String?
+  userId     String?
+  user       User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  apiKeyId   String?
+  apiKey     ApiKey?  @relation(fields: [apiKeyId], references: [id], onDelete: SetNull)
+  personId   String?
+  person     Person?  @relation(fields: [personId], references: [id], onDelete: SetNull)
+  metadata   String?
+
+  @@index([createdAt])
+  @@index([action])
+  @@index([targetType, targetId])
+  @@index([actorType, actorId])
+  @@index([userId])
+  @@index([apiKeyId])
+  @@index([personId])
 }
 
 // ─────────────────────────────────────────────

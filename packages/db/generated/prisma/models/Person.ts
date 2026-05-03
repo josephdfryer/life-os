@@ -350,6 +350,9 @@ export type PersonWhereInput = {
   ownedItems?: Prisma.ItemListRelationFilter
   assembledBy?: Prisma.AssemblyListRelationFilter
   disassembledBy?: Prisma.AssemblyListRelationFilter
+  users?: Prisma.UserListRelationFilter
+  apiKeys?: Prisma.ApiKeyListRelationFilter
+  auditLogs?: Prisma.AuditLogListRelationFilter
 }
 
 export type PersonOrderByWithRelationInput = {
@@ -380,6 +383,9 @@ export type PersonOrderByWithRelationInput = {
   ownedItems?: Prisma.ItemOrderByRelationAggregateInput
   assembledBy?: Prisma.AssemblyOrderByRelationAggregateInput
   disassembledBy?: Prisma.AssemblyOrderByRelationAggregateInput
+  users?: Prisma.UserOrderByRelationAggregateInput
+  apiKeys?: Prisma.ApiKeyOrderByRelationAggregateInput
+  auditLogs?: Prisma.AuditLogOrderByRelationAggregateInput
 }
 
 export type PersonWhereUniqueInput = Prisma.AtLeast<{
@@ -413,6 +419,9 @@ export type PersonWhereUniqueInput = Prisma.AtLeast<{
   ownedItems?: Prisma.ItemListRelationFilter
   assembledBy?: Prisma.AssemblyListRelationFilter
   disassembledBy?: Prisma.AssemblyListRelationFilter
+  users?: Prisma.UserListRelationFilter
+  apiKeys?: Prisma.ApiKeyListRelationFilter
+  auditLogs?: Prisma.AuditLogListRelationFilter
 }, "id">
 
 export type PersonOrderByWithAggregationInput = {
@@ -499,6 +508,9 @@ export type PersonCreateInput = {
   ownedItems?: Prisma.ItemCreateNestedManyWithoutOwnedByInput
   assembledBy?: Prisma.AssemblyCreateNestedManyWithoutAssembledByInput
   disassembledBy?: Prisma.AssemblyCreateNestedManyWithoutDisassembledByInput
+  users?: Prisma.UserCreateNestedManyWithoutPersonInput
+  apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutOwnerPersonInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutPersonInput
 }
 
 export type PersonUncheckedCreateInput = {
@@ -529,6 +541,9 @@ export type PersonUncheckedCreateInput = {
   ownedItems?: Prisma.ItemUncheckedCreateNestedManyWithoutOwnedByInput
   assembledBy?: Prisma.AssemblyUncheckedCreateNestedManyWithoutAssembledByInput
   disassembledBy?: Prisma.AssemblyUncheckedCreateNestedManyWithoutDisassembledByInput
+  users?: Prisma.UserUncheckedCreateNestedManyWithoutPersonInput
+  apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutOwnerPersonInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutPersonInput
 }
 
 export type PersonUpdateInput = {
@@ -559,6 +574,9 @@ export type PersonUpdateInput = {
   ownedItems?: Prisma.ItemUpdateManyWithoutOwnedByNestedInput
   assembledBy?: Prisma.AssemblyUpdateManyWithoutAssembledByNestedInput
   disassembledBy?: Prisma.AssemblyUpdateManyWithoutDisassembledByNestedInput
+  users?: Prisma.UserUpdateManyWithoutPersonNestedInput
+  apiKeys?: Prisma.ApiKeyUpdateManyWithoutOwnerPersonNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutPersonNestedInput
 }
 
 export type PersonUncheckedUpdateInput = {
@@ -589,6 +607,9 @@ export type PersonUncheckedUpdateInput = {
   ownedItems?: Prisma.ItemUncheckedUpdateManyWithoutOwnedByNestedInput
   assembledBy?: Prisma.AssemblyUncheckedUpdateManyWithoutAssembledByNestedInput
   disassembledBy?: Prisma.AssemblyUncheckedUpdateManyWithoutDisassembledByNestedInput
+  users?: Prisma.UserUncheckedUpdateManyWithoutPersonNestedInput
+  apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutOwnerPersonNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutPersonNestedInput
 }
 
 export type PersonCreateManyInput = {
@@ -768,6 +789,54 @@ export type IntFieldUpdateOperationsInput = {
   divide?: number
 }
 
+export type PersonCreateNestedOneWithoutUsersInput = {
+  create?: Prisma.XOR<Prisma.PersonCreateWithoutUsersInput, Prisma.PersonUncheckedCreateWithoutUsersInput>
+  connectOrCreate?: Prisma.PersonCreateOrConnectWithoutUsersInput
+  connect?: Prisma.PersonWhereUniqueInput
+}
+
+export type PersonUpdateOneWithoutUsersNestedInput = {
+  create?: Prisma.XOR<Prisma.PersonCreateWithoutUsersInput, Prisma.PersonUncheckedCreateWithoutUsersInput>
+  connectOrCreate?: Prisma.PersonCreateOrConnectWithoutUsersInput
+  upsert?: Prisma.PersonUpsertWithoutUsersInput
+  disconnect?: Prisma.PersonWhereInput | boolean
+  delete?: Prisma.PersonWhereInput | boolean
+  connect?: Prisma.PersonWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.PersonUpdateToOneWithWhereWithoutUsersInput, Prisma.PersonUpdateWithoutUsersInput>, Prisma.PersonUncheckedUpdateWithoutUsersInput>
+}
+
+export type PersonCreateNestedOneWithoutApiKeysInput = {
+  create?: Prisma.XOR<Prisma.PersonCreateWithoutApiKeysInput, Prisma.PersonUncheckedCreateWithoutApiKeysInput>
+  connectOrCreate?: Prisma.PersonCreateOrConnectWithoutApiKeysInput
+  connect?: Prisma.PersonWhereUniqueInput
+}
+
+export type PersonUpdateOneWithoutApiKeysNestedInput = {
+  create?: Prisma.XOR<Prisma.PersonCreateWithoutApiKeysInput, Prisma.PersonUncheckedCreateWithoutApiKeysInput>
+  connectOrCreate?: Prisma.PersonCreateOrConnectWithoutApiKeysInput
+  upsert?: Prisma.PersonUpsertWithoutApiKeysInput
+  disconnect?: Prisma.PersonWhereInput | boolean
+  delete?: Prisma.PersonWhereInput | boolean
+  connect?: Prisma.PersonWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.PersonUpdateToOneWithWhereWithoutApiKeysInput, Prisma.PersonUpdateWithoutApiKeysInput>, Prisma.PersonUncheckedUpdateWithoutApiKeysInput>
+}
+
+export type PersonCreateNestedOneWithoutAuditLogsInput = {
+  create?: Prisma.XOR<Prisma.PersonCreateWithoutAuditLogsInput, Prisma.PersonUncheckedCreateWithoutAuditLogsInput>
+  connectOrCreate?: Prisma.PersonCreateOrConnectWithoutAuditLogsInput
+  connect?: Prisma.PersonWhereUniqueInput
+}
+
+export type PersonUpdateOneWithoutAuditLogsNestedInput = {
+  create?: Prisma.XOR<Prisma.PersonCreateWithoutAuditLogsInput, Prisma.PersonUncheckedCreateWithoutAuditLogsInput>
+  connectOrCreate?: Prisma.PersonCreateOrConnectWithoutAuditLogsInput
+  upsert?: Prisma.PersonUpsertWithoutAuditLogsInput
+  disconnect?: Prisma.PersonWhereInput | boolean
+  delete?: Prisma.PersonWhereInput | boolean
+  connect?: Prisma.PersonWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.PersonUpdateToOneWithWhereWithoutAuditLogsInput, Prisma.PersonUpdateWithoutAuditLogsInput>, Prisma.PersonUncheckedUpdateWithoutAuditLogsInput>
+}
+
 export type PersonCreateNestedOneWithoutStagedInteractionsInput = {
   create?: Prisma.XOR<Prisma.PersonCreateWithoutStagedInteractionsInput, Prisma.PersonUncheckedCreateWithoutStagedInteractionsInput>
   connectOrCreate?: Prisma.PersonCreateOrConnectWithoutStagedInteractionsInput
@@ -864,6 +933,438 @@ export type PersonUpdateOneWithoutDisassembledByNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.PersonUpdateToOneWithWhereWithoutDisassembledByInput, Prisma.PersonUpdateWithoutDisassembledByInput>, Prisma.PersonUncheckedUpdateWithoutDisassembledByInput>
 }
 
+export type PersonCreateWithoutUsersInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  first: string
+  last: string
+  title?: string | null
+  headline?: string | null
+  emails?: string
+  phones?: string
+  birthday?: string | null
+  closeness?: number
+  tags?: string
+  values?: string
+  notes?: string | null
+  company?: string | null
+  location?: string | null
+  linkedin?: string | null
+  twitter?: string | null
+  website?: string | null
+  color?: string | null
+  colorSoft?: string | null
+  interactions?: Prisma.InteractionCreateNestedManyWithoutPersonInput
+  stagedInteractions?: Prisma.StagedInteractionCreateNestedManyWithoutCandidatePersonInput
+  plans?: Prisma.PlanCreateNestedManyWithoutPersonInput
+  ownedItems?: Prisma.ItemCreateNestedManyWithoutOwnedByInput
+  assembledBy?: Prisma.AssemblyCreateNestedManyWithoutAssembledByInput
+  disassembledBy?: Prisma.AssemblyCreateNestedManyWithoutDisassembledByInput
+  apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutOwnerPersonInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutPersonInput
+}
+
+export type PersonUncheckedCreateWithoutUsersInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  first: string
+  last: string
+  title?: string | null
+  headline?: string | null
+  emails?: string
+  phones?: string
+  birthday?: string | null
+  closeness?: number
+  tags?: string
+  values?: string
+  notes?: string | null
+  company?: string | null
+  location?: string | null
+  linkedin?: string | null
+  twitter?: string | null
+  website?: string | null
+  color?: string | null
+  colorSoft?: string | null
+  interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutPersonInput
+  stagedInteractions?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutCandidatePersonInput
+  plans?: Prisma.PlanUncheckedCreateNestedManyWithoutPersonInput
+  ownedItems?: Prisma.ItemUncheckedCreateNestedManyWithoutOwnedByInput
+  assembledBy?: Prisma.AssemblyUncheckedCreateNestedManyWithoutAssembledByInput
+  disassembledBy?: Prisma.AssemblyUncheckedCreateNestedManyWithoutDisassembledByInput
+  apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutOwnerPersonInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutPersonInput
+}
+
+export type PersonCreateOrConnectWithoutUsersInput = {
+  where: Prisma.PersonWhereUniqueInput
+  create: Prisma.XOR<Prisma.PersonCreateWithoutUsersInput, Prisma.PersonUncheckedCreateWithoutUsersInput>
+}
+
+export type PersonUpsertWithoutUsersInput = {
+  update: Prisma.XOR<Prisma.PersonUpdateWithoutUsersInput, Prisma.PersonUncheckedUpdateWithoutUsersInput>
+  create: Prisma.XOR<Prisma.PersonCreateWithoutUsersInput, Prisma.PersonUncheckedCreateWithoutUsersInput>
+  where?: Prisma.PersonWhereInput
+}
+
+export type PersonUpdateToOneWithWhereWithoutUsersInput = {
+  where?: Prisma.PersonWhereInput
+  data: Prisma.XOR<Prisma.PersonUpdateWithoutUsersInput, Prisma.PersonUncheckedUpdateWithoutUsersInput>
+}
+
+export type PersonUpdateWithoutUsersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  first?: Prisma.StringFieldUpdateOperationsInput | string
+  last?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emails?: Prisma.StringFieldUpdateOperationsInput | string
+  phones?: Prisma.StringFieldUpdateOperationsInput | string
+  birthday?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  closeness?: Prisma.IntFieldUpdateOperationsInput | number
+  tags?: Prisma.StringFieldUpdateOperationsInput | string
+  values?: Prisma.StringFieldUpdateOperationsInput | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  company?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  linkedin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  interactions?: Prisma.InteractionUpdateManyWithoutPersonNestedInput
+  stagedInteractions?: Prisma.StagedInteractionUpdateManyWithoutCandidatePersonNestedInput
+  plans?: Prisma.PlanUpdateManyWithoutPersonNestedInput
+  ownedItems?: Prisma.ItemUpdateManyWithoutOwnedByNestedInput
+  assembledBy?: Prisma.AssemblyUpdateManyWithoutAssembledByNestedInput
+  disassembledBy?: Prisma.AssemblyUpdateManyWithoutDisassembledByNestedInput
+  apiKeys?: Prisma.ApiKeyUpdateManyWithoutOwnerPersonNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutPersonNestedInput
+}
+
+export type PersonUncheckedUpdateWithoutUsersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  first?: Prisma.StringFieldUpdateOperationsInput | string
+  last?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emails?: Prisma.StringFieldUpdateOperationsInput | string
+  phones?: Prisma.StringFieldUpdateOperationsInput | string
+  birthday?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  closeness?: Prisma.IntFieldUpdateOperationsInput | number
+  tags?: Prisma.StringFieldUpdateOperationsInput | string
+  values?: Prisma.StringFieldUpdateOperationsInput | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  company?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  linkedin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  interactions?: Prisma.InteractionUncheckedUpdateManyWithoutPersonNestedInput
+  stagedInteractions?: Prisma.StagedInteractionUncheckedUpdateManyWithoutCandidatePersonNestedInput
+  plans?: Prisma.PlanUncheckedUpdateManyWithoutPersonNestedInput
+  ownedItems?: Prisma.ItemUncheckedUpdateManyWithoutOwnedByNestedInput
+  assembledBy?: Prisma.AssemblyUncheckedUpdateManyWithoutAssembledByNestedInput
+  disassembledBy?: Prisma.AssemblyUncheckedUpdateManyWithoutDisassembledByNestedInput
+  apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutOwnerPersonNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutPersonNestedInput
+}
+
+export type PersonCreateWithoutApiKeysInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  first: string
+  last: string
+  title?: string | null
+  headline?: string | null
+  emails?: string
+  phones?: string
+  birthday?: string | null
+  closeness?: number
+  tags?: string
+  values?: string
+  notes?: string | null
+  company?: string | null
+  location?: string | null
+  linkedin?: string | null
+  twitter?: string | null
+  website?: string | null
+  color?: string | null
+  colorSoft?: string | null
+  interactions?: Prisma.InteractionCreateNestedManyWithoutPersonInput
+  stagedInteractions?: Prisma.StagedInteractionCreateNestedManyWithoutCandidatePersonInput
+  plans?: Prisma.PlanCreateNestedManyWithoutPersonInput
+  ownedItems?: Prisma.ItemCreateNestedManyWithoutOwnedByInput
+  assembledBy?: Prisma.AssemblyCreateNestedManyWithoutAssembledByInput
+  disassembledBy?: Prisma.AssemblyCreateNestedManyWithoutDisassembledByInput
+  users?: Prisma.UserCreateNestedManyWithoutPersonInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutPersonInput
+}
+
+export type PersonUncheckedCreateWithoutApiKeysInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  first: string
+  last: string
+  title?: string | null
+  headline?: string | null
+  emails?: string
+  phones?: string
+  birthday?: string | null
+  closeness?: number
+  tags?: string
+  values?: string
+  notes?: string | null
+  company?: string | null
+  location?: string | null
+  linkedin?: string | null
+  twitter?: string | null
+  website?: string | null
+  color?: string | null
+  colorSoft?: string | null
+  interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutPersonInput
+  stagedInteractions?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutCandidatePersonInput
+  plans?: Prisma.PlanUncheckedCreateNestedManyWithoutPersonInput
+  ownedItems?: Prisma.ItemUncheckedCreateNestedManyWithoutOwnedByInput
+  assembledBy?: Prisma.AssemblyUncheckedCreateNestedManyWithoutAssembledByInput
+  disassembledBy?: Prisma.AssemblyUncheckedCreateNestedManyWithoutDisassembledByInput
+  users?: Prisma.UserUncheckedCreateNestedManyWithoutPersonInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutPersonInput
+}
+
+export type PersonCreateOrConnectWithoutApiKeysInput = {
+  where: Prisma.PersonWhereUniqueInput
+  create: Prisma.XOR<Prisma.PersonCreateWithoutApiKeysInput, Prisma.PersonUncheckedCreateWithoutApiKeysInput>
+}
+
+export type PersonUpsertWithoutApiKeysInput = {
+  update: Prisma.XOR<Prisma.PersonUpdateWithoutApiKeysInput, Prisma.PersonUncheckedUpdateWithoutApiKeysInput>
+  create: Prisma.XOR<Prisma.PersonCreateWithoutApiKeysInput, Prisma.PersonUncheckedCreateWithoutApiKeysInput>
+  where?: Prisma.PersonWhereInput
+}
+
+export type PersonUpdateToOneWithWhereWithoutApiKeysInput = {
+  where?: Prisma.PersonWhereInput
+  data: Prisma.XOR<Prisma.PersonUpdateWithoutApiKeysInput, Prisma.PersonUncheckedUpdateWithoutApiKeysInput>
+}
+
+export type PersonUpdateWithoutApiKeysInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  first?: Prisma.StringFieldUpdateOperationsInput | string
+  last?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emails?: Prisma.StringFieldUpdateOperationsInput | string
+  phones?: Prisma.StringFieldUpdateOperationsInput | string
+  birthday?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  closeness?: Prisma.IntFieldUpdateOperationsInput | number
+  tags?: Prisma.StringFieldUpdateOperationsInput | string
+  values?: Prisma.StringFieldUpdateOperationsInput | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  company?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  linkedin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  interactions?: Prisma.InteractionUpdateManyWithoutPersonNestedInput
+  stagedInteractions?: Prisma.StagedInteractionUpdateManyWithoutCandidatePersonNestedInput
+  plans?: Prisma.PlanUpdateManyWithoutPersonNestedInput
+  ownedItems?: Prisma.ItemUpdateManyWithoutOwnedByNestedInput
+  assembledBy?: Prisma.AssemblyUpdateManyWithoutAssembledByNestedInput
+  disassembledBy?: Prisma.AssemblyUpdateManyWithoutDisassembledByNestedInput
+  users?: Prisma.UserUpdateManyWithoutPersonNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutPersonNestedInput
+}
+
+export type PersonUncheckedUpdateWithoutApiKeysInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  first?: Prisma.StringFieldUpdateOperationsInput | string
+  last?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emails?: Prisma.StringFieldUpdateOperationsInput | string
+  phones?: Prisma.StringFieldUpdateOperationsInput | string
+  birthday?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  closeness?: Prisma.IntFieldUpdateOperationsInput | number
+  tags?: Prisma.StringFieldUpdateOperationsInput | string
+  values?: Prisma.StringFieldUpdateOperationsInput | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  company?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  linkedin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  interactions?: Prisma.InteractionUncheckedUpdateManyWithoutPersonNestedInput
+  stagedInteractions?: Prisma.StagedInteractionUncheckedUpdateManyWithoutCandidatePersonNestedInput
+  plans?: Prisma.PlanUncheckedUpdateManyWithoutPersonNestedInput
+  ownedItems?: Prisma.ItemUncheckedUpdateManyWithoutOwnedByNestedInput
+  assembledBy?: Prisma.AssemblyUncheckedUpdateManyWithoutAssembledByNestedInput
+  disassembledBy?: Prisma.AssemblyUncheckedUpdateManyWithoutDisassembledByNestedInput
+  users?: Prisma.UserUncheckedUpdateManyWithoutPersonNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutPersonNestedInput
+}
+
+export type PersonCreateWithoutAuditLogsInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  first: string
+  last: string
+  title?: string | null
+  headline?: string | null
+  emails?: string
+  phones?: string
+  birthday?: string | null
+  closeness?: number
+  tags?: string
+  values?: string
+  notes?: string | null
+  company?: string | null
+  location?: string | null
+  linkedin?: string | null
+  twitter?: string | null
+  website?: string | null
+  color?: string | null
+  colorSoft?: string | null
+  interactions?: Prisma.InteractionCreateNestedManyWithoutPersonInput
+  stagedInteractions?: Prisma.StagedInteractionCreateNestedManyWithoutCandidatePersonInput
+  plans?: Prisma.PlanCreateNestedManyWithoutPersonInput
+  ownedItems?: Prisma.ItemCreateNestedManyWithoutOwnedByInput
+  assembledBy?: Prisma.AssemblyCreateNestedManyWithoutAssembledByInput
+  disassembledBy?: Prisma.AssemblyCreateNestedManyWithoutDisassembledByInput
+  users?: Prisma.UserCreateNestedManyWithoutPersonInput
+  apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutOwnerPersonInput
+}
+
+export type PersonUncheckedCreateWithoutAuditLogsInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  first: string
+  last: string
+  title?: string | null
+  headline?: string | null
+  emails?: string
+  phones?: string
+  birthday?: string | null
+  closeness?: number
+  tags?: string
+  values?: string
+  notes?: string | null
+  company?: string | null
+  location?: string | null
+  linkedin?: string | null
+  twitter?: string | null
+  website?: string | null
+  color?: string | null
+  colorSoft?: string | null
+  interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutPersonInput
+  stagedInteractions?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutCandidatePersonInput
+  plans?: Prisma.PlanUncheckedCreateNestedManyWithoutPersonInput
+  ownedItems?: Prisma.ItemUncheckedCreateNestedManyWithoutOwnedByInput
+  assembledBy?: Prisma.AssemblyUncheckedCreateNestedManyWithoutAssembledByInput
+  disassembledBy?: Prisma.AssemblyUncheckedCreateNestedManyWithoutDisassembledByInput
+  users?: Prisma.UserUncheckedCreateNestedManyWithoutPersonInput
+  apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutOwnerPersonInput
+}
+
+export type PersonCreateOrConnectWithoutAuditLogsInput = {
+  where: Prisma.PersonWhereUniqueInput
+  create: Prisma.XOR<Prisma.PersonCreateWithoutAuditLogsInput, Prisma.PersonUncheckedCreateWithoutAuditLogsInput>
+}
+
+export type PersonUpsertWithoutAuditLogsInput = {
+  update: Prisma.XOR<Prisma.PersonUpdateWithoutAuditLogsInput, Prisma.PersonUncheckedUpdateWithoutAuditLogsInput>
+  create: Prisma.XOR<Prisma.PersonCreateWithoutAuditLogsInput, Prisma.PersonUncheckedCreateWithoutAuditLogsInput>
+  where?: Prisma.PersonWhereInput
+}
+
+export type PersonUpdateToOneWithWhereWithoutAuditLogsInput = {
+  where?: Prisma.PersonWhereInput
+  data: Prisma.XOR<Prisma.PersonUpdateWithoutAuditLogsInput, Prisma.PersonUncheckedUpdateWithoutAuditLogsInput>
+}
+
+export type PersonUpdateWithoutAuditLogsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  first?: Prisma.StringFieldUpdateOperationsInput | string
+  last?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emails?: Prisma.StringFieldUpdateOperationsInput | string
+  phones?: Prisma.StringFieldUpdateOperationsInput | string
+  birthday?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  closeness?: Prisma.IntFieldUpdateOperationsInput | number
+  tags?: Prisma.StringFieldUpdateOperationsInput | string
+  values?: Prisma.StringFieldUpdateOperationsInput | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  company?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  linkedin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  interactions?: Prisma.InteractionUpdateManyWithoutPersonNestedInput
+  stagedInteractions?: Prisma.StagedInteractionUpdateManyWithoutCandidatePersonNestedInput
+  plans?: Prisma.PlanUpdateManyWithoutPersonNestedInput
+  ownedItems?: Prisma.ItemUpdateManyWithoutOwnedByNestedInput
+  assembledBy?: Prisma.AssemblyUpdateManyWithoutAssembledByNestedInput
+  disassembledBy?: Prisma.AssemblyUpdateManyWithoutDisassembledByNestedInput
+  users?: Prisma.UserUpdateManyWithoutPersonNestedInput
+  apiKeys?: Prisma.ApiKeyUpdateManyWithoutOwnerPersonNestedInput
+}
+
+export type PersonUncheckedUpdateWithoutAuditLogsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  first?: Prisma.StringFieldUpdateOperationsInput | string
+  last?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emails?: Prisma.StringFieldUpdateOperationsInput | string
+  phones?: Prisma.StringFieldUpdateOperationsInput | string
+  birthday?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  closeness?: Prisma.IntFieldUpdateOperationsInput | number
+  tags?: Prisma.StringFieldUpdateOperationsInput | string
+  values?: Prisma.StringFieldUpdateOperationsInput | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  company?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  linkedin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  interactions?: Prisma.InteractionUncheckedUpdateManyWithoutPersonNestedInput
+  stagedInteractions?: Prisma.StagedInteractionUncheckedUpdateManyWithoutCandidatePersonNestedInput
+  plans?: Prisma.PlanUncheckedUpdateManyWithoutPersonNestedInput
+  ownedItems?: Prisma.ItemUncheckedUpdateManyWithoutOwnedByNestedInput
+  assembledBy?: Prisma.AssemblyUncheckedUpdateManyWithoutAssembledByNestedInput
+  disassembledBy?: Prisma.AssemblyUncheckedUpdateManyWithoutDisassembledByNestedInput
+  users?: Prisma.UserUncheckedUpdateManyWithoutPersonNestedInput
+  apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutOwnerPersonNestedInput
+}
+
 export type PersonCreateWithoutStagedInteractionsInput = {
   id?: string
   createdAt?: Date | string
@@ -891,6 +1392,9 @@ export type PersonCreateWithoutStagedInteractionsInput = {
   ownedItems?: Prisma.ItemCreateNestedManyWithoutOwnedByInput
   assembledBy?: Prisma.AssemblyCreateNestedManyWithoutAssembledByInput
   disassembledBy?: Prisma.AssemblyCreateNestedManyWithoutDisassembledByInput
+  users?: Prisma.UserCreateNestedManyWithoutPersonInput
+  apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutOwnerPersonInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutPersonInput
 }
 
 export type PersonUncheckedCreateWithoutStagedInteractionsInput = {
@@ -920,6 +1424,9 @@ export type PersonUncheckedCreateWithoutStagedInteractionsInput = {
   ownedItems?: Prisma.ItemUncheckedCreateNestedManyWithoutOwnedByInput
   assembledBy?: Prisma.AssemblyUncheckedCreateNestedManyWithoutAssembledByInput
   disassembledBy?: Prisma.AssemblyUncheckedCreateNestedManyWithoutDisassembledByInput
+  users?: Prisma.UserUncheckedCreateNestedManyWithoutPersonInput
+  apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutOwnerPersonInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutPersonInput
 }
 
 export type PersonCreateOrConnectWithoutStagedInteractionsInput = {
@@ -965,6 +1472,9 @@ export type PersonUpdateWithoutStagedInteractionsInput = {
   ownedItems?: Prisma.ItemUpdateManyWithoutOwnedByNestedInput
   assembledBy?: Prisma.AssemblyUpdateManyWithoutAssembledByNestedInput
   disassembledBy?: Prisma.AssemblyUpdateManyWithoutDisassembledByNestedInput
+  users?: Prisma.UserUpdateManyWithoutPersonNestedInput
+  apiKeys?: Prisma.ApiKeyUpdateManyWithoutOwnerPersonNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutPersonNestedInput
 }
 
 export type PersonUncheckedUpdateWithoutStagedInteractionsInput = {
@@ -994,6 +1504,9 @@ export type PersonUncheckedUpdateWithoutStagedInteractionsInput = {
   ownedItems?: Prisma.ItemUncheckedUpdateManyWithoutOwnedByNestedInput
   assembledBy?: Prisma.AssemblyUncheckedUpdateManyWithoutAssembledByNestedInput
   disassembledBy?: Prisma.AssemblyUncheckedUpdateManyWithoutDisassembledByNestedInput
+  users?: Prisma.UserUncheckedUpdateManyWithoutPersonNestedInput
+  apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutOwnerPersonNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutPersonNestedInput
 }
 
 export type PersonCreateWithoutInteractionsInput = {
@@ -1023,6 +1536,9 @@ export type PersonCreateWithoutInteractionsInput = {
   ownedItems?: Prisma.ItemCreateNestedManyWithoutOwnedByInput
   assembledBy?: Prisma.AssemblyCreateNestedManyWithoutAssembledByInput
   disassembledBy?: Prisma.AssemblyCreateNestedManyWithoutDisassembledByInput
+  users?: Prisma.UserCreateNestedManyWithoutPersonInput
+  apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutOwnerPersonInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutPersonInput
 }
 
 export type PersonUncheckedCreateWithoutInteractionsInput = {
@@ -1052,6 +1568,9 @@ export type PersonUncheckedCreateWithoutInteractionsInput = {
   ownedItems?: Prisma.ItemUncheckedCreateNestedManyWithoutOwnedByInput
   assembledBy?: Prisma.AssemblyUncheckedCreateNestedManyWithoutAssembledByInput
   disassembledBy?: Prisma.AssemblyUncheckedCreateNestedManyWithoutDisassembledByInput
+  users?: Prisma.UserUncheckedCreateNestedManyWithoutPersonInput
+  apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutOwnerPersonInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutPersonInput
 }
 
 export type PersonCreateOrConnectWithoutInteractionsInput = {
@@ -1097,6 +1616,9 @@ export type PersonUpdateWithoutInteractionsInput = {
   ownedItems?: Prisma.ItemUpdateManyWithoutOwnedByNestedInput
   assembledBy?: Prisma.AssemblyUpdateManyWithoutAssembledByNestedInput
   disassembledBy?: Prisma.AssemblyUpdateManyWithoutDisassembledByNestedInput
+  users?: Prisma.UserUpdateManyWithoutPersonNestedInput
+  apiKeys?: Prisma.ApiKeyUpdateManyWithoutOwnerPersonNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutPersonNestedInput
 }
 
 export type PersonUncheckedUpdateWithoutInteractionsInput = {
@@ -1126,6 +1648,9 @@ export type PersonUncheckedUpdateWithoutInteractionsInput = {
   ownedItems?: Prisma.ItemUncheckedUpdateManyWithoutOwnedByNestedInput
   assembledBy?: Prisma.AssemblyUncheckedUpdateManyWithoutAssembledByNestedInput
   disassembledBy?: Prisma.AssemblyUncheckedUpdateManyWithoutDisassembledByNestedInput
+  users?: Prisma.UserUncheckedUpdateManyWithoutPersonNestedInput
+  apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutOwnerPersonNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutPersonNestedInput
 }
 
 export type PersonCreateWithoutPlansInput = {
@@ -1155,6 +1680,9 @@ export type PersonCreateWithoutPlansInput = {
   ownedItems?: Prisma.ItemCreateNestedManyWithoutOwnedByInput
   assembledBy?: Prisma.AssemblyCreateNestedManyWithoutAssembledByInput
   disassembledBy?: Prisma.AssemblyCreateNestedManyWithoutDisassembledByInput
+  users?: Prisma.UserCreateNestedManyWithoutPersonInput
+  apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutOwnerPersonInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutPersonInput
 }
 
 export type PersonUncheckedCreateWithoutPlansInput = {
@@ -1184,6 +1712,9 @@ export type PersonUncheckedCreateWithoutPlansInput = {
   ownedItems?: Prisma.ItemUncheckedCreateNestedManyWithoutOwnedByInput
   assembledBy?: Prisma.AssemblyUncheckedCreateNestedManyWithoutAssembledByInput
   disassembledBy?: Prisma.AssemblyUncheckedCreateNestedManyWithoutDisassembledByInput
+  users?: Prisma.UserUncheckedCreateNestedManyWithoutPersonInput
+  apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutOwnerPersonInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutPersonInput
 }
 
 export type PersonCreateOrConnectWithoutPlansInput = {
@@ -1229,6 +1760,9 @@ export type PersonUpdateWithoutPlansInput = {
   ownedItems?: Prisma.ItemUpdateManyWithoutOwnedByNestedInput
   assembledBy?: Prisma.AssemblyUpdateManyWithoutAssembledByNestedInput
   disassembledBy?: Prisma.AssemblyUpdateManyWithoutDisassembledByNestedInput
+  users?: Prisma.UserUpdateManyWithoutPersonNestedInput
+  apiKeys?: Prisma.ApiKeyUpdateManyWithoutOwnerPersonNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutPersonNestedInput
 }
 
 export type PersonUncheckedUpdateWithoutPlansInput = {
@@ -1258,6 +1792,9 @@ export type PersonUncheckedUpdateWithoutPlansInput = {
   ownedItems?: Prisma.ItemUncheckedUpdateManyWithoutOwnedByNestedInput
   assembledBy?: Prisma.AssemblyUncheckedUpdateManyWithoutAssembledByNestedInput
   disassembledBy?: Prisma.AssemblyUncheckedUpdateManyWithoutDisassembledByNestedInput
+  users?: Prisma.UserUncheckedUpdateManyWithoutPersonNestedInput
+  apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutOwnerPersonNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutPersonNestedInput
 }
 
 export type PersonCreateWithoutOwnedItemsInput = {
@@ -1287,6 +1824,9 @@ export type PersonCreateWithoutOwnedItemsInput = {
   plans?: Prisma.PlanCreateNestedManyWithoutPersonInput
   assembledBy?: Prisma.AssemblyCreateNestedManyWithoutAssembledByInput
   disassembledBy?: Prisma.AssemblyCreateNestedManyWithoutDisassembledByInput
+  users?: Prisma.UserCreateNestedManyWithoutPersonInput
+  apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutOwnerPersonInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutPersonInput
 }
 
 export type PersonUncheckedCreateWithoutOwnedItemsInput = {
@@ -1316,6 +1856,9 @@ export type PersonUncheckedCreateWithoutOwnedItemsInput = {
   plans?: Prisma.PlanUncheckedCreateNestedManyWithoutPersonInput
   assembledBy?: Prisma.AssemblyUncheckedCreateNestedManyWithoutAssembledByInput
   disassembledBy?: Prisma.AssemblyUncheckedCreateNestedManyWithoutDisassembledByInput
+  users?: Prisma.UserUncheckedCreateNestedManyWithoutPersonInput
+  apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutOwnerPersonInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutPersonInput
 }
 
 export type PersonCreateOrConnectWithoutOwnedItemsInput = {
@@ -1361,6 +1904,9 @@ export type PersonUpdateWithoutOwnedItemsInput = {
   plans?: Prisma.PlanUpdateManyWithoutPersonNestedInput
   assembledBy?: Prisma.AssemblyUpdateManyWithoutAssembledByNestedInput
   disassembledBy?: Prisma.AssemblyUpdateManyWithoutDisassembledByNestedInput
+  users?: Prisma.UserUpdateManyWithoutPersonNestedInput
+  apiKeys?: Prisma.ApiKeyUpdateManyWithoutOwnerPersonNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutPersonNestedInput
 }
 
 export type PersonUncheckedUpdateWithoutOwnedItemsInput = {
@@ -1390,6 +1936,9 @@ export type PersonUncheckedUpdateWithoutOwnedItemsInput = {
   plans?: Prisma.PlanUncheckedUpdateManyWithoutPersonNestedInput
   assembledBy?: Prisma.AssemblyUncheckedUpdateManyWithoutAssembledByNestedInput
   disassembledBy?: Prisma.AssemblyUncheckedUpdateManyWithoutDisassembledByNestedInput
+  users?: Prisma.UserUncheckedUpdateManyWithoutPersonNestedInput
+  apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutOwnerPersonNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutPersonNestedInput
 }
 
 export type PersonCreateWithoutAssembledByInput = {
@@ -1419,6 +1968,9 @@ export type PersonCreateWithoutAssembledByInput = {
   plans?: Prisma.PlanCreateNestedManyWithoutPersonInput
   ownedItems?: Prisma.ItemCreateNestedManyWithoutOwnedByInput
   disassembledBy?: Prisma.AssemblyCreateNestedManyWithoutDisassembledByInput
+  users?: Prisma.UserCreateNestedManyWithoutPersonInput
+  apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutOwnerPersonInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutPersonInput
 }
 
 export type PersonUncheckedCreateWithoutAssembledByInput = {
@@ -1448,6 +2000,9 @@ export type PersonUncheckedCreateWithoutAssembledByInput = {
   plans?: Prisma.PlanUncheckedCreateNestedManyWithoutPersonInput
   ownedItems?: Prisma.ItemUncheckedCreateNestedManyWithoutOwnedByInput
   disassembledBy?: Prisma.AssemblyUncheckedCreateNestedManyWithoutDisassembledByInput
+  users?: Prisma.UserUncheckedCreateNestedManyWithoutPersonInput
+  apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutOwnerPersonInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutPersonInput
 }
 
 export type PersonCreateOrConnectWithoutAssembledByInput = {
@@ -1482,6 +2037,9 @@ export type PersonCreateWithoutDisassembledByInput = {
   plans?: Prisma.PlanCreateNestedManyWithoutPersonInput
   ownedItems?: Prisma.ItemCreateNestedManyWithoutOwnedByInput
   assembledBy?: Prisma.AssemblyCreateNestedManyWithoutAssembledByInput
+  users?: Prisma.UserCreateNestedManyWithoutPersonInput
+  apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutOwnerPersonInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutPersonInput
 }
 
 export type PersonUncheckedCreateWithoutDisassembledByInput = {
@@ -1511,6 +2069,9 @@ export type PersonUncheckedCreateWithoutDisassembledByInput = {
   plans?: Prisma.PlanUncheckedCreateNestedManyWithoutPersonInput
   ownedItems?: Prisma.ItemUncheckedCreateNestedManyWithoutOwnedByInput
   assembledBy?: Prisma.AssemblyUncheckedCreateNestedManyWithoutAssembledByInput
+  users?: Prisma.UserUncheckedCreateNestedManyWithoutPersonInput
+  apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutOwnerPersonInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutPersonInput
 }
 
 export type PersonCreateOrConnectWithoutDisassembledByInput = {
@@ -1556,6 +2117,9 @@ export type PersonUpdateWithoutAssembledByInput = {
   plans?: Prisma.PlanUpdateManyWithoutPersonNestedInput
   ownedItems?: Prisma.ItemUpdateManyWithoutOwnedByNestedInput
   disassembledBy?: Prisma.AssemblyUpdateManyWithoutDisassembledByNestedInput
+  users?: Prisma.UserUpdateManyWithoutPersonNestedInput
+  apiKeys?: Prisma.ApiKeyUpdateManyWithoutOwnerPersonNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutPersonNestedInput
 }
 
 export type PersonUncheckedUpdateWithoutAssembledByInput = {
@@ -1585,6 +2149,9 @@ export type PersonUncheckedUpdateWithoutAssembledByInput = {
   plans?: Prisma.PlanUncheckedUpdateManyWithoutPersonNestedInput
   ownedItems?: Prisma.ItemUncheckedUpdateManyWithoutOwnedByNestedInput
   disassembledBy?: Prisma.AssemblyUncheckedUpdateManyWithoutDisassembledByNestedInput
+  users?: Prisma.UserUncheckedUpdateManyWithoutPersonNestedInput
+  apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutOwnerPersonNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutPersonNestedInput
 }
 
 export type PersonUpsertWithoutDisassembledByInput = {
@@ -1625,6 +2192,9 @@ export type PersonUpdateWithoutDisassembledByInput = {
   plans?: Prisma.PlanUpdateManyWithoutPersonNestedInput
   ownedItems?: Prisma.ItemUpdateManyWithoutOwnedByNestedInput
   assembledBy?: Prisma.AssemblyUpdateManyWithoutAssembledByNestedInput
+  users?: Prisma.UserUpdateManyWithoutPersonNestedInput
+  apiKeys?: Prisma.ApiKeyUpdateManyWithoutOwnerPersonNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutPersonNestedInput
 }
 
 export type PersonUncheckedUpdateWithoutDisassembledByInput = {
@@ -1654,6 +2224,9 @@ export type PersonUncheckedUpdateWithoutDisassembledByInput = {
   plans?: Prisma.PlanUncheckedUpdateManyWithoutPersonNestedInput
   ownedItems?: Prisma.ItemUncheckedUpdateManyWithoutOwnedByNestedInput
   assembledBy?: Prisma.AssemblyUncheckedUpdateManyWithoutAssembledByNestedInput
+  users?: Prisma.UserUncheckedUpdateManyWithoutPersonNestedInput
+  apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutOwnerPersonNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutPersonNestedInput
 }
 
 
@@ -1668,6 +2241,9 @@ export type PersonCountOutputType = {
   ownedItems: number
   assembledBy: number
   disassembledBy: number
+  users: number
+  apiKeys: number
+  auditLogs: number
 }
 
 export type PersonCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1677,6 +2253,9 @@ export type PersonCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions
   ownedItems?: boolean | PersonCountOutputTypeCountOwnedItemsArgs
   assembledBy?: boolean | PersonCountOutputTypeCountAssembledByArgs
   disassembledBy?: boolean | PersonCountOutputTypeCountDisassembledByArgs
+  users?: boolean | PersonCountOutputTypeCountUsersArgs
+  apiKeys?: boolean | PersonCountOutputTypeCountApiKeysArgs
+  auditLogs?: boolean | PersonCountOutputTypeCountAuditLogsArgs
 }
 
 /**
@@ -1731,6 +2310,27 @@ export type PersonCountOutputTypeCountDisassembledByArgs<ExtArgs extends runtime
   where?: Prisma.AssemblyWhereInput
 }
 
+/**
+ * PersonCountOutputType without action
+ */
+export type PersonCountOutputTypeCountUsersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.UserWhereInput
+}
+
+/**
+ * PersonCountOutputType without action
+ */
+export type PersonCountOutputTypeCountApiKeysArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ApiKeyWhereInput
+}
+
+/**
+ * PersonCountOutputType without action
+ */
+export type PersonCountOutputTypeCountAuditLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AuditLogWhereInput
+}
+
 
 export type PersonSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1760,6 +2360,9 @@ export type PersonSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   ownedItems?: boolean | Prisma.Person$ownedItemsArgs<ExtArgs>
   assembledBy?: boolean | Prisma.Person$assembledByArgs<ExtArgs>
   disassembledBy?: boolean | Prisma.Person$disassembledByArgs<ExtArgs>
+  users?: boolean | Prisma.Person$usersArgs<ExtArgs>
+  apiKeys?: boolean | Prisma.Person$apiKeysArgs<ExtArgs>
+  auditLogs?: boolean | Prisma.Person$auditLogsArgs<ExtArgs>
   _count?: boolean | Prisma.PersonCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["person"]>
 
@@ -1843,6 +2446,9 @@ export type PersonInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   ownedItems?: boolean | Prisma.Person$ownedItemsArgs<ExtArgs>
   assembledBy?: boolean | Prisma.Person$assembledByArgs<ExtArgs>
   disassembledBy?: boolean | Prisma.Person$disassembledByArgs<ExtArgs>
+  users?: boolean | Prisma.Person$usersArgs<ExtArgs>
+  apiKeys?: boolean | Prisma.Person$apiKeysArgs<ExtArgs>
+  auditLogs?: boolean | Prisma.Person$auditLogsArgs<ExtArgs>
   _count?: boolean | Prisma.PersonCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type PersonIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1857,6 +2463,9 @@ export type $PersonPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     ownedItems: Prisma.$ItemPayload<ExtArgs>[]
     assembledBy: Prisma.$AssemblyPayload<ExtArgs>[]
     disassembledBy: Prisma.$AssemblyPayload<ExtArgs>[]
+    users: Prisma.$UserPayload<ExtArgs>[]
+    apiKeys: Prisma.$ApiKeyPayload<ExtArgs>[]
+    auditLogs: Prisma.$AuditLogPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2280,6 +2889,9 @@ export interface Prisma__PersonClient<T, Null = never, ExtArgs extends runtime.T
   ownedItems<T extends Prisma.Person$ownedItemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Person$ownedItemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   assembledBy<T extends Prisma.Person$assembledByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Person$assembledByArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AssemblyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   disassembledBy<T extends Prisma.Person$disassembledByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Person$disassembledByArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AssemblyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  users<T extends Prisma.Person$usersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Person$usersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  apiKeys<T extends Prisma.Person$apiKeysArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Person$apiKeysArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ApiKeyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  auditLogs<T extends Prisma.Person$auditLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Person$auditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2862,6 +3474,78 @@ export type Person$disassembledByArgs<ExtArgs extends runtime.Types.Extensions.I
   take?: number
   skip?: number
   distinct?: Prisma.AssemblyScalarFieldEnum | Prisma.AssemblyScalarFieldEnum[]
+}
+
+/**
+ * Person.users
+ */
+export type Person$usersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the User
+   */
+  select?: Prisma.UserSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the User
+   */
+  omit?: Prisma.UserOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserInclude<ExtArgs> | null
+  where?: Prisma.UserWhereInput
+  orderBy?: Prisma.UserOrderByWithRelationInput | Prisma.UserOrderByWithRelationInput[]
+  cursor?: Prisma.UserWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.UserScalarFieldEnum | Prisma.UserScalarFieldEnum[]
+}
+
+/**
+ * Person.apiKeys
+ */
+export type Person$apiKeysArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ApiKey
+   */
+  select?: Prisma.ApiKeySelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ApiKey
+   */
+  omit?: Prisma.ApiKeyOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ApiKeyInclude<ExtArgs> | null
+  where?: Prisma.ApiKeyWhereInput
+  orderBy?: Prisma.ApiKeyOrderByWithRelationInput | Prisma.ApiKeyOrderByWithRelationInput[]
+  cursor?: Prisma.ApiKeyWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ApiKeyScalarFieldEnum | Prisma.ApiKeyScalarFieldEnum[]
+}
+
+/**
+ * Person.auditLogs
+ */
+export type Person$auditLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AuditLog
+   */
+  select?: Prisma.AuditLogSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AuditLog
+   */
+  omit?: Prisma.AuditLogOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AuditLogInclude<ExtArgs> | null
+  where?: Prisma.AuditLogWhereInput
+  orderBy?: Prisma.AuditLogOrderByWithRelationInput | Prisma.AuditLogOrderByWithRelationInput[]
+  cursor?: Prisma.AuditLogWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AuditLogScalarFieldEnum | Prisma.AuditLogScalarFieldEnum[]
 }
 
 /**

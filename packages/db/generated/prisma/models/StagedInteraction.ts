@@ -769,10 +769,6 @@ export type NullableFloatFieldUpdateOperationsInput = {
   divide?: number
 }
 
-export type NullableDateTimeFieldUpdateOperationsInput = {
-  set?: Date | string | null
-}
-
 export type StagedInteractionCreateWithoutCandidatePersonInput = {
   id?: string
   createdAt?: Date | string
