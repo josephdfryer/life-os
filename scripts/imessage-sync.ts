@@ -45,6 +45,7 @@ type Options = {
   dryRun: boolean
   initWatermark: boolean
   createMissing: boolean
+  since: Date | null
 }
 
 type ExistingPerson = {
@@ -100,7 +101,7 @@ async function main() {
 
 async function syncOnce(options: Options) {
   const state = readState(options.statePath)
-  const messages = readMessages(options.chatDbPath, state.lastMessageRowId, options.limit)
+  const messages = readMessages(options.chatDbPath, state.lastMessageRowId, options.limit, options.since)
 
   let createdPersons = 0
   let updatedPersons = 0
@@ -174,11 +175,15 @@ async function syncOnce(options: Options) {
   return { scanned: messages.length, createdPersons, updatedPersons, createdInteractions, updatedInteractions, stagedInteractions, skippedExisting, watermark }
 }
 
-function readMessages(chatDbPath: string, afterRowId: number, limit: number): MessageRow[] {
+function readMessages(chatDbPath: string, afterRowId: number, limit: number, since: Date | null): MessageRow[] {
   const sqlite = openMessagesDb(chatDbPath)
   try {
     sqlite.pragma("query_only = ON")
-    return sqlite.prepare<[number, number], MessageRow>(`
+    const sinceClause = since ? "AND message.date >= ?" : ""
+    const params = since
+      ? [afterRowId, dateToAppleNanoseconds(since), limit]
+      : [afterRowId, limit]
+    return sqlite.prepare<unknown[], MessageRow>(`
       SELECT
         message.ROWID AS messageId,
         message.guid AS guid,
@@ -197,9 +202,10 @@ function readMessages(chatDbPath: string, afterRowId: number, limit: number): Me
       LEFT JOIN chat_message_join ON chat_message_join.message_id = message.ROWID
       LEFT JOIN chat ON chat.ROWID = chat_message_join.chat_id
       WHERE message.ROWID > ?
+      ${sinceClause}
       ORDER BY message.ROWID ASC
       LIMIT ?
-    `).all(afterRowId, limit)
+    `).all(...params)
   } finally {
     sqlite.close()
   }
@@ -578,6 +584,16 @@ function appleDateToDate(value: MessageRow["appleDate"]): Date {
   return new Date(APPLE_EPOCH_MS + raw * 1000)
 }
 
+function dateToAppleNanoseconds(date: Date): string {
+  return String(BigInt(date.getTime() - APPLE_EPOCH_MS) * 1_000_000n)
+}
+
+function parseSince(value: string): Date {
+  const date = new Date(value)
+  if (Number.isNaN(date.getTime())) throw new Error(`Invalid --since date: ${value}`)
+  return date
+}
+
 function dayKey(date: Date): string {
   const parts = new Intl.DateTimeFormat("en-US", {
     timeZone: DAY_TIME_ZONE,
@@ -638,6 +654,7 @@ function parseArgs(args: string[]): Options {
     dryRun: false,
     initWatermark: false,
     createMissing: false,
+    since: null,
   }
 
   for (let i = 0; i < args.length; i++) {
@@ -652,6 +669,8 @@ function parseArgs(args: string[]): Options {
     else if (arg === "--state" && next) options.statePath = expandHome(next), i++
     else if (arg === "--interval-ms" && next) options.intervalMs = Number(next), i++
     else if (arg === "--limit" && next) options.limit = Number(next), i++
+    else if (arg === "--since" && next) options.since = parseSince(next), i++
+    else if (arg === "--days" && next) options.since = new Date(Date.now() - Number(next) * 24 * 60 * 60 * 1000), i++
     else if (arg === "--help" || arg === "-h") {
       printHelp()
       process.exit(0)
@@ -678,6 +697,8 @@ Options:
   --state <path>         Watermark file. Defaults to ~/.life-os/imessage-sync-state.json.
   --interval-ms <ms>     Watch poll interval. Defaults to 15000.
   --limit <count>        Max messages per pass. Defaults to 250.
+  --since <date>         Only process messages dated on/after this ISO date.
+  --days <count>         Only process messages dated within the last N days.
 
 launchd ProgramArguments example:
   /opt/homebrew/bin/npm run imessage:sync -- --watch --interval-ms 15000
