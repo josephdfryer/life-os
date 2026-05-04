@@ -359,12 +359,12 @@ async function grantRole(userId: string, key: string) {
   })
 }
 
-async function userScopes(userId: string) {
+async function userScopes(userId: string): Promise<string[]> {
   const roles = await db.userRole.findMany({
     where: { userId },
     include: { role: { include: { permissions: { include: { permission: true } } } } },
   })
-  return [...new Set(roles.flatMap(item => item.role.permissions.map(permission => permission.permission.scope)))]
+  return [...new Set(roles.flatMap(item => item.role.permissions.map(rp => rp.permission.scope as string)))]
 }
 
 function hasScope(granted: string[], required: string) {

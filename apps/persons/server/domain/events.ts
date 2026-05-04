@@ -33,6 +33,31 @@ export async function createEvent(input: EventInput, actor?: DomainActor) {
   return event
 }
 
+export async function updateEvent(id: string, input: EventInput, actor?: DomainActor) {
+  const existing = await db.event.findUnique({ where: { id }, select: { id: true } })
+  if (!existing) throw badRequest("Event not found")
+
+  const patch: Record<string, unknown> = {}
+  if (input.name !== undefined) patch.name = requiredString(input.name, "name")
+  if (input.type !== undefined) patch.type = requiredString(input.type, "type")
+  if (input.timestamp !== undefined) patch.timestamp = parseTimestamp(input.timestamp)
+  if (input.placeId !== undefined) patch.placeId = optionalString(input.placeId)
+  if (input.notes !== undefined) patch.notes = optionalString(input.notes)
+  if (input.transcript !== undefined) patch.transcript = optionalString(input.transcript)
+  if (input.metadata !== undefined) patch.metadata = input.metadata === null ? null : JSON.stringify(input.metadata)
+
+  const event = await db.event.update({ where: { id }, data: patch })
+  await auditAction({ actor, action: "event.update", targetType: "event", targetId: id, metadata: { fields: Object.keys(patch) } })
+  return event
+}
+
+export async function deleteEvent(id: string, actor?: DomainActor) {
+  const existing = await db.event.findUnique({ where: { id }, select: { id: true } })
+  if (!existing) throw badRequest("Event not found")
+  await db.event.delete({ where: { id } })
+  await auditAction({ actor, action: "event.delete", targetType: "event", targetId: id })
+}
+
 export function parseTimestamp(value: unknown) {
   const date = value ? new Date(String(value)) : new Date()
   if (Number.isNaN(date.getTime())) throw badRequest("timestamp is invalid", { field: "timestamp" })

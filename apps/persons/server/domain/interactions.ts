@@ -93,6 +93,30 @@ export async function createInteraction(input: InteractionInput, actor?: DomainA
   return formatInteraction(interaction)
 }
 
+export async function updateInteraction(id: string, input: Partial<InteractionInput>, actor?: DomainActor) {
+  const existing = await db.interaction.findUnique({ where: { id }, select: { id: true } })
+  if (!existing) throw notFound("Interaction not found", { id })
+
+  const patch: Record<string, unknown> = {}
+  if (input.summary !== undefined) patch.summary = optionalString(input.summary)
+  if (input.notes !== undefined) patch.notes = optionalString(input.notes)
+  if (input.emotionalWeight !== undefined) patch.emotionalWeight = optionalString(input.emotionalWeight)
+  if (input.outcome !== undefined) patch.outcome = optionalString(input.outcome)
+  if (input.actionItems !== undefined) patch.actionItems = Array.isArray(input.actionItems) ? jsonList(optionalStringArray(input.actionItems)) : null
+  if (input.direction !== undefined) patch.direction = optionalString(input.direction)
+  if (input.billable !== undefined) patch.billable = Boolean(input.billable)
+  if (input.amount !== undefined) patch.amount = input.amount ? Number(input.amount) : null
+  if (input.duration !== undefined) patch.duration = input.duration ? Number(input.duration) : null
+
+  const interaction = await db.interaction.update({
+    where: { id },
+    data: patch,
+    include: { event: true, sourceFile: true },
+  })
+  await auditAction({ actor, action: "interaction.update", targetType: "interaction", targetId: id, metadata: { fields: Object.keys(patch) } })
+  return formatInteraction(interaction)
+}
+
 export async function deleteInteraction(id: string, actor?: DomainActor) {
   const existing = await db.interaction.findUnique({ where: { id }, select: { id: true } })
   if (!existing) throw notFound("Interaction not found", { id })

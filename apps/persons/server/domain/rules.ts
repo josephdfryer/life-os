@@ -116,6 +116,13 @@ export async function updateRule(id: string, input: RuleInput, actor: AccessActo
   return formatRule(rule)
 }
 
+export async function deleteRule(id: string, actor: AccessActor) {
+  const existing = await db.rule.findUnique({ where: { id }, select: { id: true } })
+  if (!existing) throw notFound("Rule not found", { id })
+  await db.rule.delete({ where: { id } })
+  await auditAction({ actor: actor.actor, action: "rule.delete", targetType: "rule", targetId: id })
+}
+
 export async function testRule(input: { ruleId?: string | null; rule?: RuleInput; payload?: unknown; targetType?: string | null; targetId?: string | null }, actor: AccessActor) {
   const payload = objectValue(input.payload)
   const rule = input.ruleId
