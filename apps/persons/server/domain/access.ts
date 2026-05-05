@@ -112,42 +112,65 @@ export async function seedDefaultAccess(actor?: DomainActor) {
   }
 }
 
-export async function requireAccess(requiredScope: string) {
+// Per-instance cache: avoids 6+ sequential Turso RTTs on every request.
+// Fluid Compute reuses instances across requests, so this is effective in production.
+// 60s TTL means role/scope changes propagate within a minute.
+const _accessCache = new Map<string, { value: AccessActor; expiresAt: number }>()
+
+export async function requireAccess(requiredScope: string): Promise<AccessActor> {
   const session = await auth()
-  const sessionUser = session?.user
-  const email = sessionUser?.email?.toLowerCase()
+  const email = session?.user?.email?.toLowerCase()
   if (!email) throw unauthorized()
-  const name = sessionUser?.name ?? null
-  const image = sessionUser?.image ?? null
 
-  await seedDefaultAccess({ type: "system", label: "access-bootstrap" })
-  const existingUserCount = await db.user.count()
-  const isFirstUser = existingUserCount === 0
-  if (!isFirstUser) await assertEmailApproved(email)
-  const user = await db.user.upsert({
-    where: { email },
-    update: {
-      name,
-      image,
-      status: "active",
-    },
-    create: {
-      email,
-      name,
-      image,
-      status: "active",
-    },
-  })
-
-  if (isFirstUser || ownerEmails().includes(email)) {
-    await grantRole(user.id, "owner")
+  const hit = _accessCache.get(email)
+  if (hit && hit.expiresAt > Date.now()) {
+    if (!hasScope(hit.value.scopes, requiredScope)) throw forbidden("Missing required permission", { requiredScope })
+    return hit.value
   }
 
-  const workspace = await ensureWorkspaceForUser(user.id, email, isFirstUser || ownerEmails().includes(email))
-  const scopes = await userScopes(user.id)
+  const name = session?.user?.name ?? null
+  const image = session?.user?.image ?? null
+  const isOwner = ownerEmails().includes(email)
+  const isAllowed = allowedEmails().includes(email)
+
+  // Parallel batch 1: user row + email approval check
+  const [existingUser, approvedRow] = await Promise.all([
+    db.user.findUnique({ where: { email } }),
+    isOwner || isAllowed
+      ? Promise.resolve(null)
+      : db.approvedEmail.findUnique({ where: { email }, select: { status: true, workspaceId: true } }),
+  ])
+
+  if (!isOwner && !isAllowed && approvedRow?.status !== "approved") {
+    throw forbidden("Email is not approved for this app", { email })
+  }
+
+  const isFirstUser = existingUser === null
+
+  const user = await db.user.upsert({
+    where: { email },
+    update: { name, image, status: "active" },
+    create: { email, name, image, status: "active" },
+  })
+
+  if (isFirstUser || isOwner) await grantRole(user.id, "owner")
+
+  // Parallel batch 2: workspace membership + permission scopes
+  const [workspaceMember, scopes] = await Promise.all([
+    db.workspaceMember.findFirst({
+      where: { userId: user.id, status: "active", workspace: { status: "active" } },
+      include: { workspace: true },
+      orderBy: { createdAt: "asc" },
+    }),
+    userScopes(user.id),
+  ])
+
+  const workspace = workspaceMember?.workspace
+    ?? await _buildWorkspace(user.id, email, isFirstUser || isOwner, approvedRow?.workspaceId ?? null)
+
   if (!hasScope(scopes, requiredScope)) throw forbidden("Missing required permission", { requiredScope })
 
-  return {
+  const result: AccessActor = {
     userId: user.id,
     email,
     workspaceId: workspace.id,
@@ -155,6 +178,36 @@ export async function requireAccess(requiredScope: string) {
     scopes,
     actor: { type: "user", id: user.id, label: email, workspaceId: workspace.id } satisfies DomainActor,
   }
+
+  _accessCache.set(email, { value: result, expiresAt: Date.now() + 60_000 })
+  return result
+}
+
+async function _buildWorkspace(userId: string, email: string, useDefault: boolean, approvedWorkspaceId: string | null) {
+  const workspaceId = useDefault ? "default-workspace" : approvedWorkspaceId
+  if (workspaceId) {
+    const workspace = await db.workspace.upsert({
+      where: { id: workspaceId },
+      update: useDefault ? { ownerUserId: userId } : {},
+      create: {
+        id: workspaceId,
+        name: useDefault ? "Joseph's Life OS" : `${displayNameFromEmail(email)}'s Life OS`,
+        slug: useDefault ? "joseph-life-os" : uniqueWorkspaceSlug(email),
+        ownerUserId: userId,
+      },
+    })
+    await addWorkspaceMember(workspace.id, userId, "owner")
+    return workspace
+  }
+  const workspace = await db.workspace.create({
+    data: {
+      name: `${displayNameFromEmail(email)}'s Life OS`,
+      slug: uniqueWorkspaceSlug(email),
+      ownerUserId: userId,
+    },
+  })
+  await addWorkspaceMember(workspace.id, userId, "owner")
+  return workspace
 }
 
 export async function accessOverview(actor: AccessActor) {
@@ -368,48 +421,6 @@ async function grantRole(userId: string, key: string) {
   })
 }
 
-async function assertEmailApproved(email: string) {
-  if (ownerEmails().includes(email) || allowedEmails().includes(email)) return
-  const approved = await db.approvedEmail.findUnique({ where: { email }, select: { status: true } })
-  if (approved?.status === "approved") return
-  throw forbidden("Email is not approved for this app", { email })
-}
-
-async function ensureWorkspaceForUser(userId: string, email: string, useDefaultWorkspace: boolean) {
-  const existing = await db.workspaceMember.findFirst({
-    where: { userId, status: "active", workspace: { status: "active" } },
-    include: { workspace: true },
-    orderBy: { createdAt: "asc" },
-  })
-  if (existing?.workspace) return existing.workspace
-
-  const approved = await db.approvedEmail.findUnique({ where: { email }, select: { workspaceId: true } })
-  const workspaceId = useDefaultWorkspace ? "default-workspace" : approved?.workspaceId
-  if (workspaceId) {
-    const workspace = await db.workspace.upsert({
-      where: { id: workspaceId },
-      update: { ownerUserId: useDefaultWorkspace ? userId : undefined },
-      create: {
-        id: workspaceId,
-        name: useDefaultWorkspace ? "Joseph's Life OS" : `${displayNameFromEmail(email)}'s Life OS`,
-        slug: useDefaultWorkspace ? "joseph-life-os" : uniqueWorkspaceSlug(email),
-        ownerUserId: userId,
-      },
-    })
-    await addWorkspaceMember(workspace.id, userId, "owner")
-    return workspace
-  }
-
-  const workspace = await db.workspace.create({
-    data: {
-      name: `${displayNameFromEmail(email)}'s Life OS`,
-      slug: uniqueWorkspaceSlug(email),
-      ownerUserId: userId,
-    },
-  })
-  await addWorkspaceMember(workspace.id, userId, "owner")
-  return workspace
-}
 
 async function addWorkspaceMember(workspaceId: string, userId: string, role: string) {
   await db.workspaceMember.upsert({
