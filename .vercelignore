@@ -1,0 +1,8 @@
+node_modules
+.next
+.turbo
+.backups
+*.db
+*.db-shm
+*.db-wal
+apps/*/uploads/
