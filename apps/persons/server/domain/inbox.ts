@@ -2,7 +2,7 @@ import { db } from "@/lib/db"
 import { badRequest, notFound, optionalString } from "@/server/api/errors"
 import { auditAction, type DomainActor } from "./audit"
 import { appendDailySourceInteraction } from "./interactions"
-import { runRulesForTarget } from "./rules"
+import { applyRuleRunSuggestions, runRulesForTarget } from "./rules"
 
 type InboxAction = "accept" | "dismiss" | "update"
 
@@ -101,6 +101,23 @@ export async function stageRecord(input: StageRecordInput, actor?: DomainActor) 
   })
 
   return staged
+}
+
+export async function applyInboxSuggestions(id: string, ruleRunIds: string[], actor?: DomainActor) {
+  const item = await db.stagedInteraction.findUnique({ where: { id }, select: { id: true } })
+  if (!item) throw notFound("Inbox item not found", { id })
+
+  const result = await applyRuleRunSuggestions(ruleRunIds, id, actor)
+  if (result.updatedRunIds.length) {
+    await auditAction({
+      actor,
+      action: "inbox.apply_suggestions",
+      targetType: "stagedInteraction",
+      targetId: id,
+      metadata: { ruleRunIds: result.updatedRunIds, actionsApplied: result.applied.length },
+    })
+  }
+  return result
 }
 
 export async function updateInboxItem(id: string, body: Record<string, unknown>, actor?: DomainActor) {

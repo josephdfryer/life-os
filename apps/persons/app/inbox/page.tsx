@@ -61,17 +61,30 @@ type SearchResult = {
 export default function InboxPage() {
   const [items, setItems] = useState<InboxItem[]>([])
   const [selectedId, setSelectedId] = useState<string | null>(null)
+  const [sourceFilter, setSourceFilter] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
+  const [applying, setApplying] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [search, setSearch] = useState("")
   const [results, setResults] = useState<SearchResult[]>([])
   const [selectedPerson, setSelectedPerson] = useState<PersonRef | null>(null)
   const [summary, setSummary] = useState("")
 
+  const sources = useMemo(() => {
+    const seen = new Set<string>()
+    for (const item of items) seen.add(item.source)
+    return [...seen].sort()
+  }, [items])
+
+  const filteredItems = useMemo(
+    () => sourceFilter ? items.filter(item => item.source === sourceFilter) : items,
+    [items, sourceFilter],
+  )
+
   const selected = useMemo(
-    () => items.find(item => item.id === selectedId) ?? items[0] ?? null,
-    [items, selectedId],
+    () => filteredItems.find(item => item.id === selectedId) ?? filteredItems[0] ?? null,
+    [filteredItems, selectedId],
   )
 
   useEffect(() => {
@@ -194,6 +207,37 @@ export default function InboxPage() {
     }
   }
 
+  async function applyRunSuggestions(ruleRunId: string) {
+    if (!selected) return
+    setApplying(ruleRunId)
+    setError(null)
+    try {
+      const res = await fetch(`/api/inbox/${selected.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "apply_suggestions", ruleRunIds: [ruleRunId] }),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || "Could not apply suggestions")
+      setItems(prev => prev.map(item =>
+        item.id === selected.id
+          ? {
+            ...item,
+            ruleRuns: item.ruleRuns.map(run =>
+              run.id === ruleRunId
+                ? { ...run, status: "applied", actionsApplied: run.actionsPlanned }
+                : run
+            ),
+          }
+          : item
+      ))
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Could not apply suggestions")
+    } finally {
+      setApplying(null)
+    }
+  }
+
   function removeItem(id: string) {
     setItems(prev => {
       const idx = prev.findIndex(item => item.id === id)
@@ -211,20 +255,40 @@ export default function InboxPage() {
         minHeight: "calc(100vh - 52px)",
       }}>
         <aside style={{ borderRight: "1px solid var(--border)", background: "var(--surface)", padding: "18px 14px" }}>
-          <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: "14px" }}>
+          <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: "10px" }}>
             <h1 style={{ margin: 0, fontSize: "18px", color: "var(--ink)", fontWeight: 600 }}>Inbox</h1>
-            <span style={{ fontSize: "11px", color: "var(--ink-4)" }}>{items.length} to review</span>
+            <span style={{ fontSize: "11px", color: "var(--ink-4)" }}>{filteredItems.length} to review</span>
           </div>
 
+          {sources.length > 1 && (
+            <div style={{ display: "flex", gap: "6px", flexWrap: "wrap", marginBottom: "12px" }}>
+              <button
+                onClick={() => setSourceFilter(null)}
+                style={filterPillStyle(sourceFilter === null)}
+              >
+                All
+              </button>
+              {sources.map(src => (
+                <button
+                  key={src}
+                  onClick={() => setSourceFilter(src)}
+                  style={filterPillStyle(sourceFilter === src)}
+                >
+                  {src}
+                </button>
+              ))}
+            </div>
+          )}
+
           {loading && <p style={{ fontSize: "12px", color: "var(--ink-3)" }}>Loading...</p>}
-          {!loading && items.length === 0 && (
+          {!loading && filteredItems.length === 0 && (
             <div style={{ padding: "32px 14px", color: "var(--ink-3)", fontSize: "12px", lineHeight: 1.5 }}>
               Nothing pending.
             </div>
           )}
 
           <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-            {items.map(item => {
+            {filteredItems.map(item => {
               const active = item.id === selected?.id
               return (
                 <button
@@ -253,8 +317,12 @@ export default function InboxPage() {
                   </div>
                   <div style={{ display: "flex", gap: "6px", alignItems: "center", marginTop: "8px", flexWrap: "wrap" }}>
                     {item.status !== "pending" && <TinyPill tone={item.status === "blocked" ? "warn" : "muted"}>{item.status}</TinyPill>}
+                    {sources.length > 1 && <TinyPill tone="muted">{item.source}</TinyPill>}
                     {item.ruleRuns.some(run => run.matched) && <TinyPill tone="ok">rule matched</TinyPill>}
                     {item.ruleRuns.some(run => actionCount(run.actionsApplied) > 0) && <TinyPill tone="accent">auto updated</TinyPill>}
+                    {item.ruleRuns.some(run => run.mode === "suggest" && run.matched && run.status === "suggested") && (
+                      <TinyPill tone="suggest">suggestions pending</TinyPill>
+                    )}
                   </div>
                 </button>
               )
@@ -327,24 +395,62 @@ export default function InboxPage() {
 
                 {selected.ruleRuns.length > 0 && (
                   <div style={{ display: "grid", gap: "8px" }}>
-                    {selected.ruleRuns.map(run => (
-                      <div key={run.id} style={{ border: "1px solid var(--border)", borderRadius: "8px", background: "var(--bg)", padding: "10px" }}>
-                        <div style={{ display: "flex", justifyContent: "space-between", gap: "10px", alignItems: "center" }}>
-                          <div>
-                            <div style={{ fontSize: "12px", color: "var(--ink)", fontWeight: 600 }}>{run.rule.name}</div>
-                            <div style={{ fontSize: "10px", color: "var(--ink-4)", marginTop: "2px" }}>{run.trigger} · {run.mode} · {formatDateTime(run.createdAt)}</div>
+                    {selected.ruleRuns.map(run => {
+                      const canApply = run.mode === "suggest" && run.matched && run.status === "suggested" && actionCount(run.actionsPlanned) > 0
+                      const isApplying = applying === run.id
+                      return (
+                        <div key={run.id} style={{ border: "1px solid var(--border)", borderRadius: "8px", background: "var(--bg)", padding: "10px" }}>
+                          <div style={{ display: "flex", justifyContent: "space-between", gap: "10px", alignItems: "center" }}>
+                            <div>
+                              <div style={{ fontSize: "12px", color: "var(--ink)", fontWeight: 600 }}>{run.rule.name}</div>
+                              <div style={{ fontSize: "10px", color: "var(--ink-4)", marginTop: "2px" }}>{run.trigger} · {run.mode} · {formatDateTime(run.createdAt)}</div>
+                            </div>
+                            <div style={{ display: "flex", gap: "6px", alignItems: "center" }}>
+                              {canApply && (
+                                <button
+                                  onClick={() => applyRunSuggestions(run.id)}
+                                  disabled={isApplying}
+                                  style={{
+                                    padding: "4px 10px",
+                                    borderRadius: "6px",
+                                    border: "1px solid var(--accent)",
+                                    background: "var(--accent-soft)",
+                                    color: "var(--accent)",
+                                    font: "inherit",
+                                    fontSize: "11px",
+                                    fontWeight: 600,
+                                    cursor: isApplying ? "not-allowed" : "pointer",
+                                    opacity: isApplying ? 0.6 : 1,
+                                    whiteSpace: "nowrap",
+                                  }}
+                                >
+                                  {isApplying ? "Applying…" : "Apply"}
+                                </button>
+                              )}
+                              <TinyPill tone={run.matched ? "ok" : "muted"}>{run.matched ? "matched" : "skipped"}</TinyPill>
+                            </div>
                           </div>
-                          <TinyPill tone={run.matched ? "ok" : "muted"}>{run.matched ? "matched" : "skipped"}</TinyPill>
+                          {run.message && <div style={{ fontSize: "11px", color: "var(--ink-3)", marginTop: "8px" }}>{run.message}</div>}
+                          {(actionCount(run.actionsPlanned) > 0 || actionCount(run.actionsApplied) > 0) && (
+                            <div style={{ display: "flex", gap: "8px", marginTop: "8px", flexWrap: "wrap" }}>
+                              {actionCount(run.actionsPlanned) > 0 && run.status !== "applied" && (
+                                <TinyPill tone="suggest">{actionCount(run.actionsPlanned)} suggested</TinyPill>
+                              )}
+                              {actionCount(run.actionsApplied) > 0 && <TinyPill tone="accent">{actionCount(run.actionsApplied)} applied</TinyPill>}
+                            </div>
+                          )}
+                          {canApply && Array.isArray(run.actionsPlanned) && (
+                            <div style={{ marginTop: "8px", fontSize: "11px", color: "var(--ink-3)", lineHeight: 1.5 }}>
+                              {(run.actionsPlanned as { type: string; field?: string; value?: unknown }[]).map((a, i) => (
+                                <span key={i} style={{ display: "inline-block", marginRight: "8px", background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "4px", padding: "2px 6px", fontFamily: "monospace", fontSize: "10px" }}>
+                                  {a.type}{a.field ? ` ${a.field}` : ""}{a.value !== undefined ? `=${String(a.value)}` : ""}
+                                </span>
+                              ))}
+                            </div>
+                          )}
                         </div>
-                        {run.message && <div style={{ fontSize: "11px", color: "var(--ink-3)", marginTop: "8px" }}>{run.message}</div>}
-                        {(actionCount(run.actionsPlanned) > 0 || actionCount(run.actionsApplied) > 0) && (
-                          <div style={{ display: "flex", gap: "8px", marginTop: "8px", flexWrap: "wrap" }}>
-                            {actionCount(run.actionsPlanned) > 0 && <TinyPill tone="muted">{actionCount(run.actionsPlanned)} planned</TinyPill>}
-                            {actionCount(run.actionsApplied) > 0 && <TinyPill tone="accent">{actionCount(run.actionsApplied)} applied</TinyPill>}
-                          </div>
-                        )}
-                      </div>
-                    ))}
+                      )
+                    })}
                   </div>
                 )}
               </section>
@@ -452,6 +558,19 @@ export default function InboxPage() {
   )
 }
 
+function filterPillStyle(active: boolean): React.CSSProperties {
+  return {
+    padding: "3px 10px",
+    borderRadius: "999px",
+    border: `1px solid ${active ? "var(--accent)" : "var(--border)"}`,
+    background: active ? "var(--accent-soft)" : "transparent",
+    color: active ? "var(--accent)" : "var(--ink-4)",
+    font: "inherit",
+    fontSize: "11px",
+    cursor: "pointer",
+  }
+}
+
 function formatDate(value: string) {
   return new Intl.DateTimeFormat("en", { month: "short", day: "numeric" }).format(new Date(value))
 }
@@ -469,12 +588,13 @@ function actionCount(value: unknown) {
   return Array.isArray(value) ? value.length : 0
 }
 
-function TinyPill({ children, tone = "muted" }: { children: React.ReactNode; tone?: "muted" | "ok" | "warn" | "accent" }) {
+function TinyPill({ children, tone = "muted" }: { children: React.ReactNode; tone?: "muted" | "ok" | "warn" | "accent" | "suggest" }) {
   const styles = {
     muted: { border: "var(--border)", color: "var(--ink-4)", background: "var(--surface)" },
     ok: { border: "#88a06a", color: "#526b37", background: "#f3f7ee" },
     warn: { border: "#d28a5d", color: "#914a22", background: "#fff4eb" },
     accent: { border: "var(--accent)", color: "var(--accent)", background: "var(--accent-soft)" },
+    suggest: { border: "#8a7abd", color: "#4a3a8a", background: "#f0eefb" },
   }[tone]
   return (
     <span style={{ display: "inline-flex", border: `1px solid ${styles.border}`, color: styles.color, background: styles.background, borderRadius: "999px", padding: "2px 7px", fontSize: "10px", lineHeight: 1.3 }}>

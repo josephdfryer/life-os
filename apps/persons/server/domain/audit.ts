@@ -37,6 +37,7 @@ export type AuditAction =
   | "inbox.update"
   | "inbox.dismiss"
   | "inbox.accept"
+  | "inbox.apply_suggestions"
 
 type AuditInput = {
   actor?: DomainActor

@@ -354,6 +354,8 @@ async function applyRuleActions(actions: RuleAction[], input: RuleExecutionInput
 
   const patch: Record<string, unknown> = {}
   const applied: RuleAction[] = []
+  const personTagActions: RuleAction[] = []
+
   for (const action of actions) {
     const type = normalize(action.type)
     if (type === "block") {
@@ -361,7 +363,10 @@ async function applyRuleActions(actions: RuleAction[], input: RuleExecutionInput
       applied.push({ type: action.type, field: "status", value: "blocked" })
       continue
     }
-
+    if (type === "add_tag" || type === "remove_tag") {
+      personTagActions.push(action)
+      continue
+    }
     if (!["set", "set_field", "assign"].includes(type) || !action.field) continue
     if (!isStagedInteractionField(action.field)) continue
     patch[action.field] = action.value
@@ -375,7 +380,101 @@ async function applyRuleActions(actions: RuleAction[], input: RuleExecutionInput
     })
   }
 
+  if (personTagActions.length) {
+    const tagApplied = await applyPersonTagActions(personTagActions, input.targetId)
+    applied.push(...tagApplied)
+  }
+
   return applied
+}
+
+async function applyPersonTagActions(actions: RuleAction[], stagedId: string) {
+  const staged = await db.stagedInteraction.findUnique({
+    where: { id: stagedId },
+    select: { candidatePersonId: true },
+  })
+  if (!staged?.candidatePersonId) return []
+
+  const person = await db.person.findUnique({
+    where: { id: staged.candidatePersonId },
+    select: { id: true, tags: true },
+  })
+  if (!person) return []
+
+  let tags = parseStoredArray(person.tags) as string[]
+  const applied: RuleAction[] = []
+
+  for (const action of actions) {
+    const tag = String(action.value ?? "").trim()
+    if (!tag) continue
+    const type = normalize(action.type)
+    if (type === "add_tag" && !tags.includes(tag)) {
+      tags.push(tag)
+      applied.push(action)
+    } else if (type === "remove_tag") {
+      const before = tags.length
+      tags = tags.filter(t => t !== tag)
+      if (tags.length < before) applied.push(action)
+    }
+  }
+
+  if (applied.length) {
+    await db.person.update({
+      where: { id: person.id },
+      data: { tags: JSON.stringify(tags) },
+    })
+  }
+
+  return applied
+}
+
+export async function applyRuleRunSuggestions(
+  ruleRunIds: string[],
+  targetId: string,
+  actor?: DomainActor,
+) {
+  if (!ruleRunIds.length) return { applied: [] as RuleAction[], updatedRunIds: [] as string[] }
+
+  const runs = await db.ruleRun.findMany({
+    where: { id: { in: ruleRunIds }, targetId, status: "suggested" },
+    select: { id: true, actionsPlanned: true },
+  })
+
+  const allApplied: RuleAction[] = []
+  const updatedRunIds: string[] = []
+
+  for (const run of runs) {
+    const planned = parseStoredArray(run.actionsPlanned) as RuleAction[]
+    if (!planned.length) continue
+
+    const applied = await applyPersonTagActions(
+      planned.filter(a => ["add_tag", "remove_tag"].includes(normalize(a.type))),
+      targetId,
+    )
+
+    const stagePatch: Record<string, unknown> = {}
+    for (const action of planned) {
+      const type = normalize(action.type)
+      if (!["set", "set_field", "assign"].includes(type) || !action.field) continue
+      if (!isStagedInteractionField(action.field)) continue
+      stagePatch[action.field] = action.value
+      applied.push(action)
+    }
+    if (Object.keys(stagePatch).length) {
+      await db.stagedInteraction.update({ where: { id: targetId }, data: stagePatch })
+    }
+
+    if (applied.length) {
+      await db.ruleRun.update({
+        where: { id: run.id },
+        data: { actionsApplied: JSON.stringify(applied), status: "applied" },
+      })
+      allApplied.push(...applied)
+      updatedRunIds.push(run.id)
+    }
+  }
+
+  return { applied: allApplied, updatedRunIds }
 }
 
 function isStagedInteractionField(field: string) {
