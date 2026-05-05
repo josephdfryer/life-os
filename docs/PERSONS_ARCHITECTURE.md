@@ -115,7 +115,7 @@ flowchart TD
 
   Match --> Known{"Confident match?"}
   Known -->|Yes| DailyInteraction["Append to one daily Interaction"]
-  Known -->|No| StagedInbox["Create Inbox staging item"]
+  Known -->|No| StagedInbox["Create Inbox staging item (itemType=interaction)"]
 
   DailyInteraction --> Dedupe["Skip if exact message was already imported"]
   StagedInbox --> Dedupe
@@ -130,6 +130,24 @@ flowchart TD
 ```
 
 Important idea: unmatched iMessages do not create random new people anymore. They go to the Inbox staging area where you can review them.
+
+### 2b. Staging from any external source
+
+Any external script or automation can push items into the inbox via the API. This is the universal staging path — not limited to iMessage.
+
+```mermaid
+flowchart TD
+  External["External source: script, webhook, future app"] --> APIV1["POST /api/v1/inbox"]
+  APIV1 --> Auth["API key + ingest.write scope"]
+  Auth --> StageRecord["stageRecord() domain command"]
+  StageRecord --> Upsert["Upsert StagedInteraction by source+sourceId"]
+  Upsert --> Rules["Run rules (trigger: inbox.stage or caller-specified)"]
+  Rules --> RuleRuns["Save RuleRun records"]
+  Upsert --> Audit["Write AuditLog inbox.stage"]
+  Upsert --> InboxDB["Inbox staging table"]
+```
+
+The `itemType` field on the staged record tells the inbox what kind of record to create when accepted (currently `interaction` is the only handled type).
 
 ### 3. Import flow
 
@@ -306,7 +324,7 @@ Plain English version:
 - **Interaction**: a thing that happened with a person.
 - **Event**: a grouping around an interaction, such as a message day, meeting, call, dinner, or imported event.
 - **Plan**: what you want to do next with a person.
-- **StagedInteraction**: automation inbox item waiting for review.
+- **StagedInteraction**: universal inbox item waiting for review. Any source can stage a record here. The `itemType` field (`interaction`, `contact`, `event`) indicates what kind of record will be created when accepted.
 - **ImportedFile**: source material that was uploaded or ingested.
 - **Rule**: an automation decision you configured.
 - **RuleRun**: a receipt showing whether a rule matched.
@@ -355,15 +373,15 @@ The architecture goal is:
 
 ```mermaid
 flowchart LR
-  P1["Phase 1: Domain/API foundation"] --> P2["Phase 2: Access, audit, RBAC"]
-  P2 --> P3["Phase 3: Rules engine"]
-  P3 --> P4["Phase 4: Trust and control"]
+  P1["Phase 1: Domain/API foundation"] --> P2["Phase 2: Headless API parity"]
+  P2 --> P3["Phase 3: RBAC, audit, rules"]
+  P3 --> P4["Phase 4: Universal Inbox"]
   P4 --> P5["Phase 5: Broader automation engine"]
 
   P1 --> Done1["Done"]
   P2 --> Done2["Done"]
   P3 --> Done3["Done"]
-  P4 --> Now["Current"]
+  P4 --> Done4["Done"]
   P5 --> Future["Future"]
 ```
 
@@ -374,17 +392,8 @@ flowchart LR
 - Rules can be created, tested, run, and recorded.
 - iMessage, import, interaction, and inbox acceptance paths now trigger rule evaluation.
 - Admin is hidden under the profile menu, and the architecture map is a living document.
-
-### Current
-
-This phase is about trust and control:
-
-- Rules should be easier to create with templates and known triggers.
-- Inbox review should show why automation did something.
-- Rule runs should act like receipts beside the records they affected.
-- Low-confidence automation should stay reviewable instead of silently creating canonical records.
-- Admins can filter rule-run history by rule, trigger, outcome, and status.
-- Blocked Inbox records can be dismissed or returned to normal review after edits.
+- Full headless API parity: all major resources (people, interactions, events, plans, inbox, imports, rules, dedupe, audit) available under `/api/v1/`.
+- Universal Inbox: `StagedInteraction` now has an `itemType` field; any external source can stage records via `POST /api/v1/inbox` using the `stageRecord()` domain command. Rules fire automatically on staging.
 
 ### Future
 
@@ -394,4 +403,5 @@ The next larger step is the broader automation engine:
 - Notifications or digests.
 - Safer action approval flows.
 - More rule actions beyond staged inbox fields.
-- APIs for every meaningful UI operation.
+- Multiple `itemType` accept handlers (currently only `interaction` is handled on accept).
+- Inbox filtering by `source` and `itemType` in the UI.

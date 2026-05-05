@@ -33,6 +33,7 @@ export type AuditAction =
   | "interaction.delete"
   | "rule.delete"
   | "import.confirm"
+  | "inbox.stage"
   | "inbox.update"
   | "inbox.dismiss"
   | "inbox.accept"

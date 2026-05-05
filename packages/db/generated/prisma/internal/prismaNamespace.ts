@@ -2105,6 +2105,7 @@ export const StagedInteractionScalarFieldEnum = {
   updatedAt: 'updatedAt',
   source: 'source',
   sourceId: 'sourceId',
+  itemType: 'itemType',
   status: 'status',
   contactName: 'contactName',
   contactEmail: 'contactEmail',

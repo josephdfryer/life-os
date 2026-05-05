@@ -6,6 +6,103 @@ import { runRulesForTarget } from "./rules"
 
 type InboxAction = "accept" | "dismiss" | "update"
 
+export type StageRecordInput = {
+  source: string
+  sourceId: string
+  itemType?: string
+  type?: string
+  timestamp: Date | string
+  summary?: string | null
+  body?: string | null
+  direction?: string | null
+  contactName?: string | null
+  contactEmail?: string | null
+  contactPhone?: string | null
+  candidatePersonId?: string | null
+  confidence?: number | null
+  matchReason?: string | null
+  metadata?: Record<string, unknown> | null
+  trigger?: string
+}
+
+export async function stageRecord(input: StageRecordInput, actor?: DomainActor) {
+  const timestamp = input.timestamp instanceof Date ? input.timestamp : new Date(input.timestamp)
+  if (Number.isNaN(timestamp.getTime())) throw badRequest("timestamp is invalid", { field: "timestamp" })
+
+  const itemType = input.itemType ?? "interaction"
+  const metadataStr = input.metadata ? JSON.stringify(input.metadata) : null
+
+  const staged = await db.stagedInteraction.upsert({
+    where: { source_sourceId: { source: input.source, sourceId: input.sourceId } },
+    update: {
+      itemType,
+      contactName: input.contactName ?? undefined,
+      contactEmail: input.contactEmail ?? undefined,
+      contactPhone: input.contactPhone ?? undefined,
+      candidatePersonId: input.candidatePersonId ?? undefined,
+      confidence: input.confidence ?? undefined,
+      matchReason: input.matchReason ?? undefined,
+      timestamp,
+      summary: input.summary ?? undefined,
+      body: input.body ?? undefined,
+      direction: input.direction ?? undefined,
+      metadata: metadataStr ?? undefined,
+    },
+    create: {
+      source: input.source,
+      sourceId: input.sourceId,
+      itemType,
+      status: "pending",
+      type: input.type ?? "message",
+      contactName: input.contactName ?? null,
+      contactEmail: input.contactEmail ?? null,
+      contactPhone: input.contactPhone ?? null,
+      candidatePersonId: input.candidatePersonId ?? null,
+      confidence: input.confidence ?? null,
+      matchReason: input.matchReason ?? null,
+      timestamp,
+      summary: input.summary ?? null,
+      body: input.body ?? null,
+      direction: input.direction ?? null,
+      metadata: metadataStr,
+    },
+    select: { id: true, status: true, createdAt: true, updatedAt: true },
+  })
+
+  await auditAction({
+    actor,
+    action: "inbox.stage",
+    targetType: "stagedInteraction",
+    targetId: staged.id,
+    metadata: { source: input.source, sourceId: input.sourceId, itemType },
+  })
+
+  await runRulesForTarget({
+    trigger: input.trigger ?? "inbox.stage",
+    targetType: "stagedInteraction",
+    targetId: staged.id,
+    payload: {
+      stagedInteractionId: staged.id,
+      source: input.source,
+      sourceId: input.sourceId,
+      itemType,
+      type: input.type ?? "message",
+      timestamp: timestamp.toISOString(),
+      summary: input.summary,
+      body: input.body,
+      direction: input.direction,
+      contactName: input.contactName,
+      contactEmail: input.contactEmail,
+      contactPhone: input.contactPhone,
+      candidatePersonId: input.candidatePersonId,
+      metadata: input.metadata,
+    },
+    actor,
+  })
+
+  return staged
+}
+
 export async function updateInboxItem(id: string, body: Record<string, unknown>, actor?: DomainActor) {
   const action = body.action as InboxAction
   const item = await db.stagedInteraction.findUnique({ where: { id } })
@@ -85,6 +182,7 @@ async function acceptInboxItem(id: string, body: Record<string, unknown>, actor?
       personId,
       source: item.source,
       sourceId: item.sourceId,
+      itemType: item.itemType,
       type: item.type,
       timestamp: timestamp.toISOString(),
       summary: summary || item.body || "(no text)",

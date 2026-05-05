@@ -218,7 +218,8 @@ model RuleRun {
 
 // ─────────────────────────────────────────────
 // SUPPORT: StagedInteraction
-// Review queue for automated imports before they become canonical interactions.
+// Universal review queue — any source can stage records here before they
+// become canonical data. itemType identifies what will be created on accept.
 // ─────────────────────────────────────────────
 
 model StagedInteraction {
@@ -227,6 +228,7 @@ model StagedInteraction {
   updatedAt         DateTime @updatedAt
   source            String
   sourceId          String
+  itemType          String   @default("interaction")
   status            String   @default("pending")
   contactName       String?
   contactEmail      String?
@@ -247,6 +249,7 @@ model StagedInteraction {
 
   @@unique([source, sourceId])
   @@index([status, createdAt])
+  @@index([source, itemType, createdAt])
   @@index([candidatePersonId])
   @@index([timestamp])
 }

@@ -40,6 +40,7 @@ export type StagedInteractionMinAggregateOutputType = {
   updatedAt: Date | null
   source: string | null
   sourceId: string | null
+  itemType: string | null
   status: string | null
   contactName: string | null
   contactEmail: string | null
@@ -64,6 +65,7 @@ export type StagedInteractionMaxAggregateOutputType = {
   updatedAt: Date | null
   source: string | null
   sourceId: string | null
+  itemType: string | null
   status: string | null
   contactName: string | null
   contactEmail: string | null
@@ -88,6 +90,7 @@ export type StagedInteractionCountAggregateOutputType = {
   updatedAt: number
   source: number
   sourceId: number
+  itemType: number
   status: number
   contactName: number
   contactEmail: number
@@ -122,6 +125,7 @@ export type StagedInteractionMinAggregateInputType = {
   updatedAt?: true
   source?: true
   sourceId?: true
+  itemType?: true
   status?: true
   contactName?: true
   contactEmail?: true
@@ -146,6 +150,7 @@ export type StagedInteractionMaxAggregateInputType = {
   updatedAt?: true
   source?: true
   sourceId?: true
+  itemType?: true
   status?: true
   contactName?: true
   contactEmail?: true
@@ -170,6 +175,7 @@ export type StagedInteractionCountAggregateInputType = {
   updatedAt?: true
   source?: true
   sourceId?: true
+  itemType?: true
   status?: true
   contactName?: true
   contactEmail?: true
@@ -281,6 +287,7 @@ export type StagedInteractionGroupByOutputType = {
   updatedAt: Date
   source: string
   sourceId: string
+  itemType: string
   status: string
   contactName: string | null
   contactEmail: string | null
@@ -328,6 +335,7 @@ export type StagedInteractionWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"StagedInteraction"> | Date | string
   source?: Prisma.StringFilter<"StagedInteraction"> | string
   sourceId?: Prisma.StringFilter<"StagedInteraction"> | string
+  itemType?: Prisma.StringFilter<"StagedInteraction"> | string
   status?: Prisma.StringFilter<"StagedInteraction"> | string
   contactName?: Prisma.StringNullableFilter<"StagedInteraction"> | string | null
   contactEmail?: Prisma.StringNullableFilter<"StagedInteraction"> | string | null
@@ -353,6 +361,7 @@ export type StagedInteractionOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   source?: Prisma.SortOrder
   sourceId?: Prisma.SortOrder
+  itemType?: Prisma.SortOrder
   status?: Prisma.SortOrder
   contactName?: Prisma.SortOrderInput | Prisma.SortOrder
   contactEmail?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -382,6 +391,7 @@ export type StagedInteractionWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"StagedInteraction"> | Date | string
   source?: Prisma.StringFilter<"StagedInteraction"> | string
   sourceId?: Prisma.StringFilter<"StagedInteraction"> | string
+  itemType?: Prisma.StringFilter<"StagedInteraction"> | string
   status?: Prisma.StringFilter<"StagedInteraction"> | string
   contactName?: Prisma.StringNullableFilter<"StagedInteraction"> | string | null
   contactEmail?: Prisma.StringNullableFilter<"StagedInteraction"> | string | null
@@ -407,6 +417,7 @@ export type StagedInteractionOrderByWithAggregationInput = {
   updatedAt?: Prisma.SortOrder
   source?: Prisma.SortOrder
   sourceId?: Prisma.SortOrder
+  itemType?: Prisma.SortOrder
   status?: Prisma.SortOrder
   contactName?: Prisma.SortOrderInput | Prisma.SortOrder
   contactEmail?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -439,6 +450,7 @@ export type StagedInteractionScalarWhereWithAggregatesInput = {
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"StagedInteraction"> | Date | string
   source?: Prisma.StringWithAggregatesFilter<"StagedInteraction"> | string
   sourceId?: Prisma.StringWithAggregatesFilter<"StagedInteraction"> | string
+  itemType?: Prisma.StringWithAggregatesFilter<"StagedInteraction"> | string
   status?: Prisma.StringWithAggregatesFilter<"StagedInteraction"> | string
   contactName?: Prisma.StringNullableWithAggregatesFilter<"StagedInteraction"> | string | null
   contactEmail?: Prisma.StringNullableWithAggregatesFilter<"StagedInteraction"> | string | null
@@ -463,6 +475,7 @@ export type StagedInteractionCreateInput = {
   updatedAt?: Date | string
   source: string
   sourceId: string
+  itemType?: string
   status?: string
   contactName?: string | null
   contactEmail?: string | null
@@ -487,6 +500,7 @@ export type StagedInteractionUncheckedCreateInput = {
   updatedAt?: Date | string
   source: string
   sourceId: string
+  itemType?: string
   status?: string
   contactName?: string | null
   contactEmail?: string | null
@@ -511,6 +525,7 @@ export type StagedInteractionUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   source?: Prisma.StringFieldUpdateOperationsInput | string
   sourceId?: Prisma.StringFieldUpdateOperationsInput | string
+  itemType?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   contactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -535,6 +550,7 @@ export type StagedInteractionUncheckedUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   source?: Prisma.StringFieldUpdateOperationsInput | string
   sourceId?: Prisma.StringFieldUpdateOperationsInput | string
+  itemType?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   contactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -559,6 +575,7 @@ export type StagedInteractionCreateManyInput = {
   updatedAt?: Date | string
   source: string
   sourceId: string
+  itemType?: string
   status?: string
   contactName?: string | null
   contactEmail?: string | null
@@ -583,6 +600,7 @@ export type StagedInteractionUpdateManyMutationInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   source?: Prisma.StringFieldUpdateOperationsInput | string
   sourceId?: Prisma.StringFieldUpdateOperationsInput | string
+  itemType?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   contactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -606,6 +624,7 @@ export type StagedInteractionUncheckedUpdateManyInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   source?: Prisma.StringFieldUpdateOperationsInput | string
   sourceId?: Prisma.StringFieldUpdateOperationsInput | string
+  itemType?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   contactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -645,6 +664,7 @@ export type StagedInteractionCountOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
   source?: Prisma.SortOrder
   sourceId?: Prisma.SortOrder
+  itemType?: Prisma.SortOrder
   status?: Prisma.SortOrder
   contactName?: Prisma.SortOrder
   contactEmail?: Prisma.SortOrder
@@ -673,6 +693,7 @@ export type StagedInteractionMaxOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
   source?: Prisma.SortOrder
   sourceId?: Prisma.SortOrder
+  itemType?: Prisma.SortOrder
   status?: Prisma.SortOrder
   contactName?: Prisma.SortOrder
   contactEmail?: Prisma.SortOrder
@@ -697,6 +718,7 @@ export type StagedInteractionMinOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
   source?: Prisma.SortOrder
   sourceId?: Prisma.SortOrder
+  itemType?: Prisma.SortOrder
   status?: Prisma.SortOrder
   contactName?: Prisma.SortOrder
   contactEmail?: Prisma.SortOrder
@@ -775,6 +797,7 @@ export type StagedInteractionCreateWithoutCandidatePersonInput = {
   updatedAt?: Date | string
   source: string
   sourceId: string
+  itemType?: string
   status?: string
   contactName?: string | null
   contactEmail?: string | null
@@ -798,6 +821,7 @@ export type StagedInteractionUncheckedCreateWithoutCandidatePersonInput = {
   updatedAt?: Date | string
   source: string
   sourceId: string
+  itemType?: string
   status?: string
   contactName?: string | null
   contactEmail?: string | null
@@ -849,6 +873,7 @@ export type StagedInteractionScalarWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"StagedInteraction"> | Date | string
   source?: Prisma.StringFilter<"StagedInteraction"> | string
   sourceId?: Prisma.StringFilter<"StagedInteraction"> | string
+  itemType?: Prisma.StringFilter<"StagedInteraction"> | string
   status?: Prisma.StringFilter<"StagedInteraction"> | string
   contactName?: Prisma.StringNullableFilter<"StagedInteraction"> | string | null
   contactEmail?: Prisma.StringNullableFilter<"StagedInteraction"> | string | null
@@ -873,6 +898,7 @@ export type StagedInteractionCreateManyCandidatePersonInput = {
   updatedAt?: Date | string
   source: string
   sourceId: string
+  itemType?: string
   status?: string
   contactName?: string | null
   contactEmail?: string | null
@@ -896,6 +922,7 @@ export type StagedInteractionUpdateWithoutCandidatePersonInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   source?: Prisma.StringFieldUpdateOperationsInput | string
   sourceId?: Prisma.StringFieldUpdateOperationsInput | string
+  itemType?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   contactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -919,6 +946,7 @@ export type StagedInteractionUncheckedUpdateWithoutCandidatePersonInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   source?: Prisma.StringFieldUpdateOperationsInput | string
   sourceId?: Prisma.StringFieldUpdateOperationsInput | string
+  itemType?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   contactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -942,6 +970,7 @@ export type StagedInteractionUncheckedUpdateManyWithoutCandidatePersonInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   source?: Prisma.StringFieldUpdateOperationsInput | string
   sourceId?: Prisma.StringFieldUpdateOperationsInput | string
+  itemType?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   contactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -967,6 +996,7 @@ export type StagedInteractionSelect<ExtArgs extends runtime.Types.Extensions.Int
   updatedAt?: boolean
   source?: boolean
   sourceId?: boolean
+  itemType?: boolean
   status?: boolean
   contactName?: boolean
   contactEmail?: boolean
@@ -992,6 +1022,7 @@ export type StagedInteractionSelectCreateManyAndReturn<ExtArgs extends runtime.T
   updatedAt?: boolean
   source?: boolean
   sourceId?: boolean
+  itemType?: boolean
   status?: boolean
   contactName?: boolean
   contactEmail?: boolean
@@ -1017,6 +1048,7 @@ export type StagedInteractionSelectUpdateManyAndReturn<ExtArgs extends runtime.T
   updatedAt?: boolean
   source?: boolean
   sourceId?: boolean
+  itemType?: boolean
   status?: boolean
   contactName?: boolean
   contactEmail?: boolean
@@ -1042,6 +1074,7 @@ export type StagedInteractionSelectScalar = {
   updatedAt?: boolean
   source?: boolean
   sourceId?: boolean
+  itemType?: boolean
   status?: boolean
   contactName?: boolean
   contactEmail?: boolean
@@ -1060,7 +1093,7 @@ export type StagedInteractionSelectScalar = {
   interactionId?: boolean
 }
 
-export type StagedInteractionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "source" | "sourceId" | "status" | "contactName" | "contactEmail" | "contactPhone" | "candidatePersonId" | "confidence" | "matchReason" | "type" | "timestamp" | "summary" | "body" | "direction" | "metadata" | "acceptedAt" | "acceptedPersonId" | "interactionId", ExtArgs["result"]["stagedInteraction"]>
+export type StagedInteractionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "source" | "sourceId" | "itemType" | "status" | "contactName" | "contactEmail" | "contactPhone" | "candidatePersonId" | "confidence" | "matchReason" | "type" | "timestamp" | "summary" | "body" | "direction" | "metadata" | "acceptedAt" | "acceptedPersonId" | "interactionId", ExtArgs["result"]["stagedInteraction"]>
 export type StagedInteractionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   candidatePerson?: boolean | Prisma.StagedInteraction$candidatePersonArgs<ExtArgs>
 }
@@ -1082,6 +1115,7 @@ export type $StagedInteractionPayload<ExtArgs extends runtime.Types.Extensions.I
     updatedAt: Date
     source: string
     sourceId: string
+    itemType: string
     status: string
     contactName: string | null
     contactEmail: string | null
@@ -1527,6 +1561,7 @@ export interface StagedInteractionFieldRefs {
   readonly updatedAt: Prisma.FieldRef<"StagedInteraction", 'DateTime'>
   readonly source: Prisma.FieldRef<"StagedInteraction", 'String'>
   readonly sourceId: Prisma.FieldRef<"StagedInteraction", 'String'>
+  readonly itemType: Prisma.FieldRef<"StagedInteraction", 'String'>
   readonly status: Prisma.FieldRef<"StagedInteraction", 'String'>
   readonly contactName: Prisma.FieldRef<"StagedInteraction", 'String'>
   readonly contactEmail: Prisma.FieldRef<"StagedInteraction", 'String'>

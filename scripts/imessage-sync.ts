@@ -148,7 +148,7 @@ async function syncOnce(options: Options) {
     }
 
     if (!existing && !options.createMissing) {
-      await stageMessageInteraction({
+      await stageInboxRecord({
         message,
         contact,
         body,
@@ -431,7 +431,7 @@ function sourceMarkers(notes: string | null | undefined) {
   return (notes ?? "").split(/\s+/).filter(part => part.startsWith(SOURCE_PREFIX))
 }
 
-async function stageMessageInteraction(input: {
+async function stageInboxRecord(input: {
   message: MessageRow
   contact: ReturnType<typeof contactFromMessage>
   body: string
@@ -464,6 +464,7 @@ async function stageMessageInteraction(input: {
     create: {
       source: "imessage",
       sourceId: input.sourceId,
+      itemType: "interaction",
       status: "pending",
       contactName: input.contact.displayName,
       contactEmail: input.contact.email,
@@ -478,10 +479,11 @@ async function stageMessageInteraction(input: {
     select: { id: true },
   })
 
-  await runRulesForStagedInteraction({
+  await runRulesForInboxRecord({
     stagedInteractionId: staged.id,
     source: "imessage",
     sourceId: input.sourceId,
+    itemType: "interaction",
     type: "message",
     timestamp,
     summary: snippet(input.body),
@@ -494,7 +496,7 @@ async function stageMessageInteraction(input: {
   })
 }
 
-async function runRulesForStagedInteraction(payload: Record<string, unknown> & { stagedInteractionId: string }) {
+async function runRulesForInboxRecord(payload: Record<string, unknown> & { stagedInteractionId: string }) {
   const rules = await db.rule.findMany({
     where: { trigger: "ingest.message", status: "active" },
     orderBy: [{ priority: "asc" }, { createdAt: "asc" }],
