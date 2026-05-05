@@ -7,9 +7,24 @@ type Props = {
   person: PersonWithAttention
 }
 
+const CADENCE_DAYS: Record<number, number> = { 2: 90, 3: 21, 4: 10 }
+
+function overdueLabel(person: PersonWithAttention): string | null {
+  if (person.attentionScore < 1) return null
+  const cadence = CADENCE_DAYS[person.closeness]
+  if (!cadence) return null
+  const days = person.daysSinceLast
+  if (days === null) return "overdue"
+  const overdueDays = Math.round(days - cadence)
+  if (overdueDays < 1) return "overdue"
+  if (overdueDays === 1) return "1 day overdue"
+  if (overdueDays < 14) return `${overdueDays} days overdue`
+  if (overdueDays < 60) return `${Math.round(overdueDays / 7)} weeks overdue`
+  return `${Math.round(overdueDays / 30)} months overdue`
+}
+
 export default function AttentionCard({ person }: Props) {
-  const score = person.attentionScore
-  const overduePct = Math.min(Math.round((score - 1) * 100), 999)
+  const label = overdueLabel(person)
 
   return (
     <Link href={`/contacts/${person.id}`} style={{ textDecoration: "none" }}>
@@ -39,11 +54,13 @@ export default function AttentionCard({ person }: Props) {
             {closenessLabel(person.closeness)} · Last: {relativeTime(person.lastInteractionDate)}
           </div>
         </div>
-        <div style={{ textAlign: "right", flexShrink: 0 }}>
-          <div style={{ fontSize: "12px", color: "var(--accent)", fontWeight: 500 }}>
-            +{overduePct}% overdue
+        {label && (
+          <div style={{ textAlign: "right", flexShrink: 0 }}>
+            <div style={{ fontSize: "12px", color: "var(--accent)", fontWeight: 500 }}>
+              {label}
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </Link>
   )
