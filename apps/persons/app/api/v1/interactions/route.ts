@@ -6,7 +6,8 @@ import { formatInteraction } from "@/server/domain/dto"
 import { created, handleRouteError } from "@/server/api/respond"
 
 export async function GET(req: NextRequest) {
-  if (!(await authorizeApiRequest(req, "interactions.read"))) return unauthorized()
+  const auth = await authorizeApiRequest(req, "interactions.read")
+  if (!auth) return unauthorized()
 
   const { searchParams } = new URL(req.url)
   const personId = searchParams.get("personId")
@@ -15,13 +16,13 @@ export async function GET(req: NextRequest) {
 
   const [interactions, total] = await Promise.all([
     db.interaction.findMany({
-      where: personId ? { personId } : undefined,
+      where: { workspaceId: auth.workspaceId, ...(personId ? { personId } : {}) },
       include: { event: true, sourceFile: true },
       orderBy: { timestamp: "desc" },
       take: limit,
       skip: offset,
     }),
-    db.interaction.count({ where: personId ? { personId } : undefined }),
+    db.interaction.count({ where: { workspaceId: auth.workspaceId, ...(personId ? { personId } : {}) } }),
   ])
 
   return NextResponse.json({ data: interactions.map(formatInteraction), total, limit, offset })

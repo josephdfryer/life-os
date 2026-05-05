@@ -36,6 +36,7 @@ export type StagedInteractionSumAggregateOutputType = {
 
 export type StagedInteractionMinAggregateOutputType = {
   id: string | null
+  workspaceId: string | null
   createdAt: Date | null
   updatedAt: Date | null
   source: string | null
@@ -61,6 +62,7 @@ export type StagedInteractionMinAggregateOutputType = {
 
 export type StagedInteractionMaxAggregateOutputType = {
   id: string | null
+  workspaceId: string | null
   createdAt: Date | null
   updatedAt: Date | null
   source: string | null
@@ -86,6 +88,7 @@ export type StagedInteractionMaxAggregateOutputType = {
 
 export type StagedInteractionCountAggregateOutputType = {
   id: number
+  workspaceId: number
   createdAt: number
   updatedAt: number
   source: number
@@ -121,6 +124,7 @@ export type StagedInteractionSumAggregateInputType = {
 
 export type StagedInteractionMinAggregateInputType = {
   id?: true
+  workspaceId?: true
   createdAt?: true
   updatedAt?: true
   source?: true
@@ -146,6 +150,7 @@ export type StagedInteractionMinAggregateInputType = {
 
 export type StagedInteractionMaxAggregateInputType = {
   id?: true
+  workspaceId?: true
   createdAt?: true
   updatedAt?: true
   source?: true
@@ -171,6 +176,7 @@ export type StagedInteractionMaxAggregateInputType = {
 
 export type StagedInteractionCountAggregateInputType = {
   id?: true
+  workspaceId?: true
   createdAt?: true
   updatedAt?: true
   source?: true
@@ -283,6 +289,7 @@ export type StagedInteractionGroupByArgs<ExtArgs extends runtime.Types.Extension
 
 export type StagedInteractionGroupByOutputType = {
   id: string
+  workspaceId: string
   createdAt: Date
   updatedAt: Date
   source: string
@@ -331,6 +338,7 @@ export type StagedInteractionWhereInput = {
   OR?: Prisma.StagedInteractionWhereInput[]
   NOT?: Prisma.StagedInteractionWhereInput | Prisma.StagedInteractionWhereInput[]
   id?: Prisma.StringFilter<"StagedInteraction"> | string
+  workspaceId?: Prisma.StringFilter<"StagedInteraction"> | string
   createdAt?: Prisma.DateTimeFilter<"StagedInteraction"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"StagedInteraction"> | Date | string
   source?: Prisma.StringFilter<"StagedInteraction"> | string
@@ -352,11 +360,13 @@ export type StagedInteractionWhereInput = {
   acceptedAt?: Prisma.DateTimeNullableFilter<"StagedInteraction"> | Date | string | null
   acceptedPersonId?: Prisma.StringNullableFilter<"StagedInteraction"> | string | null
   interactionId?: Prisma.StringNullableFilter<"StagedInteraction"> | string | null
+  workspace?: Prisma.XOR<Prisma.WorkspaceScalarRelationFilter, Prisma.WorkspaceWhereInput>
   candidatePerson?: Prisma.XOR<Prisma.PersonNullableScalarRelationFilter, Prisma.PersonWhereInput> | null
 }
 
 export type StagedInteractionOrderByWithRelationInput = {
   id?: Prisma.SortOrder
+  workspaceId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   source?: Prisma.SortOrder
@@ -378,15 +388,17 @@ export type StagedInteractionOrderByWithRelationInput = {
   acceptedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   acceptedPersonId?: Prisma.SortOrderInput | Prisma.SortOrder
   interactionId?: Prisma.SortOrderInput | Prisma.SortOrder
+  workspace?: Prisma.WorkspaceOrderByWithRelationInput
   candidatePerson?: Prisma.PersonOrderByWithRelationInput
 }
 
 export type StagedInteractionWhereUniqueInput = Prisma.AtLeast<{
   id?: string
-  source_sourceId?: Prisma.StagedInteractionSourceSourceIdCompoundUniqueInput
+  workspaceId_source_sourceId?: Prisma.StagedInteractionWorkspaceIdSourceSourceIdCompoundUniqueInput
   AND?: Prisma.StagedInteractionWhereInput | Prisma.StagedInteractionWhereInput[]
   OR?: Prisma.StagedInteractionWhereInput[]
   NOT?: Prisma.StagedInteractionWhereInput | Prisma.StagedInteractionWhereInput[]
+  workspaceId?: Prisma.StringFilter<"StagedInteraction"> | string
   createdAt?: Prisma.DateTimeFilter<"StagedInteraction"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"StagedInteraction"> | Date | string
   source?: Prisma.StringFilter<"StagedInteraction"> | string
@@ -408,11 +420,13 @@ export type StagedInteractionWhereUniqueInput = Prisma.AtLeast<{
   acceptedAt?: Prisma.DateTimeNullableFilter<"StagedInteraction"> | Date | string | null
   acceptedPersonId?: Prisma.StringNullableFilter<"StagedInteraction"> | string | null
   interactionId?: Prisma.StringNullableFilter<"StagedInteraction"> | string | null
+  workspace?: Prisma.XOR<Prisma.WorkspaceScalarRelationFilter, Prisma.WorkspaceWhereInput>
   candidatePerson?: Prisma.XOR<Prisma.PersonNullableScalarRelationFilter, Prisma.PersonWhereInput> | null
-}, "id" | "source_sourceId">
+}, "id" | "workspaceId_source_sourceId">
 
 export type StagedInteractionOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
+  workspaceId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   source?: Prisma.SortOrder
@@ -446,6 +460,7 @@ export type StagedInteractionScalarWhereWithAggregatesInput = {
   OR?: Prisma.StagedInteractionScalarWhereWithAggregatesInput[]
   NOT?: Prisma.StagedInteractionScalarWhereWithAggregatesInput | Prisma.StagedInteractionScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"StagedInteraction"> | string
+  workspaceId?: Prisma.StringWithAggregatesFilter<"StagedInteraction"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"StagedInteraction"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"StagedInteraction"> | Date | string
   source?: Prisma.StringWithAggregatesFilter<"StagedInteraction"> | string
@@ -491,11 +506,13 @@ export type StagedInteractionCreateInput = {
   acceptedAt?: Date | string | null
   acceptedPersonId?: string | null
   interactionId?: string | null
+  workspace?: Prisma.WorkspaceCreateNestedOneWithoutStagedItemsInput
   candidatePerson?: Prisma.PersonCreateNestedOneWithoutStagedInteractionsInput
 }
 
 export type StagedInteractionUncheckedCreateInput = {
   id?: string
+  workspaceId?: string
   createdAt?: Date | string
   updatedAt?: Date | string
   source: string
@@ -541,11 +558,13 @@ export type StagedInteractionUpdateInput = {
   acceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   acceptedPersonId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   interactionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutStagedItemsNestedInput
   candidatePerson?: Prisma.PersonUpdateOneWithoutStagedInteractionsNestedInput
 }
 
 export type StagedInteractionUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   source?: Prisma.StringFieldUpdateOperationsInput | string
@@ -571,6 +590,7 @@ export type StagedInteractionUncheckedUpdateInput = {
 
 export type StagedInteractionCreateManyInput = {
   id?: string
+  workspaceId?: string
   createdAt?: Date | string
   updatedAt?: Date | string
   source: string
@@ -620,6 +640,7 @@ export type StagedInteractionUpdateManyMutationInput = {
 
 export type StagedInteractionUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   source?: Prisma.StringFieldUpdateOperationsInput | string
@@ -653,13 +674,15 @@ export type StagedInteractionOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
-export type StagedInteractionSourceSourceIdCompoundUniqueInput = {
+export type StagedInteractionWorkspaceIdSourceSourceIdCompoundUniqueInput = {
+  workspaceId: string
   source: string
   sourceId: string
 }
 
 export type StagedInteractionCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  workspaceId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   source?: Prisma.SortOrder
@@ -689,6 +712,7 @@ export type StagedInteractionAvgOrderByAggregateInput = {
 
 export type StagedInteractionMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  workspaceId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   source?: Prisma.SortOrder
@@ -714,6 +738,7 @@ export type StagedInteractionMaxOrderByAggregateInput = {
 
 export type StagedInteractionMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  workspaceId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   source?: Prisma.SortOrder
@@ -739,6 +764,48 @@ export type StagedInteractionMinOrderByAggregateInput = {
 
 export type StagedInteractionSumOrderByAggregateInput = {
   confidence?: Prisma.SortOrder
+}
+
+export type StagedInteractionCreateNestedManyWithoutWorkspaceInput = {
+  create?: Prisma.XOR<Prisma.StagedInteractionCreateWithoutWorkspaceInput, Prisma.StagedInteractionUncheckedCreateWithoutWorkspaceInput> | Prisma.StagedInteractionCreateWithoutWorkspaceInput[] | Prisma.StagedInteractionUncheckedCreateWithoutWorkspaceInput[]
+  connectOrCreate?: Prisma.StagedInteractionCreateOrConnectWithoutWorkspaceInput | Prisma.StagedInteractionCreateOrConnectWithoutWorkspaceInput[]
+  createMany?: Prisma.StagedInteractionCreateManyWorkspaceInputEnvelope
+  connect?: Prisma.StagedInteractionWhereUniqueInput | Prisma.StagedInteractionWhereUniqueInput[]
+}
+
+export type StagedInteractionUncheckedCreateNestedManyWithoutWorkspaceInput = {
+  create?: Prisma.XOR<Prisma.StagedInteractionCreateWithoutWorkspaceInput, Prisma.StagedInteractionUncheckedCreateWithoutWorkspaceInput> | Prisma.StagedInteractionCreateWithoutWorkspaceInput[] | Prisma.StagedInteractionUncheckedCreateWithoutWorkspaceInput[]
+  connectOrCreate?: Prisma.StagedInteractionCreateOrConnectWithoutWorkspaceInput | Prisma.StagedInteractionCreateOrConnectWithoutWorkspaceInput[]
+  createMany?: Prisma.StagedInteractionCreateManyWorkspaceInputEnvelope
+  connect?: Prisma.StagedInteractionWhereUniqueInput | Prisma.StagedInteractionWhereUniqueInput[]
+}
+
+export type StagedInteractionUpdateManyWithoutWorkspaceNestedInput = {
+  create?: Prisma.XOR<Prisma.StagedInteractionCreateWithoutWorkspaceInput, Prisma.StagedInteractionUncheckedCreateWithoutWorkspaceInput> | Prisma.StagedInteractionCreateWithoutWorkspaceInput[] | Prisma.StagedInteractionUncheckedCreateWithoutWorkspaceInput[]
+  connectOrCreate?: Prisma.StagedInteractionCreateOrConnectWithoutWorkspaceInput | Prisma.StagedInteractionCreateOrConnectWithoutWorkspaceInput[]
+  upsert?: Prisma.StagedInteractionUpsertWithWhereUniqueWithoutWorkspaceInput | Prisma.StagedInteractionUpsertWithWhereUniqueWithoutWorkspaceInput[]
+  createMany?: Prisma.StagedInteractionCreateManyWorkspaceInputEnvelope
+  set?: Prisma.StagedInteractionWhereUniqueInput | Prisma.StagedInteractionWhereUniqueInput[]
+  disconnect?: Prisma.StagedInteractionWhereUniqueInput | Prisma.StagedInteractionWhereUniqueInput[]
+  delete?: Prisma.StagedInteractionWhereUniqueInput | Prisma.StagedInteractionWhereUniqueInput[]
+  connect?: Prisma.StagedInteractionWhereUniqueInput | Prisma.StagedInteractionWhereUniqueInput[]
+  update?: Prisma.StagedInteractionUpdateWithWhereUniqueWithoutWorkspaceInput | Prisma.StagedInteractionUpdateWithWhereUniqueWithoutWorkspaceInput[]
+  updateMany?: Prisma.StagedInteractionUpdateManyWithWhereWithoutWorkspaceInput | Prisma.StagedInteractionUpdateManyWithWhereWithoutWorkspaceInput[]
+  deleteMany?: Prisma.StagedInteractionScalarWhereInput | Prisma.StagedInteractionScalarWhereInput[]
+}
+
+export type StagedInteractionUncheckedUpdateManyWithoutWorkspaceNestedInput = {
+  create?: Prisma.XOR<Prisma.StagedInteractionCreateWithoutWorkspaceInput, Prisma.StagedInteractionUncheckedCreateWithoutWorkspaceInput> | Prisma.StagedInteractionCreateWithoutWorkspaceInput[] | Prisma.StagedInteractionUncheckedCreateWithoutWorkspaceInput[]
+  connectOrCreate?: Prisma.StagedInteractionCreateOrConnectWithoutWorkspaceInput | Prisma.StagedInteractionCreateOrConnectWithoutWorkspaceInput[]
+  upsert?: Prisma.StagedInteractionUpsertWithWhereUniqueWithoutWorkspaceInput | Prisma.StagedInteractionUpsertWithWhereUniqueWithoutWorkspaceInput[]
+  createMany?: Prisma.StagedInteractionCreateManyWorkspaceInputEnvelope
+  set?: Prisma.StagedInteractionWhereUniqueInput | Prisma.StagedInteractionWhereUniqueInput[]
+  disconnect?: Prisma.StagedInteractionWhereUniqueInput | Prisma.StagedInteractionWhereUniqueInput[]
+  delete?: Prisma.StagedInteractionWhereUniqueInput | Prisma.StagedInteractionWhereUniqueInput[]
+  connect?: Prisma.StagedInteractionWhereUniqueInput | Prisma.StagedInteractionWhereUniqueInput[]
+  update?: Prisma.StagedInteractionUpdateWithWhereUniqueWithoutWorkspaceInput | Prisma.StagedInteractionUpdateWithWhereUniqueWithoutWorkspaceInput[]
+  updateMany?: Prisma.StagedInteractionUpdateManyWithWhereWithoutWorkspaceInput | Prisma.StagedInteractionUpdateManyWithWhereWithoutWorkspaceInput[]
+  deleteMany?: Prisma.StagedInteractionScalarWhereInput | Prisma.StagedInteractionScalarWhereInput[]
 }
 
 export type StagedInteractionCreateNestedManyWithoutCandidatePersonInput = {
@@ -791,6 +858,110 @@ export type NullableFloatFieldUpdateOperationsInput = {
   divide?: number
 }
 
+export type StagedInteractionCreateWithoutWorkspaceInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  source: string
+  sourceId: string
+  itemType?: string
+  status?: string
+  contactName?: string | null
+  contactEmail?: string | null
+  contactPhone?: string | null
+  confidence?: number | null
+  matchReason?: string | null
+  type?: string
+  timestamp: Date | string
+  summary?: string | null
+  body?: string | null
+  direction?: string | null
+  metadata?: string | null
+  acceptedAt?: Date | string | null
+  acceptedPersonId?: string | null
+  interactionId?: string | null
+  candidatePerson?: Prisma.PersonCreateNestedOneWithoutStagedInteractionsInput
+}
+
+export type StagedInteractionUncheckedCreateWithoutWorkspaceInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  source: string
+  sourceId: string
+  itemType?: string
+  status?: string
+  contactName?: string | null
+  contactEmail?: string | null
+  contactPhone?: string | null
+  candidatePersonId?: string | null
+  confidence?: number | null
+  matchReason?: string | null
+  type?: string
+  timestamp: Date | string
+  summary?: string | null
+  body?: string | null
+  direction?: string | null
+  metadata?: string | null
+  acceptedAt?: Date | string | null
+  acceptedPersonId?: string | null
+  interactionId?: string | null
+}
+
+export type StagedInteractionCreateOrConnectWithoutWorkspaceInput = {
+  where: Prisma.StagedInteractionWhereUniqueInput
+  create: Prisma.XOR<Prisma.StagedInteractionCreateWithoutWorkspaceInput, Prisma.StagedInteractionUncheckedCreateWithoutWorkspaceInput>
+}
+
+export type StagedInteractionCreateManyWorkspaceInputEnvelope = {
+  data: Prisma.StagedInteractionCreateManyWorkspaceInput | Prisma.StagedInteractionCreateManyWorkspaceInput[]
+}
+
+export type StagedInteractionUpsertWithWhereUniqueWithoutWorkspaceInput = {
+  where: Prisma.StagedInteractionWhereUniqueInput
+  update: Prisma.XOR<Prisma.StagedInteractionUpdateWithoutWorkspaceInput, Prisma.StagedInteractionUncheckedUpdateWithoutWorkspaceInput>
+  create: Prisma.XOR<Prisma.StagedInteractionCreateWithoutWorkspaceInput, Prisma.StagedInteractionUncheckedCreateWithoutWorkspaceInput>
+}
+
+export type StagedInteractionUpdateWithWhereUniqueWithoutWorkspaceInput = {
+  where: Prisma.StagedInteractionWhereUniqueInput
+  data: Prisma.XOR<Prisma.StagedInteractionUpdateWithoutWorkspaceInput, Prisma.StagedInteractionUncheckedUpdateWithoutWorkspaceInput>
+}
+
+export type StagedInteractionUpdateManyWithWhereWithoutWorkspaceInput = {
+  where: Prisma.StagedInteractionScalarWhereInput
+  data: Prisma.XOR<Prisma.StagedInteractionUpdateManyMutationInput, Prisma.StagedInteractionUncheckedUpdateManyWithoutWorkspaceInput>
+}
+
+export type StagedInteractionScalarWhereInput = {
+  AND?: Prisma.StagedInteractionScalarWhereInput | Prisma.StagedInteractionScalarWhereInput[]
+  OR?: Prisma.StagedInteractionScalarWhereInput[]
+  NOT?: Prisma.StagedInteractionScalarWhereInput | Prisma.StagedInteractionScalarWhereInput[]
+  id?: Prisma.StringFilter<"StagedInteraction"> | string
+  workspaceId?: Prisma.StringFilter<"StagedInteraction"> | string
+  createdAt?: Prisma.DateTimeFilter<"StagedInteraction"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"StagedInteraction"> | Date | string
+  source?: Prisma.StringFilter<"StagedInteraction"> | string
+  sourceId?: Prisma.StringFilter<"StagedInteraction"> | string
+  itemType?: Prisma.StringFilter<"StagedInteraction"> | string
+  status?: Prisma.StringFilter<"StagedInteraction"> | string
+  contactName?: Prisma.StringNullableFilter<"StagedInteraction"> | string | null
+  contactEmail?: Prisma.StringNullableFilter<"StagedInteraction"> | string | null
+  contactPhone?: Prisma.StringNullableFilter<"StagedInteraction"> | string | null
+  candidatePersonId?: Prisma.StringNullableFilter<"StagedInteraction"> | string | null
+  confidence?: Prisma.FloatNullableFilter<"StagedInteraction"> | number | null
+  matchReason?: Prisma.StringNullableFilter<"StagedInteraction"> | string | null
+  type?: Prisma.StringFilter<"StagedInteraction"> | string
+  timestamp?: Prisma.DateTimeFilter<"StagedInteraction"> | Date | string
+  summary?: Prisma.StringNullableFilter<"StagedInteraction"> | string | null
+  body?: Prisma.StringNullableFilter<"StagedInteraction"> | string | null
+  direction?: Prisma.StringNullableFilter<"StagedInteraction"> | string | null
+  metadata?: Prisma.StringNullableFilter<"StagedInteraction"> | string | null
+  acceptedAt?: Prisma.DateTimeNullableFilter<"StagedInteraction"> | Date | string | null
+  acceptedPersonId?: Prisma.StringNullableFilter<"StagedInteraction"> | string | null
+  interactionId?: Prisma.StringNullableFilter<"StagedInteraction"> | string | null
+}
+
 export type StagedInteractionCreateWithoutCandidatePersonInput = {
   id?: string
   createdAt?: Date | string
@@ -813,10 +984,12 @@ export type StagedInteractionCreateWithoutCandidatePersonInput = {
   acceptedAt?: Date | string | null
   acceptedPersonId?: string | null
   interactionId?: string | null
+  workspace?: Prisma.WorkspaceCreateNestedOneWithoutStagedItemsInput
 }
 
 export type StagedInteractionUncheckedCreateWithoutCandidatePersonInput = {
   id?: string
+  workspaceId?: string
   createdAt?: Date | string
   updatedAt?: Date | string
   source: string
@@ -864,36 +1037,109 @@ export type StagedInteractionUpdateManyWithWhereWithoutCandidatePersonInput = {
   data: Prisma.XOR<Prisma.StagedInteractionUpdateManyMutationInput, Prisma.StagedInteractionUncheckedUpdateManyWithoutCandidatePersonInput>
 }
 
-export type StagedInteractionScalarWhereInput = {
-  AND?: Prisma.StagedInteractionScalarWhereInput | Prisma.StagedInteractionScalarWhereInput[]
-  OR?: Prisma.StagedInteractionScalarWhereInput[]
-  NOT?: Prisma.StagedInteractionScalarWhereInput | Prisma.StagedInteractionScalarWhereInput[]
-  id?: Prisma.StringFilter<"StagedInteraction"> | string
-  createdAt?: Prisma.DateTimeFilter<"StagedInteraction"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"StagedInteraction"> | Date | string
-  source?: Prisma.StringFilter<"StagedInteraction"> | string
-  sourceId?: Prisma.StringFilter<"StagedInteraction"> | string
-  itemType?: Prisma.StringFilter<"StagedInteraction"> | string
-  status?: Prisma.StringFilter<"StagedInteraction"> | string
-  contactName?: Prisma.StringNullableFilter<"StagedInteraction"> | string | null
-  contactEmail?: Prisma.StringNullableFilter<"StagedInteraction"> | string | null
-  contactPhone?: Prisma.StringNullableFilter<"StagedInteraction"> | string | null
-  candidatePersonId?: Prisma.StringNullableFilter<"StagedInteraction"> | string | null
-  confidence?: Prisma.FloatNullableFilter<"StagedInteraction"> | number | null
-  matchReason?: Prisma.StringNullableFilter<"StagedInteraction"> | string | null
-  type?: Prisma.StringFilter<"StagedInteraction"> | string
-  timestamp?: Prisma.DateTimeFilter<"StagedInteraction"> | Date | string
-  summary?: Prisma.StringNullableFilter<"StagedInteraction"> | string | null
-  body?: Prisma.StringNullableFilter<"StagedInteraction"> | string | null
-  direction?: Prisma.StringNullableFilter<"StagedInteraction"> | string | null
-  metadata?: Prisma.StringNullableFilter<"StagedInteraction"> | string | null
-  acceptedAt?: Prisma.DateTimeNullableFilter<"StagedInteraction"> | Date | string | null
-  acceptedPersonId?: Prisma.StringNullableFilter<"StagedInteraction"> | string | null
-  interactionId?: Prisma.StringNullableFilter<"StagedInteraction"> | string | null
+export type StagedInteractionCreateManyWorkspaceInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  source: string
+  sourceId: string
+  itemType?: string
+  status?: string
+  contactName?: string | null
+  contactEmail?: string | null
+  contactPhone?: string | null
+  candidatePersonId?: string | null
+  confidence?: number | null
+  matchReason?: string | null
+  type?: string
+  timestamp: Date | string
+  summary?: string | null
+  body?: string | null
+  direction?: string | null
+  metadata?: string | null
+  acceptedAt?: Date | string | null
+  acceptedPersonId?: string | null
+  interactionId?: string | null
+}
+
+export type StagedInteractionUpdateWithoutWorkspaceInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  source?: Prisma.StringFieldUpdateOperationsInput | string
+  sourceId?: Prisma.StringFieldUpdateOperationsInput | string
+  itemType?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  contactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  confidence?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  matchReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  body?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  acceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  acceptedPersonId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  interactionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  candidatePerson?: Prisma.PersonUpdateOneWithoutStagedInteractionsNestedInput
+}
+
+export type StagedInteractionUncheckedUpdateWithoutWorkspaceInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  source?: Prisma.StringFieldUpdateOperationsInput | string
+  sourceId?: Prisma.StringFieldUpdateOperationsInput | string
+  itemType?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  contactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  candidatePersonId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  confidence?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  matchReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  body?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  acceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  acceptedPersonId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  interactionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+}
+
+export type StagedInteractionUncheckedUpdateManyWithoutWorkspaceInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  source?: Prisma.StringFieldUpdateOperationsInput | string
+  sourceId?: Prisma.StringFieldUpdateOperationsInput | string
+  itemType?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  contactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  candidatePersonId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  confidence?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  matchReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  body?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  acceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  acceptedPersonId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  interactionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type StagedInteractionCreateManyCandidatePersonInput = {
   id?: string
+  workspaceId?: string
   createdAt?: Date | string
   updatedAt?: Date | string
   source: string
@@ -938,10 +1184,12 @@ export type StagedInteractionUpdateWithoutCandidatePersonInput = {
   acceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   acceptedPersonId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   interactionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutStagedItemsNestedInput
 }
 
 export type StagedInteractionUncheckedUpdateWithoutCandidatePersonInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   source?: Prisma.StringFieldUpdateOperationsInput | string
@@ -966,6 +1214,7 @@ export type StagedInteractionUncheckedUpdateWithoutCandidatePersonInput = {
 
 export type StagedInteractionUncheckedUpdateManyWithoutCandidatePersonInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   source?: Prisma.StringFieldUpdateOperationsInput | string
@@ -992,6 +1241,7 @@ export type StagedInteractionUncheckedUpdateManyWithoutCandidatePersonInput = {
 
 export type StagedInteractionSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  workspaceId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   source?: boolean
@@ -1013,11 +1263,13 @@ export type StagedInteractionSelect<ExtArgs extends runtime.Types.Extensions.Int
   acceptedAt?: boolean
   acceptedPersonId?: boolean
   interactionId?: boolean
+  workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   candidatePerson?: boolean | Prisma.StagedInteraction$candidatePersonArgs<ExtArgs>
 }, ExtArgs["result"]["stagedInteraction"]>
 
 export type StagedInteractionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  workspaceId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   source?: boolean
@@ -1039,11 +1291,13 @@ export type StagedInteractionSelectCreateManyAndReturn<ExtArgs extends runtime.T
   acceptedAt?: boolean
   acceptedPersonId?: boolean
   interactionId?: boolean
+  workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   candidatePerson?: boolean | Prisma.StagedInteraction$candidatePersonArgs<ExtArgs>
 }, ExtArgs["result"]["stagedInteraction"]>
 
 export type StagedInteractionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  workspaceId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   source?: boolean
@@ -1065,11 +1319,13 @@ export type StagedInteractionSelectUpdateManyAndReturn<ExtArgs extends runtime.T
   acceptedAt?: boolean
   acceptedPersonId?: boolean
   interactionId?: boolean
+  workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   candidatePerson?: boolean | Prisma.StagedInteraction$candidatePersonArgs<ExtArgs>
 }, ExtArgs["result"]["stagedInteraction"]>
 
 export type StagedInteractionSelectScalar = {
   id?: boolean
+  workspaceId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   source?: boolean
@@ -1093,24 +1349,29 @@ export type StagedInteractionSelectScalar = {
   interactionId?: boolean
 }
 
-export type StagedInteractionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "source" | "sourceId" | "itemType" | "status" | "contactName" | "contactEmail" | "contactPhone" | "candidatePersonId" | "confidence" | "matchReason" | "type" | "timestamp" | "summary" | "body" | "direction" | "metadata" | "acceptedAt" | "acceptedPersonId" | "interactionId", ExtArgs["result"]["stagedInteraction"]>
+export type StagedInteractionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "workspaceId" | "createdAt" | "updatedAt" | "source" | "sourceId" | "itemType" | "status" | "contactName" | "contactEmail" | "contactPhone" | "candidatePersonId" | "confidence" | "matchReason" | "type" | "timestamp" | "summary" | "body" | "direction" | "metadata" | "acceptedAt" | "acceptedPersonId" | "interactionId", ExtArgs["result"]["stagedInteraction"]>
 export type StagedInteractionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   candidatePerson?: boolean | Prisma.StagedInteraction$candidatePersonArgs<ExtArgs>
 }
 export type StagedInteractionIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   candidatePerson?: boolean | Prisma.StagedInteraction$candidatePersonArgs<ExtArgs>
 }
 export type StagedInteractionIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   candidatePerson?: boolean | Prisma.StagedInteraction$candidatePersonArgs<ExtArgs>
 }
 
 export type $StagedInteractionPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "StagedInteraction"
   objects: {
+    workspace: Prisma.$WorkspacePayload<ExtArgs>
     candidatePerson: Prisma.$PersonPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
+    workspaceId: string
     createdAt: Date
     updatedAt: Date
     source: string
@@ -1526,6 +1787,7 @@ readonly fields: StagedInteractionFieldRefs;
  */
 export interface Prisma__StagedInteractionClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  workspace<T extends Prisma.WorkspaceDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WorkspaceDefaultArgs<ExtArgs>>): Prisma.Prisma__WorkspaceClient<runtime.Types.Result.GetResult<Prisma.$WorkspacePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   candidatePerson<T extends Prisma.StagedInteraction$candidatePersonArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.StagedInteraction$candidatePersonArgs<ExtArgs>>): Prisma.Prisma__PersonClient<runtime.Types.Result.GetResult<Prisma.$PersonPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1557,6 +1819,7 @@ export interface Prisma__StagedInteractionClient<T, Null = never, ExtArgs extend
  */
 export interface StagedInteractionFieldRefs {
   readonly id: Prisma.FieldRef<"StagedInteraction", 'String'>
+  readonly workspaceId: Prisma.FieldRef<"StagedInteraction", 'String'>
   readonly createdAt: Prisma.FieldRef<"StagedInteraction", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"StagedInteraction", 'DateTime'>
   readonly source: Prisma.FieldRef<"StagedInteraction", 'String'>

@@ -6,14 +6,15 @@ import { formatPlan } from "@/server/domain/dto"
 import { created, handleRouteError } from "@/server/api/respond"
 
 export async function GET(req: NextRequest) {
-  if (!(await authorizeApiRequest(req, "people.read"))) return unauthorized()
+  const auth = await authorizeApiRequest(req, "people.read")
+  if (!auth) return unauthorized()
 
   const { searchParams } = new URL(req.url)
   const personId = searchParams.get("personId")
   const limit = Math.min(500, Math.max(1, Number(searchParams.get("limit") ?? 100)))
   const offset = Math.max(0, Number(searchParams.get("offset") ?? 0))
 
-  const where = personId ? { personId } : undefined
+  const where = { workspaceId: auth.workspaceId, ...(personId ? { personId } : {}) }
   const [plans, total] = await Promise.all([
     db.plan.findMany({ where, orderBy: { createdAt: "desc" }, take: limit, skip: offset }),
     db.plan.count({ where }),

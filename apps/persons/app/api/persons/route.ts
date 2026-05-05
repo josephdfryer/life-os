@@ -5,8 +5,10 @@ import { enrichWithAttention } from "@/lib/attention"
 import type { Interaction } from "@/types"
 import { createPerson } from "@/server/domain/people"
 import { created, handleRouteError } from "@/server/api/respond"
+import { requireAccess } from "@/server/domain/access"
 
 export async function GET(req: NextRequest) {
+  const actor = await requireAccess("people.read")
   const { searchParams } = new URL(req.url)
   const minimal = searchParams.get("minimal") === "true"
 
@@ -62,7 +64,7 @@ export async function GET(req: NextRequest) {
     if (valueFilters.company)  AND.push({ company:  { contains: valueFilters.company } })
     if (valueFilters.location) AND.push({ location: { contains: valueFilters.location } })
     if (valueFilters.headline) AND.push({ headline: { contains: valueFilters.headline } })
-    const where = AND.length ? { AND } : {}
+    const where = AND.length ? { workspaceId: actor.workspaceId, AND } : { workspaceId: actor.workspaceId }
 
     const orderBy =
       sort === "closeness" ? [{ closeness: "desc" as const }, { last: "asc" as const }]
@@ -113,6 +115,7 @@ export async function GET(req: NextRequest) {
 
   // ── Full load with attention enrichment (individual use cases only) ──────────
   const persons = await db.person.findMany({
+    where: { workspaceId: actor.workspaceId },
     include: {
       interactions: {
         select: {
@@ -147,7 +150,7 @@ export async function GET(req: NextRequest) {
       plans: p.plans,
     }
 
-    return enrichWithAttention(person as Parameters<typeof enrichWithAttention>[0])
+    return enrichWithAttention(person as unknown as Parameters<typeof enrichWithAttention>[0])
   })
 
   return NextResponse.json(enriched)
@@ -155,7 +158,8 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    const person = await createPerson(await req.json())
+    const actor = await requireAccess("people.write")
+    const person = await createPerson(await req.json(), actor.actor)
     return created(person)
   } catch (error) {
     return handleRouteError(error)

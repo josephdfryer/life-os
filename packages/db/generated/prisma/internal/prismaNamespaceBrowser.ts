@@ -51,6 +51,9 @@ export const AnyNull = runtime.AnyNull
 
 
 export const ModelName = {
+  Workspace: 'Workspace',
+  WorkspaceMember: 'WorkspaceMember',
+  ApprovedEmail: 'ApprovedEmail',
   Person: 'Person',
   User: 'User',
   Role: 'Role',
@@ -86,8 +89,48 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
+export const WorkspaceScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  name: 'name',
+  slug: 'slug',
+  status: 'status',
+  ownerUserId: 'ownerUserId'
+} as const
+
+export type WorkspaceScalarFieldEnum = (typeof WorkspaceScalarFieldEnum)[keyof typeof WorkspaceScalarFieldEnum]
+
+
+export const WorkspaceMemberScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  workspaceId: 'workspaceId',
+  userId: 'userId',
+  role: 'role',
+  status: 'status'
+} as const
+
+export type WorkspaceMemberScalarFieldEnum = (typeof WorkspaceMemberScalarFieldEnum)[keyof typeof WorkspaceMemberScalarFieldEnum]
+
+
+export const ApprovedEmailScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  email: 'email',
+  status: 'status',
+  workspaceId: 'workspaceId',
+  invitedById: 'invitedById'
+} as const
+
+export type ApprovedEmailScalarFieldEnum = (typeof ApprovedEmailScalarFieldEnum)[keyof typeof ApprovedEmailScalarFieldEnum]
+
+
 export const PersonScalarFieldEnum = {
   id: 'id',
+  workspaceId: 'workspaceId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   first: 'first',
@@ -168,6 +211,7 @@ export type RolePermissionScalarFieldEnum = (typeof RolePermissionScalarFieldEnu
 
 export const ApiKeyScalarFieldEnum = {
   id: 'id',
+  workspaceId: 'workspaceId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   name: 'name',
@@ -193,6 +237,7 @@ export type ApiKeyScopeScalarFieldEnum = (typeof ApiKeyScopeScalarFieldEnum)[key
 
 export const AuditLogScalarFieldEnum = {
   id: 'id',
+  workspaceId: 'workspaceId',
   createdAt: 'createdAt',
   action: 'action',
   targetType: 'targetType',
@@ -211,6 +256,7 @@ export type AuditLogScalarFieldEnum = (typeof AuditLogScalarFieldEnum)[keyof typ
 
 export const RuleScalarFieldEnum = {
   id: 'id',
+  workspaceId: 'workspaceId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   name: 'name',
@@ -230,6 +276,7 @@ export type RuleScalarFieldEnum = (typeof RuleScalarFieldEnum)[keyof typeof Rule
 
 export const RuleRunScalarFieldEnum = {
   id: 'id',
+  workspaceId: 'workspaceId',
   createdAt: 'createdAt',
   ruleId: 'ruleId',
   trigger: 'trigger',
@@ -249,6 +296,7 @@ export type RuleRunScalarFieldEnum = (typeof RuleRunScalarFieldEnum)[keyof typeo
 
 export const StagedInteractionScalarFieldEnum = {
   id: 'id',
+  workspaceId: 'workspaceId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   source: 'source',
@@ -277,6 +325,7 @@ export type StagedInteractionScalarFieldEnum = (typeof StagedInteractionScalarFi
 
 export const EventScalarFieldEnum = {
   id: 'id',
+  workspaceId: 'workspaceId',
   createdAt: 'createdAt',
   name: 'name',
   type: 'type',
@@ -292,6 +341,7 @@ export type EventScalarFieldEnum = (typeof EventScalarFieldEnum)[keyof typeof Ev
 
 export const InteractionScalarFieldEnum = {
   id: 'id',
+  workspaceId: 'workspaceId',
   createdAt: 'createdAt',
   personId: 'personId',
   eventId: 'eventId',
@@ -315,6 +365,7 @@ export type InteractionScalarFieldEnum = (typeof InteractionScalarFieldEnum)[key
 
 export const PlanScalarFieldEnum = {
   id: 'id',
+  workspaceId: 'workspaceId',
   createdAt: 'createdAt',
   personId: 'personId',
   text: 'text',
@@ -329,6 +380,7 @@ export type PlanScalarFieldEnum = (typeof PlanScalarFieldEnum)[keyof typeof Plan
 
 export const PlaceScalarFieldEnum = {
   id: 'id',
+  workspaceId: 'workspaceId',
   name: 'name',
   type: 'type',
   address: 'address',
@@ -342,6 +394,7 @@ export type PlaceScalarFieldEnum = (typeof PlaceScalarFieldEnum)[keyof typeof Pl
 
 export const ItemScalarFieldEnum = {
   id: 'id',
+  workspaceId: 'workspaceId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   name: 'name',
@@ -395,6 +448,7 @@ export type ItemInteractionScalarFieldEnum = (typeof ItemInteractionScalarFieldE
 
 export const ImportedFileScalarFieldEnum = {
   id: 'id',
+  workspaceId: 'workspaceId',
   createdAt: 'createdAt',
   filename: 'filename',
   format: 'format',

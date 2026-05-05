@@ -16,6 +16,7 @@ export async function GET(req: NextRequest) {
 
   const where = search
     ? {
+        workspaceId: auth.workspaceId,
         OR: [
           { first: { contains: search } },
           { last: { contains: search } },
@@ -24,7 +25,7 @@ export async function GET(req: NextRequest) {
           { headline: { contains: search } },
         ],
       }
-    : undefined
+    : { workspaceId: auth.workspaceId }
 
   const [persons, total] = await Promise.all([
     db.person.findMany({ where, orderBy: { createdAt: "asc" }, take: limit, skip: offset }),

@@ -8,11 +8,12 @@ import { handleRouteError, noContent } from "@/server/api/respond"
 type Params = { params: Promise<{ id: string }> }
 
 export async function GET(req: NextRequest, { params }: Params) {
-  if (!(await authorizeApiRequest(req, "interactions.read"))) return unauthorized()
+  const auth = await authorizeApiRequest(req, "interactions.read")
+  if (!auth) return unauthorized()
   const { id } = await params
 
-  const interaction = await db.interaction.findUnique({
-    where: { id },
+  const interaction = await db.interaction.findFirst({
+    where: { id, workspaceId: auth.workspaceId },
     include: { event: true, sourceFile: true },
   })
 

@@ -38,6 +38,7 @@ export type ItemSumAggregateOutputType = {
 
 export type ItemMinAggregateOutputType = {
   id: string | null
+  workspaceId: string | null
   createdAt: Date | null
   updatedAt: Date | null
   name: string | null
@@ -64,6 +65,7 @@ export type ItemMinAggregateOutputType = {
 
 export type ItemMaxAggregateOutputType = {
   id: string | null
+  workspaceId: string | null
   createdAt: Date | null
   updatedAt: Date | null
   name: string | null
@@ -90,6 +92,7 @@ export type ItemMaxAggregateOutputType = {
 
 export type ItemCountAggregateOutputType = {
   id: number
+  workspaceId: number
   createdAt: number
   updatedAt: number
   name: number
@@ -128,6 +131,7 @@ export type ItemSumAggregateInputType = {
 
 export type ItemMinAggregateInputType = {
   id?: true
+  workspaceId?: true
   createdAt?: true
   updatedAt?: true
   name?: true
@@ -154,6 +158,7 @@ export type ItemMinAggregateInputType = {
 
 export type ItemMaxAggregateInputType = {
   id?: true
+  workspaceId?: true
   createdAt?: true
   updatedAt?: true
   name?: true
@@ -180,6 +185,7 @@ export type ItemMaxAggregateInputType = {
 
 export type ItemCountAggregateInputType = {
   id?: true
+  workspaceId?: true
   createdAt?: true
   updatedAt?: true
   name?: true
@@ -293,6 +299,7 @@ export type ItemGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
 
 export type ItemGroupByOutputType = {
   id: string
+  workspaceId: string
   createdAt: Date
   updatedAt: Date
   name: string
@@ -342,6 +349,7 @@ export type ItemWhereInput = {
   OR?: Prisma.ItemWhereInput[]
   NOT?: Prisma.ItemWhereInput | Prisma.ItemWhereInput[]
   id?: Prisma.StringFilter<"Item"> | string
+  workspaceId?: Prisma.StringFilter<"Item"> | string
   createdAt?: Prisma.DateTimeFilter<"Item"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Item"> | Date | string
   name?: Prisma.StringFilter<"Item"> | string
@@ -364,6 +372,7 @@ export type ItemWhereInput = {
   notes?: Prisma.StringNullableFilter<"Item"> | string | null
   color?: Prisma.StringNullableFilter<"Item"> | string | null
   colorSoft?: Prisma.StringNullableFilter<"Item"> | string | null
+  workspace?: Prisma.XOR<Prisma.WorkspaceScalarRelationFilter, Prisma.WorkspaceWhereInput>
   place?: Prisma.XOR<Prisma.PlaceNullableScalarRelationFilter, Prisma.PlaceWhereInput> | null
   ownedBy?: Prisma.XOR<Prisma.PersonNullableScalarRelationFilter, Prisma.PersonWhereInput> | null
   assembledInto?: Prisma.AssemblyListRelationFilter
@@ -373,6 +382,7 @@ export type ItemWhereInput = {
 
 export type ItemOrderByWithRelationInput = {
   id?: Prisma.SortOrder
+  workspaceId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   name?: Prisma.SortOrder
@@ -395,6 +405,7 @@ export type ItemOrderByWithRelationInput = {
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
   color?: Prisma.SortOrderInput | Prisma.SortOrder
   colorSoft?: Prisma.SortOrderInput | Prisma.SortOrder
+  workspace?: Prisma.WorkspaceOrderByWithRelationInput
   place?: Prisma.PlaceOrderByWithRelationInput
   ownedBy?: Prisma.PersonOrderByWithRelationInput
   assembledInto?: Prisma.AssemblyOrderByRelationAggregateInput
@@ -408,6 +419,7 @@ export type ItemWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.ItemWhereInput | Prisma.ItemWhereInput[]
   OR?: Prisma.ItemWhereInput[]
   NOT?: Prisma.ItemWhereInput | Prisma.ItemWhereInput[]
+  workspaceId?: Prisma.StringFilter<"Item"> | string
   createdAt?: Prisma.DateTimeFilter<"Item"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Item"> | Date | string
   name?: Prisma.StringFilter<"Item"> | string
@@ -429,6 +441,7 @@ export type ItemWhereUniqueInput = Prisma.AtLeast<{
   notes?: Prisma.StringNullableFilter<"Item"> | string | null
   color?: Prisma.StringNullableFilter<"Item"> | string | null
   colorSoft?: Prisma.StringNullableFilter<"Item"> | string | null
+  workspace?: Prisma.XOR<Prisma.WorkspaceScalarRelationFilter, Prisma.WorkspaceWhereInput>
   place?: Prisma.XOR<Prisma.PlaceNullableScalarRelationFilter, Prisma.PlaceWhereInput> | null
   ownedBy?: Prisma.XOR<Prisma.PersonNullableScalarRelationFilter, Prisma.PersonWhereInput> | null
   assembledInto?: Prisma.AssemblyListRelationFilter
@@ -438,6 +451,7 @@ export type ItemWhereUniqueInput = Prisma.AtLeast<{
 
 export type ItemOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
+  workspaceId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   name?: Prisma.SortOrder
@@ -472,6 +486,7 @@ export type ItemScalarWhereWithAggregatesInput = {
   OR?: Prisma.ItemScalarWhereWithAggregatesInput[]
   NOT?: Prisma.ItemScalarWhereWithAggregatesInput | Prisma.ItemScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Item"> | string
+  workspaceId?: Prisma.StringWithAggregatesFilter<"Item"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Item"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Item"> | Date | string
   name?: Prisma.StringWithAggregatesFilter<"Item"> | string
@@ -518,6 +533,7 @@ export type ItemCreateInput = {
   notes?: string | null
   color?: string | null
   colorSoft?: string | null
+  workspace?: Prisma.WorkspaceCreateNestedOneWithoutItemsInput
   place?: Prisma.PlaceCreateNestedOneWithoutItemsInput
   ownedBy?: Prisma.PersonCreateNestedOneWithoutOwnedItemsInput
   assembledInto?: Prisma.AssemblyCreateNestedManyWithoutChildItemInput
@@ -527,6 +543,7 @@ export type ItemCreateInput = {
 
 export type ItemUncheckedCreateInput = {
   id?: string
+  workspaceId?: string
   createdAt?: Date | string
   updatedAt?: Date | string
   name: string
@@ -576,6 +593,7 @@ export type ItemUpdateInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutItemsNestedInput
   place?: Prisma.PlaceUpdateOneWithoutItemsNestedInput
   ownedBy?: Prisma.PersonUpdateOneWithoutOwnedItemsNestedInput
   assembledInto?: Prisma.AssemblyUpdateManyWithoutChildItemNestedInput
@@ -585,6 +603,7 @@ export type ItemUpdateInput = {
 
 export type ItemUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
@@ -614,6 +633,7 @@ export type ItemUncheckedUpdateInput = {
 
 export type ItemCreateManyInput = {
   id?: string
+  workspaceId?: string
   createdAt?: Date | string
   updatedAt?: Date | string
   name: string
@@ -664,6 +684,7 @@ export type ItemUpdateManyMutationInput = {
 
 export type ItemUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
@@ -700,6 +721,7 @@ export type ItemOrderByRelationAggregateInput = {
 
 export type ItemCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  workspaceId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   name?: Prisma.SortOrder
@@ -731,6 +753,7 @@ export type ItemAvgOrderByAggregateInput = {
 
 export type ItemMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  workspaceId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   name?: Prisma.SortOrder
@@ -757,6 +780,7 @@ export type ItemMaxOrderByAggregateInput = {
 
 export type ItemMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  workspaceId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   name?: Prisma.SortOrder
@@ -789,6 +813,48 @@ export type ItemSumOrderByAggregateInput = {
 export type ItemScalarRelationFilter = {
   is?: Prisma.ItemWhereInput
   isNot?: Prisma.ItemWhereInput
+}
+
+export type ItemCreateNestedManyWithoutWorkspaceInput = {
+  create?: Prisma.XOR<Prisma.ItemCreateWithoutWorkspaceInput, Prisma.ItemUncheckedCreateWithoutWorkspaceInput> | Prisma.ItemCreateWithoutWorkspaceInput[] | Prisma.ItemUncheckedCreateWithoutWorkspaceInput[]
+  connectOrCreate?: Prisma.ItemCreateOrConnectWithoutWorkspaceInput | Prisma.ItemCreateOrConnectWithoutWorkspaceInput[]
+  createMany?: Prisma.ItemCreateManyWorkspaceInputEnvelope
+  connect?: Prisma.ItemWhereUniqueInput | Prisma.ItemWhereUniqueInput[]
+}
+
+export type ItemUncheckedCreateNestedManyWithoutWorkspaceInput = {
+  create?: Prisma.XOR<Prisma.ItemCreateWithoutWorkspaceInput, Prisma.ItemUncheckedCreateWithoutWorkspaceInput> | Prisma.ItemCreateWithoutWorkspaceInput[] | Prisma.ItemUncheckedCreateWithoutWorkspaceInput[]
+  connectOrCreate?: Prisma.ItemCreateOrConnectWithoutWorkspaceInput | Prisma.ItemCreateOrConnectWithoutWorkspaceInput[]
+  createMany?: Prisma.ItemCreateManyWorkspaceInputEnvelope
+  connect?: Prisma.ItemWhereUniqueInput | Prisma.ItemWhereUniqueInput[]
+}
+
+export type ItemUpdateManyWithoutWorkspaceNestedInput = {
+  create?: Prisma.XOR<Prisma.ItemCreateWithoutWorkspaceInput, Prisma.ItemUncheckedCreateWithoutWorkspaceInput> | Prisma.ItemCreateWithoutWorkspaceInput[] | Prisma.ItemUncheckedCreateWithoutWorkspaceInput[]
+  connectOrCreate?: Prisma.ItemCreateOrConnectWithoutWorkspaceInput | Prisma.ItemCreateOrConnectWithoutWorkspaceInput[]
+  upsert?: Prisma.ItemUpsertWithWhereUniqueWithoutWorkspaceInput | Prisma.ItemUpsertWithWhereUniqueWithoutWorkspaceInput[]
+  createMany?: Prisma.ItemCreateManyWorkspaceInputEnvelope
+  set?: Prisma.ItemWhereUniqueInput | Prisma.ItemWhereUniqueInput[]
+  disconnect?: Prisma.ItemWhereUniqueInput | Prisma.ItemWhereUniqueInput[]
+  delete?: Prisma.ItemWhereUniqueInput | Prisma.ItemWhereUniqueInput[]
+  connect?: Prisma.ItemWhereUniqueInput | Prisma.ItemWhereUniqueInput[]
+  update?: Prisma.ItemUpdateWithWhereUniqueWithoutWorkspaceInput | Prisma.ItemUpdateWithWhereUniqueWithoutWorkspaceInput[]
+  updateMany?: Prisma.ItemUpdateManyWithWhereWithoutWorkspaceInput | Prisma.ItemUpdateManyWithWhereWithoutWorkspaceInput[]
+  deleteMany?: Prisma.ItemScalarWhereInput | Prisma.ItemScalarWhereInput[]
+}
+
+export type ItemUncheckedUpdateManyWithoutWorkspaceNestedInput = {
+  create?: Prisma.XOR<Prisma.ItemCreateWithoutWorkspaceInput, Prisma.ItemUncheckedCreateWithoutWorkspaceInput> | Prisma.ItemCreateWithoutWorkspaceInput[] | Prisma.ItemUncheckedCreateWithoutWorkspaceInput[]
+  connectOrCreate?: Prisma.ItemCreateOrConnectWithoutWorkspaceInput | Prisma.ItemCreateOrConnectWithoutWorkspaceInput[]
+  upsert?: Prisma.ItemUpsertWithWhereUniqueWithoutWorkspaceInput | Prisma.ItemUpsertWithWhereUniqueWithoutWorkspaceInput[]
+  createMany?: Prisma.ItemCreateManyWorkspaceInputEnvelope
+  set?: Prisma.ItemWhereUniqueInput | Prisma.ItemWhereUniqueInput[]
+  disconnect?: Prisma.ItemWhereUniqueInput | Prisma.ItemWhereUniqueInput[]
+  delete?: Prisma.ItemWhereUniqueInput | Prisma.ItemWhereUniqueInput[]
+  connect?: Prisma.ItemWhereUniqueInput | Prisma.ItemWhereUniqueInput[]
+  update?: Prisma.ItemUpdateWithWhereUniqueWithoutWorkspaceInput | Prisma.ItemUpdateWithWhereUniqueWithoutWorkspaceInput[]
+  updateMany?: Prisma.ItemUpdateManyWithWhereWithoutWorkspaceInput | Prisma.ItemUpdateManyWithWhereWithoutWorkspaceInput[]
+  deleteMany?: Prisma.ItemScalarWhereInput | Prisma.ItemScalarWhereInput[]
 }
 
 export type ItemCreateNestedManyWithoutOwnedByInput = {
@@ -925,7 +991,7 @@ export type ItemUpdateOneRequiredWithoutItemInteractionsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ItemUpdateToOneWithWhereWithoutItemInteractionsInput, Prisma.ItemUpdateWithoutItemInteractionsInput>, Prisma.ItemUncheckedUpdateWithoutItemInteractionsInput>
 }
 
-export type ItemCreateWithoutOwnedByInput = {
+export type ItemCreateWithoutWorkspaceInput = {
   id?: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -948,6 +1014,120 @@ export type ItemCreateWithoutOwnedByInput = {
   color?: string | null
   colorSoft?: string | null
   place?: Prisma.PlaceCreateNestedOneWithoutItemsInput
+  ownedBy?: Prisma.PersonCreateNestedOneWithoutOwnedItemsInput
+  assembledInto?: Prisma.AssemblyCreateNestedManyWithoutChildItemInput
+  components?: Prisma.AssemblyCreateNestedManyWithoutParentItemInput
+  itemInteractions?: Prisma.ItemInteractionCreateNestedManyWithoutItemInput
+}
+
+export type ItemUncheckedCreateWithoutWorkspaceInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  name: string
+  description?: string | null
+  category?: string | null
+  make?: string | null
+  model?: string | null
+  serialNumber?: string | null
+  assetId: string
+  quantity?: number
+  purchaseDate?: Date | string | null
+  purchasePrice?: number | null
+  purchaseFrom?: string | null
+  warrantyExpires?: Date | string | null
+  lifetimeWarranty?: boolean
+  warrantyDetails?: string | null
+  placeId?: string | null
+  ownedById?: string | null
+  tags?: string | null
+  notes?: string | null
+  color?: string | null
+  colorSoft?: string | null
+  assembledInto?: Prisma.AssemblyUncheckedCreateNestedManyWithoutChildItemInput
+  components?: Prisma.AssemblyUncheckedCreateNestedManyWithoutParentItemInput
+  itemInteractions?: Prisma.ItemInteractionUncheckedCreateNestedManyWithoutItemInput
+}
+
+export type ItemCreateOrConnectWithoutWorkspaceInput = {
+  where: Prisma.ItemWhereUniqueInput
+  create: Prisma.XOR<Prisma.ItemCreateWithoutWorkspaceInput, Prisma.ItemUncheckedCreateWithoutWorkspaceInput>
+}
+
+export type ItemCreateManyWorkspaceInputEnvelope = {
+  data: Prisma.ItemCreateManyWorkspaceInput | Prisma.ItemCreateManyWorkspaceInput[]
+}
+
+export type ItemUpsertWithWhereUniqueWithoutWorkspaceInput = {
+  where: Prisma.ItemWhereUniqueInput
+  update: Prisma.XOR<Prisma.ItemUpdateWithoutWorkspaceInput, Prisma.ItemUncheckedUpdateWithoutWorkspaceInput>
+  create: Prisma.XOR<Prisma.ItemCreateWithoutWorkspaceInput, Prisma.ItemUncheckedCreateWithoutWorkspaceInput>
+}
+
+export type ItemUpdateWithWhereUniqueWithoutWorkspaceInput = {
+  where: Prisma.ItemWhereUniqueInput
+  data: Prisma.XOR<Prisma.ItemUpdateWithoutWorkspaceInput, Prisma.ItemUncheckedUpdateWithoutWorkspaceInput>
+}
+
+export type ItemUpdateManyWithWhereWithoutWorkspaceInput = {
+  where: Prisma.ItemScalarWhereInput
+  data: Prisma.XOR<Prisma.ItemUpdateManyMutationInput, Prisma.ItemUncheckedUpdateManyWithoutWorkspaceInput>
+}
+
+export type ItemScalarWhereInput = {
+  AND?: Prisma.ItemScalarWhereInput | Prisma.ItemScalarWhereInput[]
+  OR?: Prisma.ItemScalarWhereInput[]
+  NOT?: Prisma.ItemScalarWhereInput | Prisma.ItemScalarWhereInput[]
+  id?: Prisma.StringFilter<"Item"> | string
+  workspaceId?: Prisma.StringFilter<"Item"> | string
+  createdAt?: Prisma.DateTimeFilter<"Item"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Item"> | Date | string
+  name?: Prisma.StringFilter<"Item"> | string
+  description?: Prisma.StringNullableFilter<"Item"> | string | null
+  category?: Prisma.StringNullableFilter<"Item"> | string | null
+  make?: Prisma.StringNullableFilter<"Item"> | string | null
+  model?: Prisma.StringNullableFilter<"Item"> | string | null
+  serialNumber?: Prisma.StringNullableFilter<"Item"> | string | null
+  assetId?: Prisma.StringFilter<"Item"> | string
+  quantity?: Prisma.FloatFilter<"Item"> | number
+  purchaseDate?: Prisma.DateTimeNullableFilter<"Item"> | Date | string | null
+  purchasePrice?: Prisma.FloatNullableFilter<"Item"> | number | null
+  purchaseFrom?: Prisma.StringNullableFilter<"Item"> | string | null
+  warrantyExpires?: Prisma.DateTimeNullableFilter<"Item"> | Date | string | null
+  lifetimeWarranty?: Prisma.BoolFilter<"Item"> | boolean
+  warrantyDetails?: Prisma.StringNullableFilter<"Item"> | string | null
+  placeId?: Prisma.StringNullableFilter<"Item"> | string | null
+  ownedById?: Prisma.StringNullableFilter<"Item"> | string | null
+  tags?: Prisma.StringNullableFilter<"Item"> | string | null
+  notes?: Prisma.StringNullableFilter<"Item"> | string | null
+  color?: Prisma.StringNullableFilter<"Item"> | string | null
+  colorSoft?: Prisma.StringNullableFilter<"Item"> | string | null
+}
+
+export type ItemCreateWithoutOwnedByInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  name: string
+  description?: string | null
+  category?: string | null
+  make?: string | null
+  model?: string | null
+  serialNumber?: string | null
+  assetId: string
+  quantity?: number
+  purchaseDate?: Date | string | null
+  purchasePrice?: number | null
+  purchaseFrom?: string | null
+  warrantyExpires?: Date | string | null
+  lifetimeWarranty?: boolean
+  warrantyDetails?: string | null
+  tags?: string | null
+  notes?: string | null
+  color?: string | null
+  colorSoft?: string | null
+  workspace?: Prisma.WorkspaceCreateNestedOneWithoutItemsInput
+  place?: Prisma.PlaceCreateNestedOneWithoutItemsInput
   assembledInto?: Prisma.AssemblyCreateNestedManyWithoutChildItemInput
   components?: Prisma.AssemblyCreateNestedManyWithoutParentItemInput
   itemInteractions?: Prisma.ItemInteractionCreateNestedManyWithoutItemInput
@@ -955,6 +1135,7 @@ export type ItemCreateWithoutOwnedByInput = {
 
 export type ItemUncheckedCreateWithoutOwnedByInput = {
   id?: string
+  workspaceId?: string
   createdAt?: Date | string
   updatedAt?: Date | string
   name: string
@@ -1006,35 +1187,6 @@ export type ItemUpdateManyWithWhereWithoutOwnedByInput = {
   data: Prisma.XOR<Prisma.ItemUpdateManyMutationInput, Prisma.ItemUncheckedUpdateManyWithoutOwnedByInput>
 }
 
-export type ItemScalarWhereInput = {
-  AND?: Prisma.ItemScalarWhereInput | Prisma.ItemScalarWhereInput[]
-  OR?: Prisma.ItemScalarWhereInput[]
-  NOT?: Prisma.ItemScalarWhereInput | Prisma.ItemScalarWhereInput[]
-  id?: Prisma.StringFilter<"Item"> | string
-  createdAt?: Prisma.DateTimeFilter<"Item"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"Item"> | Date | string
-  name?: Prisma.StringFilter<"Item"> | string
-  description?: Prisma.StringNullableFilter<"Item"> | string | null
-  category?: Prisma.StringNullableFilter<"Item"> | string | null
-  make?: Prisma.StringNullableFilter<"Item"> | string | null
-  model?: Prisma.StringNullableFilter<"Item"> | string | null
-  serialNumber?: Prisma.StringNullableFilter<"Item"> | string | null
-  assetId?: Prisma.StringFilter<"Item"> | string
-  quantity?: Prisma.FloatFilter<"Item"> | number
-  purchaseDate?: Prisma.DateTimeNullableFilter<"Item"> | Date | string | null
-  purchasePrice?: Prisma.FloatNullableFilter<"Item"> | number | null
-  purchaseFrom?: Prisma.StringNullableFilter<"Item"> | string | null
-  warrantyExpires?: Prisma.DateTimeNullableFilter<"Item"> | Date | string | null
-  lifetimeWarranty?: Prisma.BoolFilter<"Item"> | boolean
-  warrantyDetails?: Prisma.StringNullableFilter<"Item"> | string | null
-  placeId?: Prisma.StringNullableFilter<"Item"> | string | null
-  ownedById?: Prisma.StringNullableFilter<"Item"> | string | null
-  tags?: Prisma.StringNullableFilter<"Item"> | string | null
-  notes?: Prisma.StringNullableFilter<"Item"> | string | null
-  color?: Prisma.StringNullableFilter<"Item"> | string | null
-  colorSoft?: Prisma.StringNullableFilter<"Item"> | string | null
-}
-
 export type ItemCreateWithoutPlaceInput = {
   id?: string
   createdAt?: Date | string
@@ -1057,6 +1209,7 @@ export type ItemCreateWithoutPlaceInput = {
   notes?: string | null
   color?: string | null
   colorSoft?: string | null
+  workspace?: Prisma.WorkspaceCreateNestedOneWithoutItemsInput
   ownedBy?: Prisma.PersonCreateNestedOneWithoutOwnedItemsInput
   assembledInto?: Prisma.AssemblyCreateNestedManyWithoutChildItemInput
   components?: Prisma.AssemblyCreateNestedManyWithoutParentItemInput
@@ -1065,6 +1218,7 @@ export type ItemCreateWithoutPlaceInput = {
 
 export type ItemUncheckedCreateWithoutPlaceInput = {
   id?: string
+  workspaceId?: string
   createdAt?: Date | string
   updatedAt?: Date | string
   name: string
@@ -1138,6 +1292,7 @@ export type ItemCreateWithoutAssembledIntoInput = {
   notes?: string | null
   color?: string | null
   colorSoft?: string | null
+  workspace?: Prisma.WorkspaceCreateNestedOneWithoutItemsInput
   place?: Prisma.PlaceCreateNestedOneWithoutItemsInput
   ownedBy?: Prisma.PersonCreateNestedOneWithoutOwnedItemsInput
   components?: Prisma.AssemblyCreateNestedManyWithoutParentItemInput
@@ -1146,6 +1301,7 @@ export type ItemCreateWithoutAssembledIntoInput = {
 
 export type ItemUncheckedCreateWithoutAssembledIntoInput = {
   id?: string
+  workspaceId?: string
   createdAt?: Date | string
   updatedAt?: Date | string
   name: string
@@ -1199,6 +1355,7 @@ export type ItemCreateWithoutComponentsInput = {
   notes?: string | null
   color?: string | null
   colorSoft?: string | null
+  workspace?: Prisma.WorkspaceCreateNestedOneWithoutItemsInput
   place?: Prisma.PlaceCreateNestedOneWithoutItemsInput
   ownedBy?: Prisma.PersonCreateNestedOneWithoutOwnedItemsInput
   assembledInto?: Prisma.AssemblyCreateNestedManyWithoutChildItemInput
@@ -1207,6 +1364,7 @@ export type ItemCreateWithoutComponentsInput = {
 
 export type ItemUncheckedCreateWithoutComponentsInput = {
   id?: string
+  workspaceId?: string
   createdAt?: Date | string
   updatedAt?: Date | string
   name: string
@@ -1271,6 +1429,7 @@ export type ItemUpdateWithoutAssembledIntoInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutItemsNestedInput
   place?: Prisma.PlaceUpdateOneWithoutItemsNestedInput
   ownedBy?: Prisma.PersonUpdateOneWithoutOwnedItemsNestedInput
   components?: Prisma.AssemblyUpdateManyWithoutParentItemNestedInput
@@ -1279,6 +1438,7 @@ export type ItemUpdateWithoutAssembledIntoInput = {
 
 export type ItemUncheckedUpdateWithoutAssembledIntoInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1338,6 +1498,7 @@ export type ItemUpdateWithoutComponentsInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutItemsNestedInput
   place?: Prisma.PlaceUpdateOneWithoutItemsNestedInput
   ownedBy?: Prisma.PersonUpdateOneWithoutOwnedItemsNestedInput
   assembledInto?: Prisma.AssemblyUpdateManyWithoutChildItemNestedInput
@@ -1346,6 +1507,7 @@ export type ItemUpdateWithoutComponentsInput = {
 
 export type ItemUncheckedUpdateWithoutComponentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1394,6 +1556,7 @@ export type ItemCreateWithoutItemInteractionsInput = {
   notes?: string | null
   color?: string | null
   colorSoft?: string | null
+  workspace?: Prisma.WorkspaceCreateNestedOneWithoutItemsInput
   place?: Prisma.PlaceCreateNestedOneWithoutItemsInput
   ownedBy?: Prisma.PersonCreateNestedOneWithoutOwnedItemsInput
   assembledInto?: Prisma.AssemblyCreateNestedManyWithoutChildItemInput
@@ -1402,6 +1565,7 @@ export type ItemCreateWithoutItemInteractionsInput = {
 
 export type ItemUncheckedCreateWithoutItemInteractionsInput = {
   id?: string
+  workspaceId?: string
   createdAt?: Date | string
   updatedAt?: Date | string
   name: string
@@ -1466,6 +1630,7 @@ export type ItemUpdateWithoutItemInteractionsInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutItemsNestedInput
   place?: Prisma.PlaceUpdateOneWithoutItemsNestedInput
   ownedBy?: Prisma.PersonUpdateOneWithoutOwnedItemsNestedInput
   assembledInto?: Prisma.AssemblyUpdateManyWithoutChildItemNestedInput
@@ -1474,6 +1639,7 @@ export type ItemUpdateWithoutItemInteractionsInput = {
 
 export type ItemUncheckedUpdateWithoutItemInteractionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1500,8 +1666,119 @@ export type ItemUncheckedUpdateWithoutItemInteractionsInput = {
   components?: Prisma.AssemblyUncheckedUpdateManyWithoutParentItemNestedInput
 }
 
+export type ItemCreateManyWorkspaceInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  name: string
+  description?: string | null
+  category?: string | null
+  make?: string | null
+  model?: string | null
+  serialNumber?: string | null
+  assetId: string
+  quantity?: number
+  purchaseDate?: Date | string | null
+  purchasePrice?: number | null
+  purchaseFrom?: string | null
+  warrantyExpires?: Date | string | null
+  lifetimeWarranty?: boolean
+  warrantyDetails?: string | null
+  placeId?: string | null
+  ownedById?: string | null
+  tags?: string | null
+  notes?: string | null
+  color?: string | null
+  colorSoft?: string | null
+}
+
+export type ItemUpdateWithoutWorkspaceInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  make?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  model?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  serialNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assetId?: Prisma.StringFieldUpdateOperationsInput | string
+  quantity?: Prisma.FloatFieldUpdateOperationsInput | number
+  purchaseDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  purchasePrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  purchaseFrom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  warrantyExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lifetimeWarranty?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  warrantyDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tags?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  place?: Prisma.PlaceUpdateOneWithoutItemsNestedInput
+  ownedBy?: Prisma.PersonUpdateOneWithoutOwnedItemsNestedInput
+  assembledInto?: Prisma.AssemblyUpdateManyWithoutChildItemNestedInput
+  components?: Prisma.AssemblyUpdateManyWithoutParentItemNestedInput
+  itemInteractions?: Prisma.ItemInteractionUpdateManyWithoutItemNestedInput
+}
+
+export type ItemUncheckedUpdateWithoutWorkspaceInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  make?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  model?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  serialNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assetId?: Prisma.StringFieldUpdateOperationsInput | string
+  quantity?: Prisma.FloatFieldUpdateOperationsInput | number
+  purchaseDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  purchasePrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  purchaseFrom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  warrantyExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lifetimeWarranty?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  warrantyDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  placeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ownedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tags?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assembledInto?: Prisma.AssemblyUncheckedUpdateManyWithoutChildItemNestedInput
+  components?: Prisma.AssemblyUncheckedUpdateManyWithoutParentItemNestedInput
+  itemInteractions?: Prisma.ItemInteractionUncheckedUpdateManyWithoutItemNestedInput
+}
+
+export type ItemUncheckedUpdateManyWithoutWorkspaceInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  make?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  model?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  serialNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assetId?: Prisma.StringFieldUpdateOperationsInput | string
+  quantity?: Prisma.FloatFieldUpdateOperationsInput | number
+  purchaseDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  purchasePrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  purchaseFrom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  warrantyExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lifetimeWarranty?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  warrantyDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  placeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ownedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tags?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+}
+
 export type ItemCreateManyOwnedByInput = {
   id?: string
+  workspaceId?: string
   createdAt?: Date | string
   updatedAt?: Date | string
   name: string
@@ -1547,6 +1824,7 @@ export type ItemUpdateWithoutOwnedByInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutItemsNestedInput
   place?: Prisma.PlaceUpdateOneWithoutItemsNestedInput
   assembledInto?: Prisma.AssemblyUpdateManyWithoutChildItemNestedInput
   components?: Prisma.AssemblyUpdateManyWithoutParentItemNestedInput
@@ -1555,6 +1833,7 @@ export type ItemUpdateWithoutOwnedByInput = {
 
 export type ItemUncheckedUpdateWithoutOwnedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1583,6 +1862,7 @@ export type ItemUncheckedUpdateWithoutOwnedByInput = {
 
 export type ItemUncheckedUpdateManyWithoutOwnedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1608,6 +1888,7 @@ export type ItemUncheckedUpdateManyWithoutOwnedByInput = {
 
 export type ItemCreateManyPlaceInput = {
   id?: string
+  workspaceId?: string
   createdAt?: Date | string
   updatedAt?: Date | string
   name: string
@@ -1653,6 +1934,7 @@ export type ItemUpdateWithoutPlaceInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutItemsNestedInput
   ownedBy?: Prisma.PersonUpdateOneWithoutOwnedItemsNestedInput
   assembledInto?: Prisma.AssemblyUpdateManyWithoutChildItemNestedInput
   components?: Prisma.AssemblyUpdateManyWithoutParentItemNestedInput
@@ -1661,6 +1943,7 @@ export type ItemUpdateWithoutPlaceInput = {
 
 export type ItemUncheckedUpdateWithoutPlaceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1689,6 +1972,7 @@ export type ItemUncheckedUpdateWithoutPlaceInput = {
 
 export type ItemUncheckedUpdateManyWithoutPlaceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1763,6 +2047,7 @@ export type ItemCountOutputTypeCountItemInteractionsArgs<ExtArgs extends runtime
 
 export type ItemSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  workspaceId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   name?: boolean
@@ -1785,6 +2070,7 @@ export type ItemSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   notes?: boolean
   color?: boolean
   colorSoft?: boolean
+  workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   place?: boolean | Prisma.Item$placeArgs<ExtArgs>
   ownedBy?: boolean | Prisma.Item$ownedByArgs<ExtArgs>
   assembledInto?: boolean | Prisma.Item$assembledIntoArgs<ExtArgs>
@@ -1795,6 +2081,7 @@ export type ItemSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
 
 export type ItemSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  workspaceId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   name?: boolean
@@ -1817,12 +2104,14 @@ export type ItemSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   notes?: boolean
   color?: boolean
   colorSoft?: boolean
+  workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   place?: boolean | Prisma.Item$placeArgs<ExtArgs>
   ownedBy?: boolean | Prisma.Item$ownedByArgs<ExtArgs>
 }, ExtArgs["result"]["item"]>
 
 export type ItemSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  workspaceId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   name?: boolean
@@ -1845,12 +2134,14 @@ export type ItemSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   notes?: boolean
   color?: boolean
   colorSoft?: boolean
+  workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   place?: boolean | Prisma.Item$placeArgs<ExtArgs>
   ownedBy?: boolean | Prisma.Item$ownedByArgs<ExtArgs>
 }, ExtArgs["result"]["item"]>
 
 export type ItemSelectScalar = {
   id?: boolean
+  workspaceId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   name?: boolean
@@ -1875,8 +2166,9 @@ export type ItemSelectScalar = {
   colorSoft?: boolean
 }
 
-export type ItemOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "name" | "description" | "category" | "make" | "model" | "serialNumber" | "assetId" | "quantity" | "purchaseDate" | "purchasePrice" | "purchaseFrom" | "warrantyExpires" | "lifetimeWarranty" | "warrantyDetails" | "placeId" | "ownedById" | "tags" | "notes" | "color" | "colorSoft", ExtArgs["result"]["item"]>
+export type ItemOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "workspaceId" | "createdAt" | "updatedAt" | "name" | "description" | "category" | "make" | "model" | "serialNumber" | "assetId" | "quantity" | "purchaseDate" | "purchasePrice" | "purchaseFrom" | "warrantyExpires" | "lifetimeWarranty" | "warrantyDetails" | "placeId" | "ownedById" | "tags" | "notes" | "color" | "colorSoft", ExtArgs["result"]["item"]>
 export type ItemInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   place?: boolean | Prisma.Item$placeArgs<ExtArgs>
   ownedBy?: boolean | Prisma.Item$ownedByArgs<ExtArgs>
   assembledInto?: boolean | Prisma.Item$assembledIntoArgs<ExtArgs>
@@ -1885,10 +2177,12 @@ export type ItemInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   _count?: boolean | Prisma.ItemCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ItemIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   place?: boolean | Prisma.Item$placeArgs<ExtArgs>
   ownedBy?: boolean | Prisma.Item$ownedByArgs<ExtArgs>
 }
 export type ItemIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   place?: boolean | Prisma.Item$placeArgs<ExtArgs>
   ownedBy?: boolean | Prisma.Item$ownedByArgs<ExtArgs>
 }
@@ -1896,6 +2190,7 @@ export type ItemIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
 export type $ItemPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Item"
   objects: {
+    workspace: Prisma.$WorkspacePayload<ExtArgs>
     place: Prisma.$PlacePayload<ExtArgs> | null
     ownedBy: Prisma.$PersonPayload<ExtArgs> | null
     assembledInto: Prisma.$AssemblyPayload<ExtArgs>[]
@@ -1904,6 +2199,7 @@ export type $ItemPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
+    workspaceId: string
     createdAt: Date
     updatedAt: Date
     name: string
@@ -2320,6 +2616,7 @@ readonly fields: ItemFieldRefs;
  */
 export interface Prisma__ItemClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  workspace<T extends Prisma.WorkspaceDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WorkspaceDefaultArgs<ExtArgs>>): Prisma.Prisma__WorkspaceClient<runtime.Types.Result.GetResult<Prisma.$WorkspacePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   place<T extends Prisma.Item$placeArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Item$placeArgs<ExtArgs>>): Prisma.Prisma__PlaceClient<runtime.Types.Result.GetResult<Prisma.$PlacePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   ownedBy<T extends Prisma.Item$ownedByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Item$ownedByArgs<ExtArgs>>): Prisma.Prisma__PersonClient<runtime.Types.Result.GetResult<Prisma.$PersonPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   assembledInto<T extends Prisma.Item$assembledIntoArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Item$assembledIntoArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AssemblyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -2355,6 +2652,7 @@ export interface Prisma__ItemClient<T, Null = never, ExtArgs extends runtime.Typ
  */
 export interface ItemFieldRefs {
   readonly id: Prisma.FieldRef<"Item", 'String'>
+  readonly workspaceId: Prisma.FieldRef<"Item", 'String'>
   readonly createdAt: Prisma.FieldRef<"Item", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Item", 'DateTime'>
   readonly name: Prisma.FieldRef<"Item", 'String'>

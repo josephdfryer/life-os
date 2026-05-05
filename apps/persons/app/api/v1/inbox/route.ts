@@ -28,7 +28,7 @@ export async function GET(req: NextRequest) {
   const offset = Math.max(0, Number(searchParams.get("offset") ?? 0))
 
   const baseWhere = inboxStatusWhere(status)
-  const where = { ...baseWhere, ...(source ? { source } : {}), ...(itemType ? { itemType } : {}) }
+  const where = { ...baseWhere, workspaceId: auth.workspaceId, ...(source ? { source } : {}), ...(itemType ? { itemType } : {}) }
   const [items, total] = await Promise.all([
     db.stagedInteraction.findMany({
       where,
@@ -47,7 +47,7 @@ export async function GET(req: NextRequest) {
   const itemIds = items.map(item => item.id)
   const runs = itemIds.length
     ? await db.ruleRun.findMany({
-        where: { targetType: "stagedInteraction", targetId: { in: itemIds } },
+        where: { targetType: "stagedInteraction", targetId: { in: itemIds }, workspaceId: auth.workspaceId },
         include: { rule: { select: { id: true, name: true, trigger: true } } },
         orderBy: { createdAt: "desc" },
         take: itemIds.length * 5,

@@ -36,6 +36,7 @@ export type PersonSumAggregateOutputType = {
 
 export type PersonMinAggregateOutputType = {
   id: string | null
+  workspaceId: string | null
   createdAt: Date | null
   updatedAt: Date | null
   first: string | null
@@ -61,6 +62,7 @@ export type PersonMinAggregateOutputType = {
 
 export type PersonMaxAggregateOutputType = {
   id: string | null
+  workspaceId: string | null
   createdAt: Date | null
   updatedAt: Date | null
   first: string | null
@@ -86,6 +88,7 @@ export type PersonMaxAggregateOutputType = {
 
 export type PersonCountAggregateOutputType = {
   id: number
+  workspaceId: number
   createdAt: number
   updatedAt: number
   first: number
@@ -121,6 +124,7 @@ export type PersonSumAggregateInputType = {
 
 export type PersonMinAggregateInputType = {
   id?: true
+  workspaceId?: true
   createdAt?: true
   updatedAt?: true
   first?: true
@@ -146,6 +150,7 @@ export type PersonMinAggregateInputType = {
 
 export type PersonMaxAggregateInputType = {
   id?: true
+  workspaceId?: true
   createdAt?: true
   updatedAt?: true
   first?: true
@@ -171,6 +176,7 @@ export type PersonMaxAggregateInputType = {
 
 export type PersonCountAggregateInputType = {
   id?: true
+  workspaceId?: true
   createdAt?: true
   updatedAt?: true
   first?: true
@@ -283,6 +289,7 @@ export type PersonGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalA
 
 export type PersonGroupByOutputType = {
   id: string
+  workspaceId: string
   createdAt: Date
   updatedAt: Date
   first: string
@@ -331,6 +338,7 @@ export type PersonWhereInput = {
   OR?: Prisma.PersonWhereInput[]
   NOT?: Prisma.PersonWhereInput | Prisma.PersonWhereInput[]
   id?: Prisma.StringFilter<"Person"> | string
+  workspaceId?: Prisma.StringFilter<"Person"> | string
   createdAt?: Prisma.DateTimeFilter<"Person"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Person"> | Date | string
   first?: Prisma.StringFilter<"Person"> | string
@@ -352,6 +360,7 @@ export type PersonWhereInput = {
   website?: Prisma.StringNullableFilter<"Person"> | string | null
   color?: Prisma.StringNullableFilter<"Person"> | string | null
   colorSoft?: Prisma.StringNullableFilter<"Person"> | string | null
+  workspace?: Prisma.XOR<Prisma.WorkspaceScalarRelationFilter, Prisma.WorkspaceWhereInput>
   interactions?: Prisma.InteractionListRelationFilter
   stagedInteractions?: Prisma.StagedInteractionListRelationFilter
   plans?: Prisma.PlanListRelationFilter
@@ -365,6 +374,7 @@ export type PersonWhereInput = {
 
 export type PersonOrderByWithRelationInput = {
   id?: Prisma.SortOrder
+  workspaceId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   first?: Prisma.SortOrder
@@ -386,6 +396,7 @@ export type PersonOrderByWithRelationInput = {
   website?: Prisma.SortOrderInput | Prisma.SortOrder
   color?: Prisma.SortOrderInput | Prisma.SortOrder
   colorSoft?: Prisma.SortOrderInput | Prisma.SortOrder
+  workspace?: Prisma.WorkspaceOrderByWithRelationInput
   interactions?: Prisma.InteractionOrderByRelationAggregateInput
   stagedInteractions?: Prisma.StagedInteractionOrderByRelationAggregateInput
   plans?: Prisma.PlanOrderByRelationAggregateInput
@@ -402,6 +413,7 @@ export type PersonWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.PersonWhereInput | Prisma.PersonWhereInput[]
   OR?: Prisma.PersonWhereInput[]
   NOT?: Prisma.PersonWhereInput | Prisma.PersonWhereInput[]
+  workspaceId?: Prisma.StringFilter<"Person"> | string
   createdAt?: Prisma.DateTimeFilter<"Person"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Person"> | Date | string
   first?: Prisma.StringFilter<"Person"> | string
@@ -423,6 +435,7 @@ export type PersonWhereUniqueInput = Prisma.AtLeast<{
   website?: Prisma.StringNullableFilter<"Person"> | string | null
   color?: Prisma.StringNullableFilter<"Person"> | string | null
   colorSoft?: Prisma.StringNullableFilter<"Person"> | string | null
+  workspace?: Prisma.XOR<Prisma.WorkspaceScalarRelationFilter, Prisma.WorkspaceWhereInput>
   interactions?: Prisma.InteractionListRelationFilter
   stagedInteractions?: Prisma.StagedInteractionListRelationFilter
   plans?: Prisma.PlanListRelationFilter
@@ -436,6 +449,7 @@ export type PersonWhereUniqueInput = Prisma.AtLeast<{
 
 export type PersonOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
+  workspaceId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   first?: Prisma.SortOrder
@@ -469,6 +483,7 @@ export type PersonScalarWhereWithAggregatesInput = {
   OR?: Prisma.PersonScalarWhereWithAggregatesInput[]
   NOT?: Prisma.PersonScalarWhereWithAggregatesInput | Prisma.PersonScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Person"> | string
+  workspaceId?: Prisma.StringWithAggregatesFilter<"Person"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Person"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Person"> | Date | string
   first?: Prisma.StringWithAggregatesFilter<"Person"> | string
@@ -515,6 +530,7 @@ export type PersonCreateInput = {
   website?: string | null
   color?: string | null
   colorSoft?: string | null
+  workspace?: Prisma.WorkspaceCreateNestedOneWithoutPersonsInput
   interactions?: Prisma.InteractionCreateNestedManyWithoutPersonInput
   stagedInteractions?: Prisma.StagedInteractionCreateNestedManyWithoutCandidatePersonInput
   plans?: Prisma.PlanCreateNestedManyWithoutPersonInput
@@ -528,6 +544,7 @@ export type PersonCreateInput = {
 
 export type PersonUncheckedCreateInput = {
   id?: string
+  workspaceId?: string
   createdAt?: Date | string
   updatedAt?: Date | string
   first: string
@@ -583,6 +600,7 @@ export type PersonUpdateInput = {
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutPersonsNestedInput
   interactions?: Prisma.InteractionUpdateManyWithoutPersonNestedInput
   stagedInteractions?: Prisma.StagedInteractionUpdateManyWithoutCandidatePersonNestedInput
   plans?: Prisma.PlanUpdateManyWithoutPersonNestedInput
@@ -596,6 +614,7 @@ export type PersonUpdateInput = {
 
 export type PersonUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   first?: Prisma.StringFieldUpdateOperationsInput | string
@@ -630,6 +649,7 @@ export type PersonUncheckedUpdateInput = {
 
 export type PersonCreateManyInput = {
   id?: string
+  workspaceId?: string
   createdAt?: Date | string
   updatedAt?: Date | string
   first: string
@@ -680,6 +700,7 @@ export type PersonUpdateManyMutationInput = {
 
 export type PersonUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   first?: Prisma.StringFieldUpdateOperationsInput | string
@@ -703,8 +724,19 @@ export type PersonUncheckedUpdateManyInput = {
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
+export type PersonListRelationFilter = {
+  every?: Prisma.PersonWhereInput
+  some?: Prisma.PersonWhereInput
+  none?: Prisma.PersonWhereInput
+}
+
+export type PersonOrderByRelationAggregateInput = {
+  _count?: Prisma.SortOrder
+}
+
 export type PersonCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  workspaceId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   first?: Prisma.SortOrder
@@ -734,6 +766,7 @@ export type PersonAvgOrderByAggregateInput = {
 
 export type PersonMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  workspaceId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   first?: Prisma.SortOrder
@@ -759,6 +792,7 @@ export type PersonMaxOrderByAggregateInput = {
 
 export type PersonMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  workspaceId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   first?: Prisma.SortOrder
@@ -791,16 +825,46 @@ export type PersonNullableScalarRelationFilter = {
   isNot?: Prisma.PersonWhereInput | null
 }
 
-export type StringFieldUpdateOperationsInput = {
-  set?: string
+export type PersonCreateNestedManyWithoutWorkspaceInput = {
+  create?: Prisma.XOR<Prisma.PersonCreateWithoutWorkspaceInput, Prisma.PersonUncheckedCreateWithoutWorkspaceInput> | Prisma.PersonCreateWithoutWorkspaceInput[] | Prisma.PersonUncheckedCreateWithoutWorkspaceInput[]
+  connectOrCreate?: Prisma.PersonCreateOrConnectWithoutWorkspaceInput | Prisma.PersonCreateOrConnectWithoutWorkspaceInput[]
+  createMany?: Prisma.PersonCreateManyWorkspaceInputEnvelope
+  connect?: Prisma.PersonWhereUniqueInput | Prisma.PersonWhereUniqueInput[]
 }
 
-export type DateTimeFieldUpdateOperationsInput = {
-  set?: Date | string
+export type PersonUncheckedCreateNestedManyWithoutWorkspaceInput = {
+  create?: Prisma.XOR<Prisma.PersonCreateWithoutWorkspaceInput, Prisma.PersonUncheckedCreateWithoutWorkspaceInput> | Prisma.PersonCreateWithoutWorkspaceInput[] | Prisma.PersonUncheckedCreateWithoutWorkspaceInput[]
+  connectOrCreate?: Prisma.PersonCreateOrConnectWithoutWorkspaceInput | Prisma.PersonCreateOrConnectWithoutWorkspaceInput[]
+  createMany?: Prisma.PersonCreateManyWorkspaceInputEnvelope
+  connect?: Prisma.PersonWhereUniqueInput | Prisma.PersonWhereUniqueInput[]
 }
 
-export type NullableStringFieldUpdateOperationsInput = {
-  set?: string | null
+export type PersonUpdateManyWithoutWorkspaceNestedInput = {
+  create?: Prisma.XOR<Prisma.PersonCreateWithoutWorkspaceInput, Prisma.PersonUncheckedCreateWithoutWorkspaceInput> | Prisma.PersonCreateWithoutWorkspaceInput[] | Prisma.PersonUncheckedCreateWithoutWorkspaceInput[]
+  connectOrCreate?: Prisma.PersonCreateOrConnectWithoutWorkspaceInput | Prisma.PersonCreateOrConnectWithoutWorkspaceInput[]
+  upsert?: Prisma.PersonUpsertWithWhereUniqueWithoutWorkspaceInput | Prisma.PersonUpsertWithWhereUniqueWithoutWorkspaceInput[]
+  createMany?: Prisma.PersonCreateManyWorkspaceInputEnvelope
+  set?: Prisma.PersonWhereUniqueInput | Prisma.PersonWhereUniqueInput[]
+  disconnect?: Prisma.PersonWhereUniqueInput | Prisma.PersonWhereUniqueInput[]
+  delete?: Prisma.PersonWhereUniqueInput | Prisma.PersonWhereUniqueInput[]
+  connect?: Prisma.PersonWhereUniqueInput | Prisma.PersonWhereUniqueInput[]
+  update?: Prisma.PersonUpdateWithWhereUniqueWithoutWorkspaceInput | Prisma.PersonUpdateWithWhereUniqueWithoutWorkspaceInput[]
+  updateMany?: Prisma.PersonUpdateManyWithWhereWithoutWorkspaceInput | Prisma.PersonUpdateManyWithWhereWithoutWorkspaceInput[]
+  deleteMany?: Prisma.PersonScalarWhereInput | Prisma.PersonScalarWhereInput[]
+}
+
+export type PersonUncheckedUpdateManyWithoutWorkspaceNestedInput = {
+  create?: Prisma.XOR<Prisma.PersonCreateWithoutWorkspaceInput, Prisma.PersonUncheckedCreateWithoutWorkspaceInput> | Prisma.PersonCreateWithoutWorkspaceInput[] | Prisma.PersonUncheckedCreateWithoutWorkspaceInput[]
+  connectOrCreate?: Prisma.PersonCreateOrConnectWithoutWorkspaceInput | Prisma.PersonCreateOrConnectWithoutWorkspaceInput[]
+  upsert?: Prisma.PersonUpsertWithWhereUniqueWithoutWorkspaceInput | Prisma.PersonUpsertWithWhereUniqueWithoutWorkspaceInput[]
+  createMany?: Prisma.PersonCreateManyWorkspaceInputEnvelope
+  set?: Prisma.PersonWhereUniqueInput | Prisma.PersonWhereUniqueInput[]
+  disconnect?: Prisma.PersonWhereUniqueInput | Prisma.PersonWhereUniqueInput[]
+  delete?: Prisma.PersonWhereUniqueInput | Prisma.PersonWhereUniqueInput[]
+  connect?: Prisma.PersonWhereUniqueInput | Prisma.PersonWhereUniqueInput[]
+  update?: Prisma.PersonUpdateWithWhereUniqueWithoutWorkspaceInput | Prisma.PersonUpdateWithWhereUniqueWithoutWorkspaceInput[]
+  updateMany?: Prisma.PersonUpdateManyWithWhereWithoutWorkspaceInput | Prisma.PersonUpdateManyWithWhereWithoutWorkspaceInput[]
+  deleteMany?: Prisma.PersonScalarWhereInput | Prisma.PersonScalarWhereInput[]
 }
 
 export type IntFieldUpdateOperationsInput = {
@@ -955,7 +1019,7 @@ export type PersonUpdateOneWithoutDisassembledByNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.PersonUpdateToOneWithWhereWithoutDisassembledByInput, Prisma.PersonUpdateWithoutDisassembledByInput>, Prisma.PersonUncheckedUpdateWithoutDisassembledByInput>
 }
 
-export type PersonCreateWithoutUsersInput = {
+export type PersonCreateWithoutWorkspaceInput = {
   id?: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -984,12 +1048,136 @@ export type PersonCreateWithoutUsersInput = {
   ownedItems?: Prisma.ItemCreateNestedManyWithoutOwnedByInput
   assembledBy?: Prisma.AssemblyCreateNestedManyWithoutAssembledByInput
   disassembledBy?: Prisma.AssemblyCreateNestedManyWithoutDisassembledByInput
+  users?: Prisma.UserCreateNestedManyWithoutPersonInput
+  apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutOwnerPersonInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutPersonInput
+}
+
+export type PersonUncheckedCreateWithoutWorkspaceInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  first: string
+  last: string
+  nickname?: string | null
+  title?: string | null
+  headline?: string | null
+  emails?: string
+  phones?: string
+  birthday?: string | null
+  closeness?: number
+  tags?: string
+  values?: string
+  notes?: string | null
+  company?: string | null
+  location?: string | null
+  linkedin?: string | null
+  twitter?: string | null
+  website?: string | null
+  color?: string | null
+  colorSoft?: string | null
+  interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutPersonInput
+  stagedInteractions?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutCandidatePersonInput
+  plans?: Prisma.PlanUncheckedCreateNestedManyWithoutPersonInput
+  ownedItems?: Prisma.ItemUncheckedCreateNestedManyWithoutOwnedByInput
+  assembledBy?: Prisma.AssemblyUncheckedCreateNestedManyWithoutAssembledByInput
+  disassembledBy?: Prisma.AssemblyUncheckedCreateNestedManyWithoutDisassembledByInput
+  users?: Prisma.UserUncheckedCreateNestedManyWithoutPersonInput
+  apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutOwnerPersonInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutPersonInput
+}
+
+export type PersonCreateOrConnectWithoutWorkspaceInput = {
+  where: Prisma.PersonWhereUniqueInput
+  create: Prisma.XOR<Prisma.PersonCreateWithoutWorkspaceInput, Prisma.PersonUncheckedCreateWithoutWorkspaceInput>
+}
+
+export type PersonCreateManyWorkspaceInputEnvelope = {
+  data: Prisma.PersonCreateManyWorkspaceInput | Prisma.PersonCreateManyWorkspaceInput[]
+}
+
+export type PersonUpsertWithWhereUniqueWithoutWorkspaceInput = {
+  where: Prisma.PersonWhereUniqueInput
+  update: Prisma.XOR<Prisma.PersonUpdateWithoutWorkspaceInput, Prisma.PersonUncheckedUpdateWithoutWorkspaceInput>
+  create: Prisma.XOR<Prisma.PersonCreateWithoutWorkspaceInput, Prisma.PersonUncheckedCreateWithoutWorkspaceInput>
+}
+
+export type PersonUpdateWithWhereUniqueWithoutWorkspaceInput = {
+  where: Prisma.PersonWhereUniqueInput
+  data: Prisma.XOR<Prisma.PersonUpdateWithoutWorkspaceInput, Prisma.PersonUncheckedUpdateWithoutWorkspaceInput>
+}
+
+export type PersonUpdateManyWithWhereWithoutWorkspaceInput = {
+  where: Prisma.PersonScalarWhereInput
+  data: Prisma.XOR<Prisma.PersonUpdateManyMutationInput, Prisma.PersonUncheckedUpdateManyWithoutWorkspaceInput>
+}
+
+export type PersonScalarWhereInput = {
+  AND?: Prisma.PersonScalarWhereInput | Prisma.PersonScalarWhereInput[]
+  OR?: Prisma.PersonScalarWhereInput[]
+  NOT?: Prisma.PersonScalarWhereInput | Prisma.PersonScalarWhereInput[]
+  id?: Prisma.StringFilter<"Person"> | string
+  workspaceId?: Prisma.StringFilter<"Person"> | string
+  createdAt?: Prisma.DateTimeFilter<"Person"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Person"> | Date | string
+  first?: Prisma.StringFilter<"Person"> | string
+  last?: Prisma.StringFilter<"Person"> | string
+  nickname?: Prisma.StringNullableFilter<"Person"> | string | null
+  title?: Prisma.StringNullableFilter<"Person"> | string | null
+  headline?: Prisma.StringNullableFilter<"Person"> | string | null
+  emails?: Prisma.StringFilter<"Person"> | string
+  phones?: Prisma.StringFilter<"Person"> | string
+  birthday?: Prisma.StringNullableFilter<"Person"> | string | null
+  closeness?: Prisma.IntFilter<"Person"> | number
+  tags?: Prisma.StringFilter<"Person"> | string
+  values?: Prisma.StringFilter<"Person"> | string
+  notes?: Prisma.StringNullableFilter<"Person"> | string | null
+  company?: Prisma.StringNullableFilter<"Person"> | string | null
+  location?: Prisma.StringNullableFilter<"Person"> | string | null
+  linkedin?: Prisma.StringNullableFilter<"Person"> | string | null
+  twitter?: Prisma.StringNullableFilter<"Person"> | string | null
+  website?: Prisma.StringNullableFilter<"Person"> | string | null
+  color?: Prisma.StringNullableFilter<"Person"> | string | null
+  colorSoft?: Prisma.StringNullableFilter<"Person"> | string | null
+}
+
+export type PersonCreateWithoutUsersInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  first: string
+  last: string
+  nickname?: string | null
+  title?: string | null
+  headline?: string | null
+  emails?: string
+  phones?: string
+  birthday?: string | null
+  closeness?: number
+  tags?: string
+  values?: string
+  notes?: string | null
+  company?: string | null
+  location?: string | null
+  linkedin?: string | null
+  twitter?: string | null
+  website?: string | null
+  color?: string | null
+  colorSoft?: string | null
+  workspace?: Prisma.WorkspaceCreateNestedOneWithoutPersonsInput
+  interactions?: Prisma.InteractionCreateNestedManyWithoutPersonInput
+  stagedInteractions?: Prisma.StagedInteractionCreateNestedManyWithoutCandidatePersonInput
+  plans?: Prisma.PlanCreateNestedManyWithoutPersonInput
+  ownedItems?: Prisma.ItemCreateNestedManyWithoutOwnedByInput
+  assembledBy?: Prisma.AssemblyCreateNestedManyWithoutAssembledByInput
+  disassembledBy?: Prisma.AssemblyCreateNestedManyWithoutDisassembledByInput
   apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutOwnerPersonInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutPersonInput
 }
 
 export type PersonUncheckedCreateWithoutUsersInput = {
   id?: string
+  workspaceId?: string
   createdAt?: Date | string
   updatedAt?: Date | string
   first: string
@@ -1060,6 +1248,7 @@ export type PersonUpdateWithoutUsersInput = {
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutPersonsNestedInput
   interactions?: Prisma.InteractionUpdateManyWithoutPersonNestedInput
   stagedInteractions?: Prisma.StagedInteractionUpdateManyWithoutCandidatePersonNestedInput
   plans?: Prisma.PlanUpdateManyWithoutPersonNestedInput
@@ -1072,6 +1261,7 @@ export type PersonUpdateWithoutUsersInput = {
 
 export type PersonUncheckedUpdateWithoutUsersInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   first?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1126,6 +1316,7 @@ export type PersonCreateWithoutApiKeysInput = {
   website?: string | null
   color?: string | null
   colorSoft?: string | null
+  workspace?: Prisma.WorkspaceCreateNestedOneWithoutPersonsInput
   interactions?: Prisma.InteractionCreateNestedManyWithoutPersonInput
   stagedInteractions?: Prisma.StagedInteractionCreateNestedManyWithoutCandidatePersonInput
   plans?: Prisma.PlanCreateNestedManyWithoutPersonInput
@@ -1138,6 +1329,7 @@ export type PersonCreateWithoutApiKeysInput = {
 
 export type PersonUncheckedCreateWithoutApiKeysInput = {
   id?: string
+  workspaceId?: string
   createdAt?: Date | string
   updatedAt?: Date | string
   first: string
@@ -1208,6 +1400,7 @@ export type PersonUpdateWithoutApiKeysInput = {
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutPersonsNestedInput
   interactions?: Prisma.InteractionUpdateManyWithoutPersonNestedInput
   stagedInteractions?: Prisma.StagedInteractionUpdateManyWithoutCandidatePersonNestedInput
   plans?: Prisma.PlanUpdateManyWithoutPersonNestedInput
@@ -1220,6 +1413,7 @@ export type PersonUpdateWithoutApiKeysInput = {
 
 export type PersonUncheckedUpdateWithoutApiKeysInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   first?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1274,6 +1468,7 @@ export type PersonCreateWithoutAuditLogsInput = {
   website?: string | null
   color?: string | null
   colorSoft?: string | null
+  workspace?: Prisma.WorkspaceCreateNestedOneWithoutPersonsInput
   interactions?: Prisma.InteractionCreateNestedManyWithoutPersonInput
   stagedInteractions?: Prisma.StagedInteractionCreateNestedManyWithoutCandidatePersonInput
   plans?: Prisma.PlanCreateNestedManyWithoutPersonInput
@@ -1286,6 +1481,7 @@ export type PersonCreateWithoutAuditLogsInput = {
 
 export type PersonUncheckedCreateWithoutAuditLogsInput = {
   id?: string
+  workspaceId?: string
   createdAt?: Date | string
   updatedAt?: Date | string
   first: string
@@ -1356,6 +1552,7 @@ export type PersonUpdateWithoutAuditLogsInput = {
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutPersonsNestedInput
   interactions?: Prisma.InteractionUpdateManyWithoutPersonNestedInput
   stagedInteractions?: Prisma.StagedInteractionUpdateManyWithoutCandidatePersonNestedInput
   plans?: Prisma.PlanUpdateManyWithoutPersonNestedInput
@@ -1368,6 +1565,7 @@ export type PersonUpdateWithoutAuditLogsInput = {
 
 export type PersonUncheckedUpdateWithoutAuditLogsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   first?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1422,6 +1620,7 @@ export type PersonCreateWithoutStagedInteractionsInput = {
   website?: string | null
   color?: string | null
   colorSoft?: string | null
+  workspace?: Prisma.WorkspaceCreateNestedOneWithoutPersonsInput
   interactions?: Prisma.InteractionCreateNestedManyWithoutPersonInput
   plans?: Prisma.PlanCreateNestedManyWithoutPersonInput
   ownedItems?: Prisma.ItemCreateNestedManyWithoutOwnedByInput
@@ -1434,6 +1633,7 @@ export type PersonCreateWithoutStagedInteractionsInput = {
 
 export type PersonUncheckedCreateWithoutStagedInteractionsInput = {
   id?: string
+  workspaceId?: string
   createdAt?: Date | string
   updatedAt?: Date | string
   first: string
@@ -1504,6 +1704,7 @@ export type PersonUpdateWithoutStagedInteractionsInput = {
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutPersonsNestedInput
   interactions?: Prisma.InteractionUpdateManyWithoutPersonNestedInput
   plans?: Prisma.PlanUpdateManyWithoutPersonNestedInput
   ownedItems?: Prisma.ItemUpdateManyWithoutOwnedByNestedInput
@@ -1516,6 +1717,7 @@ export type PersonUpdateWithoutStagedInteractionsInput = {
 
 export type PersonUncheckedUpdateWithoutStagedInteractionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   first?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1570,6 +1772,7 @@ export type PersonCreateWithoutInteractionsInput = {
   website?: string | null
   color?: string | null
   colorSoft?: string | null
+  workspace?: Prisma.WorkspaceCreateNestedOneWithoutPersonsInput
   stagedInteractions?: Prisma.StagedInteractionCreateNestedManyWithoutCandidatePersonInput
   plans?: Prisma.PlanCreateNestedManyWithoutPersonInput
   ownedItems?: Prisma.ItemCreateNestedManyWithoutOwnedByInput
@@ -1582,6 +1785,7 @@ export type PersonCreateWithoutInteractionsInput = {
 
 export type PersonUncheckedCreateWithoutInteractionsInput = {
   id?: string
+  workspaceId?: string
   createdAt?: Date | string
   updatedAt?: Date | string
   first: string
@@ -1652,6 +1856,7 @@ export type PersonUpdateWithoutInteractionsInput = {
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutPersonsNestedInput
   stagedInteractions?: Prisma.StagedInteractionUpdateManyWithoutCandidatePersonNestedInput
   plans?: Prisma.PlanUpdateManyWithoutPersonNestedInput
   ownedItems?: Prisma.ItemUpdateManyWithoutOwnedByNestedInput
@@ -1664,6 +1869,7 @@ export type PersonUpdateWithoutInteractionsInput = {
 
 export type PersonUncheckedUpdateWithoutInteractionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   first?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1718,6 +1924,7 @@ export type PersonCreateWithoutPlansInput = {
   website?: string | null
   color?: string | null
   colorSoft?: string | null
+  workspace?: Prisma.WorkspaceCreateNestedOneWithoutPersonsInput
   interactions?: Prisma.InteractionCreateNestedManyWithoutPersonInput
   stagedInteractions?: Prisma.StagedInteractionCreateNestedManyWithoutCandidatePersonInput
   ownedItems?: Prisma.ItemCreateNestedManyWithoutOwnedByInput
@@ -1730,6 +1937,7 @@ export type PersonCreateWithoutPlansInput = {
 
 export type PersonUncheckedCreateWithoutPlansInput = {
   id?: string
+  workspaceId?: string
   createdAt?: Date | string
   updatedAt?: Date | string
   first: string
@@ -1800,6 +2008,7 @@ export type PersonUpdateWithoutPlansInput = {
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutPersonsNestedInput
   interactions?: Prisma.InteractionUpdateManyWithoutPersonNestedInput
   stagedInteractions?: Prisma.StagedInteractionUpdateManyWithoutCandidatePersonNestedInput
   ownedItems?: Prisma.ItemUpdateManyWithoutOwnedByNestedInput
@@ -1812,6 +2021,7 @@ export type PersonUpdateWithoutPlansInput = {
 
 export type PersonUncheckedUpdateWithoutPlansInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   first?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1866,6 +2076,7 @@ export type PersonCreateWithoutOwnedItemsInput = {
   website?: string | null
   color?: string | null
   colorSoft?: string | null
+  workspace?: Prisma.WorkspaceCreateNestedOneWithoutPersonsInput
   interactions?: Prisma.InteractionCreateNestedManyWithoutPersonInput
   stagedInteractions?: Prisma.StagedInteractionCreateNestedManyWithoutCandidatePersonInput
   plans?: Prisma.PlanCreateNestedManyWithoutPersonInput
@@ -1878,6 +2089,7 @@ export type PersonCreateWithoutOwnedItemsInput = {
 
 export type PersonUncheckedCreateWithoutOwnedItemsInput = {
   id?: string
+  workspaceId?: string
   createdAt?: Date | string
   updatedAt?: Date | string
   first: string
@@ -1948,6 +2160,7 @@ export type PersonUpdateWithoutOwnedItemsInput = {
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutPersonsNestedInput
   interactions?: Prisma.InteractionUpdateManyWithoutPersonNestedInput
   stagedInteractions?: Prisma.StagedInteractionUpdateManyWithoutCandidatePersonNestedInput
   plans?: Prisma.PlanUpdateManyWithoutPersonNestedInput
@@ -1960,6 +2173,7 @@ export type PersonUpdateWithoutOwnedItemsInput = {
 
 export type PersonUncheckedUpdateWithoutOwnedItemsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   first?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2014,6 +2228,7 @@ export type PersonCreateWithoutAssembledByInput = {
   website?: string | null
   color?: string | null
   colorSoft?: string | null
+  workspace?: Prisma.WorkspaceCreateNestedOneWithoutPersonsInput
   interactions?: Prisma.InteractionCreateNestedManyWithoutPersonInput
   stagedInteractions?: Prisma.StagedInteractionCreateNestedManyWithoutCandidatePersonInput
   plans?: Prisma.PlanCreateNestedManyWithoutPersonInput
@@ -2026,6 +2241,7 @@ export type PersonCreateWithoutAssembledByInput = {
 
 export type PersonUncheckedCreateWithoutAssembledByInput = {
   id?: string
+  workspaceId?: string
   createdAt?: Date | string
   updatedAt?: Date | string
   first: string
@@ -2085,6 +2301,7 @@ export type PersonCreateWithoutDisassembledByInput = {
   website?: string | null
   color?: string | null
   colorSoft?: string | null
+  workspace?: Prisma.WorkspaceCreateNestedOneWithoutPersonsInput
   interactions?: Prisma.InteractionCreateNestedManyWithoutPersonInput
   stagedInteractions?: Prisma.StagedInteractionCreateNestedManyWithoutCandidatePersonInput
   plans?: Prisma.PlanCreateNestedManyWithoutPersonInput
@@ -2097,6 +2314,7 @@ export type PersonCreateWithoutDisassembledByInput = {
 
 export type PersonUncheckedCreateWithoutDisassembledByInput = {
   id?: string
+  workspaceId?: string
   createdAt?: Date | string
   updatedAt?: Date | string
   first: string
@@ -2167,6 +2385,7 @@ export type PersonUpdateWithoutAssembledByInput = {
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutPersonsNestedInput
   interactions?: Prisma.InteractionUpdateManyWithoutPersonNestedInput
   stagedInteractions?: Prisma.StagedInteractionUpdateManyWithoutCandidatePersonNestedInput
   plans?: Prisma.PlanUpdateManyWithoutPersonNestedInput
@@ -2179,6 +2398,7 @@ export type PersonUpdateWithoutAssembledByInput = {
 
 export type PersonUncheckedUpdateWithoutAssembledByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   first?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2244,6 +2464,7 @@ export type PersonUpdateWithoutDisassembledByInput = {
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutPersonsNestedInput
   interactions?: Prisma.InteractionUpdateManyWithoutPersonNestedInput
   stagedInteractions?: Prisma.StagedInteractionUpdateManyWithoutCandidatePersonNestedInput
   plans?: Prisma.PlanUpdateManyWithoutPersonNestedInput
@@ -2256,6 +2477,7 @@ export type PersonUpdateWithoutDisassembledByInput = {
 
 export type PersonUncheckedUpdateWithoutDisassembledByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   first?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2285,6 +2507,124 @@ export type PersonUncheckedUpdateWithoutDisassembledByInput = {
   users?: Prisma.UserUncheckedUpdateManyWithoutPersonNestedInput
   apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutOwnerPersonNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutPersonNestedInput
+}
+
+export type PersonCreateManyWorkspaceInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  first: string
+  last: string
+  nickname?: string | null
+  title?: string | null
+  headline?: string | null
+  emails?: string
+  phones?: string
+  birthday?: string | null
+  closeness?: number
+  tags?: string
+  values?: string
+  notes?: string | null
+  company?: string | null
+  location?: string | null
+  linkedin?: string | null
+  twitter?: string | null
+  website?: string | null
+  color?: string | null
+  colorSoft?: string | null
+}
+
+export type PersonUpdateWithoutWorkspaceInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  first?: Prisma.StringFieldUpdateOperationsInput | string
+  last?: Prisma.StringFieldUpdateOperationsInput | string
+  nickname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emails?: Prisma.StringFieldUpdateOperationsInput | string
+  phones?: Prisma.StringFieldUpdateOperationsInput | string
+  birthday?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  closeness?: Prisma.IntFieldUpdateOperationsInput | number
+  tags?: Prisma.StringFieldUpdateOperationsInput | string
+  values?: Prisma.StringFieldUpdateOperationsInput | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  company?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  linkedin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  interactions?: Prisma.InteractionUpdateManyWithoutPersonNestedInput
+  stagedInteractions?: Prisma.StagedInteractionUpdateManyWithoutCandidatePersonNestedInput
+  plans?: Prisma.PlanUpdateManyWithoutPersonNestedInput
+  ownedItems?: Prisma.ItemUpdateManyWithoutOwnedByNestedInput
+  assembledBy?: Prisma.AssemblyUpdateManyWithoutAssembledByNestedInput
+  disassembledBy?: Prisma.AssemblyUpdateManyWithoutDisassembledByNestedInput
+  users?: Prisma.UserUpdateManyWithoutPersonNestedInput
+  apiKeys?: Prisma.ApiKeyUpdateManyWithoutOwnerPersonNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutPersonNestedInput
+}
+
+export type PersonUncheckedUpdateWithoutWorkspaceInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  first?: Prisma.StringFieldUpdateOperationsInput | string
+  last?: Prisma.StringFieldUpdateOperationsInput | string
+  nickname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emails?: Prisma.StringFieldUpdateOperationsInput | string
+  phones?: Prisma.StringFieldUpdateOperationsInput | string
+  birthday?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  closeness?: Prisma.IntFieldUpdateOperationsInput | number
+  tags?: Prisma.StringFieldUpdateOperationsInput | string
+  values?: Prisma.StringFieldUpdateOperationsInput | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  company?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  linkedin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  interactions?: Prisma.InteractionUncheckedUpdateManyWithoutPersonNestedInput
+  stagedInteractions?: Prisma.StagedInteractionUncheckedUpdateManyWithoutCandidatePersonNestedInput
+  plans?: Prisma.PlanUncheckedUpdateManyWithoutPersonNestedInput
+  ownedItems?: Prisma.ItemUncheckedUpdateManyWithoutOwnedByNestedInput
+  assembledBy?: Prisma.AssemblyUncheckedUpdateManyWithoutAssembledByNestedInput
+  disassembledBy?: Prisma.AssemblyUncheckedUpdateManyWithoutDisassembledByNestedInput
+  users?: Prisma.UserUncheckedUpdateManyWithoutPersonNestedInput
+  apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutOwnerPersonNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutPersonNestedInput
+}
+
+export type PersonUncheckedUpdateManyWithoutWorkspaceInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  first?: Prisma.StringFieldUpdateOperationsInput | string
+  last?: Prisma.StringFieldUpdateOperationsInput | string
+  nickname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emails?: Prisma.StringFieldUpdateOperationsInput | string
+  phones?: Prisma.StringFieldUpdateOperationsInput | string
+  birthday?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  closeness?: Prisma.IntFieldUpdateOperationsInput | number
+  tags?: Prisma.StringFieldUpdateOperationsInput | string
+  values?: Prisma.StringFieldUpdateOperationsInput | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  company?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  linkedin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
@@ -2392,6 +2732,7 @@ export type PersonCountOutputTypeCountAuditLogsArgs<ExtArgs extends runtime.Type
 
 export type PersonSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  workspaceId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   first?: boolean
@@ -2413,6 +2754,7 @@ export type PersonSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   website?: boolean
   color?: boolean
   colorSoft?: boolean
+  workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   interactions?: boolean | Prisma.Person$interactionsArgs<ExtArgs>
   stagedInteractions?: boolean | Prisma.Person$stagedInteractionsArgs<ExtArgs>
   plans?: boolean | Prisma.Person$plansArgs<ExtArgs>
@@ -2427,6 +2769,7 @@ export type PersonSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
 
 export type PersonSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  workspaceId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   first?: boolean
@@ -2448,10 +2791,12 @@ export type PersonSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   website?: boolean
   color?: boolean
   colorSoft?: boolean
+  workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["person"]>
 
 export type PersonSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  workspaceId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   first?: boolean
@@ -2473,10 +2818,12 @@ export type PersonSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   website?: boolean
   color?: boolean
   colorSoft?: boolean
+  workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["person"]>
 
 export type PersonSelectScalar = {
   id?: boolean
+  workspaceId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   first?: boolean
@@ -2500,8 +2847,9 @@ export type PersonSelectScalar = {
   colorSoft?: boolean
 }
 
-export type PersonOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "first" | "last" | "nickname" | "title" | "headline" | "emails" | "phones" | "birthday" | "closeness" | "tags" | "values" | "notes" | "company" | "location" | "linkedin" | "twitter" | "website" | "color" | "colorSoft", ExtArgs["result"]["person"]>
+export type PersonOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "workspaceId" | "createdAt" | "updatedAt" | "first" | "last" | "nickname" | "title" | "headline" | "emails" | "phones" | "birthday" | "closeness" | "tags" | "values" | "notes" | "company" | "location" | "linkedin" | "twitter" | "website" | "color" | "colorSoft", ExtArgs["result"]["person"]>
 export type PersonInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   interactions?: boolean | Prisma.Person$interactionsArgs<ExtArgs>
   stagedInteractions?: boolean | Prisma.Person$stagedInteractionsArgs<ExtArgs>
   plans?: boolean | Prisma.Person$plansArgs<ExtArgs>
@@ -2513,12 +2861,17 @@ export type PersonInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   auditLogs?: boolean | Prisma.Person$auditLogsArgs<ExtArgs>
   _count?: boolean | Prisma.PersonCountOutputTypeDefaultArgs<ExtArgs>
 }
-export type PersonIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
-export type PersonIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
+export type PersonIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
+}
+export type PersonIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
+}
 
 export type $PersonPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Person"
   objects: {
+    workspace: Prisma.$WorkspacePayload<ExtArgs>
     interactions: Prisma.$InteractionPayload<ExtArgs>[]
     stagedInteractions: Prisma.$StagedInteractionPayload<ExtArgs>[]
     plans: Prisma.$PlanPayload<ExtArgs>[]
@@ -2531,6 +2884,7 @@ export type $PersonPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
+    workspaceId: string
     createdAt: Date
     updatedAt: Date
     first: string
@@ -2946,6 +3300,7 @@ readonly fields: PersonFieldRefs;
  */
 export interface Prisma__PersonClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  workspace<T extends Prisma.WorkspaceDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WorkspaceDefaultArgs<ExtArgs>>): Prisma.Prisma__WorkspaceClient<runtime.Types.Result.GetResult<Prisma.$WorkspacePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   interactions<T extends Prisma.Person$interactionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Person$interactionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InteractionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   stagedInteractions<T extends Prisma.Person$stagedInteractionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Person$stagedInteractionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StagedInteractionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   plans<T extends Prisma.Person$plansArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Person$plansArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PlanPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -2985,6 +3340,7 @@ export interface Prisma__PersonClient<T, Null = never, ExtArgs extends runtime.T
  */
 export interface PersonFieldRefs {
   readonly id: Prisma.FieldRef<"Person", 'String'>
+  readonly workspaceId: Prisma.FieldRef<"Person", 'String'>
   readonly createdAt: Prisma.FieldRef<"Person", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Person", 'DateTime'>
   readonly first: Prisma.FieldRef<"Person", 'String'>
@@ -3258,6 +3614,10 @@ export type PersonCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensio
    * The data used to create many People.
    */
   data: Prisma.PersonCreateManyInput | Prisma.PersonCreateManyInput[]
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PersonIncludeCreateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -3328,6 +3688,10 @@ export type PersonUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensio
    * Limit how many People to update.
    */
   limit?: number
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PersonIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**

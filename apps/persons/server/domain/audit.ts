@@ -4,6 +4,7 @@ export type DomainActor = {
   type: "user" | "api_key" | "system"
   id?: string | null
   label?: string | null
+  workspaceId?: string | null
 }
 
 export type AuditAction =
@@ -60,6 +61,7 @@ export async function auditAction(input: AuditInput) {
         actorType: actor.type,
         actorId,
         actorLabel: actor.label ?? null,
+        workspaceId: actor.workspaceId ?? null,
         userId: actor.type === "user" ? actorId : null,
         apiKeyId: actor.type === "api_key" && actorId !== "env" ? actorId : null,
         personId: input.targetType === "person" ? input.targetId ?? null : null,

@@ -26,6 +26,7 @@ export type AggregatePlan = {
 
 export type PlanMinAggregateOutputType = {
   id: string | null
+  workspaceId: string | null
   createdAt: Date | null
   personId: string | null
   text: string | null
@@ -37,6 +38,7 @@ export type PlanMinAggregateOutputType = {
 
 export type PlanMaxAggregateOutputType = {
   id: string | null
+  workspaceId: string | null
   createdAt: Date | null
   personId: string | null
   text: string | null
@@ -48,6 +50,7 @@ export type PlanMaxAggregateOutputType = {
 
 export type PlanCountAggregateOutputType = {
   id: number
+  workspaceId: number
   createdAt: number
   personId: number
   text: number
@@ -61,6 +64,7 @@ export type PlanCountAggregateOutputType = {
 
 export type PlanMinAggregateInputType = {
   id?: true
+  workspaceId?: true
   createdAt?: true
   personId?: true
   text?: true
@@ -72,6 +76,7 @@ export type PlanMinAggregateInputType = {
 
 export type PlanMaxAggregateInputType = {
   id?: true
+  workspaceId?: true
   createdAt?: true
   personId?: true
   text?: true
@@ -83,6 +88,7 @@ export type PlanMaxAggregateInputType = {
 
 export type PlanCountAggregateInputType = {
   id?: true
+  workspaceId?: true
   createdAt?: true
   personId?: true
   text?: true
@@ -167,6 +173,7 @@ export type PlanGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
 
 export type PlanGroupByOutputType = {
   id: string
+  workspaceId: string
   createdAt: Date
   personId: string | null
   text: string
@@ -199,6 +206,7 @@ export type PlanWhereInput = {
   OR?: Prisma.PlanWhereInput[]
   NOT?: Prisma.PlanWhereInput | Prisma.PlanWhereInput[]
   id?: Prisma.StringFilter<"Plan"> | string
+  workspaceId?: Prisma.StringFilter<"Plan"> | string
   createdAt?: Prisma.DateTimeFilter<"Plan"> | Date | string
   personId?: Prisma.StringNullableFilter<"Plan"> | string | null
   text?: Prisma.StringFilter<"Plan"> | string
@@ -206,6 +214,7 @@ export type PlanWhereInput = {
   successSignals?: Prisma.StringNullableFilter<"Plan"> | string | null
   status?: Prisma.StringFilter<"Plan"> | string
   parentId?: Prisma.StringNullableFilter<"Plan"> | string | null
+  workspace?: Prisma.XOR<Prisma.WorkspaceScalarRelationFilter, Prisma.WorkspaceWhereInput>
   person?: Prisma.XOR<Prisma.PersonNullableScalarRelationFilter, Prisma.PersonWhereInput> | null
   children?: Prisma.PlanListRelationFilter
   parent?: Prisma.XOR<Prisma.PlanNullableScalarRelationFilter, Prisma.PlanWhereInput> | null
@@ -213,6 +222,7 @@ export type PlanWhereInput = {
 
 export type PlanOrderByWithRelationInput = {
   id?: Prisma.SortOrder
+  workspaceId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   personId?: Prisma.SortOrderInput | Prisma.SortOrder
   text?: Prisma.SortOrder
@@ -220,6 +230,7 @@ export type PlanOrderByWithRelationInput = {
   successSignals?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   parentId?: Prisma.SortOrderInput | Prisma.SortOrder
+  workspace?: Prisma.WorkspaceOrderByWithRelationInput
   person?: Prisma.PersonOrderByWithRelationInput
   children?: Prisma.PlanOrderByRelationAggregateInput
   parent?: Prisma.PlanOrderByWithRelationInput
@@ -230,6 +241,7 @@ export type PlanWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.PlanWhereInput | Prisma.PlanWhereInput[]
   OR?: Prisma.PlanWhereInput[]
   NOT?: Prisma.PlanWhereInput | Prisma.PlanWhereInput[]
+  workspaceId?: Prisma.StringFilter<"Plan"> | string
   createdAt?: Prisma.DateTimeFilter<"Plan"> | Date | string
   personId?: Prisma.StringNullableFilter<"Plan"> | string | null
   text?: Prisma.StringFilter<"Plan"> | string
@@ -237,6 +249,7 @@ export type PlanWhereUniqueInput = Prisma.AtLeast<{
   successSignals?: Prisma.StringNullableFilter<"Plan"> | string | null
   status?: Prisma.StringFilter<"Plan"> | string
   parentId?: Prisma.StringNullableFilter<"Plan"> | string | null
+  workspace?: Prisma.XOR<Prisma.WorkspaceScalarRelationFilter, Prisma.WorkspaceWhereInput>
   person?: Prisma.XOR<Prisma.PersonNullableScalarRelationFilter, Prisma.PersonWhereInput> | null
   children?: Prisma.PlanListRelationFilter
   parent?: Prisma.XOR<Prisma.PlanNullableScalarRelationFilter, Prisma.PlanWhereInput> | null
@@ -244,6 +257,7 @@ export type PlanWhereUniqueInput = Prisma.AtLeast<{
 
 export type PlanOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
+  workspaceId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   personId?: Prisma.SortOrderInput | Prisma.SortOrder
   text?: Prisma.SortOrder
@@ -261,6 +275,7 @@ export type PlanScalarWhereWithAggregatesInput = {
   OR?: Prisma.PlanScalarWhereWithAggregatesInput[]
   NOT?: Prisma.PlanScalarWhereWithAggregatesInput | Prisma.PlanScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Plan"> | string
+  workspaceId?: Prisma.StringWithAggregatesFilter<"Plan"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Plan"> | Date | string
   personId?: Prisma.StringNullableWithAggregatesFilter<"Plan"> | string | null
   text?: Prisma.StringWithAggregatesFilter<"Plan"> | string
@@ -277,6 +292,7 @@ export type PlanCreateInput = {
   timescale?: string | null
   successSignals?: string | null
   status?: string
+  workspace?: Prisma.WorkspaceCreateNestedOneWithoutPlansInput
   person?: Prisma.PersonCreateNestedOneWithoutPlansInput
   children?: Prisma.PlanCreateNestedManyWithoutParentInput
   parent?: Prisma.PlanCreateNestedOneWithoutChildrenInput
@@ -284,6 +300,7 @@ export type PlanCreateInput = {
 
 export type PlanUncheckedCreateInput = {
   id?: string
+  workspaceId?: string
   createdAt?: Date | string
   personId?: string | null
   text: string
@@ -301,6 +318,7 @@ export type PlanUpdateInput = {
   timescale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   successSignals?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutPlansNestedInput
   person?: Prisma.PersonUpdateOneWithoutPlansNestedInput
   children?: Prisma.PlanUpdateManyWithoutParentNestedInput
   parent?: Prisma.PlanUpdateOneWithoutChildrenNestedInput
@@ -308,6 +326,7 @@ export type PlanUpdateInput = {
 
 export type PlanUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   personId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   text?: Prisma.StringFieldUpdateOperationsInput | string
@@ -320,6 +339,7 @@ export type PlanUncheckedUpdateInput = {
 
 export type PlanCreateManyInput = {
   id?: string
+  workspaceId?: string
   createdAt?: Date | string
   personId?: string | null
   text: string
@@ -340,6 +360,7 @@ export type PlanUpdateManyMutationInput = {
 
 export type PlanUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   personId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   text?: Prisma.StringFieldUpdateOperationsInput | string
@@ -366,6 +387,7 @@ export type PlanNullableScalarRelationFilter = {
 
 export type PlanCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  workspaceId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   personId?: Prisma.SortOrder
   text?: Prisma.SortOrder
@@ -377,6 +399,7 @@ export type PlanCountOrderByAggregateInput = {
 
 export type PlanMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  workspaceId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   personId?: Prisma.SortOrder
   text?: Prisma.SortOrder
@@ -388,6 +411,7 @@ export type PlanMaxOrderByAggregateInput = {
 
 export type PlanMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  workspaceId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   personId?: Prisma.SortOrder
   text?: Prisma.SortOrder
@@ -395,6 +419,48 @@ export type PlanMinOrderByAggregateInput = {
   successSignals?: Prisma.SortOrder
   status?: Prisma.SortOrder
   parentId?: Prisma.SortOrder
+}
+
+export type PlanCreateNestedManyWithoutWorkspaceInput = {
+  create?: Prisma.XOR<Prisma.PlanCreateWithoutWorkspaceInput, Prisma.PlanUncheckedCreateWithoutWorkspaceInput> | Prisma.PlanCreateWithoutWorkspaceInput[] | Prisma.PlanUncheckedCreateWithoutWorkspaceInput[]
+  connectOrCreate?: Prisma.PlanCreateOrConnectWithoutWorkspaceInput | Prisma.PlanCreateOrConnectWithoutWorkspaceInput[]
+  createMany?: Prisma.PlanCreateManyWorkspaceInputEnvelope
+  connect?: Prisma.PlanWhereUniqueInput | Prisma.PlanWhereUniqueInput[]
+}
+
+export type PlanUncheckedCreateNestedManyWithoutWorkspaceInput = {
+  create?: Prisma.XOR<Prisma.PlanCreateWithoutWorkspaceInput, Prisma.PlanUncheckedCreateWithoutWorkspaceInput> | Prisma.PlanCreateWithoutWorkspaceInput[] | Prisma.PlanUncheckedCreateWithoutWorkspaceInput[]
+  connectOrCreate?: Prisma.PlanCreateOrConnectWithoutWorkspaceInput | Prisma.PlanCreateOrConnectWithoutWorkspaceInput[]
+  createMany?: Prisma.PlanCreateManyWorkspaceInputEnvelope
+  connect?: Prisma.PlanWhereUniqueInput | Prisma.PlanWhereUniqueInput[]
+}
+
+export type PlanUpdateManyWithoutWorkspaceNestedInput = {
+  create?: Prisma.XOR<Prisma.PlanCreateWithoutWorkspaceInput, Prisma.PlanUncheckedCreateWithoutWorkspaceInput> | Prisma.PlanCreateWithoutWorkspaceInput[] | Prisma.PlanUncheckedCreateWithoutWorkspaceInput[]
+  connectOrCreate?: Prisma.PlanCreateOrConnectWithoutWorkspaceInput | Prisma.PlanCreateOrConnectWithoutWorkspaceInput[]
+  upsert?: Prisma.PlanUpsertWithWhereUniqueWithoutWorkspaceInput | Prisma.PlanUpsertWithWhereUniqueWithoutWorkspaceInput[]
+  createMany?: Prisma.PlanCreateManyWorkspaceInputEnvelope
+  set?: Prisma.PlanWhereUniqueInput | Prisma.PlanWhereUniqueInput[]
+  disconnect?: Prisma.PlanWhereUniqueInput | Prisma.PlanWhereUniqueInput[]
+  delete?: Prisma.PlanWhereUniqueInput | Prisma.PlanWhereUniqueInput[]
+  connect?: Prisma.PlanWhereUniqueInput | Prisma.PlanWhereUniqueInput[]
+  update?: Prisma.PlanUpdateWithWhereUniqueWithoutWorkspaceInput | Prisma.PlanUpdateWithWhereUniqueWithoutWorkspaceInput[]
+  updateMany?: Prisma.PlanUpdateManyWithWhereWithoutWorkspaceInput | Prisma.PlanUpdateManyWithWhereWithoutWorkspaceInput[]
+  deleteMany?: Prisma.PlanScalarWhereInput | Prisma.PlanScalarWhereInput[]
+}
+
+export type PlanUncheckedUpdateManyWithoutWorkspaceNestedInput = {
+  create?: Prisma.XOR<Prisma.PlanCreateWithoutWorkspaceInput, Prisma.PlanUncheckedCreateWithoutWorkspaceInput> | Prisma.PlanCreateWithoutWorkspaceInput[] | Prisma.PlanUncheckedCreateWithoutWorkspaceInput[]
+  connectOrCreate?: Prisma.PlanCreateOrConnectWithoutWorkspaceInput | Prisma.PlanCreateOrConnectWithoutWorkspaceInput[]
+  upsert?: Prisma.PlanUpsertWithWhereUniqueWithoutWorkspaceInput | Prisma.PlanUpsertWithWhereUniqueWithoutWorkspaceInput[]
+  createMany?: Prisma.PlanCreateManyWorkspaceInputEnvelope
+  set?: Prisma.PlanWhereUniqueInput | Prisma.PlanWhereUniqueInput[]
+  disconnect?: Prisma.PlanWhereUniqueInput | Prisma.PlanWhereUniqueInput[]
+  delete?: Prisma.PlanWhereUniqueInput | Prisma.PlanWhereUniqueInput[]
+  connect?: Prisma.PlanWhereUniqueInput | Prisma.PlanWhereUniqueInput[]
+  update?: Prisma.PlanUpdateWithWhereUniqueWithoutWorkspaceInput | Prisma.PlanUpdateWithWhereUniqueWithoutWorkspaceInput[]
+  updateMany?: Prisma.PlanUpdateManyWithWhereWithoutWorkspaceInput | Prisma.PlanUpdateManyWithWhereWithoutWorkspaceInput[]
+  deleteMany?: Prisma.PlanScalarWhereInput | Prisma.PlanScalarWhereInput[]
 }
 
 export type PlanCreateNestedManyWithoutPersonInput = {
@@ -497,6 +563,70 @@ export type PlanUncheckedUpdateManyWithoutParentNestedInput = {
   deleteMany?: Prisma.PlanScalarWhereInput | Prisma.PlanScalarWhereInput[]
 }
 
+export type PlanCreateWithoutWorkspaceInput = {
+  id?: string
+  createdAt?: Date | string
+  text: string
+  timescale?: string | null
+  successSignals?: string | null
+  status?: string
+  person?: Prisma.PersonCreateNestedOneWithoutPlansInput
+  children?: Prisma.PlanCreateNestedManyWithoutParentInput
+  parent?: Prisma.PlanCreateNestedOneWithoutChildrenInput
+}
+
+export type PlanUncheckedCreateWithoutWorkspaceInput = {
+  id?: string
+  createdAt?: Date | string
+  personId?: string | null
+  text: string
+  timescale?: string | null
+  successSignals?: string | null
+  status?: string
+  parentId?: string | null
+  children?: Prisma.PlanUncheckedCreateNestedManyWithoutParentInput
+}
+
+export type PlanCreateOrConnectWithoutWorkspaceInput = {
+  where: Prisma.PlanWhereUniqueInput
+  create: Prisma.XOR<Prisma.PlanCreateWithoutWorkspaceInput, Prisma.PlanUncheckedCreateWithoutWorkspaceInput>
+}
+
+export type PlanCreateManyWorkspaceInputEnvelope = {
+  data: Prisma.PlanCreateManyWorkspaceInput | Prisma.PlanCreateManyWorkspaceInput[]
+}
+
+export type PlanUpsertWithWhereUniqueWithoutWorkspaceInput = {
+  where: Prisma.PlanWhereUniqueInput
+  update: Prisma.XOR<Prisma.PlanUpdateWithoutWorkspaceInput, Prisma.PlanUncheckedUpdateWithoutWorkspaceInput>
+  create: Prisma.XOR<Prisma.PlanCreateWithoutWorkspaceInput, Prisma.PlanUncheckedCreateWithoutWorkspaceInput>
+}
+
+export type PlanUpdateWithWhereUniqueWithoutWorkspaceInput = {
+  where: Prisma.PlanWhereUniqueInput
+  data: Prisma.XOR<Prisma.PlanUpdateWithoutWorkspaceInput, Prisma.PlanUncheckedUpdateWithoutWorkspaceInput>
+}
+
+export type PlanUpdateManyWithWhereWithoutWorkspaceInput = {
+  where: Prisma.PlanScalarWhereInput
+  data: Prisma.XOR<Prisma.PlanUpdateManyMutationInput, Prisma.PlanUncheckedUpdateManyWithoutWorkspaceInput>
+}
+
+export type PlanScalarWhereInput = {
+  AND?: Prisma.PlanScalarWhereInput | Prisma.PlanScalarWhereInput[]
+  OR?: Prisma.PlanScalarWhereInput[]
+  NOT?: Prisma.PlanScalarWhereInput | Prisma.PlanScalarWhereInput[]
+  id?: Prisma.StringFilter<"Plan"> | string
+  workspaceId?: Prisma.StringFilter<"Plan"> | string
+  createdAt?: Prisma.DateTimeFilter<"Plan"> | Date | string
+  personId?: Prisma.StringNullableFilter<"Plan"> | string | null
+  text?: Prisma.StringFilter<"Plan"> | string
+  timescale?: Prisma.StringNullableFilter<"Plan"> | string | null
+  successSignals?: Prisma.StringNullableFilter<"Plan"> | string | null
+  status?: Prisma.StringFilter<"Plan"> | string
+  parentId?: Prisma.StringNullableFilter<"Plan"> | string | null
+}
+
 export type PlanCreateWithoutPersonInput = {
   id?: string
   createdAt?: Date | string
@@ -504,12 +634,14 @@ export type PlanCreateWithoutPersonInput = {
   timescale?: string | null
   successSignals?: string | null
   status?: string
+  workspace?: Prisma.WorkspaceCreateNestedOneWithoutPlansInput
   children?: Prisma.PlanCreateNestedManyWithoutParentInput
   parent?: Prisma.PlanCreateNestedOneWithoutChildrenInput
 }
 
 export type PlanUncheckedCreateWithoutPersonInput = {
   id?: string
+  workspaceId?: string
   createdAt?: Date | string
   text: string
   timescale?: string | null
@@ -544,20 +676,6 @@ export type PlanUpdateManyWithWhereWithoutPersonInput = {
   data: Prisma.XOR<Prisma.PlanUpdateManyMutationInput, Prisma.PlanUncheckedUpdateManyWithoutPersonInput>
 }
 
-export type PlanScalarWhereInput = {
-  AND?: Prisma.PlanScalarWhereInput | Prisma.PlanScalarWhereInput[]
-  OR?: Prisma.PlanScalarWhereInput[]
-  NOT?: Prisma.PlanScalarWhereInput | Prisma.PlanScalarWhereInput[]
-  id?: Prisma.StringFilter<"Plan"> | string
-  createdAt?: Prisma.DateTimeFilter<"Plan"> | Date | string
-  personId?: Prisma.StringNullableFilter<"Plan"> | string | null
-  text?: Prisma.StringFilter<"Plan"> | string
-  timescale?: Prisma.StringNullableFilter<"Plan"> | string | null
-  successSignals?: Prisma.StringNullableFilter<"Plan"> | string | null
-  status?: Prisma.StringFilter<"Plan"> | string
-  parentId?: Prisma.StringNullableFilter<"Plan"> | string | null
-}
-
 export type PlanCreateWithoutParentInput = {
   id?: string
   createdAt?: Date | string
@@ -565,12 +683,14 @@ export type PlanCreateWithoutParentInput = {
   timescale?: string | null
   successSignals?: string | null
   status?: string
+  workspace?: Prisma.WorkspaceCreateNestedOneWithoutPlansInput
   person?: Prisma.PersonCreateNestedOneWithoutPlansInput
   children?: Prisma.PlanCreateNestedManyWithoutParentInput
 }
 
 export type PlanUncheckedCreateWithoutParentInput = {
   id?: string
+  workspaceId?: string
   createdAt?: Date | string
   personId?: string | null
   text: string
@@ -596,12 +716,14 @@ export type PlanCreateWithoutChildrenInput = {
   timescale?: string | null
   successSignals?: string | null
   status?: string
+  workspace?: Prisma.WorkspaceCreateNestedOneWithoutPlansInput
   person?: Prisma.PersonCreateNestedOneWithoutPlansInput
   parent?: Prisma.PlanCreateNestedOneWithoutChildrenInput
 }
 
 export type PlanUncheckedCreateWithoutChildrenInput = {
   id?: string
+  workspaceId?: string
   createdAt?: Date | string
   personId?: string | null
   text: string
@@ -650,11 +772,59 @@ export type PlanUpdateWithoutChildrenInput = {
   timescale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   successSignals?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutPlansNestedInput
   person?: Prisma.PersonUpdateOneWithoutPlansNestedInput
   parent?: Prisma.PlanUpdateOneWithoutChildrenNestedInput
 }
 
 export type PlanUncheckedUpdateWithoutChildrenInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  personId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  text?: Prisma.StringFieldUpdateOperationsInput | string
+  timescale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  successSignals?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+}
+
+export type PlanCreateManyWorkspaceInput = {
+  id?: string
+  createdAt?: Date | string
+  personId?: string | null
+  text: string
+  timescale?: string | null
+  successSignals?: string | null
+  status?: string
+  parentId?: string | null
+}
+
+export type PlanUpdateWithoutWorkspaceInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  text?: Prisma.StringFieldUpdateOperationsInput | string
+  timescale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  successSignals?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  person?: Prisma.PersonUpdateOneWithoutPlansNestedInput
+  children?: Prisma.PlanUpdateManyWithoutParentNestedInput
+  parent?: Prisma.PlanUpdateOneWithoutChildrenNestedInput
+}
+
+export type PlanUncheckedUpdateWithoutWorkspaceInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  personId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  text?: Prisma.StringFieldUpdateOperationsInput | string
+  timescale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  successSignals?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  children?: Prisma.PlanUncheckedUpdateManyWithoutParentNestedInput
+}
+
+export type PlanUncheckedUpdateManyWithoutWorkspaceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   personId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -667,6 +837,7 @@ export type PlanUncheckedUpdateWithoutChildrenInput = {
 
 export type PlanCreateManyPersonInput = {
   id?: string
+  workspaceId?: string
   createdAt?: Date | string
   text: string
   timescale?: string | null
@@ -682,12 +853,14 @@ export type PlanUpdateWithoutPersonInput = {
   timescale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   successSignals?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutPlansNestedInput
   children?: Prisma.PlanUpdateManyWithoutParentNestedInput
   parent?: Prisma.PlanUpdateOneWithoutChildrenNestedInput
 }
 
 export type PlanUncheckedUpdateWithoutPersonInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   text?: Prisma.StringFieldUpdateOperationsInput | string
   timescale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -699,6 +872,7 @@ export type PlanUncheckedUpdateWithoutPersonInput = {
 
 export type PlanUncheckedUpdateManyWithoutPersonInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   text?: Prisma.StringFieldUpdateOperationsInput | string
   timescale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -709,6 +883,7 @@ export type PlanUncheckedUpdateManyWithoutPersonInput = {
 
 export type PlanCreateManyParentInput = {
   id?: string
+  workspaceId?: string
   createdAt?: Date | string
   personId?: string | null
   text: string
@@ -724,12 +899,14 @@ export type PlanUpdateWithoutParentInput = {
   timescale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   successSignals?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutPlansNestedInput
   person?: Prisma.PersonUpdateOneWithoutPlansNestedInput
   children?: Prisma.PlanUpdateManyWithoutParentNestedInput
 }
 
 export type PlanUncheckedUpdateWithoutParentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   personId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   text?: Prisma.StringFieldUpdateOperationsInput | string
@@ -741,6 +918,7 @@ export type PlanUncheckedUpdateWithoutParentInput = {
 
 export type PlanUncheckedUpdateManyWithoutParentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   personId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   text?: Prisma.StringFieldUpdateOperationsInput | string
@@ -782,6 +960,7 @@ export type PlanCountOutputTypeCountChildrenArgs<ExtArgs extends runtime.Types.E
 
 export type PlanSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  workspaceId?: boolean
   createdAt?: boolean
   personId?: boolean
   text?: boolean
@@ -789,6 +968,7 @@ export type PlanSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   successSignals?: boolean
   status?: boolean
   parentId?: boolean
+  workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   person?: boolean | Prisma.Plan$personArgs<ExtArgs>
   children?: boolean | Prisma.Plan$childrenArgs<ExtArgs>
   parent?: boolean | Prisma.Plan$parentArgs<ExtArgs>
@@ -797,6 +977,7 @@ export type PlanSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
 
 export type PlanSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  workspaceId?: boolean
   createdAt?: boolean
   personId?: boolean
   text?: boolean
@@ -804,12 +985,14 @@ export type PlanSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   successSignals?: boolean
   status?: boolean
   parentId?: boolean
+  workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   person?: boolean | Prisma.Plan$personArgs<ExtArgs>
   parent?: boolean | Prisma.Plan$parentArgs<ExtArgs>
 }, ExtArgs["result"]["plan"]>
 
 export type PlanSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  workspaceId?: boolean
   createdAt?: boolean
   personId?: boolean
   text?: boolean
@@ -817,12 +1000,14 @@ export type PlanSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   successSignals?: boolean
   status?: boolean
   parentId?: boolean
+  workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   person?: boolean | Prisma.Plan$personArgs<ExtArgs>
   parent?: boolean | Prisma.Plan$parentArgs<ExtArgs>
 }, ExtArgs["result"]["plan"]>
 
 export type PlanSelectScalar = {
   id?: boolean
+  workspaceId?: boolean
   createdAt?: boolean
   personId?: boolean
   text?: boolean
@@ -832,18 +1017,21 @@ export type PlanSelectScalar = {
   parentId?: boolean
 }
 
-export type PlanOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "personId" | "text" | "timescale" | "successSignals" | "status" | "parentId", ExtArgs["result"]["plan"]>
+export type PlanOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "workspaceId" | "createdAt" | "personId" | "text" | "timescale" | "successSignals" | "status" | "parentId", ExtArgs["result"]["plan"]>
 export type PlanInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   person?: boolean | Prisma.Plan$personArgs<ExtArgs>
   children?: boolean | Prisma.Plan$childrenArgs<ExtArgs>
   parent?: boolean | Prisma.Plan$parentArgs<ExtArgs>
   _count?: boolean | Prisma.PlanCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type PlanIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   person?: boolean | Prisma.Plan$personArgs<ExtArgs>
   parent?: boolean | Prisma.Plan$parentArgs<ExtArgs>
 }
 export type PlanIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   person?: boolean | Prisma.Plan$personArgs<ExtArgs>
   parent?: boolean | Prisma.Plan$parentArgs<ExtArgs>
 }
@@ -851,12 +1039,14 @@ export type PlanIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
 export type $PlanPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Plan"
   objects: {
+    workspace: Prisma.$WorkspacePayload<ExtArgs>
     person: Prisma.$PersonPayload<ExtArgs> | null
     children: Prisma.$PlanPayload<ExtArgs>[]
     parent: Prisma.$PlanPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
+    workspaceId: string
     createdAt: Date
     personId: string | null
     text: string
@@ -1258,6 +1448,7 @@ readonly fields: PlanFieldRefs;
  */
 export interface Prisma__PlanClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  workspace<T extends Prisma.WorkspaceDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WorkspaceDefaultArgs<ExtArgs>>): Prisma.Prisma__WorkspaceClient<runtime.Types.Result.GetResult<Prisma.$WorkspacePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   person<T extends Prisma.Plan$personArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Plan$personArgs<ExtArgs>>): Prisma.Prisma__PersonClient<runtime.Types.Result.GetResult<Prisma.$PersonPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   children<T extends Prisma.Plan$childrenArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Plan$childrenArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PlanPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   parent<T extends Prisma.Plan$parentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Plan$parentArgs<ExtArgs>>): Prisma.Prisma__PlanClient<runtime.Types.Result.GetResult<Prisma.$PlanPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
@@ -1291,6 +1482,7 @@ export interface Prisma__PlanClient<T, Null = never, ExtArgs extends runtime.Typ
  */
 export interface PlanFieldRefs {
   readonly id: Prisma.FieldRef<"Plan", 'String'>
+  readonly workspaceId: Prisma.FieldRef<"Plan", 'String'>
   readonly createdAt: Prisma.FieldRef<"Plan", 'DateTime'>
   readonly personId: Prisma.FieldRef<"Plan", 'String'>
   readonly text: Prisma.FieldRef<"Plan", 'String'>

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { db } from "@/lib/db"
 import { parseTags } from "@/lib/utils"
+import { requireAccess } from "@/server/domain/access"
 
 type IssueKey =
   | "missing_email"
@@ -49,6 +50,7 @@ const ISSUE_LABELS: Record<IssueKey, string> = {
 }
 
 export async function GET(req: NextRequest) {
+  const actor = await requireAccess("people.read")
   const { searchParams } = new URL(req.url)
   const page = Math.max(0, parseInt(searchParams.get("page") ?? "0"))
   const limit = Math.min(200, Math.max(1, parseInt(searchParams.get("limit") ?? "50")))
@@ -57,6 +59,7 @@ export async function GET(req: NextRequest) {
   const issue = searchParams.get("issue") as IssueKey | "all" | null
 
   const rows = await db.person.findMany({
+    where: { workspaceId: actor.workspaceId },
     orderBy: [{ last: "asc" }, { first: "asc" }],
     include: {
       _count: { select: { interactions: true } },

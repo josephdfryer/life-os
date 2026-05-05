@@ -6,9 +6,11 @@ import { formatPerson } from "@/server/domain/dto"
 import { created, handleRouteError } from "@/server/api/respond"
 
 export async function GET(req: NextRequest) {
-  if (!(await authorizeApiRequest(req, "people.read"))) return unauthorized()
+  const auth = await authorizeApiRequest(req, "people.read")
+  if (!auth) return unauthorized()
 
   const persons = await db.person.findMany({
+    where: { workspaceId: auth.workspaceId },
     orderBy: { createdAt: "asc" },
   })
 

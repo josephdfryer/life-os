@@ -8,14 +8,15 @@ import { createInteraction } from "@/server/domain/interactions"
 type Params = { params: Promise<{ id: string }> }
 
 export async function GET(req: NextRequest, { params }: Params) {
-  if (!(await authorizeApiRequest(req, "interactions.read"))) return unauthorized()
+  const auth = await authorizeApiRequest(req, "interactions.read")
+  if (!auth) return unauthorized()
   const { id } = await params
 
-  const person = await db.person.findUnique({ where: { id } })
+  const person = await db.person.findFirst({ where: { id, workspaceId: auth.workspaceId } })
   if (!person) return NextResponse.json({ error: "Not found" }, { status: 404 })
 
   const interactions = await db.interaction.findMany({
-    where: { personId: id },
+    where: { personId: id, workspaceId: auth.workspaceId },
     include: { event: true, sourceFile: true },
     orderBy: { timestamp: "desc" },
   })

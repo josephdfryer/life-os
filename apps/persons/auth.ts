@@ -1,5 +1,6 @@
 import NextAuth from "next-auth"
 import Google from "next-auth/providers/google"
+import { db } from "@/lib/db"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [
@@ -13,17 +14,31 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   },
   callbacks: {
     async signIn({ user }) {
-      // If ALLOWED_EMAILS is set, only those addresses can log in
-      // Accepts a comma-separated list: "a@gmail.com,b@gmail.com"
-      const allowed = process.env.ALLOWED_EMAILS
-      if (allowed) {
-        const list = allowed.split(",").map(e => e.trim().toLowerCase())
-        if (!list.includes(user.email?.toLowerCase() ?? "")) return false
+      const email = user.email?.toLowerCase()
+      if (!email) return false
+      if (envApprovedEmails().includes(email)) return true
+      try {
+        const existingUsers = await db.user.count()
+        if (existingUsers === 0) return true
+        const approved = await db.approvedEmail.findUnique({ where: { email }, select: { status: true } })
+        return approved?.status === "approved"
+      } catch {
+        return false
       }
-      return true
     },
     authorized({ auth: session }) {
       return !!session?.user
     },
   },
 })
+
+function envApprovedEmails() {
+  return [
+    process.env.ALLOWED_EMAILS,
+    process.env.OWNER_EMAILS,
+    process.env.ADMIN_EMAILS,
+  ].filter(Boolean)
+    .flatMap(value => value!.split(","))
+    .map(value => value.trim().toLowerCase())
+    .filter(Boolean)
+}

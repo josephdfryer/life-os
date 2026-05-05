@@ -1,18 +1,20 @@
 import { NextRequest, NextResponse } from "next/server"
 import { db } from "@/lib/db"
 import { parseTags } from "@/lib/utils"
+import { requireAccess } from "@/server/domain/access"
 
 type InboxItemCandidate = { id: string; first: string; last: string; title: string | null; company: string | null; emails: string; phones: string }
 type InboxItem = { id: string; status: string; source: string; sourceId: string | null; contactName: string | null; contactEmail: string | null; contactPhone: string | null; candidatePersonId: string | null; type: string; timestamp: Date; summary: string | null; body: string | null; direction: string | null; acceptedAt: Date | null; acceptedPersonId: string | null; interactionId: string | null; createdAt: Date; updatedAt: Date; candidatePerson: InboxItemCandidate | null }
 type RuleRunResult = { id: string; createdAt: Date; trigger: string; matched: boolean; mode: string; status: string; message: string | null; actionsPlanned: string | null; actionsApplied: string | null; targetId: string | null; rule: { id: string; name: string; trigger: string } | null }
 
 export async function GET(req: NextRequest) {
+  const actor = await requireAccess("inbox.review")
   const { searchParams } = new URL(req.url)
   const status = searchParams.get("status") ?? "pending"
   const limit = Math.min(200, Math.max(1, Number(searchParams.get("limit") ?? 100)))
 
   const items = await db.stagedInteraction.findMany({
-    where: inboxStatusWhere(status),
+    where: { ...inboxStatusWhere(status), workspaceId: actor.workspaceId },
     orderBy: [{ createdAt: "desc" }],
     take: limit,
     include: {
@@ -32,7 +34,7 @@ export async function GET(req: NextRequest) {
   const itemIds = items.map((item: InboxItem) => item.id)
   const runs: RuleRunResult[] = itemIds.length
     ? await db.ruleRun.findMany({
-      where: { targetType: "stagedInteraction", targetId: { in: itemIds } },
+      where: { targetType: "stagedInteraction", targetId: { in: itemIds }, workspaceId: actor.workspaceId },
       include: { rule: { select: { id: true, name: true, trigger: true } } },
       orderBy: { createdAt: "desc" },
       take: itemIds.length * 5,

@@ -6,6 +6,7 @@ import type { DomainActor } from "@/server/domain/audit"
 export type ApiAuthResult = {
   actor: DomainActor
   scopes: string[]
+  workspaceId: string
 }
 
 export async function authorizeApiRequest(
@@ -21,8 +22,9 @@ export async function authorizeApiRequest(
   const legacyKey = process.env.API_KEY
   if (legacyKey && provided === legacyKey) {
     return {
-      actor: { type: "api_key", id: "env", label: "legacy-env-api-key" },
+      actor: { type: "api_key", id: "env", label: "legacy-env-api-key", workspaceId: "default-workspace" },
       scopes: ["*"],
+      workspaceId: "default-workspace",
     }
   }
 
@@ -50,8 +52,10 @@ export async function authorizeApiRequest(
       type: "api_key",
       id: apiKey.id,
       label: apiKey.name,
+      workspaceId: apiKey.workspaceId,
     },
     scopes: granted,
+    workspaceId: apiKey.workspaceId,
   }
 }
 

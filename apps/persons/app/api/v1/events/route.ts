@@ -5,7 +5,8 @@ import { createEvent } from "@/server/domain/events"
 import { created, handleRouteError } from "@/server/api/respond"
 
 export async function GET(req: NextRequest) {
-  if (!(await authorizeApiRequest(req, "people.read"))) return unauthorized()
+  const auth = await authorizeApiRequest(req, "people.read")
+  if (!auth) return unauthorized()
 
   const { searchParams } = new URL(req.url)
   const limit = Math.min(500, Math.max(1, Number(searchParams.get("limit") ?? 100)))
@@ -13,12 +14,13 @@ export async function GET(req: NextRequest) {
 
   const [events, total] = await Promise.all([
     db.event.findMany({
+      where: { workspaceId: auth.workspaceId },
       include: { place: true },
       orderBy: { timestamp: "desc" },
       take: limit,
       skip: offset,
     }),
-    db.event.count(),
+    db.event.count({ where: { workspaceId: auth.workspaceId } }),
   ])
 
   return NextResponse.json({ data: events, total, limit, offset })

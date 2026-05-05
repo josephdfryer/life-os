@@ -11,11 +11,12 @@ export function sourceMarkers(notes: string | null | undefined) {
     .filter(part => /^[a-z0-9_-]+:.+/i.test(part))
 }
 
-export async function findInteractionByExactSource(source: string, sourceId: string, personId?: string | null) {
+export async function findInteractionByExactSource(source: string, sourceId: string, personId?: string | null, workspaceId = "default-workspace") {
   const marker = normalizeSourceMarker(source, sourceId)
   const candidates = await db.interaction.findMany({
     where: {
       ...(personId ? { personId } : {}),
+      workspaceId,
       notes: { contains: marker },
     },
     select: { id: true, notes: true },

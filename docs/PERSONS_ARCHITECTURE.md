@@ -284,6 +284,27 @@ Examples:
 - `audit.read`: can view the audit log.
 - `*`: owner-level access.
 
+### Workspace tenancy
+
+Persons is moving from "Joseph's private CRM" toward "approved people can each have their own private CRM space."
+
+```mermaid
+flowchart TD
+  Login["Google login"] --> Gate{"Email approved?"}
+  Gate -->|Env owner/allowlist| DefaultWorkspace["Use Joseph's default workspace"]
+  Gate -->|ApprovedEmail row| UserWorkspace["Use or create that person's workspace"]
+  Gate -->|No| Reject["Reject sign-in"]
+
+  DefaultWorkspace --> Member["WorkspaceMember"]
+  UserWorkspace --> Member
+  Member --> Scope["Every read/write carries workspaceId"]
+  Scope --> PeopleDB["People, Interactions, Inbox, Rules, API keys, Audit"]
+```
+
+Plain English: a login is allowed only when the email is in `OWNER_EMAILS`, `ADMIN_EMAILS`, `ALLOWED_EMAILS`, is the first user in an empty database, or has an approved `ApprovedEmail` record. Once allowed, the user gets a `WorkspaceMember` record. All core People memory then belongs to that workspace through `workspaceId`.
+
+The current migration preserves existing data in `default-workspace`. Owner and env-allowlisted emails land there. Future approved emails can be attached to a specific workspace or can create their own clean workspace on first sign-in. API keys also carry `workspaceId`, so headless API calls read and write inside the same boundary as browser users.
+
 ## Rules Engine
 
 ```mermaid
@@ -333,7 +354,14 @@ erDiagram
   Person ||--o{ StagedInteraction : candidate
   ImportedFile ||--o{ Interaction : source
 
+  Workspace ||--o{ WorkspaceMember : has
+  Workspace ||--o{ Person : owns
+  Workspace ||--o{ Interaction : owns
+  Workspace ||--o{ StagedInteraction : owns
+  Workspace ||--o{ Rule : owns
+  ApprovedEmail }o--|| Workspace : can_assign_to
   User ||--o{ ApiKey : creates
+  User ||--o{ WorkspaceMember : belongs_to
   User ||--o{ AuditLog : causes
   User ||--o{ Rule : creates
   Role ||--o{ RolePermission : includes
@@ -354,6 +382,7 @@ Plain English version:
 - **RuleRun**: a receipt showing whether a rule matched.
 - **AuditLog**: a receipt showing who or what changed something.
 - **User, Role, Permission, ApiKey**: access-control system.
+- **Workspace, WorkspaceMember, ApprovedEmail**: tenancy system. These decide who can sign in and which private workspace their People data belongs to.
 
 ## Outputs
 
@@ -421,6 +450,7 @@ flowchart LR
 - Universal Inbox: `StagedInteraction` now has an `itemType` field; any external source can stage records via `POST /api/v1/inbox` using the `stageRecord()` domain command. Rules fire automatically on staging.
 - Data Cleaning: `/people/clean` highlights People records missing email, phone, names, or broader context, and supports editing or deleting those People from the cleanup view.
 - Inbox create-and-accept: an unmatched staged interaction can create a new Person and attach the interaction in one review action.
+- Workspace tenancy foundation: approved emails can sign in without inheriting Joseph's data, core browser/API paths carry `workspaceId`, existing data is preserved in `default-workspace`, and API keys are scoped to the workspace that created them.
 
 ### Future
 
@@ -432,3 +462,4 @@ The next larger step is the broader automation engine:
 - More rule actions beyond staged inbox fields.
 - Multiple `itemType` accept handlers (currently only `interaction` is handled on accept).
 - Inbox filtering by `source` and `itemType` in the UI.
+- Admin UI for approving emails and choosing whether an approved person gets their own workspace or joins an existing one.

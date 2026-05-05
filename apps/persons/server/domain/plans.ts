@@ -13,9 +13,17 @@ export type PlanInput = {
 }
 
 export async function createPlan(input: PlanInput, actor?: DomainActor) {
+  const workspaceId = actor?.workspaceId ?? "default-workspace"
+  const personId = optionalString(input.personId)
+  if (personId) {
+    const person = await db.person.findFirst({ where: { id: personId, workspaceId }, select: { id: true } })
+    if (!person) throw notFound("Person not found", { id: personId })
+  }
+
   const plan = await db.plan.create({
     data: {
-      personId: optionalString(input.personId),
+      workspaceId,
+      personId,
       text: requiredString(input.text, "text"),
       timescale: optionalString(input.timescale),
       successSignals: Array.isArray(input.successSignals)
@@ -31,7 +39,8 @@ export async function createPlan(input: PlanInput, actor?: DomainActor) {
 }
 
 export async function updatePlan(id: string, input: PlanInput, actor?: DomainActor) {
-  const existing = await db.plan.findUnique({ where: { id }, select: { id: true } })
+  const workspaceId = actor?.workspaceId ?? "default-workspace"
+  const existing = await db.plan.findFirst({ where: { id, workspaceId }, select: { id: true } })
   if (!existing) throw notFound("Plan not found", { id })
 
   const patch: Record<string, unknown> = {}
@@ -45,6 +54,10 @@ export async function updatePlan(id: string, input: PlanInput, actor?: DomainAct
   }
   if (input.parentId !== undefined) patch.parentId = optionalString(input.parentId)
   if (input.personId !== undefined) patch.personId = optionalString(input.personId)
+  if (typeof patch.personId === "string") {
+    const person = await db.person.findFirst({ where: { id: patch.personId, workspaceId }, select: { id: true } })
+    if (!person) throw notFound("Person not found", { id: patch.personId })
+  }
 
   const plan = await db.plan.update({ where: { id }, data: patch })
   await auditAction({ actor, action: "plan.update", targetType: "plan", targetId: id, metadata: { fields: Object.keys(patch) } })
@@ -52,7 +65,8 @@ export async function updatePlan(id: string, input: PlanInput, actor?: DomainAct
 }
 
 export async function deletePlan(id: string, actor?: DomainActor) {
-  const existing = await db.plan.findUnique({ where: { id }, select: { id: true } })
+  const workspaceId = actor?.workspaceId ?? "default-workspace"
+  const existing = await db.plan.findFirst({ where: { id, workspaceId }, select: { id: true } })
   if (!existing) throw notFound("Plan not found", { id })
   await db.plan.delete({ where: { id } })
   await auditAction({ actor, action: "plan.delete", targetType: "plan", targetId: id })

@@ -26,6 +26,7 @@ export type AggregateEvent = {
 
 export type EventMinAggregateOutputType = {
   id: string | null
+  workspaceId: string | null
   createdAt: Date | null
   name: string | null
   type: string | null
@@ -38,6 +39,7 @@ export type EventMinAggregateOutputType = {
 
 export type EventMaxAggregateOutputType = {
   id: string | null
+  workspaceId: string | null
   createdAt: Date | null
   name: string | null
   type: string | null
@@ -50,6 +52,7 @@ export type EventMaxAggregateOutputType = {
 
 export type EventCountAggregateOutputType = {
   id: number
+  workspaceId: number
   createdAt: number
   name: number
   type: number
@@ -64,6 +67,7 @@ export type EventCountAggregateOutputType = {
 
 export type EventMinAggregateInputType = {
   id?: true
+  workspaceId?: true
   createdAt?: true
   name?: true
   type?: true
@@ -76,6 +80,7 @@ export type EventMinAggregateInputType = {
 
 export type EventMaxAggregateInputType = {
   id?: true
+  workspaceId?: true
   createdAt?: true
   name?: true
   type?: true
@@ -88,6 +93,7 @@ export type EventMaxAggregateInputType = {
 
 export type EventCountAggregateInputType = {
   id?: true
+  workspaceId?: true
   createdAt?: true
   name?: true
   type?: true
@@ -173,6 +179,7 @@ export type EventGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
 
 export type EventGroupByOutputType = {
   id: string
+  workspaceId: string
   createdAt: Date
   name: string
   type: string
@@ -206,6 +213,7 @@ export type EventWhereInput = {
   OR?: Prisma.EventWhereInput[]
   NOT?: Prisma.EventWhereInput | Prisma.EventWhereInput[]
   id?: Prisma.StringFilter<"Event"> | string
+  workspaceId?: Prisma.StringFilter<"Event"> | string
   createdAt?: Prisma.DateTimeFilter<"Event"> | Date | string
   name?: Prisma.StringFilter<"Event"> | string
   type?: Prisma.StringFilter<"Event"> | string
@@ -214,12 +222,14 @@ export type EventWhereInput = {
   notes?: Prisma.StringNullableFilter<"Event"> | string | null
   transcript?: Prisma.StringNullableFilter<"Event"> | string | null
   metadata?: Prisma.StringNullableFilter<"Event"> | string | null
+  workspace?: Prisma.XOR<Prisma.WorkspaceScalarRelationFilter, Prisma.WorkspaceWhereInput>
   place?: Prisma.XOR<Prisma.PlaceNullableScalarRelationFilter, Prisma.PlaceWhereInput> | null
   interactions?: Prisma.InteractionListRelationFilter
 }
 
 export type EventOrderByWithRelationInput = {
   id?: Prisma.SortOrder
+  workspaceId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   name?: Prisma.SortOrder
   type?: Prisma.SortOrder
@@ -228,6 +238,7 @@ export type EventOrderByWithRelationInput = {
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
   transcript?: Prisma.SortOrderInput | Prisma.SortOrder
   metadata?: Prisma.SortOrderInput | Prisma.SortOrder
+  workspace?: Prisma.WorkspaceOrderByWithRelationInput
   place?: Prisma.PlaceOrderByWithRelationInput
   interactions?: Prisma.InteractionOrderByRelationAggregateInput
 }
@@ -237,6 +248,7 @@ export type EventWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.EventWhereInput | Prisma.EventWhereInput[]
   OR?: Prisma.EventWhereInput[]
   NOT?: Prisma.EventWhereInput | Prisma.EventWhereInput[]
+  workspaceId?: Prisma.StringFilter<"Event"> | string
   createdAt?: Prisma.DateTimeFilter<"Event"> | Date | string
   name?: Prisma.StringFilter<"Event"> | string
   type?: Prisma.StringFilter<"Event"> | string
@@ -245,12 +257,14 @@ export type EventWhereUniqueInput = Prisma.AtLeast<{
   notes?: Prisma.StringNullableFilter<"Event"> | string | null
   transcript?: Prisma.StringNullableFilter<"Event"> | string | null
   metadata?: Prisma.StringNullableFilter<"Event"> | string | null
+  workspace?: Prisma.XOR<Prisma.WorkspaceScalarRelationFilter, Prisma.WorkspaceWhereInput>
   place?: Prisma.XOR<Prisma.PlaceNullableScalarRelationFilter, Prisma.PlaceWhereInput> | null
   interactions?: Prisma.InteractionListRelationFilter
 }, "id">
 
 export type EventOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
+  workspaceId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   name?: Prisma.SortOrder
   type?: Prisma.SortOrder
@@ -269,6 +283,7 @@ export type EventScalarWhereWithAggregatesInput = {
   OR?: Prisma.EventScalarWhereWithAggregatesInput[]
   NOT?: Prisma.EventScalarWhereWithAggregatesInput | Prisma.EventScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Event"> | string
+  workspaceId?: Prisma.StringWithAggregatesFilter<"Event"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Event"> | Date | string
   name?: Prisma.StringWithAggregatesFilter<"Event"> | string
   type?: Prisma.StringWithAggregatesFilter<"Event"> | string
@@ -288,12 +303,14 @@ export type EventCreateInput = {
   notes?: string | null
   transcript?: string | null
   metadata?: string | null
+  workspace?: Prisma.WorkspaceCreateNestedOneWithoutEventsInput
   place?: Prisma.PlaceCreateNestedOneWithoutEventsInput
   interactions?: Prisma.InteractionCreateNestedManyWithoutEventInput
 }
 
 export type EventUncheckedCreateInput = {
   id?: string
+  workspaceId?: string
   createdAt?: Date | string
   name: string
   type: string
@@ -314,12 +331,14 @@ export type EventUpdateInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transcript?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutEventsNestedInput
   place?: Prisma.PlaceUpdateOneWithoutEventsNestedInput
   interactions?: Prisma.InteractionUpdateManyWithoutEventNestedInput
 }
 
 export type EventUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.StringFieldUpdateOperationsInput | string
@@ -333,6 +352,7 @@ export type EventUncheckedUpdateInput = {
 
 export type EventCreateManyInput = {
   id?: string
+  workspaceId?: string
   createdAt?: Date | string
   name: string
   type: string
@@ -356,6 +376,7 @@ export type EventUpdateManyMutationInput = {
 
 export type EventUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.StringFieldUpdateOperationsInput | string
@@ -366,8 +387,19 @@ export type EventUncheckedUpdateManyInput = {
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
+export type EventListRelationFilter = {
+  every?: Prisma.EventWhereInput
+  some?: Prisma.EventWhereInput
+  none?: Prisma.EventWhereInput
+}
+
+export type EventOrderByRelationAggregateInput = {
+  _count?: Prisma.SortOrder
+}
+
 export type EventCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  workspaceId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   name?: Prisma.SortOrder
   type?: Prisma.SortOrder
@@ -380,6 +412,7 @@ export type EventCountOrderByAggregateInput = {
 
 export type EventMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  workspaceId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   name?: Prisma.SortOrder
   type?: Prisma.SortOrder
@@ -392,6 +425,7 @@ export type EventMaxOrderByAggregateInput = {
 
 export type EventMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  workspaceId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   name?: Prisma.SortOrder
   type?: Prisma.SortOrder
@@ -407,14 +441,46 @@ export type EventNullableScalarRelationFilter = {
   isNot?: Prisma.EventWhereInput | null
 }
 
-export type EventListRelationFilter = {
-  every?: Prisma.EventWhereInput
-  some?: Prisma.EventWhereInput
-  none?: Prisma.EventWhereInput
+export type EventCreateNestedManyWithoutWorkspaceInput = {
+  create?: Prisma.XOR<Prisma.EventCreateWithoutWorkspaceInput, Prisma.EventUncheckedCreateWithoutWorkspaceInput> | Prisma.EventCreateWithoutWorkspaceInput[] | Prisma.EventUncheckedCreateWithoutWorkspaceInput[]
+  connectOrCreate?: Prisma.EventCreateOrConnectWithoutWorkspaceInput | Prisma.EventCreateOrConnectWithoutWorkspaceInput[]
+  createMany?: Prisma.EventCreateManyWorkspaceInputEnvelope
+  connect?: Prisma.EventWhereUniqueInput | Prisma.EventWhereUniqueInput[]
 }
 
-export type EventOrderByRelationAggregateInput = {
-  _count?: Prisma.SortOrder
+export type EventUncheckedCreateNestedManyWithoutWorkspaceInput = {
+  create?: Prisma.XOR<Prisma.EventCreateWithoutWorkspaceInput, Prisma.EventUncheckedCreateWithoutWorkspaceInput> | Prisma.EventCreateWithoutWorkspaceInput[] | Prisma.EventUncheckedCreateWithoutWorkspaceInput[]
+  connectOrCreate?: Prisma.EventCreateOrConnectWithoutWorkspaceInput | Prisma.EventCreateOrConnectWithoutWorkspaceInput[]
+  createMany?: Prisma.EventCreateManyWorkspaceInputEnvelope
+  connect?: Prisma.EventWhereUniqueInput | Prisma.EventWhereUniqueInput[]
+}
+
+export type EventUpdateManyWithoutWorkspaceNestedInput = {
+  create?: Prisma.XOR<Prisma.EventCreateWithoutWorkspaceInput, Prisma.EventUncheckedCreateWithoutWorkspaceInput> | Prisma.EventCreateWithoutWorkspaceInput[] | Prisma.EventUncheckedCreateWithoutWorkspaceInput[]
+  connectOrCreate?: Prisma.EventCreateOrConnectWithoutWorkspaceInput | Prisma.EventCreateOrConnectWithoutWorkspaceInput[]
+  upsert?: Prisma.EventUpsertWithWhereUniqueWithoutWorkspaceInput | Prisma.EventUpsertWithWhereUniqueWithoutWorkspaceInput[]
+  createMany?: Prisma.EventCreateManyWorkspaceInputEnvelope
+  set?: Prisma.EventWhereUniqueInput | Prisma.EventWhereUniqueInput[]
+  disconnect?: Prisma.EventWhereUniqueInput | Prisma.EventWhereUniqueInput[]
+  delete?: Prisma.EventWhereUniqueInput | Prisma.EventWhereUniqueInput[]
+  connect?: Prisma.EventWhereUniqueInput | Prisma.EventWhereUniqueInput[]
+  update?: Prisma.EventUpdateWithWhereUniqueWithoutWorkspaceInput | Prisma.EventUpdateWithWhereUniqueWithoutWorkspaceInput[]
+  updateMany?: Prisma.EventUpdateManyWithWhereWithoutWorkspaceInput | Prisma.EventUpdateManyWithWhereWithoutWorkspaceInput[]
+  deleteMany?: Prisma.EventScalarWhereInput | Prisma.EventScalarWhereInput[]
+}
+
+export type EventUncheckedUpdateManyWithoutWorkspaceNestedInput = {
+  create?: Prisma.XOR<Prisma.EventCreateWithoutWorkspaceInput, Prisma.EventUncheckedCreateWithoutWorkspaceInput> | Prisma.EventCreateWithoutWorkspaceInput[] | Prisma.EventUncheckedCreateWithoutWorkspaceInput[]
+  connectOrCreate?: Prisma.EventCreateOrConnectWithoutWorkspaceInput | Prisma.EventCreateOrConnectWithoutWorkspaceInput[]
+  upsert?: Prisma.EventUpsertWithWhereUniqueWithoutWorkspaceInput | Prisma.EventUpsertWithWhereUniqueWithoutWorkspaceInput[]
+  createMany?: Prisma.EventCreateManyWorkspaceInputEnvelope
+  set?: Prisma.EventWhereUniqueInput | Prisma.EventWhereUniqueInput[]
+  disconnect?: Prisma.EventWhereUniqueInput | Prisma.EventWhereUniqueInput[]
+  delete?: Prisma.EventWhereUniqueInput | Prisma.EventWhereUniqueInput[]
+  connect?: Prisma.EventWhereUniqueInput | Prisma.EventWhereUniqueInput[]
+  update?: Prisma.EventUpdateWithWhereUniqueWithoutWorkspaceInput | Prisma.EventUpdateWithWhereUniqueWithoutWorkspaceInput[]
+  updateMany?: Prisma.EventUpdateManyWithWhereWithoutWorkspaceInput | Prisma.EventUpdateManyWithWhereWithoutWorkspaceInput[]
+  deleteMany?: Prisma.EventScalarWhereInput | Prisma.EventScalarWhereInput[]
 }
 
 export type EventCreateNestedOneWithoutInteractionsInput = {
@@ -475,7 +541,7 @@ export type EventUncheckedUpdateManyWithoutPlaceNestedInput = {
   deleteMany?: Prisma.EventScalarWhereInput | Prisma.EventScalarWhereInput[]
 }
 
-export type EventCreateWithoutInteractionsInput = {
+export type EventCreateWithoutWorkspaceInput = {
   id?: string
   createdAt?: Date | string
   name: string
@@ -485,10 +551,79 @@ export type EventCreateWithoutInteractionsInput = {
   transcript?: string | null
   metadata?: string | null
   place?: Prisma.PlaceCreateNestedOneWithoutEventsInput
+  interactions?: Prisma.InteractionCreateNestedManyWithoutEventInput
+}
+
+export type EventUncheckedCreateWithoutWorkspaceInput = {
+  id?: string
+  createdAt?: Date | string
+  name: string
+  type: string
+  timestamp: Date | string
+  placeId?: string | null
+  notes?: string | null
+  transcript?: string | null
+  metadata?: string | null
+  interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutEventInput
+}
+
+export type EventCreateOrConnectWithoutWorkspaceInput = {
+  where: Prisma.EventWhereUniqueInput
+  create: Prisma.XOR<Prisma.EventCreateWithoutWorkspaceInput, Prisma.EventUncheckedCreateWithoutWorkspaceInput>
+}
+
+export type EventCreateManyWorkspaceInputEnvelope = {
+  data: Prisma.EventCreateManyWorkspaceInput | Prisma.EventCreateManyWorkspaceInput[]
+}
+
+export type EventUpsertWithWhereUniqueWithoutWorkspaceInput = {
+  where: Prisma.EventWhereUniqueInput
+  update: Prisma.XOR<Prisma.EventUpdateWithoutWorkspaceInput, Prisma.EventUncheckedUpdateWithoutWorkspaceInput>
+  create: Prisma.XOR<Prisma.EventCreateWithoutWorkspaceInput, Prisma.EventUncheckedCreateWithoutWorkspaceInput>
+}
+
+export type EventUpdateWithWhereUniqueWithoutWorkspaceInput = {
+  where: Prisma.EventWhereUniqueInput
+  data: Prisma.XOR<Prisma.EventUpdateWithoutWorkspaceInput, Prisma.EventUncheckedUpdateWithoutWorkspaceInput>
+}
+
+export type EventUpdateManyWithWhereWithoutWorkspaceInput = {
+  where: Prisma.EventScalarWhereInput
+  data: Prisma.XOR<Prisma.EventUpdateManyMutationInput, Prisma.EventUncheckedUpdateManyWithoutWorkspaceInput>
+}
+
+export type EventScalarWhereInput = {
+  AND?: Prisma.EventScalarWhereInput | Prisma.EventScalarWhereInput[]
+  OR?: Prisma.EventScalarWhereInput[]
+  NOT?: Prisma.EventScalarWhereInput | Prisma.EventScalarWhereInput[]
+  id?: Prisma.StringFilter<"Event"> | string
+  workspaceId?: Prisma.StringFilter<"Event"> | string
+  createdAt?: Prisma.DateTimeFilter<"Event"> | Date | string
+  name?: Prisma.StringFilter<"Event"> | string
+  type?: Prisma.StringFilter<"Event"> | string
+  timestamp?: Prisma.DateTimeFilter<"Event"> | Date | string
+  placeId?: Prisma.StringNullableFilter<"Event"> | string | null
+  notes?: Prisma.StringNullableFilter<"Event"> | string | null
+  transcript?: Prisma.StringNullableFilter<"Event"> | string | null
+  metadata?: Prisma.StringNullableFilter<"Event"> | string | null
+}
+
+export type EventCreateWithoutInteractionsInput = {
+  id?: string
+  createdAt?: Date | string
+  name: string
+  type: string
+  timestamp: Date | string
+  notes?: string | null
+  transcript?: string | null
+  metadata?: string | null
+  workspace?: Prisma.WorkspaceCreateNestedOneWithoutEventsInput
+  place?: Prisma.PlaceCreateNestedOneWithoutEventsInput
 }
 
 export type EventUncheckedCreateWithoutInteractionsInput = {
   id?: string
+  workspaceId?: string
   createdAt?: Date | string
   name: string
   type: string
@@ -524,11 +659,13 @@ export type EventUpdateWithoutInteractionsInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transcript?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutEventsNestedInput
   place?: Prisma.PlaceUpdateOneWithoutEventsNestedInput
 }
 
 export type EventUncheckedUpdateWithoutInteractionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.StringFieldUpdateOperationsInput | string
@@ -548,11 +685,13 @@ export type EventCreateWithoutPlaceInput = {
   notes?: string | null
   transcript?: string | null
   metadata?: string | null
+  workspace?: Prisma.WorkspaceCreateNestedOneWithoutEventsInput
   interactions?: Prisma.InteractionCreateNestedManyWithoutEventInput
 }
 
 export type EventUncheckedCreateWithoutPlaceInput = {
   id?: string
+  workspaceId?: string
   createdAt?: Date | string
   name: string
   type: string
@@ -588,23 +727,59 @@ export type EventUpdateManyWithWhereWithoutPlaceInput = {
   data: Prisma.XOR<Prisma.EventUpdateManyMutationInput, Prisma.EventUncheckedUpdateManyWithoutPlaceInput>
 }
 
-export type EventScalarWhereInput = {
-  AND?: Prisma.EventScalarWhereInput | Prisma.EventScalarWhereInput[]
-  OR?: Prisma.EventScalarWhereInput[]
-  NOT?: Prisma.EventScalarWhereInput | Prisma.EventScalarWhereInput[]
-  id?: Prisma.StringFilter<"Event"> | string
-  createdAt?: Prisma.DateTimeFilter<"Event"> | Date | string
-  name?: Prisma.StringFilter<"Event"> | string
-  type?: Prisma.StringFilter<"Event"> | string
-  timestamp?: Prisma.DateTimeFilter<"Event"> | Date | string
-  placeId?: Prisma.StringNullableFilter<"Event"> | string | null
-  notes?: Prisma.StringNullableFilter<"Event"> | string | null
-  transcript?: Prisma.StringNullableFilter<"Event"> | string | null
-  metadata?: Prisma.StringNullableFilter<"Event"> | string | null
+export type EventCreateManyWorkspaceInput = {
+  id?: string
+  createdAt?: Date | string
+  name: string
+  type: string
+  timestamp: Date | string
+  placeId?: string | null
+  notes?: string | null
+  transcript?: string | null
+  metadata?: string | null
+}
+
+export type EventUpdateWithoutWorkspaceInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  transcript?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  place?: Prisma.PlaceUpdateOneWithoutEventsNestedInput
+  interactions?: Prisma.InteractionUpdateManyWithoutEventNestedInput
+}
+
+export type EventUncheckedUpdateWithoutWorkspaceInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  placeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  transcript?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  interactions?: Prisma.InteractionUncheckedUpdateManyWithoutEventNestedInput
+}
+
+export type EventUncheckedUpdateManyWithoutWorkspaceInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  placeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  transcript?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type EventCreateManyPlaceInput = {
   id?: string
+  workspaceId?: string
   createdAt?: Date | string
   name: string
   type: string
@@ -623,11 +798,13 @@ export type EventUpdateWithoutPlaceInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transcript?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutEventsNestedInput
   interactions?: Prisma.InteractionUpdateManyWithoutEventNestedInput
 }
 
 export type EventUncheckedUpdateWithoutPlaceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.StringFieldUpdateOperationsInput | string
@@ -640,6 +817,7 @@ export type EventUncheckedUpdateWithoutPlaceInput = {
 
 export type EventUncheckedUpdateManyWithoutPlaceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.StringFieldUpdateOperationsInput | string
@@ -682,6 +860,7 @@ export type EventCountOutputTypeCountInteractionsArgs<ExtArgs extends runtime.Ty
 
 export type EventSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  workspaceId?: boolean
   createdAt?: boolean
   name?: boolean
   type?: boolean
@@ -690,6 +869,7 @@ export type EventSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   notes?: boolean
   transcript?: boolean
   metadata?: boolean
+  workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   place?: boolean | Prisma.Event$placeArgs<ExtArgs>
   interactions?: boolean | Prisma.Event$interactionsArgs<ExtArgs>
   _count?: boolean | Prisma.EventCountOutputTypeDefaultArgs<ExtArgs>
@@ -697,6 +877,7 @@ export type EventSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
 
 export type EventSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  workspaceId?: boolean
   createdAt?: boolean
   name?: boolean
   type?: boolean
@@ -705,11 +886,13 @@ export type EventSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   notes?: boolean
   transcript?: boolean
   metadata?: boolean
+  workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   place?: boolean | Prisma.Event$placeArgs<ExtArgs>
 }, ExtArgs["result"]["event"]>
 
 export type EventSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  workspaceId?: boolean
   createdAt?: boolean
   name?: boolean
   type?: boolean
@@ -718,11 +901,13 @@ export type EventSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   notes?: boolean
   transcript?: boolean
   metadata?: boolean
+  workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   place?: boolean | Prisma.Event$placeArgs<ExtArgs>
 }, ExtArgs["result"]["event"]>
 
 export type EventSelectScalar = {
   id?: boolean
+  workspaceId?: boolean
   createdAt?: boolean
   name?: boolean
   type?: boolean
@@ -733,27 +918,32 @@ export type EventSelectScalar = {
   metadata?: boolean
 }
 
-export type EventOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "name" | "type" | "timestamp" | "placeId" | "notes" | "transcript" | "metadata", ExtArgs["result"]["event"]>
+export type EventOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "workspaceId" | "createdAt" | "name" | "type" | "timestamp" | "placeId" | "notes" | "transcript" | "metadata", ExtArgs["result"]["event"]>
 export type EventInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   place?: boolean | Prisma.Event$placeArgs<ExtArgs>
   interactions?: boolean | Prisma.Event$interactionsArgs<ExtArgs>
   _count?: boolean | Prisma.EventCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type EventIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   place?: boolean | Prisma.Event$placeArgs<ExtArgs>
 }
 export type EventIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   place?: boolean | Prisma.Event$placeArgs<ExtArgs>
 }
 
 export type $EventPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Event"
   objects: {
+    workspace: Prisma.$WorkspacePayload<ExtArgs>
     place: Prisma.$PlacePayload<ExtArgs> | null
     interactions: Prisma.$InteractionPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
+    workspaceId: string
     createdAt: Date
     name: string
     type: string
@@ -1156,6 +1346,7 @@ readonly fields: EventFieldRefs;
  */
 export interface Prisma__EventClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  workspace<T extends Prisma.WorkspaceDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WorkspaceDefaultArgs<ExtArgs>>): Prisma.Prisma__WorkspaceClient<runtime.Types.Result.GetResult<Prisma.$WorkspacePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   place<T extends Prisma.Event$placeArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Event$placeArgs<ExtArgs>>): Prisma.Prisma__PlaceClient<runtime.Types.Result.GetResult<Prisma.$PlacePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   interactions<T extends Prisma.Event$interactionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Event$interactionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InteractionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
@@ -1188,6 +1379,7 @@ export interface Prisma__EventClient<T, Null = never, ExtArgs extends runtime.Ty
  */
 export interface EventFieldRefs {
   readonly id: Prisma.FieldRef<"Event", 'String'>
+  readonly workspaceId: Prisma.FieldRef<"Event", 'String'>
   readonly createdAt: Prisma.FieldRef<"Event", 'DateTime'>
   readonly name: Prisma.FieldRef<"Event", 'String'>
   readonly type: Prisma.FieldRef<"Event", 'String'>

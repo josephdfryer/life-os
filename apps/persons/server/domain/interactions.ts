@@ -25,6 +25,7 @@ export type InteractionInput = {
 }
 
 export async function createInteraction(input: InteractionInput, actor?: DomainActor) {
+  const workspaceId = actor?.workspaceId ?? "default-workspace"
   const type = requiredString(input.type, "type")
   const timestamp = parseTimestamp(input.timestamp)
   const summary = optionalString(input.summary)
@@ -32,7 +33,7 @@ export async function createInteraction(input: InteractionInput, actor?: DomainA
   const eventId = optionalString(input.eventId)
 
   if (personId) {
-    const person = await db.person.findUnique({ where: { id: personId }, select: { id: true } })
+    const person = await db.person.findFirst({ where: { id: personId, workspaceId }, select: { id: true } })
     if (!person) throw notFound("Person not found", { personId })
   }
 
@@ -41,19 +42,21 @@ export async function createInteraction(input: InteractionInput, actor?: DomainA
     const event = await db.event.create({
       data: {
         name: summary ? summary.slice(0, 80) : `${type} interaction`,
+        workspaceId,
         type,
         timestamp,
       },
     })
     resolvedEventId = event.id
   } else {
-    const event = await db.event.findUnique({ where: { id: resolvedEventId }, select: { id: true } })
+    const event = await db.event.findFirst({ where: { id: resolvedEventId, workspaceId }, select: { id: true } })
     if (!event) throw notFound("Event not found", { eventId: resolvedEventId })
   }
 
   const interaction = await db.interaction.create({
     data: {
       personId,
+      workspaceId,
       eventId: resolvedEventId,
       type,
       timestamp,
@@ -94,7 +97,8 @@ export async function createInteraction(input: InteractionInput, actor?: DomainA
 }
 
 export async function updateInteraction(id: string, input: Partial<InteractionInput>, actor?: DomainActor) {
-  const existing = await db.interaction.findUnique({ where: { id }, select: { id: true } })
+  const workspaceId = actor?.workspaceId ?? "default-workspace"
+  const existing = await db.interaction.findFirst({ where: { id, workspaceId }, select: { id: true } })
   if (!existing) throw notFound("Interaction not found", { id })
 
   const patch: Record<string, unknown> = {}
@@ -118,7 +122,8 @@ export async function updateInteraction(id: string, input: Partial<InteractionIn
 }
 
 export async function deleteInteraction(id: string, actor?: DomainActor) {
-  const existing = await db.interaction.findUnique({ where: { id }, select: { id: true } })
+  const workspaceId = actor?.workspaceId ?? "default-workspace"
+  const existing = await db.interaction.findFirst({ where: { id, workspaceId }, select: { id: true } })
   if (!existing) throw notFound("Interaction not found", { id })
   await db.interaction.delete({ where: { id } })
   await auditAction({ actor, action: "interaction.delete", targetType: "interaction", targetId: id })
@@ -135,13 +140,15 @@ export async function appendDailySourceInteraction(input: {
   direction?: string | null
   actor?: DomainActor
 }) {
-  const existingSource = await findInteractionByExactSource(input.source, input.sourceId, input.personId)
+  const workspaceId = input.actor?.workspaceId ?? "default-workspace"
+  const existingSource = await findInteractionByExactSource(input.source, input.sourceId, input.personId, workspaceId)
   if (existingSource) return { interactionId: existingSource.id, created: false, updated: false }
 
   const dayMarker = `${input.source}-day:${dayKey(input.timestamp)}`
   const dailyInteraction = await db.interaction.findFirst({
     where: {
       personId: input.personId,
+      workspaceId,
       type: input.type,
       notes: { contains: dayMarker },
     },
@@ -176,6 +183,7 @@ export async function appendDailySourceInteraction(input: {
   const event = await db.event.create({
     data: {
       name: `${input.source} ${dayKey(input.timestamp)}`.slice(0, 80),
+      workspaceId,
       type: input.type,
       timestamp: input.timestamp,
       metadata: JSON.stringify({ source: input.source, day: dayKey(input.timestamp) }),
@@ -185,6 +193,7 @@ export async function appendDailySourceInteraction(input: {
   const interaction = await db.interaction.create({
     data: {
       personId: input.personId,
+      workspaceId,
       eventId: event.id,
       type: input.type,
       timestamp: input.timestamp,

@@ -5,7 +5,7 @@ import { listRuleRuns } from "@/server/domain/rules"
 
 export async function GET(req: NextRequest) {
   try {
-    await requireAccess("rules.manage")
+    const actor = await requireAccess("rules.manage")
     const { searchParams } = new URL(req.url)
     return json(await listRuleRuns({
       ruleId: searchParams.get("ruleId"),
@@ -14,7 +14,7 @@ export async function GET(req: NextRequest) {
       status: searchParams.get("status"),
       targetType: searchParams.get("targetType"),
       targetId: searchParams.get("targetId"),
-    }))
+    }, actor.workspaceId))
   } catch (error) {
     return handleRouteError(error)
   }

@@ -4,13 +4,15 @@ import { parseTags } from "@/lib/utils"
 import type { Interaction } from "@/types"
 import { deletePerson, updatePerson } from "@/server/domain/people"
 import { handleRouteError, noContent } from "@/server/api/respond"
+import { requireAccess } from "@/server/domain/access"
 
 type Params = { params: Promise<{ id: string }> }
 
 export async function GET(_req: NextRequest, { params }: Params) {
   const { id } = await params
-  const person = await db.person.findUnique({
-    where: { id },
+  const actor = await requireAccess("people.read")
+  const person = await db.person.findFirst({
+    where: { id, workspaceId: actor.workspaceId },
     include: {
       interactions: {
         include: { event: true, sourceFile: true },
@@ -50,7 +52,8 @@ export async function GET(_req: NextRequest, { params }: Params) {
 export async function PATCH(req: NextRequest, { params }: Params) {
   try {
     const { id } = await params
-    return NextResponse.json(await updatePerson(id, await req.json()))
+    const actor = await requireAccess("people.write")
+    return NextResponse.json(await updatePerson(id, await req.json(), actor.actor))
   } catch (error) {
     return handleRouteError(error)
   }
@@ -59,7 +62,8 @@ export async function PATCH(req: NextRequest, { params }: Params) {
 export async function DELETE(_req: NextRequest, { params }: Params) {
   try {
     const { id } = await params
-    await deletePerson(id)
+    const actor = await requireAccess("people.write")
+    await deletePerson(id, actor.actor)
     return noContent()
   } catch (error) {
     return handleRouteError(error)

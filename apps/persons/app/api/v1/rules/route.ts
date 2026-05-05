@@ -8,15 +8,18 @@ function toAccessActor(auth: ApiAuthResult): AccessActor {
   return {
     userId: null as unknown as string,
     email: auth.actor.label ?? "api-key",
+    workspaceId: auth.workspaceId,
+    workspaceName: "API Workspace",
     actor: auth.actor,
     scopes: auth.scopes,
   }
 }
 
 export async function GET(req: NextRequest) {
-  if (!(await authorizeApiRequest(req, "rules.manage"))) return unauthorized()
+  const auth = await authorizeApiRequest(req, "rules.manage")
+  if (!auth) return unauthorized()
   try {
-    return json(await listRules())
+    return json(await listRules(auth.workspaceId))
   } catch (error) {
     return handleRouteError(error)
   }

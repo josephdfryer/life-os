@@ -8,11 +8,77 @@ datasource db {
 }
 
 // ─────────────────────────────────────────────
+// TENANCY: Workspace isolation
+// ─────────────────────────────────────────────
+
+model Workspace {
+  id             String              @id @default(cuid())
+  createdAt      DateTime            @default(now())
+  updatedAt      DateTime            @updatedAt
+  name           String
+  slug           String              @unique
+  status         String              @default("active")
+  ownerUserId    String?
+  ownerUser      User?               @relation("WorkspaceOwner", fields: [ownerUserId], references: [id], onDelete: SetNull)
+  members        WorkspaceMember[]
+  approvedEmails ApprovedEmail[]
+  persons        Person[]
+  events         Event[]
+  interactions   Interaction[]
+  plans          Plan[]
+  places         Place[]
+  items          Item[]
+  importedFiles  ImportedFile[]
+  stagedItems    StagedInteraction[]
+  rules          Rule[]
+  ruleRuns       RuleRun[]
+  apiKeys        ApiKey[]
+  auditLogs      AuditLog[]
+
+  @@index([ownerUserId])
+  @@index([status])
+}
+
+model WorkspaceMember {
+  id          String    @id @default(cuid())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  workspaceId String
+  userId      String
+  role        String    @default("owner")
+  status      String    @default("active")
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([workspaceId, userId])
+  @@index([userId])
+  @@index([workspaceId, status])
+}
+
+model ApprovedEmail {
+  id          String     @id @default(cuid())
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  email       String     @unique
+  status      String     @default("approved")
+  workspaceId String?
+  workspace   Workspace? @relation(fields: [workspaceId], references: [id], onDelete: SetNull)
+  invitedById String?
+  invitedBy   User?      @relation("ApprovedEmailInviter", fields: [invitedById], references: [id], onDelete: SetNull)
+
+  @@index([status])
+  @@index([workspaceId])
+  @@index([invitedById])
+}
+
+// ─────────────────────────────────────────────
 // PRIMARY: Person
 // ─────────────────────────────────────────────
 
 model Person {
   id           String        @id @default(cuid())
+  workspaceId  String        @default("default-workspace")
+  workspace    Workspace     @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
   first        String
@@ -44,6 +110,7 @@ model Person {
   apiKeys      ApiKey[]
   auditLogs    AuditLog[]
 
+  @@index([workspaceId, last, first])
   @@index([last, first])
   @@index([title])
   @@index([closeness])
@@ -69,6 +136,9 @@ model User {
   apiKeys   ApiKey[]
   auditLogs AuditLog[]
   rules     Rule[]
+  workspaceMemberships WorkspaceMember[]
+  ownedWorkspaces      Workspace[]     @relation("WorkspaceOwner")
+  approvedEmailsSent   ApprovedEmail[] @relation("ApprovedEmailInviter")
 
   @@index([email])
   @@index([status])
@@ -115,6 +185,8 @@ model RolePermission {
 
 model ApiKey {
   id            String        @id @default(cuid())
+  workspaceId   String        @default("default-workspace")
+  workspace     Workspace     @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
   name          String
@@ -131,6 +203,7 @@ model ApiKey {
   auditLogs     AuditLog[]
 
   @@index([status])
+  @@index([workspaceId])
   @@index([createdByUserId])
   @@index([ownerPersonId])
 }
@@ -146,6 +219,8 @@ model ApiKeyScope {
 
 model AuditLog {
   id         String   @id @default(cuid())
+  workspaceId String? @default("default-workspace")
+  workspace Workspace? @relation(fields: [workspaceId], references: [id], onDelete: SetNull)
   createdAt  DateTime @default(now())
   action     String
   targetType String
@@ -162,6 +237,7 @@ model AuditLog {
   metadata   String?
 
   @@index([createdAt])
+  @@index([workspaceId, createdAt])
   @@index([action])
   @@index([targetType, targetId])
   @@index([actorType, actorId])
@@ -176,6 +252,8 @@ model AuditLog {
 
 model Rule {
   id              String    @id @default(cuid())
+  workspaceId     String    @default("default-workspace")
+  workspace       Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
   name            String
@@ -191,12 +269,15 @@ model Rule {
   createdByUser   User?     @relation(fields: [createdByUserId], references: [id], onDelete: SetNull)
   runs            RuleRun[]
 
+  @@index([workspaceId, trigger, status, priority])
   @@index([trigger, status, priority])
   @@index([createdByUserId])
 }
 
 model RuleRun {
   id             String   @id @default(cuid())
+  workspaceId    String   @default("default-workspace")
+  workspace      Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   createdAt      DateTime @default(now())
   ruleId         String
   rule           Rule     @relation(fields: [ruleId], references: [id], onDelete: Cascade)
@@ -212,6 +293,7 @@ model RuleRun {
   message        String?
 
   @@index([ruleId, createdAt])
+  @@index([workspaceId, createdAt])
   @@index([trigger, createdAt])
   @@index([matched, createdAt])
   @@index([targetType, targetId])
@@ -225,6 +307,8 @@ model RuleRun {
 
 model StagedInteraction {
   id                String   @id @default(cuid())
+  workspaceId        String   @default("default-workspace")
+  workspace          Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
   source            String
@@ -248,7 +332,7 @@ model StagedInteraction {
   acceptedPersonId  String?
   interactionId     String?
 
-  @@unique([source, sourceId])
+  @@unique([workspaceId, source, sourceId])
   @@index([status, createdAt])
   @@index([source, itemType, createdAt])
   @@index([candidatePersonId])
@@ -261,6 +345,8 @@ model StagedInteraction {
 
 model Event {
   id           String        @id @default(cuid())
+  workspaceId  String        @default("default-workspace")
+  workspace    Workspace     @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   createdAt    DateTime      @default(now())
   name         String
   type         String
@@ -271,6 +357,8 @@ model Event {
   transcript   String?
   metadata     String?
   interactions Interaction[]
+
+  @@index([workspaceId, timestamp])
 }
 
 // ─────────────────────────────────────────────
@@ -279,6 +367,8 @@ model Event {
 
 model Interaction {
   id              String            @id @default(cuid())
+  workspaceId     String            @default("default-workspace")
+  workspace       Workspace         @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   createdAt       DateTime          @default(now())
   // Person is optional — interactions can involve any combination of primaries
   personId        String?
@@ -304,6 +394,7 @@ model Interaction {
   itemInteractions ItemInteraction[]
 
   @@index([personId, timestamp(sort: Desc)])
+  @@index([workspaceId, timestamp(sort: Desc)])
   @@index([timestamp(sort: Desc)])
   @@index([placeId])
 }
@@ -314,6 +405,8 @@ model Interaction {
 
 model Plan {
   id             String   @id @default(cuid())
+  workspaceId    String   @default("default-workspace")
+  workspace      Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   createdAt      DateTime @default(now())
   personId       String?
   person         Person?  @relation(fields: [personId], references: [id], onDelete: Cascade)
@@ -324,6 +417,9 @@ model Plan {
   parentId       String?
   children       Plan[]   @relation("PlanHierarchy")
   parent         Plan?    @relation("PlanHierarchy", fields: [parentId], references: [id])
+
+  @@index([workspaceId, createdAt])
+  @@index([workspaceId, personId])
 }
 
 // ─────────────────────────────────────────────
@@ -332,6 +428,8 @@ model Plan {
 
 model Place {
   id            String        @id @default(cuid())
+  workspaceId   String        @default("default-workspace")
+  workspace     Workspace     @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   name          String
   type          String?
   address       String?
@@ -346,6 +444,7 @@ model Place {
   items         Item[]
 
   @@index([parentPlaceId])
+  @@index([workspaceId])
 }
 
 // ─────────────────────────────────────────────
@@ -354,6 +453,8 @@ model Place {
 
 model Item {
   id               String           @id @default(cuid())
+  workspaceId      String           @default("default-workspace")
+  workspace        Workspace        @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   createdAt        DateTime         @default(now())
   updatedAt        DateTime         @updatedAt
   name             String
@@ -401,6 +502,7 @@ model Item {
   @@index([placeId])
   @@index([ownedById])
   @@index([createdAt])
+  @@index([workspaceId])
 }
 
 // ─────────────────────────────────────────────
@@ -455,6 +557,8 @@ model ItemInteraction {
 
 model ImportedFile {
   id           String        @id @default(cuid())
+  workspaceId  String        @default("default-workspace")
+  workspace    Workspace     @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   createdAt    DateTime      @default(now())
   filename     String
   format       String
@@ -462,4 +566,6 @@ model ImportedFile {
   sizeBytes    Int
   content      String?
   interactions Interaction[]
+
+  @@index([workspaceId, createdAt])
 }

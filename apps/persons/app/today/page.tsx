@@ -5,16 +5,19 @@ import { isBirthdayToday, isBirthdayThisWeek } from "@/lib/utils"
 import AttentionCard from "@/components/today/AttentionCard"
 import BirthdayCard from "@/components/today/BirthdayCard"
 import type { Person } from "@/types"
+import { requireAccess } from "@/server/domain/access"
 
 export const dynamic = "force-dynamic"
 
 export default async function TodayPage() {
+  const actor = await requireAccess("people.read")
   // Only load persons who are relevant to today:
   //   - closeness >= 2 (Friends / Inner Circle) for attention tracking
   //   - OR have a birthday set
   // Only fetch the last 5 interaction timestamps per person — no event/sourceFile joins.
   const raw = await db.person.findMany({
     where: {
+      workspaceId: actor.workspaceId,
       OR: [
         { closeness: { gte: 2 } },
         { birthday: { not: null } },

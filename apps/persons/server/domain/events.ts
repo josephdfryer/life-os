@@ -16,9 +16,11 @@ export async function createEvent(input: EventInput, actor?: DomainActor) {
   const name = requiredString(input.name, "name")
   const type = requiredString(input.type, "type")
   const timestamp = parseTimestamp(input.timestamp)
+  const workspaceId = actor?.workspaceId ?? "default-workspace"
 
   const event = await db.event.create({
     data: {
+      workspaceId,
       name,
       type,
       timestamp,
@@ -34,7 +36,8 @@ export async function createEvent(input: EventInput, actor?: DomainActor) {
 }
 
 export async function updateEvent(id: string, input: EventInput, actor?: DomainActor) {
-  const existing = await db.event.findUnique({ where: { id }, select: { id: true } })
+  const workspaceId = actor?.workspaceId ?? "default-workspace"
+  const existing = await db.event.findFirst({ where: { id, workspaceId }, select: { id: true } })
   if (!existing) throw badRequest("Event not found")
 
   const patch: Record<string, unknown> = {}
@@ -52,7 +55,8 @@ export async function updateEvent(id: string, input: EventInput, actor?: DomainA
 }
 
 export async function deleteEvent(id: string, actor?: DomainActor) {
-  const existing = await db.event.findUnique({ where: { id }, select: { id: true } })
+  const workspaceId = actor?.workspaceId ?? "default-workspace"
+  const existing = await db.event.findFirst({ where: { id, workspaceId }, select: { id: true } })
   if (!existing) throw badRequest("Event not found")
   await db.event.delete({ where: { id } })
   await auditAction({ actor, action: "event.delete", targetType: "event", targetId: id })

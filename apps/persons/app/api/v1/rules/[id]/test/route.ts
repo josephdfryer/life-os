@@ -8,6 +8,8 @@ function toAccessActor(auth: ApiAuthResult): AccessActor {
   return {
     userId: null as unknown as string,
     email: auth.actor.label ?? "api-key",
+    workspaceId: auth.workspaceId,
+    workspaceName: "API Workspace",
     actor: auth.actor,
     scopes: auth.scopes,
   }

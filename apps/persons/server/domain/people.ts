@@ -29,14 +29,16 @@ export type PersonInput = {
 }
 
 export async function createPerson(input: PersonInput, actor?: DomainActor) {
+  const workspaceId = actor?.workspaceId ?? "default-workspace"
   const first = requiredString(input.first, "first")
   const last = requiredString(input.last, "last")
-  const count = await db.person.count()
+  const count = await db.person.count({ where: { workspaceId } })
   const assigned = assignColor(count)
 
   const person = await db.person.create({
     data: {
       first,
+      workspaceId,
       last,
       nickname: optionalString(input.nickname),
       title: optionalString(input.title),
@@ -63,6 +65,7 @@ export async function createPerson(input: PersonInput, actor?: DomainActor) {
 }
 
 export async function updatePerson(id: string, input: PersonInput, actor?: DomainActor) {
+  const workspaceId = actor?.workspaceId ?? "default-workspace"
   const patch: Record<string, unknown> = {}
   if (input.first !== undefined) patch.first = requiredString(input.first, "first")
   if (input.last !== undefined) patch.last = requiredString(input.last, "last")
@@ -86,7 +89,7 @@ export async function updatePerson(id: string, input: PersonInput, actor?: Domai
   if (input.twitter !== undefined) patch.twitter = optionalString(input.twitter)
   if (input.website !== undefined) patch.website = optionalString(input.website)
 
-  const existing = await db.person.findUnique({ where: { id }, select: { id: true } })
+  const existing = await db.person.findFirst({ where: { id, workspaceId }, select: { id: true } })
   if (!existing) throw notFound("Person not found", { id })
 
   const person = await db.person.update({ where: { id }, data: patch })
@@ -95,7 +98,8 @@ export async function updatePerson(id: string, input: PersonInput, actor?: Domai
 }
 
 export async function deletePerson(id: string, actor?: DomainActor) {
-  const existing = await db.person.findUnique({ where: { id }, select: { id: true } })
+  const workspaceId = actor?.workspaceId ?? "default-workspace"
+  const existing = await db.person.findFirst({ where: { id, workspaceId }, select: { id: true } })
   if (!existing) throw notFound("Person not found", { id })
   await db.person.delete({ where: { id } })
   await auditAction({ actor, action: "person.delete", targetType: "person", targetId: id })

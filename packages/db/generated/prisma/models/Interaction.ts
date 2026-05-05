@@ -38,6 +38,7 @@ export type InteractionSumAggregateOutputType = {
 
 export type InteractionMinAggregateOutputType = {
   id: string | null
+  workspaceId: string | null
   createdAt: Date | null
   personId: string | null
   eventId: string | null
@@ -58,6 +59,7 @@ export type InteractionMinAggregateOutputType = {
 
 export type InteractionMaxAggregateOutputType = {
   id: string | null
+  workspaceId: string | null
   createdAt: Date | null
   personId: string | null
   eventId: string | null
@@ -78,6 +80,7 @@ export type InteractionMaxAggregateOutputType = {
 
 export type InteractionCountAggregateOutputType = {
   id: number
+  workspaceId: number
   createdAt: number
   personId: number
   eventId: number
@@ -110,6 +113,7 @@ export type InteractionSumAggregateInputType = {
 
 export type InteractionMinAggregateInputType = {
   id?: true
+  workspaceId?: true
   createdAt?: true
   personId?: true
   eventId?: true
@@ -130,6 +134,7 @@ export type InteractionMinAggregateInputType = {
 
 export type InteractionMaxAggregateInputType = {
   id?: true
+  workspaceId?: true
   createdAt?: true
   personId?: true
   eventId?: true
@@ -150,6 +155,7 @@ export type InteractionMaxAggregateInputType = {
 
 export type InteractionCountAggregateInputType = {
   id?: true
+  workspaceId?: true
   createdAt?: true
   personId?: true
   eventId?: true
@@ -257,6 +263,7 @@ export type InteractionGroupByArgs<ExtArgs extends runtime.Types.Extensions.Inte
 
 export type InteractionGroupByOutputType = {
   id: string
+  workspaceId: string
   createdAt: Date
   personId: string | null
   eventId: string | null
@@ -300,6 +307,7 @@ export type InteractionWhereInput = {
   OR?: Prisma.InteractionWhereInput[]
   NOT?: Prisma.InteractionWhereInput | Prisma.InteractionWhereInput[]
   id?: Prisma.StringFilter<"Interaction"> | string
+  workspaceId?: Prisma.StringFilter<"Interaction"> | string
   createdAt?: Prisma.DateTimeFilter<"Interaction"> | Date | string
   personId?: Prisma.StringNullableFilter<"Interaction"> | string | null
   eventId?: Prisma.StringNullableFilter<"Interaction"> | string | null
@@ -316,6 +324,7 @@ export type InteractionWhereInput = {
   amount?: Prisma.FloatNullableFilter<"Interaction"> | number | null
   direction?: Prisma.StringNullableFilter<"Interaction"> | string | null
   sourceFileId?: Prisma.StringNullableFilter<"Interaction"> | string | null
+  workspace?: Prisma.XOR<Prisma.WorkspaceScalarRelationFilter, Prisma.WorkspaceWhereInput>
   person?: Prisma.XOR<Prisma.PersonNullableScalarRelationFilter, Prisma.PersonWhereInput> | null
   event?: Prisma.XOR<Prisma.EventNullableScalarRelationFilter, Prisma.EventWhereInput> | null
   place?: Prisma.XOR<Prisma.PlaceNullableScalarRelationFilter, Prisma.PlaceWhereInput> | null
@@ -325,6 +334,7 @@ export type InteractionWhereInput = {
 
 export type InteractionOrderByWithRelationInput = {
   id?: Prisma.SortOrder
+  workspaceId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   personId?: Prisma.SortOrderInput | Prisma.SortOrder
   eventId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -341,6 +351,7 @@ export type InteractionOrderByWithRelationInput = {
   amount?: Prisma.SortOrderInput | Prisma.SortOrder
   direction?: Prisma.SortOrderInput | Prisma.SortOrder
   sourceFileId?: Prisma.SortOrderInput | Prisma.SortOrder
+  workspace?: Prisma.WorkspaceOrderByWithRelationInput
   person?: Prisma.PersonOrderByWithRelationInput
   event?: Prisma.EventOrderByWithRelationInput
   place?: Prisma.PlaceOrderByWithRelationInput
@@ -353,6 +364,7 @@ export type InteractionWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.InteractionWhereInput | Prisma.InteractionWhereInput[]
   OR?: Prisma.InteractionWhereInput[]
   NOT?: Prisma.InteractionWhereInput | Prisma.InteractionWhereInput[]
+  workspaceId?: Prisma.StringFilter<"Interaction"> | string
   createdAt?: Prisma.DateTimeFilter<"Interaction"> | Date | string
   personId?: Prisma.StringNullableFilter<"Interaction"> | string | null
   eventId?: Prisma.StringNullableFilter<"Interaction"> | string | null
@@ -369,6 +381,7 @@ export type InteractionWhereUniqueInput = Prisma.AtLeast<{
   amount?: Prisma.FloatNullableFilter<"Interaction"> | number | null
   direction?: Prisma.StringNullableFilter<"Interaction"> | string | null
   sourceFileId?: Prisma.StringNullableFilter<"Interaction"> | string | null
+  workspace?: Prisma.XOR<Prisma.WorkspaceScalarRelationFilter, Prisma.WorkspaceWhereInput>
   person?: Prisma.XOR<Prisma.PersonNullableScalarRelationFilter, Prisma.PersonWhereInput> | null
   event?: Prisma.XOR<Prisma.EventNullableScalarRelationFilter, Prisma.EventWhereInput> | null
   place?: Prisma.XOR<Prisma.PlaceNullableScalarRelationFilter, Prisma.PlaceWhereInput> | null
@@ -378,6 +391,7 @@ export type InteractionWhereUniqueInput = Prisma.AtLeast<{
 
 export type InteractionOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
+  workspaceId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   personId?: Prisma.SortOrderInput | Prisma.SortOrder
   eventId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -406,6 +420,7 @@ export type InteractionScalarWhereWithAggregatesInput = {
   OR?: Prisma.InteractionScalarWhereWithAggregatesInput[]
   NOT?: Prisma.InteractionScalarWhereWithAggregatesInput | Prisma.InteractionScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Interaction"> | string
+  workspaceId?: Prisma.StringWithAggregatesFilter<"Interaction"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Interaction"> | Date | string
   personId?: Prisma.StringNullableWithAggregatesFilter<"Interaction"> | string | null
   eventId?: Prisma.StringNullableWithAggregatesFilter<"Interaction"> | string | null
@@ -438,6 +453,7 @@ export type InteractionCreateInput = {
   billable?: boolean
   amount?: number | null
   direction?: string | null
+  workspace?: Prisma.WorkspaceCreateNestedOneWithoutInteractionsInput
   person?: Prisma.PersonCreateNestedOneWithoutInteractionsInput
   event?: Prisma.EventCreateNestedOneWithoutInteractionsInput
   place?: Prisma.PlaceCreateNestedOneWithoutInteractionsInput
@@ -447,6 +463,7 @@ export type InteractionCreateInput = {
 
 export type InteractionUncheckedCreateInput = {
   id?: string
+  workspaceId?: string
   createdAt?: Date | string
   personId?: string | null
   eventId?: string | null
@@ -480,6 +497,7 @@ export type InteractionUpdateInput = {
   billable?: Prisma.BoolFieldUpdateOperationsInput | boolean
   amount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutInteractionsNestedInput
   person?: Prisma.PersonUpdateOneWithoutInteractionsNestedInput
   event?: Prisma.EventUpdateOneWithoutInteractionsNestedInput
   place?: Prisma.PlaceUpdateOneWithoutInteractionsNestedInput
@@ -489,6 +507,7 @@ export type InteractionUpdateInput = {
 
 export type InteractionUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   personId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   eventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -510,6 +529,7 @@ export type InteractionUncheckedUpdateInput = {
 
 export type InteractionCreateManyInput = {
   id?: string
+  workspaceId?: string
   createdAt?: Date | string
   personId?: string | null
   eventId?: string | null
@@ -546,6 +566,7 @@ export type InteractionUpdateManyMutationInput = {
 
 export type InteractionUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   personId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   eventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -576,6 +597,7 @@ export type InteractionOrderByRelationAggregateInput = {
 
 export type InteractionCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  workspaceId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   personId?: Prisma.SortOrder
   eventId?: Prisma.SortOrder
@@ -601,6 +623,7 @@ export type InteractionAvgOrderByAggregateInput = {
 
 export type InteractionMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  workspaceId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   personId?: Prisma.SortOrder
   eventId?: Prisma.SortOrder
@@ -621,6 +644,7 @@ export type InteractionMaxOrderByAggregateInput = {
 
 export type InteractionMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  workspaceId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   personId?: Prisma.SortOrder
   eventId?: Prisma.SortOrder
@@ -647,6 +671,48 @@ export type InteractionSumOrderByAggregateInput = {
 export type InteractionScalarRelationFilter = {
   is?: Prisma.InteractionWhereInput
   isNot?: Prisma.InteractionWhereInput
+}
+
+export type InteractionCreateNestedManyWithoutWorkspaceInput = {
+  create?: Prisma.XOR<Prisma.InteractionCreateWithoutWorkspaceInput, Prisma.InteractionUncheckedCreateWithoutWorkspaceInput> | Prisma.InteractionCreateWithoutWorkspaceInput[] | Prisma.InteractionUncheckedCreateWithoutWorkspaceInput[]
+  connectOrCreate?: Prisma.InteractionCreateOrConnectWithoutWorkspaceInput | Prisma.InteractionCreateOrConnectWithoutWorkspaceInput[]
+  createMany?: Prisma.InteractionCreateManyWorkspaceInputEnvelope
+  connect?: Prisma.InteractionWhereUniqueInput | Prisma.InteractionWhereUniqueInput[]
+}
+
+export type InteractionUncheckedCreateNestedManyWithoutWorkspaceInput = {
+  create?: Prisma.XOR<Prisma.InteractionCreateWithoutWorkspaceInput, Prisma.InteractionUncheckedCreateWithoutWorkspaceInput> | Prisma.InteractionCreateWithoutWorkspaceInput[] | Prisma.InteractionUncheckedCreateWithoutWorkspaceInput[]
+  connectOrCreate?: Prisma.InteractionCreateOrConnectWithoutWorkspaceInput | Prisma.InteractionCreateOrConnectWithoutWorkspaceInput[]
+  createMany?: Prisma.InteractionCreateManyWorkspaceInputEnvelope
+  connect?: Prisma.InteractionWhereUniqueInput | Prisma.InteractionWhereUniqueInput[]
+}
+
+export type InteractionUpdateManyWithoutWorkspaceNestedInput = {
+  create?: Prisma.XOR<Prisma.InteractionCreateWithoutWorkspaceInput, Prisma.InteractionUncheckedCreateWithoutWorkspaceInput> | Prisma.InteractionCreateWithoutWorkspaceInput[] | Prisma.InteractionUncheckedCreateWithoutWorkspaceInput[]
+  connectOrCreate?: Prisma.InteractionCreateOrConnectWithoutWorkspaceInput | Prisma.InteractionCreateOrConnectWithoutWorkspaceInput[]
+  upsert?: Prisma.InteractionUpsertWithWhereUniqueWithoutWorkspaceInput | Prisma.InteractionUpsertWithWhereUniqueWithoutWorkspaceInput[]
+  createMany?: Prisma.InteractionCreateManyWorkspaceInputEnvelope
+  set?: Prisma.InteractionWhereUniqueInput | Prisma.InteractionWhereUniqueInput[]
+  disconnect?: Prisma.InteractionWhereUniqueInput | Prisma.InteractionWhereUniqueInput[]
+  delete?: Prisma.InteractionWhereUniqueInput | Prisma.InteractionWhereUniqueInput[]
+  connect?: Prisma.InteractionWhereUniqueInput | Prisma.InteractionWhereUniqueInput[]
+  update?: Prisma.InteractionUpdateWithWhereUniqueWithoutWorkspaceInput | Prisma.InteractionUpdateWithWhereUniqueWithoutWorkspaceInput[]
+  updateMany?: Prisma.InteractionUpdateManyWithWhereWithoutWorkspaceInput | Prisma.InteractionUpdateManyWithWhereWithoutWorkspaceInput[]
+  deleteMany?: Prisma.InteractionScalarWhereInput | Prisma.InteractionScalarWhereInput[]
+}
+
+export type InteractionUncheckedUpdateManyWithoutWorkspaceNestedInput = {
+  create?: Prisma.XOR<Prisma.InteractionCreateWithoutWorkspaceInput, Prisma.InteractionUncheckedCreateWithoutWorkspaceInput> | Prisma.InteractionCreateWithoutWorkspaceInput[] | Prisma.InteractionUncheckedCreateWithoutWorkspaceInput[]
+  connectOrCreate?: Prisma.InteractionCreateOrConnectWithoutWorkspaceInput | Prisma.InteractionCreateOrConnectWithoutWorkspaceInput[]
+  upsert?: Prisma.InteractionUpsertWithWhereUniqueWithoutWorkspaceInput | Prisma.InteractionUpsertWithWhereUniqueWithoutWorkspaceInput[]
+  createMany?: Prisma.InteractionCreateManyWorkspaceInputEnvelope
+  set?: Prisma.InteractionWhereUniqueInput | Prisma.InteractionWhereUniqueInput[]
+  disconnect?: Prisma.InteractionWhereUniqueInput | Prisma.InteractionWhereUniqueInput[]
+  delete?: Prisma.InteractionWhereUniqueInput | Prisma.InteractionWhereUniqueInput[]
+  connect?: Prisma.InteractionWhereUniqueInput | Prisma.InteractionWhereUniqueInput[]
+  update?: Prisma.InteractionUpdateWithWhereUniqueWithoutWorkspaceInput | Prisma.InteractionUpdateWithWhereUniqueWithoutWorkspaceInput[]
+  updateMany?: Prisma.InteractionUpdateManyWithWhereWithoutWorkspaceInput | Prisma.InteractionUpdateManyWithWhereWithoutWorkspaceInput[]
+  deleteMany?: Prisma.InteractionScalarWhereInput | Prisma.InteractionScalarWhereInput[]
 }
 
 export type InteractionCreateNestedManyWithoutPersonInput = {
@@ -839,6 +905,97 @@ export type InteractionUncheckedUpdateManyWithoutSourceFileNestedInput = {
   deleteMany?: Prisma.InteractionScalarWhereInput | Prisma.InteractionScalarWhereInput[]
 }
 
+export type InteractionCreateWithoutWorkspaceInput = {
+  id?: string
+  createdAt?: Date | string
+  type: string
+  timestamp: Date | string
+  duration?: number | null
+  emotionalWeight?: string | null
+  outcome?: string | null
+  summary?: string | null
+  notes?: string | null
+  actionItems?: string | null
+  billable?: boolean
+  amount?: number | null
+  direction?: string | null
+  person?: Prisma.PersonCreateNestedOneWithoutInteractionsInput
+  event?: Prisma.EventCreateNestedOneWithoutInteractionsInput
+  place?: Prisma.PlaceCreateNestedOneWithoutInteractionsInput
+  sourceFile?: Prisma.ImportedFileCreateNestedOneWithoutInteractionsInput
+  itemInteractions?: Prisma.ItemInteractionCreateNestedManyWithoutInteractionInput
+}
+
+export type InteractionUncheckedCreateWithoutWorkspaceInput = {
+  id?: string
+  createdAt?: Date | string
+  personId?: string | null
+  eventId?: string | null
+  placeId?: string | null
+  type: string
+  timestamp: Date | string
+  duration?: number | null
+  emotionalWeight?: string | null
+  outcome?: string | null
+  summary?: string | null
+  notes?: string | null
+  actionItems?: string | null
+  billable?: boolean
+  amount?: number | null
+  direction?: string | null
+  sourceFileId?: string | null
+  itemInteractions?: Prisma.ItemInteractionUncheckedCreateNestedManyWithoutInteractionInput
+}
+
+export type InteractionCreateOrConnectWithoutWorkspaceInput = {
+  where: Prisma.InteractionWhereUniqueInput
+  create: Prisma.XOR<Prisma.InteractionCreateWithoutWorkspaceInput, Prisma.InteractionUncheckedCreateWithoutWorkspaceInput>
+}
+
+export type InteractionCreateManyWorkspaceInputEnvelope = {
+  data: Prisma.InteractionCreateManyWorkspaceInput | Prisma.InteractionCreateManyWorkspaceInput[]
+}
+
+export type InteractionUpsertWithWhereUniqueWithoutWorkspaceInput = {
+  where: Prisma.InteractionWhereUniqueInput
+  update: Prisma.XOR<Prisma.InteractionUpdateWithoutWorkspaceInput, Prisma.InteractionUncheckedUpdateWithoutWorkspaceInput>
+  create: Prisma.XOR<Prisma.InteractionCreateWithoutWorkspaceInput, Prisma.InteractionUncheckedCreateWithoutWorkspaceInput>
+}
+
+export type InteractionUpdateWithWhereUniqueWithoutWorkspaceInput = {
+  where: Prisma.InteractionWhereUniqueInput
+  data: Prisma.XOR<Prisma.InteractionUpdateWithoutWorkspaceInput, Prisma.InteractionUncheckedUpdateWithoutWorkspaceInput>
+}
+
+export type InteractionUpdateManyWithWhereWithoutWorkspaceInput = {
+  where: Prisma.InteractionScalarWhereInput
+  data: Prisma.XOR<Prisma.InteractionUpdateManyMutationInput, Prisma.InteractionUncheckedUpdateManyWithoutWorkspaceInput>
+}
+
+export type InteractionScalarWhereInput = {
+  AND?: Prisma.InteractionScalarWhereInput | Prisma.InteractionScalarWhereInput[]
+  OR?: Prisma.InteractionScalarWhereInput[]
+  NOT?: Prisma.InteractionScalarWhereInput | Prisma.InteractionScalarWhereInput[]
+  id?: Prisma.StringFilter<"Interaction"> | string
+  workspaceId?: Prisma.StringFilter<"Interaction"> | string
+  createdAt?: Prisma.DateTimeFilter<"Interaction"> | Date | string
+  personId?: Prisma.StringNullableFilter<"Interaction"> | string | null
+  eventId?: Prisma.StringNullableFilter<"Interaction"> | string | null
+  placeId?: Prisma.StringNullableFilter<"Interaction"> | string | null
+  type?: Prisma.StringFilter<"Interaction"> | string
+  timestamp?: Prisma.DateTimeFilter<"Interaction"> | Date | string
+  duration?: Prisma.IntNullableFilter<"Interaction"> | number | null
+  emotionalWeight?: Prisma.StringNullableFilter<"Interaction"> | string | null
+  outcome?: Prisma.StringNullableFilter<"Interaction"> | string | null
+  summary?: Prisma.StringNullableFilter<"Interaction"> | string | null
+  notes?: Prisma.StringNullableFilter<"Interaction"> | string | null
+  actionItems?: Prisma.StringNullableFilter<"Interaction"> | string | null
+  billable?: Prisma.BoolFilter<"Interaction"> | boolean
+  amount?: Prisma.FloatNullableFilter<"Interaction"> | number | null
+  direction?: Prisma.StringNullableFilter<"Interaction"> | string | null
+  sourceFileId?: Prisma.StringNullableFilter<"Interaction"> | string | null
+}
+
 export type InteractionCreateWithoutPersonInput = {
   id?: string
   createdAt?: Date | string
@@ -853,6 +1010,7 @@ export type InteractionCreateWithoutPersonInput = {
   billable?: boolean
   amount?: number | null
   direction?: string | null
+  workspace?: Prisma.WorkspaceCreateNestedOneWithoutInteractionsInput
   event?: Prisma.EventCreateNestedOneWithoutInteractionsInput
   place?: Prisma.PlaceCreateNestedOneWithoutInteractionsInput
   sourceFile?: Prisma.ImportedFileCreateNestedOneWithoutInteractionsInput
@@ -861,6 +1019,7 @@ export type InteractionCreateWithoutPersonInput = {
 
 export type InteractionUncheckedCreateWithoutPersonInput = {
   id?: string
+  workspaceId?: string
   createdAt?: Date | string
   eventId?: string | null
   placeId?: string | null
@@ -904,29 +1063,6 @@ export type InteractionUpdateManyWithWhereWithoutPersonInput = {
   data: Prisma.XOR<Prisma.InteractionUpdateManyMutationInput, Prisma.InteractionUncheckedUpdateManyWithoutPersonInput>
 }
 
-export type InteractionScalarWhereInput = {
-  AND?: Prisma.InteractionScalarWhereInput | Prisma.InteractionScalarWhereInput[]
-  OR?: Prisma.InteractionScalarWhereInput[]
-  NOT?: Prisma.InteractionScalarWhereInput | Prisma.InteractionScalarWhereInput[]
-  id?: Prisma.StringFilter<"Interaction"> | string
-  createdAt?: Prisma.DateTimeFilter<"Interaction"> | Date | string
-  personId?: Prisma.StringNullableFilter<"Interaction"> | string | null
-  eventId?: Prisma.StringNullableFilter<"Interaction"> | string | null
-  placeId?: Prisma.StringNullableFilter<"Interaction"> | string | null
-  type?: Prisma.StringFilter<"Interaction"> | string
-  timestamp?: Prisma.DateTimeFilter<"Interaction"> | Date | string
-  duration?: Prisma.IntNullableFilter<"Interaction"> | number | null
-  emotionalWeight?: Prisma.StringNullableFilter<"Interaction"> | string | null
-  outcome?: Prisma.StringNullableFilter<"Interaction"> | string | null
-  summary?: Prisma.StringNullableFilter<"Interaction"> | string | null
-  notes?: Prisma.StringNullableFilter<"Interaction"> | string | null
-  actionItems?: Prisma.StringNullableFilter<"Interaction"> | string | null
-  billable?: Prisma.BoolFilter<"Interaction"> | boolean
-  amount?: Prisma.FloatNullableFilter<"Interaction"> | number | null
-  direction?: Prisma.StringNullableFilter<"Interaction"> | string | null
-  sourceFileId?: Prisma.StringNullableFilter<"Interaction"> | string | null
-}
-
 export type InteractionCreateWithoutEventInput = {
   id?: string
   createdAt?: Date | string
@@ -941,6 +1077,7 @@ export type InteractionCreateWithoutEventInput = {
   billable?: boolean
   amount?: number | null
   direction?: string | null
+  workspace?: Prisma.WorkspaceCreateNestedOneWithoutInteractionsInput
   person?: Prisma.PersonCreateNestedOneWithoutInteractionsInput
   place?: Prisma.PlaceCreateNestedOneWithoutInteractionsInput
   sourceFile?: Prisma.ImportedFileCreateNestedOneWithoutInteractionsInput
@@ -949,6 +1086,7 @@ export type InteractionCreateWithoutEventInput = {
 
 export type InteractionUncheckedCreateWithoutEventInput = {
   id?: string
+  workspaceId?: string
   createdAt?: Date | string
   personId?: string | null
   placeId?: string | null
@@ -1006,6 +1144,7 @@ export type InteractionCreateWithoutPlaceInput = {
   billable?: boolean
   amount?: number | null
   direction?: string | null
+  workspace?: Prisma.WorkspaceCreateNestedOneWithoutInteractionsInput
   person?: Prisma.PersonCreateNestedOneWithoutInteractionsInput
   event?: Prisma.EventCreateNestedOneWithoutInteractionsInput
   sourceFile?: Prisma.ImportedFileCreateNestedOneWithoutInteractionsInput
@@ -1014,6 +1153,7 @@ export type InteractionCreateWithoutPlaceInput = {
 
 export type InteractionUncheckedCreateWithoutPlaceInput = {
   id?: string
+  workspaceId?: string
   createdAt?: Date | string
   personId?: string | null
   eventId?: string | null
@@ -1071,6 +1211,7 @@ export type InteractionCreateWithoutItemInteractionsInput = {
   billable?: boolean
   amount?: number | null
   direction?: string | null
+  workspace?: Prisma.WorkspaceCreateNestedOneWithoutInteractionsInput
   person?: Prisma.PersonCreateNestedOneWithoutInteractionsInput
   event?: Prisma.EventCreateNestedOneWithoutInteractionsInput
   place?: Prisma.PlaceCreateNestedOneWithoutInteractionsInput
@@ -1079,6 +1220,7 @@ export type InteractionCreateWithoutItemInteractionsInput = {
 
 export type InteractionUncheckedCreateWithoutItemInteractionsInput = {
   id?: string
+  workspaceId?: string
   createdAt?: Date | string
   personId?: string | null
   eventId?: string | null
@@ -1127,6 +1269,7 @@ export type InteractionUpdateWithoutItemInteractionsInput = {
   billable?: Prisma.BoolFieldUpdateOperationsInput | boolean
   amount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutInteractionsNestedInput
   person?: Prisma.PersonUpdateOneWithoutInteractionsNestedInput
   event?: Prisma.EventUpdateOneWithoutInteractionsNestedInput
   place?: Prisma.PlaceUpdateOneWithoutInteractionsNestedInput
@@ -1135,6 +1278,7 @@ export type InteractionUpdateWithoutItemInteractionsInput = {
 
 export type InteractionUncheckedUpdateWithoutItemInteractionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   personId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   eventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1167,6 +1311,7 @@ export type InteractionCreateWithoutSourceFileInput = {
   billable?: boolean
   amount?: number | null
   direction?: string | null
+  workspace?: Prisma.WorkspaceCreateNestedOneWithoutInteractionsInput
   person?: Prisma.PersonCreateNestedOneWithoutInteractionsInput
   event?: Prisma.EventCreateNestedOneWithoutInteractionsInput
   place?: Prisma.PlaceCreateNestedOneWithoutInteractionsInput
@@ -1175,6 +1320,7 @@ export type InteractionCreateWithoutSourceFileInput = {
 
 export type InteractionUncheckedCreateWithoutSourceFileInput = {
   id?: string
+  workspaceId?: string
   createdAt?: Date | string
   personId?: string | null
   eventId?: string | null
@@ -1218,8 +1364,91 @@ export type InteractionUpdateManyWithWhereWithoutSourceFileInput = {
   data: Prisma.XOR<Prisma.InteractionUpdateManyMutationInput, Prisma.InteractionUncheckedUpdateManyWithoutSourceFileInput>
 }
 
+export type InteractionCreateManyWorkspaceInput = {
+  id?: string
+  createdAt?: Date | string
+  personId?: string | null
+  eventId?: string | null
+  placeId?: string | null
+  type: string
+  timestamp: Date | string
+  duration?: number | null
+  emotionalWeight?: string | null
+  outcome?: string | null
+  summary?: string | null
+  notes?: string | null
+  actionItems?: string | null
+  billable?: boolean
+  amount?: number | null
+  direction?: string | null
+  sourceFileId?: string | null
+}
+
+export type InteractionUpdateWithoutWorkspaceInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  duration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  emotionalWeight?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  outcome?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  actionItems?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billable?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  amount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  person?: Prisma.PersonUpdateOneWithoutInteractionsNestedInput
+  event?: Prisma.EventUpdateOneWithoutInteractionsNestedInput
+  place?: Prisma.PlaceUpdateOneWithoutInteractionsNestedInput
+  sourceFile?: Prisma.ImportedFileUpdateOneWithoutInteractionsNestedInput
+  itemInteractions?: Prisma.ItemInteractionUpdateManyWithoutInteractionNestedInput
+}
+
+export type InteractionUncheckedUpdateWithoutWorkspaceInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  personId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  eventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  placeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  duration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  emotionalWeight?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  outcome?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  actionItems?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billable?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  amount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  itemInteractions?: Prisma.ItemInteractionUncheckedUpdateManyWithoutInteractionNestedInput
+}
+
+export type InteractionUncheckedUpdateManyWithoutWorkspaceInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  personId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  eventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  placeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  duration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  emotionalWeight?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  outcome?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  actionItems?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billable?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  amount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+}
+
 export type InteractionCreateManyPersonInput = {
   id?: string
+  workspaceId?: string
   createdAt?: Date | string
   eventId?: string | null
   placeId?: string | null
@@ -1251,6 +1480,7 @@ export type InteractionUpdateWithoutPersonInput = {
   billable?: Prisma.BoolFieldUpdateOperationsInput | boolean
   amount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutInteractionsNestedInput
   event?: Prisma.EventUpdateOneWithoutInteractionsNestedInput
   place?: Prisma.PlaceUpdateOneWithoutInteractionsNestedInput
   sourceFile?: Prisma.ImportedFileUpdateOneWithoutInteractionsNestedInput
@@ -1259,6 +1489,7 @@ export type InteractionUpdateWithoutPersonInput = {
 
 export type InteractionUncheckedUpdateWithoutPersonInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   eventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   placeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1279,6 +1510,7 @@ export type InteractionUncheckedUpdateWithoutPersonInput = {
 
 export type InteractionUncheckedUpdateManyWithoutPersonInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   eventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   placeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1298,6 +1530,7 @@ export type InteractionUncheckedUpdateManyWithoutPersonInput = {
 
 export type InteractionCreateManyEventInput = {
   id?: string
+  workspaceId?: string
   createdAt?: Date | string
   personId?: string | null
   placeId?: string | null
@@ -1329,6 +1562,7 @@ export type InteractionUpdateWithoutEventInput = {
   billable?: Prisma.BoolFieldUpdateOperationsInput | boolean
   amount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutInteractionsNestedInput
   person?: Prisma.PersonUpdateOneWithoutInteractionsNestedInput
   place?: Prisma.PlaceUpdateOneWithoutInteractionsNestedInput
   sourceFile?: Prisma.ImportedFileUpdateOneWithoutInteractionsNestedInput
@@ -1337,6 +1571,7 @@ export type InteractionUpdateWithoutEventInput = {
 
 export type InteractionUncheckedUpdateWithoutEventInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   personId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   placeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1357,6 +1592,7 @@ export type InteractionUncheckedUpdateWithoutEventInput = {
 
 export type InteractionUncheckedUpdateManyWithoutEventInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   personId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   placeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1376,6 +1612,7 @@ export type InteractionUncheckedUpdateManyWithoutEventInput = {
 
 export type InteractionCreateManyPlaceInput = {
   id?: string
+  workspaceId?: string
   createdAt?: Date | string
   personId?: string | null
   eventId?: string | null
@@ -1407,6 +1644,7 @@ export type InteractionUpdateWithoutPlaceInput = {
   billable?: Prisma.BoolFieldUpdateOperationsInput | boolean
   amount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutInteractionsNestedInput
   person?: Prisma.PersonUpdateOneWithoutInteractionsNestedInput
   event?: Prisma.EventUpdateOneWithoutInteractionsNestedInput
   sourceFile?: Prisma.ImportedFileUpdateOneWithoutInteractionsNestedInput
@@ -1415,6 +1653,7 @@ export type InteractionUpdateWithoutPlaceInput = {
 
 export type InteractionUncheckedUpdateWithoutPlaceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   personId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   eventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1435,6 +1674,7 @@ export type InteractionUncheckedUpdateWithoutPlaceInput = {
 
 export type InteractionUncheckedUpdateManyWithoutPlaceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   personId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   eventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1454,6 +1694,7 @@ export type InteractionUncheckedUpdateManyWithoutPlaceInput = {
 
 export type InteractionCreateManySourceFileInput = {
   id?: string
+  workspaceId?: string
   createdAt?: Date | string
   personId?: string | null
   eventId?: string | null
@@ -1485,6 +1726,7 @@ export type InteractionUpdateWithoutSourceFileInput = {
   billable?: Prisma.BoolFieldUpdateOperationsInput | boolean
   amount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutInteractionsNestedInput
   person?: Prisma.PersonUpdateOneWithoutInteractionsNestedInput
   event?: Prisma.EventUpdateOneWithoutInteractionsNestedInput
   place?: Prisma.PlaceUpdateOneWithoutInteractionsNestedInput
@@ -1493,6 +1735,7 @@ export type InteractionUpdateWithoutSourceFileInput = {
 
 export type InteractionUncheckedUpdateWithoutSourceFileInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   personId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   eventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1513,6 +1756,7 @@ export type InteractionUncheckedUpdateWithoutSourceFileInput = {
 
 export type InteractionUncheckedUpdateManyWithoutSourceFileInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   personId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   eventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1563,6 +1807,7 @@ export type InteractionCountOutputTypeCountItemInteractionsArgs<ExtArgs extends 
 
 export type InteractionSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  workspaceId?: boolean
   createdAt?: boolean
   personId?: boolean
   eventId?: boolean
@@ -1579,6 +1824,7 @@ export type InteractionSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   amount?: boolean
   direction?: boolean
   sourceFileId?: boolean
+  workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   person?: boolean | Prisma.Interaction$personArgs<ExtArgs>
   event?: boolean | Prisma.Interaction$eventArgs<ExtArgs>
   place?: boolean | Prisma.Interaction$placeArgs<ExtArgs>
@@ -1589,6 +1835,7 @@ export type InteractionSelect<ExtArgs extends runtime.Types.Extensions.InternalA
 
 export type InteractionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  workspaceId?: boolean
   createdAt?: boolean
   personId?: boolean
   eventId?: boolean
@@ -1605,6 +1852,7 @@ export type InteractionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   amount?: boolean
   direction?: boolean
   sourceFileId?: boolean
+  workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   person?: boolean | Prisma.Interaction$personArgs<ExtArgs>
   event?: boolean | Prisma.Interaction$eventArgs<ExtArgs>
   place?: boolean | Prisma.Interaction$placeArgs<ExtArgs>
@@ -1613,6 +1861,7 @@ export type InteractionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
 
 export type InteractionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  workspaceId?: boolean
   createdAt?: boolean
   personId?: boolean
   eventId?: boolean
@@ -1629,6 +1878,7 @@ export type InteractionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   amount?: boolean
   direction?: boolean
   sourceFileId?: boolean
+  workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   person?: boolean | Prisma.Interaction$personArgs<ExtArgs>
   event?: boolean | Prisma.Interaction$eventArgs<ExtArgs>
   place?: boolean | Prisma.Interaction$placeArgs<ExtArgs>
@@ -1637,6 +1887,7 @@ export type InteractionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
 
 export type InteractionSelectScalar = {
   id?: boolean
+  workspaceId?: boolean
   createdAt?: boolean
   personId?: boolean
   eventId?: boolean
@@ -1655,8 +1906,9 @@ export type InteractionSelectScalar = {
   sourceFileId?: boolean
 }
 
-export type InteractionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "personId" | "eventId" | "placeId" | "type" | "timestamp" | "duration" | "emotionalWeight" | "outcome" | "summary" | "notes" | "actionItems" | "billable" | "amount" | "direction" | "sourceFileId", ExtArgs["result"]["interaction"]>
+export type InteractionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "workspaceId" | "createdAt" | "personId" | "eventId" | "placeId" | "type" | "timestamp" | "duration" | "emotionalWeight" | "outcome" | "summary" | "notes" | "actionItems" | "billable" | "amount" | "direction" | "sourceFileId", ExtArgs["result"]["interaction"]>
 export type InteractionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   person?: boolean | Prisma.Interaction$personArgs<ExtArgs>
   event?: boolean | Prisma.Interaction$eventArgs<ExtArgs>
   place?: boolean | Prisma.Interaction$placeArgs<ExtArgs>
@@ -1665,12 +1917,14 @@ export type InteractionInclude<ExtArgs extends runtime.Types.Extensions.Internal
   _count?: boolean | Prisma.InteractionCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type InteractionIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   person?: boolean | Prisma.Interaction$personArgs<ExtArgs>
   event?: boolean | Prisma.Interaction$eventArgs<ExtArgs>
   place?: boolean | Prisma.Interaction$placeArgs<ExtArgs>
   sourceFile?: boolean | Prisma.Interaction$sourceFileArgs<ExtArgs>
 }
 export type InteractionIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   person?: boolean | Prisma.Interaction$personArgs<ExtArgs>
   event?: boolean | Prisma.Interaction$eventArgs<ExtArgs>
   place?: boolean | Prisma.Interaction$placeArgs<ExtArgs>
@@ -1680,6 +1934,7 @@ export type InteractionIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.
 export type $InteractionPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Interaction"
   objects: {
+    workspace: Prisma.$WorkspacePayload<ExtArgs>
     person: Prisma.$PersonPayload<ExtArgs> | null
     event: Prisma.$EventPayload<ExtArgs> | null
     place: Prisma.$PlacePayload<ExtArgs> | null
@@ -1688,6 +1943,7 @@ export type $InteractionPayload<ExtArgs extends runtime.Types.Extensions.Interna
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
+    workspaceId: string
     createdAt: Date
     personId: string | null
     eventId: string | null
@@ -2098,6 +2354,7 @@ readonly fields: InteractionFieldRefs;
  */
 export interface Prisma__InteractionClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  workspace<T extends Prisma.WorkspaceDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WorkspaceDefaultArgs<ExtArgs>>): Prisma.Prisma__WorkspaceClient<runtime.Types.Result.GetResult<Prisma.$WorkspacePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   person<T extends Prisma.Interaction$personArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Interaction$personArgs<ExtArgs>>): Prisma.Prisma__PersonClient<runtime.Types.Result.GetResult<Prisma.$PersonPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   event<T extends Prisma.Interaction$eventArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Interaction$eventArgs<ExtArgs>>): Prisma.Prisma__EventClient<runtime.Types.Result.GetResult<Prisma.$EventPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   place<T extends Prisma.Interaction$placeArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Interaction$placeArgs<ExtArgs>>): Prisma.Prisma__PlaceClient<runtime.Types.Result.GetResult<Prisma.$PlacePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
@@ -2133,6 +2390,7 @@ export interface Prisma__InteractionClient<T, Null = never, ExtArgs extends runt
  */
 export interface InteractionFieldRefs {
   readonly id: Prisma.FieldRef<"Interaction", 'String'>
+  readonly workspaceId: Prisma.FieldRef<"Interaction", 'String'>
   readonly createdAt: Prisma.FieldRef<"Interaction", 'DateTime'>
   readonly personId: Prisma.FieldRef<"Interaction", 'String'>
   readonly eventId: Prisma.FieldRef<"Interaction", 'String'>

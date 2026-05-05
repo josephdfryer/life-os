@@ -5,8 +5,8 @@ import { createRule, listRules } from "@/server/domain/rules"
 
 export async function GET() {
   try {
-    await requireAccess("rules.manage")
-    return json(await listRules())
+    const actor = await requireAccess("rules.manage")
+    return json(await listRules(actor.workspaceId))
   } catch (error) {
     return handleRouteError(error)
   }

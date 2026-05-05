@@ -26,6 +26,7 @@ export type StageRecordInput = {
 }
 
 export async function stageRecord(input: StageRecordInput, actor?: DomainActor) {
+  const workspaceId = actor?.workspaceId ?? "default-workspace"
   const timestamp = input.timestamp instanceof Date ? input.timestamp : new Date(input.timestamp)
   if (Number.isNaN(timestamp.getTime())) throw badRequest("timestamp is invalid", { field: "timestamp" })
 
@@ -33,9 +34,10 @@ export async function stageRecord(input: StageRecordInput, actor?: DomainActor) 
   const metadataStr = input.metadata ? JSON.stringify(input.metadata) : null
 
   const staged = await db.stagedInteraction.upsert({
-    where: { source_sourceId: { source: input.source, sourceId: input.sourceId } },
+    where: { workspaceId_source_sourceId: { workspaceId, source: input.source, sourceId: input.sourceId } },
     update: {
       itemType,
+      workspaceId,
       contactName: input.contactName ?? undefined,
       contactEmail: input.contactEmail ?? undefined,
       contactPhone: input.contactPhone ?? undefined,
@@ -50,6 +52,7 @@ export async function stageRecord(input: StageRecordInput, actor?: DomainActor) 
     },
     create: {
       source: input.source,
+      workspaceId,
       sourceId: input.sourceId,
       itemType,
       status: "pending",
@@ -104,7 +107,8 @@ export async function stageRecord(input: StageRecordInput, actor?: DomainActor) 
 }
 
 export async function applyInboxSuggestions(id: string, ruleRunIds: string[], actor?: DomainActor) {
-  const item = await db.stagedInteraction.findUnique({ where: { id }, select: { id: true } })
+  const workspaceId = actor?.workspaceId ?? "default-workspace"
+  const item = await db.stagedInteraction.findFirst({ where: { id, workspaceId }, select: { id: true } })
   if (!item) throw notFound("Inbox item not found", { id })
 
   const result = await applyRuleRunSuggestions(ruleRunIds, id, actor)
@@ -121,8 +125,9 @@ export async function applyInboxSuggestions(id: string, ruleRunIds: string[], ac
 }
 
 export async function updateInboxItem(id: string, body: Record<string, unknown>, actor?: DomainActor) {
+  const workspaceId = actor?.workspaceId ?? "default-workspace"
   const action = body.action as InboxAction
-  const item = await db.stagedInteraction.findUnique({ where: { id } })
+  const item = await db.stagedInteraction.findFirst({ where: { id, workspaceId } })
   if (!item) throw notFound("Inbox item not found", { id })
 
   if (action === "dismiss") {
@@ -153,13 +158,14 @@ export async function updateInboxItem(id: string, body: Record<string, unknown>,
 }
 
 async function acceptInboxItem(id: string, body: Record<string, unknown>, actor?: DomainActor) {
-  const item = await db.stagedInteraction.findUnique({ where: { id } })
+  const workspaceId = actor?.workspaceId ?? "default-workspace"
+  const item = await db.stagedInteraction.findFirst({ where: { id, workspaceId } })
   if (!item) throw notFound("Inbox item not found", { id })
 
   const personId = optionalString(body.personId) ?? item.candidatePersonId
   if (!personId) throw badRequest("Choose a Person before accepting this item", { field: "personId" })
 
-  const person = await db.person.findUnique({ where: { id: personId }, select: { id: true } })
+  const person = await db.person.findFirst({ where: { id: personId, workspaceId }, select: { id: true } })
   if (!person) throw notFound("Selected Person does not exist", { personId })
 
   const summary = body.summary === undefined ? item.summary : optionalString(body.summary)

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import { db } from "@/lib/db"
+import { requireAccess } from "@/server/domain/access"
 
 const FACET_FIELDS = ["title", "company", "location", "headline"] as const
 type FacetField = typeof FACET_FIELDS[number]
@@ -9,6 +10,7 @@ function isFacetField(value: string | null): value is FacetField {
 }
 
 export async function GET(req: NextRequest) {
+  const actor = await requireAccess("people.read")
   const { searchParams } = new URL(req.url)
   const field = searchParams.get("field")
   const q = searchParams.get("q")?.trim() ?? ""
@@ -20,6 +22,7 @@ export async function GET(req: NextRequest) {
 
   const rows = await db.person.findMany({
     where: {
+      workspaceId: actor.workspaceId,
       [field]: {
         not: null,
         ...(q ? { contains: q } : {}),

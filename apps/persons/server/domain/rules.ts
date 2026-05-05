@@ -46,13 +46,14 @@ export type RuleInput = {
   stopProcessing?: unknown
 }
 
-export async function listRules() {
+export async function listRules(workspaceId = "default-workspace") {
   const [rules, runCount] = await Promise.all([
     db.rule.findMany({
+      where: { workspaceId },
       include: { createdByUser: true, runs: { orderBy: { createdAt: "desc" }, take: 1 } },
       orderBy: [{ priority: "asc" }, { createdAt: "desc" }],
     }),
-    db.ruleRun.count(),
+    db.ruleRun.count({ where: { workspaceId } }),
   ])
   return { rules: rules.map(formatRule), runCount }
 }
@@ -63,6 +64,7 @@ export async function createRule(input: RuleInput, actor: AccessActor) {
   const rule = await db.rule.create({
     data: {
       name: requiredString(input.name, "name"),
+      workspaceId: actor.workspaceId,
       description: optionalString(input.description),
       trigger: requiredString(input.trigger, "trigger"),
       status: optionalString(input.status) ?? "active",
@@ -87,7 +89,7 @@ export async function createRule(input: RuleInput, actor: AccessActor) {
 }
 
 export async function updateRule(id: string, input: RuleInput, actor: AccessActor) {
-  const existing = await db.rule.findUnique({ where: { id }, select: { id: true } })
+  const existing = await db.rule.findFirst({ where: { id, workspaceId: actor.workspaceId }, select: { id: true } })
   if (!existing) throw notFound("Rule not found", { id })
 
   const patch: Record<string, unknown> = {}
@@ -117,7 +119,7 @@ export async function updateRule(id: string, input: RuleInput, actor: AccessActo
 }
 
 export async function deleteRule(id: string, actor: AccessActor) {
-  const existing = await db.rule.findUnique({ where: { id }, select: { id: true } })
+  const existing = await db.rule.findFirst({ where: { id, workspaceId: actor.workspaceId }, select: { id: true } })
   if (!existing) throw notFound("Rule not found", { id })
   await db.rule.delete({ where: { id } })
   await auditAction({ actor: actor.actor, action: "rule.delete", targetType: "rule", targetId: id })
@@ -126,7 +128,7 @@ export async function deleteRule(id: string, actor: AccessActor) {
 export async function testRule(input: { ruleId?: string | null; rule?: RuleInput; payload?: unknown; targetType?: string | null; targetId?: string | null }, actor: AccessActor) {
   const payload = objectValue(input.payload)
   const rule = input.ruleId
-    ? await db.rule.findUnique({ where: { id: input.ruleId } })
+    ? await db.rule.findFirst({ where: { id: input.ruleId, workspaceId: actor.workspaceId } })
     : null
 
   const evaluatedRule = rule
@@ -155,6 +157,7 @@ export async function testRule(input: { ruleId?: string | null; rule?: RuleInput
     run = await db.ruleRun.create({
       data: {
         ruleId: evaluatedRule.id,
+        workspaceId: actor.workspaceId,
         trigger: evaluatedRule.trigger,
         targetType: optionalString(input.targetType),
         targetId: optionalString(input.targetId),
@@ -181,8 +184,9 @@ export async function testRule(input: { ruleId?: string | null; rule?: RuleInput
 }
 
 export async function runRulesForTarget(input: RuleExecutionInput) {
+  const workspaceId = input.actor?.workspaceId ?? "default-workspace"
   const rules = await db.rule.findMany({
-    where: { trigger: input.trigger, status: "active" },
+    where: { workspaceId, trigger: input.trigger, status: "active" },
     orderBy: [{ priority: "asc" }, { createdAt: "asc" }],
   })
 
@@ -215,6 +219,7 @@ export async function runRulesForTarget(input: RuleExecutionInput) {
     const run = await db.ruleRun.create({
       data: {
         ruleId: rule.id,
+        workspaceId,
         trigger: input.trigger,
         targetType: input.targetType ?? null,
         targetId: input.targetId ?? null,
@@ -267,8 +272,8 @@ export type RuleRunFilters = {
   targetId?: string | null
 }
 
-export async function listRuleRuns(filters: RuleRunFilters = {}) {
-  const where: Prisma.RuleRunWhereInput = {}
+export async function listRuleRuns(filters: RuleRunFilters = {}, workspaceId = "default-workspace") {
+  const where: Prisma.RuleRunWhereInput = { workspaceId }
   if (filters.ruleId) where.ruleId = filters.ruleId
   if (filters.trigger) where.trigger = filters.trigger
   if (filters.status) where.status = filters.status
@@ -351,6 +356,7 @@ function runStatus(mode: string, matched: boolean, apply: boolean | undefined, a
 
 async function applyRuleActions(actions: RuleAction[], input: RuleExecutionInput) {
   if (input.targetType !== "stagedInteraction" || !input.targetId) return []
+  const workspaceId = input.actor?.workspaceId ?? "default-workspace"
 
   const patch: Record<string, unknown> = {}
   const applied: RuleAction[] = []
@@ -381,22 +387,22 @@ async function applyRuleActions(actions: RuleAction[], input: RuleExecutionInput
   }
 
   if (personTagActions.length) {
-    const tagApplied = await applyPersonTagActions(personTagActions, input.targetId)
+    const tagApplied = await applyPersonTagActions(personTagActions, input.targetId, workspaceId)
     applied.push(...tagApplied)
   }
 
   return applied
 }
 
-async function applyPersonTagActions(actions: RuleAction[], stagedId: string) {
-  const staged = await db.stagedInteraction.findUnique({
-    where: { id: stagedId },
+async function applyPersonTagActions(actions: RuleAction[], stagedId: string, workspaceId = "default-workspace") {
+  const staged = await db.stagedInteraction.findFirst({
+    where: { id: stagedId, workspaceId },
     select: { candidatePersonId: true },
   })
   if (!staged?.candidatePersonId) return []
 
-  const person = await db.person.findUnique({
-    where: { id: staged.candidatePersonId },
+  const person = await db.person.findFirst({
+    where: { id: staged.candidatePersonId, workspaceId },
     select: { id: true, tags: true },
   })
   if (!person) return []
@@ -436,7 +442,7 @@ export async function applyRuleRunSuggestions(
   if (!ruleRunIds.length) return { applied: [] as RuleAction[], updatedRunIds: [] as string[] }
 
   const runs = await db.ruleRun.findMany({
-    where: { id: { in: ruleRunIds }, targetId, status: "suggested" },
+    where: { id: { in: ruleRunIds }, targetId, status: "suggested", workspaceId: actor?.workspaceId ?? "default-workspace" },
     select: { id: true, actionsPlanned: true },
   })
 
@@ -450,6 +456,7 @@ export async function applyRuleRunSuggestions(
     const applied = await applyPersonTagActions(
       planned.filter(a => ["add_tag", "remove_tag"].includes(normalize(a.type))),
       targetId,
+      actor?.workspaceId ?? "default-workspace",
     )
 
     const stagePatch: Record<string, unknown> = {}

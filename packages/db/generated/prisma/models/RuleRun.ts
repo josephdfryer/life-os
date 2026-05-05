@@ -26,6 +26,7 @@ export type AggregateRuleRun = {
 
 export type RuleRunMinAggregateOutputType = {
   id: string | null
+  workspaceId: string | null
   createdAt: Date | null
   ruleId: string | null
   trigger: string | null
@@ -42,6 +43,7 @@ export type RuleRunMinAggregateOutputType = {
 
 export type RuleRunMaxAggregateOutputType = {
   id: string | null
+  workspaceId: string | null
   createdAt: Date | null
   ruleId: string | null
   trigger: string | null
@@ -58,6 +60,7 @@ export type RuleRunMaxAggregateOutputType = {
 
 export type RuleRunCountAggregateOutputType = {
   id: number
+  workspaceId: number
   createdAt: number
   ruleId: number
   trigger: number
@@ -76,6 +79,7 @@ export type RuleRunCountAggregateOutputType = {
 
 export type RuleRunMinAggregateInputType = {
   id?: true
+  workspaceId?: true
   createdAt?: true
   ruleId?: true
   trigger?: true
@@ -92,6 +96,7 @@ export type RuleRunMinAggregateInputType = {
 
 export type RuleRunMaxAggregateInputType = {
   id?: true
+  workspaceId?: true
   createdAt?: true
   ruleId?: true
   trigger?: true
@@ -108,6 +113,7 @@ export type RuleRunMaxAggregateInputType = {
 
 export type RuleRunCountAggregateInputType = {
   id?: true
+  workspaceId?: true
   createdAt?: true
   ruleId?: true
   trigger?: true
@@ -197,6 +203,7 @@ export type RuleRunGroupByArgs<ExtArgs extends runtime.Types.Extensions.Internal
 
 export type RuleRunGroupByOutputType = {
   id: string
+  workspaceId: string
   createdAt: Date
   ruleId: string
   trigger: string
@@ -234,6 +241,7 @@ export type RuleRunWhereInput = {
   OR?: Prisma.RuleRunWhereInput[]
   NOT?: Prisma.RuleRunWhereInput | Prisma.RuleRunWhereInput[]
   id?: Prisma.StringFilter<"RuleRun"> | string
+  workspaceId?: Prisma.StringFilter<"RuleRun"> | string
   createdAt?: Prisma.DateTimeFilter<"RuleRun"> | Date | string
   ruleId?: Prisma.StringFilter<"RuleRun"> | string
   trigger?: Prisma.StringFilter<"RuleRun"> | string
@@ -246,11 +254,13 @@ export type RuleRunWhereInput = {
   actionsPlanned?: Prisma.StringNullableFilter<"RuleRun"> | string | null
   actionsApplied?: Prisma.StringNullableFilter<"RuleRun"> | string | null
   message?: Prisma.StringNullableFilter<"RuleRun"> | string | null
+  workspace?: Prisma.XOR<Prisma.WorkspaceScalarRelationFilter, Prisma.WorkspaceWhereInput>
   rule?: Prisma.XOR<Prisma.RuleScalarRelationFilter, Prisma.RuleWhereInput>
 }
 
 export type RuleRunOrderByWithRelationInput = {
   id?: Prisma.SortOrder
+  workspaceId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   ruleId?: Prisma.SortOrder
   trigger?: Prisma.SortOrder
@@ -263,6 +273,7 @@ export type RuleRunOrderByWithRelationInput = {
   actionsPlanned?: Prisma.SortOrderInput | Prisma.SortOrder
   actionsApplied?: Prisma.SortOrderInput | Prisma.SortOrder
   message?: Prisma.SortOrderInput | Prisma.SortOrder
+  workspace?: Prisma.WorkspaceOrderByWithRelationInput
   rule?: Prisma.RuleOrderByWithRelationInput
 }
 
@@ -271,6 +282,7 @@ export type RuleRunWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.RuleRunWhereInput | Prisma.RuleRunWhereInput[]
   OR?: Prisma.RuleRunWhereInput[]
   NOT?: Prisma.RuleRunWhereInput | Prisma.RuleRunWhereInput[]
+  workspaceId?: Prisma.StringFilter<"RuleRun"> | string
   createdAt?: Prisma.DateTimeFilter<"RuleRun"> | Date | string
   ruleId?: Prisma.StringFilter<"RuleRun"> | string
   trigger?: Prisma.StringFilter<"RuleRun"> | string
@@ -283,11 +295,13 @@ export type RuleRunWhereUniqueInput = Prisma.AtLeast<{
   actionsPlanned?: Prisma.StringNullableFilter<"RuleRun"> | string | null
   actionsApplied?: Prisma.StringNullableFilter<"RuleRun"> | string | null
   message?: Prisma.StringNullableFilter<"RuleRun"> | string | null
+  workspace?: Prisma.XOR<Prisma.WorkspaceScalarRelationFilter, Prisma.WorkspaceWhereInput>
   rule?: Prisma.XOR<Prisma.RuleScalarRelationFilter, Prisma.RuleWhereInput>
 }, "id">
 
 export type RuleRunOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
+  workspaceId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   ruleId?: Prisma.SortOrder
   trigger?: Prisma.SortOrder
@@ -310,6 +324,7 @@ export type RuleRunScalarWhereWithAggregatesInput = {
   OR?: Prisma.RuleRunScalarWhereWithAggregatesInput[]
   NOT?: Prisma.RuleRunScalarWhereWithAggregatesInput | Prisma.RuleRunScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"RuleRun"> | string
+  workspaceId?: Prisma.StringWithAggregatesFilter<"RuleRun"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"RuleRun"> | Date | string
   ruleId?: Prisma.StringWithAggregatesFilter<"RuleRun"> | string
   trigger?: Prisma.StringWithAggregatesFilter<"RuleRun"> | string
@@ -337,11 +352,13 @@ export type RuleRunCreateInput = {
   actionsPlanned?: string | null
   actionsApplied?: string | null
   message?: string | null
+  workspace?: Prisma.WorkspaceCreateNestedOneWithoutRuleRunsInput
   rule: Prisma.RuleCreateNestedOneWithoutRunsInput
 }
 
 export type RuleRunUncheckedCreateInput = {
   id?: string
+  workspaceId?: string
   createdAt?: Date | string
   ruleId: string
   trigger: string
@@ -369,11 +386,13 @@ export type RuleRunUpdateInput = {
   actionsPlanned?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actionsApplied?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutRuleRunsNestedInput
   rule?: Prisma.RuleUpdateOneRequiredWithoutRunsNestedInput
 }
 
 export type RuleRunUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   ruleId?: Prisma.StringFieldUpdateOperationsInput | string
   trigger?: Prisma.StringFieldUpdateOperationsInput | string
@@ -390,6 +409,7 @@ export type RuleRunUncheckedUpdateInput = {
 
 export type RuleRunCreateManyInput = {
   id?: string
+  workspaceId?: string
   createdAt?: Date | string
   ruleId: string
   trigger: string
@@ -421,6 +441,7 @@ export type RuleRunUpdateManyMutationInput = {
 
 export type RuleRunUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   ruleId?: Prisma.StringFieldUpdateOperationsInput | string
   trigger?: Prisma.StringFieldUpdateOperationsInput | string
@@ -447,6 +468,7 @@ export type RuleRunOrderByRelationAggregateInput = {
 
 export type RuleRunCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  workspaceId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   ruleId?: Prisma.SortOrder
   trigger?: Prisma.SortOrder
@@ -463,6 +485,7 @@ export type RuleRunCountOrderByAggregateInput = {
 
 export type RuleRunMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  workspaceId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   ruleId?: Prisma.SortOrder
   trigger?: Prisma.SortOrder
@@ -479,6 +502,7 @@ export type RuleRunMaxOrderByAggregateInput = {
 
 export type RuleRunMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  workspaceId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   ruleId?: Prisma.SortOrder
   trigger?: Prisma.SortOrder
@@ -491,6 +515,48 @@ export type RuleRunMinOrderByAggregateInput = {
   actionsPlanned?: Prisma.SortOrder
   actionsApplied?: Prisma.SortOrder
   message?: Prisma.SortOrder
+}
+
+export type RuleRunCreateNestedManyWithoutWorkspaceInput = {
+  create?: Prisma.XOR<Prisma.RuleRunCreateWithoutWorkspaceInput, Prisma.RuleRunUncheckedCreateWithoutWorkspaceInput> | Prisma.RuleRunCreateWithoutWorkspaceInput[] | Prisma.RuleRunUncheckedCreateWithoutWorkspaceInput[]
+  connectOrCreate?: Prisma.RuleRunCreateOrConnectWithoutWorkspaceInput | Prisma.RuleRunCreateOrConnectWithoutWorkspaceInput[]
+  createMany?: Prisma.RuleRunCreateManyWorkspaceInputEnvelope
+  connect?: Prisma.RuleRunWhereUniqueInput | Prisma.RuleRunWhereUniqueInput[]
+}
+
+export type RuleRunUncheckedCreateNestedManyWithoutWorkspaceInput = {
+  create?: Prisma.XOR<Prisma.RuleRunCreateWithoutWorkspaceInput, Prisma.RuleRunUncheckedCreateWithoutWorkspaceInput> | Prisma.RuleRunCreateWithoutWorkspaceInput[] | Prisma.RuleRunUncheckedCreateWithoutWorkspaceInput[]
+  connectOrCreate?: Prisma.RuleRunCreateOrConnectWithoutWorkspaceInput | Prisma.RuleRunCreateOrConnectWithoutWorkspaceInput[]
+  createMany?: Prisma.RuleRunCreateManyWorkspaceInputEnvelope
+  connect?: Prisma.RuleRunWhereUniqueInput | Prisma.RuleRunWhereUniqueInput[]
+}
+
+export type RuleRunUpdateManyWithoutWorkspaceNestedInput = {
+  create?: Prisma.XOR<Prisma.RuleRunCreateWithoutWorkspaceInput, Prisma.RuleRunUncheckedCreateWithoutWorkspaceInput> | Prisma.RuleRunCreateWithoutWorkspaceInput[] | Prisma.RuleRunUncheckedCreateWithoutWorkspaceInput[]
+  connectOrCreate?: Prisma.RuleRunCreateOrConnectWithoutWorkspaceInput | Prisma.RuleRunCreateOrConnectWithoutWorkspaceInput[]
+  upsert?: Prisma.RuleRunUpsertWithWhereUniqueWithoutWorkspaceInput | Prisma.RuleRunUpsertWithWhereUniqueWithoutWorkspaceInput[]
+  createMany?: Prisma.RuleRunCreateManyWorkspaceInputEnvelope
+  set?: Prisma.RuleRunWhereUniqueInput | Prisma.RuleRunWhereUniqueInput[]
+  disconnect?: Prisma.RuleRunWhereUniqueInput | Prisma.RuleRunWhereUniqueInput[]
+  delete?: Prisma.RuleRunWhereUniqueInput | Prisma.RuleRunWhereUniqueInput[]
+  connect?: Prisma.RuleRunWhereUniqueInput | Prisma.RuleRunWhereUniqueInput[]
+  update?: Prisma.RuleRunUpdateWithWhereUniqueWithoutWorkspaceInput | Prisma.RuleRunUpdateWithWhereUniqueWithoutWorkspaceInput[]
+  updateMany?: Prisma.RuleRunUpdateManyWithWhereWithoutWorkspaceInput | Prisma.RuleRunUpdateManyWithWhereWithoutWorkspaceInput[]
+  deleteMany?: Prisma.RuleRunScalarWhereInput | Prisma.RuleRunScalarWhereInput[]
+}
+
+export type RuleRunUncheckedUpdateManyWithoutWorkspaceNestedInput = {
+  create?: Prisma.XOR<Prisma.RuleRunCreateWithoutWorkspaceInput, Prisma.RuleRunUncheckedCreateWithoutWorkspaceInput> | Prisma.RuleRunCreateWithoutWorkspaceInput[] | Prisma.RuleRunUncheckedCreateWithoutWorkspaceInput[]
+  connectOrCreate?: Prisma.RuleRunCreateOrConnectWithoutWorkspaceInput | Prisma.RuleRunCreateOrConnectWithoutWorkspaceInput[]
+  upsert?: Prisma.RuleRunUpsertWithWhereUniqueWithoutWorkspaceInput | Prisma.RuleRunUpsertWithWhereUniqueWithoutWorkspaceInput[]
+  createMany?: Prisma.RuleRunCreateManyWorkspaceInputEnvelope
+  set?: Prisma.RuleRunWhereUniqueInput | Prisma.RuleRunWhereUniqueInput[]
+  disconnect?: Prisma.RuleRunWhereUniqueInput | Prisma.RuleRunWhereUniqueInput[]
+  delete?: Prisma.RuleRunWhereUniqueInput | Prisma.RuleRunWhereUniqueInput[]
+  connect?: Prisma.RuleRunWhereUniqueInput | Prisma.RuleRunWhereUniqueInput[]
+  update?: Prisma.RuleRunUpdateWithWhereUniqueWithoutWorkspaceInput | Prisma.RuleRunUpdateWithWhereUniqueWithoutWorkspaceInput[]
+  updateMany?: Prisma.RuleRunUpdateManyWithWhereWithoutWorkspaceInput | Prisma.RuleRunUpdateManyWithWhereWithoutWorkspaceInput[]
+  deleteMany?: Prisma.RuleRunScalarWhereInput | Prisma.RuleRunScalarWhereInput[]
 }
 
 export type RuleRunCreateNestedManyWithoutRuleInput = {
@@ -535,6 +601,83 @@ export type RuleRunUncheckedUpdateManyWithoutRuleNestedInput = {
   deleteMany?: Prisma.RuleRunScalarWhereInput | Prisma.RuleRunScalarWhereInput[]
 }
 
+export type RuleRunCreateWithoutWorkspaceInput = {
+  id?: string
+  createdAt?: Date | string
+  trigger: string
+  targetType?: string | null
+  targetId?: string | null
+  matched: boolean
+  mode: string
+  status: string
+  input?: string | null
+  actionsPlanned?: string | null
+  actionsApplied?: string | null
+  message?: string | null
+  rule: Prisma.RuleCreateNestedOneWithoutRunsInput
+}
+
+export type RuleRunUncheckedCreateWithoutWorkspaceInput = {
+  id?: string
+  createdAt?: Date | string
+  ruleId: string
+  trigger: string
+  targetType?: string | null
+  targetId?: string | null
+  matched: boolean
+  mode: string
+  status: string
+  input?: string | null
+  actionsPlanned?: string | null
+  actionsApplied?: string | null
+  message?: string | null
+}
+
+export type RuleRunCreateOrConnectWithoutWorkspaceInput = {
+  where: Prisma.RuleRunWhereUniqueInput
+  create: Prisma.XOR<Prisma.RuleRunCreateWithoutWorkspaceInput, Prisma.RuleRunUncheckedCreateWithoutWorkspaceInput>
+}
+
+export type RuleRunCreateManyWorkspaceInputEnvelope = {
+  data: Prisma.RuleRunCreateManyWorkspaceInput | Prisma.RuleRunCreateManyWorkspaceInput[]
+}
+
+export type RuleRunUpsertWithWhereUniqueWithoutWorkspaceInput = {
+  where: Prisma.RuleRunWhereUniqueInput
+  update: Prisma.XOR<Prisma.RuleRunUpdateWithoutWorkspaceInput, Prisma.RuleRunUncheckedUpdateWithoutWorkspaceInput>
+  create: Prisma.XOR<Prisma.RuleRunCreateWithoutWorkspaceInput, Prisma.RuleRunUncheckedCreateWithoutWorkspaceInput>
+}
+
+export type RuleRunUpdateWithWhereUniqueWithoutWorkspaceInput = {
+  where: Prisma.RuleRunWhereUniqueInput
+  data: Prisma.XOR<Prisma.RuleRunUpdateWithoutWorkspaceInput, Prisma.RuleRunUncheckedUpdateWithoutWorkspaceInput>
+}
+
+export type RuleRunUpdateManyWithWhereWithoutWorkspaceInput = {
+  where: Prisma.RuleRunScalarWhereInput
+  data: Prisma.XOR<Prisma.RuleRunUpdateManyMutationInput, Prisma.RuleRunUncheckedUpdateManyWithoutWorkspaceInput>
+}
+
+export type RuleRunScalarWhereInput = {
+  AND?: Prisma.RuleRunScalarWhereInput | Prisma.RuleRunScalarWhereInput[]
+  OR?: Prisma.RuleRunScalarWhereInput[]
+  NOT?: Prisma.RuleRunScalarWhereInput | Prisma.RuleRunScalarWhereInput[]
+  id?: Prisma.StringFilter<"RuleRun"> | string
+  workspaceId?: Prisma.StringFilter<"RuleRun"> | string
+  createdAt?: Prisma.DateTimeFilter<"RuleRun"> | Date | string
+  ruleId?: Prisma.StringFilter<"RuleRun"> | string
+  trigger?: Prisma.StringFilter<"RuleRun"> | string
+  targetType?: Prisma.StringNullableFilter<"RuleRun"> | string | null
+  targetId?: Prisma.StringNullableFilter<"RuleRun"> | string | null
+  matched?: Prisma.BoolFilter<"RuleRun"> | boolean
+  mode?: Prisma.StringFilter<"RuleRun"> | string
+  status?: Prisma.StringFilter<"RuleRun"> | string
+  input?: Prisma.StringNullableFilter<"RuleRun"> | string | null
+  actionsPlanned?: Prisma.StringNullableFilter<"RuleRun"> | string | null
+  actionsApplied?: Prisma.StringNullableFilter<"RuleRun"> | string | null
+  message?: Prisma.StringNullableFilter<"RuleRun"> | string | null
+}
+
 export type RuleRunCreateWithoutRuleInput = {
   id?: string
   createdAt?: Date | string
@@ -548,10 +691,12 @@ export type RuleRunCreateWithoutRuleInput = {
   actionsPlanned?: string | null
   actionsApplied?: string | null
   message?: string | null
+  workspace?: Prisma.WorkspaceCreateNestedOneWithoutRuleRunsInput
 }
 
 export type RuleRunUncheckedCreateWithoutRuleInput = {
   id?: string
+  workspaceId?: string
   createdAt?: Date | string
   trigger: string
   targetType?: string | null
@@ -590,27 +735,73 @@ export type RuleRunUpdateManyWithWhereWithoutRuleInput = {
   data: Prisma.XOR<Prisma.RuleRunUpdateManyMutationInput, Prisma.RuleRunUncheckedUpdateManyWithoutRuleInput>
 }
 
-export type RuleRunScalarWhereInput = {
-  AND?: Prisma.RuleRunScalarWhereInput | Prisma.RuleRunScalarWhereInput[]
-  OR?: Prisma.RuleRunScalarWhereInput[]
-  NOT?: Prisma.RuleRunScalarWhereInput | Prisma.RuleRunScalarWhereInput[]
-  id?: Prisma.StringFilter<"RuleRun"> | string
-  createdAt?: Prisma.DateTimeFilter<"RuleRun"> | Date | string
-  ruleId?: Prisma.StringFilter<"RuleRun"> | string
-  trigger?: Prisma.StringFilter<"RuleRun"> | string
-  targetType?: Prisma.StringNullableFilter<"RuleRun"> | string | null
-  targetId?: Prisma.StringNullableFilter<"RuleRun"> | string | null
-  matched?: Prisma.BoolFilter<"RuleRun"> | boolean
-  mode?: Prisma.StringFilter<"RuleRun"> | string
-  status?: Prisma.StringFilter<"RuleRun"> | string
-  input?: Prisma.StringNullableFilter<"RuleRun"> | string | null
-  actionsPlanned?: Prisma.StringNullableFilter<"RuleRun"> | string | null
-  actionsApplied?: Prisma.StringNullableFilter<"RuleRun"> | string | null
-  message?: Prisma.StringNullableFilter<"RuleRun"> | string | null
+export type RuleRunCreateManyWorkspaceInput = {
+  id?: string
+  createdAt?: Date | string
+  ruleId: string
+  trigger: string
+  targetType?: string | null
+  targetId?: string | null
+  matched: boolean
+  mode: string
+  status: string
+  input?: string | null
+  actionsPlanned?: string | null
+  actionsApplied?: string | null
+  message?: string | null
+}
+
+export type RuleRunUpdateWithoutWorkspaceInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  trigger?: Prisma.StringFieldUpdateOperationsInput | string
+  targetType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  targetId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  matched?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  mode?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  input?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  actionsPlanned?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  actionsApplied?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rule?: Prisma.RuleUpdateOneRequiredWithoutRunsNestedInput
+}
+
+export type RuleRunUncheckedUpdateWithoutWorkspaceInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  ruleId?: Prisma.StringFieldUpdateOperationsInput | string
+  trigger?: Prisma.StringFieldUpdateOperationsInput | string
+  targetType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  targetId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  matched?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  mode?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  input?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  actionsPlanned?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  actionsApplied?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+}
+
+export type RuleRunUncheckedUpdateManyWithoutWorkspaceInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  ruleId?: Prisma.StringFieldUpdateOperationsInput | string
+  trigger?: Prisma.StringFieldUpdateOperationsInput | string
+  targetType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  targetId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  matched?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  mode?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  input?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  actionsPlanned?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  actionsApplied?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type RuleRunCreateManyRuleInput = {
   id?: string
+  workspaceId?: string
   createdAt?: Date | string
   trigger: string
   targetType?: string | null
@@ -637,10 +828,12 @@ export type RuleRunUpdateWithoutRuleInput = {
   actionsPlanned?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actionsApplied?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutRuleRunsNestedInput
 }
 
 export type RuleRunUncheckedUpdateWithoutRuleInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   trigger?: Prisma.StringFieldUpdateOperationsInput | string
   targetType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -656,6 +849,7 @@ export type RuleRunUncheckedUpdateWithoutRuleInput = {
 
 export type RuleRunUncheckedUpdateManyWithoutRuleInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   trigger?: Prisma.StringFieldUpdateOperationsInput | string
   targetType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -673,6 +867,7 @@ export type RuleRunUncheckedUpdateManyWithoutRuleInput = {
 
 export type RuleRunSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  workspaceId?: boolean
   createdAt?: boolean
   ruleId?: boolean
   trigger?: boolean
@@ -685,11 +880,13 @@ export type RuleRunSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   actionsPlanned?: boolean
   actionsApplied?: boolean
   message?: boolean
+  workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   rule?: boolean | Prisma.RuleDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["ruleRun"]>
 
 export type RuleRunSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  workspaceId?: boolean
   createdAt?: boolean
   ruleId?: boolean
   trigger?: boolean
@@ -702,11 +899,13 @@ export type RuleRunSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   actionsPlanned?: boolean
   actionsApplied?: boolean
   message?: boolean
+  workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   rule?: boolean | Prisma.RuleDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["ruleRun"]>
 
 export type RuleRunSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  workspaceId?: boolean
   createdAt?: boolean
   ruleId?: boolean
   trigger?: boolean
@@ -719,11 +918,13 @@ export type RuleRunSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   actionsPlanned?: boolean
   actionsApplied?: boolean
   message?: boolean
+  workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   rule?: boolean | Prisma.RuleDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["ruleRun"]>
 
 export type RuleRunSelectScalar = {
   id?: boolean
+  workspaceId?: boolean
   createdAt?: boolean
   ruleId?: boolean
   trigger?: boolean
@@ -738,24 +939,29 @@ export type RuleRunSelectScalar = {
   message?: boolean
 }
 
-export type RuleRunOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "ruleId" | "trigger" | "targetType" | "targetId" | "matched" | "mode" | "status" | "input" | "actionsPlanned" | "actionsApplied" | "message", ExtArgs["result"]["ruleRun"]>
+export type RuleRunOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "workspaceId" | "createdAt" | "ruleId" | "trigger" | "targetType" | "targetId" | "matched" | "mode" | "status" | "input" | "actionsPlanned" | "actionsApplied" | "message", ExtArgs["result"]["ruleRun"]>
 export type RuleRunInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   rule?: boolean | Prisma.RuleDefaultArgs<ExtArgs>
 }
 export type RuleRunIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   rule?: boolean | Prisma.RuleDefaultArgs<ExtArgs>
 }
 export type RuleRunIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   rule?: boolean | Prisma.RuleDefaultArgs<ExtArgs>
 }
 
 export type $RuleRunPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "RuleRun"
   objects: {
+    workspace: Prisma.$WorkspacePayload<ExtArgs>
     rule: Prisma.$RulePayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
+    workspaceId: string
     createdAt: Date
     ruleId: string
     trigger: string
@@ -1162,6 +1368,7 @@ readonly fields: RuleRunFieldRefs;
  */
 export interface Prisma__RuleRunClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  workspace<T extends Prisma.WorkspaceDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WorkspaceDefaultArgs<ExtArgs>>): Prisma.Prisma__WorkspaceClient<runtime.Types.Result.GetResult<Prisma.$WorkspacePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   rule<T extends Prisma.RuleDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.RuleDefaultArgs<ExtArgs>>): Prisma.Prisma__RuleClient<runtime.Types.Result.GetResult<Prisma.$RulePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1193,6 +1400,7 @@ export interface Prisma__RuleRunClient<T, Null = never, ExtArgs extends runtime.
  */
 export interface RuleRunFieldRefs {
   readonly id: Prisma.FieldRef<"RuleRun", 'String'>
+  readonly workspaceId: Prisma.FieldRef<"RuleRun", 'String'>
   readonly createdAt: Prisma.FieldRef<"RuleRun", 'DateTime'>
   readonly ruleId: Prisma.FieldRef<"RuleRun", 'String'>
   readonly trigger: Prisma.FieldRef<"RuleRun", 'String'>

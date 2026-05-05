@@ -68,6 +68,8 @@ const DEFAULT_ROLES = [
 export type AccessActor = {
   userId: string
   email: string
+  workspaceId: string
+  workspaceName: string
   actor: DomainActor
   scopes: string[]
 }
@@ -120,6 +122,8 @@ export async function requireAccess(requiredScope: string) {
 
   await seedDefaultAccess({ type: "system", label: "access-bootstrap" })
   const existingUserCount = await db.user.count()
+  const isFirstUser = existingUserCount === 0
+  if (!isFirstUser) await assertEmailApproved(email)
   const user = await db.user.upsert({
     where: { email },
     update: {
@@ -135,18 +139,21 @@ export async function requireAccess(requiredScope: string) {
     },
   })
 
-  if (existingUserCount === 0 || ownerEmails().includes(email)) {
+  if (isFirstUser || ownerEmails().includes(email)) {
     await grantRole(user.id, "owner")
   }
 
+  const workspace = await ensureWorkspaceForUser(user.id, email, isFirstUser || ownerEmails().includes(email))
   const scopes = await userScopes(user.id)
   if (!hasScope(scopes, requiredScope)) throw forbidden("Missing required permission", { requiredScope })
 
   return {
     userId: user.id,
     email,
+    workspaceId: workspace.id,
+    workspaceName: workspace.name,
     scopes,
-    actor: { type: "user", id: user.id, label: email } satisfies DomainActor,
+    actor: { type: "user", id: user.id, label: email, workspaceId: workspace.id } satisfies DomainActor,
   }
 }
 
@@ -163,14 +170,15 @@ export async function accessOverview(actor: AccessActor) {
     }),
     db.permission.findMany({ orderBy: { scope: "asc" } }),
     db.apiKey.findMany({
+      where: { workspaceId: actor.workspaceId },
       include: { scopes: true, createdByUser: true, ownerPerson: true },
       orderBy: { createdAt: "desc" },
     }),
-    db.auditLog.count(),
+    db.auditLog.count({ where: { workspaceId: actor.workspaceId } }),
   ])
 
   return {
-    currentUser: { id: actor.userId, email: actor.email, scopes: actor.scopes },
+    currentUser: { id: actor.userId, email: actor.email, scopes: actor.scopes, workspaceId: actor.workspaceId, workspaceName: actor.workspaceName },
     users: users.map(user => ({
       id: user.id,
       email: user.email,
@@ -200,6 +208,7 @@ export async function createApiKey(input: Record<string, unknown>, actor: Access
       keyPrefix: secret.slice(0, 12),
       keyHash: hashApiKey(secret),
       status: "active",
+      workspaceId: actor.workspaceId,
       expiresAt: input.expiresAt ? new Date(String(input.expiresAt)) : null,
       createdByUserId: actor.userId,
       scopes: { create: scopes.map(scope => ({ scope })) },
@@ -219,7 +228,7 @@ export async function createApiKey(input: Record<string, unknown>, actor: Access
 }
 
 export async function updateApiKey(id: string, input: Record<string, unknown>, actor: AccessActor) {
-  const existing = await db.apiKey.findUnique({ where: { id }, include: { scopes: true } })
+  const existing = await db.apiKey.findFirst({ where: { id, workspaceId: actor.workspaceId }, include: { scopes: true } })
   if (!existing) throw notFound("API key not found", { id })
 
   const patch: Record<string, unknown> = {}
@@ -359,6 +368,57 @@ async function grantRole(userId: string, key: string) {
   })
 }
 
+async function assertEmailApproved(email: string) {
+  if (ownerEmails().includes(email) || allowedEmails().includes(email)) return
+  const approved = await db.approvedEmail.findUnique({ where: { email }, select: { status: true } })
+  if (approved?.status === "approved") return
+  throw forbidden("Email is not approved for this app", { email })
+}
+
+async function ensureWorkspaceForUser(userId: string, email: string, useDefaultWorkspace: boolean) {
+  const existing = await db.workspaceMember.findFirst({
+    where: { userId, status: "active", workspace: { status: "active" } },
+    include: { workspace: true },
+    orderBy: { createdAt: "asc" },
+  })
+  if (existing?.workspace) return existing.workspace
+
+  const approved = await db.approvedEmail.findUnique({ where: { email }, select: { workspaceId: true } })
+  const workspaceId = useDefaultWorkspace ? "default-workspace" : approved?.workspaceId
+  if (workspaceId) {
+    const workspace = await db.workspace.upsert({
+      where: { id: workspaceId },
+      update: { ownerUserId: useDefaultWorkspace ? userId : undefined },
+      create: {
+        id: workspaceId,
+        name: useDefaultWorkspace ? "Joseph's Life OS" : `${displayNameFromEmail(email)}'s Life OS`,
+        slug: useDefaultWorkspace ? "joseph-life-os" : uniqueWorkspaceSlug(email),
+        ownerUserId: userId,
+      },
+    })
+    await addWorkspaceMember(workspace.id, userId, "owner")
+    return workspace
+  }
+
+  const workspace = await db.workspace.create({
+    data: {
+      name: `${displayNameFromEmail(email)}'s Life OS`,
+      slug: uniqueWorkspaceSlug(email),
+      ownerUserId: userId,
+    },
+  })
+  await addWorkspaceMember(workspace.id, userId, "owner")
+  return workspace
+}
+
+async function addWorkspaceMember(workspaceId: string, userId: string, role: string) {
+  await db.workspaceMember.upsert({
+    where: { workspaceId_userId: { workspaceId, userId } },
+    update: { role, status: "active" },
+    create: { workspaceId, userId, role, status: "active" },
+  })
+}
+
 async function userScopes(userId: string): Promise<string[]> {
   const roles = await db.userRole.findMany({
     where: { userId },
@@ -460,6 +520,24 @@ function ownerEmails() {
     .flatMap(value => value!.split(","))
     .map(value => value.trim().toLowerCase())
     .filter(Boolean)
+}
+
+function allowedEmails() {
+  return [process.env.ALLOWED_EMAILS]
+    .filter(Boolean)
+    .flatMap(value => value!.split(","))
+    .map(value => value.trim().toLowerCase())
+    .filter(Boolean)
+}
+
+function displayNameFromEmail(email: string) {
+  const local = email.split("@")[0] ?? "Person"
+  return local.split(/[._-]+/).filter(Boolean).map(part => part[0]?.toUpperCase() + part.slice(1)).join(" ") || "Person"
+}
+
+function uniqueWorkspaceSlug(email: string) {
+  const base = email.toLowerCase().replace(/@/g, "-").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")
+  return `${base || "workspace"}-${createHash("sha1").update(email).digest("hex").slice(0, 8)}`
 }
 
 function parseJson(value: string | null) {

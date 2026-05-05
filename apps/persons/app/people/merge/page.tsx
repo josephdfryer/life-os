@@ -3,11 +3,14 @@ import { parseTags } from "@/lib/utils"
 import { findDuplicates } from "@/lib/dedupe"
 import MergeDuplicatesUI from "./MergeDuplicatesUI"
 import type { Person } from "@/types"
+import { requireAccess } from "@/server/domain/access"
 
 export const dynamic = "force-dynamic"
 
 export default async function MergePage() {
+  const actor = await requireAccess("people.write")
   const rows = await db.person.findMany({
+    where: { workspaceId: actor.workspaceId },
     include: { _count: { select: { interactions: true, plans: true } } },
   })
 
