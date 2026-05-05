@@ -33,6 +33,7 @@ export async function GET(req: NextRequest) {
         OR: [
           { first:    { contains: token } },
           { last:     { contains: token } },
+          { nickname: { contains: token } },
           { emails:   { contains: token } },
           { title:    { contains: token } },
           { company:  { contains: token } },

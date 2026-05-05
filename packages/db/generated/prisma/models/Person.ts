@@ -40,6 +40,7 @@ export type PersonMinAggregateOutputType = {
   updatedAt: Date | null
   first: string | null
   last: string | null
+  nickname: string | null
   title: string | null
   headline: string | null
   emails: string | null
@@ -64,6 +65,7 @@ export type PersonMaxAggregateOutputType = {
   updatedAt: Date | null
   first: string | null
   last: string | null
+  nickname: string | null
   title: string | null
   headline: string | null
   emails: string | null
@@ -88,6 +90,7 @@ export type PersonCountAggregateOutputType = {
   updatedAt: number
   first: number
   last: number
+  nickname: number
   title: number
   headline: number
   emails: number
@@ -122,6 +125,7 @@ export type PersonMinAggregateInputType = {
   updatedAt?: true
   first?: true
   last?: true
+  nickname?: true
   title?: true
   headline?: true
   emails?: true
@@ -146,6 +150,7 @@ export type PersonMaxAggregateInputType = {
   updatedAt?: true
   first?: true
   last?: true
+  nickname?: true
   title?: true
   headline?: true
   emails?: true
@@ -170,6 +175,7 @@ export type PersonCountAggregateInputType = {
   updatedAt?: true
   first?: true
   last?: true
+  nickname?: true
   title?: true
   headline?: true
   emails?: true
@@ -281,6 +287,7 @@ export type PersonGroupByOutputType = {
   updatedAt: Date
   first: string
   last: string
+  nickname: string | null
   title: string | null
   headline: string | null
   emails: string
@@ -328,6 +335,7 @@ export type PersonWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"Person"> | Date | string
   first?: Prisma.StringFilter<"Person"> | string
   last?: Prisma.StringFilter<"Person"> | string
+  nickname?: Prisma.StringNullableFilter<"Person"> | string | null
   title?: Prisma.StringNullableFilter<"Person"> | string | null
   headline?: Prisma.StringNullableFilter<"Person"> | string | null
   emails?: Prisma.StringFilter<"Person"> | string
@@ -361,6 +369,7 @@ export type PersonOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   first?: Prisma.SortOrder
   last?: Prisma.SortOrder
+  nickname?: Prisma.SortOrderInput | Prisma.SortOrder
   title?: Prisma.SortOrderInput | Prisma.SortOrder
   headline?: Prisma.SortOrderInput | Prisma.SortOrder
   emails?: Prisma.SortOrder
@@ -397,6 +406,7 @@ export type PersonWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"Person"> | Date | string
   first?: Prisma.StringFilter<"Person"> | string
   last?: Prisma.StringFilter<"Person"> | string
+  nickname?: Prisma.StringNullableFilter<"Person"> | string | null
   title?: Prisma.StringNullableFilter<"Person"> | string | null
   headline?: Prisma.StringNullableFilter<"Person"> | string | null
   emails?: Prisma.StringFilter<"Person"> | string
@@ -430,6 +440,7 @@ export type PersonOrderByWithAggregationInput = {
   updatedAt?: Prisma.SortOrder
   first?: Prisma.SortOrder
   last?: Prisma.SortOrder
+  nickname?: Prisma.SortOrderInput | Prisma.SortOrder
   title?: Prisma.SortOrderInput | Prisma.SortOrder
   headline?: Prisma.SortOrderInput | Prisma.SortOrder
   emails?: Prisma.SortOrder
@@ -462,6 +473,7 @@ export type PersonScalarWhereWithAggregatesInput = {
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Person"> | Date | string
   first?: Prisma.StringWithAggregatesFilter<"Person"> | string
   last?: Prisma.StringWithAggregatesFilter<"Person"> | string
+  nickname?: Prisma.StringNullableWithAggregatesFilter<"Person"> | string | null
   title?: Prisma.StringNullableWithAggregatesFilter<"Person"> | string | null
   headline?: Prisma.StringNullableWithAggregatesFilter<"Person"> | string | null
   emails?: Prisma.StringWithAggregatesFilter<"Person"> | string
@@ -486,6 +498,7 @@ export type PersonCreateInput = {
   updatedAt?: Date | string
   first: string
   last: string
+  nickname?: string | null
   title?: string | null
   headline?: string | null
   emails?: string
@@ -519,6 +532,7 @@ export type PersonUncheckedCreateInput = {
   updatedAt?: Date | string
   first: string
   last: string
+  nickname?: string | null
   title?: string | null
   headline?: string | null
   emails?: string
@@ -552,6 +566,7 @@ export type PersonUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   first?: Prisma.StringFieldUpdateOperationsInput | string
   last?: Prisma.StringFieldUpdateOperationsInput | string
+  nickname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emails?: Prisma.StringFieldUpdateOperationsInput | string
@@ -585,6 +600,7 @@ export type PersonUncheckedUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   first?: Prisma.StringFieldUpdateOperationsInput | string
   last?: Prisma.StringFieldUpdateOperationsInput | string
+  nickname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emails?: Prisma.StringFieldUpdateOperationsInput | string
@@ -618,6 +634,7 @@ export type PersonCreateManyInput = {
   updatedAt?: Date | string
   first: string
   last: string
+  nickname?: string | null
   title?: string | null
   headline?: string | null
   emails?: string
@@ -642,6 +659,7 @@ export type PersonUpdateManyMutationInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   first?: Prisma.StringFieldUpdateOperationsInput | string
   last?: Prisma.StringFieldUpdateOperationsInput | string
+  nickname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emails?: Prisma.StringFieldUpdateOperationsInput | string
@@ -666,6 +684,7 @@ export type PersonUncheckedUpdateManyInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   first?: Prisma.StringFieldUpdateOperationsInput | string
   last?: Prisma.StringFieldUpdateOperationsInput | string
+  nickname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emails?: Prisma.StringFieldUpdateOperationsInput | string
@@ -690,6 +709,7 @@ export type PersonCountOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
   first?: Prisma.SortOrder
   last?: Prisma.SortOrder
+  nickname?: Prisma.SortOrder
   title?: Prisma.SortOrder
   headline?: Prisma.SortOrder
   emails?: Prisma.SortOrder
@@ -718,6 +738,7 @@ export type PersonMaxOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
   first?: Prisma.SortOrder
   last?: Prisma.SortOrder
+  nickname?: Prisma.SortOrder
   title?: Prisma.SortOrder
   headline?: Prisma.SortOrder
   emails?: Prisma.SortOrder
@@ -742,6 +763,7 @@ export type PersonMinOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
   first?: Prisma.SortOrder
   last?: Prisma.SortOrder
+  nickname?: Prisma.SortOrder
   title?: Prisma.SortOrder
   headline?: Prisma.SortOrder
   emails?: Prisma.SortOrder
@@ -939,6 +961,7 @@ export type PersonCreateWithoutUsersInput = {
   updatedAt?: Date | string
   first: string
   last: string
+  nickname?: string | null
   title?: string | null
   headline?: string | null
   emails?: string
@@ -971,6 +994,7 @@ export type PersonUncheckedCreateWithoutUsersInput = {
   updatedAt?: Date | string
   first: string
   last: string
+  nickname?: string | null
   title?: string | null
   headline?: string | null
   emails?: string
@@ -1019,6 +1043,7 @@ export type PersonUpdateWithoutUsersInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   first?: Prisma.StringFieldUpdateOperationsInput | string
   last?: Prisma.StringFieldUpdateOperationsInput | string
+  nickname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emails?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1051,6 +1076,7 @@ export type PersonUncheckedUpdateWithoutUsersInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   first?: Prisma.StringFieldUpdateOperationsInput | string
   last?: Prisma.StringFieldUpdateOperationsInput | string
+  nickname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emails?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1083,6 +1109,7 @@ export type PersonCreateWithoutApiKeysInput = {
   updatedAt?: Date | string
   first: string
   last: string
+  nickname?: string | null
   title?: string | null
   headline?: string | null
   emails?: string
@@ -1115,6 +1142,7 @@ export type PersonUncheckedCreateWithoutApiKeysInput = {
   updatedAt?: Date | string
   first: string
   last: string
+  nickname?: string | null
   title?: string | null
   headline?: string | null
   emails?: string
@@ -1163,6 +1191,7 @@ export type PersonUpdateWithoutApiKeysInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   first?: Prisma.StringFieldUpdateOperationsInput | string
   last?: Prisma.StringFieldUpdateOperationsInput | string
+  nickname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emails?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1195,6 +1224,7 @@ export type PersonUncheckedUpdateWithoutApiKeysInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   first?: Prisma.StringFieldUpdateOperationsInput | string
   last?: Prisma.StringFieldUpdateOperationsInput | string
+  nickname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emails?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1227,6 +1257,7 @@ export type PersonCreateWithoutAuditLogsInput = {
   updatedAt?: Date | string
   first: string
   last: string
+  nickname?: string | null
   title?: string | null
   headline?: string | null
   emails?: string
@@ -1259,6 +1290,7 @@ export type PersonUncheckedCreateWithoutAuditLogsInput = {
   updatedAt?: Date | string
   first: string
   last: string
+  nickname?: string | null
   title?: string | null
   headline?: string | null
   emails?: string
@@ -1307,6 +1339,7 @@ export type PersonUpdateWithoutAuditLogsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   first?: Prisma.StringFieldUpdateOperationsInput | string
   last?: Prisma.StringFieldUpdateOperationsInput | string
+  nickname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emails?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1339,6 +1372,7 @@ export type PersonUncheckedUpdateWithoutAuditLogsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   first?: Prisma.StringFieldUpdateOperationsInput | string
   last?: Prisma.StringFieldUpdateOperationsInput | string
+  nickname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emails?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1371,6 +1405,7 @@ export type PersonCreateWithoutStagedInteractionsInput = {
   updatedAt?: Date | string
   first: string
   last: string
+  nickname?: string | null
   title?: string | null
   headline?: string | null
   emails?: string
@@ -1403,6 +1438,7 @@ export type PersonUncheckedCreateWithoutStagedInteractionsInput = {
   updatedAt?: Date | string
   first: string
   last: string
+  nickname?: string | null
   title?: string | null
   headline?: string | null
   emails?: string
@@ -1451,6 +1487,7 @@ export type PersonUpdateWithoutStagedInteractionsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   first?: Prisma.StringFieldUpdateOperationsInput | string
   last?: Prisma.StringFieldUpdateOperationsInput | string
+  nickname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emails?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1483,6 +1520,7 @@ export type PersonUncheckedUpdateWithoutStagedInteractionsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   first?: Prisma.StringFieldUpdateOperationsInput | string
   last?: Prisma.StringFieldUpdateOperationsInput | string
+  nickname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emails?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1515,6 +1553,7 @@ export type PersonCreateWithoutInteractionsInput = {
   updatedAt?: Date | string
   first: string
   last: string
+  nickname?: string | null
   title?: string | null
   headline?: string | null
   emails?: string
@@ -1547,6 +1586,7 @@ export type PersonUncheckedCreateWithoutInteractionsInput = {
   updatedAt?: Date | string
   first: string
   last: string
+  nickname?: string | null
   title?: string | null
   headline?: string | null
   emails?: string
@@ -1595,6 +1635,7 @@ export type PersonUpdateWithoutInteractionsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   first?: Prisma.StringFieldUpdateOperationsInput | string
   last?: Prisma.StringFieldUpdateOperationsInput | string
+  nickname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emails?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1627,6 +1668,7 @@ export type PersonUncheckedUpdateWithoutInteractionsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   first?: Prisma.StringFieldUpdateOperationsInput | string
   last?: Prisma.StringFieldUpdateOperationsInput | string
+  nickname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emails?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1659,6 +1701,7 @@ export type PersonCreateWithoutPlansInput = {
   updatedAt?: Date | string
   first: string
   last: string
+  nickname?: string | null
   title?: string | null
   headline?: string | null
   emails?: string
@@ -1691,6 +1734,7 @@ export type PersonUncheckedCreateWithoutPlansInput = {
   updatedAt?: Date | string
   first: string
   last: string
+  nickname?: string | null
   title?: string | null
   headline?: string | null
   emails?: string
@@ -1739,6 +1783,7 @@ export type PersonUpdateWithoutPlansInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   first?: Prisma.StringFieldUpdateOperationsInput | string
   last?: Prisma.StringFieldUpdateOperationsInput | string
+  nickname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emails?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1771,6 +1816,7 @@ export type PersonUncheckedUpdateWithoutPlansInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   first?: Prisma.StringFieldUpdateOperationsInput | string
   last?: Prisma.StringFieldUpdateOperationsInput | string
+  nickname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emails?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1803,6 +1849,7 @@ export type PersonCreateWithoutOwnedItemsInput = {
   updatedAt?: Date | string
   first: string
   last: string
+  nickname?: string | null
   title?: string | null
   headline?: string | null
   emails?: string
@@ -1835,6 +1882,7 @@ export type PersonUncheckedCreateWithoutOwnedItemsInput = {
   updatedAt?: Date | string
   first: string
   last: string
+  nickname?: string | null
   title?: string | null
   headline?: string | null
   emails?: string
@@ -1883,6 +1931,7 @@ export type PersonUpdateWithoutOwnedItemsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   first?: Prisma.StringFieldUpdateOperationsInput | string
   last?: Prisma.StringFieldUpdateOperationsInput | string
+  nickname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emails?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1915,6 +1964,7 @@ export type PersonUncheckedUpdateWithoutOwnedItemsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   first?: Prisma.StringFieldUpdateOperationsInput | string
   last?: Prisma.StringFieldUpdateOperationsInput | string
+  nickname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emails?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1947,6 +1997,7 @@ export type PersonCreateWithoutAssembledByInput = {
   updatedAt?: Date | string
   first: string
   last: string
+  nickname?: string | null
   title?: string | null
   headline?: string | null
   emails?: string
@@ -1979,6 +2030,7 @@ export type PersonUncheckedCreateWithoutAssembledByInput = {
   updatedAt?: Date | string
   first: string
   last: string
+  nickname?: string | null
   title?: string | null
   headline?: string | null
   emails?: string
@@ -2016,6 +2068,7 @@ export type PersonCreateWithoutDisassembledByInput = {
   updatedAt?: Date | string
   first: string
   last: string
+  nickname?: string | null
   title?: string | null
   headline?: string | null
   emails?: string
@@ -2048,6 +2101,7 @@ export type PersonUncheckedCreateWithoutDisassembledByInput = {
   updatedAt?: Date | string
   first: string
   last: string
+  nickname?: string | null
   title?: string | null
   headline?: string | null
   emails?: string
@@ -2096,6 +2150,7 @@ export type PersonUpdateWithoutAssembledByInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   first?: Prisma.StringFieldUpdateOperationsInput | string
   last?: Prisma.StringFieldUpdateOperationsInput | string
+  nickname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emails?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2128,6 +2183,7 @@ export type PersonUncheckedUpdateWithoutAssembledByInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   first?: Prisma.StringFieldUpdateOperationsInput | string
   last?: Prisma.StringFieldUpdateOperationsInput | string
+  nickname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emails?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2171,6 +2227,7 @@ export type PersonUpdateWithoutDisassembledByInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   first?: Prisma.StringFieldUpdateOperationsInput | string
   last?: Prisma.StringFieldUpdateOperationsInput | string
+  nickname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emails?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2203,6 +2260,7 @@ export type PersonUncheckedUpdateWithoutDisassembledByInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   first?: Prisma.StringFieldUpdateOperationsInput | string
   last?: Prisma.StringFieldUpdateOperationsInput | string
+  nickname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emails?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2338,6 +2396,7 @@ export type PersonSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   updatedAt?: boolean
   first?: boolean
   last?: boolean
+  nickname?: boolean
   title?: boolean
   headline?: boolean
   emails?: boolean
@@ -2372,6 +2431,7 @@ export type PersonSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   updatedAt?: boolean
   first?: boolean
   last?: boolean
+  nickname?: boolean
   title?: boolean
   headline?: boolean
   emails?: boolean
@@ -2396,6 +2456,7 @@ export type PersonSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   updatedAt?: boolean
   first?: boolean
   last?: boolean
+  nickname?: boolean
   title?: boolean
   headline?: boolean
   emails?: boolean
@@ -2420,6 +2481,7 @@ export type PersonSelectScalar = {
   updatedAt?: boolean
   first?: boolean
   last?: boolean
+  nickname?: boolean
   title?: boolean
   headline?: boolean
   emails?: boolean
@@ -2438,7 +2500,7 @@ export type PersonSelectScalar = {
   colorSoft?: boolean
 }
 
-export type PersonOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "first" | "last" | "title" | "headline" | "emails" | "phones" | "birthday" | "closeness" | "tags" | "values" | "notes" | "company" | "location" | "linkedin" | "twitter" | "website" | "color" | "colorSoft", ExtArgs["result"]["person"]>
+export type PersonOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "first" | "last" | "nickname" | "title" | "headline" | "emails" | "phones" | "birthday" | "closeness" | "tags" | "values" | "notes" | "company" | "location" | "linkedin" | "twitter" | "website" | "color" | "colorSoft", ExtArgs["result"]["person"]>
 export type PersonInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   interactions?: boolean | Prisma.Person$interactionsArgs<ExtArgs>
   stagedInteractions?: boolean | Prisma.Person$stagedInteractionsArgs<ExtArgs>
@@ -2473,6 +2535,7 @@ export type $PersonPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     updatedAt: Date
     first: string
     last: string
+    nickname: string | null
     title: string | null
     headline: string | null
     emails: string
@@ -2926,6 +2989,7 @@ export interface PersonFieldRefs {
   readonly updatedAt: Prisma.FieldRef<"Person", 'DateTime'>
   readonly first: Prisma.FieldRef<"Person", 'String'>
   readonly last: Prisma.FieldRef<"Person", 'String'>
+  readonly nickname: Prisma.FieldRef<"Person", 'String'>
   readonly title: Prisma.FieldRef<"Person", 'String'>
   readonly headline: Prisma.FieldRef<"Person", 'String'>
   readonly emails: Prisma.FieldRef<"Person", 'String'>

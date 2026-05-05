@@ -106,11 +106,16 @@ export default function PersonDetailPage({ params }: { params: Promise<{ id: str
               fontFamily: "var(--font-display)",
               fontSize: "22px",
               fontWeight: 600,
-              margin: "0 0 4px",
+              margin: "0 0 2px",
               color: "var(--ink)",
             }}>
               {person.first} {person.last}
             </h1>
+            {person.nickname && (
+              <div style={{ fontSize: "11px", color: "var(--ink-4)", marginBottom: "4px" }}>
+                aka {person.nickname}
+              </div>
+            )}
             {(person.title || person.headline) && (
               <div style={{ fontSize: "12px", color: "var(--ink-3)", marginBottom: "8px" }}>
                 {person.title ?? person.headline}

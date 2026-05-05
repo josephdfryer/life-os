@@ -92,6 +92,7 @@ export const PersonScalarFieldEnum = {
   updatedAt: 'updatedAt',
   first: 'first',
   last: 'last',
+  nickname: 'nickname',
   title: 'title',
   headline: 'headline',
   emails: 'emails',

@@ -14,6 +14,7 @@ export default function EditPersonModal({ person, onClose, onSaved }: Props) {
   const [form, setForm] = useState({
     first: person.first,
     last: person.last,
+    nickname: person.nickname ?? "",
     title: person.title ?? "",
     headline: person.headline ?? "",
     company: person.company ?? "",
@@ -101,6 +102,7 @@ export default function EditPersonModal({ person, onClose, onSaved }: Props) {
             <Field label="First name *" value={form.first} onChange={v => set("first", v)} />
             <Field label="Last name *" value={form.last} onChange={v => set("last", v)} />
           </div>
+          <Field label="Nickname" value={form.nickname} onChange={v => set("nickname", v)} placeholder="e.g. Bobby" />
           <Field label="Title" value={form.title} onChange={v => set("title", v)} />
           <Field label="Headline" value={form.headline} onChange={v => set("headline", v)} />
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>

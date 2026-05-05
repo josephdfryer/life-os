@@ -7,6 +7,7 @@ import { formatPerson, jsonList } from "./dto"
 export type PersonInput = {
   first?: unknown
   last?: unknown
+  nickname?: unknown
   title?: unknown
   headline?: unknown
   company?: unknown
@@ -37,6 +38,7 @@ export async function createPerson(input: PersonInput, actor?: DomainActor) {
     data: {
       first,
       last,
+      nickname: optionalString(input.nickname),
       title: optionalString(input.title),
       headline: optionalString(input.headline),
       company: optionalString(input.company),
@@ -64,6 +66,7 @@ export async function updatePerson(id: string, input: PersonInput, actor?: Domai
   const patch: Record<string, unknown> = {}
   if (input.first !== undefined) patch.first = requiredString(input.first, "first")
   if (input.last !== undefined) patch.last = requiredString(input.last, "last")
+  if (input.nickname !== undefined) patch.nickname = optionalString(input.nickname)
   if (input.title !== undefined) patch.title = optionalString(input.title)
   if (input.headline !== undefined) patch.headline = optionalString(input.headline)
   if (input.company !== undefined) patch.company = optionalString(input.company)

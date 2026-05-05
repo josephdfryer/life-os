@@ -17,6 +17,7 @@ model Person {
   updatedAt    DateTime      @updatedAt
   first        String
   last         String
+  nickname     String?
   title        String?
   headline     String?
   emails       String        @default("[]")
