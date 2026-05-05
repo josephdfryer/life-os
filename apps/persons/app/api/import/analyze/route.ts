@@ -19,13 +19,13 @@ function buildSystemPrompt(contacts: ContactRef[]): string {
 
   return `You are parsing communication history for a personal CRM belonging to Joseph Fryer.
 
-Joseph Fryer is the owner of this CRM. He is the author/sender in every conversation — do NOT create a person entry for him. Every other participant is a contact to extract.
+Joseph Fryer is the owner of this CRM. He is the author/sender in every conversation — do NOT create a person entry for him. Every other participant is a person to extract.
 
-Known contacts already in the CRM:
+Known people already in the CRM:
 ${contactList}
 
 Data model:
-- Person nodes: name, title, headline/context, tags, closeness (1=acquaintance/no cadence, 2=nurture/professional contact to stay top of mind, 3=friend, 4=inner circle)
+- Person nodes: name, title, headline/context, tags, closeness (1=acquaintance/no cadence, 2=nurture/professional relationship to stay top of mind, 3=friend, 4=inner circle)
 - Event nodes: exist independently, have a type (meeting, call, dinner, message, etc)
 - Interactions: connect Person nodes TO Events, carry personal metadata
 
@@ -33,7 +33,7 @@ Filename parsing: The source filename often contains critical context — parse 
 - Participant names: "Joseph _ Steve 1_1..." → the other participant is Steve
 - Meeting type/cadence: "BiWeekly", "Weekly", "1_1", "Standup", "AllHands" → use as eventType hint and in summary
 - Dates: filenames like "2024-01-15_meeting.txt" or "Meeting_Jan15.txt" → use as the interaction date
-- Match first-name-only participants in the filename against the known contacts list to resolve full names
+- Match first-name-only participants in the filename against the known people list to resolve full names
 
 First, identify the format (Slack, iMessage, WhatsApp, email, SMS, meeting transcript, etc). Then extract ALL people and their interactions.
 
@@ -41,7 +41,7 @@ For meeting transcripts (Zoom, Teams, etc): treat the whole file as one interact
 
 For multi-message threads (text chains, chat exports): group messages into meaningful conversation sessions or topics — NOT one entry per message. A week of back-and-forth about planning a trip is one interaction. Daily check-ins over a month might be 3–5 interactions.
 
-Matching: if a person's name closely matches one in the known contacts list above, set matchedPersonId to their id. Only set it when confident (full name match, or unambiguous first name + context). If the filename names a participant and only one known contact has that first name, use that as the match.
+Matching: if a person's name closely matches one in the known people list above, set matchedPersonId to their id. Only set it when confident (full name match, or unambiguous first name + context). If the filename names a participant and only one known person has that first name, use that as the match.
 
 Respond ONLY with a JSON array, no markdown:
 [
@@ -68,8 +68,8 @@ Respond ONLY with a JSON array, no markdown:
 ]
 
 Rules:
-- isNew: true if this person is NOT in the known contacts list
-- matchedPersonId: the id string from the known contacts list if matched, otherwise null
+- isNew: true if this person is NOT in the known people list
+- matchedPersonId: the id string from the known people list if matched, otherwise null
 - needsReview: true if name is ambiguous AND cannot be resolved from filename context
 - Never include Joseph Fryer as a person entry
 - closeness: 1=acquaintance (no follow-up cadence), 2=nurture (professional, stay top of mind), 3=friend, 4=inner circle`
@@ -118,7 +118,7 @@ ${content.slice(0, 40000)}
       ...r,
     }))
 
-    // Resolve matchedPersonName from the contacts list
+    // Resolve matchedPersonName from the people list
     for (const r of results) {
       if (r.matchedPersonId) {
         const match = (existingContacts as ContactRef[]).find((c: ContactRef) => c.id === r.matchedPersonId)

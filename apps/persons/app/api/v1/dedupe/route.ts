@@ -4,7 +4,7 @@ import { findPersonDuplicates } from "@/server/domain/merge"
 import { handleRouteError, json } from "@/server/api/respond"
 
 export async function GET(req: NextRequest) {
-  if (!(await authorizeApiRequest(req, "contacts.write"))) return unauthorized()
+  if (!(await authorizeApiRequest(req, "people.write"))) return unauthorized()
   try {
     return json(await findPersonDuplicates())
   } catch (error) {

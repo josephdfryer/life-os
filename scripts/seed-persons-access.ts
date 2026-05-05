@@ -6,8 +6,8 @@ import { createClient } from "@libsql/client"
 
 const permissions = [
   ["*", "Full system access"],
-  ["contacts.read", "Read people and contact records"],
-  ["contacts.write", "Create and update people"],
+  ["people.read", "Read people records"],
+  ["people.write", "Create and update people"],
   ["interactions.read", "Read interactions"],
   ["interactions.write", "Create and update interactions"],
   ["inbox.review", "Review and resolve automation inbox items"],
@@ -25,20 +25,20 @@ const permissions = [
 const roles = [
   ["owner", "Owner", "Full access, including access and settings management.", ["*"]],
   ["admin", "Admin", "Operational admin access without ownership transfer semantics.", [
-    "contacts.read", "contacts.write",
+    "people.read", "people.write",
     "interactions.read", "interactions.write",
     "inbox.review", "ingest.write", "files.read",
     "audit.read", "apiKeys.manage", "roles.manage", "permissions.manage",
     "settings.manage", "rules.manage", "automations.manage",
   ]],
   ["editor", "Editor", "Day-to-day CRM editing access.", [
-    "contacts.read", "contacts.write",
+    "people.read", "people.write",
     "interactions.read", "interactions.write",
     "inbox.review", "ingest.write", "files.read",
   ]],
-  ["viewer", "Viewer", "Read-only CRM access.", ["contacts.read", "interactions.read", "files.read"]],
+  ["viewer", "Viewer", "Read-only CRM access.", ["people.read", "interactions.read", "files.read"]],
   ["automation", "Automation", "Machine access for ingest and inbox workflows.", [
-    "contacts.read", "interactions.read", "interactions.write", "inbox.review", "ingest.write", "files.read",
+    "people.read", "interactions.read", "interactions.write", "inbox.review", "ingest.write", "files.read",
   ]],
 ] as const
 

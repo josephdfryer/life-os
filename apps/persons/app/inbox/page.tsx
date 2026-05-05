@@ -70,6 +70,15 @@ export default function InboxPage() {
   const [results, setResults] = useState<SearchResult[]>([])
   const [selectedPerson, setSelectedPerson] = useState<PersonRef | null>(null)
   const [summary, setSummary] = useState("")
+  const [showCreatePerson, setShowCreatePerson] = useState(false)
+  const [newPerson, setNewPerson] = useState({
+    first: "",
+    last: "",
+    email: "",
+    phone: "",
+    title: "",
+    company: "",
+  })
 
   const sources = useMemo(() => {
     const seen = new Set<string>()
@@ -97,6 +106,16 @@ export default function InboxPage() {
     setSummary(selected.summary ?? selected.body ?? "")
     setSearch("")
     setResults([])
+    setShowCreatePerson(false)
+    const parsedName = splitPersonName(selected.contactName)
+    setNewPerson({
+      first: parsedName.first,
+      last: parsedName.last,
+      email: selected.contactEmail ?? "",
+      phone: selected.contactPhone ?? "",
+      title: "",
+      company: "",
+    })
   }, [selected?.id])
 
   useEffect(() => {
@@ -148,6 +167,70 @@ export default function InboxPage() {
       removeItem(selected.id)
     } catch (e) {
       setError(e instanceof Error ? e.message : "Could not accept item")
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  async function createPersonFromSelected(acceptAfterCreate: boolean) {
+    if (!selected) return
+    if (!newPerson.first.trim() || !newPerson.last.trim()) {
+      setError("Add a first and last name before creating the Person.")
+      return
+    }
+    setSaving(true)
+    setError(null)
+    try {
+      const createRes = await fetch("/api/persons", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          first: newPerson.first,
+          last: newPerson.last,
+          title: newPerson.title,
+          company: newPerson.company,
+          emails: newPerson.email.trim() ? [newPerson.email.trim()] : [],
+          phones: newPerson.phone.trim() ? [newPerson.phone.trim()] : [],
+          closeness: 2,
+          tags: [],
+          values: [],
+        }),
+      })
+      const created = await createRes.json()
+      if (!createRes.ok) throw new Error(created.error || "Could not create Person")
+
+      const person: PersonRef = {
+        id: created.id,
+        first: created.first,
+        last: created.last,
+        title: created.title,
+        company: created.company,
+        emails: created.emails ?? [],
+        phones: created.phones ?? [],
+      }
+      setSelectedPerson(person)
+
+      if (!acceptAfterCreate) {
+        setShowCreatePerson(false)
+        await updateSelectedWithPerson(person)
+        return
+      }
+
+      const acceptRes = await fetch(`/api/inbox/${selected.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "accept",
+          personId: person.id,
+          summary,
+          direction: selected.direction,
+        }),
+      })
+      const accepted = await acceptRes.json()
+      if (!acceptRes.ok) throw new Error(accepted.error || "Could not accept item")
+      removeItem(selected.id)
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Could not create Person")
     } finally {
       setSaving(false)
     }
@@ -205,6 +288,30 @@ export default function InboxPage() {
     } finally {
       setSaving(false)
     }
+  }
+
+  async function updateSelectedWithPerson(person: PersonRef) {
+    if (!selected) return
+    const res = await fetch(`/api/inbox/${selected.id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        action: "update",
+        personId: person.id,
+        summary,
+        direction: selected.direction,
+      }),
+    })
+    const data = await res.json()
+    if (!res.ok) throw new Error(data.error || "Could not attach Person")
+    setItems(prev => prev.map(item => item.id === selected.id
+      ? {
+        ...item,
+        candidatePersonId: person.id,
+        candidatePerson: person,
+        summary,
+      }
+      : item))
   }
 
   async function applyRunSuggestions(ruleRunId: string) {
@@ -348,7 +455,7 @@ export default function InboxPage() {
                       {selected.status !== "pending" && <TinyPill tone={selected.status === "blocked" ? "warn" : "muted"}>{selected.status}</TinyPill>}
                     </div>
                     <h2 style={{ margin: 0, color: "var(--ink)", fontSize: "22px", fontWeight: 600 }}>
-                      {selected.contactName || selected.contactEmail || selected.contactPhone || "Unknown contact"}
+                      {selected.contactName || selected.contactEmail || selected.contactPhone || "Unknown person"}
                     </h2>
                   </div>
                   <div style={{ textAlign: "right", color: "var(--ink-3)", fontSize: "12px" }}>
@@ -466,7 +573,7 @@ export default function InboxPage() {
                         {[selectedPerson.title, selectedPerson.company, selectedPerson.emails[0], selectedPerson.phones[0]].filter(Boolean).join(" · ")}
                       </div>
                     </div>
-                    <Link href={`/contacts/${selectedPerson.id}`} style={{ fontSize: "11px", color: "var(--accent)", textDecoration: "none" }}>
+                    <Link href={`/people/${selectedPerson.id}`} style={{ fontSize: "11px", color: "var(--accent)", textDecoration: "none" }}>
                       Open
                     </Link>
                   </div>
@@ -514,6 +621,49 @@ export default function InboxPage() {
                     ))}
                   </div>
                 )}
+
+                <div style={{ marginTop: "14px", borderTop: "1px solid var(--border)", paddingTop: "14px" }}>
+                  <button
+                    type="button"
+                    onClick={() => setShowCreatePerson(open => !open)}
+                    style={{ padding: "7px 11px", borderRadius: "6px", border: "1px solid var(--border)", background: showCreatePerson ? "var(--accent-soft)" : "transparent", color: showCreatePerson ? "var(--accent)" : "var(--ink-3)", font: "inherit", fontSize: "11px", cursor: "pointer" }}
+                  >
+                    + Create new Person
+                  </button>
+
+                  {showCreatePerson && (
+                    <div style={{ display: "grid", gap: "10px", marginTop: "12px" }}>
+                      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}>
+                        <SmallField label="First" value={newPerson.first} onChange={value => setNewPerson(prev => ({ ...prev, first: value }))} />
+                        <SmallField label="Last" value={newPerson.last} onChange={value => setNewPerson(prev => ({ ...prev, last: value }))} />
+                      </div>
+                      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}>
+                        <SmallField label="Email" value={newPerson.email} onChange={value => setNewPerson(prev => ({ ...prev, email: value }))} />
+                        <SmallField label="Phone" value={newPerson.phone} onChange={value => setNewPerson(prev => ({ ...prev, phone: value }))} />
+                      </div>
+                      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}>
+                        <SmallField label="Title" value={newPerson.title} onChange={value => setNewPerson(prev => ({ ...prev, title: value }))} />
+                        <SmallField label="Company" value={newPerson.company} onChange={value => setNewPerson(prev => ({ ...prev, company: value }))} />
+                      </div>
+                      <div style={{ display: "flex", justifyContent: "flex-end", gap: "8px" }}>
+                        <button
+                          onClick={() => createPersonFromSelected(false)}
+                          disabled={saving}
+                          style={{ padding: "8px 12px", borderRadius: "6px", border: "1px solid var(--border)", background: "transparent", color: "var(--ink-3)", font: "inherit", fontSize: "11px", cursor: saving ? "not-allowed" : "pointer" }}
+                        >
+                          Create & Attach
+                        </button>
+                        <button
+                          onClick={() => createPersonFromSelected(true)}
+                          disabled={saving}
+                          style={{ padding: "8px 12px", borderRadius: "6px", border: "none", background: "var(--accent)", color: "#fff", font: "inherit", fontSize: "11px", fontWeight: 600, cursor: saving ? "not-allowed" : "pointer" }}
+                        >
+                          Create & Accept
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
               </section>
 
               {error && <p style={{ color: "var(--accent)", fontSize: "12px", margin: 0 }}>{error}</p>}
@@ -586,6 +736,26 @@ function formatDateTime(value: string) {
 
 function actionCount(value: unknown) {
   return Array.isArray(value) ? value.length : 0
+}
+
+function splitPersonName(value: string | null) {
+  const parts = (value ?? "").trim().split(/\s+/).filter(Boolean)
+  if (parts.length === 0) return { first: "", last: "" }
+  if (parts.length === 1) return { first: parts[0], last: "" }
+  return { first: parts[0], last: parts.slice(1).join(" ") }
+}
+
+function SmallField({ label, value, onChange }: { label: string; value: string; onChange: (value: string) => void }) {
+  return (
+    <label style={{ display: "grid", gap: "5px", color: "var(--ink-4)", fontSize: "10px", textTransform: "uppercase", letterSpacing: "0.06em" }}>
+      {label}
+      <input
+        value={value}
+        onChange={e => onChange(e.target.value)}
+        style={{ width: "100%", boxSizing: "border-box", border: "1px solid var(--border)", borderRadius: "7px", padding: "8px 9px", background: "var(--bg)", color: "var(--ink)", font: "inherit", fontSize: "12px", textTransform: "none", letterSpacing: 0 }}
+      />
+    </label>
+  )
 }
 
 function TinyPill({ children, tone = "muted" }: { children: React.ReactNode; tone?: "muted" | "ok" | "warn" | "accent" | "suggest" }) {

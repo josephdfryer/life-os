@@ -7,7 +7,7 @@ import { useSession, signOut } from "next-auth/react"
 
 const IMPORT_ITEMS = [
   { href: "/import", label: "Import Conversations", desc: "Slack, iMessage, email, any chat" },
-  { href: "/import/contacts", label: "Import People", desc: "vCard, Google CSV, LinkedIn CSV" },
+  { href: "/import/people", label: "Import People", desc: "vCard, Google CSV, LinkedIn CSV" },
 ]
 
 export default function Header() {
@@ -65,7 +65,7 @@ export default function Header() {
         <NavLink href="/today" label="Today" active={pathname === "/today"} />
 
         {/* People */}
-        <NavLink href="/contacts" label="People" active={pathname === "/contacts" || (pathname.startsWith("/contacts/") && !pathname.startsWith("/contacts/import"))} />
+        <NavLink href="/people" label="People" active={pathname === "/people" || pathname.startsWith("/people/") || pathname === "/contacts" || pathname.startsWith("/contacts/")} />
 
         <NavLink href="/inbox" label="Inbox" active={pathname === "/inbox"} />
 

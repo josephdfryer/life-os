@@ -26,7 +26,7 @@ export default function PersonCard({ person }: Props) {
   const hasEverContacted = person.lastInteractionDate !== null
 
   return (
-    <Link href={`/contacts/${person.id}`} style={{ textDecoration: "none", display: "block" }}>
+    <Link href={`/people/${person.id}`} style={{ textDecoration: "none", display: "block" }}>
       <div style={{
         background: "var(--surface)",
         border: "1px solid var(--border)",
@@ -68,7 +68,7 @@ export default function PersonCard({ person }: Props) {
                 background: "var(--accent)",
                 display: "inline-block",
                 flexShrink: 0,
-              }} title="Overdue for contact" />
+              }} title="Overdue to reach out" />
             )}
           </div>
 
@@ -107,8 +107,8 @@ export default function PersonCard({ person }: Props) {
             {relativeTime(person.lastInteractionDate)}
           </span>
 
-          {/* Contact urgency bar — fills and turns red as relationship goes overdue */}
-          <div title={hasEverContacted ? `${person.daysSinceLast}d ago · target every ${cadenceDays}d` : "Never contacted"} style={{ width: "48px", height: "3px", background: "var(--surface2)", borderRadius: "2px", overflow: "hidden" }}>
+          {/* Reach-out urgency bar — fills and turns red as relationship goes overdue */}
+          <div title={hasEverContacted ? `${person.daysSinceLast}d ago · target every ${cadenceDays}d` : "Never reached out"} style={{ width: "48px", height: "3px", background: "var(--surface2)", borderRadius: "2px", overflow: "hidden" }}>
             {hasEverContacted && (
               <div style={{
                 width: `${Math.round(urgencyRatio * 100)}%`,

@@ -26,7 +26,7 @@ function buildSystemPrompt(contacts: ContactRef[]): string {
 
 Joseph Fryer is the owner — do NOT create a person entry for him. He is the host/sender in every conversation. Every other participant is a contact.
 
-Known contacts:
+Known people:
 ${contactList}
 
 For long transcripts or chat histories: group messages into meaningful conversation sessions or topics — NOT one entry per message. A week of back-and-forth about one topic is one interaction. Daily check-ins over a month are 3–5 interactions max.

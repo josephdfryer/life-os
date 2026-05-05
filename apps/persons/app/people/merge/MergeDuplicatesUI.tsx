@@ -198,7 +198,7 @@ export default function MergeDuplicatesUI({ initialPairs }: { initialPairs: Dupe
     const deletedId = b.id
     const currentKey = selectedKey
     setMerging(true)
-    const res = await fetch("/api/contacts/merge", {
+    const res = await fetch("/api/people/merge", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ keepId: a.id, deleteId: b.id, fields: buildFields(a, b, choices) }),
@@ -267,7 +267,7 @@ export default function MergeDuplicatesUI({ initialPairs }: { initialPairs: Dupe
       // Send pairs to server — it does union-find clustering so overlapping pairs
       // (e.g. 6 Hannah Nguyens) correctly collapse into one record, not pairwise.
       const pairInput = toMerge.map(p => ({ aId: p.a.id, bId: p.b.id }))
-      const res = await fetch("/api/contacts/merge-cluster", {
+      const res = await fetch("/api/people/merge-cluster", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ pairs: pairInput }),
@@ -314,7 +314,7 @@ export default function MergeDuplicatesUI({ initialPairs }: { initialPairs: Dupe
   return (
     <div style={{ maxWidth: "1020px", margin: "0 auto", padding: "32px 24px" }}>
 
-      <BackLink label="People" href="/contacts" component={Link} style={{ marginBottom: "16px" }} />
+      <BackLink label="People" href="/people" component={Link} style={{ marginBottom: "16px" }} />
 
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: pairs.length > 0 ? "14px" : "24px" }}>
         <h1 style={{ fontFamily: "var(--font-display)", fontSize: "24px", fontWeight: 600, color: "var(--ink)", margin: 0 }}>

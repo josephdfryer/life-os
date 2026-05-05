@@ -73,7 +73,7 @@ export default function ResultCard({ result, onChange }: Props) {
               fontSize: "12px",
               color: "#2a6ea3",
             }}>
-              Interactions will be added to <strong>{result.matchedPersonName}</strong> — no new contact will be created.
+              Interactions will be added to <strong>{result.matchedPersonName}</strong> — no new Person will be created.
             </div>
           ) : (
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px", marginBottom: "12px" }}>

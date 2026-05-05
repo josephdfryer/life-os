@@ -189,7 +189,7 @@ export default function AdminClient({
   const [newSecret, setNewSecret] = useState<string | null>(null)
 
   const [keyName, setKeyName] = useState("")
-  const [keyScopes, setKeyScopes] = useState<string[]>(["contacts.read", "interactions.read"])
+  const [keyScopes, setKeyScopes] = useState<string[]>(["people.read", "interactions.read"])
   const [roleName, setRoleName] = useState("")
   const [roleKey, setRoleKey] = useState("")
   const [roleDescription, setRoleDescription] = useState("")

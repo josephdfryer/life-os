@@ -27,7 +27,7 @@ export default function AttentionCard({ person }: Props) {
   const label = overdueLabel(person)
 
   return (
-    <Link href={`/contacts/${person.id}`} style={{ textDecoration: "none" }}>
+    <Link href={`/people/${person.id}`} style={{ textDecoration: "none" }}>
       <div style={{
         display: "flex",
         alignItems: "center",

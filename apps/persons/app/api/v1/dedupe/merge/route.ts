@@ -4,7 +4,7 @@ import { mergePersonClusters } from "@/server/domain/merge"
 import { handleRouteError, json } from "@/server/api/respond"
 
 export async function POST(req: NextRequest) {
-  const auth = await authorizeApiRequest(req, "contacts.write")
+  const auth = await authorizeApiRequest(req, "people.write")
   if (!auth) return unauthorized()
   try {
     const { pairs } = await req.json() as { pairs: { aId: string; bId: string }[] }

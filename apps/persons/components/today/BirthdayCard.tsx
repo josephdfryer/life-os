@@ -12,7 +12,7 @@ export default function BirthdayCard({ person, isToday }: Props) {
   const days = daysUntilBirthday(person.birthday)
 
   return (
-    <Link href={`/contacts/${person.id}`} style={{ textDecoration: "none" }}>
+    <Link href={`/people/${person.id}`} style={{ textDecoration: "none" }}>
       <div style={{
         display: "flex",
         alignItems: "center",

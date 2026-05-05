@@ -6,7 +6,7 @@ import { formatPlan } from "@/server/domain/dto"
 import { created, handleRouteError } from "@/server/api/respond"
 
 export async function GET(req: NextRequest) {
-  if (!(await authorizeApiRequest(req, "contacts.read"))) return unauthorized()
+  if (!(await authorizeApiRequest(req, "people.read"))) return unauthorized()
 
   const { searchParams } = new URL(req.url)
   const personId = searchParams.get("personId")
@@ -23,7 +23,7 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
-  const auth = await authorizeApiRequest(req, "contacts.write")
+  const auth = await authorizeApiRequest(req, "people.write")
   if (!auth) return unauthorized()
   try {
     return created(await createPlan(await req.json(), auth.actor))

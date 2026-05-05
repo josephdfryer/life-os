@@ -50,7 +50,7 @@ export async function POST(req: NextRequest) {
 
     if (!contacts.length) {
       return NextResponse.json(
-        { error: "No contacts could be parsed. Columns detected: " + header.slice(0, 8).join(", ") },
+        { error: "No people could be parsed. Columns detected: " + header.slice(0, 8).join(", ") },
         { status: 400 }
       )
     }

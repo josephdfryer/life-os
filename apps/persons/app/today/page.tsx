@@ -108,7 +108,7 @@ export default async function TodayPage() {
       ) : (
         persons.length > 0 && (
           <div style={{ padding: "32px", background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "10px", textAlign: "center", color: "var(--ink-3)", fontSize: "13px" }}>
-            You&apos;re all caught up. No one is overdue for contact.
+            You&apos;re all caught up. No one is overdue for a check-in.
           </div>
         )
       )}
@@ -121,7 +121,7 @@ export default async function TodayPage() {
           <div style={{ fontSize: "12px", color: "var(--ink-3)", marginBottom: "20px" }}>
             Add your first person to get started.
           </div>
-          <a href="/contacts" style={{ display: "inline-block", padding: "9px 20px", background: "var(--accent)", color: "#fff", borderRadius: "7px", textDecoration: "none", fontSize: "12px", fontWeight: 500 }}>
+          <a href="/people" style={{ display: "inline-block", padding: "9px 20px", background: "var(--accent)", color: "#fff", borderRadius: "7px", textDecoration: "none", fontSize: "12px", fontWeight: 500 }}>
             Go to People →
           </a>
         </div>

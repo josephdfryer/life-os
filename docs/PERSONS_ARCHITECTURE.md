@@ -174,17 +174,41 @@ flowchart TD
   Review --> Trace["Automation trace shows matched rules"]
   Trace --> Choice{"Decision"}
   Choice -->|Accept| Person["Attach to correct Person"]
+  Choice -->|Create + Accept| NewPerson["Create a new Person and attach it"]
   Choice -->|Dismiss| Dismissed["Mark dismissed"]
   Choice -->|Update| Pending["Keep pending with edits"]
   Choice -->|Return to Review| Pending
 
   Person --> DailyInteraction["Append/create daily Interaction"]
+  NewPerson --> DailyInteraction
   DailyInteraction --> Rules["Run inbox.accept and interaction rules"]
   Rules --> RuleRuns["Save RuleRuns"]
   DailyInteraction --> Audit["Write AuditLog"]
 ```
 
-Plain English: Inbox is the human filter between automation and your real CRM memory.
+Plain English: Inbox is the human filter between automation and your real CRM memory. If an incoming interaction belongs to someone who is not in People yet, the Inbox can create the Person from the staged name, email, or phone and accept the interaction in the same review step.
+
+### 5. Data cleaning view
+
+```mermaid
+flowchart TD
+  PeopleDB["People table"] --> QualityAPI["/api/persons/data-cleaning"]
+  QualityAPI --> Checks["Completeness checks"]
+  Checks --> MissingEmail["Missing email"]
+  Checks --> MissingPhone["Missing phone"]
+  Checks --> MissingName["Missing first or last name"]
+  Checks --> NameOnly["Name-only people"]
+  Checks --> Symbols["Unusual name symbols"]
+
+  QualityAPI --> CleanUI["/people/clean"]
+  CleanUI --> Edit["Edit Person"]
+  CleanUI --> Delete["Delete Person"]
+  Edit --> PersonAPI["/api/persons/:id"]
+  Delete --> PersonAPI
+  PersonAPI --> PeopleDB
+```
+
+Plain English: the Data Cleaning page is a focused People quality view. It counts sparse records, lets you filter and sort by the kind of cleanup needed, and sends edits or deletes through the same Person APIs used by the rest of the app.
 
 ## API Plumbing
 
@@ -221,7 +245,7 @@ flowchart LR
   Scope --> Domain["Domain commands"]
   Domain --> DB["Database"]
 
-  V1 --> Contacts["contacts.read/write"]
+  V1 --> PeopleScope["people.read/write"]
   V1 --> Files["files.read"]
   V1 --> Ingest["ingest.write"]
   V1 --> Interactions["interactions.read/write"]
@@ -253,8 +277,8 @@ flowchart TD
 
 Examples:
 
-- `contacts.read`: can read People.
-- `contacts.write`: can create or edit People.
+- `people.read`: can read People.
+- `people.write`: can create or edit People.
 - `ingest.write`: can run import/ingest flows.
 - `rules.manage`: can create or edit rules.
 - `audit.read`: can view the audit log.
@@ -324,7 +348,7 @@ Plain English version:
 - **Interaction**: a thing that happened with a person.
 - **Event**: a grouping around an interaction, such as a message day, meeting, call, dinner, or imported event.
 - **Plan**: what you want to do next with a person.
-- **StagedInteraction**: universal inbox item waiting for review. Any source can stage a record here. The `itemType` field (`interaction`, `contact`, `event`) indicates what kind of record will be created when accepted.
+- **StagedInteraction**: universal inbox item waiting for review. Any source can stage a record here. The `itemType` field (`interaction`, `person`, `event`) indicates what kind of record will be created when accepted.
 - **ImportedFile**: source material that was uploaded or ingested.
 - **Rule**: an automation decision you configured.
 - **RuleRun**: a receipt showing whether a rule matched.
@@ -338,6 +362,7 @@ flowchart LR
   DB["Persons database"] --> UI["Web app views"]
   DB --> Today["Today dashboard"]
   DB --> People["People pages"]
+  DB --> Cleanup["Data cleaning"]
   DB --> Inbox["Inbox review"]
   DB --> Admin["Admin tools"]
   DB --> API["Headless API responses"]
@@ -394,6 +419,8 @@ flowchart LR
 - Admin is hidden under the profile menu, and the architecture map is a living document.
 - Full headless API parity: all major resources (people, interactions, events, plans, inbox, imports, rules, dedupe, audit) available under `/api/v1/`.
 - Universal Inbox: `StagedInteraction` now has an `itemType` field; any external source can stage records via `POST /api/v1/inbox` using the `stageRecord()` domain command. Rules fire automatically on staging.
+- Data Cleaning: `/people/clean` highlights People records missing email, phone, names, or broader context, and supports editing or deleting those People from the cleanup view.
+- Inbox create-and-accept: an unmatched staged interaction can create a new Person and attach the interaction in one review action.
 
 ### Future
 

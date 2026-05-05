@@ -76,6 +76,17 @@ function hasScopes(granted: string[], required: string[]) {
   if (required.length === 0) return true
   if (granted.includes("*")) return true
   return required.every(scope =>
-    granted.includes(scope) || granted.includes(`${scope.split(".")[0]}.*`)
+    granted.includes(scope) ||
+    granted.includes(`${scope.split(".")[0]}.*`) ||
+    legacyPeopleScopeMatches(granted, scope)
   )
+}
+
+function legacyPeopleScopeMatches(granted: string[], required: string) {
+  const legacy = required === "people.read"
+    ? "contacts.read"
+    : required === "people.write"
+      ? "contacts.write"
+      : null
+  return Boolean(legacy && (granted.includes(legacy) || granted.includes("contacts.*")))
 }

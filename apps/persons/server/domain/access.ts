@@ -6,8 +6,8 @@ import { auditAction, type DomainActor } from "./audit"
 
 export const DEFAULT_PERMISSIONS = [
   { scope: "*", description: "Full system access" },
-  { scope: "contacts.read", description: "Read people and contact records" },
-  { scope: "contacts.write", description: "Create and update people" },
+  { scope: "people.read", description: "Read people records" },
+  { scope: "people.write", description: "Create and update people" },
   { scope: "interactions.read", description: "Read interactions" },
   { scope: "interactions.write", description: "Create and update interactions" },
   { scope: "inbox.review", description: "Review and resolve automation inbox items" },
@@ -34,7 +34,7 @@ const DEFAULT_ROLES = [
     name: "Admin",
     description: "Operational admin access without ownership transfer semantics.",
     scopes: [
-      "contacts.read", "contacts.write",
+      "people.read", "people.write",
       "interactions.read", "interactions.write",
       "inbox.review", "ingest.write", "files.read",
       "audit.read", "apiKeys.manage", "roles.manage", "permissions.manage",
@@ -46,7 +46,7 @@ const DEFAULT_ROLES = [
     name: "Editor",
     description: "Day-to-day CRM editing access.",
     scopes: [
-      "contacts.read", "contacts.write",
+      "people.read", "people.write",
       "interactions.read", "interactions.write",
       "inbox.review", "ingest.write", "files.read",
     ],
@@ -55,13 +55,13 @@ const DEFAULT_ROLES = [
     key: "viewer",
     name: "Viewer",
     description: "Read-only CRM access.",
-    scopes: ["contacts.read", "interactions.read", "files.read"],
+    scopes: ["people.read", "interactions.read", "files.read"],
   },
   {
     key: "automation",
     name: "Automation",
     description: "Machine access for ingest and inbox workflows.",
-    scopes: ["contacts.read", "interactions.read", "interactions.write", "inbox.review", "ingest.write", "files.read"],
+    scopes: ["people.read", "interactions.read", "interactions.write", "inbox.review", "ingest.write", "files.read"],
   },
 ]
 
@@ -369,6 +369,12 @@ async function userScopes(userId: string): Promise<string[]> {
 
 function hasScope(granted: string[], required: string) {
   if (granted.includes("*")) return true
+  const legacyRequired = required === "people.read"
+    ? "contacts.read"
+    : required === "people.write"
+      ? "contacts.write"
+      : null
+  if (legacyRequired && (granted.includes(legacyRequired) || granted.includes("contacts.*"))) return true
   return granted.includes(required) || granted.includes(`${required.split(".")[0]}.*`)
 }
 

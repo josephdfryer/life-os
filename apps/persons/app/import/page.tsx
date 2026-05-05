@@ -38,7 +38,7 @@ export default function ImportConversationsPage() {
     if (!incoming.length) return
     const firstFile = incoming[0]
     if (firstFile.name.endsWith(".vcf")) {
-      router.push("/import/contacts")
+      router.push("/import/people")
       return
     }
     setFiles(incoming)
@@ -83,7 +83,7 @@ export default function ImportConversationsPage() {
     )
 
     try {
-      // Fetch existing contacts to pass to Claude for matching
+      // Fetch existing people to pass to Claude for matching
       const contactsRes = await fetch("/api/persons?minimal=true&limit=200")
       const contactsData = contactsRes.ok ? await contactsRes.json() : {}
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -393,7 +393,7 @@ export default function ImportConversationsPage() {
               {results.length} people and their interactions have been added.
             </p>
             <div style={{ display: "flex", gap: "10px", justifyContent: "center" }}>
-              <button onClick={() => router.push("/contacts")} style={{ padding: "10px 24px", background: "var(--accent)", color: "#fff", border: "none", borderRadius: "7px", cursor: "pointer", fontFamily: "inherit", fontSize: "12px", fontWeight: 500 }}>
+              <button onClick={() => router.push("/people")} style={{ padding: "10px 24px", background: "var(--accent)", color: "#fff", border: "none", borderRadius: "7px", cursor: "pointer", fontFamily: "inherit", fontSize: "12px", fontWeight: 500 }}>
                 View People →
               </button>
               <button
@@ -535,7 +535,7 @@ function ResolveModal({
       </h2>
       <p style={{ fontSize: "12px", color: "var(--ink-3)", margin: "0 0 20px", lineHeight: 1.5 }}>
         {contacts.length > 0
-          ? "This person wasn't automatically matched. Pick an existing contact or add them as new."
+          ? "This person was not automatically matched. Pick an existing Person or add them as new."
           : "No existing people to match against. Add as a new person?"}
       </p>
 
@@ -604,7 +604,7 @@ function ResolveModal({
           fontWeight: 500,
         }}
       >
-        Add "{person.name}" as new contact
+        Add "{person.name}" as new Person
       </button>
     </div>
   )

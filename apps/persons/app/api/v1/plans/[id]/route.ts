@@ -6,7 +6,7 @@ import { handleRouteError, json, noContent } from "@/server/api/respond"
 type Params = { params: Promise<{ id: string }> }
 
 export async function PATCH(req: NextRequest, { params }: Params) {
-  const auth = await authorizeApiRequest(req, "contacts.write")
+  const auth = await authorizeApiRequest(req, "people.write")
   if (!auth) return unauthorized()
   try {
     const { id } = await params
@@ -17,7 +17,7 @@ export async function PATCH(req: NextRequest, { params }: Params) {
 }
 
 export async function DELETE(req: NextRequest, { params }: Params) {
-  const auth = await authorizeApiRequest(req, "contacts.write")
+  const auth = await authorizeApiRequest(req, "people.write")
   if (!auth) return unauthorized()
   try {
     const { id } = await params
