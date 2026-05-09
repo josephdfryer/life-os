@@ -64,7 +64,7 @@ export async function GET(req: NextRequest) {
 
   return NextResponse.json({
     data: items.map((item: typeof items[number]) => {
-      const cp = item.candidatePerson
+      const cp = item.candidatePerson as { id: string; first: string; last: string; title: string | null; company: string | null; emails: string; phones: string } | null
       return {
         ...item,
         candidatePerson: cp
