@@ -41,7 +41,7 @@ export async function GET(_req: NextRequest, { params }: Params) {
     emails: parseTags(person.emails),
     phones: parseTags(person.phones),
     interactions,
-    plans: person.plans.map(p => ({
+    plans: person.plans.map((p: typeof person.plans[number]) => ({
       ...p,
       successSignals: parseTags(p.successSignals),
       children: [],
