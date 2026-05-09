@@ -43,14 +43,14 @@ export default async function TodayPage() {
     orderBy: { createdAt: "asc" },
   })
 
-  const persons = raw.map(p =>
+  const persons = raw.map((p: typeof raw[number]) =>
     enrichWithAttention({
       ...(p as unknown as Person),
       tags:   parseTags(p.tags)   as unknown as string[],
       values: parseTags(p.values) as unknown as string[],
       emails: parseTags(p.emails) as unknown as string[],
       phones: parseTags(p.phones) as unknown as string[],
-      interactions: p.interactions.map(ix => ({
+      interactions: p.interactions.map((ix: typeof p.interactions[number]) => ({
         ...ix,
         actionItems: parseTags(ix.actionItems) as unknown as string[],
         event: null,

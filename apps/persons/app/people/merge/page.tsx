@@ -14,7 +14,7 @@ export default async function MergePage() {
     include: { _count: { select: { interactions: true, plans: true } } },
   })
 
-  const persons = rows.map(p => ({
+  const persons = rows.map((p: typeof rows[number]) => ({
     ...(p as unknown as Person),
     tags:   parseTags(p.tags),
     values: parseTags(p.values),

@@ -23,7 +23,7 @@ export default async function PeoplePage() {
       db.person.count({ where }),
     ])
 
-    const persons = rows.map(p => {
+    const persons = rows.map((p: typeof rows[number]) => {
       const lastTs = p.interactions[0]?.timestamp ?? null
       const lastInteractionDate = lastTs ? new Date(lastTs) : null
       const daysSinceLast = lastInteractionDate
