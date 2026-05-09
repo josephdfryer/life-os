@@ -31,6 +31,21 @@ type User = {
   status: string
   roles: { id: string; key: string; name: string }[]
 }
+type ApprovedEmail = {
+  id: string
+  email: string
+  status: string
+  workspaceId: string | null
+  createdAt: string
+  workspace: { id: string; name: string; slug: string } | null
+  invitedBy: { id: string; email: string; name: string | null } | null
+}
+type Workspace = {
+  id: string
+  name: string
+  slug: string
+  status: string
+}
 type AuditLog = {
   id: string
   createdAt: string
@@ -75,9 +90,11 @@ type Overview = {
   permissions: Permission[]
   apiKeys: ApiKey[]
   auditCount: number
+  approvedEmails: ApprovedEmail[]
+  workspaces: Workspace[]
 }
 
-const TABS = ["apiKeys", "roles", "rules", "permissions", "audit"] as const
+const TABS = ["apiKeys", "roles", "rules", "permissions", "audit", "workspace"] as const
 type Tab = typeof TABS[number]
 
 const DEFAULT_CONDITIONS = `[
@@ -212,6 +229,9 @@ export default function AdminClient({
   const [runFilterTrigger, setRunFilterTrigger] = useState("all")
   const [runFilterMatched, setRunFilterMatched] = useState("all")
   const [runFilterStatus, setRunFilterStatus] = useState("all")
+
+  const [inviteEmail, setInviteEmail] = useState("")
+  const [inviteWorkspaceId, setInviteWorkspaceId] = useState("own")
 
   const selectedRole = useMemo(
     () => overview?.roles.find(role => role.id === selectedRoleId) ?? overview?.roles[0] ?? null,
@@ -492,6 +512,47 @@ export default function AdminClient({
     }
   }
 
+  async function sendInvite() {
+    if (!inviteEmail.trim()) return
+    setSaving(true)
+    setError(null)
+    try {
+      const workspaceId = inviteWorkspaceId === "own" ? null : inviteWorkspaceId
+      const res = await fetch("/api/admin/approved-emails", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: inviteEmail.trim(), workspaceId }),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error?.message || data.error || "Could not approve email")
+      setInviteEmail("")
+      await loadOverview()
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Could not approve email")
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  async function updateApprovedEmailStatus(id: string, status: string) {
+    setSaving(true)
+    setError(null)
+    try {
+      const res = await fetch(`/api/admin/approved-emails/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status }),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error?.message || data.error || "Could not update approval")
+      await loadOverview()
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Could not update approval")
+    } finally {
+      setSaving(false)
+    }
+  }
+
   function rulePayload() {
     return {
       name: ruleName,
@@ -579,6 +640,7 @@ export default function AdminClient({
             <TabButton active={tab === "rules"} onClick={() => setTab("rules")} label="Rules" />
             <TabButton active={tab === "permissions"} onClick={() => setTab("permissions")} label="Permissions" />
             <TabButton active={tab === "audit"} onClick={() => setTab("audit")} label="Audit" />
+            <TabButton active={tab === "workspace"} onClick={() => setTab("workspace")} label="Workspace" />
           </div>
           <div style={{ marginTop: "22px", paddingTop: "16px", borderTop: "1px solid var(--border)", fontSize: "11px", color: "var(--ink-3)", lineHeight: 1.6 }}>
             <div>{overview?.currentUser.email ?? ""}</div>
@@ -863,6 +925,77 @@ export default function AdminClient({
                 ))}
               </div>
             </Panel>
+          )}
+
+          {!loading && overview && tab === "workspace" && (
+            <section style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) 300px", gap: "18px" }}>
+              <Panel title="Approved Sign-ins" meta={`${overview.approvedEmails.length} emails`}>
+                <div style={{ overflowX: "auto" }}>
+                  <table style={tableStyle}>
+                    <thead>
+                      <tr>
+                        <Th>Email</Th>
+                        <Th>Status</Th>
+                        <Th>Workspace</Th>
+                        <Th>Invited by</Th>
+                        <Th>Approved</Th>
+                        <Th></Th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {overview.approvedEmails.map(entry => (
+                        <tr key={entry.id}>
+                          <Td strong>{entry.email}</Td>
+                          <Td><StatusPill status={entry.status} /></Td>
+                          <Td>{entry.workspace?.name ?? <span style={{ color: "var(--ink-4)" }}>own workspace</span>}</Td>
+                          <Td>{entry.invitedBy?.email ?? "—"}</Td>
+                          <Td>{formatDate(entry.createdAt)}</Td>
+                          <Td align="right">
+                            <button
+                              style={smallButtonStyle}
+                              disabled={saving}
+                              onClick={() => updateApprovedEmailStatus(entry.id, entry.status === "approved" ? "revoked" : "approved")}
+                            >
+                              {entry.status === "approved" ? "Revoke" : "Re-approve"}
+                            </button>
+                          </Td>
+                        </tr>
+                      ))}
+                      {overview.approvedEmails.length === 0 && (
+                        <tr>
+                          <td colSpan={6} style={{ textAlign: "center", padding: "18px", fontSize: "11px", color: "var(--ink-4)" }}>No approved emails yet</td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </Panel>
+
+              <Panel title="Approve Email">
+                <Field label="Email" value={inviteEmail} onChange={setInviteEmail} placeholder="name@example.com" />
+                <label style={{ display: "grid", gap: "5px", marginBottom: "12px" }}>
+                  <span style={{ fontSize: "10px", color: "var(--ink-4)" }}>Workspace</span>
+                  <select
+                    value={inviteWorkspaceId}
+                    onChange={event => setInviteWorkspaceId(event.target.value)}
+                    style={{ height: "34px", border: "1px solid var(--border)", borderRadius: "7px", background: "var(--bg)", color: "var(--ink)", padding: "0 9px", fontFamily: "inherit", fontSize: "12px" }}
+                  >
+                    <option value="own">Own workspace (isolated)</option>
+                    {overview.workspaces.map(ws => (
+                      <option key={ws.id} value={ws.id}>{ws.name}</option>
+                    ))}
+                  </select>
+                </label>
+                <div style={{ fontSize: "11px", color: "var(--ink-4)", marginBottom: "12px", lineHeight: 1.5 }}>
+                  {inviteWorkspaceId === "own"
+                    ? "This person gets a clean, private workspace when they first sign in."
+                    : `This person will share data in "${overview.workspaces.find(ws => ws.id === inviteWorkspaceId)?.name}".`}
+                </div>
+                <button style={primaryButtonStyle} disabled={saving || !inviteEmail.trim()} onClick={sendInvite}>
+                  Approve
+                </button>
+              </Panel>
+            </section>
           )}
 
           {!loading && overview && tab === "audit" && (

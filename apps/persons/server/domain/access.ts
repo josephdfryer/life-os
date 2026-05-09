@@ -74,12 +74,24 @@ export type AccessActor = {
   scopes: string[]
 }
 
+// Instance-level flag: once seeded in this Fluid Compute instance, skip all
+// subsequent seed checks. Fluid Compute reuses instances across requests, so
+// this survives for the lifetime of the instance (~minutes to hours).
+let _seedVerified = false
+
 export async function seedDefaultAccess(actor?: DomainActor) {
+  if (_seedVerified) return
+
   const [permissionCount, roleCount] = await Promise.all([
     db.permission.count(),
     db.role.count(),
   ])
   const needsSeed = permissionCount < DEFAULT_PERMISSIONS.length || roleCount < DEFAULT_ROLES.length
+
+  if (!needsSeed) {
+    _seedVerified = true
+    return
+  }
 
   for (const permission of DEFAULT_PERMISSIONS) {
     await db.permission.upsert({
@@ -107,9 +119,8 @@ export async function seedDefaultAccess(actor?: DomainActor) {
     }
   }
 
-  if (needsSeed) {
-    await auditAction({ actor, action: "access.seed", targetType: "access" })
-  }
+  _seedVerified = true
+  await auditAction({ actor, action: "access.seed", targetType: "access" })
 }
 
 // Per-instance cache: avoids 6+ sequential Turso RTTs on every request.
@@ -212,7 +223,7 @@ async function _buildWorkspace(userId: string, email: string, useDefault: boolea
 
 export async function accessOverview(actor: AccessActor) {
   await seedDefaultAccess(actor.actor)
-  const [users, roles, permissions, apiKeys, auditCount] = await Promise.all([
+  const [users, roles, permissions, apiKeys, auditCount, approvedEmails, workspaces] = await Promise.all([
     db.user.findMany({
       include: { roles: { include: { role: true } } },
       orderBy: { createdAt: "asc" },
@@ -228,6 +239,11 @@ export async function accessOverview(actor: AccessActor) {
       orderBy: { createdAt: "desc" },
     }),
     db.auditLog.count({ where: { workspaceId: actor.workspaceId } }),
+    db.approvedEmail.findMany({
+      include: { workspace: true, invitedBy: true },
+      orderBy: { createdAt: "desc" },
+    }),
+    db.workspace.findMany({ orderBy: { name: "asc" } }),
   ])
 
   return {
@@ -245,6 +261,76 @@ export async function accessOverview(actor: AccessActor) {
     permissions,
     apiKeys: apiKeys.map(formatApiKey),
     auditCount,
+    approvedEmails: approvedEmails.map(formatApprovedEmail),
+    workspaces: workspaces.map(ws => ({ id: ws.id, name: ws.name, slug: ws.slug, status: ws.status })),
+  }
+}
+
+export async function addApprovedEmail(input: Record<string, unknown>, actor: AccessActor) {
+  const email = requiredString(input.email, "email").toLowerCase().trim()
+  const workspaceId = optionalString(input.workspaceId) || null
+
+  const existing = await db.approvedEmail.findUnique({ where: { email } })
+  if (existing) throw badRequest("Email is already approved", { field: "email" })
+
+  const record = await db.approvedEmail.create({
+    data: { email, status: "approved", workspaceId, invitedById: actor.userId },
+    include: { workspace: true, invitedBy: true },
+  })
+
+  await auditAction({
+    actor: actor.actor,
+    action: "approvedEmail.create",
+    targetType: "approvedEmail",
+    targetId: record.id,
+    metadata: { email, workspaceId },
+  })
+
+  return { approvedEmail: formatApprovedEmail(record) }
+}
+
+export async function updateApprovedEmail(id: string, input: Record<string, unknown>, actor: AccessActor) {
+  const existing = await db.approvedEmail.findUnique({ where: { id } })
+  if (!existing) throw notFound("Approved email not found", { id })
+
+  const patch: Record<string, unknown> = {}
+  if (input.status !== undefined) patch.status = requiredString(input.status, "status")
+  if ("workspaceId" in input) patch.workspaceId = optionalString(input.workspaceId) || null
+
+  const updated = await db.approvedEmail.update({
+    where: { id },
+    data: patch,
+    include: { workspace: true, invitedBy: true },
+  })
+
+  await auditAction({
+    actor: actor.actor,
+    action: "approvedEmail.update",
+    targetType: "approvedEmail",
+    targetId: id,
+    metadata: patch,
+  })
+
+  return { approvedEmail: formatApprovedEmail(updated) }
+}
+
+function formatApprovedEmail(record: {
+  id: string
+  email: string
+  status: string
+  workspaceId: string | null
+  createdAt: Date
+  workspace: { id: string; name: string; slug: string } | null
+  invitedBy: { id: string; email: string; name: string | null } | null
+}) {
+  return {
+    id: record.id,
+    email: record.email,
+    status: record.status,
+    workspaceId: record.workspaceId,
+    createdAt: record.createdAt,
+    workspace: record.workspace ? { id: record.workspace.id, name: record.workspace.name, slug: record.workspace.slug } : null,
+    invitedBy: record.invitedBy ? { id: record.invitedBy.id, email: record.invitedBy.email, name: record.invitedBy.name } : null,
   }
 }
 
