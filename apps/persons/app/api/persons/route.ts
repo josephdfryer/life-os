@@ -82,7 +82,7 @@ export async function GET(req: NextRequest) {
     ])
 
     return NextResponse.json({
-      persons: rows.map(p => {
+      persons: rows.map((p: typeof rows[number]) => {
         const lastTs = p.interactions[0]?.timestamp ?? null
         const lastInteractionDate = lastTs ? new Date(lastTs) : null
         const daysSinceLast = lastInteractionDate
@@ -132,8 +132,8 @@ export async function GET(req: NextRequest) {
     orderBy: { createdAt: "asc" },
   })
 
-  const enriched = persons.map(p => {
-    const interactions: Interaction[] = p.interactions.map(ix => ({
+  const enriched = persons.map((p: typeof persons[number]) => {
+    const interactions: Interaction[] = p.interactions.map((ix: typeof p.interactions[number]) => ({
       ...ix,
       actionItems: parseTags(ix.actionItems) as unknown as string[],
       event: null,

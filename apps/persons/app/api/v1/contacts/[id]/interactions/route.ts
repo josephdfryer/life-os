@@ -21,7 +21,7 @@ export async function GET(req: NextRequest, { params }: Params) {
     orderBy: { timestamp: "desc" },
   })
 
-  return NextResponse.json(interactions.map(ix => ({
+  return NextResponse.json(interactions.map((ix: typeof interactions[number]) => ({
     id: ix.id,
     type: ix.type,
     timestamp: ix.timestamp,

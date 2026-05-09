@@ -28,7 +28,7 @@ export async function GET(req: NextRequest, { params }: Params) {
 
   return NextResponse.json({
     ...formatPerson(person as Record<string, unknown>),
-    interactions: person.interactions.map(ix => ({
+    interactions: person.interactions.map((ix: typeof person.interactions[number]) => ({
       ...ix,
       keyTopics: parseTags(ix.actionItems),
       event: ix.event
