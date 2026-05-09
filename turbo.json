@@ -7,6 +7,22 @@
     },
     "build": {
       "dependsOn": ["^build"],
+      "env": [
+        "ALLOWED_EMAILS",
+        "ADMIN_EMAILS",
+        "ANTHROPIC_API_KEY",
+        "API_KEY",
+        "AUTH_SECRET",
+        "DATABASE_URL",
+        "GOOGLE_CALENDAR_CLIENT_ID",
+        "GOOGLE_CALENDAR_CLIENT_SECRET",
+        "GOOGLE_CLIENT_ID",
+        "GOOGLE_CLIENT_SECRET",
+        "NEXTAUTH_SECRET",
+        "OWNER_EMAILS",
+        "TURSO_AUTH_TOKEN",
+        "TURSO_DATABASE_URL"
+      ],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
       "outputs": [".next/**", "!.next/cache/**", "dist/**"]
     },
