@@ -18,6 +18,7 @@ flowchart LR
   subgraph Inputs["Things that come in"]
     Human["You in the browser"]
     IMessages["iMessage chat.db on your Mac"]
+    GoogleCalendar["Google Calendar"]
     Files["Imported files and transcripts"]
     ExternalTools["External scripts, automations, future apps"]
   end
@@ -28,6 +29,7 @@ flowchart LR
     AdminUI["Admin screens"]
     PublicAPI["Headless API /api/v1"]
     Watcher["iMessage watcher script"]
+    CalendarOAuth["Google Calendar OAuth + sync"]
   end
 
   subgraph Plumbing["Business plumbing"]
@@ -42,6 +44,7 @@ flowchart LR
     Interactions["Interactions"]
     Events["Events"]
     Plans["Plans"]
+    CalendarDB["Calendar connections and event links"]
     Inbox["Inbox staging"]
     FilesDB["Imported files"]
     AccessDB["Users, roles, API keys"]
@@ -53,6 +56,7 @@ flowchart LR
   Human --> ImportUI
   Human --> AdminUI
   IMessages --> Watcher
+  GoogleCalendar --> CalendarOAuth
   Files --> ImportUI
   ExternalTools --> PublicAPI
 
@@ -61,6 +65,7 @@ flowchart LR
   AdminUI --> Access
   PublicAPI --> Access
   Watcher --> Commands
+  CalendarOAuth --> Commands
 
   Access --> Commands
   Commands --> Rules
@@ -72,6 +77,7 @@ flowchart LR
   Commands --> Interactions
   Commands --> Events
   Commands --> Plans
+  Commands --> CalendarDB
   Commands --> Inbox
   Commands --> FilesDB
   Access --> AccessDB
@@ -165,6 +171,30 @@ flowchart TD
 ```
 
 Plain English: import is a bulk way to turn messy text into structured People, Events, and Interactions.
+
+### 3b. Google Calendar sync
+
+```mermaid
+flowchart TD
+  Admin["Admin Calendar tab"] --> Connect["Connect Google Calendar"]
+  Connect --> OAuth["Google OAuth consent"]
+  OAuth --> Connection["CalendarConnection stores tokens and sync state"]
+  Admin --> Sync["Sync now"]
+  Sync --> GoogleEvents["Read Google Calendar events"]
+  GoogleEvents --> Link["CalendarEventLink by calendarId + Google event id"]
+  Link --> Event["Create or update local Event"]
+  GoogleEvents --> Match["Match attendees to People by email"]
+  Match --> Interaction["Create Interaction for matched People"]
+  Sync --> Audit["Write calendar.sync AuditLog"]
+```
+
+Plain English: Google Calendar remains the source of truth. Persons imports calendar entries into local Events and creates Interactions only when an attendee email already matches a Person in the current workspace. Re-running sync is idempotent because `CalendarEventLink` remembers which Google event maps to which local Event.
+
+Runtime configuration:
+
+- `GOOGLE_CALENDAR_CLIENT_ID` and `GOOGLE_CALENDAR_CLIENT_SECRET`, or the existing `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` if that OAuth client has Calendar API access.
+- The Google OAuth redirect URI must include `/api/calendar/google/callback` on the deployed app origin.
+- The first sync reads a bounded window around the present; later syncs use Google's sync token when available.
 
 ### 4. Inbox review flow
 
@@ -359,6 +389,9 @@ erDiagram
   Workspace ||--o{ Interaction : owns
   Workspace ||--o{ StagedInteraction : owns
   Workspace ||--o{ Rule : owns
+  Workspace ||--o{ CalendarConnection : owns
+  CalendarConnection ||--o{ CalendarEventLink : maps
+  Event ||--o{ CalendarEventLink : source
   ApprovedEmail }o--|| Workspace : can_assign_to
   User ||--o{ ApiKey : creates
   User ||--o{ WorkspaceMember : belongs_to
@@ -383,6 +416,7 @@ Plain English version:
 - **AuditLog**: a receipt showing who or what changed something.
 - **User, Role, Permission, ApiKey**: access-control system.
 - **Workspace, WorkspaceMember, ApprovedEmail**: tenancy system. These decide who can sign in and which private workspace their People data belongs to.
+- **CalendarConnection, CalendarEventLink**: Google Calendar integration state. Connections store OAuth/sync state; event links make imports repeatable without duplicating Events.
 
 ## Outputs
 
@@ -451,6 +485,7 @@ flowchart LR
 - Data Cleaning: `/people/clean` highlights People records missing email, phone, names, or broader context, and supports editing or deleting those People from the cleanup view.
 - Inbox create-and-accept: an unmatched staged interaction can create a new Person and attach the interaction in one review action.
 - Workspace tenancy foundation: approved emails can sign in without inheriting Joseph's data, core browser/API paths carry `workspaceId`, existing data is preserved in `default-workspace`, and API keys are scoped to the workspace that created them.
+- Google Calendar foundation: Admin can connect Google Calendar, sync read-only events into Events, and create Interactions for attendees matched to existing People by email.
 
 ### Future
 
@@ -463,3 +498,4 @@ The next larger step is the broader automation engine:
 - Multiple `itemType` accept handlers (currently only `interaction` is handled on accept).
 - Inbox filtering by `source` and `itemType` in the UI.
 - Admin UI for approving emails and choosing whether an approved person gets their own workspace or joins an existing one.
+- Background/scheduled Google Calendar sync and optional review queue for unmatched calendar attendees.

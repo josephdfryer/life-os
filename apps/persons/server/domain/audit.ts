@@ -41,6 +41,8 @@ export type AuditAction =
   | "inbox.apply_suggestions"
   | "approvedEmail.create"
   | "approvedEmail.update"
+  | "calendar.connect"
+  | "calendar.sync"
 
 type AuditInput = {
   actor?: DomainActor

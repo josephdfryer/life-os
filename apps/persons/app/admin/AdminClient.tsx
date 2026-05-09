@@ -83,6 +83,22 @@ type RuleRun = {
   actionsApplied: unknown
   rule: { id: string; name: string; trigger: string }
 }
+type CalendarStatus = {
+  configured: boolean
+  connection: {
+    id: string
+    status: string
+    accountEmail: string | null
+    calendarId: string
+    calendarSummary: string | null
+    scope: string | null
+    syncToken: string | null
+    lastSyncedAt: string | null
+    lastError: string | null
+    updatedAt: string
+    eventCount: number
+  } | null
+}
 type Overview = {
   currentUser: { id: string; email: string; scopes: string[] }
   users: User[]
@@ -94,7 +110,7 @@ type Overview = {
   workspaces: Workspace[]
 }
 
-const TABS = ["apiKeys", "roles", "rules", "permissions", "audit", "workspace"] as const
+const TABS = ["apiKeys", "roles", "rules", "permissions", "audit", "workspace", "calendar"] as const
 type Tab = typeof TABS[number]
 
 const DEFAULT_CONDITIONS = `[
@@ -199,6 +215,8 @@ export default function AdminClient({
   const [auditLogs, setAuditLogs] = useState<AuditLog[]>([])
   const [rules, setRules] = useState<Rule[]>([])
   const [ruleRuns, setRuleRuns] = useState<RuleRun[]>([])
+  const [calendarStatus, setCalendarStatus] = useState<CalendarStatus | null>(null)
+  const [calendarSyncResult, setCalendarSyncResult] = useState<string | null>(null)
   const [tab, setTab] = useState<Tab>("apiKeys")
   const [loading, setLoading] = useState(false)
   const [saving, setSaving] = useState(false)
@@ -261,6 +279,7 @@ export default function AdminClient({
       loadRules()
       loadRuleRuns()
     }
+    if (tab === "calendar") loadCalendarStatus()
   }, [tab])
 
   useEffect(() => {
@@ -336,6 +355,34 @@ export default function AdminClient({
       setRuleRuns(data.runs ?? [])
     } catch (e) {
       setError(e instanceof Error ? e.message : "Could not load rule runs")
+    }
+  }
+
+  async function loadCalendarStatus() {
+    try {
+      const res = await fetch("/api/calendar/google/status")
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error?.message || data.error || "Could not load calendar status")
+      setCalendarStatus(data)
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Could not load calendar status")
+    }
+  }
+
+  async function syncCalendar() {
+    setSaving(true)
+    setError(null)
+    setCalendarSyncResult(null)
+    try {
+      const res = await fetch("/api/calendar/google/sync", { method: "POST" })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error?.message || data.error || "Could not sync Google Calendar")
+      setCalendarSyncResult(JSON.stringify(data, null, 2))
+      await loadCalendarStatus()
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Could not sync Google Calendar")
+    } finally {
+      setSaving(false)
     }
   }
 
@@ -641,6 +688,7 @@ export default function AdminClient({
             <TabButton active={tab === "permissions"} onClick={() => setTab("permissions")} label="Permissions" />
             <TabButton active={tab === "audit"} onClick={() => setTab("audit")} label="Audit" />
             <TabButton active={tab === "workspace"} onClick={() => setTab("workspace")} label="Workspace" />
+            <TabButton active={tab === "calendar"} onClick={() => setTab("calendar")} label="Calendar" />
           </div>
           <div style={{ marginTop: "22px", paddingTop: "16px", borderTop: "1px solid var(--border)", fontSize: "11px", color: "var(--ink-3)", lineHeight: 1.6 }}>
             <div>{overview?.currentUser.email ?? ""}</div>
@@ -998,6 +1046,68 @@ export default function AdminClient({
             </section>
           )}
 
+          {!loading && overview && tab === "calendar" && (
+            <section style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) 320px", gap: "18px" }}>
+              <Panel title="Google Calendar" meta={calendarStatus?.connection?.status ?? "not connected"}>
+                {!calendarStatus && (
+                  <div style={{ fontSize: "12px", color: "var(--ink-3)" }}>Loading calendar status...</div>
+                )}
+                {calendarStatus && !calendarStatus.configured && (
+                  <div style={{ border: "1px solid var(--border)", borderRadius: "8px", background: "var(--bg)", padding: "12px", fontSize: "12px", color: "var(--ink-3)", lineHeight: 1.5 }}>
+                    Google Calendar OAuth is not configured yet. Add `GOOGLE_CALENDAR_CLIENT_ID` and `GOOGLE_CALENDAR_CLIENT_SECRET` in Vercel, or reuse the existing Google OAuth client with Calendar API enabled.
+                  </div>
+                )}
+                {calendarStatus?.connection ? (
+                  <div style={{ display: "grid", gap: "10px" }}>
+                    <div style={{ border: "1px solid var(--border)", borderRadius: "8px", background: "var(--bg)", padding: "10px" }}>
+                      <div style={{ fontSize: "13px", fontWeight: 600 }}>{calendarStatus.connection.calendarSummary ?? "Primary calendar"}</div>
+                      <div style={{ fontSize: "11px", color: "var(--ink-4)", marginTop: "4px" }}>{calendarStatus.connection.accountEmail ?? "Google account"}</div>
+                      <div style={{ display: "flex", gap: "7px", flexWrap: "wrap", marginTop: "9px" }}>
+                        <StatusPill status={calendarStatus.connection.status} />
+                        <StatusPill status={`${calendarStatus.connection.eventCount} linked events`} />
+                        {calendarStatus.connection.syncToken && <StatusPill status="incremental sync" />}
+                      </div>
+                    </div>
+                    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(170px, 1fr))", gap: "8px" }}>
+                      <InfoTile label="Last synced" value={formatDate(calendarStatus.connection.lastSyncedAt)} />
+                      <InfoTile label="Calendar ID" value={calendarStatus.connection.calendarId} />
+                    </div>
+                    {calendarStatus.connection.lastError && (
+                      <div style={{ border: "1px solid #d46a3a", background: "#fff3ed", color: "#8f3518", borderRadius: "8px", padding: "10px", fontSize: "11px" }}>
+                        {calendarStatus.connection.lastError}
+                      </div>
+                    )}
+                    {calendarSyncResult && (
+                      <div>
+                        <div style={{ fontSize: "10px", color: "var(--ink-4)", marginBottom: "5px" }}>Last sync result</div>
+                        <pre style={preStyle}>{calendarSyncResult}</pre>
+                      </div>
+                    )}
+                  </div>
+                ) : calendarStatus?.configured ? (
+                  <div style={{ fontSize: "12px", color: "var(--ink-3)", lineHeight: 1.5 }}>
+                    Connect Google Calendar to import calendar events into Events and create Interactions for attendees already matched to People by email.
+                  </div>
+                ) : null}
+              </Panel>
+
+              <Panel title="Actions">
+                <a href="/api/calendar/google/connect?returnTo=/admin" style={{ ...primaryLinkStyle, display: "block", textAlign: "center", marginBottom: "10px" }}>
+                  {calendarStatus?.connection ? "Reconnect Google" : "Connect Google"}
+                </a>
+                <button style={primaryButtonStyle} disabled={saving || !calendarStatus?.connection} onClick={syncCalendar}>
+                  {saving ? "Syncing..." : "Sync now"}
+                </button>
+                <button style={{ ...smallButtonStyle, width: "100%", marginTop: "9px" }} onClick={loadCalendarStatus}>
+                  Refresh Status
+                </button>
+                <div style={{ fontSize: "11px", color: "var(--ink-4)", marginTop: "12px", lineHeight: 1.5 }}>
+                  Sync is read-only. Google Calendar remains the source of truth; Persons stores linked Events and creates Interactions for known attendees.
+                </div>
+              </Panel>
+            </section>
+          )}
+
           {!loading && overview && tab === "audit" && (
             <Panel title="Audit" meta={`${overview.auditCount} total`}>
               <div style={{ overflowX: "auto" }}>
@@ -1214,6 +1324,15 @@ function StatusPill({ status }: { status: string }) {
   )
 }
 
+function InfoTile({ label, value }: { label: string; value: string }) {
+  return (
+    <div style={{ border: "1px solid var(--border)", borderRadius: "8px", background: "var(--bg)", padding: "9px" }}>
+      <div style={{ fontSize: "10px", color: "var(--ink-4)", marginBottom: "4px" }}>{label}</div>
+      <div style={{ fontSize: "11px", color: "var(--ink-2)", wordBreak: "break-word" }}>{value}</div>
+    </div>
+  )
+}
+
 function Th({ children = null }: { children?: React.ReactNode }) {
   return <th style={{ textAlign: "left", padding: "8px", fontSize: "10px", color: "var(--ink-4)", borderBottom: "1px solid var(--border)", fontWeight: 500 }}>{children}</th>
 }
@@ -1237,6 +1356,12 @@ const primaryButtonStyle: React.CSSProperties = {
   fontSize: "12px",
   fontFamily: "inherit",
   cursor: "pointer",
+}
+
+const primaryLinkStyle: React.CSSProperties = {
+  ...primaryButtonStyle,
+  lineHeight: "34px",
+  textDecoration: "none",
 }
 
 const smallButtonStyle: React.CSSProperties = {

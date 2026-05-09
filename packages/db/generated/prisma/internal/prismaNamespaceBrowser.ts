@@ -63,6 +63,8 @@ export const ModelName = {
   ApiKey: 'ApiKey',
   ApiKeyScope: 'ApiKeyScope',
   AuditLog: 'AuditLog',
+  CalendarConnection: 'CalendarConnection',
+  CalendarEventLink: 'CalendarEventLink',
   Rule: 'Rule',
   RuleRun: 'RuleRun',
   StagedInteraction: 'StagedInteraction',
@@ -252,6 +254,47 @@ export const AuditLogScalarFieldEnum = {
 } as const
 
 export type AuditLogScalarFieldEnum = (typeof AuditLogScalarFieldEnum)[keyof typeof AuditLogScalarFieldEnum]
+
+
+export const CalendarConnectionScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  userId: 'userId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  provider: 'provider',
+  status: 'status',
+  accountEmail: 'accountEmail',
+  calendarId: 'calendarId',
+  calendarSummary: 'calendarSummary',
+  accessToken: 'accessToken',
+  refreshToken: 'refreshToken',
+  expiresAt: 'expiresAt',
+  scope: 'scope',
+  syncToken: 'syncToken',
+  lastSyncedAt: 'lastSyncedAt',
+  lastError: 'lastError'
+} as const
+
+export type CalendarConnectionScalarFieldEnum = (typeof CalendarConnectionScalarFieldEnum)[keyof typeof CalendarConnectionScalarFieldEnum]
+
+
+export const CalendarEventLinkScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  connectionId: 'connectionId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  provider: 'provider',
+  calendarId: 'calendarId',
+  externalEventId: 'externalEventId',
+  iCalUID: 'iCalUID',
+  eventId: 'eventId',
+  status: 'status',
+  lastSeenAt: 'lastSeenAt'
+} as const
+
+export type CalendarEventLinkScalarFieldEnum = (typeof CalendarEventLinkScalarFieldEnum)[keyof typeof CalendarEventLinkScalarFieldEnum]
 
 
 export const RuleScalarFieldEnum = {

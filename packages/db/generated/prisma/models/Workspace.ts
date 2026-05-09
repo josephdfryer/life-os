@@ -213,6 +213,8 @@ export type WorkspaceWhereInput = {
   ruleRuns?: Prisma.RuleRunListRelationFilter
   apiKeys?: Prisma.ApiKeyListRelationFilter
   auditLogs?: Prisma.AuditLogListRelationFilter
+  calendarConnections?: Prisma.CalendarConnectionListRelationFilter
+  calendarEventLinks?: Prisma.CalendarEventLinkListRelationFilter
 }
 
 export type WorkspaceOrderByWithRelationInput = {
@@ -238,6 +240,8 @@ export type WorkspaceOrderByWithRelationInput = {
   ruleRuns?: Prisma.RuleRunOrderByRelationAggregateInput
   apiKeys?: Prisma.ApiKeyOrderByRelationAggregateInput
   auditLogs?: Prisma.AuditLogOrderByRelationAggregateInput
+  calendarConnections?: Prisma.CalendarConnectionOrderByRelationAggregateInput
+  calendarEventLinks?: Prisma.CalendarEventLinkOrderByRelationAggregateInput
 }
 
 export type WorkspaceWhereUniqueInput = Prisma.AtLeast<{
@@ -266,6 +270,8 @@ export type WorkspaceWhereUniqueInput = Prisma.AtLeast<{
   ruleRuns?: Prisma.RuleRunListRelationFilter
   apiKeys?: Prisma.ApiKeyListRelationFilter
   auditLogs?: Prisma.AuditLogListRelationFilter
+  calendarConnections?: Prisma.CalendarConnectionListRelationFilter
+  calendarEventLinks?: Prisma.CalendarEventLinkListRelationFilter
 }, "id" | "slug">
 
 export type WorkspaceOrderByWithAggregationInput = {
@@ -316,6 +322,8 @@ export type WorkspaceCreateInput = {
   ruleRuns?: Prisma.RuleRunCreateNestedManyWithoutWorkspaceInput
   apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutWorkspaceInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutWorkspaceInput
+  calendarConnections?: Prisma.CalendarConnectionCreateNestedManyWithoutWorkspaceInput
+  calendarEventLinks?: Prisma.CalendarEventLinkCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateInput = {
@@ -340,6 +348,8 @@ export type WorkspaceUncheckedCreateInput = {
   ruleRuns?: Prisma.RuleRunUncheckedCreateNestedManyWithoutWorkspaceInput
   apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutWorkspaceInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutWorkspaceInput
+  calendarConnections?: Prisma.CalendarConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  calendarEventLinks?: Prisma.CalendarEventLinkUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUpdateInput = {
@@ -364,6 +374,8 @@ export type WorkspaceUpdateInput = {
   ruleRuns?: Prisma.RuleRunUpdateManyWithoutWorkspaceNestedInput
   apiKeys?: Prisma.ApiKeyUpdateManyWithoutWorkspaceNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutWorkspaceNestedInput
+  calendarConnections?: Prisma.CalendarConnectionUpdateManyWithoutWorkspaceNestedInput
+  calendarEventLinks?: Prisma.CalendarEventLinkUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateInput = {
@@ -388,6 +400,8 @@ export type WorkspaceUncheckedUpdateInput = {
   ruleRuns?: Prisma.RuleRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutWorkspaceNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutWorkspaceNestedInput
+  calendarConnections?: Prisma.CalendarConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  calendarEventLinks?: Prisma.CalendarEventLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateManyInput = {
@@ -597,6 +611,34 @@ export type WorkspaceUpdateOneWithoutAuditLogsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.WorkspaceUpdateToOneWithWhereWithoutAuditLogsInput, Prisma.WorkspaceUpdateWithoutAuditLogsInput>, Prisma.WorkspaceUncheckedUpdateWithoutAuditLogsInput>
 }
 
+export type WorkspaceCreateNestedOneWithoutCalendarConnectionsInput = {
+  create?: Prisma.XOR<Prisma.WorkspaceCreateWithoutCalendarConnectionsInput, Prisma.WorkspaceUncheckedCreateWithoutCalendarConnectionsInput>
+  connectOrCreate?: Prisma.WorkspaceCreateOrConnectWithoutCalendarConnectionsInput
+  connect?: Prisma.WorkspaceWhereUniqueInput
+}
+
+export type WorkspaceUpdateOneRequiredWithoutCalendarConnectionsNestedInput = {
+  create?: Prisma.XOR<Prisma.WorkspaceCreateWithoutCalendarConnectionsInput, Prisma.WorkspaceUncheckedCreateWithoutCalendarConnectionsInput>
+  connectOrCreate?: Prisma.WorkspaceCreateOrConnectWithoutCalendarConnectionsInput
+  upsert?: Prisma.WorkspaceUpsertWithoutCalendarConnectionsInput
+  connect?: Prisma.WorkspaceWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.WorkspaceUpdateToOneWithWhereWithoutCalendarConnectionsInput, Prisma.WorkspaceUpdateWithoutCalendarConnectionsInput>, Prisma.WorkspaceUncheckedUpdateWithoutCalendarConnectionsInput>
+}
+
+export type WorkspaceCreateNestedOneWithoutCalendarEventLinksInput = {
+  create?: Prisma.XOR<Prisma.WorkspaceCreateWithoutCalendarEventLinksInput, Prisma.WorkspaceUncheckedCreateWithoutCalendarEventLinksInput>
+  connectOrCreate?: Prisma.WorkspaceCreateOrConnectWithoutCalendarEventLinksInput
+  connect?: Prisma.WorkspaceWhereUniqueInput
+}
+
+export type WorkspaceUpdateOneRequiredWithoutCalendarEventLinksNestedInput = {
+  create?: Prisma.XOR<Prisma.WorkspaceCreateWithoutCalendarEventLinksInput, Prisma.WorkspaceUncheckedCreateWithoutCalendarEventLinksInput>
+  connectOrCreate?: Prisma.WorkspaceCreateOrConnectWithoutCalendarEventLinksInput
+  upsert?: Prisma.WorkspaceUpsertWithoutCalendarEventLinksInput
+  connect?: Prisma.WorkspaceWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.WorkspaceUpdateToOneWithWhereWithoutCalendarEventLinksInput, Prisma.WorkspaceUpdateWithoutCalendarEventLinksInput>, Prisma.WorkspaceUncheckedUpdateWithoutCalendarEventLinksInput>
+}
+
 export type WorkspaceCreateNestedOneWithoutRulesInput = {
   create?: Prisma.XOR<Prisma.WorkspaceCreateWithoutRulesInput, Prisma.WorkspaceUncheckedCreateWithoutRulesInput>
   connectOrCreate?: Prisma.WorkspaceCreateOrConnectWithoutRulesInput
@@ -744,6 +786,8 @@ export type WorkspaceCreateWithoutMembersInput = {
   ruleRuns?: Prisma.RuleRunCreateNestedManyWithoutWorkspaceInput
   apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutWorkspaceInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutWorkspaceInput
+  calendarConnections?: Prisma.CalendarConnectionCreateNestedManyWithoutWorkspaceInput
+  calendarEventLinks?: Prisma.CalendarEventLinkCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutMembersInput = {
@@ -767,6 +811,8 @@ export type WorkspaceUncheckedCreateWithoutMembersInput = {
   ruleRuns?: Prisma.RuleRunUncheckedCreateNestedManyWithoutWorkspaceInput
   apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutWorkspaceInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutWorkspaceInput
+  calendarConnections?: Prisma.CalendarConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  calendarEventLinks?: Prisma.CalendarEventLinkUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutMembersInput = {
@@ -806,6 +852,8 @@ export type WorkspaceUpdateWithoutMembersInput = {
   ruleRuns?: Prisma.RuleRunUpdateManyWithoutWorkspaceNestedInput
   apiKeys?: Prisma.ApiKeyUpdateManyWithoutWorkspaceNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutWorkspaceNestedInput
+  calendarConnections?: Prisma.CalendarConnectionUpdateManyWithoutWorkspaceNestedInput
+  calendarEventLinks?: Prisma.CalendarEventLinkUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutMembersInput = {
@@ -829,6 +877,8 @@ export type WorkspaceUncheckedUpdateWithoutMembersInput = {
   ruleRuns?: Prisma.RuleRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutWorkspaceNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutWorkspaceNestedInput
+  calendarConnections?: Prisma.CalendarConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  calendarEventLinks?: Prisma.CalendarEventLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutApprovedEmailsInput = {
@@ -852,6 +902,8 @@ export type WorkspaceCreateWithoutApprovedEmailsInput = {
   ruleRuns?: Prisma.RuleRunCreateNestedManyWithoutWorkspaceInput
   apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutWorkspaceInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutWorkspaceInput
+  calendarConnections?: Prisma.CalendarConnectionCreateNestedManyWithoutWorkspaceInput
+  calendarEventLinks?: Prisma.CalendarEventLinkCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutApprovedEmailsInput = {
@@ -875,6 +927,8 @@ export type WorkspaceUncheckedCreateWithoutApprovedEmailsInput = {
   ruleRuns?: Prisma.RuleRunUncheckedCreateNestedManyWithoutWorkspaceInput
   apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutWorkspaceInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutWorkspaceInput
+  calendarConnections?: Prisma.CalendarConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  calendarEventLinks?: Prisma.CalendarEventLinkUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutApprovedEmailsInput = {
@@ -914,6 +968,8 @@ export type WorkspaceUpdateWithoutApprovedEmailsInput = {
   ruleRuns?: Prisma.RuleRunUpdateManyWithoutWorkspaceNestedInput
   apiKeys?: Prisma.ApiKeyUpdateManyWithoutWorkspaceNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutWorkspaceNestedInput
+  calendarConnections?: Prisma.CalendarConnectionUpdateManyWithoutWorkspaceNestedInput
+  calendarEventLinks?: Prisma.CalendarEventLinkUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutApprovedEmailsInput = {
@@ -937,6 +993,8 @@ export type WorkspaceUncheckedUpdateWithoutApprovedEmailsInput = {
   ruleRuns?: Prisma.RuleRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutWorkspaceNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutWorkspaceNestedInput
+  calendarConnections?: Prisma.CalendarConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  calendarEventLinks?: Prisma.CalendarEventLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutPersonsInput = {
@@ -960,6 +1018,8 @@ export type WorkspaceCreateWithoutPersonsInput = {
   ruleRuns?: Prisma.RuleRunCreateNestedManyWithoutWorkspaceInput
   apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutWorkspaceInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutWorkspaceInput
+  calendarConnections?: Prisma.CalendarConnectionCreateNestedManyWithoutWorkspaceInput
+  calendarEventLinks?: Prisma.CalendarEventLinkCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutPersonsInput = {
@@ -983,6 +1043,8 @@ export type WorkspaceUncheckedCreateWithoutPersonsInput = {
   ruleRuns?: Prisma.RuleRunUncheckedCreateNestedManyWithoutWorkspaceInput
   apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutWorkspaceInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutWorkspaceInput
+  calendarConnections?: Prisma.CalendarConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  calendarEventLinks?: Prisma.CalendarEventLinkUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutPersonsInput = {
@@ -1022,6 +1084,8 @@ export type WorkspaceUpdateWithoutPersonsInput = {
   ruleRuns?: Prisma.RuleRunUpdateManyWithoutWorkspaceNestedInput
   apiKeys?: Prisma.ApiKeyUpdateManyWithoutWorkspaceNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutWorkspaceNestedInput
+  calendarConnections?: Prisma.CalendarConnectionUpdateManyWithoutWorkspaceNestedInput
+  calendarEventLinks?: Prisma.CalendarEventLinkUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutPersonsInput = {
@@ -1045,6 +1109,8 @@ export type WorkspaceUncheckedUpdateWithoutPersonsInput = {
   ruleRuns?: Prisma.RuleRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutWorkspaceNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutWorkspaceNestedInput
+  calendarConnections?: Prisma.CalendarConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  calendarEventLinks?: Prisma.CalendarEventLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutOwnerUserInput = {
@@ -1068,6 +1134,8 @@ export type WorkspaceCreateWithoutOwnerUserInput = {
   ruleRuns?: Prisma.RuleRunCreateNestedManyWithoutWorkspaceInput
   apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutWorkspaceInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutWorkspaceInput
+  calendarConnections?: Prisma.CalendarConnectionCreateNestedManyWithoutWorkspaceInput
+  calendarEventLinks?: Prisma.CalendarEventLinkCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutOwnerUserInput = {
@@ -1091,6 +1159,8 @@ export type WorkspaceUncheckedCreateWithoutOwnerUserInput = {
   ruleRuns?: Prisma.RuleRunUncheckedCreateNestedManyWithoutWorkspaceInput
   apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutWorkspaceInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutWorkspaceInput
+  calendarConnections?: Prisma.CalendarConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  calendarEventLinks?: Prisma.CalendarEventLinkUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutOwnerUserInput = {
@@ -1152,6 +1222,8 @@ export type WorkspaceCreateWithoutApiKeysInput = {
   rules?: Prisma.RuleCreateNestedManyWithoutWorkspaceInput
   ruleRuns?: Prisma.RuleRunCreateNestedManyWithoutWorkspaceInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutWorkspaceInput
+  calendarConnections?: Prisma.CalendarConnectionCreateNestedManyWithoutWorkspaceInput
+  calendarEventLinks?: Prisma.CalendarEventLinkCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutApiKeysInput = {
@@ -1175,6 +1247,8 @@ export type WorkspaceUncheckedCreateWithoutApiKeysInput = {
   rules?: Prisma.RuleUncheckedCreateNestedManyWithoutWorkspaceInput
   ruleRuns?: Prisma.RuleRunUncheckedCreateNestedManyWithoutWorkspaceInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutWorkspaceInput
+  calendarConnections?: Prisma.CalendarConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  calendarEventLinks?: Prisma.CalendarEventLinkUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutApiKeysInput = {
@@ -1214,6 +1288,8 @@ export type WorkspaceUpdateWithoutApiKeysInput = {
   rules?: Prisma.RuleUpdateManyWithoutWorkspaceNestedInput
   ruleRuns?: Prisma.RuleRunUpdateManyWithoutWorkspaceNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutWorkspaceNestedInput
+  calendarConnections?: Prisma.CalendarConnectionUpdateManyWithoutWorkspaceNestedInput
+  calendarEventLinks?: Prisma.CalendarEventLinkUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutApiKeysInput = {
@@ -1237,6 +1313,8 @@ export type WorkspaceUncheckedUpdateWithoutApiKeysInput = {
   rules?: Prisma.RuleUncheckedUpdateManyWithoutWorkspaceNestedInput
   ruleRuns?: Prisma.RuleRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutWorkspaceNestedInput
+  calendarConnections?: Prisma.CalendarConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  calendarEventLinks?: Prisma.CalendarEventLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutAuditLogsInput = {
@@ -1260,6 +1338,8 @@ export type WorkspaceCreateWithoutAuditLogsInput = {
   rules?: Prisma.RuleCreateNestedManyWithoutWorkspaceInput
   ruleRuns?: Prisma.RuleRunCreateNestedManyWithoutWorkspaceInput
   apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutWorkspaceInput
+  calendarConnections?: Prisma.CalendarConnectionCreateNestedManyWithoutWorkspaceInput
+  calendarEventLinks?: Prisma.CalendarEventLinkCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutAuditLogsInput = {
@@ -1283,6 +1363,8 @@ export type WorkspaceUncheckedCreateWithoutAuditLogsInput = {
   rules?: Prisma.RuleUncheckedCreateNestedManyWithoutWorkspaceInput
   ruleRuns?: Prisma.RuleRunUncheckedCreateNestedManyWithoutWorkspaceInput
   apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutWorkspaceInput
+  calendarConnections?: Prisma.CalendarConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  calendarEventLinks?: Prisma.CalendarEventLinkUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutAuditLogsInput = {
@@ -1322,6 +1404,8 @@ export type WorkspaceUpdateWithoutAuditLogsInput = {
   rules?: Prisma.RuleUpdateManyWithoutWorkspaceNestedInput
   ruleRuns?: Prisma.RuleRunUpdateManyWithoutWorkspaceNestedInput
   apiKeys?: Prisma.ApiKeyUpdateManyWithoutWorkspaceNestedInput
+  calendarConnections?: Prisma.CalendarConnectionUpdateManyWithoutWorkspaceNestedInput
+  calendarEventLinks?: Prisma.CalendarEventLinkUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutAuditLogsInput = {
@@ -1345,6 +1429,240 @@ export type WorkspaceUncheckedUpdateWithoutAuditLogsInput = {
   rules?: Prisma.RuleUncheckedUpdateManyWithoutWorkspaceNestedInput
   ruleRuns?: Prisma.RuleRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutWorkspaceNestedInput
+  calendarConnections?: Prisma.CalendarConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  calendarEventLinks?: Prisma.CalendarEventLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
+}
+
+export type WorkspaceCreateWithoutCalendarConnectionsInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  name: string
+  slug: string
+  status?: string
+  ownerUser?: Prisma.UserCreateNestedOneWithoutOwnedWorkspacesInput
+  members?: Prisma.WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
+  approvedEmails?: Prisma.ApprovedEmailCreateNestedManyWithoutWorkspaceInput
+  persons?: Prisma.PersonCreateNestedManyWithoutWorkspaceInput
+  events?: Prisma.EventCreateNestedManyWithoutWorkspaceInput
+  interactions?: Prisma.InteractionCreateNestedManyWithoutWorkspaceInput
+  plans?: Prisma.PlanCreateNestedManyWithoutWorkspaceInput
+  places?: Prisma.PlaceCreateNestedManyWithoutWorkspaceInput
+  items?: Prisma.ItemCreateNestedManyWithoutWorkspaceInput
+  importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
+  stagedItems?: Prisma.StagedInteractionCreateNestedManyWithoutWorkspaceInput
+  rules?: Prisma.RuleCreateNestedManyWithoutWorkspaceInput
+  ruleRuns?: Prisma.RuleRunCreateNestedManyWithoutWorkspaceInput
+  apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutWorkspaceInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutWorkspaceInput
+  calendarEventLinks?: Prisma.CalendarEventLinkCreateNestedManyWithoutWorkspaceInput
+}
+
+export type WorkspaceUncheckedCreateWithoutCalendarConnectionsInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  name: string
+  slug: string
+  status?: string
+  ownerUserId?: string | null
+  members?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
+  approvedEmails?: Prisma.ApprovedEmailUncheckedCreateNestedManyWithoutWorkspaceInput
+  persons?: Prisma.PersonUncheckedCreateNestedManyWithoutWorkspaceInput
+  events?: Prisma.EventUncheckedCreateNestedManyWithoutWorkspaceInput
+  interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutWorkspaceInput
+  plans?: Prisma.PlanUncheckedCreateNestedManyWithoutWorkspaceInput
+  places?: Prisma.PlaceUncheckedCreateNestedManyWithoutWorkspaceInput
+  items?: Prisma.ItemUncheckedCreateNestedManyWithoutWorkspaceInput
+  importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
+  stagedItems?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutWorkspaceInput
+  rules?: Prisma.RuleUncheckedCreateNestedManyWithoutWorkspaceInput
+  ruleRuns?: Prisma.RuleRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutWorkspaceInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutWorkspaceInput
+  calendarEventLinks?: Prisma.CalendarEventLinkUncheckedCreateNestedManyWithoutWorkspaceInput
+}
+
+export type WorkspaceCreateOrConnectWithoutCalendarConnectionsInput = {
+  where: Prisma.WorkspaceWhereUniqueInput
+  create: Prisma.XOR<Prisma.WorkspaceCreateWithoutCalendarConnectionsInput, Prisma.WorkspaceUncheckedCreateWithoutCalendarConnectionsInput>
+}
+
+export type WorkspaceUpsertWithoutCalendarConnectionsInput = {
+  update: Prisma.XOR<Prisma.WorkspaceUpdateWithoutCalendarConnectionsInput, Prisma.WorkspaceUncheckedUpdateWithoutCalendarConnectionsInput>
+  create: Prisma.XOR<Prisma.WorkspaceCreateWithoutCalendarConnectionsInput, Prisma.WorkspaceUncheckedCreateWithoutCalendarConnectionsInput>
+  where?: Prisma.WorkspaceWhereInput
+}
+
+export type WorkspaceUpdateToOneWithWhereWithoutCalendarConnectionsInput = {
+  where?: Prisma.WorkspaceWhereInput
+  data: Prisma.XOR<Prisma.WorkspaceUpdateWithoutCalendarConnectionsInput, Prisma.WorkspaceUncheckedUpdateWithoutCalendarConnectionsInput>
+}
+
+export type WorkspaceUpdateWithoutCalendarConnectionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  ownerUser?: Prisma.UserUpdateOneWithoutOwnedWorkspacesNestedInput
+  members?: Prisma.WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
+  approvedEmails?: Prisma.ApprovedEmailUpdateManyWithoutWorkspaceNestedInput
+  persons?: Prisma.PersonUpdateManyWithoutWorkspaceNestedInput
+  events?: Prisma.EventUpdateManyWithoutWorkspaceNestedInput
+  interactions?: Prisma.InteractionUpdateManyWithoutWorkspaceNestedInput
+  plans?: Prisma.PlanUpdateManyWithoutWorkspaceNestedInput
+  places?: Prisma.PlaceUpdateManyWithoutWorkspaceNestedInput
+  items?: Prisma.ItemUpdateManyWithoutWorkspaceNestedInput
+  importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
+  stagedItems?: Prisma.StagedInteractionUpdateManyWithoutWorkspaceNestedInput
+  rules?: Prisma.RuleUpdateManyWithoutWorkspaceNestedInput
+  ruleRuns?: Prisma.RuleRunUpdateManyWithoutWorkspaceNestedInput
+  apiKeys?: Prisma.ApiKeyUpdateManyWithoutWorkspaceNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutWorkspaceNestedInput
+  calendarEventLinks?: Prisma.CalendarEventLinkUpdateManyWithoutWorkspaceNestedInput
+}
+
+export type WorkspaceUncheckedUpdateWithoutCalendarConnectionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  ownerUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  members?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
+  approvedEmails?: Prisma.ApprovedEmailUncheckedUpdateManyWithoutWorkspaceNestedInput
+  persons?: Prisma.PersonUncheckedUpdateManyWithoutWorkspaceNestedInput
+  events?: Prisma.EventUncheckedUpdateManyWithoutWorkspaceNestedInput
+  interactions?: Prisma.InteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  plans?: Prisma.PlanUncheckedUpdateManyWithoutWorkspaceNestedInput
+  places?: Prisma.PlaceUncheckedUpdateManyWithoutWorkspaceNestedInput
+  items?: Prisma.ItemUncheckedUpdateManyWithoutWorkspaceNestedInput
+  importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
+  stagedItems?: Prisma.StagedInteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  rules?: Prisma.RuleUncheckedUpdateManyWithoutWorkspaceNestedInput
+  ruleRuns?: Prisma.RuleRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutWorkspaceNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutWorkspaceNestedInput
+  calendarEventLinks?: Prisma.CalendarEventLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
+}
+
+export type WorkspaceCreateWithoutCalendarEventLinksInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  name: string
+  slug: string
+  status?: string
+  ownerUser?: Prisma.UserCreateNestedOneWithoutOwnedWorkspacesInput
+  members?: Prisma.WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
+  approvedEmails?: Prisma.ApprovedEmailCreateNestedManyWithoutWorkspaceInput
+  persons?: Prisma.PersonCreateNestedManyWithoutWorkspaceInput
+  events?: Prisma.EventCreateNestedManyWithoutWorkspaceInput
+  interactions?: Prisma.InteractionCreateNestedManyWithoutWorkspaceInput
+  plans?: Prisma.PlanCreateNestedManyWithoutWorkspaceInput
+  places?: Prisma.PlaceCreateNestedManyWithoutWorkspaceInput
+  items?: Prisma.ItemCreateNestedManyWithoutWorkspaceInput
+  importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
+  stagedItems?: Prisma.StagedInteractionCreateNestedManyWithoutWorkspaceInput
+  rules?: Prisma.RuleCreateNestedManyWithoutWorkspaceInput
+  ruleRuns?: Prisma.RuleRunCreateNestedManyWithoutWorkspaceInput
+  apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutWorkspaceInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutWorkspaceInput
+  calendarConnections?: Prisma.CalendarConnectionCreateNestedManyWithoutWorkspaceInput
+}
+
+export type WorkspaceUncheckedCreateWithoutCalendarEventLinksInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  name: string
+  slug: string
+  status?: string
+  ownerUserId?: string | null
+  members?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
+  approvedEmails?: Prisma.ApprovedEmailUncheckedCreateNestedManyWithoutWorkspaceInput
+  persons?: Prisma.PersonUncheckedCreateNestedManyWithoutWorkspaceInput
+  events?: Prisma.EventUncheckedCreateNestedManyWithoutWorkspaceInput
+  interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutWorkspaceInput
+  plans?: Prisma.PlanUncheckedCreateNestedManyWithoutWorkspaceInput
+  places?: Prisma.PlaceUncheckedCreateNestedManyWithoutWorkspaceInput
+  items?: Prisma.ItemUncheckedCreateNestedManyWithoutWorkspaceInput
+  importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
+  stagedItems?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutWorkspaceInput
+  rules?: Prisma.RuleUncheckedCreateNestedManyWithoutWorkspaceInput
+  ruleRuns?: Prisma.RuleRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutWorkspaceInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutWorkspaceInput
+  calendarConnections?: Prisma.CalendarConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+}
+
+export type WorkspaceCreateOrConnectWithoutCalendarEventLinksInput = {
+  where: Prisma.WorkspaceWhereUniqueInput
+  create: Prisma.XOR<Prisma.WorkspaceCreateWithoutCalendarEventLinksInput, Prisma.WorkspaceUncheckedCreateWithoutCalendarEventLinksInput>
+}
+
+export type WorkspaceUpsertWithoutCalendarEventLinksInput = {
+  update: Prisma.XOR<Prisma.WorkspaceUpdateWithoutCalendarEventLinksInput, Prisma.WorkspaceUncheckedUpdateWithoutCalendarEventLinksInput>
+  create: Prisma.XOR<Prisma.WorkspaceCreateWithoutCalendarEventLinksInput, Prisma.WorkspaceUncheckedCreateWithoutCalendarEventLinksInput>
+  where?: Prisma.WorkspaceWhereInput
+}
+
+export type WorkspaceUpdateToOneWithWhereWithoutCalendarEventLinksInput = {
+  where?: Prisma.WorkspaceWhereInput
+  data: Prisma.XOR<Prisma.WorkspaceUpdateWithoutCalendarEventLinksInput, Prisma.WorkspaceUncheckedUpdateWithoutCalendarEventLinksInput>
+}
+
+export type WorkspaceUpdateWithoutCalendarEventLinksInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  ownerUser?: Prisma.UserUpdateOneWithoutOwnedWorkspacesNestedInput
+  members?: Prisma.WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
+  approvedEmails?: Prisma.ApprovedEmailUpdateManyWithoutWorkspaceNestedInput
+  persons?: Prisma.PersonUpdateManyWithoutWorkspaceNestedInput
+  events?: Prisma.EventUpdateManyWithoutWorkspaceNestedInput
+  interactions?: Prisma.InteractionUpdateManyWithoutWorkspaceNestedInput
+  plans?: Prisma.PlanUpdateManyWithoutWorkspaceNestedInput
+  places?: Prisma.PlaceUpdateManyWithoutWorkspaceNestedInput
+  items?: Prisma.ItemUpdateManyWithoutWorkspaceNestedInput
+  importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
+  stagedItems?: Prisma.StagedInteractionUpdateManyWithoutWorkspaceNestedInput
+  rules?: Prisma.RuleUpdateManyWithoutWorkspaceNestedInput
+  ruleRuns?: Prisma.RuleRunUpdateManyWithoutWorkspaceNestedInput
+  apiKeys?: Prisma.ApiKeyUpdateManyWithoutWorkspaceNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutWorkspaceNestedInput
+  calendarConnections?: Prisma.CalendarConnectionUpdateManyWithoutWorkspaceNestedInput
+}
+
+export type WorkspaceUncheckedUpdateWithoutCalendarEventLinksInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  ownerUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  members?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
+  approvedEmails?: Prisma.ApprovedEmailUncheckedUpdateManyWithoutWorkspaceNestedInput
+  persons?: Prisma.PersonUncheckedUpdateManyWithoutWorkspaceNestedInput
+  events?: Prisma.EventUncheckedUpdateManyWithoutWorkspaceNestedInput
+  interactions?: Prisma.InteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  plans?: Prisma.PlanUncheckedUpdateManyWithoutWorkspaceNestedInput
+  places?: Prisma.PlaceUncheckedUpdateManyWithoutWorkspaceNestedInput
+  items?: Prisma.ItemUncheckedUpdateManyWithoutWorkspaceNestedInput
+  importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
+  stagedItems?: Prisma.StagedInteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  rules?: Prisma.RuleUncheckedUpdateManyWithoutWorkspaceNestedInput
+  ruleRuns?: Prisma.RuleRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutWorkspaceNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutWorkspaceNestedInput
+  calendarConnections?: Prisma.CalendarConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutRulesInput = {
@@ -1368,6 +1686,8 @@ export type WorkspaceCreateWithoutRulesInput = {
   ruleRuns?: Prisma.RuleRunCreateNestedManyWithoutWorkspaceInput
   apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutWorkspaceInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutWorkspaceInput
+  calendarConnections?: Prisma.CalendarConnectionCreateNestedManyWithoutWorkspaceInput
+  calendarEventLinks?: Prisma.CalendarEventLinkCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutRulesInput = {
@@ -1391,6 +1711,8 @@ export type WorkspaceUncheckedCreateWithoutRulesInput = {
   ruleRuns?: Prisma.RuleRunUncheckedCreateNestedManyWithoutWorkspaceInput
   apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutWorkspaceInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutWorkspaceInput
+  calendarConnections?: Prisma.CalendarConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  calendarEventLinks?: Prisma.CalendarEventLinkUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutRulesInput = {
@@ -1430,6 +1752,8 @@ export type WorkspaceUpdateWithoutRulesInput = {
   ruleRuns?: Prisma.RuleRunUpdateManyWithoutWorkspaceNestedInput
   apiKeys?: Prisma.ApiKeyUpdateManyWithoutWorkspaceNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutWorkspaceNestedInput
+  calendarConnections?: Prisma.CalendarConnectionUpdateManyWithoutWorkspaceNestedInput
+  calendarEventLinks?: Prisma.CalendarEventLinkUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutRulesInput = {
@@ -1453,6 +1777,8 @@ export type WorkspaceUncheckedUpdateWithoutRulesInput = {
   ruleRuns?: Prisma.RuleRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutWorkspaceNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutWorkspaceNestedInput
+  calendarConnections?: Prisma.CalendarConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  calendarEventLinks?: Prisma.CalendarEventLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutRuleRunsInput = {
@@ -1476,6 +1802,8 @@ export type WorkspaceCreateWithoutRuleRunsInput = {
   rules?: Prisma.RuleCreateNestedManyWithoutWorkspaceInput
   apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutWorkspaceInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutWorkspaceInput
+  calendarConnections?: Prisma.CalendarConnectionCreateNestedManyWithoutWorkspaceInput
+  calendarEventLinks?: Prisma.CalendarEventLinkCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutRuleRunsInput = {
@@ -1499,6 +1827,8 @@ export type WorkspaceUncheckedCreateWithoutRuleRunsInput = {
   rules?: Prisma.RuleUncheckedCreateNestedManyWithoutWorkspaceInput
   apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutWorkspaceInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutWorkspaceInput
+  calendarConnections?: Prisma.CalendarConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  calendarEventLinks?: Prisma.CalendarEventLinkUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutRuleRunsInput = {
@@ -1538,6 +1868,8 @@ export type WorkspaceUpdateWithoutRuleRunsInput = {
   rules?: Prisma.RuleUpdateManyWithoutWorkspaceNestedInput
   apiKeys?: Prisma.ApiKeyUpdateManyWithoutWorkspaceNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutWorkspaceNestedInput
+  calendarConnections?: Prisma.CalendarConnectionUpdateManyWithoutWorkspaceNestedInput
+  calendarEventLinks?: Prisma.CalendarEventLinkUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutRuleRunsInput = {
@@ -1561,6 +1893,8 @@ export type WorkspaceUncheckedUpdateWithoutRuleRunsInput = {
   rules?: Prisma.RuleUncheckedUpdateManyWithoutWorkspaceNestedInput
   apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutWorkspaceNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutWorkspaceNestedInput
+  calendarConnections?: Prisma.CalendarConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  calendarEventLinks?: Prisma.CalendarEventLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutStagedItemsInput = {
@@ -1584,6 +1918,8 @@ export type WorkspaceCreateWithoutStagedItemsInput = {
   ruleRuns?: Prisma.RuleRunCreateNestedManyWithoutWorkspaceInput
   apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutWorkspaceInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutWorkspaceInput
+  calendarConnections?: Prisma.CalendarConnectionCreateNestedManyWithoutWorkspaceInput
+  calendarEventLinks?: Prisma.CalendarEventLinkCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutStagedItemsInput = {
@@ -1607,6 +1943,8 @@ export type WorkspaceUncheckedCreateWithoutStagedItemsInput = {
   ruleRuns?: Prisma.RuleRunUncheckedCreateNestedManyWithoutWorkspaceInput
   apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutWorkspaceInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutWorkspaceInput
+  calendarConnections?: Prisma.CalendarConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  calendarEventLinks?: Prisma.CalendarEventLinkUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutStagedItemsInput = {
@@ -1646,6 +1984,8 @@ export type WorkspaceUpdateWithoutStagedItemsInput = {
   ruleRuns?: Prisma.RuleRunUpdateManyWithoutWorkspaceNestedInput
   apiKeys?: Prisma.ApiKeyUpdateManyWithoutWorkspaceNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutWorkspaceNestedInput
+  calendarConnections?: Prisma.CalendarConnectionUpdateManyWithoutWorkspaceNestedInput
+  calendarEventLinks?: Prisma.CalendarEventLinkUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutStagedItemsInput = {
@@ -1669,6 +2009,8 @@ export type WorkspaceUncheckedUpdateWithoutStagedItemsInput = {
   ruleRuns?: Prisma.RuleRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutWorkspaceNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutWorkspaceNestedInput
+  calendarConnections?: Prisma.CalendarConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  calendarEventLinks?: Prisma.CalendarEventLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutEventsInput = {
@@ -1692,6 +2034,8 @@ export type WorkspaceCreateWithoutEventsInput = {
   ruleRuns?: Prisma.RuleRunCreateNestedManyWithoutWorkspaceInput
   apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutWorkspaceInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutWorkspaceInput
+  calendarConnections?: Prisma.CalendarConnectionCreateNestedManyWithoutWorkspaceInput
+  calendarEventLinks?: Prisma.CalendarEventLinkCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutEventsInput = {
@@ -1715,6 +2059,8 @@ export type WorkspaceUncheckedCreateWithoutEventsInput = {
   ruleRuns?: Prisma.RuleRunUncheckedCreateNestedManyWithoutWorkspaceInput
   apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutWorkspaceInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutWorkspaceInput
+  calendarConnections?: Prisma.CalendarConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  calendarEventLinks?: Prisma.CalendarEventLinkUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutEventsInput = {
@@ -1754,6 +2100,8 @@ export type WorkspaceUpdateWithoutEventsInput = {
   ruleRuns?: Prisma.RuleRunUpdateManyWithoutWorkspaceNestedInput
   apiKeys?: Prisma.ApiKeyUpdateManyWithoutWorkspaceNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutWorkspaceNestedInput
+  calendarConnections?: Prisma.CalendarConnectionUpdateManyWithoutWorkspaceNestedInput
+  calendarEventLinks?: Prisma.CalendarEventLinkUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutEventsInput = {
@@ -1777,6 +2125,8 @@ export type WorkspaceUncheckedUpdateWithoutEventsInput = {
   ruleRuns?: Prisma.RuleRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutWorkspaceNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutWorkspaceNestedInput
+  calendarConnections?: Prisma.CalendarConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  calendarEventLinks?: Prisma.CalendarEventLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutInteractionsInput = {
@@ -1800,6 +2150,8 @@ export type WorkspaceCreateWithoutInteractionsInput = {
   ruleRuns?: Prisma.RuleRunCreateNestedManyWithoutWorkspaceInput
   apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutWorkspaceInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutWorkspaceInput
+  calendarConnections?: Prisma.CalendarConnectionCreateNestedManyWithoutWorkspaceInput
+  calendarEventLinks?: Prisma.CalendarEventLinkCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutInteractionsInput = {
@@ -1823,6 +2175,8 @@ export type WorkspaceUncheckedCreateWithoutInteractionsInput = {
   ruleRuns?: Prisma.RuleRunUncheckedCreateNestedManyWithoutWorkspaceInput
   apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutWorkspaceInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutWorkspaceInput
+  calendarConnections?: Prisma.CalendarConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  calendarEventLinks?: Prisma.CalendarEventLinkUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutInteractionsInput = {
@@ -1862,6 +2216,8 @@ export type WorkspaceUpdateWithoutInteractionsInput = {
   ruleRuns?: Prisma.RuleRunUpdateManyWithoutWorkspaceNestedInput
   apiKeys?: Prisma.ApiKeyUpdateManyWithoutWorkspaceNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutWorkspaceNestedInput
+  calendarConnections?: Prisma.CalendarConnectionUpdateManyWithoutWorkspaceNestedInput
+  calendarEventLinks?: Prisma.CalendarEventLinkUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutInteractionsInput = {
@@ -1885,6 +2241,8 @@ export type WorkspaceUncheckedUpdateWithoutInteractionsInput = {
   ruleRuns?: Prisma.RuleRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutWorkspaceNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutWorkspaceNestedInput
+  calendarConnections?: Prisma.CalendarConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  calendarEventLinks?: Prisma.CalendarEventLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutPlansInput = {
@@ -1908,6 +2266,8 @@ export type WorkspaceCreateWithoutPlansInput = {
   ruleRuns?: Prisma.RuleRunCreateNestedManyWithoutWorkspaceInput
   apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutWorkspaceInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutWorkspaceInput
+  calendarConnections?: Prisma.CalendarConnectionCreateNestedManyWithoutWorkspaceInput
+  calendarEventLinks?: Prisma.CalendarEventLinkCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutPlansInput = {
@@ -1931,6 +2291,8 @@ export type WorkspaceUncheckedCreateWithoutPlansInput = {
   ruleRuns?: Prisma.RuleRunUncheckedCreateNestedManyWithoutWorkspaceInput
   apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutWorkspaceInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutWorkspaceInput
+  calendarConnections?: Prisma.CalendarConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  calendarEventLinks?: Prisma.CalendarEventLinkUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutPlansInput = {
@@ -1970,6 +2332,8 @@ export type WorkspaceUpdateWithoutPlansInput = {
   ruleRuns?: Prisma.RuleRunUpdateManyWithoutWorkspaceNestedInput
   apiKeys?: Prisma.ApiKeyUpdateManyWithoutWorkspaceNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutWorkspaceNestedInput
+  calendarConnections?: Prisma.CalendarConnectionUpdateManyWithoutWorkspaceNestedInput
+  calendarEventLinks?: Prisma.CalendarEventLinkUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutPlansInput = {
@@ -1993,6 +2357,8 @@ export type WorkspaceUncheckedUpdateWithoutPlansInput = {
   ruleRuns?: Prisma.RuleRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutWorkspaceNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutWorkspaceNestedInput
+  calendarConnections?: Prisma.CalendarConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  calendarEventLinks?: Prisma.CalendarEventLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutPlacesInput = {
@@ -2016,6 +2382,8 @@ export type WorkspaceCreateWithoutPlacesInput = {
   ruleRuns?: Prisma.RuleRunCreateNestedManyWithoutWorkspaceInput
   apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutWorkspaceInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutWorkspaceInput
+  calendarConnections?: Prisma.CalendarConnectionCreateNestedManyWithoutWorkspaceInput
+  calendarEventLinks?: Prisma.CalendarEventLinkCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutPlacesInput = {
@@ -2039,6 +2407,8 @@ export type WorkspaceUncheckedCreateWithoutPlacesInput = {
   ruleRuns?: Prisma.RuleRunUncheckedCreateNestedManyWithoutWorkspaceInput
   apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutWorkspaceInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutWorkspaceInput
+  calendarConnections?: Prisma.CalendarConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  calendarEventLinks?: Prisma.CalendarEventLinkUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutPlacesInput = {
@@ -2078,6 +2448,8 @@ export type WorkspaceUpdateWithoutPlacesInput = {
   ruleRuns?: Prisma.RuleRunUpdateManyWithoutWorkspaceNestedInput
   apiKeys?: Prisma.ApiKeyUpdateManyWithoutWorkspaceNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutWorkspaceNestedInput
+  calendarConnections?: Prisma.CalendarConnectionUpdateManyWithoutWorkspaceNestedInput
+  calendarEventLinks?: Prisma.CalendarEventLinkUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutPlacesInput = {
@@ -2101,6 +2473,8 @@ export type WorkspaceUncheckedUpdateWithoutPlacesInput = {
   ruleRuns?: Prisma.RuleRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutWorkspaceNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutWorkspaceNestedInput
+  calendarConnections?: Prisma.CalendarConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  calendarEventLinks?: Prisma.CalendarEventLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutItemsInput = {
@@ -2124,6 +2498,8 @@ export type WorkspaceCreateWithoutItemsInput = {
   ruleRuns?: Prisma.RuleRunCreateNestedManyWithoutWorkspaceInput
   apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutWorkspaceInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutWorkspaceInput
+  calendarConnections?: Prisma.CalendarConnectionCreateNestedManyWithoutWorkspaceInput
+  calendarEventLinks?: Prisma.CalendarEventLinkCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutItemsInput = {
@@ -2147,6 +2523,8 @@ export type WorkspaceUncheckedCreateWithoutItemsInput = {
   ruleRuns?: Prisma.RuleRunUncheckedCreateNestedManyWithoutWorkspaceInput
   apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutWorkspaceInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutWorkspaceInput
+  calendarConnections?: Prisma.CalendarConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  calendarEventLinks?: Prisma.CalendarEventLinkUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutItemsInput = {
@@ -2186,6 +2564,8 @@ export type WorkspaceUpdateWithoutItemsInput = {
   ruleRuns?: Prisma.RuleRunUpdateManyWithoutWorkspaceNestedInput
   apiKeys?: Prisma.ApiKeyUpdateManyWithoutWorkspaceNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutWorkspaceNestedInput
+  calendarConnections?: Prisma.CalendarConnectionUpdateManyWithoutWorkspaceNestedInput
+  calendarEventLinks?: Prisma.CalendarEventLinkUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutItemsInput = {
@@ -2209,6 +2589,8 @@ export type WorkspaceUncheckedUpdateWithoutItemsInput = {
   ruleRuns?: Prisma.RuleRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutWorkspaceNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutWorkspaceNestedInput
+  calendarConnections?: Prisma.CalendarConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  calendarEventLinks?: Prisma.CalendarEventLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutImportedFilesInput = {
@@ -2232,6 +2614,8 @@ export type WorkspaceCreateWithoutImportedFilesInput = {
   ruleRuns?: Prisma.RuleRunCreateNestedManyWithoutWorkspaceInput
   apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutWorkspaceInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutWorkspaceInput
+  calendarConnections?: Prisma.CalendarConnectionCreateNestedManyWithoutWorkspaceInput
+  calendarEventLinks?: Prisma.CalendarEventLinkCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutImportedFilesInput = {
@@ -2255,6 +2639,8 @@ export type WorkspaceUncheckedCreateWithoutImportedFilesInput = {
   ruleRuns?: Prisma.RuleRunUncheckedCreateNestedManyWithoutWorkspaceInput
   apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutWorkspaceInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutWorkspaceInput
+  calendarConnections?: Prisma.CalendarConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  calendarEventLinks?: Prisma.CalendarEventLinkUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutImportedFilesInput = {
@@ -2294,6 +2680,8 @@ export type WorkspaceUpdateWithoutImportedFilesInput = {
   ruleRuns?: Prisma.RuleRunUpdateManyWithoutWorkspaceNestedInput
   apiKeys?: Prisma.ApiKeyUpdateManyWithoutWorkspaceNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutWorkspaceNestedInput
+  calendarConnections?: Prisma.CalendarConnectionUpdateManyWithoutWorkspaceNestedInput
+  calendarEventLinks?: Prisma.CalendarEventLinkUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutImportedFilesInput = {
@@ -2317,6 +2705,8 @@ export type WorkspaceUncheckedUpdateWithoutImportedFilesInput = {
   ruleRuns?: Prisma.RuleRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutWorkspaceNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutWorkspaceNestedInput
+  calendarConnections?: Prisma.CalendarConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  calendarEventLinks?: Prisma.CalendarEventLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateManyOwnerUserInput = {
@@ -2349,6 +2739,8 @@ export type WorkspaceUpdateWithoutOwnerUserInput = {
   ruleRuns?: Prisma.RuleRunUpdateManyWithoutWorkspaceNestedInput
   apiKeys?: Prisma.ApiKeyUpdateManyWithoutWorkspaceNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutWorkspaceNestedInput
+  calendarConnections?: Prisma.CalendarConnectionUpdateManyWithoutWorkspaceNestedInput
+  calendarEventLinks?: Prisma.CalendarEventLinkUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutOwnerUserInput = {
@@ -2372,6 +2764,8 @@ export type WorkspaceUncheckedUpdateWithoutOwnerUserInput = {
   ruleRuns?: Prisma.RuleRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutWorkspaceNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutWorkspaceNestedInput
+  calendarConnections?: Prisma.CalendarConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  calendarEventLinks?: Prisma.CalendarEventLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateManyWithoutOwnerUserInput = {
@@ -2403,6 +2797,8 @@ export type WorkspaceCountOutputType = {
   ruleRuns: number
   apiKeys: number
   auditLogs: number
+  calendarConnections: number
+  calendarEventLinks: number
 }
 
 export type WorkspaceCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2420,6 +2816,8 @@ export type WorkspaceCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensi
   ruleRuns?: boolean | WorkspaceCountOutputTypeCountRuleRunsArgs
   apiKeys?: boolean | WorkspaceCountOutputTypeCountApiKeysArgs
   auditLogs?: boolean | WorkspaceCountOutputTypeCountAuditLogsArgs
+  calendarConnections?: boolean | WorkspaceCountOutputTypeCountCalendarConnectionsArgs
+  calendarEventLinks?: boolean | WorkspaceCountOutputTypeCountCalendarEventLinksArgs
 }
 
 /**
@@ -2530,6 +2928,20 @@ export type WorkspaceCountOutputTypeCountAuditLogsArgs<ExtArgs extends runtime.T
   where?: Prisma.AuditLogWhereInput
 }
 
+/**
+ * WorkspaceCountOutputType without action
+ */
+export type WorkspaceCountOutputTypeCountCalendarConnectionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CalendarConnectionWhereInput
+}
+
+/**
+ * WorkspaceCountOutputType without action
+ */
+export type WorkspaceCountOutputTypeCountCalendarEventLinksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CalendarEventLinkWhereInput
+}
+
 
 export type WorkspaceSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -2554,6 +2966,8 @@ export type WorkspaceSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   ruleRuns?: boolean | Prisma.Workspace$ruleRunsArgs<ExtArgs>
   apiKeys?: boolean | Prisma.Workspace$apiKeysArgs<ExtArgs>
   auditLogs?: boolean | Prisma.Workspace$auditLogsArgs<ExtArgs>
+  calendarConnections?: boolean | Prisma.Workspace$calendarConnectionsArgs<ExtArgs>
+  calendarEventLinks?: boolean | Prisma.Workspace$calendarEventLinksArgs<ExtArgs>
   _count?: boolean | Prisma.WorkspaceCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["workspace"]>
 
@@ -2606,6 +3020,8 @@ export type WorkspaceInclude<ExtArgs extends runtime.Types.Extensions.InternalAr
   ruleRuns?: boolean | Prisma.Workspace$ruleRunsArgs<ExtArgs>
   apiKeys?: boolean | Prisma.Workspace$apiKeysArgs<ExtArgs>
   auditLogs?: boolean | Prisma.Workspace$auditLogsArgs<ExtArgs>
+  calendarConnections?: boolean | Prisma.Workspace$calendarConnectionsArgs<ExtArgs>
+  calendarEventLinks?: boolean | Prisma.Workspace$calendarEventLinksArgs<ExtArgs>
   _count?: boolean | Prisma.WorkspaceCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type WorkspaceIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2633,6 +3049,8 @@ export type $WorkspacePayload<ExtArgs extends runtime.Types.Extensions.InternalA
     ruleRuns: Prisma.$RuleRunPayload<ExtArgs>[]
     apiKeys: Prisma.$ApiKeyPayload<ExtArgs>[]
     auditLogs: Prisma.$AuditLogPayload<ExtArgs>[]
+    calendarConnections: Prisma.$CalendarConnectionPayload<ExtArgs>[]
+    calendarEventLinks: Prisma.$CalendarEventLinkPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -3051,6 +3469,8 @@ export interface Prisma__WorkspaceClient<T, Null = never, ExtArgs extends runtim
   ruleRuns<T extends Prisma.Workspace$ruleRunsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Workspace$ruleRunsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RuleRunPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   apiKeys<T extends Prisma.Workspace$apiKeysArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Workspace$apiKeysArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ApiKeyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   auditLogs<T extends Prisma.Workspace$auditLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Workspace$auditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  calendarConnections<T extends Prisma.Workspace$calendarConnectionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Workspace$calendarConnectionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CalendarConnectionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  calendarEventLinks<T extends Prisma.Workspace$calendarEventLinksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Workspace$calendarEventLinksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CalendarEventLinkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3838,6 +4258,54 @@ export type Workspace$auditLogsArgs<ExtArgs extends runtime.Types.Extensions.Int
   take?: number
   skip?: number
   distinct?: Prisma.AuditLogScalarFieldEnum | Prisma.AuditLogScalarFieldEnum[]
+}
+
+/**
+ * Workspace.calendarConnections
+ */
+export type Workspace$calendarConnectionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CalendarConnection
+   */
+  select?: Prisma.CalendarConnectionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CalendarConnection
+   */
+  omit?: Prisma.CalendarConnectionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CalendarConnectionInclude<ExtArgs> | null
+  where?: Prisma.CalendarConnectionWhereInput
+  orderBy?: Prisma.CalendarConnectionOrderByWithRelationInput | Prisma.CalendarConnectionOrderByWithRelationInput[]
+  cursor?: Prisma.CalendarConnectionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CalendarConnectionScalarFieldEnum | Prisma.CalendarConnectionScalarFieldEnum[]
+}
+
+/**
+ * Workspace.calendarEventLinks
+ */
+export type Workspace$calendarEventLinksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CalendarEventLink
+   */
+  select?: Prisma.CalendarEventLinkSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CalendarEventLink
+   */
+  omit?: Prisma.CalendarEventLinkOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CalendarEventLinkInclude<ExtArgs> | null
+  where?: Prisma.CalendarEventLinkWhereInput
+  orderBy?: Prisma.CalendarEventLinkOrderByWithRelationInput | Prisma.CalendarEventLinkOrderByWithRelationInput[]
+  cursor?: Prisma.CalendarEventLinkWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CalendarEventLinkScalarFieldEnum | Prisma.CalendarEventLinkScalarFieldEnum[]
 }
 
 /**

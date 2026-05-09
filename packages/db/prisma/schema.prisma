@@ -34,6 +34,8 @@ model Workspace {
   ruleRuns       RuleRun[]
   apiKeys        ApiKey[]
   auditLogs      AuditLog[]
+  calendarConnections CalendarConnection[]
+  calendarEventLinks  CalendarEventLink[]
 
   @@index([ownerUserId])
   @@index([status])
@@ -139,6 +141,7 @@ model User {
   workspaceMemberships WorkspaceMember[]
   ownedWorkspaces      Workspace[]     @relation("WorkspaceOwner")
   approvedEmailsSent   ApprovedEmail[] @relation("ApprovedEmailInviter")
+  calendarConnections  CalendarConnection[]
 
   @@index([email])
   @@index([status])
@@ -244,6 +247,60 @@ model AuditLog {
   @@index([userId])
   @@index([apiKeyId])
   @@index([personId])
+}
+
+// ─────────────────────────────────────────────
+// INTEGRATIONS: Google Calendar
+// ─────────────────────────────────────────────
+
+model CalendarConnection {
+  id              String   @id @default(cuid())
+  workspaceId     String   @default("default-workspace")
+  workspace       Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  provider        String   @default("google")
+  status          String   @default("active")
+  accountEmail    String?
+  calendarId      String   @default("primary")
+  calendarSummary String?
+  accessToken     String?
+  refreshToken    String?
+  expiresAt       DateTime?
+  scope           String?
+  syncToken       String?
+  lastSyncedAt    DateTime?
+  lastError       String?
+  eventLinks      CalendarEventLink[]
+
+  @@unique([workspaceId, provider, calendarId])
+  @@index([userId])
+  @@index([workspaceId, status])
+}
+
+model CalendarEventLink {
+  id             String   @id @default(cuid())
+  workspaceId    String   @default("default-workspace")
+  workspace      Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  connectionId   String
+  connection     CalendarConnection @relation(fields: [connectionId], references: [id], onDelete: Cascade)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  provider       String   @default("google")
+  calendarId     String
+  externalEventId String
+  iCalUID        String?
+  eventId        String?
+  event          Event?   @relation(fields: [eventId], references: [id], onDelete: SetNull)
+  status         String   @default("active")
+  lastSeenAt     DateTime?
+
+  @@unique([workspaceId, provider, calendarId, externalEventId])
+  @@index([connectionId])
+  @@index([eventId])
+  @@index([workspaceId, status])
 }
 
 // ─────────────────────────────────────────────
@@ -357,6 +414,7 @@ model Event {
   transcript   String?
   metadata     String?
   interactions Interaction[]
+  calendarLinks CalendarEventLink[]
 
   @@index([workspaceId, timestamp])
 }
