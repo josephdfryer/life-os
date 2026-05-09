@@ -100,6 +100,47 @@ type CalendarStatus = {
     eventCount: number
   } | null
 }
+type CalendarTrace = {
+  connection: {
+    id: string
+    calendarId: string
+    accountEmail: string | null
+    calendarSummary: string | null
+  } | null
+  runs: {
+    id: string
+    createdAt: string
+    actorLabel: string | null
+    metadata: Record<string, unknown> | null
+  }[]
+  events: {
+    id: string
+    status: string
+    calendarId: string
+    externalEventId: string
+    iCalUID: string | null
+    createdAt: string
+    updatedAt: string
+    lastSeenAt: string | null
+    event: {
+      id: string
+      name: string
+      timestamp: string
+      createdAt: string
+      htmlLink: string | null
+      location: string | null
+      attendeeCount: number
+      attendees: { email?: string | null; displayName?: string | null; responseStatus?: string | null; self?: boolean }[]
+    } | null
+    linkedPeople: {
+      id: string
+      createdAt: string
+      timestamp: string
+      summary: string | null
+      person: { id: string; name: string; emails: string[] } | null
+    }[]
+  }[]
+}
 type GmailStatus = {
   configured: boolean
   redirectUri: string
@@ -251,6 +292,7 @@ export default function AdminClient({
   const [rules, setRules] = useState<Rule[]>([])
   const [ruleRuns, setRuleRuns] = useState<RuleRun[]>([])
   const [calendarStatus, setCalendarStatus] = useState<CalendarStatus | null>(null)
+  const [calendarTrace, setCalendarTrace] = useState<CalendarTrace | null>(null)
   const [calendarSyncResult, setCalendarSyncResult] = useState<string | null>(null)
   const [calendarBackfillDays, setCalendarBackfillDays] = useState("180")
   const [gmailStatus, setGmailStatus] = useState<GmailStatus | null>(null)
@@ -319,7 +361,10 @@ export default function AdminClient({
       loadRules()
       loadRuleRuns()
     }
-    if (tab === "calendar") loadCalendarStatus()
+    if (tab === "calendar") {
+      loadCalendarStatus()
+      loadCalendarTrace()
+    }
     if (tab === "gmail") loadGmailStatus()
   }, [tab])
 
@@ -410,6 +455,17 @@ export default function AdminClient({
     }
   }
 
+  async function loadCalendarTrace() {
+    try {
+      const res = await fetch("/api/calendar/google/trace?limit=75")
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error?.message || data.error || "Could not load calendar trace")
+      setCalendarTrace(data)
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Could not load calendar trace")
+    }
+  }
+
   async function syncCalendar() {
     setSaving(true)
     setError(null)
@@ -423,7 +479,7 @@ export default function AdminClient({
       const data = await res.json()
       if (!res.ok) throw new Error(data.error?.message || data.error || "Could not sync Google Calendar")
       setCalendarSyncResult(JSON.stringify(data, null, 2))
-      await loadCalendarStatus()
+      await Promise.all([loadCalendarStatus(), loadCalendarTrace()])
     } catch (e) {
       setError(e instanceof Error ? e.message : "Could not sync Google Calendar")
     } finally {
@@ -1195,6 +1251,72 @@ export default function AdminClient({
                   Sync is read-only and runs in small batches. The backfill range applies when there is no incremental Google sync token yet; after that, sync only asks Google for changes.
                 </div>
               </Panel>
+
+              <div style={{ gridColumn: "1 / -1" }}>
+              <Panel title="Sync Trace" meta={calendarTrace ? `${calendarTrace.events.length} recent events` : "loading"}>
+                <div style={{ display: "flex", justifyContent: "space-between", gap: "10px", alignItems: "center", marginBottom: "10px" }}>
+                  <div style={{ fontSize: "11px", color: "var(--ink-4)", lineHeight: 1.45 }}>
+                    Recent Google Calendar imports with the local Event and People interactions they created.
+                  </div>
+                  <button style={smallButtonStyle} onClick={loadCalendarTrace}>Refresh Trace</button>
+                </div>
+
+                {calendarTrace?.runs.length ? (
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(170px, 1fr))", gap: "8px", marginBottom: "12px" }}>
+                    {calendarTrace.runs.slice(0, 3).map(run => (
+                      <div key={run.id} style={{ border: "1px solid var(--border)", borderRadius: "8px", background: "var(--bg)", padding: "9px" }}>
+                        <div style={{ fontSize: "10px", color: "var(--ink-4)", marginBottom: "5px" }}>{formatDate(run.createdAt)}</div>
+                        <div style={{ fontSize: "11px", color: "var(--ink-2)", lineHeight: 1.45 }}>{formatSyncRun(run.metadata)}</div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div style={{ fontSize: "11px", color: "var(--ink-4)", marginBottom: "12px" }}>No Calendar sync runs logged yet.</div>
+                )}
+
+                <div style={{ display: "grid", gap: "8px" }}>
+                  {(calendarTrace?.events ?? []).map(item => (
+                    <div key={item.id} style={{ border: "1px solid var(--border)", borderRadius: "8px", background: "var(--bg)", padding: "10px" }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", gap: "12px", alignItems: "baseline", marginBottom: "7px" }}>
+                        <div style={{ minWidth: 0 }}>
+                          <div style={{ fontSize: "13px", fontWeight: 600, color: "var(--ink)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                            {item.event?.name ?? "Missing local event"}
+                          </div>
+                          <div style={{ fontSize: "10px", color: "var(--ink-4)", marginTop: "3px" }}>
+                            {formatDate(item.event?.timestamp ?? item.lastSeenAt)} · {item.status} · {item.event?.attendeeCount ?? 0} attendees
+                          </div>
+                        </div>
+                        {item.event?.htmlLink && (
+                          <a href={item.event.htmlLink} target="_blank" rel="noreferrer" style={{ ...smallButtonStyle, textDecoration: "none", whiteSpace: "nowrap" }}>
+                            Open in Google
+                          </a>
+                        )}
+                      </div>
+                      {item.event?.location && (
+                        <div style={{ fontSize: "10px", color: "var(--ink-4)", marginBottom: "7px" }}>{item.event.location}</div>
+                      )}
+                      <TracePeople people={item.linkedPeople} />
+                      <details style={{ marginTop: "8px" }}>
+                        <summary style={{ fontSize: "10px", color: "var(--ink-4)", cursor: "pointer" }}>Attendees and IDs</summary>
+                        <div style={{ marginTop: "7px", display: "grid", gap: "5px" }}>
+                          <div style={{ fontSize: "10px", color: "var(--ink-4)", wordBreak: "break-word" }}>Google event: {item.externalEventId}</div>
+                          {(item.event?.attendees ?? []).map((attendee, index) => (
+                            <div key={`${attendee.email ?? "attendee"}-${index}`} style={{ fontSize: "10px", color: "var(--ink-3)" }}>
+                              {attendee.displayName || attendee.email || "Unknown attendee"}{attendee.responseStatus ? ` · ${attendee.responseStatus}` : ""}
+                            </div>
+                          ))}
+                        </div>
+                      </details>
+                    </div>
+                  ))}
+                  {calendarTrace && calendarTrace.events.length === 0 && (
+                    <div style={{ fontSize: "11px", color: "var(--ink-4)", border: "1px solid var(--border)", borderRadius: "8px", background: "var(--bg)", padding: "10px" }}>
+                      No imported Calendar events to trace yet.
+                    </div>
+                  )}
+                </div>
+              </Panel>
+              </div>
             </section>
           )}
 
@@ -1506,6 +1628,25 @@ function InfoTile({ label, value }: { label: string; value: string }) {
   )
 }
 
+function TracePeople({ people }: { people: CalendarTrace["events"][number]["linkedPeople"] }) {
+  if (!people.length) {
+    return <div style={{ fontSize: "11px", color: "var(--ink-4)" }}>No People were matched for this event.</div>
+  }
+  return (
+    <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
+      {people.map(item => item.person ? (
+        <a
+          key={item.id}
+          href={`/people/${item.person.id}`}
+          style={{ border: "1px solid #88a06a", color: "#526b37", borderRadius: "999px", padding: "3px 8px", fontSize: "10px", textDecoration: "none", background: "#f3f8ee" }}
+        >
+          {item.person.name}
+        </a>
+      ) : null)}
+    </div>
+  )
+}
+
 function Th({ children = null }: { children?: React.ReactNode }) {
   return <th style={{ textAlign: "left", padding: "8px", fontSize: "10px", color: "var(--ink-4)", borderBottom: "1px solid var(--border)", fontWeight: 500 }}>{children}</th>
 }
@@ -1598,6 +1739,17 @@ function formatMetadata(value: unknown) {
   if (!value) return ""
   const text = typeof value === "string" ? value : JSON.stringify(value)
   return text.length > 140 ? `${text.slice(0, 140)}...` : text
+}
+
+function formatSyncRun(metadata: Record<string, unknown> | null) {
+  if (!metadata) return "Sync run"
+  const createdEvents = Number(metadata.createdEvents ?? 0)
+  const updatedEvents = Number(metadata.updatedEvents ?? 0)
+  const createdInteractions = Number(metadata.createdInteractions ?? 0)
+  const fetched = Number(metadata.fetched ?? 0)
+  const batches = Number(metadata.batches ?? 0)
+  const incremental = metadata.incremental ? "incremental" : "backfill"
+  return `${createdEvents} events created, ${updatedEvents} updated, ${createdInteractions} People interactions · ${fetched} fetched in ${batches} batches · ${incremental}`
 }
 
 function actionCount(value: unknown) {

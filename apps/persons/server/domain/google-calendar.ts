@@ -53,6 +53,16 @@ type EventsListResponse = {
   summary?: string
 }
 
+type CalendarEventMetadata = {
+  htmlLink?: string | null
+  location?: string | null
+  start?: { dateTime?: string; date?: string; timeZone?: string } | null
+  end?: { dateTime?: string; date?: string; timeZone?: string } | null
+  attendees?: { email?: string | null; displayName?: string | null; responseStatus?: string | null; self?: boolean }[]
+  organizer?: { email?: string; displayName?: string; self?: boolean } | null
+  creator?: { email?: string; displayName?: string; self?: boolean } | null
+}
+
 export function googleCalendarConfigured() {
   return Boolean(calendarClientId() && calendarClientSecret())
 }
@@ -84,6 +94,100 @@ export async function googleCalendarStatus(actor: AccessActor) {
       eventCount: connection._count.eventLinks,
       _count: undefined,
     } : null,
+  }
+}
+
+export async function googleCalendarTrace(actor: AccessActor, options: { limit?: number } = {}) {
+  const limit = normalizeTraceLimit(options.limit)
+  const connection = await db.calendarConnection.findFirst({
+    where: { workspaceId: actor.workspaceId, provider: "google" },
+    orderBy: { updatedAt: "desc" },
+    select: { id: true, calendarId: true, accountEmail: true, calendarSummary: true },
+  })
+
+  const runs = await db.auditLog.findMany({
+    where: { workspaceId: actor.workspaceId, action: "calendar.sync" },
+    orderBy: { createdAt: "desc" },
+    take: 10,
+    select: { id: true, createdAt: true, actorLabel: true, metadata: true },
+  })
+
+  const links = connection ? await db.calendarEventLink.findMany({
+    where: { workspaceId: actor.workspaceId, provider: "google", connectionId: connection.id },
+    orderBy: [{ updatedAt: "desc" }, { createdAt: "desc" }],
+    take: limit,
+    include: {
+      event: {
+        select: {
+          id: true,
+          name: true,
+          timestamp: true,
+          createdAt: true,
+          metadata: true,
+          interactions: {
+            where: { type: "calendar" },
+            orderBy: { createdAt: "desc" },
+            select: {
+              id: true,
+              createdAt: true,
+              timestamp: true,
+              summary: true,
+              notes: true,
+              person: { select: { id: true, first: true, last: true, emails: true } },
+            },
+          },
+        },
+      },
+    },
+  }) : []
+
+  return {
+    connection,
+    runs: runs.map(run => ({
+      id: run.id,
+      createdAt: run.createdAt,
+      actorLabel: run.actorLabel,
+      metadata: parseJsonObject(run.metadata),
+    })),
+    events: links.map(link => {
+      const metadata = parseCalendarMetadata(link.event?.metadata)
+      const marker = sourceMarker(link.calendarId, link.externalEventId)
+      const linkedInteractions = (link.event?.interactions ?? [])
+        .filter(interaction => interaction.person && (interaction.notes ?? "").includes(marker))
+        .map(interaction => ({
+          id: interaction.id,
+          createdAt: interaction.createdAt,
+          timestamp: interaction.timestamp,
+          summary: interaction.summary,
+          person: interaction.person ? {
+            id: interaction.person.id,
+            name: personName(interaction.person),
+            emails: parseJsonList(interaction.person.emails),
+          } : null,
+        }))
+
+      return {
+        id: link.id,
+        status: link.status,
+        calendarId: link.calendarId,
+        externalEventId: link.externalEventId,
+        iCalUID: link.iCalUID,
+        createdAt: link.createdAt,
+        updatedAt: link.updatedAt,
+        lastSeenAt: link.lastSeenAt,
+        event: link.event ? {
+          id: link.event.id,
+          name: link.event.name,
+          timestamp: link.event.timestamp,
+          createdAt: link.event.createdAt,
+          htmlLink: metadata.htmlLink ?? null,
+          location: metadata.location ?? null,
+          attendeeCount: metadata.attendees?.length ?? 0,
+          attendees: (metadata.attendees ?? []).slice(0, 12),
+        } : null,
+        linkedPeople: linkedInteractions,
+      }
+    }),
   }
 }
 
@@ -376,7 +480,7 @@ async function upsertCalendarEvent(input: {
       select: { id: true },
     })
     if (existing) continue
-    await db.interaction.create({
+    const interaction = await db.interaction.create({
       data: {
         workspaceId: input.workspaceId,
         eventId,
@@ -388,8 +492,24 @@ async function upsertCalendarEvent(input: {
         notes: [sourceMarker(input.calendarId, input.item.id), input.item.htmlLink].filter(Boolean).join("\n"),
         direction: "meeting",
       },
+      select: { id: true },
     })
     createdInteractions += 1
+    await auditAction({
+      actor: input.actor,
+      action: "interaction.create",
+      targetType: "interaction",
+      targetId: interaction.id,
+      metadata: {
+        mode: "calendar-sync",
+        source: SOURCE,
+        calendarId: input.calendarId,
+        externalEventId: input.item.id,
+        eventId,
+        personId: person.id,
+        personName: personName(person),
+      },
+    })
   }
 
   return { createdEvent, createdInteractions }
@@ -647,11 +767,37 @@ function parseJsonList(value: string | null) {
   }
 }
 
+function parseJsonObject(value: string | null) {
+  if (!value) return null
+  try {
+    const parsed = JSON.parse(value) as unknown
+    return parsed && typeof parsed === "object" && !Array.isArray(parsed) ? parsed : null
+  } catch {
+    return null
+  }
+}
+
+function parseCalendarMetadata(value: string | null | undefined): CalendarEventMetadata {
+  const parsed = parseJsonObject(value ?? null) as CalendarEventMetadata | null
+  return parsed ?? {}
+}
+
 function normalizeBackfillDays(value: number | null | undefined) {
   if (typeof value !== "number" || !Number.isFinite(value)) return DEFAULT_BACKFILL_DAYS
   const days = Math.round(value)
   if (days < 1) return DEFAULT_BACKFILL_DAYS
   return Math.min(days, MAX_BACKFILL_DAYS)
+}
+
+function normalizeTraceLimit(value: number | null | undefined) {
+  if (typeof value !== "number" || !Number.isFinite(value)) return 50
+  const limit = Math.round(value)
+  if (limit < 1) return 50
+  return Math.min(limit, 150)
+}
+
+function personName(person: { first: string; last: string }) {
+  return [person.first, person.last].filter(Boolean).join(" ").trim() || "Unnamed person"
 }
 
 function chunk<T>(items: T[], size: number) {

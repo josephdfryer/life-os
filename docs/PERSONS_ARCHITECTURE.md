@@ -192,11 +192,16 @@ flowchart TD
   GoogleEvents --> Match["Match attendees to People by email"]
   Match --> Interaction["Create Interaction for matched People"]
   Sync --> Audit["Write calendar.sync AuditLog"]
+  Admin --> Trace["Review sync trace"]
+  Trace --> Link
+  Trace --> Interaction
 ```
 
 Plain English: Google Calendar remains the source of truth. Persons imports calendar entries into local Events and creates Interactions only when an attendee email already matches a Person in the current workspace. Re-running sync is idempotent because `CalendarEventLink` remembers which Google event maps to which local Event.
 
 To keep first-time imports from hogging resources, the Admin Calendar screen asks for a backfill range before syncing. The server fetches Google events in restrained pages and writes them in small batches rather than holding one giant event list in memory. Once Google gives Persons an incremental sync token, later syncs ignore the historical backfill range and only ask Google for changed events.
+
+The Admin Calendar tab also has a sync trace. It reads recent `calendar.sync` audit rows plus the actual `CalendarEventLink`, `Event`, and `Interaction` records so an operator can see which Google events landed locally and which People were linked.
 
 Runtime configuration:
 
@@ -525,6 +530,7 @@ flowchart LR
 - Inbox create-and-accept: an unmatched staged interaction can create a new Person and attach the interaction in one review action.
 - Workspace tenancy foundation: approved emails can sign in without inheriting Joseph's data, core browser/API paths carry `workspaceId`, existing data is preserved in `default-workspace`, and API keys are scoped to the workspace that created them.
 - Google Calendar foundation: Admin can connect Google Calendar, sync read-only events into Events, and create Interactions for attendees matched to existing People by email.
+- Google Calendar traceability: Admin can inspect recent Calendar sync runs, imported events, Google event IDs, attendees, and linked People.
 - Gmail foundation: Admin can connect Gmail, sync read-only messages into Interactions for matched People, and stage unmatched emails in Inbox.
 
 ### Future
