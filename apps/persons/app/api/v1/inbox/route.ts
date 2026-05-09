@@ -68,7 +68,7 @@ export async function GET(req: NextRequest) {
       return {
         ...item,
         candidatePerson: cp
-          ? { ...cp, emails: parseTags(cp.emails), phones: parseTags(cp.phones) }
+          ? { id: cp.id, first: cp.first, last: cp.last, title: cp.title, company: cp.company, emails: parseTags(cp.emails), phones: parseTags(cp.phones) }
           : null,
         ruleRuns: (runsByTarget.get(item.id) ?? []).map((run: typeof runs[number]) => ({
         id: run.id,
