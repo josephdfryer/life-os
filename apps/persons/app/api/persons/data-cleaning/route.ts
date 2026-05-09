@@ -66,7 +66,7 @@ export async function GET(req: NextRequest) {
     },
   })
 
-  const people = rows.map((row: typeof rows[number]) => {
+  const people: CleanupPerson[] = rows.map((row: typeof rows[number]) => {
     const emails = parseTags(row.emails)
     const phones = parseTags(row.phones)
     const tags = parseTags(row.tags)
