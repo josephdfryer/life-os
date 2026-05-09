@@ -82,6 +82,7 @@ let db: PrismaClient
 const APPLE_EPOCH_MS = Date.UTC(2001, 0, 1)
 const SOURCE_PREFIX = "imessage:"
 const DAY_TIME_ZONE = process.env.IMESSAGE_SYNC_DAY_TIME_ZONE ?? "America/Los_Angeles"
+const WORKSPACE_ID = process.env.IMESSAGE_SYNC_WORKSPACE_ID ?? "default-workspace"
 
 async function main() {
   db = (await import("@life-os/db")).db
@@ -248,7 +249,10 @@ function openMessagesDb(chatDbPath: string): BetterSqliteDatabase {
 async function loadPeopleIndex(options: { includeAutoCreated: boolean }) {
   const persons = await db.person.findMany({
     select: { id: true, first: true, last: true, emails: true, phones: true },
-    where: options.includeAutoCreated ? undefined : { NOT: { tags: { contains: "imessage" } } },
+    where: {
+      workspaceId: WORKSPACE_ID,
+      ...(options.includeAutoCreated ? {} : { NOT: { tags: { contains: "imessage" } } }),
+    },
   })
   const people = {
     byId: new Map<string, ExistingPerson>(),
@@ -297,6 +301,7 @@ async function createPerson(contact: ReturnType<typeof contactFromMessage>, inde
   const { color, colorSoft } = assignColor(index)
   const person = await db.person.create({
     data: {
+      workspaceId: WORKSPACE_ID,
       first,
       last,
       emails: JSON.stringify(contact.email ? [contact.email] : []),
@@ -376,6 +381,7 @@ async function upsertDailyMessageInteraction(input: {
 
   const event = await db.event.create({
     data: {
+      workspaceId: WORKSPACE_ID,
       name: `iMessage ${dayKey(input.timestamp)}`,
       type: "message",
       timestamp: input.timestamp,
@@ -385,6 +391,7 @@ async function upsertDailyMessageInteraction(input: {
 
   await db.interaction.create({
     data: {
+      workspaceId: WORKSPACE_ID,
       personId: input.personId,
       eventId: event.id,
       type: "message",
@@ -403,7 +410,8 @@ async function hasImportedMessage(sourceMarker: string, stagedSourceId: string) 
 
   const staged = await db.stagedInteraction.findUnique({
     where: {
-      source_sourceId: {
+      workspaceId_source_sourceId: {
+        workspaceId: WORKSPACE_ID,
         source: "imessage",
         sourceId: stagedSourceId,
       },
@@ -418,6 +426,7 @@ async function findInteractionWithSource(sourceMarker: string, personId?: string
   const marker = normalizeSourceMarker(sourceMarker)
   const candidates = await db.interaction.findMany({
     where: {
+      workspaceId: WORKSPACE_ID,
       ...(personId ? { personId } : {}),
       notes: { contains: marker },
     },
@@ -446,7 +455,8 @@ async function stageInboxRecord(input: {
   }
   const staged = await db.stagedInteraction.upsert({
     where: {
-      source_sourceId: {
+      workspaceId_source_sourceId: {
+        workspaceId: WORKSPACE_ID,
         source: "imessage",
         sourceId: input.sourceId,
       },
@@ -462,6 +472,7 @@ async function stageInboxRecord(input: {
       metadata: JSON.stringify(metadata),
     },
     create: {
+      workspaceId: WORKSPACE_ID,
       source: "imessage",
       sourceId: input.sourceId,
       itemType: "interaction",
@@ -498,7 +509,7 @@ async function stageInboxRecord(input: {
 
 async function runRulesForInboxRecord(payload: Record<string, unknown> & { stagedInteractionId: string }) {
   const rules = await db.rule.findMany({
-    where: { trigger: "ingest.message", status: "active" },
+    where: { workspaceId: WORKSPACE_ID, trigger: "ingest.message", status: "active" },
     orderBy: [{ priority: "asc" }, { createdAt: "asc" }],
   })
 
@@ -511,6 +522,7 @@ async function runRulesForInboxRecord(payload: Record<string, unknown> & { stage
       : []
     await db.ruleRun.create({
       data: {
+        workspaceId: WORKSPACE_ID,
         ruleId: rule.id,
         trigger: rule.trigger,
         targetType: "stagedInteraction",
