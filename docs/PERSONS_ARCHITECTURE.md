@@ -190,11 +190,13 @@ flowchart TD
 
 Plain English: Google Calendar remains the source of truth. Persons imports calendar entries into local Events and creates Interactions only when an attendee email already matches a Person in the current workspace. Re-running sync is idempotent because `CalendarEventLink` remembers which Google event maps to which local Event.
 
+To keep first-time imports from hogging resources, the Admin Calendar screen asks for a backfill range before syncing. The server fetches Google events in restrained pages and writes them in small batches rather than holding one giant event list in memory. Once Google gives Persons an incremental sync token, later syncs ignore the historical backfill range and only ask Google for changed events.
+
 Runtime configuration:
 
 - `GOOGLE_CALENDAR_CLIENT_ID` and `GOOGLE_CALENDAR_CLIENT_SECRET`, or the existing `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` if that OAuth client has Calendar API access.
 - The Google OAuth redirect URI must include `/api/calendar/google/callback` on the deployed app origin.
-- The first sync reads a bounded window around the present; later syncs use Google's sync token when available.
+- The first sync reads the selected bounded window around the present; later syncs use Google's sync token when available.
 
 ### 4. Inbox review flow
 

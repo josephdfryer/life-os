@@ -10,6 +10,10 @@ const GOOGLE_CALENDAR_BASE = "https://www.googleapis.com/calendar/v3"
 const GOOGLE_USERINFO_URL = "https://www.googleapis.com/oauth2/v2/userinfo"
 const CALENDAR_SCOPE = "https://www.googleapis.com/auth/calendar.readonly"
 const SOURCE = "google-calendar"
+const DEFAULT_BACKFILL_DAYS = 180
+const MAX_BACKFILL_DAYS = 3650
+const GOOGLE_PAGE_SIZE = 100
+const DB_BATCH_SIZE = 25
 
 type OAuthState = {
   workspaceId: string
@@ -157,7 +161,22 @@ export async function handleGoogleCalendarCallback(input: { code: string; state:
   return { returnTo: state.returnTo, connectionId: connection.id }
 }
 
-export async function syncGoogleCalendar(actor: AccessActor) {
+type SyncOptions = {
+  backfillDays?: number | null
+}
+
+type SyncStats = {
+  createdEvents: number
+  updatedEvents: number
+  createdInteractions: number
+  cancelled: number
+  fetched: number
+  batches: number
+  backfillDays: number
+  incremental: boolean
+}
+
+export async function syncGoogleCalendar(actor: AccessActor, options: SyncOptions = {}) {
   const connection = await db.calendarConnection.findFirst({
     where: { workspaceId: actor.workspaceId, provider: "google", status: "active" },
     orderBy: { updatedAt: "desc" },
@@ -166,36 +185,42 @@ export async function syncGoogleCalendar(actor: AccessActor) {
   if (!connection.refreshToken && !connection.accessToken) throw badRequest("Google Calendar connection has no usable token")
 
   const accessToken = await usableAccessToken(connection)
+  const backfillDays = normalizeBackfillDays(options.backfillDays)
 
   try {
-    const listed = await listEvents(accessToken, {
+    const peopleByEmail = await peopleEmailIndex(actor.workspaceId)
+    const stats: SyncStats = {
+      createdEvents: 0,
+      updatedEvents: 0,
+      createdInteractions: 0,
+      cancelled: 0,
+      fetched: 0,
+      batches: 0,
+      backfillDays,
+      incremental: Boolean(connection.syncToken),
+    }
+    const listed = await syncEventPages(accessToken, {
       calendarId: connection.calendarId,
       syncToken: connection.syncToken,
-    })
-    const peopleByEmail = await peopleEmailIndex(actor.workspaceId)
-    let createdEvents = 0
-    let updatedEvents = 0
-    let createdInteractions = 0
-    let cancelled = 0
-
-    for (const item of listed.items) {
-      if (!item.id) continue
-      if (item.status === "cancelled") {
-        cancelled += await markCancelled(connection.id, actor.workspaceId, connection.calendarId, item.id)
-        continue
+      backfillDays,
+      onBatch: async items => {
+        stats.batches += 1
+        const result = await processCalendarBatch({
+          actor: actor.actor,
+          workspaceId: actor.workspaceId,
+          connectionId: connection.id,
+          calendarId: connection.calendarId,
+          items,
+          peopleByEmail,
+        })
+        stats.createdEvents += result.createdEvents
+        stats.updatedEvents += result.updatedEvents
+        stats.createdInteractions += result.createdInteractions
+        stats.cancelled += result.cancelled
+        stats.fetched += result.fetched
       }
-      const result = await upsertCalendarEvent({
-        actor: actor.actor,
-        workspaceId: actor.workspaceId,
-        connectionId: connection.id,
-        calendarId: connection.calendarId,
-        item,
-        peopleByEmail,
-      })
-      if (result.createdEvent) createdEvents += 1
-      else updatedEvents += 1
-      createdInteractions += result.createdInteractions
-    }
+    })
+    stats.incremental = listed.usedSyncToken
 
     await db.calendarConnection.update({
       where: { id: connection.id },
@@ -211,15 +236,52 @@ export async function syncGoogleCalendar(actor: AccessActor) {
       action: "calendar.sync",
       targetType: "calendarConnection",
       targetId: connection.id,
-      metadata: { provider: "google", createdEvents, updatedEvents, createdInteractions, cancelled, fetched: listed.items.length },
+      metadata: { provider: "google", ...stats },
     })
 
-    return { createdEvents, updatedEvents, createdInteractions, cancelled, fetched: listed.items.length }
+    return stats
   } catch (error) {
     const message = error instanceof Error ? error.message : "Google Calendar sync failed"
     await db.calendarConnection.update({ where: { id: connection.id }, data: { lastError: message } })
     throw error
   }
+}
+
+async function processCalendarBatch(input: {
+  actor: DomainActor
+  workspaceId: string
+  connectionId: string
+  calendarId: string
+  items: GoogleCalendarEvent[]
+  peopleByEmail: Map<string, { id: string; first: string; last: string }>
+}) {
+  let createdEvents = 0
+  let updatedEvents = 0
+  let createdInteractions = 0
+  let cancelled = 0
+  let fetched = 0
+
+  for (const item of input.items) {
+    if (!item.id) continue
+    fetched += 1
+    if (item.status === "cancelled") {
+      cancelled += await markCancelled(input.connectionId, input.workspaceId, input.calendarId, item.id)
+      continue
+    }
+    const result = await upsertCalendarEvent({
+      actor: input.actor,
+      workspaceId: input.workspaceId,
+      connectionId: input.connectionId,
+      calendarId: input.calendarId,
+      item,
+      peopleByEmail: input.peopleByEmail,
+    })
+    if (result.createdEvent) createdEvents += 1
+    else updatedEvents += 1
+    createdInteractions += result.createdInteractions
+  }
+
+  return { createdEvents, updatedEvents, createdInteractions, cancelled, fetched }
 }
 
 async function upsertCalendarEvent(input: {
@@ -392,15 +454,23 @@ async function usableAccessToken(connection: { id: string; accessToken: string |
   return token.access_token
 }
 
-async function listEvents(accessToken: string, input: { calendarId: string; syncToken: string | null }) {
-  const items: GoogleCalendarEvent[] = []
+async function syncEventPages(
+  accessToken: string,
+  input: {
+    calendarId: string
+    syncToken: string | null
+    backfillDays: number
+    onBatch: (items: GoogleCalendarEvent[]) => Promise<void>
+  }
+) {
   let pageToken: string | undefined
   let nextSyncToken: string | undefined
   let useSyncToken = Boolean(input.syncToken)
+  let usedSyncToken = useSyncToken
 
   for (;;) {
     const params = new URLSearchParams({
-      maxResults: "2500",
+      maxResults: String(GOOGLE_PAGE_SIZE),
       showDeleted: "true",
       singleEvents: "true",
     })
@@ -408,8 +478,9 @@ async function listEvents(accessToken: string, input: { calendarId: string; sync
     if (useSyncToken && input.syncToken) {
       params.set("syncToken", input.syncToken)
     } else {
+      usedSyncToken = false
       const now = Date.now()
-      params.set("timeMin", new Date(now - 180 * 24 * 60 * 60 * 1000).toISOString())
+      params.set("timeMin", new Date(now - input.backfillDays * 24 * 60 * 60 * 1000).toISOString())
       params.set("timeMax", new Date(now + 365 * 24 * 60 * 60 * 1000).toISOString())
       params.set("orderBy", "startTime")
     }
@@ -417,19 +488,21 @@ async function listEvents(accessToken: string, input: { calendarId: string; sync
     const res = await googleFetch(`${GOOGLE_CALENDAR_BASE}/calendars/${encodeURIComponent(input.calendarId)}/events?${params}`, accessToken)
     if (res.status === 410 && useSyncToken) {
       useSyncToken = false
+      usedSyncToken = false
       pageToken = undefined
-      items.length = 0
       continue
     }
     if (!res.ok) throw new Error(`Google Calendar events request failed (${res.status})`)
     const data = await res.json() as EventsListResponse
-    items.push(...(data.items ?? []))
+    for (const batch of chunk(data.items ?? [], DB_BATCH_SIZE)) {
+      await input.onBatch(batch)
+    }
     pageToken = data.nextPageToken
     nextSyncToken = data.nextSyncToken ?? nextSyncToken
     if (!pageToken) break
   }
 
-  return { items, nextSyncToken }
+  return { nextSyncToken, usedSyncToken }
 }
 
 async function exchangeCode(code: string, redirectUri: string) {
@@ -559,4 +632,17 @@ function parseJsonList(value: string | null) {
   } catch {
     return []
   }
+}
+
+function normalizeBackfillDays(value: number | null | undefined) {
+  if (typeof value !== "number" || !Number.isFinite(value)) return DEFAULT_BACKFILL_DAYS
+  const days = Math.round(value)
+  if (days < 1) return DEFAULT_BACKFILL_DAYS
+  return Math.min(days, MAX_BACKFILL_DAYS)
+}
+
+function chunk<T>(items: T[], size: number) {
+  const chunks: T[][] = []
+  for (let i = 0; i < items.length; i += size) chunks.push(items.slice(i, i + size))
+  return chunks
 }

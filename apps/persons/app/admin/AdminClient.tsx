@@ -112,6 +112,14 @@ type Overview = {
 
 const TABS = ["apiKeys", "roles", "rules", "permissions", "audit", "workspace", "calendar"] as const
 type Tab = typeof TABS[number]
+const CALENDAR_BACKFILL_OPTIONS = [
+  { value: "30", label: "Past 30 days" },
+  { value: "90", label: "Past 90 days" },
+  { value: "180", label: "Past 6 months" },
+  { value: "365", label: "Past year" },
+  { value: "730", label: "Past 2 years" },
+  { value: "3650", label: "Past 10 years" },
+] as const
 
 const DEFAULT_CONDITIONS = `[
   { "field": "source", "operator": "equals", "value": "imessage" }
@@ -217,6 +225,7 @@ export default function AdminClient({
   const [ruleRuns, setRuleRuns] = useState<RuleRun[]>([])
   const [calendarStatus, setCalendarStatus] = useState<CalendarStatus | null>(null)
   const [calendarSyncResult, setCalendarSyncResult] = useState<string | null>(null)
+  const [calendarBackfillDays, setCalendarBackfillDays] = useState("180")
   const [tab, setTab] = useState<Tab>("apiKeys")
   const [loading, setLoading] = useState(false)
   const [saving, setSaving] = useState(false)
@@ -374,7 +383,11 @@ export default function AdminClient({
     setError(null)
     setCalendarSyncResult(null)
     try {
-      const res = await fetch("/api/calendar/google/sync", { method: "POST" })
+      const res = await fetch("/api/calendar/google/sync", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ backfillDays: Number(calendarBackfillDays) }),
+      })
       const data = await res.json()
       if (!res.ok) throw new Error(data.error?.message || data.error || "Could not sync Google Calendar")
       setCalendarSyncResult(JSON.stringify(data, null, 2))
@@ -1095,6 +1108,12 @@ export default function AdminClient({
                 <a href="/api/calendar/google/connect?returnTo=/admin" style={{ ...primaryLinkStyle, display: "block", textAlign: "center", marginBottom: "10px" }}>
                   {calendarStatus?.connection ? "Reconnect Google" : "Connect Google"}
                 </a>
+                <SelectOptionField
+                  label="Backfill range"
+                  value={calendarBackfillDays}
+                  onChange={setCalendarBackfillDays}
+                  options={[...CALENDAR_BACKFILL_OPTIONS]}
+                />
                 <button style={primaryButtonStyle} disabled={saving || !calendarStatus?.connection} onClick={syncCalendar}>
                   {saving ? "Syncing..." : "Sync now"}
                 </button>
@@ -1102,7 +1121,7 @@ export default function AdminClient({
                   Refresh Status
                 </button>
                 <div style={{ fontSize: "11px", color: "var(--ink-4)", marginTop: "12px", lineHeight: 1.5 }}>
-                  Sync is read-only. Google Calendar remains the source of truth; Persons stores linked Events and creates Interactions for known attendees.
+                  Sync is read-only and runs in small batches. The backfill range applies when there is no incremental Google sync token yet; after that, sync only asks Google for changes.
                 </div>
               </Panel>
             </section>
