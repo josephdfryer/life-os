@@ -85,6 +85,7 @@ type RuleRun = {
 }
 type CalendarStatus = {
   configured: boolean
+  redirectUri: string
   connection: {
     id: string
     status: string
@@ -1068,6 +1069,12 @@ export default function AdminClient({
                 {calendarStatus && !calendarStatus.configured && (
                   <div style={{ border: "1px solid var(--border)", borderRadius: "8px", background: "var(--bg)", padding: "12px", fontSize: "12px", color: "var(--ink-3)", lineHeight: 1.5 }}>
                     Google Calendar OAuth is not configured yet. Add `GOOGLE_CALENDAR_CLIENT_ID` and `GOOGLE_CALENDAR_CLIENT_SECRET` in Vercel, or reuse the existing Google OAuth client with Calendar API enabled.
+                  </div>
+                )}
+                {calendarStatus && (
+                  <div style={{ border: "1px solid var(--border)", borderRadius: "8px", background: "var(--bg)", padding: "10px", fontSize: "11px", color: "var(--ink-3)", lineHeight: 1.5, wordBreak: "break-word" }}>
+                    <div style={{ fontSize: "10px", color: "var(--ink-4)", marginBottom: "4px" }}>Google Cloud redirect URI</div>
+                    {calendarStatus.redirectUri}
                   </div>
                 )}
                 {calendarStatus?.connection ? (

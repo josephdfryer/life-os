@@ -78,6 +78,7 @@ export async function googleCalendarStatus(actor: AccessActor) {
 
   return {
     configured: googleCalendarConfigured(),
+    redirectUri: googleCalendarRedirectUri(null),
     connection: connection ? {
       ...connection,
       eventCount: connection._count.eventLinks,
@@ -559,8 +560,15 @@ function googleFetch(url: string, accessToken: string) {
   return fetch(url, { headers: { Authorization: `Bearer ${accessToken}` } })
 }
 
-function googleCalendarRedirectUri(origin: string) {
-  return `${origin.replace(/\/$/, "")}/api/calendar/google/callback`
+function googleCalendarRedirectUri(origin: string | null) {
+  const explicit = process.env.GOOGLE_CALENDAR_REDIRECT_URI
+  if (explicit) return explicit
+  const base = process.env.AUTH_URL
+    || process.env.NEXTAUTH_URL
+    || vercelProductionUrl()
+    || origin
+  if (!base) throw badRequest("Google Calendar redirect URI could not be resolved")
+  return `${base.replace(/\/$/, "")}/api/calendar/google/callback`
 }
 
 function signState(state: OAuthState) {
@@ -587,6 +595,11 @@ function calendarClientId() {
 
 function calendarClientSecret() {
   return process.env.GOOGLE_CALENDAR_CLIENT_SECRET || process.env.GOOGLE_CLIENT_SECRET || null
+}
+
+function vercelProductionUrl() {
+  const host = process.env.VERCEL_PROJECT_PRODUCTION_URL
+  return host ? `https://${host}` : null
 }
 
 function parseGoogleDate(value: GoogleCalendarEvent["start"] | GoogleCalendarEvent["end"]) {

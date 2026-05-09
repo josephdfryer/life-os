@@ -196,6 +196,7 @@ Runtime configuration:
 
 - `GOOGLE_CALENDAR_CLIENT_ID` and `GOOGLE_CALENDAR_CLIENT_SECRET`, or the existing `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` if that OAuth client has Calendar API access.
 - The Google OAuth redirect URI must include `/api/calendar/google/callback` on the deployed app origin.
+- `GOOGLE_CALENDAR_REDIRECT_URI` can pin the callback to one exact production URL, avoiding mismatches when someone opens a preview deployment or alternate Vercel alias.
 - The first sync reads the selected bounded window around the present; later syncs use Google's sync token when available.
 
 ### 4. Inbox review flow
