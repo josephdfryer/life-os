@@ -63,12 +63,14 @@ export async function GET(req: NextRequest) {
   }
 
   return NextResponse.json({
-    data: items.map((item: typeof items[number]) => ({
-      ...item,
-      candidatePerson: item.candidatePerson
-        ? { ...item.candidatePerson, emails: parseTags(item.candidatePerson.emails), phones: parseTags(item.candidatePerson.phones) }
-        : null,
-      ruleRuns: (runsByTarget.get(item.id) ?? []).map((run: typeof runs[number]) => ({
+    data: items.map((item: typeof items[number]) => {
+      const cp = item.candidatePerson
+      return {
+        ...item,
+        candidatePerson: cp
+          ? { ...cp, emails: parseTags(cp.emails), phones: parseTags(cp.phones) }
+          : null,
+        ruleRuns: (runsByTarget.get(item.id) ?? []).map((run: typeof runs[number]) => ({
         id: run.id,
         createdAt: run.createdAt,
         trigger: run.trigger,
@@ -80,7 +82,8 @@ export async function GET(req: NextRequest) {
         actionsApplied: parseJson(run.actionsApplied),
         rule: run.rule,
       })),
-    })),
+      }
+    }),
     total,
     limit,
     offset,
