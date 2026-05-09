@@ -91,13 +91,13 @@ export async function POST(req: NextRequest) {
     const cleaned = text.replace(/^```(?:json)?\n?/m, "").replace(/\n?```$/m, "").trim()
     const results = JSON.parse(cleaned) as Record<string, unknown>[]
 
-    const validIds = new Set(existingContacts.map(c => c.id))
+    const validIds = new Set(existingContacts.map((c: typeof existingContacts[number]) => c.id))
     for (const r of results) {
       if (r.matchedPersonId && !validIds.has(r.matchedPersonId as string)) {
         r.matchedPersonId = null
       }
       if (r.matchedPersonId) {
-        const match = existingContacts.find(c => c.id === r.matchedPersonId)
+        const match = existingContacts.find((c: typeof existingContacts[number]) => c.id === r.matchedPersonId)
         r.matchedPersonName = match ? `${match.first} ${match.last}` : null
         r.isNew = false
       }
