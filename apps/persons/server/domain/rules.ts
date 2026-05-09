@@ -4,6 +4,37 @@ import { badRequest, notFound, optionalString, requiredString } from "@/server/a
 import { auditAction, type DomainActor } from "./audit"
 import type { AccessActor } from "./access"
 
+// 30s TTL per workspace+trigger — Fluid Compute reuses instances, so this is
+// effective in production. Invalidated whenever a rule is written.
+const _rulesCache = new Map<string, { value: EvaluatedRule[]; expiresAt: number }>()
+
+function _invalidateRulesCache(workspaceId: string) {
+  for (const key of _rulesCache.keys()) {
+    if (key.startsWith(`${workspaceId}:`)) _rulesCache.delete(key)
+  }
+}
+
+async function _loadActiveRules(workspaceId: string, trigger: string): Promise<EvaluatedRule[]> {
+  const key = `${workspaceId}:${trigger}`
+  const cached = _rulesCache.get(key)
+  if (cached && cached.expiresAt > Date.now()) return cached.value
+
+  const rows = await db.rule.findMany({
+    where: { workspaceId, trigger, status: "active" },
+    orderBy: [{ priority: "asc" }, { createdAt: "asc" }],
+  })
+  const value: EvaluatedRule[] = rows.map(r => ({
+    id: r.id,
+    trigger: r.trigger,
+    mode: r.mode,
+    conditions: parseStoredArray(r.conditions) as RuleCondition[],
+    actions: parseStoredArray(r.actions) as RuleAction[],
+    stopProcessing: r.stopProcessing,
+  }))
+  _rulesCache.set(key, { value, expiresAt: Date.now() + 30_000 })
+  return value
+}
+
 type RuleCondition = {
   field: string
   operator: "equals" | "not_equals" | "contains" | "in" | "exists" | "not_exists"
@@ -78,6 +109,7 @@ export async function createRule(input: RuleInput, actor: AccessActor) {
     include: { createdByUser: true, runs: { orderBy: { createdAt: "desc" }, take: 1 } },
   })
 
+  _invalidateRulesCache(actor.workspaceId)
   await auditAction({
     actor: actor.actor,
     action: "rule.create",
@@ -108,6 +140,7 @@ export async function updateRule(id: string, input: RuleInput, actor: AccessActo
     data: patch,
     include: { createdByUser: true, runs: { orderBy: { createdAt: "desc" }, take: 1 } },
   })
+  _invalidateRulesCache(actor.workspaceId)
   await auditAction({
     actor: actor.actor,
     action: "rule.update",
@@ -122,6 +155,7 @@ export async function deleteRule(id: string, actor: AccessActor) {
   const existing = await db.rule.findFirst({ where: { id, workspaceId: actor.workspaceId }, select: { id: true } })
   if (!existing) throw notFound("Rule not found", { id })
   await db.rule.delete({ where: { id } })
+  _invalidateRulesCache(actor.workspaceId)
   await auditAction({ actor: actor.actor, action: "rule.delete", targetType: "rule", targetId: id })
 }
 
@@ -185,82 +219,64 @@ export async function testRule(input: { ruleId?: string | null; rule?: RuleInput
 
 export async function runRulesForTarget(input: RuleExecutionInput) {
   const workspaceId = input.actor?.workspaceId ?? "default-workspace"
-  const rules = await db.rule.findMany({
-    where: { workspaceId, trigger: input.trigger, status: "active" },
-    orderBy: [{ priority: "asc" }, { createdAt: "asc" }],
-  })
+  const rules = await _loadActiveRules(workspaceId, input.trigger)
 
-  const runs = []
+  const runData: Prisma.RuleRunCreateManyInput[] = []
   const actionsPlanned: RuleAction[] = []
   const actionsApplied: RuleAction[] = []
+  const auditEvents: Parameters<typeof auditAction>[0][] = []
+  let matched = false
   let blocked = false
 
-  for (const storedRule of rules) {
-    const rule: EvaluatedRule = {
-      id: storedRule.id,
-      trigger: storedRule.trigger,
-      mode: storedRule.mode,
-      conditions: parseStoredArray(storedRule.conditions) as RuleCondition[],
-      actions: parseStoredArray(storedRule.actions) as RuleAction[],
-      stopProcessing: storedRule.stopProcessing,
-    }
+  for (const rule of rules) {
     const result = evaluateRule(rule.conditions, rule.actions, input.payload)
-    const matched = result.matched
-    const planned = matched ? result.actionsPlanned : []
-    const applied = matched && input.apply && shouldApply(rule.mode)
+    const ruleMatched = result.matched
+    const planned = ruleMatched ? result.actionsPlanned : []
+    const applied = ruleMatched && input.apply && shouldApply(rule.mode)
       ? await applyRuleActions(planned, input)
       : []
-    const status = runStatus(rule.mode, matched, input.apply, applied.length)
+    const status = runStatus(rule.mode, ruleMatched, input.apply, applied.length)
 
-    if (matched && rule.mode === "block") blocked = true
+    if (ruleMatched && rule.mode === "block") blocked = true
+    if (ruleMatched) matched = true
     actionsPlanned.push(...planned)
     actionsApplied.push(...applied)
 
-    const run = await db.ruleRun.create({
-      data: {
-        ruleId: rule.id,
-        workspaceId,
-        trigger: input.trigger,
-        targetType: input.targetType ?? null,
-        targetId: input.targetId ?? null,
-        matched,
-        mode: rule.mode,
-        status,
-        input: JSON.stringify(input.payload),
-        actionsPlanned: JSON.stringify(planned),
-        actionsApplied: JSON.stringify(applied),
-        message: result.message,
-      },
+    runData.push({
+      ruleId: rule.id,
+      workspaceId,
+      trigger: input.trigger,
+      targetType: input.targetType ?? null,
+      targetId: input.targetId ?? null,
+      matched: ruleMatched,
+      mode: rule.mode,
+      status,
+      input: JSON.stringify(input.payload),
+      actionsPlanned: JSON.stringify(planned),
+      actionsApplied: JSON.stringify(applied),
+      message: result.message,
     })
-    runs.push(run)
 
-    if (matched) {
-      await auditAction({
+    if (ruleMatched) {
+      auditEvents.push({
         actor: input.actor,
         action: applied.length ? "rule.apply" : "rule.run",
         targetType: input.targetType ?? "rule",
         targetId: input.targetId ?? rule.id,
-        metadata: {
-          ruleId: rule.id,
-          trigger: input.trigger,
-          mode: rule.mode,
-          actionsApplied: applied.length,
-        },
+        metadata: { ruleId: rule.id, trigger: input.trigger, mode: rule.mode, actionsApplied: applied.length },
       })
     }
 
-    if (matched && rule.stopProcessing) break
+    if (ruleMatched && rule.stopProcessing) break
   }
 
-  return {
-    trigger: input.trigger,
-    matched: runs.some(run => run.matched),
-    blocked,
-    runCount: runs.length,
-    runs,
-    actionsPlanned,
-    actionsApplied,
-  }
+  // Batch all writes: 1 RTT instead of N
+  await Promise.all([
+    runData.length ? db.ruleRun.createMany({ data: runData }) : Promise.resolve(),
+    ...auditEvents.map(e => auditAction(e)),
+  ])
+
+  return { trigger: input.trigger, matched, blocked, runCount: runData.length, actionsPlanned, actionsApplied }
 }
 
 export type RuleRunFilters = {
