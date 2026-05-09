@@ -217,11 +217,12 @@ flowchart TD
   GmailMessages --> Link["GmailMessageLink by mailbox + Gmail message id"]
   GmailMessages --> Match["Match senders and recipients to People by email"]
   Match -->|Known Person| Interaction["Create or append email Interaction"]
-  Match -->|No Person match| Inbox["Stage email in Inbox for review"]
+  Match -->|No Person match, default| Skip["Skip unknown email"]
+  Match -->|No Person match, opt in| Inbox["Stage email in Inbox for review"]
   Sync --> Audit["Write gmail.sync AuditLog"]
 ```
 
-Plain English: Gmail remains read-only. Persons imports messages into Interactions when a sender or recipient already matches a Person email in the current workspace. Messages without a known Person become Inbox review items, so the user can attach them or create a new Person later. First-time sync uses the selected Admin backfill range and processes messages in small batches. Later syncs use Gmail's history API via `GmailConnection.historyId`; if Gmail says that history cursor is too old, Persons falls back to a bounded full sync.
+Plain English: Gmail remains read-only. Persons imports messages into Interactions when a sender or recipient already matches a Person email in the current workspace. The default sync mode is "Known People only": unknown senders and recipients are skipped and do not enter Inbox. The user can explicitly switch to "Stage unmatched in Inbox" when they want to review unknown emails and attach or create People later. First-time sync uses the selected Admin backfill range, defaults to 30 days, includes an all-time option, and processes messages in small batches. Later syncs use Gmail's history API via `GmailConnection.historyId`; if Gmail says that history cursor is too old, Persons falls back to a bounded full sync.
 
 Runtime configuration:
 

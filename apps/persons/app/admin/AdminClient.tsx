@@ -145,6 +145,7 @@ const GMAIL_BACKFILL_OPTIONS = [
   { value: "365", label: "Past year" },
   { value: "730", label: "Past 2 years" },
   { value: "3650", label: "Past 10 years" },
+  { value: "36500", label: "All time" },
 ] as const
 
 const DEFAULT_CONDITIONS = `[
@@ -255,6 +256,7 @@ export default function AdminClient({
   const [gmailStatus, setGmailStatus] = useState<GmailStatus | null>(null)
   const [gmailSyncResult, setGmailSyncResult] = useState<string | null>(null)
   const [gmailBackfillDays, setGmailBackfillDays] = useState("30")
+  const [gmailUnmatchedMode, setGmailUnmatchedMode] = useState<"skip" | "stage">("skip")
   const [tab, setTab] = useState<Tab>("apiKeys")
   const [loading, setLoading] = useState(false)
   const [saving, setSaving] = useState(false)
@@ -448,7 +450,7 @@ export default function AdminClient({
       const res = await fetch("/api/gmail/google/sync", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ backfillDays: Number(gmailBackfillDays) }),
+        body: JSON.stringify({ backfillDays: Number(gmailBackfillDays), unmatchedMode: gmailUnmatchedMode }),
       })
       const data = await res.json()
       if (!res.ok) throw new Error(data.error?.message || data.error || "Could not sync Gmail")
@@ -1257,6 +1259,15 @@ export default function AdminClient({
                   onChange={setGmailBackfillDays}
                   options={[...GMAIL_BACKFILL_OPTIONS]}
                 />
+                <SelectOptionField
+                  label="Unmatched email"
+                  value={gmailUnmatchedMode}
+                  onChange={value => setGmailUnmatchedMode(value === "stage" ? "stage" : "skip")}
+                  options={[
+                    { value: "skip", label: "Known People only" },
+                    { value: "stage", label: "Stage unmatched in Inbox" },
+                  ]}
+                />
                 <button style={primaryButtonStyle} disabled={saving || !gmailStatus?.connection} onClick={syncGmail}>
                   {saving ? "Syncing..." : "Sync now"}
                 </button>
@@ -1264,7 +1275,7 @@ export default function AdminClient({
                   Refresh Status
                 </button>
                 <div style={{ fontSize: "11px", color: "var(--ink-4)", marginTop: "12px", lineHeight: 1.5 }}>
-                  Sync is read-only, batched, and uses Gmail history after the first import. Matched emails become Interactions; unmatched emails go to Inbox.
+                  Sync is read-only, batched, and uses Gmail history after the first import. By default, only email involving existing People is imported.
                 </div>
               </Panel>
             </section>

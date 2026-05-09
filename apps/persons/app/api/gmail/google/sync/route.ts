@@ -7,7 +7,7 @@ export async function POST(req: NextRequest) {
   try {
     const actor = await requireAccess("interactions.write")
     const body = await safeJson(req)
-    return json(await syncGmail(actor, { backfillDays: body.backfillDays }))
+    return json(await syncGmail(actor, { backfillDays: body.backfillDays, unmatchedMode: body.unmatchedMode }))
   } catch (error) {
     return handleRouteError(error)
   }
@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
 async function safeJson(req: NextRequest) {
   try {
     const body = await req.json()
-    return typeof body === "object" && body ? body as { backfillDays?: number | null } : {}
+    return typeof body === "object" && body ? body as { backfillDays?: number | null; unmatchedMode?: "skip" | "stage" | null } : {}
   } catch {
     return {}
   }

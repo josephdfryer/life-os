@@ -13,6 +13,7 @@ const GMAIL_SCOPE = "https://www.googleapis.com/auth/gmail.readonly"
 const SOURCE = "gmail"
 const DEFAULT_BACKFILL_DAYS = 30
 const MAX_BACKFILL_DAYS = 3650
+const ALL_TIME_BACKFILL_DAYS = 36500
 const GMAIL_PAGE_SIZE = 100
 const DB_BATCH_SIZE = 25
 
@@ -89,6 +90,7 @@ type ParsedMessage = {
 
 type SyncOptions = {
   backfillDays?: number | null
+  unmatchedMode?: "skip" | "stage" | null
 }
 
 type SyncStats = {
@@ -101,6 +103,7 @@ type SyncStats = {
   batches: number
   backfillDays: number
   incremental: boolean
+  unmatchedMode: "skip" | "stage"
 }
 
 export function gmailConfigured() {
@@ -219,6 +222,7 @@ export async function syncGmail(actor: AccessActor, options: SyncOptions = {}) {
 
   const accessToken = await usableAccessToken(connection)
   const backfillDays = normalizeBackfillDays(options.backfillDays)
+  const unmatchedMode = options.unmatchedMode === "stage" ? "stage" : "skip"
 
   try {
     const peopleByEmail = await peopleEmailIndex(actor.workspaceId)
@@ -232,6 +236,7 @@ export async function syncGmail(actor: AccessActor, options: SyncOptions = {}) {
       batches: 0,
       backfillDays,
       incremental: Boolean(connection.historyId),
+      unmatchedMode,
     }
 
     const listed = connection.historyId
@@ -240,6 +245,7 @@ export async function syncGmail(actor: AccessActor, options: SyncOptions = {}) {
         actor: actor.actor,
         peopleByEmail,
         stats,
+        unmatchedMode,
       })
       : await syncMessagePages(accessToken, {
         connection,
@@ -247,6 +253,7 @@ export async function syncGmail(actor: AccessActor, options: SyncOptions = {}) {
         peopleByEmail,
         stats,
         backfillDays,
+        unmatchedMode,
       })
 
     const profile = await fetchGmailProfile(accessToken)
@@ -283,6 +290,7 @@ async function syncMessagePages(
     peopleByEmail: Map<string, { id: string; first: string; last: string }>
     stats: SyncStats
     backfillDays: number
+    unmatchedMode: "skip" | "stage"
   }
 ) {
   let pageToken: string | undefined
@@ -319,6 +327,7 @@ async function syncHistoryPages(
     actor: DomainActor
     peopleByEmail: Map<string, { id: string; first: string; last: string }>
     stats: SyncStats
+    unmatchedMode: "skip" | "stage"
   }
 ) {
   let pageToken: string | undefined
@@ -371,6 +380,7 @@ async function processMessageBatch(
     peopleByEmail: Map<string, { id: string; first: string; last: string }>
     stats: SyncStats
     messageIds: string[]
+    unmatchedMode: "skip" | "stage"
   }
 ) {
   let newestHistoryId: string | null = null
@@ -391,6 +401,7 @@ async function processMessageBatch(
       mailboxEmail: input.connection.accountEmail,
       peopleByEmail: input.peopleByEmail,
       message,
+      unmatchedMode: input.unmatchedMode,
     })
     input.stats.createdInteractions += result.createdInteractions
     input.stats.updatedInteractions += result.updatedInteractions
@@ -408,6 +419,7 @@ async function importMessage(input: {
   mailboxEmail: string | null
   peopleByEmail: Map<string, { id: string; first: string; last: string }>
   message: ParsedMessage
+  unmatchedMode: "skip" | "stage"
 }) {
   const matchedPeople = matchedPeopleForMessage(input.message, input.peopleByEmail, input.mailboxEmail)
   const contact = primaryContact(input.message, input.mailboxEmail)
@@ -437,7 +449,7 @@ async function importMessage(input: {
       else if (result.updated) updatedInteractions += 1
       else skipped += 1
     }
-  } else {
+  } else if (input.unmatchedMode === "stage") {
     const stagedItem = await stageRecord({
       source: SOURCE,
       sourceId: input.message.id,
@@ -456,6 +468,8 @@ async function importMessage(input: {
     }, input.actor)
     stagedItemId = stagedItem.id
     staged += 1
+  } else {
+    skipped += 1
   }
 
   await db.gmailMessageLink.upsert({
@@ -473,7 +487,7 @@ async function importMessage(input: {
       historyId: input.message.historyId,
       interactionId: firstInteractionId,
       stagedItemId,
-      status: matchedPeople.length ? "matched" : "staged",
+      status: matchedPeople.length ? "matched" : input.unmatchedMode === "stage" ? "staged" : "skipped",
       lastSeenAt: new Date(),
     },
     create: {
@@ -486,7 +500,7 @@ async function importMessage(input: {
       historyId: input.message.historyId,
       interactionId: firstInteractionId,
       stagedItemId,
-      status: matchedPeople.length ? "matched" : "staged",
+      status: matchedPeople.length ? "matched" : input.unmatchedMode === "stage" ? "staged" : "skipped",
       lastSeenAt: new Date(),
     },
   })
@@ -767,6 +781,7 @@ function normalizeBackfillDays(value: number | null | undefined) {
   if (typeof value !== "number" || !Number.isFinite(value)) return DEFAULT_BACKFILL_DAYS
   const days = Math.round(value)
   if (days < 1) return DEFAULT_BACKFILL_DAYS
+  if (days >= ALL_TIME_BACKFILL_DAYS) return ALL_TIME_BACKFILL_DAYS
   return Math.min(days, MAX_BACKFILL_DAYS)
 }
 
