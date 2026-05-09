@@ -36,6 +36,8 @@ model Workspace {
   auditLogs      AuditLog[]
   calendarConnections CalendarConnection[]
   calendarEventLinks  CalendarEventLink[]
+  gmailConnections    GmailConnection[]
+  gmailMessageLinks   GmailMessageLink[]
 
   @@index([ownerUserId])
   @@index([status])
@@ -142,6 +144,7 @@ model User {
   ownedWorkspaces      Workspace[]     @relation("WorkspaceOwner")
   approvedEmailsSent   ApprovedEmail[] @relation("ApprovedEmailInviter")
   calendarConnections  CalendarConnection[]
+  gmailConnections     GmailConnection[]
 
   @@index([email])
   @@index([status])
@@ -304,6 +307,63 @@ model CalendarEventLink {
 }
 
 // ─────────────────────────────────────────────
+// INTEGRATIONS: Gmail
+// ─────────────────────────────────────────────
+
+model GmailConnection {
+  id             String   @id @default(cuid())
+  workspaceId    String   @default("default-workspace")
+  workspace      Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  userId         String
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  provider       String   @default("google")
+  status         String   @default("active")
+  accountEmail   String?
+  mailboxId      String   @default("me")
+  accessToken    String?
+  refreshToken   String?
+  expiresAt      DateTime?
+  scope          String?
+  historyId      String?
+  lastSyncedAt   DateTime?
+  lastError      String?
+  messageLinks   GmailMessageLink[]
+
+  @@unique([workspaceId, provider, mailboxId])
+  @@index([userId])
+  @@index([workspaceId, status])
+}
+
+model GmailMessageLink {
+  id              String   @id @default(cuid())
+  workspaceId     String   @default("default-workspace")
+  workspace       Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  connectionId    String
+  connection      GmailConnection @relation(fields: [connectionId], references: [id], onDelete: Cascade)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  provider        String   @default("google")
+  mailboxId       String
+  externalMessageId String
+  threadId        String?
+  historyId       String?
+  interactionId   String?
+  interaction     Interaction? @relation(fields: [interactionId], references: [id], onDelete: SetNull)
+  stagedItemId    String?
+  stagedItem      StagedInteraction? @relation(fields: [stagedItemId], references: [id], onDelete: SetNull)
+  status          String   @default("active")
+  lastSeenAt      DateTime?
+
+  @@unique([workspaceId, provider, mailboxId, externalMessageId])
+  @@index([connectionId])
+  @@index([interactionId])
+  @@index([stagedItemId])
+  @@index([workspaceId, status])
+}
+
+// ─────────────────────────────────────────────
 // RULES: deterministic policy and enrichment engine
 // ─────────────────────────────────────────────
 
@@ -388,6 +448,7 @@ model StagedInteraction {
   acceptedAt        DateTime?
   acceptedPersonId  String?
   interactionId     String?
+  gmailLinks        GmailMessageLink[]
 
   @@unique([workspaceId, source, sourceId])
   @@index([status, createdAt])
@@ -450,6 +511,7 @@ model Interaction {
   sourceFileId    String?
   sourceFile      ImportedFile?     @relation(fields: [sourceFileId], references: [id])
   itemInteractions ItemInteraction[]
+  gmailLinks       GmailMessageLink[]
 
   @@index([personId, timestamp(sort: Desc)])
   @@index([workspaceId, timestamp(sort: Desc)])

@@ -65,6 +65,8 @@ export const ModelName = {
   AuditLog: 'AuditLog',
   CalendarConnection: 'CalendarConnection',
   CalendarEventLink: 'CalendarEventLink',
+  GmailConnection: 'GmailConnection',
+  GmailMessageLink: 'GmailMessageLink',
   Rule: 'Rule',
   RuleRun: 'RuleRun',
   StagedInteraction: 'StagedInteraction',
@@ -295,6 +297,48 @@ export const CalendarEventLinkScalarFieldEnum = {
 } as const
 
 export type CalendarEventLinkScalarFieldEnum = (typeof CalendarEventLinkScalarFieldEnum)[keyof typeof CalendarEventLinkScalarFieldEnum]
+
+
+export const GmailConnectionScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  userId: 'userId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  provider: 'provider',
+  status: 'status',
+  accountEmail: 'accountEmail',
+  mailboxId: 'mailboxId',
+  accessToken: 'accessToken',
+  refreshToken: 'refreshToken',
+  expiresAt: 'expiresAt',
+  scope: 'scope',
+  historyId: 'historyId',
+  lastSyncedAt: 'lastSyncedAt',
+  lastError: 'lastError'
+} as const
+
+export type GmailConnectionScalarFieldEnum = (typeof GmailConnectionScalarFieldEnum)[keyof typeof GmailConnectionScalarFieldEnum]
+
+
+export const GmailMessageLinkScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  connectionId: 'connectionId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  provider: 'provider',
+  mailboxId: 'mailboxId',
+  externalMessageId: 'externalMessageId',
+  threadId: 'threadId',
+  historyId: 'historyId',
+  interactionId: 'interactionId',
+  stagedItemId: 'stagedItemId',
+  status: 'status',
+  lastSeenAt: 'lastSeenAt'
+} as const
+
+export type GmailMessageLinkScalarFieldEnum = (typeof GmailMessageLinkScalarFieldEnum)[keyof typeof GmailMessageLinkScalarFieldEnum]
 
 
 export const RuleScalarFieldEnum = {

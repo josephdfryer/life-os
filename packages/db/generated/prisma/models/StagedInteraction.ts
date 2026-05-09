@@ -362,6 +362,7 @@ export type StagedInteractionWhereInput = {
   interactionId?: Prisma.StringNullableFilter<"StagedInteraction"> | string | null
   workspace?: Prisma.XOR<Prisma.WorkspaceScalarRelationFilter, Prisma.WorkspaceWhereInput>
   candidatePerson?: Prisma.XOR<Prisma.PersonNullableScalarRelationFilter, Prisma.PersonWhereInput> | null
+  gmailLinks?: Prisma.GmailMessageLinkListRelationFilter
 }
 
 export type StagedInteractionOrderByWithRelationInput = {
@@ -390,6 +391,7 @@ export type StagedInteractionOrderByWithRelationInput = {
   interactionId?: Prisma.SortOrderInput | Prisma.SortOrder
   workspace?: Prisma.WorkspaceOrderByWithRelationInput
   candidatePerson?: Prisma.PersonOrderByWithRelationInput
+  gmailLinks?: Prisma.GmailMessageLinkOrderByRelationAggregateInput
 }
 
 export type StagedInteractionWhereUniqueInput = Prisma.AtLeast<{
@@ -422,6 +424,7 @@ export type StagedInteractionWhereUniqueInput = Prisma.AtLeast<{
   interactionId?: Prisma.StringNullableFilter<"StagedInteraction"> | string | null
   workspace?: Prisma.XOR<Prisma.WorkspaceScalarRelationFilter, Prisma.WorkspaceWhereInput>
   candidatePerson?: Prisma.XOR<Prisma.PersonNullableScalarRelationFilter, Prisma.PersonWhereInput> | null
+  gmailLinks?: Prisma.GmailMessageLinkListRelationFilter
 }, "id" | "workspaceId_source_sourceId">
 
 export type StagedInteractionOrderByWithAggregationInput = {
@@ -508,6 +511,7 @@ export type StagedInteractionCreateInput = {
   interactionId?: string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutStagedItemsInput
   candidatePerson?: Prisma.PersonCreateNestedOneWithoutStagedInteractionsInput
+  gmailLinks?: Prisma.GmailMessageLinkCreateNestedManyWithoutStagedItemInput
 }
 
 export type StagedInteractionUncheckedCreateInput = {
@@ -534,6 +538,7 @@ export type StagedInteractionUncheckedCreateInput = {
   acceptedAt?: Date | string | null
   acceptedPersonId?: string | null
   interactionId?: string | null
+  gmailLinks?: Prisma.GmailMessageLinkUncheckedCreateNestedManyWithoutStagedItemInput
 }
 
 export type StagedInteractionUpdateInput = {
@@ -560,6 +565,7 @@ export type StagedInteractionUpdateInput = {
   interactionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutStagedItemsNestedInput
   candidatePerson?: Prisma.PersonUpdateOneWithoutStagedInteractionsNestedInput
+  gmailLinks?: Prisma.GmailMessageLinkUpdateManyWithoutStagedItemNestedInput
 }
 
 export type StagedInteractionUncheckedUpdateInput = {
@@ -586,6 +592,7 @@ export type StagedInteractionUncheckedUpdateInput = {
   acceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   acceptedPersonId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   interactionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gmailLinks?: Prisma.GmailMessageLinkUncheckedUpdateManyWithoutStagedItemNestedInput
 }
 
 export type StagedInteractionCreateManyInput = {
@@ -672,6 +679,11 @@ export type StagedInteractionListRelationFilter = {
 
 export type StagedInteractionOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type StagedInteractionNullableScalarRelationFilter = {
+  is?: Prisma.StagedInteractionWhereInput | null
+  isNot?: Prisma.StagedInteractionWhereInput | null
 }
 
 export type StagedInteractionWorkspaceIdSourceSourceIdCompoundUniqueInput = {
@@ -850,6 +862,22 @@ export type StagedInteractionUncheckedUpdateManyWithoutCandidatePersonNestedInpu
   deleteMany?: Prisma.StagedInteractionScalarWhereInput | Prisma.StagedInteractionScalarWhereInput[]
 }
 
+export type StagedInteractionCreateNestedOneWithoutGmailLinksInput = {
+  create?: Prisma.XOR<Prisma.StagedInteractionCreateWithoutGmailLinksInput, Prisma.StagedInteractionUncheckedCreateWithoutGmailLinksInput>
+  connectOrCreate?: Prisma.StagedInteractionCreateOrConnectWithoutGmailLinksInput
+  connect?: Prisma.StagedInteractionWhereUniqueInput
+}
+
+export type StagedInteractionUpdateOneWithoutGmailLinksNestedInput = {
+  create?: Prisma.XOR<Prisma.StagedInteractionCreateWithoutGmailLinksInput, Prisma.StagedInteractionUncheckedCreateWithoutGmailLinksInput>
+  connectOrCreate?: Prisma.StagedInteractionCreateOrConnectWithoutGmailLinksInput
+  upsert?: Prisma.StagedInteractionUpsertWithoutGmailLinksInput
+  disconnect?: Prisma.StagedInteractionWhereInput | boolean
+  delete?: Prisma.StagedInteractionWhereInput | boolean
+  connect?: Prisma.StagedInteractionWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.StagedInteractionUpdateToOneWithWhereWithoutGmailLinksInput, Prisma.StagedInteractionUpdateWithoutGmailLinksInput>, Prisma.StagedInteractionUncheckedUpdateWithoutGmailLinksInput>
+}
+
 export type NullableFloatFieldUpdateOperationsInput = {
   set?: number | null
   increment?: number
@@ -881,6 +909,7 @@ export type StagedInteractionCreateWithoutWorkspaceInput = {
   acceptedPersonId?: string | null
   interactionId?: string | null
   candidatePerson?: Prisma.PersonCreateNestedOneWithoutStagedInteractionsInput
+  gmailLinks?: Prisma.GmailMessageLinkCreateNestedManyWithoutStagedItemInput
 }
 
 export type StagedInteractionUncheckedCreateWithoutWorkspaceInput = {
@@ -906,6 +935,7 @@ export type StagedInteractionUncheckedCreateWithoutWorkspaceInput = {
   acceptedAt?: Date | string | null
   acceptedPersonId?: string | null
   interactionId?: string | null
+  gmailLinks?: Prisma.GmailMessageLinkUncheckedCreateNestedManyWithoutStagedItemInput
 }
 
 export type StagedInteractionCreateOrConnectWithoutWorkspaceInput = {
@@ -985,6 +1015,7 @@ export type StagedInteractionCreateWithoutCandidatePersonInput = {
   acceptedPersonId?: string | null
   interactionId?: string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutStagedItemsInput
+  gmailLinks?: Prisma.GmailMessageLinkCreateNestedManyWithoutStagedItemInput
 }
 
 export type StagedInteractionUncheckedCreateWithoutCandidatePersonInput = {
@@ -1010,6 +1041,7 @@ export type StagedInteractionUncheckedCreateWithoutCandidatePersonInput = {
   acceptedAt?: Date | string | null
   acceptedPersonId?: string | null
   interactionId?: string | null
+  gmailLinks?: Prisma.GmailMessageLinkUncheckedCreateNestedManyWithoutStagedItemInput
 }
 
 export type StagedInteractionCreateOrConnectWithoutCandidatePersonInput = {
@@ -1035,6 +1067,126 @@ export type StagedInteractionUpdateWithWhereUniqueWithoutCandidatePersonInput = 
 export type StagedInteractionUpdateManyWithWhereWithoutCandidatePersonInput = {
   where: Prisma.StagedInteractionScalarWhereInput
   data: Prisma.XOR<Prisma.StagedInteractionUpdateManyMutationInput, Prisma.StagedInteractionUncheckedUpdateManyWithoutCandidatePersonInput>
+}
+
+export type StagedInteractionCreateWithoutGmailLinksInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  source: string
+  sourceId: string
+  itemType?: string
+  status?: string
+  contactName?: string | null
+  contactEmail?: string | null
+  contactPhone?: string | null
+  confidence?: number | null
+  matchReason?: string | null
+  type?: string
+  timestamp: Date | string
+  summary?: string | null
+  body?: string | null
+  direction?: string | null
+  metadata?: string | null
+  acceptedAt?: Date | string | null
+  acceptedPersonId?: string | null
+  interactionId?: string | null
+  workspace?: Prisma.WorkspaceCreateNestedOneWithoutStagedItemsInput
+  candidatePerson?: Prisma.PersonCreateNestedOneWithoutStagedInteractionsInput
+}
+
+export type StagedInteractionUncheckedCreateWithoutGmailLinksInput = {
+  id?: string
+  workspaceId?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  source: string
+  sourceId: string
+  itemType?: string
+  status?: string
+  contactName?: string | null
+  contactEmail?: string | null
+  contactPhone?: string | null
+  candidatePersonId?: string | null
+  confidence?: number | null
+  matchReason?: string | null
+  type?: string
+  timestamp: Date | string
+  summary?: string | null
+  body?: string | null
+  direction?: string | null
+  metadata?: string | null
+  acceptedAt?: Date | string | null
+  acceptedPersonId?: string | null
+  interactionId?: string | null
+}
+
+export type StagedInteractionCreateOrConnectWithoutGmailLinksInput = {
+  where: Prisma.StagedInteractionWhereUniqueInput
+  create: Prisma.XOR<Prisma.StagedInteractionCreateWithoutGmailLinksInput, Prisma.StagedInteractionUncheckedCreateWithoutGmailLinksInput>
+}
+
+export type StagedInteractionUpsertWithoutGmailLinksInput = {
+  update: Prisma.XOR<Prisma.StagedInteractionUpdateWithoutGmailLinksInput, Prisma.StagedInteractionUncheckedUpdateWithoutGmailLinksInput>
+  create: Prisma.XOR<Prisma.StagedInteractionCreateWithoutGmailLinksInput, Prisma.StagedInteractionUncheckedCreateWithoutGmailLinksInput>
+  where?: Prisma.StagedInteractionWhereInput
+}
+
+export type StagedInteractionUpdateToOneWithWhereWithoutGmailLinksInput = {
+  where?: Prisma.StagedInteractionWhereInput
+  data: Prisma.XOR<Prisma.StagedInteractionUpdateWithoutGmailLinksInput, Prisma.StagedInteractionUncheckedUpdateWithoutGmailLinksInput>
+}
+
+export type StagedInteractionUpdateWithoutGmailLinksInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  source?: Prisma.StringFieldUpdateOperationsInput | string
+  sourceId?: Prisma.StringFieldUpdateOperationsInput | string
+  itemType?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  contactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  confidence?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  matchReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  body?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  acceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  acceptedPersonId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  interactionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutStagedItemsNestedInput
+  candidatePerson?: Prisma.PersonUpdateOneWithoutStagedInteractionsNestedInput
+}
+
+export type StagedInteractionUncheckedUpdateWithoutGmailLinksInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  source?: Prisma.StringFieldUpdateOperationsInput | string
+  sourceId?: Prisma.StringFieldUpdateOperationsInput | string
+  itemType?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  contactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  candidatePersonId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  confidence?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  matchReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  body?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  acceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  acceptedPersonId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  interactionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type StagedInteractionCreateManyWorkspaceInput = {
@@ -1085,6 +1237,7 @@ export type StagedInteractionUpdateWithoutWorkspaceInput = {
   acceptedPersonId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   interactionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   candidatePerson?: Prisma.PersonUpdateOneWithoutStagedInteractionsNestedInput
+  gmailLinks?: Prisma.GmailMessageLinkUpdateManyWithoutStagedItemNestedInput
 }
 
 export type StagedInteractionUncheckedUpdateWithoutWorkspaceInput = {
@@ -1110,6 +1263,7 @@ export type StagedInteractionUncheckedUpdateWithoutWorkspaceInput = {
   acceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   acceptedPersonId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   interactionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gmailLinks?: Prisma.GmailMessageLinkUncheckedUpdateManyWithoutStagedItemNestedInput
 }
 
 export type StagedInteractionUncheckedUpdateManyWithoutWorkspaceInput = {
@@ -1185,6 +1339,7 @@ export type StagedInteractionUpdateWithoutCandidatePersonInput = {
   acceptedPersonId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   interactionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutStagedItemsNestedInput
+  gmailLinks?: Prisma.GmailMessageLinkUpdateManyWithoutStagedItemNestedInput
 }
 
 export type StagedInteractionUncheckedUpdateWithoutCandidatePersonInput = {
@@ -1210,6 +1365,7 @@ export type StagedInteractionUncheckedUpdateWithoutCandidatePersonInput = {
   acceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   acceptedPersonId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   interactionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gmailLinks?: Prisma.GmailMessageLinkUncheckedUpdateManyWithoutStagedItemNestedInput
 }
 
 export type StagedInteractionUncheckedUpdateManyWithoutCandidatePersonInput = {
@@ -1238,6 +1394,35 @@ export type StagedInteractionUncheckedUpdateManyWithoutCandidatePersonInput = {
 }
 
 
+/**
+ * Count Type StagedInteractionCountOutputType
+ */
+
+export type StagedInteractionCountOutputType = {
+  gmailLinks: number
+}
+
+export type StagedInteractionCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  gmailLinks?: boolean | StagedInteractionCountOutputTypeCountGmailLinksArgs
+}
+
+/**
+ * StagedInteractionCountOutputType without action
+ */
+export type StagedInteractionCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the StagedInteractionCountOutputType
+   */
+  select?: Prisma.StagedInteractionCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * StagedInteractionCountOutputType without action
+ */
+export type StagedInteractionCountOutputTypeCountGmailLinksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.GmailMessageLinkWhereInput
+}
+
 
 export type StagedInteractionSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1265,6 +1450,8 @@ export type StagedInteractionSelect<ExtArgs extends runtime.Types.Extensions.Int
   interactionId?: boolean
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   candidatePerson?: boolean | Prisma.StagedInteraction$candidatePersonArgs<ExtArgs>
+  gmailLinks?: boolean | Prisma.StagedInteraction$gmailLinksArgs<ExtArgs>
+  _count?: boolean | Prisma.StagedInteractionCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["stagedInteraction"]>
 
 export type StagedInteractionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1353,6 +1540,8 @@ export type StagedInteractionOmit<ExtArgs extends runtime.Types.Extensions.Inter
 export type StagedInteractionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   candidatePerson?: boolean | Prisma.StagedInteraction$candidatePersonArgs<ExtArgs>
+  gmailLinks?: boolean | Prisma.StagedInteraction$gmailLinksArgs<ExtArgs>
+  _count?: boolean | Prisma.StagedInteractionCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type StagedInteractionIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
@@ -1368,6 +1557,7 @@ export type $StagedInteractionPayload<ExtArgs extends runtime.Types.Extensions.I
   objects: {
     workspace: Prisma.$WorkspacePayload<ExtArgs>
     candidatePerson: Prisma.$PersonPayload<ExtArgs> | null
+    gmailLinks: Prisma.$GmailMessageLinkPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1789,6 +1979,7 @@ export interface Prisma__StagedInteractionClient<T, Null = never, ExtArgs extend
   readonly [Symbol.toStringTag]: "PrismaPromise"
   workspace<T extends Prisma.WorkspaceDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WorkspaceDefaultArgs<ExtArgs>>): Prisma.Prisma__WorkspaceClient<runtime.Types.Result.GetResult<Prisma.$WorkspacePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   candidatePerson<T extends Prisma.StagedInteraction$candidatePersonArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.StagedInteraction$candidatePersonArgs<ExtArgs>>): Prisma.Prisma__PersonClient<runtime.Types.Result.GetResult<Prisma.$PersonPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  gmailLinks<T extends Prisma.StagedInteraction$gmailLinksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.StagedInteraction$gmailLinksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$GmailMessageLinkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2256,6 +2447,30 @@ export type StagedInteraction$candidatePersonArgs<ExtArgs extends runtime.Types.
    */
   include?: Prisma.PersonInclude<ExtArgs> | null
   where?: Prisma.PersonWhereInput
+}
+
+/**
+ * StagedInteraction.gmailLinks
+ */
+export type StagedInteraction$gmailLinksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the GmailMessageLink
+   */
+  select?: Prisma.GmailMessageLinkSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the GmailMessageLink
+   */
+  omit?: Prisma.GmailMessageLinkOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.GmailMessageLinkInclude<ExtArgs> | null
+  where?: Prisma.GmailMessageLinkWhereInput
+  orderBy?: Prisma.GmailMessageLinkOrderByWithRelationInput | Prisma.GmailMessageLinkOrderByWithRelationInput[]
+  cursor?: Prisma.GmailMessageLinkWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.GmailMessageLinkScalarFieldEnum | Prisma.GmailMessageLinkScalarFieldEnum[]
 }
 
 /**

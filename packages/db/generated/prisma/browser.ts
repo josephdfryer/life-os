@@ -88,6 +88,16 @@ export type CalendarConnection = Prisma.CalendarConnectionModel
  */
 export type CalendarEventLink = Prisma.CalendarEventLinkModel
 /**
+ * Model GmailConnection
+ *
+ */
+export type GmailConnection = Prisma.GmailConnectionModel
+/**
+ * Model GmailMessageLink
+ *
+ */
+export type GmailMessageLink = Prisma.GmailMessageLinkModel
+/**
  * Model Rule
  *
  */

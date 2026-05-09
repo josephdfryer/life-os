@@ -19,6 +19,7 @@ flowchart LR
     Human["You in the browser"]
     IMessages["iMessage chat.db on your Mac"]
     GoogleCalendar["Google Calendar"]
+    Gmail["Gmail"]
     Files["Imported files and transcripts"]
     ExternalTools["External scripts, automations, future apps"]
   end
@@ -30,6 +31,7 @@ flowchart LR
     PublicAPI["Headless API /api/v1"]
     Watcher["iMessage watcher script"]
     CalendarOAuth["Google Calendar OAuth + sync"]
+    GmailOAuth["Gmail OAuth + sync"]
   end
 
   subgraph Plumbing["Business plumbing"]
@@ -45,6 +47,7 @@ flowchart LR
     Events["Events"]
     Plans["Plans"]
     CalendarDB["Calendar connections and event links"]
+    GmailDB["Gmail connections and message links"]
     Inbox["Inbox staging"]
     FilesDB["Imported files"]
     AccessDB["Users, roles, API keys"]
@@ -57,6 +60,7 @@ flowchart LR
   Human --> AdminUI
   IMessages --> Watcher
   GoogleCalendar --> CalendarOAuth
+  Gmail --> GmailOAuth
   Files --> ImportUI
   ExternalTools --> PublicAPI
 
@@ -66,6 +70,7 @@ flowchart LR
   PublicAPI --> Access
   Watcher --> Commands
   CalendarOAuth --> Commands
+  GmailOAuth --> Commands
 
   Access --> Commands
   Commands --> Rules
@@ -78,6 +83,7 @@ flowchart LR
   Commands --> Events
   Commands --> Plans
   Commands --> CalendarDB
+  Commands --> GmailDB
   Commands --> Inbox
   Commands --> FilesDB
   Access --> AccessDB
@@ -198,6 +204,30 @@ Runtime configuration:
 - The Google OAuth redirect URI must include `/api/calendar/google/callback` on the deployed app origin.
 - `GOOGLE_CALENDAR_REDIRECT_URI` can pin the callback to one exact production URL, avoiding mismatches when someone opens a preview deployment or alternate Vercel alias.
 - The first sync reads the selected bounded window around the present; later syncs use Google's sync token when available.
+
+### 3c. Gmail sync
+
+```mermaid
+flowchart TD
+  Admin["Admin Gmail tab"] --> Connect["Connect Gmail"]
+  Connect --> OAuth["Google OAuth consent"]
+  OAuth --> Connection["GmailConnection stores tokens and Gmail historyId"]
+  Admin --> Sync["Sync now"]
+  Sync --> GmailMessages["Read Gmail messages"]
+  GmailMessages --> Link["GmailMessageLink by mailbox + Gmail message id"]
+  GmailMessages --> Match["Match senders and recipients to People by email"]
+  Match -->|Known Person| Interaction["Create or append email Interaction"]
+  Match -->|No Person match| Inbox["Stage email in Inbox for review"]
+  Sync --> Audit["Write gmail.sync AuditLog"]
+```
+
+Plain English: Gmail remains read-only. Persons imports messages into Interactions when a sender or recipient already matches a Person email in the current workspace. Messages without a known Person become Inbox review items, so the user can attach them or create a new Person later. First-time sync uses the selected Admin backfill range and processes messages in small batches. Later syncs use Gmail's history API via `GmailConnection.historyId`; if Gmail says that history cursor is too old, Persons falls back to a bounded full sync.
+
+Runtime configuration:
+
+- `GOOGLE_GMAIL_CLIENT_ID` and `GOOGLE_GMAIL_CLIENT_SECRET`, or the existing `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` if that OAuth client has Gmail API access.
+- The Google OAuth redirect URI must include `/api/gmail/google/callback` on the deployed app origin.
+- `GOOGLE_GMAIL_REDIRECT_URI` can pin the callback to one exact production URL.
 
 ### 4. Inbox review flow
 
@@ -395,6 +425,10 @@ erDiagram
   Workspace ||--o{ CalendarConnection : owns
   CalendarConnection ||--o{ CalendarEventLink : maps
   Event ||--o{ CalendarEventLink : source
+  Workspace ||--o{ GmailConnection : owns
+  GmailConnection ||--o{ GmailMessageLink : maps
+  Interaction ||--o{ GmailMessageLink : source
+  StagedInteraction ||--o{ GmailMessageLink : reviews
   ApprovedEmail }o--|| Workspace : can_assign_to
   User ||--o{ ApiKey : creates
   User ||--o{ WorkspaceMember : belongs_to
@@ -420,6 +454,7 @@ Plain English version:
 - **User, Role, Permission, ApiKey**: access-control system.
 - **Workspace, WorkspaceMember, ApprovedEmail**: tenancy system. These decide who can sign in and which private workspace their People data belongs to.
 - **CalendarConnection, CalendarEventLink**: Google Calendar integration state. Connections store OAuth/sync state; event links make imports repeatable without duplicating Events.
+- **GmailConnection, GmailMessageLink**: Gmail integration state. Connections store OAuth/history state; message links make email imports repeatable and tie Gmail messages to Interactions or Inbox items.
 
 ## Outputs
 
@@ -489,6 +524,7 @@ flowchart LR
 - Inbox create-and-accept: an unmatched staged interaction can create a new Person and attach the interaction in one review action.
 - Workspace tenancy foundation: approved emails can sign in without inheriting Joseph's data, core browser/API paths carry `workspaceId`, existing data is preserved in `default-workspace`, and API keys are scoped to the workspace that created them.
 - Google Calendar foundation: Admin can connect Google Calendar, sync read-only events into Events, and create Interactions for attendees matched to existing People by email.
+- Gmail foundation: Admin can connect Gmail, sync read-only messages into Interactions for matched People, and stage unmatched emails in Inbox.
 
 ### Future
 
@@ -502,3 +538,4 @@ The next larger step is the broader automation engine:
 - Inbox filtering by `source` and `itemType` in the UI.
 - Admin UI for approving emails and choosing whether an approved person gets their own workspace or joins an existing one.
 - Background/scheduled Google Calendar sync and optional review queue for unmatched calendar attendees.
+- Background/scheduled Gmail sync.

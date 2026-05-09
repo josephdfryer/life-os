@@ -215,6 +215,7 @@ export type UserWhereInput = {
   ownedWorkspaces?: Prisma.WorkspaceListRelationFilter
   approvedEmailsSent?: Prisma.ApprovedEmailListRelationFilter
   calendarConnections?: Prisma.CalendarConnectionListRelationFilter
+  gmailConnections?: Prisma.GmailConnectionListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -235,6 +236,7 @@ export type UserOrderByWithRelationInput = {
   ownedWorkspaces?: Prisma.WorkspaceOrderByRelationAggregateInput
   approvedEmailsSent?: Prisma.ApprovedEmailOrderByRelationAggregateInput
   calendarConnections?: Prisma.CalendarConnectionOrderByRelationAggregateInput
+  gmailConnections?: Prisma.GmailConnectionOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -258,6 +260,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   ownedWorkspaces?: Prisma.WorkspaceListRelationFilter
   approvedEmailsSent?: Prisma.ApprovedEmailListRelationFilter
   calendarConnections?: Prisma.CalendarConnectionListRelationFilter
+  gmailConnections?: Prisma.GmailConnectionListRelationFilter
 }, "id" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -305,6 +308,7 @@ export type UserCreateInput = {
   ownedWorkspaces?: Prisma.WorkspaceCreateNestedManyWithoutOwnerUserInput
   approvedEmailsSent?: Prisma.ApprovedEmailCreateNestedManyWithoutInvitedByInput
   calendarConnections?: Prisma.CalendarConnectionCreateNestedManyWithoutUserInput
+  gmailConnections?: Prisma.GmailConnectionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -324,6 +328,7 @@ export type UserUncheckedCreateInput = {
   ownedWorkspaces?: Prisma.WorkspaceUncheckedCreateNestedManyWithoutOwnerUserInput
   approvedEmailsSent?: Prisma.ApprovedEmailUncheckedCreateNestedManyWithoutInvitedByInput
   calendarConnections?: Prisma.CalendarConnectionUncheckedCreateNestedManyWithoutUserInput
+  gmailConnections?: Prisma.GmailConnectionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -343,6 +348,7 @@ export type UserUpdateInput = {
   ownedWorkspaces?: Prisma.WorkspaceUpdateManyWithoutOwnerUserNestedInput
   approvedEmailsSent?: Prisma.ApprovedEmailUpdateManyWithoutInvitedByNestedInput
   calendarConnections?: Prisma.CalendarConnectionUpdateManyWithoutUserNestedInput
+  gmailConnections?: Prisma.GmailConnectionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -362,6 +368,7 @@ export type UserUncheckedUpdateInput = {
   ownedWorkspaces?: Prisma.WorkspaceUncheckedUpdateManyWithoutOwnerUserNestedInput
   approvedEmailsSent?: Prisma.ApprovedEmailUncheckedUpdateManyWithoutInvitedByNestedInput
   calendarConnections?: Prisma.CalendarConnectionUncheckedUpdateManyWithoutUserNestedInput
+  gmailConnections?: Prisma.GmailConnectionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -597,6 +604,20 @@ export type UserUpdateOneRequiredWithoutCalendarConnectionsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutCalendarConnectionsInput, Prisma.UserUpdateWithoutCalendarConnectionsInput>, Prisma.UserUncheckedUpdateWithoutCalendarConnectionsInput>
 }
 
+export type UserCreateNestedOneWithoutGmailConnectionsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutGmailConnectionsInput, Prisma.UserUncheckedCreateWithoutGmailConnectionsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutGmailConnectionsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutGmailConnectionsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutGmailConnectionsInput, Prisma.UserUncheckedCreateWithoutGmailConnectionsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutGmailConnectionsInput
+  upsert?: Prisma.UserUpsertWithoutGmailConnectionsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutGmailConnectionsInput, Prisma.UserUpdateWithoutGmailConnectionsInput>, Prisma.UserUncheckedUpdateWithoutGmailConnectionsInput>
+}
+
 export type UserCreateNestedOneWithoutRulesInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutRulesInput, Prisma.UserUncheckedCreateWithoutRulesInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutRulesInput
@@ -629,6 +650,7 @@ export type UserCreateWithoutOwnedWorkspacesInput = {
   workspaceMemberships?: Prisma.WorkspaceMemberCreateNestedManyWithoutUserInput
   approvedEmailsSent?: Prisma.ApprovedEmailCreateNestedManyWithoutInvitedByInput
   calendarConnections?: Prisma.CalendarConnectionCreateNestedManyWithoutUserInput
+  gmailConnections?: Prisma.GmailConnectionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutOwnedWorkspacesInput = {
@@ -647,6 +669,7 @@ export type UserUncheckedCreateWithoutOwnedWorkspacesInput = {
   workspaceMemberships?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutUserInput
   approvedEmailsSent?: Prisma.ApprovedEmailUncheckedCreateNestedManyWithoutInvitedByInput
   calendarConnections?: Prisma.CalendarConnectionUncheckedCreateNestedManyWithoutUserInput
+  gmailConnections?: Prisma.GmailConnectionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutOwnedWorkspacesInput = {
@@ -681,6 +704,7 @@ export type UserUpdateWithoutOwnedWorkspacesInput = {
   workspaceMemberships?: Prisma.WorkspaceMemberUpdateManyWithoutUserNestedInput
   approvedEmailsSent?: Prisma.ApprovedEmailUpdateManyWithoutInvitedByNestedInput
   calendarConnections?: Prisma.CalendarConnectionUpdateManyWithoutUserNestedInput
+  gmailConnections?: Prisma.GmailConnectionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutOwnedWorkspacesInput = {
@@ -699,6 +723,7 @@ export type UserUncheckedUpdateWithoutOwnedWorkspacesInput = {
   workspaceMemberships?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutUserNestedInput
   approvedEmailsSent?: Prisma.ApprovedEmailUncheckedUpdateManyWithoutInvitedByNestedInput
   calendarConnections?: Prisma.CalendarConnectionUncheckedUpdateManyWithoutUserNestedInput
+  gmailConnections?: Prisma.GmailConnectionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutWorkspaceMembershipsInput = {
@@ -717,6 +742,7 @@ export type UserCreateWithoutWorkspaceMembershipsInput = {
   ownedWorkspaces?: Prisma.WorkspaceCreateNestedManyWithoutOwnerUserInput
   approvedEmailsSent?: Prisma.ApprovedEmailCreateNestedManyWithoutInvitedByInput
   calendarConnections?: Prisma.CalendarConnectionCreateNestedManyWithoutUserInput
+  gmailConnections?: Prisma.GmailConnectionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutWorkspaceMembershipsInput = {
@@ -735,6 +761,7 @@ export type UserUncheckedCreateWithoutWorkspaceMembershipsInput = {
   ownedWorkspaces?: Prisma.WorkspaceUncheckedCreateNestedManyWithoutOwnerUserInput
   approvedEmailsSent?: Prisma.ApprovedEmailUncheckedCreateNestedManyWithoutInvitedByInput
   calendarConnections?: Prisma.CalendarConnectionUncheckedCreateNestedManyWithoutUserInput
+  gmailConnections?: Prisma.GmailConnectionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutWorkspaceMembershipsInput = {
@@ -769,6 +796,7 @@ export type UserUpdateWithoutWorkspaceMembershipsInput = {
   ownedWorkspaces?: Prisma.WorkspaceUpdateManyWithoutOwnerUserNestedInput
   approvedEmailsSent?: Prisma.ApprovedEmailUpdateManyWithoutInvitedByNestedInput
   calendarConnections?: Prisma.CalendarConnectionUpdateManyWithoutUserNestedInput
+  gmailConnections?: Prisma.GmailConnectionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutWorkspaceMembershipsInput = {
@@ -787,6 +815,7 @@ export type UserUncheckedUpdateWithoutWorkspaceMembershipsInput = {
   ownedWorkspaces?: Prisma.WorkspaceUncheckedUpdateManyWithoutOwnerUserNestedInput
   approvedEmailsSent?: Prisma.ApprovedEmailUncheckedUpdateManyWithoutInvitedByNestedInput
   calendarConnections?: Prisma.CalendarConnectionUncheckedUpdateManyWithoutUserNestedInput
+  gmailConnections?: Prisma.GmailConnectionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutApprovedEmailsSentInput = {
@@ -805,6 +834,7 @@ export type UserCreateWithoutApprovedEmailsSentInput = {
   workspaceMemberships?: Prisma.WorkspaceMemberCreateNestedManyWithoutUserInput
   ownedWorkspaces?: Prisma.WorkspaceCreateNestedManyWithoutOwnerUserInput
   calendarConnections?: Prisma.CalendarConnectionCreateNestedManyWithoutUserInput
+  gmailConnections?: Prisma.GmailConnectionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutApprovedEmailsSentInput = {
@@ -823,6 +853,7 @@ export type UserUncheckedCreateWithoutApprovedEmailsSentInput = {
   workspaceMemberships?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutUserInput
   ownedWorkspaces?: Prisma.WorkspaceUncheckedCreateNestedManyWithoutOwnerUserInput
   calendarConnections?: Prisma.CalendarConnectionUncheckedCreateNestedManyWithoutUserInput
+  gmailConnections?: Prisma.GmailConnectionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutApprovedEmailsSentInput = {
@@ -857,6 +888,7 @@ export type UserUpdateWithoutApprovedEmailsSentInput = {
   workspaceMemberships?: Prisma.WorkspaceMemberUpdateManyWithoutUserNestedInput
   ownedWorkspaces?: Prisma.WorkspaceUpdateManyWithoutOwnerUserNestedInput
   calendarConnections?: Prisma.CalendarConnectionUpdateManyWithoutUserNestedInput
+  gmailConnections?: Prisma.GmailConnectionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutApprovedEmailsSentInput = {
@@ -875,6 +907,7 @@ export type UserUncheckedUpdateWithoutApprovedEmailsSentInput = {
   workspaceMemberships?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutUserNestedInput
   ownedWorkspaces?: Prisma.WorkspaceUncheckedUpdateManyWithoutOwnerUserNestedInput
   calendarConnections?: Prisma.CalendarConnectionUncheckedUpdateManyWithoutUserNestedInput
+  gmailConnections?: Prisma.GmailConnectionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutPersonInput = {
@@ -893,6 +926,7 @@ export type UserCreateWithoutPersonInput = {
   ownedWorkspaces?: Prisma.WorkspaceCreateNestedManyWithoutOwnerUserInput
   approvedEmailsSent?: Prisma.ApprovedEmailCreateNestedManyWithoutInvitedByInput
   calendarConnections?: Prisma.CalendarConnectionCreateNestedManyWithoutUserInput
+  gmailConnections?: Prisma.GmailConnectionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutPersonInput = {
@@ -911,6 +945,7 @@ export type UserUncheckedCreateWithoutPersonInput = {
   ownedWorkspaces?: Prisma.WorkspaceUncheckedCreateNestedManyWithoutOwnerUserInput
   approvedEmailsSent?: Prisma.ApprovedEmailUncheckedCreateNestedManyWithoutInvitedByInput
   calendarConnections?: Prisma.CalendarConnectionUncheckedCreateNestedManyWithoutUserInput
+  gmailConnections?: Prisma.GmailConnectionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutPersonInput = {
@@ -968,6 +1003,7 @@ export type UserCreateWithoutRolesInput = {
   ownedWorkspaces?: Prisma.WorkspaceCreateNestedManyWithoutOwnerUserInput
   approvedEmailsSent?: Prisma.ApprovedEmailCreateNestedManyWithoutInvitedByInput
   calendarConnections?: Prisma.CalendarConnectionCreateNestedManyWithoutUserInput
+  gmailConnections?: Prisma.GmailConnectionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutRolesInput = {
@@ -986,6 +1022,7 @@ export type UserUncheckedCreateWithoutRolesInput = {
   ownedWorkspaces?: Prisma.WorkspaceUncheckedCreateNestedManyWithoutOwnerUserInput
   approvedEmailsSent?: Prisma.ApprovedEmailUncheckedCreateNestedManyWithoutInvitedByInput
   calendarConnections?: Prisma.CalendarConnectionUncheckedCreateNestedManyWithoutUserInput
+  gmailConnections?: Prisma.GmailConnectionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutRolesInput = {
@@ -1020,6 +1057,7 @@ export type UserUpdateWithoutRolesInput = {
   ownedWorkspaces?: Prisma.WorkspaceUpdateManyWithoutOwnerUserNestedInput
   approvedEmailsSent?: Prisma.ApprovedEmailUpdateManyWithoutInvitedByNestedInput
   calendarConnections?: Prisma.CalendarConnectionUpdateManyWithoutUserNestedInput
+  gmailConnections?: Prisma.GmailConnectionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutRolesInput = {
@@ -1038,6 +1076,7 @@ export type UserUncheckedUpdateWithoutRolesInput = {
   ownedWorkspaces?: Prisma.WorkspaceUncheckedUpdateManyWithoutOwnerUserNestedInput
   approvedEmailsSent?: Prisma.ApprovedEmailUncheckedUpdateManyWithoutInvitedByNestedInput
   calendarConnections?: Prisma.CalendarConnectionUncheckedUpdateManyWithoutUserNestedInput
+  gmailConnections?: Prisma.GmailConnectionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutApiKeysInput = {
@@ -1056,6 +1095,7 @@ export type UserCreateWithoutApiKeysInput = {
   ownedWorkspaces?: Prisma.WorkspaceCreateNestedManyWithoutOwnerUserInput
   approvedEmailsSent?: Prisma.ApprovedEmailCreateNestedManyWithoutInvitedByInput
   calendarConnections?: Prisma.CalendarConnectionCreateNestedManyWithoutUserInput
+  gmailConnections?: Prisma.GmailConnectionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutApiKeysInput = {
@@ -1074,6 +1114,7 @@ export type UserUncheckedCreateWithoutApiKeysInput = {
   ownedWorkspaces?: Prisma.WorkspaceUncheckedCreateNestedManyWithoutOwnerUserInput
   approvedEmailsSent?: Prisma.ApprovedEmailUncheckedCreateNestedManyWithoutInvitedByInput
   calendarConnections?: Prisma.CalendarConnectionUncheckedCreateNestedManyWithoutUserInput
+  gmailConnections?: Prisma.GmailConnectionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutApiKeysInput = {
@@ -1108,6 +1149,7 @@ export type UserUpdateWithoutApiKeysInput = {
   ownedWorkspaces?: Prisma.WorkspaceUpdateManyWithoutOwnerUserNestedInput
   approvedEmailsSent?: Prisma.ApprovedEmailUpdateManyWithoutInvitedByNestedInput
   calendarConnections?: Prisma.CalendarConnectionUpdateManyWithoutUserNestedInput
+  gmailConnections?: Prisma.GmailConnectionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutApiKeysInput = {
@@ -1126,6 +1168,7 @@ export type UserUncheckedUpdateWithoutApiKeysInput = {
   ownedWorkspaces?: Prisma.WorkspaceUncheckedUpdateManyWithoutOwnerUserNestedInput
   approvedEmailsSent?: Prisma.ApprovedEmailUncheckedUpdateManyWithoutInvitedByNestedInput
   calendarConnections?: Prisma.CalendarConnectionUncheckedUpdateManyWithoutUserNestedInput
+  gmailConnections?: Prisma.GmailConnectionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutAuditLogsInput = {
@@ -1144,6 +1187,7 @@ export type UserCreateWithoutAuditLogsInput = {
   ownedWorkspaces?: Prisma.WorkspaceCreateNestedManyWithoutOwnerUserInput
   approvedEmailsSent?: Prisma.ApprovedEmailCreateNestedManyWithoutInvitedByInput
   calendarConnections?: Prisma.CalendarConnectionCreateNestedManyWithoutUserInput
+  gmailConnections?: Prisma.GmailConnectionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAuditLogsInput = {
@@ -1162,6 +1206,7 @@ export type UserUncheckedCreateWithoutAuditLogsInput = {
   ownedWorkspaces?: Prisma.WorkspaceUncheckedCreateNestedManyWithoutOwnerUserInput
   approvedEmailsSent?: Prisma.ApprovedEmailUncheckedCreateNestedManyWithoutInvitedByInput
   calendarConnections?: Prisma.CalendarConnectionUncheckedCreateNestedManyWithoutUserInput
+  gmailConnections?: Prisma.GmailConnectionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAuditLogsInput = {
@@ -1196,6 +1241,7 @@ export type UserUpdateWithoutAuditLogsInput = {
   ownedWorkspaces?: Prisma.WorkspaceUpdateManyWithoutOwnerUserNestedInput
   approvedEmailsSent?: Prisma.ApprovedEmailUpdateManyWithoutInvitedByNestedInput
   calendarConnections?: Prisma.CalendarConnectionUpdateManyWithoutUserNestedInput
+  gmailConnections?: Prisma.GmailConnectionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAuditLogsInput = {
@@ -1214,6 +1260,7 @@ export type UserUncheckedUpdateWithoutAuditLogsInput = {
   ownedWorkspaces?: Prisma.WorkspaceUncheckedUpdateManyWithoutOwnerUserNestedInput
   approvedEmailsSent?: Prisma.ApprovedEmailUncheckedUpdateManyWithoutInvitedByNestedInput
   calendarConnections?: Prisma.CalendarConnectionUncheckedUpdateManyWithoutUserNestedInput
+  gmailConnections?: Prisma.GmailConnectionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutCalendarConnectionsInput = {
@@ -1232,6 +1279,7 @@ export type UserCreateWithoutCalendarConnectionsInput = {
   workspaceMemberships?: Prisma.WorkspaceMemberCreateNestedManyWithoutUserInput
   ownedWorkspaces?: Prisma.WorkspaceCreateNestedManyWithoutOwnerUserInput
   approvedEmailsSent?: Prisma.ApprovedEmailCreateNestedManyWithoutInvitedByInput
+  gmailConnections?: Prisma.GmailConnectionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutCalendarConnectionsInput = {
@@ -1250,6 +1298,7 @@ export type UserUncheckedCreateWithoutCalendarConnectionsInput = {
   workspaceMemberships?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutUserInput
   ownedWorkspaces?: Prisma.WorkspaceUncheckedCreateNestedManyWithoutOwnerUserInput
   approvedEmailsSent?: Prisma.ApprovedEmailUncheckedCreateNestedManyWithoutInvitedByInput
+  gmailConnections?: Prisma.GmailConnectionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutCalendarConnectionsInput = {
@@ -1284,6 +1333,7 @@ export type UserUpdateWithoutCalendarConnectionsInput = {
   workspaceMemberships?: Prisma.WorkspaceMemberUpdateManyWithoutUserNestedInput
   ownedWorkspaces?: Prisma.WorkspaceUpdateManyWithoutOwnerUserNestedInput
   approvedEmailsSent?: Prisma.ApprovedEmailUpdateManyWithoutInvitedByNestedInput
+  gmailConnections?: Prisma.GmailConnectionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCalendarConnectionsInput = {
@@ -1302,6 +1352,99 @@ export type UserUncheckedUpdateWithoutCalendarConnectionsInput = {
   workspaceMemberships?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutUserNestedInput
   ownedWorkspaces?: Prisma.WorkspaceUncheckedUpdateManyWithoutOwnerUserNestedInput
   approvedEmailsSent?: Prisma.ApprovedEmailUncheckedUpdateManyWithoutInvitedByNestedInput
+  gmailConnections?: Prisma.GmailConnectionUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutGmailConnectionsInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  email: string
+  name?: string | null
+  image?: string | null
+  status?: string
+  person?: Prisma.PersonCreateNestedOneWithoutUsersInput
+  roles?: Prisma.UserRoleCreateNestedManyWithoutUserInput
+  apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutCreatedByUserInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  rules?: Prisma.RuleCreateNestedManyWithoutCreatedByUserInput
+  workspaceMemberships?: Prisma.WorkspaceMemberCreateNestedManyWithoutUserInput
+  ownedWorkspaces?: Prisma.WorkspaceCreateNestedManyWithoutOwnerUserInput
+  approvedEmailsSent?: Prisma.ApprovedEmailCreateNestedManyWithoutInvitedByInput
+  calendarConnections?: Prisma.CalendarConnectionCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutGmailConnectionsInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  email: string
+  name?: string | null
+  image?: string | null
+  status?: string
+  personId?: string | null
+  roles?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
+  apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutCreatedByUserInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  rules?: Prisma.RuleUncheckedCreateNestedManyWithoutCreatedByUserInput
+  workspaceMemberships?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutUserInput
+  ownedWorkspaces?: Prisma.WorkspaceUncheckedCreateNestedManyWithoutOwnerUserInput
+  approvedEmailsSent?: Prisma.ApprovedEmailUncheckedCreateNestedManyWithoutInvitedByInput
+  calendarConnections?: Prisma.CalendarConnectionUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutGmailConnectionsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutGmailConnectionsInput, Prisma.UserUncheckedCreateWithoutGmailConnectionsInput>
+}
+
+export type UserUpsertWithoutGmailConnectionsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutGmailConnectionsInput, Prisma.UserUncheckedUpdateWithoutGmailConnectionsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutGmailConnectionsInput, Prisma.UserUncheckedCreateWithoutGmailConnectionsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutGmailConnectionsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutGmailConnectionsInput, Prisma.UserUncheckedUpdateWithoutGmailConnectionsInput>
+}
+
+export type UserUpdateWithoutGmailConnectionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  person?: Prisma.PersonUpdateOneWithoutUsersNestedInput
+  roles?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
+  apiKeys?: Prisma.ApiKeyUpdateManyWithoutCreatedByUserNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  rules?: Prisma.RuleUpdateManyWithoutCreatedByUserNestedInput
+  workspaceMemberships?: Prisma.WorkspaceMemberUpdateManyWithoutUserNestedInput
+  ownedWorkspaces?: Prisma.WorkspaceUpdateManyWithoutOwnerUserNestedInput
+  approvedEmailsSent?: Prisma.ApprovedEmailUpdateManyWithoutInvitedByNestedInput
+  calendarConnections?: Prisma.CalendarConnectionUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutGmailConnectionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  personId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  roles?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
+  apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutCreatedByUserNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  rules?: Prisma.RuleUncheckedUpdateManyWithoutCreatedByUserNestedInput
+  workspaceMemberships?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutUserNestedInput
+  ownedWorkspaces?: Prisma.WorkspaceUncheckedUpdateManyWithoutOwnerUserNestedInput
+  approvedEmailsSent?: Prisma.ApprovedEmailUncheckedUpdateManyWithoutInvitedByNestedInput
+  calendarConnections?: Prisma.CalendarConnectionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutRulesInput = {
@@ -1320,6 +1463,7 @@ export type UserCreateWithoutRulesInput = {
   ownedWorkspaces?: Prisma.WorkspaceCreateNestedManyWithoutOwnerUserInput
   approvedEmailsSent?: Prisma.ApprovedEmailCreateNestedManyWithoutInvitedByInput
   calendarConnections?: Prisma.CalendarConnectionCreateNestedManyWithoutUserInput
+  gmailConnections?: Prisma.GmailConnectionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutRulesInput = {
@@ -1338,6 +1482,7 @@ export type UserUncheckedCreateWithoutRulesInput = {
   ownedWorkspaces?: Prisma.WorkspaceUncheckedCreateNestedManyWithoutOwnerUserInput
   approvedEmailsSent?: Prisma.ApprovedEmailUncheckedCreateNestedManyWithoutInvitedByInput
   calendarConnections?: Prisma.CalendarConnectionUncheckedCreateNestedManyWithoutUserInput
+  gmailConnections?: Prisma.GmailConnectionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutRulesInput = {
@@ -1372,6 +1517,7 @@ export type UserUpdateWithoutRulesInput = {
   ownedWorkspaces?: Prisma.WorkspaceUpdateManyWithoutOwnerUserNestedInput
   approvedEmailsSent?: Prisma.ApprovedEmailUpdateManyWithoutInvitedByNestedInput
   calendarConnections?: Prisma.CalendarConnectionUpdateManyWithoutUserNestedInput
+  gmailConnections?: Prisma.GmailConnectionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutRulesInput = {
@@ -1390,6 +1536,7 @@ export type UserUncheckedUpdateWithoutRulesInput = {
   ownedWorkspaces?: Prisma.WorkspaceUncheckedUpdateManyWithoutOwnerUserNestedInput
   approvedEmailsSent?: Prisma.ApprovedEmailUncheckedUpdateManyWithoutInvitedByNestedInput
   calendarConnections?: Prisma.CalendarConnectionUncheckedUpdateManyWithoutUserNestedInput
+  gmailConnections?: Prisma.GmailConnectionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyPersonInput = {
@@ -1418,6 +1565,7 @@ export type UserUpdateWithoutPersonInput = {
   ownedWorkspaces?: Prisma.WorkspaceUpdateManyWithoutOwnerUserNestedInput
   approvedEmailsSent?: Prisma.ApprovedEmailUpdateManyWithoutInvitedByNestedInput
   calendarConnections?: Prisma.CalendarConnectionUpdateManyWithoutUserNestedInput
+  gmailConnections?: Prisma.GmailConnectionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPersonInput = {
@@ -1436,6 +1584,7 @@ export type UserUncheckedUpdateWithoutPersonInput = {
   ownedWorkspaces?: Prisma.WorkspaceUncheckedUpdateManyWithoutOwnerUserNestedInput
   approvedEmailsSent?: Prisma.ApprovedEmailUncheckedUpdateManyWithoutInvitedByNestedInput
   calendarConnections?: Prisma.CalendarConnectionUncheckedUpdateManyWithoutUserNestedInput
+  gmailConnections?: Prisma.GmailConnectionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateManyWithoutPersonInput = {
@@ -1462,6 +1611,7 @@ export type UserCountOutputType = {
   ownedWorkspaces: number
   approvedEmailsSent: number
   calendarConnections: number
+  gmailConnections: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1473,6 +1623,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   ownedWorkspaces?: boolean | UserCountOutputTypeCountOwnedWorkspacesArgs
   approvedEmailsSent?: boolean | UserCountOutputTypeCountApprovedEmailsSentArgs
   calendarConnections?: boolean | UserCountOutputTypeCountCalendarConnectionsArgs
+  gmailConnections?: boolean | UserCountOutputTypeCountGmailConnectionsArgs
 }
 
 /**
@@ -1541,6 +1692,13 @@ export type UserCountOutputTypeCountCalendarConnectionsArgs<ExtArgs extends runt
   where?: Prisma.CalendarConnectionWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountGmailConnectionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.GmailConnectionWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1560,6 +1718,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   ownedWorkspaces?: boolean | Prisma.User$ownedWorkspacesArgs<ExtArgs>
   approvedEmailsSent?: boolean | Prisma.User$approvedEmailsSentArgs<ExtArgs>
   calendarConnections?: boolean | Prisma.User$calendarConnectionsArgs<ExtArgs>
+  gmailConnections?: boolean | Prisma.User$gmailConnectionsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -1609,6 +1768,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   ownedWorkspaces?: boolean | Prisma.User$ownedWorkspacesArgs<ExtArgs>
   approvedEmailsSent?: boolean | Prisma.User$approvedEmailsSentArgs<ExtArgs>
   calendarConnections?: boolean | Prisma.User$calendarConnectionsArgs<ExtArgs>
+  gmailConnections?: boolean | Prisma.User$gmailConnectionsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1630,6 +1790,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     ownedWorkspaces: Prisma.$WorkspacePayload<ExtArgs>[]
     approvedEmailsSent: Prisma.$ApprovedEmailPayload<ExtArgs>[]
     calendarConnections: Prisma.$CalendarConnectionPayload<ExtArgs>[]
+    gmailConnections: Prisma.$GmailConnectionPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2043,6 +2204,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   ownedWorkspaces<T extends Prisma.User$ownedWorkspacesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$ownedWorkspacesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WorkspacePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   approvedEmailsSent<T extends Prisma.User$approvedEmailsSentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$approvedEmailsSentArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ApprovedEmailPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   calendarConnections<T extends Prisma.User$calendarConnectionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$calendarConnectionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CalendarConnectionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  gmailConnections<T extends Prisma.User$gmailConnectionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$gmailConnectionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$GmailConnectionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2687,6 +2849,30 @@ export type User$calendarConnectionsArgs<ExtArgs extends runtime.Types.Extension
   take?: number
   skip?: number
   distinct?: Prisma.CalendarConnectionScalarFieldEnum | Prisma.CalendarConnectionScalarFieldEnum[]
+}
+
+/**
+ * User.gmailConnections
+ */
+export type User$gmailConnectionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the GmailConnection
+   */
+  select?: Prisma.GmailConnectionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the GmailConnection
+   */
+  omit?: Prisma.GmailConnectionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.GmailConnectionInclude<ExtArgs> | null
+  where?: Prisma.GmailConnectionWhereInput
+  orderBy?: Prisma.GmailConnectionOrderByWithRelationInput | Prisma.GmailConnectionOrderByWithRelationInput[]
+  cursor?: Prisma.GmailConnectionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.GmailConnectionScalarFieldEnum | Prisma.GmailConnectionScalarFieldEnum[]
 }
 
 /**

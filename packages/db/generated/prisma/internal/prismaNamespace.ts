@@ -398,6 +398,8 @@ export const ModelName = {
   AuditLog: 'AuditLog',
   CalendarConnection: 'CalendarConnection',
   CalendarEventLink: 'CalendarEventLink',
+  GmailConnection: 'GmailConnection',
+  GmailMessageLink: 'GmailMessageLink',
   Rule: 'Rule',
   RuleRun: 'RuleRun',
   StagedInteraction: 'StagedInteraction',
@@ -424,7 +426,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "workspace" | "workspaceMember" | "approvedEmail" | "person" | "user" | "role" | "permission" | "userRole" | "rolePermission" | "apiKey" | "apiKeyScope" | "auditLog" | "calendarConnection" | "calendarEventLink" | "rule" | "ruleRun" | "stagedInteraction" | "event" | "interaction" | "plan" | "place" | "item" | "assembly" | "itemInteraction" | "importedFile"
+    modelProps: "workspace" | "workspaceMember" | "approvedEmail" | "person" | "user" | "role" | "permission" | "userRole" | "rolePermission" | "apiKey" | "apiKeyScope" | "auditLog" | "calendarConnection" | "calendarEventLink" | "gmailConnection" | "gmailMessageLink" | "rule" | "ruleRun" | "stagedInteraction" | "event" | "interaction" | "plan" | "place" | "item" | "assembly" | "itemInteraction" | "importedFile"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1461,6 +1463,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.CalendarEventLinkCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.CalendarEventLinkCountAggregateOutputType> | number
+        }
+      }
+    }
+    GmailConnection: {
+      payload: Prisma.$GmailConnectionPayload<ExtArgs>
+      fields: Prisma.GmailConnectionFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.GmailConnectionFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GmailConnectionPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.GmailConnectionFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GmailConnectionPayload>
+        }
+        findFirst: {
+          args: Prisma.GmailConnectionFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GmailConnectionPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.GmailConnectionFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GmailConnectionPayload>
+        }
+        findMany: {
+          args: Prisma.GmailConnectionFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GmailConnectionPayload>[]
+        }
+        create: {
+          args: Prisma.GmailConnectionCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GmailConnectionPayload>
+        }
+        createMany: {
+          args: Prisma.GmailConnectionCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.GmailConnectionCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GmailConnectionPayload>[]
+        }
+        delete: {
+          args: Prisma.GmailConnectionDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GmailConnectionPayload>
+        }
+        update: {
+          args: Prisma.GmailConnectionUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GmailConnectionPayload>
+        }
+        deleteMany: {
+          args: Prisma.GmailConnectionDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.GmailConnectionUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.GmailConnectionUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GmailConnectionPayload>[]
+        }
+        upsert: {
+          args: Prisma.GmailConnectionUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GmailConnectionPayload>
+        }
+        aggregate: {
+          args: Prisma.GmailConnectionAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateGmailConnection>
+        }
+        groupBy: {
+          args: Prisma.GmailConnectionGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.GmailConnectionGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.GmailConnectionCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.GmailConnectionCountAggregateOutputType> | number
+        }
+      }
+    }
+    GmailMessageLink: {
+      payload: Prisma.$GmailMessageLinkPayload<ExtArgs>
+      fields: Prisma.GmailMessageLinkFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.GmailMessageLinkFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GmailMessageLinkPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.GmailMessageLinkFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GmailMessageLinkPayload>
+        }
+        findFirst: {
+          args: Prisma.GmailMessageLinkFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GmailMessageLinkPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.GmailMessageLinkFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GmailMessageLinkPayload>
+        }
+        findMany: {
+          args: Prisma.GmailMessageLinkFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GmailMessageLinkPayload>[]
+        }
+        create: {
+          args: Prisma.GmailMessageLinkCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GmailMessageLinkPayload>
+        }
+        createMany: {
+          args: Prisma.GmailMessageLinkCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.GmailMessageLinkCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GmailMessageLinkPayload>[]
+        }
+        delete: {
+          args: Prisma.GmailMessageLinkDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GmailMessageLinkPayload>
+        }
+        update: {
+          args: Prisma.GmailMessageLinkUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GmailMessageLinkPayload>
+        }
+        deleteMany: {
+          args: Prisma.GmailMessageLinkDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.GmailMessageLinkUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.GmailMessageLinkUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GmailMessageLinkPayload>[]
+        }
+        upsert: {
+          args: Prisma.GmailMessageLinkUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GmailMessageLinkPayload>
+        }
+        aggregate: {
+          args: Prisma.GmailMessageLinkAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateGmailMessageLink>
+        }
+        groupBy: {
+          args: Prisma.GmailMessageLinkGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.GmailMessageLinkGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.GmailMessageLinkCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.GmailMessageLinkCountAggregateOutputType> | number
         }
       }
     }
@@ -2520,6 +2670,48 @@ export const CalendarEventLinkScalarFieldEnum = {
 export type CalendarEventLinkScalarFieldEnum = (typeof CalendarEventLinkScalarFieldEnum)[keyof typeof CalendarEventLinkScalarFieldEnum]
 
 
+export const GmailConnectionScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  userId: 'userId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  provider: 'provider',
+  status: 'status',
+  accountEmail: 'accountEmail',
+  mailboxId: 'mailboxId',
+  accessToken: 'accessToken',
+  refreshToken: 'refreshToken',
+  expiresAt: 'expiresAt',
+  scope: 'scope',
+  historyId: 'historyId',
+  lastSyncedAt: 'lastSyncedAt',
+  lastError: 'lastError'
+} as const
+
+export type GmailConnectionScalarFieldEnum = (typeof GmailConnectionScalarFieldEnum)[keyof typeof GmailConnectionScalarFieldEnum]
+
+
+export const GmailMessageLinkScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  connectionId: 'connectionId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  provider: 'provider',
+  mailboxId: 'mailboxId',
+  externalMessageId: 'externalMessageId',
+  threadId: 'threadId',
+  historyId: 'historyId',
+  interactionId: 'interactionId',
+  stagedItemId: 'stagedItemId',
+  status: 'status',
+  lastSeenAt: 'lastSeenAt'
+} as const
+
+export type GmailMessageLinkScalarFieldEnum = (typeof GmailMessageLinkScalarFieldEnum)[keyof typeof GmailMessageLinkScalarFieldEnum]
+
+
 export const RuleScalarFieldEnum = {
   id: 'id',
   workspaceId: 'workspaceId',
@@ -2906,6 +3098,8 @@ export type GlobalOmitConfig = {
   auditLog?: Prisma.AuditLogOmit
   calendarConnection?: Prisma.CalendarConnectionOmit
   calendarEventLink?: Prisma.CalendarEventLinkOmit
+  gmailConnection?: Prisma.GmailConnectionOmit
+  gmailMessageLink?: Prisma.GmailMessageLinkOmit
   rule?: Prisma.RuleOmit
   ruleRun?: Prisma.RuleRunOmit
   stagedInteraction?: Prisma.StagedInteractionOmit

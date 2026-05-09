@@ -43,6 +43,8 @@ export type AuditAction =
   | "approvedEmail.update"
   | "calendar.connect"
   | "calendar.sync"
+  | "gmail.connect"
+  | "gmail.sync"
 
 type AuditInput = {
   actor?: DomainActor

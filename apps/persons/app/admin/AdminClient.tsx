@@ -100,6 +100,22 @@ type CalendarStatus = {
     eventCount: number
   } | null
 }
+type GmailStatus = {
+  configured: boolean
+  redirectUri: string
+  connection: {
+    id: string
+    status: string
+    accountEmail: string | null
+    mailboxId: string
+    scope: string | null
+    historyId: string | null
+    lastSyncedAt: string | null
+    lastError: string | null
+    updatedAt: string
+    messageCount: number
+  } | null
+}
 type Overview = {
   currentUser: { id: string; email: string; scopes: string[] }
   users: User[]
@@ -111,9 +127,18 @@ type Overview = {
   workspaces: Workspace[]
 }
 
-const TABS = ["apiKeys", "roles", "rules", "permissions", "audit", "workspace", "calendar"] as const
+const TABS = ["apiKeys", "roles", "rules", "permissions", "audit", "workspace", "calendar", "gmail"] as const
 type Tab = typeof TABS[number]
 const CALENDAR_BACKFILL_OPTIONS = [
+  { value: "30", label: "Past 30 days" },
+  { value: "90", label: "Past 90 days" },
+  { value: "180", label: "Past 6 months" },
+  { value: "365", label: "Past year" },
+  { value: "730", label: "Past 2 years" },
+  { value: "3650", label: "Past 10 years" },
+] as const
+const GMAIL_BACKFILL_OPTIONS = [
+  { value: "7", label: "Past 7 days" },
   { value: "30", label: "Past 30 days" },
   { value: "90", label: "Past 90 days" },
   { value: "180", label: "Past 6 months" },
@@ -227,6 +252,9 @@ export default function AdminClient({
   const [calendarStatus, setCalendarStatus] = useState<CalendarStatus | null>(null)
   const [calendarSyncResult, setCalendarSyncResult] = useState<string | null>(null)
   const [calendarBackfillDays, setCalendarBackfillDays] = useState("180")
+  const [gmailStatus, setGmailStatus] = useState<GmailStatus | null>(null)
+  const [gmailSyncResult, setGmailSyncResult] = useState<string | null>(null)
+  const [gmailBackfillDays, setGmailBackfillDays] = useState("30")
   const [tab, setTab] = useState<Tab>("apiKeys")
   const [loading, setLoading] = useState(false)
   const [saving, setSaving] = useState(false)
@@ -290,6 +318,7 @@ export default function AdminClient({
       loadRuleRuns()
     }
     if (tab === "calendar") loadCalendarStatus()
+    if (tab === "gmail") loadGmailStatus()
   }, [tab])
 
   useEffect(() => {
@@ -395,6 +424,38 @@ export default function AdminClient({
       await loadCalendarStatus()
     } catch (e) {
       setError(e instanceof Error ? e.message : "Could not sync Google Calendar")
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  async function loadGmailStatus() {
+    try {
+      const res = await fetch("/api/gmail/google/status")
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error?.message || data.error || "Could not load Gmail status")
+      setGmailStatus(data)
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Could not load Gmail status")
+    }
+  }
+
+  async function syncGmail() {
+    setSaving(true)
+    setError(null)
+    setGmailSyncResult(null)
+    try {
+      const res = await fetch("/api/gmail/google/sync", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ backfillDays: Number(gmailBackfillDays) }),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error?.message || data.error || "Could not sync Gmail")
+      setGmailSyncResult(JSON.stringify(data, null, 2))
+      await loadGmailStatus()
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Could not sync Gmail")
     } finally {
       setSaving(false)
     }
@@ -703,6 +764,7 @@ export default function AdminClient({
             <TabButton active={tab === "audit"} onClick={() => setTab("audit")} label="Audit" />
             <TabButton active={tab === "workspace"} onClick={() => setTab("workspace")} label="Workspace" />
             <TabButton active={tab === "calendar"} onClick={() => setTab("calendar")} label="Calendar" />
+            <TabButton active={tab === "gmail"} onClick={() => setTab("gmail")} label="Gmail" />
           </div>
           <div style={{ marginTop: "22px", paddingTop: "16px", borderTop: "1px solid var(--border)", fontSize: "11px", color: "var(--ink-3)", lineHeight: 1.6 }}>
             <div>{overview?.currentUser.email ?? ""}</div>
@@ -1129,6 +1191,80 @@ export default function AdminClient({
                 </button>
                 <div style={{ fontSize: "11px", color: "var(--ink-4)", marginTop: "12px", lineHeight: 1.5 }}>
                   Sync is read-only and runs in small batches. The backfill range applies when there is no incremental Google sync token yet; after that, sync only asks Google for changes.
+                </div>
+              </Panel>
+            </section>
+          )}
+
+          {!loading && overview && tab === "gmail" && (
+            <section style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) 320px", gap: "18px" }}>
+              <Panel title="Gmail" meta={gmailStatus?.connection?.status ?? "not connected"}>
+                {!gmailStatus && (
+                  <div style={{ fontSize: "12px", color: "var(--ink-3)" }}>Loading Gmail status...</div>
+                )}
+                {gmailStatus && !gmailStatus.configured && (
+                  <div style={{ border: "1px solid var(--border)", borderRadius: "8px", background: "var(--bg)", padding: "12px", fontSize: "12px", color: "var(--ink-3)", lineHeight: 1.5 }}>
+                    Gmail OAuth is not configured yet. Add `GOOGLE_GMAIL_CLIENT_ID` and `GOOGLE_GMAIL_CLIENT_SECRET` in Vercel, or reuse the existing Google OAuth client with Gmail API enabled.
+                  </div>
+                )}
+                {gmailStatus && (
+                  <div style={{ border: "1px solid var(--border)", borderRadius: "8px", background: "var(--bg)", padding: "10px", fontSize: "11px", color: "var(--ink-3)", lineHeight: 1.5, wordBreak: "break-word" }}>
+                    <div style={{ fontSize: "10px", color: "var(--ink-4)", marginBottom: "4px" }}>Google Cloud redirect URI</div>
+                    {gmailStatus.redirectUri}
+                  </div>
+                )}
+                {gmailStatus?.connection ? (
+                  <div style={{ display: "grid", gap: "10px", marginTop: "10px" }}>
+                    <div style={{ border: "1px solid var(--border)", borderRadius: "8px", background: "var(--bg)", padding: "10px" }}>
+                      <div style={{ fontSize: "13px", fontWeight: 600 }}>{gmailStatus.connection.accountEmail ?? "Gmail account"}</div>
+                      <div style={{ fontSize: "11px", color: "var(--ink-4)", marginTop: "4px" }}>{gmailStatus.connection.mailboxId}</div>
+                      <div style={{ display: "flex", gap: "7px", flexWrap: "wrap", marginTop: "9px" }}>
+                        <StatusPill status={gmailStatus.connection.status} />
+                        <StatusPill status={`${gmailStatus.connection.messageCount} synced messages`} />
+                        {gmailStatus.connection.historyId && <StatusPill status="incremental sync" />}
+                      </div>
+                    </div>
+                    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(170px, 1fr))", gap: "8px" }}>
+                      <InfoTile label="Last synced" value={formatDate(gmailStatus.connection.lastSyncedAt)} />
+                      <InfoTile label="History ID" value={gmailStatus.connection.historyId ?? "Not set"} />
+                    </div>
+                    {gmailStatus.connection.lastError && (
+                      <div style={{ border: "1px solid #d46a3a", background: "#fff3ed", color: "#8f3518", borderRadius: "8px", padding: "10px", fontSize: "11px" }}>
+                        {gmailStatus.connection.lastError}
+                      </div>
+                    )}
+                    {gmailSyncResult && (
+                      <div>
+                        <div style={{ fontSize: "10px", color: "var(--ink-4)", marginBottom: "5px" }}>Last sync result</div>
+                        <pre style={preStyle}>{gmailSyncResult}</pre>
+                      </div>
+                    )}
+                  </div>
+                ) : gmailStatus?.configured ? (
+                  <div style={{ fontSize: "12px", color: "var(--ink-3)", lineHeight: 1.5, marginTop: "10px" }}>
+                    Connect Gmail to import email into Interactions for People matched by email. Messages without a matching Person go to Inbox for review.
+                  </div>
+                ) : null}
+              </Panel>
+
+              <Panel title="Actions">
+                <a href="/api/gmail/google/connect?returnTo=/admin" style={{ ...primaryLinkStyle, display: "block", textAlign: "center", marginBottom: "10px" }}>
+                  {gmailStatus?.connection ? "Reconnect Gmail" : "Connect Gmail"}
+                </a>
+                <SelectOptionField
+                  label="Backfill range"
+                  value={gmailBackfillDays}
+                  onChange={setGmailBackfillDays}
+                  options={[...GMAIL_BACKFILL_OPTIONS]}
+                />
+                <button style={primaryButtonStyle} disabled={saving || !gmailStatus?.connection} onClick={syncGmail}>
+                  {saving ? "Syncing..." : "Sync now"}
+                </button>
+                <button style={{ ...smallButtonStyle, width: "100%", marginTop: "9px" }} onClick={loadGmailStatus}>
+                  Refresh Status
+                </button>
+                <div style={{ fontSize: "11px", color: "var(--ink-4)", marginTop: "12px", lineHeight: 1.5 }}>
+                  Sync is read-only, batched, and uses Gmail history after the first import. Matched emails become Interactions; unmatched emails go to Inbox.
                 </div>
               </Panel>
             </section>
