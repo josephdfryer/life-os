@@ -44,7 +44,7 @@ export async function GET(req: NextRequest) {
     db.stagedInteraction.count({ where }),
   ])
 
-  const itemIds = items.map(item => item.id)
+  const itemIds = items.map((item: typeof items[number]) => item.id)
   const runs = itemIds.length
     ? await db.ruleRun.findMany({
         where: { targetType: "stagedInteraction", targetId: { in: itemIds }, workspaceId: auth.workspaceId },
@@ -63,12 +63,12 @@ export async function GET(req: NextRequest) {
   }
 
   return NextResponse.json({
-    data: items.map(item => ({
+    data: items.map((item: typeof items[number]) => ({
       ...item,
       candidatePerson: item.candidatePerson
         ? { ...item.candidatePerson, emails: parseTags(item.candidatePerson.emails), phones: parseTags(item.candidatePerson.phones) }
         : null,
-      ruleRuns: (runsByTarget.get(item.id) ?? []).map(run => ({
+      ruleRuns: (runsByTarget.get(item.id) ?? []).map((run: typeof runs[number]) => ({
         id: run.id,
         createdAt: run.createdAt,
         trigger: run.trigger,
