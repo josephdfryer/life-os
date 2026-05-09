@@ -56,7 +56,7 @@ export async function GET(req: NextRequest) {
   const limit = Math.min(200, Math.max(1, parseInt(searchParams.get("limit") ?? "50")))
   const search = searchParams.get("search")?.trim().toLowerCase() ?? ""
   const sort = searchParams.get("sort") ?? "issues"
-  const issue = searchParams.get("issue") as IssueKey | "all" | null
+  const issue = searchParams.get("issue") as IssueKey | "all" | "all_people" | null
 
   const rows = await db.person.findMany({
     where: { workspaceId: actor.workspaceId },
@@ -152,8 +152,8 @@ export async function GET(req: NextRequest) {
   }
 
   const filtered = people
-    .filter(person => person.issueKeys.length > 0)
-    .filter(person => !issue || issue === "all" || person.issueKeys.includes(issue))
+    .filter(person => issue === "all_people" || person.issueKeys.length > 0)
+    .filter(person => !issue || issue === "all" || issue === "all_people" || person.issueKeys.includes(issue))
     .filter(person => {
       if (!search) return true
       const haystack = [

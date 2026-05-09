@@ -9,6 +9,7 @@ import type { Person } from "@/types"
 
 type IssueKey =
   | "all"
+  | "all_people"
   | "missing_email"
   | "missing_phone"
   | "missing_first"
@@ -34,6 +35,17 @@ type CleanupStats = {
   missingLast: number
   nameOnly: number
   strangeSymbols: number
+}
+
+type StatAction = {
+  issue: IssueKey
+  sort: SortKey
+}
+
+type StatCard = StatAction & {
+  label: string
+  value: number
+  tone?: "accent"
 }
 
 const ISSUE_FILTERS: { key: IssueKey; label: string }[] = [
@@ -108,6 +120,22 @@ export default function DataCleaningPage() {
     }
   }
 
+  function applyStat(action: StatAction) {
+    setIssue(action.issue)
+    setSort(action.sort)
+  }
+
+  const statCards: StatCard[] = stats
+    ? [
+        { label: "Total people", value: stats.total, issue: "all_people", sort: "name" },
+        { label: "Need cleanup", value: stats.needsCleanup, issue: "all", sort: "issues", tone: "accent" },
+        { label: "No phone", value: stats.missingPhone, issue: "missing_phone", sort: "sparse" },
+        { label: "No email", value: stats.missingEmail, issue: "missing_email", sort: "sparse" },
+        { label: "Name only", value: stats.nameOnly, issue: "name_only", sort: "name" },
+        { label: "Symbols", value: stats.strangeSymbols, issue: "strange_symbols", sort: "name" },
+      ]
+    : []
+
   return (
     <div style={{ maxWidth: "960px", margin: "0 auto", padding: "32px 24px" }}>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "16px", marginBottom: "22px" }}>
@@ -125,12 +153,16 @@ export default function DataCleaningPage() {
 
       {stats && (
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(126px, 1fr))", gap: "8px", marginBottom: "14px" }}>
-          <Stat label="Total people" value={stats.total} />
-          <Stat label="Need cleanup" value={stats.needsCleanup} tone="accent" />
-          <Stat label="No phone" value={stats.missingPhone} />
-          <Stat label="No email" value={stats.missingEmail} />
-          <Stat label="Name only" value={stats.nameOnly} />
-          <Stat label="Symbols" value={stats.strangeSymbols} />
+          {statCards.map(card => (
+            <Stat
+              key={card.label}
+              label={card.label}
+              value={card.value}
+              tone={card.tone}
+              active={issue === card.issue && sort === card.sort}
+              onClick={() => applyStat(card)}
+            />
+          ))}
         </div>
       )}
 
@@ -143,6 +175,11 @@ export default function DataCleaningPage() {
         />
         <div style={{ display: "flex", gap: "8px", alignItems: "center", flexWrap: "wrap", marginBottom: "10px" }}>
           <span style={{ fontSize: "10px", color: "var(--ink-4)", letterSpacing: "0.06em", textTransform: "uppercase" }}>Filter:</span>
+          {issue === "all_people" && (
+            <button onClick={() => setIssue("all_people")} style={pillStyle(true)}>
+              All people
+            </button>
+          )}
           {ISSUE_FILTERS.map(filter => (
             <button key={filter.key} onClick={() => setIssue(filter.key)} style={pillStyle(issue === filter.key)}>
               {filter.label}
@@ -210,12 +247,39 @@ export default function DataCleaningPage() {
   )
 }
 
-function Stat({ label, value, tone }: { label: string; value: number; tone?: "accent" }) {
+function Stat({
+  label,
+  value,
+  tone,
+  active,
+  onClick,
+}: {
+  label: string
+  value: number
+  tone?: "accent"
+  active: boolean
+  onClick: () => void
+}) {
+  const accent = tone === "accent" || active
   return (
-    <div style={{ border: "1px solid var(--border)", background: tone === "accent" ? "var(--accent-soft)" : "var(--surface)", borderRadius: "8px", padding: "12px" }}>
-      <div style={{ color: tone === "accent" ? "var(--accent)" : "var(--ink)", fontSize: "20px", fontWeight: 600 }}>{value.toLocaleString()}</div>
+    <button
+      type="button"
+      onClick={onClick}
+      aria-pressed={active}
+      style={{
+        border: `1px solid ${active ? "var(--accent)" : "var(--border)"}`,
+        background: accent ? "var(--accent-soft)" : "var(--surface)",
+        borderRadius: "8px",
+        padding: "12px",
+        textAlign: "left",
+        cursor: "pointer",
+        font: "inherit",
+        boxShadow: active ? "0 0 0 1px var(--accent)" : "none",
+      }}
+    >
+      <div style={{ color: accent ? "var(--accent)" : "var(--ink)", fontSize: "20px", fontWeight: 600 }}>{value.toLocaleString()}</div>
       <div style={{ color: "var(--ink-4)", fontSize: "10px", textTransform: "uppercase", letterSpacing: "0.06em", marginTop: "3px" }}>{label}</div>
-    </div>
+    </button>
   )
 }
 
