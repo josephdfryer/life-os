@@ -5,6 +5,7 @@ import { auditAction, type DomainActor } from "./audit"
 import type { AccessActor } from "./access"
 import { stageRecord } from "./inbox"
 import { appendDailySourceInteraction } from "./interactions"
+import { sourceMarkers } from "./idempotency"
 
 const GOOGLE_AUTH_URL = "https://accounts.google.com/o/oauth2/v2/auth"
 const GOOGLE_TOKEN_URL = "https://oauth2.googleapis.com/token"
@@ -88,6 +89,17 @@ type ParsedMessage = {
   metadata: Record<string, unknown>
 }
 
+type GmailMessageMetadata = {
+  subject?: string | null
+  from?: EmailParty[]
+  to?: EmailParty[]
+  cc?: EmailParty[]
+  bcc?: EmailParty[]
+  snippet?: string | null
+  threadId?: string | null
+  historyId?: string | null
+}
+
 type SyncOptions = {
   backfillDays?: number | null
   unmatchedMode?: "skip" | "stage" | null
@@ -113,7 +125,7 @@ export function gmailConfigured() {
 export async function gmailStatus(actor: AccessActor) {
   const connection = await db.gmailConnection.findFirst({
     where: { workspaceId: actor.workspaceId, provider: "google" },
-    orderBy: { updatedAt: "desc" },
+    orderBy: { createdAt: "desc" },
     select: {
       id: true,
       status: true,
@@ -136,6 +148,140 @@ export async function gmailStatus(actor: AccessActor) {
       messageCount: connection._count.messageLinks,
       _count: undefined,
     } : null,
+  }
+}
+
+export async function gmailTrace(actor: AccessActor, options: { limit?: number } = {}) {
+  const limit = normalizeTraceLimit(options.limit)
+  const connection = await db.gmailConnection.findFirst({
+    where: { workspaceId: actor.workspaceId, provider: "google" },
+    orderBy: { updatedAt: "desc" },
+    select: { id: true, mailboxId: true, accountEmail: true },
+  })
+
+  const runs = await db.auditLog.findMany({
+    where: { workspaceId: actor.workspaceId, action: "gmail.sync" },
+    orderBy: { createdAt: "desc" },
+    take: 10,
+    select: { id: true, createdAt: true, actorLabel: true, metadata: true },
+  })
+
+  const links = connection ? await db.gmailMessageLink.findMany({
+    where: { workspaceId: actor.workspaceId, provider: "google", connectionId: connection.id },
+    orderBy: [{ updatedAt: "desc" }, { createdAt: "desc" }],
+    take: limit,
+    include: {
+      interaction: {
+        select: {
+          id: true,
+          createdAt: true,
+          timestamp: true,
+          summary: true,
+          notes: true,
+          direction: true,
+          person: { select: { id: true, first: true, last: true, emails: true } },
+        },
+      },
+      stagedItem: {
+        select: {
+          id: true,
+          createdAt: true,
+          updatedAt: true,
+          status: true,
+          contactName: true,
+          contactEmail: true,
+          summary: true,
+          direction: true,
+          timestamp: true,
+          metadata: true,
+          candidatePerson: { select: { id: true, first: true, last: true, emails: true } },
+        },
+      },
+    },
+  }) : []
+
+  const recentInteractions = await db.interaction.findMany({
+    where: { workspaceId: actor.workspaceId, type: "email", notes: { contains: `${SOURCE}:` } },
+    orderBy: { createdAt: "desc" },
+    take: 500,
+    select: {
+      id: true,
+      createdAt: true,
+      timestamp: true,
+      summary: true,
+      notes: true,
+      direction: true,
+      person: { select: { id: true, first: true, last: true, emails: true } },
+    },
+  })
+  const interactionsByMessage = new Map<string, typeof recentInteractions>()
+  for (const interaction of recentInteractions) {
+    for (const marker of sourceMarkers(interaction.notes)) {
+      if (!marker.startsWith(`${SOURCE}:`)) continue
+      const messageId = marker.slice(`${SOURCE}:`.length)
+      interactionsByMessage.set(messageId, [...(interactionsByMessage.get(messageId) ?? []), interaction])
+    }
+  }
+
+  return {
+    connection,
+    runs: runs.map(run => ({
+      id: run.id,
+      createdAt: run.createdAt,
+      actorLabel: run.actorLabel,
+      metadata: parseJsonObject(run.metadata),
+    })),
+    messages: links.map(link => {
+      const stagedMetadata = parseGmailMetadata(link.stagedItem?.metadata)
+      const linkedInteractions = dedupeInteractions([
+        ...(interactionsByMessage.get(link.externalMessageId) ?? []),
+        ...(link.interaction ? [link.interaction] : []),
+      ]).map(interaction => ({
+        id: interaction.id,
+        createdAt: interaction.createdAt,
+        timestamp: interaction.timestamp,
+        summary: interaction.summary,
+        direction: interaction.direction,
+        person: interaction.person ? {
+          id: interaction.person.id,
+          name: personName(interaction.person),
+          emails: parseJsonList(interaction.person.emails),
+        } : null,
+      }))
+
+      return {
+        id: link.id,
+        status: link.status,
+        mailboxId: link.mailboxId,
+        externalMessageId: link.externalMessageId,
+        threadId: link.threadId,
+        historyId: link.historyId,
+        createdAt: link.createdAt,
+        updatedAt: link.updatedAt,
+        lastSeenAt: link.lastSeenAt,
+        subject: stagedMetadata.subject ?? link.stagedItem?.summary ?? link.interaction?.summary ?? null,
+        snippet: stagedMetadata.snippet ?? null,
+        from: stagedMetadata.from ?? [],
+        to: stagedMetadata.to ?? [],
+        linkedPeople: linkedInteractions,
+        stagedItem: link.stagedItem ? {
+          id: link.stagedItem.id,
+          status: link.stagedItem.status,
+          createdAt: link.stagedItem.createdAt,
+          updatedAt: link.stagedItem.updatedAt,
+          timestamp: link.stagedItem.timestamp,
+          contactName: link.stagedItem.contactName,
+          contactEmail: link.stagedItem.contactEmail,
+          summary: link.stagedItem.summary,
+          direction: link.stagedItem.direction,
+          candidatePerson: link.stagedItem.candidatePerson ? {
+            id: link.stagedItem.candidatePerson.id,
+            name: personName(link.stagedItem.candidatePerson),
+            emails: parseJsonList(link.stagedItem.candidatePerson.emails),
+          } : null,
+        } : null,
+      }
+    }),
   }
 }
 
@@ -448,6 +594,21 @@ async function importMessage(input: {
       if (result.created) createdInteractions += 1
       else if (result.updated) updatedInteractions += 1
       else skipped += 1
+      await auditAction({
+        actor: input.actor,
+        action: "interaction.create",
+        targetType: "interaction",
+        targetId: result.interactionId,
+        metadata: {
+          mode: result.created ? "gmail-sync-create" : result.updated ? "gmail-sync-append" : "gmail-sync-skip",
+          source: SOURCE,
+          gmailMessageId: input.message.id,
+          threadId: input.message.threadId,
+          personId: person.id,
+          personName: personName(person),
+          subject: input.message.subject,
+        },
+      })
     }
   } else if (input.unmatchedMode === "stage") {
     const stagedItem = await stageRecord({
@@ -795,8 +956,43 @@ function parseJsonList(value: string | null) {
   }
 }
 
+function parseJsonObject(value: string | null) {
+  if (!value) return null
+  try {
+    const parsed = JSON.parse(value) as unknown
+    return parsed && typeof parsed === "object" && !Array.isArray(parsed) ? parsed : null
+  } catch {
+    return null
+  }
+}
+
+function parseGmailMetadata(value: string | null | undefined): GmailMessageMetadata {
+  const parsed = parseJsonObject(value ?? null) as GmailMessageMetadata | null
+  return parsed ?? {}
+}
+
 function normalizeEmail(value: string) {
   return value.trim().toLowerCase()
+}
+
+function normalizeTraceLimit(value: number | null | undefined) {
+  if (typeof value !== "number" || !Number.isFinite(value)) return 50
+  const limit = Math.round(value)
+  if (limit < 1) return 50
+  return Math.min(limit, 150)
+}
+
+function personName(person: { first: string; last: string }) {
+  return [person.first, person.last].filter(Boolean).join(" ").trim() || "Unnamed person"
+}
+
+function dedupeInteractions<T extends { id: string }>(items: T[]) {
+  const seen = new Set<string>()
+  return items.filter(item => {
+    if (seen.has(item.id)) return false
+    seen.add(item.id)
+    return true
+  })
 }
 
 function chunk<T>(items: T[], size: number) {

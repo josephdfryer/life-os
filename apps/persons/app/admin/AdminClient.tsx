@@ -157,6 +157,54 @@ type GmailStatus = {
     messageCount: number
   } | null
 }
+type GmailTrace = {
+  connection: {
+    id: string
+    mailboxId: string
+    accountEmail: string | null
+  } | null
+  runs: {
+    id: string
+    createdAt: string
+    actorLabel: string | null
+    metadata: Record<string, unknown> | null
+  }[]
+  messages: {
+    id: string
+    status: string
+    mailboxId: string
+    externalMessageId: string
+    threadId: string | null
+    historyId: string | null
+    createdAt: string
+    updatedAt: string
+    lastSeenAt: string | null
+    subject: string | null
+    snippet: string | null
+    from: { name: string | null; email: string }[]
+    to: { name: string | null; email: string }[]
+    linkedPeople: {
+      id: string
+      createdAt: string
+      timestamp: string
+      summary: string | null
+      direction: string | null
+      person: { id: string; name: string; emails: string[] } | null
+    }[]
+    stagedItem: {
+      id: string
+      status: string
+      createdAt: string
+      updatedAt: string
+      timestamp: string
+      contactName: string | null
+      contactEmail: string | null
+      summary: string | null
+      direction: string | null
+      candidatePerson: { id: string; name: string; emails: string[] } | null
+    } | null
+  }[]
+}
 type Overview = {
   currentUser: { id: string; email: string; scopes: string[] }
   users: User[]
@@ -296,6 +344,7 @@ export default function AdminClient({
   const [calendarSyncResult, setCalendarSyncResult] = useState<string | null>(null)
   const [calendarBackfillDays, setCalendarBackfillDays] = useState("180")
   const [gmailStatus, setGmailStatus] = useState<GmailStatus | null>(null)
+  const [gmailTrace, setGmailTrace] = useState<GmailTrace | null>(null)
   const [gmailSyncResult, setGmailSyncResult] = useState<string | null>(null)
   const [gmailBackfillDays, setGmailBackfillDays] = useState("30")
   const [gmailUnmatchedMode, setGmailUnmatchedMode] = useState<"skip" | "stage">("skip")
@@ -365,7 +414,10 @@ export default function AdminClient({
       loadCalendarStatus()
       loadCalendarTrace()
     }
-    if (tab === "gmail") loadGmailStatus()
+    if (tab === "gmail") {
+      loadGmailStatus()
+      loadGmailTrace()
+    }
   }, [tab])
 
   useEffect(() => {
@@ -498,6 +550,17 @@ export default function AdminClient({
     }
   }
 
+  async function loadGmailTrace() {
+    try {
+      const res = await fetch("/api/gmail/google/trace?limit=75")
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error?.message || data.error || "Could not load Gmail trace")
+      setGmailTrace(data)
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Could not load Gmail trace")
+    }
+  }
+
   async function syncGmail() {
     setSaving(true)
     setError(null)
@@ -511,7 +574,7 @@ export default function AdminClient({
       const data = await res.json()
       if (!res.ok) throw new Error(data.error?.message || data.error || "Could not sync Gmail")
       setGmailSyncResult(JSON.stringify(data, null, 2))
-      await loadGmailStatus()
+      await Promise.all([loadGmailStatus(), loadGmailTrace()])
     } catch (e) {
       setError(e instanceof Error ? e.message : "Could not sync Gmail")
     } finally {
@@ -1400,6 +1463,66 @@ export default function AdminClient({
                   Sync is read-only, batched, and uses Gmail history after the first import. By default, only email involving existing People is imported.
                 </div>
               </Panel>
+
+              <div style={{ gridColumn: "1 / -1" }}>
+              <Panel title="Sync Trace" meta={gmailTrace ? `${gmailTrace.messages.length} recent messages` : "loading"}>
+                <div style={{ display: "flex", justifyContent: "space-between", gap: "10px", alignItems: "center", marginBottom: "10px" }}>
+                  <div style={{ fontSize: "11px", color: "var(--ink-4)", lineHeight: 1.45 }}>
+                    Recent Gmail imports with their matched People, staged Inbox records, or skipped status.
+                  </div>
+                  <button style={smallButtonStyle} onClick={loadGmailTrace}>Refresh Trace</button>
+                </div>
+
+                {gmailTrace?.runs.length ? (
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(190px, 1fr))", gap: "8px", marginBottom: "12px" }}>
+                    {gmailTrace.runs.slice(0, 3).map(run => (
+                      <div key={run.id} style={{ border: "1px solid var(--border)", borderRadius: "8px", background: "var(--bg)", padding: "9px" }}>
+                        <div style={{ fontSize: "10px", color: "var(--ink-4)", marginBottom: "5px" }}>{formatDate(run.createdAt)}</div>
+                        <div style={{ fontSize: "11px", color: "var(--ink-2)", lineHeight: 1.45 }}>{formatGmailSyncRun(run.metadata)}</div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div style={{ fontSize: "11px", color: "var(--ink-4)", marginBottom: "12px" }}>No Gmail sync runs logged yet.</div>
+                )}
+
+                <div style={{ display: "grid", gap: "8px" }}>
+                  {(gmailTrace?.messages ?? []).map(message => (
+                    <div key={message.id} style={{ border: "1px solid var(--border)", borderRadius: "8px", background: "var(--bg)", padding: "10px" }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", gap: "12px", alignItems: "baseline", marginBottom: "7px" }}>
+                        <div style={{ minWidth: 0 }}>
+                          <div style={{ fontSize: "13px", fontWeight: 600, color: "var(--ink)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                            {message.subject || message.stagedItem?.summary || "Gmail message"}
+                          </div>
+                          <div style={{ fontSize: "10px", color: "var(--ink-4)", marginTop: "3px" }}>
+                            {formatDate(message.lastSeenAt ?? message.updatedAt)} · {message.status} · thread {shortId(message.threadId)}
+                          </div>
+                        </div>
+                        <StatusPill status={message.status} />
+                      </div>
+                      <div style={{ fontSize: "10px", color: "var(--ink-4)", marginBottom: "7px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                        {formatEmailParties("From", message.from)} {message.to.length ? ` · ${formatEmailParties("To", message.to)}` : ""}
+                      </div>
+                      <GmailTraceOutcome message={message} />
+                      <details style={{ marginTop: "8px" }}>
+                        <summary style={{ fontSize: "10px", color: "var(--ink-4)", cursor: "pointer" }}>Message IDs</summary>
+                        <div style={{ marginTop: "7px", display: "grid", gap: "5px" }}>
+                          <div style={{ fontSize: "10px", color: "var(--ink-4)", wordBreak: "break-word" }}>Gmail message: {message.externalMessageId}</div>
+                          {message.threadId && <div style={{ fontSize: "10px", color: "var(--ink-4)", wordBreak: "break-word" }}>Thread: {message.threadId}</div>}
+                          {message.historyId && <div style={{ fontSize: "10px", color: "var(--ink-4)", wordBreak: "break-word" }}>History: {message.historyId}</div>}
+                          {message.snippet && <div style={{ fontSize: "10px", color: "var(--ink-3)", lineHeight: 1.45 }}>{message.snippet}</div>}
+                        </div>
+                      </details>
+                    </div>
+                  ))}
+                  {gmailTrace && gmailTrace.messages.length === 0 && (
+                    <div style={{ fontSize: "11px", color: "var(--ink-4)", border: "1px solid var(--border)", borderRadius: "8px", background: "var(--bg)", padding: "10px" }}>
+                      No Gmail messages to trace yet.
+                    </div>
+                  )}
+                </div>
+              </Panel>
+              </div>
             </section>
           )}
 
@@ -1647,6 +1770,44 @@ function TracePeople({ people }: { people: CalendarTrace["events"][number]["link
   )
 }
 
+function GmailTraceOutcome({ message }: { message: GmailTrace["messages"][number] }) {
+  if (message.linkedPeople.length) {
+    return (
+      <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
+        {message.linkedPeople.map(item => item.person ? (
+          <a
+            key={`${item.id}-${item.person.id}`}
+            href={`/people/${item.person.id}`}
+            style={{ border: "1px solid #88a06a", color: "#526b37", borderRadius: "999px", padding: "3px 8px", fontSize: "10px", textDecoration: "none", background: "#f3f8ee" }}
+          >
+            {item.person.name}
+          </a>
+        ) : null)}
+      </div>
+    )
+  }
+
+  if (message.stagedItem) {
+    return (
+      <div style={{ display: "flex", gap: "7px", alignItems: "center", flexWrap: "wrap", fontSize: "11px", color: "var(--ink-3)" }}>
+        <a href="/inbox" style={{ ...smallButtonStyle, textDecoration: "none" }}>Open Inbox</a>
+        <span>Staged for {message.stagedItem.contactName || message.stagedItem.contactEmail || "review"}</span>
+        {message.stagedItem.candidatePerson && <span>candidate: {message.stagedItem.candidatePerson.name}</span>}
+      </div>
+    )
+  }
+
+  if (message.status === "skipped") {
+    return <div style={{ fontSize: "11px", color: "var(--ink-4)" }}>Skipped because no existing Person matched and Known People only was selected.</div>
+  }
+
+  if (message.status === "deleted") {
+    return <div style={{ fontSize: "11px", color: "var(--ink-4)" }}>Google reported this message as deleted.</div>
+  }
+
+  return <div style={{ fontSize: "11px", color: "var(--ink-4)" }}>No linked Person or Inbox item is recorded for this message.</div>
+}
+
 function Th({ children = null }: { children?: React.ReactNode }) {
   return <th style={{ textAlign: "left", padding: "8px", fontSize: "10px", color: "var(--ink-4)", borderBottom: "1px solid var(--border)", fontWeight: 500 }}>{children}</th>
 }
@@ -1750,6 +1911,30 @@ function formatSyncRun(metadata: Record<string, unknown> | null) {
   const batches = Number(metadata.batches ?? 0)
   const incremental = metadata.incremental ? "incremental" : "backfill"
   return `${createdEvents} events created, ${updatedEvents} updated, ${createdInteractions} People interactions · ${fetched} fetched in ${batches} batches · ${incremental}`
+}
+
+function formatGmailSyncRun(metadata: Record<string, unknown> | null) {
+  if (!metadata) return "Sync run"
+  const createdInteractions = Number(metadata.createdInteractions ?? 0)
+  const updatedInteractions = Number(metadata.updatedInteractions ?? 0)
+  const staged = Number(metadata.staged ?? 0)
+  const skipped = Number(metadata.skipped ?? 0)
+  const deleted = Number(metadata.deleted ?? 0)
+  const fetched = Number(metadata.fetched ?? 0)
+  const batches = Number(metadata.batches ?? 0)
+  const incremental = metadata.incremental ? "incremental" : "backfill"
+  return `${createdInteractions} created, ${updatedInteractions} appended, ${staged} staged, ${skipped} skipped, ${deleted} deleted · ${fetched} fetched in ${batches} batches · ${incremental}`
+}
+
+function formatEmailParties(label: string, parties: { name: string | null; email: string }[]) {
+  if (!parties.length) return `${label}: unknown`
+  const names = parties.slice(0, 3).map(party => party.name || party.email).join(", ")
+  const more = parties.length > 3 ? ` +${parties.length - 3}` : ""
+  return `${label}: ${names}${more}`
+}
+
+function shortId(value: string | null) {
+  return value ? value.slice(0, 10) : "none"
 }
 
 function actionCount(value: unknown) {

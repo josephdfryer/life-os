@@ -225,9 +225,15 @@ flowchart TD
   Match -->|No Person match, default| Skip["Skip unknown email"]
   Match -->|No Person match, opt in| Inbox["Stage email in Inbox for review"]
   Sync --> Audit["Write gmail.sync AuditLog"]
+  Admin --> Trace["Review sync trace"]
+  Trace --> Link
+  Trace --> Interaction
+  Trace --> Inbox
 ```
 
 Plain English: Gmail remains read-only. Persons imports messages into Interactions when a sender or recipient already matches a Person email in the current workspace. The default sync mode is "Known People only": unknown senders and recipients are skipped and do not enter Inbox. The user can explicitly switch to "Stage unmatched in Inbox" when they want to review unknown emails and attach or create People later. First-time sync uses the selected Admin backfill range, defaults to 30 days, includes an all-time option, and processes messages in small batches. Later syncs use Gmail's history API via `GmailConnection.historyId`; if Gmail says that history cursor is too old, Persons falls back to a bounded full sync.
+
+The Admin Gmail tab includes a sync trace. It combines recent `gmail.sync` audit rows with `GmailMessageLink`, email Interactions, and staged Inbox records so an operator can see whether each message matched a Person, was staged for review, was skipped by Known People only mode, or was marked deleted.
 
 Runtime configuration:
 
@@ -532,6 +538,7 @@ flowchart LR
 - Google Calendar foundation: Admin can connect Google Calendar, sync read-only events into Events, and create Interactions for attendees matched to existing People by email.
 - Google Calendar traceability: Admin can inspect recent Calendar sync runs, imported events, Google event IDs, attendees, and linked People.
 - Gmail foundation: Admin can connect Gmail, sync read-only messages into Interactions for matched People, and stage unmatched emails in Inbox.
+- Gmail traceability: Admin can inspect recent Gmail sync runs, message IDs, threads, matched People, staged Inbox records, skipped messages, and deleted markers.
 
 ### Future
 
