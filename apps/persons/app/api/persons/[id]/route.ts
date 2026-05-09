@@ -26,7 +26,7 @@ export async function GET(_req: NextRequest, { params }: Params) {
 
   if (!person) return NextResponse.json({ error: "Not found" }, { status: 404 })
 
-  const interactions: Interaction[] = person.interactions.map(ix => ({
+  const interactions: Interaction[] = person.interactions.map((ix: typeof person.interactions[number]) => ({
     ...ix,
     actionItems: parseTags(ix.actionItems) as unknown as string[],
     event: ix.event
