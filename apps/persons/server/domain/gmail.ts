@@ -10,7 +10,10 @@ import { sourceMarkers } from "./idempotency"
 const GOOGLE_AUTH_URL = "https://accounts.google.com/o/oauth2/v2/auth"
 const GOOGLE_TOKEN_URL = "https://oauth2.googleapis.com/token"
 const GMAIL_BASE = "https://gmail.googleapis.com/gmail/v1"
-const GMAIL_SCOPE = "https://www.googleapis.com/auth/gmail.readonly"
+const GOOGLE_PEOPLE_BASE = "https://people.googleapis.com/v1"
+const GMAIL_READONLY_SCOPE = "https://www.googleapis.com/auth/gmail.readonly"
+const GOOGLE_CONTACTS_READONLY_SCOPE = "https://www.googleapis.com/auth/contacts.readonly"
+const GMAIL_SCOPE = `${GMAIL_READONLY_SCOPE} ${GOOGLE_CONTACTS_READONLY_SCOPE}`
 const SOURCE = "gmail"
 const DEFAULT_BACKFILL_DAYS = 30
 const MAX_BACKFILL_DAYS = 3650
@@ -36,6 +39,24 @@ type GmailProfile = {
   emailAddress?: string
   historyId?: string
 }
+
+type GooglePeopleResponse = {
+  connections?: GooglePerson[]
+  nextPageToken?: string
+}
+
+type GooglePerson = {
+  names?: { displayName?: string; givenName?: string; familyName?: string }[]
+  emailAddresses?: { value?: string }[]
+  phoneNumbers?: { value?: string }[]
+  organizations?: { name?: string; title?: string }[]
+  birthdays?: { date?: GoogleBirthdayDate }[]
+  addresses?: { formattedValue?: string; city?: string; region?: string; country?: string }[]
+  urls?: { value?: string }[]
+  biographies?: { value?: string }[]
+}
+
+type GoogleBirthdayDate = { year?: number; month?: number; day?: number }
 
 type GmailListResponse = {
   messages?: { id: string; threadId?: string }[]
@@ -283,6 +304,25 @@ export async function gmailTrace(actor: AccessActor, options: { limit?: number }
       }
     }),
   }
+}
+
+export async function importGmailContactsPreview(actor: AccessActor) {
+  const connection = await db.gmailConnection.findFirst({
+    where: { workspaceId: actor.workspaceId, provider: "google", status: "active" },
+    orderBy: { updatedAt: "desc" },
+  })
+  if (!connection) throw notFound("Gmail is not connected")
+  if (!hasGoogleContactsScope(connection.scope)) {
+    throw badRequest("Reconnect Gmail to allow importing Google contacts", {
+      reconnectRequired: true,
+      missingScope: GOOGLE_CONTACTS_READONLY_SCOPE,
+      reconnectUrl: "/api/gmail/google/connect?returnTo=/import/people",
+    })
+  }
+
+  const accessToken = await usableAccessToken(connection)
+  const contacts = await fetchGoogleContacts(accessToken)
+  return { contacts, count: contacts.length, method: "google-contacts", accountEmail: connection.accountEmail }
 }
 
 export function gmailAuthUrl(actor: AccessActor, origin: string, returnTo = "/admin") {
@@ -896,6 +936,69 @@ function gmailFetch(url: string, accessToken: string) {
   return fetch(url, { headers: { Authorization: `Bearer ${accessToken}` } })
 }
 
+async function fetchGoogleContacts(accessToken: string) {
+  const contacts: ReturnType<typeof googlePersonToParsedContact>[] = []
+  let pageToken: string | null = null
+  const personFields = "names,emailAddresses,phoneNumbers,organizations,birthdays,addresses,urls,biographies"
+
+  do {
+    const params = new URLSearchParams({
+      pageSize: "1000",
+      personFields,
+      sortOrder: "FIRST_NAME_ASCENDING",
+    })
+    if (pageToken) params.set("pageToken", pageToken)
+    const res = await gmailFetch(`${GOOGLE_PEOPLE_BASE}/people/me/connections?${params}`, accessToken)
+    if (!res.ok) throw new Error(`Google contacts request failed (${res.status})`)
+    const data = await res.json() as GooglePeopleResponse
+    for (const person of data.connections ?? []) {
+      const contact = googlePersonToParsedContact(person)
+      if (contact.first || contact.last || contact.email || contact.phone) contacts.push(contact)
+    }
+    pageToken = data.nextPageToken ?? null
+  } while (pageToken)
+
+  return contacts
+}
+
+function googlePersonToParsedContact(person: GooglePerson) {
+  const name = person.names?.[0]
+  const organization = person.organizations?.[0]
+  const email = cleanNullable(person.emailAddresses?.find(item => item.value)?.value)
+  const phone = cleanNullable(person.phoneNumbers?.find(item => item.value)?.value)
+  const fullName = cleanNullable(name?.displayName)
+    ?? [name?.givenName, name?.familyName].map(value => value?.trim()).filter(Boolean).join(" ")
+  const title = cleanNullable(organization?.title)
+  const company = cleanNullable(organization?.name)
+  const urls = (person.urls ?? []).map(url => url.value?.trim()).filter((value): value is string => Boolean(value))
+  const linkedin = urls.find(url => url.toLowerCase().includes("linkedin.com")) ?? null
+  const twitter = urls.find(url => {
+    const lower = url.toLowerCase()
+    return lower.includes("twitter.com") || lower.includes("x.com")
+  }) ?? null
+  const website = urls.find(url => url !== linkedin && url !== twitter) ?? null
+  const address = person.addresses?.[0]
+  const structuredLocation = [address?.city, address?.region, address?.country].map(value => value?.trim()).filter(Boolean).join(", ")
+  const location = cleanNullable(address?.formattedValue) ?? cleanNullable(structuredLocation)
+
+  return {
+    first: cleanNullable(name?.givenName) ?? firstFromFullName(fullName),
+    last: cleanNullable(name?.familyName) ?? lastFromFullName(fullName),
+    fullName: fullName || [name?.givenName, name?.familyName].map(value => value?.trim()).filter(Boolean).join(" "),
+    title,
+    headline: title && company ? `${title} at ${company}` : title ?? company,
+    company,
+    email,
+    phone,
+    birthday: googleBirthday(person.birthdays?.[0]?.date),
+    notes: cleanNullable(person.biographies?.[0]?.value),
+    location,
+    linkedin,
+    twitter,
+    website,
+  }
+}
+
 function signState(state: OAuthState) {
   const payload = Buffer.from(JSON.stringify(state)).toString("base64url")
   const signature = createHmac("sha256", stateSecret()).update(payload).digest("base64url")
@@ -944,6 +1047,31 @@ function normalizeBackfillDays(value: number | null | undefined) {
   if (days < 1) return DEFAULT_BACKFILL_DAYS
   if (days >= ALL_TIME_BACKFILL_DAYS) return ALL_TIME_BACKFILL_DAYS
   return Math.min(days, MAX_BACKFILL_DAYS)
+}
+
+function hasGoogleContactsScope(scope: string | null | undefined) {
+  return (scope ?? "").split(/\s+/).includes(GOOGLE_CONTACTS_READONLY_SCOPE)
+}
+
+function cleanNullable(value: string | null | undefined) {
+  const clean = value?.trim()
+  return clean ? clean : null
+}
+
+function firstFromFullName(value: string | null) {
+  return value?.split(/\s+/)[0] ?? ""
+}
+
+function lastFromFullName(value: string | null) {
+  const parts = value?.split(/\s+/) ?? []
+  return parts.length > 1 ? parts.slice(1).join(" ") : ""
+}
+
+function googleBirthday(date: GoogleBirthdayDate | undefined) {
+  if (!date?.month || !date.day) return null
+  const month = String(date.month).padStart(2, "0")
+  const day = String(date.day).padStart(2, "0")
+  return `${date.year ?? "0000"}-${month}-${day}`
 }
 
 function parseJsonList(value: string | null) {

@@ -283,6 +283,7 @@ export default function ImportContactsPage() {
   const [filter, setFilter]                 = useState<FilterKey>("all")
   const [page, setPage]                     = useState(0)
   const [autoSkipped, setAutoSkipped]       = useState(0)
+  const [gmailReconnectUrl, setGmailReconnectUrl] = useState<string | null>(null)
   const [requiredFields, setRequiredFields] = useState<Set<FieldKey>>(new Set())
   const inputRef  = useRef<HTMLInputElement>(null)
   const cardRefs  = useRef<(HTMLDivElement | null)[]>([])
@@ -299,13 +300,14 @@ export default function ImportContactsPage() {
 
   async function processFile(file: File) {
     setError(null)
+    setGmailReconnectUrl(null)
     setLoading(true)
     const isCsv = file.name.endsWith(".csv")
     setLoadingMsg(isCsv ? "Mapping columns with AI…" : "Parsing people…")
 
     try {
       const content = await file.text()
-      const res = await fetch("/api/import/people", {
+      const res = await fetch("/api/import/contacts", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ content, format: isCsv ? "csv" : "vcf" }),
@@ -313,48 +315,80 @@ export default function ImportContactsPage() {
       const data = await res.json()
       if (!res.ok) throw new Error(data.error || "Failed to parse file")
 
-      setLoadingMsg("Matching against existing people…")
-
-      let skippedCount = 0
-      const review: ReviewContact[] = data.contacts.map((c: ParsedContact, i: number) => {
-        const hasRealName  = !!(c.first?.trim())
-        const totallyEmpty = !c.first?.trim() && !c.email && !c.phone
-        let guessedName = false, guessedFrom: string | null = null
-        let first = c.first ?? "", last = c.last ?? ""
-
-        if (!hasRealName && c.email) {
-          const guess = guessNameFromEmail(c.email)
-          if (guess) { first = guess.first; last = guess.last; guessedName = true; guessedFrom = c.email }
-        }
-
-        if (totallyEmpty) skippedCount++
-
-        const matchResult = totallyEmpty ? null : findMatch({ ...c, first, last }, existingPersons)
-        const action: ContactAction = matchResult
-          ? (matchResult.score >= DUPLICATE_THRESHOLD ? "update_existing" : "import_new")
-          : "import"
-
-        return {
-          ...c, first, last,
-          closeness: 1, tags: "", colorIdx: i,
-          skip: totallyEmpty,
-          guessedName, guessedFrom,
-          needsReview: !hasRealName,
-          matchResult, action,
-          selected: false,
-        }
-      })
-
-      setAutoSkipped(skippedCount)
-      setContacts(sortByStatus(review))
-      setFilter("all")
-      setPage(0)
-      setStep("review")
+      processParsedContacts(data.contacts ?? [])
     } catch (e) {
       setError(e instanceof Error ? e.message : "Failed to read file")
     } finally {
       setLoading(false)
     }
+  }
+
+  async function importGmailContacts() {
+    setError(null)
+    setGmailReconnectUrl(null)
+    setLoading(true)
+    setLoadingMsg("Reading Google contacts…")
+    try {
+      const res = await fetch("/api/import/gmail-contacts")
+      const data = await res.json()
+      if (!res.ok) {
+        const reconnectUrl = data.error?.details?.reconnectUrl
+        if (data.error?.details?.reconnectRequired && reconnectUrl) {
+          setGmailReconnectUrl(reconnectUrl)
+          throw new Error("Reconnect Gmail to allow contacts import.")
+        }
+        throw new Error(data.error?.message || data.error || "Could not import Gmail contacts")
+      }
+      processParsedContacts(data.contacts ?? [])
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Could not import Gmail contacts")
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  function processParsedContacts(parsedContacts: ParsedContact[]) {
+    if (!parsedContacts.length) {
+      setError("No people could be found in that source.")
+      return
+    }
+    setLoadingMsg("Matching against existing people…")
+
+    let skippedCount = 0
+    const review: ReviewContact[] = parsedContacts.map((c: ParsedContact, i: number) => {
+      const hasRealName  = !!(c.first?.trim())
+      const totallyEmpty = !c.first?.trim() && !c.email && !c.phone
+      let guessedName = false, guessedFrom: string | null = null
+      let first = c.first ?? "", last = c.last ?? ""
+
+      if (!hasRealName && c.email) {
+        const guess = guessNameFromEmail(c.email)
+        if (guess) { first = guess.first; last = guess.last; guessedName = true; guessedFrom = c.email }
+      }
+
+      if (totallyEmpty) skippedCount++
+
+      const matchResult = totallyEmpty ? null : findMatch({ ...c, first, last }, existingPersons)
+      const action: ContactAction = matchResult
+        ? (matchResult.score >= DUPLICATE_THRESHOLD ? "update_existing" : "import_new")
+        : "import"
+
+      return {
+        ...c, first, last,
+        closeness: 1, tags: "", colorIdx: i,
+        skip: totallyEmpty,
+        guessedName, guessedFrom,
+        needsReview: !hasRealName,
+        matchResult, action,
+        selected: false,
+      }
+    })
+
+    setAutoSkipped(skippedCount)
+    setContacts(sortByStatus(review))
+    setFilter("all")
+    setPage(0)
+    setStep("review")
   }
 
   function handleDrop(e: React.DragEvent) {
@@ -555,21 +589,37 @@ export default function ImportContactsPage() {
           Import People
         </h1>
         <p style={{ color: "var(--ink-3)", fontSize: "12px", margin: 0 }}>
-          Export a vCard (.vcf), then drop it here.
+          Import from a vCard, CSV, or your connected Google account.
         </p>
       </div>
 
       {/* ── Upload ── */}
       {step === "upload" && (
         <>
-          <div style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "10px", padding: "16px 18px", marginBottom: "20px", fontSize: "12px", color: "var(--ink-2)", lineHeight: 1.7 }}>
-            <div style={{ fontFamily: "var(--font-playfair), serif", fontSize: "14px", fontWeight: 500, color: "var(--ink)", marginBottom: "6px" }}>How to export a vCard</div>
+          <div style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "10px", padding: "16px 18px", marginBottom: "14px", fontSize: "12px", color: "var(--ink-2)", lineHeight: 1.7 }}>
+            <div style={{ fontFamily: "var(--font-playfair), serif", fontSize: "14px", fontWeight: 500, color: "var(--ink)", marginBottom: "6px" }}>Import from file</div>
             <ol style={{ margin: 0, paddingLeft: "18px" }}>
               <li>Open your address book app</li>
               <li>Select people (⌘-click to multi-select)</li>
               <li><strong>File → Export → Export vCard…</strong></li>
               <li>Save the .vcf file, then drop it below — or export a Google/LinkedIn CSV</li>
             </ol>
+          </div>
+
+          <div style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "10px", padding: "16px 18px", marginBottom: "14px", display: "grid", gridTemplateColumns: "minmax(0, 1fr) auto", gap: "14px", alignItems: "center" }}>
+            <div>
+              <div style={{ fontFamily: "var(--font-playfair), serif", fontSize: "14px", fontWeight: 500, color: "var(--ink)", marginBottom: "5px" }}>Import Gmail Contacts</div>
+              <div style={{ fontSize: "12px", color: "var(--ink-3)", lineHeight: 1.5 }}>
+                Pull Google Contacts from the Gmail account you connected, then review them here before anything is saved.
+              </div>
+            </div>
+            <button
+              onClick={importGmailContacts}
+              disabled={loading}
+              style={{ padding: "9px 14px", background: "var(--accent)", color: "#fff", border: "none", borderRadius: "7px", cursor: loading ? "wait" : "pointer", fontFamily: "inherit", fontSize: "12px", fontWeight: 500, opacity: loading ? 0.7 : 1, whiteSpace: "nowrap" }}
+            >
+              Import Gmail Contacts
+            </button>
           </div>
 
           <div
@@ -593,7 +643,16 @@ export default function ImportContactsPage() {
               </>
             )}
           </div>
-          {error && <p style={{ color: "var(--accent)", fontSize: "12px", marginTop: "12px" }}>{error}</p>}
+          {error && (
+            <div style={{ color: "var(--accent)", fontSize: "12px", marginTop: "12px", display: "grid", gap: "8px" }}>
+              <div>{error}</div>
+              {gmailReconnectUrl && (
+                <a href={gmailReconnectUrl} style={{ color: "var(--accent)", textDecoration: "underline" }}>
+                  Reconnect Gmail with Contacts access →
+                </a>
+              )}
+            </div>
+          )}
           <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
         </>
       )}
