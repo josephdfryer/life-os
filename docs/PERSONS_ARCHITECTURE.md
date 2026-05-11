@@ -165,7 +165,13 @@ The `itemType` field on the staged record tells the inbox what kind of record to
 
 ```mermaid
 flowchart TD
-  File["File, transcript, or API-ingested text"] --> Analyze["Analyze and extract people/interactions"]
+  ImportHub["/import chooser"] --> PeopleImport["/import/people"]
+  ImportHub --> ConversationImport["/import/conversations"]
+  PeopleFile["vCard or CSV people file"] --> PeopleImport
+  File["File, transcript, or API-ingested text"] --> ConversationImport
+  ConversationImport --> Analyze["Analyze and extract people/interactions"]
+  PeopleImport --> ParsePeople["Parse and match people records"]
+  ParsePeople --> Confirm
   Analyze --> MatchPeople["Match extracted names to existing People"]
   MatchPeople --> Confirm["Confirm import"]
   Confirm --> People["Create or update People"]
@@ -176,7 +182,7 @@ flowchart TD
   Confirm --> Audit["Write AuditLog"]
 ```
 
-Plain English: import is a bulk way to turn messy text into structured People, Events, and Interactions.
+Plain English: import is a bulk way to turn source material into structured People, Events, and Interactions. `/import` is the chooser, `/import/people` handles vCard/CSV people files, and `/import/conversations` handles transcripts, notes, and message exports.
 
 ### 3b. Google Calendar sync
 
