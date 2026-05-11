@@ -166,14 +166,19 @@ The `itemType` field on the staged record tells the inbox what kind of record to
 ```mermaid
 flowchart TD
   ImportHub["/import chooser"] --> PeopleImport["/import/people"]
-  ImportHub --> ConversationImport["/import/conversations"]
+  ImportHub --> InteractionImport["/import/interactions"]
+  LegacyConversation["/import/conversations"] --> InteractionImport
   PeopleFile["vCard or CSV people file"] --> PeopleImport
   GoogleContacts["Google Contacts from connected Gmail"] --> PeopleImport
-  File["File, transcript, or API-ingested text"] --> ConversationImport
-  ConversationImport --> Analyze["Analyze and extract people/interactions"]
+  GmailMail["Gmail Mail sync"] --> InteractionImport
+  File["File, transcript, or API-ingested text"] --> InteractionImport
+  InteractionImport --> Analyze["Analyze and extract people/interactions"]
+  InteractionImport --> GmailSync["Run Gmail sync with backfill and unmatched mode"]
   PeopleImport --> ParsePeople["Parse and match people records"]
   ParsePeople --> Confirm
   Analyze --> MatchPeople["Match extracted names to existing People"]
+  GmailSync --> Interactions
+  GmailSync --> Inbox["Optional Inbox staging for unknown email"]
   MatchPeople --> Confirm["Confirm import"]
   Confirm --> People["Create or update People"]
   Confirm --> Events["Create Events"]
@@ -183,7 +188,7 @@ flowchart TD
   Confirm --> Audit["Write AuditLog"]
 ```
 
-Plain English: import is a bulk way to turn source material into structured People, Events, and Interactions. `/import` is the chooser, `/import/people` handles vCard/CSV people files plus Google Contacts from the connected Gmail account, and `/import/conversations` handles transcripts, notes, and message exports.
+Plain English: import is a bulk way to turn source material into structured People, Events, and Interactions. `/import` is the chooser, `/import/people` handles vCard/CSV people files plus Google Contacts from the connected Gmail account, and `/import/interactions` handles Gmail Mail, transcripts, notes, and message exports. `/import/conversations` remains as a redirect for older links.
 
 The Google Contacts import does not save records immediately. `/api/import/gmail-contacts` reads the connected Google account through the People API, maps names, emails, phone numbers, organizations, birthdays, addresses, URLs, and notes into the same review shape as a vCard/CSV import, and then the regular People import review decides what to create, update, or skip.
 
@@ -243,6 +248,8 @@ flowchart TD
 Plain English: Gmail remains read-only. Persons imports messages into Interactions when a sender or recipient already matches a Person email in the current workspace. The default sync mode is "Known People only": unknown senders and recipients are skipped and do not enter Inbox. The user can explicitly switch to "Stage unmatched in Inbox" when they want to review unknown emails and attach or create People later. First-time sync uses the selected Admin backfill range, defaults to 30 days, includes an all-time option, and processes messages in small batches. Later syncs use Gmail's history API via `GmailConnection.historyId`; if Gmail says that history cursor is too old, Persons falls back to a bounded full sync.
 
 The Admin Gmail tab includes a sync trace. It combines recent `gmail.sync` audit rows with `GmailMessageLink`, email Interactions, and staged Inbox records so an operator can see whether each message matched a Person, was staged for review, was skipped by Known People only mode, or was marked deleted.
+
+The same Gmail sync can also be launched from `/import/interactions` as "Import Gmail Mail." That screen keeps the same conservative default as Admin: a 30-day backfill and Known People only mode, with an opt-in control to stage unmatched email in Inbox.
 
 Runtime configuration:
 
@@ -550,6 +557,7 @@ flowchart LR
 - Gmail foundation: Admin can connect Gmail, sync read-only messages into Interactions for matched People, and stage unmatched emails in Inbox.
 - Gmail traceability: Admin can inspect recent Gmail sync runs, message IDs, threads, matched People, staged Inbox records, skipped messages, and deleted markers.
 - Google Contacts import: `/import/people` can pull People candidates from the connected Gmail account's Google Contacts and review them with the same create/update/skip flow as vCard and CSV imports.
+- Gmail Mail import: `/import/interactions` can launch the same batched Gmail sync from the import area, defaulting to a 30-day Known People only import.
 
 ### Future
 

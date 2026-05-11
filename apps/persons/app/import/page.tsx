@@ -9,11 +9,11 @@ const importModes = [
     action: "Import People",
   },
   {
-    href: "/import/conversations",
-    title: "Conversations",
-    count: "Text / files",
-    summary: "Turn messages, notes, and transcripts into People, Events, and Interactions for review.",
-    action: "Import Conversations",
+    href: "/import/interactions",
+    title: "Interactions",
+    count: "Gmail / text / files",
+    summary: "Turn Gmail mail, messages, notes, and transcripts into Interactions for review.",
+    action: "Import Interactions",
   },
 ]
 

@@ -6,7 +6,7 @@ import { useState, useRef, useEffect } from "react"
 import { useSession, signOut } from "next-auth/react"
 
 const IMPORT_ITEMS = [
-  { href: "/import/conversations", label: "Import Conversations", desc: "Slack, iMessage, email, any chat" },
+  { href: "/import/interactions", label: "Import Interactions", desc: "Gmail, Slack, iMessage, notes" },
   { href: "/import/people", label: "Import People", desc: "vCard, Google CSV, LinkedIn CSV" },
 ]
 
