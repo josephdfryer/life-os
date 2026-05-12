@@ -252,6 +252,40 @@ export type FloatWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedFloatFilter<$PrismaModel>
 }
 
+export type EnumGroupTypeFilter<$PrismaModel = never> = {
+  equals?: $Enums.GroupType | Prisma.EnumGroupTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.GroupType[]
+  notIn?: $Enums.GroupType[]
+  not?: Prisma.NestedEnumGroupTypeFilter<$PrismaModel> | $Enums.GroupType
+}
+
+export type EnumGroupTypeWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.GroupType | Prisma.EnumGroupTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.GroupType[]
+  notIn?: $Enums.GroupType[]
+  not?: Prisma.NestedEnumGroupTypeWithAggregatesFilter<$PrismaModel> | $Enums.GroupType
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumGroupTypeFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumGroupTypeFilter<$PrismaModel>
+}
+
+export type EnumPlaceGroupRelationshipTypeFilter<$PrismaModel = never> = {
+  equals?: $Enums.PlaceGroupRelationshipType | Prisma.EnumPlaceGroupRelationshipTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.PlaceGroupRelationshipType[]
+  notIn?: $Enums.PlaceGroupRelationshipType[]
+  not?: Prisma.NestedEnumPlaceGroupRelationshipTypeFilter<$PrismaModel> | $Enums.PlaceGroupRelationshipType
+}
+
+export type EnumPlaceGroupRelationshipTypeWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.PlaceGroupRelationshipType | Prisma.EnumPlaceGroupRelationshipTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.PlaceGroupRelationshipType[]
+  notIn?: $Enums.PlaceGroupRelationshipType[]
+  not?: Prisma.NestedEnumPlaceGroupRelationshipTypeWithAggregatesFilter<$PrismaModel> | $Enums.PlaceGroupRelationshipType
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumPlaceGroupRelationshipTypeFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumPlaceGroupRelationshipTypeFilter<$PrismaModel>
+}
+
 export type NestedStringFilter<$PrismaModel = never> = {
   equals?: string | Prisma.StringFieldRefInput<$PrismaModel>
   in?: string[]
@@ -483,6 +517,40 @@ export type NestedFloatWithAggregatesFilter<$PrismaModel = never> = {
   _sum?: Prisma.NestedFloatFilter<$PrismaModel>
   _min?: Prisma.NestedFloatFilter<$PrismaModel>
   _max?: Prisma.NestedFloatFilter<$PrismaModel>
+}
+
+export type NestedEnumGroupTypeFilter<$PrismaModel = never> = {
+  equals?: $Enums.GroupType | Prisma.EnumGroupTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.GroupType[]
+  notIn?: $Enums.GroupType[]
+  not?: Prisma.NestedEnumGroupTypeFilter<$PrismaModel> | $Enums.GroupType
+}
+
+export type NestedEnumGroupTypeWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.GroupType | Prisma.EnumGroupTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.GroupType[]
+  notIn?: $Enums.GroupType[]
+  not?: Prisma.NestedEnumGroupTypeWithAggregatesFilter<$PrismaModel> | $Enums.GroupType
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumGroupTypeFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumGroupTypeFilter<$PrismaModel>
+}
+
+export type NestedEnumPlaceGroupRelationshipTypeFilter<$PrismaModel = never> = {
+  equals?: $Enums.PlaceGroupRelationshipType | Prisma.EnumPlaceGroupRelationshipTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.PlaceGroupRelationshipType[]
+  notIn?: $Enums.PlaceGroupRelationshipType[]
+  not?: Prisma.NestedEnumPlaceGroupRelationshipTypeFilter<$PrismaModel> | $Enums.PlaceGroupRelationshipType
+}
+
+export type NestedEnumPlaceGroupRelationshipTypeWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.PlaceGroupRelationshipType | Prisma.EnumPlaceGroupRelationshipTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.PlaceGroupRelationshipType[]
+  notIn?: $Enums.PlaceGroupRelationshipType[]
+  not?: Prisma.NestedEnumPlaceGroupRelationshipTypeWithAggregatesFilter<$PrismaModel> | $Enums.PlaceGroupRelationshipType
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumPlaceGroupRelationshipTypeFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumPlaceGroupRelationshipTypeFilter<$PrismaModel>
 }
 
 

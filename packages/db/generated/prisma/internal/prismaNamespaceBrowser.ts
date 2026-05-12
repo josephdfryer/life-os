@@ -77,7 +77,11 @@ export const ModelName = {
   Item: 'Item',
   Assembly: 'Assembly',
   ItemInteraction: 'ItemInteraction',
-  ImportedFile: 'ImportedFile'
+  ImportedFile: 'ImportedFile',
+  Group: 'Group',
+  PersonGroup: 'PersonGroup',
+  GroupGroup: 'GroupGroup',
+  PlaceGroup: 'PlaceGroup'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -545,6 +549,55 @@ export const ImportedFileScalarFieldEnum = {
 } as const
 
 export type ImportedFileScalarFieldEnum = (typeof ImportedFileScalarFieldEnum)[keyof typeof ImportedFileScalarFieldEnum]
+
+
+export const GroupScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  name: 'name',
+  groupType: 'groupType',
+  notes: 'notes',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type GroupScalarFieldEnum = (typeof GroupScalarFieldEnum)[keyof typeof GroupScalarFieldEnum]
+
+
+export const PersonGroupScalarFieldEnum = {
+  id: 'id',
+  personId: 'personId',
+  groupId: 'groupId',
+  role: 'role',
+  startDate: 'startDate',
+  endDate: 'endDate'
+} as const
+
+export type PersonGroupScalarFieldEnum = (typeof PersonGroupScalarFieldEnum)[keyof typeof PersonGroupScalarFieldEnum]
+
+
+export const GroupGroupScalarFieldEnum = {
+  id: 'id',
+  parentGroupId: 'parentGroupId',
+  childGroupId: 'childGroupId',
+  role: 'role',
+  startDate: 'startDate',
+  endDate: 'endDate'
+} as const
+
+export type GroupGroupScalarFieldEnum = (typeof GroupGroupScalarFieldEnum)[keyof typeof GroupGroupScalarFieldEnum]
+
+
+export const PlaceGroupScalarFieldEnum = {
+  id: 'id',
+  placeId: 'placeId',
+  groupId: 'groupId',
+  relationshipType: 'relationshipType',
+  startDate: 'startDate',
+  endDate: 'endDate'
+} as const
+
+export type PlaceGroupScalarFieldEnum = (typeof PlaceGroupScalarFieldEnum)[keyof typeof PlaceGroupScalarFieldEnum]
 
 
 export const SortOrder = {

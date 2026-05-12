@@ -367,6 +367,7 @@ export type PersonWhereInput = {
   ownedItems?: Prisma.ItemListRelationFilter
   assembledBy?: Prisma.AssemblyListRelationFilter
   disassembledBy?: Prisma.AssemblyListRelationFilter
+  groupMemberships?: Prisma.PersonGroupListRelationFilter
   users?: Prisma.UserListRelationFilter
   apiKeys?: Prisma.ApiKeyListRelationFilter
   auditLogs?: Prisma.AuditLogListRelationFilter
@@ -403,6 +404,7 @@ export type PersonOrderByWithRelationInput = {
   ownedItems?: Prisma.ItemOrderByRelationAggregateInput
   assembledBy?: Prisma.AssemblyOrderByRelationAggregateInput
   disassembledBy?: Prisma.AssemblyOrderByRelationAggregateInput
+  groupMemberships?: Prisma.PersonGroupOrderByRelationAggregateInput
   users?: Prisma.UserOrderByRelationAggregateInput
   apiKeys?: Prisma.ApiKeyOrderByRelationAggregateInput
   auditLogs?: Prisma.AuditLogOrderByRelationAggregateInput
@@ -442,6 +444,7 @@ export type PersonWhereUniqueInput = Prisma.AtLeast<{
   ownedItems?: Prisma.ItemListRelationFilter
   assembledBy?: Prisma.AssemblyListRelationFilter
   disassembledBy?: Prisma.AssemblyListRelationFilter
+  groupMemberships?: Prisma.PersonGroupListRelationFilter
   users?: Prisma.UserListRelationFilter
   apiKeys?: Prisma.ApiKeyListRelationFilter
   auditLogs?: Prisma.AuditLogListRelationFilter
@@ -537,6 +540,7 @@ export type PersonCreateInput = {
   ownedItems?: Prisma.ItemCreateNestedManyWithoutOwnedByInput
   assembledBy?: Prisma.AssemblyCreateNestedManyWithoutAssembledByInput
   disassembledBy?: Prisma.AssemblyCreateNestedManyWithoutDisassembledByInput
+  groupMemberships?: Prisma.PersonGroupCreateNestedManyWithoutPersonInput
   users?: Prisma.UserCreateNestedManyWithoutPersonInput
   apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutOwnerPersonInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutPersonInput
@@ -572,6 +576,7 @@ export type PersonUncheckedCreateInput = {
   ownedItems?: Prisma.ItemUncheckedCreateNestedManyWithoutOwnedByInput
   assembledBy?: Prisma.AssemblyUncheckedCreateNestedManyWithoutAssembledByInput
   disassembledBy?: Prisma.AssemblyUncheckedCreateNestedManyWithoutDisassembledByInput
+  groupMemberships?: Prisma.PersonGroupUncheckedCreateNestedManyWithoutPersonInput
   users?: Prisma.UserUncheckedCreateNestedManyWithoutPersonInput
   apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutOwnerPersonInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutPersonInput
@@ -607,6 +612,7 @@ export type PersonUpdateInput = {
   ownedItems?: Prisma.ItemUpdateManyWithoutOwnedByNestedInput
   assembledBy?: Prisma.AssemblyUpdateManyWithoutAssembledByNestedInput
   disassembledBy?: Prisma.AssemblyUpdateManyWithoutDisassembledByNestedInput
+  groupMemberships?: Prisma.PersonGroupUpdateManyWithoutPersonNestedInput
   users?: Prisma.UserUpdateManyWithoutPersonNestedInput
   apiKeys?: Prisma.ApiKeyUpdateManyWithoutOwnerPersonNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutPersonNestedInput
@@ -642,6 +648,7 @@ export type PersonUncheckedUpdateInput = {
   ownedItems?: Prisma.ItemUncheckedUpdateManyWithoutOwnedByNestedInput
   assembledBy?: Prisma.AssemblyUncheckedUpdateManyWithoutAssembledByNestedInput
   disassembledBy?: Prisma.AssemblyUncheckedUpdateManyWithoutDisassembledByNestedInput
+  groupMemberships?: Prisma.PersonGroupUncheckedUpdateManyWithoutPersonNestedInput
   users?: Prisma.UserUncheckedUpdateManyWithoutPersonNestedInput
   apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutOwnerPersonNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutPersonNestedInput
@@ -823,6 +830,11 @@ export type PersonSumOrderByAggregateInput = {
 export type PersonNullableScalarRelationFilter = {
   is?: Prisma.PersonWhereInput | null
   isNot?: Prisma.PersonWhereInput | null
+}
+
+export type PersonScalarRelationFilter = {
+  is?: Prisma.PersonWhereInput
+  isNot?: Prisma.PersonWhereInput
 }
 
 export type PersonCreateNestedManyWithoutWorkspaceInput = {
@@ -1019,6 +1031,20 @@ export type PersonUpdateOneWithoutDisassembledByNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.PersonUpdateToOneWithWhereWithoutDisassembledByInput, Prisma.PersonUpdateWithoutDisassembledByInput>, Prisma.PersonUncheckedUpdateWithoutDisassembledByInput>
 }
 
+export type PersonCreateNestedOneWithoutGroupMembershipsInput = {
+  create?: Prisma.XOR<Prisma.PersonCreateWithoutGroupMembershipsInput, Prisma.PersonUncheckedCreateWithoutGroupMembershipsInput>
+  connectOrCreate?: Prisma.PersonCreateOrConnectWithoutGroupMembershipsInput
+  connect?: Prisma.PersonWhereUniqueInput
+}
+
+export type PersonUpdateOneRequiredWithoutGroupMembershipsNestedInput = {
+  create?: Prisma.XOR<Prisma.PersonCreateWithoutGroupMembershipsInput, Prisma.PersonUncheckedCreateWithoutGroupMembershipsInput>
+  connectOrCreate?: Prisma.PersonCreateOrConnectWithoutGroupMembershipsInput
+  upsert?: Prisma.PersonUpsertWithoutGroupMembershipsInput
+  connect?: Prisma.PersonWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.PersonUpdateToOneWithWhereWithoutGroupMembershipsInput, Prisma.PersonUpdateWithoutGroupMembershipsInput>, Prisma.PersonUncheckedUpdateWithoutGroupMembershipsInput>
+}
+
 export type PersonCreateWithoutWorkspaceInput = {
   id?: string
   createdAt?: Date | string
@@ -1048,6 +1074,7 @@ export type PersonCreateWithoutWorkspaceInput = {
   ownedItems?: Prisma.ItemCreateNestedManyWithoutOwnedByInput
   assembledBy?: Prisma.AssemblyCreateNestedManyWithoutAssembledByInput
   disassembledBy?: Prisma.AssemblyCreateNestedManyWithoutDisassembledByInput
+  groupMemberships?: Prisma.PersonGroupCreateNestedManyWithoutPersonInput
   users?: Prisma.UserCreateNestedManyWithoutPersonInput
   apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutOwnerPersonInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutPersonInput
@@ -1082,6 +1109,7 @@ export type PersonUncheckedCreateWithoutWorkspaceInput = {
   ownedItems?: Prisma.ItemUncheckedCreateNestedManyWithoutOwnedByInput
   assembledBy?: Prisma.AssemblyUncheckedCreateNestedManyWithoutAssembledByInput
   disassembledBy?: Prisma.AssemblyUncheckedCreateNestedManyWithoutDisassembledByInput
+  groupMemberships?: Prisma.PersonGroupUncheckedCreateNestedManyWithoutPersonInput
   users?: Prisma.UserUncheckedCreateNestedManyWithoutPersonInput
   apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutOwnerPersonInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutPersonInput
@@ -1171,6 +1199,7 @@ export type PersonCreateWithoutUsersInput = {
   ownedItems?: Prisma.ItemCreateNestedManyWithoutOwnedByInput
   assembledBy?: Prisma.AssemblyCreateNestedManyWithoutAssembledByInput
   disassembledBy?: Prisma.AssemblyCreateNestedManyWithoutDisassembledByInput
+  groupMemberships?: Prisma.PersonGroupCreateNestedManyWithoutPersonInput
   apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutOwnerPersonInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutPersonInput
 }
@@ -1205,6 +1234,7 @@ export type PersonUncheckedCreateWithoutUsersInput = {
   ownedItems?: Prisma.ItemUncheckedCreateNestedManyWithoutOwnedByInput
   assembledBy?: Prisma.AssemblyUncheckedCreateNestedManyWithoutAssembledByInput
   disassembledBy?: Prisma.AssemblyUncheckedCreateNestedManyWithoutDisassembledByInput
+  groupMemberships?: Prisma.PersonGroupUncheckedCreateNestedManyWithoutPersonInput
   apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutOwnerPersonInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutPersonInput
 }
@@ -1255,6 +1285,7 @@ export type PersonUpdateWithoutUsersInput = {
   ownedItems?: Prisma.ItemUpdateManyWithoutOwnedByNestedInput
   assembledBy?: Prisma.AssemblyUpdateManyWithoutAssembledByNestedInput
   disassembledBy?: Prisma.AssemblyUpdateManyWithoutDisassembledByNestedInput
+  groupMemberships?: Prisma.PersonGroupUpdateManyWithoutPersonNestedInput
   apiKeys?: Prisma.ApiKeyUpdateManyWithoutOwnerPersonNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutPersonNestedInput
 }
@@ -1289,6 +1320,7 @@ export type PersonUncheckedUpdateWithoutUsersInput = {
   ownedItems?: Prisma.ItemUncheckedUpdateManyWithoutOwnedByNestedInput
   assembledBy?: Prisma.AssemblyUncheckedUpdateManyWithoutAssembledByNestedInput
   disassembledBy?: Prisma.AssemblyUncheckedUpdateManyWithoutDisassembledByNestedInput
+  groupMemberships?: Prisma.PersonGroupUncheckedUpdateManyWithoutPersonNestedInput
   apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutOwnerPersonNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutPersonNestedInput
 }
@@ -1323,6 +1355,7 @@ export type PersonCreateWithoutApiKeysInput = {
   ownedItems?: Prisma.ItemCreateNestedManyWithoutOwnedByInput
   assembledBy?: Prisma.AssemblyCreateNestedManyWithoutAssembledByInput
   disassembledBy?: Prisma.AssemblyCreateNestedManyWithoutDisassembledByInput
+  groupMemberships?: Prisma.PersonGroupCreateNestedManyWithoutPersonInput
   users?: Prisma.UserCreateNestedManyWithoutPersonInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutPersonInput
 }
@@ -1357,6 +1390,7 @@ export type PersonUncheckedCreateWithoutApiKeysInput = {
   ownedItems?: Prisma.ItemUncheckedCreateNestedManyWithoutOwnedByInput
   assembledBy?: Prisma.AssemblyUncheckedCreateNestedManyWithoutAssembledByInput
   disassembledBy?: Prisma.AssemblyUncheckedCreateNestedManyWithoutDisassembledByInput
+  groupMemberships?: Prisma.PersonGroupUncheckedCreateNestedManyWithoutPersonInput
   users?: Prisma.UserUncheckedCreateNestedManyWithoutPersonInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutPersonInput
 }
@@ -1407,6 +1441,7 @@ export type PersonUpdateWithoutApiKeysInput = {
   ownedItems?: Prisma.ItemUpdateManyWithoutOwnedByNestedInput
   assembledBy?: Prisma.AssemblyUpdateManyWithoutAssembledByNestedInput
   disassembledBy?: Prisma.AssemblyUpdateManyWithoutDisassembledByNestedInput
+  groupMemberships?: Prisma.PersonGroupUpdateManyWithoutPersonNestedInput
   users?: Prisma.UserUpdateManyWithoutPersonNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutPersonNestedInput
 }
@@ -1441,6 +1476,7 @@ export type PersonUncheckedUpdateWithoutApiKeysInput = {
   ownedItems?: Prisma.ItemUncheckedUpdateManyWithoutOwnedByNestedInput
   assembledBy?: Prisma.AssemblyUncheckedUpdateManyWithoutAssembledByNestedInput
   disassembledBy?: Prisma.AssemblyUncheckedUpdateManyWithoutDisassembledByNestedInput
+  groupMemberships?: Prisma.PersonGroupUncheckedUpdateManyWithoutPersonNestedInput
   users?: Prisma.UserUncheckedUpdateManyWithoutPersonNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutPersonNestedInput
 }
@@ -1475,6 +1511,7 @@ export type PersonCreateWithoutAuditLogsInput = {
   ownedItems?: Prisma.ItemCreateNestedManyWithoutOwnedByInput
   assembledBy?: Prisma.AssemblyCreateNestedManyWithoutAssembledByInput
   disassembledBy?: Prisma.AssemblyCreateNestedManyWithoutDisassembledByInput
+  groupMemberships?: Prisma.PersonGroupCreateNestedManyWithoutPersonInput
   users?: Prisma.UserCreateNestedManyWithoutPersonInput
   apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutOwnerPersonInput
 }
@@ -1509,6 +1546,7 @@ export type PersonUncheckedCreateWithoutAuditLogsInput = {
   ownedItems?: Prisma.ItemUncheckedCreateNestedManyWithoutOwnedByInput
   assembledBy?: Prisma.AssemblyUncheckedCreateNestedManyWithoutAssembledByInput
   disassembledBy?: Prisma.AssemblyUncheckedCreateNestedManyWithoutDisassembledByInput
+  groupMemberships?: Prisma.PersonGroupUncheckedCreateNestedManyWithoutPersonInput
   users?: Prisma.UserUncheckedCreateNestedManyWithoutPersonInput
   apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutOwnerPersonInput
 }
@@ -1559,6 +1597,7 @@ export type PersonUpdateWithoutAuditLogsInput = {
   ownedItems?: Prisma.ItemUpdateManyWithoutOwnedByNestedInput
   assembledBy?: Prisma.AssemblyUpdateManyWithoutAssembledByNestedInput
   disassembledBy?: Prisma.AssemblyUpdateManyWithoutDisassembledByNestedInput
+  groupMemberships?: Prisma.PersonGroupUpdateManyWithoutPersonNestedInput
   users?: Prisma.UserUpdateManyWithoutPersonNestedInput
   apiKeys?: Prisma.ApiKeyUpdateManyWithoutOwnerPersonNestedInput
 }
@@ -1593,6 +1632,7 @@ export type PersonUncheckedUpdateWithoutAuditLogsInput = {
   ownedItems?: Prisma.ItemUncheckedUpdateManyWithoutOwnedByNestedInput
   assembledBy?: Prisma.AssemblyUncheckedUpdateManyWithoutAssembledByNestedInput
   disassembledBy?: Prisma.AssemblyUncheckedUpdateManyWithoutDisassembledByNestedInput
+  groupMemberships?: Prisma.PersonGroupUncheckedUpdateManyWithoutPersonNestedInput
   users?: Prisma.UserUncheckedUpdateManyWithoutPersonNestedInput
   apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutOwnerPersonNestedInput
 }
@@ -1626,6 +1666,7 @@ export type PersonCreateWithoutStagedInteractionsInput = {
   ownedItems?: Prisma.ItemCreateNestedManyWithoutOwnedByInput
   assembledBy?: Prisma.AssemblyCreateNestedManyWithoutAssembledByInput
   disassembledBy?: Prisma.AssemblyCreateNestedManyWithoutDisassembledByInput
+  groupMemberships?: Prisma.PersonGroupCreateNestedManyWithoutPersonInput
   users?: Prisma.UserCreateNestedManyWithoutPersonInput
   apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutOwnerPersonInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutPersonInput
@@ -1660,6 +1701,7 @@ export type PersonUncheckedCreateWithoutStagedInteractionsInput = {
   ownedItems?: Prisma.ItemUncheckedCreateNestedManyWithoutOwnedByInput
   assembledBy?: Prisma.AssemblyUncheckedCreateNestedManyWithoutAssembledByInput
   disassembledBy?: Prisma.AssemblyUncheckedCreateNestedManyWithoutDisassembledByInput
+  groupMemberships?: Prisma.PersonGroupUncheckedCreateNestedManyWithoutPersonInput
   users?: Prisma.UserUncheckedCreateNestedManyWithoutPersonInput
   apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutOwnerPersonInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutPersonInput
@@ -1710,6 +1752,7 @@ export type PersonUpdateWithoutStagedInteractionsInput = {
   ownedItems?: Prisma.ItemUpdateManyWithoutOwnedByNestedInput
   assembledBy?: Prisma.AssemblyUpdateManyWithoutAssembledByNestedInput
   disassembledBy?: Prisma.AssemblyUpdateManyWithoutDisassembledByNestedInput
+  groupMemberships?: Prisma.PersonGroupUpdateManyWithoutPersonNestedInput
   users?: Prisma.UserUpdateManyWithoutPersonNestedInput
   apiKeys?: Prisma.ApiKeyUpdateManyWithoutOwnerPersonNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutPersonNestedInput
@@ -1744,6 +1787,7 @@ export type PersonUncheckedUpdateWithoutStagedInteractionsInput = {
   ownedItems?: Prisma.ItemUncheckedUpdateManyWithoutOwnedByNestedInput
   assembledBy?: Prisma.AssemblyUncheckedUpdateManyWithoutAssembledByNestedInput
   disassembledBy?: Prisma.AssemblyUncheckedUpdateManyWithoutDisassembledByNestedInput
+  groupMemberships?: Prisma.PersonGroupUncheckedUpdateManyWithoutPersonNestedInput
   users?: Prisma.UserUncheckedUpdateManyWithoutPersonNestedInput
   apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutOwnerPersonNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutPersonNestedInput
@@ -1778,6 +1822,7 @@ export type PersonCreateWithoutInteractionsInput = {
   ownedItems?: Prisma.ItemCreateNestedManyWithoutOwnedByInput
   assembledBy?: Prisma.AssemblyCreateNestedManyWithoutAssembledByInput
   disassembledBy?: Prisma.AssemblyCreateNestedManyWithoutDisassembledByInput
+  groupMemberships?: Prisma.PersonGroupCreateNestedManyWithoutPersonInput
   users?: Prisma.UserCreateNestedManyWithoutPersonInput
   apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutOwnerPersonInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutPersonInput
@@ -1812,6 +1857,7 @@ export type PersonUncheckedCreateWithoutInteractionsInput = {
   ownedItems?: Prisma.ItemUncheckedCreateNestedManyWithoutOwnedByInput
   assembledBy?: Prisma.AssemblyUncheckedCreateNestedManyWithoutAssembledByInput
   disassembledBy?: Prisma.AssemblyUncheckedCreateNestedManyWithoutDisassembledByInput
+  groupMemberships?: Prisma.PersonGroupUncheckedCreateNestedManyWithoutPersonInput
   users?: Prisma.UserUncheckedCreateNestedManyWithoutPersonInput
   apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutOwnerPersonInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutPersonInput
@@ -1862,6 +1908,7 @@ export type PersonUpdateWithoutInteractionsInput = {
   ownedItems?: Prisma.ItemUpdateManyWithoutOwnedByNestedInput
   assembledBy?: Prisma.AssemblyUpdateManyWithoutAssembledByNestedInput
   disassembledBy?: Prisma.AssemblyUpdateManyWithoutDisassembledByNestedInput
+  groupMemberships?: Prisma.PersonGroupUpdateManyWithoutPersonNestedInput
   users?: Prisma.UserUpdateManyWithoutPersonNestedInput
   apiKeys?: Prisma.ApiKeyUpdateManyWithoutOwnerPersonNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutPersonNestedInput
@@ -1896,6 +1943,7 @@ export type PersonUncheckedUpdateWithoutInteractionsInput = {
   ownedItems?: Prisma.ItemUncheckedUpdateManyWithoutOwnedByNestedInput
   assembledBy?: Prisma.AssemblyUncheckedUpdateManyWithoutAssembledByNestedInput
   disassembledBy?: Prisma.AssemblyUncheckedUpdateManyWithoutDisassembledByNestedInput
+  groupMemberships?: Prisma.PersonGroupUncheckedUpdateManyWithoutPersonNestedInput
   users?: Prisma.UserUncheckedUpdateManyWithoutPersonNestedInput
   apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutOwnerPersonNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutPersonNestedInput
@@ -1930,6 +1978,7 @@ export type PersonCreateWithoutPlansInput = {
   ownedItems?: Prisma.ItemCreateNestedManyWithoutOwnedByInput
   assembledBy?: Prisma.AssemblyCreateNestedManyWithoutAssembledByInput
   disassembledBy?: Prisma.AssemblyCreateNestedManyWithoutDisassembledByInput
+  groupMemberships?: Prisma.PersonGroupCreateNestedManyWithoutPersonInput
   users?: Prisma.UserCreateNestedManyWithoutPersonInput
   apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutOwnerPersonInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutPersonInput
@@ -1964,6 +2013,7 @@ export type PersonUncheckedCreateWithoutPlansInput = {
   ownedItems?: Prisma.ItemUncheckedCreateNestedManyWithoutOwnedByInput
   assembledBy?: Prisma.AssemblyUncheckedCreateNestedManyWithoutAssembledByInput
   disassembledBy?: Prisma.AssemblyUncheckedCreateNestedManyWithoutDisassembledByInput
+  groupMemberships?: Prisma.PersonGroupUncheckedCreateNestedManyWithoutPersonInput
   users?: Prisma.UserUncheckedCreateNestedManyWithoutPersonInput
   apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutOwnerPersonInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutPersonInput
@@ -2014,6 +2064,7 @@ export type PersonUpdateWithoutPlansInput = {
   ownedItems?: Prisma.ItemUpdateManyWithoutOwnedByNestedInput
   assembledBy?: Prisma.AssemblyUpdateManyWithoutAssembledByNestedInput
   disassembledBy?: Prisma.AssemblyUpdateManyWithoutDisassembledByNestedInput
+  groupMemberships?: Prisma.PersonGroupUpdateManyWithoutPersonNestedInput
   users?: Prisma.UserUpdateManyWithoutPersonNestedInput
   apiKeys?: Prisma.ApiKeyUpdateManyWithoutOwnerPersonNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutPersonNestedInput
@@ -2048,6 +2099,7 @@ export type PersonUncheckedUpdateWithoutPlansInput = {
   ownedItems?: Prisma.ItemUncheckedUpdateManyWithoutOwnedByNestedInput
   assembledBy?: Prisma.AssemblyUncheckedUpdateManyWithoutAssembledByNestedInput
   disassembledBy?: Prisma.AssemblyUncheckedUpdateManyWithoutDisassembledByNestedInput
+  groupMemberships?: Prisma.PersonGroupUncheckedUpdateManyWithoutPersonNestedInput
   users?: Prisma.UserUncheckedUpdateManyWithoutPersonNestedInput
   apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutOwnerPersonNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutPersonNestedInput
@@ -2082,6 +2134,7 @@ export type PersonCreateWithoutOwnedItemsInput = {
   plans?: Prisma.PlanCreateNestedManyWithoutPersonInput
   assembledBy?: Prisma.AssemblyCreateNestedManyWithoutAssembledByInput
   disassembledBy?: Prisma.AssemblyCreateNestedManyWithoutDisassembledByInput
+  groupMemberships?: Prisma.PersonGroupCreateNestedManyWithoutPersonInput
   users?: Prisma.UserCreateNestedManyWithoutPersonInput
   apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutOwnerPersonInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutPersonInput
@@ -2116,6 +2169,7 @@ export type PersonUncheckedCreateWithoutOwnedItemsInput = {
   plans?: Prisma.PlanUncheckedCreateNestedManyWithoutPersonInput
   assembledBy?: Prisma.AssemblyUncheckedCreateNestedManyWithoutAssembledByInput
   disassembledBy?: Prisma.AssemblyUncheckedCreateNestedManyWithoutDisassembledByInput
+  groupMemberships?: Prisma.PersonGroupUncheckedCreateNestedManyWithoutPersonInput
   users?: Prisma.UserUncheckedCreateNestedManyWithoutPersonInput
   apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutOwnerPersonInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutPersonInput
@@ -2166,6 +2220,7 @@ export type PersonUpdateWithoutOwnedItemsInput = {
   plans?: Prisma.PlanUpdateManyWithoutPersonNestedInput
   assembledBy?: Prisma.AssemblyUpdateManyWithoutAssembledByNestedInput
   disassembledBy?: Prisma.AssemblyUpdateManyWithoutDisassembledByNestedInput
+  groupMemberships?: Prisma.PersonGroupUpdateManyWithoutPersonNestedInput
   users?: Prisma.UserUpdateManyWithoutPersonNestedInput
   apiKeys?: Prisma.ApiKeyUpdateManyWithoutOwnerPersonNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutPersonNestedInput
@@ -2200,6 +2255,7 @@ export type PersonUncheckedUpdateWithoutOwnedItemsInput = {
   plans?: Prisma.PlanUncheckedUpdateManyWithoutPersonNestedInput
   assembledBy?: Prisma.AssemblyUncheckedUpdateManyWithoutAssembledByNestedInput
   disassembledBy?: Prisma.AssemblyUncheckedUpdateManyWithoutDisassembledByNestedInput
+  groupMemberships?: Prisma.PersonGroupUncheckedUpdateManyWithoutPersonNestedInput
   users?: Prisma.UserUncheckedUpdateManyWithoutPersonNestedInput
   apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutOwnerPersonNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutPersonNestedInput
@@ -2234,6 +2290,7 @@ export type PersonCreateWithoutAssembledByInput = {
   plans?: Prisma.PlanCreateNestedManyWithoutPersonInput
   ownedItems?: Prisma.ItemCreateNestedManyWithoutOwnedByInput
   disassembledBy?: Prisma.AssemblyCreateNestedManyWithoutDisassembledByInput
+  groupMemberships?: Prisma.PersonGroupCreateNestedManyWithoutPersonInput
   users?: Prisma.UserCreateNestedManyWithoutPersonInput
   apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutOwnerPersonInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutPersonInput
@@ -2268,6 +2325,7 @@ export type PersonUncheckedCreateWithoutAssembledByInput = {
   plans?: Prisma.PlanUncheckedCreateNestedManyWithoutPersonInput
   ownedItems?: Prisma.ItemUncheckedCreateNestedManyWithoutOwnedByInput
   disassembledBy?: Prisma.AssemblyUncheckedCreateNestedManyWithoutDisassembledByInput
+  groupMemberships?: Prisma.PersonGroupUncheckedCreateNestedManyWithoutPersonInput
   users?: Prisma.UserUncheckedCreateNestedManyWithoutPersonInput
   apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutOwnerPersonInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutPersonInput
@@ -2307,6 +2365,7 @@ export type PersonCreateWithoutDisassembledByInput = {
   plans?: Prisma.PlanCreateNestedManyWithoutPersonInput
   ownedItems?: Prisma.ItemCreateNestedManyWithoutOwnedByInput
   assembledBy?: Prisma.AssemblyCreateNestedManyWithoutAssembledByInput
+  groupMemberships?: Prisma.PersonGroupCreateNestedManyWithoutPersonInput
   users?: Prisma.UserCreateNestedManyWithoutPersonInput
   apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutOwnerPersonInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutPersonInput
@@ -2341,6 +2400,7 @@ export type PersonUncheckedCreateWithoutDisassembledByInput = {
   plans?: Prisma.PlanUncheckedCreateNestedManyWithoutPersonInput
   ownedItems?: Prisma.ItemUncheckedCreateNestedManyWithoutOwnedByInput
   assembledBy?: Prisma.AssemblyUncheckedCreateNestedManyWithoutAssembledByInput
+  groupMemberships?: Prisma.PersonGroupUncheckedCreateNestedManyWithoutPersonInput
   users?: Prisma.UserUncheckedCreateNestedManyWithoutPersonInput
   apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutOwnerPersonInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutPersonInput
@@ -2391,6 +2451,7 @@ export type PersonUpdateWithoutAssembledByInput = {
   plans?: Prisma.PlanUpdateManyWithoutPersonNestedInput
   ownedItems?: Prisma.ItemUpdateManyWithoutOwnedByNestedInput
   disassembledBy?: Prisma.AssemblyUpdateManyWithoutDisassembledByNestedInput
+  groupMemberships?: Prisma.PersonGroupUpdateManyWithoutPersonNestedInput
   users?: Prisma.UserUpdateManyWithoutPersonNestedInput
   apiKeys?: Prisma.ApiKeyUpdateManyWithoutOwnerPersonNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutPersonNestedInput
@@ -2425,6 +2486,7 @@ export type PersonUncheckedUpdateWithoutAssembledByInput = {
   plans?: Prisma.PlanUncheckedUpdateManyWithoutPersonNestedInput
   ownedItems?: Prisma.ItemUncheckedUpdateManyWithoutOwnedByNestedInput
   disassembledBy?: Prisma.AssemblyUncheckedUpdateManyWithoutDisassembledByNestedInput
+  groupMemberships?: Prisma.PersonGroupUncheckedUpdateManyWithoutPersonNestedInput
   users?: Prisma.UserUncheckedUpdateManyWithoutPersonNestedInput
   apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutOwnerPersonNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutPersonNestedInput
@@ -2470,6 +2532,7 @@ export type PersonUpdateWithoutDisassembledByInput = {
   plans?: Prisma.PlanUpdateManyWithoutPersonNestedInput
   ownedItems?: Prisma.ItemUpdateManyWithoutOwnedByNestedInput
   assembledBy?: Prisma.AssemblyUpdateManyWithoutAssembledByNestedInput
+  groupMemberships?: Prisma.PersonGroupUpdateManyWithoutPersonNestedInput
   users?: Prisma.UserUpdateManyWithoutPersonNestedInput
   apiKeys?: Prisma.ApiKeyUpdateManyWithoutOwnerPersonNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutPersonNestedInput
@@ -2504,6 +2567,163 @@ export type PersonUncheckedUpdateWithoutDisassembledByInput = {
   plans?: Prisma.PlanUncheckedUpdateManyWithoutPersonNestedInput
   ownedItems?: Prisma.ItemUncheckedUpdateManyWithoutOwnedByNestedInput
   assembledBy?: Prisma.AssemblyUncheckedUpdateManyWithoutAssembledByNestedInput
+  groupMemberships?: Prisma.PersonGroupUncheckedUpdateManyWithoutPersonNestedInput
+  users?: Prisma.UserUncheckedUpdateManyWithoutPersonNestedInput
+  apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutOwnerPersonNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutPersonNestedInput
+}
+
+export type PersonCreateWithoutGroupMembershipsInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  first: string
+  last: string
+  nickname?: string | null
+  title?: string | null
+  headline?: string | null
+  emails?: string
+  phones?: string
+  birthday?: string | null
+  closeness?: number
+  tags?: string
+  values?: string
+  notes?: string | null
+  company?: string | null
+  location?: string | null
+  linkedin?: string | null
+  twitter?: string | null
+  website?: string | null
+  color?: string | null
+  colorSoft?: string | null
+  workspace?: Prisma.WorkspaceCreateNestedOneWithoutPersonsInput
+  interactions?: Prisma.InteractionCreateNestedManyWithoutPersonInput
+  stagedInteractions?: Prisma.StagedInteractionCreateNestedManyWithoutCandidatePersonInput
+  plans?: Prisma.PlanCreateNestedManyWithoutPersonInput
+  ownedItems?: Prisma.ItemCreateNestedManyWithoutOwnedByInput
+  assembledBy?: Prisma.AssemblyCreateNestedManyWithoutAssembledByInput
+  disassembledBy?: Prisma.AssemblyCreateNestedManyWithoutDisassembledByInput
+  users?: Prisma.UserCreateNestedManyWithoutPersonInput
+  apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutOwnerPersonInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutPersonInput
+}
+
+export type PersonUncheckedCreateWithoutGroupMembershipsInput = {
+  id?: string
+  workspaceId?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  first: string
+  last: string
+  nickname?: string | null
+  title?: string | null
+  headline?: string | null
+  emails?: string
+  phones?: string
+  birthday?: string | null
+  closeness?: number
+  tags?: string
+  values?: string
+  notes?: string | null
+  company?: string | null
+  location?: string | null
+  linkedin?: string | null
+  twitter?: string | null
+  website?: string | null
+  color?: string | null
+  colorSoft?: string | null
+  interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutPersonInput
+  stagedInteractions?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutCandidatePersonInput
+  plans?: Prisma.PlanUncheckedCreateNestedManyWithoutPersonInput
+  ownedItems?: Prisma.ItemUncheckedCreateNestedManyWithoutOwnedByInput
+  assembledBy?: Prisma.AssemblyUncheckedCreateNestedManyWithoutAssembledByInput
+  disassembledBy?: Prisma.AssemblyUncheckedCreateNestedManyWithoutDisassembledByInput
+  users?: Prisma.UserUncheckedCreateNestedManyWithoutPersonInput
+  apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutOwnerPersonInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutPersonInput
+}
+
+export type PersonCreateOrConnectWithoutGroupMembershipsInput = {
+  where: Prisma.PersonWhereUniqueInput
+  create: Prisma.XOR<Prisma.PersonCreateWithoutGroupMembershipsInput, Prisma.PersonUncheckedCreateWithoutGroupMembershipsInput>
+}
+
+export type PersonUpsertWithoutGroupMembershipsInput = {
+  update: Prisma.XOR<Prisma.PersonUpdateWithoutGroupMembershipsInput, Prisma.PersonUncheckedUpdateWithoutGroupMembershipsInput>
+  create: Prisma.XOR<Prisma.PersonCreateWithoutGroupMembershipsInput, Prisma.PersonUncheckedCreateWithoutGroupMembershipsInput>
+  where?: Prisma.PersonWhereInput
+}
+
+export type PersonUpdateToOneWithWhereWithoutGroupMembershipsInput = {
+  where?: Prisma.PersonWhereInput
+  data: Prisma.XOR<Prisma.PersonUpdateWithoutGroupMembershipsInput, Prisma.PersonUncheckedUpdateWithoutGroupMembershipsInput>
+}
+
+export type PersonUpdateWithoutGroupMembershipsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  first?: Prisma.StringFieldUpdateOperationsInput | string
+  last?: Prisma.StringFieldUpdateOperationsInput | string
+  nickname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emails?: Prisma.StringFieldUpdateOperationsInput | string
+  phones?: Prisma.StringFieldUpdateOperationsInput | string
+  birthday?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  closeness?: Prisma.IntFieldUpdateOperationsInput | number
+  tags?: Prisma.StringFieldUpdateOperationsInput | string
+  values?: Prisma.StringFieldUpdateOperationsInput | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  company?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  linkedin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutPersonsNestedInput
+  interactions?: Prisma.InteractionUpdateManyWithoutPersonNestedInput
+  stagedInteractions?: Prisma.StagedInteractionUpdateManyWithoutCandidatePersonNestedInput
+  plans?: Prisma.PlanUpdateManyWithoutPersonNestedInput
+  ownedItems?: Prisma.ItemUpdateManyWithoutOwnedByNestedInput
+  assembledBy?: Prisma.AssemblyUpdateManyWithoutAssembledByNestedInput
+  disassembledBy?: Prisma.AssemblyUpdateManyWithoutDisassembledByNestedInput
+  users?: Prisma.UserUpdateManyWithoutPersonNestedInput
+  apiKeys?: Prisma.ApiKeyUpdateManyWithoutOwnerPersonNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutPersonNestedInput
+}
+
+export type PersonUncheckedUpdateWithoutGroupMembershipsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  first?: Prisma.StringFieldUpdateOperationsInput | string
+  last?: Prisma.StringFieldUpdateOperationsInput | string
+  nickname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emails?: Prisma.StringFieldUpdateOperationsInput | string
+  phones?: Prisma.StringFieldUpdateOperationsInput | string
+  birthday?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  closeness?: Prisma.IntFieldUpdateOperationsInput | number
+  tags?: Prisma.StringFieldUpdateOperationsInput | string
+  values?: Prisma.StringFieldUpdateOperationsInput | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  company?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  linkedin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  interactions?: Prisma.InteractionUncheckedUpdateManyWithoutPersonNestedInput
+  stagedInteractions?: Prisma.StagedInteractionUncheckedUpdateManyWithoutCandidatePersonNestedInput
+  plans?: Prisma.PlanUncheckedUpdateManyWithoutPersonNestedInput
+  ownedItems?: Prisma.ItemUncheckedUpdateManyWithoutOwnedByNestedInput
+  assembledBy?: Prisma.AssemblyUncheckedUpdateManyWithoutAssembledByNestedInput
+  disassembledBy?: Prisma.AssemblyUncheckedUpdateManyWithoutDisassembledByNestedInput
   users?: Prisma.UserUncheckedUpdateManyWithoutPersonNestedInput
   apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutOwnerPersonNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutPersonNestedInput
@@ -2563,6 +2783,7 @@ export type PersonUpdateWithoutWorkspaceInput = {
   ownedItems?: Prisma.ItemUpdateManyWithoutOwnedByNestedInput
   assembledBy?: Prisma.AssemblyUpdateManyWithoutAssembledByNestedInput
   disassembledBy?: Prisma.AssemblyUpdateManyWithoutDisassembledByNestedInput
+  groupMemberships?: Prisma.PersonGroupUpdateManyWithoutPersonNestedInput
   users?: Prisma.UserUpdateManyWithoutPersonNestedInput
   apiKeys?: Prisma.ApiKeyUpdateManyWithoutOwnerPersonNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutPersonNestedInput
@@ -2597,6 +2818,7 @@ export type PersonUncheckedUpdateWithoutWorkspaceInput = {
   ownedItems?: Prisma.ItemUncheckedUpdateManyWithoutOwnedByNestedInput
   assembledBy?: Prisma.AssemblyUncheckedUpdateManyWithoutAssembledByNestedInput
   disassembledBy?: Prisma.AssemblyUncheckedUpdateManyWithoutDisassembledByNestedInput
+  groupMemberships?: Prisma.PersonGroupUncheckedUpdateManyWithoutPersonNestedInput
   users?: Prisma.UserUncheckedUpdateManyWithoutPersonNestedInput
   apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutOwnerPersonNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutPersonNestedInput
@@ -2639,6 +2861,7 @@ export type PersonCountOutputType = {
   ownedItems: number
   assembledBy: number
   disassembledBy: number
+  groupMemberships: number
   users: number
   apiKeys: number
   auditLogs: number
@@ -2651,6 +2874,7 @@ export type PersonCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions
   ownedItems?: boolean | PersonCountOutputTypeCountOwnedItemsArgs
   assembledBy?: boolean | PersonCountOutputTypeCountAssembledByArgs
   disassembledBy?: boolean | PersonCountOutputTypeCountDisassembledByArgs
+  groupMemberships?: boolean | PersonCountOutputTypeCountGroupMembershipsArgs
   users?: boolean | PersonCountOutputTypeCountUsersArgs
   apiKeys?: boolean | PersonCountOutputTypeCountApiKeysArgs
   auditLogs?: boolean | PersonCountOutputTypeCountAuditLogsArgs
@@ -2711,6 +2935,13 @@ export type PersonCountOutputTypeCountDisassembledByArgs<ExtArgs extends runtime
 /**
  * PersonCountOutputType without action
  */
+export type PersonCountOutputTypeCountGroupMembershipsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PersonGroupWhereInput
+}
+
+/**
+ * PersonCountOutputType without action
+ */
 export type PersonCountOutputTypeCountUsersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.UserWhereInput
 }
@@ -2761,6 +2992,7 @@ export type PersonSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   ownedItems?: boolean | Prisma.Person$ownedItemsArgs<ExtArgs>
   assembledBy?: boolean | Prisma.Person$assembledByArgs<ExtArgs>
   disassembledBy?: boolean | Prisma.Person$disassembledByArgs<ExtArgs>
+  groupMemberships?: boolean | Prisma.Person$groupMembershipsArgs<ExtArgs>
   users?: boolean | Prisma.Person$usersArgs<ExtArgs>
   apiKeys?: boolean | Prisma.Person$apiKeysArgs<ExtArgs>
   auditLogs?: boolean | Prisma.Person$auditLogsArgs<ExtArgs>
@@ -2856,6 +3088,7 @@ export type PersonInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   ownedItems?: boolean | Prisma.Person$ownedItemsArgs<ExtArgs>
   assembledBy?: boolean | Prisma.Person$assembledByArgs<ExtArgs>
   disassembledBy?: boolean | Prisma.Person$disassembledByArgs<ExtArgs>
+  groupMemberships?: boolean | Prisma.Person$groupMembershipsArgs<ExtArgs>
   users?: boolean | Prisma.Person$usersArgs<ExtArgs>
   apiKeys?: boolean | Prisma.Person$apiKeysArgs<ExtArgs>
   auditLogs?: boolean | Prisma.Person$auditLogsArgs<ExtArgs>
@@ -2878,6 +3111,7 @@ export type $PersonPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     ownedItems: Prisma.$ItemPayload<ExtArgs>[]
     assembledBy: Prisma.$AssemblyPayload<ExtArgs>[]
     disassembledBy: Prisma.$AssemblyPayload<ExtArgs>[]
+    groupMemberships: Prisma.$PersonGroupPayload<ExtArgs>[]
     users: Prisma.$UserPayload<ExtArgs>[]
     apiKeys: Prisma.$ApiKeyPayload<ExtArgs>[]
     auditLogs: Prisma.$AuditLogPayload<ExtArgs>[]
@@ -3307,6 +3541,7 @@ export interface Prisma__PersonClient<T, Null = never, ExtArgs extends runtime.T
   ownedItems<T extends Prisma.Person$ownedItemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Person$ownedItemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   assembledBy<T extends Prisma.Person$assembledByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Person$assembledByArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AssemblyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   disassembledBy<T extends Prisma.Person$disassembledByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Person$disassembledByArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AssemblyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  groupMemberships<T extends Prisma.Person$groupMembershipsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Person$groupMembershipsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PersonGroupPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   users<T extends Prisma.Person$usersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Person$usersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   apiKeys<T extends Prisma.Person$apiKeysArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Person$apiKeysArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ApiKeyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   auditLogs<T extends Prisma.Person$auditLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Person$auditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -3902,6 +4137,30 @@ export type Person$disassembledByArgs<ExtArgs extends runtime.Types.Extensions.I
   take?: number
   skip?: number
   distinct?: Prisma.AssemblyScalarFieldEnum | Prisma.AssemblyScalarFieldEnum[]
+}
+
+/**
+ * Person.groupMemberships
+ */
+export type Person$groupMembershipsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PersonGroup
+   */
+  select?: Prisma.PersonGroupSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PersonGroup
+   */
+  omit?: Prisma.PersonGroupOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PersonGroupInclude<ExtArgs> | null
+  where?: Prisma.PersonGroupWhereInput
+  orderBy?: Prisma.PersonGroupOrderByWithRelationInput | Prisma.PersonGroupOrderByWithRelationInput[]
+  cursor?: Prisma.PersonGroupWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PersonGroupScalarFieldEnum | Prisma.PersonGroupScalarFieldEnum[]
 }
 
 /**

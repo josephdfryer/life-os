@@ -206,6 +206,7 @@ export type WorkspaceWhereInput = {
   interactions?: Prisma.InteractionListRelationFilter
   plans?: Prisma.PlanListRelationFilter
   places?: Prisma.PlaceListRelationFilter
+  groups?: Prisma.GroupListRelationFilter
   items?: Prisma.ItemListRelationFilter
   importedFiles?: Prisma.ImportedFileListRelationFilter
   stagedItems?: Prisma.StagedInteractionListRelationFilter
@@ -235,6 +236,7 @@ export type WorkspaceOrderByWithRelationInput = {
   interactions?: Prisma.InteractionOrderByRelationAggregateInput
   plans?: Prisma.PlanOrderByRelationAggregateInput
   places?: Prisma.PlaceOrderByRelationAggregateInput
+  groups?: Prisma.GroupOrderByRelationAggregateInput
   items?: Prisma.ItemOrderByRelationAggregateInput
   importedFiles?: Prisma.ImportedFileOrderByRelationAggregateInput
   stagedItems?: Prisma.StagedInteractionOrderByRelationAggregateInput
@@ -267,6 +269,7 @@ export type WorkspaceWhereUniqueInput = Prisma.AtLeast<{
   interactions?: Prisma.InteractionListRelationFilter
   plans?: Prisma.PlanListRelationFilter
   places?: Prisma.PlaceListRelationFilter
+  groups?: Prisma.GroupListRelationFilter
   items?: Prisma.ItemListRelationFilter
   importedFiles?: Prisma.ImportedFileListRelationFilter
   stagedItems?: Prisma.StagedInteractionListRelationFilter
@@ -321,6 +324,7 @@ export type WorkspaceCreateInput = {
   interactions?: Prisma.InteractionCreateNestedManyWithoutWorkspaceInput
   plans?: Prisma.PlanCreateNestedManyWithoutWorkspaceInput
   places?: Prisma.PlaceCreateNestedManyWithoutWorkspaceInput
+  groups?: Prisma.GroupCreateNestedManyWithoutWorkspaceInput
   items?: Prisma.ItemCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionCreateNestedManyWithoutWorkspaceInput
@@ -349,6 +353,7 @@ export type WorkspaceUncheckedCreateInput = {
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutWorkspaceInput
   plans?: Prisma.PlanUncheckedCreateNestedManyWithoutWorkspaceInput
   places?: Prisma.PlaceUncheckedCreateNestedManyWithoutWorkspaceInput
+  groups?: Prisma.GroupUncheckedCreateNestedManyWithoutWorkspaceInput
   items?: Prisma.ItemUncheckedCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -377,6 +382,7 @@ export type WorkspaceUpdateInput = {
   interactions?: Prisma.InteractionUpdateManyWithoutWorkspaceNestedInput
   plans?: Prisma.PlanUpdateManyWithoutWorkspaceNestedInput
   places?: Prisma.PlaceUpdateManyWithoutWorkspaceNestedInput
+  groups?: Prisma.GroupUpdateManyWithoutWorkspaceNestedInput
   items?: Prisma.ItemUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUpdateManyWithoutWorkspaceNestedInput
@@ -405,6 +411,7 @@ export type WorkspaceUncheckedUpdateInput = {
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
   plans?: Prisma.PlanUncheckedUpdateManyWithoutWorkspaceNestedInput
   places?: Prisma.PlaceUncheckedUpdateManyWithoutWorkspaceNestedInput
+  groups?: Prisma.GroupUncheckedUpdateManyWithoutWorkspaceNestedInput
   items?: Prisma.ItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -807,6 +814,20 @@ export type WorkspaceUpdateOneRequiredWithoutImportedFilesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.WorkspaceUpdateToOneWithWhereWithoutImportedFilesInput, Prisma.WorkspaceUpdateWithoutImportedFilesInput>, Prisma.WorkspaceUncheckedUpdateWithoutImportedFilesInput>
 }
 
+export type WorkspaceCreateNestedOneWithoutGroupsInput = {
+  create?: Prisma.XOR<Prisma.WorkspaceCreateWithoutGroupsInput, Prisma.WorkspaceUncheckedCreateWithoutGroupsInput>
+  connectOrCreate?: Prisma.WorkspaceCreateOrConnectWithoutGroupsInput
+  connect?: Prisma.WorkspaceWhereUniqueInput
+}
+
+export type WorkspaceUpdateOneRequiredWithoutGroupsNestedInput = {
+  create?: Prisma.XOR<Prisma.WorkspaceCreateWithoutGroupsInput, Prisma.WorkspaceUncheckedCreateWithoutGroupsInput>
+  connectOrCreate?: Prisma.WorkspaceCreateOrConnectWithoutGroupsInput
+  upsert?: Prisma.WorkspaceUpsertWithoutGroupsInput
+  connect?: Prisma.WorkspaceWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.WorkspaceUpdateToOneWithWhereWithoutGroupsInput, Prisma.WorkspaceUpdateWithoutGroupsInput>, Prisma.WorkspaceUncheckedUpdateWithoutGroupsInput>
+}
+
 export type WorkspaceCreateWithoutMembersInput = {
   id?: string
   createdAt?: Date | string
@@ -821,6 +842,7 @@ export type WorkspaceCreateWithoutMembersInput = {
   interactions?: Prisma.InteractionCreateNestedManyWithoutWorkspaceInput
   plans?: Prisma.PlanCreateNestedManyWithoutWorkspaceInput
   places?: Prisma.PlaceCreateNestedManyWithoutWorkspaceInput
+  groups?: Prisma.GroupCreateNestedManyWithoutWorkspaceInput
   items?: Prisma.ItemCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionCreateNestedManyWithoutWorkspaceInput
@@ -848,6 +870,7 @@ export type WorkspaceUncheckedCreateWithoutMembersInput = {
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutWorkspaceInput
   plans?: Prisma.PlanUncheckedCreateNestedManyWithoutWorkspaceInput
   places?: Prisma.PlaceUncheckedCreateNestedManyWithoutWorkspaceInput
+  groups?: Prisma.GroupUncheckedCreateNestedManyWithoutWorkspaceInput
   items?: Prisma.ItemUncheckedCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -891,6 +914,7 @@ export type WorkspaceUpdateWithoutMembersInput = {
   interactions?: Prisma.InteractionUpdateManyWithoutWorkspaceNestedInput
   plans?: Prisma.PlanUpdateManyWithoutWorkspaceNestedInput
   places?: Prisma.PlaceUpdateManyWithoutWorkspaceNestedInput
+  groups?: Prisma.GroupUpdateManyWithoutWorkspaceNestedInput
   items?: Prisma.ItemUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUpdateManyWithoutWorkspaceNestedInput
@@ -918,6 +942,7 @@ export type WorkspaceUncheckedUpdateWithoutMembersInput = {
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
   plans?: Prisma.PlanUncheckedUpdateManyWithoutWorkspaceNestedInput
   places?: Prisma.PlaceUncheckedUpdateManyWithoutWorkspaceNestedInput
+  groups?: Prisma.GroupUncheckedUpdateManyWithoutWorkspaceNestedInput
   items?: Prisma.ItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -945,6 +970,7 @@ export type WorkspaceCreateWithoutApprovedEmailsInput = {
   interactions?: Prisma.InteractionCreateNestedManyWithoutWorkspaceInput
   plans?: Prisma.PlanCreateNestedManyWithoutWorkspaceInput
   places?: Prisma.PlaceCreateNestedManyWithoutWorkspaceInput
+  groups?: Prisma.GroupCreateNestedManyWithoutWorkspaceInput
   items?: Prisma.ItemCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionCreateNestedManyWithoutWorkspaceInput
@@ -972,6 +998,7 @@ export type WorkspaceUncheckedCreateWithoutApprovedEmailsInput = {
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutWorkspaceInput
   plans?: Prisma.PlanUncheckedCreateNestedManyWithoutWorkspaceInput
   places?: Prisma.PlaceUncheckedCreateNestedManyWithoutWorkspaceInput
+  groups?: Prisma.GroupUncheckedCreateNestedManyWithoutWorkspaceInput
   items?: Prisma.ItemUncheckedCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -1015,6 +1042,7 @@ export type WorkspaceUpdateWithoutApprovedEmailsInput = {
   interactions?: Prisma.InteractionUpdateManyWithoutWorkspaceNestedInput
   plans?: Prisma.PlanUpdateManyWithoutWorkspaceNestedInput
   places?: Prisma.PlaceUpdateManyWithoutWorkspaceNestedInput
+  groups?: Prisma.GroupUpdateManyWithoutWorkspaceNestedInput
   items?: Prisma.ItemUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUpdateManyWithoutWorkspaceNestedInput
@@ -1042,6 +1070,7 @@ export type WorkspaceUncheckedUpdateWithoutApprovedEmailsInput = {
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
   plans?: Prisma.PlanUncheckedUpdateManyWithoutWorkspaceNestedInput
   places?: Prisma.PlaceUncheckedUpdateManyWithoutWorkspaceNestedInput
+  groups?: Prisma.GroupUncheckedUpdateManyWithoutWorkspaceNestedInput
   items?: Prisma.ItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -1069,6 +1098,7 @@ export type WorkspaceCreateWithoutPersonsInput = {
   interactions?: Prisma.InteractionCreateNestedManyWithoutWorkspaceInput
   plans?: Prisma.PlanCreateNestedManyWithoutWorkspaceInput
   places?: Prisma.PlaceCreateNestedManyWithoutWorkspaceInput
+  groups?: Prisma.GroupCreateNestedManyWithoutWorkspaceInput
   items?: Prisma.ItemCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionCreateNestedManyWithoutWorkspaceInput
@@ -1096,6 +1126,7 @@ export type WorkspaceUncheckedCreateWithoutPersonsInput = {
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutWorkspaceInput
   plans?: Prisma.PlanUncheckedCreateNestedManyWithoutWorkspaceInput
   places?: Prisma.PlaceUncheckedCreateNestedManyWithoutWorkspaceInput
+  groups?: Prisma.GroupUncheckedCreateNestedManyWithoutWorkspaceInput
   items?: Prisma.ItemUncheckedCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -1139,6 +1170,7 @@ export type WorkspaceUpdateWithoutPersonsInput = {
   interactions?: Prisma.InteractionUpdateManyWithoutWorkspaceNestedInput
   plans?: Prisma.PlanUpdateManyWithoutWorkspaceNestedInput
   places?: Prisma.PlaceUpdateManyWithoutWorkspaceNestedInput
+  groups?: Prisma.GroupUpdateManyWithoutWorkspaceNestedInput
   items?: Prisma.ItemUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUpdateManyWithoutWorkspaceNestedInput
@@ -1166,6 +1198,7 @@ export type WorkspaceUncheckedUpdateWithoutPersonsInput = {
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
   plans?: Prisma.PlanUncheckedUpdateManyWithoutWorkspaceNestedInput
   places?: Prisma.PlaceUncheckedUpdateManyWithoutWorkspaceNestedInput
+  groups?: Prisma.GroupUncheckedUpdateManyWithoutWorkspaceNestedInput
   items?: Prisma.ItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -1193,6 +1226,7 @@ export type WorkspaceCreateWithoutOwnerUserInput = {
   interactions?: Prisma.InteractionCreateNestedManyWithoutWorkspaceInput
   plans?: Prisma.PlanCreateNestedManyWithoutWorkspaceInput
   places?: Prisma.PlaceCreateNestedManyWithoutWorkspaceInput
+  groups?: Prisma.GroupCreateNestedManyWithoutWorkspaceInput
   items?: Prisma.ItemCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionCreateNestedManyWithoutWorkspaceInput
@@ -1220,6 +1254,7 @@ export type WorkspaceUncheckedCreateWithoutOwnerUserInput = {
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutWorkspaceInput
   plans?: Prisma.PlanUncheckedCreateNestedManyWithoutWorkspaceInput
   places?: Prisma.PlaceUncheckedCreateNestedManyWithoutWorkspaceInput
+  groups?: Prisma.GroupUncheckedCreateNestedManyWithoutWorkspaceInput
   items?: Prisma.ItemUncheckedCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -1286,6 +1321,7 @@ export type WorkspaceCreateWithoutApiKeysInput = {
   interactions?: Prisma.InteractionCreateNestedManyWithoutWorkspaceInput
   plans?: Prisma.PlanCreateNestedManyWithoutWorkspaceInput
   places?: Prisma.PlaceCreateNestedManyWithoutWorkspaceInput
+  groups?: Prisma.GroupCreateNestedManyWithoutWorkspaceInput
   items?: Prisma.ItemCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionCreateNestedManyWithoutWorkspaceInput
@@ -1313,6 +1349,7 @@ export type WorkspaceUncheckedCreateWithoutApiKeysInput = {
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutWorkspaceInput
   plans?: Prisma.PlanUncheckedCreateNestedManyWithoutWorkspaceInput
   places?: Prisma.PlaceUncheckedCreateNestedManyWithoutWorkspaceInput
+  groups?: Prisma.GroupUncheckedCreateNestedManyWithoutWorkspaceInput
   items?: Prisma.ItemUncheckedCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -1356,6 +1393,7 @@ export type WorkspaceUpdateWithoutApiKeysInput = {
   interactions?: Prisma.InteractionUpdateManyWithoutWorkspaceNestedInput
   plans?: Prisma.PlanUpdateManyWithoutWorkspaceNestedInput
   places?: Prisma.PlaceUpdateManyWithoutWorkspaceNestedInput
+  groups?: Prisma.GroupUpdateManyWithoutWorkspaceNestedInput
   items?: Prisma.ItemUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUpdateManyWithoutWorkspaceNestedInput
@@ -1383,6 +1421,7 @@ export type WorkspaceUncheckedUpdateWithoutApiKeysInput = {
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
   plans?: Prisma.PlanUncheckedUpdateManyWithoutWorkspaceNestedInput
   places?: Prisma.PlaceUncheckedUpdateManyWithoutWorkspaceNestedInput
+  groups?: Prisma.GroupUncheckedUpdateManyWithoutWorkspaceNestedInput
   items?: Prisma.ItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -1410,6 +1449,7 @@ export type WorkspaceCreateWithoutAuditLogsInput = {
   interactions?: Prisma.InteractionCreateNestedManyWithoutWorkspaceInput
   plans?: Prisma.PlanCreateNestedManyWithoutWorkspaceInput
   places?: Prisma.PlaceCreateNestedManyWithoutWorkspaceInput
+  groups?: Prisma.GroupCreateNestedManyWithoutWorkspaceInput
   items?: Prisma.ItemCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionCreateNestedManyWithoutWorkspaceInput
@@ -1437,6 +1477,7 @@ export type WorkspaceUncheckedCreateWithoutAuditLogsInput = {
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutWorkspaceInput
   plans?: Prisma.PlanUncheckedCreateNestedManyWithoutWorkspaceInput
   places?: Prisma.PlaceUncheckedCreateNestedManyWithoutWorkspaceInput
+  groups?: Prisma.GroupUncheckedCreateNestedManyWithoutWorkspaceInput
   items?: Prisma.ItemUncheckedCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -1480,6 +1521,7 @@ export type WorkspaceUpdateWithoutAuditLogsInput = {
   interactions?: Prisma.InteractionUpdateManyWithoutWorkspaceNestedInput
   plans?: Prisma.PlanUpdateManyWithoutWorkspaceNestedInput
   places?: Prisma.PlaceUpdateManyWithoutWorkspaceNestedInput
+  groups?: Prisma.GroupUpdateManyWithoutWorkspaceNestedInput
   items?: Prisma.ItemUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUpdateManyWithoutWorkspaceNestedInput
@@ -1507,6 +1549,7 @@ export type WorkspaceUncheckedUpdateWithoutAuditLogsInput = {
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
   plans?: Prisma.PlanUncheckedUpdateManyWithoutWorkspaceNestedInput
   places?: Prisma.PlaceUncheckedUpdateManyWithoutWorkspaceNestedInput
+  groups?: Prisma.GroupUncheckedUpdateManyWithoutWorkspaceNestedInput
   items?: Prisma.ItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -1534,6 +1577,7 @@ export type WorkspaceCreateWithoutCalendarConnectionsInput = {
   interactions?: Prisma.InteractionCreateNestedManyWithoutWorkspaceInput
   plans?: Prisma.PlanCreateNestedManyWithoutWorkspaceInput
   places?: Prisma.PlaceCreateNestedManyWithoutWorkspaceInput
+  groups?: Prisma.GroupCreateNestedManyWithoutWorkspaceInput
   items?: Prisma.ItemCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionCreateNestedManyWithoutWorkspaceInput
@@ -1561,6 +1605,7 @@ export type WorkspaceUncheckedCreateWithoutCalendarConnectionsInput = {
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutWorkspaceInput
   plans?: Prisma.PlanUncheckedCreateNestedManyWithoutWorkspaceInput
   places?: Prisma.PlaceUncheckedCreateNestedManyWithoutWorkspaceInput
+  groups?: Prisma.GroupUncheckedCreateNestedManyWithoutWorkspaceInput
   items?: Prisma.ItemUncheckedCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -1604,6 +1649,7 @@ export type WorkspaceUpdateWithoutCalendarConnectionsInput = {
   interactions?: Prisma.InteractionUpdateManyWithoutWorkspaceNestedInput
   plans?: Prisma.PlanUpdateManyWithoutWorkspaceNestedInput
   places?: Prisma.PlaceUpdateManyWithoutWorkspaceNestedInput
+  groups?: Prisma.GroupUpdateManyWithoutWorkspaceNestedInput
   items?: Prisma.ItemUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUpdateManyWithoutWorkspaceNestedInput
@@ -1631,6 +1677,7 @@ export type WorkspaceUncheckedUpdateWithoutCalendarConnectionsInput = {
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
   plans?: Prisma.PlanUncheckedUpdateManyWithoutWorkspaceNestedInput
   places?: Prisma.PlaceUncheckedUpdateManyWithoutWorkspaceNestedInput
+  groups?: Prisma.GroupUncheckedUpdateManyWithoutWorkspaceNestedInput
   items?: Prisma.ItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -1658,6 +1705,7 @@ export type WorkspaceCreateWithoutCalendarEventLinksInput = {
   interactions?: Prisma.InteractionCreateNestedManyWithoutWorkspaceInput
   plans?: Prisma.PlanCreateNestedManyWithoutWorkspaceInput
   places?: Prisma.PlaceCreateNestedManyWithoutWorkspaceInput
+  groups?: Prisma.GroupCreateNestedManyWithoutWorkspaceInput
   items?: Prisma.ItemCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionCreateNestedManyWithoutWorkspaceInput
@@ -1685,6 +1733,7 @@ export type WorkspaceUncheckedCreateWithoutCalendarEventLinksInput = {
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutWorkspaceInput
   plans?: Prisma.PlanUncheckedCreateNestedManyWithoutWorkspaceInput
   places?: Prisma.PlaceUncheckedCreateNestedManyWithoutWorkspaceInput
+  groups?: Prisma.GroupUncheckedCreateNestedManyWithoutWorkspaceInput
   items?: Prisma.ItemUncheckedCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -1728,6 +1777,7 @@ export type WorkspaceUpdateWithoutCalendarEventLinksInput = {
   interactions?: Prisma.InteractionUpdateManyWithoutWorkspaceNestedInput
   plans?: Prisma.PlanUpdateManyWithoutWorkspaceNestedInput
   places?: Prisma.PlaceUpdateManyWithoutWorkspaceNestedInput
+  groups?: Prisma.GroupUpdateManyWithoutWorkspaceNestedInput
   items?: Prisma.ItemUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUpdateManyWithoutWorkspaceNestedInput
@@ -1755,6 +1805,7 @@ export type WorkspaceUncheckedUpdateWithoutCalendarEventLinksInput = {
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
   plans?: Prisma.PlanUncheckedUpdateManyWithoutWorkspaceNestedInput
   places?: Prisma.PlaceUncheckedUpdateManyWithoutWorkspaceNestedInput
+  groups?: Prisma.GroupUncheckedUpdateManyWithoutWorkspaceNestedInput
   items?: Prisma.ItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -1782,6 +1833,7 @@ export type WorkspaceCreateWithoutGmailConnectionsInput = {
   interactions?: Prisma.InteractionCreateNestedManyWithoutWorkspaceInput
   plans?: Prisma.PlanCreateNestedManyWithoutWorkspaceInput
   places?: Prisma.PlaceCreateNestedManyWithoutWorkspaceInput
+  groups?: Prisma.GroupCreateNestedManyWithoutWorkspaceInput
   items?: Prisma.ItemCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionCreateNestedManyWithoutWorkspaceInput
@@ -1809,6 +1861,7 @@ export type WorkspaceUncheckedCreateWithoutGmailConnectionsInput = {
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutWorkspaceInput
   plans?: Prisma.PlanUncheckedCreateNestedManyWithoutWorkspaceInput
   places?: Prisma.PlaceUncheckedCreateNestedManyWithoutWorkspaceInput
+  groups?: Prisma.GroupUncheckedCreateNestedManyWithoutWorkspaceInput
   items?: Prisma.ItemUncheckedCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -1852,6 +1905,7 @@ export type WorkspaceUpdateWithoutGmailConnectionsInput = {
   interactions?: Prisma.InteractionUpdateManyWithoutWorkspaceNestedInput
   plans?: Prisma.PlanUpdateManyWithoutWorkspaceNestedInput
   places?: Prisma.PlaceUpdateManyWithoutWorkspaceNestedInput
+  groups?: Prisma.GroupUpdateManyWithoutWorkspaceNestedInput
   items?: Prisma.ItemUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUpdateManyWithoutWorkspaceNestedInput
@@ -1879,6 +1933,7 @@ export type WorkspaceUncheckedUpdateWithoutGmailConnectionsInput = {
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
   plans?: Prisma.PlanUncheckedUpdateManyWithoutWorkspaceNestedInput
   places?: Prisma.PlaceUncheckedUpdateManyWithoutWorkspaceNestedInput
+  groups?: Prisma.GroupUncheckedUpdateManyWithoutWorkspaceNestedInput
   items?: Prisma.ItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -1906,6 +1961,7 @@ export type WorkspaceCreateWithoutGmailMessageLinksInput = {
   interactions?: Prisma.InteractionCreateNestedManyWithoutWorkspaceInput
   plans?: Prisma.PlanCreateNestedManyWithoutWorkspaceInput
   places?: Prisma.PlaceCreateNestedManyWithoutWorkspaceInput
+  groups?: Prisma.GroupCreateNestedManyWithoutWorkspaceInput
   items?: Prisma.ItemCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionCreateNestedManyWithoutWorkspaceInput
@@ -1933,6 +1989,7 @@ export type WorkspaceUncheckedCreateWithoutGmailMessageLinksInput = {
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutWorkspaceInput
   plans?: Prisma.PlanUncheckedCreateNestedManyWithoutWorkspaceInput
   places?: Prisma.PlaceUncheckedCreateNestedManyWithoutWorkspaceInput
+  groups?: Prisma.GroupUncheckedCreateNestedManyWithoutWorkspaceInput
   items?: Prisma.ItemUncheckedCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -1976,6 +2033,7 @@ export type WorkspaceUpdateWithoutGmailMessageLinksInput = {
   interactions?: Prisma.InteractionUpdateManyWithoutWorkspaceNestedInput
   plans?: Prisma.PlanUpdateManyWithoutWorkspaceNestedInput
   places?: Prisma.PlaceUpdateManyWithoutWorkspaceNestedInput
+  groups?: Prisma.GroupUpdateManyWithoutWorkspaceNestedInput
   items?: Prisma.ItemUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUpdateManyWithoutWorkspaceNestedInput
@@ -2003,6 +2061,7 @@ export type WorkspaceUncheckedUpdateWithoutGmailMessageLinksInput = {
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
   plans?: Prisma.PlanUncheckedUpdateManyWithoutWorkspaceNestedInput
   places?: Prisma.PlaceUncheckedUpdateManyWithoutWorkspaceNestedInput
+  groups?: Prisma.GroupUncheckedUpdateManyWithoutWorkspaceNestedInput
   items?: Prisma.ItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -2030,6 +2089,7 @@ export type WorkspaceCreateWithoutRulesInput = {
   interactions?: Prisma.InteractionCreateNestedManyWithoutWorkspaceInput
   plans?: Prisma.PlanCreateNestedManyWithoutWorkspaceInput
   places?: Prisma.PlaceCreateNestedManyWithoutWorkspaceInput
+  groups?: Prisma.GroupCreateNestedManyWithoutWorkspaceInput
   items?: Prisma.ItemCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionCreateNestedManyWithoutWorkspaceInput
@@ -2057,6 +2117,7 @@ export type WorkspaceUncheckedCreateWithoutRulesInput = {
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutWorkspaceInput
   plans?: Prisma.PlanUncheckedCreateNestedManyWithoutWorkspaceInput
   places?: Prisma.PlaceUncheckedCreateNestedManyWithoutWorkspaceInput
+  groups?: Prisma.GroupUncheckedCreateNestedManyWithoutWorkspaceInput
   items?: Prisma.ItemUncheckedCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -2100,6 +2161,7 @@ export type WorkspaceUpdateWithoutRulesInput = {
   interactions?: Prisma.InteractionUpdateManyWithoutWorkspaceNestedInput
   plans?: Prisma.PlanUpdateManyWithoutWorkspaceNestedInput
   places?: Prisma.PlaceUpdateManyWithoutWorkspaceNestedInput
+  groups?: Prisma.GroupUpdateManyWithoutWorkspaceNestedInput
   items?: Prisma.ItemUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUpdateManyWithoutWorkspaceNestedInput
@@ -2127,6 +2189,7 @@ export type WorkspaceUncheckedUpdateWithoutRulesInput = {
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
   plans?: Prisma.PlanUncheckedUpdateManyWithoutWorkspaceNestedInput
   places?: Prisma.PlaceUncheckedUpdateManyWithoutWorkspaceNestedInput
+  groups?: Prisma.GroupUncheckedUpdateManyWithoutWorkspaceNestedInput
   items?: Prisma.ItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -2154,6 +2217,7 @@ export type WorkspaceCreateWithoutRuleRunsInput = {
   interactions?: Prisma.InteractionCreateNestedManyWithoutWorkspaceInput
   plans?: Prisma.PlanCreateNestedManyWithoutWorkspaceInput
   places?: Prisma.PlaceCreateNestedManyWithoutWorkspaceInput
+  groups?: Prisma.GroupCreateNestedManyWithoutWorkspaceInput
   items?: Prisma.ItemCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionCreateNestedManyWithoutWorkspaceInput
@@ -2181,6 +2245,7 @@ export type WorkspaceUncheckedCreateWithoutRuleRunsInput = {
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutWorkspaceInput
   plans?: Prisma.PlanUncheckedCreateNestedManyWithoutWorkspaceInput
   places?: Prisma.PlaceUncheckedCreateNestedManyWithoutWorkspaceInput
+  groups?: Prisma.GroupUncheckedCreateNestedManyWithoutWorkspaceInput
   items?: Prisma.ItemUncheckedCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -2224,6 +2289,7 @@ export type WorkspaceUpdateWithoutRuleRunsInput = {
   interactions?: Prisma.InteractionUpdateManyWithoutWorkspaceNestedInput
   plans?: Prisma.PlanUpdateManyWithoutWorkspaceNestedInput
   places?: Prisma.PlaceUpdateManyWithoutWorkspaceNestedInput
+  groups?: Prisma.GroupUpdateManyWithoutWorkspaceNestedInput
   items?: Prisma.ItemUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUpdateManyWithoutWorkspaceNestedInput
@@ -2251,6 +2317,7 @@ export type WorkspaceUncheckedUpdateWithoutRuleRunsInput = {
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
   plans?: Prisma.PlanUncheckedUpdateManyWithoutWorkspaceNestedInput
   places?: Prisma.PlaceUncheckedUpdateManyWithoutWorkspaceNestedInput
+  groups?: Prisma.GroupUncheckedUpdateManyWithoutWorkspaceNestedInput
   items?: Prisma.ItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -2278,6 +2345,7 @@ export type WorkspaceCreateWithoutStagedItemsInput = {
   interactions?: Prisma.InteractionCreateNestedManyWithoutWorkspaceInput
   plans?: Prisma.PlanCreateNestedManyWithoutWorkspaceInput
   places?: Prisma.PlaceCreateNestedManyWithoutWorkspaceInput
+  groups?: Prisma.GroupCreateNestedManyWithoutWorkspaceInput
   items?: Prisma.ItemCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleCreateNestedManyWithoutWorkspaceInput
@@ -2305,6 +2373,7 @@ export type WorkspaceUncheckedCreateWithoutStagedItemsInput = {
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutWorkspaceInput
   plans?: Prisma.PlanUncheckedCreateNestedManyWithoutWorkspaceInput
   places?: Prisma.PlaceUncheckedCreateNestedManyWithoutWorkspaceInput
+  groups?: Prisma.GroupUncheckedCreateNestedManyWithoutWorkspaceInput
   items?: Prisma.ItemUncheckedCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -2348,6 +2417,7 @@ export type WorkspaceUpdateWithoutStagedItemsInput = {
   interactions?: Prisma.InteractionUpdateManyWithoutWorkspaceNestedInput
   plans?: Prisma.PlanUpdateManyWithoutWorkspaceNestedInput
   places?: Prisma.PlaceUpdateManyWithoutWorkspaceNestedInput
+  groups?: Prisma.GroupUpdateManyWithoutWorkspaceNestedInput
   items?: Prisma.ItemUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUpdateManyWithoutWorkspaceNestedInput
@@ -2375,6 +2445,7 @@ export type WorkspaceUncheckedUpdateWithoutStagedItemsInput = {
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
   plans?: Prisma.PlanUncheckedUpdateManyWithoutWorkspaceNestedInput
   places?: Prisma.PlaceUncheckedUpdateManyWithoutWorkspaceNestedInput
+  groups?: Prisma.GroupUncheckedUpdateManyWithoutWorkspaceNestedInput
   items?: Prisma.ItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -2401,6 +2472,7 @@ export type WorkspaceCreateWithoutEventsInput = {
   interactions?: Prisma.InteractionCreateNestedManyWithoutWorkspaceInput
   plans?: Prisma.PlanCreateNestedManyWithoutWorkspaceInput
   places?: Prisma.PlaceCreateNestedManyWithoutWorkspaceInput
+  groups?: Prisma.GroupCreateNestedManyWithoutWorkspaceInput
   items?: Prisma.ItemCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionCreateNestedManyWithoutWorkspaceInput
@@ -2428,6 +2500,7 @@ export type WorkspaceUncheckedCreateWithoutEventsInput = {
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutWorkspaceInput
   plans?: Prisma.PlanUncheckedCreateNestedManyWithoutWorkspaceInput
   places?: Prisma.PlaceUncheckedCreateNestedManyWithoutWorkspaceInput
+  groups?: Prisma.GroupUncheckedCreateNestedManyWithoutWorkspaceInput
   items?: Prisma.ItemUncheckedCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -2471,6 +2544,7 @@ export type WorkspaceUpdateWithoutEventsInput = {
   interactions?: Prisma.InteractionUpdateManyWithoutWorkspaceNestedInput
   plans?: Prisma.PlanUpdateManyWithoutWorkspaceNestedInput
   places?: Prisma.PlaceUpdateManyWithoutWorkspaceNestedInput
+  groups?: Prisma.GroupUpdateManyWithoutWorkspaceNestedInput
   items?: Prisma.ItemUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUpdateManyWithoutWorkspaceNestedInput
@@ -2498,6 +2572,7 @@ export type WorkspaceUncheckedUpdateWithoutEventsInput = {
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
   plans?: Prisma.PlanUncheckedUpdateManyWithoutWorkspaceNestedInput
   places?: Prisma.PlaceUncheckedUpdateManyWithoutWorkspaceNestedInput
+  groups?: Prisma.GroupUncheckedUpdateManyWithoutWorkspaceNestedInput
   items?: Prisma.ItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -2525,6 +2600,7 @@ export type WorkspaceCreateWithoutInteractionsInput = {
   events?: Prisma.EventCreateNestedManyWithoutWorkspaceInput
   plans?: Prisma.PlanCreateNestedManyWithoutWorkspaceInput
   places?: Prisma.PlaceCreateNestedManyWithoutWorkspaceInput
+  groups?: Prisma.GroupCreateNestedManyWithoutWorkspaceInput
   items?: Prisma.ItemCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionCreateNestedManyWithoutWorkspaceInput
@@ -2552,6 +2628,7 @@ export type WorkspaceUncheckedCreateWithoutInteractionsInput = {
   events?: Prisma.EventUncheckedCreateNestedManyWithoutWorkspaceInput
   plans?: Prisma.PlanUncheckedCreateNestedManyWithoutWorkspaceInput
   places?: Prisma.PlaceUncheckedCreateNestedManyWithoutWorkspaceInput
+  groups?: Prisma.GroupUncheckedCreateNestedManyWithoutWorkspaceInput
   items?: Prisma.ItemUncheckedCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -2595,6 +2672,7 @@ export type WorkspaceUpdateWithoutInteractionsInput = {
   events?: Prisma.EventUpdateManyWithoutWorkspaceNestedInput
   plans?: Prisma.PlanUpdateManyWithoutWorkspaceNestedInput
   places?: Prisma.PlaceUpdateManyWithoutWorkspaceNestedInput
+  groups?: Prisma.GroupUpdateManyWithoutWorkspaceNestedInput
   items?: Prisma.ItemUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUpdateManyWithoutWorkspaceNestedInput
@@ -2622,6 +2700,7 @@ export type WorkspaceUncheckedUpdateWithoutInteractionsInput = {
   events?: Prisma.EventUncheckedUpdateManyWithoutWorkspaceNestedInput
   plans?: Prisma.PlanUncheckedUpdateManyWithoutWorkspaceNestedInput
   places?: Prisma.PlaceUncheckedUpdateManyWithoutWorkspaceNestedInput
+  groups?: Prisma.GroupUncheckedUpdateManyWithoutWorkspaceNestedInput
   items?: Prisma.ItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -2649,6 +2728,7 @@ export type WorkspaceCreateWithoutPlansInput = {
   events?: Prisma.EventCreateNestedManyWithoutWorkspaceInput
   interactions?: Prisma.InteractionCreateNestedManyWithoutWorkspaceInput
   places?: Prisma.PlaceCreateNestedManyWithoutWorkspaceInput
+  groups?: Prisma.GroupCreateNestedManyWithoutWorkspaceInput
   items?: Prisma.ItemCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionCreateNestedManyWithoutWorkspaceInput
@@ -2676,6 +2756,7 @@ export type WorkspaceUncheckedCreateWithoutPlansInput = {
   events?: Prisma.EventUncheckedCreateNestedManyWithoutWorkspaceInput
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutWorkspaceInput
   places?: Prisma.PlaceUncheckedCreateNestedManyWithoutWorkspaceInput
+  groups?: Prisma.GroupUncheckedCreateNestedManyWithoutWorkspaceInput
   items?: Prisma.ItemUncheckedCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -2719,6 +2800,7 @@ export type WorkspaceUpdateWithoutPlansInput = {
   events?: Prisma.EventUpdateManyWithoutWorkspaceNestedInput
   interactions?: Prisma.InteractionUpdateManyWithoutWorkspaceNestedInput
   places?: Prisma.PlaceUpdateManyWithoutWorkspaceNestedInput
+  groups?: Prisma.GroupUpdateManyWithoutWorkspaceNestedInput
   items?: Prisma.ItemUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUpdateManyWithoutWorkspaceNestedInput
@@ -2746,6 +2828,7 @@ export type WorkspaceUncheckedUpdateWithoutPlansInput = {
   events?: Prisma.EventUncheckedUpdateManyWithoutWorkspaceNestedInput
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
   places?: Prisma.PlaceUncheckedUpdateManyWithoutWorkspaceNestedInput
+  groups?: Prisma.GroupUncheckedUpdateManyWithoutWorkspaceNestedInput
   items?: Prisma.ItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -2773,6 +2856,7 @@ export type WorkspaceCreateWithoutPlacesInput = {
   events?: Prisma.EventCreateNestedManyWithoutWorkspaceInput
   interactions?: Prisma.InteractionCreateNestedManyWithoutWorkspaceInput
   plans?: Prisma.PlanCreateNestedManyWithoutWorkspaceInput
+  groups?: Prisma.GroupCreateNestedManyWithoutWorkspaceInput
   items?: Prisma.ItemCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionCreateNestedManyWithoutWorkspaceInput
@@ -2800,6 +2884,7 @@ export type WorkspaceUncheckedCreateWithoutPlacesInput = {
   events?: Prisma.EventUncheckedCreateNestedManyWithoutWorkspaceInput
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutWorkspaceInput
   plans?: Prisma.PlanUncheckedCreateNestedManyWithoutWorkspaceInput
+  groups?: Prisma.GroupUncheckedCreateNestedManyWithoutWorkspaceInput
   items?: Prisma.ItemUncheckedCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -2843,6 +2928,7 @@ export type WorkspaceUpdateWithoutPlacesInput = {
   events?: Prisma.EventUpdateManyWithoutWorkspaceNestedInput
   interactions?: Prisma.InteractionUpdateManyWithoutWorkspaceNestedInput
   plans?: Prisma.PlanUpdateManyWithoutWorkspaceNestedInput
+  groups?: Prisma.GroupUpdateManyWithoutWorkspaceNestedInput
   items?: Prisma.ItemUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUpdateManyWithoutWorkspaceNestedInput
@@ -2870,6 +2956,7 @@ export type WorkspaceUncheckedUpdateWithoutPlacesInput = {
   events?: Prisma.EventUncheckedUpdateManyWithoutWorkspaceNestedInput
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
   plans?: Prisma.PlanUncheckedUpdateManyWithoutWorkspaceNestedInput
+  groups?: Prisma.GroupUncheckedUpdateManyWithoutWorkspaceNestedInput
   items?: Prisma.ItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -2898,6 +2985,7 @@ export type WorkspaceCreateWithoutItemsInput = {
   interactions?: Prisma.InteractionCreateNestedManyWithoutWorkspaceInput
   plans?: Prisma.PlanCreateNestedManyWithoutWorkspaceInput
   places?: Prisma.PlaceCreateNestedManyWithoutWorkspaceInput
+  groups?: Prisma.GroupCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleCreateNestedManyWithoutWorkspaceInput
@@ -2925,6 +3013,7 @@ export type WorkspaceUncheckedCreateWithoutItemsInput = {
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutWorkspaceInput
   plans?: Prisma.PlanUncheckedCreateNestedManyWithoutWorkspaceInput
   places?: Prisma.PlaceUncheckedCreateNestedManyWithoutWorkspaceInput
+  groups?: Prisma.GroupUncheckedCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -2968,6 +3057,7 @@ export type WorkspaceUpdateWithoutItemsInput = {
   interactions?: Prisma.InteractionUpdateManyWithoutWorkspaceNestedInput
   plans?: Prisma.PlanUpdateManyWithoutWorkspaceNestedInput
   places?: Prisma.PlaceUpdateManyWithoutWorkspaceNestedInput
+  groups?: Prisma.GroupUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUpdateManyWithoutWorkspaceNestedInput
@@ -2995,6 +3085,7 @@ export type WorkspaceUncheckedUpdateWithoutItemsInput = {
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
   plans?: Prisma.PlanUncheckedUpdateManyWithoutWorkspaceNestedInput
   places?: Prisma.PlaceUncheckedUpdateManyWithoutWorkspaceNestedInput
+  groups?: Prisma.GroupUncheckedUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -3022,6 +3113,7 @@ export type WorkspaceCreateWithoutImportedFilesInput = {
   interactions?: Prisma.InteractionCreateNestedManyWithoutWorkspaceInput
   plans?: Prisma.PlanCreateNestedManyWithoutWorkspaceInput
   places?: Prisma.PlaceCreateNestedManyWithoutWorkspaceInput
+  groups?: Prisma.GroupCreateNestedManyWithoutWorkspaceInput
   items?: Prisma.ItemCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleCreateNestedManyWithoutWorkspaceInput
@@ -3049,6 +3141,7 @@ export type WorkspaceUncheckedCreateWithoutImportedFilesInput = {
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutWorkspaceInput
   plans?: Prisma.PlanUncheckedCreateNestedManyWithoutWorkspaceInput
   places?: Prisma.PlaceUncheckedCreateNestedManyWithoutWorkspaceInput
+  groups?: Prisma.GroupUncheckedCreateNestedManyWithoutWorkspaceInput
   items?: Prisma.ItemUncheckedCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -3092,6 +3185,7 @@ export type WorkspaceUpdateWithoutImportedFilesInput = {
   interactions?: Prisma.InteractionUpdateManyWithoutWorkspaceNestedInput
   plans?: Prisma.PlanUpdateManyWithoutWorkspaceNestedInput
   places?: Prisma.PlaceUpdateManyWithoutWorkspaceNestedInput
+  groups?: Prisma.GroupUpdateManyWithoutWorkspaceNestedInput
   items?: Prisma.ItemUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUpdateManyWithoutWorkspaceNestedInput
@@ -3119,7 +3213,136 @@ export type WorkspaceUncheckedUpdateWithoutImportedFilesInput = {
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
   plans?: Prisma.PlanUncheckedUpdateManyWithoutWorkspaceNestedInput
   places?: Prisma.PlaceUncheckedUpdateManyWithoutWorkspaceNestedInput
+  groups?: Prisma.GroupUncheckedUpdateManyWithoutWorkspaceNestedInput
   items?: Prisma.ItemUncheckedUpdateManyWithoutWorkspaceNestedInput
+  stagedItems?: Prisma.StagedInteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  rules?: Prisma.RuleUncheckedUpdateManyWithoutWorkspaceNestedInput
+  ruleRuns?: Prisma.RuleRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutWorkspaceNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutWorkspaceNestedInput
+  calendarConnections?: Prisma.CalendarConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  calendarEventLinks?: Prisma.CalendarEventLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
+  gmailConnections?: Prisma.GmailConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  gmailMessageLinks?: Prisma.GmailMessageLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
+}
+
+export type WorkspaceCreateWithoutGroupsInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  name: string
+  slug: string
+  status?: string
+  ownerUser?: Prisma.UserCreateNestedOneWithoutOwnedWorkspacesInput
+  members?: Prisma.WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
+  approvedEmails?: Prisma.ApprovedEmailCreateNestedManyWithoutWorkspaceInput
+  persons?: Prisma.PersonCreateNestedManyWithoutWorkspaceInput
+  events?: Prisma.EventCreateNestedManyWithoutWorkspaceInput
+  interactions?: Prisma.InteractionCreateNestedManyWithoutWorkspaceInput
+  plans?: Prisma.PlanCreateNestedManyWithoutWorkspaceInput
+  places?: Prisma.PlaceCreateNestedManyWithoutWorkspaceInput
+  items?: Prisma.ItemCreateNestedManyWithoutWorkspaceInput
+  importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
+  stagedItems?: Prisma.StagedInteractionCreateNestedManyWithoutWorkspaceInput
+  rules?: Prisma.RuleCreateNestedManyWithoutWorkspaceInput
+  ruleRuns?: Prisma.RuleRunCreateNestedManyWithoutWorkspaceInput
+  apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutWorkspaceInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutWorkspaceInput
+  calendarConnections?: Prisma.CalendarConnectionCreateNestedManyWithoutWorkspaceInput
+  calendarEventLinks?: Prisma.CalendarEventLinkCreateNestedManyWithoutWorkspaceInput
+  gmailConnections?: Prisma.GmailConnectionCreateNestedManyWithoutWorkspaceInput
+  gmailMessageLinks?: Prisma.GmailMessageLinkCreateNestedManyWithoutWorkspaceInput
+}
+
+export type WorkspaceUncheckedCreateWithoutGroupsInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  name: string
+  slug: string
+  status?: string
+  ownerUserId?: string | null
+  members?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
+  approvedEmails?: Prisma.ApprovedEmailUncheckedCreateNestedManyWithoutWorkspaceInput
+  persons?: Prisma.PersonUncheckedCreateNestedManyWithoutWorkspaceInput
+  events?: Prisma.EventUncheckedCreateNestedManyWithoutWorkspaceInput
+  interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutWorkspaceInput
+  plans?: Prisma.PlanUncheckedCreateNestedManyWithoutWorkspaceInput
+  places?: Prisma.PlaceUncheckedCreateNestedManyWithoutWorkspaceInput
+  items?: Prisma.ItemUncheckedCreateNestedManyWithoutWorkspaceInput
+  importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
+  stagedItems?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutWorkspaceInput
+  rules?: Prisma.RuleUncheckedCreateNestedManyWithoutWorkspaceInput
+  ruleRuns?: Prisma.RuleRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutWorkspaceInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutWorkspaceInput
+  calendarConnections?: Prisma.CalendarConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  calendarEventLinks?: Prisma.CalendarEventLinkUncheckedCreateNestedManyWithoutWorkspaceInput
+  gmailConnections?: Prisma.GmailConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  gmailMessageLinks?: Prisma.GmailMessageLinkUncheckedCreateNestedManyWithoutWorkspaceInput
+}
+
+export type WorkspaceCreateOrConnectWithoutGroupsInput = {
+  where: Prisma.WorkspaceWhereUniqueInput
+  create: Prisma.XOR<Prisma.WorkspaceCreateWithoutGroupsInput, Prisma.WorkspaceUncheckedCreateWithoutGroupsInput>
+}
+
+export type WorkspaceUpsertWithoutGroupsInput = {
+  update: Prisma.XOR<Prisma.WorkspaceUpdateWithoutGroupsInput, Prisma.WorkspaceUncheckedUpdateWithoutGroupsInput>
+  create: Prisma.XOR<Prisma.WorkspaceCreateWithoutGroupsInput, Prisma.WorkspaceUncheckedCreateWithoutGroupsInput>
+  where?: Prisma.WorkspaceWhereInput
+}
+
+export type WorkspaceUpdateToOneWithWhereWithoutGroupsInput = {
+  where?: Prisma.WorkspaceWhereInput
+  data: Prisma.XOR<Prisma.WorkspaceUpdateWithoutGroupsInput, Prisma.WorkspaceUncheckedUpdateWithoutGroupsInput>
+}
+
+export type WorkspaceUpdateWithoutGroupsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  ownerUser?: Prisma.UserUpdateOneWithoutOwnedWorkspacesNestedInput
+  members?: Prisma.WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
+  approvedEmails?: Prisma.ApprovedEmailUpdateManyWithoutWorkspaceNestedInput
+  persons?: Prisma.PersonUpdateManyWithoutWorkspaceNestedInput
+  events?: Prisma.EventUpdateManyWithoutWorkspaceNestedInput
+  interactions?: Prisma.InteractionUpdateManyWithoutWorkspaceNestedInput
+  plans?: Prisma.PlanUpdateManyWithoutWorkspaceNestedInput
+  places?: Prisma.PlaceUpdateManyWithoutWorkspaceNestedInput
+  items?: Prisma.ItemUpdateManyWithoutWorkspaceNestedInput
+  importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
+  stagedItems?: Prisma.StagedInteractionUpdateManyWithoutWorkspaceNestedInput
+  rules?: Prisma.RuleUpdateManyWithoutWorkspaceNestedInput
+  ruleRuns?: Prisma.RuleRunUpdateManyWithoutWorkspaceNestedInput
+  apiKeys?: Prisma.ApiKeyUpdateManyWithoutWorkspaceNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutWorkspaceNestedInput
+  calendarConnections?: Prisma.CalendarConnectionUpdateManyWithoutWorkspaceNestedInput
+  calendarEventLinks?: Prisma.CalendarEventLinkUpdateManyWithoutWorkspaceNestedInput
+  gmailConnections?: Prisma.GmailConnectionUpdateManyWithoutWorkspaceNestedInput
+  gmailMessageLinks?: Prisma.GmailMessageLinkUpdateManyWithoutWorkspaceNestedInput
+}
+
+export type WorkspaceUncheckedUpdateWithoutGroupsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  ownerUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  members?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
+  approvedEmails?: Prisma.ApprovedEmailUncheckedUpdateManyWithoutWorkspaceNestedInput
+  persons?: Prisma.PersonUncheckedUpdateManyWithoutWorkspaceNestedInput
+  events?: Prisma.EventUncheckedUpdateManyWithoutWorkspaceNestedInput
+  interactions?: Prisma.InteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  plans?: Prisma.PlanUncheckedUpdateManyWithoutWorkspaceNestedInput
+  places?: Prisma.PlaceUncheckedUpdateManyWithoutWorkspaceNestedInput
+  items?: Prisma.ItemUncheckedUpdateManyWithoutWorkspaceNestedInput
+  importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUncheckedUpdateManyWithoutWorkspaceNestedInput
   ruleRuns?: Prisma.RuleRunUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -3154,6 +3377,7 @@ export type WorkspaceUpdateWithoutOwnerUserInput = {
   interactions?: Prisma.InteractionUpdateManyWithoutWorkspaceNestedInput
   plans?: Prisma.PlanUpdateManyWithoutWorkspaceNestedInput
   places?: Prisma.PlaceUpdateManyWithoutWorkspaceNestedInput
+  groups?: Prisma.GroupUpdateManyWithoutWorkspaceNestedInput
   items?: Prisma.ItemUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUpdateManyWithoutWorkspaceNestedInput
@@ -3181,6 +3405,7 @@ export type WorkspaceUncheckedUpdateWithoutOwnerUserInput = {
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
   plans?: Prisma.PlanUncheckedUpdateManyWithoutWorkspaceNestedInput
   places?: Prisma.PlaceUncheckedUpdateManyWithoutWorkspaceNestedInput
+  groups?: Prisma.GroupUncheckedUpdateManyWithoutWorkspaceNestedInput
   items?: Prisma.ItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -3216,6 +3441,7 @@ export type WorkspaceCountOutputType = {
   interactions: number
   plans: number
   places: number
+  groups: number
   items: number
   importedFiles: number
   stagedItems: number
@@ -3237,6 +3463,7 @@ export type WorkspaceCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensi
   interactions?: boolean | WorkspaceCountOutputTypeCountInteractionsArgs
   plans?: boolean | WorkspaceCountOutputTypeCountPlansArgs
   places?: boolean | WorkspaceCountOutputTypeCountPlacesArgs
+  groups?: boolean | WorkspaceCountOutputTypeCountGroupsArgs
   items?: boolean | WorkspaceCountOutputTypeCountItemsArgs
   importedFiles?: boolean | WorkspaceCountOutputTypeCountImportedFilesArgs
   stagedItems?: boolean | WorkspaceCountOutputTypeCountStagedItemsArgs
@@ -3307,6 +3534,13 @@ export type WorkspaceCountOutputTypeCountPlansArgs<ExtArgs extends runtime.Types
  */
 export type WorkspaceCountOutputTypeCountPlacesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.PlaceWhereInput
+}
+
+/**
+ * WorkspaceCountOutputType without action
+ */
+export type WorkspaceCountOutputTypeCountGroupsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.GroupWhereInput
 }
 
 /**
@@ -3403,6 +3637,7 @@ export type WorkspaceSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   interactions?: boolean | Prisma.Workspace$interactionsArgs<ExtArgs>
   plans?: boolean | Prisma.Workspace$plansArgs<ExtArgs>
   places?: boolean | Prisma.Workspace$placesArgs<ExtArgs>
+  groups?: boolean | Prisma.Workspace$groupsArgs<ExtArgs>
   items?: boolean | Prisma.Workspace$itemsArgs<ExtArgs>
   importedFiles?: boolean | Prisma.Workspace$importedFilesArgs<ExtArgs>
   stagedItems?: boolean | Prisma.Workspace$stagedItemsArgs<ExtArgs>
@@ -3459,6 +3694,7 @@ export type WorkspaceInclude<ExtArgs extends runtime.Types.Extensions.InternalAr
   interactions?: boolean | Prisma.Workspace$interactionsArgs<ExtArgs>
   plans?: boolean | Prisma.Workspace$plansArgs<ExtArgs>
   places?: boolean | Prisma.Workspace$placesArgs<ExtArgs>
+  groups?: boolean | Prisma.Workspace$groupsArgs<ExtArgs>
   items?: boolean | Prisma.Workspace$itemsArgs<ExtArgs>
   importedFiles?: boolean | Prisma.Workspace$importedFilesArgs<ExtArgs>
   stagedItems?: boolean | Prisma.Workspace$stagedItemsArgs<ExtArgs>
@@ -3490,6 +3726,7 @@ export type $WorkspacePayload<ExtArgs extends runtime.Types.Extensions.InternalA
     interactions: Prisma.$InteractionPayload<ExtArgs>[]
     plans: Prisma.$PlanPayload<ExtArgs>[]
     places: Prisma.$PlacePayload<ExtArgs>[]
+    groups: Prisma.$GroupPayload<ExtArgs>[]
     items: Prisma.$ItemPayload<ExtArgs>[]
     importedFiles: Prisma.$ImportedFilePayload<ExtArgs>[]
     stagedItems: Prisma.$StagedInteractionPayload<ExtArgs>[]
@@ -3912,6 +4149,7 @@ export interface Prisma__WorkspaceClient<T, Null = never, ExtArgs extends runtim
   interactions<T extends Prisma.Workspace$interactionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Workspace$interactionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InteractionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   plans<T extends Prisma.Workspace$plansArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Workspace$plansArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PlanPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   places<T extends Prisma.Workspace$placesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Workspace$placesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PlacePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  groups<T extends Prisma.Workspace$groupsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Workspace$groupsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$GroupPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   items<T extends Prisma.Workspace$itemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Workspace$itemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   importedFiles<T extends Prisma.Workspace$importedFilesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Workspace$importedFilesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ImportedFilePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   stagedItems<T extends Prisma.Workspace$stagedItemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Workspace$stagedItemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StagedInteractionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -4542,6 +4780,30 @@ export type Workspace$placesArgs<ExtArgs extends runtime.Types.Extensions.Intern
   take?: number
   skip?: number
   distinct?: Prisma.PlaceScalarFieldEnum | Prisma.PlaceScalarFieldEnum[]
+}
+
+/**
+ * Workspace.groups
+ */
+export type Workspace$groupsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Group
+   */
+  select?: Prisma.GroupSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Group
+   */
+  omit?: Prisma.GroupOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.GroupInclude<ExtArgs> | null
+  where?: Prisma.GroupWhereInput
+  orderBy?: Prisma.GroupOrderByWithRelationInput | Prisma.GroupOrderByWithRelationInput[]
+  cursor?: Prisma.GroupWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.GroupScalarFieldEnum | Prisma.GroupScalarFieldEnum[]
 }
 
 /**

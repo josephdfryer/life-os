@@ -9,7 +9,26 @@
 * 🟢 You can import this file directly.
 */
 
+export const GroupType = {
+  family: 'family',
+  employer: 'employer',
+  friend_group: 'friend_group',
+  sports_team: 'sports_team',
+  corporation: 'corporation',
+  community: 'community',
+  other: 'other'
+} as const
+
+export type GroupType = (typeof GroupType)[keyof typeof GroupType]
 
 
-// This file is empty because there are no enums in the schema.
-export {}
+export const PlaceGroupRelationshipType = {
+  corporate_parent: 'corporate_parent',
+  employer_location: 'employer_location',
+  home_venue: 'home_venue',
+  residence: 'residence',
+  usual_spot: 'usual_spot',
+  other: 'other'
+} as const
+
+export type PlaceGroupRelationshipType = (typeof PlaceGroupRelationshipType)[keyof typeof PlaceGroupRelationshipType]

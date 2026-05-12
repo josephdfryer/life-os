@@ -27,6 +27,7 @@ model Workspace {
   interactions   Interaction[]
   plans          Plan[]
   places         Place[]
+  groups         Group[]
   items          Item[]
   importedFiles  ImportedFile[]
   stagedItems    StagedInteraction[]
@@ -110,6 +111,7 @@ model Person {
   ownedItems   Item[]
   assembledBy  Assembly[]    @relation("AssembledBy")
   disassembledBy Assembly[]  @relation("DisassembledBy")
+  groupMemberships PersonGroup[]
   users        User[]
   apiKeys      ApiKey[]
   auditLogs    AuditLog[]
@@ -476,6 +478,7 @@ model Event {
   metadata     String?
   interactions Interaction[]
   calendarLinks CalendarEventLink[]
+  groupTags    Group[]             @relation("EventGroupTags")
 
   @@index([workspaceId, timestamp])
 }
@@ -562,6 +565,7 @@ model Place {
   events        Event[]
   interactions  Interaction[]
   items         Item[]
+  groupAffiliations PlaceGroup[]
 
   @@index([parentPlaceId])
   @@index([workspaceId])
@@ -688,4 +692,94 @@ model ImportedFile {
   interactions Interaction[]
 
   @@index([workspaceId, createdAt])
+}
+
+// ─────────────────────────────────────────────
+// PRIMARY: Group (6th primitive)
+// Represents organizations, families, teams — any collective identity.
+// Person represents humans ONLY; Group is the node for collective entities.
+// ─────────────────────────────────────────────
+
+enum GroupType {
+  family
+  employer
+  friend_group
+  sports_team
+  corporation
+  community
+  other
+}
+
+enum PlaceGroupRelationshipType {
+  corporate_parent
+  employer_location
+  home_venue
+  residence
+  usual_spot
+  other
+}
+
+model Group {
+  id              String    @id @default(cuid())
+  workspaceId     String    @default("default-workspace")
+  workspace       Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  name            String
+  groupType       GroupType
+  notes           String?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  personMembers     PersonGroup[]
+  childGroups       GroupGroup[]  @relation("ParentGroup")
+  parentGroups      GroupGroup[]  @relation("ChildGroup")
+  placeAffiliations PlaceGroup[]
+  taggedEvents      Event[]       @relation("EventGroupTags")
+
+  @@index([workspaceId])
+  @@index([workspaceId, groupType])
+}
+
+model PersonGroup {
+  id        String    @id @default(cuid())
+  personId  String
+  groupId   String
+  role      String?
+  startDate DateTime?
+  endDate   DateTime?
+
+  person    Person    @relation(fields: [personId], references: [id])
+  group     Group     @relation(fields: [groupId], references: [id])
+
+  @@index([personId])
+  @@index([groupId])
+}
+
+model GroupGroup {
+  id            String    @id @default(cuid())
+  parentGroupId String
+  childGroupId  String
+  role          String?
+  startDate     DateTime?
+  endDate       DateTime?
+
+  parent        Group     @relation("ParentGroup", fields: [parentGroupId], references: [id])
+  child         Group     @relation("ChildGroup", fields: [childGroupId], references: [id])
+
+  @@index([parentGroupId])
+  @@index([childGroupId])
+}
+
+model PlaceGroup {
+  id               String                    @id @default(cuid())
+  placeId          String
+  groupId          String
+  relationshipType PlaceGroupRelationshipType
+  startDate        DateTime?
+  endDate          DateTime?
+
+  place            Place                     @relation(fields: [placeId], references: [id])
+  group            Group                     @relation(fields: [groupId], references: [id])
+
+  @@index([placeId])
+  @@index([groupId])
 }

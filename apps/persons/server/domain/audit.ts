@@ -45,6 +45,14 @@ export type AuditAction =
   | "calendar.sync"
   | "gmail.connect"
   | "gmail.sync"
+  | "group.create"
+  | "group.update"
+  | "group.delete"
+  | "group.member.add"
+  | "group.member.remove"
+  | "group.place.add"
+  | "group.place.remove"
+  | "group.subgroup.add"
 
 type AuditInput = {
   actor?: DomainActor
