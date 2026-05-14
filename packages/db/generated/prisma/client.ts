@@ -157,6 +157,21 @@ export type Plan = Prisma.PlanModel
  */
 export type Place = Prisma.PlaceModel
 /**
+ * Model ImportJob
+ * 
+ */
+export type ImportJob = Prisma.ImportJobModel
+/**
+ * Model ImportStagedVisit
+ * 
+ */
+export type ImportStagedVisit = Prisma.ImportStagedVisitModel
+/**
+ * Model PlaceNote
+ * 
+ */
+export type PlaceNote = Prisma.PlaceNoteModel
+/**
  * Model Item
  * 
  */

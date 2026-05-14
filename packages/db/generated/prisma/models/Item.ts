@@ -941,14 +941,6 @@ export type ItemUncheckedUpdateManyWithoutPlaceNestedInput = {
   deleteMany?: Prisma.ItemScalarWhereInput | Prisma.ItemScalarWhereInput[]
 }
 
-export type FloatFieldUpdateOperationsInput = {
-  set?: number
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
-}
-
 export type ItemCreateNestedOneWithoutAssembledIntoInput = {
   create?: Prisma.XOR<Prisma.ItemCreateWithoutAssembledIntoInput, Prisma.ItemUncheckedCreateWithoutAssembledIntoInput>
   connectOrCreate?: Prisma.ItemCreateOrConnectWithoutAssembledIntoInput

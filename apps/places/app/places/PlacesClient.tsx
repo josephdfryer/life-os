@@ -1,0 +1,490 @@
+"use client"
+
+import { useMemo, useState } from "react"
+import Link from "next/link"
+import { EmptyState } from "@life-os/ui"
+
+type PlaceMapItem = {
+  id: string
+  name: string
+  latitude?: number
+  longitude?: number
+  address?: string
+  placeType?: string
+  favorite?: boolean
+  stats: {
+    visitCount: number
+    photoCount: number
+    personCount: number
+    groupCount: number
+    noteCount: number
+    planCount: number
+    totalSpend?: number
+    lastVisitAt?: string
+  }
+  weight: number
+  financialGroup?: {
+    id: string
+    name: string
+    groupType: string
+    relationshipType: string
+  }
+}
+
+type FilterKey = "all" | "favorites" | "photos" | "people" | "notes"
+type PlottedPlace = { place: PlaceMapItem; x: number; y: number }
+type PlaceCluster = {
+  id: string
+  places: PlaceMapItem[]
+  x: number
+  y: number
+  totalSpend: number
+  fallbackWeight: number
+  label: string
+  level: "group" | "neighborhood" | "place"
+  placeType?: string
+}
+
+const FILTERS: { key: FilterKey; label: string }[] = [
+  { key: "all", label: "All" },
+  { key: "favorites", label: "Favorites" },
+  { key: "photos", label: "Has photos" },
+  { key: "people", label: "Has people" },
+  { key: "notes", label: "Has notes" },
+]
+
+export default function PlacesClient({ places }: { places: PlaceMapItem[] }) {
+  const [filter, setFilter] = useState<FilterKey>("all")
+  const [selectedId, setSelectedId] = useState<string | null>(places[0]?.id ?? null)
+  const [zoom, setZoom] = useState(1)
+
+  const filtered = useMemo(() => places.filter(place => {
+    if (filter === "favorites") return place.favorite
+    if (filter === "photos") return place.stats.photoCount > 0
+    if (filter === "people") return place.stats.personCount > 0
+    if (filter === "notes") return place.stats.noteCount > 0
+    return true
+  }), [filter, places])
+
+  const selected = filtered.find(place => place.id === selectedId) ?? filtered[0] ?? null
+  const plotted = useMemo(() => plotPlaces(filtered), [filtered])
+  const clusters = useMemo(() => clusterPlaces(plotted, zoom), [plotted, zoom])
+  const zoomLevelLabel = zoom <= 1 ? "Group spend" : zoom < 4 ? "Neighborhood spend" : "Place spend"
+
+  return (
+    <div style={{ maxWidth: "1180px", margin: "0 auto", padding: "28px 24px 40px" }}>
+      <header style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: "16px", marginBottom: "18px", flexWrap: "wrap" }}>
+        <div>
+          <h1 style={{ fontFamily: "var(--font-display)", fontSize: "28px", fontWeight: 600, margin: 0, color: "var(--ink)" }}>Places</h1>
+          <div style={{ color: "var(--ink-3)", fontSize: "12px", marginTop: "4px" }}>
+            {filtered.length.toLocaleString()} {filtered.length === 1 ? "place" : "places"} in your private map
+            {totalSpend(filtered) > 0 && ` · ${money(totalSpend(filtered))} recorded spend`}
+            {` · ${zoomLevelLabel}`}
+          </div>
+        </div>
+        <div style={{ display: "flex", gap: "6px", flexWrap: "wrap", alignItems: "center" }}>
+          {FILTERS.map(item => (
+            <button
+              key={item.key}
+              onClick={() => { setFilter(item.key); setSelectedId(null) }}
+              style={{
+                padding: "6px 11px",
+                borderRadius: "7px",
+                border: `1px solid ${filter === item.key ? "var(--accent)" : "var(--border)"}`,
+                background: filter === item.key ? "var(--accent-soft)" : "transparent",
+                color: filter === item.key ? "var(--accent)" : "var(--ink-3)",
+                fontFamily: "inherit",
+                fontSize: "11px",
+                cursor: "pointer",
+              }}
+            >
+              {item.label}
+            </button>
+          ))}
+          <Link
+            href="/places/import"
+            style={{
+              padding: "7px 12px",
+              borderRadius: "7px",
+              border: "1px solid var(--accent)",
+              background: "var(--accent)",
+              color: "#fff",
+              fontSize: "11px",
+              textDecoration: "none",
+            }}
+          >
+            Import
+          </Link>
+        </div>
+      </header>
+
+      {places.length === 0 ? (
+        <div style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "10px" }}>
+          <EmptyState
+            icon="◎"
+            title="No places yet"
+            subtitle="Import location history or create your first place to start building your private map."
+          />
+        </div>
+      ) : (
+        <div className="places-map-layout" style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) 320px", gap: "18px", alignItems: "stretch" }}>
+          <section
+            aria-label="Places map"
+            style={{
+              minHeight: "620px",
+              position: "relative",
+              overflow: "hidden",
+              border: "1px solid var(--border)",
+              borderRadius: "10px",
+              background: "linear-gradient(180deg, #f8f6f0 0%, #ede9df 100%)",
+            }}
+          >
+            <div style={{
+              position: "absolute",
+              inset: 0,
+              backgroundImage: "linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px)",
+              backgroundSize: `${Math.max(28, 54 - zoom * 6)}px ${Math.max(28, 54 - zoom * 6)}px`,
+              opacity: 0.45,
+            }} />
+            <div style={{
+              position: "absolute",
+              top: "14px",
+              left: "14px",
+              zIndex: 2,
+              display: "flex",
+              alignItems: "center",
+              gap: "8px",
+              padding: "8px 10px",
+              border: "1px solid var(--border)",
+              borderRadius: "9px",
+              background: "rgba(250, 248, 244, 0.9)",
+              boxShadow: "0 10px 30px rgba(26, 24, 20, 0.08)",
+            }}>
+              <button
+                aria-label="Zoom out"
+                onClick={() => setZoom(value => Math.max(0, value - 1))}
+                style={zoomButtonStyle}
+              >
+                −
+              </button>
+              <input
+                aria-label="Map zoom"
+                type="range"
+                min={0}
+                max={4}
+                step={1}
+                value={zoom}
+                onChange={event => setZoom(Number(event.target.value))}
+                style={{ width: "108px", accentColor: "var(--accent)" }}
+              />
+              <button
+                aria-label="Zoom in"
+                onClick={() => setZoom(value => Math.min(4, value + 1))}
+                style={zoomButtonStyle}
+              >
+                +
+              </button>
+            </div>
+            {filtered.length === 0 ? (
+              <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <EmptyState icon="○" title="No matching places" subtitle="Try a different filter." />
+              </div>
+            ) : (
+              clusters.map(cluster => {
+                const single = cluster.level === "place" && cluster.places.length === 1 ? cluster.places[0] : null
+                const selectedMarker = single ? selected?.id === single.id : cluster.places.some(place => place.id === selected?.id)
+                const size = markerSize(cluster.totalSpend, cluster.fallbackWeight)
+                const label = single ? single.name : cluster.label
+                const color = placeTypeColor(cluster.placeType)
+                return (
+                  <button
+                    key={cluster.id}
+                    aria-label={label}
+                    onClick={() => {
+                      if (cluster.places.length > 1 && zoom < 4) {
+                        setZoom(value => Math.min(4, value + 1))
+                      }
+                      setSelectedId(cluster.places[0]?.id ?? null)
+                    }}
+                    style={{
+                      position: "absolute",
+                      left: `${cluster.x}%`,
+                      top: `${cluster.y}%`,
+                      width: `${size}px`,
+                      height: `${size}px`,
+                      transform: "translate(-50%, -50%)",
+                      borderRadius: "50%",
+                      border: selectedMarker ? "2px solid var(--ink)" : "1px solid #ffffff",
+                      background: selectedMarker ? "var(--accent)" : color,
+                      boxShadow: selectedMarker ? `0 0 0 8px ${color}2b` : "0 8px 20px rgba(26, 24, 20, 0.16)",
+                      color: "#fff",
+                      cursor: "pointer",
+                      fontSize: cluster.level !== "place" ? "11px" : 0,
+                      fontWeight: 700,
+                      transition: "left 180ms ease, top 180ms ease, width 180ms ease, height 180ms ease, box-shadow 180ms ease",
+                    }}
+                    title={`${label}${cluster.totalSpend > 0 ? ` · ${money(cluster.totalSpend)}` : " · no spend yet"}`}
+                  >
+                    {cluster.level === "group" ? shortGroupLabel(cluster.label) : cluster.level === "neighborhood" ? cluster.places.length : ""}
+                  </button>
+                )
+              })
+            )}
+          </section>
+
+          <aside style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+            {selected ? (
+              <PlacePreview place={selected} />
+            ) : (
+              <div style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "10px" }}>
+                <EmptyState icon="◎" title="Select a place" subtitle="Markers open a preview before you jump into the full memory page." />
+              </div>
+            )}
+            <div style={{ display: "flex", flexDirection: "column", gap: "8px", maxHeight: "360px", overflow: "auto" }}>
+              {filtered.map(place => (
+                <button
+                  key={place.id}
+                  onClick={() => setSelectedId(place.id)}
+                  style={{
+                    textAlign: "left",
+                    padding: "10px 12px",
+                    border: `1px solid ${selected?.id === place.id ? "var(--accent)" : "var(--border)"}`,
+                    borderRadius: "8px",
+                    background: selected?.id === place.id ? "var(--accent-soft)" : "var(--surface)",
+                    color: "var(--ink)",
+                    fontFamily: "inherit",
+                    cursor: "pointer",
+                  }}
+                >
+                  <div style={{ fontSize: "12px", fontWeight: 600 }}>{place.favorite ? "★ " : ""}{place.name}</div>
+                  <div style={{ fontSize: "10px", color: "var(--ink-4)", marginTop: "2px" }}>
+                    {place.stats.visitCount} visits · {place.stats.personCount} people{place.stats.totalSpend ? ` · ${money(place.stats.totalSpend)}` : ""}
+                  </div>
+                </button>
+              ))}
+            </div>
+          </aside>
+        </div>
+      )}
+    </div>
+  )
+}
+
+function PlacePreview({ place }: { place: PlaceMapItem }) {
+  return (
+    <div style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "10px", overflow: "hidden" }}>
+      <div style={{ height: "130px", background: "linear-gradient(135deg, #e9dfcf, #cdd4cf)", borderBottom: "1px solid var(--border)", position: "relative" }}>
+        <div style={{ position: "absolute", left: "18px", bottom: "14px", color: "#fff", textShadow: "0 1px 14px rgba(0,0,0,0.35)", fontSize: "24px" }}>◎</div>
+      </div>
+      <div style={{ padding: "16px" }}>
+        <h2 style={{ fontFamily: "var(--font-display)", fontSize: "20px", margin: 0 }}>{place.name}</h2>
+        <div style={{ fontSize: "11px", color: "var(--ink-3)", marginTop: "4px" }}>
+          {[place.address, place.placeType].filter(Boolean).join(" · ") || "No address yet"}
+        </div>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "8px", marginTop: "14px" }}>
+          <MiniStat label="Visits" value={place.stats.visitCount} />
+          <MiniStat label="Photos" value={place.stats.photoCount} />
+          <MiniStat label="Spend" value={place.stats.totalSpend ? money(place.stats.totalSpend) : "$0"} />
+        </div>
+        <div style={{ fontSize: "11px", color: "var(--ink-4)", marginTop: "12px" }}>
+          Last visit: {formatDate(place.stats.lastVisitAt)}
+        </div>
+        <Link href={`/places/${place.id}`} style={{
+          marginTop: "14px",
+          display: "inline-flex",
+          padding: "8px 14px",
+          background: "var(--accent)",
+          color: "#fff",
+          borderRadius: "7px",
+          textDecoration: "none",
+          fontSize: "11px",
+        }}>
+          Open
+        </Link>
+      </div>
+    </div>
+  )
+}
+
+function MiniStat({ label, value }: { label: string; value: number | string }) {
+  return (
+    <div style={{ border: "1px solid var(--border)", borderRadius: "8px", padding: "8px", background: "var(--bg)" }}>
+      <div style={{ fontSize: "15px", color: "var(--ink)", fontWeight: 600 }}>{value}</div>
+      <div style={{ fontSize: "9px", color: "var(--ink-4)", textTransform: "uppercase", letterSpacing: "0.08em" }}>{label}</div>
+    </div>
+  )
+}
+
+function plotPlaces(places: PlaceMapItem[]): PlottedPlace[] {
+  const withCoordinates = places.filter(place => typeof place.latitude === "number" && typeof place.longitude === "number")
+  if (!withCoordinates.length) {
+    return places.map((place, index) => ({
+      place,
+      x: 18 + (index % 5) * 16,
+      y: 18 + (Math.floor(index / 5) % 5) * 16,
+    }))
+  }
+  const lats = withCoordinates.map(place => place.latitude!)
+  const lngs = withCoordinates.map(place => place.longitude!)
+  const minLat = Math.min(...lats)
+  const maxLat = Math.max(...lats)
+  const minLng = Math.min(...lngs)
+  const maxLng = Math.max(...lngs)
+  return places.map((place, index) => {
+    if (typeof place.latitude !== "number" || typeof place.longitude !== "number") {
+      return { place, x: 12 + (index % 4) * 8, y: 82 }
+    }
+    const x = scale(place.longitude, minLng, maxLng)
+    const y = 100 - scale(place.latitude, minLat, maxLat)
+    return { place, x, y }
+  })
+}
+
+function scale(value: number, min: number, max: number) {
+  if (min === max) return 50
+  return 8 + ((value - min) / (max - min)) * 84
+}
+
+function clusterPlaces(points: PlottedPlace[], zoom: number): PlaceCluster[] {
+  if (zoom <= 1) return clusterByFinancialGroup(points)
+  const radius = clusterRadiusForZoom(zoom)
+  if (radius === 0) return points.map(point => clusterFromPoints([point], "place"))
+
+  const clusters: PlottedPlace[][] = []
+  for (const point of points) {
+    const cluster = clusters.find(items => {
+      const center = centerOf(items)
+      return distance(center.x, center.y, point.x, point.y) <= radius
+    })
+    if (cluster) {
+      cluster.push(point)
+    } else {
+      clusters.push([point])
+    }
+  }
+  return clusters.map(points => clusterFromPoints(points, points.length === 1 ? "place" : "neighborhood"))
+}
+
+function clusterRadiusForZoom(zoom: number) {
+  if (zoom >= 4) return 0
+  return Math.max(5, 24 - zoom * 5)
+}
+
+function clusterByFinancialGroup(points: PlottedPlace[]) {
+  const byGroup = new Map<string, PlottedPlace[]>()
+  for (const point of points) {
+    const group = point.place.financialGroup
+    const key = group ? `group:${group.id}` : `place:${point.place.id}`
+    byGroup.set(key, [...(byGroup.get(key) ?? []), point])
+  }
+  return [...byGroup.values()].map(points => clusterFromPoints(points, points[0]?.place.financialGroup ? "group" : "place"))
+}
+
+function clusterFromPoints(points: PlottedPlace[], level: PlaceCluster["level"]): PlaceCluster {
+  const center = centerOf(points)
+  const places = points.map(point => point.place)
+  const financialGroup = places[0]?.financialGroup
+  return {
+    id: places.map(place => place.id).join(":"),
+    places,
+    x: center.x,
+    y: center.y,
+    totalSpend: places.reduce((sum, place) => sum + (place.stats.totalSpend ?? 0), 0),
+    fallbackWeight: places.reduce((sum, place) => sum + place.weight, 0),
+    label: level === "group" && financialGroup
+      ? financialGroup.name
+      : level === "neighborhood"
+        ? `${places.length} nearby places`
+        : places[0]?.name ?? "Place",
+    level,
+    placeType: dominantPlaceType(places),
+  }
+}
+
+function centerOf(points: PlottedPlace[]) {
+  return {
+    x: points.reduce((sum, point) => sum + point.x, 0) / points.length,
+    y: points.reduce((sum, point) => sum + point.y, 0) / points.length,
+  }
+}
+
+function distance(ax: number, ay: number, bx: number, by: number) {
+  return Math.hypot(ax - bx, ay - by)
+}
+
+function markerSize(totalSpend: number, fallbackWeight: number) {
+  if (totalSpend <= 0) {
+    return Math.max(13, Math.min(42, 12 + Math.sqrt(Math.max(fallbackWeight, 1)) * 2.4))
+  }
+  return Math.max(16, Math.min(62, 12 + Math.log10(totalSpend + 1) * 14))
+}
+
+function formatDate(value?: string) {
+  if (!value) return "Never"
+  return new Intl.DateTimeFormat(undefined, { month: "short", day: "numeric", year: "numeric" }).format(new Date(value))
+}
+
+function totalSpend(places: PlaceMapItem[]) {
+  return places.reduce((sum, place) => sum + (place.stats.totalSpend ?? 0), 0)
+}
+
+function money(value: number) {
+  return new Intl.NumberFormat(undefined, { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(value)
+}
+
+function shortGroupLabel(label: string) {
+  return label.split(/\s+/).map(word => word[0]).join("").slice(0, 3).toUpperCase()
+}
+
+function dominantPlaceType(places: PlaceMapItem[]) {
+  const counts = new Map<string, number>()
+  for (const place of places) {
+    const key = normalizePlaceType(place.placeType)
+    if (!key) continue
+    counts.set(key, (counts.get(key) ?? 0) + 1)
+  }
+  return [...counts.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))[0]?.[0]
+}
+
+function normalizePlaceType(value?: string) {
+  return value?.trim().toLowerCase().replaceAll(/\s+/g, "_")
+}
+
+function placeTypeColor(placeType?: string) {
+  const palette: Record<string, string> = {
+    cafe: "#c4572a",
+    coffee: "#c4572a",
+    restaurant: "#b85f35",
+    bar: "#6f5ca8",
+    store: "#3f7f6b",
+    shop: "#3f7f6b",
+    grocery: "#5f8b4c",
+    home: "#4f6f88",
+    office: "#8a6f3d",
+    gym: "#b9475a",
+    hotel: "#7b6a58",
+    airport: "#4f789e",
+    park: "#5f8b4c",
+  }
+  if (!placeType) return "#7b8a84"
+  return palette[placeType] ?? hashColor(placeType)
+}
+
+function hashColor(value: string) {
+  const colors = ["#c4572a", "#3f7f6b", "#6f5ca8", "#8a6f3d", "#4f789e", "#b9475a", "#5f8b4c"]
+  let hash = 0
+  for (let i = 0; i < value.length; i++) hash = (hash * 31 + value.charCodeAt(i)) >>> 0
+  return colors[hash % colors.length]
+}
+
+const zoomButtonStyle = {
+  width: "24px",
+  height: "24px",
+  borderRadius: "50%",
+  border: "1px solid var(--border)",
+  background: "var(--surface)",
+  color: "var(--ink)",
+  cursor: "pointer",
+  fontFamily: "inherit",
+  lineHeight: 1,
+}

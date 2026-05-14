@@ -9,6 +9,25 @@
 * 🟢 You can import this file directly.
 */
 
+export const ImportJobStatus = {
+  pending: 'pending',
+  running: 'running',
+  done: 'done',
+  failed: 'failed'
+} as const
+
+export type ImportJobStatus = (typeof ImportJobStatus)[keyof typeof ImportJobStatus]
+
+
+export const StagedVisitStatus = {
+  pending: 'pending',
+  accepted: 'accepted',
+  rejected: 'rejected'
+} as const
+
+export type StagedVisitStatus = (typeof StagedVisitStatus)[keyof typeof StagedVisitStatus]
+
+
 export const GroupType = {
   family: 'family',
   employer: 'employer',

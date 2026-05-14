@@ -18,6 +18,10 @@ npm run agent:finish -- --agent claude --summary "What changed and why" --next "
 
 The local state lives in `.agent-sync/` and is intentionally ignored by git. See `docs/AGENT_SYNC.md` for the full protocol.
 
+## Vision and Ethos
+
+Before building anything new, read `docs/LIFE_OS_VISION.md`. It explains what Life OS is trying to accomplish, the 5 primitives (People, Places, Events, Items, Interactions), and the guiding principles that should shape every feature decision.
+
 ## App-Specific Notes
 
 Read the nearest app-level `AGENTS.md` or `CLAUDE.md` before editing app code. For the persons CRM, start with `apps/persons/AGENTS.md`.

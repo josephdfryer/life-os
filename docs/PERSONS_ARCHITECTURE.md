@@ -448,12 +448,17 @@ erDiagram
 
   Workspace ||--o{ WorkspaceMember : has
   Workspace ||--o{ Person : owns
+  Workspace ||--o{ Place : owns
+  Workspace ||--o{ PlaceNote : owns
   Workspace ||--o{ Interaction : owns
   Workspace ||--o{ StagedInteraction : owns
   Workspace ||--o{ Rule : owns
   Workspace ||--o{ CalendarConnection : owns
   CalendarConnection ||--o{ CalendarEventLink : maps
   Event ||--o{ CalendarEventLink : source
+  Place ||--o{ Event : hosts
+  Place ||--o{ PlaceNote : remembers
+  Event ||--o{ PlaceNote : can_anchor
   Workspace ||--o{ GmailConnection : owns
   GmailConnection ||--o{ GmailMessageLink : maps
   Interaction ||--o{ GmailMessageLink : source
@@ -472,6 +477,8 @@ erDiagram
 Plain English version:
 
 - **Person**: a human in your CRM.
+- **Place**: a location at any scale, from a city to a room or shelf. Places are shown through `/places` and `/places/[id]`.
+- **PlaceNote**: a memory note attached to a Place, optionally anchored to one Event at that Place.
 - **Interaction**: a thing that happened with a person.
 - **Event**: a grouping around an interaction, such as a message day, meeting, call, dinner, or imported event.
 - **Plan**: what you want to do next with a person.

@@ -26,8 +26,9 @@ dist
 # Uploads (may contain sensitive content)
 apps/*/uploads/
 
-# Claude Code local settings (may contain keys in curl commands)
+# Claude Code local settings and worktrees
 .claude/settings.local.json
+.claude/worktrees/
 
 # Local cross-agent state for Claude Code / Codex handoffs
 .agent-sync/

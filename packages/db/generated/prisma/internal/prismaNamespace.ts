@@ -407,6 +407,9 @@ export const ModelName = {
   Interaction: 'Interaction',
   Plan: 'Plan',
   Place: 'Place',
+  ImportJob: 'ImportJob',
+  ImportStagedVisit: 'ImportStagedVisit',
+  PlaceNote: 'PlaceNote',
   Item: 'Item',
   Assembly: 'Assembly',
   ItemInteraction: 'ItemInteraction',
@@ -430,7 +433,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "workspace" | "workspaceMember" | "approvedEmail" | "person" | "user" | "role" | "permission" | "userRole" | "rolePermission" | "apiKey" | "apiKeyScope" | "auditLog" | "calendarConnection" | "calendarEventLink" | "gmailConnection" | "gmailMessageLink" | "rule" | "ruleRun" | "stagedInteraction" | "event" | "interaction" | "plan" | "place" | "item" | "assembly" | "itemInteraction" | "importedFile" | "group" | "personGroup" | "groupGroup" | "placeGroup"
+    modelProps: "workspace" | "workspaceMember" | "approvedEmail" | "person" | "user" | "role" | "permission" | "userRole" | "rolePermission" | "apiKey" | "apiKeyScope" | "auditLog" | "calendarConnection" | "calendarEventLink" | "gmailConnection" | "gmailMessageLink" | "rule" | "ruleRun" | "stagedInteraction" | "event" | "interaction" | "plan" | "place" | "importJob" | "importStagedVisit" | "placeNote" | "item" | "assembly" | "itemInteraction" | "importedFile" | "group" | "personGroup" | "groupGroup" | "placeGroup"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -2136,6 +2139,228 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    ImportJob: {
+      payload: Prisma.$ImportJobPayload<ExtArgs>
+      fields: Prisma.ImportJobFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ImportJobFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImportJobPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ImportJobFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImportJobPayload>
+        }
+        findFirst: {
+          args: Prisma.ImportJobFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImportJobPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ImportJobFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImportJobPayload>
+        }
+        findMany: {
+          args: Prisma.ImportJobFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImportJobPayload>[]
+        }
+        create: {
+          args: Prisma.ImportJobCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImportJobPayload>
+        }
+        createMany: {
+          args: Prisma.ImportJobCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ImportJobCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImportJobPayload>[]
+        }
+        delete: {
+          args: Prisma.ImportJobDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImportJobPayload>
+        }
+        update: {
+          args: Prisma.ImportJobUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImportJobPayload>
+        }
+        deleteMany: {
+          args: Prisma.ImportJobDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ImportJobUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ImportJobUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImportJobPayload>[]
+        }
+        upsert: {
+          args: Prisma.ImportJobUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImportJobPayload>
+        }
+        aggregate: {
+          args: Prisma.ImportJobAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateImportJob>
+        }
+        groupBy: {
+          args: Prisma.ImportJobGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ImportJobGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ImportJobCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ImportJobCountAggregateOutputType> | number
+        }
+      }
+    }
+    ImportStagedVisit: {
+      payload: Prisma.$ImportStagedVisitPayload<ExtArgs>
+      fields: Prisma.ImportStagedVisitFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ImportStagedVisitFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImportStagedVisitPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ImportStagedVisitFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImportStagedVisitPayload>
+        }
+        findFirst: {
+          args: Prisma.ImportStagedVisitFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImportStagedVisitPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ImportStagedVisitFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImportStagedVisitPayload>
+        }
+        findMany: {
+          args: Prisma.ImportStagedVisitFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImportStagedVisitPayload>[]
+        }
+        create: {
+          args: Prisma.ImportStagedVisitCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImportStagedVisitPayload>
+        }
+        createMany: {
+          args: Prisma.ImportStagedVisitCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ImportStagedVisitCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImportStagedVisitPayload>[]
+        }
+        delete: {
+          args: Prisma.ImportStagedVisitDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImportStagedVisitPayload>
+        }
+        update: {
+          args: Prisma.ImportStagedVisitUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImportStagedVisitPayload>
+        }
+        deleteMany: {
+          args: Prisma.ImportStagedVisitDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ImportStagedVisitUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ImportStagedVisitUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImportStagedVisitPayload>[]
+        }
+        upsert: {
+          args: Prisma.ImportStagedVisitUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImportStagedVisitPayload>
+        }
+        aggregate: {
+          args: Prisma.ImportStagedVisitAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateImportStagedVisit>
+        }
+        groupBy: {
+          args: Prisma.ImportStagedVisitGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ImportStagedVisitGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ImportStagedVisitCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ImportStagedVisitCountAggregateOutputType> | number
+        }
+      }
+    }
+    PlaceNote: {
+      payload: Prisma.$PlaceNotePayload<ExtArgs>
+      fields: Prisma.PlaceNoteFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.PlaceNoteFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlaceNotePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.PlaceNoteFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlaceNotePayload>
+        }
+        findFirst: {
+          args: Prisma.PlaceNoteFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlaceNotePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.PlaceNoteFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlaceNotePayload>
+        }
+        findMany: {
+          args: Prisma.PlaceNoteFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlaceNotePayload>[]
+        }
+        create: {
+          args: Prisma.PlaceNoteCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlaceNotePayload>
+        }
+        createMany: {
+          args: Prisma.PlaceNoteCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.PlaceNoteCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlaceNotePayload>[]
+        }
+        delete: {
+          args: Prisma.PlaceNoteDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlaceNotePayload>
+        }
+        update: {
+          args: Prisma.PlaceNoteUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlaceNotePayload>
+        }
+        deleteMany: {
+          args: Prisma.PlaceNoteDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.PlaceNoteUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.PlaceNoteUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlaceNotePayload>[]
+        }
+        upsert: {
+          args: Prisma.PlaceNoteUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlaceNotePayload>
+        }
+        aggregate: {
+          args: Prisma.PlaceNoteAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePlaceNote>
+        }
+        groupBy: {
+          args: Prisma.PlaceNoteGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PlaceNoteGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.PlaceNoteCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PlaceNoteCountAggregateOutputType> | number
+        }
+      }
+    }
     Item: {
       payload: Prisma.$ItemPayload<ExtArgs>
       fields: Prisma.ItemFieldRefs
@@ -3140,14 +3365,72 @@ export const PlaceScalarFieldEnum = {
   id: 'id',
   workspaceId: 'workspaceId',
   name: 'name',
+  googlePlaceId: 'googlePlaceId',
   type: 'type',
   address: 'address',
   coordinates: 'coordinates',
   meaning: 'meaning',
+  favorite: 'favorite',
   parentPlaceId: 'parentPlaceId'
 } as const
 
 export type PlaceScalarFieldEnum = (typeof PlaceScalarFieldEnum)[keyof typeof PlaceScalarFieldEnum]
+
+
+export const ImportJobScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  status: 'status',
+  format: 'format',
+  filename: 'filename',
+  rawData: 'rawData',
+  totalRows: 'totalRows',
+  processedRows: 'processedRows',
+  createdRows: 'createdRows',
+  stagedRows: 'stagedRows',
+  skippedRows: 'skippedRows',
+  errorRows: 'errorRows',
+  startedAt: 'startedAt',
+  finishedAt: 'finishedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type ImportJobScalarFieldEnum = (typeof ImportJobScalarFieldEnum)[keyof typeof ImportJobScalarFieldEnum]
+
+
+export const ImportStagedVisitScalarFieldEnum = {
+  id: 'id',
+  importJobId: 'importJobId',
+  workspaceId: 'workspaceId',
+  rawData: 'rawData',
+  placeName: 'placeName',
+  placeAddress: 'placeAddress',
+  latitude: 'latitude',
+  longitude: 'longitude',
+  googlePlaceId: 'googlePlaceId',
+  startedAt: 'startedAt',
+  endedAt: 'endedAt',
+  confidence: 'confidence',
+  status: 'status',
+  resolvedPlaceId: 'resolvedPlaceId',
+  resolvedEventId: 'resolvedEventId',
+  createdAt: 'createdAt'
+} as const
+
+export type ImportStagedVisitScalarFieldEnum = (typeof ImportStagedVisitScalarFieldEnum)[keyof typeof ImportStagedVisitScalarFieldEnum]
+
+
+export const PlaceNoteScalarFieldEnum = {
+  id: 'id',
+  placeId: 'placeId',
+  workspaceId: 'workspaceId',
+  body: 'body',
+  eventId: 'eventId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PlaceNoteScalarFieldEnum = (typeof PlaceNoteScalarFieldEnum)[keyof typeof PlaceNoteScalarFieldEnum]
 
 
 export const ItemScalarFieldEnum = {
@@ -3275,12 +3558,36 @@ export const SortOrder = {
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
 
 
+export const JsonNullValueInput = {
+  JsonNull: JsonNull
+} as const
+
+export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
+
+
 export const NullsOrder = {
   first: 'first',
   last: 'last'
 } as const
 
 export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+export const JsonNullValueFilter = {
+  DbNull: DbNull,
+  JsonNull: JsonNull,
+  AnyNull: AnyNull
+} as const
+
+export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
+
+
+export const QueryMode = {
+  default: 'default',
+  insensitive: 'insensitive'
+} as const
+
+export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
 
 
 
@@ -3321,6 +3628,34 @@ export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel,
  * Reference to a field of type 'Float'
  */
 export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
+    
+
+
+/**
+ * Reference to a field of type 'ImportJobStatus'
+ */
+export type EnumImportJobStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ImportJobStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'Json'
+ */
+export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
+    
+
+
+/**
+ * Reference to a field of type 'QueryMode'
+ */
+export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
+    
+
+
+/**
+ * Reference to a field of type 'StagedVisitStatus'
+ */
+export type EnumStagedVisitStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'StagedVisitStatus'>
     
 
 
@@ -3470,6 +3805,9 @@ export type GlobalOmitConfig = {
   interaction?: Prisma.InteractionOmit
   plan?: Prisma.PlanOmit
   place?: Prisma.PlaceOmit
+  importJob?: Prisma.ImportJobOmit
+  importStagedVisit?: Prisma.ImportStagedVisitOmit
+  placeNote?: Prisma.PlaceNoteOmit
   item?: Prisma.ItemOmit
   assembly?: Prisma.AssemblyOmit
   itemInteraction?: Prisma.ItemInteractionOmit

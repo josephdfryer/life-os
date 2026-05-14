@@ -27,6 +27,7 @@ model Workspace {
   interactions   Interaction[]
   plans          Plan[]
   places         Place[]
+  placeNotes     PlaceNote[]
   groups         Group[]
   items          Item[]
   importedFiles  ImportedFile[]
@@ -39,6 +40,8 @@ model Workspace {
   calendarEventLinks  CalendarEventLink[]
   gmailConnections    GmailConnection[]
   gmailMessageLinks   GmailMessageLink[]
+  importJobs          ImportJob[]
+  importStagedVisits  ImportStagedVisit[]
 
   @@index([ownerUserId])
   @@index([status])
@@ -479,6 +482,7 @@ model Event {
   interactions Interaction[]
   calendarLinks CalendarEventLink[]
   groupTags    Group[]             @relation("EventGroupTags")
+  placeNotes   PlaceNote[]
 
   @@index([workspaceId, timestamp])
 }
@@ -554,10 +558,12 @@ model Place {
   workspaceId   String        @default("default-workspace")
   workspace     Workspace     @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   name          String
+  googlePlaceId String?       @unique
   type          String?
   address       String?
   coordinates   String?
   meaning       String?
+  favorite      Boolean       @default(false)
   // Self-referencing hierarchy: Earth → Country → City → Home → Room → Shelf
   parentPlaceId String?
   parentPlace   Place?        @relation("PlaceHierarchy", fields: [parentPlaceId], references: [id])
@@ -565,10 +571,98 @@ model Place {
   events        Event[]
   interactions  Interaction[]
   items         Item[]
+  notes         PlaceNote[]
   groupAffiliations PlaceGroup[]
+  importStagedVisits ImportStagedVisit[]
 
   @@index([parentPlaceId])
   @@index([workspaceId])
+}
+
+// ─────────────────────────────────────────────
+// INTEGRATIONS: Google Maps Takeout import
+// ─────────────────────────────────────────────
+
+model ImportJob {
+  id            String          @id @default(cuid())
+  workspaceId   String
+  status        ImportJobStatus @default(pending)
+  format        String
+  filename      String
+  rawData       String?
+  totalRows     Int             @default(0)
+  processedRows Int             @default(0)
+  createdRows   Int             @default(0)
+  stagedRows    Int             @default(0)
+  skippedRows   Int             @default(0)
+  errorRows     Int             @default(0)
+  startedAt     DateTime?
+  finishedAt    DateTime?
+  createdAt     DateTime        @default(now())
+
+  workspace     Workspace       @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  stagedVisits  ImportStagedVisit[]
+
+  @@index([workspaceId, createdAt])
+  @@index([workspaceId, status])
+}
+
+enum ImportJobStatus {
+  pending
+  running
+  done
+  failed
+}
+
+model ImportStagedVisit {
+  id              String            @id @default(cuid())
+  importJobId     String
+  workspaceId     String
+  rawData         Json
+  placeName       String?
+  placeAddress    String?
+  latitude        Float?
+  longitude       Float?
+  googlePlaceId   String?
+  startedAt       DateTime
+  endedAt         DateTime?
+  confidence      Float
+  status          StagedVisitStatus @default(pending)
+  resolvedPlaceId String?
+  resolvedEventId String?
+  createdAt       DateTime          @default(now())
+
+  importJob       ImportJob         @relation(fields: [importJobId], references: [id], onDelete: Cascade)
+  workspace       Workspace         @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  resolvedPlace   Place?            @relation(fields: [resolvedPlaceId], references: [id], onDelete: SetNull)
+
+  @@index([importJobId, status, confidence])
+  @@index([workspaceId, status, startedAt])
+  @@index([googlePlaceId])
+}
+
+enum StagedVisitStatus {
+  pending
+  accepted
+  rejected
+}
+
+model PlaceNote {
+  id          String    @id @default(cuid())
+  placeId     String
+  workspaceId String
+  body        String
+  eventId     String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  place       Place     @relation(fields: [placeId], references: [id])
+  workspace   Workspace @relation(fields: [workspaceId], references: [id])
+  event       Event?    @relation(fields: [eventId], references: [id])
+
+  @@index([placeId, createdAt])
+  @@index([workspaceId, createdAt])
+  @@index([eventId])
 }
 
 // ─────────────────────────────────────────────

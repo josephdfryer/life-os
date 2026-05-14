@@ -74,6 +74,9 @@ export const ModelName = {
   Interaction: 'Interaction',
   Plan: 'Plan',
   Place: 'Place',
+  ImportJob: 'ImportJob',
+  ImportStagedVisit: 'ImportStagedVisit',
+  PlaceNote: 'PlaceNote',
   Item: 'Item',
   Assembly: 'Assembly',
   ItemInteraction: 'ItemInteraction',
@@ -473,14 +476,72 @@ export const PlaceScalarFieldEnum = {
   id: 'id',
   workspaceId: 'workspaceId',
   name: 'name',
+  googlePlaceId: 'googlePlaceId',
   type: 'type',
   address: 'address',
   coordinates: 'coordinates',
   meaning: 'meaning',
+  favorite: 'favorite',
   parentPlaceId: 'parentPlaceId'
 } as const
 
 export type PlaceScalarFieldEnum = (typeof PlaceScalarFieldEnum)[keyof typeof PlaceScalarFieldEnum]
+
+
+export const ImportJobScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  status: 'status',
+  format: 'format',
+  filename: 'filename',
+  rawData: 'rawData',
+  totalRows: 'totalRows',
+  processedRows: 'processedRows',
+  createdRows: 'createdRows',
+  stagedRows: 'stagedRows',
+  skippedRows: 'skippedRows',
+  errorRows: 'errorRows',
+  startedAt: 'startedAt',
+  finishedAt: 'finishedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type ImportJobScalarFieldEnum = (typeof ImportJobScalarFieldEnum)[keyof typeof ImportJobScalarFieldEnum]
+
+
+export const ImportStagedVisitScalarFieldEnum = {
+  id: 'id',
+  importJobId: 'importJobId',
+  workspaceId: 'workspaceId',
+  rawData: 'rawData',
+  placeName: 'placeName',
+  placeAddress: 'placeAddress',
+  latitude: 'latitude',
+  longitude: 'longitude',
+  googlePlaceId: 'googlePlaceId',
+  startedAt: 'startedAt',
+  endedAt: 'endedAt',
+  confidence: 'confidence',
+  status: 'status',
+  resolvedPlaceId: 'resolvedPlaceId',
+  resolvedEventId: 'resolvedEventId',
+  createdAt: 'createdAt'
+} as const
+
+export type ImportStagedVisitScalarFieldEnum = (typeof ImportStagedVisitScalarFieldEnum)[keyof typeof ImportStagedVisitScalarFieldEnum]
+
+
+export const PlaceNoteScalarFieldEnum = {
+  id: 'id',
+  placeId: 'placeId',
+  workspaceId: 'workspaceId',
+  body: 'body',
+  eventId: 'eventId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PlaceNoteScalarFieldEnum = (typeof PlaceNoteScalarFieldEnum)[keyof typeof PlaceNoteScalarFieldEnum]
 
 
 export const ItemScalarFieldEnum = {
@@ -608,10 +669,34 @@ export const SortOrder = {
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
 
 
+export const JsonNullValueInput = {
+  JsonNull: JsonNull
+} as const
+
+export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
+
+
 export const NullsOrder = {
   first: 'first',
   last: 'last'
 } as const
 
 export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+export const JsonNullValueFilter = {
+  DbNull: DbNull,
+  JsonNull: JsonNull,
+  AnyNull: AnyNull
+} as const
+
+export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
+
+
+export const QueryMode = {
+  default: 'default',
+  insensitive: 'insensitive'
+} as const
+
+export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
 
