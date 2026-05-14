@@ -53,6 +53,15 @@ export type AuditAction =
   | "group.place.add"
   | "group.place.remove"
   | "group.subgroup.add"
+  | "place.note.create"
+  | "place.note.update"
+  | "place.note.delete"
+  | "place.favorite.toggle"
+  | "places.import.create"
+  | "places.import.visit.accept"
+  | "places.import.visit.reject"
+  | "places.import.visit.reject_bulk"
+  | "places.import.finish"
 
 type AuditInput = {
   actor?: DomainActor
