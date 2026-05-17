@@ -87,6 +87,7 @@ export type ImportStagedVisitCountAggregateOutputType = {
   startedAt: number
   endedAt: number
   confidence: number
+  aiEnrichment: number
   status: number
   resolvedPlaceId: number
   resolvedEventId: number
@@ -156,6 +157,7 @@ export type ImportStagedVisitCountAggregateInputType = {
   startedAt?: true
   endedAt?: true
   confidence?: true
+  aiEnrichment?: true
   status?: true
   resolvedPlaceId?: true
   resolvedEventId?: true
@@ -262,6 +264,7 @@ export type ImportStagedVisitGroupByOutputType = {
   startedAt: Date
   endedAt: Date | null
   confidence: number
+  aiEnrichment: runtime.JsonValue | null
   status: $Enums.StagedVisitStatus
   resolvedPlaceId: string | null
   resolvedEventId: string | null
@@ -304,6 +307,7 @@ export type ImportStagedVisitWhereInput = {
   startedAt?: Prisma.DateTimeFilter<"ImportStagedVisit"> | Date | string
   endedAt?: Prisma.DateTimeNullableFilter<"ImportStagedVisit"> | Date | string | null
   confidence?: Prisma.FloatFilter<"ImportStagedVisit"> | number
+  aiEnrichment?: Prisma.JsonNullableFilter<"ImportStagedVisit">
   status?: Prisma.EnumStagedVisitStatusFilter<"ImportStagedVisit"> | $Enums.StagedVisitStatus
   resolvedPlaceId?: Prisma.StringNullableFilter<"ImportStagedVisit"> | string | null
   resolvedEventId?: Prisma.StringNullableFilter<"ImportStagedVisit"> | string | null
@@ -326,6 +330,7 @@ export type ImportStagedVisitOrderByWithRelationInput = {
   startedAt?: Prisma.SortOrder
   endedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   confidence?: Prisma.SortOrder
+  aiEnrichment?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   resolvedPlaceId?: Prisma.SortOrderInput | Prisma.SortOrder
   resolvedEventId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -351,6 +356,7 @@ export type ImportStagedVisitWhereUniqueInput = Prisma.AtLeast<{
   startedAt?: Prisma.DateTimeFilter<"ImportStagedVisit"> | Date | string
   endedAt?: Prisma.DateTimeNullableFilter<"ImportStagedVisit"> | Date | string | null
   confidence?: Prisma.FloatFilter<"ImportStagedVisit"> | number
+  aiEnrichment?: Prisma.JsonNullableFilter<"ImportStagedVisit">
   status?: Prisma.EnumStagedVisitStatusFilter<"ImportStagedVisit"> | $Enums.StagedVisitStatus
   resolvedPlaceId?: Prisma.StringNullableFilter<"ImportStagedVisit"> | string | null
   resolvedEventId?: Prisma.StringNullableFilter<"ImportStagedVisit"> | string | null
@@ -373,6 +379,7 @@ export type ImportStagedVisitOrderByWithAggregationInput = {
   startedAt?: Prisma.SortOrder
   endedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   confidence?: Prisma.SortOrder
+  aiEnrichment?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   resolvedPlaceId?: Prisma.SortOrderInput | Prisma.SortOrder
   resolvedEventId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -400,6 +407,7 @@ export type ImportStagedVisitScalarWhereWithAggregatesInput = {
   startedAt?: Prisma.DateTimeWithAggregatesFilter<"ImportStagedVisit"> | Date | string
   endedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"ImportStagedVisit"> | Date | string | null
   confidence?: Prisma.FloatWithAggregatesFilter<"ImportStagedVisit"> | number
+  aiEnrichment?: Prisma.JsonNullableWithAggregatesFilter<"ImportStagedVisit">
   status?: Prisma.EnumStagedVisitStatusWithAggregatesFilter<"ImportStagedVisit"> | $Enums.StagedVisitStatus
   resolvedPlaceId?: Prisma.StringNullableWithAggregatesFilter<"ImportStagedVisit"> | string | null
   resolvedEventId?: Prisma.StringNullableWithAggregatesFilter<"ImportStagedVisit"> | string | null
@@ -417,6 +425,7 @@ export type ImportStagedVisitCreateInput = {
   startedAt: Date | string
   endedAt?: Date | string | null
   confidence: number
+  aiEnrichment?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: $Enums.StagedVisitStatus
   resolvedEventId?: string | null
   createdAt?: Date | string
@@ -438,6 +447,7 @@ export type ImportStagedVisitUncheckedCreateInput = {
   startedAt: Date | string
   endedAt?: Date | string | null
   confidence: number
+  aiEnrichment?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: $Enums.StagedVisitStatus
   resolvedPlaceId?: string | null
   resolvedEventId?: string | null
@@ -455,6 +465,7 @@ export type ImportStagedVisitUpdateInput = {
   startedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   confidence?: Prisma.FloatFieldUpdateOperationsInput | number
+  aiEnrichment?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: Prisma.EnumStagedVisitStatusFieldUpdateOperationsInput | $Enums.StagedVisitStatus
   resolvedEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -476,6 +487,7 @@ export type ImportStagedVisitUncheckedUpdateInput = {
   startedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   confidence?: Prisma.FloatFieldUpdateOperationsInput | number
+  aiEnrichment?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: Prisma.EnumStagedVisitStatusFieldUpdateOperationsInput | $Enums.StagedVisitStatus
   resolvedPlaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resolvedEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -495,6 +507,7 @@ export type ImportStagedVisitCreateManyInput = {
   startedAt: Date | string
   endedAt?: Date | string | null
   confidence: number
+  aiEnrichment?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: $Enums.StagedVisitStatus
   resolvedPlaceId?: string | null
   resolvedEventId?: string | null
@@ -512,6 +525,7 @@ export type ImportStagedVisitUpdateManyMutationInput = {
   startedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   confidence?: Prisma.FloatFieldUpdateOperationsInput | number
+  aiEnrichment?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: Prisma.EnumStagedVisitStatusFieldUpdateOperationsInput | $Enums.StagedVisitStatus
   resolvedEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -530,6 +544,7 @@ export type ImportStagedVisitUncheckedUpdateManyInput = {
   startedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   confidence?: Prisma.FloatFieldUpdateOperationsInput | number
+  aiEnrichment?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: Prisma.EnumStagedVisitStatusFieldUpdateOperationsInput | $Enums.StagedVisitStatus
   resolvedPlaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resolvedEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -559,6 +574,7 @@ export type ImportStagedVisitCountOrderByAggregateInput = {
   startedAt?: Prisma.SortOrder
   endedAt?: Prisma.SortOrder
   confidence?: Prisma.SortOrder
+  aiEnrichment?: Prisma.SortOrder
   status?: Prisma.SortOrder
   resolvedPlaceId?: Prisma.SortOrder
   resolvedEventId?: Prisma.SortOrder
@@ -762,6 +778,7 @@ export type ImportStagedVisitCreateWithoutWorkspaceInput = {
   startedAt: Date | string
   endedAt?: Date | string | null
   confidence: number
+  aiEnrichment?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: $Enums.StagedVisitStatus
   resolvedEventId?: string | null
   createdAt?: Date | string
@@ -781,6 +798,7 @@ export type ImportStagedVisitUncheckedCreateWithoutWorkspaceInput = {
   startedAt: Date | string
   endedAt?: Date | string | null
   confidence: number
+  aiEnrichment?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: $Enums.StagedVisitStatus
   resolvedPlaceId?: string | null
   resolvedEventId?: string | null
@@ -828,6 +846,7 @@ export type ImportStagedVisitScalarWhereInput = {
   startedAt?: Prisma.DateTimeFilter<"ImportStagedVisit"> | Date | string
   endedAt?: Prisma.DateTimeNullableFilter<"ImportStagedVisit"> | Date | string | null
   confidence?: Prisma.FloatFilter<"ImportStagedVisit"> | number
+  aiEnrichment?: Prisma.JsonNullableFilter<"ImportStagedVisit">
   status?: Prisma.EnumStagedVisitStatusFilter<"ImportStagedVisit"> | $Enums.StagedVisitStatus
   resolvedPlaceId?: Prisma.StringNullableFilter<"ImportStagedVisit"> | string | null
   resolvedEventId?: Prisma.StringNullableFilter<"ImportStagedVisit"> | string | null
@@ -845,6 +864,7 @@ export type ImportStagedVisitCreateWithoutResolvedPlaceInput = {
   startedAt: Date | string
   endedAt?: Date | string | null
   confidence: number
+  aiEnrichment?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: $Enums.StagedVisitStatus
   resolvedEventId?: string | null
   createdAt?: Date | string
@@ -865,6 +885,7 @@ export type ImportStagedVisitUncheckedCreateWithoutResolvedPlaceInput = {
   startedAt: Date | string
   endedAt?: Date | string | null
   confidence: number
+  aiEnrichment?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: $Enums.StagedVisitStatus
   resolvedEventId?: string | null
   createdAt?: Date | string
@@ -906,6 +927,7 @@ export type ImportStagedVisitCreateWithoutImportJobInput = {
   startedAt: Date | string
   endedAt?: Date | string | null
   confidence: number
+  aiEnrichment?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: $Enums.StagedVisitStatus
   resolvedEventId?: string | null
   createdAt?: Date | string
@@ -925,6 +947,7 @@ export type ImportStagedVisitUncheckedCreateWithoutImportJobInput = {
   startedAt: Date | string
   endedAt?: Date | string | null
   confidence: number
+  aiEnrichment?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: $Enums.StagedVisitStatus
   resolvedPlaceId?: string | null
   resolvedEventId?: string | null
@@ -968,6 +991,7 @@ export type ImportStagedVisitCreateManyWorkspaceInput = {
   startedAt: Date | string
   endedAt?: Date | string | null
   confidence: number
+  aiEnrichment?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: $Enums.StagedVisitStatus
   resolvedPlaceId?: string | null
   resolvedEventId?: string | null
@@ -985,6 +1009,7 @@ export type ImportStagedVisitUpdateWithoutWorkspaceInput = {
   startedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   confidence?: Prisma.FloatFieldUpdateOperationsInput | number
+  aiEnrichment?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: Prisma.EnumStagedVisitStatusFieldUpdateOperationsInput | $Enums.StagedVisitStatus
   resolvedEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1004,6 +1029,7 @@ export type ImportStagedVisitUncheckedUpdateWithoutWorkspaceInput = {
   startedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   confidence?: Prisma.FloatFieldUpdateOperationsInput | number
+  aiEnrichment?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: Prisma.EnumStagedVisitStatusFieldUpdateOperationsInput | $Enums.StagedVisitStatus
   resolvedPlaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resolvedEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1022,6 +1048,7 @@ export type ImportStagedVisitUncheckedUpdateManyWithoutWorkspaceInput = {
   startedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   confidence?: Prisma.FloatFieldUpdateOperationsInput | number
+  aiEnrichment?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: Prisma.EnumStagedVisitStatusFieldUpdateOperationsInput | $Enums.StagedVisitStatus
   resolvedPlaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resolvedEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1041,6 +1068,7 @@ export type ImportStagedVisitCreateManyResolvedPlaceInput = {
   startedAt: Date | string
   endedAt?: Date | string | null
   confidence: number
+  aiEnrichment?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: $Enums.StagedVisitStatus
   resolvedEventId?: string | null
   createdAt?: Date | string
@@ -1057,6 +1085,7 @@ export type ImportStagedVisitUpdateWithoutResolvedPlaceInput = {
   startedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   confidence?: Prisma.FloatFieldUpdateOperationsInput | number
+  aiEnrichment?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: Prisma.EnumStagedVisitStatusFieldUpdateOperationsInput | $Enums.StagedVisitStatus
   resolvedEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1077,6 +1106,7 @@ export type ImportStagedVisitUncheckedUpdateWithoutResolvedPlaceInput = {
   startedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   confidence?: Prisma.FloatFieldUpdateOperationsInput | number
+  aiEnrichment?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: Prisma.EnumStagedVisitStatusFieldUpdateOperationsInput | $Enums.StagedVisitStatus
   resolvedEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1095,6 +1125,7 @@ export type ImportStagedVisitUncheckedUpdateManyWithoutResolvedPlaceInput = {
   startedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   confidence?: Prisma.FloatFieldUpdateOperationsInput | number
+  aiEnrichment?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: Prisma.EnumStagedVisitStatusFieldUpdateOperationsInput | $Enums.StagedVisitStatus
   resolvedEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1112,6 +1143,7 @@ export type ImportStagedVisitCreateManyImportJobInput = {
   startedAt: Date | string
   endedAt?: Date | string | null
   confidence: number
+  aiEnrichment?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: $Enums.StagedVisitStatus
   resolvedPlaceId?: string | null
   resolvedEventId?: string | null
@@ -1129,6 +1161,7 @@ export type ImportStagedVisitUpdateWithoutImportJobInput = {
   startedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   confidence?: Prisma.FloatFieldUpdateOperationsInput | number
+  aiEnrichment?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: Prisma.EnumStagedVisitStatusFieldUpdateOperationsInput | $Enums.StagedVisitStatus
   resolvedEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1148,6 +1181,7 @@ export type ImportStagedVisitUncheckedUpdateWithoutImportJobInput = {
   startedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   confidence?: Prisma.FloatFieldUpdateOperationsInput | number
+  aiEnrichment?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: Prisma.EnumStagedVisitStatusFieldUpdateOperationsInput | $Enums.StagedVisitStatus
   resolvedPlaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resolvedEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1166,6 +1200,7 @@ export type ImportStagedVisitUncheckedUpdateManyWithoutImportJobInput = {
   startedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   confidence?: Prisma.FloatFieldUpdateOperationsInput | number
+  aiEnrichment?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: Prisma.EnumStagedVisitStatusFieldUpdateOperationsInput | $Enums.StagedVisitStatus
   resolvedPlaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resolvedEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1187,6 +1222,7 @@ export type ImportStagedVisitSelect<ExtArgs extends runtime.Types.Extensions.Int
   startedAt?: boolean
   endedAt?: boolean
   confidence?: boolean
+  aiEnrichment?: boolean
   status?: boolean
   resolvedPlaceId?: boolean
   resolvedEventId?: boolean
@@ -1209,6 +1245,7 @@ export type ImportStagedVisitSelectCreateManyAndReturn<ExtArgs extends runtime.T
   startedAt?: boolean
   endedAt?: boolean
   confidence?: boolean
+  aiEnrichment?: boolean
   status?: boolean
   resolvedPlaceId?: boolean
   resolvedEventId?: boolean
@@ -1231,6 +1268,7 @@ export type ImportStagedVisitSelectUpdateManyAndReturn<ExtArgs extends runtime.T
   startedAt?: boolean
   endedAt?: boolean
   confidence?: boolean
+  aiEnrichment?: boolean
   status?: boolean
   resolvedPlaceId?: boolean
   resolvedEventId?: boolean
@@ -1253,13 +1291,14 @@ export type ImportStagedVisitSelectScalar = {
   startedAt?: boolean
   endedAt?: boolean
   confidence?: boolean
+  aiEnrichment?: boolean
   status?: boolean
   resolvedPlaceId?: boolean
   resolvedEventId?: boolean
   createdAt?: boolean
 }
 
-export type ImportStagedVisitOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "importJobId" | "workspaceId" | "rawData" | "placeName" | "placeAddress" | "latitude" | "longitude" | "googlePlaceId" | "startedAt" | "endedAt" | "confidence" | "status" | "resolvedPlaceId" | "resolvedEventId" | "createdAt", ExtArgs["result"]["importStagedVisit"]>
+export type ImportStagedVisitOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "importJobId" | "workspaceId" | "rawData" | "placeName" | "placeAddress" | "latitude" | "longitude" | "googlePlaceId" | "startedAt" | "endedAt" | "confidence" | "aiEnrichment" | "status" | "resolvedPlaceId" | "resolvedEventId" | "createdAt", ExtArgs["result"]["importStagedVisit"]>
 export type ImportStagedVisitInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   importJob?: boolean | Prisma.ImportJobDefaultArgs<ExtArgs>
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
@@ -1296,6 +1335,7 @@ export type $ImportStagedVisitPayload<ExtArgs extends runtime.Types.Extensions.I
     startedAt: Date
     endedAt: Date | null
     confidence: number
+    aiEnrichment: runtime.JsonValue | null
     status: $Enums.StagedVisitStatus
     resolvedPlaceId: string | null
     resolvedEventId: string | null
@@ -1738,6 +1778,7 @@ export interface ImportStagedVisitFieldRefs {
   readonly startedAt: Prisma.FieldRef<"ImportStagedVisit", 'DateTime'>
   readonly endedAt: Prisma.FieldRef<"ImportStagedVisit", 'DateTime'>
   readonly confidence: Prisma.FieldRef<"ImportStagedVisit", 'Float'>
+  readonly aiEnrichment: Prisma.FieldRef<"ImportStagedVisit", 'Json'>
   readonly status: Prisma.FieldRef<"ImportStagedVisit", 'StagedVisitStatus'>
   readonly resolvedPlaceId: Prisma.FieldRef<"ImportStagedVisit", 'String'>
   readonly resolvedEventId: Prisma.FieldRef<"ImportStagedVisit", 'String'>

@@ -627,6 +627,7 @@ model ImportStagedVisit {
   startedAt       DateTime
   endedAt         DateTime?
   confidence      Float
+  aiEnrichment    Json?
   status          StagedVisitStatus @default(pending)
   resolvedPlaceId String?
   resolvedEventId String?

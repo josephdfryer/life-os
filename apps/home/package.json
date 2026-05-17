@@ -1,19 +1,16 @@
 {
-  "name": "places",
+  "name": "home",
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --port 3002",
+    "dev": "next dev --port 3003",
     "build": "next build",
-    "start": "next start",
-    "test": "tsx --test tests/*.test.ts"
+    "start": "next start"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.88.0",
     "@life-os/auth": "*",
     "@life-os/db": "*",
     "@life-os/ui": "*",
-    "jszip": "^3.10.1",
     "next": "16.2.3",
     "next-auth": "^5.0.0-beta.30",
     "react": "19.2.4",
@@ -25,7 +22,6 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "tailwindcss": "^4",
-    "tsx": "^4.21.0",
     "typescript": "^5"
   }
 }

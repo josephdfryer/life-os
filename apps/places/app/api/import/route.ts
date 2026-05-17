@@ -2,7 +2,8 @@ import { NextResponse } from "next/server"
 import { badRequest } from "@/server/api/errors"
 import { handleRouteError } from "@/server/api/respond"
 import { requireAccess } from "@/server/domain/access"
-import { createImportJob, parseFile } from "@/server/domain/import"
+import { enrichPendingVisits } from "@/server/domain/enrichment"
+import { createImportJob, previewFile } from "@/server/domain/import"
 
 export const dynamic = "force-dynamic"
 
@@ -12,6 +13,9 @@ export async function POST(request: Request) {
     const file = await fileFromRequest(request)
     const buffer = Buffer.from(await file.arrayBuffer())
     const job = await createImportJob({ workspaceId: actor.workspaceId, filename: file.name, buffer, actor: actor.actor })
+    void enrichPendingVisits(actor.workspaceId).catch(error => {
+      console.error("[places import] background enrichment failed", error)
+    })
     return NextResponse.json(job, { status: 201 })
   } catch (error) {
     return handleRouteError(error)
@@ -23,14 +27,7 @@ export async function PUT(request: Request) {
     await requireAccess("ingest.write")
     const file = await fileFromRequest(request)
     const buffer = Buffer.from(await file.arrayBuffer())
-    const visits = await parseFile(buffer)
-    const sorted = [...visits].sort((a, b) => a.startedAt.getTime() - b.startedAt.getTime())
-    return NextResponse.json({
-      format: visits[0]?.format ?? "unknown",
-      totalRows: visits.length,
-      firstStartedAt: sorted[0]?.startedAt?.toISOString() ?? null,
-      lastStartedAt: sorted.at(-1)?.startedAt?.toISOString() ?? null,
-    })
+    return NextResponse.json(await previewFile(buffer))
   } catch (error) {
     return handleRouteError(error)
   }

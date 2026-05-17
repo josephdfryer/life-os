@@ -135,6 +135,8 @@ export async function requireAccess(requiredScope: string): Promise<AccessActor>
   const email = session?.user?.email?.toLowerCase()
   if (!email) throw unauthorized()
 
+  await seedDefaultAccess()
+
   const hit = _accessCache.get(email)
   if (hit && hit.expiresAt > Date.now()) {
     if (!hasScope(hit.value.scopes, requiredScope)) throw forbidden("Missing required permission", { requiredScope })

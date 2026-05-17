@@ -1,5 +1,7 @@
 import { db } from "@/lib/db"
 
+export const dynamic = "force-dynamic"
+
 export default async function ItemsPage() {
   const items = await db.item.findMany({
     orderBy: { createdAt: "desc" },

@@ -13,6 +13,7 @@ export type PlaceMapItem = {
   latitude?: number
   longitude?: number
   address?: string
+  googlePlaceId?: string
   placeType?: string
   favorite?: boolean
   stats: PlaceStats
@@ -138,6 +139,7 @@ export async function getPlacesForMap(workspaceId: string | null | undefined): P
       latitude: coordinates?.latitude,
       longitude: coordinates?.longitude,
       address: place.address ?? undefined,
+      googlePlaceId: place.googlePlaceId ?? undefined,
       placeType: place.type ?? undefined,
       favorite: place.favorite,
       stats: {

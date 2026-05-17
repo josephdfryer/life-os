@@ -1,6 +1,6 @@
 import { PrismaClient } from "./generated/prisma/client"
 
-export type { Prisma } from "./generated/prisma/client"
+export { Prisma } from "./generated/prisma/client"
 export * from "./generated/prisma/client"
 
 function createClient(): PrismaClient {

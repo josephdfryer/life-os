@@ -182,6 +182,70 @@ test("place note CRUD creates, updates, and deletes notes in the selected worksp
   assert.equal(profile.notes.length, 0)
 })
 
+test("places map layer data includes unresolved AI enrichment and interaction overlays", async () => {
+  const { db } = await setup()
+  const mapLayers = await import("../server/domain/map-layers")
+  const workspace = await db.workspace.create({
+    data: { id: "map-layers-workspace", name: "Map Layers", slug: "map-layers" },
+  })
+  const place = await db.place.create({
+    data: {
+      workspaceId: workspace.id,
+      name: "Market Cafe",
+      coordinates: JSON.stringify({ latitude: 37.78, longitude: -122.41 }),
+    },
+  })
+  const person = await db.person.create({ data: { workspaceId: workspace.id, first: "Jonny", last: "Appleseed" } })
+  const event = await db.event.create({
+    data: {
+      workspaceId: workspace.id,
+      placeId: place.id,
+      name: "Quick coffee",
+      type: "coffee",
+      timestamp: new Date("2026-05-01T16:00:00Z"),
+    },
+  })
+  await db.interaction.create({
+    data: {
+      workspaceId: workspace.id,
+      personId: person.id,
+      eventId: event.id,
+      type: "coffee",
+      timestamp: event.timestamp,
+      summary: "Caught up after the meeting.",
+    },
+  })
+  const job = await db.importJob.create({
+    data: { workspaceId: workspace.id, status: "done", format: "timeline_records", filename: "layers.json", totalRows: 1, stagedRows: 1 },
+  })
+  await db.importStagedVisit.create({
+    data: {
+      importJobId: job.id,
+      workspaceId: workspace.id,
+      rawData: { source: "test" },
+      latitude: 37.781,
+      longitude: -122.411,
+      startedAt: new Date("2026-05-02T17:00:00Z"),
+      confidence: 64,
+      aiEnrichment: {
+        placeName: "Likely Market Cafe",
+        category: "coffee_shop",
+        confidence: 0.82,
+        reasoning: "Nearby known cafe and visit duration fit.",
+      },
+    },
+  })
+
+  const layers = await mapLayers.getMapLayerData(workspace.id, [place.id])
+  assert.equal(layers.unresolvedVisits.length, 1)
+  assert.equal(layers.unresolvedVisits[0].aiEnrichment?.placeName, "Likely Market Cafe")
+  assert.equal(layers.interactions.length, 1)
+  assert.equal(layers.interactions[0].placeId, place.id)
+  assert.equal(layers.interactions[0].people[0].name, "Jonny Appleseed")
+  assert.deepEqual(layers.finance, [])
+  assert.deepEqual(layers.photos, [])
+})
+
 test("google maps legacy import auto-creates confident visits and stages ambiguous ones", async () => {
   const { db } = await setup()
   const mapsImport = await import("../server/domain/import")
@@ -243,6 +307,61 @@ test("google maps legacy import auto-creates confident visits and stages ambiguo
   const staged = await mapsImport.listStagedVisits(job.id, workspace.id)
   assert.equal(staged.total, 1)
   assert.equal(staged.items[0].placeName, "Maybe Park")
+})
+
+test("google location-history flat timeline records parse visits and ignore movement paths", async () => {
+  await setup()
+  const mapsImport = await import("../server/domain/import")
+  const payload = [
+    {
+      startTime: "2024-01-01T10:00:00-08:00",
+      endTime: "2024-01-01T11:15:00-08:00",
+      visit: {
+        probability: "0.940000",
+        topCandidate: {
+          probability: "0.840000",
+          semanticType: "Home",
+          placeID: "google-home",
+          placeLocation: "geo:34.100000,-118.200000",
+        },
+      },
+    },
+    {
+      startTime: "2024-01-01T11:15:00-08:00",
+      endTime: "2024-01-01T11:45:00-08:00",
+      activity: {
+        start: "geo:34.100000,-118.200000",
+        end: "geo:34.200000,-118.300000",
+        distanceMeters: "1000.000000",
+      },
+    },
+    {
+      startTime: "2024-01-01T12:00:00-08:00",
+      endTime: "2024-01-01T14:00:00-08:00",
+      timelinePath: [
+        { point: "geo:34.100000,-118.200000", durationMinutesOffsetFromStartTime: "10" },
+      ],
+    },
+  ]
+
+  assert.equal(mapsImport.detectFormat(payload), "timeline_records")
+  const visits = await mapsImport.parseFile(Buffer.from(JSON.stringify(payload)))
+  assert.equal(visits.length, 1)
+  assert.equal(visits[0].googlePlaceId, "google-home")
+  assert.equal(visits[0].latitude, 34.1)
+  assert.equal(visits[0].longitude, -118.2)
+  assert.equal(visits[0].semanticType, "Home")
+  assert.equal(mapsImport.normalizeConfidence(visits[0]), 92)
+
+  const preview = await mapsImport.previewFile(Buffer.from(JSON.stringify(payload)))
+  assert.equal(preview.format, "timeline_records")
+  assert.equal(preview.totalRecords, 3)
+  assert.equal(preview.totalVisits, 1)
+  assert.equal(preview.ignoredRecords, 2)
+  assert.equal(preview.uniqueGooglePlaceIds, 1)
+  assert.equal(preview.sourceRecordTypes.activity, 1)
+  assert.equal(preview.sourceRecordTypes.timelinePath, 1)
+  assert.equal(preview.topSemanticTypes[0].label, "Home")
 })
 
 test("staged google maps visit can be accepted into a place event", async () => {

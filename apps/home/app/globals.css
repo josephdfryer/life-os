@@ -1,0 +1,154 @@
+@import "tailwindcss";
+
+:root {
+  --bg: #f7f4ee;
+  --surface: #fffdf8;
+  --border: #ded7cb;
+  --ink: #1b1a17;
+  --muted: #7b756b;
+  --accent: #b85632;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  min-height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-dm-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 13px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.page {
+  min-height: 100vh;
+  padding: 28px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  min-height: 32px;
+}
+
+.brand {
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.apps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  width: min(840px, 100%);
+  margin-top: 34vh;
+}
+
+.app-link {
+  display: flex;
+  min-height: 168px;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 18px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  transition: border-color 0.14s ease, transform 0.14s ease;
+}
+
+.app-link:hover {
+  transform: translateY(-1px);
+  border-color: var(--accent);
+}
+
+.app-label {
+  color: var(--muted);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.app-name {
+  margin-top: 8px;
+  font-family: var(--font-playfair), Georgia, serif;
+  font-size: 34px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.app-description {
+  margin-top: 12px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.login-page {
+  display: flex;
+  min-height: 100vh;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.login-panel {
+  width: min(360px, 100%);
+  padding: 34px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+}
+
+.login-title {
+  font-family: var(--font-playfair), Georgia, serif;
+  font-size: 32px;
+  font-weight: 600;
+}
+
+.login-copy {
+  margin: 8px 0 28px;
+  color: var(--muted);
+}
+
+.login-button {
+  width: 100%;
+  min-height: 42px;
+  border: 0;
+  background: var(--ink);
+  color: var(--surface);
+  cursor: pointer;
+  font: inherit;
+}
+
+@media (max-width: 760px) {
+  .page {
+    padding: 20px;
+  }
+
+  .apps {
+    grid-template-columns: 1fr;
+    margin-top: 22vh;
+  }
+
+  .app-link {
+    min-height: 124px;
+  }
+}

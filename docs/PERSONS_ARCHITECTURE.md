@@ -347,6 +347,12 @@ Plain English: the headless API is how Persons can become programmable. Anything
 
 ## Access Control
 
+Browser auth is shared across Life OS apps. Persons keeps a local `apps/persons/auth.ts`
+wrapper, but the actual Google sign-in policy now lives in `packages/auth`.
+Home, Persons, Places, and Stuff can share the same session when deployed on a
+common parent domain and configured with the same `AUTH_SECRET` plus
+`AUTH_COOKIE_DOMAIN` or `LIFE_OS_COOKIE_DOMAIN`.
+
 ```mermaid
 flowchart TD
   Request["Someone asks Persons to do something"] --> AuthType{"How did they arrive?"}

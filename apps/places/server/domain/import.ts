@@ -4,7 +4,7 @@ import { db } from "@/lib/db"
 import { badRequest, notFound } from "@/server/api/errors"
 import { auditAction, type DomainActor } from "./audit"
 
-export type MapsImportFormat = "legacy_takeout" | "device_timeline" | "unknown"
+export type MapsImportFormat = "legacy_takeout" | "device_timeline" | "timeline_records" | "unknown"
 export type StagedVisitAction = "accept" | "reject" | "skip"
 
 export type RawVisit = {
@@ -22,6 +22,7 @@ export type RawVisit = {
   placeConfidence?: string
   userActivityType?: string
   probability?: number
+  semanticType?: string
 }
 
 type ImportJobRow = Awaited<ReturnType<typeof getImportJob>>
@@ -33,6 +34,36 @@ type ImportCounters = {
   errorRows: number
 }
 
+export type ImportPreview = {
+  format: MapsImportFormat
+  totalRecords: number
+  totalVisits: number
+  ignoredRecords: number
+  firstStartedAt: string | null
+  lastStartedAt: string | null
+  uniqueGooglePlaceIds: number
+  estimatedAutoCreateRows: number
+  estimatedStagedRows: number
+  estimatedSkippedRows: number
+  averageVisitMinutes: number | null
+  sourceRecordTypes: Record<string, number>
+  topSemanticTypes: Array<{ label: string; count: number }>
+  confidenceBuckets: {
+    high: number
+    medium: number
+    low: number
+  }
+  sampleVisits: Array<{
+    startedAt: string
+    endedAt: string | null
+    googlePlaceId: string | null
+    semanticType: string | null
+    latitude: number | null
+    longitude: number | null
+    confidence: number
+  }>
+}
+
 const AUTO_CREATE_THRESHOLD = 70
 const STAGE_THRESHOLD = 30
 const MAX_AUTO_CREATED_EVENTS = 10_000
@@ -42,6 +73,7 @@ const BATCH_DELAY_MS = 100
 export function detectFormat(json: unknown): MapsImportFormat {
   if (isRecord(json) && Array.isArray(json.timelineObjects)) return "legacy_takeout"
   if (isRecord(json) && Array.isArray(json.semanticSegments)) return "device_timeline"
+  if (Array.isArray(json) && json.some(item => isRecord(item) && ("visit" in item || "activity" in item || "timelinePath" in item || "timelineMemory" in item))) return "timeline_records"
   return "unknown"
 }
 
@@ -54,6 +86,21 @@ export async function parseFile(buffer: Buffer, format?: MapsImportFormat): Prom
   const detected = format && format !== "unknown" ? format : detectFormat(json)
   if (detected === "unknown") throw badRequest("Unsupported Google Maps export format")
   return parseJsonDocument(json, detected)
+}
+
+export async function previewFile(buffer: Buffer, format?: MapsImportFormat): Promise<ImportPreview> {
+  const bytes = buffer.subarray(0, 4)
+  const isZip = bytes[0] === 0x50 && bytes[1] === 0x4b
+  if (isZip) {
+    const visits = await parseZip(buffer)
+    return buildPreview(visits, visits[0]?.format ?? "unknown", {}, visits.length)
+  }
+
+  const json = JSON.parse(buffer.toString("utf8")) as unknown
+  const detected = format && format !== "unknown" ? format : detectFormat(json)
+  if (detected === "unknown") throw badRequest("Unsupported Google Maps export format")
+  const visits = parseJsonDocument(json, detected)
+  return buildPreview(visits, detected, sourceRecordTypes(json), sourceRecordCount(json))
 }
 
 export function normalizeConfidence(visit: RawVisit): number {
@@ -69,14 +116,20 @@ export function normalizeConfidence(visit: RawVisit): number {
           : visit.locationConfidence ?? 50
     score = typeof visit.visitConfidence === "number" ? (base + visit.visitConfidence) / 2 : base
     if (visit.userActivityType === "WALKING") score += 5
-  } else {
+  } else if (visit.format === "device_timeline") {
     score = (visit.probability ?? visit.visitConfidence ?? 0) * 100
+  } else {
+    const candidateScore = (visit.probability ?? 0) * 100
+    const visitScore = (visit.visitConfidence ?? 0) * 100
+    score = candidateScore && visitScore ? (candidateScore * 0.7) + (visitScore * 0.3) : candidateScore || visitScore || 0
+    if (visit.semanticType && visit.semanticType !== "Unknown") score += 5
   }
 
   const minutes = durationMinutes(visit)
   if (minutes !== null && minutes < 5) score /= 2
   if (minutes !== null && minutes > 24 * 60) score = Math.min(score, 50)
   if (visit.userActivityType === "WALKING" && score >= 60) score = Math.max(score, AUTO_CREATE_THRESHOLD)
+  if (!visit.placeName && !hasCoordinates(visit)) score = Math.min(score, 69)
 
   return Math.max(0, Math.min(100, Math.round(score * 10) / 10))
 }
@@ -234,8 +287,8 @@ export async function processImportJob(jobId: string, workspaceId: string, opts:
           counters.skippedRows += 1
         } else {
           const confidence = normalizeConfidence(visit)
-          const shouldStageUnnamed = !visit.placeName && !hasCoordinates(visit)
-          if (confidence >= AUTO_CREATE_THRESHOLD && !shouldStageUnnamed && counters.createdRows < MAX_AUTO_CREATED_EVENTS) {
+          const requiresReview = !visit.placeName
+          if (confidence >= AUTO_CREATE_THRESHOLD && !requiresReview && counters.createdRows < MAX_AUTO_CREATED_EVENTS) {
             const result = await acceptVisit(visit, workspaceId)
             counters[result.skipped ? "skippedRows" : "createdRows"] += 1
           } else if (confidence >= STAGE_THRESHOLD) {
@@ -282,7 +335,9 @@ async function parseZip(buffer: Buffer) {
 }
 
 function parseJsonDocument(json: unknown, format: Exclude<MapsImportFormat, "unknown">) {
-  return format === "legacy_takeout" ? parseLegacyTakeout(json) : parseDeviceTimeline(json)
+  if (format === "legacy_takeout") return parseLegacyTakeout(json)
+  if (format === "device_timeline") return parseDeviceTimeline(json)
+  return parseTimelineRecords(json)
 }
 
 function parseLegacyTakeout(json: unknown): RawVisit[] {
@@ -329,6 +384,137 @@ function parseDeviceTimeline(json: unknown): RawVisit[] {
       probability: numberFrom(topCandidate.probability) ?? numberFrom(visit.probability) ?? undefined,
     }]
   })
+}
+
+function parseTimelineRecords(json: unknown): RawVisit[] {
+  if (!Array.isArray(json)) return []
+  return json.flatMap(item => {
+    if (!isRecord(item) || !isRecord(item.visit)) return []
+    const visit = item.visit
+    const topCandidate = isRecord(visit.topCandidate) ? visit.topCandidate : {}
+    const start = dateFrom(item.startTime)
+    if (!start) return []
+    const coords = coordinatesFromGeoUri(stringFrom(topCandidate.placeLocation))
+    const semanticType = stringFrom(topCandidate.semanticType)
+    return [{
+      raw: item,
+      format: "timeline_records" as const,
+      latitude: coords?.latitude,
+      longitude: coords?.longitude,
+      googlePlaceId: stringFrom(topCandidate.placeID) ?? stringFrom(topCandidate.placeId),
+      startedAt: start,
+      endedAt: dateFrom(item.endTime) ?? undefined,
+      visitConfidence: numberFrom(visit.probability),
+      probability: numberFrom(topCandidate.probability),
+      semanticType,
+      placeName: semanticType && semanticType !== "Unknown" ? semanticType : undefined,
+    }]
+  })
+}
+
+function buildPreview(visits: RawVisit[], format: MapsImportFormat, recordTypes: Record<string, number>, totalRecords: number): ImportPreview {
+  const sorted = [...visits].sort((a, b) => a.startedAt.getTime() - b.startedAt.getTime())
+  const semanticCounts = new Map<string, number>()
+  const googlePlaceIds = new Set<string>()
+  let totalMinutes = 0
+  let durationCount = 0
+  let estimatedAutoCreateRows = 0
+  let estimatedStagedRows = 0
+  let estimatedSkippedRows = 0
+  const confidenceBuckets = { high: 0, medium: 0, low: 0 }
+
+  for (const visit of visits) {
+    if (visit.googlePlaceId) googlePlaceIds.add(visit.googlePlaceId)
+    if (visit.semanticType) semanticCounts.set(visit.semanticType, (semanticCounts.get(visit.semanticType) ?? 0) + 1)
+
+    const minutes = durationMinutes(visit)
+    if (minutes !== null && Number.isFinite(minutes) && minutes >= 0) {
+      totalMinutes += minutes
+      durationCount += 1
+    }
+
+    const confidence = normalizeConfidence(visit)
+    if (confidence >= AUTO_CREATE_THRESHOLD) confidenceBuckets.high += 1
+    else if (confidence >= STAGE_THRESHOLD) confidenceBuckets.medium += 1
+    else confidenceBuckets.low += 1
+
+    const requiresReview = !visit.placeName
+    if (visit.startedAt > new Date()) estimatedSkippedRows += 1
+    else if (confidence >= AUTO_CREATE_THRESHOLD && !requiresReview) estimatedAutoCreateRows += 1
+    else if (confidence >= STAGE_THRESHOLD) estimatedStagedRows += 1
+    else estimatedSkippedRows += 1
+  }
+
+  return {
+    format,
+    totalRecords,
+    totalVisits: visits.length,
+    ignoredRecords: Math.max(0, totalRecords - visits.length),
+    firstStartedAt: sorted[0]?.startedAt.toISOString() ?? null,
+    lastStartedAt: sorted.at(-1)?.startedAt.toISOString() ?? null,
+    uniqueGooglePlaceIds: googlePlaceIds.size,
+    estimatedAutoCreateRows,
+    estimatedStagedRows,
+    estimatedSkippedRows,
+    averageVisitMinutes: durationCount ? Math.round((totalMinutes / durationCount) * 10) / 10 : null,
+    sourceRecordTypes: recordTypes,
+    topSemanticTypes: [...semanticCounts.entries()]
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 8)
+      .map(([label, count]) => ({ label, count })),
+    confidenceBuckets,
+    sampleVisits: sorted.slice(0, 5).map(visit => ({
+      startedAt: visit.startedAt.toISOString(),
+      endedAt: visit.endedAt?.toISOString() ?? null,
+      googlePlaceId: visit.googlePlaceId ?? null,
+      semanticType: visit.semanticType ?? null,
+      latitude: visit.latitude ?? null,
+      longitude: visit.longitude ?? null,
+      confidence: normalizeConfidence(visit),
+    })),
+  }
+}
+
+function sourceRecordCount(json: unknown) {
+  if (Array.isArray(json)) return json.length
+  if (isRecord(json) && Array.isArray(json.timelineObjects)) return json.timelineObjects.length
+  if (isRecord(json) && Array.isArray(json.semanticSegments)) return json.semanticSegments.length
+  return 0
+}
+
+function sourceRecordTypes(json: unknown) {
+  const counts: Record<string, number> = {}
+  const bump = (key: string) => {
+    counts[key] = (counts[key] ?? 0) + 1
+  }
+
+  if (Array.isArray(json)) {
+    for (const item of json) {
+      if (!isRecord(item)) {
+        bump("unknown")
+      } else if (isRecord(item.visit)) {
+        bump("visit")
+      } else if (isRecord(item.activity)) {
+        bump("activity")
+      } else if (Array.isArray(item.timelinePath)) {
+        bump("timelinePath")
+      } else if (isRecord(item.timelineMemory)) {
+        bump("timelineMemory")
+      } else {
+        bump("other")
+      }
+    }
+  } else if (isRecord(json) && Array.isArray(json.timelineObjects)) {
+    for (const item of json.timelineObjects) {
+      bump(isRecord(item) && isRecord(item.placeVisit) ? "placeVisit" : "other")
+    }
+  } else if (isRecord(json) && Array.isArray(json.semanticSegments)) {
+    for (const item of json.semanticSegments) {
+      bump(isRecord(item) && isRecord(item.visit) ? "visit" : "other")
+    }
+  }
+
+  return counts
 }
 
 async function acceptVisit(visit: RawVisit, workspaceId: string) {
@@ -474,6 +660,14 @@ function coordinatesFromString(raw: string | null) {
   } catch {
     return null
   }
+}
+
+function coordinatesFromGeoUri(raw: string | undefined) {
+  if (!raw?.startsWith("geo:")) return null
+  const [latRaw, lngRaw] = raw.slice(4).split(",")
+  const latitude = numberFrom(latRaw)
+  const longitude = numberFrom(lngRaw)
+  return latitude === undefined || longitude === undefined ? null : { latitude, longitude }
 }
 
 function namesSimilar(a: string, b: string) {
