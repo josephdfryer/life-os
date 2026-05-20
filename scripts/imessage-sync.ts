@@ -323,11 +323,11 @@ async function updatePersonContact(existing: ExistingPerson, contact: ReturnType
   const phones = parseJsonArray(existing.phones)
   let updated = false
 
-  if (contact.email && !emails.some(email => normalizeEmail(email) === normalizeEmail(contact.email))) {
+  if (contact.email && !emails.some(email => normalizeEmail(email) === normalizeEmail(contact.email!))) {
     emails.push(contact.email)
     updated = true
   }
-  if (contact.phone && !phones.some(phone => normalizePhone(phone) === normalizePhone(contact.phone))) {
+  if (contact.phone && !phones.some(phone => normalizePhone(phone) === normalizePhone(contact.phone!))) {
     phones.push(contact.phone)
     updated = true
   }

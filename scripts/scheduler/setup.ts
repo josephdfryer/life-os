@@ -1,0 +1,70 @@
+#!/usr/bin/env tsx
+
+import fs from "node:fs"
+import os from "node:os"
+import path from "node:path"
+import { execSync } from "node:child_process"
+
+const REPO_ROOT = path.resolve(import.meta.dirname, "../..")
+const PLISTS_DIR = path.join(import.meta.dirname, "plists")
+const LAUNCH_AGENTS_DIR = path.join(os.homedir(), "Library/LaunchAgents")
+
+const PLIST_NAMES = [
+  "com.lifeos.capture",
+  "com.lifeos.synthesis",
+  "com.lifeos.brief",
+]
+
+function main() {
+  const args = process.argv.slice(2)
+  const uninstall = args.includes("--uninstall")
+
+  fs.mkdirSync(LAUNCH_AGENTS_DIR, { recursive: true })
+  fs.mkdirSync(path.join(REPO_ROOT, "logs"), { recursive: true })
+
+  for (const name of PLIST_NAMES) {
+    const destPath = path.join(LAUNCH_AGENTS_DIR, `${name}.plist`)
+
+    if (uninstall) {
+      unloadPlist(destPath, name)
+      if (fs.existsSync(destPath)) fs.unlinkSync(destPath)
+      console.log(`[scheduler] Uninstalled ${name}`)
+      continue
+    }
+
+    const sourcePath = path.join(PLISTS_DIR, `${name}.plist`)
+    let content = fs.readFileSync(sourcePath, "utf8")
+    content = content.replaceAll("LIFE_OS_ROOT", REPO_ROOT)
+
+    fs.writeFileSync(destPath, content)
+
+    // Unload first in case it was already loaded
+    try {
+      execSync(`launchctl unload "${destPath}" 2>/dev/null`, { stdio: "ignore" })
+    } catch {
+      // ignore — not loaded yet
+    }
+
+    execSync(`launchctl load "${destPath}"`)
+    console.log(`[scheduler] Installed and loaded ${name}`)
+  }
+
+  if (!uninstall) {
+    console.log(`\n[scheduler] All agents installed.`)
+    console.log(`  Logs: ${REPO_ROOT}/logs/`)
+    console.log(`  Run manually: npm run capture:all`)
+    console.log(`  Check status: launchctl list | grep lifeos`)
+  }
+}
+
+function unloadPlist(destPath: string, name: string) {
+  if (!fs.existsSync(destPath)) return
+  try {
+    execSync(`launchctl unload "${destPath}"`)
+    console.log(`[scheduler] Unloaded ${name}`)
+  } catch {
+    // already unloaded
+  }
+}
+
+main()
