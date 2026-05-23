@@ -32,7 +32,7 @@ export async function GET(req: NextRequest) {
   const [items, total] = await Promise.all([
     db.stagedInteraction.findMany({
       where,
-      orderBy: [{ createdAt: "desc" }],
+      orderBy: [{ priority: "desc" }, { timestamp: "desc" }],
       take: limit,
       skip: offset,
       include: {

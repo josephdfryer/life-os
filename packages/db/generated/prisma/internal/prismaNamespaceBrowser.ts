@@ -411,7 +411,9 @@ export const StagedInteractionScalarFieldEnum = {
   metadata: 'metadata',
   acceptedAt: 'acceptedAt',
   acceptedPersonId: 'acceptedPersonId',
-  interactionId: 'interactionId'
+  interactionId: 'interactionId',
+  priority: 'priority',
+  enrichedAt: 'enrichedAt'
 } as const
 
 export type StagedInteractionScalarFieldEnum = (typeof StagedInteractionScalarFieldEnum)[keyof typeof StagedInteractionScalarFieldEnum]

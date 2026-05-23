@@ -2,6 +2,7 @@ import { db } from "@/lib/db"
 import { badRequest, notFound, optionalString } from "@/server/api/errors"
 import { auditAction, type DomainActor } from "./audit"
 import { appendDailySourceInteraction } from "./interactions"
+import { enrichInboxItem } from "./inbox-enrich"
 import { applyRuleRunSuggestions, runRulesForTarget } from "./rules"
 
 type InboxAction = "accept" | "dismiss" | "update"
@@ -80,7 +81,12 @@ export async function stageRecord(input: StageRecordInput, actor?: DomainActor) 
     metadata: { source: input.source, sourceId: input.sourceId, itemType },
   })
 
-  await runRulesForTarget({
+  // Enrich before rules fire so confidence/priority are available for condition matching
+  const enriched = staged.status === "pending"
+    ? await enrichInboxItem(staged.id, input, workspaceId)
+    : null
+
+  const ruleResult = await runRulesForTarget({
     trigger: input.trigger ?? "inbox.stage",
     targetType: "stagedInteraction",
     targetId: staged.id,
@@ -91,19 +97,72 @@ export async function stageRecord(input: StageRecordInput, actor?: DomainActor) 
       itemType,
       type: input.type ?? "message",
       timestamp: timestamp.toISOString(),
-      summary: input.summary,
+      summary: enriched?.summary ?? input.summary,
       body: input.body,
       direction: input.direction,
       contactName: input.contactName,
       contactEmail: input.contactEmail,
       contactPhone: input.contactPhone,
-      candidatePersonId: input.candidatePersonId,
+      candidatePersonId: enriched?.candidatePersonId ?? input.candidatePersonId,
+      confidence: enriched?.confidence ?? input.confidence,
+      matchReason: enriched?.matchReason ?? input.matchReason,
+      priority: enriched?.priority ?? 3,
       metadata: input.metadata,
     },
     actor,
+    apply: true,
   })
 
+  // Complete the accept flow when a rule auto-approved the item
+  const wasAutoAccepted = ruleResult.actionsApplied.some(
+    a => a.field === "status" && a.value === "accepted",
+  )
+  if (wasAutoAccepted) {
+    const personId = enriched?.candidatePersonId ?? input.candidatePersonId
+    if (personId) {
+      await completeAccept(staged.id, personId, actor)
+    }
+  }
+
   return staged
+}
+
+async function completeAccept(id: string, personId: string, actor?: DomainActor) {
+  const workspaceId = actor?.workspaceId ?? "default-workspace"
+  const item = await db.stagedInteraction.findFirst({ where: { id, workspaceId } })
+  if (!item) return
+  const person = await db.person.findFirst({ where: { id: personId, workspaceId }, select: { id: true } })
+  if (!person) return
+
+  const result = await appendDailySourceInteraction({
+    personId,
+    source: item.source,
+    sourceId: item.sourceId,
+    type: item.type,
+    timestamp: item.timestamp,
+    summary: item.summary || item.body || "(no text)",
+    body: item.body,
+    direction: item.direction,
+    actor,
+  })
+
+  await db.stagedInteraction.update({
+    where: { id },
+    data: {
+      status: "accepted",
+      acceptedAt: new Date(),
+      acceptedPersonId: personId,
+      interactionId: result.interactionId,
+    },
+  })
+
+  await auditAction({
+    actor,
+    action: "inbox.accept",
+    targetType: "stagedInteraction",
+    targetId: id,
+    metadata: { ...result, autoApproved: true },
+  })
 }
 
 export async function applyInboxSuggestions(id: string, ruleRunIds: string[], actor?: DomainActor) {

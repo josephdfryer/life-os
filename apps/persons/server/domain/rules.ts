@@ -37,7 +37,7 @@ async function _loadActiveRules(workspaceId: string, trigger: string): Promise<E
 
 type RuleCondition = {
   field: string
-  operator: "equals" | "not_equals" | "contains" | "in" | "exists" | "not_exists"
+  operator: "equals" | "not_equals" | "contains" | "in" | "exists" | "not_exists" | "gte" | "lte"
   value?: unknown
 }
 
@@ -352,6 +352,10 @@ function matchesCondition(condition: RuleCondition, payload: Record<string, unkn
       return actual !== undefined && actual !== null && actual !== ""
     case "not_exists":
       return actual === undefined || actual === null || actual === ""
+    case "gte":
+      return Number(actual) >= Number(condition.value)
+    case "lte":
+      return Number(actual) <= Number(condition.value)
     default:
       return false
   }
@@ -511,6 +515,7 @@ function isStagedInteractionField(field: string) {
     "contactName",
     "contactEmail",
     "contactPhone",
+    "priority",
   ].includes(field)
 }
 

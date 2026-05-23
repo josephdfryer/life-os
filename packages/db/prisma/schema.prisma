@@ -453,10 +453,12 @@ model StagedInteraction {
   acceptedAt        DateTime?
   acceptedPersonId  String?
   interactionId     String?
+  priority          Int       @default(3)
+  enrichedAt        DateTime?
   gmailLinks        GmailMessageLink[]
 
   @@unique([workspaceId, source, sourceId])
-  @@index([status, createdAt])
+  @@index([status, priority, createdAt])
   @@index([source, itemType, createdAt])
   @@index([candidatePersonId])
   @@index([timestamp])
