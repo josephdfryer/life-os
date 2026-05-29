@@ -880,3 +880,36 @@ model PlaceGroup {
   @@index([placeId])
   @@index([groupId])
 }
+
+// ─────────────────────────────────────────────
+// STATE LAYER
+// ─────────────────────────────────────────────
+
+model StateDefinition {
+  id          String  @id @default(cuid())
+  workspaceId String
+  entityType  String
+  type        String
+  value       String
+  description String?
+  states      State[]
+
+  @@unique([workspaceId, entityType, type, value])
+  @@index([workspaceId, entityType])
+}
+
+model State {
+  id           String          @id @default(cuid())
+  workspaceId  String
+  entityType   String
+  entityId     String
+  definitionId String
+  definition   StateDefinition @relation(fields: [definitionId], references: [id])
+  severity     Float?
+  source       String?
+  recordedAt   DateTime
+  createdAt    DateTime        @default(now())
+
+  @@index([workspaceId, entityId, entityType])
+  @@index([workspaceId, entityId, entityType, recordedAt])
+}

@@ -84,7 +84,9 @@ export const ModelName = {
   Group: 'Group',
   PersonGroup: 'PersonGroup',
   GroupGroup: 'GroupGroup',
-  PlaceGroup: 'PlaceGroup'
+  PlaceGroup: 'PlaceGroup',
+  StateDefinition: 'StateDefinition',
+  State: 'State'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -662,6 +664,33 @@ export const PlaceGroupScalarFieldEnum = {
 } as const
 
 export type PlaceGroupScalarFieldEnum = (typeof PlaceGroupScalarFieldEnum)[keyof typeof PlaceGroupScalarFieldEnum]
+
+
+export const StateDefinitionScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  entityType: 'entityType',
+  type: 'type',
+  value: 'value',
+  description: 'description'
+} as const
+
+export type StateDefinitionScalarFieldEnum = (typeof StateDefinitionScalarFieldEnum)[keyof typeof StateDefinitionScalarFieldEnum]
+
+
+export const StateScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  entityType: 'entityType',
+  entityId: 'entityId',
+  definitionId: 'definitionId',
+  severity: 'severity',
+  source: 'source',
+  recordedAt: 'recordedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type StateScalarFieldEnum = (typeof StateScalarFieldEnum)[keyof typeof StateScalarFieldEnum]
 
 
 export const SortOrder = {

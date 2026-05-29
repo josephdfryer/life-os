@@ -2,7 +2,6 @@ import { db } from "@/lib/db"
 import { badRequest, notFound, optionalString } from "@/server/api/errors"
 import { auditAction, type DomainActor } from "./audit"
 import { appendDailySourceInteraction } from "./interactions"
-import { enrichInboxItem } from "./inbox-enrich"
 import { applyRuleRunSuggestions, runRulesForTarget } from "./rules"
 
 type InboxAction = "accept" | "dismiss" | "update"
@@ -83,7 +82,7 @@ export async function stageRecord(input: StageRecordInput, actor?: DomainActor) 
 
   // Enrich before rules fire so confidence/priority are available for condition matching
   const enriched = staged.status === "pending"
-    ? await enrichInboxItem(staged.id, input, workspaceId)
+    ? await (await import("./inbox-enrich")).enrichInboxItem(staged.id, input, workspaceId)
     : null
 
   const ruleResult = await runRulesForTarget({

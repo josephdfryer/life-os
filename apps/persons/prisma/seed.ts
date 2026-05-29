@@ -261,6 +261,75 @@ async function main() {
     },
   })
 
+  // StateDefinition seed — idempotent via skipDuplicates
+  const stateDefinitions = [
+    // Person
+    { entityType: "Person", type: "capacity",     value: "depleted"    },
+    { entityType: "Person", type: "capacity",     value: "low"         },
+    { entityType: "Person", type: "capacity",     value: "optimal"     },
+    { entityType: "Person", type: "health",       value: "sick"        },
+    { entityType: "Person", type: "health",       value: "recovering"  },
+    { entityType: "Person", type: "health",       value: "healthy"     },
+    { entityType: "Person", type: "mood",         value: "low"         },
+    { entityType: "Person", type: "mood",         value: "neutral"     },
+    { entityType: "Person", type: "mood",         value: "elevated"    },
+    { entityType: "Person", type: "availability", value: "unavailable" },
+    { entityType: "Person", type: "availability", value: "busy"        },
+    { entityType: "Person", type: "availability", value: "available"   },
+    // Place
+    { entityType: "Place", type: "availability",  value: "closed"      },
+    { entityType: "Place", type: "availability",  value: "open"        },
+    { entityType: "Place", type: "condition",     value: "degraded"    },
+    { entityType: "Place", type: "condition",     value: "functional"  },
+    { entityType: "Place", type: "condition",     value: "optimal"     },
+    { entityType: "Place", type: "access",        value: "restricted"  },
+    { entityType: "Place", type: "access",        value: "open"        },
+    // Object
+    { entityType: "Object", type: "condition",    value: "degraded"    },
+    { entityType: "Object", type: "condition",    value: "functional"  },
+    { entityType: "Object", type: "condition",    value: "optimal"     },
+    { entityType: "Object", type: "availability", value: "unavailable" },
+    { entityType: "Object", type: "availability", value: "available"   },
+    { entityType: "Object", type: "ownership",    value: "owned"       },
+    { entityType: "Object", type: "ownership",    value: "loaned_out"  },
+    { entityType: "Object", type: "ownership",    value: "sold"        },
+    // Event
+    { entityType: "Event", type: "status",        value: "planned"     },
+    { entityType: "Event", type: "status",        value: "confirmed"   },
+    { entityType: "Event", type: "status",        value: "in_progress" },
+    { entityType: "Event", type: "status",        value: "completed"   },
+    { entityType: "Event", type: "status",        value: "cancelled"   },
+    { entityType: "Event", type: "energy",        value: "low"         },
+    { entityType: "Event", type: "energy",        value: "neutral"     },
+    { entityType: "Event", type: "energy",        value: "high"        },
+    // Plan
+    { entityType: "Plan", type: "status",         value: "draft"       },
+    { entityType: "Plan", type: "status",         value: "active"      },
+    { entityType: "Plan", type: "status",         value: "blocked"     },
+    { entityType: "Plan", type: "status",         value: "completed"   },
+    { entityType: "Plan", type: "status",         value: "abandoned"   },
+    { entityType: "Plan", type: "momentum",       value: "stalled"     },
+    { entityType: "Plan", type: "momentum",       value: "slow"        },
+    { entityType: "Plan", type: "momentum",       value: "moving"      },
+    { entityType: "Plan", type: "momentum",       value: "fast"        },
+    // Group
+    { entityType: "Group", type: "status",        value: "forming"     },
+    { entityType: "Group", type: "status",        value: "active"      },
+    { entityType: "Group", type: "status",        value: "dormant"     },
+    { entityType: "Group", type: "status",        value: "disbanded"   },
+    { entityType: "Group", type: "cohesion",      value: "fragmented"  },
+    { entityType: "Group", type: "cohesion",      value: "neutral"     },
+    { entityType: "Group", type: "cohesion",      value: "strong"      },
+  ]
+
+  for (const d of stateDefinitions) {
+    await db.stateDefinition.upsert({
+      where: { workspaceId_entityType_type_value: { workspaceId: "default-workspace", entityType: d.entityType, type: d.type, value: d.value } },
+      create: { ...d, workspaceId: "default-workspace" },
+      update: {},
+    })
+  }
+
   // Plans
   await db.plan.create({
     data: {
@@ -292,6 +361,7 @@ async function main() {
     },
   })
 
+  console.log(`✓ Seeded ${stateDefinitions.length} StateDefinitions across 6 entity types`)
   console.log("✓ Seeded 5 persons with interactions and plans")
   console.log("  Marcus Chen (Inner Circle) — 3 interactions, 1 plan")
   console.log("  Sarah Okafor (Friend) — 2 interactions, 1 plan")

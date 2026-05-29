@@ -2,7 +2,15 @@ import Anthropic from "@anthropic-ai/sdk"
 import { db } from "@/lib/db"
 import type { StageRecordInput } from "./inbox"
 
-const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
+let client: Anthropic | null = null
+function getClient(): Anthropic | null {
+  if (!process.env.ANTHROPIC_API_KEY) {
+    console.warn("[inbox-enrich] ANTHROPIC_API_KEY not set — enrichment disabled")
+    return null
+  }
+  if (!client) client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
+  return client
+}
 
 export type EnrichResult = {
   candidatePersonId: string | null
@@ -157,7 +165,9 @@ Required JSON:
   "priority": <1-5, where 5=urgent question or commitment with deadline, 4=substantive exchange with known contact, 3=normal conversation, 2=fyi/informational, 1=automated or one-liner>
 }`
 
-  const response = await client.messages.create({
+  const c = getClient()
+  if (!c) return null
+  const response = await c.messages.create({
     model: "claude-haiku-4-5-20251001",
     max_tokens: 512,
     messages: [{ role: "user", content: prompt }],

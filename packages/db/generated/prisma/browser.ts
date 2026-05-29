@@ -187,3 +187,13 @@ export type GroupGroup = Prisma.GroupGroupModel
  * 
  */
 export type PlaceGroup = Prisma.PlaceGroupModel
+/**
+ * Model StateDefinition
+ * 
+ */
+export type StateDefinition = Prisma.StateDefinitionModel
+/**
+ * Model State
+ * 
+ */
+export type State = Prisma.StateModel

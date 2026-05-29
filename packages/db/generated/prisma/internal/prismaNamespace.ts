@@ -417,7 +417,9 @@ export const ModelName = {
   Group: 'Group',
   PersonGroup: 'PersonGroup',
   GroupGroup: 'GroupGroup',
-  PlaceGroup: 'PlaceGroup'
+  PlaceGroup: 'PlaceGroup',
+  StateDefinition: 'StateDefinition',
+  State: 'State'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -433,7 +435,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "workspace" | "workspaceMember" | "approvedEmail" | "person" | "user" | "role" | "permission" | "userRole" | "rolePermission" | "apiKey" | "apiKeyScope" | "auditLog" | "calendarConnection" | "calendarEventLink" | "gmailConnection" | "gmailMessageLink" | "rule" | "ruleRun" | "stagedInteraction" | "event" | "interaction" | "plan" | "place" | "importJob" | "importStagedVisit" | "placeNote" | "item" | "assembly" | "itemInteraction" | "importedFile" | "group" | "personGroup" | "groupGroup" | "placeGroup"
+    modelProps: "workspace" | "workspaceMember" | "approvedEmail" | "person" | "user" | "role" | "permission" | "userRole" | "rolePermission" | "apiKey" | "apiKeyScope" | "auditLog" | "calendarConnection" | "calendarEventLink" | "gmailConnection" | "gmailMessageLink" | "rule" | "ruleRun" | "stagedInteraction" | "event" | "interaction" | "plan" | "place" | "importJob" | "importStagedVisit" | "placeNote" | "item" | "assembly" | "itemInteraction" | "importedFile" | "group" | "personGroup" | "groupGroup" | "placeGroup" | "stateDefinition" | "state"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -2953,6 +2955,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    StateDefinition: {
+      payload: Prisma.$StateDefinitionPayload<ExtArgs>
+      fields: Prisma.StateDefinitionFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.StateDefinitionFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StateDefinitionPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.StateDefinitionFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StateDefinitionPayload>
+        }
+        findFirst: {
+          args: Prisma.StateDefinitionFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StateDefinitionPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.StateDefinitionFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StateDefinitionPayload>
+        }
+        findMany: {
+          args: Prisma.StateDefinitionFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StateDefinitionPayload>[]
+        }
+        create: {
+          args: Prisma.StateDefinitionCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StateDefinitionPayload>
+        }
+        createMany: {
+          args: Prisma.StateDefinitionCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.StateDefinitionCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StateDefinitionPayload>[]
+        }
+        delete: {
+          args: Prisma.StateDefinitionDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StateDefinitionPayload>
+        }
+        update: {
+          args: Prisma.StateDefinitionUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StateDefinitionPayload>
+        }
+        deleteMany: {
+          args: Prisma.StateDefinitionDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.StateDefinitionUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.StateDefinitionUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StateDefinitionPayload>[]
+        }
+        upsert: {
+          args: Prisma.StateDefinitionUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StateDefinitionPayload>
+        }
+        aggregate: {
+          args: Prisma.StateDefinitionAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateStateDefinition>
+        }
+        groupBy: {
+          args: Prisma.StateDefinitionGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.StateDefinitionGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.StateDefinitionCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.StateDefinitionCountAggregateOutputType> | number
+        }
+      }
+    }
+    State: {
+      payload: Prisma.$StatePayload<ExtArgs>
+      fields: Prisma.StateFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.StateFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StatePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.StateFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StatePayload>
+        }
+        findFirst: {
+          args: Prisma.StateFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StatePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.StateFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StatePayload>
+        }
+        findMany: {
+          args: Prisma.StateFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StatePayload>[]
+        }
+        create: {
+          args: Prisma.StateCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StatePayload>
+        }
+        createMany: {
+          args: Prisma.StateCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.StateCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StatePayload>[]
+        }
+        delete: {
+          args: Prisma.StateDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StatePayload>
+        }
+        update: {
+          args: Prisma.StateUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StatePayload>
+        }
+        deleteMany: {
+          args: Prisma.StateDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.StateUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.StateUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StatePayload>[]
+        }
+        upsert: {
+          args: Prisma.StateUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StatePayload>
+        }
+        aggregate: {
+          args: Prisma.StateAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateState>
+        }
+        groupBy: {
+          args: Prisma.StateGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.StateGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.StateCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.StateCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -3553,6 +3703,33 @@ export const PlaceGroupScalarFieldEnum = {
 export type PlaceGroupScalarFieldEnum = (typeof PlaceGroupScalarFieldEnum)[keyof typeof PlaceGroupScalarFieldEnum]
 
 
+export const StateDefinitionScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  entityType: 'entityType',
+  type: 'type',
+  value: 'value',
+  description: 'description'
+} as const
+
+export type StateDefinitionScalarFieldEnum = (typeof StateDefinitionScalarFieldEnum)[keyof typeof StateDefinitionScalarFieldEnum]
+
+
+export const StateScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  entityType: 'entityType',
+  entityId: 'entityId',
+  definitionId: 'definitionId',
+  severity: 'severity',
+  source: 'source',
+  recordedAt: 'recordedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type StateScalarFieldEnum = (typeof StateScalarFieldEnum)[keyof typeof StateScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -3827,6 +4004,8 @@ export type GlobalOmitConfig = {
   personGroup?: Prisma.PersonGroupOmit
   groupGroup?: Prisma.GroupGroupOmit
   placeGroup?: Prisma.PlaceGroupOmit
+  stateDefinition?: Prisma.StateDefinitionOmit
+  state?: Prisma.StateOmit
 }
 
 /* Types for Logging */
