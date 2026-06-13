@@ -3,6 +3,7 @@ import { auth } from "@/auth"
 import { db } from "@/lib/db"
 import { badRequest, forbidden, notFound, optionalString, optionalStringArray, requiredString, unauthorized } from "@/server/api/errors"
 import { auditAction, type DomainActor } from "./audit"
+import { localReviewEnabled } from "@/lib/local-review"
 
 export const DEFAULT_PERMISSIONS = [
   { scope: "*", description: "Full system access" },
@@ -131,6 +132,8 @@ export async function seedDefaultAccess(actor?: DomainActor) {
 const _accessCache = new Map<string, { value: AccessActor; expiresAt: number }>()
 
 export async function requireAccess(requiredScope: string): Promise<AccessActor> {
+  if (localReviewEnabled()) return localReviewActor()
+
   const session = await auth()
   const email = session?.user?.email?.toLowerCase()
   if (!email) throw unauthorized()
@@ -196,6 +199,28 @@ export async function requireAccess(requiredScope: string): Promise<AccessActor>
 
   _accessCache.set(email, { value: result, expiresAt: Date.now() + 60_000 })
   return result
+}
+
+async function localReviewActor(): Promise<AccessActor> {
+  const workspace = await db.workspace.findUnique({
+    where: { id: "default-workspace" },
+    select: { id: true, name: true, ownerUserId: true },
+  })
+  if (!workspace) throw unauthorized("Local review workspace is missing")
+
+  const user = workspace.ownerUserId
+    ? await db.user.findUnique({ where: { id: workspace.ownerUserId }, select: { id: true, email: true } })
+    : await db.user.findFirst({ orderBy: { createdAt: "asc" }, select: { id: true, email: true } })
+  if (!user) throw unauthorized("Local review user is missing")
+
+  return {
+    userId: user.id,
+    email: user.email,
+    workspaceId: workspace.id,
+    workspaceName: workspace.name,
+    scopes: ["*"],
+    actor: { type: "user", id: user.id, label: `${user.email} (local review)`, workspaceId: workspace.id },
+  }
 }
 
 async function _buildWorkspace(userId: string, email: string, useDefault: boolean, approvedWorkspaceId: string | null) {

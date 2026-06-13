@@ -1,4 +1,5 @@
 import type { ParsedContact } from "./vcard"
+import { normalizeBirthday } from "./birthday"
 
 export type CsvFlavor = "google" | "linkedin" | "generic" | "unknown"
 
@@ -56,7 +57,7 @@ function parseGoogleRow(header: string[], row: string[]): ParsedContact {
              || colNumberedValue(header, row, "mobile")
              || getPrefix("mobile phone")
              || null
-  const birthday = parseBday(get("birthday"))
+  const birthday = normalizeBirthday(get("birthday"))
   const notes = get("notes") || null
 
   return {
@@ -128,7 +129,7 @@ function parseGenericRow(header: string[], row: string[]): ParsedContact {
   const title = get("title") || get("job title") || get("position") || get("role") || null
   const email = getPrefix("email") || get("e-mail") || null
   const phone = getPrefix("phone") || getPrefix("mobile") || getPrefix("cell") || null
-  const birthday = parseBday(get("birthday") || get("date of birth") || get("dob"))
+  const birthday = normalizeBirthday(get("birthday") || get("date of birth") || get("dob"))
   const notes = get("notes") || get("note") || get("description") || null
   const location = get("city") || get("location") || get("address") || null
   const linkedin = get("linkedin") || get("linkedin url") || null
@@ -179,17 +180,6 @@ function colNumberedValue(header: string[], row: string[], prefix: string): stri
     const idx = header.findIndex(h => h.toLowerCase().trim() === key)
     if (idx !== -1 && row[idx]?.trim()) return row[idx].trim()
   }
-  return null
-}
-
-function parseBday(raw: string | null | undefined): string | null {
-  if (!raw) return null
-  const m1 = raw.match(/^(\d{4})-(\d{2})-(\d{2})$/)
-  if (m1) return raw
-  const m2 = raw.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/)
-  if (m2) return `${m2[3]}-${m2[1].padStart(2,"0")}-${m2[2].padStart(2,"0")}`
-  const m3 = raw.match(/^(\d{4})(\d{2})(\d{2})$/)
-  if (m3) return `${m3[1]}-${m3[2]}-${m3[3]}`
   return null
 }
 

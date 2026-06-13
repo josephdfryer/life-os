@@ -3,6 +3,7 @@ import { assignColor } from "@/lib/colors"
 import { badRequest, notFound, optionalString, optionalStringArray, requiredString } from "@/server/api/errors"
 import { auditAction, type DomainActor } from "./audit"
 import { formatPerson, jsonList } from "./dto"
+import { normalizeBirthday } from "@/lib/birthday"
 
 export type PersonInput = {
   first?: unknown
@@ -46,7 +47,7 @@ export async function createPerson(input: PersonInput, actor?: DomainActor) {
       company: optionalString(input.company),
       emails: jsonList(contactList(input.emails, input.email)),
       phones: jsonList(contactList(input.phones, input.phone)),
-      birthday: optionalString(input.birthday),
+      birthday: validatedBirthday(input.birthday),
       closeness: input.closeness === undefined ? 2 : Number(input.closeness) || 2,
       tags: jsonList(optionalStringArray(input.tags)),
       values: jsonList(optionalStringArray(input.values)),
@@ -75,7 +76,7 @@ export async function updatePerson(id: string, input: PersonInput, actor?: Domai
   if (input.company !== undefined) patch.company = optionalString(input.company)
   if (input.emails !== undefined || input.email !== undefined) patch.emails = jsonList(contactList(input.emails, input.email))
   if (input.phones !== undefined || input.phone !== undefined) patch.phones = jsonList(contactList(input.phones, input.phone))
-  if (input.birthday !== undefined) patch.birthday = optionalString(input.birthday)
+  if (input.birthday !== undefined) patch.birthday = validatedBirthday(input.birthday)
   if (input.closeness !== undefined) {
     const closeness = Number(input.closeness)
     if (!Number.isFinite(closeness)) throw badRequest("closeness must be a number", { field: "closeness" })
@@ -110,4 +111,14 @@ function contactList(arrayValue: unknown, singleValue: unknown) {
   if (fromArray.length) return fromArray
   const single = optionalString(singleValue)
   return single ? [single] : []
+}
+
+function validatedBirthday(value: unknown) {
+  const raw = optionalString(value)
+  if (!raw) return null
+  const birthday = normalizeBirthday(raw)
+  if (!birthday) {
+    throw badRequest("birthday must be YYYY-MM-DD or MM-DD", { field: "birthday" })
+  }
+  return birthday
 }

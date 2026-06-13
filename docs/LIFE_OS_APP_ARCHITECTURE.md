@@ -25,6 +25,8 @@ flowchart TD
 - Session cookies can be shared across subdomains by setting `AUTH_COOKIE_DOMAIN` or `LIFE_OS_COOKIE_DOMAIN` to the parent domain, for example `.lifeos.example`.
 - Production apps must share the same `AUTH_SECRET` or `NEXTAUTH_SECRET`.
 - Local development uses a dev-only fallback secret when no secret is present.
+- The home, Persons, and Places apps may bypass sign-in for an explicit local review by setting
+  `LIFE_OS_LOCAL_REVIEW=1`; this bypass is disabled whenever `NODE_ENV=production`.
 
 ## Current Apps
 

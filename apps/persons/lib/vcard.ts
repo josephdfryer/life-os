@@ -1,3 +1,5 @@
+import { normalizeBirthday } from "./birthday"
+
 export type ParsedContact = {
   first: string
   last: string
@@ -99,7 +101,7 @@ function parseOneVCard(card: string): ParsedContact {
 
   // Birthday
   const bdayRaw = get(/^BDAY[;:](.*)/i)
-  const birthday = parseBday(bdayRaw)
+  const birthday = normalizeBirthday(bdayRaw)
 
   // Notes
   const notes = get(/^NOTE[;:](.*)/i)?.replace(/\\n/g, "\n").trim() ?? null
@@ -158,20 +160,6 @@ function decodeValue(val: string): string {
   }
   // Unescape vCard backslash sequences
   return val.replace(/\\,/g, ",").replace(/\\;/g, ";").replace(/\\n/gi, "\n").replace(/\\\\/g, "\\")
-}
-
-function parseBday(raw: string | null): string | null {
-  if (!raw) return null
-  // Handle YYYYMMDD
-  const compact = raw.match(/^(\d{4})(\d{2})(\d{2})$/)
-  if (compact) return `${compact[1]}-${compact[2]}-${compact[3]}`
-  // Handle YYYY-MM-DD
-  const iso = raw.match(/^(\d{4})-(\d{2})-(\d{2})$/)
-  if (iso) return raw
-  // Handle --MMDD (no year)
-  const noYear = raw.match(/^--(\d{2})(\d{2})$/)
-  if (noYear) return `0000-${noYear[1]}-${noYear[2]}`
-  return null
 }
 
 function normalizePhone(phone: string): string {

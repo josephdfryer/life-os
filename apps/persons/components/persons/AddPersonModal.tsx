@@ -122,7 +122,7 @@ export default function AddPersonModal({ onClose, onSaved, totalPersons }: Props
             type="tel"
           />
 
-          <Field label="Birthday" value={form.birthday} onChange={v => set("birthday", v)} placeholder="YYYY-MM-DD" />
+          <Field label="Birthday" value={form.birthday} onChange={v => set("birthday", v)} placeholder="MM-DD or YYYY-MM-DD" />
 
           <div>
             <label style={labelStyle}>Closeness</label>

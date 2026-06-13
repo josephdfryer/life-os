@@ -1,3 +1,5 @@
+import { birthdayMonthDay } from "./birthday"
+
 export function relativeTime(date: Date | string | null): string {
   if (!date) return "Never"
   const d = new Date(date)
@@ -56,32 +58,33 @@ export function parseJsonArray(raw: string | null | undefined): string[] {
 }
 
 export function formatBirthday(birthday: string | null): string | null {
-  if (!birthday) return null
-  const [, month, day] = birthday.split("-")
+  const parts = birthdayMonthDay(birthday)
+  if (!parts) return null
   const months = [
     "Jan","Feb","Mar","Apr","May","Jun",
     "Jul","Aug","Sep","Oct","Nov","Dec",
   ]
-  return `${months[parseInt(month, 10) - 1]} ${parseInt(day, 10)}`
+  return `${months[parts.month - 1]} ${parts.day}`
 }
 
 export function daysUntilBirthday(birthday: string | null): number | null {
-  if (!birthday) return null
+  const parts = birthdayMonthDay(birthday)
+  if (!parts) return null
   const today = new Date()
-  const [, month, day] = birthday.split("-").map(Number)
-  let next = new Date(today.getFullYear(), month - 1, day)
-  if (next < today) {
-    next = new Date(today.getFullYear() + 1, month - 1, day)
+  const startOfToday = new Date(today.getFullYear(), today.getMonth(), today.getDate())
+  let next = new Date(today.getFullYear(), parts.month - 1, parts.day)
+  if (next < startOfToday) {
+    next = new Date(today.getFullYear() + 1, parts.month - 1, parts.day)
   }
-  const diff = next.getTime() - today.getTime()
+  const diff = next.getTime() - startOfToday.getTime()
   return Math.ceil(diff / (1000 * 60 * 60 * 24))
 }
 
 export function isBirthdayToday(birthday: string | null): boolean {
-  if (!birthday) return false
+  const parts = birthdayMonthDay(birthday)
+  if (!parts) return false
   const today = new Date()
-  const [, month, day] = birthday.split("-").map(Number)
-  return today.getMonth() + 1 === month && today.getDate() === day
+  return today.getMonth() + 1 === parts.month && today.getDate() === parts.day
 }
 
 export function isBirthdayThisWeek(birthday: string | null): boolean {

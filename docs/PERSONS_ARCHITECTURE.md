@@ -123,8 +123,9 @@ In plain English: the UI does not directly make database decisions. It asks an A
 flowchart TD
   ChatDB["Mac Messages database: chat.db"] --> Watcher["scripts/imessage-sync.ts"]
   Watcher --> Watermark["Watermark: last message already seen"]
-  Watcher --> Match["Try to match sender to an existing Person"]
+  Watcher --> GroupFilter["Ignore group texts by default"]
 
+  GroupFilter --> Match["Try to match sender to an existing Person"]
   Match --> Known{"Confident match?"}
   Known -->|Yes| DailyInteraction["Append to one daily Interaction"]
   Known -->|No| StagedInbox["Create Inbox staging item (itemType=interaction)"]
@@ -142,6 +143,8 @@ flowchart TD
 ```
 
 Important idea: unmatched iMessages do not create random new people anymore. They go to the Inbox staging area where you can review them.
+
+Group texts are intentionally ignored by default before matching or staging. The watcher identifies multi-person chats from the Messages chat participant table, with the chat identifier as a fallback, so noisy group threads do not fill the Persons inbox or get appended to one person's daily interaction log. A one-off backfill can opt in with `--include-group-chats` when that is explicitly useful.
 
 ### 2b. Staging from any external source
 
@@ -191,6 +194,10 @@ flowchart TD
 Plain English: import is a bulk way to turn source material into structured People, Events, and Interactions. `/import` is the chooser, `/import/people` handles vCard/CSV people files plus Google Contacts from the connected Gmail account, and `/import/interactions` handles Gmail Mail, transcripts, notes, and message exports. `/import/conversations` remains as a redirect for older links.
 
 The Google Contacts import does not save records immediately. `/api/import/gmail-contacts` reads the connected Google account through the People API, maps names, emails, phone numbers, organizations, birthdays, addresses, URLs, and notes into the same review shape as a vCard/CSV import, and then the regular People import review decides what to create, update, or skip.
+
+Birthdays preserve useful month/day information even when the birth year is unknown. Full dates use `YYYY-MM-DD`; yearless birthdays use `--MM-DD`. Both formats drive Today-page birthday reminders without inventing a year.
+
+For local recovery review only, `LIFE_OS_LOCAL_REVIEW=1` bypasses Google OAuth when the app is not running in production. It resolves the existing owner and default workspace read-only instead of creating authentication records; production explicitly ignores this flag.
 
 ### 3b. Google Calendar sync
 

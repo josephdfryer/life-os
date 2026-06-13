@@ -236,7 +236,7 @@ const FIELD_CHIPS: FieldChip[] = [
   { key: "company",  label: "Company",    check: c => !!(c.company?.trim()) },
   { key: "title",    label: "Title",      check: c => !!(c.title?.trim()) },
   { key: "headline", label: "Headline",   check: c => !!(c.headline?.trim()) },
-  { key: "birthday", label: "Birthday",   check: c => !!(c.birthday?.trim() && !c.birthday.startsWith("0000")) },
+  { key: "birthday", label: "Birthday",   check: c => !!c.birthday?.trim() },
   { key: "location", label: "Location",   check: c => !!(c.location?.trim()) },
   { key: "linkedin", label: "LinkedIn",   check: c => !!(c.linkedin?.trim()) },
   { key: "twitter",  label: "Twitter",    check: c => !!(c.twitter?.trim()) },
@@ -451,7 +451,7 @@ export default function ImportContactsPage() {
             body: JSON.stringify({
               first: c.first, last: c.last, title: c.title, headline: c.headline, company: c.company,
               email: c.email, phone: c.phone,
-              birthday: c.birthday && !c.birthday.startsWith("0000") ? c.birthday : null,
+              birthday: c.birthday,
               closeness: c.closeness, tags, values: [], notes: c.notes, location: c.location,
               linkedin: c.linkedin, twitter: c.twitter, website: c.website, color, colorSoft,
             }),
@@ -1145,7 +1145,7 @@ function ContactReviewCard({
             <Field label="Phone"><input type="tel" value={contact.phone ?? ""} onChange={e => onChange({ phone: e.target.value || null })} placeholder="+1 555 000 0000" style={inputStyle} /></Field>
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px", marginBottom: "10px" }}>
-            <Field label="Birthday"><input type="text" value={contact.birthday && !contact.birthday.startsWith("0000") ? contact.birthday : ""} onChange={e => onChange({ birthday: e.target.value || null })} placeholder="YYYY-MM-DD" style={inputStyle} /></Field>
+            <Field label="Birthday"><input type="text" value={contact.birthday ?? ""} onChange={e => onChange({ birthday: e.target.value || null })} placeholder="MM-DD or YYYY-MM-DD" style={inputStyle} /></Field>
             <Field label="Location"><input type="text" value={contact.location ?? ""} onChange={e => onChange({ location: e.target.value || null })} placeholder="City, State" style={inputStyle} /></Field>
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "8px", marginBottom: "10px" }}>

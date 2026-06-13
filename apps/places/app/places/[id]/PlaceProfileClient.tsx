@@ -3,6 +3,7 @@
 import { useState } from "react"
 import Link from "next/link"
 import { BackLink, Button, Card, EmptyState } from "@life-os/ui"
+import { formatCurrency, formatDate as formatLocalDate, formatInteger, formatMonthYear } from "@/lib/format"
 
 type PlaceNote = {
   id: string
@@ -337,7 +338,7 @@ function HeaderStat({ label, value }: { label: string; value: string }) {
 function Metric({ label, value }: { label: string; value: number }) {
   return (
     <div style={{ border: "1px solid var(--border)", borderRadius: "8px", padding: "10px 12px", background: "var(--bg)" }}>
-      <div style={{ fontSize: "18px", color: "var(--ink)", fontWeight: 600 }}>{value.toLocaleString()}</div>
+      <div style={{ fontSize: "18px", color: "var(--ink)", fontWeight: 600 }}>{formatInteger(value)}</div>
       <div style={{ fontSize: "9px", color: "var(--ink-4)", textTransform: "uppercase", letterSpacing: "0.08em" }}>{label}</div>
     </div>
   )
@@ -414,15 +415,15 @@ function primaryMemorySignal(profile: PlaceProfile) {
 
 function formatDate(value?: string) {
   if (!value) return "None"
-  return new Intl.DateTimeFormat(undefined, { month: "short", day: "numeric", year: "numeric" }).format(new Date(value))
+  return formatLocalDate(value)
 }
 
 function monthYear(value: string) {
-  return new Intl.DateTimeFormat(undefined, { month: "long", year: "numeric" }).format(new Date(value))
+  return formatMonthYear(value)
 }
 
 function money(value: number) {
-  return new Intl.NumberFormat(undefined, { style: "currency", currency: "USD" }).format(value)
+  return formatCurrency(value)
 }
 
 function labelize(value: string) {

@@ -28,6 +28,7 @@ type MessageRow = {
   chatIdentifier: string | null
   chatDisplayName: string | null
   chatServiceName: string | null
+  chatParticipantCount: number | null
   service: string | null
 }
 
@@ -45,6 +46,7 @@ type Options = {
   dryRun: boolean
   initWatermark: boolean
   createMissing: boolean
+  includeGroupChats: boolean
   since: Date | null
 }
 
@@ -102,7 +104,7 @@ async function main() {
   do {
     const result = await syncOnce(options)
     console.log(
-      `iMessage sync: scanned=${result.scanned} createdPersons=${result.createdPersons} updatedPersons=${result.updatedPersons} createdInteractions=${result.createdInteractions} updatedInteractions=${result.updatedInteractions} stagedInteractions=${result.stagedInteractions} skippedExisting=${result.skippedExisting} watermark=${result.watermark}`
+      `iMessage sync: scanned=${result.scanned} createdPersons=${result.createdPersons} updatedPersons=${result.updatedPersons} createdInteractions=${result.createdInteractions} updatedInteractions=${result.updatedInteractions} stagedInteractions=${result.stagedInteractions} skippedExisting=${result.skippedExisting} skippedGroupMessages=${result.skippedGroupMessages} watermark=${result.watermark}`
     )
 
     if (!options.watch || shuttingDown) break
@@ -122,11 +124,17 @@ async function syncOnce(options: Options) {
   let updatedInteractions = 0
   let stagedInteractions = 0
   let skippedExisting = 0
+  let skippedGroupMessages = 0
   let watermark = state.lastMessageRowId
   const people = await loadPeopleIndex({ includeAutoCreated: options.createMissing })
 
   for (const message of messages) {
     watermark = Math.max(watermark, message.messageId)
+
+    if (!options.includeGroupChats && isGroupMessage(message)) {
+      skippedGroupMessages++
+      continue
+    }
 
     const identifier = normalizeIdentifier(message.handleId ?? message.uncanonicalizedId ?? message.chatIdentifier)
     if (!identifier) continue
@@ -185,7 +193,7 @@ async function syncOnce(options: Options) {
     writeState(options.statePath, { lastMessageRowId: watermark, updatedAt: new Date().toISOString() })
   }
 
-  return { scanned: messages.length, createdPersons, updatedPersons, createdInteractions, updatedInteractions, stagedInteractions, skippedExisting, watermark }
+  return { scanned: messages.length, createdPersons, updatedPersons, createdInteractions, updatedInteractions, stagedInteractions, skippedExisting, skippedGroupMessages, watermark }
 }
 
 function readMessages(chatDbPath: string, afterRowId: number, limit: number, since: Date | null): MessageRow[] {
@@ -209,6 +217,11 @@ function readMessages(chatDbPath: string, afterRowId: number, limit: number, sin
         chat.chat_identifier AS chatIdentifier,
         chat.display_name AS chatDisplayName,
         chat.service_name AS chatServiceName,
+        (
+          SELECT COUNT(DISTINCT chat_handle_join.handle_id)
+          FROM chat_handle_join
+          WHERE chat_handle_join.chat_id = chat.ROWID
+        ) AS chatParticipantCount,
         message.service AS service
       FROM message
       LEFT JOIN handle ON handle.ROWID = message.handle_id
@@ -660,6 +673,12 @@ function contactFromMessage(message: MessageRow, identifier: string) {
   }
 }
 
+function isGroupMessage(message: MessageRow) {
+  if ((message.chatParticipantCount ?? 0) > 1) return true
+  const chatIdentifier = message.chatIdentifier?.trim().toLowerCase()
+  return Boolean(chatIdentifier?.startsWith("chat"))
+}
+
 function extractMessageText(message: MessageRow): string | null {
   const text = message.text?.trim()
   if (text) return text
@@ -832,6 +851,7 @@ function parseArgs(args: string[]): Options {
     dryRun: false,
     initWatermark: false,
     createMissing: false,
+    includeGroupChats: process.env.IMESSAGE_SYNC_INCLUDE_GROUP_CHATS === "1",
     since: null,
   }
 
@@ -843,6 +863,7 @@ function parseArgs(args: string[]): Options {
     else if (arg === "--dry-run") options.dryRun = true
     else if (arg === "--init-watermark") options.initWatermark = true
     else if (arg === "--create-missing") options.createMissing = true
+    else if (arg === "--include-group-chats") options.includeGroupChats = true
     else if (arg === "--db" && next) options.chatDbPath = expandHome(next), i++
     else if (arg === "--state" && next) options.statePath = expandHome(next), i++
     else if (arg === "--interval-ms" && next) options.intervalMs = Number(next), i++
@@ -870,6 +891,7 @@ Options:
   --watch                Poll chat.db continuously for launchd-style use.
   --init-watermark       Set the watermark to the current latest message and exit.
   --create-missing       Create new People for unmatched phone/email handles.
+  --include-group-chats  Include group-chat messages. By default, group texts are ignored.
   --dry-run              Print planned work without writing to Persons.
   --db <path>            Path to chat.db. Defaults to ~/Library/Messages/chat.db.
   --state <path>         Watermark file. Defaults to ~/.life-os/imessage-sync-state.json.

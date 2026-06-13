@@ -1,7 +1,10 @@
 import { auth } from "@/auth"
 import { NextResponse } from "next/server"
+import { localReviewEnabled } from "@/lib/local-review"
 
 export default auth((req) => {
+  if (localReviewEnabled()) return NextResponse.next()
+
   // Already authenticated — let through
   if (req.auth) return NextResponse.next()
 

@@ -22,6 +22,7 @@
 
 import Anthropic from "@anthropic-ai/sdk"
 import type { ParsedContact } from "./vcard"
+import { normalizeBirthday } from "./birthday"
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
@@ -143,26 +144,4 @@ export function applyMapping(
       }
     })
     .filter(c => c.first || c.last || c.email)
-}
-
-// ── Birthday normalization ────────────────────────────────────────────────────
-
-function normalizeBirthday(raw: string | null): string | null {
-  if (!raw) return null
-  // Already YYYY-MM-DD
-  if (/^\d{4}-\d{2}-\d{2}$/.test(raw)) return raw
-  // YYYYMMDD
-  const m1 = raw.match(/^(\d{4})(\d{2})(\d{2})$/)
-  if (m1) return `${m1[1]}-${m1[2]}-${m1[3]}`
-  // M/D/YYYY or MM/DD/YYYY
-  const m2 = raw.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/)
-  if (m2) return `${m2[3]}-${m2[1].padStart(2, "0")}-${m2[2].padStart(2, "0")}`
-  // D Month YYYY
-  const m3 = raw.match(/^(\d{1,2})\s+(\w+)\s+(\d{4})$/)
-  if (m3) {
-    const months: Record<string, string> = { january:"01",february:"02",march:"03",april:"04",may:"05",june:"06",july:"07",august:"08",september:"09",october:"10",november:"11",december:"12" }
-    const mo = months[m3[2].toLowerCase()]
-    if (mo) return `${m3[3]}-${mo}-${m3[1].padStart(2, "0")}`
-  }
-  return null
 }

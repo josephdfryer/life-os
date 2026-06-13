@@ -1071,7 +1071,7 @@ function googleBirthday(date: GoogleBirthdayDate | undefined) {
   if (!date?.month || !date.day) return null
   const month = String(date.month).padStart(2, "0")
   const day = String(date.day).padStart(2, "0")
-  return `${date.year ?? "0000"}-${month}-${day}`
+  return date.year ? `${date.year}-${month}-${day}` : `--${month}-${day}`
 }
 
 function parseJsonList(value: string | null) {

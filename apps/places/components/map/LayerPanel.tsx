@@ -1,5 +1,7 @@
 "use client"
 
+import { formatInteger } from "@/lib/format"
+
 export type LayerId = "location" | "finance" | "photos" | "interactions" | "enrichment"
 
 export type LayerConfig = {
@@ -33,7 +35,7 @@ export function LayerPanel({ layers, onToggle }: { layers: LayerConfig[]; onTogg
             {layer.icon}
           </span>
           <span className="layer-toggle-label">{layer.label}</span>
-          <span className="layer-toggle-count">{layer.count.toLocaleString()}</span>
+          <span className="layer-toggle-count">{formatInteger(layer.count)}</span>
         </button>
       ))}
     </div>

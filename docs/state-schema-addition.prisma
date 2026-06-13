@@ -1,0 +1,107 @@
+// ─────────────────────────────────────────────
+// STATE LAYER
+// Add these two models to your existing schema.prisma
+// ─────────────────────────────────────────────
+
+// Controlled vocabulary — defines every valid state.
+// Seeded once, extended manually as needed.
+model StateDefinition {
+  id          String  @id @default(cuid())
+  workspaceId String
+  entityType  String  // "Person" | "Place" | "Object" | "Event" | "Plan" | "Group"
+  type        String  // see seed data below for full vocabulary
+  value       String
+  description String?
+  states      State[]
+
+  @@unique([workspaceId, entityType, type, value])
+  @@index([workspaceId, entityType])
+}
+
+// Append-only log of state transitions.
+// Never updated — only new records written.
+// Duration is always derived by diffing consecutive recordedAt values
+// for the same entityId + type combination.
+model State {
+  id           String          @id @default(cuid())
+  workspaceId  String
+  entityType   String          // "Person" | "Place" | "Object" | "Event" | "Plan" | "Group"
+  entityId     String          // FK to the relevant node
+  definitionId String
+  definition   StateDefinition @relation(fields: [definitionId], references: [id])
+  severity     Float?          // 0–1, optional signal strength
+  source       String?         // "manual" | "healthkit" | "pipeline" | "oura"
+  recordedAt   DateTime        // when this state was entered
+  createdAt    DateTime        @default(now())
+
+  @@index([workspaceId, entityId, entityType])
+  @@index([workspaceId, entityId, entityType, recordedAt])
+}
+
+// ─────────────────────────────────────────────
+// SEED DATA
+// Run this in your seed.ts to populate StateDefinition
+// ─────────────────────────────────────────────
+
+// Person states
+// { entityType: "Person", type: "capacity",     value: "depleted"      }
+// { entityType: "Person", type: "capacity",     value: "low"           }
+// { entityType: "Person", type: "capacity",     value: "optimal"       }
+// { entityType: "Person", type: "health",       value: "sick"          }
+// { entityType: "Person", type: "health",       value: "recovering"    }
+// { entityType: "Person", type: "health",       value: "healthy"       }
+// { entityType: "Person", type: "mood",         value: "low"           }
+// { entityType: "Person", type: "mood",         value: "neutral"       }
+// { entityType: "Person", type: "mood",         value: "elevated"      }
+// { entityType: "Person", type: "availability", value: "unavailable"   }
+// { entityType: "Person", type: "availability", value: "busy"          }
+// { entityType: "Person", type: "availability", value: "available"     }
+
+// Place states
+// { entityType: "Place", type: "availability",  value: "closed"        }
+// { entityType: "Place", type: "availability",  value: "open"          }
+// { entityType: "Place", type: "condition",     value: "degraded"      }
+// { entityType: "Place", type: "condition",     value: "functional"    }
+// { entityType: "Place", type: "condition",     value: "optimal"       }
+// { entityType: "Place", type: "access",        value: "restricted"    }
+// { entityType: "Place", type: "access",        value: "open"          }
+
+// Object states
+// { entityType: "Object", type: "condition",    value: "degraded"      }
+// { entityType: "Object", type: "condition",    value: "functional"    }
+// { entityType: "Object", type: "condition",    value: "optimal"       }
+// { entityType: "Object", type: "availability", value: "unavailable"   }
+// { entityType: "Object", type: "availability", value: "available"     }
+// { entityType: "Object", type: "ownership",    value: "owned"         }
+// { entityType: "Object", type: "ownership",    value: "loaned_out"    }
+// { entityType: "Object", type: "ownership",    value: "sold"          }
+
+// Event states
+// { entityType: "Event", type: "status",        value: "planned"       }
+// { entityType: "Event", type: "status",        value: "confirmed"     }
+// { entityType: "Event", type: "status",        value: "in_progress"   }
+// { entityType: "Event", type: "status",        value: "completed"     }
+// { entityType: "Event", type: "status",        value: "cancelled"     }
+// { entityType: "Event", type: "energy",        value: "low"           }
+// { entityType: "Event", type: "energy",        value: "neutral"       }
+// { entityType: "Event", type: "energy",        value: "high"          }
+
+// Plan states
+// { entityType: "Plan", type: "status",         value: "draft"         }
+// { entityType: "Plan", type: "status",         value: "active"        }
+// { entityType: "Plan", type: "status",         value: "blocked"       }
+// { entityType: "Plan", type: "status",         value: "completed"     }
+// { entityType: "Plan", type: "status",         value: "abandoned"     }
+// { entityType: "Plan", type: "momentum",       value: "stalled"       }
+// { entityType: "Plan", type: "momentum",       value: "slow"          }
+// { entityType: "Plan", type: "momentum",       value: "moving"        }
+// { entityType: "Plan", type: "momentum",       value: "fast"          }
+
+// Group states
+// { entityType: "Group", type: "status",        value: "forming"       }
+// { entityType: "Group", type: "status",        value: "active"        }
+// { entityType: "Group", type: "status",        value: "dormant"       }
+// { entityType: "Group", type: "status",        value: "disbanded"     }
+// { entityType: "Group", type: "cohesion",      value: "fragmented"    }
+// { entityType: "Group", type: "cohesion",      value: "neutral"       }
+// { entityType: "Group", type: "cohesion",      value: "strong"        }

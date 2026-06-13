@@ -5,6 +5,7 @@ import Link from "next/link"
 import { useRouter, useSearchParams } from "next/navigation"
 import { EmptyState } from "@life-os/ui"
 import { LayerPanel, type LayerConfig, type LayerId } from "@/components/map/LayerPanel"
+import { formatDate as formatLocalDate, formatInteger, formatRoundedCurrency } from "@/lib/format"
 
 type PlaceMapItem = {
   id: string
@@ -168,7 +169,7 @@ export default function PlacesClient({ places, layers }: { places: PlaceMapItem[
         <div>
           <h1 style={{ fontFamily: "var(--font-display)", fontSize: "28px", fontWeight: 600, margin: 0, color: "var(--ink)" }}>Places</h1>
           <div style={{ color: "var(--ink-3)", fontSize: "12px", marginTop: "4px" }}>
-            {places.length.toLocaleString()} {places.length === 1 ? "place" : "places"}
+            {formatInteger(places.length)} {places.length === 1 ? "place" : "places"}
             {totalSpend(filtered) > 0 && ` · ${money(totalSpend(filtered))} recorded spend`}
             {` · ${zoomLevelLabel}`}
           </div>
@@ -240,8 +241,8 @@ export default function PlacesClient({ places, layers }: { places: PlaceMapItem[
                 draggable={false}
                 style={{
                   position: "absolute",
-                  left: `${tile.left}px`,
-                  top: `${tile.top}px`,
+                  left: cssPixel(tile.left),
+                  top: cssPixel(tile.top),
                   width: "256px",
                   height: "256px",
                   userSelect: "none",
@@ -330,10 +331,10 @@ export default function PlacesClient({ places, layers }: { places: PlaceMapItem[
                     }}
                     style={{
                       position: "absolute",
-                      left: `${cluster.x}px`,
-                      top: `${cluster.y}px`,
-                      width: `${size}px`,
-                      height: `${size}px`,
+                      left: cssPixel(cluster.x),
+                      top: cssPixel(cluster.y),
+                      width: cssPixel(size),
+                      height: cssPixel(size),
                       transform: "translate(-50%, -50%)",
                       borderRadius: "50%",
                       border: selectedMarker ? "2px solid var(--ink)" : "1px solid #ffffff",
@@ -366,8 +367,8 @@ export default function PlacesClient({ places, layers }: { places: PlaceMapItem[
                 }}
                 style={{
                   position: "absolute",
-                  left: `${point.x}px`,
-                  top: `${point.y}px`,
+                  left: cssPixel(point.x),
+                  top: cssPixel(point.y),
                   width: "24px",
                   height: "24px",
                   transform: "translate(-50%, -50%)",
@@ -512,8 +513,8 @@ function PinBadge({ label, color, x, y }: { label: string; color: string; x: num
   return (
     <span style={{
       position: "absolute",
-      left: `${x}px`,
-      top: `${y}px`,
+      left: cssPixel(x),
+      top: cssPixel(y),
       minWidth: "16px",
       height: "16px",
       borderRadius: "999px",
@@ -543,8 +544,8 @@ function PhotoLayerPin({ item, x, y }: { item: PhotoLayerItem; x: number; y: num
       }}
       style={{
         position: "absolute",
-        left: `${x}px`,
-        top: `${y}px`,
+        left: cssPixel(x),
+        top: cssPixel(y),
         minWidth: "18px",
         height: "16px",
         borderRadius: "999px",
@@ -789,9 +790,13 @@ function markerSize(totalSpend: number, fallbackWeight: number) {
   return Math.max(16, Math.min(62, 12 + Math.log10(totalSpend + 1) * 14))
 }
 
+function cssPixel(value: number) {
+  return `${Math.round(value * 1000) / 1000}px`
+}
+
 function formatDate(value?: string) {
   if (!value) return "Never"
-  return new Intl.DateTimeFormat(undefined, { month: "short", day: "numeric", year: "numeric" }).format(new Date(value))
+  return formatLocalDate(value)
 }
 
 function coordinatesLabel(place: PlaceMapItem) {
@@ -837,7 +842,7 @@ function totalSpend(places: PlaceMapItem[]) {
 }
 
 function money(value: number) {
-  return new Intl.NumberFormat(undefined, { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(value)
+  return formatRoundedCurrency(value)
 }
 
 function shortGroupLabel(label: string) {

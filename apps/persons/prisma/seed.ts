@@ -3,6 +3,13 @@ import { db } from "@life-os/db"
 import { assignColor } from "../lib/colors"
 
 async function main() {
+  if (process.env.TURSO_DATABASE_URL && process.env.ALLOW_DESTRUCTIVE_SEED !== "I_UNDERSTAND") {
+    throw new Error(
+      "Refusing to run the destructive demo seed against Turso. " +
+      "Set ALLOW_DESTRUCTIVE_SEED=I_UNDERSTAND only when replacing remote data is intentional."
+    )
+  }
+
   // Clear existing data
   await db.interaction.deleteMany()
   await db.plan.deleteMany()
