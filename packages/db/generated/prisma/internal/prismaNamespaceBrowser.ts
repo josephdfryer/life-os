@@ -73,6 +73,7 @@ export const ModelName = {
   Event: 'Event',
   Interaction: 'Interaction',
   Plan: 'Plan',
+  PlanExpectedPerson: 'PlanExpectedPerson',
   Place: 'Place',
   ImportJob: 'ImportJob',
   ImportStagedVisit: 'ImportStagedVisit',
@@ -427,11 +428,15 @@ export const EventScalarFieldEnum = {
   createdAt: 'createdAt',
   name: 'name',
   type: 'type',
+  start: 'start',
+  end: 'end',
   timestamp: 'timestamp',
   placeId: 'placeId',
   notes: 'notes',
   transcript: 'transcript',
-  metadata: 'metadata'
+  metadata: 'metadata',
+  sourcePlanId: 'sourcePlanId',
+  parentEventId: 'parentEventId'
 } as const
 
 export type EventScalarFieldEnum = (typeof EventScalarFieldEnum)[keyof typeof EventScalarFieldEnum]
@@ -470,10 +475,24 @@ export const PlanScalarFieldEnum = {
   timescale: 'timescale',
   successSignals: 'successSignals',
   status: 'status',
-  parentId: 'parentId'
+  parentId: 'parentId',
+  scheduledStart: 'scheduledStart',
+  scheduledEnd: 'scheduledEnd',
+  placeId: 'placeId',
+  externalSource: 'externalSource',
+  externalInstanceId: 'externalInstanceId'
 } as const
 
 export type PlanScalarFieldEnum = (typeof PlanScalarFieldEnum)[keyof typeof PlanScalarFieldEnum]
+
+
+export const PlanExpectedPersonScalarFieldEnum = {
+  planId: 'planId',
+  personId: 'personId',
+  workspaceId: 'workspaceId'
+} as const
+
+export type PlanExpectedPersonScalarFieldEnum = (typeof PlanExpectedPersonScalarFieldEnum)[keyof typeof PlanExpectedPersonScalarFieldEnum]
 
 
 export const PlaceScalarFieldEnum = {

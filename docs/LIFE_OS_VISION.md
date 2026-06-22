@@ -1,5 +1,7 @@
 # Life OS — Vision and Ethos
 
+> **Start with `docs/MANIFESTO.md`.** That is the founding document — the authoritative statement of what this project is, the eight primitives, and every design principle. This file is a companion, not the source of truth.
+
 *Based on "The Context Manifesto" by Joseph Fryer*
 
 ---

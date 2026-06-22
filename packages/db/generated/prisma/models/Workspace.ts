@@ -221,6 +221,7 @@ export type WorkspaceWhereInput = {
   gmailMessageLinks?: Prisma.GmailMessageLinkListRelationFilter
   importJobs?: Prisma.ImportJobListRelationFilter
   importStagedVisits?: Prisma.ImportStagedVisitListRelationFilter
+  planExpectedPersons?: Prisma.PlanExpectedPersonListRelationFilter
 }
 
 export type WorkspaceOrderByWithRelationInput = {
@@ -254,6 +255,7 @@ export type WorkspaceOrderByWithRelationInput = {
   gmailMessageLinks?: Prisma.GmailMessageLinkOrderByRelationAggregateInput
   importJobs?: Prisma.ImportJobOrderByRelationAggregateInput
   importStagedVisits?: Prisma.ImportStagedVisitOrderByRelationAggregateInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonOrderByRelationAggregateInput
 }
 
 export type WorkspaceWhereUniqueInput = Prisma.AtLeast<{
@@ -290,6 +292,7 @@ export type WorkspaceWhereUniqueInput = Prisma.AtLeast<{
   gmailMessageLinks?: Prisma.GmailMessageLinkListRelationFilter
   importJobs?: Prisma.ImportJobListRelationFilter
   importStagedVisits?: Prisma.ImportStagedVisitListRelationFilter
+  planExpectedPersons?: Prisma.PlanExpectedPersonListRelationFilter
 }, "id" | "slug">
 
 export type WorkspaceOrderByWithAggregationInput = {
@@ -348,6 +351,7 @@ export type WorkspaceCreateInput = {
   gmailMessageLinks?: Prisma.GmailMessageLinkCreateNestedManyWithoutWorkspaceInput
   importJobs?: Prisma.ImportJobCreateNestedManyWithoutWorkspaceInput
   importStagedVisits?: Prisma.ImportStagedVisitCreateNestedManyWithoutWorkspaceInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateInput = {
@@ -380,6 +384,7 @@ export type WorkspaceUncheckedCreateInput = {
   gmailMessageLinks?: Prisma.GmailMessageLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   importJobs?: Prisma.ImportJobUncheckedCreateNestedManyWithoutWorkspaceInput
   importStagedVisits?: Prisma.ImportStagedVisitUncheckedCreateNestedManyWithoutWorkspaceInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUpdateInput = {
@@ -412,6 +417,7 @@ export type WorkspaceUpdateInput = {
   gmailMessageLinks?: Prisma.GmailMessageLinkUpdateManyWithoutWorkspaceNestedInput
   importJobs?: Prisma.ImportJobUpdateManyWithoutWorkspaceNestedInput
   importStagedVisits?: Prisma.ImportStagedVisitUpdateManyWithoutWorkspaceNestedInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateInput = {
@@ -444,6 +450,7 @@ export type WorkspaceUncheckedUpdateInput = {
   gmailMessageLinks?: Prisma.GmailMessageLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   importJobs?: Prisma.ImportJobUncheckedUpdateManyWithoutWorkspaceNestedInput
   importStagedVisits?: Prisma.ImportStagedVisitUncheckedUpdateManyWithoutWorkspaceNestedInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateManyInput = {
@@ -793,6 +800,20 @@ export type WorkspaceUpdateOneRequiredWithoutPlansNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.WorkspaceUpdateToOneWithWhereWithoutPlansInput, Prisma.WorkspaceUpdateWithoutPlansInput>, Prisma.WorkspaceUncheckedUpdateWithoutPlansInput>
 }
 
+export type WorkspaceCreateNestedOneWithoutPlanExpectedPersonsInput = {
+  create?: Prisma.XOR<Prisma.WorkspaceCreateWithoutPlanExpectedPersonsInput, Prisma.WorkspaceUncheckedCreateWithoutPlanExpectedPersonsInput>
+  connectOrCreate?: Prisma.WorkspaceCreateOrConnectWithoutPlanExpectedPersonsInput
+  connect?: Prisma.WorkspaceWhereUniqueInput
+}
+
+export type WorkspaceUpdateOneRequiredWithoutPlanExpectedPersonsNestedInput = {
+  create?: Prisma.XOR<Prisma.WorkspaceCreateWithoutPlanExpectedPersonsInput, Prisma.WorkspaceUncheckedCreateWithoutPlanExpectedPersonsInput>
+  connectOrCreate?: Prisma.WorkspaceCreateOrConnectWithoutPlanExpectedPersonsInput
+  upsert?: Prisma.WorkspaceUpsertWithoutPlanExpectedPersonsInput
+  connect?: Prisma.WorkspaceWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.WorkspaceUpdateToOneWithWhereWithoutPlanExpectedPersonsInput, Prisma.WorkspaceUpdateWithoutPlanExpectedPersonsInput>, Prisma.WorkspaceUncheckedUpdateWithoutPlanExpectedPersonsInput>
+}
+
 export type WorkspaceCreateNestedOneWithoutPlacesInput = {
   create?: Prisma.XOR<Prisma.WorkspaceCreateWithoutPlacesInput, Prisma.WorkspaceUncheckedCreateWithoutPlacesInput>
   connectOrCreate?: Prisma.WorkspaceCreateOrConnectWithoutPlacesInput
@@ -920,6 +941,7 @@ export type WorkspaceCreateWithoutMembersInput = {
   gmailMessageLinks?: Prisma.GmailMessageLinkCreateNestedManyWithoutWorkspaceInput
   importJobs?: Prisma.ImportJobCreateNestedManyWithoutWorkspaceInput
   importStagedVisits?: Prisma.ImportStagedVisitCreateNestedManyWithoutWorkspaceInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutMembersInput = {
@@ -951,6 +973,7 @@ export type WorkspaceUncheckedCreateWithoutMembersInput = {
   gmailMessageLinks?: Prisma.GmailMessageLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   importJobs?: Prisma.ImportJobUncheckedCreateNestedManyWithoutWorkspaceInput
   importStagedVisits?: Prisma.ImportStagedVisitUncheckedCreateNestedManyWithoutWorkspaceInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutMembersInput = {
@@ -998,6 +1021,7 @@ export type WorkspaceUpdateWithoutMembersInput = {
   gmailMessageLinks?: Prisma.GmailMessageLinkUpdateManyWithoutWorkspaceNestedInput
   importJobs?: Prisma.ImportJobUpdateManyWithoutWorkspaceNestedInput
   importStagedVisits?: Prisma.ImportStagedVisitUpdateManyWithoutWorkspaceNestedInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutMembersInput = {
@@ -1029,6 +1053,7 @@ export type WorkspaceUncheckedUpdateWithoutMembersInput = {
   gmailMessageLinks?: Prisma.GmailMessageLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   importJobs?: Prisma.ImportJobUncheckedUpdateManyWithoutWorkspaceNestedInput
   importStagedVisits?: Prisma.ImportStagedVisitUncheckedUpdateManyWithoutWorkspaceNestedInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutApprovedEmailsInput = {
@@ -1060,6 +1085,7 @@ export type WorkspaceCreateWithoutApprovedEmailsInput = {
   gmailMessageLinks?: Prisma.GmailMessageLinkCreateNestedManyWithoutWorkspaceInput
   importJobs?: Prisma.ImportJobCreateNestedManyWithoutWorkspaceInput
   importStagedVisits?: Prisma.ImportStagedVisitCreateNestedManyWithoutWorkspaceInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutApprovedEmailsInput = {
@@ -1091,6 +1117,7 @@ export type WorkspaceUncheckedCreateWithoutApprovedEmailsInput = {
   gmailMessageLinks?: Prisma.GmailMessageLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   importJobs?: Prisma.ImportJobUncheckedCreateNestedManyWithoutWorkspaceInput
   importStagedVisits?: Prisma.ImportStagedVisitUncheckedCreateNestedManyWithoutWorkspaceInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutApprovedEmailsInput = {
@@ -1138,6 +1165,7 @@ export type WorkspaceUpdateWithoutApprovedEmailsInput = {
   gmailMessageLinks?: Prisma.GmailMessageLinkUpdateManyWithoutWorkspaceNestedInput
   importJobs?: Prisma.ImportJobUpdateManyWithoutWorkspaceNestedInput
   importStagedVisits?: Prisma.ImportStagedVisitUpdateManyWithoutWorkspaceNestedInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutApprovedEmailsInput = {
@@ -1169,6 +1197,7 @@ export type WorkspaceUncheckedUpdateWithoutApprovedEmailsInput = {
   gmailMessageLinks?: Prisma.GmailMessageLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   importJobs?: Prisma.ImportJobUncheckedUpdateManyWithoutWorkspaceNestedInput
   importStagedVisits?: Prisma.ImportStagedVisitUncheckedUpdateManyWithoutWorkspaceNestedInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutPersonsInput = {
@@ -1200,6 +1229,7 @@ export type WorkspaceCreateWithoutPersonsInput = {
   gmailMessageLinks?: Prisma.GmailMessageLinkCreateNestedManyWithoutWorkspaceInput
   importJobs?: Prisma.ImportJobCreateNestedManyWithoutWorkspaceInput
   importStagedVisits?: Prisma.ImportStagedVisitCreateNestedManyWithoutWorkspaceInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutPersonsInput = {
@@ -1231,6 +1261,7 @@ export type WorkspaceUncheckedCreateWithoutPersonsInput = {
   gmailMessageLinks?: Prisma.GmailMessageLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   importJobs?: Prisma.ImportJobUncheckedCreateNestedManyWithoutWorkspaceInput
   importStagedVisits?: Prisma.ImportStagedVisitUncheckedCreateNestedManyWithoutWorkspaceInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutPersonsInput = {
@@ -1278,6 +1309,7 @@ export type WorkspaceUpdateWithoutPersonsInput = {
   gmailMessageLinks?: Prisma.GmailMessageLinkUpdateManyWithoutWorkspaceNestedInput
   importJobs?: Prisma.ImportJobUpdateManyWithoutWorkspaceNestedInput
   importStagedVisits?: Prisma.ImportStagedVisitUpdateManyWithoutWorkspaceNestedInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutPersonsInput = {
@@ -1309,6 +1341,7 @@ export type WorkspaceUncheckedUpdateWithoutPersonsInput = {
   gmailMessageLinks?: Prisma.GmailMessageLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   importJobs?: Prisma.ImportJobUncheckedUpdateManyWithoutWorkspaceNestedInput
   importStagedVisits?: Prisma.ImportStagedVisitUncheckedUpdateManyWithoutWorkspaceNestedInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutOwnerUserInput = {
@@ -1340,6 +1373,7 @@ export type WorkspaceCreateWithoutOwnerUserInput = {
   gmailMessageLinks?: Prisma.GmailMessageLinkCreateNestedManyWithoutWorkspaceInput
   importJobs?: Prisma.ImportJobCreateNestedManyWithoutWorkspaceInput
   importStagedVisits?: Prisma.ImportStagedVisitCreateNestedManyWithoutWorkspaceInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutOwnerUserInput = {
@@ -1371,6 +1405,7 @@ export type WorkspaceUncheckedCreateWithoutOwnerUserInput = {
   gmailMessageLinks?: Prisma.GmailMessageLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   importJobs?: Prisma.ImportJobUncheckedCreateNestedManyWithoutWorkspaceInput
   importStagedVisits?: Prisma.ImportStagedVisitUncheckedCreateNestedManyWithoutWorkspaceInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutOwnerUserInput = {
@@ -1440,6 +1475,7 @@ export type WorkspaceCreateWithoutApiKeysInput = {
   gmailMessageLinks?: Prisma.GmailMessageLinkCreateNestedManyWithoutWorkspaceInput
   importJobs?: Prisma.ImportJobCreateNestedManyWithoutWorkspaceInput
   importStagedVisits?: Prisma.ImportStagedVisitCreateNestedManyWithoutWorkspaceInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutApiKeysInput = {
@@ -1471,6 +1507,7 @@ export type WorkspaceUncheckedCreateWithoutApiKeysInput = {
   gmailMessageLinks?: Prisma.GmailMessageLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   importJobs?: Prisma.ImportJobUncheckedCreateNestedManyWithoutWorkspaceInput
   importStagedVisits?: Prisma.ImportStagedVisitUncheckedCreateNestedManyWithoutWorkspaceInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutApiKeysInput = {
@@ -1518,6 +1555,7 @@ export type WorkspaceUpdateWithoutApiKeysInput = {
   gmailMessageLinks?: Prisma.GmailMessageLinkUpdateManyWithoutWorkspaceNestedInput
   importJobs?: Prisma.ImportJobUpdateManyWithoutWorkspaceNestedInput
   importStagedVisits?: Prisma.ImportStagedVisitUpdateManyWithoutWorkspaceNestedInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutApiKeysInput = {
@@ -1549,6 +1587,7 @@ export type WorkspaceUncheckedUpdateWithoutApiKeysInput = {
   gmailMessageLinks?: Prisma.GmailMessageLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   importJobs?: Prisma.ImportJobUncheckedUpdateManyWithoutWorkspaceNestedInput
   importStagedVisits?: Prisma.ImportStagedVisitUncheckedUpdateManyWithoutWorkspaceNestedInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutAuditLogsInput = {
@@ -1580,6 +1619,7 @@ export type WorkspaceCreateWithoutAuditLogsInput = {
   gmailMessageLinks?: Prisma.GmailMessageLinkCreateNestedManyWithoutWorkspaceInput
   importJobs?: Prisma.ImportJobCreateNestedManyWithoutWorkspaceInput
   importStagedVisits?: Prisma.ImportStagedVisitCreateNestedManyWithoutWorkspaceInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutAuditLogsInput = {
@@ -1611,6 +1651,7 @@ export type WorkspaceUncheckedCreateWithoutAuditLogsInput = {
   gmailMessageLinks?: Prisma.GmailMessageLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   importJobs?: Prisma.ImportJobUncheckedCreateNestedManyWithoutWorkspaceInput
   importStagedVisits?: Prisma.ImportStagedVisitUncheckedCreateNestedManyWithoutWorkspaceInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutAuditLogsInput = {
@@ -1658,6 +1699,7 @@ export type WorkspaceUpdateWithoutAuditLogsInput = {
   gmailMessageLinks?: Prisma.GmailMessageLinkUpdateManyWithoutWorkspaceNestedInput
   importJobs?: Prisma.ImportJobUpdateManyWithoutWorkspaceNestedInput
   importStagedVisits?: Prisma.ImportStagedVisitUpdateManyWithoutWorkspaceNestedInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutAuditLogsInput = {
@@ -1689,6 +1731,7 @@ export type WorkspaceUncheckedUpdateWithoutAuditLogsInput = {
   gmailMessageLinks?: Prisma.GmailMessageLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   importJobs?: Prisma.ImportJobUncheckedUpdateManyWithoutWorkspaceNestedInput
   importStagedVisits?: Prisma.ImportStagedVisitUncheckedUpdateManyWithoutWorkspaceNestedInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutCalendarConnectionsInput = {
@@ -1720,6 +1763,7 @@ export type WorkspaceCreateWithoutCalendarConnectionsInput = {
   gmailMessageLinks?: Prisma.GmailMessageLinkCreateNestedManyWithoutWorkspaceInput
   importJobs?: Prisma.ImportJobCreateNestedManyWithoutWorkspaceInput
   importStagedVisits?: Prisma.ImportStagedVisitCreateNestedManyWithoutWorkspaceInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutCalendarConnectionsInput = {
@@ -1751,6 +1795,7 @@ export type WorkspaceUncheckedCreateWithoutCalendarConnectionsInput = {
   gmailMessageLinks?: Prisma.GmailMessageLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   importJobs?: Prisma.ImportJobUncheckedCreateNestedManyWithoutWorkspaceInput
   importStagedVisits?: Prisma.ImportStagedVisitUncheckedCreateNestedManyWithoutWorkspaceInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutCalendarConnectionsInput = {
@@ -1798,6 +1843,7 @@ export type WorkspaceUpdateWithoutCalendarConnectionsInput = {
   gmailMessageLinks?: Prisma.GmailMessageLinkUpdateManyWithoutWorkspaceNestedInput
   importJobs?: Prisma.ImportJobUpdateManyWithoutWorkspaceNestedInput
   importStagedVisits?: Prisma.ImportStagedVisitUpdateManyWithoutWorkspaceNestedInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutCalendarConnectionsInput = {
@@ -1829,6 +1875,7 @@ export type WorkspaceUncheckedUpdateWithoutCalendarConnectionsInput = {
   gmailMessageLinks?: Prisma.GmailMessageLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   importJobs?: Prisma.ImportJobUncheckedUpdateManyWithoutWorkspaceNestedInput
   importStagedVisits?: Prisma.ImportStagedVisitUncheckedUpdateManyWithoutWorkspaceNestedInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutCalendarEventLinksInput = {
@@ -1860,6 +1907,7 @@ export type WorkspaceCreateWithoutCalendarEventLinksInput = {
   gmailMessageLinks?: Prisma.GmailMessageLinkCreateNestedManyWithoutWorkspaceInput
   importJobs?: Prisma.ImportJobCreateNestedManyWithoutWorkspaceInput
   importStagedVisits?: Prisma.ImportStagedVisitCreateNestedManyWithoutWorkspaceInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutCalendarEventLinksInput = {
@@ -1891,6 +1939,7 @@ export type WorkspaceUncheckedCreateWithoutCalendarEventLinksInput = {
   gmailMessageLinks?: Prisma.GmailMessageLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   importJobs?: Prisma.ImportJobUncheckedCreateNestedManyWithoutWorkspaceInput
   importStagedVisits?: Prisma.ImportStagedVisitUncheckedCreateNestedManyWithoutWorkspaceInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutCalendarEventLinksInput = {
@@ -1938,6 +1987,7 @@ export type WorkspaceUpdateWithoutCalendarEventLinksInput = {
   gmailMessageLinks?: Prisma.GmailMessageLinkUpdateManyWithoutWorkspaceNestedInput
   importJobs?: Prisma.ImportJobUpdateManyWithoutWorkspaceNestedInput
   importStagedVisits?: Prisma.ImportStagedVisitUpdateManyWithoutWorkspaceNestedInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutCalendarEventLinksInput = {
@@ -1969,6 +2019,7 @@ export type WorkspaceUncheckedUpdateWithoutCalendarEventLinksInput = {
   gmailMessageLinks?: Prisma.GmailMessageLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   importJobs?: Prisma.ImportJobUncheckedUpdateManyWithoutWorkspaceNestedInput
   importStagedVisits?: Prisma.ImportStagedVisitUncheckedUpdateManyWithoutWorkspaceNestedInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutGmailConnectionsInput = {
@@ -2000,6 +2051,7 @@ export type WorkspaceCreateWithoutGmailConnectionsInput = {
   gmailMessageLinks?: Prisma.GmailMessageLinkCreateNestedManyWithoutWorkspaceInput
   importJobs?: Prisma.ImportJobCreateNestedManyWithoutWorkspaceInput
   importStagedVisits?: Prisma.ImportStagedVisitCreateNestedManyWithoutWorkspaceInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutGmailConnectionsInput = {
@@ -2031,6 +2083,7 @@ export type WorkspaceUncheckedCreateWithoutGmailConnectionsInput = {
   gmailMessageLinks?: Prisma.GmailMessageLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   importJobs?: Prisma.ImportJobUncheckedCreateNestedManyWithoutWorkspaceInput
   importStagedVisits?: Prisma.ImportStagedVisitUncheckedCreateNestedManyWithoutWorkspaceInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutGmailConnectionsInput = {
@@ -2078,6 +2131,7 @@ export type WorkspaceUpdateWithoutGmailConnectionsInput = {
   gmailMessageLinks?: Prisma.GmailMessageLinkUpdateManyWithoutWorkspaceNestedInput
   importJobs?: Prisma.ImportJobUpdateManyWithoutWorkspaceNestedInput
   importStagedVisits?: Prisma.ImportStagedVisitUpdateManyWithoutWorkspaceNestedInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutGmailConnectionsInput = {
@@ -2109,6 +2163,7 @@ export type WorkspaceUncheckedUpdateWithoutGmailConnectionsInput = {
   gmailMessageLinks?: Prisma.GmailMessageLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   importJobs?: Prisma.ImportJobUncheckedUpdateManyWithoutWorkspaceNestedInput
   importStagedVisits?: Prisma.ImportStagedVisitUncheckedUpdateManyWithoutWorkspaceNestedInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutGmailMessageLinksInput = {
@@ -2140,6 +2195,7 @@ export type WorkspaceCreateWithoutGmailMessageLinksInput = {
   gmailConnections?: Prisma.GmailConnectionCreateNestedManyWithoutWorkspaceInput
   importJobs?: Prisma.ImportJobCreateNestedManyWithoutWorkspaceInput
   importStagedVisits?: Prisma.ImportStagedVisitCreateNestedManyWithoutWorkspaceInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutGmailMessageLinksInput = {
@@ -2171,6 +2227,7 @@ export type WorkspaceUncheckedCreateWithoutGmailMessageLinksInput = {
   gmailConnections?: Prisma.GmailConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
   importJobs?: Prisma.ImportJobUncheckedCreateNestedManyWithoutWorkspaceInput
   importStagedVisits?: Prisma.ImportStagedVisitUncheckedCreateNestedManyWithoutWorkspaceInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutGmailMessageLinksInput = {
@@ -2218,6 +2275,7 @@ export type WorkspaceUpdateWithoutGmailMessageLinksInput = {
   gmailConnections?: Prisma.GmailConnectionUpdateManyWithoutWorkspaceNestedInput
   importJobs?: Prisma.ImportJobUpdateManyWithoutWorkspaceNestedInput
   importStagedVisits?: Prisma.ImportStagedVisitUpdateManyWithoutWorkspaceNestedInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutGmailMessageLinksInput = {
@@ -2249,6 +2307,7 @@ export type WorkspaceUncheckedUpdateWithoutGmailMessageLinksInput = {
   gmailConnections?: Prisma.GmailConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
   importJobs?: Prisma.ImportJobUncheckedUpdateManyWithoutWorkspaceNestedInput
   importStagedVisits?: Prisma.ImportStagedVisitUncheckedUpdateManyWithoutWorkspaceNestedInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutRulesInput = {
@@ -2280,6 +2339,7 @@ export type WorkspaceCreateWithoutRulesInput = {
   gmailMessageLinks?: Prisma.GmailMessageLinkCreateNestedManyWithoutWorkspaceInput
   importJobs?: Prisma.ImportJobCreateNestedManyWithoutWorkspaceInput
   importStagedVisits?: Prisma.ImportStagedVisitCreateNestedManyWithoutWorkspaceInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutRulesInput = {
@@ -2311,6 +2371,7 @@ export type WorkspaceUncheckedCreateWithoutRulesInput = {
   gmailMessageLinks?: Prisma.GmailMessageLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   importJobs?: Prisma.ImportJobUncheckedCreateNestedManyWithoutWorkspaceInput
   importStagedVisits?: Prisma.ImportStagedVisitUncheckedCreateNestedManyWithoutWorkspaceInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutRulesInput = {
@@ -2358,6 +2419,7 @@ export type WorkspaceUpdateWithoutRulesInput = {
   gmailMessageLinks?: Prisma.GmailMessageLinkUpdateManyWithoutWorkspaceNestedInput
   importJobs?: Prisma.ImportJobUpdateManyWithoutWorkspaceNestedInput
   importStagedVisits?: Prisma.ImportStagedVisitUpdateManyWithoutWorkspaceNestedInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutRulesInput = {
@@ -2389,6 +2451,7 @@ export type WorkspaceUncheckedUpdateWithoutRulesInput = {
   gmailMessageLinks?: Prisma.GmailMessageLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   importJobs?: Prisma.ImportJobUncheckedUpdateManyWithoutWorkspaceNestedInput
   importStagedVisits?: Prisma.ImportStagedVisitUncheckedUpdateManyWithoutWorkspaceNestedInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutRuleRunsInput = {
@@ -2420,6 +2483,7 @@ export type WorkspaceCreateWithoutRuleRunsInput = {
   gmailMessageLinks?: Prisma.GmailMessageLinkCreateNestedManyWithoutWorkspaceInput
   importJobs?: Prisma.ImportJobCreateNestedManyWithoutWorkspaceInput
   importStagedVisits?: Prisma.ImportStagedVisitCreateNestedManyWithoutWorkspaceInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutRuleRunsInput = {
@@ -2451,6 +2515,7 @@ export type WorkspaceUncheckedCreateWithoutRuleRunsInput = {
   gmailMessageLinks?: Prisma.GmailMessageLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   importJobs?: Prisma.ImportJobUncheckedCreateNestedManyWithoutWorkspaceInput
   importStagedVisits?: Prisma.ImportStagedVisitUncheckedCreateNestedManyWithoutWorkspaceInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutRuleRunsInput = {
@@ -2498,6 +2563,7 @@ export type WorkspaceUpdateWithoutRuleRunsInput = {
   gmailMessageLinks?: Prisma.GmailMessageLinkUpdateManyWithoutWorkspaceNestedInput
   importJobs?: Prisma.ImportJobUpdateManyWithoutWorkspaceNestedInput
   importStagedVisits?: Prisma.ImportStagedVisitUpdateManyWithoutWorkspaceNestedInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutRuleRunsInput = {
@@ -2529,6 +2595,7 @@ export type WorkspaceUncheckedUpdateWithoutRuleRunsInput = {
   gmailMessageLinks?: Prisma.GmailMessageLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   importJobs?: Prisma.ImportJobUncheckedUpdateManyWithoutWorkspaceNestedInput
   importStagedVisits?: Prisma.ImportStagedVisitUncheckedUpdateManyWithoutWorkspaceNestedInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutStagedItemsInput = {
@@ -2560,6 +2627,7 @@ export type WorkspaceCreateWithoutStagedItemsInput = {
   gmailMessageLinks?: Prisma.GmailMessageLinkCreateNestedManyWithoutWorkspaceInput
   importJobs?: Prisma.ImportJobCreateNestedManyWithoutWorkspaceInput
   importStagedVisits?: Prisma.ImportStagedVisitCreateNestedManyWithoutWorkspaceInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutStagedItemsInput = {
@@ -2591,6 +2659,7 @@ export type WorkspaceUncheckedCreateWithoutStagedItemsInput = {
   gmailMessageLinks?: Prisma.GmailMessageLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   importJobs?: Prisma.ImportJobUncheckedCreateNestedManyWithoutWorkspaceInput
   importStagedVisits?: Prisma.ImportStagedVisitUncheckedCreateNestedManyWithoutWorkspaceInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutStagedItemsInput = {
@@ -2638,6 +2707,7 @@ export type WorkspaceUpdateWithoutStagedItemsInput = {
   gmailMessageLinks?: Prisma.GmailMessageLinkUpdateManyWithoutWorkspaceNestedInput
   importJobs?: Prisma.ImportJobUpdateManyWithoutWorkspaceNestedInput
   importStagedVisits?: Prisma.ImportStagedVisitUpdateManyWithoutWorkspaceNestedInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutStagedItemsInput = {
@@ -2669,6 +2739,7 @@ export type WorkspaceUncheckedUpdateWithoutStagedItemsInput = {
   gmailMessageLinks?: Prisma.GmailMessageLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   importJobs?: Prisma.ImportJobUncheckedUpdateManyWithoutWorkspaceNestedInput
   importStagedVisits?: Prisma.ImportStagedVisitUncheckedUpdateManyWithoutWorkspaceNestedInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutEventsInput = {
@@ -2700,6 +2771,7 @@ export type WorkspaceCreateWithoutEventsInput = {
   gmailMessageLinks?: Prisma.GmailMessageLinkCreateNestedManyWithoutWorkspaceInput
   importJobs?: Prisma.ImportJobCreateNestedManyWithoutWorkspaceInput
   importStagedVisits?: Prisma.ImportStagedVisitCreateNestedManyWithoutWorkspaceInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutEventsInput = {
@@ -2731,6 +2803,7 @@ export type WorkspaceUncheckedCreateWithoutEventsInput = {
   gmailMessageLinks?: Prisma.GmailMessageLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   importJobs?: Prisma.ImportJobUncheckedCreateNestedManyWithoutWorkspaceInput
   importStagedVisits?: Prisma.ImportStagedVisitUncheckedCreateNestedManyWithoutWorkspaceInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutEventsInput = {
@@ -2778,6 +2851,7 @@ export type WorkspaceUpdateWithoutEventsInput = {
   gmailMessageLinks?: Prisma.GmailMessageLinkUpdateManyWithoutWorkspaceNestedInput
   importJobs?: Prisma.ImportJobUpdateManyWithoutWorkspaceNestedInput
   importStagedVisits?: Prisma.ImportStagedVisitUpdateManyWithoutWorkspaceNestedInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutEventsInput = {
@@ -2809,6 +2883,7 @@ export type WorkspaceUncheckedUpdateWithoutEventsInput = {
   gmailMessageLinks?: Prisma.GmailMessageLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   importJobs?: Prisma.ImportJobUncheckedUpdateManyWithoutWorkspaceNestedInput
   importStagedVisits?: Prisma.ImportStagedVisitUncheckedUpdateManyWithoutWorkspaceNestedInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutInteractionsInput = {
@@ -2840,6 +2915,7 @@ export type WorkspaceCreateWithoutInteractionsInput = {
   gmailMessageLinks?: Prisma.GmailMessageLinkCreateNestedManyWithoutWorkspaceInput
   importJobs?: Prisma.ImportJobCreateNestedManyWithoutWorkspaceInput
   importStagedVisits?: Prisma.ImportStagedVisitCreateNestedManyWithoutWorkspaceInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutInteractionsInput = {
@@ -2871,6 +2947,7 @@ export type WorkspaceUncheckedCreateWithoutInteractionsInput = {
   gmailMessageLinks?: Prisma.GmailMessageLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   importJobs?: Prisma.ImportJobUncheckedCreateNestedManyWithoutWorkspaceInput
   importStagedVisits?: Prisma.ImportStagedVisitUncheckedCreateNestedManyWithoutWorkspaceInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutInteractionsInput = {
@@ -2918,6 +2995,7 @@ export type WorkspaceUpdateWithoutInteractionsInput = {
   gmailMessageLinks?: Prisma.GmailMessageLinkUpdateManyWithoutWorkspaceNestedInput
   importJobs?: Prisma.ImportJobUpdateManyWithoutWorkspaceNestedInput
   importStagedVisits?: Prisma.ImportStagedVisitUpdateManyWithoutWorkspaceNestedInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutInteractionsInput = {
@@ -2949,6 +3027,7 @@ export type WorkspaceUncheckedUpdateWithoutInteractionsInput = {
   gmailMessageLinks?: Prisma.GmailMessageLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   importJobs?: Prisma.ImportJobUncheckedUpdateManyWithoutWorkspaceNestedInput
   importStagedVisits?: Prisma.ImportStagedVisitUncheckedUpdateManyWithoutWorkspaceNestedInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutPlansInput = {
@@ -2980,6 +3059,7 @@ export type WorkspaceCreateWithoutPlansInput = {
   gmailMessageLinks?: Prisma.GmailMessageLinkCreateNestedManyWithoutWorkspaceInput
   importJobs?: Prisma.ImportJobCreateNestedManyWithoutWorkspaceInput
   importStagedVisits?: Prisma.ImportStagedVisitCreateNestedManyWithoutWorkspaceInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutPlansInput = {
@@ -3011,6 +3091,7 @@ export type WorkspaceUncheckedCreateWithoutPlansInput = {
   gmailMessageLinks?: Prisma.GmailMessageLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   importJobs?: Prisma.ImportJobUncheckedCreateNestedManyWithoutWorkspaceInput
   importStagedVisits?: Prisma.ImportStagedVisitUncheckedCreateNestedManyWithoutWorkspaceInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutPlansInput = {
@@ -3058,6 +3139,7 @@ export type WorkspaceUpdateWithoutPlansInput = {
   gmailMessageLinks?: Prisma.GmailMessageLinkUpdateManyWithoutWorkspaceNestedInput
   importJobs?: Prisma.ImportJobUpdateManyWithoutWorkspaceNestedInput
   importStagedVisits?: Prisma.ImportStagedVisitUpdateManyWithoutWorkspaceNestedInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutPlansInput = {
@@ -3073,6 +3155,151 @@ export type WorkspaceUncheckedUpdateWithoutPlansInput = {
   persons?: Prisma.PersonUncheckedUpdateManyWithoutWorkspaceNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutWorkspaceNestedInput
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  places?: Prisma.PlaceUncheckedUpdateManyWithoutWorkspaceNestedInput
+  placeNotes?: Prisma.PlaceNoteUncheckedUpdateManyWithoutWorkspaceNestedInput
+  groups?: Prisma.GroupUncheckedUpdateManyWithoutWorkspaceNestedInput
+  items?: Prisma.ItemUncheckedUpdateManyWithoutWorkspaceNestedInput
+  importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
+  stagedItems?: Prisma.StagedInteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  rules?: Prisma.RuleUncheckedUpdateManyWithoutWorkspaceNestedInput
+  ruleRuns?: Prisma.RuleRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutWorkspaceNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutWorkspaceNestedInput
+  calendarConnections?: Prisma.CalendarConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  calendarEventLinks?: Prisma.CalendarEventLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
+  gmailConnections?: Prisma.GmailConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  gmailMessageLinks?: Prisma.GmailMessageLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
+  importJobs?: Prisma.ImportJobUncheckedUpdateManyWithoutWorkspaceNestedInput
+  importStagedVisits?: Prisma.ImportStagedVisitUncheckedUpdateManyWithoutWorkspaceNestedInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUncheckedUpdateManyWithoutWorkspaceNestedInput
+}
+
+export type WorkspaceCreateWithoutPlanExpectedPersonsInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  name: string
+  slug: string
+  status?: string
+  ownerUser?: Prisma.UserCreateNestedOneWithoutOwnedWorkspacesInput
+  members?: Prisma.WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
+  approvedEmails?: Prisma.ApprovedEmailCreateNestedManyWithoutWorkspaceInput
+  persons?: Prisma.PersonCreateNestedManyWithoutWorkspaceInput
+  events?: Prisma.EventCreateNestedManyWithoutWorkspaceInput
+  interactions?: Prisma.InteractionCreateNestedManyWithoutWorkspaceInput
+  plans?: Prisma.PlanCreateNestedManyWithoutWorkspaceInput
+  places?: Prisma.PlaceCreateNestedManyWithoutWorkspaceInput
+  placeNotes?: Prisma.PlaceNoteCreateNestedManyWithoutWorkspaceInput
+  groups?: Prisma.GroupCreateNestedManyWithoutWorkspaceInput
+  items?: Prisma.ItemCreateNestedManyWithoutWorkspaceInput
+  importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
+  stagedItems?: Prisma.StagedInteractionCreateNestedManyWithoutWorkspaceInput
+  rules?: Prisma.RuleCreateNestedManyWithoutWorkspaceInput
+  ruleRuns?: Prisma.RuleRunCreateNestedManyWithoutWorkspaceInput
+  apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutWorkspaceInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutWorkspaceInput
+  calendarConnections?: Prisma.CalendarConnectionCreateNestedManyWithoutWorkspaceInput
+  calendarEventLinks?: Prisma.CalendarEventLinkCreateNestedManyWithoutWorkspaceInput
+  gmailConnections?: Prisma.GmailConnectionCreateNestedManyWithoutWorkspaceInput
+  gmailMessageLinks?: Prisma.GmailMessageLinkCreateNestedManyWithoutWorkspaceInput
+  importJobs?: Prisma.ImportJobCreateNestedManyWithoutWorkspaceInput
+  importStagedVisits?: Prisma.ImportStagedVisitCreateNestedManyWithoutWorkspaceInput
+}
+
+export type WorkspaceUncheckedCreateWithoutPlanExpectedPersonsInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  name: string
+  slug: string
+  status?: string
+  ownerUserId?: string | null
+  members?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
+  approvedEmails?: Prisma.ApprovedEmailUncheckedCreateNestedManyWithoutWorkspaceInput
+  persons?: Prisma.PersonUncheckedCreateNestedManyWithoutWorkspaceInput
+  events?: Prisma.EventUncheckedCreateNestedManyWithoutWorkspaceInput
+  interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutWorkspaceInput
+  plans?: Prisma.PlanUncheckedCreateNestedManyWithoutWorkspaceInput
+  places?: Prisma.PlaceUncheckedCreateNestedManyWithoutWorkspaceInput
+  placeNotes?: Prisma.PlaceNoteUncheckedCreateNestedManyWithoutWorkspaceInput
+  groups?: Prisma.GroupUncheckedCreateNestedManyWithoutWorkspaceInput
+  items?: Prisma.ItemUncheckedCreateNestedManyWithoutWorkspaceInput
+  importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
+  stagedItems?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutWorkspaceInput
+  rules?: Prisma.RuleUncheckedCreateNestedManyWithoutWorkspaceInput
+  ruleRuns?: Prisma.RuleRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutWorkspaceInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutWorkspaceInput
+  calendarConnections?: Prisma.CalendarConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  calendarEventLinks?: Prisma.CalendarEventLinkUncheckedCreateNestedManyWithoutWorkspaceInput
+  gmailConnections?: Prisma.GmailConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  gmailMessageLinks?: Prisma.GmailMessageLinkUncheckedCreateNestedManyWithoutWorkspaceInput
+  importJobs?: Prisma.ImportJobUncheckedCreateNestedManyWithoutWorkspaceInput
+  importStagedVisits?: Prisma.ImportStagedVisitUncheckedCreateNestedManyWithoutWorkspaceInput
+}
+
+export type WorkspaceCreateOrConnectWithoutPlanExpectedPersonsInput = {
+  where: Prisma.WorkspaceWhereUniqueInput
+  create: Prisma.XOR<Prisma.WorkspaceCreateWithoutPlanExpectedPersonsInput, Prisma.WorkspaceUncheckedCreateWithoutPlanExpectedPersonsInput>
+}
+
+export type WorkspaceUpsertWithoutPlanExpectedPersonsInput = {
+  update: Prisma.XOR<Prisma.WorkspaceUpdateWithoutPlanExpectedPersonsInput, Prisma.WorkspaceUncheckedUpdateWithoutPlanExpectedPersonsInput>
+  create: Prisma.XOR<Prisma.WorkspaceCreateWithoutPlanExpectedPersonsInput, Prisma.WorkspaceUncheckedCreateWithoutPlanExpectedPersonsInput>
+  where?: Prisma.WorkspaceWhereInput
+}
+
+export type WorkspaceUpdateToOneWithWhereWithoutPlanExpectedPersonsInput = {
+  where?: Prisma.WorkspaceWhereInput
+  data: Prisma.XOR<Prisma.WorkspaceUpdateWithoutPlanExpectedPersonsInput, Prisma.WorkspaceUncheckedUpdateWithoutPlanExpectedPersonsInput>
+}
+
+export type WorkspaceUpdateWithoutPlanExpectedPersonsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  ownerUser?: Prisma.UserUpdateOneWithoutOwnedWorkspacesNestedInput
+  members?: Prisma.WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
+  approvedEmails?: Prisma.ApprovedEmailUpdateManyWithoutWorkspaceNestedInput
+  persons?: Prisma.PersonUpdateManyWithoutWorkspaceNestedInput
+  events?: Prisma.EventUpdateManyWithoutWorkspaceNestedInput
+  interactions?: Prisma.InteractionUpdateManyWithoutWorkspaceNestedInput
+  plans?: Prisma.PlanUpdateManyWithoutWorkspaceNestedInput
+  places?: Prisma.PlaceUpdateManyWithoutWorkspaceNestedInput
+  placeNotes?: Prisma.PlaceNoteUpdateManyWithoutWorkspaceNestedInput
+  groups?: Prisma.GroupUpdateManyWithoutWorkspaceNestedInput
+  items?: Prisma.ItemUpdateManyWithoutWorkspaceNestedInput
+  importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
+  stagedItems?: Prisma.StagedInteractionUpdateManyWithoutWorkspaceNestedInput
+  rules?: Prisma.RuleUpdateManyWithoutWorkspaceNestedInput
+  ruleRuns?: Prisma.RuleRunUpdateManyWithoutWorkspaceNestedInput
+  apiKeys?: Prisma.ApiKeyUpdateManyWithoutWorkspaceNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutWorkspaceNestedInput
+  calendarConnections?: Prisma.CalendarConnectionUpdateManyWithoutWorkspaceNestedInput
+  calendarEventLinks?: Prisma.CalendarEventLinkUpdateManyWithoutWorkspaceNestedInput
+  gmailConnections?: Prisma.GmailConnectionUpdateManyWithoutWorkspaceNestedInput
+  gmailMessageLinks?: Prisma.GmailMessageLinkUpdateManyWithoutWorkspaceNestedInput
+  importJobs?: Prisma.ImportJobUpdateManyWithoutWorkspaceNestedInput
+  importStagedVisits?: Prisma.ImportStagedVisitUpdateManyWithoutWorkspaceNestedInput
+}
+
+export type WorkspaceUncheckedUpdateWithoutPlanExpectedPersonsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  ownerUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  members?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
+  approvedEmails?: Prisma.ApprovedEmailUncheckedUpdateManyWithoutWorkspaceNestedInput
+  persons?: Prisma.PersonUncheckedUpdateManyWithoutWorkspaceNestedInput
+  events?: Prisma.EventUncheckedUpdateManyWithoutWorkspaceNestedInput
+  interactions?: Prisma.InteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  plans?: Prisma.PlanUncheckedUpdateManyWithoutWorkspaceNestedInput
   places?: Prisma.PlaceUncheckedUpdateManyWithoutWorkspaceNestedInput
   placeNotes?: Prisma.PlaceNoteUncheckedUpdateManyWithoutWorkspaceNestedInput
   groups?: Prisma.GroupUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -3120,6 +3347,7 @@ export type WorkspaceCreateWithoutPlacesInput = {
   gmailMessageLinks?: Prisma.GmailMessageLinkCreateNestedManyWithoutWorkspaceInput
   importJobs?: Prisma.ImportJobCreateNestedManyWithoutWorkspaceInput
   importStagedVisits?: Prisma.ImportStagedVisitCreateNestedManyWithoutWorkspaceInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutPlacesInput = {
@@ -3151,6 +3379,7 @@ export type WorkspaceUncheckedCreateWithoutPlacesInput = {
   gmailMessageLinks?: Prisma.GmailMessageLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   importJobs?: Prisma.ImportJobUncheckedCreateNestedManyWithoutWorkspaceInput
   importStagedVisits?: Prisma.ImportStagedVisitUncheckedCreateNestedManyWithoutWorkspaceInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutPlacesInput = {
@@ -3198,6 +3427,7 @@ export type WorkspaceUpdateWithoutPlacesInput = {
   gmailMessageLinks?: Prisma.GmailMessageLinkUpdateManyWithoutWorkspaceNestedInput
   importJobs?: Prisma.ImportJobUpdateManyWithoutWorkspaceNestedInput
   importStagedVisits?: Prisma.ImportStagedVisitUpdateManyWithoutWorkspaceNestedInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutPlacesInput = {
@@ -3229,6 +3459,7 @@ export type WorkspaceUncheckedUpdateWithoutPlacesInput = {
   gmailMessageLinks?: Prisma.GmailMessageLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   importJobs?: Prisma.ImportJobUncheckedUpdateManyWithoutWorkspaceNestedInput
   importStagedVisits?: Prisma.ImportStagedVisitUncheckedUpdateManyWithoutWorkspaceNestedInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutImportJobsInput = {
@@ -3260,6 +3491,7 @@ export type WorkspaceCreateWithoutImportJobsInput = {
   gmailConnections?: Prisma.GmailConnectionCreateNestedManyWithoutWorkspaceInput
   gmailMessageLinks?: Prisma.GmailMessageLinkCreateNestedManyWithoutWorkspaceInput
   importStagedVisits?: Prisma.ImportStagedVisitCreateNestedManyWithoutWorkspaceInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutImportJobsInput = {
@@ -3291,6 +3523,7 @@ export type WorkspaceUncheckedCreateWithoutImportJobsInput = {
   gmailConnections?: Prisma.GmailConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
   gmailMessageLinks?: Prisma.GmailMessageLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   importStagedVisits?: Prisma.ImportStagedVisitUncheckedCreateNestedManyWithoutWorkspaceInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutImportJobsInput = {
@@ -3338,6 +3571,7 @@ export type WorkspaceUpdateWithoutImportJobsInput = {
   gmailConnections?: Prisma.GmailConnectionUpdateManyWithoutWorkspaceNestedInput
   gmailMessageLinks?: Prisma.GmailMessageLinkUpdateManyWithoutWorkspaceNestedInput
   importStagedVisits?: Prisma.ImportStagedVisitUpdateManyWithoutWorkspaceNestedInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutImportJobsInput = {
@@ -3369,6 +3603,7 @@ export type WorkspaceUncheckedUpdateWithoutImportJobsInput = {
   gmailConnections?: Prisma.GmailConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
   gmailMessageLinks?: Prisma.GmailMessageLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   importStagedVisits?: Prisma.ImportStagedVisitUncheckedUpdateManyWithoutWorkspaceNestedInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutImportStagedVisitsInput = {
@@ -3400,6 +3635,7 @@ export type WorkspaceCreateWithoutImportStagedVisitsInput = {
   gmailConnections?: Prisma.GmailConnectionCreateNestedManyWithoutWorkspaceInput
   gmailMessageLinks?: Prisma.GmailMessageLinkCreateNestedManyWithoutWorkspaceInput
   importJobs?: Prisma.ImportJobCreateNestedManyWithoutWorkspaceInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutImportStagedVisitsInput = {
@@ -3431,6 +3667,7 @@ export type WorkspaceUncheckedCreateWithoutImportStagedVisitsInput = {
   gmailConnections?: Prisma.GmailConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
   gmailMessageLinks?: Prisma.GmailMessageLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   importJobs?: Prisma.ImportJobUncheckedCreateNestedManyWithoutWorkspaceInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutImportStagedVisitsInput = {
@@ -3478,6 +3715,7 @@ export type WorkspaceUpdateWithoutImportStagedVisitsInput = {
   gmailConnections?: Prisma.GmailConnectionUpdateManyWithoutWorkspaceNestedInput
   gmailMessageLinks?: Prisma.GmailMessageLinkUpdateManyWithoutWorkspaceNestedInput
   importJobs?: Prisma.ImportJobUpdateManyWithoutWorkspaceNestedInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutImportStagedVisitsInput = {
@@ -3509,6 +3747,7 @@ export type WorkspaceUncheckedUpdateWithoutImportStagedVisitsInput = {
   gmailConnections?: Prisma.GmailConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
   gmailMessageLinks?: Prisma.GmailMessageLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   importJobs?: Prisma.ImportJobUncheckedUpdateManyWithoutWorkspaceNestedInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutPlaceNotesInput = {
@@ -3540,6 +3779,7 @@ export type WorkspaceCreateWithoutPlaceNotesInput = {
   gmailMessageLinks?: Prisma.GmailMessageLinkCreateNestedManyWithoutWorkspaceInput
   importJobs?: Prisma.ImportJobCreateNestedManyWithoutWorkspaceInput
   importStagedVisits?: Prisma.ImportStagedVisitCreateNestedManyWithoutWorkspaceInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutPlaceNotesInput = {
@@ -3571,6 +3811,7 @@ export type WorkspaceUncheckedCreateWithoutPlaceNotesInput = {
   gmailMessageLinks?: Prisma.GmailMessageLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   importJobs?: Prisma.ImportJobUncheckedCreateNestedManyWithoutWorkspaceInput
   importStagedVisits?: Prisma.ImportStagedVisitUncheckedCreateNestedManyWithoutWorkspaceInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutPlaceNotesInput = {
@@ -3618,6 +3859,7 @@ export type WorkspaceUpdateWithoutPlaceNotesInput = {
   gmailMessageLinks?: Prisma.GmailMessageLinkUpdateManyWithoutWorkspaceNestedInput
   importJobs?: Prisma.ImportJobUpdateManyWithoutWorkspaceNestedInput
   importStagedVisits?: Prisma.ImportStagedVisitUpdateManyWithoutWorkspaceNestedInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutPlaceNotesInput = {
@@ -3649,6 +3891,7 @@ export type WorkspaceUncheckedUpdateWithoutPlaceNotesInput = {
   gmailMessageLinks?: Prisma.GmailMessageLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   importJobs?: Prisma.ImportJobUncheckedUpdateManyWithoutWorkspaceNestedInput
   importStagedVisits?: Prisma.ImportStagedVisitUncheckedUpdateManyWithoutWorkspaceNestedInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutItemsInput = {
@@ -3680,6 +3923,7 @@ export type WorkspaceCreateWithoutItemsInput = {
   gmailMessageLinks?: Prisma.GmailMessageLinkCreateNestedManyWithoutWorkspaceInput
   importJobs?: Prisma.ImportJobCreateNestedManyWithoutWorkspaceInput
   importStagedVisits?: Prisma.ImportStagedVisitCreateNestedManyWithoutWorkspaceInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutItemsInput = {
@@ -3711,6 +3955,7 @@ export type WorkspaceUncheckedCreateWithoutItemsInput = {
   gmailMessageLinks?: Prisma.GmailMessageLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   importJobs?: Prisma.ImportJobUncheckedCreateNestedManyWithoutWorkspaceInput
   importStagedVisits?: Prisma.ImportStagedVisitUncheckedCreateNestedManyWithoutWorkspaceInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutItemsInput = {
@@ -3758,6 +4003,7 @@ export type WorkspaceUpdateWithoutItemsInput = {
   gmailMessageLinks?: Prisma.GmailMessageLinkUpdateManyWithoutWorkspaceNestedInput
   importJobs?: Prisma.ImportJobUpdateManyWithoutWorkspaceNestedInput
   importStagedVisits?: Prisma.ImportStagedVisitUpdateManyWithoutWorkspaceNestedInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutItemsInput = {
@@ -3789,6 +4035,7 @@ export type WorkspaceUncheckedUpdateWithoutItemsInput = {
   gmailMessageLinks?: Prisma.GmailMessageLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   importJobs?: Prisma.ImportJobUncheckedUpdateManyWithoutWorkspaceNestedInput
   importStagedVisits?: Prisma.ImportStagedVisitUncheckedUpdateManyWithoutWorkspaceNestedInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutImportedFilesInput = {
@@ -3820,6 +4067,7 @@ export type WorkspaceCreateWithoutImportedFilesInput = {
   gmailMessageLinks?: Prisma.GmailMessageLinkCreateNestedManyWithoutWorkspaceInput
   importJobs?: Prisma.ImportJobCreateNestedManyWithoutWorkspaceInput
   importStagedVisits?: Prisma.ImportStagedVisitCreateNestedManyWithoutWorkspaceInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutImportedFilesInput = {
@@ -3851,6 +4099,7 @@ export type WorkspaceUncheckedCreateWithoutImportedFilesInput = {
   gmailMessageLinks?: Prisma.GmailMessageLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   importJobs?: Prisma.ImportJobUncheckedCreateNestedManyWithoutWorkspaceInput
   importStagedVisits?: Prisma.ImportStagedVisitUncheckedCreateNestedManyWithoutWorkspaceInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutImportedFilesInput = {
@@ -3898,6 +4147,7 @@ export type WorkspaceUpdateWithoutImportedFilesInput = {
   gmailMessageLinks?: Prisma.GmailMessageLinkUpdateManyWithoutWorkspaceNestedInput
   importJobs?: Prisma.ImportJobUpdateManyWithoutWorkspaceNestedInput
   importStagedVisits?: Prisma.ImportStagedVisitUpdateManyWithoutWorkspaceNestedInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutImportedFilesInput = {
@@ -3929,6 +4179,7 @@ export type WorkspaceUncheckedUpdateWithoutImportedFilesInput = {
   gmailMessageLinks?: Prisma.GmailMessageLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   importJobs?: Prisma.ImportJobUncheckedUpdateManyWithoutWorkspaceNestedInput
   importStagedVisits?: Prisma.ImportStagedVisitUncheckedUpdateManyWithoutWorkspaceNestedInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutGroupsInput = {
@@ -3960,6 +4211,7 @@ export type WorkspaceCreateWithoutGroupsInput = {
   gmailMessageLinks?: Prisma.GmailMessageLinkCreateNestedManyWithoutWorkspaceInput
   importJobs?: Prisma.ImportJobCreateNestedManyWithoutWorkspaceInput
   importStagedVisits?: Prisma.ImportStagedVisitCreateNestedManyWithoutWorkspaceInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutGroupsInput = {
@@ -3991,6 +4243,7 @@ export type WorkspaceUncheckedCreateWithoutGroupsInput = {
   gmailMessageLinks?: Prisma.GmailMessageLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   importJobs?: Prisma.ImportJobUncheckedCreateNestedManyWithoutWorkspaceInput
   importStagedVisits?: Prisma.ImportStagedVisitUncheckedCreateNestedManyWithoutWorkspaceInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutGroupsInput = {
@@ -4038,6 +4291,7 @@ export type WorkspaceUpdateWithoutGroupsInput = {
   gmailMessageLinks?: Prisma.GmailMessageLinkUpdateManyWithoutWorkspaceNestedInput
   importJobs?: Prisma.ImportJobUpdateManyWithoutWorkspaceNestedInput
   importStagedVisits?: Prisma.ImportStagedVisitUpdateManyWithoutWorkspaceNestedInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutGroupsInput = {
@@ -4069,6 +4323,7 @@ export type WorkspaceUncheckedUpdateWithoutGroupsInput = {
   gmailMessageLinks?: Prisma.GmailMessageLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   importJobs?: Prisma.ImportJobUncheckedUpdateManyWithoutWorkspaceNestedInput
   importStagedVisits?: Prisma.ImportStagedVisitUncheckedUpdateManyWithoutWorkspaceNestedInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateManyOwnerUserInput = {
@@ -4109,6 +4364,7 @@ export type WorkspaceUpdateWithoutOwnerUserInput = {
   gmailMessageLinks?: Prisma.GmailMessageLinkUpdateManyWithoutWorkspaceNestedInput
   importJobs?: Prisma.ImportJobUpdateManyWithoutWorkspaceNestedInput
   importStagedVisits?: Prisma.ImportStagedVisitUpdateManyWithoutWorkspaceNestedInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutOwnerUserInput = {
@@ -4140,6 +4396,7 @@ export type WorkspaceUncheckedUpdateWithoutOwnerUserInput = {
   gmailMessageLinks?: Prisma.GmailMessageLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   importJobs?: Prisma.ImportJobUncheckedUpdateManyWithoutWorkspaceNestedInput
   importStagedVisits?: Prisma.ImportStagedVisitUncheckedUpdateManyWithoutWorkspaceNestedInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateManyWithoutOwnerUserInput = {
@@ -4179,6 +4436,7 @@ export type WorkspaceCountOutputType = {
   gmailMessageLinks: number
   importJobs: number
   importStagedVisits: number
+  planExpectedPersons: number
 }
 
 export type WorkspaceCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -4204,6 +4462,7 @@ export type WorkspaceCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensi
   gmailMessageLinks?: boolean | WorkspaceCountOutputTypeCountGmailMessageLinksArgs
   importJobs?: boolean | WorkspaceCountOutputTypeCountImportJobsArgs
   importStagedVisits?: boolean | WorkspaceCountOutputTypeCountImportStagedVisitsArgs
+  planExpectedPersons?: boolean | WorkspaceCountOutputTypeCountPlanExpectedPersonsArgs
 }
 
 /**
@@ -4370,6 +4629,13 @@ export type WorkspaceCountOutputTypeCountImportStagedVisitsArgs<ExtArgs extends 
   where?: Prisma.ImportStagedVisitWhereInput
 }
 
+/**
+ * WorkspaceCountOutputType without action
+ */
+export type WorkspaceCountOutputTypeCountPlanExpectedPersonsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PlanExpectedPersonWhereInput
+}
+
 
 export type WorkspaceSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -4402,6 +4668,7 @@ export type WorkspaceSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   gmailMessageLinks?: boolean | Prisma.Workspace$gmailMessageLinksArgs<ExtArgs>
   importJobs?: boolean | Prisma.Workspace$importJobsArgs<ExtArgs>
   importStagedVisits?: boolean | Prisma.Workspace$importStagedVisitsArgs<ExtArgs>
+  planExpectedPersons?: boolean | Prisma.Workspace$planExpectedPersonsArgs<ExtArgs>
   _count?: boolean | Prisma.WorkspaceCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["workspace"]>
 
@@ -4462,6 +4729,7 @@ export type WorkspaceInclude<ExtArgs extends runtime.Types.Extensions.InternalAr
   gmailMessageLinks?: boolean | Prisma.Workspace$gmailMessageLinksArgs<ExtArgs>
   importJobs?: boolean | Prisma.Workspace$importJobsArgs<ExtArgs>
   importStagedVisits?: boolean | Prisma.Workspace$importStagedVisitsArgs<ExtArgs>
+  planExpectedPersons?: boolean | Prisma.Workspace$planExpectedPersonsArgs<ExtArgs>
   _count?: boolean | Prisma.WorkspaceCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type WorkspaceIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -4497,6 +4765,7 @@ export type $WorkspacePayload<ExtArgs extends runtime.Types.Extensions.InternalA
     gmailMessageLinks: Prisma.$GmailMessageLinkPayload<ExtArgs>[]
     importJobs: Prisma.$ImportJobPayload<ExtArgs>[]
     importStagedVisits: Prisma.$ImportStagedVisitPayload<ExtArgs>[]
+    planExpectedPersons: Prisma.$PlanExpectedPersonPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -4923,6 +5192,7 @@ export interface Prisma__WorkspaceClient<T, Null = never, ExtArgs extends runtim
   gmailMessageLinks<T extends Prisma.Workspace$gmailMessageLinksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Workspace$gmailMessageLinksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$GmailMessageLinkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   importJobs<T extends Prisma.Workspace$importJobsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Workspace$importJobsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ImportJobPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   importStagedVisits<T extends Prisma.Workspace$importStagedVisitsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Workspace$importStagedVisitsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ImportStagedVisitPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  planExpectedPersons<T extends Prisma.Workspace$planExpectedPersonsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Workspace$planExpectedPersonsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PlanExpectedPersonPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -5902,6 +6172,30 @@ export type Workspace$importStagedVisitsArgs<ExtArgs extends runtime.Types.Exten
   take?: number
   skip?: number
   distinct?: Prisma.ImportStagedVisitScalarFieldEnum | Prisma.ImportStagedVisitScalarFieldEnum[]
+}
+
+/**
+ * Workspace.planExpectedPersons
+ */
+export type Workspace$planExpectedPersonsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PlanExpectedPerson
+   */
+  select?: Prisma.PlanExpectedPersonSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PlanExpectedPerson
+   */
+  omit?: Prisma.PlanExpectedPersonOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PlanExpectedPersonInclude<ExtArgs> | null
+  where?: Prisma.PlanExpectedPersonWhereInput
+  orderBy?: Prisma.PlanExpectedPersonOrderByWithRelationInput | Prisma.PlanExpectedPersonOrderByWithRelationInput[]
+  cursor?: Prisma.PlanExpectedPersonWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PlanExpectedPersonScalarFieldEnum | Prisma.PlanExpectedPersonScalarFieldEnum[]
 }
 
 /**

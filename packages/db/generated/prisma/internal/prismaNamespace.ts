@@ -406,6 +406,7 @@ export const ModelName = {
   Event: 'Event',
   Interaction: 'Interaction',
   Plan: 'Plan',
+  PlanExpectedPerson: 'PlanExpectedPerson',
   Place: 'Place',
   ImportJob: 'ImportJob',
   ImportStagedVisit: 'ImportStagedVisit',
@@ -435,7 +436,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "workspace" | "workspaceMember" | "approvedEmail" | "person" | "user" | "role" | "permission" | "userRole" | "rolePermission" | "apiKey" | "apiKeyScope" | "auditLog" | "calendarConnection" | "calendarEventLink" | "gmailConnection" | "gmailMessageLink" | "rule" | "ruleRun" | "stagedInteraction" | "event" | "interaction" | "plan" | "place" | "importJob" | "importStagedVisit" | "placeNote" | "item" | "assembly" | "itemInteraction" | "importedFile" | "group" | "personGroup" | "groupGroup" | "placeGroup" | "stateDefinition" | "state"
+    modelProps: "workspace" | "workspaceMember" | "approvedEmail" | "person" | "user" | "role" | "permission" | "userRole" | "rolePermission" | "apiKey" | "apiKeyScope" | "auditLog" | "calendarConnection" | "calendarEventLink" | "gmailConnection" | "gmailMessageLink" | "rule" | "ruleRun" | "stagedInteraction" | "event" | "interaction" | "plan" | "planExpectedPerson" | "place" | "importJob" | "importStagedVisit" | "placeNote" | "item" | "assembly" | "itemInteraction" | "importedFile" | "group" | "personGroup" | "groupGroup" | "placeGroup" | "stateDefinition" | "state"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -2067,6 +2068,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    PlanExpectedPerson: {
+      payload: Prisma.$PlanExpectedPersonPayload<ExtArgs>
+      fields: Prisma.PlanExpectedPersonFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.PlanExpectedPersonFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlanExpectedPersonPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.PlanExpectedPersonFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlanExpectedPersonPayload>
+        }
+        findFirst: {
+          args: Prisma.PlanExpectedPersonFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlanExpectedPersonPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.PlanExpectedPersonFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlanExpectedPersonPayload>
+        }
+        findMany: {
+          args: Prisma.PlanExpectedPersonFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlanExpectedPersonPayload>[]
+        }
+        create: {
+          args: Prisma.PlanExpectedPersonCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlanExpectedPersonPayload>
+        }
+        createMany: {
+          args: Prisma.PlanExpectedPersonCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.PlanExpectedPersonCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlanExpectedPersonPayload>[]
+        }
+        delete: {
+          args: Prisma.PlanExpectedPersonDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlanExpectedPersonPayload>
+        }
+        update: {
+          args: Prisma.PlanExpectedPersonUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlanExpectedPersonPayload>
+        }
+        deleteMany: {
+          args: Prisma.PlanExpectedPersonDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.PlanExpectedPersonUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.PlanExpectedPersonUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlanExpectedPersonPayload>[]
+        }
+        upsert: {
+          args: Prisma.PlanExpectedPersonUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlanExpectedPersonPayload>
+        }
+        aggregate: {
+          args: Prisma.PlanExpectedPersonAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePlanExpectedPerson>
+        }
+        groupBy: {
+          args: Prisma.PlanExpectedPersonGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PlanExpectedPersonGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.PlanExpectedPersonCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PlanExpectedPersonCountAggregateOutputType> | number
+        }
+      }
+    }
     Place: {
       payload: Prisma.$PlacePayload<ExtArgs>
       fields: Prisma.PlaceFieldRefs
@@ -3464,11 +3539,15 @@ export const EventScalarFieldEnum = {
   createdAt: 'createdAt',
   name: 'name',
   type: 'type',
+  start: 'start',
+  end: 'end',
   timestamp: 'timestamp',
   placeId: 'placeId',
   notes: 'notes',
   transcript: 'transcript',
-  metadata: 'metadata'
+  metadata: 'metadata',
+  sourcePlanId: 'sourcePlanId',
+  parentEventId: 'parentEventId'
 } as const
 
 export type EventScalarFieldEnum = (typeof EventScalarFieldEnum)[keyof typeof EventScalarFieldEnum]
@@ -3507,10 +3586,24 @@ export const PlanScalarFieldEnum = {
   timescale: 'timescale',
   successSignals: 'successSignals',
   status: 'status',
-  parentId: 'parentId'
+  parentId: 'parentId',
+  scheduledStart: 'scheduledStart',
+  scheduledEnd: 'scheduledEnd',
+  placeId: 'placeId',
+  externalSource: 'externalSource',
+  externalInstanceId: 'externalInstanceId'
 } as const
 
 export type PlanScalarFieldEnum = (typeof PlanScalarFieldEnum)[keyof typeof PlanScalarFieldEnum]
+
+
+export const PlanExpectedPersonScalarFieldEnum = {
+  planId: 'planId',
+  personId: 'personId',
+  workspaceId: 'workspaceId'
+} as const
+
+export type PlanExpectedPersonScalarFieldEnum = (typeof PlanExpectedPersonScalarFieldEnum)[keyof typeof PlanExpectedPersonScalarFieldEnum]
 
 
 export const PlaceScalarFieldEnum = {
@@ -3992,6 +4085,7 @@ export type GlobalOmitConfig = {
   event?: Prisma.EventOmit
   interaction?: Prisma.InteractionOmit
   plan?: Prisma.PlanOmit
+  planExpectedPerson?: Prisma.PlanExpectedPersonOmit
   place?: Prisma.PlaceOmit
   importJob?: Prisma.ImportJobOmit
   importStagedVisit?: Prisma.ImportStagedVisitOmit

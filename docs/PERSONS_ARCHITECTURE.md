@@ -20,6 +20,7 @@ flowchart LR
     IMessages["iMessage chat.db on your Mac"]
     GoogleCalendar["Google Calendar"]
     Gmail["Gmail"]
+    Krisp["Krisp meeting transcripts"]
     Files["Imported files and transcripts"]
     ExternalTools["External scripts, automations, future apps"]
   end
@@ -32,6 +33,7 @@ flowchart LR
     Watcher["iMessage watcher script"]
     CalendarOAuth["Google Calendar OAuth + sync"]
     GmailOAuth["Gmail OAuth + sync"]
+    KrispWorker["Local Krisp-to-Team-OS worker"]
   end
 
   subgraph Plumbing["Business plumbing"]
@@ -264,6 +266,36 @@ Runtime configuration:
 - The Google OAuth redirect URI must include `/api/gmail/google/callback` on the deployed app origin.
 - `GOOGLE_GMAIL_REDIRECT_URI` can pin the callback to one exact production URL.
 - People import from Google Contacts uses the same Gmail connection but also needs the Google People API enabled and the `https://www.googleapis.com/auth/contacts.readonly` scope. Older Gmail connections that only granted Gmail read access must reconnect before `/import/people` can pull Google Contacts.
+
+### 3d. Krisp transcript processing
+
+```mermaid
+flowchart TD
+  Launchd["One-minute launchd job"] --> KrispMCP["Krisp hosted MCP"]
+  KrispMCP --> Transcript["Completed meeting transcript"]
+  Transcript --> Calendar["Score against Apple and Google calendars"]
+  Calendar --> Split["Claude splits sustained customer topics"]
+  Split --> Customer["Team OS customer meeting files"]
+  Split --> Private["Private internal or review files"]
+  Customer --> Ledger["Private meeting ledger"]
+  Private --> Ledger
+  Transcript --> Archive["Private raw transcript archive"]
+  Calendar -->|Existing Life OS Event| EventTranscript["Attach transcript to Event"]
+```
+
+Plain English: `scripts/krisp/sync.ts` polls meetings owned by Joseph through
+Krisp MCP. It deduplicates by Krisp meeting ID and URL, tries to identify the
+corresponding calendar event, and requires transcript evidence before publishing
+a customer-specific file. Mixed meetings can produce several customer files plus
+one private internal note. Low-confidence mappings are held in Team OS's private
+`personal-drawer/meeting-review/` folder rather than guessed.
+
+The job is local because Team OS's `personal-drawer` is intentionally gitignored.
+Its launch agent is `com.lifeos.krisp`; state lives in
+`~/.life-os/krisp-team-os-state.json`. Every output is also indexed in
+`team-os/personal-drawer/meeting-ledger.md` so later report generators can find
+the relevant meeting notes without rescanning every transcript. See
+`docs/KRISP_TEAM_OS_AUTOMATION.md` for setup and operating commands.
 
 ### 4. Inbox review flow
 
@@ -578,6 +610,7 @@ flowchart LR
 - Gmail traceability: Admin can inspect recent Gmail sync runs, message IDs, threads, matched People, staged Inbox records, skipped messages, and deleted markers.
 - Google Contacts import: `/import/people` can pull People candidates from the connected Gmail account's Google Contacts and review them with the same create/update/skip flow as vCard and CSV imports.
 - Gmail Mail import: `/import/interactions` can launch the same batched Gmail sync from the import area, defaulting to a 30-day Known People only import.
+- Krisp transcript automation: a local scheduled worker archives completed transcripts, maps them to calendar context, splits mixed customer discussions, and writes Team OS meeting records with a private ambiguity queue.
 
 ### Future
 

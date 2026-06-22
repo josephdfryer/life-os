@@ -432,6 +432,8 @@ async function upsertCalendarEvent(input: {
         workspaceId: input.workspaceId,
         name: input.item.summary?.trim() || "Untitled Google Calendar event",
         type: "calendar",
+        start,
+        end: end ?? null,
         timestamp: start,
         notes: input.item.description ?? null,
         metadata: JSON.stringify(metadata),

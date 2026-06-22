@@ -18,9 +18,11 @@ npm run agent:finish -- --agent claude --summary "What changed and why" --next "
 
 The local state lives in `.agent-sync/` and is intentionally ignored by git. See `docs/AGENT_SYNC.md` for the full protocol.
 
-## Vision and Ethos
+## Founding Document — Read First
 
-Before building anything new, read `docs/LIFE_OS_VISION.md`. It explains what Life OS is trying to accomplish, the 5 primitives (People, Places, Events, Items, Interactions), and the guiding principles that should shape every feature decision.
+Before doing anything else, read `docs/MANIFESTO.md`. It is the authoritative statement of what Life OS is, why it is being built this way, the eight primitives (Person, Place, Item, Event, Plan, Group, State, Note) connected by Interaction, and the principles that govern every modeling decision. When two implementation options compete, the manifesto breaks the tie.
+
+`docs/LIFE_OS_VISION.md` is an earlier companion document with supplementary context on the graph model and derived computations. Read it after the manifesto.
 
 ## App-Specific Notes
 

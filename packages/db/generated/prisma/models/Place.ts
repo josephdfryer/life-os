@@ -226,6 +226,7 @@ export type PlaceWhereInput = {
   parentPlace?: Prisma.XOR<Prisma.PlaceNullableScalarRelationFilter, Prisma.PlaceWhereInput> | null
   childPlaces?: Prisma.PlaceListRelationFilter
   events?: Prisma.EventListRelationFilter
+  plans?: Prisma.PlanListRelationFilter
   interactions?: Prisma.InteractionListRelationFilter
   items?: Prisma.ItemListRelationFilter
   notes?: Prisma.PlaceNoteListRelationFilter
@@ -248,6 +249,7 @@ export type PlaceOrderByWithRelationInput = {
   parentPlace?: Prisma.PlaceOrderByWithRelationInput
   childPlaces?: Prisma.PlaceOrderByRelationAggregateInput
   events?: Prisma.EventOrderByRelationAggregateInput
+  plans?: Prisma.PlanOrderByRelationAggregateInput
   interactions?: Prisma.InteractionOrderByRelationAggregateInput
   items?: Prisma.ItemOrderByRelationAggregateInput
   notes?: Prisma.PlaceNoteOrderByRelationAggregateInput
@@ -273,6 +275,7 @@ export type PlaceWhereUniqueInput = Prisma.AtLeast<{
   parentPlace?: Prisma.XOR<Prisma.PlaceNullableScalarRelationFilter, Prisma.PlaceWhereInput> | null
   childPlaces?: Prisma.PlaceListRelationFilter
   events?: Prisma.EventListRelationFilter
+  plans?: Prisma.PlanListRelationFilter
   interactions?: Prisma.InteractionListRelationFilter
   items?: Prisma.ItemListRelationFilter
   notes?: Prisma.PlaceNoteListRelationFilter
@@ -325,6 +328,7 @@ export type PlaceCreateInput = {
   parentPlace?: Prisma.PlaceCreateNestedOneWithoutChildPlacesInput
   childPlaces?: Prisma.PlaceCreateNestedManyWithoutParentPlaceInput
   events?: Prisma.EventCreateNestedManyWithoutPlaceInput
+  plans?: Prisma.PlanCreateNestedManyWithoutPlaceInput
   interactions?: Prisma.InteractionCreateNestedManyWithoutPlaceInput
   items?: Prisma.ItemCreateNestedManyWithoutPlaceInput
   notes?: Prisma.PlaceNoteCreateNestedManyWithoutPlaceInput
@@ -345,6 +349,7 @@ export type PlaceUncheckedCreateInput = {
   parentPlaceId?: string | null
   childPlaces?: Prisma.PlaceUncheckedCreateNestedManyWithoutParentPlaceInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutPlaceInput
+  plans?: Prisma.PlanUncheckedCreateNestedManyWithoutPlaceInput
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutPlaceInput
   items?: Prisma.ItemUncheckedCreateNestedManyWithoutPlaceInput
   notes?: Prisma.PlaceNoteUncheckedCreateNestedManyWithoutPlaceInput
@@ -365,6 +370,7 @@ export type PlaceUpdateInput = {
   parentPlace?: Prisma.PlaceUpdateOneWithoutChildPlacesNestedInput
   childPlaces?: Prisma.PlaceUpdateManyWithoutParentPlaceNestedInput
   events?: Prisma.EventUpdateManyWithoutPlaceNestedInput
+  plans?: Prisma.PlanUpdateManyWithoutPlaceNestedInput
   interactions?: Prisma.InteractionUpdateManyWithoutPlaceNestedInput
   items?: Prisma.ItemUpdateManyWithoutPlaceNestedInput
   notes?: Prisma.PlaceNoteUpdateManyWithoutPlaceNestedInput
@@ -385,6 +391,7 @@ export type PlaceUncheckedUpdateInput = {
   parentPlaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   childPlaces?: Prisma.PlaceUncheckedUpdateManyWithoutParentPlaceNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutPlaceNestedInput
+  plans?: Prisma.PlanUncheckedUpdateManyWithoutPlaceNestedInput
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutPlaceNestedInput
   items?: Prisma.ItemUncheckedUpdateManyWithoutPlaceNestedInput
   notes?: Prisma.PlaceNoteUncheckedUpdateManyWithoutPlaceNestedInput
@@ -562,6 +569,22 @@ export type PlaceUpdateOneWithoutInteractionsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.PlaceUpdateToOneWithWhereWithoutInteractionsInput, Prisma.PlaceUpdateWithoutInteractionsInput>, Prisma.PlaceUncheckedUpdateWithoutInteractionsInput>
 }
 
+export type PlaceCreateNestedOneWithoutPlansInput = {
+  create?: Prisma.XOR<Prisma.PlaceCreateWithoutPlansInput, Prisma.PlaceUncheckedCreateWithoutPlansInput>
+  connectOrCreate?: Prisma.PlaceCreateOrConnectWithoutPlansInput
+  connect?: Prisma.PlaceWhereUniqueInput
+}
+
+export type PlaceUpdateOneWithoutPlansNestedInput = {
+  create?: Prisma.XOR<Prisma.PlaceCreateWithoutPlansInput, Prisma.PlaceUncheckedCreateWithoutPlansInput>
+  connectOrCreate?: Prisma.PlaceCreateOrConnectWithoutPlansInput
+  upsert?: Prisma.PlaceUpsertWithoutPlansInput
+  disconnect?: Prisma.PlaceWhereInput | boolean
+  delete?: Prisma.PlaceWhereInput | boolean
+  connect?: Prisma.PlaceWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.PlaceUpdateToOneWithWhereWithoutPlansInput, Prisma.PlaceUpdateWithoutPlansInput>, Prisma.PlaceUncheckedUpdateWithoutPlansInput>
+}
+
 export type PlaceCreateNestedOneWithoutChildPlacesInput = {
   create?: Prisma.XOR<Prisma.PlaceCreateWithoutChildPlacesInput, Prisma.PlaceUncheckedCreateWithoutChildPlacesInput>
   connectOrCreate?: Prisma.PlaceCreateOrConnectWithoutChildPlacesInput
@@ -692,6 +715,7 @@ export type PlaceCreateWithoutWorkspaceInput = {
   parentPlace?: Prisma.PlaceCreateNestedOneWithoutChildPlacesInput
   childPlaces?: Prisma.PlaceCreateNestedManyWithoutParentPlaceInput
   events?: Prisma.EventCreateNestedManyWithoutPlaceInput
+  plans?: Prisma.PlanCreateNestedManyWithoutPlaceInput
   interactions?: Prisma.InteractionCreateNestedManyWithoutPlaceInput
   items?: Prisma.ItemCreateNestedManyWithoutPlaceInput
   notes?: Prisma.PlaceNoteCreateNestedManyWithoutPlaceInput
@@ -711,6 +735,7 @@ export type PlaceUncheckedCreateWithoutWorkspaceInput = {
   parentPlaceId?: string | null
   childPlaces?: Prisma.PlaceUncheckedCreateNestedManyWithoutParentPlaceInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutPlaceInput
+  plans?: Prisma.PlanUncheckedCreateNestedManyWithoutPlaceInput
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutPlaceInput
   items?: Prisma.ItemUncheckedCreateNestedManyWithoutPlaceInput
   notes?: Prisma.PlaceNoteUncheckedCreateNestedManyWithoutPlaceInput
@@ -771,6 +796,7 @@ export type PlaceCreateWithoutEventsInput = {
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutPlacesInput
   parentPlace?: Prisma.PlaceCreateNestedOneWithoutChildPlacesInput
   childPlaces?: Prisma.PlaceCreateNestedManyWithoutParentPlaceInput
+  plans?: Prisma.PlanCreateNestedManyWithoutPlaceInput
   interactions?: Prisma.InteractionCreateNestedManyWithoutPlaceInput
   items?: Prisma.ItemCreateNestedManyWithoutPlaceInput
   notes?: Prisma.PlaceNoteCreateNestedManyWithoutPlaceInput
@@ -790,6 +816,7 @@ export type PlaceUncheckedCreateWithoutEventsInput = {
   favorite?: boolean
   parentPlaceId?: string | null
   childPlaces?: Prisma.PlaceUncheckedCreateNestedManyWithoutParentPlaceInput
+  plans?: Prisma.PlanUncheckedCreateNestedManyWithoutPlaceInput
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutPlaceInput
   items?: Prisma.ItemUncheckedCreateNestedManyWithoutPlaceInput
   notes?: Prisma.PlaceNoteUncheckedCreateNestedManyWithoutPlaceInput
@@ -825,6 +852,7 @@ export type PlaceUpdateWithoutEventsInput = {
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutPlacesNestedInput
   parentPlace?: Prisma.PlaceUpdateOneWithoutChildPlacesNestedInput
   childPlaces?: Prisma.PlaceUpdateManyWithoutParentPlaceNestedInput
+  plans?: Prisma.PlanUpdateManyWithoutPlaceNestedInput
   interactions?: Prisma.InteractionUpdateManyWithoutPlaceNestedInput
   items?: Prisma.ItemUpdateManyWithoutPlaceNestedInput
   notes?: Prisma.PlaceNoteUpdateManyWithoutPlaceNestedInput
@@ -844,6 +872,7 @@ export type PlaceUncheckedUpdateWithoutEventsInput = {
   favorite?: Prisma.BoolFieldUpdateOperationsInput | boolean
   parentPlaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   childPlaces?: Prisma.PlaceUncheckedUpdateManyWithoutParentPlaceNestedInput
+  plans?: Prisma.PlanUncheckedUpdateManyWithoutPlaceNestedInput
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutPlaceNestedInput
   items?: Prisma.ItemUncheckedUpdateManyWithoutPlaceNestedInput
   notes?: Prisma.PlaceNoteUncheckedUpdateManyWithoutPlaceNestedInput
@@ -864,6 +893,7 @@ export type PlaceCreateWithoutInteractionsInput = {
   parentPlace?: Prisma.PlaceCreateNestedOneWithoutChildPlacesInput
   childPlaces?: Prisma.PlaceCreateNestedManyWithoutParentPlaceInput
   events?: Prisma.EventCreateNestedManyWithoutPlaceInput
+  plans?: Prisma.PlanCreateNestedManyWithoutPlaceInput
   items?: Prisma.ItemCreateNestedManyWithoutPlaceInput
   notes?: Prisma.PlaceNoteCreateNestedManyWithoutPlaceInput
   groupAffiliations?: Prisma.PlaceGroupCreateNestedManyWithoutPlaceInput
@@ -883,6 +913,7 @@ export type PlaceUncheckedCreateWithoutInteractionsInput = {
   parentPlaceId?: string | null
   childPlaces?: Prisma.PlaceUncheckedCreateNestedManyWithoutParentPlaceInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutPlaceInput
+  plans?: Prisma.PlanUncheckedCreateNestedManyWithoutPlaceInput
   items?: Prisma.ItemUncheckedCreateNestedManyWithoutPlaceInput
   notes?: Prisma.PlaceNoteUncheckedCreateNestedManyWithoutPlaceInput
   groupAffiliations?: Prisma.PlaceGroupUncheckedCreateNestedManyWithoutPlaceInput
@@ -918,6 +949,7 @@ export type PlaceUpdateWithoutInteractionsInput = {
   parentPlace?: Prisma.PlaceUpdateOneWithoutChildPlacesNestedInput
   childPlaces?: Prisma.PlaceUpdateManyWithoutParentPlaceNestedInput
   events?: Prisma.EventUpdateManyWithoutPlaceNestedInput
+  plans?: Prisma.PlanUpdateManyWithoutPlaceNestedInput
   items?: Prisma.ItemUpdateManyWithoutPlaceNestedInput
   notes?: Prisma.PlaceNoteUpdateManyWithoutPlaceNestedInput
   groupAffiliations?: Prisma.PlaceGroupUpdateManyWithoutPlaceNestedInput
@@ -937,6 +969,103 @@ export type PlaceUncheckedUpdateWithoutInteractionsInput = {
   parentPlaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   childPlaces?: Prisma.PlaceUncheckedUpdateManyWithoutParentPlaceNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutPlaceNestedInput
+  plans?: Prisma.PlanUncheckedUpdateManyWithoutPlaceNestedInput
+  items?: Prisma.ItemUncheckedUpdateManyWithoutPlaceNestedInput
+  notes?: Prisma.PlaceNoteUncheckedUpdateManyWithoutPlaceNestedInput
+  groupAffiliations?: Prisma.PlaceGroupUncheckedUpdateManyWithoutPlaceNestedInput
+  importStagedVisits?: Prisma.ImportStagedVisitUncheckedUpdateManyWithoutResolvedPlaceNestedInput
+}
+
+export type PlaceCreateWithoutPlansInput = {
+  id?: string
+  name: string
+  googlePlaceId?: string | null
+  type?: string | null
+  address?: string | null
+  coordinates?: string | null
+  meaning?: string | null
+  favorite?: boolean
+  workspace?: Prisma.WorkspaceCreateNestedOneWithoutPlacesInput
+  parentPlace?: Prisma.PlaceCreateNestedOneWithoutChildPlacesInput
+  childPlaces?: Prisma.PlaceCreateNestedManyWithoutParentPlaceInput
+  events?: Prisma.EventCreateNestedManyWithoutPlaceInput
+  interactions?: Prisma.InteractionCreateNestedManyWithoutPlaceInput
+  items?: Prisma.ItemCreateNestedManyWithoutPlaceInput
+  notes?: Prisma.PlaceNoteCreateNestedManyWithoutPlaceInput
+  groupAffiliations?: Prisma.PlaceGroupCreateNestedManyWithoutPlaceInput
+  importStagedVisits?: Prisma.ImportStagedVisitCreateNestedManyWithoutResolvedPlaceInput
+}
+
+export type PlaceUncheckedCreateWithoutPlansInput = {
+  id?: string
+  workspaceId?: string
+  name: string
+  googlePlaceId?: string | null
+  type?: string | null
+  address?: string | null
+  coordinates?: string | null
+  meaning?: string | null
+  favorite?: boolean
+  parentPlaceId?: string | null
+  childPlaces?: Prisma.PlaceUncheckedCreateNestedManyWithoutParentPlaceInput
+  events?: Prisma.EventUncheckedCreateNestedManyWithoutPlaceInput
+  interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutPlaceInput
+  items?: Prisma.ItemUncheckedCreateNestedManyWithoutPlaceInput
+  notes?: Prisma.PlaceNoteUncheckedCreateNestedManyWithoutPlaceInput
+  groupAffiliations?: Prisma.PlaceGroupUncheckedCreateNestedManyWithoutPlaceInput
+  importStagedVisits?: Prisma.ImportStagedVisitUncheckedCreateNestedManyWithoutResolvedPlaceInput
+}
+
+export type PlaceCreateOrConnectWithoutPlansInput = {
+  where: Prisma.PlaceWhereUniqueInput
+  create: Prisma.XOR<Prisma.PlaceCreateWithoutPlansInput, Prisma.PlaceUncheckedCreateWithoutPlansInput>
+}
+
+export type PlaceUpsertWithoutPlansInput = {
+  update: Prisma.XOR<Prisma.PlaceUpdateWithoutPlansInput, Prisma.PlaceUncheckedUpdateWithoutPlansInput>
+  create: Prisma.XOR<Prisma.PlaceCreateWithoutPlansInput, Prisma.PlaceUncheckedCreateWithoutPlansInput>
+  where?: Prisma.PlaceWhereInput
+}
+
+export type PlaceUpdateToOneWithWhereWithoutPlansInput = {
+  where?: Prisma.PlaceWhereInput
+  data: Prisma.XOR<Prisma.PlaceUpdateWithoutPlansInput, Prisma.PlaceUncheckedUpdateWithoutPlansInput>
+}
+
+export type PlaceUpdateWithoutPlansInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  googlePlaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  coordinates?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  meaning?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  favorite?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutPlacesNestedInput
+  parentPlace?: Prisma.PlaceUpdateOneWithoutChildPlacesNestedInput
+  childPlaces?: Prisma.PlaceUpdateManyWithoutParentPlaceNestedInput
+  events?: Prisma.EventUpdateManyWithoutPlaceNestedInput
+  interactions?: Prisma.InteractionUpdateManyWithoutPlaceNestedInput
+  items?: Prisma.ItemUpdateManyWithoutPlaceNestedInput
+  notes?: Prisma.PlaceNoteUpdateManyWithoutPlaceNestedInput
+  groupAffiliations?: Prisma.PlaceGroupUpdateManyWithoutPlaceNestedInput
+  importStagedVisits?: Prisma.ImportStagedVisitUpdateManyWithoutResolvedPlaceNestedInput
+}
+
+export type PlaceUncheckedUpdateWithoutPlansInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  googlePlaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  coordinates?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  meaning?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  favorite?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  parentPlaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  childPlaces?: Prisma.PlaceUncheckedUpdateManyWithoutParentPlaceNestedInput
+  events?: Prisma.EventUncheckedUpdateManyWithoutPlaceNestedInput
+  interactions?: Prisma.InteractionUncheckedUpdateManyWithoutPlaceNestedInput
   items?: Prisma.ItemUncheckedUpdateManyWithoutPlaceNestedInput
   notes?: Prisma.PlaceNoteUncheckedUpdateManyWithoutPlaceNestedInput
   groupAffiliations?: Prisma.PlaceGroupUncheckedUpdateManyWithoutPlaceNestedInput
@@ -955,6 +1084,7 @@ export type PlaceCreateWithoutChildPlacesInput = {
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutPlacesInput
   parentPlace?: Prisma.PlaceCreateNestedOneWithoutChildPlacesInput
   events?: Prisma.EventCreateNestedManyWithoutPlaceInput
+  plans?: Prisma.PlanCreateNestedManyWithoutPlaceInput
   interactions?: Prisma.InteractionCreateNestedManyWithoutPlaceInput
   items?: Prisma.ItemCreateNestedManyWithoutPlaceInput
   notes?: Prisma.PlaceNoteCreateNestedManyWithoutPlaceInput
@@ -974,6 +1104,7 @@ export type PlaceUncheckedCreateWithoutChildPlacesInput = {
   favorite?: boolean
   parentPlaceId?: string | null
   events?: Prisma.EventUncheckedCreateNestedManyWithoutPlaceInput
+  plans?: Prisma.PlanUncheckedCreateNestedManyWithoutPlaceInput
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutPlaceInput
   items?: Prisma.ItemUncheckedCreateNestedManyWithoutPlaceInput
   notes?: Prisma.PlaceNoteUncheckedCreateNestedManyWithoutPlaceInput
@@ -998,6 +1129,7 @@ export type PlaceCreateWithoutParentPlaceInput = {
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutPlacesInput
   childPlaces?: Prisma.PlaceCreateNestedManyWithoutParentPlaceInput
   events?: Prisma.EventCreateNestedManyWithoutPlaceInput
+  plans?: Prisma.PlanCreateNestedManyWithoutPlaceInput
   interactions?: Prisma.InteractionCreateNestedManyWithoutPlaceInput
   items?: Prisma.ItemCreateNestedManyWithoutPlaceInput
   notes?: Prisma.PlaceNoteCreateNestedManyWithoutPlaceInput
@@ -1017,6 +1149,7 @@ export type PlaceUncheckedCreateWithoutParentPlaceInput = {
   favorite?: boolean
   childPlaces?: Prisma.PlaceUncheckedCreateNestedManyWithoutParentPlaceInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutPlaceInput
+  plans?: Prisma.PlanUncheckedCreateNestedManyWithoutPlaceInput
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutPlaceInput
   items?: Prisma.ItemUncheckedCreateNestedManyWithoutPlaceInput
   notes?: Prisma.PlaceNoteUncheckedCreateNestedManyWithoutPlaceInput
@@ -1056,6 +1189,7 @@ export type PlaceUpdateWithoutChildPlacesInput = {
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutPlacesNestedInput
   parentPlace?: Prisma.PlaceUpdateOneWithoutChildPlacesNestedInput
   events?: Prisma.EventUpdateManyWithoutPlaceNestedInput
+  plans?: Prisma.PlanUpdateManyWithoutPlaceNestedInput
   interactions?: Prisma.InteractionUpdateManyWithoutPlaceNestedInput
   items?: Prisma.ItemUpdateManyWithoutPlaceNestedInput
   notes?: Prisma.PlaceNoteUpdateManyWithoutPlaceNestedInput
@@ -1075,6 +1209,7 @@ export type PlaceUncheckedUpdateWithoutChildPlacesInput = {
   favorite?: Prisma.BoolFieldUpdateOperationsInput | boolean
   parentPlaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   events?: Prisma.EventUncheckedUpdateManyWithoutPlaceNestedInput
+  plans?: Prisma.PlanUncheckedUpdateManyWithoutPlaceNestedInput
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutPlaceNestedInput
   items?: Prisma.ItemUncheckedUpdateManyWithoutPlaceNestedInput
   notes?: Prisma.PlaceNoteUncheckedUpdateManyWithoutPlaceNestedInput
@@ -1111,6 +1246,7 @@ export type PlaceCreateWithoutImportStagedVisitsInput = {
   parentPlace?: Prisma.PlaceCreateNestedOneWithoutChildPlacesInput
   childPlaces?: Prisma.PlaceCreateNestedManyWithoutParentPlaceInput
   events?: Prisma.EventCreateNestedManyWithoutPlaceInput
+  plans?: Prisma.PlanCreateNestedManyWithoutPlaceInput
   interactions?: Prisma.InteractionCreateNestedManyWithoutPlaceInput
   items?: Prisma.ItemCreateNestedManyWithoutPlaceInput
   notes?: Prisma.PlaceNoteCreateNestedManyWithoutPlaceInput
@@ -1130,6 +1266,7 @@ export type PlaceUncheckedCreateWithoutImportStagedVisitsInput = {
   parentPlaceId?: string | null
   childPlaces?: Prisma.PlaceUncheckedCreateNestedManyWithoutParentPlaceInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutPlaceInput
+  plans?: Prisma.PlanUncheckedCreateNestedManyWithoutPlaceInput
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutPlaceInput
   items?: Prisma.ItemUncheckedCreateNestedManyWithoutPlaceInput
   notes?: Prisma.PlaceNoteUncheckedCreateNestedManyWithoutPlaceInput
@@ -1165,6 +1302,7 @@ export type PlaceUpdateWithoutImportStagedVisitsInput = {
   parentPlace?: Prisma.PlaceUpdateOneWithoutChildPlacesNestedInput
   childPlaces?: Prisma.PlaceUpdateManyWithoutParentPlaceNestedInput
   events?: Prisma.EventUpdateManyWithoutPlaceNestedInput
+  plans?: Prisma.PlanUpdateManyWithoutPlaceNestedInput
   interactions?: Prisma.InteractionUpdateManyWithoutPlaceNestedInput
   items?: Prisma.ItemUpdateManyWithoutPlaceNestedInput
   notes?: Prisma.PlaceNoteUpdateManyWithoutPlaceNestedInput
@@ -1184,6 +1322,7 @@ export type PlaceUncheckedUpdateWithoutImportStagedVisitsInput = {
   parentPlaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   childPlaces?: Prisma.PlaceUncheckedUpdateManyWithoutParentPlaceNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutPlaceNestedInput
+  plans?: Prisma.PlanUncheckedUpdateManyWithoutPlaceNestedInput
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutPlaceNestedInput
   items?: Prisma.ItemUncheckedUpdateManyWithoutPlaceNestedInput
   notes?: Prisma.PlaceNoteUncheckedUpdateManyWithoutPlaceNestedInput
@@ -1203,6 +1342,7 @@ export type PlaceCreateWithoutNotesInput = {
   parentPlace?: Prisma.PlaceCreateNestedOneWithoutChildPlacesInput
   childPlaces?: Prisma.PlaceCreateNestedManyWithoutParentPlaceInput
   events?: Prisma.EventCreateNestedManyWithoutPlaceInput
+  plans?: Prisma.PlanCreateNestedManyWithoutPlaceInput
   interactions?: Prisma.InteractionCreateNestedManyWithoutPlaceInput
   items?: Prisma.ItemCreateNestedManyWithoutPlaceInput
   groupAffiliations?: Prisma.PlaceGroupCreateNestedManyWithoutPlaceInput
@@ -1222,6 +1362,7 @@ export type PlaceUncheckedCreateWithoutNotesInput = {
   parentPlaceId?: string | null
   childPlaces?: Prisma.PlaceUncheckedCreateNestedManyWithoutParentPlaceInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutPlaceInput
+  plans?: Prisma.PlanUncheckedCreateNestedManyWithoutPlaceInput
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutPlaceInput
   items?: Prisma.ItemUncheckedCreateNestedManyWithoutPlaceInput
   groupAffiliations?: Prisma.PlaceGroupUncheckedCreateNestedManyWithoutPlaceInput
@@ -1257,6 +1398,7 @@ export type PlaceUpdateWithoutNotesInput = {
   parentPlace?: Prisma.PlaceUpdateOneWithoutChildPlacesNestedInput
   childPlaces?: Prisma.PlaceUpdateManyWithoutParentPlaceNestedInput
   events?: Prisma.EventUpdateManyWithoutPlaceNestedInput
+  plans?: Prisma.PlanUpdateManyWithoutPlaceNestedInput
   interactions?: Prisma.InteractionUpdateManyWithoutPlaceNestedInput
   items?: Prisma.ItemUpdateManyWithoutPlaceNestedInput
   groupAffiliations?: Prisma.PlaceGroupUpdateManyWithoutPlaceNestedInput
@@ -1276,6 +1418,7 @@ export type PlaceUncheckedUpdateWithoutNotesInput = {
   parentPlaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   childPlaces?: Prisma.PlaceUncheckedUpdateManyWithoutParentPlaceNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutPlaceNestedInput
+  plans?: Prisma.PlanUncheckedUpdateManyWithoutPlaceNestedInput
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutPlaceNestedInput
   items?: Prisma.ItemUncheckedUpdateManyWithoutPlaceNestedInput
   groupAffiliations?: Prisma.PlaceGroupUncheckedUpdateManyWithoutPlaceNestedInput
@@ -1295,6 +1438,7 @@ export type PlaceCreateWithoutItemsInput = {
   parentPlace?: Prisma.PlaceCreateNestedOneWithoutChildPlacesInput
   childPlaces?: Prisma.PlaceCreateNestedManyWithoutParentPlaceInput
   events?: Prisma.EventCreateNestedManyWithoutPlaceInput
+  plans?: Prisma.PlanCreateNestedManyWithoutPlaceInput
   interactions?: Prisma.InteractionCreateNestedManyWithoutPlaceInput
   notes?: Prisma.PlaceNoteCreateNestedManyWithoutPlaceInput
   groupAffiliations?: Prisma.PlaceGroupCreateNestedManyWithoutPlaceInput
@@ -1314,6 +1458,7 @@ export type PlaceUncheckedCreateWithoutItemsInput = {
   parentPlaceId?: string | null
   childPlaces?: Prisma.PlaceUncheckedCreateNestedManyWithoutParentPlaceInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutPlaceInput
+  plans?: Prisma.PlanUncheckedCreateNestedManyWithoutPlaceInput
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutPlaceInput
   notes?: Prisma.PlaceNoteUncheckedCreateNestedManyWithoutPlaceInput
   groupAffiliations?: Prisma.PlaceGroupUncheckedCreateNestedManyWithoutPlaceInput
@@ -1349,6 +1494,7 @@ export type PlaceUpdateWithoutItemsInput = {
   parentPlace?: Prisma.PlaceUpdateOneWithoutChildPlacesNestedInput
   childPlaces?: Prisma.PlaceUpdateManyWithoutParentPlaceNestedInput
   events?: Prisma.EventUpdateManyWithoutPlaceNestedInput
+  plans?: Prisma.PlanUpdateManyWithoutPlaceNestedInput
   interactions?: Prisma.InteractionUpdateManyWithoutPlaceNestedInput
   notes?: Prisma.PlaceNoteUpdateManyWithoutPlaceNestedInput
   groupAffiliations?: Prisma.PlaceGroupUpdateManyWithoutPlaceNestedInput
@@ -1368,6 +1514,7 @@ export type PlaceUncheckedUpdateWithoutItemsInput = {
   parentPlaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   childPlaces?: Prisma.PlaceUncheckedUpdateManyWithoutParentPlaceNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutPlaceNestedInput
+  plans?: Prisma.PlanUncheckedUpdateManyWithoutPlaceNestedInput
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutPlaceNestedInput
   notes?: Prisma.PlaceNoteUncheckedUpdateManyWithoutPlaceNestedInput
   groupAffiliations?: Prisma.PlaceGroupUncheckedUpdateManyWithoutPlaceNestedInput
@@ -1387,6 +1534,7 @@ export type PlaceCreateWithoutGroupAffiliationsInput = {
   parentPlace?: Prisma.PlaceCreateNestedOneWithoutChildPlacesInput
   childPlaces?: Prisma.PlaceCreateNestedManyWithoutParentPlaceInput
   events?: Prisma.EventCreateNestedManyWithoutPlaceInput
+  plans?: Prisma.PlanCreateNestedManyWithoutPlaceInput
   interactions?: Prisma.InteractionCreateNestedManyWithoutPlaceInput
   items?: Prisma.ItemCreateNestedManyWithoutPlaceInput
   notes?: Prisma.PlaceNoteCreateNestedManyWithoutPlaceInput
@@ -1406,6 +1554,7 @@ export type PlaceUncheckedCreateWithoutGroupAffiliationsInput = {
   parentPlaceId?: string | null
   childPlaces?: Prisma.PlaceUncheckedCreateNestedManyWithoutParentPlaceInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutPlaceInput
+  plans?: Prisma.PlanUncheckedCreateNestedManyWithoutPlaceInput
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutPlaceInput
   items?: Prisma.ItemUncheckedCreateNestedManyWithoutPlaceInput
   notes?: Prisma.PlaceNoteUncheckedCreateNestedManyWithoutPlaceInput
@@ -1441,6 +1590,7 @@ export type PlaceUpdateWithoutGroupAffiliationsInput = {
   parentPlace?: Prisma.PlaceUpdateOneWithoutChildPlacesNestedInput
   childPlaces?: Prisma.PlaceUpdateManyWithoutParentPlaceNestedInput
   events?: Prisma.EventUpdateManyWithoutPlaceNestedInput
+  plans?: Prisma.PlanUpdateManyWithoutPlaceNestedInput
   interactions?: Prisma.InteractionUpdateManyWithoutPlaceNestedInput
   items?: Prisma.ItemUpdateManyWithoutPlaceNestedInput
   notes?: Prisma.PlaceNoteUpdateManyWithoutPlaceNestedInput
@@ -1460,6 +1610,7 @@ export type PlaceUncheckedUpdateWithoutGroupAffiliationsInput = {
   parentPlaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   childPlaces?: Prisma.PlaceUncheckedUpdateManyWithoutParentPlaceNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutPlaceNestedInput
+  plans?: Prisma.PlanUncheckedUpdateManyWithoutPlaceNestedInput
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutPlaceNestedInput
   items?: Prisma.ItemUncheckedUpdateManyWithoutPlaceNestedInput
   notes?: Prisma.PlaceNoteUncheckedUpdateManyWithoutPlaceNestedInput
@@ -1490,6 +1641,7 @@ export type PlaceUpdateWithoutWorkspaceInput = {
   parentPlace?: Prisma.PlaceUpdateOneWithoutChildPlacesNestedInput
   childPlaces?: Prisma.PlaceUpdateManyWithoutParentPlaceNestedInput
   events?: Prisma.EventUpdateManyWithoutPlaceNestedInput
+  plans?: Prisma.PlanUpdateManyWithoutPlaceNestedInput
   interactions?: Prisma.InteractionUpdateManyWithoutPlaceNestedInput
   items?: Prisma.ItemUpdateManyWithoutPlaceNestedInput
   notes?: Prisma.PlaceNoteUpdateManyWithoutPlaceNestedInput
@@ -1509,6 +1661,7 @@ export type PlaceUncheckedUpdateWithoutWorkspaceInput = {
   parentPlaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   childPlaces?: Prisma.PlaceUncheckedUpdateManyWithoutParentPlaceNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutPlaceNestedInput
+  plans?: Prisma.PlanUncheckedUpdateManyWithoutPlaceNestedInput
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutPlaceNestedInput
   items?: Prisma.ItemUncheckedUpdateManyWithoutPlaceNestedInput
   notes?: Prisma.PlaceNoteUncheckedUpdateManyWithoutPlaceNestedInput
@@ -1552,6 +1705,7 @@ export type PlaceUpdateWithoutParentPlaceInput = {
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutPlacesNestedInput
   childPlaces?: Prisma.PlaceUpdateManyWithoutParentPlaceNestedInput
   events?: Prisma.EventUpdateManyWithoutPlaceNestedInput
+  plans?: Prisma.PlanUpdateManyWithoutPlaceNestedInput
   interactions?: Prisma.InteractionUpdateManyWithoutPlaceNestedInput
   items?: Prisma.ItemUpdateManyWithoutPlaceNestedInput
   notes?: Prisma.PlaceNoteUpdateManyWithoutPlaceNestedInput
@@ -1571,6 +1725,7 @@ export type PlaceUncheckedUpdateWithoutParentPlaceInput = {
   favorite?: Prisma.BoolFieldUpdateOperationsInput | boolean
   childPlaces?: Prisma.PlaceUncheckedUpdateManyWithoutParentPlaceNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutPlaceNestedInput
+  plans?: Prisma.PlanUncheckedUpdateManyWithoutPlaceNestedInput
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutPlaceNestedInput
   items?: Prisma.ItemUncheckedUpdateManyWithoutPlaceNestedInput
   notes?: Prisma.PlaceNoteUncheckedUpdateManyWithoutPlaceNestedInput
@@ -1598,6 +1753,7 @@ export type PlaceUncheckedUpdateManyWithoutParentPlaceInput = {
 export type PlaceCountOutputType = {
   childPlaces: number
   events: number
+  plans: number
   interactions: number
   items: number
   notes: number
@@ -1608,6 +1764,7 @@ export type PlaceCountOutputType = {
 export type PlaceCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   childPlaces?: boolean | PlaceCountOutputTypeCountChildPlacesArgs
   events?: boolean | PlaceCountOutputTypeCountEventsArgs
+  plans?: boolean | PlaceCountOutputTypeCountPlansArgs
   interactions?: boolean | PlaceCountOutputTypeCountInteractionsArgs
   items?: boolean | PlaceCountOutputTypeCountItemsArgs
   notes?: boolean | PlaceCountOutputTypeCountNotesArgs
@@ -1637,6 +1794,13 @@ export type PlaceCountOutputTypeCountChildPlacesArgs<ExtArgs extends runtime.Typ
  */
 export type PlaceCountOutputTypeCountEventsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.EventWhereInput
+}
+
+/**
+ * PlaceCountOutputType without action
+ */
+export type PlaceCountOutputTypeCountPlansArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PlanWhereInput
 }
 
 /**
@@ -1690,6 +1854,7 @@ export type PlaceSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   parentPlace?: boolean | Prisma.Place$parentPlaceArgs<ExtArgs>
   childPlaces?: boolean | Prisma.Place$childPlacesArgs<ExtArgs>
   events?: boolean | Prisma.Place$eventsArgs<ExtArgs>
+  plans?: boolean | Prisma.Place$plansArgs<ExtArgs>
   interactions?: boolean | Prisma.Place$interactionsArgs<ExtArgs>
   items?: boolean | Prisma.Place$itemsArgs<ExtArgs>
   notes?: boolean | Prisma.Place$notesArgs<ExtArgs>
@@ -1747,6 +1912,7 @@ export type PlaceInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   parentPlace?: boolean | Prisma.Place$parentPlaceArgs<ExtArgs>
   childPlaces?: boolean | Prisma.Place$childPlacesArgs<ExtArgs>
   events?: boolean | Prisma.Place$eventsArgs<ExtArgs>
+  plans?: boolean | Prisma.Place$plansArgs<ExtArgs>
   interactions?: boolean | Prisma.Place$interactionsArgs<ExtArgs>
   items?: boolean | Prisma.Place$itemsArgs<ExtArgs>
   notes?: boolean | Prisma.Place$notesArgs<ExtArgs>
@@ -1770,6 +1936,7 @@ export type $PlacePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     parentPlace: Prisma.$PlacePayload<ExtArgs> | null
     childPlaces: Prisma.$PlacePayload<ExtArgs>[]
     events: Prisma.$EventPayload<ExtArgs>[]
+    plans: Prisma.$PlanPayload<ExtArgs>[]
     interactions: Prisma.$InteractionPayload<ExtArgs>[]
     items: Prisma.$ItemPayload<ExtArgs>[]
     notes: Prisma.$PlaceNotePayload<ExtArgs>[]
@@ -2185,6 +2352,7 @@ export interface Prisma__PlaceClient<T, Null = never, ExtArgs extends runtime.Ty
   parentPlace<T extends Prisma.Place$parentPlaceArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Place$parentPlaceArgs<ExtArgs>>): Prisma.Prisma__PlaceClient<runtime.Types.Result.GetResult<Prisma.$PlacePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   childPlaces<T extends Prisma.Place$childPlacesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Place$childPlacesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PlacePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   events<T extends Prisma.Place$eventsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Place$eventsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  plans<T extends Prisma.Place$plansArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Place$plansArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PlanPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   interactions<T extends Prisma.Place$interactionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Place$interactionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InteractionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   items<T extends Prisma.Place$itemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Place$itemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   notes<T extends Prisma.Place$notesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Place$notesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PlaceNotePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -2692,6 +2860,30 @@ export type Place$eventsArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
   take?: number
   skip?: number
   distinct?: Prisma.EventScalarFieldEnum | Prisma.EventScalarFieldEnum[]
+}
+
+/**
+ * Place.plans
+ */
+export type Place$plansArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Plan
+   */
+  select?: Prisma.PlanSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Plan
+   */
+  omit?: Prisma.PlanOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PlanInclude<ExtArgs> | null
+  where?: Prisma.PlanWhereInput
+  orderBy?: Prisma.PlanOrderByWithRelationInput | Prisma.PlanOrderByWithRelationInput[]
+  cursor?: Prisma.PlanWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PlanScalarFieldEnum | Prisma.PlanScalarFieldEnum[]
 }
 
 /**

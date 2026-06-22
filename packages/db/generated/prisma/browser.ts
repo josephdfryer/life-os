@@ -128,6 +128,11 @@ export type Interaction = Prisma.InteractionModel
  */
 export type Plan = Prisma.PlanModel
 /**
+ * Model PlanExpectedPerson
+ * 
+ */
+export type PlanExpectedPerson = Prisma.PlanExpectedPersonModel
+/**
  * Model Place
  * 
  */

@@ -1,3 +1,17 @@
+// ═════════════════════════════════════════════
+// LIFE OS — DATA MODEL
+// Founding document: docs/MANIFESTO.md
+//
+// Eight primitives connected by one edge type (Interaction):
+//   Person · Place · Item · Event · Plan · Group · State · Note
+//
+// Core rules:
+//   • Derive, never store, aggregates (net worth, relationship health, attention score)
+//   • Semantic honesty over convenience — never overload a primitive with flags
+//   • Provenance is sacred — every derived node traces back to its source
+//   • Resist new primitives hard; each one earned its place
+// ═════════════════════════════════════════════
+
 generator client {
   provider = "prisma-client"
   output   = "../generated/prisma"
@@ -36,12 +50,13 @@ model Workspace {
   ruleRuns       RuleRun[]
   apiKeys        ApiKey[]
   auditLogs      AuditLog[]
-  calendarConnections CalendarConnection[]
-  calendarEventLinks  CalendarEventLink[]
-  gmailConnections    GmailConnection[]
-  gmailMessageLinks   GmailMessageLink[]
-  importJobs          ImportJob[]
-  importStagedVisits  ImportStagedVisit[]
+  calendarConnections  CalendarConnection[]
+  calendarEventLinks   CalendarEventLink[]
+  gmailConnections     GmailConnection[]
+  gmailMessageLinks    GmailMessageLink[]
+  importJobs           ImportJob[]
+  importStagedVisits   ImportStagedVisit[]
+  planExpectedPersons  PlanExpectedPerson[]
 
   @@index([ownerUserId])
   @@index([status])
@@ -111,6 +126,7 @@ model Person {
   interactions Interaction[]
   stagedInteractions StagedInteraction[]
   plans        Plan[]
+  expectedInPlans PlanExpectedPerson[]
   ownedItems   Item[]
   assembledBy  Assembly[]    @relation("AssembledBy")
   disassembledBy Assembly[]  @relation("DisassembledBy")
@@ -469,24 +485,37 @@ model StagedInteraction {
 // ─────────────────────────────────────────────
 
 model Event {
-  id           String        @id @default(cuid())
-  workspaceId  String        @default("default-workspace")
-  workspace    Workspace     @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  createdAt    DateTime      @default(now())
-  name         String
-  type         String
-  timestamp    DateTime
-  placeId      String?
-  place        Place?        @relation(fields: [placeId], references: [id])
-  notes        String?
-  transcript   String?
-  metadata     String?
-  interactions Interaction[]
+  id            String        @id @default(cuid())
+  workspaceId   String        @default("default-workspace")
+  workspace     Workspace     @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  createdAt     DateTime      @default(now())
+  name          String
+  type          String
+  // start/end are the canonical time bounds; timestamp mirrors start for Persons compatibility
+  start         DateTime
+  end           DateTime?
+  timestamp     DateTime
+  placeId       String?
+  place         Place?        @relation(fields: [placeId], references: [id])
+  notes         String?
+  transcript    String?
+  metadata      String?
+  // Which prediction (if any) this occurrence fulfilled
+  sourcePlanId  String?
+  sourcePlan    Plan?         @relation("PlanFulfillment", fields: [sourcePlanId], references: [id], onDelete: SetNull)
+  // Containment nesting — bind to the narrowest true event
+  parentEventId String?
+  parentEvent   Event?        @relation("EventNesting", fields: [parentEventId], references: [id], onDelete: SetNull)
+  childEvents   Event[]       @relation("EventNesting")
+  interactions  Interaction[]
   calendarLinks CalendarEventLink[]
-  groupTags    Group[]             @relation("EventGroupTags")
-  placeNotes   PlaceNote[]
+  groupTags     Group[]             @relation("EventGroupTags")
+  placeNotes    PlaceNote[]
 
+  @@index([workspaceId, start])
   @@index([workspaceId, timestamp])
+  @@index([sourcePlanId])
+  @@index([parentEventId])
 }
 
 // ─────────────────────────────────────────────
@@ -546,9 +575,35 @@ model Plan {
   parentId       String?
   children       Plan[]   @relation("PlanHierarchy")
   parent         Plan?    @relation("PlanHierarchy", fields: [parentId], references: [id])
+  // Calendar-backed prediction fields (null = goal-type plan, set = temporal prediction)
+  scheduledStart     DateTime?
+  scheduledEnd       DateTime?
+  placeId            String?
+  place              Place?    @relation(fields: [placeId], references: [id])
+  externalSource     String?
+  externalInstanceId String?   @unique
+  expectedPeople     PlanExpectedPerson[]
+  // Reverse of Event.sourcePlanId — a fulfilled Plan has exactly one Event here
+  fulfilledBy        Event[]   @relation("PlanFulfillment")
 
   @@index([workspaceId, createdAt])
   @@index([workspaceId, personId])
+  @@index([workspaceId, scheduledStart])
+  @@index([externalInstanceId])
+}
+
+// Junction: expected attendees on a Plan (flat Person refs, not Interactions)
+model PlanExpectedPerson {
+  planId      String
+  personId    String
+  workspaceId String   @default("default-workspace")
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  plan        Plan      @relation(fields: [planId], references: [id], onDelete: Cascade)
+  person      Person    @relation(fields: [personId], references: [id], onDelete: Cascade)
+
+  @@id([planId, personId])
+  @@index([personId])
+  @@index([workspaceId])
 }
 
 // ─────────────────────────────────────────────
@@ -571,6 +626,7 @@ model Place {
   parentPlace   Place?        @relation("PlaceHierarchy", fields: [parentPlaceId], references: [id])
   childPlaces   Place[]       @relation("PlaceHierarchy")
   events        Event[]
+  plans         Plan[]
   interactions  Interaction[]
   items         Item[]
   notes         PlaceNote[]

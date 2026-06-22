@@ -101,6 +101,7 @@ async function main() {
     data: {
       name: "Series A strategy call with Marcus",
       type: "call",
+      start: daysAgo(3),
       timestamp: daysAgo(3),
     },
   })
@@ -123,6 +124,7 @@ async function main() {
     data: {
       name: "Dinner at Nopa with Marcus",
       type: "dinner",
+      start: daysAgo(10),
       timestamp: daysAgo(10),
     },
   })
@@ -144,6 +146,7 @@ async function main() {
     data: {
       name: "BuildStack product review",
       type: "meeting",
+      start: daysAgo(18),
       timestamp: daysAgo(18),
     },
   })
@@ -166,6 +169,7 @@ async function main() {
     data: {
       name: "Call with Sarah re: fintech portfolio",
       type: "call",
+      start: daysAgo(28),
       timestamp: daysAgo(28),
     },
   })
@@ -187,6 +191,7 @@ async function main() {
     data: {
       name: "Fintech Nexus Conference",
       type: "conference",
+      start: daysAgo(55),
       timestamp: daysAgo(55),
     },
   })
@@ -208,6 +213,7 @@ async function main() {
     data: {
       name: "Slack message with Lily about design system",
       type: "message",
+      start: daysAgo(25),
       timestamp: daysAgo(25),
     },
   })
@@ -229,6 +235,7 @@ async function main() {
     data: {
       name: "Catch-up call with Jordan",
       type: "call",
+      start: daysAgo(40),
       timestamp: daysAgo(40),
     },
   })
@@ -251,6 +258,7 @@ async function main() {
     data: {
       name: "Email thread with Derek about advisory terms",
       type: "email",
+      start: daysAgo(185),
       timestamp: daysAgo(185),
     },
   })

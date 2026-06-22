@@ -11,6 +11,7 @@ const LAUNCH_AGENTS_DIR = path.join(os.homedir(), "Library/LaunchAgents")
 
 const PLIST_NAMES = [
   "com.lifeos.capture",
+  "com.lifeos.krisp",
   "com.lifeos.synthesis",
   "com.lifeos.brief",
 ]

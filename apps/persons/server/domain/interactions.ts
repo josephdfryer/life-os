@@ -44,6 +44,7 @@ export async function createInteraction(input: InteractionInput, actor?: DomainA
         name: summary ? summary.slice(0, 80) : `${type} interaction`,
         workspaceId,
         type,
+        start: timestamp,
         timestamp,
       },
     })
@@ -185,6 +186,7 @@ export async function appendDailySourceInteraction(input: {
       name: `${input.source} ${dayKey(input.timestamp)}`.slice(0, 80),
       workspaceId,
       type: input.type,
+      start: input.timestamp,
       timestamp: input.timestamp,
       metadata: JSON.stringify({ source: input.source, day: dayKey(input.timestamp) }),
     },

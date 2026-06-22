@@ -6,6 +6,7 @@ export type EventInput = {
   name?: unknown
   type?: unknown
   timestamp?: unknown
+  end?: unknown
   placeId?: unknown
   notes?: unknown
   transcript?: unknown
@@ -23,6 +24,8 @@ export async function createEvent(input: EventInput, actor?: DomainActor) {
       workspaceId,
       name,
       type,
+      start: timestamp,
+      end: input.end ? parseTimestamp(input.end) : null,
       timestamp,
       placeId: optionalString(input.placeId),
       notes: optionalString(input.notes),
