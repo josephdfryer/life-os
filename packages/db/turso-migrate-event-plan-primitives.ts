@@ -16,7 +16,9 @@ async function main() {
 
     if (!existingEventCols.has("start")) {
       console.log("  Event: adding start column...")
-      await client.execute(`ALTER TABLE "Event" ADD COLUMN "start" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP`)
+      // Turso/libSQL rejects ADD COLUMN with a non-constant default (CURRENT_TIMESTAMP),
+      // so seed with a constant placeholder, then immediately backfill from timestamp.
+      await client.execute(`ALTER TABLE "Event" ADD COLUMN "start" DATETIME NOT NULL DEFAULT '1970-01-01 00:00:00'`)
       console.log("  Event: backfilling start from timestamp...")
       await client.execute(`UPDATE "Event" SET "start" = "timestamp"`)
     }
