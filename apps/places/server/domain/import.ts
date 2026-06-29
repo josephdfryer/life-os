@@ -528,6 +528,8 @@ async function acceptVisit(visit: RawVisit, workspaceId: string) {
       placeId: place.id,
       name: `Visit: ${place.name}`,
       type: "visit",
+      start: visit.startedAt,
+      end: visit.endedAt ?? null,
       timestamp: visit.startedAt,
       notes: visit.placeAddress ? `Imported from Google Maps Timeline. ${visit.placeAddress}` : "Imported from Google Maps Timeline.",
       metadata: JSON.stringify({

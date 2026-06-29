@@ -29,8 +29,10 @@
         "NEXT_PUBLIC_PERSONS_URL",
         "NEXT_PUBLIC_PLACES_URL",
         "NEXT_PUBLIC_STUFF_URL",
+        "NEXT_PUBLIC_THEORY_URL",
         "LIFE_OS_COOKIE_DOMAIN",
         "OWNER_EMAILS",
+        "THEORY_WORKSPACE_ID",
         "TURSO_AUTH_TOKEN",
         "TURSO_DATABASE_URL"
       ],

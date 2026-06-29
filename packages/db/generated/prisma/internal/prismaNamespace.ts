@@ -419,6 +419,9 @@ export const ModelName = {
   PersonGroup: 'PersonGroup',
   GroupGroup: 'GroupGroup',
   PlaceGroup: 'PlaceGroup',
+  Note: 'Note',
+  TheorySnapshot: 'TheorySnapshot',
+  TheorySnapshotSource: 'TheorySnapshotSource',
   StateDefinition: 'StateDefinition',
   State: 'State'
 } as const
@@ -436,7 +439,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "workspace" | "workspaceMember" | "approvedEmail" | "person" | "user" | "role" | "permission" | "userRole" | "rolePermission" | "apiKey" | "apiKeyScope" | "auditLog" | "calendarConnection" | "calendarEventLink" | "gmailConnection" | "gmailMessageLink" | "rule" | "ruleRun" | "stagedInteraction" | "event" | "interaction" | "plan" | "planExpectedPerson" | "place" | "importJob" | "importStagedVisit" | "placeNote" | "item" | "assembly" | "itemInteraction" | "importedFile" | "group" | "personGroup" | "groupGroup" | "placeGroup" | "stateDefinition" | "state"
+    modelProps: "workspace" | "workspaceMember" | "approvedEmail" | "person" | "user" | "role" | "permission" | "userRole" | "rolePermission" | "apiKey" | "apiKeyScope" | "auditLog" | "calendarConnection" | "calendarEventLink" | "gmailConnection" | "gmailMessageLink" | "rule" | "ruleRun" | "stagedInteraction" | "event" | "interaction" | "plan" | "planExpectedPerson" | "place" | "importJob" | "importStagedVisit" | "placeNote" | "item" | "assembly" | "itemInteraction" | "importedFile" | "group" | "personGroup" | "groupGroup" | "placeGroup" | "note" | "theorySnapshot" | "theorySnapshotSource" | "stateDefinition" | "state"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -3030,6 +3033,228 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    Note: {
+      payload: Prisma.$NotePayload<ExtArgs>
+      fields: Prisma.NoteFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.NoteFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.NoteFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotePayload>
+        }
+        findFirst: {
+          args: Prisma.NoteFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.NoteFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotePayload>
+        }
+        findMany: {
+          args: Prisma.NoteFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotePayload>[]
+        }
+        create: {
+          args: Prisma.NoteCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotePayload>
+        }
+        createMany: {
+          args: Prisma.NoteCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.NoteCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotePayload>[]
+        }
+        delete: {
+          args: Prisma.NoteDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotePayload>
+        }
+        update: {
+          args: Prisma.NoteUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotePayload>
+        }
+        deleteMany: {
+          args: Prisma.NoteDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.NoteUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.NoteUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotePayload>[]
+        }
+        upsert: {
+          args: Prisma.NoteUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotePayload>
+        }
+        aggregate: {
+          args: Prisma.NoteAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateNote>
+        }
+        groupBy: {
+          args: Prisma.NoteGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.NoteGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.NoteCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.NoteCountAggregateOutputType> | number
+        }
+      }
+    }
+    TheorySnapshot: {
+      payload: Prisma.$TheorySnapshotPayload<ExtArgs>
+      fields: Prisma.TheorySnapshotFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.TheorySnapshotFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TheorySnapshotPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.TheorySnapshotFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TheorySnapshotPayload>
+        }
+        findFirst: {
+          args: Prisma.TheorySnapshotFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TheorySnapshotPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.TheorySnapshotFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TheorySnapshotPayload>
+        }
+        findMany: {
+          args: Prisma.TheorySnapshotFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TheorySnapshotPayload>[]
+        }
+        create: {
+          args: Prisma.TheorySnapshotCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TheorySnapshotPayload>
+        }
+        createMany: {
+          args: Prisma.TheorySnapshotCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.TheorySnapshotCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TheorySnapshotPayload>[]
+        }
+        delete: {
+          args: Prisma.TheorySnapshotDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TheorySnapshotPayload>
+        }
+        update: {
+          args: Prisma.TheorySnapshotUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TheorySnapshotPayload>
+        }
+        deleteMany: {
+          args: Prisma.TheorySnapshotDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.TheorySnapshotUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.TheorySnapshotUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TheorySnapshotPayload>[]
+        }
+        upsert: {
+          args: Prisma.TheorySnapshotUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TheorySnapshotPayload>
+        }
+        aggregate: {
+          args: Prisma.TheorySnapshotAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateTheorySnapshot>
+        }
+        groupBy: {
+          args: Prisma.TheorySnapshotGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TheorySnapshotGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.TheorySnapshotCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TheorySnapshotCountAggregateOutputType> | number
+        }
+      }
+    }
+    TheorySnapshotSource: {
+      payload: Prisma.$TheorySnapshotSourcePayload<ExtArgs>
+      fields: Prisma.TheorySnapshotSourceFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.TheorySnapshotSourceFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TheorySnapshotSourcePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.TheorySnapshotSourceFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TheorySnapshotSourcePayload>
+        }
+        findFirst: {
+          args: Prisma.TheorySnapshotSourceFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TheorySnapshotSourcePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.TheorySnapshotSourceFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TheorySnapshotSourcePayload>
+        }
+        findMany: {
+          args: Prisma.TheorySnapshotSourceFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TheorySnapshotSourcePayload>[]
+        }
+        create: {
+          args: Prisma.TheorySnapshotSourceCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TheorySnapshotSourcePayload>
+        }
+        createMany: {
+          args: Prisma.TheorySnapshotSourceCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.TheorySnapshotSourceCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TheorySnapshotSourcePayload>[]
+        }
+        delete: {
+          args: Prisma.TheorySnapshotSourceDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TheorySnapshotSourcePayload>
+        }
+        update: {
+          args: Prisma.TheorySnapshotSourceUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TheorySnapshotSourcePayload>
+        }
+        deleteMany: {
+          args: Prisma.TheorySnapshotSourceDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.TheorySnapshotSourceUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.TheorySnapshotSourceUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TheorySnapshotSourcePayload>[]
+        }
+        upsert: {
+          args: Prisma.TheorySnapshotSourceUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TheorySnapshotSourcePayload>
+        }
+        aggregate: {
+          args: Prisma.TheorySnapshotSourceAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateTheorySnapshotSource>
+        }
+        groupBy: {
+          args: Prisma.TheorySnapshotSourceGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TheorySnapshotSourceGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.TheorySnapshotSourceCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TheorySnapshotSourceCountAggregateOutputType> | number
+        }
+      }
+    }
     StateDefinition: {
       payload: Prisma.$StateDefinitionPayload<ExtArgs>
       fields: Prisma.StateDefinitionFieldRefs
@@ -3547,7 +3772,8 @@ export const EventScalarFieldEnum = {
   transcript: 'transcript',
   metadata: 'metadata',
   sourcePlanId: 'sourcePlanId',
-  parentEventId: 'parentEventId'
+  parentEventId: 'parentEventId',
+  sourceNoteId: 'sourceNoteId'
 } as const
 
 export type EventScalarFieldEnum = (typeof EventScalarFieldEnum)[keyof typeof EventScalarFieldEnum]
@@ -3571,7 +3797,8 @@ export const InteractionScalarFieldEnum = {
   billable: 'billable',
   amount: 'amount',
   direction: 'direction',
-  sourceFileId: 'sourceFileId'
+  sourceFileId: 'sourceFileId',
+  sourceNoteId: 'sourceNoteId'
 } as const
 
 export type InteractionScalarFieldEnum = (typeof InteractionScalarFieldEnum)[keyof typeof InteractionScalarFieldEnum]
@@ -3591,7 +3818,8 @@ export const PlanScalarFieldEnum = {
   scheduledEnd: 'scheduledEnd',
   placeId: 'placeId',
   externalSource: 'externalSource',
-  externalInstanceId: 'externalInstanceId'
+  externalInstanceId: 'externalInstanceId',
+  sourceNoteId: 'sourceNoteId'
 } as const
 
 export type PlanScalarFieldEnum = (typeof PlanScalarFieldEnum)[keyof typeof PlanScalarFieldEnum]
@@ -3754,7 +3982,8 @@ export const GroupScalarFieldEnum = {
   groupType: 'groupType',
   notes: 'notes',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  sourceNoteId: 'sourceNoteId'
 } as const
 
 export type GroupScalarFieldEnum = (typeof GroupScalarFieldEnum)[keyof typeof GroupScalarFieldEnum]
@@ -3796,6 +4025,51 @@ export const PlaceGroupScalarFieldEnum = {
 export type PlaceGroupScalarFieldEnum = (typeof PlaceGroupScalarFieldEnum)[keyof typeof PlaceGroupScalarFieldEnum]
 
 
+export const NoteScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  createdAt: 'createdAt',
+  timestamp: 'timestamp',
+  type: 'type',
+  content: 'content',
+  metadata: 'metadata',
+  sourceFileId: 'sourceFileId'
+} as const
+
+export type NoteScalarFieldEnum = (typeof NoteScalarFieldEnum)[keyof typeof NoteScalarFieldEnum]
+
+
+export const TheorySnapshotScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  subjectPersonId: 'subjectPersonId',
+  version: 'version',
+  title: 'title',
+  summary: 'summary',
+  markdownBody: 'markdownBody',
+  status: 'status',
+  confidence: 'confidence',
+  synthesizedAt: 'synthesizedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TheorySnapshotScalarFieldEnum = (typeof TheorySnapshotScalarFieldEnum)[keyof typeof TheorySnapshotScalarFieldEnum]
+
+
+export const TheorySnapshotSourceScalarFieldEnum = {
+  id: 'id',
+  snapshotId: 'snapshotId',
+  sourceType: 'sourceType',
+  sourceId: 'sourceId',
+  contribution: 'contribution',
+  weight: 'weight',
+  createdAt: 'createdAt'
+} as const
+
+export type TheorySnapshotSourceScalarFieldEnum = (typeof TheorySnapshotSourceScalarFieldEnum)[keyof typeof TheorySnapshotSourceScalarFieldEnum]
+
+
 export const StateDefinitionScalarFieldEnum = {
   id: 'id',
   workspaceId: 'workspaceId',
@@ -3816,6 +4090,7 @@ export const StateScalarFieldEnum = {
   definitionId: 'definitionId',
   severity: 'severity',
   source: 'source',
+  sourceNoteId: 'sourceNoteId',
   recordedAt: 'recordedAt',
   createdAt: 'createdAt'
 } as const
@@ -4098,6 +4373,9 @@ export type GlobalOmitConfig = {
   personGroup?: Prisma.PersonGroupOmit
   groupGroup?: Prisma.GroupGroupOmit
   placeGroup?: Prisma.PlaceGroupOmit
+  note?: Prisma.NoteOmit
+  theorySnapshot?: Prisma.TheorySnapshotOmit
+  theorySnapshotSource?: Prisma.TheorySnapshotSourceOmit
   stateDefinition?: Prisma.StateDefinitionOmit
   state?: Prisma.StateOmit
 }

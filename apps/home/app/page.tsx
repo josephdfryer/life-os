@@ -17,6 +17,12 @@ const appLinks = [
     href: process.env.NEXT_PUBLIC_STUFF_URL ?? "http://localhost:3001",
     description: "Objects and inventory",
   },
+  {
+    name: "Theory of",
+    label: "Theory",
+    href: process.env.NEXT_PUBLIC_THEORY_URL ?? "http://localhost:3004",
+    description: "Living theory of a person",
+  },
 ]
 
 export default function Home() {

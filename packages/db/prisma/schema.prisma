@@ -42,6 +42,8 @@ model Workspace {
   plans          Plan[]
   places         Place[]
   placeNotes     PlaceNote[]
+  notes          Note[]
+  theorySnapshots TheorySnapshot[]
   groups         Group[]
   items          Item[]
   importedFiles  ImportedFile[]
@@ -134,6 +136,7 @@ model Person {
   users        User[]
   apiKeys      ApiKey[]
   auditLogs    AuditLog[]
+  theorySnapshots TheorySnapshot[]
 
   @@index([workspaceId, last, first])
   @@index([last, first])
@@ -507,6 +510,9 @@ model Event {
   parentEventId String?
   parentEvent   Event?        @relation("EventNesting", fields: [parentEventId], references: [id], onDelete: SetNull)
   childEvents   Event[]       @relation("EventNesting")
+  // Provenance — the Note this Event was derived from, if any
+  sourceNoteId  String?
+  sourceNote    Note?         @relation(fields: [sourceNoteId], references: [id], onDelete: SetNull)
   interactions  Interaction[]
   calendarLinks CalendarEventLink[]
   groupTags     Group[]             @relation("EventGroupTags")
@@ -548,6 +554,9 @@ model Interaction {
   direction       String?
   sourceFileId    String?
   sourceFile      ImportedFile?     @relation(fields: [sourceFileId], references: [id])
+  // Provenance — the Note this Interaction was derived from, if any
+  sourceNoteId    String?
+  sourceNote      Note?             @relation(fields: [sourceNoteId], references: [id], onDelete: SetNull)
   itemInteractions ItemInteraction[]
   gmailLinks       GmailMessageLink[]
 
@@ -585,6 +594,9 @@ model Plan {
   expectedPeople     PlanExpectedPerson[]
   // Reverse of Event.sourcePlanId — a fulfilled Plan has exactly one Event here
   fulfilledBy        Event[]   @relation("PlanFulfillment")
+  // Provenance — the Note this Plan was derived from, if any
+  sourceNoteId       String?
+  sourceNote         Note?     @relation(fields: [sourceNoteId], references: [id], onDelete: SetNull)
 
   @@index([workspaceId, createdAt])
   @@index([workspaceId, personId])
@@ -843,6 +855,7 @@ model ImportedFile {
   sizeBytes    Int
   content      String?
   interactions Interaction[]
+  notes        Note[]
 
   @@index([workspaceId, createdAt])
 }
@@ -887,6 +900,9 @@ model Group {
   parentGroups      GroupGroup[]  @relation("ChildGroup")
   placeAffiliations PlaceGroup[]
   taggedEvents      Event[]       @relation("EventGroupTags")
+  // Provenance — the Note this Group was derived from, if any
+  sourceNoteId      String?
+  sourceNote        Note?         @relation(fields: [sourceNoteId], references: [id], onDelete: SetNull)
 
   @@index([workspaceId])
   @@index([workspaceId, groupType])
@@ -938,6 +954,96 @@ model PlaceGroup {
 }
 
 // ─────────────────────────────────────────────
+// PRIMARY: Note (8th primitive)
+// A raw captured thought, voice memo transcript, or observation — the entry
+// point for unstructured input before it is resolved into structure.
+// Provenance is sacred: every derivable node carries a nullable sourceNoteId
+// back to the Note it came from. Notes are immutable by convention.
+// ─────────────────────────────────────────────
+
+model Note {
+  id           String        @id @default(cuid())
+  workspaceId  String        @default("default-workspace")
+  workspace    Workspace     @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  createdAt    DateTime      @default(now())
+  // When the underlying thought/observation occurred (may predate createdAt)
+  timestamp    DateTime
+  // thought | voice_transcript | observation | import
+  type         String
+  content      String
+  metadata     String?
+  // Raw/derived split: link back to the archived raw file, when one exists
+  sourceFileId String?
+  sourceFile   ImportedFile? @relation(fields: [sourceFileId], references: [id])
+
+  // Reverse provenance — nodes derived from this Note
+  plans        Plan[]
+  events       Event[]
+  interactions Interaction[]
+  states       State[]
+  groups       Group[]
+
+  @@index([workspaceId, timestamp(sort: Desc)])
+  @@index([sourceFileId])
+}
+
+// ─────────────────────────────────────────────
+// APP-LAYER STATE: Theory of Person
+// NOT a life primitive. A cached, versioned, auditable synthesis derived from
+// the stored truth (Person · Note · Event · Plan · State · Interaction).
+// Person is the source entity; the theory is the derived interpretation.
+// ─────────────────────────────────────────────
+
+model TheorySnapshot {
+  id              String    @id @default(cuid())
+  workspaceId     String    @default("default-workspace")
+  workspace       Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  subjectPersonId String
+  subjectPerson   Person    @relation(fields: [subjectPersonId], references: [id], onDelete: Cascade)
+
+  version         Int
+  title           String
+
+  summary         String
+  markdownBody    String
+
+  // current | archived | draft | rejected
+  status          String    @default("current")
+  confidence      Float?
+
+  synthesizedAt   DateTime  @default(now())
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  sources         TheorySnapshotSource[]
+
+  @@index([subjectPersonId])
+  @@index([subjectPersonId, version])
+  @@index([status])
+  @@index([workspaceId])
+}
+
+model TheorySnapshotSource {
+  id           String         @id @default(cuid())
+
+  snapshotId   String
+  snapshot     TheorySnapshot @relation(fields: [snapshotId], references: [id], onDelete: Cascade)
+
+  // note | event | interaction | state | plan | person
+  sourceType   String
+  sourceId     String
+
+  contribution String?
+  weight       Float?
+
+  createdAt    DateTime       @default(now())
+
+  @@index([snapshotId])
+  @@index([sourceType, sourceId])
+}
+
+// ─────────────────────────────────────────────
 // STATE LAYER
 // ─────────────────────────────────────────────
 
@@ -963,6 +1069,9 @@ model State {
   definition   StateDefinition @relation(fields: [definitionId], references: [id])
   severity     Float?
   source       String?
+  // Provenance — the Note this State was derived from, if any
+  sourceNoteId String?
+  sourceNote   Note?           @relation(fields: [sourceNoteId], references: [id], onDelete: SetNull)
   recordedAt   DateTime
   createdAt    DateTime        @default(now())
 

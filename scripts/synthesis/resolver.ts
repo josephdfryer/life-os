@@ -99,7 +99,7 @@ async function resolvePlans(mentions: string[], db: PrismaClient): Promise<strin
   return ids
 }
 
-function normalizePhone(value: string): string | null {
+export function normalizePhone(value: string): string | null {
   const digits = value.replace(/\D/g, "")
   if (digits.length < 7) return null
   return digits.length === 10 ? `+1${digits}` : `+${digits.replace(/^00/, "")}`

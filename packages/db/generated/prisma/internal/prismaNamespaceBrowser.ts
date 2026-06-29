@@ -86,6 +86,9 @@ export const ModelName = {
   PersonGroup: 'PersonGroup',
   GroupGroup: 'GroupGroup',
   PlaceGroup: 'PlaceGroup',
+  Note: 'Note',
+  TheorySnapshot: 'TheorySnapshot',
+  TheorySnapshotSource: 'TheorySnapshotSource',
   StateDefinition: 'StateDefinition',
   State: 'State'
 } as const
@@ -436,7 +439,8 @@ export const EventScalarFieldEnum = {
   transcript: 'transcript',
   metadata: 'metadata',
   sourcePlanId: 'sourcePlanId',
-  parentEventId: 'parentEventId'
+  parentEventId: 'parentEventId',
+  sourceNoteId: 'sourceNoteId'
 } as const
 
 export type EventScalarFieldEnum = (typeof EventScalarFieldEnum)[keyof typeof EventScalarFieldEnum]
@@ -460,7 +464,8 @@ export const InteractionScalarFieldEnum = {
   billable: 'billable',
   amount: 'amount',
   direction: 'direction',
-  sourceFileId: 'sourceFileId'
+  sourceFileId: 'sourceFileId',
+  sourceNoteId: 'sourceNoteId'
 } as const
 
 export type InteractionScalarFieldEnum = (typeof InteractionScalarFieldEnum)[keyof typeof InteractionScalarFieldEnum]
@@ -480,7 +485,8 @@ export const PlanScalarFieldEnum = {
   scheduledEnd: 'scheduledEnd',
   placeId: 'placeId',
   externalSource: 'externalSource',
-  externalInstanceId: 'externalInstanceId'
+  externalInstanceId: 'externalInstanceId',
+  sourceNoteId: 'sourceNoteId'
 } as const
 
 export type PlanScalarFieldEnum = (typeof PlanScalarFieldEnum)[keyof typeof PlanScalarFieldEnum]
@@ -643,7 +649,8 @@ export const GroupScalarFieldEnum = {
   groupType: 'groupType',
   notes: 'notes',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  sourceNoteId: 'sourceNoteId'
 } as const
 
 export type GroupScalarFieldEnum = (typeof GroupScalarFieldEnum)[keyof typeof GroupScalarFieldEnum]
@@ -685,6 +692,51 @@ export const PlaceGroupScalarFieldEnum = {
 export type PlaceGroupScalarFieldEnum = (typeof PlaceGroupScalarFieldEnum)[keyof typeof PlaceGroupScalarFieldEnum]
 
 
+export const NoteScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  createdAt: 'createdAt',
+  timestamp: 'timestamp',
+  type: 'type',
+  content: 'content',
+  metadata: 'metadata',
+  sourceFileId: 'sourceFileId'
+} as const
+
+export type NoteScalarFieldEnum = (typeof NoteScalarFieldEnum)[keyof typeof NoteScalarFieldEnum]
+
+
+export const TheorySnapshotScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  subjectPersonId: 'subjectPersonId',
+  version: 'version',
+  title: 'title',
+  summary: 'summary',
+  markdownBody: 'markdownBody',
+  status: 'status',
+  confidence: 'confidence',
+  synthesizedAt: 'synthesizedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TheorySnapshotScalarFieldEnum = (typeof TheorySnapshotScalarFieldEnum)[keyof typeof TheorySnapshotScalarFieldEnum]
+
+
+export const TheorySnapshotSourceScalarFieldEnum = {
+  id: 'id',
+  snapshotId: 'snapshotId',
+  sourceType: 'sourceType',
+  sourceId: 'sourceId',
+  contribution: 'contribution',
+  weight: 'weight',
+  createdAt: 'createdAt'
+} as const
+
+export type TheorySnapshotSourceScalarFieldEnum = (typeof TheorySnapshotSourceScalarFieldEnum)[keyof typeof TheorySnapshotSourceScalarFieldEnum]
+
+
 export const StateDefinitionScalarFieldEnum = {
   id: 'id',
   workspaceId: 'workspaceId',
@@ -705,6 +757,7 @@ export const StateScalarFieldEnum = {
   definitionId: 'definitionId',
   severity: 'severity',
   source: 'source',
+  sourceNoteId: 'sourceNoteId',
   recordedAt: 'recordedAt',
   createdAt: 'createdAt'
 } as const

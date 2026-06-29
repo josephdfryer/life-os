@@ -372,6 +372,7 @@ export type PersonWhereInput = {
   users?: Prisma.UserListRelationFilter
   apiKeys?: Prisma.ApiKeyListRelationFilter
   auditLogs?: Prisma.AuditLogListRelationFilter
+  theorySnapshots?: Prisma.TheorySnapshotListRelationFilter
 }
 
 export type PersonOrderByWithRelationInput = {
@@ -410,6 +411,7 @@ export type PersonOrderByWithRelationInput = {
   users?: Prisma.UserOrderByRelationAggregateInput
   apiKeys?: Prisma.ApiKeyOrderByRelationAggregateInput
   auditLogs?: Prisma.AuditLogOrderByRelationAggregateInput
+  theorySnapshots?: Prisma.TheorySnapshotOrderByRelationAggregateInput
 }
 
 export type PersonWhereUniqueInput = Prisma.AtLeast<{
@@ -451,6 +453,7 @@ export type PersonWhereUniqueInput = Prisma.AtLeast<{
   users?: Prisma.UserListRelationFilter
   apiKeys?: Prisma.ApiKeyListRelationFilter
   auditLogs?: Prisma.AuditLogListRelationFilter
+  theorySnapshots?: Prisma.TheorySnapshotListRelationFilter
 }, "id">
 
 export type PersonOrderByWithAggregationInput = {
@@ -548,6 +551,7 @@ export type PersonCreateInput = {
   users?: Prisma.UserCreateNestedManyWithoutPersonInput
   apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutOwnerPersonInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutPersonInput
+  theorySnapshots?: Prisma.TheorySnapshotCreateNestedManyWithoutSubjectPersonInput
 }
 
 export type PersonUncheckedCreateInput = {
@@ -585,6 +589,7 @@ export type PersonUncheckedCreateInput = {
   users?: Prisma.UserUncheckedCreateNestedManyWithoutPersonInput
   apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutOwnerPersonInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutPersonInput
+  theorySnapshots?: Prisma.TheorySnapshotUncheckedCreateNestedManyWithoutSubjectPersonInput
 }
 
 export type PersonUpdateInput = {
@@ -622,6 +627,7 @@ export type PersonUpdateInput = {
   users?: Prisma.UserUpdateManyWithoutPersonNestedInput
   apiKeys?: Prisma.ApiKeyUpdateManyWithoutOwnerPersonNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutPersonNestedInput
+  theorySnapshots?: Prisma.TheorySnapshotUpdateManyWithoutSubjectPersonNestedInput
 }
 
 export type PersonUncheckedUpdateInput = {
@@ -659,6 +665,7 @@ export type PersonUncheckedUpdateInput = {
   users?: Prisma.UserUncheckedUpdateManyWithoutPersonNestedInput
   apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutOwnerPersonNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutPersonNestedInput
+  theorySnapshots?: Prisma.TheorySnapshotUncheckedUpdateManyWithoutSubjectPersonNestedInput
 }
 
 export type PersonCreateManyInput = {
@@ -1066,6 +1073,20 @@ export type PersonUpdateOneRequiredWithoutGroupMembershipsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.PersonUpdateToOneWithWhereWithoutGroupMembershipsInput, Prisma.PersonUpdateWithoutGroupMembershipsInput>, Prisma.PersonUncheckedUpdateWithoutGroupMembershipsInput>
 }
 
+export type PersonCreateNestedOneWithoutTheorySnapshotsInput = {
+  create?: Prisma.XOR<Prisma.PersonCreateWithoutTheorySnapshotsInput, Prisma.PersonUncheckedCreateWithoutTheorySnapshotsInput>
+  connectOrCreate?: Prisma.PersonCreateOrConnectWithoutTheorySnapshotsInput
+  connect?: Prisma.PersonWhereUniqueInput
+}
+
+export type PersonUpdateOneRequiredWithoutTheorySnapshotsNestedInput = {
+  create?: Prisma.XOR<Prisma.PersonCreateWithoutTheorySnapshotsInput, Prisma.PersonUncheckedCreateWithoutTheorySnapshotsInput>
+  connectOrCreate?: Prisma.PersonCreateOrConnectWithoutTheorySnapshotsInput
+  upsert?: Prisma.PersonUpsertWithoutTheorySnapshotsInput
+  connect?: Prisma.PersonWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.PersonUpdateToOneWithWhereWithoutTheorySnapshotsInput, Prisma.PersonUpdateWithoutTheorySnapshotsInput>, Prisma.PersonUncheckedUpdateWithoutTheorySnapshotsInput>
+}
+
 export type PersonCreateWithoutWorkspaceInput = {
   id?: string
   createdAt?: Date | string
@@ -1100,6 +1121,7 @@ export type PersonCreateWithoutWorkspaceInput = {
   users?: Prisma.UserCreateNestedManyWithoutPersonInput
   apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutOwnerPersonInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutPersonInput
+  theorySnapshots?: Prisma.TheorySnapshotCreateNestedManyWithoutSubjectPersonInput
 }
 
 export type PersonUncheckedCreateWithoutWorkspaceInput = {
@@ -1136,6 +1158,7 @@ export type PersonUncheckedCreateWithoutWorkspaceInput = {
   users?: Prisma.UserUncheckedCreateNestedManyWithoutPersonInput
   apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutOwnerPersonInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutPersonInput
+  theorySnapshots?: Prisma.TheorySnapshotUncheckedCreateNestedManyWithoutSubjectPersonInput
 }
 
 export type PersonCreateOrConnectWithoutWorkspaceInput = {
@@ -1226,6 +1249,7 @@ export type PersonCreateWithoutUsersInput = {
   groupMemberships?: Prisma.PersonGroupCreateNestedManyWithoutPersonInput
   apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutOwnerPersonInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutPersonInput
+  theorySnapshots?: Prisma.TheorySnapshotCreateNestedManyWithoutSubjectPersonInput
 }
 
 export type PersonUncheckedCreateWithoutUsersInput = {
@@ -1262,6 +1286,7 @@ export type PersonUncheckedCreateWithoutUsersInput = {
   groupMemberships?: Prisma.PersonGroupUncheckedCreateNestedManyWithoutPersonInput
   apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutOwnerPersonInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutPersonInput
+  theorySnapshots?: Prisma.TheorySnapshotUncheckedCreateNestedManyWithoutSubjectPersonInput
 }
 
 export type PersonCreateOrConnectWithoutUsersInput = {
@@ -1314,6 +1339,7 @@ export type PersonUpdateWithoutUsersInput = {
   groupMemberships?: Prisma.PersonGroupUpdateManyWithoutPersonNestedInput
   apiKeys?: Prisma.ApiKeyUpdateManyWithoutOwnerPersonNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutPersonNestedInput
+  theorySnapshots?: Prisma.TheorySnapshotUpdateManyWithoutSubjectPersonNestedInput
 }
 
 export type PersonUncheckedUpdateWithoutUsersInput = {
@@ -1350,6 +1376,7 @@ export type PersonUncheckedUpdateWithoutUsersInput = {
   groupMemberships?: Prisma.PersonGroupUncheckedUpdateManyWithoutPersonNestedInput
   apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutOwnerPersonNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutPersonNestedInput
+  theorySnapshots?: Prisma.TheorySnapshotUncheckedUpdateManyWithoutSubjectPersonNestedInput
 }
 
 export type PersonCreateWithoutApiKeysInput = {
@@ -1386,6 +1413,7 @@ export type PersonCreateWithoutApiKeysInput = {
   groupMemberships?: Prisma.PersonGroupCreateNestedManyWithoutPersonInput
   users?: Prisma.UserCreateNestedManyWithoutPersonInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutPersonInput
+  theorySnapshots?: Prisma.TheorySnapshotCreateNestedManyWithoutSubjectPersonInput
 }
 
 export type PersonUncheckedCreateWithoutApiKeysInput = {
@@ -1422,6 +1450,7 @@ export type PersonUncheckedCreateWithoutApiKeysInput = {
   groupMemberships?: Prisma.PersonGroupUncheckedCreateNestedManyWithoutPersonInput
   users?: Prisma.UserUncheckedCreateNestedManyWithoutPersonInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutPersonInput
+  theorySnapshots?: Prisma.TheorySnapshotUncheckedCreateNestedManyWithoutSubjectPersonInput
 }
 
 export type PersonCreateOrConnectWithoutApiKeysInput = {
@@ -1474,6 +1503,7 @@ export type PersonUpdateWithoutApiKeysInput = {
   groupMemberships?: Prisma.PersonGroupUpdateManyWithoutPersonNestedInput
   users?: Prisma.UserUpdateManyWithoutPersonNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutPersonNestedInput
+  theorySnapshots?: Prisma.TheorySnapshotUpdateManyWithoutSubjectPersonNestedInput
 }
 
 export type PersonUncheckedUpdateWithoutApiKeysInput = {
@@ -1510,6 +1540,7 @@ export type PersonUncheckedUpdateWithoutApiKeysInput = {
   groupMemberships?: Prisma.PersonGroupUncheckedUpdateManyWithoutPersonNestedInput
   users?: Prisma.UserUncheckedUpdateManyWithoutPersonNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutPersonNestedInput
+  theorySnapshots?: Prisma.TheorySnapshotUncheckedUpdateManyWithoutSubjectPersonNestedInput
 }
 
 export type PersonCreateWithoutAuditLogsInput = {
@@ -1546,6 +1577,7 @@ export type PersonCreateWithoutAuditLogsInput = {
   groupMemberships?: Prisma.PersonGroupCreateNestedManyWithoutPersonInput
   users?: Prisma.UserCreateNestedManyWithoutPersonInput
   apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutOwnerPersonInput
+  theorySnapshots?: Prisma.TheorySnapshotCreateNestedManyWithoutSubjectPersonInput
 }
 
 export type PersonUncheckedCreateWithoutAuditLogsInput = {
@@ -1582,6 +1614,7 @@ export type PersonUncheckedCreateWithoutAuditLogsInput = {
   groupMemberships?: Prisma.PersonGroupUncheckedCreateNestedManyWithoutPersonInput
   users?: Prisma.UserUncheckedCreateNestedManyWithoutPersonInput
   apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutOwnerPersonInput
+  theorySnapshots?: Prisma.TheorySnapshotUncheckedCreateNestedManyWithoutSubjectPersonInput
 }
 
 export type PersonCreateOrConnectWithoutAuditLogsInput = {
@@ -1634,6 +1667,7 @@ export type PersonUpdateWithoutAuditLogsInput = {
   groupMemberships?: Prisma.PersonGroupUpdateManyWithoutPersonNestedInput
   users?: Prisma.UserUpdateManyWithoutPersonNestedInput
   apiKeys?: Prisma.ApiKeyUpdateManyWithoutOwnerPersonNestedInput
+  theorySnapshots?: Prisma.TheorySnapshotUpdateManyWithoutSubjectPersonNestedInput
 }
 
 export type PersonUncheckedUpdateWithoutAuditLogsInput = {
@@ -1670,6 +1704,7 @@ export type PersonUncheckedUpdateWithoutAuditLogsInput = {
   groupMemberships?: Prisma.PersonGroupUncheckedUpdateManyWithoutPersonNestedInput
   users?: Prisma.UserUncheckedUpdateManyWithoutPersonNestedInput
   apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutOwnerPersonNestedInput
+  theorySnapshots?: Prisma.TheorySnapshotUncheckedUpdateManyWithoutSubjectPersonNestedInput
 }
 
 export type PersonCreateWithoutStagedInteractionsInput = {
@@ -1706,6 +1741,7 @@ export type PersonCreateWithoutStagedInteractionsInput = {
   users?: Prisma.UserCreateNestedManyWithoutPersonInput
   apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutOwnerPersonInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutPersonInput
+  theorySnapshots?: Prisma.TheorySnapshotCreateNestedManyWithoutSubjectPersonInput
 }
 
 export type PersonUncheckedCreateWithoutStagedInteractionsInput = {
@@ -1742,6 +1778,7 @@ export type PersonUncheckedCreateWithoutStagedInteractionsInput = {
   users?: Prisma.UserUncheckedCreateNestedManyWithoutPersonInput
   apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutOwnerPersonInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutPersonInput
+  theorySnapshots?: Prisma.TheorySnapshotUncheckedCreateNestedManyWithoutSubjectPersonInput
 }
 
 export type PersonCreateOrConnectWithoutStagedInteractionsInput = {
@@ -1794,6 +1831,7 @@ export type PersonUpdateWithoutStagedInteractionsInput = {
   users?: Prisma.UserUpdateManyWithoutPersonNestedInput
   apiKeys?: Prisma.ApiKeyUpdateManyWithoutOwnerPersonNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutPersonNestedInput
+  theorySnapshots?: Prisma.TheorySnapshotUpdateManyWithoutSubjectPersonNestedInput
 }
 
 export type PersonUncheckedUpdateWithoutStagedInteractionsInput = {
@@ -1830,6 +1868,7 @@ export type PersonUncheckedUpdateWithoutStagedInteractionsInput = {
   users?: Prisma.UserUncheckedUpdateManyWithoutPersonNestedInput
   apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutOwnerPersonNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutPersonNestedInput
+  theorySnapshots?: Prisma.TheorySnapshotUncheckedUpdateManyWithoutSubjectPersonNestedInput
 }
 
 export type PersonCreateWithoutInteractionsInput = {
@@ -1866,6 +1905,7 @@ export type PersonCreateWithoutInteractionsInput = {
   users?: Prisma.UserCreateNestedManyWithoutPersonInput
   apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutOwnerPersonInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutPersonInput
+  theorySnapshots?: Prisma.TheorySnapshotCreateNestedManyWithoutSubjectPersonInput
 }
 
 export type PersonUncheckedCreateWithoutInteractionsInput = {
@@ -1902,6 +1942,7 @@ export type PersonUncheckedCreateWithoutInteractionsInput = {
   users?: Prisma.UserUncheckedCreateNestedManyWithoutPersonInput
   apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutOwnerPersonInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutPersonInput
+  theorySnapshots?: Prisma.TheorySnapshotUncheckedCreateNestedManyWithoutSubjectPersonInput
 }
 
 export type PersonCreateOrConnectWithoutInteractionsInput = {
@@ -1954,6 +1995,7 @@ export type PersonUpdateWithoutInteractionsInput = {
   users?: Prisma.UserUpdateManyWithoutPersonNestedInput
   apiKeys?: Prisma.ApiKeyUpdateManyWithoutOwnerPersonNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutPersonNestedInput
+  theorySnapshots?: Prisma.TheorySnapshotUpdateManyWithoutSubjectPersonNestedInput
 }
 
 export type PersonUncheckedUpdateWithoutInteractionsInput = {
@@ -1990,6 +2032,7 @@ export type PersonUncheckedUpdateWithoutInteractionsInput = {
   users?: Prisma.UserUncheckedUpdateManyWithoutPersonNestedInput
   apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutOwnerPersonNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutPersonNestedInput
+  theorySnapshots?: Prisma.TheorySnapshotUncheckedUpdateManyWithoutSubjectPersonNestedInput
 }
 
 export type PersonCreateWithoutPlansInput = {
@@ -2026,6 +2069,7 @@ export type PersonCreateWithoutPlansInput = {
   users?: Prisma.UserCreateNestedManyWithoutPersonInput
   apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutOwnerPersonInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutPersonInput
+  theorySnapshots?: Prisma.TheorySnapshotCreateNestedManyWithoutSubjectPersonInput
 }
 
 export type PersonUncheckedCreateWithoutPlansInput = {
@@ -2062,6 +2106,7 @@ export type PersonUncheckedCreateWithoutPlansInput = {
   users?: Prisma.UserUncheckedCreateNestedManyWithoutPersonInput
   apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutOwnerPersonInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutPersonInput
+  theorySnapshots?: Prisma.TheorySnapshotUncheckedCreateNestedManyWithoutSubjectPersonInput
 }
 
 export type PersonCreateOrConnectWithoutPlansInput = {
@@ -2114,6 +2159,7 @@ export type PersonUpdateWithoutPlansInput = {
   users?: Prisma.UserUpdateManyWithoutPersonNestedInput
   apiKeys?: Prisma.ApiKeyUpdateManyWithoutOwnerPersonNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutPersonNestedInput
+  theorySnapshots?: Prisma.TheorySnapshotUpdateManyWithoutSubjectPersonNestedInput
 }
 
 export type PersonUncheckedUpdateWithoutPlansInput = {
@@ -2150,6 +2196,7 @@ export type PersonUncheckedUpdateWithoutPlansInput = {
   users?: Prisma.UserUncheckedUpdateManyWithoutPersonNestedInput
   apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutOwnerPersonNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutPersonNestedInput
+  theorySnapshots?: Prisma.TheorySnapshotUncheckedUpdateManyWithoutSubjectPersonNestedInput
 }
 
 export type PersonCreateWithoutExpectedInPlansInput = {
@@ -2186,6 +2233,7 @@ export type PersonCreateWithoutExpectedInPlansInput = {
   users?: Prisma.UserCreateNestedManyWithoutPersonInput
   apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutOwnerPersonInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutPersonInput
+  theorySnapshots?: Prisma.TheorySnapshotCreateNestedManyWithoutSubjectPersonInput
 }
 
 export type PersonUncheckedCreateWithoutExpectedInPlansInput = {
@@ -2222,6 +2270,7 @@ export type PersonUncheckedCreateWithoutExpectedInPlansInput = {
   users?: Prisma.UserUncheckedCreateNestedManyWithoutPersonInput
   apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutOwnerPersonInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutPersonInput
+  theorySnapshots?: Prisma.TheorySnapshotUncheckedCreateNestedManyWithoutSubjectPersonInput
 }
 
 export type PersonCreateOrConnectWithoutExpectedInPlansInput = {
@@ -2274,6 +2323,7 @@ export type PersonUpdateWithoutExpectedInPlansInput = {
   users?: Prisma.UserUpdateManyWithoutPersonNestedInput
   apiKeys?: Prisma.ApiKeyUpdateManyWithoutOwnerPersonNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutPersonNestedInput
+  theorySnapshots?: Prisma.TheorySnapshotUpdateManyWithoutSubjectPersonNestedInput
 }
 
 export type PersonUncheckedUpdateWithoutExpectedInPlansInput = {
@@ -2310,6 +2360,7 @@ export type PersonUncheckedUpdateWithoutExpectedInPlansInput = {
   users?: Prisma.UserUncheckedUpdateManyWithoutPersonNestedInput
   apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutOwnerPersonNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutPersonNestedInput
+  theorySnapshots?: Prisma.TheorySnapshotUncheckedUpdateManyWithoutSubjectPersonNestedInput
 }
 
 export type PersonCreateWithoutOwnedItemsInput = {
@@ -2346,6 +2397,7 @@ export type PersonCreateWithoutOwnedItemsInput = {
   users?: Prisma.UserCreateNestedManyWithoutPersonInput
   apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutOwnerPersonInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutPersonInput
+  theorySnapshots?: Prisma.TheorySnapshotCreateNestedManyWithoutSubjectPersonInput
 }
 
 export type PersonUncheckedCreateWithoutOwnedItemsInput = {
@@ -2382,6 +2434,7 @@ export type PersonUncheckedCreateWithoutOwnedItemsInput = {
   users?: Prisma.UserUncheckedCreateNestedManyWithoutPersonInput
   apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutOwnerPersonInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutPersonInput
+  theorySnapshots?: Prisma.TheorySnapshotUncheckedCreateNestedManyWithoutSubjectPersonInput
 }
 
 export type PersonCreateOrConnectWithoutOwnedItemsInput = {
@@ -2434,6 +2487,7 @@ export type PersonUpdateWithoutOwnedItemsInput = {
   users?: Prisma.UserUpdateManyWithoutPersonNestedInput
   apiKeys?: Prisma.ApiKeyUpdateManyWithoutOwnerPersonNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutPersonNestedInput
+  theorySnapshots?: Prisma.TheorySnapshotUpdateManyWithoutSubjectPersonNestedInput
 }
 
 export type PersonUncheckedUpdateWithoutOwnedItemsInput = {
@@ -2470,6 +2524,7 @@ export type PersonUncheckedUpdateWithoutOwnedItemsInput = {
   users?: Prisma.UserUncheckedUpdateManyWithoutPersonNestedInput
   apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutOwnerPersonNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutPersonNestedInput
+  theorySnapshots?: Prisma.TheorySnapshotUncheckedUpdateManyWithoutSubjectPersonNestedInput
 }
 
 export type PersonCreateWithoutAssembledByInput = {
@@ -2506,6 +2561,7 @@ export type PersonCreateWithoutAssembledByInput = {
   users?: Prisma.UserCreateNestedManyWithoutPersonInput
   apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutOwnerPersonInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutPersonInput
+  theorySnapshots?: Prisma.TheorySnapshotCreateNestedManyWithoutSubjectPersonInput
 }
 
 export type PersonUncheckedCreateWithoutAssembledByInput = {
@@ -2542,6 +2598,7 @@ export type PersonUncheckedCreateWithoutAssembledByInput = {
   users?: Prisma.UserUncheckedCreateNestedManyWithoutPersonInput
   apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutOwnerPersonInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutPersonInput
+  theorySnapshots?: Prisma.TheorySnapshotUncheckedCreateNestedManyWithoutSubjectPersonInput
 }
 
 export type PersonCreateOrConnectWithoutAssembledByInput = {
@@ -2583,6 +2640,7 @@ export type PersonCreateWithoutDisassembledByInput = {
   users?: Prisma.UserCreateNestedManyWithoutPersonInput
   apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutOwnerPersonInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutPersonInput
+  theorySnapshots?: Prisma.TheorySnapshotCreateNestedManyWithoutSubjectPersonInput
 }
 
 export type PersonUncheckedCreateWithoutDisassembledByInput = {
@@ -2619,6 +2677,7 @@ export type PersonUncheckedCreateWithoutDisassembledByInput = {
   users?: Prisma.UserUncheckedCreateNestedManyWithoutPersonInput
   apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutOwnerPersonInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutPersonInput
+  theorySnapshots?: Prisma.TheorySnapshotUncheckedCreateNestedManyWithoutSubjectPersonInput
 }
 
 export type PersonCreateOrConnectWithoutDisassembledByInput = {
@@ -2671,6 +2730,7 @@ export type PersonUpdateWithoutAssembledByInput = {
   users?: Prisma.UserUpdateManyWithoutPersonNestedInput
   apiKeys?: Prisma.ApiKeyUpdateManyWithoutOwnerPersonNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutPersonNestedInput
+  theorySnapshots?: Prisma.TheorySnapshotUpdateManyWithoutSubjectPersonNestedInput
 }
 
 export type PersonUncheckedUpdateWithoutAssembledByInput = {
@@ -2707,6 +2767,7 @@ export type PersonUncheckedUpdateWithoutAssembledByInput = {
   users?: Prisma.UserUncheckedUpdateManyWithoutPersonNestedInput
   apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutOwnerPersonNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutPersonNestedInput
+  theorySnapshots?: Prisma.TheorySnapshotUncheckedUpdateManyWithoutSubjectPersonNestedInput
 }
 
 export type PersonUpsertWithoutDisassembledByInput = {
@@ -2754,6 +2815,7 @@ export type PersonUpdateWithoutDisassembledByInput = {
   users?: Prisma.UserUpdateManyWithoutPersonNestedInput
   apiKeys?: Prisma.ApiKeyUpdateManyWithoutOwnerPersonNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutPersonNestedInput
+  theorySnapshots?: Prisma.TheorySnapshotUpdateManyWithoutSubjectPersonNestedInput
 }
 
 export type PersonUncheckedUpdateWithoutDisassembledByInput = {
@@ -2790,6 +2852,7 @@ export type PersonUncheckedUpdateWithoutDisassembledByInput = {
   users?: Prisma.UserUncheckedUpdateManyWithoutPersonNestedInput
   apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutOwnerPersonNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutPersonNestedInput
+  theorySnapshots?: Prisma.TheorySnapshotUncheckedUpdateManyWithoutSubjectPersonNestedInput
 }
 
 export type PersonCreateWithoutGroupMembershipsInput = {
@@ -2826,6 +2889,7 @@ export type PersonCreateWithoutGroupMembershipsInput = {
   users?: Prisma.UserCreateNestedManyWithoutPersonInput
   apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutOwnerPersonInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutPersonInput
+  theorySnapshots?: Prisma.TheorySnapshotCreateNestedManyWithoutSubjectPersonInput
 }
 
 export type PersonUncheckedCreateWithoutGroupMembershipsInput = {
@@ -2862,6 +2926,7 @@ export type PersonUncheckedCreateWithoutGroupMembershipsInput = {
   users?: Prisma.UserUncheckedCreateNestedManyWithoutPersonInput
   apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutOwnerPersonInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutPersonInput
+  theorySnapshots?: Prisma.TheorySnapshotUncheckedCreateNestedManyWithoutSubjectPersonInput
 }
 
 export type PersonCreateOrConnectWithoutGroupMembershipsInput = {
@@ -2914,6 +2979,7 @@ export type PersonUpdateWithoutGroupMembershipsInput = {
   users?: Prisma.UserUpdateManyWithoutPersonNestedInput
   apiKeys?: Prisma.ApiKeyUpdateManyWithoutOwnerPersonNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutPersonNestedInput
+  theorySnapshots?: Prisma.TheorySnapshotUpdateManyWithoutSubjectPersonNestedInput
 }
 
 export type PersonUncheckedUpdateWithoutGroupMembershipsInput = {
@@ -2947,6 +3013,171 @@ export type PersonUncheckedUpdateWithoutGroupMembershipsInput = {
   ownedItems?: Prisma.ItemUncheckedUpdateManyWithoutOwnedByNestedInput
   assembledBy?: Prisma.AssemblyUncheckedUpdateManyWithoutAssembledByNestedInput
   disassembledBy?: Prisma.AssemblyUncheckedUpdateManyWithoutDisassembledByNestedInput
+  users?: Prisma.UserUncheckedUpdateManyWithoutPersonNestedInput
+  apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutOwnerPersonNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutPersonNestedInput
+  theorySnapshots?: Prisma.TheorySnapshotUncheckedUpdateManyWithoutSubjectPersonNestedInput
+}
+
+export type PersonCreateWithoutTheorySnapshotsInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  first: string
+  last: string
+  nickname?: string | null
+  title?: string | null
+  headline?: string | null
+  emails?: string
+  phones?: string
+  birthday?: string | null
+  closeness?: number
+  tags?: string
+  values?: string
+  notes?: string | null
+  company?: string | null
+  location?: string | null
+  linkedin?: string | null
+  twitter?: string | null
+  website?: string | null
+  color?: string | null
+  colorSoft?: string | null
+  workspace?: Prisma.WorkspaceCreateNestedOneWithoutPersonsInput
+  interactions?: Prisma.InteractionCreateNestedManyWithoutPersonInput
+  stagedInteractions?: Prisma.StagedInteractionCreateNestedManyWithoutCandidatePersonInput
+  plans?: Prisma.PlanCreateNestedManyWithoutPersonInput
+  expectedInPlans?: Prisma.PlanExpectedPersonCreateNestedManyWithoutPersonInput
+  ownedItems?: Prisma.ItemCreateNestedManyWithoutOwnedByInput
+  assembledBy?: Prisma.AssemblyCreateNestedManyWithoutAssembledByInput
+  disassembledBy?: Prisma.AssemblyCreateNestedManyWithoutDisassembledByInput
+  groupMemberships?: Prisma.PersonGroupCreateNestedManyWithoutPersonInput
+  users?: Prisma.UserCreateNestedManyWithoutPersonInput
+  apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutOwnerPersonInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutPersonInput
+}
+
+export type PersonUncheckedCreateWithoutTheorySnapshotsInput = {
+  id?: string
+  workspaceId?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  first: string
+  last: string
+  nickname?: string | null
+  title?: string | null
+  headline?: string | null
+  emails?: string
+  phones?: string
+  birthday?: string | null
+  closeness?: number
+  tags?: string
+  values?: string
+  notes?: string | null
+  company?: string | null
+  location?: string | null
+  linkedin?: string | null
+  twitter?: string | null
+  website?: string | null
+  color?: string | null
+  colorSoft?: string | null
+  interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutPersonInput
+  stagedInteractions?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutCandidatePersonInput
+  plans?: Prisma.PlanUncheckedCreateNestedManyWithoutPersonInput
+  expectedInPlans?: Prisma.PlanExpectedPersonUncheckedCreateNestedManyWithoutPersonInput
+  ownedItems?: Prisma.ItemUncheckedCreateNestedManyWithoutOwnedByInput
+  assembledBy?: Prisma.AssemblyUncheckedCreateNestedManyWithoutAssembledByInput
+  disassembledBy?: Prisma.AssemblyUncheckedCreateNestedManyWithoutDisassembledByInput
+  groupMemberships?: Prisma.PersonGroupUncheckedCreateNestedManyWithoutPersonInput
+  users?: Prisma.UserUncheckedCreateNestedManyWithoutPersonInput
+  apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutOwnerPersonInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutPersonInput
+}
+
+export type PersonCreateOrConnectWithoutTheorySnapshotsInput = {
+  where: Prisma.PersonWhereUniqueInput
+  create: Prisma.XOR<Prisma.PersonCreateWithoutTheorySnapshotsInput, Prisma.PersonUncheckedCreateWithoutTheorySnapshotsInput>
+}
+
+export type PersonUpsertWithoutTheorySnapshotsInput = {
+  update: Prisma.XOR<Prisma.PersonUpdateWithoutTheorySnapshotsInput, Prisma.PersonUncheckedUpdateWithoutTheorySnapshotsInput>
+  create: Prisma.XOR<Prisma.PersonCreateWithoutTheorySnapshotsInput, Prisma.PersonUncheckedCreateWithoutTheorySnapshotsInput>
+  where?: Prisma.PersonWhereInput
+}
+
+export type PersonUpdateToOneWithWhereWithoutTheorySnapshotsInput = {
+  where?: Prisma.PersonWhereInput
+  data: Prisma.XOR<Prisma.PersonUpdateWithoutTheorySnapshotsInput, Prisma.PersonUncheckedUpdateWithoutTheorySnapshotsInput>
+}
+
+export type PersonUpdateWithoutTheorySnapshotsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  first?: Prisma.StringFieldUpdateOperationsInput | string
+  last?: Prisma.StringFieldUpdateOperationsInput | string
+  nickname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emails?: Prisma.StringFieldUpdateOperationsInput | string
+  phones?: Prisma.StringFieldUpdateOperationsInput | string
+  birthday?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  closeness?: Prisma.IntFieldUpdateOperationsInput | number
+  tags?: Prisma.StringFieldUpdateOperationsInput | string
+  values?: Prisma.StringFieldUpdateOperationsInput | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  company?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  linkedin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutPersonsNestedInput
+  interactions?: Prisma.InteractionUpdateManyWithoutPersonNestedInput
+  stagedInteractions?: Prisma.StagedInteractionUpdateManyWithoutCandidatePersonNestedInput
+  plans?: Prisma.PlanUpdateManyWithoutPersonNestedInput
+  expectedInPlans?: Prisma.PlanExpectedPersonUpdateManyWithoutPersonNestedInput
+  ownedItems?: Prisma.ItemUpdateManyWithoutOwnedByNestedInput
+  assembledBy?: Prisma.AssemblyUpdateManyWithoutAssembledByNestedInput
+  disassembledBy?: Prisma.AssemblyUpdateManyWithoutDisassembledByNestedInput
+  groupMemberships?: Prisma.PersonGroupUpdateManyWithoutPersonNestedInput
+  users?: Prisma.UserUpdateManyWithoutPersonNestedInput
+  apiKeys?: Prisma.ApiKeyUpdateManyWithoutOwnerPersonNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutPersonNestedInput
+}
+
+export type PersonUncheckedUpdateWithoutTheorySnapshotsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  first?: Prisma.StringFieldUpdateOperationsInput | string
+  last?: Prisma.StringFieldUpdateOperationsInput | string
+  nickname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emails?: Prisma.StringFieldUpdateOperationsInput | string
+  phones?: Prisma.StringFieldUpdateOperationsInput | string
+  birthday?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  closeness?: Prisma.IntFieldUpdateOperationsInput | number
+  tags?: Prisma.StringFieldUpdateOperationsInput | string
+  values?: Prisma.StringFieldUpdateOperationsInput | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  company?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  linkedin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  interactions?: Prisma.InteractionUncheckedUpdateManyWithoutPersonNestedInput
+  stagedInteractions?: Prisma.StagedInteractionUncheckedUpdateManyWithoutCandidatePersonNestedInput
+  plans?: Prisma.PlanUncheckedUpdateManyWithoutPersonNestedInput
+  expectedInPlans?: Prisma.PlanExpectedPersonUncheckedUpdateManyWithoutPersonNestedInput
+  ownedItems?: Prisma.ItemUncheckedUpdateManyWithoutOwnedByNestedInput
+  assembledBy?: Prisma.AssemblyUncheckedUpdateManyWithoutAssembledByNestedInput
+  disassembledBy?: Prisma.AssemblyUncheckedUpdateManyWithoutDisassembledByNestedInput
+  groupMemberships?: Prisma.PersonGroupUncheckedUpdateManyWithoutPersonNestedInput
   users?: Prisma.UserUncheckedUpdateManyWithoutPersonNestedInput
   apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutOwnerPersonNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutPersonNestedInput
@@ -3011,6 +3242,7 @@ export type PersonUpdateWithoutWorkspaceInput = {
   users?: Prisma.UserUpdateManyWithoutPersonNestedInput
   apiKeys?: Prisma.ApiKeyUpdateManyWithoutOwnerPersonNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutPersonNestedInput
+  theorySnapshots?: Prisma.TheorySnapshotUpdateManyWithoutSubjectPersonNestedInput
 }
 
 export type PersonUncheckedUpdateWithoutWorkspaceInput = {
@@ -3047,6 +3279,7 @@ export type PersonUncheckedUpdateWithoutWorkspaceInput = {
   users?: Prisma.UserUncheckedUpdateManyWithoutPersonNestedInput
   apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutOwnerPersonNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutPersonNestedInput
+  theorySnapshots?: Prisma.TheorySnapshotUncheckedUpdateManyWithoutSubjectPersonNestedInput
 }
 
 export type PersonUncheckedUpdateManyWithoutWorkspaceInput = {
@@ -3091,6 +3324,7 @@ export type PersonCountOutputType = {
   users: number
   apiKeys: number
   auditLogs: number
+  theorySnapshots: number
 }
 
 export type PersonCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -3105,6 +3339,7 @@ export type PersonCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions
   users?: boolean | PersonCountOutputTypeCountUsersArgs
   apiKeys?: boolean | PersonCountOutputTypeCountApiKeysArgs
   auditLogs?: boolean | PersonCountOutputTypeCountAuditLogsArgs
+  theorySnapshots?: boolean | PersonCountOutputTypeCountTheorySnapshotsArgs
 }
 
 /**
@@ -3194,6 +3429,13 @@ export type PersonCountOutputTypeCountAuditLogsArgs<ExtArgs extends runtime.Type
   where?: Prisma.AuditLogWhereInput
 }
 
+/**
+ * PersonCountOutputType without action
+ */
+export type PersonCountOutputTypeCountTheorySnapshotsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TheorySnapshotWhereInput
+}
+
 
 export type PersonSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -3231,6 +3473,7 @@ export type PersonSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   users?: boolean | Prisma.Person$usersArgs<ExtArgs>
   apiKeys?: boolean | Prisma.Person$apiKeysArgs<ExtArgs>
   auditLogs?: boolean | Prisma.Person$auditLogsArgs<ExtArgs>
+  theorySnapshots?: boolean | Prisma.Person$theorySnapshotsArgs<ExtArgs>
   _count?: boolean | Prisma.PersonCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["person"]>
 
@@ -3328,6 +3571,7 @@ export type PersonInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   users?: boolean | Prisma.Person$usersArgs<ExtArgs>
   apiKeys?: boolean | Prisma.Person$apiKeysArgs<ExtArgs>
   auditLogs?: boolean | Prisma.Person$auditLogsArgs<ExtArgs>
+  theorySnapshots?: boolean | Prisma.Person$theorySnapshotsArgs<ExtArgs>
   _count?: boolean | Prisma.PersonCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type PersonIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -3352,6 +3596,7 @@ export type $PersonPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     users: Prisma.$UserPayload<ExtArgs>[]
     apiKeys: Prisma.$ApiKeyPayload<ExtArgs>[]
     auditLogs: Prisma.$AuditLogPayload<ExtArgs>[]
+    theorySnapshots: Prisma.$TheorySnapshotPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -3783,6 +4028,7 @@ export interface Prisma__PersonClient<T, Null = never, ExtArgs extends runtime.T
   users<T extends Prisma.Person$usersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Person$usersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   apiKeys<T extends Prisma.Person$apiKeysArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Person$apiKeysArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ApiKeyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   auditLogs<T extends Prisma.Person$auditLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Person$auditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  theorySnapshots<T extends Prisma.Person$theorySnapshotsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Person$theorySnapshotsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TheorySnapshotPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4495,6 +4741,30 @@ export type Person$auditLogsArgs<ExtArgs extends runtime.Types.Extensions.Intern
   take?: number
   skip?: number
   distinct?: Prisma.AuditLogScalarFieldEnum | Prisma.AuditLogScalarFieldEnum[]
+}
+
+/**
+ * Person.theorySnapshots
+ */
+export type Person$theorySnapshotsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the TheorySnapshot
+   */
+  select?: Prisma.TheorySnapshotSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the TheorySnapshot
+   */
+  omit?: Prisma.TheorySnapshotOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TheorySnapshotInclude<ExtArgs> | null
+  where?: Prisma.TheorySnapshotWhereInput
+  orderBy?: Prisma.TheorySnapshotOrderByWithRelationInput | Prisma.TheorySnapshotOrderByWithRelationInput[]
+  cursor?: Prisma.TheorySnapshotWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TheorySnapshotScalarFieldEnum | Prisma.TheorySnapshotScalarFieldEnum[]
 }
 
 /**

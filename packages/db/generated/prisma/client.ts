@@ -217,6 +217,21 @@ export type GroupGroup = Prisma.GroupGroupModel
  */
 export type PlaceGroup = Prisma.PlaceGroupModel
 /**
+ * Model Note
+ * 
+ */
+export type Note = Prisma.NoteModel
+/**
+ * Model TheorySnapshot
+ * 
+ */
+export type TheorySnapshot = Prisma.TheorySnapshotModel
+/**
+ * Model TheorySnapshotSource
+ * 
+ */
+export type TheorySnapshotSource = Prisma.TheorySnapshotSourceModel
+/**
  * Model StateDefinition
  * 
  */

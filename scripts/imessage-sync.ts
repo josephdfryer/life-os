@@ -397,6 +397,7 @@ async function upsertDailyMessageInteraction(input: {
       workspaceId: WORKSPACE_ID,
       name: `iMessage ${dayKey(input.timestamp)}`,
       type: "message",
+      start: input.timestamp,
       timestamp: input.timestamp,
       metadata: JSON.stringify({ source: "imessage", day: dayKey(input.timestamp), service: input.service }),
     },

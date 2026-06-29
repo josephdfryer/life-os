@@ -1,0 +1,87 @@
+import { db } from "@life-os/db"
+import type { TheorySource, TheorySourceBundle } from "./types"
+
+const DEFAULT_WORKSPACE = process.env.THEORY_WORKSPACE_ID ?? "default-workspace"
+
+// Collect everything the stored graph currently knows about a person. This is
+// read-only and makes no interpretation — it is the evidence base synthesis
+// reasons over, and the provenance trail every snapshot points back to.
+export async function getTheorySourcesForPerson(
+  personId: string,
+  workspaceId: string = DEFAULT_WORKSPACE
+): Promise<TheorySourceBundle> {
+  const person = await db.person.findFirst({
+    where: { id: personId, workspaceId },
+    select: { id: true, first: true, last: true, nickname: true, headline: true },
+  })
+
+  const interactions = await db.interaction.findMany({
+    where: { workspaceId, personId },
+    select: { id: true, eventId: true, sourceNoteId: true },
+    orderBy: { timestamp: "desc" },
+  })
+
+  const plans = await db.plan.findMany({
+    where: {
+      workspaceId,
+      OR: [{ personId }, { expectedPeople: { some: { personId } } }],
+    },
+    select: { id: true, sourceNoteId: true },
+    orderBy: { createdAt: "desc" },
+  })
+
+  const states = await db.state.findMany({
+    where: { workspaceId, entityType: "person", entityId: personId },
+    select: { id: true, sourceNoteId: true },
+    orderBy: { recordedAt: "desc" },
+  })
+
+  // Notes about this person: theory observations (and any note) whose metadata
+  // references the person, plus the source Notes behind their derived records.
+  const taggedNotes = await db.note.findMany({
+    where: { workspaceId, metadata: { contains: personId } },
+    select: { id: true },
+    orderBy: { timestamp: "desc" },
+  })
+
+  const eventIds = dedupe(interactions.map(i => i.eventId).filter(isString))
+  const interactionIds = interactions.map(i => i.id)
+  const planIds = plans.map(p => p.id)
+  const stateIds = states.map(s => s.id)
+
+  const provenanceNoteIds = dedupe([
+    ...interactions.map(i => i.sourceNoteId),
+    ...plans.map(p => p.sourceNoteId),
+    ...states.map(s => s.sourceNoteId),
+  ].filter(isString))
+  const noteIds = dedupe([...taggedNotes.map(n => n.id), ...provenanceNoteIds])
+
+  const sources: TheorySource[] = [
+    ...(person ? [{ sourceType: "person" as const, sourceId: person.id }] : []),
+    ...noteIds.map(id => ({ sourceType: "note" as const, sourceId: id })),
+    ...eventIds.map(id => ({ sourceType: "event" as const, sourceId: id })),
+    ...interactionIds.map(id => ({ sourceType: "interaction" as const, sourceId: id })),
+    ...stateIds.map(id => ({ sourceType: "state" as const, sourceId: id })),
+    ...planIds.map(id => ({ sourceType: "plan" as const, sourceId: id })),
+  ]
+
+  return {
+    personId,
+    workspaceId,
+    person,
+    noteIds,
+    eventIds,
+    interactionIds,
+    stateIds,
+    planIds,
+    sources,
+  }
+}
+
+function dedupe<T>(values: T[]): T[] {
+  return Array.from(new Set(values))
+}
+
+function isString(value: string | null | undefined): value is string {
+  return typeof value === "string" && value.length > 0
+}

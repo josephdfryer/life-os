@@ -242,6 +242,7 @@ export type ImportedFileWhereInput = {
   content?: Prisma.StringNullableFilter<"ImportedFile"> | string | null
   workspace?: Prisma.XOR<Prisma.WorkspaceScalarRelationFilter, Prisma.WorkspaceWhereInput>
   interactions?: Prisma.InteractionListRelationFilter
+  notes?: Prisma.NoteListRelationFilter
 }
 
 export type ImportedFileOrderByWithRelationInput = {
@@ -255,6 +256,7 @@ export type ImportedFileOrderByWithRelationInput = {
   content?: Prisma.SortOrderInput | Prisma.SortOrder
   workspace?: Prisma.WorkspaceOrderByWithRelationInput
   interactions?: Prisma.InteractionOrderByRelationAggregateInput
+  notes?: Prisma.NoteOrderByRelationAggregateInput
 }
 
 export type ImportedFileWhereUniqueInput = Prisma.AtLeast<{
@@ -271,6 +273,7 @@ export type ImportedFileWhereUniqueInput = Prisma.AtLeast<{
   content?: Prisma.StringNullableFilter<"ImportedFile"> | string | null
   workspace?: Prisma.XOR<Prisma.WorkspaceScalarRelationFilter, Prisma.WorkspaceWhereInput>
   interactions?: Prisma.InteractionListRelationFilter
+  notes?: Prisma.NoteListRelationFilter
 }, "id">
 
 export type ImportedFileOrderByWithAggregationInput = {
@@ -313,6 +316,7 @@ export type ImportedFileCreateInput = {
   content?: string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutImportedFilesInput
   interactions?: Prisma.InteractionCreateNestedManyWithoutSourceFileInput
+  notes?: Prisma.NoteCreateNestedManyWithoutSourceFileInput
 }
 
 export type ImportedFileUncheckedCreateInput = {
@@ -325,6 +329,7 @@ export type ImportedFileUncheckedCreateInput = {
   sizeBytes: number
   content?: string | null
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutSourceFileInput
+  notes?: Prisma.NoteUncheckedCreateNestedManyWithoutSourceFileInput
 }
 
 export type ImportedFileUpdateInput = {
@@ -337,6 +342,7 @@ export type ImportedFileUpdateInput = {
   content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutImportedFilesNestedInput
   interactions?: Prisma.InteractionUpdateManyWithoutSourceFileNestedInput
+  notes?: Prisma.NoteUpdateManyWithoutSourceFileNestedInput
 }
 
 export type ImportedFileUncheckedUpdateInput = {
@@ -349,6 +355,7 @@ export type ImportedFileUncheckedUpdateInput = {
   sizeBytes?: Prisma.IntFieldUpdateOperationsInput | number
   content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutSourceFileNestedInput
+  notes?: Prisma.NoteUncheckedUpdateManyWithoutSourceFileNestedInput
 }
 
 export type ImportedFileCreateManyInput = {
@@ -497,6 +504,22 @@ export type ImportedFileUpdateOneWithoutInteractionsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ImportedFileUpdateToOneWithWhereWithoutInteractionsInput, Prisma.ImportedFileUpdateWithoutInteractionsInput>, Prisma.ImportedFileUncheckedUpdateWithoutInteractionsInput>
 }
 
+export type ImportedFileCreateNestedOneWithoutNotesInput = {
+  create?: Prisma.XOR<Prisma.ImportedFileCreateWithoutNotesInput, Prisma.ImportedFileUncheckedCreateWithoutNotesInput>
+  connectOrCreate?: Prisma.ImportedFileCreateOrConnectWithoutNotesInput
+  connect?: Prisma.ImportedFileWhereUniqueInput
+}
+
+export type ImportedFileUpdateOneWithoutNotesNestedInput = {
+  create?: Prisma.XOR<Prisma.ImportedFileCreateWithoutNotesInput, Prisma.ImportedFileUncheckedCreateWithoutNotesInput>
+  connectOrCreate?: Prisma.ImportedFileCreateOrConnectWithoutNotesInput
+  upsert?: Prisma.ImportedFileUpsertWithoutNotesInput
+  disconnect?: Prisma.ImportedFileWhereInput | boolean
+  delete?: Prisma.ImportedFileWhereInput | boolean
+  connect?: Prisma.ImportedFileWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ImportedFileUpdateToOneWithWhereWithoutNotesInput, Prisma.ImportedFileUpdateWithoutNotesInput>, Prisma.ImportedFileUncheckedUpdateWithoutNotesInput>
+}
+
 export type ImportedFileCreateWithoutWorkspaceInput = {
   id?: string
   createdAt?: Date | string
@@ -506,6 +529,7 @@ export type ImportedFileCreateWithoutWorkspaceInput = {
   sizeBytes: number
   content?: string | null
   interactions?: Prisma.InteractionCreateNestedManyWithoutSourceFileInput
+  notes?: Prisma.NoteCreateNestedManyWithoutSourceFileInput
 }
 
 export type ImportedFileUncheckedCreateWithoutWorkspaceInput = {
@@ -517,6 +541,7 @@ export type ImportedFileUncheckedCreateWithoutWorkspaceInput = {
   sizeBytes: number
   content?: string | null
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutSourceFileInput
+  notes?: Prisma.NoteUncheckedCreateNestedManyWithoutSourceFileInput
 }
 
 export type ImportedFileCreateOrConnectWithoutWorkspaceInput = {
@@ -567,6 +592,7 @@ export type ImportedFileCreateWithoutInteractionsInput = {
   sizeBytes: number
   content?: string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutImportedFilesInput
+  notes?: Prisma.NoteCreateNestedManyWithoutSourceFileInput
 }
 
 export type ImportedFileUncheckedCreateWithoutInteractionsInput = {
@@ -578,6 +604,7 @@ export type ImportedFileUncheckedCreateWithoutInteractionsInput = {
   filePath: string
   sizeBytes: number
   content?: string | null
+  notes?: Prisma.NoteUncheckedCreateNestedManyWithoutSourceFileInput
 }
 
 export type ImportedFileCreateOrConnectWithoutInteractionsInput = {
@@ -605,6 +632,7 @@ export type ImportedFileUpdateWithoutInteractionsInput = {
   sizeBytes?: Prisma.IntFieldUpdateOperationsInput | number
   content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutImportedFilesNestedInput
+  notes?: Prisma.NoteUpdateManyWithoutSourceFileNestedInput
 }
 
 export type ImportedFileUncheckedUpdateWithoutInteractionsInput = {
@@ -616,6 +644,71 @@ export type ImportedFileUncheckedUpdateWithoutInteractionsInput = {
   filePath?: Prisma.StringFieldUpdateOperationsInput | string
   sizeBytes?: Prisma.IntFieldUpdateOperationsInput | number
   content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NoteUncheckedUpdateManyWithoutSourceFileNestedInput
+}
+
+export type ImportedFileCreateWithoutNotesInput = {
+  id?: string
+  createdAt?: Date | string
+  filename: string
+  format: string
+  filePath: string
+  sizeBytes: number
+  content?: string | null
+  workspace?: Prisma.WorkspaceCreateNestedOneWithoutImportedFilesInput
+  interactions?: Prisma.InteractionCreateNestedManyWithoutSourceFileInput
+}
+
+export type ImportedFileUncheckedCreateWithoutNotesInput = {
+  id?: string
+  workspaceId?: string
+  createdAt?: Date | string
+  filename: string
+  format: string
+  filePath: string
+  sizeBytes: number
+  content?: string | null
+  interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutSourceFileInput
+}
+
+export type ImportedFileCreateOrConnectWithoutNotesInput = {
+  where: Prisma.ImportedFileWhereUniqueInput
+  create: Prisma.XOR<Prisma.ImportedFileCreateWithoutNotesInput, Prisma.ImportedFileUncheckedCreateWithoutNotesInput>
+}
+
+export type ImportedFileUpsertWithoutNotesInput = {
+  update: Prisma.XOR<Prisma.ImportedFileUpdateWithoutNotesInput, Prisma.ImportedFileUncheckedUpdateWithoutNotesInput>
+  create: Prisma.XOR<Prisma.ImportedFileCreateWithoutNotesInput, Prisma.ImportedFileUncheckedCreateWithoutNotesInput>
+  where?: Prisma.ImportedFileWhereInput
+}
+
+export type ImportedFileUpdateToOneWithWhereWithoutNotesInput = {
+  where?: Prisma.ImportedFileWhereInput
+  data: Prisma.XOR<Prisma.ImportedFileUpdateWithoutNotesInput, Prisma.ImportedFileUncheckedUpdateWithoutNotesInput>
+}
+
+export type ImportedFileUpdateWithoutNotesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  filename?: Prisma.StringFieldUpdateOperationsInput | string
+  format?: Prisma.StringFieldUpdateOperationsInput | string
+  filePath?: Prisma.StringFieldUpdateOperationsInput | string
+  sizeBytes?: Prisma.IntFieldUpdateOperationsInput | number
+  content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutImportedFilesNestedInput
+  interactions?: Prisma.InteractionUpdateManyWithoutSourceFileNestedInput
+}
+
+export type ImportedFileUncheckedUpdateWithoutNotesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  filename?: Prisma.StringFieldUpdateOperationsInput | string
+  format?: Prisma.StringFieldUpdateOperationsInput | string
+  filePath?: Prisma.StringFieldUpdateOperationsInput | string
+  sizeBytes?: Prisma.IntFieldUpdateOperationsInput | number
+  content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  interactions?: Prisma.InteractionUncheckedUpdateManyWithoutSourceFileNestedInput
 }
 
 export type ImportedFileCreateManyWorkspaceInput = {
@@ -637,6 +730,7 @@ export type ImportedFileUpdateWithoutWorkspaceInput = {
   sizeBytes?: Prisma.IntFieldUpdateOperationsInput | number
   content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   interactions?: Prisma.InteractionUpdateManyWithoutSourceFileNestedInput
+  notes?: Prisma.NoteUpdateManyWithoutSourceFileNestedInput
 }
 
 export type ImportedFileUncheckedUpdateWithoutWorkspaceInput = {
@@ -648,6 +742,7 @@ export type ImportedFileUncheckedUpdateWithoutWorkspaceInput = {
   sizeBytes?: Prisma.IntFieldUpdateOperationsInput | number
   content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutSourceFileNestedInput
+  notes?: Prisma.NoteUncheckedUpdateManyWithoutSourceFileNestedInput
 }
 
 export type ImportedFileUncheckedUpdateManyWithoutWorkspaceInput = {
@@ -667,10 +762,12 @@ export type ImportedFileUncheckedUpdateManyWithoutWorkspaceInput = {
 
 export type ImportedFileCountOutputType = {
   interactions: number
+  notes: number
 }
 
 export type ImportedFileCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   interactions?: boolean | ImportedFileCountOutputTypeCountInteractionsArgs
+  notes?: boolean | ImportedFileCountOutputTypeCountNotesArgs
 }
 
 /**
@@ -690,6 +787,13 @@ export type ImportedFileCountOutputTypeCountInteractionsArgs<ExtArgs extends run
   where?: Prisma.InteractionWhereInput
 }
 
+/**
+ * ImportedFileCountOutputType without action
+ */
+export type ImportedFileCountOutputTypeCountNotesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.NoteWhereInput
+}
+
 
 export type ImportedFileSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -702,6 +806,7 @@ export type ImportedFileSelect<ExtArgs extends runtime.Types.Extensions.Internal
   content?: boolean
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   interactions?: boolean | Prisma.ImportedFile$interactionsArgs<ExtArgs>
+  notes?: boolean | Prisma.ImportedFile$notesArgs<ExtArgs>
   _count?: boolean | Prisma.ImportedFileCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["importedFile"]>
 
@@ -744,6 +849,7 @@ export type ImportedFileOmit<ExtArgs extends runtime.Types.Extensions.InternalAr
 export type ImportedFileInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   interactions?: boolean | Prisma.ImportedFile$interactionsArgs<ExtArgs>
+  notes?: boolean | Prisma.ImportedFile$notesArgs<ExtArgs>
   _count?: boolean | Prisma.ImportedFileCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ImportedFileIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -758,6 +864,7 @@ export type $ImportedFilePayload<ExtArgs extends runtime.Types.Extensions.Intern
   objects: {
     workspace: Prisma.$WorkspacePayload<ExtArgs>
     interactions: Prisma.$InteractionPayload<ExtArgs>[]
+    notes: Prisma.$NotePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1164,6 +1271,7 @@ export interface Prisma__ImportedFileClient<T, Null = never, ExtArgs extends run
   readonly [Symbol.toStringTag]: "PrismaPromise"
   workspace<T extends Prisma.WorkspaceDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WorkspaceDefaultArgs<ExtArgs>>): Prisma.Prisma__WorkspaceClient<runtime.Types.Result.GetResult<Prisma.$WorkspacePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   interactions<T extends Prisma.ImportedFile$interactionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ImportedFile$interactionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InteractionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  notes<T extends Prisma.ImportedFile$notesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ImportedFile$notesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NotePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1621,6 +1729,30 @@ export type ImportedFile$interactionsArgs<ExtArgs extends runtime.Types.Extensio
   take?: number
   skip?: number
   distinct?: Prisma.InteractionScalarFieldEnum | Prisma.InteractionScalarFieldEnum[]
+}
+
+/**
+ * ImportedFile.notes
+ */
+export type ImportedFile$notesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Note
+   */
+  select?: Prisma.NoteSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Note
+   */
+  omit?: Prisma.NoteOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.NoteInclude<ExtArgs> | null
+  where?: Prisma.NoteWhereInput
+  orderBy?: Prisma.NoteOrderByWithRelationInput | Prisma.NoteOrderByWithRelationInput[]
+  cursor?: Prisma.NoteWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.NoteScalarFieldEnum | Prisma.NoteScalarFieldEnum[]
 }
 
 /**

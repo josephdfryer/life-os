@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "next dev --port 3003",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "type-check": "tsc --noEmit"
   },
   "dependencies": {
     "@life-os/auth": "*",

@@ -32,6 +32,7 @@ export type GroupMinAggregateOutputType = {
   notes: string | null
   createdAt: Date | null
   updatedAt: Date | null
+  sourceNoteId: string | null
 }
 
 export type GroupMaxAggregateOutputType = {
@@ -42,6 +43,7 @@ export type GroupMaxAggregateOutputType = {
   notes: string | null
   createdAt: Date | null
   updatedAt: Date | null
+  sourceNoteId: string | null
 }
 
 export type GroupCountAggregateOutputType = {
@@ -52,6 +54,7 @@ export type GroupCountAggregateOutputType = {
   notes: number
   createdAt: number
   updatedAt: number
+  sourceNoteId: number
   _all: number
 }
 
@@ -64,6 +67,7 @@ export type GroupMinAggregateInputType = {
   notes?: true
   createdAt?: true
   updatedAt?: true
+  sourceNoteId?: true
 }
 
 export type GroupMaxAggregateInputType = {
@@ -74,6 +78,7 @@ export type GroupMaxAggregateInputType = {
   notes?: true
   createdAt?: true
   updatedAt?: true
+  sourceNoteId?: true
 }
 
 export type GroupCountAggregateInputType = {
@@ -84,6 +89,7 @@ export type GroupCountAggregateInputType = {
   notes?: true
   createdAt?: true
   updatedAt?: true
+  sourceNoteId?: true
   _all?: true
 }
 
@@ -167,6 +173,7 @@ export type GroupGroupByOutputType = {
   notes: string | null
   createdAt: Date
   updatedAt: Date
+  sourceNoteId: string | null
   _count: GroupCountAggregateOutputType | null
   _min: GroupMinAggregateOutputType | null
   _max: GroupMaxAggregateOutputType | null
@@ -198,12 +205,14 @@ export type GroupWhereInput = {
   notes?: Prisma.StringNullableFilter<"Group"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Group"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Group"> | Date | string
+  sourceNoteId?: Prisma.StringNullableFilter<"Group"> | string | null
   workspace?: Prisma.XOR<Prisma.WorkspaceScalarRelationFilter, Prisma.WorkspaceWhereInput>
   personMembers?: Prisma.PersonGroupListRelationFilter
   childGroups?: Prisma.GroupGroupListRelationFilter
   parentGroups?: Prisma.GroupGroupListRelationFilter
   placeAffiliations?: Prisma.PlaceGroupListRelationFilter
   taggedEvents?: Prisma.EventListRelationFilter
+  sourceNote?: Prisma.XOR<Prisma.NoteNullableScalarRelationFilter, Prisma.NoteWhereInput> | null
 }
 
 export type GroupOrderByWithRelationInput = {
@@ -214,12 +223,14 @@ export type GroupOrderByWithRelationInput = {
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  sourceNoteId?: Prisma.SortOrderInput | Prisma.SortOrder
   workspace?: Prisma.WorkspaceOrderByWithRelationInput
   personMembers?: Prisma.PersonGroupOrderByRelationAggregateInput
   childGroups?: Prisma.GroupGroupOrderByRelationAggregateInput
   parentGroups?: Prisma.GroupGroupOrderByRelationAggregateInput
   placeAffiliations?: Prisma.PlaceGroupOrderByRelationAggregateInput
   taggedEvents?: Prisma.EventOrderByRelationAggregateInput
+  sourceNote?: Prisma.NoteOrderByWithRelationInput
 }
 
 export type GroupWhereUniqueInput = Prisma.AtLeast<{
@@ -233,12 +244,14 @@ export type GroupWhereUniqueInput = Prisma.AtLeast<{
   notes?: Prisma.StringNullableFilter<"Group"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Group"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Group"> | Date | string
+  sourceNoteId?: Prisma.StringNullableFilter<"Group"> | string | null
   workspace?: Prisma.XOR<Prisma.WorkspaceScalarRelationFilter, Prisma.WorkspaceWhereInput>
   personMembers?: Prisma.PersonGroupListRelationFilter
   childGroups?: Prisma.GroupGroupListRelationFilter
   parentGroups?: Prisma.GroupGroupListRelationFilter
   placeAffiliations?: Prisma.PlaceGroupListRelationFilter
   taggedEvents?: Prisma.EventListRelationFilter
+  sourceNote?: Prisma.XOR<Prisma.NoteNullableScalarRelationFilter, Prisma.NoteWhereInput> | null
 }, "id">
 
 export type GroupOrderByWithAggregationInput = {
@@ -249,6 +262,7 @@ export type GroupOrderByWithAggregationInput = {
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  sourceNoteId?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.GroupCountOrderByAggregateInput
   _max?: Prisma.GroupMaxOrderByAggregateInput
   _min?: Prisma.GroupMinOrderByAggregateInput
@@ -265,6 +279,7 @@ export type GroupScalarWhereWithAggregatesInput = {
   notes?: Prisma.StringNullableWithAggregatesFilter<"Group"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Group"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Group"> | Date | string
+  sourceNoteId?: Prisma.StringNullableWithAggregatesFilter<"Group"> | string | null
 }
 
 export type GroupCreateInput = {
@@ -280,6 +295,7 @@ export type GroupCreateInput = {
   parentGroups?: Prisma.GroupGroupCreateNestedManyWithoutChildInput
   placeAffiliations?: Prisma.PlaceGroupCreateNestedManyWithoutGroupInput
   taggedEvents?: Prisma.EventCreateNestedManyWithoutGroupTagsInput
+  sourceNote?: Prisma.NoteCreateNestedOneWithoutGroupsInput
 }
 
 export type GroupUncheckedCreateInput = {
@@ -290,6 +306,7 @@ export type GroupUncheckedCreateInput = {
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  sourceNoteId?: string | null
   personMembers?: Prisma.PersonGroupUncheckedCreateNestedManyWithoutGroupInput
   childGroups?: Prisma.GroupGroupUncheckedCreateNestedManyWithoutParentInput
   parentGroups?: Prisma.GroupGroupUncheckedCreateNestedManyWithoutChildInput
@@ -310,6 +327,7 @@ export type GroupUpdateInput = {
   parentGroups?: Prisma.GroupGroupUpdateManyWithoutChildNestedInput
   placeAffiliations?: Prisma.PlaceGroupUpdateManyWithoutGroupNestedInput
   taggedEvents?: Prisma.EventUpdateManyWithoutGroupTagsNestedInput
+  sourceNote?: Prisma.NoteUpdateOneWithoutGroupsNestedInput
 }
 
 export type GroupUncheckedUpdateInput = {
@@ -320,6 +338,7 @@ export type GroupUncheckedUpdateInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   personMembers?: Prisma.PersonGroupUncheckedUpdateManyWithoutGroupNestedInput
   childGroups?: Prisma.GroupGroupUncheckedUpdateManyWithoutParentNestedInput
   parentGroups?: Prisma.GroupGroupUncheckedUpdateManyWithoutChildNestedInput
@@ -335,6 +354,7 @@ export type GroupCreateManyInput = {
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  sourceNoteId?: string | null
 }
 
 export type GroupUpdateManyMutationInput = {
@@ -354,6 +374,7 @@ export type GroupUncheckedUpdateManyInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type GroupListRelationFilter = {
@@ -374,6 +395,7 @@ export type GroupCountOrderByAggregateInput = {
   notes?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  sourceNoteId?: Prisma.SortOrder
 }
 
 export type GroupMaxOrderByAggregateInput = {
@@ -384,6 +406,7 @@ export type GroupMaxOrderByAggregateInput = {
   notes?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  sourceNoteId?: Prisma.SortOrder
 }
 
 export type GroupMinOrderByAggregateInput = {
@@ -394,6 +417,7 @@ export type GroupMinOrderByAggregateInput = {
   notes?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  sourceNoteId?: Prisma.SortOrder
 }
 
 export type GroupScalarRelationFilter = {
@@ -541,6 +565,48 @@ export type GroupUpdateOneRequiredWithoutPlaceAffiliationsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.GroupUpdateToOneWithWhereWithoutPlaceAffiliationsInput, Prisma.GroupUpdateWithoutPlaceAffiliationsInput>, Prisma.GroupUncheckedUpdateWithoutPlaceAffiliationsInput>
 }
 
+export type GroupCreateNestedManyWithoutSourceNoteInput = {
+  create?: Prisma.XOR<Prisma.GroupCreateWithoutSourceNoteInput, Prisma.GroupUncheckedCreateWithoutSourceNoteInput> | Prisma.GroupCreateWithoutSourceNoteInput[] | Prisma.GroupUncheckedCreateWithoutSourceNoteInput[]
+  connectOrCreate?: Prisma.GroupCreateOrConnectWithoutSourceNoteInput | Prisma.GroupCreateOrConnectWithoutSourceNoteInput[]
+  createMany?: Prisma.GroupCreateManySourceNoteInputEnvelope
+  connect?: Prisma.GroupWhereUniqueInput | Prisma.GroupWhereUniqueInput[]
+}
+
+export type GroupUncheckedCreateNestedManyWithoutSourceNoteInput = {
+  create?: Prisma.XOR<Prisma.GroupCreateWithoutSourceNoteInput, Prisma.GroupUncheckedCreateWithoutSourceNoteInput> | Prisma.GroupCreateWithoutSourceNoteInput[] | Prisma.GroupUncheckedCreateWithoutSourceNoteInput[]
+  connectOrCreate?: Prisma.GroupCreateOrConnectWithoutSourceNoteInput | Prisma.GroupCreateOrConnectWithoutSourceNoteInput[]
+  createMany?: Prisma.GroupCreateManySourceNoteInputEnvelope
+  connect?: Prisma.GroupWhereUniqueInput | Prisma.GroupWhereUniqueInput[]
+}
+
+export type GroupUpdateManyWithoutSourceNoteNestedInput = {
+  create?: Prisma.XOR<Prisma.GroupCreateWithoutSourceNoteInput, Prisma.GroupUncheckedCreateWithoutSourceNoteInput> | Prisma.GroupCreateWithoutSourceNoteInput[] | Prisma.GroupUncheckedCreateWithoutSourceNoteInput[]
+  connectOrCreate?: Prisma.GroupCreateOrConnectWithoutSourceNoteInput | Prisma.GroupCreateOrConnectWithoutSourceNoteInput[]
+  upsert?: Prisma.GroupUpsertWithWhereUniqueWithoutSourceNoteInput | Prisma.GroupUpsertWithWhereUniqueWithoutSourceNoteInput[]
+  createMany?: Prisma.GroupCreateManySourceNoteInputEnvelope
+  set?: Prisma.GroupWhereUniqueInput | Prisma.GroupWhereUniqueInput[]
+  disconnect?: Prisma.GroupWhereUniqueInput | Prisma.GroupWhereUniqueInput[]
+  delete?: Prisma.GroupWhereUniqueInput | Prisma.GroupWhereUniqueInput[]
+  connect?: Prisma.GroupWhereUniqueInput | Prisma.GroupWhereUniqueInput[]
+  update?: Prisma.GroupUpdateWithWhereUniqueWithoutSourceNoteInput | Prisma.GroupUpdateWithWhereUniqueWithoutSourceNoteInput[]
+  updateMany?: Prisma.GroupUpdateManyWithWhereWithoutSourceNoteInput | Prisma.GroupUpdateManyWithWhereWithoutSourceNoteInput[]
+  deleteMany?: Prisma.GroupScalarWhereInput | Prisma.GroupScalarWhereInput[]
+}
+
+export type GroupUncheckedUpdateManyWithoutSourceNoteNestedInput = {
+  create?: Prisma.XOR<Prisma.GroupCreateWithoutSourceNoteInput, Prisma.GroupUncheckedCreateWithoutSourceNoteInput> | Prisma.GroupCreateWithoutSourceNoteInput[] | Prisma.GroupUncheckedCreateWithoutSourceNoteInput[]
+  connectOrCreate?: Prisma.GroupCreateOrConnectWithoutSourceNoteInput | Prisma.GroupCreateOrConnectWithoutSourceNoteInput[]
+  upsert?: Prisma.GroupUpsertWithWhereUniqueWithoutSourceNoteInput | Prisma.GroupUpsertWithWhereUniqueWithoutSourceNoteInput[]
+  createMany?: Prisma.GroupCreateManySourceNoteInputEnvelope
+  set?: Prisma.GroupWhereUniqueInput | Prisma.GroupWhereUniqueInput[]
+  disconnect?: Prisma.GroupWhereUniqueInput | Prisma.GroupWhereUniqueInput[]
+  delete?: Prisma.GroupWhereUniqueInput | Prisma.GroupWhereUniqueInput[]
+  connect?: Prisma.GroupWhereUniqueInput | Prisma.GroupWhereUniqueInput[]
+  update?: Prisma.GroupUpdateWithWhereUniqueWithoutSourceNoteInput | Prisma.GroupUpdateWithWhereUniqueWithoutSourceNoteInput[]
+  updateMany?: Prisma.GroupUpdateManyWithWhereWithoutSourceNoteInput | Prisma.GroupUpdateManyWithWhereWithoutSourceNoteInput[]
+  deleteMany?: Prisma.GroupScalarWhereInput | Prisma.GroupScalarWhereInput[]
+}
+
 export type GroupCreateWithoutWorkspaceInput = {
   id?: string
   name: string
@@ -553,6 +619,7 @@ export type GroupCreateWithoutWorkspaceInput = {
   parentGroups?: Prisma.GroupGroupCreateNestedManyWithoutChildInput
   placeAffiliations?: Prisma.PlaceGroupCreateNestedManyWithoutGroupInput
   taggedEvents?: Prisma.EventCreateNestedManyWithoutGroupTagsInput
+  sourceNote?: Prisma.NoteCreateNestedOneWithoutGroupsInput
 }
 
 export type GroupUncheckedCreateWithoutWorkspaceInput = {
@@ -562,6 +629,7 @@ export type GroupUncheckedCreateWithoutWorkspaceInput = {
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  sourceNoteId?: string | null
   personMembers?: Prisma.PersonGroupUncheckedCreateNestedManyWithoutGroupInput
   childGroups?: Prisma.GroupGroupUncheckedCreateNestedManyWithoutParentInput
   parentGroups?: Prisma.GroupGroupUncheckedCreateNestedManyWithoutChildInput
@@ -605,6 +673,7 @@ export type GroupScalarWhereInput = {
   notes?: Prisma.StringNullableFilter<"Group"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Group"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Group"> | Date | string
+  sourceNoteId?: Prisma.StringNullableFilter<"Group"> | string | null
 }
 
 export type GroupCreateWithoutTaggedEventsInput = {
@@ -619,6 +688,7 @@ export type GroupCreateWithoutTaggedEventsInput = {
   childGroups?: Prisma.GroupGroupCreateNestedManyWithoutParentInput
   parentGroups?: Prisma.GroupGroupCreateNestedManyWithoutChildInput
   placeAffiliations?: Prisma.PlaceGroupCreateNestedManyWithoutGroupInput
+  sourceNote?: Prisma.NoteCreateNestedOneWithoutGroupsInput
 }
 
 export type GroupUncheckedCreateWithoutTaggedEventsInput = {
@@ -629,6 +699,7 @@ export type GroupUncheckedCreateWithoutTaggedEventsInput = {
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  sourceNoteId?: string | null
   personMembers?: Prisma.PersonGroupUncheckedCreateNestedManyWithoutGroupInput
   childGroups?: Prisma.GroupGroupUncheckedCreateNestedManyWithoutParentInput
   parentGroups?: Prisma.GroupGroupUncheckedCreateNestedManyWithoutChildInput
@@ -668,6 +739,7 @@ export type GroupCreateWithoutPersonMembersInput = {
   parentGroups?: Prisma.GroupGroupCreateNestedManyWithoutChildInput
   placeAffiliations?: Prisma.PlaceGroupCreateNestedManyWithoutGroupInput
   taggedEvents?: Prisma.EventCreateNestedManyWithoutGroupTagsInput
+  sourceNote?: Prisma.NoteCreateNestedOneWithoutGroupsInput
 }
 
 export type GroupUncheckedCreateWithoutPersonMembersInput = {
@@ -678,6 +750,7 @@ export type GroupUncheckedCreateWithoutPersonMembersInput = {
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  sourceNoteId?: string | null
   childGroups?: Prisma.GroupGroupUncheckedCreateNestedManyWithoutParentInput
   parentGroups?: Prisma.GroupGroupUncheckedCreateNestedManyWithoutChildInput
   placeAffiliations?: Prisma.PlaceGroupUncheckedCreateNestedManyWithoutGroupInput
@@ -712,6 +785,7 @@ export type GroupUpdateWithoutPersonMembersInput = {
   parentGroups?: Prisma.GroupGroupUpdateManyWithoutChildNestedInput
   placeAffiliations?: Prisma.PlaceGroupUpdateManyWithoutGroupNestedInput
   taggedEvents?: Prisma.EventUpdateManyWithoutGroupTagsNestedInput
+  sourceNote?: Prisma.NoteUpdateOneWithoutGroupsNestedInput
 }
 
 export type GroupUncheckedUpdateWithoutPersonMembersInput = {
@@ -722,6 +796,7 @@ export type GroupUncheckedUpdateWithoutPersonMembersInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   childGroups?: Prisma.GroupGroupUncheckedUpdateManyWithoutParentNestedInput
   parentGroups?: Prisma.GroupGroupUncheckedUpdateManyWithoutChildNestedInput
   placeAffiliations?: Prisma.PlaceGroupUncheckedUpdateManyWithoutGroupNestedInput
@@ -740,6 +815,7 @@ export type GroupCreateWithoutChildGroupsInput = {
   parentGroups?: Prisma.GroupGroupCreateNestedManyWithoutChildInput
   placeAffiliations?: Prisma.PlaceGroupCreateNestedManyWithoutGroupInput
   taggedEvents?: Prisma.EventCreateNestedManyWithoutGroupTagsInput
+  sourceNote?: Prisma.NoteCreateNestedOneWithoutGroupsInput
 }
 
 export type GroupUncheckedCreateWithoutChildGroupsInput = {
@@ -750,6 +826,7 @@ export type GroupUncheckedCreateWithoutChildGroupsInput = {
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  sourceNoteId?: string | null
   personMembers?: Prisma.PersonGroupUncheckedCreateNestedManyWithoutGroupInput
   parentGroups?: Prisma.GroupGroupUncheckedCreateNestedManyWithoutChildInput
   placeAffiliations?: Prisma.PlaceGroupUncheckedCreateNestedManyWithoutGroupInput
@@ -773,6 +850,7 @@ export type GroupCreateWithoutParentGroupsInput = {
   childGroups?: Prisma.GroupGroupCreateNestedManyWithoutParentInput
   placeAffiliations?: Prisma.PlaceGroupCreateNestedManyWithoutGroupInput
   taggedEvents?: Prisma.EventCreateNestedManyWithoutGroupTagsInput
+  sourceNote?: Prisma.NoteCreateNestedOneWithoutGroupsInput
 }
 
 export type GroupUncheckedCreateWithoutParentGroupsInput = {
@@ -783,6 +861,7 @@ export type GroupUncheckedCreateWithoutParentGroupsInput = {
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  sourceNoteId?: string | null
   personMembers?: Prisma.PersonGroupUncheckedCreateNestedManyWithoutGroupInput
   childGroups?: Prisma.GroupGroupUncheckedCreateNestedManyWithoutParentInput
   placeAffiliations?: Prisma.PlaceGroupUncheckedCreateNestedManyWithoutGroupInput
@@ -817,6 +896,7 @@ export type GroupUpdateWithoutChildGroupsInput = {
   parentGroups?: Prisma.GroupGroupUpdateManyWithoutChildNestedInput
   placeAffiliations?: Prisma.PlaceGroupUpdateManyWithoutGroupNestedInput
   taggedEvents?: Prisma.EventUpdateManyWithoutGroupTagsNestedInput
+  sourceNote?: Prisma.NoteUpdateOneWithoutGroupsNestedInput
 }
 
 export type GroupUncheckedUpdateWithoutChildGroupsInput = {
@@ -827,6 +907,7 @@ export type GroupUncheckedUpdateWithoutChildGroupsInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   personMembers?: Prisma.PersonGroupUncheckedUpdateManyWithoutGroupNestedInput
   parentGroups?: Prisma.GroupGroupUncheckedUpdateManyWithoutChildNestedInput
   placeAffiliations?: Prisma.PlaceGroupUncheckedUpdateManyWithoutGroupNestedInput
@@ -856,6 +937,7 @@ export type GroupUpdateWithoutParentGroupsInput = {
   childGroups?: Prisma.GroupGroupUpdateManyWithoutParentNestedInput
   placeAffiliations?: Prisma.PlaceGroupUpdateManyWithoutGroupNestedInput
   taggedEvents?: Prisma.EventUpdateManyWithoutGroupTagsNestedInput
+  sourceNote?: Prisma.NoteUpdateOneWithoutGroupsNestedInput
 }
 
 export type GroupUncheckedUpdateWithoutParentGroupsInput = {
@@ -866,6 +948,7 @@ export type GroupUncheckedUpdateWithoutParentGroupsInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   personMembers?: Prisma.PersonGroupUncheckedUpdateManyWithoutGroupNestedInput
   childGroups?: Prisma.GroupGroupUncheckedUpdateManyWithoutParentNestedInput
   placeAffiliations?: Prisma.PlaceGroupUncheckedUpdateManyWithoutGroupNestedInput
@@ -884,6 +967,7 @@ export type GroupCreateWithoutPlaceAffiliationsInput = {
   childGroups?: Prisma.GroupGroupCreateNestedManyWithoutParentInput
   parentGroups?: Prisma.GroupGroupCreateNestedManyWithoutChildInput
   taggedEvents?: Prisma.EventCreateNestedManyWithoutGroupTagsInput
+  sourceNote?: Prisma.NoteCreateNestedOneWithoutGroupsInput
 }
 
 export type GroupUncheckedCreateWithoutPlaceAffiliationsInput = {
@@ -894,6 +978,7 @@ export type GroupUncheckedCreateWithoutPlaceAffiliationsInput = {
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  sourceNoteId?: string | null
   personMembers?: Prisma.PersonGroupUncheckedCreateNestedManyWithoutGroupInput
   childGroups?: Prisma.GroupGroupUncheckedCreateNestedManyWithoutParentInput
   parentGroups?: Prisma.GroupGroupUncheckedCreateNestedManyWithoutChildInput
@@ -928,6 +1013,7 @@ export type GroupUpdateWithoutPlaceAffiliationsInput = {
   childGroups?: Prisma.GroupGroupUpdateManyWithoutParentNestedInput
   parentGroups?: Prisma.GroupGroupUpdateManyWithoutChildNestedInput
   taggedEvents?: Prisma.EventUpdateManyWithoutGroupTagsNestedInput
+  sourceNote?: Prisma.NoteUpdateOneWithoutGroupsNestedInput
 }
 
 export type GroupUncheckedUpdateWithoutPlaceAffiliationsInput = {
@@ -938,10 +1024,66 @@ export type GroupUncheckedUpdateWithoutPlaceAffiliationsInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   personMembers?: Prisma.PersonGroupUncheckedUpdateManyWithoutGroupNestedInput
   childGroups?: Prisma.GroupGroupUncheckedUpdateManyWithoutParentNestedInput
   parentGroups?: Prisma.GroupGroupUncheckedUpdateManyWithoutChildNestedInput
   taggedEvents?: Prisma.EventUncheckedUpdateManyWithoutGroupTagsNestedInput
+}
+
+export type GroupCreateWithoutSourceNoteInput = {
+  id?: string
+  name: string
+  groupType: $Enums.GroupType
+  notes?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  workspace?: Prisma.WorkspaceCreateNestedOneWithoutGroupsInput
+  personMembers?: Prisma.PersonGroupCreateNestedManyWithoutGroupInput
+  childGroups?: Prisma.GroupGroupCreateNestedManyWithoutParentInput
+  parentGroups?: Prisma.GroupGroupCreateNestedManyWithoutChildInput
+  placeAffiliations?: Prisma.PlaceGroupCreateNestedManyWithoutGroupInput
+  taggedEvents?: Prisma.EventCreateNestedManyWithoutGroupTagsInput
+}
+
+export type GroupUncheckedCreateWithoutSourceNoteInput = {
+  id?: string
+  workspaceId?: string
+  name: string
+  groupType: $Enums.GroupType
+  notes?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  personMembers?: Prisma.PersonGroupUncheckedCreateNestedManyWithoutGroupInput
+  childGroups?: Prisma.GroupGroupUncheckedCreateNestedManyWithoutParentInput
+  parentGroups?: Prisma.GroupGroupUncheckedCreateNestedManyWithoutChildInput
+  placeAffiliations?: Prisma.PlaceGroupUncheckedCreateNestedManyWithoutGroupInput
+  taggedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutGroupTagsInput
+}
+
+export type GroupCreateOrConnectWithoutSourceNoteInput = {
+  where: Prisma.GroupWhereUniqueInput
+  create: Prisma.XOR<Prisma.GroupCreateWithoutSourceNoteInput, Prisma.GroupUncheckedCreateWithoutSourceNoteInput>
+}
+
+export type GroupCreateManySourceNoteInputEnvelope = {
+  data: Prisma.GroupCreateManySourceNoteInput | Prisma.GroupCreateManySourceNoteInput[]
+}
+
+export type GroupUpsertWithWhereUniqueWithoutSourceNoteInput = {
+  where: Prisma.GroupWhereUniqueInput
+  update: Prisma.XOR<Prisma.GroupUpdateWithoutSourceNoteInput, Prisma.GroupUncheckedUpdateWithoutSourceNoteInput>
+  create: Prisma.XOR<Prisma.GroupCreateWithoutSourceNoteInput, Prisma.GroupUncheckedCreateWithoutSourceNoteInput>
+}
+
+export type GroupUpdateWithWhereUniqueWithoutSourceNoteInput = {
+  where: Prisma.GroupWhereUniqueInput
+  data: Prisma.XOR<Prisma.GroupUpdateWithoutSourceNoteInput, Prisma.GroupUncheckedUpdateWithoutSourceNoteInput>
+}
+
+export type GroupUpdateManyWithWhereWithoutSourceNoteInput = {
+  where: Prisma.GroupScalarWhereInput
+  data: Prisma.XOR<Prisma.GroupUpdateManyMutationInput, Prisma.GroupUncheckedUpdateManyWithoutSourceNoteInput>
 }
 
 export type GroupCreateManyWorkspaceInput = {
@@ -951,6 +1093,7 @@ export type GroupCreateManyWorkspaceInput = {
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  sourceNoteId?: string | null
 }
 
 export type GroupUpdateWithoutWorkspaceInput = {
@@ -965,6 +1108,7 @@ export type GroupUpdateWithoutWorkspaceInput = {
   parentGroups?: Prisma.GroupGroupUpdateManyWithoutChildNestedInput
   placeAffiliations?: Prisma.PlaceGroupUpdateManyWithoutGroupNestedInput
   taggedEvents?: Prisma.EventUpdateManyWithoutGroupTagsNestedInput
+  sourceNote?: Prisma.NoteUpdateOneWithoutGroupsNestedInput
 }
 
 export type GroupUncheckedUpdateWithoutWorkspaceInput = {
@@ -974,6 +1118,7 @@ export type GroupUncheckedUpdateWithoutWorkspaceInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   personMembers?: Prisma.PersonGroupUncheckedUpdateManyWithoutGroupNestedInput
   childGroups?: Prisma.GroupGroupUncheckedUpdateManyWithoutParentNestedInput
   parentGroups?: Prisma.GroupGroupUncheckedUpdateManyWithoutChildNestedInput
@@ -988,6 +1133,7 @@ export type GroupUncheckedUpdateManyWithoutWorkspaceInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type GroupUpdateWithoutTaggedEventsInput = {
@@ -1002,9 +1148,61 @@ export type GroupUpdateWithoutTaggedEventsInput = {
   childGroups?: Prisma.GroupGroupUpdateManyWithoutParentNestedInput
   parentGroups?: Prisma.GroupGroupUpdateManyWithoutChildNestedInput
   placeAffiliations?: Prisma.PlaceGroupUpdateManyWithoutGroupNestedInput
+  sourceNote?: Prisma.NoteUpdateOneWithoutGroupsNestedInput
 }
 
 export type GroupUncheckedUpdateWithoutTaggedEventsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  groupType?: Prisma.EnumGroupTypeFieldUpdateOperationsInput | $Enums.GroupType
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  personMembers?: Prisma.PersonGroupUncheckedUpdateManyWithoutGroupNestedInput
+  childGroups?: Prisma.GroupGroupUncheckedUpdateManyWithoutParentNestedInput
+  parentGroups?: Prisma.GroupGroupUncheckedUpdateManyWithoutChildNestedInput
+  placeAffiliations?: Prisma.PlaceGroupUncheckedUpdateManyWithoutGroupNestedInput
+}
+
+export type GroupUncheckedUpdateManyWithoutTaggedEventsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  groupType?: Prisma.EnumGroupTypeFieldUpdateOperationsInput | $Enums.GroupType
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+}
+
+export type GroupCreateManySourceNoteInput = {
+  id?: string
+  workspaceId?: string
+  name: string
+  groupType: $Enums.GroupType
+  notes?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type GroupUpdateWithoutSourceNoteInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  groupType?: Prisma.EnumGroupTypeFieldUpdateOperationsInput | $Enums.GroupType
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutGroupsNestedInput
+  personMembers?: Prisma.PersonGroupUpdateManyWithoutGroupNestedInput
+  childGroups?: Prisma.GroupGroupUpdateManyWithoutParentNestedInput
+  parentGroups?: Prisma.GroupGroupUpdateManyWithoutChildNestedInput
+  placeAffiliations?: Prisma.PlaceGroupUpdateManyWithoutGroupNestedInput
+  taggedEvents?: Prisma.EventUpdateManyWithoutGroupTagsNestedInput
+}
+
+export type GroupUncheckedUpdateWithoutSourceNoteInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1016,9 +1214,10 @@ export type GroupUncheckedUpdateWithoutTaggedEventsInput = {
   childGroups?: Prisma.GroupGroupUncheckedUpdateManyWithoutParentNestedInput
   parentGroups?: Prisma.GroupGroupUncheckedUpdateManyWithoutChildNestedInput
   placeAffiliations?: Prisma.PlaceGroupUncheckedUpdateManyWithoutGroupNestedInput
+  taggedEvents?: Prisma.EventUncheckedUpdateManyWithoutGroupTagsNestedInput
 }
 
-export type GroupUncheckedUpdateManyWithoutTaggedEventsInput = {
+export type GroupUncheckedUpdateManyWithoutSourceNoteInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1103,12 +1302,14 @@ export type GroupSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   notes?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  sourceNoteId?: boolean
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   personMembers?: boolean | Prisma.Group$personMembersArgs<ExtArgs>
   childGroups?: boolean | Prisma.Group$childGroupsArgs<ExtArgs>
   parentGroups?: boolean | Prisma.Group$parentGroupsArgs<ExtArgs>
   placeAffiliations?: boolean | Prisma.Group$placeAffiliationsArgs<ExtArgs>
   taggedEvents?: boolean | Prisma.Group$taggedEventsArgs<ExtArgs>
+  sourceNote?: boolean | Prisma.Group$sourceNoteArgs<ExtArgs>
   _count?: boolean | Prisma.GroupCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["group"]>
 
@@ -1120,7 +1321,9 @@ export type GroupSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   notes?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  sourceNoteId?: boolean
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
+  sourceNote?: boolean | Prisma.Group$sourceNoteArgs<ExtArgs>
 }, ExtArgs["result"]["group"]>
 
 export type GroupSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1131,7 +1334,9 @@ export type GroupSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   notes?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  sourceNoteId?: boolean
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
+  sourceNote?: boolean | Prisma.Group$sourceNoteArgs<ExtArgs>
 }, ExtArgs["result"]["group"]>
 
 export type GroupSelectScalar = {
@@ -1142,9 +1347,10 @@ export type GroupSelectScalar = {
   notes?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  sourceNoteId?: boolean
 }
 
-export type GroupOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "workspaceId" | "name" | "groupType" | "notes" | "createdAt" | "updatedAt", ExtArgs["result"]["group"]>
+export type GroupOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "workspaceId" | "name" | "groupType" | "notes" | "createdAt" | "updatedAt" | "sourceNoteId", ExtArgs["result"]["group"]>
 export type GroupInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   personMembers?: boolean | Prisma.Group$personMembersArgs<ExtArgs>
@@ -1152,13 +1358,16 @@ export type GroupInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   parentGroups?: boolean | Prisma.Group$parentGroupsArgs<ExtArgs>
   placeAffiliations?: boolean | Prisma.Group$placeAffiliationsArgs<ExtArgs>
   taggedEvents?: boolean | Prisma.Group$taggedEventsArgs<ExtArgs>
+  sourceNote?: boolean | Prisma.Group$sourceNoteArgs<ExtArgs>
   _count?: boolean | Prisma.GroupCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type GroupIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
+  sourceNote?: boolean | Prisma.Group$sourceNoteArgs<ExtArgs>
 }
 export type GroupIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
+  sourceNote?: boolean | Prisma.Group$sourceNoteArgs<ExtArgs>
 }
 
 export type $GroupPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1170,6 +1379,7 @@ export type $GroupPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     parentGroups: Prisma.$GroupGroupPayload<ExtArgs>[]
     placeAffiliations: Prisma.$PlaceGroupPayload<ExtArgs>[]
     taggedEvents: Prisma.$EventPayload<ExtArgs>[]
+    sourceNote: Prisma.$NotePayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1179,6 +1389,7 @@ export type $GroupPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     notes: string | null
     createdAt: Date
     updatedAt: Date
+    sourceNoteId: string | null
   }, ExtArgs["result"]["group"]>
   composites: {}
 }
@@ -1579,6 +1790,7 @@ export interface Prisma__GroupClient<T, Null = never, ExtArgs extends runtime.Ty
   parentGroups<T extends Prisma.Group$parentGroupsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Group$parentGroupsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$GroupGroupPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   placeAffiliations<T extends Prisma.Group$placeAffiliationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Group$placeAffiliationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PlaceGroupPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   taggedEvents<T extends Prisma.Group$taggedEventsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Group$taggedEventsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  sourceNote<T extends Prisma.Group$sourceNoteArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Group$sourceNoteArgs<ExtArgs>>): Prisma.Prisma__NoteClient<runtime.Types.Result.GetResult<Prisma.$NotePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1615,6 +1827,7 @@ export interface GroupFieldRefs {
   readonly notes: Prisma.FieldRef<"Group", 'String'>
   readonly createdAt: Prisma.FieldRef<"Group", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Group", 'DateTime'>
+  readonly sourceNoteId: Prisma.FieldRef<"Group", 'String'>
 }
     
 
@@ -2131,6 +2344,25 @@ export type Group$taggedEventsArgs<ExtArgs extends runtime.Types.Extensions.Inte
   take?: number
   skip?: number
   distinct?: Prisma.EventScalarFieldEnum | Prisma.EventScalarFieldEnum[]
+}
+
+/**
+ * Group.sourceNote
+ */
+export type Group$sourceNoteArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Note
+   */
+  select?: Prisma.NoteSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Note
+   */
+  omit?: Prisma.NoteOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.NoteInclude<ExtArgs> | null
+  where?: Prisma.NoteWhereInput
 }
 
 /**

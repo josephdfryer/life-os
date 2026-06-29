@@ -100,6 +100,7 @@ test("places map and profile derive stats from events, interactions, groups, pho
       placeId: place.id,
       name: "Saturday coffee",
       type: "coffee",
+      start: new Date("2026-04-18T17:00:00Z"),
       timestamp: new Date("2026-04-18T17:00:00Z"),
       groupTags: { connect: [{ id: group.id }] },
     },
@@ -110,6 +111,7 @@ test("places map and profile derive stats from events, interactions, groups, pho
       placeId: place.id,
       name: "Other workspace visit",
       type: "coffee",
+      start: new Date("2026-04-19T17:00:00Z"),
       timestamp: new Date("2026-04-19T17:00:00Z"),
     },
   })
@@ -202,6 +204,7 @@ test("places map layer data includes unresolved AI enrichment and interaction ov
       placeId: place.id,
       name: "Quick coffee",
       type: "coffee",
+      start: new Date("2026-05-01T16:00:00Z"),
       timestamp: new Date("2026-05-01T16:00:00Z"),
     },
   })

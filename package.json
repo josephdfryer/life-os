@@ -22,7 +22,8 @@
     "build": "turbo run build",
     "dev": "turbo run dev",
     "lint": "turbo run lint",
-    "type-check": "turbo run type-check"
+    "test": "tsx --test \"scripts/**/*.test.ts\" && npm run test --workspaces --if-present",
+    "type-check": "tsc --noEmit -p tsconfig.json && turbo run type-check"
   },
   "packageManager": "npm@11.12.1",
   "devDependencies": {

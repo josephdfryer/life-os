@@ -28,12 +28,32 @@ export async function writeExtraction(
   const placeId = resolvedPlaceIds[0] ?? null
 
   return db.$transaction(async tx => {
+    // Provenance: capture the raw item as a Note so every derived node can trace
+    // back to the thing that produced it ("provenance is sacred").
+    const note = await tx.note.create({
+      data: {
+        workspaceId: WORKSPACE_ID,
+        timestamp: new Date(rawItem.timestamp),
+        type: "import",
+        content: rawItem.body,
+        metadata: JSON.stringify({
+          source: rawItem.source,
+          sourceId: rawItem.id,
+          archivePath: rawItem.archivePath ?? null,
+          synthMarker,
+        }),
+      },
+      select: { id: true },
+    })
+
     const dbEvent = await tx.event.create({
       data: {
         workspaceId: WORKSPACE_ID,
         name: event.title,
         type: event.type,
+        start: new Date(event.date),
         timestamp: new Date(event.date),
+        sourceNoteId: note.id,
         placeId,
         notes: [event.notes, my_action_items?.length ? `My action items:\n${my_action_items.map(a => `- ${a.description}${a.deadline ? ` (by ${a.deadline})` : ""}`).join("\n")}` : null]
           .filter(Boolean)
@@ -64,6 +84,7 @@ export async function writeExtraction(
             personId: participant.personId,
             eventId: dbEvent.id,
             placeId,
+            sourceNoteId: note.id,
             type: event.type,
             timestamp: new Date(event.date),
             duration: event.duration_minutes ?? rawItem.durationSeconds ? Math.round((rawItem.durationSeconds ?? 0) / 60) : null,

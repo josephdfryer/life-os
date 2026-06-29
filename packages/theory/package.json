@@ -1,0 +1,13 @@
+{
+  "name": "@life-os/theory",
+  "version": "0.0.1",
+  "private": true,
+  "main": "./index.ts",
+  "types": "./index.ts",
+  "exports": {
+    ".": "./index.ts"
+  },
+  "dependencies": {
+    "@life-os/db": "*"
+  }
+}
