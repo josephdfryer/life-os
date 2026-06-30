@@ -7,9 +7,21 @@ function createClient(): PrismaClient {
   const log = ["error"] as const
 
   if (process.env.TURSO_DATABASE_URL) {
-    // Production: Turso (hosted libSQL / SQLite-compatible)
     // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-explicit-any
     const { PrismaLibSql } = require("@prisma/adapter-libsql") as any
+
+    // Embedded replica: local SQLite file synced from remote Turso (~8ms reads vs ~150ms HTTP)
+    if (process.env.TURSO_SYNC_URL) {
+      const adapter = new PrismaLibSql({
+        url: "file:replica.db",
+        syncUrl: process.env.TURSO_SYNC_URL,
+        authToken: process.env.TURSO_AUTH_TOKEN ?? undefined,
+        syncInterval: 60,
+      })
+      return new PrismaClient({ adapter, log: log as any })
+    }
+
+    // Production: Turso (hosted libSQL / SQLite-compatible)
     const adapter = new PrismaLibSql({
       url: process.env.TURSO_DATABASE_URL,
       authToken: process.env.TURSO_AUTH_TOKEN ?? undefined,
