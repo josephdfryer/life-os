@@ -59,10 +59,7 @@ export default async function InboxWidget({ workspaceId, personsUrl }: Props) {
         )}
       </div>
 
-      <a
-        href={`${personsUrl}/inbox`}
-        className="dashboard-inbox-link"
-      >
+      <a href={`${personsUrl}/inbox`} className="dashboard-inbox-link">
         Process inbox →
       </a>
     </div>
