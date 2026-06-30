@@ -11,8 +11,9 @@ export async function GET(req: NextRequest) {
 
   const { searchParams } = new URL(req.url)
   const search = searchParams.get("search")
-  const limit = Math.min(500, Math.max(1, Number(searchParams.get("limit") ?? 200)))
-  const offset = Math.max(0, Number(searchParams.get("offset") ?? 0))
+  const limit = Math.min(500, Math.max(1, Number(searchParams.get("limit") ?? 50)))
+  const cursor = searchParams.get("cursor") ?? null
+  const offset = cursor ? null : Math.max(0, Number(searchParams.get("offset") ?? 0))
 
   const where = search
     ? {
@@ -20,7 +21,7 @@ export async function GET(req: NextRequest) {
         OR: [
           { first: { contains: search } },
           { last: { contains: search } },
-          { emails: { contains: search } },
+          { emailSearch: { contains: search.toLowerCase() } },
           { company: { contains: search } },
           { headline: { contains: search } },
         ],
@@ -28,11 +29,25 @@ export async function GET(req: NextRequest) {
     : { workspaceId: auth.workspaceId }
 
   const [persons, total] = await Promise.all([
-    db.person.findMany({ where, orderBy: { createdAt: "asc" }, take: limit, skip: offset }),
+    db.person.findMany({
+      where,
+      orderBy: { createdAt: "asc" },
+      take: limit,
+      ...(cursor
+        ? { cursor: { id: cursor }, skip: 1 }
+        : { skip: offset ?? 0 }),
+    }),
     db.person.count({ where }),
   ])
 
-  return NextResponse.json({ data: persons.map(formatPerson), total, limit, offset })
+  const nextCursor = persons.length === limit ? persons[persons.length - 1].id : null
+
+  return NextResponse.json({
+    data: persons.map(formatPerson),
+    total,
+    limit,
+    ...(cursor != null ? { nextCursor } : { offset: offset ?? 0 }),
+  })
 }
 
 export async function POST(req: NextRequest) {

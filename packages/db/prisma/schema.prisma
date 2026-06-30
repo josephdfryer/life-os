@@ -113,6 +113,7 @@ model Person {
   title        String?
   headline     String?
   emails       String        @default("[]")
+  emailSearch  String?
   phones       String        @default("[]")
   birthday     String?
   closeness    Int           @default(2)
@@ -145,6 +146,9 @@ model Person {
   @@index([closeness])
   @@index([birthday])
   @@index([createdAt])
+  @@index([workspaceId, company])
+  @@index([workspaceId, headline])
+  @@index([workspaceId, emailSearch])
 }
 
 // ─────────────────────────────────────────────

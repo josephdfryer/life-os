@@ -3564,6 +3564,7 @@ export const PersonScalarFieldEnum = {
   title: 'title',
   headline: 'headline',
   emails: 'emails',
+  emailSearch: 'emailSearch',
   phones: 'phones',
   birthday: 'birthday',
   closeness: 'closeness',

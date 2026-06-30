@@ -1,9 +1,14 @@
+import { revalidatePath } from "next/cache"
 import { db } from "@/lib/db"
 import { assignColor } from "@/lib/colors"
 import { badRequest, notFound, optionalString, optionalStringArray, requiredString } from "@/server/api/errors"
 import { auditAction, type DomainActor } from "./audit"
 import { formatPerson, jsonList } from "./dto"
 import { normalizeBirthday } from "@/lib/birthday"
+
+export function revalidatePeopleCache(_workspaceId: string) {
+  revalidatePath("/people")
+}
 
 export type PersonInput = {
   first?: unknown
@@ -36,6 +41,7 @@ export async function createPerson(input: PersonInput, actor?: DomainActor) {
   const count = await db.person.count({ where: { workspaceId } })
   const assigned = assignColor(count)
 
+  const emailsJson = jsonList(contactList(input.emails, input.email))
   const person = await db.person.create({
     data: {
       first,
@@ -45,7 +51,8 @@ export async function createPerson(input: PersonInput, actor?: DomainActor) {
       title: optionalString(input.title),
       headline: optionalString(input.headline),
       company: optionalString(input.company),
-      emails: jsonList(contactList(input.emails, input.email)),
+      emails: emailsJson,
+      emailSearch: emailsJson.toLowerCase(),
       phones: jsonList(contactList(input.phones, input.phone)),
       birthday: validatedBirthday(input.birthday),
       closeness: input.closeness === undefined ? 2 : Number(input.closeness) || 2,
@@ -62,6 +69,7 @@ export async function createPerson(input: PersonInput, actor?: DomainActor) {
   })
 
   await auditAction({ actor, action: "person.create", targetType: "person", targetId: person.id })
+  revalidatePeopleCache(workspaceId)
   return formatPerson(person)
 }
 
@@ -74,7 +82,11 @@ export async function updatePerson(id: string, input: PersonInput, actor?: Domai
   if (input.title !== undefined) patch.title = optionalString(input.title)
   if (input.headline !== undefined) patch.headline = optionalString(input.headline)
   if (input.company !== undefined) patch.company = optionalString(input.company)
-  if (input.emails !== undefined || input.email !== undefined) patch.emails = jsonList(contactList(input.emails, input.email))
+  if (input.emails !== undefined || input.email !== undefined) {
+    const emailsJson = jsonList(contactList(input.emails, input.email))
+    patch.emails = emailsJson
+    patch.emailSearch = emailsJson.toLowerCase()
+  }
   if (input.phones !== undefined || input.phone !== undefined) patch.phones = jsonList(contactList(input.phones, input.phone))
   if (input.birthday !== undefined) patch.birthday = validatedBirthday(input.birthday)
   if (input.closeness !== undefined) {
@@ -95,6 +107,7 @@ export async function updatePerson(id: string, input: PersonInput, actor?: Domai
 
   const person = await db.person.update({ where: { id }, data: patch })
   await auditAction({ actor, action: "person.update", targetType: "person", targetId: id, metadata: { fields: Object.keys(patch) } })
+  revalidatePeopleCache(workspaceId)
   return formatPerson(person)
 }
 
@@ -104,6 +117,7 @@ export async function deletePerson(id: string, actor?: DomainActor) {
   if (!existing) throw notFound("Person not found", { id })
   await db.person.delete({ where: { id } })
   await auditAction({ actor, action: "person.delete", targetType: "person", targetId: id })
+  revalidatePeopleCache(workspaceId)
 }
 
 function contactList(arrayValue: unknown, singleValue: unknown) {
