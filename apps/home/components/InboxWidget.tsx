@@ -61,26 +61,7 @@ export default async function InboxWidget({ workspaceId, personsUrl }: Props) {
 
       <a
         href={`${personsUrl}/inbox`}
-        style={{
-          display: 'block',
-          width: '100%',
-          textAlign: 'center',
-          padding: '12px',
-          border: '1px solid #3f3f46',
-          borderRadius: '16px',
-          fontSize: '14px',
-          color: '#a1a1aa',
-          textDecoration: 'none',
-          transition: 'background 0.15s, color 0.15s',
-        }}
-        onMouseOver={(e) => {
-          e.currentTarget.style.background = '#27272a'
-          e.currentTarget.style.color = '#fff'
-        }}
-        onMouseOut={(e) => {
-          e.currentTarget.style.background = 'transparent'
-          e.currentTarget.style.color = '#a1a1aa'
-        }}
+        className="dashboard-inbox-link"
       >
         Process inbox →
       </a>

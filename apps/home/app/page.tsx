@@ -7,7 +7,7 @@ import ActionItemsWidget from '../components/ActionItemsWidget'
 import InboxWidget from '../components/InboxWidget'
 import NudgesWidget from '../components/NudgesWidget'
 
-export const revalidate = 60
+export const dynamic = 'force-dynamic'
 
 async function getWorkspaceId(email: string): Promise<string> {
   const member = await db.workspaceMember.findFirst({
@@ -127,9 +127,7 @@ export default async function HomePage() {
               <a
                 key={label}
                 href={href}
-                style={{ fontSize: '14px', color: '#a1a1aa', textDecoration: 'none' }}
-                onMouseOver={(e) => (e.currentTarget.style.color = '#fff')}
-                onMouseOut={(e) => (e.currentTarget.style.color = '#a1a1aa')}
+                className="dashboard-app-link"
               >
                 {label}
               </a>
