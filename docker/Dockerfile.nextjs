@@ -1,0 +1,64 @@
+# Single Dockerfile for all Life OS Next.js apps.
+# Build from monorepo root:
+#   docker build -f docker/Dockerfile.nextjs --build-arg APP_NAME=persons --build-arg PORT=3000 .
+ARG NODE_VERSION=24
+ARG APP_NAME
+ARG PORT=3000
+
+# ── base ──────────────────────────────────────────────────────────────────────
+FROM node:${NODE_VERSION}-alpine AS base
+RUN apk add --no-cache libc6-compat
+
+# ── pruner ────────────────────────────────────────────────────────────────────
+# Installs turbo, copies the full repo, prunes to only what APP_NAME needs.
+# Output: out/json/ (manifests only) + out/full/ (source) + out/package-lock.json
+FROM base AS pruner
+WORKDIR /repo
+RUN npm install --global turbo
+COPY . .
+ARG APP_NAME
+RUN turbo prune ${APP_NAME} --docker
+
+# ── installer ─────────────────────────────────────────────────────────────────
+# Two-layer approach for cache efficiency:
+#   Layer 1: install deps from pruned manifests (rebuilds only when package.json changes)
+#   Layer 2: copy source + build (rebuilds only when source changes)
+FROM base AS installer
+WORKDIR /repo
+# native module build tools (better-sqlite3, etc.)
+RUN apk add --no-cache python3 make g++
+
+# layer 1 — deps
+COPY --from=pruner /repo/out/json/ .
+COPY --from=pruner /repo/out/package-lock.json ./package-lock.json
+RUN npm ci
+
+# layer 2 — source + build
+COPY --from=pruner /repo/out/full/ .
+ARG APP_NAME
+RUN npx turbo run build --filter=${APP_NAME}
+
+# ── runner ────────────────────────────────────────────────────────────────────
+FROM node:${NODE_VERSION}-alpine AS runner
+WORKDIR /app
+
+RUN apk add --no-cache libc6-compat \
+ && addgroup --system --gid 1001 nodejs \
+ && adduser --system --uid 1001 nextjs
+
+ARG APP_NAME
+ARG PORT=3000
+
+# standalone output already bundles all node_modules it needs
+COPY --from=installer --chown=nextjs:nodejs /repo/apps/${APP_NAME}/.next/standalone ./
+COPY --from=installer --chown=nextjs:nodejs /repo/apps/${APP_NAME}/.next/static ./apps/${APP_NAME}/.next/static
+COPY --from=installer --chown=nextjs:nodejs /repo/apps/${APP_NAME}/public ./apps/${APP_NAME}/public
+
+# expose the server via entrypoint so APP_NAME is resolved at runtime from ENV
+COPY --chown=nextjs:nodejs docker/entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+USER nextjs
+EXPOSE ${PORT}
+ENV NODE_ENV=production PORT=${PORT} HOSTNAME=0.0.0.0 APP_NAME=${APP_NAME}
+ENTRYPOINT ["/entrypoint.sh"]

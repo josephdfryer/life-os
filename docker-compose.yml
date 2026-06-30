@@ -1,111 +1,115 @@
 # Life OS — local multi-app stack
 #
 # Usage:
-#   cp .env.example .env   # fill in secrets
+#   cp .env.example .env        # fill in AUTH_SECRET + ANTHROPIC_API_KEY at minimum
 #   docker compose up --build
 #
-# DB: all apps share a single SQLite file on the `life-os-db` volume.
-# Set TURSO_DATABASE_URL + TURSO_AUTH_TOKEN instead to use Turso instead.
+# Subdomains (via Caddy on :80):
+#   http://persons.localhost
+#   http://stuff.localhost
+#   http://places.localhost
+#   http://home.localhost
+#   http://assistant.localhost
 #
-# App ports:
-#   persons    → http://localhost:3000
-#   stuff      → http://localhost:3001
-#   places     → http://localhost:3002
-#   home       → http://localhost:3003
-#   assistant  → http://localhost:3005
+# DB: all apps share a single SQLite file on the `life-os-db` volume.
+# Override with TURSO_DATABASE_URL + TURSO_AUTH_TOKEN in .env to use Turso instead.
 
-x-db-env: &db-env
-  DATABASE_URL: file:/data/db/life-os.db
-  TURSO_DATABASE_URL: ${TURSO_DATABASE_URL:-}
-  TURSO_AUTH_TOKEN: ${TURSO_AUTH_TOKEN:-}
-  LIFE_OS_WORKSPACE_ID: ${LIFE_OS_WORKSPACE_ID:-default-workspace}
+x-nextjs-build: &nextjs-build
+  context: .
+  dockerfile: docker/Dockerfile.nextjs
 
-x-auth-env: &auth-env
-  AUTH_SECRET: ${AUTH_SECRET:?set AUTH_SECRET in .env}
-  NEXTAUTH_SECRET: ${AUTH_SECRET}
-  AUTH_URL: ${AUTH_URL:-}
-  NEXTAUTH_URL: ${NEXTAUTH_URL:-}
-  AUTH_COOKIE_DOMAIN: ${AUTH_COOKIE_DOMAIN:-}
-  ALLOWED_EMAILS: ${ALLOWED_EMAILS:-}
-  ADMIN_EMAILS: ${ADMIN_EMAILS:-}
-  OWNER_EMAILS: ${OWNER_EMAILS:-}
+x-app-defaults: &app-defaults
+  env_file:
+    - path: .env
+      required: false
+  volumes:
+    - life-os-db:/data/db
+  restart: unless-stopped
 
 volumes:
   life-os-db:
+  caddy-data:
+  caddy-config:
 
 services:
+  # ── Caddy reverse proxy ────────────────────────────────────────────────────
+  caddy:
+    image: caddy:2-alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./docker/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    depends_on:
+      - persons
+      - places
+      - home
+      - stuff
+      - assistant
+    restart: unless-stopped
+
+  # ── App services ────────────────────────────────────────────────────────────
   persons:
+    <<: *app-defaults
     build:
-      context: .
-      dockerfile: apps/persons/Dockerfile
+      <<: *nextjs-build
+      args:
+        APP_NAME: persons
+        PORT: "3000"
     ports:
       - "3000:3000"
-    volumes:
-      - life-os-db:/data/db
     environment:
-      <<: [*db-env, *auth-env]
-      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
-      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
-      GOOGLE_CALENDAR_CLIENT_ID: ${GOOGLE_CALENDAR_CLIENT_ID:-}
-      GOOGLE_CALENDAR_CLIENT_SECRET: ${GOOGLE_CALENDAR_CLIENT_SECRET:-}
-      GOOGLE_CALENDAR_REDIRECT_URI: ${GOOGLE_CALENDAR_REDIRECT_URI:-}
-      GOOGLE_GMAIL_CLIENT_ID: ${GOOGLE_GMAIL_CLIENT_ID:-}
-      GOOGLE_GMAIL_CLIENT_SECRET: ${GOOGLE_GMAIL_CLIENT_SECRET:-}
-      GOOGLE_GMAIL_REDIRECT_URI: ${GOOGLE_GMAIL_REDIRECT_URI:-}
-      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
-      API_KEY: ${API_KEY:-}
+      DATABASE_URL: file:/data/db/life-os.db
 
   stuff:
+    <<: *app-defaults
     build:
-      context: .
-      dockerfile: apps/stuff/Dockerfile
+      <<: *nextjs-build
+      args:
+        APP_NAME: stuff
+        PORT: "3001"
     ports:
       - "3001:3001"
-    volumes:
-      - life-os-db:/data/db
     environment:
-      <<: [*db-env, *auth-env]
+      DATABASE_URL: file:/data/db/life-os.db
 
   places:
+    <<: *app-defaults
     build:
-      context: .
-      dockerfile: apps/places/Dockerfile
+      <<: *nextjs-build
+      args:
+        APP_NAME: places
+        PORT: "3002"
     ports:
       - "3002:3002"
-    volumes:
-      - life-os-db:/data/db
     environment:
-      <<: [*db-env, *auth-env]
-      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
-      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
+      DATABASE_URL: file:/data/db/life-os.db
 
   home:
+    <<: *app-defaults
     build:
-      context: .
-      dockerfile: apps/home/Dockerfile
+      <<: *nextjs-build
+      args:
+        APP_NAME: home
+        PORT: "3003"
     ports:
       - "3003:3003"
-    volumes:
-      - life-os-db:/data/db
     environment:
-      <<: [*db-env, *auth-env]
-      NEXT_PUBLIC_PERSONS_URL: ${NEXT_PUBLIC_PERSONS_URL:-http://localhost:3000}
-      NEXT_PUBLIC_STUFF_URL: ${NEXT_PUBLIC_STUFF_URL:-http://localhost:3001}
-      NEXT_PUBLIC_PLACES_URL: ${NEXT_PUBLIC_PLACES_URL:-http://localhost:3002}
-      NEXT_PUBLIC_THEORY_URL: ${NEXT_PUBLIC_THEORY_URL:-http://localhost:3004}
+      DATABASE_URL: file:/data/db/life-os.db
+      NEXT_PUBLIC_PERSONS_URL: ${NEXT_PUBLIC_PERSONS_URL:-http://persons.localhost}
+      NEXT_PUBLIC_STUFF_URL: ${NEXT_PUBLIC_STUFF_URL:-http://stuff.localhost}
+      NEXT_PUBLIC_PLACES_URL: ${NEXT_PUBLIC_PLACES_URL:-http://places.localhost}
+      NEXT_PUBLIC_THEORY_URL: ${NEXT_PUBLIC_THEORY_URL:-http://theory.localhost}
 
   assistant:
+    <<: *app-defaults
     build:
-      context: .
-      dockerfile: apps/assistant/Dockerfile
+      <<: *nextjs-build
+      args:
+        APP_NAME: assistant
+        PORT: "3005"
     ports:
       - "3005:3005"
-    volumes:
-      - life-os-db:/data/db
     environment:
-      <<: *db-env
-      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:?set ANTHROPIC_API_KEY in .env}
-      TWILIO_ACCOUNT_SID: ${TWILIO_ACCOUNT_SID:-}
-      TWILIO_AUTH_TOKEN: ${TWILIO_AUTH_TOKEN:-}
-      TWILIO_WHATSAPP_NUMBER: ${TWILIO_WHATSAPP_NUMBER:-}
-      MY_WHATSAPP_NUMBER: ${MY_WHATSAPP_NUMBER:-}
+      DATABASE_URL: file:/data/db/life-os.db

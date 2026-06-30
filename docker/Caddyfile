@@ -1,0 +1,19 @@
+http://persons.localhost {
+    reverse_proxy persons:3000
+}
+
+http://places.localhost {
+    reverse_proxy places:3002
+}
+
+http://home.localhost {
+    reverse_proxy home:3003
+}
+
+http://stuff.localhost {
+    reverse_proxy stuff:3001
+}
+
+http://assistant.localhost {
+    reverse_proxy assistant:3005
+}
