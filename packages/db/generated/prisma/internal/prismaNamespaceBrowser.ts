@@ -90,7 +90,8 @@ export const ModelName = {
   TheorySnapshot: 'TheorySnapshot',
   TheorySnapshotSource: 'TheorySnapshotSource',
   StateDefinition: 'StateDefinition',
-  State: 'State'
+  State: 'State',
+  AssistantMessage: 'AssistantMessage'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -763,6 +764,19 @@ export const StateScalarFieldEnum = {
 } as const
 
 export type StateScalarFieldEnum = (typeof StateScalarFieldEnum)[keyof typeof StateScalarFieldEnum]
+
+
+export const AssistantMessageScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  channel: 'channel',
+  from: 'from',
+  role: 'role',
+  content: 'content',
+  createdAt: 'createdAt'
+} as const
+
+export type AssistantMessageScalarFieldEnum = (typeof AssistantMessageScalarFieldEnum)[keyof typeof AssistantMessageScalarFieldEnum]
 
 
 export const SortOrder = {

@@ -59,6 +59,7 @@ model Workspace {
   importJobs           ImportJob[]
   importStagedVisits   ImportStagedVisit[]
   planExpectedPersons  PlanExpectedPerson[]
+  assistantMessages    AssistantMessage[]
 
   @@index([ownerUserId])
   @@index([status])
@@ -1077,4 +1078,23 @@ model State {
 
   @@index([workspaceId, entityId, entityType])
   @@index([workspaceId, entityId, entityType, recordedAt])
+}
+
+// ─────────────────────────────────────────────
+// APP-LAYER: Assistant conversation history
+// Stores WhatsApp ↔ Claude message threads keyed by channel + phone number.
+// Not a Life OS primitive — purely an assistant-app concern.
+// ─────────────────────────────────────────────
+
+model AssistantMessage {
+  id          String    @id @default(cuid())
+  workspaceId String    @default("default-workspace")
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  channel     String    // "whatsapp"
+  from        String    // phone number e.g. "whatsapp:+14155238886"
+  role        String    // "user" | "assistant"
+  content     String
+  createdAt   DateTime  @default(now())
+
+  @@index([workspaceId, from, createdAt])
 }

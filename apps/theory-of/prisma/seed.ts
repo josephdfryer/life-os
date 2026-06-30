@@ -6,18 +6,30 @@ import {
   listTheorySnapshots,
 } from "@life-os/theory"
 
-// Seeds the first ("v1") Theory of Joseph snapshot if Joseph exists and has no
-// theory yet. Idempotent and additive — safe to re-run; it never overwrites.
+const SEED_WORKSPACE_ID = process.env.THEORY_WORKSPACE_ID ?? "default-workspace"
+
+// Seeds the first ("v1") Theory of Joseph snapshot. Idempotent and additive —
+// safe to re-run; it never overwrites. Creates a minimal Joseph Person only if
+// one does not already exist.
 async function main() {
-  const joseph = await db.person.findFirst({
+  let joseph = await db.person.findFirst({
     where: { OR: [{ first: "Joseph" }, { nickname: "Joseph" }] },
     orderBy: { createdAt: "asc" },
     select: { id: true, first: true, last: true, workspaceId: true },
   })
 
   if (!joseph) {
-    console.log("No person named Joseph found — nothing to seed.")
-    return
+    joseph = await db.person.create({
+      data: {
+        workspaceId: SEED_WORKSPACE_ID,
+        first: "Joseph",
+        last: "Fryer",
+        headline: "Building Life OS",
+        emails: JSON.stringify(["jdf247@gmail.com"]),
+      },
+      select: { id: true, first: true, last: true, workspaceId: true },
+    })
+    console.log(`Created Joseph person (${joseph.id}) in workspace ${joseph.workspaceId}.`)
   }
 
   const existing = await listTheorySnapshots(joseph.id)

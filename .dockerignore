@@ -1,0 +1,12 @@
+node_modules
+**/node_modules
+**/.next
+**/.turbo
+**/*.db
+**/*.db-shm
+**/*.db-wal
+.git
+.env*.local
+.env.production*
+.vercel
+.agent-sync

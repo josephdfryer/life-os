@@ -1,0 +1,111 @@
+# Life OS — local multi-app stack
+#
+# Usage:
+#   cp .env.example .env   # fill in secrets
+#   docker compose up --build
+#
+# DB: all apps share a single SQLite file on the `life-os-db` volume.
+# Set TURSO_DATABASE_URL + TURSO_AUTH_TOKEN instead to use Turso instead.
+#
+# App ports:
+#   persons    → http://localhost:3000
+#   stuff      → http://localhost:3001
+#   places     → http://localhost:3002
+#   home       → http://localhost:3003
+#   assistant  → http://localhost:3005
+
+x-db-env: &db-env
+  DATABASE_URL: file:/data/db/life-os.db
+  TURSO_DATABASE_URL: ${TURSO_DATABASE_URL:-}
+  TURSO_AUTH_TOKEN: ${TURSO_AUTH_TOKEN:-}
+  LIFE_OS_WORKSPACE_ID: ${LIFE_OS_WORKSPACE_ID:-default-workspace}
+
+x-auth-env: &auth-env
+  AUTH_SECRET: ${AUTH_SECRET:?set AUTH_SECRET in .env}
+  NEXTAUTH_SECRET: ${AUTH_SECRET}
+  AUTH_URL: ${AUTH_URL:-}
+  NEXTAUTH_URL: ${NEXTAUTH_URL:-}
+  AUTH_COOKIE_DOMAIN: ${AUTH_COOKIE_DOMAIN:-}
+  ALLOWED_EMAILS: ${ALLOWED_EMAILS:-}
+  ADMIN_EMAILS: ${ADMIN_EMAILS:-}
+  OWNER_EMAILS: ${OWNER_EMAILS:-}
+
+volumes:
+  life-os-db:
+
+services:
+  persons:
+    build:
+      context: .
+      dockerfile: apps/persons/Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - life-os-db:/data/db
+    environment:
+      <<: [*db-env, *auth-env]
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
+      GOOGLE_CALENDAR_CLIENT_ID: ${GOOGLE_CALENDAR_CLIENT_ID:-}
+      GOOGLE_CALENDAR_CLIENT_SECRET: ${GOOGLE_CALENDAR_CLIENT_SECRET:-}
+      GOOGLE_CALENDAR_REDIRECT_URI: ${GOOGLE_CALENDAR_REDIRECT_URI:-}
+      GOOGLE_GMAIL_CLIENT_ID: ${GOOGLE_GMAIL_CLIENT_ID:-}
+      GOOGLE_GMAIL_CLIENT_SECRET: ${GOOGLE_GMAIL_CLIENT_SECRET:-}
+      GOOGLE_GMAIL_REDIRECT_URI: ${GOOGLE_GMAIL_REDIRECT_URI:-}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      API_KEY: ${API_KEY:-}
+
+  stuff:
+    build:
+      context: .
+      dockerfile: apps/stuff/Dockerfile
+    ports:
+      - "3001:3001"
+    volumes:
+      - life-os-db:/data/db
+    environment:
+      <<: [*db-env, *auth-env]
+
+  places:
+    build:
+      context: .
+      dockerfile: apps/places/Dockerfile
+    ports:
+      - "3002:3002"
+    volumes:
+      - life-os-db:/data/db
+    environment:
+      <<: [*db-env, *auth-env]
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
+
+  home:
+    build:
+      context: .
+      dockerfile: apps/home/Dockerfile
+    ports:
+      - "3003:3003"
+    volumes:
+      - life-os-db:/data/db
+    environment:
+      <<: [*db-env, *auth-env]
+      NEXT_PUBLIC_PERSONS_URL: ${NEXT_PUBLIC_PERSONS_URL:-http://localhost:3000}
+      NEXT_PUBLIC_STUFF_URL: ${NEXT_PUBLIC_STUFF_URL:-http://localhost:3001}
+      NEXT_PUBLIC_PLACES_URL: ${NEXT_PUBLIC_PLACES_URL:-http://localhost:3002}
+      NEXT_PUBLIC_THEORY_URL: ${NEXT_PUBLIC_THEORY_URL:-http://localhost:3004}
+
+  assistant:
+    build:
+      context: .
+      dockerfile: apps/assistant/Dockerfile
+    ports:
+      - "3005:3005"
+    volumes:
+      - life-os-db:/data/db
+    environment:
+      <<: *db-env
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:?set ANTHROPIC_API_KEY in .env}
+      TWILIO_ACCOUNT_SID: ${TWILIO_ACCOUNT_SID:-}
+      TWILIO_AUTH_TOKEN: ${TWILIO_AUTH_TOKEN:-}
+      TWILIO_WHATSAPP_NUMBER: ${TWILIO_WHATSAPP_NUMBER:-}
+      MY_WHATSAPP_NUMBER: ${MY_WHATSAPP_NUMBER:-}

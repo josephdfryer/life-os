@@ -5,14 +5,12 @@ const nextConfig: NextConfig = {
   output: "standalone",
   outputFileTracingRoot: path.resolve(__dirname, "../.."),
   serverExternalPackages: [
+    "twilio",
     "better-sqlite3",
     "@prisma/adapter-better-sqlite3",
     "@prisma/adapter-libsql",
     "@libsql/client",
   ],
-  turbopack: {
-    root: path.resolve(__dirname, "../.."),
-  },
 }
 
 export default nextConfig

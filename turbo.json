@@ -34,7 +34,12 @@
         "OWNER_EMAILS",
         "THEORY_WORKSPACE_ID",
         "TURSO_AUTH_TOKEN",
-        "TURSO_DATABASE_URL"
+        "TURSO_DATABASE_URL",
+        "TWILIO_ACCOUNT_SID",
+        "TWILIO_AUTH_TOKEN",
+        "TWILIO_WHATSAPP_NUMBER",
+        "MY_WHATSAPP_NUMBER",
+        "LIFE_OS_WORKSPACE_ID"
       ],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
       "outputs": [".next/**", "!.next/cache/**", "dist/**"]

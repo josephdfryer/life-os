@@ -217,3 +217,8 @@ export type StateDefinition = Prisma.StateDefinitionModel
  * 
  */
 export type State = Prisma.StateModel
+/**
+ * Model AssistantMessage
+ * 
+ */
+export type AssistantMessage = Prisma.AssistantMessageModel
