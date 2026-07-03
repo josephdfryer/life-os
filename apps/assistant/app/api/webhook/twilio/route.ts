@@ -13,6 +13,11 @@ export async function POST(req: NextRequest) {
   })
 
   if (!validateTwilioSignature(url, params, signature)) {
+    console.error("Twilio signature validation failed", {
+      url,
+      hasSignature: Boolean(signature),
+      hasAuthToken: Boolean(process.env.TWILIO_AUTH_TOKEN),
+    })
     return new NextResponse("Forbidden", { status: 403 })
   }
 
@@ -20,6 +25,10 @@ export async function POST(req: NextRequest) {
   const body = (params["Body"] ?? "").trim()
 
   if (!isAllowedSender(from)) {
+    console.error("Sender not allowed", {
+      from,
+      hasMyNumber: Boolean(process.env.MY_WHATSAPP_NUMBER),
+    })
     return new NextResponse("Forbidden", { status: 403 })
   }
 
