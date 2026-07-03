@@ -2,6 +2,20 @@ import NextAuth, { type NextAuthConfig } from "next-auth"
 import Google from "next-auth/providers/google"
 import { db } from "@life-os/db"
 
+export const LIFE_OS_ROOT_DOMAIN = "lacollecteur.com"
+export const LIFE_OS_COOKIE_DOMAIN = `.${LIFE_OS_ROOT_DOMAIN}`
+
+export const LIFE_OS_APP_URLS = {
+  home: `https://home.${LIFE_OS_ROOT_DOMAIN}`,
+  persons: `https://people.${LIFE_OS_ROOT_DOMAIN}`,
+  places: `https://places.${LIFE_OS_ROOT_DOMAIN}`,
+  stuff: `https://stuff.${LIFE_OS_ROOT_DOMAIN}`,
+  context: `https://context.${LIFE_OS_ROOT_DOMAIN}`,
+  assistant: `https://assistant.${LIFE_OS_ROOT_DOMAIN}`,
+} as const
+
+export type LifeOsApp = keyof typeof LIFE_OS_APP_URLS
+
 type CreateLifeOsAuthOptions = {
   signInPath?: string
 }
@@ -62,13 +76,20 @@ export function envApprovedEmails() {
     .filter((value): value is string => Boolean(value))
 }
 
+export function lifeOsAppUrl(app: LifeOsApp, localFallback: string) {
+  const configured = appUrlFromEnv(app)
+  if (configured) return configured
+  if (process.env.NODE_ENV === "production") return LIFE_OS_APP_URLS[app]
+  return localFallback
+}
+
 function normalizeEmail(value: string | null | undefined) {
   const email = value?.trim().toLowerCase()
   return email || null
 }
 
 function sharedAuthCookies(): NextAuthConfig["cookies"] | undefined {
-  const domain = process.env.AUTH_COOKIE_DOMAIN ?? process.env.LIFE_OS_COOKIE_DOMAIN
+  const domain = sharedAuthCookieDomain()
   if (!domain) return undefined
 
   const secure = isSecureAuthContext()
@@ -94,6 +115,28 @@ function isSecureAuthContext() {
     || process.env.AUTH_URL?.startsWith("https://") === true
     || process.env.NEXTAUTH_URL?.startsWith("https://") === true
   )
+}
+
+function appUrlFromEnv(app: LifeOsApp) {
+  const envName = `NEXT_PUBLIC_${app.toUpperCase()}_URL`
+  const value = process.env[envName]
+  const configured = value?.trim()
+  if (configured) return configured
+
+  if (app === "context") {
+    return process.env.NEXT_PUBLIC_THEORY_URL?.trim() || null
+  }
+
+  return null
+}
+
+function sharedAuthCookieDomain() {
+  const configured = process.env.AUTH_COOKIE_DOMAIN ?? process.env.LIFE_OS_COOKIE_DOMAIN
+  const domain = configured?.trim()
+  if (!domain) return undefined
+
+  if (domain === LIFE_OS_ROOT_DOMAIN) return LIFE_OS_COOKIE_DOMAIN
+  return domain
 }
 
 function authSecret() {

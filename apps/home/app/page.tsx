@@ -2,6 +2,7 @@ import { Suspense } from 'react'
 import { redirect } from 'next/navigation'
 import { auth } from '../auth'
 import { db } from '@life-os/db'
+import { lifeOsAppUrl } from '@life-os/auth'
 import ScheduleWidget from '../components/ScheduleWidget'
 import ActionItemsWidget from '../components/ActionItemsWidget'
 import InboxWidget from '../components/InboxWidget'
@@ -32,7 +33,7 @@ export default async function HomePage() {
     day: 'numeric',
   })
 
-  const personsUrl = process.env.NEXT_PUBLIC_PERSONS_URL ?? 'http://localhost:3000'
+  const personsUrl = lifeOsAppUrl('persons', 'http://localhost:3000')
 
   return (
     <div className="min-h-screen pb-12" style={{ background: '#0d0d0d', color: '#fff' }}>
@@ -120,9 +121,9 @@ export default async function HomePage() {
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px 32px' }}>
             {[
               { label: 'Persons', href: personsUrl },
-              { label: 'Places', href: process.env.NEXT_PUBLIC_PLACES_URL ?? 'http://localhost:3002' },
-              { label: 'Stuff', href: process.env.NEXT_PUBLIC_STUFF_URL ?? 'http://localhost:3001' },
-              { label: 'Theory of', href: process.env.NEXT_PUBLIC_THEORY_URL ?? 'http://localhost:3004' },
+              { label: 'Places', href: lifeOsAppUrl('places', 'http://localhost:3002') },
+              { label: 'Stuff', href: lifeOsAppUrl('stuff', 'http://localhost:3001') },
+              { label: 'Context', href: lifeOsAppUrl('context', 'http://localhost:3004') },
             ].map(({ label, href }) => (
               <a
                 key={label}

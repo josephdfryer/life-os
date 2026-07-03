@@ -1,7 +1,19 @@
 # Unified Single Sign-On Across Life OS Apps
 
-Status: proposal
+Status: superseded by `docs/LACOLLECTEUR_UNIFIED_AUTH.md`
 Author: research session, 2026-06-30
+
+## 2026-06-30 update
+
+Joseph has an existing domain, `lacollecteur.com`, available for Life OS. That changes the recommendation below.
+
+Use **Option A — Shared cookie domain** for the near-term implementation:
+
+- custom app domains under `*.lacollecteur.com`
+- one shared `AUTH_SECRET` across all Auth.js apps
+- `AUTH_COOKIE_DOMAIN=.lacollecteur.com`
+
+Do not implement Option C unless Life OS later needs SSO across unrelated root domains. See `docs/LACOLLECTEUR_UNIFIED_AUTH.md` for the active runbook.
 
 ## Goal
 
