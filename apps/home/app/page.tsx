@@ -121,6 +121,7 @@ export default async function HomePage() {
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px 32px' }}>
             {[
               { label: 'Persons', href: personsUrl },
+              { label: 'Events', href: lifeOsAppUrl('events', 'http://localhost:3006') },
               { label: 'Places', href: lifeOsAppUrl('places', 'http://localhost:3002') },
               { label: 'Stuff', href: lifeOsAppUrl('stuff', 'http://localhost:3001') },
               { label: 'Context', href: lifeOsAppUrl('context', 'http://localhost:3004') },

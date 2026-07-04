@@ -19,6 +19,7 @@ Do not switch to database-backed Auth.js sessions for this phase. That path is s
 | Persons | `persons` | `people.lacollecteur.com` |
 | Places | `life-os-places` | `places.lacollecteur.com` |
 | Stuff | `life-os-stuff` | `stuff.lacollecteur.com` |
+| Events | `life-os-events` | `events.lacollecteur.com` |
 | Assistant | `life-os-assistant` | `assistant.lacollecteur.com` |
 | Context | not yet confirmed as a Vercel project | `context.lacollecteur.com` |
 
@@ -63,6 +64,7 @@ home       A  76.76.21.21
 people     A  76.76.21.21
 places     A  76.76.21.21
 stuff      A  76.76.21.21
+events     A  76.76.21.21
 assistant  A  76.76.21.21
 context    A  76.76.21.21
 ```

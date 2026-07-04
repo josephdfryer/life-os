@@ -10,6 +10,7 @@ export const LIFE_OS_APP_URLS = {
   persons: `https://people.${LIFE_OS_ROOT_DOMAIN}`,
   places: `https://places.${LIFE_OS_ROOT_DOMAIN}`,
   stuff: `https://stuff.${LIFE_OS_ROOT_DOMAIN}`,
+  events: `https://events.${LIFE_OS_ROOT_DOMAIN}`,
   context: `https://context.${LIFE_OS_ROOT_DOMAIN}`,
   assistant: `https://assistant.${LIFE_OS_ROOT_DOMAIN}`,
 } as const

@@ -2,6 +2,7 @@
 
 import type React from "react"
 import { useEffect, useMemo, useState } from "react"
+const EVENTS_APP_URL = process.env.NEXT_PUBLIC_EVENTS_URL || "http://localhost:3006"
 
 type Permission = { id: string; scope: string; description: string | null }
 type Role = {
@@ -1244,142 +1245,18 @@ export default function AdminClient({
           )}
 
           {!loading && overview && tab === "calendar" && (
-            <section style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) 320px", gap: "18px" }}>
-              <Panel title="Google Calendar" meta={calendarStatus?.connection?.status ?? "not connected"}>
-                {!calendarStatus && (
-                  <div style={{ fontSize: "12px", color: "var(--ink-3)" }}>Loading calendar status...</div>
-                )}
-                {calendarStatus && !calendarStatus.configured && (
-                  <div style={{ border: "1px solid var(--border)", borderRadius: "8px", background: "var(--bg)", padding: "12px", fontSize: "12px", color: "var(--ink-3)", lineHeight: 1.5 }}>
-                    Google Calendar OAuth is not configured yet. Add `GOOGLE_CALENDAR_CLIENT_ID` and `GOOGLE_CALENDAR_CLIENT_SECRET` in Vercel, or reuse the existing Google OAuth client with Calendar API enabled.
-                  </div>
-                )}
-                {calendarStatus && (
-                  <div style={{ border: "1px solid var(--border)", borderRadius: "8px", background: "var(--bg)", padding: "10px", fontSize: "11px", color: "var(--ink-3)", lineHeight: 1.5, wordBreak: "break-word" }}>
-                    <div style={{ fontSize: "10px", color: "var(--ink-4)", marginBottom: "4px" }}>Google Cloud redirect URI</div>
-                    {calendarStatus.redirectUri}
-                  </div>
-                )}
-                {calendarStatus?.connection ? (
-                  <div style={{ display: "grid", gap: "10px" }}>
-                    <div style={{ border: "1px solid var(--border)", borderRadius: "8px", background: "var(--bg)", padding: "10px" }}>
-                      <div style={{ fontSize: "13px", fontWeight: 600 }}>{calendarStatus.connection.calendarSummary ?? "Primary calendar"}</div>
-                      <div style={{ fontSize: "11px", color: "var(--ink-4)", marginTop: "4px" }}>{calendarStatus.connection.accountEmail ?? "Google account"}</div>
-                      <div style={{ display: "flex", gap: "7px", flexWrap: "wrap", marginTop: "9px" }}>
-                        <StatusPill status={calendarStatus.connection.status} />
-                        <StatusPill status={`${calendarStatus.connection.eventCount} linked events`} />
-                        {calendarStatus.connection.syncToken && <StatusPill status="incremental sync" />}
-                      </div>
-                    </div>
-                    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(170px, 1fr))", gap: "8px" }}>
-                      <InfoTile label="Last synced" value={formatDate(calendarStatus.connection.lastSyncedAt)} />
-                      <InfoTile label="Calendar ID" value={calendarStatus.connection.calendarId} />
-                    </div>
-                    {calendarStatus.connection.lastError && (
-                      <div style={{ border: "1px solid #d46a3a", background: "#fff3ed", color: "#8f3518", borderRadius: "8px", padding: "10px", fontSize: "11px" }}>
-                        {calendarStatus.connection.lastError}
-                      </div>
-                    )}
-                    {calendarSyncResult && (
-                      <div>
-                        <div style={{ fontSize: "10px", color: "var(--ink-4)", marginBottom: "5px" }}>Last sync result</div>
-                        <pre style={preStyle}>{calendarSyncResult}</pre>
-                      </div>
-                    )}
-                  </div>
-                ) : calendarStatus?.configured ? (
-                  <div style={{ fontSize: "12px", color: "var(--ink-3)", lineHeight: 1.5 }}>
-                    Connect Google Calendar to import calendar events into Events and create Interactions for attendees already matched to People by email.
-                  </div>
-                ) : null}
-              </Panel>
-
-              <Panel title="Actions">
-                <a href="/api/calendar/google/connect?returnTo=/admin" style={{ ...primaryLinkStyle, display: "block", textAlign: "center", marginBottom: "10px" }}>
-                  {calendarStatus?.connection ? "Reconnect Google" : "Connect Google"}
+            <section>
+              <Panel title="Google Calendar moved to Events">
+                <div style={{ fontSize: "12px", color: "var(--ink-3)", lineHeight: 1.6, marginBottom: "14px" }}>
+                  Calendar connect, sync, and import trace now live in the Events app — the lens for the Event primitive.
+                </div>
+                <a
+                  href={`${EVENTS_APP_URL}/settings/calendar`}
+                  style={{ ...primaryLinkStyle, display: "inline-block", textDecoration: "none" }}
+                >
+                  Open Calendar sync in Events
                 </a>
-                <SelectOptionField
-                  label="Backfill range"
-                  value={calendarBackfillDays}
-                  onChange={setCalendarBackfillDays}
-                  options={[...CALENDAR_BACKFILL_OPTIONS]}
-                />
-                <button style={primaryButtonStyle} disabled={saving || !calendarStatus?.connection} onClick={syncCalendar}>
-                  {saving ? "Syncing..." : "Sync now"}
-                </button>
-                <button style={{ ...smallButtonStyle, width: "100%", marginTop: "9px" }} onClick={loadCalendarStatus}>
-                  Refresh Status
-                </button>
-                <div style={{ fontSize: "11px", color: "var(--ink-4)", marginTop: "12px", lineHeight: 1.5 }}>
-                  Sync is read-only and runs in small batches. The backfill range applies when there is no incremental Google sync token yet; after that, sync only asks Google for changes.
-                </div>
               </Panel>
-
-              <div style={{ gridColumn: "1 / -1" }}>
-              <Panel title="Sync Trace" meta={calendarTrace ? `${calendarTrace.events.length} recent events` : "loading"}>
-                <div style={{ display: "flex", justifyContent: "space-between", gap: "10px", alignItems: "center", marginBottom: "10px" }}>
-                  <div style={{ fontSize: "11px", color: "var(--ink-4)", lineHeight: 1.45 }}>
-                    Recent Google Calendar imports with the local Event and People interactions they created.
-                  </div>
-                  <button style={smallButtonStyle} onClick={loadCalendarTrace}>Refresh Trace</button>
-                </div>
-
-                {calendarTrace?.runs.length ? (
-                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(170px, 1fr))", gap: "8px", marginBottom: "12px" }}>
-                    {calendarTrace.runs.slice(0, 3).map(run => (
-                      <div key={run.id} style={{ border: "1px solid var(--border)", borderRadius: "8px", background: "var(--bg)", padding: "9px" }}>
-                        <div style={{ fontSize: "10px", color: "var(--ink-4)", marginBottom: "5px" }}>{formatDate(run.createdAt)}</div>
-                        <div style={{ fontSize: "11px", color: "var(--ink-2)", lineHeight: 1.45 }}>{formatSyncRun(run.metadata)}</div>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div style={{ fontSize: "11px", color: "var(--ink-4)", marginBottom: "12px" }}>No Calendar sync runs logged yet.</div>
-                )}
-
-                <div style={{ display: "grid", gap: "8px" }}>
-                  {(calendarTrace?.events ?? []).map(item => (
-                    <div key={item.id} style={{ border: "1px solid var(--border)", borderRadius: "8px", background: "var(--bg)", padding: "10px" }}>
-                      <div style={{ display: "flex", justifyContent: "space-between", gap: "12px", alignItems: "baseline", marginBottom: "7px" }}>
-                        <div style={{ minWidth: 0 }}>
-                          <div style={{ fontSize: "13px", fontWeight: 600, color: "var(--ink)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                            {item.event?.name ?? "Missing local event"}
-                          </div>
-                          <div style={{ fontSize: "10px", color: "var(--ink-4)", marginTop: "3px" }}>
-                            {formatDate(item.event?.timestamp ?? item.lastSeenAt)} · {item.status} · {item.event?.attendeeCount ?? 0} attendees
-                          </div>
-                        </div>
-                        {item.event?.htmlLink && (
-                          <a href={item.event.htmlLink} target="_blank" rel="noreferrer" style={{ ...smallButtonStyle, textDecoration: "none", whiteSpace: "nowrap" }}>
-                            Open in Google
-                          </a>
-                        )}
-                      </div>
-                      {item.event?.location && (
-                        <div style={{ fontSize: "10px", color: "var(--ink-4)", marginBottom: "7px" }}>{item.event.location}</div>
-                      )}
-                      <TracePeople people={item.linkedPeople} />
-                      <details style={{ marginTop: "8px" }}>
-                        <summary style={{ fontSize: "10px", color: "var(--ink-4)", cursor: "pointer" }}>Attendees and IDs</summary>
-                        <div style={{ marginTop: "7px", display: "grid", gap: "5px" }}>
-                          <div style={{ fontSize: "10px", color: "var(--ink-4)", wordBreak: "break-word" }}>Google event: {item.externalEventId}</div>
-                          {(item.event?.attendees ?? []).map((attendee, index) => (
-                            <div key={`${attendee.email ?? "attendee"}-${index}`} style={{ fontSize: "10px", color: "var(--ink-3)" }}>
-                              {attendee.displayName || attendee.email || "Unknown attendee"}{attendee.responseStatus ? ` · ${attendee.responseStatus}` : ""}
-                            </div>
-                          ))}
-                        </div>
-                      </details>
-                    </div>
-                  ))}
-                  {calendarTrace && calendarTrace.events.length === 0 && (
-                    <div style={{ fontSize: "11px", color: "var(--ink-4)", border: "1px solid var(--border)", borderRadius: "8px", background: "var(--bg)", padding: "10px" }}>
-                      No imported Calendar events to trace yet.
-                    </div>
-                  )}
-                </div>
-              </Panel>
-              </div>
             </section>
           )}
 

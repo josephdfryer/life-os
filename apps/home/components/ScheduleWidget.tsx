@@ -1,3 +1,4 @@
+import { lifeOsAppUrl } from '@life-os/auth'
 import { db } from '@life-os/db'
 
 interface Props {
@@ -5,6 +6,7 @@ interface Props {
 }
 
 export default async function ScheduleWidget({ workspaceId }: Props) {
+  const eventsUrl = lifeOsAppUrl('events', 'http://localhost:3006')
   const now = new Date()
   const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0)
   const todayEnd = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59)
@@ -33,9 +35,9 @@ export default async function ScheduleWidget({ workspaceId }: Props) {
     <div style={card}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
         <h2 style={heading}>Today's Schedule</h2>
-        <span style={badge}>
-          {events.length} {events.length === 1 ? 'event' : 'events'}
-        </span>
+        <a href={eventsUrl} style={{ ...badge, textDecoration: 'none' }}>
+          {events.length} {events.length === 1 ? 'event' : 'events'} →
+        </a>
       </div>
 
       {events.length === 0 ? (
@@ -51,7 +53,11 @@ export default async function ScheduleWidget({ workspaceId }: Props) {
             const uniqueAttendees = [...new Set(attendees)].slice(0, 3)
 
             return (
-              <div key={event.id} style={{ display: 'flex', gap: '24px' }}>
+              <a
+                key={event.id}
+                href={`${eventsUrl}/events/${event.id}`}
+                style={{ display: 'flex', gap: '24px', textDecoration: 'none', color: 'inherit' }}
+              >
                 <div
                   style={{
                     fontFamily: 'var(--font-dm-mono)',
@@ -72,7 +78,7 @@ export default async function ScheduleWidget({ workspaceId }: Props) {
                     </div>
                   )}
                 </div>
-              </div>
+              </a>
             )
           })}
         </div>

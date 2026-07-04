@@ -9,6 +9,7 @@
 #   http://stuff.localhost
 #   http://places.localhost
 #   http://home.localhost
+#   http://events.localhost
 #   http://assistant.localhost
 #
 # DB: all apps share a single SQLite file on the `life-os-db` volume.
@@ -46,6 +47,7 @@ services:
       - places
       - home
       - stuff
+      - events
       - assistant
     restart: unless-stopped
 
@@ -100,7 +102,20 @@ services:
       NEXT_PUBLIC_PERSONS_URL: ${NEXT_PUBLIC_PERSONS_URL:-http://persons.localhost}
       NEXT_PUBLIC_STUFF_URL: ${NEXT_PUBLIC_STUFF_URL:-http://stuff.localhost}
       NEXT_PUBLIC_PLACES_URL: ${NEXT_PUBLIC_PLACES_URL:-http://places.localhost}
+      NEXT_PUBLIC_EVENTS_URL: ${NEXT_PUBLIC_EVENTS_URL:-http://events.localhost}
       NEXT_PUBLIC_THEORY_URL: ${NEXT_PUBLIC_THEORY_URL:-http://theory.localhost}
+
+  events:
+    <<: *app-defaults
+    build:
+      <<: *nextjs-build
+      args:
+        APP_NAME: events
+        PORT: "3006"
+    ports:
+      - "3006:3006"
+    environment:
+      DATABASE_URL: file:/data/db/life-os.db
 
   assistant:
     <<: *app-defaults
