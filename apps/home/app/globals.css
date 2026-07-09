@@ -1,12 +1,8 @@
 @import "tailwindcss";
+@import "@life-os/ui/still-tokens.css";
 
 :root {
-  --bg: #f7f4ee;
-  --surface: #fffdf8;
-  --border: #ded7cb;
-  --ink: #1b1a17;
-  --muted: #7b756b;
-  --accent: #b85632;
+  --muted: var(--ink-3);
 }
 
 * {
@@ -23,9 +19,9 @@ body {
 body {
   background: var(--bg);
   color: var(--ink);
-  font-family: var(--font-dm-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  font-size: 13px;
-  line-height: 1.5;
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.55;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -35,7 +31,7 @@ a {
 }
 
 :focus-visible {
-  outline: 2px solid var(--accent);
+  outline: 2px solid var(--cognac);
   outline-offset: 3px;
 }
 
@@ -51,10 +47,9 @@ a {
 }
 
 .brand {
-  font-size: 12px;
-  font-weight: 500;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 400;
 }
 
 .apps {
@@ -72,13 +67,14 @@ a {
   justify-content: flex-end;
   padding: 18px;
   border: 1px solid var(--border);
+  border-radius: var(--radius);
   background: var(--surface);
   transition: border-color 0.14s ease, transform 0.14s ease;
 }
 
 .app-link:hover {
   transform: translateY(-1px);
-  border-color: var(--accent);
+  border-color: var(--cognac-soft);
 }
 
 .app-label {
@@ -90,9 +86,9 @@ a {
 
 .app-name {
   margin-top: 8px;
-  font-family: var(--font-playfair), Georgia, serif;
+  font-family: var(--font-display);
   font-size: 34px;
-  font-weight: 600;
+  font-weight: 400;
   line-height: 1;
 }
 
@@ -114,11 +110,12 @@ a {
   width: min(360px, 100%);
   padding: 34px;
   border: 1px solid var(--border);
+  border-radius: var(--radius);
   background: var(--surface);
 }
 
 .login-title {
-  font-family: var(--font-playfair), Georgia, serif;
+  font-family: var(--font-display), Georgia, serif;
   font-size: 32px;
   font-weight: 600;
 }

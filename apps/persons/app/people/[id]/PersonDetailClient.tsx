@@ -169,7 +169,7 @@ export default function PersonDetailClient({ id, initialData }: { id: string; in
 
         {/* Contact info */}
         {(person.emails.length > 0 || person.phones.length > 0 || person.birthday ||
-          person.title || person.company || person.location || person.linkedin || person.twitter || person.website) && (
+          person.title || person.company || person.location || person.linkedin || person.twitter || person.website || person.facebook || person.instagram) && (
           <div style={{ display: "flex", flexDirection: "column", gap: "8px", padding: "16px 22px" }}>
             {person.title && <ContactRow icon="◌" items={[person.title]} />}
             {person.company && <ContactRow icon="○" items={[person.company]} />}
@@ -177,16 +177,17 @@ export default function PersonDetailClient({ id, initialData }: { id: string; in
             {person.emails.length > 0 && (
               <ContactRow icon="✉" items={person.emails} hrefPrefix="mailto:" />
             )}
+            {person.emails.length > 0 && <SuperhumanRow emails={person.emails} />}
             {person.phones.length > 0 && (
               <ContactRow icon="↗" items={person.phones} hrefPrefix="tel:" />
             )}
             {person.birthday && (
               <ContactRow icon="◑" items={[formatBirthday(person.birthday) ?? person.birthday]} />
             )}
-            {(person.linkedin || person.twitter || person.website) && (
+            {(person.linkedin || person.twitter || person.website || person.facebook || person.instagram) && (
               <ContactRow
                 icon="⊕"
-                items={[person.linkedin, person.twitter, person.website].filter(Boolean) as string[]}
+                items={[person.linkedin, person.twitter, person.website, person.facebook, person.instagram].filter(Boolean) as string[]}
                 isLinks
               />
             )}
@@ -320,6 +321,39 @@ function Stat({ label, value, accent }: { label: string; value: string; accent?:
     <div>
       <div style={{ fontSize: "10px", color: "var(--ink-4)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: "3px" }}>{label}</div>
       <div style={{ fontSize: "13px", fontWeight: 500, color: accent ? "var(--accent)" : "var(--ink)" }}>{value}</div>
+    </div>
+  )
+}
+
+// Opens Superhuman's web app pre-searched for the address, showing all
+// correspondence with this person. (The desktop app picks these links up
+// when installed.)
+function SuperhumanRow({ emails }: { emails: string[] }) {
+  return (
+    <div style={{ display: "flex", alignItems: "flex-start", gap: "10px" }}>
+      <span style={{
+        fontSize: "12px", color: "var(--ink-4)", width: "16px",
+        textAlign: "center", flexShrink: 0, paddingTop: "4px",
+      }}>
+        ⚡
+      </span>
+      <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
+        {emails.map(email => (
+          <a
+            key={email}
+            href={`https://mail.superhuman.com/search/${encodeURIComponent(email)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ textDecoration: "none" }}
+          >
+            <Chip
+              label={emails.length > 1 ? `Superhuman · ${email}` : "Open in Superhuman"}
+              variant="accent"
+              style={{ wordBreak: "break-all" }}
+            />
+          </a>
+        ))}
+      </div>
     </div>
   )
 }

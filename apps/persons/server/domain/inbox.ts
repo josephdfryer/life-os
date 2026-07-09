@@ -215,6 +215,49 @@ export async function updateInboxItem(id: string, body: Record<string, unknown>,
   return acceptInboxItem(item.id, body, actor)
 }
 
+export async function bulkUpdateInboxItems(action: "dismiss" | "accept", ids: string[], actor?: DomainActor) {
+  const workspaceId = actor?.workspaceId ?? "default-workspace"
+  if (!Array.isArray(ids) || ids.length === 0) throw badRequest("ids required", { field: "ids" })
+  const unique = [...new Set(ids)].slice(0, 500)
+
+  if (action === "dismiss") {
+    const result = await db.stagedInteraction.updateMany({
+      where: { id: { in: unique }, workspaceId, status: { in: ["pending", "blocked"] } },
+      data: { status: "dismissed" },
+    })
+    await auditAction({
+      actor,
+      action: "inbox.dismiss",
+      targetType: "stagedInteraction",
+      metadata: { bulk: true, count: result.count },
+    })
+    return { action, processed: result.count, skipped: unique.length - result.count, errors: [] as string[] }
+  }
+
+  // Accept: each item needs its candidate person and an interaction write, so
+  // this loops — only items that already have a candidate attached qualify.
+  const items = await db.stagedInteraction.findMany({
+    where: { id: { in: unique }, workspaceId, status: { in: ["pending", "blocked"] } },
+    select: { id: true, candidatePersonId: true },
+  })
+  let processed = 0
+  let skipped = unique.length - items.length
+  const errors: string[] = []
+  for (const item of items) {
+    if (!item.candidatePersonId) {
+      skipped += 1
+      continue
+    }
+    try {
+      await acceptInboxItem(item.id, {}, actor)
+      processed += 1
+    } catch (error) {
+      errors.push(`${item.id}: ${error instanceof Error ? error.message : String(error)}`)
+    }
+  }
+  return { action, processed, skipped, errors }
+}
+
 async function acceptInboxItem(id: string, body: Record<string, unknown>, actor?: DomainActor) {
   const workspaceId = actor?.workspaceId ?? "default-workspace"
   const item = await db.stagedInteraction.findFirst({ where: { id, workspaceId } })

@@ -52,7 +52,7 @@ export default function NewItemPage() {
   const fieldStyle: React.CSSProperties = { marginBottom: '16px' }
   const sectionStyle: React.CSSProperties = { marginBottom: '32px' }
   const sectionHeadStyle: React.CSSProperties = {
-    fontFamily: 'var(--font-dm-mono)',
+    fontFamily: 'var(--font-body)',
     fontSize: '10px',
     letterSpacing: '0.08em',
     textTransform: 'uppercase',
@@ -66,7 +66,7 @@ export default function NewItemPage() {
     <div style={{ maxWidth: '680px', margin: '0 auto', padding: '40px 24px' }}>
       <div style={{ marginBottom: '32px' }}>
         <a href="/items" style={{ fontSize: '12px', color: 'var(--ink-3)', textDecoration: 'none' }}>← Items</a>
-        <h1 style={{ fontFamily: 'var(--font-playfair)', fontSize: '24px', fontWeight: 600, margin: '12px 0 0', letterSpacing: '-0.02em' }}>
+        <h1 style={{ fontFamily: 'var(--font-display)', fontSize: '24px', fontWeight: 600, margin: '12px 0 0', letterSpacing: '-0.02em' }}>
           Add item
         </h1>
       </div>

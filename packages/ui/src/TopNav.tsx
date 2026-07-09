@@ -11,6 +11,7 @@ export interface TopNavProps {
   links?: NavLink[];
   rightSlot?: React.ReactNode;
   style?: React.CSSProperties;
+  brandHref?: string;
 }
 
 /**
@@ -22,41 +23,44 @@ export interface TopNavProps {
  *     rightSlot={<Avatar name="Kenji Lee" size="sm" />}
  *   />
  */
-export function TopNav({ appName, links = [], rightSlot, style }: TopNavProps) {
+export function TopNav({ appName, links = [], rightSlot, style, brandHref }: TopNavProps) {
+  const BrandTag = brandHref ? 'a' : 'span';
+
   return (
     <nav
       style={{
-        height: 44,
+        height: 'var(--nav-height, 52px)',
         background: 'var(--surface)',
-        borderBottom: '1px solid var(--separator)',
+        borderBottom: '1px solid var(--border-subtle, var(--separator))',
         display: 'flex',
         alignItems: 'center',
-        padding: '0 20px',
-        gap: 0,
+        padding: '0 24px',
+        gap: 24,
+        overflowX: 'auto',
         ...style,
       }}
     >
-      <span
+      <BrandTag
+        href={brandHref as never}
         style={{
           fontFamily: 'var(--font-display)',
-          fontSize: 14,
-          fontWeight: 500,
+          fontSize: 17,
+          fontWeight: 400,
           color: 'var(--ink)',
-          letterSpacing: '0.02em',
           flexShrink: 0,
+          textDecoration: 'none',
         }}
       >
         {appName}
-      </span>
+      </BrandTag>
 
       {links.length > 0 && (
         <div
           style={{
             display: 'flex',
             alignItems: 'center',
-            marginLeft: 24,
-            gap: 0,
-            height: '100%',
+            gap: 2,
+            minWidth: 0,
           }}
         >
           {links.map(link => (
@@ -64,18 +68,18 @@ export function TopNav({ appName, links = [], rightSlot, style }: TopNavProps) {
               key={link.href}
               href={link.href}
               style={{
-                fontFamily: 'var(--font-mono)',
-                fontSize: 9,
-                letterSpacing: '0.10em',
-                textTransform: 'uppercase',
-                color: link.active ? 'var(--ink)' : 'var(--ink-4)',
+                fontFamily: 'var(--font-body)',
+                fontSize: 13,
+                color: link.active ? 'var(--cognac-deep, var(--accent))' : 'var(--ink-3)',
+                background: link.active ? 'var(--cognac-soft, var(--accent-soft))' : 'transparent',
                 textDecoration: 'none',
-                padding: '0 14px',
-                height: '100%',
+                padding: '6px 14px',
+                borderRadius: 'var(--radius-pill)',
                 display: 'flex',
                 alignItems: 'center',
-                borderBottom: link.active ? '1px solid var(--accent)' : '1px solid transparent',
-                transition: 'color 0.12s',
+                whiteSpace: 'nowrap',
+                fontWeight: link.active ? 450 : 400,
+                transition: 'background 0.12s, color 0.12s',
               }}
             >
               {link.label}

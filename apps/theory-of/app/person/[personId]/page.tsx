@@ -40,7 +40,7 @@ export default async function TheoryOfPersonPage({ params }: { params: Promise<{
       {/* Person header */}
       <div style={{ marginBottom: "20px" }}>
         <h1 style={{
-          fontFamily: "var(--font-playfair), serif",
+          fontFamily: "var(--font-display), serif",
           fontSize: "30px",
           fontWeight: 600,
           color: "var(--ink)",

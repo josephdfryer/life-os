@@ -31,7 +31,7 @@ function LoginContent() {
       >
         <div
           style={{
-            fontFamily: "var(--font-playfair), serif",
+            fontFamily: "var(--font-display), serif",
             fontSize: "28px",
             fontWeight: 600,
             color: "var(--ink)",

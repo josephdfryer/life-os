@@ -2,7 +2,6 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { useRef, useEffect, useState } from "react"
 import { useSession, signOut } from "next-auth/react"
 
 export default function Header() {
@@ -14,30 +13,28 @@ export default function Header() {
   return (
     <header style={{
       background: "var(--surface)",
-      borderBottom: "1px solid var(--border)",
+      borderBottom: "1px solid var(--border-subtle)",
       padding: "0 24px",
       display: "flex",
       alignItems: "center",
       height: "52px",
-      gap: "32px",
+      gap: "24px",
       position: "sticky",
       top: 0,
       zIndex: 50,
     }}>
       <Link href="/items" style={{
-        fontFamily: "var(--font-playfair), serif",
-        fontSize: "18px",
-        fontWeight: 600,
+        fontFamily: "var(--font-display)",
+        fontSize: "17px",
+        fontWeight: 400,
         color: "var(--ink)",
         textDecoration: "none",
-        letterSpacing: "-0.01em",
       }}>
         Stuff
       </Link>
 
       <nav style={{ display: "flex", gap: "4px", alignItems: "center" }}>
         <NavLink href="/items"   label="Items"   active={pathname === "/items" || pathname.startsWith("/items/")} />
-        <NavLink href="/places"  label="Places"  active={pathname === "/places" || pathname.startsWith("/places/")} />
       </nav>
 
       {session?.user && (
@@ -56,8 +53,8 @@ export default function Header() {
             onClick={() => signOut({ callbackUrl: "/login" })}
             style={{
               padding: "4px 10px",
-              borderRadius: "6px",
-              fontSize: "11px",
+              borderRadius: "var(--radius-pill)",
+              fontSize: "12px",
               color: "var(--ink-3)",
               background: "transparent",
               border: "1px solid var(--border)",
@@ -87,12 +84,12 @@ function NavLink({ href, label, active }: { href: string; label: string; active:
     <Link
       href={href}
       style={{
-        padding: "5px 12px",
-        borderRadius: "6px",
-        fontSize: "12px",
+        padding: "6px 14px",
+        borderRadius: "var(--radius-pill)",
+        fontSize: "13px",
         fontWeight: active ? 500 : 400,
-        color: active ? "var(--accent)" : "var(--ink-3)",
-        background: active ? "var(--accent-soft)" : "transparent",
+        color: active ? "var(--cognac-deep)" : "var(--ink-3)",
+        background: active ? "var(--cognac-soft)" : "transparent",
         textDecoration: "none",
         transition: "all 0.1s",
       }}

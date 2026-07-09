@@ -1,0 +1,1099 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Life OS — Style Explorer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@400;600;700&family=DM+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Space+Grotesk:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: #111;
+      color: #e8e8e8;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .hero {
+      padding: 56px 32px 40px;
+      max-width: 1200px;
+      margin: 0 auto;
+      border-bottom: 1px solid #2a2a2a;
+    }
+
+    .hero h1 {
+      font-size: clamp(2rem, 4vw, 2.8rem);
+      font-weight: 600;
+      letter-spacing: -0.03em;
+      margin-bottom: 12px;
+    }
+
+    .hero p {
+      color: #888;
+      max-width: 560px;
+      font-size: 15px;
+      line-height: 1.7;
+    }
+
+    .hero .steps {
+      margin-top: 28px;
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+      font-size: 12px;
+      color: #666;
+    }
+
+    .hero .steps span { color: #aaa; }
+
+    .grid {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 32px 80px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 24px;
+    }
+
+    .style-card {
+      border: 1px solid #2a2a2a;
+      border-radius: 16px;
+      overflow: hidden;
+      background: #1a1a1a;
+      transition: border-color 0.2s, transform 0.2s;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .style-card:hover {
+      border-color: #444;
+      transform: translateY(-2px);
+    }
+
+    .style-card.selected {
+      border-color: #6ee7b7;
+      box-shadow: 0 0 0 1px #6ee7b7;
+    }
+
+    .style-card.selected::after {
+      content: '✓ picked';
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: #6ee7b7;
+      color: #111;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 100px;
+      z-index: 2;
+    }
+
+    /* Mini UI previews — each card has its own scoped theme */
+    .preview {
+      height: 200px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .preview-nav {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 11px;
+    }
+
+    .preview-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .preview-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .preview-card {
+      padding: 10px 12px;
+      font-size: 11px;
+      flex: 1;
+    }
+
+    .preview-btn {
+      padding: 6px 12px;
+      font-size: 10px;
+      border: none;
+      cursor: default;
+      font-family: inherit;
+    }
+
+    .card-info {
+      padding: 20px;
+      border-top: 1px solid #2a2a2a;
+    }
+
+    .card-info h2 {
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      margin-bottom: 4px;
+    }
+
+    .card-info .refs {
+      font-size: 11px;
+      color: #6ee7b7;
+      margin-bottom: 10px;
+    }
+
+    .card-info .refs a {
+      color: #6ee7b7;
+      text-decoration: none;
+    }
+
+    .card-info .refs a:hover { text-decoration: underline; }
+
+    .card-info p {
+      font-size: 13px;
+      color: #888;
+      line-height: 1.6;
+      margin-bottom: 12px;
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .tag {
+      font-size: 10px;
+      padding: 3px 8px;
+      border-radius: 100px;
+      background: #2a2a2a;
+      color: #888;
+    }
+
+    .swatches {
+      display: flex;
+      gap: 4px;
+      margin-top: 12px;
+    }
+
+    .swatch {
+      width: 20px;
+      height: 20px;
+      border-radius: 4px;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    /* ── Style 1: Linear ── */
+    .s-linear .preview {
+      background: #0a0a0b;
+      color: #eee;
+      font-family: 'Inter', sans-serif;
+    }
+    .s-linear .preview-nav { color: #666; }
+    .s-linear .preview-nav b { color: #eee; font-weight: 500; }
+    .s-linear .preview-card {
+      background: #141416;
+      border: 1px solid #222;
+      border-radius: 8px;
+      color: #aaa;
+    }
+    .s-linear .preview-card strong { color: #eee; display: block; margin-bottom: 2px; }
+    .s-linear .preview-btn {
+      background: #5e6ad2;
+      color: #fff;
+      border-radius: 6px;
+      font-weight: 500;
+    }
+    .s-linear .dot { width: 6px; height: 6px; border-radius: 50%; background: #5e6ad2; }
+
+    /* ── Style 2: Raycast ── */
+    .s-raycast .preview {
+      background: linear-gradient(145deg, #1a1a2e 0%, #0f0f1a 100%);
+      color: #eee;
+      font-family: 'Inter', sans-serif;
+    }
+    .s-raycast .preview-card {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      backdrop-filter: blur(8px);
+      color: #aaa;
+    }
+    .s-raycast .preview-card strong { color: #fff; }
+    .s-raycast .preview-btn {
+      background: #ff6363;
+      color: #fff;
+      border-radius: 8px;
+    }
+    .s-raycast .cmd {
+      background: rgba(0,0,0,0.4);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px;
+      padding: 8px 12px;
+      font-size: 12px;
+      color: #666;
+    }
+
+    /* ── Style 3: Notion ── */
+    .s-notion .preview {
+      background: #fff;
+      color: #37352f;
+      font-family: ui-sans-serif, 'Inter', sans-serif;
+    }
+    .s-notion .preview-nav { color: #9b9a97; }
+    .s-notion .preview-nav b { color: #37352f; }
+    .s-notion .preview-card {
+      background: #f7f6f3;
+      border-radius: 4px;
+      color: #787774;
+    }
+    .s-notion .preview-card strong { color: #37352f; }
+    .s-notion .preview-btn {
+      background: #2383e2;
+      color: #fff;
+      border-radius: 4px;
+    }
+
+    /* ── Style 4: Superhuman ── */
+    .s-superhuman .preview {
+      background: #000;
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+    }
+    .s-superhuman .preview-nav { color: #555; letter-spacing: 0.08em; text-transform: uppercase; font-size: 9px; }
+    .s-superhuman .preview-card {
+      background: transparent;
+      border-left: 2px solid #7c3aed;
+      border-radius: 0;
+      color: #888;
+      padding-left: 14px;
+    }
+    .s-superhuman .preview-card strong { color: #fff; font-weight: 600; }
+    .s-superhuman .preview-btn {
+      background: #7c3aed;
+      color: #fff;
+      border-radius: 4px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      font-size: 9px;
+    }
+
+    /* ── Style 5: Things / Apple calm ── */
+    .s-things .preview {
+      background: #f2f2f7;
+      color: #1c1c1e;
+      font-family: -apple-system, 'Inter', sans-serif;
+    }
+    .s-things .preview-nav { color: #8e8e93; }
+    .s-things .preview-nav b { color: #1c1c1e; font-weight: 600; }
+    .s-things .preview-card {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+      color: #8e8e93;
+    }
+    .s-things .preview-card strong { color: #1c1c1e; }
+    .s-things .preview-btn {
+      background: #007aff;
+      color: #fff;
+      border-radius: 100px;
+    }
+    .s-things .check {
+      width: 18px; height: 18px; border-radius: 50%;
+      border: 2px solid #007aff; flex-shrink: 0;
+    }
+
+    /* ── Style 6: Editorial ── */
+    .s-editorial .preview {
+      background: #faf9f6;
+      color: #1a1a1a;
+      font-family: 'Newsreader', Georgia, serif;
+    }
+    .s-editorial .preview-nav {
+      font-family: 'Inter', sans-serif;
+      font-size: 9px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #999;
+    }
+    .s-editorial .preview-card {
+      background: transparent;
+      border: none;
+      border-top: 1px solid #ddd;
+      border-radius: 0;
+      padding-top: 14px;
+      color: #666;
+      font-size: 13px;
+    }
+    .s-editorial .preview-card strong {
+      font-family: 'Instrument Serif', Georgia, serif;
+      font-size: 22px;
+      font-weight: 400;
+      color: #1a1a1a;
+      display: block;
+      margin-bottom: 4px;
+    }
+    .s-editorial .preview-btn {
+      background: transparent;
+      color: #1a1a1a;
+      border: 1px solid #1a1a1a;
+      border-radius: 0;
+      font-family: 'Inter', sans-serif;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      font-size: 9px;
+    }
+
+    /* ── Style 7: Terminal ── */
+    .s-terminal .preview {
+      background: #0c0c0c;
+      color: #33ff33;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+    }
+    .s-terminal .preview-nav { color: #33ff33; opacity: 0.5; }
+    .s-terminal .preview-card {
+      background: transparent;
+      border: 1px solid #33ff33;
+      border-radius: 0;
+      color: #33ff33;
+      opacity: 0.8;
+    }
+    .s-terminal .preview-card strong { color: #fff; }
+    .s-terminal .preview-btn {
+      background: #33ff33;
+      color: #0c0c0c;
+      border-radius: 0;
+      font-family: inherit;
+      font-weight: 500;
+    }
+    .s-terminal .blink { animation: blink 1s step-end infinite; }
+    @keyframes blink { 50% { opacity: 0; } }
+
+    /* ── Style 8: Aesop / Luxury ── */
+    .s-aesop .preview {
+      background: #f5f0e8;
+      color: #2c2c2c;
+      font-family: 'Newsreader', Georgia, serif;
+    }
+    .s-aesop .preview-nav {
+      font-family: 'Inter', sans-serif;
+      font-size: 9px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #9a8e7e;
+    }
+    .s-aesop .preview-card {
+      background: transparent;
+      border-bottom: 1px solid #d4ccc0;
+      border-radius: 0;
+      color: #7a7068;
+      font-size: 12px;
+    }
+    .s-aesop .preview-card strong {
+      font-weight: 400;
+      font-size: 16px;
+      color: #2c2c2c;
+    }
+    .s-aesop .preview-btn {
+      background: #2c2c2c;
+      color: #f5f0e8;
+      border-radius: 0;
+      font-family: 'Inter', sans-serif;
+      font-size: 9px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+
+    /* ── Style 9: Neubrutalism ── */
+    .s-neubrutal .preview {
+      background: #fff8e7;
+      color: #000;
+      font-family: 'Space Grotesk', sans-serif;
+    }
+    .s-neubrutal .preview-nav b { font-weight: 700; }
+    .s-neubrutal .preview-card {
+      background: #fff;
+      border: 2px solid #000;
+      border-radius: 0;
+      box-shadow: 4px 4px 0 #000;
+      color: #444;
+      font-weight: 500;
+    }
+    .s-neubrutal .preview-card strong { font-weight: 700; }
+    .s-neubrutal .preview-btn {
+      background: #ff6b6b;
+      color: #000;
+      border: 2px solid #000;
+      border-radius: 0;
+      box-shadow: 3px 3px 0 #000;
+      font-weight: 700;
+    }
+
+    /* ── Style 10: Vercel / Geist ── */
+    .s-vercel .preview {
+      background: #000;
+      color: #ededed;
+      font-family: 'Geist Mono', 'IBM Plex Mono', monospace;
+      font-size: 11px;
+    }
+    .s-vercel .preview-nav { color: #666; }
+    .s-vercel .preview-nav b { color: #fff; }
+    .s-vercel .preview-card {
+      background: #111;
+      border: 1px solid #333;
+      border-radius: 6px;
+      color: #888;
+    }
+    .s-vercel .preview-card strong { color: #fff; }
+    .s-vercel .preview-btn {
+      background: #fff;
+      color: #000;
+      border-radius: 6px;
+      font-weight: 500;
+    }
+    .s-vercel .grid-bg {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 20px 20px;
+      pointer-events: none;
+    }
+
+    /* ── Style 11: Japanese / Muji ── */
+    .s-muji .preview {
+      background: #e8e4df;
+      color: #3d3d3d;
+      font-family: 'Inter', sans-serif;
+    }
+    .s-muji .preview-nav { color: #9a9590; font-size: 10px; }
+    .s-muji .preview-nav b { color: #3d3d3d; font-weight: 400; }
+    .s-muji .preview-card {
+      background: #f5f3f0;
+      border: none;
+      border-radius: 2px;
+      color: #8a8580;
+      font-size: 11px;
+    }
+    .s-muji .preview-card strong { color: #3d3d3d; font-weight: 400; }
+    .s-muji .preview-btn {
+      background: #6b6560;
+      color: #f5f3f0;
+      border-radius: 2px;
+      font-weight: 400;
+      font-size: 10px;
+    }
+
+    /* ── Style 12: Warm Concrete (current) ── */
+    .s-warm .preview {
+      background: #f5f2ec;
+      color: #1a1814;
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+    }
+    .s-warm .preview-nav {
+      font-family: 'Playfair Display', serif;
+      font-size: 14px;
+      color: #8a8680;
+    }
+    .s-warm .preview-nav b { color: #1a1814; font-weight: 600; }
+    .s-warm .preview-card {
+      background: #faf8f4;
+      border: 1px solid #ddd9cf;
+      border-radius: 0;
+      color: #8a8680;
+    }
+    .s-warm .preview-card strong {
+      font-family: 'Playfair Display', serif;
+      color: #1a1814;
+      font-size: 14px;
+    }
+    .s-warm .preview-btn {
+      background: #c4572a;
+      color: #fff;
+      border-radius: 0;
+      font-family: inherit;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-size: 9px;
+    }
+
+    /* ── Style 13: Arc / Colorful ── */
+    .s-arc .preview {
+      background: linear-gradient(135deg, #1e1033 0%, #2d1b4e 40%, #1a3a4a 100%);
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+    }
+    .s-arc .preview-card {
+      background: rgba(255,255,255,0.1);
+      border-radius: 16px;
+      color: rgba(255,255,255,0.6);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .s-arc .preview-card strong { color: #fff; }
+    .s-arc .preview-btn {
+      background: linear-gradient(135deg, #ff6b9d, #c44dff);
+      color: #fff;
+      border-radius: 100px;
+      font-weight: 600;
+    }
+    .s-arc .pill {
+      width: 40px; height: 6px; border-radius: 100px;
+      background: linear-gradient(90deg, #ff6b9d, #ffd93d, #6bcb77, #4d96ff);
+    }
+
+    /* ── Style 14: Obsidian / Craft docs ── */
+    .s-obsidian .preview {
+      background: #1e1e1e;
+      color: #dcddde;
+      font-family: ui-sans-serif, 'Inter', sans-serif;
+    }
+    .s-obsidian .preview-nav { color: #72767d; }
+    .s-obsidian .preview-card {
+      background: #2d2d2d;
+      border: 1px solid #3d3d3d;
+      border-radius: 4px;
+      color: #999;
+    }
+    .s-obsidian .preview-card strong { color: #dcddde; }
+    .s-obsidian .preview-btn {
+      background: #7c6af7;
+      color: #fff;
+      border-radius: 4px;
+    }
+    .s-obsidian .link { color: #7c6af7; }
+
+    /* Footer */
+    .footer {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 32px 60px;
+    }
+
+    .pick-bar {
+      position: sticky;
+      bottom: 0;
+      background: #1a1a1a;
+      border-top: 1px solid #2a2a2a;
+      padding: 16px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .pick-bar .count {
+      font-size: 14px;
+      color: #888;
+    }
+
+    .pick-bar .count strong { color: #6ee7b7; }
+
+    .pick-bar button {
+      background: #6ee7b7;
+      color: #111;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .pick-bar button:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    #picked-list {
+      font-size: 12px;
+      color: #666;
+      max-width: 500px;
+    }
+
+    .toast-msg {
+      position: fixed;
+      bottom: 80px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #6ee7b7;
+      color: #111;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 500;
+      display: none;
+      z-index: 100;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="hero">
+    <h1>Pick what feels like you</h1>
+    <p>
+      Twelve distinct design directions for Life OS. Click any card to mark it as a favorite.
+      Pick 2–4 that resonate — even if they seem contradictory. I'll help you blend them into
+      something that's actually yours.
+    </p>
+    <div class="steps">
+      <div><span>①</span> Browse & click favorites</div>
+      <div><span>②</span> Tell me your picks in chat</div>
+      <div><span>③</span> We refine a custom direction together</div>
+    </div>
+  </header>
+
+  <div class="grid" id="grid">
+
+    <article class="style-card s-linear" data-id="linear" data-name="Linear / Precision">
+      <div class="preview">
+        <div class="preview-nav"><b>Persons</b> · Today · People · Inbox</div>
+        <div class="preview-body">
+          <div class="preview-row">
+            <div class="dot"></div>
+            <div class="preview-card"><strong>Kenji Lee</strong>Last contact 3d ago · Meridian</div>
+          </div>
+          <button class="preview-btn">Log interaction</button>
+        </div>
+      </div>
+      <div class="card-info">
+        <h2>Linear / Precision</h2>
+        <div class="refs">
+          See: <a href="https://linear.app" target="_blank">linear.app</a> ·
+          <a href="https://height.app" target="_blank">height.app</a>
+        </div>
+        <p>Tight, dark, impossibly crisp. Purple accent, micro-typography, zero wasted pixels. Feels fast and serious.</p>
+        <div class="tags"><span class="tag">dark</span><span class="tag">dense</span><span class="tag">pro tool</span><span class="tag">keyboard-first</span></div>
+        <div class="swatches">
+          <div class="swatch" style="background:#0a0a0b"></div>
+          <div class="swatch" style="background:#5e6ad2"></div>
+          <div class="swatch" style="background:#141416"></div>
+          <div class="swatch" style="background:#eee"></div>
+        </div>
+      </div>
+    </article>
+
+    <article class="style-card s-raycast" data-id="raycast" data-name="Raycast / Command">
+      <div class="preview">
+        <div class="cmd">⌘ Search people, places, events…</div>
+        <div class="preview-body">
+          <div class="preview-card"><strong>Kenji Lee</strong>VP Engineering · Meridian Group</div>
+          <div class="preview-card"><strong>Go to Inbox</strong>12 pending items</div>
+        </div>
+      </div>
+      <div class="card-info">
+        <h2>Raycast / Command</h2>
+        <div class="refs">
+          See: <a href="https://raycast.com" target="_blank">raycast.com</a> ·
+          <a href="https://arc.net" target="_blank">arc.net</a> (command bar)
+        </div>
+        <p>Glass-dark surfaces, search-first, pops of coral/red. The UI disappears until you need it.</p>
+        <div class="tags"><span class="tag">dark</span><span class="tag">glass</span><span class="tag">⌘K</span><span class="tag">minimal chrome</span></div>
+        <div class="swatches">
+          <div class="swatch" style="background:#1a1a2e"></div>
+          <div class="swatch" style="background:#ff6363"></div>
+          <div class="swatch" style="background:#0f0f1a"></div>
+          <div class="swatch" style="background:#fff"></div>
+        </div>
+      </div>
+    </article>
+
+    <article class="style-card s-notion" data-id="notion" data-name="Notion / Quiet">
+      <div class="preview">
+        <div class="preview-nav"><b>🌅 Today</b></div>
+        <div class="preview-body">
+          <div class="preview-card"><strong>People to reach out to</strong>Amara · Sofia · Kenji</div>
+          <div class="preview-card"><strong>Birthdays this week</strong>Marcus turns 34 on Thursday</div>
+        </div>
+      </div>
+      <div class="card-info">
+        <h2>Notion / Quiet Utility</h2>
+        <div class="refs">
+          See: <a href="https://notion.so" target="_blank">notion.so</a> ·
+          <a href="https://coda.io" target="_blank">coda.io</a>
+        </div>
+        <p>Warm white, soft grays, content is king. Blocks and pages, not dashboards. Familiar and unpretentious.</p>
+        <div class="tags"><span class="tag">light</span><span class="tag">content-first</span><span class="tag">blocks</span><span class="tag">friendly</span></div>
+        <div class="swatches">
+          <div class="swatch" style="background:#fff"></div>
+          <div class="swatch" style="background:#37352f"></div>
+          <div class="swatch" style="background:#f7f6f3"></div>
+          <div class="swatch" style="background:#2383e2"></div>
+        </div>
+      </div>
+    </article>
+
+    <article class="style-card s-superhuman" data-id="superhuman" data-name="Superhuman / Speed">
+      <div class="preview">
+        <div class="preview-nav">Inbox · 12 pending</div>
+        <div class="preview-body">
+          <div class="preview-card"><strong>gmail · Kenji Lee</strong>Re: Meridian partnership</div>
+          <div class="preview-card" style="border-color:#555"><strong>imessage · Amara</strong>See you Thursday?</div>
+        </div>
+        <button class="preview-btn">Process →</button>
+      </div>
+      <div class="card-info">
+        <h2>Superhuman / Speed</h2>
+        <div class="refs">
+          See: <a href="https://superhuman.com" target="_blank">superhuman.com</a> ·
+          <a href="https://feedly.com" target="_blank">feedly.com</a>
+        </div>
+        <p>Pure black, purple accents, uppercase micro-labels. Built for velocity — every interaction feels intentional.</p>
+        <div class="tags"><span class="tag">dark</span><span class="tag">bold</span><span class="tag">high contrast</span><span class="tag">power user</span></div>
+        <div class="swatches">
+          <div class="swatch" style="background:#000"></div>
+          <div class="swatch" style="background:#7c3aed"></div>
+          <div class="swatch" style="background:#fff"></div>
+          <div class="swatch" style="background:#888"></div>
+        </div>
+      </div>
+    </article>
+
+    <article class="style-card s-things" data-id="things" data-name="Things / Calm">
+      <div class="preview">
+        <div class="preview-nav"><b>Today</b></div>
+        <div class="preview-body">
+          <div class="preview-row">
+            <div class="check"></div>
+            <div class="preview-card"><strong>Reach out to Kenji</strong>42 days since last contact</div>
+          </div>
+          <div class="preview-row">
+            <div class="check" style="border-color:#ccc"></div>
+            <div class="preview-card"><strong>Amara's birthday</strong>Thursday · send a note</div>
+          </div>
+        </div>
+      </div>
+      <div class="card-info">
+        <h2>Things / Apple Calm</h2>
+        <div class="refs">
+          See: <a href="https://culturedcode.com/things/" target="_blank">Things app</a> ·
+          <a href="https://www.apple.com/macos/" target="_blank">macOS design</a>
+        </div>
+        <p>Soft gray backgrounds, rounded cards, blue accents. Gentle, breathable, feels like a native Mac app.</p>
+        <div class="tags"><span class="tag">light</span><span class="tag">rounded</span><span class="tag">calm</span><span class="tag">personal</span></div>
+        <div class="swatches">
+          <div class="swatch" style="background:#f2f2f7"></div>
+          <div class="swatch" style="background:#007aff"></div>
+          <div class="swatch" style="background:#fff"></div>
+          <div class="swatch" style="background:#1c1c1e"></div>
+        </div>
+      </div>
+    </article>
+
+    <article class="style-card s-editorial" data-id="editorial" data-name="Editorial / Magazine">
+      <div class="preview">
+        <div class="preview-nav">Persons · Issue 04</div>
+        <div class="preview-body">
+          <div class="preview-card"><strong>Kenji Lee</strong>A conversation about synthesis, memory, and what we owe the people we know.</div>
+        </div>
+        <button class="preview-btn">Read profile →</button>
+      </div>
+      <div class="card-info">
+        <h2>Editorial / Magazine</h2>
+        <div class="refs">
+          See: <a href="https://stripe.com/en-gb/newsroom" target="_blank">Stripe Press</a> ·
+          <a href="https://www.nytimes.com" target="_blank">NYT</a> ·
+          <a href="https://read.cv" target="_blank">read.cv</a>
+        </div>
+        <p>Large serif headlines, generous whitespace, thin rules. Your CRM as a personal journal, not software.</p>
+        <div class="tags"><span class="tag">serif</span><span class="tag">spacious</span><span class="tag">literary</span><span class="tag">light</span></div>
+        <div class="swatches">
+          <div class="swatch" style="background:#faf9f6"></div>
+          <div class="swatch" style="background:#1a1a1a"></div>
+          <div class="swatch" style="background:#ddd"></div>
+          <div class="swatch" style="background:#666"></div>
+        </div>
+      </div>
+    </article>
+
+    <article class="style-card s-terminal" data-id="terminal" data-name="Terminal / Hacker">
+      <div class="preview">
+        <div class="preview-nav">life-os@persons $</div>
+        <div class="preview-body">
+          <div class="preview-card"><strong>&gt; list --attention</strong>3 people need outreach</div>
+          <div class="preview-card"><strong>&gt; show kenji_lee</strong>last: 3d ago · closeness: 4</div>
+        </div>
+        <button class="preview-btn">execute<span class="blink">_</span></button>
+      </div>
+      <div class="card-info">
+        <h2>Terminal / Hacker</h2>
+        <div class="refs">
+          See: <a href="https://vercel.com/geist/terminal" target="_blank">Geist Terminal</a> ·
+          <a href="https://ohmyposh.dev" target="_blank">ohmyposh</a> ·
+          <a href="https://starship.rs" target="_blank">starship</a>
+        </div>
+        <p>Monospace everything, phosphor green or amber on black. Zero decoration. Life OS as a shell you live in.</p>
+        <div class="tags"><span class="tag">dark</span><span class="tag">monospace</span><span class="tag">raw</span><span class="tag">no BS</span></div>
+        <div class="swatches">
+          <div class="swatch" style="background:#0c0c0c"></div>
+          <div class="swatch" style="background:#33ff33"></div>
+          <div class="swatch" style="background:#fff"></div>
+          <div class="swatch" style="background:#1a1a1a"></div>
+        </div>
+      </div>
+    </article>
+
+    <article class="style-card s-aesop" data-id="aesop" data-name="Aesop / Refined">
+      <div class="preview">
+        <div class="preview-nav">La Collecteur</div>
+        <div class="preview-body">
+          <div class="preview-card"><strong>Kenji Lee</strong>San Francisco · Meridian Group</div>
+          <div class="preview-card"><strong>Last encounter</strong>Coffee, Sightglass · March 12</div>
+        </div>
+        <button class="preview-btn">View</button>
+      </div>
+      <div class="card-info">
+        <h2>Aesop / Refined Warmth</h2>
+        <div class="refs">
+          See: <a href="https://www.aesop.com" target="_blank">aesop.com</a> ·
+          <a href="https://www.ritual.com" target="_blank">ritual.com</a>
+        </div>
+        <p>Muted cream, warm grays, restrained typography. Quiet luxury — nothing screams "app."</p>
+        <div class="tags"><span class="tag">warm</span><span class="tag">minimal</span><span class="tag">tactile</span><span class="tag">adult</span></div>
+        <div class="swatches">
+          <div class="swatch" style="background:#f5f0e8"></div>
+          <div class="swatch" style="background:#2c2c2c"></div>
+          <div class="swatch" style="background:#9a8e7e"></div>
+          <div class="swatch" style="background:#d4ccc0"></div>
+        </div>
+      </div>
+    </article>
+
+    <article class="style-card s-neubrutal" data-id="neubrutal" data-name="Neubrutalism">
+      <div class="preview">
+        <div class="preview-nav"><b>PEOPLE</b></div>
+        <div class="preview-body">
+          <div class="preview-card"><strong>Kenji Lee</strong>MERIDIAN · 3D AGO</div>
+        </div>
+        <button class="preview-btn">+ ADD</button>
+      </div>
+      <div class="card-info">
+        <h2>Neubrutalism / Playful</h2>
+        <div class="refs">
+          See: <a href="https://gumroad.com" target="_blank">gumroad.com</a> ·
+          <a href="https://figma.com" target="_blank">figma.com</a> (marketing) ·
+          <a href="https://mobbin.com" target="_blank">mobbin.com</a>
+        </div>
+        <p>Hard borders, offset shadows, bold type, unexpected color. Confident and a little irreverent.</p>
+        <div class="tags"><span class="tag">bold</span><span class="tag">playful</span><span class="tag">light</span><span class="tag">personality</span></div>
+        <div class="swatches">
+          <div class="swatch" style="background:#fff8e7"></div>
+          <div class="swatch" style="background:#000"></div>
+          <div class="swatch" style="background:#ff6b6b"></div>
+          <div class="swatch" style="background:#fff"></div>
+        </div>
+      </div>
+    </article>
+
+    <article class="style-card s-vercel" data-id="vercel" data-name="Vercel / Geist">
+      <div class="preview">
+        <div class="grid-bg"></div>
+        <div class="preview-nav" style="position:relative"><b>life-os</b> / persons</div>
+        <div class="preview-body" style="position:relative">
+          <div class="preview-card"><strong>kenji_lee</strong>type: person · status: active</div>
+          <button class="preview-btn">deploy</button>
+        </div>
+      </div>
+      <div class="card-info">
+        <h2>Vercel / Geist</h2>
+        <div class="refs">
+          See: <a href="https://vercel.com" target="_blank">vercel.com</a> ·
+          <a href="https://ui.shadcn.com" target="_blank">shadcn/ui</a> ·
+          <a href="https://turbo.build" target="_blank">turbo.build</a>
+        </div>
+        <p>Pure black/white, Geist Mono, subtle grid. Developer-chic — precise, modern, no warmth but lots of clarity.</p>
+        <div class="tags"><span class="tag">dark</span><span class="tag">mono</span><span class="tag">geometric</span><span class="tag">tech</span></div>
+        <div class="swatches">
+          <div class="swatch" style="background:#000"></div>
+          <div class="swatch" style="background:#fff"></div>
+          <div class="swatch" style="background:#111"></div>
+          <div class="swatch" style="background:#888"></div>
+        </div>
+      </div>
+    </article>
+
+    <article class="style-card s-muji" data-id="muji" data-name="Muji / Japanese">
+      <div class="preview">
+        <div class="preview-nav"><b>今日</b> today</div>
+        <div class="preview-body">
+          <div class="preview-card"><strong>Kenji Lee</strong>3 days · meridian</div>
+          <div class="preview-card"><strong>Amara Mensah</strong>42 days · accra</div>
+        </div>
+      </div>
+      <div class="card-info">
+        <h2>Muji / Japanese Minimal</h2>
+        <div class="refs">
+          See: <a href="https://www.muji.com" target="_blank">muji.com</a> ·
+          <a href="https://www.nothing.tech" target="_blank">nothing.tech</a>
+        </div>
+        <p>Warm gray, near-zero ornament, everything at 80% saturation. Calm object-ness — tools that don't demand attention.</p>
+        <div class="tags"><span class="tag">muted</span><span class="tag">restrained</span><span class="tag">warm gray</span><span class="tag">zen</span></div>
+        <div class="swatches">
+          <div class="swatch" style="background:#e8e4df"></div>
+          <div class="swatch" style="background:#3d3d3d"></div>
+          <div class="swatch" style="background:#f5f3f0"></div>
+          <div class="swatch" style="background:#6b6560"></div>
+        </div>
+      </div>
+    </article>
+
+    <article class="style-card s-obsidian" data-id="obsidian" data-name="Obsidian / Knowledge">
+      <div class="preview">
+        <div class="preview-nav"><b>Theory of Kenji Lee</b></div>
+        <div class="preview-body">
+          <div class="preview-card">
+            <strong>Core beliefs</strong>
+            Values <span class="link">synthesis</span> over accumulation. Thinks in systems.
+          </div>
+        </div>
+      </div>
+      <div class="card-info">
+        <h2>Obsidian / Knowledge Graph</h2>
+        <div class="refs">
+          See: <a href="https://obsidian.md" target="_blank">obsidian.md</a> ·
+          <a href="https://reflect.app" target="_blank">reflect.app</a> ·
+          <a href="https://roamresearch.com" target="_blank">roamresearch.com</a>
+        </div>
+        <p>Dark gray (not black), purple links, note-first. Perfect for Theory-of and the graph model underneath Life OS.</p>
+        <div class="tags"><span class="tag">dark</span><span class="tag">notes</span><span class="tag">links</span><span class="tag">thinker</span></div>
+        <div class="swatches">
+          <div class="swatch" style="background:#1e1e1e"></div>
+          <div class="swatch" style="background:#7c6af7"></div>
+          <div class="swatch" style="background:#2d2d2d"></div>
+          <div class="swatch" style="background:#dcddde"></div>
+        </div>
+      </div>
+    </article>
+
+    <article class="style-card s-arc" data-id="arc" data-name="Arc / Expressive">
+      <div class="preview">
+        <div class="pill"></div>
+        <div class="preview-nav"><b>Good morning, Joseph</b></div>
+        <div class="preview-body">
+          <div class="preview-card"><strong>12 inbox items</strong>gmail · imessage · calls</div>
+        </div>
+        <button class="preview-btn">Let's go</button>
+      </div>
+      <div class="card-info">
+        <h2>Arc / Expressive Color</h2>
+        <div class="refs">
+          See: <a href="https://arc.net" target="_blank">arc.net</a> ·
+          <a href="https://poolside.ai" target="_blank">poolside.ai</a>
+        </div>
+        <p>Gradients, personality, joy. Life OS shouldn't feel like work — it should feel like a space that's yours.</p>
+        <div class="tags"><span class="tag">colorful</span><span class="tag">gradient</span><span class="tag">personality</span><span class="tag">dark</span></div>
+        <div class="swatches">
+          <div class="swatch" style="background:#1e1033"></div>
+          <div class="swatch" style="background:#ff6b9d"></div>
+          <div class="swatch" style="background:#4d96ff"></div>
+          <div class="swatch" style="background:#ffd93d"></div>
+        </div>
+      </div>
+    </article>
+
+    <article class="style-card s-warm" data-id="warm" data-name="Warm Concrete (current)">
+      <div class="preview">
+        <div class="preview-nav"><b>Persons</b></div>
+        <div class="preview-body">
+          <div class="preview-card"><strong>Kenji Lee</strong>VP Engineering · Meridian · 3d ago</div>
+          <button class="preview-btn">Log</button>
+        </div>
+      </div>
+      <div class="card-info">
+        <h2>Warm Concrete (current)</h2>
+        <div class="refs">Your existing <code>@life-os/ui</code> tokens</div>
+        <p>Playfair serif + DM Mono, terracotta accent, square corners. Editorial-meets-terminal — for reference, not obligation.</p>
+        <div class="tags"><span class="tag">current</span><span class="tag">serif+mono</span><span class="tag">terracotta</span><span class="tag">square</span></div>
+        <div class="swatches">
+          <div class="swatch" style="background:#f5f2ec"></div>
+          <div class="swatch" style="background:#c4572a"></div>
+          <div class="swatch" style="background:#1a1814"></div>
+          <div class="swatch" style="background:#faf8f4"></div>
+        </div>
+      </div>
+    </article>
+
+  </div>
+
+  <div class="footer">
+    <p style="font-size: 13px; color: #555; line-height: 1.7; max-width: 600px;">
+      <strong style="color:#888">Tip:</strong> Don't overthink it. Gut reaction is what we want.
+      "I like the calm of Things but the typography of Editorial" is a perfect starting point.
+    </p>
+  </div>
+
+  <div class="pick-bar">
+    <div>
+      <div class="count"><strong id="pick-count">0</strong> styles picked</div>
+      <div id="picked-list">Click cards above to select favorites</div>
+    </div>
+    <button id="copy-btn" disabled>Copy picks to clipboard</button>
+  </div>
+
+  <div class="toast-msg" id="toast">Copied! Paste your picks in chat.</div>
+
+  <script>
+    const picked = new Set();
+    const cards = document.querySelectorAll('.style-card');
+    const countEl = document.getElementById('pick-count');
+    const listEl = document.getElementById('picked-list');
+    const copyBtn = document.getElementById('copy-btn');
+    const toast = document.getElementById('toast');
+
+    cards.forEach(card => {
+      card.addEventListener('click', () => {
+        const id = card.dataset.id;
+        if (picked.has(id)) {
+          picked.delete(id);
+          card.classList.remove('selected');
+        } else {
+          picked.add(id);
+          card.classList.add('selected');
+        }
+        updateBar();
+      });
+    });
+
+    function updateBar() {
+      const names = [...picked].map(id => {
+        const card = document.querySelector(`[data-id="${id}"]`);
+        return card?.dataset.name ?? id;
+      });
+      countEl.textContent = picked.size;
+      listEl.textContent = names.length ? names.join(' · ') : 'Click cards above to select favorites';
+      copyBtn.disabled = picked.size === 0;
+    }
+
+    copyBtn.addEventListener('click', () => {
+      const names = [...picked].map(id => document.querySelector(`[data-id="${id}"]`)?.dataset.name ?? id);
+      const text = `My Life OS style picks: ${names.join(', ')}`;
+      navigator.clipboard.writeText(text).then(() => {
+        toast.style.display = 'block';
+        setTimeout(() => { toast.style.display = 'none'; }, 2500);
+      });
+    });
+  </script>
+
+</body>
+</html>

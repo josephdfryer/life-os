@@ -42,10 +42,10 @@ export default async function ActionItemsWidget({ workspaceId, personsUrl }: Pro
       items = [interaction.actionItems]
     }
     for (const item of items) {
-      if (!item?.trim()) continue
+      if (typeof item !== 'string' || !item.trim()) continue
       rows.push({
         id: `${interaction.id}-${rows.length}`,
-        item: String(item).trim(),
+        item: item.trim(),
         personName: interaction.person
           ? `${interaction.person.first} ${interaction.person.last ?? ''}`.trim()
           : null,
@@ -113,7 +113,7 @@ const card: React.CSSProperties = {
 }
 
 const heading: React.CSSProperties = {
-  fontFamily: 'var(--font-playfair)',
+  fontFamily: 'var(--font-display)',
   fontSize: '1.4rem',
   fontWeight: 600,
   margin: 0,

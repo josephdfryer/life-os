@@ -141,7 +141,7 @@ function computeFillableFields(contact: ParsedContact, person: Person): Record<s
   const pairs: [keyof ParsedContact, keyof Person][] = [
     ["title", "title"], ["company", "company"], ["headline", "headline"], ["birthday", "birthday"],
     ["location", "location"], ["linkedin", "linkedin"], ["twitter", "twitter"],
-    ["website", "website"], ["notes", "notes"],
+    ["website", "website"], ["facebook", "facebook"], ["instagram", "instagram"], ["notes", "notes"],
   ]
   for (const [ck, pk] of pairs) {
     const cv = (contact[ck] as string | null)?.trim()
@@ -224,7 +224,7 @@ function guessNameFromEmail(email: string): { first: string; last: string } | nu
 
 // ── Field filter chips ────────────────────────────────────────────────────────
 
-type FieldKey = "first" | "last" | "email" | "phone" | "company" | "title" | "headline" | "birthday" | "location" | "linkedin" | "twitter" | "website" | "notes" | "guessed"
+type FieldKey = "first" | "last" | "email" | "phone" | "company" | "title" | "headline" | "birthday" | "location" | "linkedin" | "twitter" | "website" | "facebook" | "instagram" | "notes" | "guessed"
 
 type FieldChip = { key: FieldKey; label: string; check: (c: ReviewContact) => boolean }
 
@@ -238,10 +238,12 @@ const FIELD_CHIPS: FieldChip[] = [
   { key: "headline", label: "Headline",   check: c => !!(c.headline?.trim()) },
   { key: "birthday", label: "Birthday",   check: c => !!c.birthday?.trim() },
   { key: "location", label: "Location",   check: c => !!(c.location?.trim()) },
-  { key: "linkedin", label: "LinkedIn",   check: c => !!(c.linkedin?.trim()) },
-  { key: "twitter",  label: "Twitter",    check: c => !!(c.twitter?.trim()) },
-  { key: "website",  label: "Website",    check: c => !!(c.website?.trim()) },
-  { key: "notes",    label: "Notes",      check: c => !!(c.notes?.trim()) },
+  { key: "linkedin",  label: "LinkedIn",   check: c => !!(c.linkedin?.trim()) },
+  { key: "twitter",   label: "Twitter",    check: c => !!(c.twitter?.trim()) },
+  { key: "website",   label: "Website",    check: c => !!(c.website?.trim()) },
+  { key: "facebook",  label: "Facebook",   check: c => !!(c.facebook?.trim()) },
+  { key: "instagram", label: "Instagram",  check: c => !!(c.instagram?.trim()) },
+  { key: "notes",     label: "Notes",      check: c => !!(c.notes?.trim()) },
   { key: "guessed",  label: "Guessed name", check: c => c.guessedName },
 ]
 
@@ -280,6 +282,7 @@ export default function ImportContactsPage() {
   const [saving, setSaving]                 = useState(false)
   const [savedCount, setSavedCount]         = useState(0)
   const [updatedCount, setUpdatedCount]     = useState(0)
+  const [importProgress, setImportProgress] = useState<{ done: number; total: number } | null>(null)
   const [filter, setFilter]                 = useState<FilterKey>("all")
   const [page, setPage]                     = useState(0)
   const [autoSkipped, setAutoSkipped]       = useState(0)
@@ -423,45 +426,74 @@ export default function ImportContactsPage() {
   async function handleConfirm() {
     setSaving(true); setError(null)
     const toProcess = contacts.filter(c => !c.skip && c.action !== "skip" && passesFieldFilter(c))
+    const toCreate  = toProcess.filter(c => c.action !== "update_existing" || !c.matchResult)
+    const toUpdate  = toProcess.filter(c => c.action === "update_existing" && c.matchResult)
+    setImportProgress({ done: 0, total: toProcess.length })
 
     try {
-      // Fetch current count for color assignment only
       const countRes = await fetch("/api/persons?minimal=true")
       const existing = countRes.ok ? await countRes.json() : {}
       const offset   = Array.isArray(existing) ? existing.length : existing.total ?? 0
-      let created = 0, updated = 0
 
-      for (const c of toProcess) {
-        if (c.action === "update_existing" && c.matchResult) {
-          const fields = c.matchResult.fillableFields
-          if (Object.keys(fields).length > 0) {
-            await fetch(`/api/persons/${c.matchResult.personId}`, {
-              method: "PATCH",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify(fields),
-            })
+      let created = 0, updated = 0, done = 0
+      const CREATE_CHUNK = 500
+      const UPDATE_CHUNK = 100
+
+      // ── Bulk creates ────────────────────────────────────────────────────────
+      for (let i = 0; i < toCreate.length; i += CREATE_CHUNK) {
+        const chunk = toCreate.slice(i, i + CREATE_CHUNK)
+        const contactPayloads = chunk.map((c, idx) => {
+          const { color, colorSoft } = assignColor(offset + i + idx)
+          return {
+            first: c.first, last: c.last, title: c.title ?? null, headline: c.headline ?? null,
+            company: c.company ?? null, email: c.email ?? null, phone: c.phone ?? null,
+            birthday: c.birthday ?? null, closeness: c.closeness,
+            tags: c.tags.split(",").map((t: string) => t.trim()).filter(Boolean),
+            values: [], notes: c.notes ?? null, location: c.location ?? null,
+            linkedin: c.linkedin ?? null, twitter: c.twitter ?? null, website: c.website ?? null,
+            facebook: c.facebook ?? null, instagram: c.instagram ?? null,
+            color, colorSoft,
           }
-          updated++
-        } else {
-          const { color, colorSoft } = assignColor(offset + created)
-          const tags = c.tags.split(",").map(t => t.trim()).filter(Boolean)
-          const res  = await fetch("/api/persons", {
+        })
+
+        const res = await fetch("/api/persons/bulk-create", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ contacts: contactPayloads }),
+        })
+        if (res.ok) {
+          const json = await res.json()
+          created += json.created ?? chunk.length
+        }
+        done += chunk.length
+        setImportProgress({ done, total: toProcess.length })
+      }
+
+      // ── Bulk updates ────────────────────────────────────────────────────────
+      for (let i = 0; i < toUpdate.length; i += UPDATE_CHUNK) {
+        const chunk = toUpdate.slice(i, i + UPDATE_CHUNK)
+        const updatePayloads = chunk
+          .filter(c => c.matchResult && Object.keys(c.matchResult.fillableFields).length > 0)
+          .map(c => ({ id: c.matchResult!.personId, fields: c.matchResult!.fillableFields }))
+
+        if (updatePayloads.length > 0) {
+          const res = await fetch("/api/persons/bulk-update", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              first: c.first, last: c.last, title: c.title, headline: c.headline, company: c.company,
-              email: c.email, phone: c.phone,
-              birthday: c.birthday,
-              closeness: c.closeness, tags, values: [], notes: c.notes, location: c.location,
-              linkedin: c.linkedin, twitter: c.twitter, website: c.website, color, colorSoft,
-            }),
+            body: JSON.stringify({ updates: updatePayloads }),
           })
-          if (res.ok) created++
+          if (res.ok) {
+            const json = await res.json()
+            updated += json.updated ?? updatePayloads.length
+          }
         }
+        done += chunk.length
+        setImportProgress({ done, total: toProcess.length })
       }
 
       setSavedCount(created)
       setUpdatedCount(updated)
+      setImportProgress(null)
       setStep("done")
     } catch (e) {
       setError(e instanceof Error ? e.message : "Import failed")
@@ -585,7 +617,7 @@ export default function ImportContactsPage() {
       </a>
 
       <div style={{ marginBottom: "28px" }}>
-        <h1 style={{ fontFamily: "var(--font-playfair), serif", fontSize: "26px", fontWeight: 600, color: "var(--ink)", margin: "0 0 6px" }}>
+        <h1 style={{ fontFamily: "var(--font-display), serif", fontSize: "26px", fontWeight: 600, color: "var(--ink)", margin: "0 0 6px" }}>
           Import People
         </h1>
         <p style={{ color: "var(--ink-3)", fontSize: "12px", margin: 0 }}>
@@ -597,7 +629,7 @@ export default function ImportContactsPage() {
       {step === "upload" && (
         <>
           <div style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "10px", padding: "16px 18px", marginBottom: "14px", fontSize: "12px", color: "var(--ink-2)", lineHeight: 1.7 }}>
-            <div style={{ fontFamily: "var(--font-playfair), serif", fontSize: "14px", fontWeight: 500, color: "var(--ink)", marginBottom: "6px" }}>Import from file</div>
+            <div style={{ fontFamily: "var(--font-display), serif", fontSize: "14px", fontWeight: 500, color: "var(--ink)", marginBottom: "6px" }}>Import from file</div>
             <ol style={{ margin: 0, paddingLeft: "18px" }}>
               <li>Open your address book app</li>
               <li>Select people (⌘-click to multi-select)</li>
@@ -608,7 +640,7 @@ export default function ImportContactsPage() {
 
           <div style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "10px", padding: "16px 18px", marginBottom: "14px", display: "grid", gridTemplateColumns: "minmax(0, 1fr) auto", gap: "14px", alignItems: "center" }}>
             <div>
-              <div style={{ fontFamily: "var(--font-playfair), serif", fontSize: "14px", fontWeight: 500, color: "var(--ink)", marginBottom: "5px" }}>Import Gmail Contacts</div>
+              <div style={{ fontFamily: "var(--font-display), serif", fontSize: "14px", fontWeight: 500, color: "var(--ink)", marginBottom: "5px" }}>Import Gmail Contacts</div>
               <div style={{ fontSize: "12px", color: "var(--ink-3)", lineHeight: 1.5 }}>
                 Pull Google Contacts from the Gmail account you connected, then review them here before anything is saved.
               </div>
@@ -663,7 +695,7 @@ export default function ImportContactsPage() {
           {/* Header */}
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "14px" }}>
             <div>
-              <h2 style={{ fontFamily: "var(--font-playfair), serif", fontSize: "18px", fontWeight: 600, margin: "0 0 2px", color: "var(--ink)" }}>
+              <h2 style={{ fontFamily: "var(--font-display), serif", fontSize: "18px", fontWeight: 600, margin: "0 0 2px", color: "var(--ink)" }}>
                 {contacts.length} people found
               </h2>
               <div style={{ fontSize: "11px", color: "var(--ink-4)" }}>
@@ -862,25 +894,26 @@ export default function ImportContactsPage() {
 
       {/* ── Done ── */}
       {step === "done" && (
-        <div style={{ textAlign: "center", padding: "56px 32px", background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "12px" }}>
-          <div style={{ fontSize: "30px", marginBottom: "14px" }}>✓</div>
-          <h2 style={{ fontFamily: "var(--font-playfair), serif", fontSize: "22px", fontWeight: 600, color: "var(--ink)", margin: "0 0 8px" }}>
-            {savedCount + updatedCount > 0
-              ? `${savedCount > 0 ? `${savedCount} added` : ""}${savedCount > 0 && updatedCount > 0 ? " · " : ""}${updatedCount > 0 ? `${updatedCount} updated` : ""}`
-              : "Nothing to import"}
+        <div style={{ textAlign: "center", padding: "64px 32px", background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "12px" }}>
+          <div style={{ fontSize: "40px", marginBottom: "16px" }}>✓</div>
+          <h2 style={{ fontFamily: "var(--font-display), serif", fontSize: "26px", fontWeight: 600, color: "var(--ink)", margin: "0 0 10px" }}>
+            Import complete
           </h2>
-          <p style={{ color: "var(--ink-3)", fontSize: "12px", marginBottom: "24px" }}>
-            {savedCount > 0 && updatedCount > 0
-              ? `${savedCount} new ${savedCount === 1 ? "person" : "people"} added and ${updatedCount} existing updated.`
-              : savedCount > 0
-              ? `${savedCount} new ${savedCount === 1 ? "person" : "people"} added.`
-              : `${updatedCount} existing ${updatedCount === 1 ? "person" : "people"} updated with new info.`}
+          <p style={{ color: "var(--ink-3)", fontSize: "14px", marginBottom: "6px" }}>
+            {savedCount > 0 && <span><strong style={{ color: "var(--ink)" }}>{savedCount.toLocaleString()}</strong> people added</span>}
+            {savedCount > 0 && updatedCount > 0 && <span style={{ color: "var(--ink-4)" }}> · </span>}
+            {updatedCount > 0 && <span><strong style={{ color: "var(--ink)" }}>{updatedCount.toLocaleString()}</strong> existing updated</span>}
+            {savedCount === 0 && updatedCount === 0 && <span>Nothing was imported.</span>}
           </p>
+          <p style={{ color: "var(--ink-4)", fontSize: "12px", marginBottom: "32px" }}>Your people list is ready.</p>
           <div style={{ display: "flex", gap: "10px", justifyContent: "center" }}>
-            <button onClick={() => router.push("/people")} style={{ padding: "10px 24px", background: "var(--accent)", color: "#fff", border: "none", borderRadius: "7px", cursor: "pointer", fontFamily: "inherit", fontSize: "12px", fontWeight: 500 }}>
-              View People →
+            <button
+              onClick={() => router.push("/people")}
+              style={{ padding: "12px 32px", background: "var(--accent)", color: "#fff", border: "none", borderRadius: "8px", cursor: "pointer", fontFamily: "inherit", fontSize: "14px", fontWeight: 600 }}
+            >
+              Go to People →
             </button>
-            <button onClick={() => { setStep("upload"); setContacts([]) }} style={{ padding: "10px 24px", background: "transparent", color: "var(--ink-3)", border: "1px solid var(--border)", borderRadius: "7px", cursor: "pointer", fontFamily: "inherit", fontSize: "12px" }}>
+            <button onClick={() => { setStep("upload"); setContacts([]) }} style={{ padding: "12px 24px", background: "transparent", color: "var(--ink-3)", border: "1px solid var(--border)", borderRadius: "8px", cursor: "pointer", fontFamily: "inherit", fontSize: "13px" }}>
               Import More
             </button>
           </div>
@@ -892,43 +925,70 @@ export default function ImportContactsPage() {
         <div style={{
           position: "fixed", bottom: 0, left: 0, right: 0,
           background: "var(--surface)", borderTop: "1px solid var(--border)",
-          padding: "12px 24px", display: "flex", alignItems: "center",
+          padding: importProgress ? "10px 24px" : "12px 24px",
+          display: "flex", alignItems: "center",
           justifyContent: "space-between", zIndex: 40,
           boxShadow: "0 -4px 16px rgba(26,24,20,0.07)",
+          flexDirection: importProgress ? "column" : "row",
+          gap: importProgress ? "8px" : "0",
         }}>
-          <div style={{ fontSize: "11px", color: "var(--ink-3)" }}>
-            <span style={{ color: "var(--ink)", fontWeight: 500 }}>{activeCount}</span> will be imported
-            {hiddenByFieldFilter > 0 && (
-              <span style={{ marginLeft: "6px", color: "#d97706" }}>
-                · {hiddenByFieldFilter} excluded by field filter
-              </span>
-            )}
-            {hiddenByFieldFilter === 0 && (() => {
-              const updateCount = contacts.filter(c => !c.skip && c.action === "update_existing" && passesFieldFilter(c)).length
-              const newCount    = contacts.filter(c => !c.skip && c.action !== "update_existing" && c.action !== "skip" && passesFieldFilter(c)).length
-              if (updateCount > 0 && newCount > 0) return (
-                <span style={{ color: "var(--ink-4)", marginLeft: "6px" }}>
-                  ({newCount} new · <span style={{ color: STATUS_COLOR.duplicate }}>{updateCount} updates</span>)
+          {importProgress ? (
+            <>
+              <div style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                <span style={{ fontSize: "12px", color: "var(--ink-2)", fontWeight: 500 }}>
+                  Importing… {importProgress.done.toLocaleString()} / {importProgress.total.toLocaleString()}
                 </span>
-              )
-              if (updateCount > 0) return <span style={{ color: STATUS_COLOR.duplicate, marginLeft: "6px" }}>({updateCount} updates to existing)</span>
-              return null
-            })()}
-          </div>
-          <div style={{ display: "flex", gap: "8px" }}>
-            {filter !== "all" && filteredPairs.filter(p => !p.contact.skip).length > 0 && (
-              <button onClick={skipAllInFilter} style={ghostBtnStyle}>
-                Skip all {STATUS_LABEL[filter].toLowerCase()}
-              </button>
-            )}
-            <button
-              onClick={handleConfirm}
-              disabled={saving || activeCount === 0}
-              style={{ padding: "8px 20px", background: activeCount > 0 ? "var(--accent)" : "var(--border)", color: activeCount > 0 ? "#fff" : "var(--ink-4)", border: "none", borderRadius: "7px", cursor: activeCount > 0 && !saving ? "pointer" : "not-allowed", fontFamily: "inherit", fontSize: "12px", fontWeight: 500, opacity: saving ? 0.7 : 1 }}
-            >
-              {saving ? "Importing…" : `Import ${activeCount}`}
-            </button>
-          </div>
+                <span style={{ fontSize: "11px", color: "var(--ink-4)" }}>
+                  {Math.round((importProgress.done / importProgress.total) * 100)}%
+                </span>
+              </div>
+              <div style={{ width: "100%", height: "6px", background: "var(--surface2)", borderRadius: "3px", overflow: "hidden" }}>
+                <div style={{
+                  height: "100%",
+                  width: `${Math.round((importProgress.done / importProgress.total) * 100)}%`,
+                  background: "var(--accent)",
+                  borderRadius: "3px",
+                  transition: "width 0.3s ease",
+                }} />
+              </div>
+            </>
+          ) : (
+            <>
+              <div style={{ fontSize: "11px", color: "var(--ink-3)" }}>
+                <span style={{ color: "var(--ink)", fontWeight: 500 }}>{activeCount}</span> will be imported
+                {hiddenByFieldFilter > 0 && (
+                  <span style={{ marginLeft: "6px", color: "#d97706" }}>
+                    · {hiddenByFieldFilter} excluded by field filter
+                  </span>
+                )}
+                {hiddenByFieldFilter === 0 && (() => {
+                  const updateCount = contacts.filter(c => !c.skip && c.action === "update_existing" && passesFieldFilter(c)).length
+                  const newCount    = contacts.filter(c => !c.skip && c.action !== "update_existing" && c.action !== "skip" && passesFieldFilter(c)).length
+                  if (updateCount > 0 && newCount > 0) return (
+                    <span style={{ color: "var(--ink-4)", marginLeft: "6px" }}>
+                      ({newCount} new · <span style={{ color: STATUS_COLOR.duplicate }}>{updateCount} updates</span>)
+                    </span>
+                  )
+                  if (updateCount > 0) return <span style={{ color: STATUS_COLOR.duplicate, marginLeft: "6px" }}>({updateCount} updates to existing)</span>
+                  return null
+                })()}
+              </div>
+              <div style={{ display: "flex", gap: "8px" }}>
+                {filter !== "all" && filteredPairs.filter(p => !p.contact.skip).length > 0 && (
+                  <button onClick={skipAllInFilter} style={ghostBtnStyle}>
+                    Skip all {STATUS_LABEL[filter].toLowerCase()}
+                  </button>
+                )}
+                <button
+                  onClick={handleConfirm}
+                  disabled={saving || activeCount === 0}
+                  style={{ padding: "8px 20px", background: activeCount > 0 ? "var(--accent)" : "var(--border)", color: activeCount > 0 ? "#fff" : "var(--ink-4)", border: "none", borderRadius: "7px", cursor: activeCount > 0 && !saving ? "pointer" : "not-allowed", fontFamily: "inherit", fontSize: "12px", fontWeight: 500 }}
+                >
+                  {`Import ${activeCount}`}
+                </button>
+              </div>
+            </>
+          )}
         </div>
       )}
     </div>
@@ -1152,6 +1212,10 @@ function ContactReviewCard({
             <Field label="LinkedIn"><input type="url" value={contact.linkedin ?? ""} onChange={e => onChange({ linkedin: e.target.value || null })} placeholder="linkedin.com/in/…" style={inputStyle} /></Field>
             <Field label="Twitter"><input type="text" value={contact.twitter ?? ""} onChange={e => onChange({ twitter: e.target.value || null })} placeholder="@handle" style={inputStyle} /></Field>
             <Field label="Website"><input type="url" value={contact.website ?? ""} onChange={e => onChange({ website: e.target.value || null })} placeholder="https://…" style={inputStyle} /></Field>
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px", marginBottom: "10px" }}>
+            <Field label="Facebook"><input type="url" value={contact.facebook ?? ""} onChange={e => onChange({ facebook: e.target.value || null })} placeholder="facebook.com/…" style={inputStyle} /></Field>
+            <Field label="Instagram"><input type="text" value={contact.instagram ?? ""} onChange={e => onChange({ instagram: e.target.value || null })} placeholder="instagram.com/…" style={inputStyle} /></Field>
           </div>
 
           {!isMatch && (

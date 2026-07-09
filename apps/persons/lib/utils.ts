@@ -1,4 +1,4 @@
-import { birthdayMonthDay } from "./birthday"
+import { birthdayMonthDay, normalizeBirthday } from "./birthday"
 
 export function relativeTime(date: Date | string | null): string {
   if (!date) return "Never"
@@ -67,28 +67,59 @@ export function formatBirthday(birthday: string | null): string | null {
   return `${months[parts.month - 1]} ${parts.day}`
 }
 
-export function daysUntilBirthday(birthday: string | null): number | null {
+function localDateParts(tz: string): { year: number; month: number; day: number } {
+  const p = new Intl.DateTimeFormat("en-US", {
+    timeZone: tz, year: "numeric", month: "numeric", day: "numeric",
+  }).formatToParts(new Date())
+  return {
+    year:  +p.find(x => x.type === "year")!.value,
+    month: +p.find(x => x.type === "month")!.value,
+    day:   +p.find(x => x.type === "day")!.value,
+  }
+}
+
+export function isTimestampToday(timestamp: Date | string, tz = "UTC"): boolean {
+  const fmt = new Intl.DateTimeFormat("en-CA", { timeZone: tz })
+  return fmt.format(new Date(timestamp)) === fmt.format(new Date())
+}
+
+export function daysUntilBirthday(birthday: string | null, tz = "UTC"): number | null {
   const parts = birthdayMonthDay(birthday)
   if (!parts) return null
-  const today = new Date()
-  const startOfToday = new Date(today.getFullYear(), today.getMonth(), today.getDate())
-  let next = new Date(today.getFullYear(), parts.month - 1, parts.day)
+  const { year, month, day } = localDateParts(tz)
+  const startOfToday = new Date(year, month - 1, day)
+  let next = new Date(year, parts.month - 1, parts.day)
   if (next < startOfToday) {
-    next = new Date(today.getFullYear() + 1, parts.month - 1, parts.day)
+    next = new Date(year + 1, parts.month - 1, parts.day)
   }
   const diff = next.getTime() - startOfToday.getTime()
   return Math.ceil(diff / (1000 * 60 * 60 * 24))
 }
 
-export function isBirthdayToday(birthday: string | null): boolean {
+export function isBirthdayToday(birthday: string | null, tz = "UTC"): boolean {
   const parts = birthdayMonthDay(birthday)
   if (!parts) return false
-  const today = new Date()
-  return today.getMonth() + 1 === parts.month && today.getDate() === parts.day
+  const { month, day } = localDateParts(tz)
+  return month === parts.month && day === parts.day
 }
 
-export function isBirthdayThisWeek(birthday: string | null): boolean {
+export function isBirthdayThisWeek(birthday: string | null, tz = "UTC"): boolean {
   if (!birthday) return false
-  const days = daysUntilBirthday(birthday)
+  const days = daysUntilBirthday(birthday, tz)
   return days !== null && days > 0 && days <= 7
+}
+
+export function birthdayTurningAge(birthday: string | null, tz = "UTC"): number | null {
+  const normalized = normalizeBirthday(birthday)
+  if (!normalized) return null
+  const fullMatch = normalized.match(/^(\d{4})-(\d{2})-(\d{2})$/)
+  if (!fullMatch) return null
+  const birthYear = Number(fullMatch[1])
+  const parts = birthdayMonthDay(birthday)
+  if (!parts) return null
+  const { year, month, day } = localDateParts(tz)
+  const birthdayThisYear = new Date(year, parts.month - 1, parts.day)
+  const today = new Date(year, month - 1, day)
+  const ageYear = birthdayThisYear >= today ? year : year + 1
+  return ageYear - birthYear
 }

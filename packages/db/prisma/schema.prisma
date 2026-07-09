@@ -125,6 +125,8 @@ model Person {
   linkedin     String?
   twitter      String?
   website      String?
+  facebook     String?
+  instagram    String?
   color        String?
   colorSoft    String?
   interactions Interaction[]

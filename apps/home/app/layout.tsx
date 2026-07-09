@@ -1,20 +1,18 @@
 import type { Metadata } from "next"
-import { DM_Mono, Playfair_Display } from "next/font/google"
+import { Inter, Newsreader } from "next/font/google"
 import "./globals.css"
 
-const playfair = Playfair_Display({
+const inter = Inter({
   subsets: ["latin"],
-  weight: ["400", "600", "700"],
-  style: ["normal", "italic"],
-  variable: "--font-playfair",
+  variable: "--font-body",
   display: "swap",
 })
 
-const dmMono = DM_Mono({
+const newsreader = Newsreader({
   subsets: ["latin"],
-  weight: ["300", "400", "500"],
+  weight: ["400", "500"],
   style: ["normal", "italic"],
-  variable: "--font-dm-mono",
+  variable: "--font-display",
   display: "swap",
 })
 
@@ -29,7 +27,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className={`${playfair.variable} ${dmMono.variable}`}>
+    <html lang="en" className={`${inter.variable} ${newsreader.variable}`}>
       <body>{children}</body>
     </html>
   )

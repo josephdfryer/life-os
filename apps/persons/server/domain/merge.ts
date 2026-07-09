@@ -22,6 +22,8 @@ type MergePerson = {
   linkedin: string | null
   twitter: string | null
   website: string | null
+  facebook: string | null
+  instagram: string | null
   emails: string
   phones: string
   tags: string
@@ -40,6 +42,10 @@ export type PairResult = {
 }
 
 const AUTO_THRESHOLD = 0.93
+// Each merge is its own transaction: Turso over HTTP makes every statement a
+// network round-trip, so batching all merges into one interactive transaction
+// blows past Prisma's 5s default and aborts the whole run.
+const TX_OPTS = { timeout: 20_000, maxWait: 10_000 }
 const mergeSelect = {
   id: true,
   createdAt: true,
@@ -54,6 +60,8 @@ const mergeSelect = {
   linkedin: true,
   twitter: true,
   website: true,
+  facebook: true,
+  instagram: true,
   emails: true,
   phones: true,
   tags: true,
@@ -90,15 +98,17 @@ export async function mergePersonPairs(pairs: PairInput[], actor?: DomainActor) 
   const byId = new Map(persons.map(person => [person.id, person as MergePerson]))
   const deletedIds: string[] = []
 
-  await db.$transaction(async tx => {
-    for (const pair of pairs) {
-      const keeper = byId.get(pair.keepId)
-      const loser = byId.get(pair.deleteId)
-      if (!keeper || !loser) continue
-      await applyMerge(tx, pair.keepId, pair.deleteId, automaticPatch(keeper, loser))
-      deletedIds.push(pair.deleteId)
-    }
-  })
+  for (const pair of pairs) {
+    const keeper = byId.get(pair.keepId)
+    const loser = byId.get(pair.deleteId)
+    if (!keeper || !loser) continue
+    const patch = automaticPatch(keeper, loser)
+    await db.$transaction(async tx => {
+      await applyMerge(tx, pair.keepId, pair.deleteId, patch)
+    }, TX_OPTS)
+    Object.assign(keeper, patch)
+    deletedIds.push(pair.deleteId)
+  }
 
   await auditAction({
     actor,
@@ -119,21 +129,21 @@ export async function mergePersonClusters(pairs: ClusterPairInput[], actor?: Dom
   const byId = new Map(persons.map(person => [person.id, person as MergePerson]))
   const deletedIds: string[] = []
 
-  await db.$transaction(async tx => {
-    for (const component of components) {
-      const members = component.map(id => byId.get(id)).filter((person): person is MergePerson => Boolean(person))
-      if (members.length < 2) continue
-      const [keeper, ...losers] = sortByKeepPreference(members)
-      const patch = clusterPatch(keeper, losers)
+  for (const component of components) {
+    const members = component.map(id => byId.get(id)).filter((person): person is MergePerson => Boolean(person))
+    if (members.length < 2) continue
+    const [keeper, ...losers] = sortByKeepPreference(members)
+    const patch = clusterPatch(keeper, losers)
+    await db.$transaction(async tx => {
       if (Object.keys(patch).length > 0) {
         await tx.person.update({ where: { id: keeper.id }, data: patch })
       }
       for (const loser of losers) {
         await reassignAndDelete(tx, keeper.id, loser.id)
-        deletedIds.push(loser.id)
       }
-    }
-  })
+    }, TX_OPTS)
+    deletedIds.push(...losers.map(loser => loser.id))
+  }
 
   await auditAction({
     actor,
@@ -159,18 +169,20 @@ export async function mergeSameEmailPersons(actor?: DomainActor) {
 
   const deleted = new Set<string>()
   const deletedIds: string[] = []
-  await db.$transaction(async tx => {
-    for (const bucket of byEmail.values()) {
-      if (bucket.length < 2) continue
-      const [keeper, ...losers] = sortByKeepPreference(bucket)
-      for (const loser of losers) {
-        if (deleted.has(loser.id) || deleted.has(keeper.id)) continue
-        await applyMerge(tx, keeper.id, loser.id, automaticPatch(keeper, loser))
-        deleted.add(loser.id)
-        deletedIds.push(loser.id)
-      }
+  for (const bucket of byEmail.values()) {
+    if (bucket.length < 2) continue
+    const [keeper, ...losers] = sortByKeepPreference(bucket)
+    for (const loser of losers) {
+      if (deleted.has(loser.id) || deleted.has(keeper.id)) continue
+      const patch = automaticPatch(keeper, loser)
+      await db.$transaction(async tx => {
+        await applyMerge(tx, keeper.id, loser.id, patch)
+      }, TX_OPTS)
+      Object.assign(keeper, patch)
+      deleted.add(loser.id)
+      deletedIds.push(loser.id)
     }
-  })
+  }
 
   await auditAction({
     actor,
@@ -181,29 +193,93 @@ export async function mergeSameEmailPersons(actor?: DomainActor) {
   return { merged: deletedIds.length, deletedIds }
 }
 
-export async function autoDedupePersons(actor?: DomainActor) {
-  const all = await db.person.findMany({ select: mergeSelect })
+// Stop starting new merges after this long so we return partial progress
+// instead of letting Vercel kill the function (maxDuration on the route must
+// exceed this). The UI re-invokes until `remaining` is 0.
+const DEDUPE_BUDGET_MS = 250_000
+
+export async function autoDedupePersons(workspaceId?: string, actor?: DomainActor) {
+  const deadline = Date.now() + DEDUPE_BUDGET_MS
+  const all = await db.person.findMany({
+    where: workspaceId ? { workspaceId } : undefined,
+    select: mergeSelect,
+  })
   const toMerge = findAutoMergePairs(all as MergePerson[])
   const byId = new Map((all as MergePerson[]).map(person => [person.id, person]))
+  const refs = await loserRefSets(toMerge.map(pair => pair.deleteId))
   const results: PairResult[] = []
+  const failures: { pair: PairResult; error: string }[] = []
+  let remaining = 0
 
-  await db.$transaction(async tx => {
-    for (const pair of toMerge) {
-      const keeper = byId.get(pair.keepId)
-      const loser = byId.get(pair.deleteId)
-      if (!keeper || !loser) continue
-      await applyMerge(tx, pair.keepId, pair.deleteId, automaticPatch(keeper, loser))
-      results.push(pair)
+  for (let index = 0; index < toMerge.length; index++) {
+    if (Date.now() > deadline) {
+      remaining = toMerge.length - index
+      break
     }
-  })
+    const pair = toMerge[index]
+    const keeper = byId.get(pair.keepId)
+    const loser = byId.get(pair.deleteId)
+    if (!keeper || !loser) continue
+    const patch = automaticPatch(keeper, loser)
+    try {
+      await db.$transaction(async tx => {
+        if (Object.keys(patch).length > 0) {
+          await tx.person.update({ where: { id: pair.keepId }, data: patch })
+        }
+        await reassignAndDelete(tx, pair.keepId, pair.deleteId, {
+          interactions: loser._count.interactions > 0,
+          plans: (loser._count.plans ?? 0) > 0,
+          stagedCandidate: refs.stagedCandidate.has(pair.deleteId),
+          stagedAccepted: refs.stagedAccepted.has(pair.deleteId),
+          apiKeys: refs.apiKeys.has(pair.deleteId),
+          audits: refs.audits.has(pair.deleteId),
+        })
+      }, TX_OPTS)
+      // Keep the cached keeper in sync so later merges into the same keeper
+      // build on already-merged emails/phones/tags instead of stale data.
+      Object.assign(keeper, patch)
+      results.push(pair)
+    } catch (error) {
+      // Loser already gone (e.g. deleted by a previous partial run) — done.
+      if ((error as { code?: string })?.code === "P2025") continue
+      console.error(`[dedupe] merge failed: ${pair.deleteName} → ${pair.keepName}`, error)
+      failures.push({ pair, error: error instanceof Error ? error.message : String(error) })
+    }
+  }
 
   await auditAction({
     actor,
     action: "person.dedupe",
     targetType: "person",
-    metadata: { merged: results.length, deletedIds: results.map(result => result.deleteId) },
+    metadata: { merged: results.length, failed: failures.length, remaining, deletedIds: results.map(result => result.deleteId) },
   })
-  return { merged: results.length, results }
+  return { merged: results.length, results, failed: failures.length, failures, remaining }
+}
+
+// One bulk lookup per referencing table so each merge can skip reassignment
+// statements that would touch zero rows — with Turso every statement is a
+// network round-trip, and most losers have no staged items, api keys, or
+// audit entries.
+async function loserRefSets(ids: string[]) {
+  const empty = {
+    stagedCandidate: new Set<string>(),
+    stagedAccepted: new Set<string>(),
+    apiKeys: new Set<string>(),
+    audits: new Set<string>(),
+  }
+  if (ids.length === 0) return empty
+  const [stagedCandidate, stagedAccepted, apiKeys, audits] = await Promise.all([
+    db.stagedInteraction.findMany({ where: { candidatePersonId: { in: ids } }, select: { candidatePersonId: true } }),
+    db.stagedInteraction.findMany({ where: { acceptedPersonId: { in: ids } }, select: { acceptedPersonId: true } }),
+    db.apiKey.findMany({ where: { ownerPersonId: { in: ids } }, select: { ownerPersonId: true } }),
+    db.auditLog.findMany({ where: { personId: { in: ids } }, select: { personId: true } }),
+  ])
+  return {
+    stagedCandidate: new Set(stagedCandidate.map(row => row.candidatePersonId).filter(Boolean) as string[]),
+    stagedAccepted: new Set(stagedAccepted.map(row => row.acceptedPersonId).filter(Boolean) as string[]),
+    apiKeys: new Set(apiKeys.map(row => row.ownerPersonId).filter(Boolean) as string[]),
+    audits: new Set(audits.map(row => row.personId).filter(Boolean) as string[]),
+  }
 }
 
 export async function findPersonDuplicates() {
@@ -241,7 +317,7 @@ function explicitPatch(fields: Record<string, unknown>) {
   const scalars = [
     "first", "last", "title", "headline", "company",
     "location", "birthday", "closeness", "linkedin", "twitter",
-    "website", "notes", "color", "colorSoft",
+    "website", "facebook", "instagram", "notes", "color", "colorSoft",
   ]
   for (const key of scalars) {
     if (key in fields) data[key] = fields[key] ?? null
@@ -255,7 +331,7 @@ function explicitPatch(fields: Record<string, unknown>) {
 
 function automaticPatch(keeper: MergePerson, loser: MergePerson) {
   const patch: Record<string, unknown> = {}
-  for (const key of ["title", "headline", "company", "location", "birthday", "linkedin", "twitter", "website"] as const) {
+  for (const key of ["title", "headline", "company", "location", "birthday", "linkedin", "twitter", "website", "facebook", "instagram"] as const) {
     if (!keeper[key] && loser[key]) patch[key] = loser[key]
   }
 
@@ -300,18 +376,29 @@ async function applyMerge(
   await reassignAndDelete(tx, keepId, deleteId)
 }
 
+type ReassignHints = {
+  interactions?: boolean
+  plans?: boolean
+  stagedCandidate?: boolean
+  stagedAccepted?: boolean
+  apiKeys?: boolean
+  audits?: boolean
+}
+
 async function reassignAndDelete(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   tx: any,
   keepId: string,
   deleteId: string,
+  hints?: ReassignHints,
 ) {
-  await tx.interaction.updateMany({ where: { personId: deleteId }, data: { personId: keepId } })
-  await tx.plan.updateMany({ where: { personId: deleteId }, data: { personId: keepId } })
-  await tx.stagedInteraction.updateMany({ where: { candidatePersonId: deleteId }, data: { candidatePersonId: keepId } })
-  await tx.stagedInteraction.updateMany({ where: { acceptedPersonId: deleteId }, data: { acceptedPersonId: keepId } })
-  await tx.apiKey.updateMany({ where: { ownerPersonId: deleteId }, data: { ownerPersonId: keepId } })
-  await tx.auditLog.updateMany({ where: { personId: deleteId }, data: { personId: keepId } })
+  // When hints are provided, statements known to touch zero rows are skipped.
+  if (hints?.interactions !== false) await tx.interaction.updateMany({ where: { personId: deleteId }, data: { personId: keepId } })
+  if (hints?.plans !== false) await tx.plan.updateMany({ where: { personId: deleteId }, data: { personId: keepId } })
+  if (hints?.stagedCandidate !== false) await tx.stagedInteraction.updateMany({ where: { candidatePersonId: deleteId }, data: { candidatePersonId: keepId } })
+  if (hints?.stagedAccepted !== false) await tx.stagedInteraction.updateMany({ where: { acceptedPersonId: deleteId }, data: { acceptedPersonId: keepId } })
+  if (hints?.apiKeys !== false) await tx.apiKey.updateMany({ where: { ownerPersonId: deleteId }, data: { ownerPersonId: keepId } })
+  if (hints?.audits !== false) await tx.auditLog.updateMany({ where: { personId: deleteId }, data: { personId: keepId } })
   await tx.person.delete({ where: { id: deleteId } })
 }
 
@@ -388,14 +475,22 @@ function findAutoMergePairs(all: MergePerson[]) {
 
   const byPrefix = new Map<string, MergePerson[]>()
   for (const person of all) {
-    if (deleted.has(person.id) || !person.last) continue
-    const key = norm(person.last).slice(0, 3).padEnd(3, "_")
+    if (deleted.has(person.id)) continue
+    // Block on last name when present, otherwise fall back to first name so
+    // contacts whose full name lives in `first` still get compared.
+    const blockName = norm(person.last || person.first)
+    if (!blockName) continue
+    const key = blockName.slice(0, 3).padEnd(3, "_")
     byPrefix.set(key, [...(byPrefix.get(key) ?? []), person])
   }
   for (const bucket of byPrefix.values()) {
     for (let i = 0; i < bucket.length; i++) {
       if (deleted.has(bucket[i].id)) continue
       for (let j = i + 1; j < bucket.length; j++) {
+        // bucket[i] may have just been picked as the loser of a previous pair
+        // in this inner loop — stop pairing it or the same person gets
+        // scheduled for deletion twice.
+        if (deleted.has(bucket[i].id)) break
         if (deleted.has(bucket[j].id)) continue
         const scored = scoreMinimal(bucket[i], bucket[j])
         if (!scored || scored.score < AUTO_THRESHOLD) continue

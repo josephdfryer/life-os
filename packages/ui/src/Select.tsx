@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState } from 'react';
 
 export interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
@@ -24,16 +26,17 @@ export function Select({ style, children, ...rest }: SelectProps) {
           appearance: 'none',
           WebkitAppearance: 'none',
           background: 'var(--surface)',
-          border: `1px solid ${focused ? 'var(--ink-4)' : 'var(--border)'}`,
+          border: `1px solid ${focused ? 'var(--cognac, var(--accent))' : 'var(--border)'}`,
+          borderRadius: 'var(--radius)',
+          boxShadow: focused ? '0 0 0 3px var(--cognac-soft, var(--accent-soft))' : 'var(--shadow-sm)',
           outline: 'none',
           fontFamily: 'var(--font-body)',
-          fontSize: 13,
-          fontWeight: 300,
-          color: 'var(--ink-2)',
-          padding: '7px 32px 7px 10px',
+          fontSize: 14,
+          color: 'var(--ink)',
+          padding: '10px 36px 10px 14px',
           width: '100%',
           cursor: 'pointer',
-          transition: 'border-color 0.12s',
+          transition: 'border-color 0.12s, box-shadow 0.12s',
         }}
         {...rest}
       >
@@ -48,8 +51,8 @@ export function Select({ style, children, ...rest }: SelectProps) {
           transform: 'translateY(-50%)',
           pointerEvents: 'none',
           color: 'var(--ink-4)',
-          fontSize: 9,
-          fontFamily: 'var(--font-mono)',
+          fontSize: 11,
+          fontFamily: 'var(--font-body)',
         }}
       >
         ▾

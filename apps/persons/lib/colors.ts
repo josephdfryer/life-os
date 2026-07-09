@@ -1,5 +1,5 @@
 const PALETTE = [
-  { color: "#c4572a", colorSoft: "#f5ede8" },
+  { color: "#8f6b4a", colorSoft: "#f0e6d8" },
   { color: "#2a6ea3", colorSoft: "#e8f1f8" },
   { color: "#3a8a5c", colorSoft: "#e8f4ed" },
   { color: "#7a3aa3", colorSoft: "#f0e8f8" },

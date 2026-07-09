@@ -4,14 +4,14 @@ export type ButtonVariant = 'primary' | 'ghost' | 'danger';
 export type ButtonSize = 'sm' | 'md';
 
 const variantBase: Record<ButtonVariant, React.CSSProperties> = {
-  primary: { background: 'var(--accent)', color: '#fff', border: '1px solid transparent' },
+  primary: { background: 'var(--cognac, var(--accent))', color: '#fff', border: '1px solid transparent' },
   ghost:   { background: 'transparent', color: 'var(--ink-3)', border: '1px solid var(--border)' },
-  danger:  { background: 'var(--accent-soft)', color: 'var(--accent)', border: '1px solid var(--accent)' },
+  danger:  { background: 'var(--attention-soft, var(--accent-soft))', color: 'var(--attention, var(--accent))', border: '1px solid var(--attention, var(--accent))' },
 };
 
 const sizeBase: Record<ButtonSize, React.CSSProperties> = {
-  sm: { padding: '5px 12px', fontSize: 9 },
-  md: { padding: '8px 16px', fontSize: 11 },
+  sm: { padding: '7px 14px', fontSize: 12 },
+  md: { padding: '9px 18px', fontSize: 13 },
 };
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -39,16 +39,18 @@ export function Button({
     <button
       disabled={disabled || loading}
       style={{
-        fontFamily: 'var(--font-mono)',
-        letterSpacing: '0.08em',
-        textTransform: 'uppercase',
+        fontFamily: 'var(--font-body)',
         cursor: disabled || loading ? 'not-allowed' : 'pointer',
         opacity: disabled ? 0.45 : 1,
         display: 'inline-flex',
         alignItems: 'center',
+        justifyContent: 'center',
         gap: 7,
-        borderRadius: 0,
-        transition: 'opacity 0.12s',
+        borderRadius: 'var(--radius-pill)',
+        fontWeight: 450,
+        lineHeight: 1.2,
+        whiteSpace: 'nowrap',
+        transition: 'background 0.12s, color 0.12s, border-color 0.12s, opacity 0.12s',
         ...variantBase[variant],
         ...sizeBase[size],
         ...style,

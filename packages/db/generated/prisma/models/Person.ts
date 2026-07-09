@@ -57,6 +57,8 @@ export type PersonMinAggregateOutputType = {
   linkedin: string | null
   twitter: string | null
   website: string | null
+  facebook: string | null
+  instagram: string | null
   color: string | null
   colorSoft: string | null
 }
@@ -84,6 +86,8 @@ export type PersonMaxAggregateOutputType = {
   linkedin: string | null
   twitter: string | null
   website: string | null
+  facebook: string | null
+  instagram: string | null
   color: string | null
   colorSoft: string | null
 }
@@ -111,6 +115,8 @@ export type PersonCountAggregateOutputType = {
   linkedin: number
   twitter: number
   website: number
+  facebook: number
+  instagram: number
   color: number
   colorSoft: number
   _all: number
@@ -148,6 +154,8 @@ export type PersonMinAggregateInputType = {
   linkedin?: true
   twitter?: true
   website?: true
+  facebook?: true
+  instagram?: true
   color?: true
   colorSoft?: true
 }
@@ -175,6 +183,8 @@ export type PersonMaxAggregateInputType = {
   linkedin?: true
   twitter?: true
   website?: true
+  facebook?: true
+  instagram?: true
   color?: true
   colorSoft?: true
 }
@@ -202,6 +212,8 @@ export type PersonCountAggregateInputType = {
   linkedin?: true
   twitter?: true
   website?: true
+  facebook?: true
+  instagram?: true
   color?: true
   colorSoft?: true
   _all?: true
@@ -316,6 +328,8 @@ export type PersonGroupByOutputType = {
   linkedin: string | null
   twitter: string | null
   website: string | null
+  facebook: string | null
+  instagram: string | null
   color: string | null
   colorSoft: string | null
   _count: PersonCountAggregateOutputType | null
@@ -366,6 +380,8 @@ export type PersonWhereInput = {
   linkedin?: Prisma.StringNullableFilter<"Person"> | string | null
   twitter?: Prisma.StringNullableFilter<"Person"> | string | null
   website?: Prisma.StringNullableFilter<"Person"> | string | null
+  facebook?: Prisma.StringNullableFilter<"Person"> | string | null
+  instagram?: Prisma.StringNullableFilter<"Person"> | string | null
   color?: Prisma.StringNullableFilter<"Person"> | string | null
   colorSoft?: Prisma.StringNullableFilter<"Person"> | string | null
   workspace?: Prisma.XOR<Prisma.WorkspaceScalarRelationFilter, Prisma.WorkspaceWhereInput>
@@ -406,6 +422,8 @@ export type PersonOrderByWithRelationInput = {
   linkedin?: Prisma.SortOrderInput | Prisma.SortOrder
   twitter?: Prisma.SortOrderInput | Prisma.SortOrder
   website?: Prisma.SortOrderInput | Prisma.SortOrder
+  facebook?: Prisma.SortOrderInput | Prisma.SortOrder
+  instagram?: Prisma.SortOrderInput | Prisma.SortOrder
   color?: Prisma.SortOrderInput | Prisma.SortOrder
   colorSoft?: Prisma.SortOrderInput | Prisma.SortOrder
   workspace?: Prisma.WorkspaceOrderByWithRelationInput
@@ -449,6 +467,8 @@ export type PersonWhereUniqueInput = Prisma.AtLeast<{
   linkedin?: Prisma.StringNullableFilter<"Person"> | string | null
   twitter?: Prisma.StringNullableFilter<"Person"> | string | null
   website?: Prisma.StringNullableFilter<"Person"> | string | null
+  facebook?: Prisma.StringNullableFilter<"Person"> | string | null
+  instagram?: Prisma.StringNullableFilter<"Person"> | string | null
   color?: Prisma.StringNullableFilter<"Person"> | string | null
   colorSoft?: Prisma.StringNullableFilter<"Person"> | string | null
   workspace?: Prisma.XOR<Prisma.WorkspaceScalarRelationFilter, Prisma.WorkspaceWhereInput>
@@ -489,6 +509,8 @@ export type PersonOrderByWithAggregationInput = {
   linkedin?: Prisma.SortOrderInput | Prisma.SortOrder
   twitter?: Prisma.SortOrderInput | Prisma.SortOrder
   website?: Prisma.SortOrderInput | Prisma.SortOrder
+  facebook?: Prisma.SortOrderInput | Prisma.SortOrder
+  instagram?: Prisma.SortOrderInput | Prisma.SortOrder
   color?: Prisma.SortOrderInput | Prisma.SortOrder
   colorSoft?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.PersonCountOrderByAggregateInput
@@ -524,6 +546,8 @@ export type PersonScalarWhereWithAggregatesInput = {
   linkedin?: Prisma.StringNullableWithAggregatesFilter<"Person"> | string | null
   twitter?: Prisma.StringNullableWithAggregatesFilter<"Person"> | string | null
   website?: Prisma.StringNullableWithAggregatesFilter<"Person"> | string | null
+  facebook?: Prisma.StringNullableWithAggregatesFilter<"Person"> | string | null
+  instagram?: Prisma.StringNullableWithAggregatesFilter<"Person"> | string | null
   color?: Prisma.StringNullableWithAggregatesFilter<"Person"> | string | null
   colorSoft?: Prisma.StringNullableWithAggregatesFilter<"Person"> | string | null
 }
@@ -550,6 +574,8 @@ export type PersonCreateInput = {
   linkedin?: string | null
   twitter?: string | null
   website?: string | null
+  facebook?: string | null
+  instagram?: string | null
   color?: string | null
   colorSoft?: string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutPersonsInput
@@ -590,6 +616,8 @@ export type PersonUncheckedCreateInput = {
   linkedin?: string | null
   twitter?: string | null
   website?: string | null
+  facebook?: string | null
+  instagram?: string | null
   color?: string | null
   colorSoft?: string | null
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutPersonInput
@@ -628,6 +656,8 @@ export type PersonUpdateInput = {
   linkedin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   twitter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebook?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutPersonsNestedInput
@@ -668,6 +698,8 @@ export type PersonUncheckedUpdateInput = {
   linkedin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   twitter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebook?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutPersonNestedInput
@@ -707,6 +739,8 @@ export type PersonCreateManyInput = {
   linkedin?: string | null
   twitter?: string | null
   website?: string | null
+  facebook?: string | null
+  instagram?: string | null
   color?: string | null
   colorSoft?: string | null
 }
@@ -733,6 +767,8 @@ export type PersonUpdateManyMutationInput = {
   linkedin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   twitter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebook?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
@@ -760,6 +796,8 @@ export type PersonUncheckedUpdateManyInput = {
   linkedin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   twitter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebook?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
@@ -797,6 +835,8 @@ export type PersonCountOrderByAggregateInput = {
   linkedin?: Prisma.SortOrder
   twitter?: Prisma.SortOrder
   website?: Prisma.SortOrder
+  facebook?: Prisma.SortOrder
+  instagram?: Prisma.SortOrder
   color?: Prisma.SortOrder
   colorSoft?: Prisma.SortOrder
 }
@@ -828,6 +868,8 @@ export type PersonMaxOrderByAggregateInput = {
   linkedin?: Prisma.SortOrder
   twitter?: Prisma.SortOrder
   website?: Prisma.SortOrder
+  facebook?: Prisma.SortOrder
+  instagram?: Prisma.SortOrder
   color?: Prisma.SortOrder
   colorSoft?: Prisma.SortOrder
 }
@@ -855,6 +897,8 @@ export type PersonMinOrderByAggregateInput = {
   linkedin?: Prisma.SortOrder
   twitter?: Prisma.SortOrder
   website?: Prisma.SortOrder
+  facebook?: Prisma.SortOrder
+  instagram?: Prisma.SortOrder
   color?: Prisma.SortOrder
   colorSoft?: Prisma.SortOrder
 }
@@ -1131,6 +1175,8 @@ export type PersonCreateWithoutWorkspaceInput = {
   linkedin?: string | null
   twitter?: string | null
   website?: string | null
+  facebook?: string | null
+  instagram?: string | null
   color?: string | null
   colorSoft?: string | null
   interactions?: Prisma.InteractionCreateNestedManyWithoutPersonInput
@@ -1169,6 +1215,8 @@ export type PersonUncheckedCreateWithoutWorkspaceInput = {
   linkedin?: string | null
   twitter?: string | null
   website?: string | null
+  facebook?: string | null
+  instagram?: string | null
   color?: string | null
   colorSoft?: string | null
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutPersonInput
@@ -1236,6 +1284,8 @@ export type PersonScalarWhereInput = {
   linkedin?: Prisma.StringNullableFilter<"Person"> | string | null
   twitter?: Prisma.StringNullableFilter<"Person"> | string | null
   website?: Prisma.StringNullableFilter<"Person"> | string | null
+  facebook?: Prisma.StringNullableFilter<"Person"> | string | null
+  instagram?: Prisma.StringNullableFilter<"Person"> | string | null
   color?: Prisma.StringNullableFilter<"Person"> | string | null
   colorSoft?: Prisma.StringNullableFilter<"Person"> | string | null
 }
@@ -1262,6 +1312,8 @@ export type PersonCreateWithoutUsersInput = {
   linkedin?: string | null
   twitter?: string | null
   website?: string | null
+  facebook?: string | null
+  instagram?: string | null
   color?: string | null
   colorSoft?: string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutPersonsInput
@@ -1301,6 +1353,8 @@ export type PersonUncheckedCreateWithoutUsersInput = {
   linkedin?: string | null
   twitter?: string | null
   website?: string | null
+  facebook?: string | null
+  instagram?: string | null
   color?: string | null
   colorSoft?: string | null
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutPersonInput
@@ -1354,6 +1408,8 @@ export type PersonUpdateWithoutUsersInput = {
   linkedin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   twitter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebook?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutPersonsNestedInput
@@ -1393,6 +1449,8 @@ export type PersonUncheckedUpdateWithoutUsersInput = {
   linkedin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   twitter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebook?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutPersonNestedInput
@@ -1430,6 +1488,8 @@ export type PersonCreateWithoutApiKeysInput = {
   linkedin?: string | null
   twitter?: string | null
   website?: string | null
+  facebook?: string | null
+  instagram?: string | null
   color?: string | null
   colorSoft?: string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutPersonsInput
@@ -1469,6 +1529,8 @@ export type PersonUncheckedCreateWithoutApiKeysInput = {
   linkedin?: string | null
   twitter?: string | null
   website?: string | null
+  facebook?: string | null
+  instagram?: string | null
   color?: string | null
   colorSoft?: string | null
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutPersonInput
@@ -1522,6 +1584,8 @@ export type PersonUpdateWithoutApiKeysInput = {
   linkedin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   twitter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebook?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutPersonsNestedInput
@@ -1561,6 +1625,8 @@ export type PersonUncheckedUpdateWithoutApiKeysInput = {
   linkedin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   twitter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebook?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutPersonNestedInput
@@ -1598,6 +1664,8 @@ export type PersonCreateWithoutAuditLogsInput = {
   linkedin?: string | null
   twitter?: string | null
   website?: string | null
+  facebook?: string | null
+  instagram?: string | null
   color?: string | null
   colorSoft?: string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutPersonsInput
@@ -1637,6 +1705,8 @@ export type PersonUncheckedCreateWithoutAuditLogsInput = {
   linkedin?: string | null
   twitter?: string | null
   website?: string | null
+  facebook?: string | null
+  instagram?: string | null
   color?: string | null
   colorSoft?: string | null
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutPersonInput
@@ -1690,6 +1760,8 @@ export type PersonUpdateWithoutAuditLogsInput = {
   linkedin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   twitter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebook?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutPersonsNestedInput
@@ -1729,6 +1801,8 @@ export type PersonUncheckedUpdateWithoutAuditLogsInput = {
   linkedin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   twitter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebook?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutPersonNestedInput
@@ -1766,6 +1840,8 @@ export type PersonCreateWithoutStagedInteractionsInput = {
   linkedin?: string | null
   twitter?: string | null
   website?: string | null
+  facebook?: string | null
+  instagram?: string | null
   color?: string | null
   colorSoft?: string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutPersonsInput
@@ -1805,6 +1881,8 @@ export type PersonUncheckedCreateWithoutStagedInteractionsInput = {
   linkedin?: string | null
   twitter?: string | null
   website?: string | null
+  facebook?: string | null
+  instagram?: string | null
   color?: string | null
   colorSoft?: string | null
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutPersonInput
@@ -1858,6 +1936,8 @@ export type PersonUpdateWithoutStagedInteractionsInput = {
   linkedin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   twitter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebook?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutPersonsNestedInput
@@ -1897,6 +1977,8 @@ export type PersonUncheckedUpdateWithoutStagedInteractionsInput = {
   linkedin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   twitter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebook?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutPersonNestedInput
@@ -1934,6 +2016,8 @@ export type PersonCreateWithoutInteractionsInput = {
   linkedin?: string | null
   twitter?: string | null
   website?: string | null
+  facebook?: string | null
+  instagram?: string | null
   color?: string | null
   colorSoft?: string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutPersonsInput
@@ -1973,6 +2057,8 @@ export type PersonUncheckedCreateWithoutInteractionsInput = {
   linkedin?: string | null
   twitter?: string | null
   website?: string | null
+  facebook?: string | null
+  instagram?: string | null
   color?: string | null
   colorSoft?: string | null
   stagedInteractions?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutCandidatePersonInput
@@ -2026,6 +2112,8 @@ export type PersonUpdateWithoutInteractionsInput = {
   linkedin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   twitter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebook?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutPersonsNestedInput
@@ -2065,6 +2153,8 @@ export type PersonUncheckedUpdateWithoutInteractionsInput = {
   linkedin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   twitter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebook?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stagedInteractions?: Prisma.StagedInteractionUncheckedUpdateManyWithoutCandidatePersonNestedInput
@@ -2102,6 +2192,8 @@ export type PersonCreateWithoutPlansInput = {
   linkedin?: string | null
   twitter?: string | null
   website?: string | null
+  facebook?: string | null
+  instagram?: string | null
   color?: string | null
   colorSoft?: string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutPersonsInput
@@ -2141,6 +2233,8 @@ export type PersonUncheckedCreateWithoutPlansInput = {
   linkedin?: string | null
   twitter?: string | null
   website?: string | null
+  facebook?: string | null
+  instagram?: string | null
   color?: string | null
   colorSoft?: string | null
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutPersonInput
@@ -2194,6 +2288,8 @@ export type PersonUpdateWithoutPlansInput = {
   linkedin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   twitter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebook?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutPersonsNestedInput
@@ -2233,6 +2329,8 @@ export type PersonUncheckedUpdateWithoutPlansInput = {
   linkedin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   twitter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebook?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutPersonNestedInput
@@ -2270,6 +2368,8 @@ export type PersonCreateWithoutExpectedInPlansInput = {
   linkedin?: string | null
   twitter?: string | null
   website?: string | null
+  facebook?: string | null
+  instagram?: string | null
   color?: string | null
   colorSoft?: string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutPersonsInput
@@ -2309,6 +2409,8 @@ export type PersonUncheckedCreateWithoutExpectedInPlansInput = {
   linkedin?: string | null
   twitter?: string | null
   website?: string | null
+  facebook?: string | null
+  instagram?: string | null
   color?: string | null
   colorSoft?: string | null
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutPersonInput
@@ -2362,6 +2464,8 @@ export type PersonUpdateWithoutExpectedInPlansInput = {
   linkedin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   twitter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebook?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutPersonsNestedInput
@@ -2401,6 +2505,8 @@ export type PersonUncheckedUpdateWithoutExpectedInPlansInput = {
   linkedin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   twitter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebook?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutPersonNestedInput
@@ -2438,6 +2544,8 @@ export type PersonCreateWithoutOwnedItemsInput = {
   linkedin?: string | null
   twitter?: string | null
   website?: string | null
+  facebook?: string | null
+  instagram?: string | null
   color?: string | null
   colorSoft?: string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutPersonsInput
@@ -2477,6 +2585,8 @@ export type PersonUncheckedCreateWithoutOwnedItemsInput = {
   linkedin?: string | null
   twitter?: string | null
   website?: string | null
+  facebook?: string | null
+  instagram?: string | null
   color?: string | null
   colorSoft?: string | null
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutPersonInput
@@ -2530,6 +2640,8 @@ export type PersonUpdateWithoutOwnedItemsInput = {
   linkedin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   twitter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebook?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutPersonsNestedInput
@@ -2569,6 +2681,8 @@ export type PersonUncheckedUpdateWithoutOwnedItemsInput = {
   linkedin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   twitter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebook?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutPersonNestedInput
@@ -2606,6 +2720,8 @@ export type PersonCreateWithoutAssembledByInput = {
   linkedin?: string | null
   twitter?: string | null
   website?: string | null
+  facebook?: string | null
+  instagram?: string | null
   color?: string | null
   colorSoft?: string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutPersonsInput
@@ -2645,6 +2761,8 @@ export type PersonUncheckedCreateWithoutAssembledByInput = {
   linkedin?: string | null
   twitter?: string | null
   website?: string | null
+  facebook?: string | null
+  instagram?: string | null
   color?: string | null
   colorSoft?: string | null
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutPersonInput
@@ -2687,6 +2805,8 @@ export type PersonCreateWithoutDisassembledByInput = {
   linkedin?: string | null
   twitter?: string | null
   website?: string | null
+  facebook?: string | null
+  instagram?: string | null
   color?: string | null
   colorSoft?: string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutPersonsInput
@@ -2726,6 +2846,8 @@ export type PersonUncheckedCreateWithoutDisassembledByInput = {
   linkedin?: string | null
   twitter?: string | null
   website?: string | null
+  facebook?: string | null
+  instagram?: string | null
   color?: string | null
   colorSoft?: string | null
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutPersonInput
@@ -2779,6 +2901,8 @@ export type PersonUpdateWithoutAssembledByInput = {
   linkedin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   twitter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebook?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutPersonsNestedInput
@@ -2818,6 +2942,8 @@ export type PersonUncheckedUpdateWithoutAssembledByInput = {
   linkedin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   twitter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebook?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutPersonNestedInput
@@ -2866,6 +2992,8 @@ export type PersonUpdateWithoutDisassembledByInput = {
   linkedin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   twitter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebook?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutPersonsNestedInput
@@ -2905,6 +3033,8 @@ export type PersonUncheckedUpdateWithoutDisassembledByInput = {
   linkedin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   twitter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebook?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutPersonNestedInput
@@ -2942,6 +3072,8 @@ export type PersonCreateWithoutGroupMembershipsInput = {
   linkedin?: string | null
   twitter?: string | null
   website?: string | null
+  facebook?: string | null
+  instagram?: string | null
   color?: string | null
   colorSoft?: string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutPersonsInput
@@ -2981,6 +3113,8 @@ export type PersonUncheckedCreateWithoutGroupMembershipsInput = {
   linkedin?: string | null
   twitter?: string | null
   website?: string | null
+  facebook?: string | null
+  instagram?: string | null
   color?: string | null
   colorSoft?: string | null
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutPersonInput
@@ -3034,6 +3168,8 @@ export type PersonUpdateWithoutGroupMembershipsInput = {
   linkedin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   twitter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebook?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutPersonsNestedInput
@@ -3073,6 +3209,8 @@ export type PersonUncheckedUpdateWithoutGroupMembershipsInput = {
   linkedin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   twitter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebook?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutPersonNestedInput
@@ -3110,6 +3248,8 @@ export type PersonCreateWithoutTheorySnapshotsInput = {
   linkedin?: string | null
   twitter?: string | null
   website?: string | null
+  facebook?: string | null
+  instagram?: string | null
   color?: string | null
   colorSoft?: string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutPersonsInput
@@ -3149,6 +3289,8 @@ export type PersonUncheckedCreateWithoutTheorySnapshotsInput = {
   linkedin?: string | null
   twitter?: string | null
   website?: string | null
+  facebook?: string | null
+  instagram?: string | null
   color?: string | null
   colorSoft?: string | null
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutPersonInput
@@ -3202,6 +3344,8 @@ export type PersonUpdateWithoutTheorySnapshotsInput = {
   linkedin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   twitter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebook?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutPersonsNestedInput
@@ -3241,6 +3385,8 @@ export type PersonUncheckedUpdateWithoutTheorySnapshotsInput = {
   linkedin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   twitter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebook?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutPersonNestedInput
@@ -3278,6 +3424,8 @@ export type PersonCreateManyWorkspaceInput = {
   linkedin?: string | null
   twitter?: string | null
   website?: string | null
+  facebook?: string | null
+  instagram?: string | null
   color?: string | null
   colorSoft?: string | null
 }
@@ -3304,6 +3452,8 @@ export type PersonUpdateWithoutWorkspaceInput = {
   linkedin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   twitter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebook?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   interactions?: Prisma.InteractionUpdateManyWithoutPersonNestedInput
@@ -3342,6 +3492,8 @@ export type PersonUncheckedUpdateWithoutWorkspaceInput = {
   linkedin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   twitter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebook?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutPersonNestedInput
@@ -3380,6 +3532,8 @@ export type PersonUncheckedUpdateManyWithoutWorkspaceInput = {
   linkedin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   twitter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebook?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
@@ -3537,6 +3691,8 @@ export type PersonSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   linkedin?: boolean
   twitter?: boolean
   website?: boolean
+  facebook?: boolean
+  instagram?: boolean
   color?: boolean
   colorSoft?: boolean
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
@@ -3578,6 +3734,8 @@ export type PersonSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   linkedin?: boolean
   twitter?: boolean
   website?: boolean
+  facebook?: boolean
+  instagram?: boolean
   color?: boolean
   colorSoft?: boolean
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
@@ -3606,6 +3764,8 @@ export type PersonSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   linkedin?: boolean
   twitter?: boolean
   website?: boolean
+  facebook?: boolean
+  instagram?: boolean
   color?: boolean
   colorSoft?: boolean
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
@@ -3634,11 +3794,13 @@ export type PersonSelectScalar = {
   linkedin?: boolean
   twitter?: boolean
   website?: boolean
+  facebook?: boolean
+  instagram?: boolean
   color?: boolean
   colorSoft?: boolean
 }
 
-export type PersonOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "workspaceId" | "createdAt" | "updatedAt" | "first" | "last" | "nickname" | "title" | "headline" | "emails" | "emailSearch" | "phones" | "birthday" | "closeness" | "tags" | "values" | "notes" | "company" | "location" | "linkedin" | "twitter" | "website" | "color" | "colorSoft", ExtArgs["result"]["person"]>
+export type PersonOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "workspaceId" | "createdAt" | "updatedAt" | "first" | "last" | "nickname" | "title" | "headline" | "emails" | "emailSearch" | "phones" | "birthday" | "closeness" | "tags" | "values" | "notes" | "company" | "location" | "linkedin" | "twitter" | "website" | "facebook" | "instagram" | "color" | "colorSoft", ExtArgs["result"]["person"]>
 export type PersonInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   interactions?: boolean | Prisma.Person$interactionsArgs<ExtArgs>
@@ -3702,6 +3864,8 @@ export type $PersonPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     linkedin: string | null
     twitter: string | null
     website: string | null
+    facebook: string | null
+    instagram: string | null
     color: string | null
     colorSoft: string | null
   }, ExtArgs["result"]["person"]>
@@ -4162,6 +4326,8 @@ export interface PersonFieldRefs {
   readonly linkedin: Prisma.FieldRef<"Person", 'String'>
   readonly twitter: Prisma.FieldRef<"Person", 'String'>
   readonly website: Prisma.FieldRef<"Person", 'String'>
+  readonly facebook: Prisma.FieldRef<"Person", 'String'>
+  readonly instagram: Prisma.FieldRef<"Person", 'String'>
   readonly color: Prisma.FieldRef<"Person", 'String'>
   readonly colorSoft: Prisma.FieldRef<"Person", 'String'>
 }

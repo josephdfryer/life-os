@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Still v3 — Linen</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet" />
+  <style>
+    /* STILL v3 · LINEN — European summer, camel-led, maximum air */
+    :root {
+      --bg:             #f3ece2;
+      --surface:        #fbf8f3;
+      --surface-2:      #f5efe4;
+      --surface-hover:  #efe6d8;
+
+      --border:         #e2d6c4;
+      --border-subtle:  #ece4d6;
+
+      --ink:            #3a342c;
+      --ink-2:          #5e564c;
+      --ink-3:          #8c8276;
+      --ink-4:          #b5aa9c;
+
+      --camel:          #b8956a;
+      --camel-bright:   #d4b07a;
+      --camel-deep:     #96784f;
+      --camel-soft:     #f7edd8;
+      --camel-glow:     #faf0de;
+
+      --cognac:         #9a7355;
+      --cognac-soft:    #f3e8da;
+
+      --sand:           #d9cbb8;
+      --attention:      #c4864a;
+      --attention-soft: #faf0e4;
+      --success:        #7a8f72;
+
+      --radius:         12px;
+      --radius-pill:    100px;
+      --shadow-sm:      0 1px 4px rgba(58, 52, 44, 0.04);
+      --shadow:         0 3px 14px rgba(58, 52, 44, 0.06);
+
+      --font-display:   'Newsreader', Georgia, serif;
+      --font-body:      'Inter', system-ui, sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: var(--font-body); font-size: 14px; line-height: 1.55; color: var(--ink); background: var(--bg); -webkit-font-smoothing: antialiased; }
+
+    .banner {
+      background: linear-gradient(135deg, var(--camel-glow) 0%, var(--bg) 60%);
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 48px 40px 36px;
+      max-width: 1080px;
+      margin: 0 auto;
+    }
+
+    .variant-tag {
+      display: inline-block;
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--camel-deep);
+      background: var(--camel-soft);
+      padding: 5px 12px;
+      border-radius: var(--radius-pill);
+      margin-bottom: 14px;
+      font-weight: 500;
+    }
+
+    .banner h1 { font-family: var(--font-display); font-size: 2.4rem; font-weight: 400; letter-spacing: -0.02em; margin-bottom: 10px; }
+    .banner .lead { color: var(--ink-3); max-width: 520px; line-height: 1.75; font-size: 15px; }
+    .banner .angle { margin-top: 20px; font-size: 13px; color: var(--ink-2); max-width: 520px; line-height: 1.7; padding: 16px 18px; background: var(--surface); border-radius: var(--radius); border: 1px solid var(--border-subtle); }
+
+    main { max-width: 1080px; margin: 0 auto; padding: 36px 40px 64px; }
+
+    .swatches { display: flex; gap: 8px; flex-wrap: wrap; margin: 24px 0; }
+    .sw { width: 48px; height: 36px; border-radius: 8px; border: 1px solid rgba(58,52,44,0.06); }
+
+    .app {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      background: var(--bg);
+      box-shadow: var(--shadow);
+    }
+
+    .nav {
+      height: 56px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      padding: 0 28px;
+      gap: 28px;
+    }
+
+    .nav-brand { font-family: var(--font-display); font-size: 18px; color: var(--ink); }
+    .nav-links { display: flex; gap: 4px; }
+    .nav-link {
+      padding: 7px 16px;
+      border-radius: var(--radius-pill);
+      font-size: 13px;
+      color: var(--ink-3);
+      text-decoration: none;
+      transition: all 0.12s;
+    }
+    .nav-link.active { background: var(--camel-soft); color: var(--camel-deep); font-weight: 450; }
+    .nav-link:hover:not(.active) { background: var(--surface-hover); color: var(--ink); }
+
+    .body {
+      padding: 40px;
+      display: grid;
+      grid-template-columns: 1fr 270px;
+      gap: 36px;
+    }
+    @media (max-width: 720px) { .body { grid-template-columns: 1fr; } }
+
+    .greeting { font-family: var(--font-display); font-size: 30px; font-weight: 400; letter-spacing: -0.02em; }
+    .sub { font-size: 14px; color: var(--ink-3); margin: 6px 0 32px; }
+    .sub em { color: var(--camel); font-style: normal; font-weight: 450; }
+
+    .label { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--camel-deep); margin-bottom: 12px; opacity: 0.8; }
+
+    .row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 16px 18px;
+      background: var(--surface);
+      border-radius: var(--radius);
+      margin-bottom: 10px;
+      border: 1px solid var(--border-subtle);
+      box-shadow: var(--shadow-sm);
+      transition: all 0.15s;
+      cursor: pointer;
+    }
+    .row:hover { border-color: var(--camel); background: var(--camel-glow); }
+
+    .av {
+      width: 42px; height: 42px; border-radius: 50%;
+      background: var(--camel-soft);
+      color: var(--camel-deep);
+      display: grid; place-items: center;
+      font-size: 12px; font-weight: 500;
+      border: 1.5px solid var(--camel);
+    }
+
+    .name { font-family: var(--font-display); font-size: 18px; }
+    .meta { font-size: 12px; color: var(--ink-3); }
+    .days { margin-left: auto; font-size: 12px; color: var(--ink-4); }
+    .days.warn { color: var(--attention); font-weight: 450; }
+
+    .side {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .side h3 { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--camel-deep); margin-bottom: 16px; }
+    .big { font-family: var(--font-display); font-size: 44px; color: var(--camel); line-height: 1; }
+    .big-sub { font-size: 12px; color: var(--ink-3); margin-top: 4px; }
+
+    .breakdown { margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--border-subtle); }
+    .br { display: flex; justify-content: space-between; font-size: 13px; padding: 5px 0; color: var(--ink-3); }
+    .br span:last-child { color: var(--camel-deep); font-weight: 450; }
+
+    .btn {
+      margin-top: 18px; width: 100%;
+      padding: 11px 18px;
+      background: var(--camel);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius-pill);
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 450;
+      cursor: pointer;
+    }
+    .btn:hover { background: var(--camel-deep); }
+
+    .traits {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 12px;
+      margin-top: 28px;
+    }
+    .trait {
+      background: var(--surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius);
+      padding: 16px;
+      font-size: 12px;
+      color: var(--ink-3);
+      line-height: 1.6;
+    }
+    .trait strong { display: block; color: var(--camel-deep); font-size: 13px; margin-bottom: 4px; }
+
+    .compare-footer {
+      margin-top: 32px;
+      padding: 18px 20px;
+      background: var(--camel-glow);
+      border-radius: var(--radius);
+      font-size: 13px;
+      color: var(--ink-2);
+      line-height: 1.7;
+      border: 1px solid var(--border);
+    }
+    .compare-footer strong { color: var(--camel-deep); }
+  </style>
+</head>
+<body>
+
+  <header class="banner">
+    <span class="variant-tag">Still v3 · Linen</span>
+    <h1>Summer in Amalfi</h1>
+    <p class="lead">Camel leads. Everything stays light. Cognac only appears when you touch something. No dark panels — just sun, linen, and gold.</p>
+    <p class="angle"><strong>The angle:</strong> Your board's European linen &amp; Italian summer pins. Sprezzatura at its most relaxed — unstructured, breezy, warm without weight.</p>
+  </header>
+
+  <main>
+    <div class="swatches">
+      <div class="sw" style="background:#f3ece2" title="bg"></div>
+      <div class="sw" style="background:#fbf8f3" title="surface"></div>
+      <div class="sw" style="background:#b8956a" title="camel"></div>
+      <div class="sw" style="background:#d4b07a" title="camel-bright"></div>
+      <div class="sw" style="background:#9a7355" title="cognac-secondary"></div>
+      <div class="sw" style="background:#3a342c" title="ink"></div>
+    </div>
+
+    <div class="app">
+      <nav class="nav">
+        <span class="nav-brand">Persons</span>
+        <div class="nav-links">
+          <a class="nav-link active" href="#">Today</a>
+          <a class="nav-link" href="#">People</a>
+          <a class="nav-link" href="#">Inbox</a>
+        </div>
+      </nav>
+      <div class="body">
+        <div>
+          <div class="greeting">Good morning, Joseph</div>
+          <div class="sub">Wednesday, July 8 · <em>3 birthdays this week</em></div>
+          <div class="label">Reach out</div>
+          <div class="row">
+            <div class="av">AM</div>
+            <div><div class="name">Amara Mensah</div><div class="meta">Product Lead · Accra</div></div>
+            <div class="days warn">42 days</div>
+          </div>
+          <div class="row">
+            <div class="av">SR</div>
+            <div><div class="name">Sofia Ruiz</div><div class="meta">Northwind · Portland</div></div>
+            <div class="days warn">28 days</div>
+          </div>
+          <div class="label" style="margin-top:28px">Recent</div>
+          <div class="row">
+            <div class="av">KL</div>
+            <div><div class="name">Kenji Lee</div><div class="meta">VP Engineering · Meridian</div></div>
+            <div class="days">3 days</div>
+          </div>
+        </div>
+        <div class="side">
+          <h3>Inbox</h3>
+          <div class="big">12</div>
+          <div class="big-sub">pending items</div>
+          <div class="breakdown">
+            <div class="br"><span>gmail</span><span>8</span></div>
+            <div class="br"><span>imessage</span><span>3</span></div>
+            <div class="br"><span>calls</span><span>1</span></div>
+          </div>
+          <button class="btn">Process inbox</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="traits">
+      <div class="trait"><strong>Camel primary</strong>Buttons, stats, active nav — gold jewelry, not leather</div>
+      <div class="trait"><strong>All-light canvas</strong>No petrol card. Inbox matches the rest — unified warmth</div>
+      <div class="trait"><strong>12px radius</strong>Softest roundness of the four versions</div>
+      <div class="trait"><strong>Camel ring avatars</strong>Outlined, airy — not filled gradients</div>
+      <div class="trait"><strong>Most breathable</strong>Widest spacing, lightest backgrounds</div>
+      <div class="trait"><strong>Best for</strong>Daytime use, reading, calm long sessions</div>
+    </div>
+
+    <div class="compare-footer">
+      <strong>vs v2:</strong> v2 had cognac + a dark petrol inbox card. v3 drops the darkness entirely and lets camel carry all the color. Lighter, softer, more "linen pants on cobblestones."
+    </div>
+  </main>
+
+</body>
+</html>

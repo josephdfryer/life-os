@@ -104,7 +104,7 @@ export default function CalendarView({ initialMode, initialDate }: Props) {
           </button>
           <h2
             style={{
-              fontFamily: "var(--font-playfair)",
+              fontFamily: "var(--font-display)",
               fontSize: "22px",
               fontWeight: 600,
               margin: 0,

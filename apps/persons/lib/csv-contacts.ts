@@ -75,6 +75,8 @@ function parseGoogleRow(header: string[], row: string[]): ParsedContact {
     linkedin: null,
     twitter: null,
     website: null,
+    facebook: null,
+    instagram: null,
   }
 }
 
@@ -106,6 +108,8 @@ function parseLinkedInRow(header: string[], row: string[]): ParsedContact {
     linkedin: get("profile url") || null,
     twitter,
     website,
+    facebook: null,
+    instagram: null,
   }
 }
 
@@ -135,6 +139,8 @@ function parseGenericRow(header: string[], row: string[]): ParsedContact {
   const linkedin = get("linkedin") || get("linkedin url") || null
   const twitter = get("twitter") || null
   const website = get("website") || get("url") || null
+  const facebook = get("facebook") || get("facebook url") || null
+  const instagram = get("instagram") || null
 
   return {
     first,
@@ -151,6 +157,8 @@ function parseGenericRow(header: string[], row: string[]): ParsedContact {
     linkedin,
     twitter,
     website,
+    facebook,
+    instagram,
   }
 }
 

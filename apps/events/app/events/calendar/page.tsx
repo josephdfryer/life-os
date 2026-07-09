@@ -22,7 +22,7 @@ export default async function EventsCalendarPage({
       <div style={{ marginBottom: "28px" }}>
         <h1
           style={{
-            fontFamily: "var(--font-playfair)",
+            fontFamily: "var(--font-display)",
             fontSize: "28px",
             fontWeight: 600,
             letterSpacing: "-0.02em",

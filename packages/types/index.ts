@@ -21,6 +21,8 @@ export type Person = {
   linkedin: string | null
   twitter: string | null
   website: string | null
+  facebook: string | null
+  instagram: string | null
   color: string | null
   colorSoft: string | null
 }

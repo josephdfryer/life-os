@@ -21,7 +21,7 @@ export default function ImportPage() {
   return (
     <main style={{ maxWidth: "980px", margin: "0 auto", padding: "42px 24px 56px" }}>
       <header style={{ marginBottom: "28px" }}>
-        <h1 style={{ fontFamily: "var(--font-playfair), serif", fontSize: "42px", lineHeight: 1.05, fontWeight: 600, color: "var(--ink)", margin: "0 0 8px" }}>
+        <h1 style={{ fontFamily: "var(--font-display), serif", fontSize: "42px", lineHeight: 1.05, fontWeight: 600, color: "var(--ink)", margin: "0 0 8px" }}>
           Import
         </h1>
         <div style={{ fontSize: "13px", color: "var(--ink-3)" }}>
@@ -47,7 +47,7 @@ export default function ImportPage() {
           >
             <div>
               <div style={{ fontSize: "10px", color: "var(--ink-4)", marginBottom: "8px" }}>{mode.count}</div>
-              <h2 style={{ fontFamily: "var(--font-playfair), serif", fontSize: "30px", lineHeight: 1.05, fontWeight: 600, color: "var(--ink)", margin: 0 }}>
+              <h2 style={{ fontFamily: "var(--font-display), serif", fontSize: "30px", lineHeight: 1.05, fontWeight: 600, color: "var(--ink)", margin: 0 }}>
                 {mode.title}
               </h2>
               <p style={{ fontSize: "12px", lineHeight: 1.6, color: "var(--ink-3)", margin: "12px 0 0" }}>

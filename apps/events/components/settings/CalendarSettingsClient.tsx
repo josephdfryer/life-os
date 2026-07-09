@@ -192,7 +192,7 @@ const panelStyle: React.CSSProperties = {
 }
 
 const panelTitleStyle: React.CSSProperties = {
-  fontFamily: "var(--font-playfair)",
+  fontFamily: "var(--font-display)",
   fontSize: "18px",
   fontWeight: 600,
   marginBottom: "8px",

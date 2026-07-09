@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useRef, useState } from 'react';
 
 export interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'> {
@@ -21,11 +23,13 @@ export function Input({ icon, clearable, onClear, value, onChange, style, inputS
       style={{
         display: 'flex',
         alignItems: 'center',
-        border: `1px solid ${focused ? 'var(--ink-4)' : 'var(--border)'}`,
+        border: `1px solid ${focused ? 'var(--cognac, var(--accent))' : 'var(--border)'}`,
+        borderRadius: 'var(--radius)',
         background: 'var(--surface)',
-        padding: '0 10px',
+        padding: '0 14px',
         gap: 8,
-        transition: 'border-color 0.12s',
+        boxShadow: focused ? '0 0 0 3px var(--cognac-soft, var(--accent-soft))' : 'var(--shadow-sm)',
+        transition: 'border-color 0.12s, box-shadow 0.12s',
         ...style,
       }}
     >
@@ -44,10 +48,9 @@ export function Input({ icon, clearable, onClear, value, onChange, style, inputS
           border: 'none',
           outline: 'none',
           fontFamily: 'var(--font-body)',
-          fontSize: 13,
-          fontWeight: 300,
-          color: 'var(--ink-2)',
-          padding: '8px 0',
+          fontSize: 14,
+          color: 'var(--ink)',
+          padding: '10px 0',
           ...inputStyle,
         }}
         {...rest}

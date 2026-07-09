@@ -23,6 +23,11 @@ export default function EditPersonModal({ person, onClose, onSaved }: Props) {
     closeness: person.closeness,
     tags: parseTags(person.tags as unknown as string).join(", "),
     notes: person.notes ?? "",
+    linkedin: person.linkedin ?? "",
+    twitter: person.twitter ?? "",
+    website: person.website ?? "",
+    facebook: person.facebook ?? "",
+    instagram: person.instagram ?? "",
   })
   const [emails, setEmails] = useState<string[]>(
     person.emails.length > 0 ? person.emails : [""]
@@ -91,7 +96,7 @@ export default function EditPersonModal({ person, onClose, onSaved }: Props) {
         }}
       >
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "24px" }}>
-          <h2 style={{ fontFamily: "var(--font-playfair), serif", fontSize: "20px", fontWeight: 600, margin: 0, color: "var(--ink)" }}>
+          <h2 style={{ fontFamily: "var(--font-display), serif", fontSize: "20px", fontWeight: 600, margin: 0, color: "var(--ink)" }}>
             Edit {person.first} {person.last}
           </h2>
           <button onClick={onClose} style={{ background: "none", border: "none", cursor: "pointer", color: "var(--ink-3)", fontSize: "18px", padding: "4px" }}>×</button>
@@ -126,6 +131,16 @@ export default function EditPersonModal({ person, onClose, onSaved }: Props) {
           />
 
           <Field label="Birthday" value={form.birthday} onChange={v => set("birthday", v)} placeholder="MM-DD or YYYY-MM-DD" />
+
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
+            <Field label="LinkedIn" value={form.linkedin} onChange={v => set("linkedin", v)} placeholder="linkedin.com/in/…" />
+            <Field label="Twitter / X" value={form.twitter} onChange={v => set("twitter", v)} placeholder="@handle or URL" />
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
+            <Field label="Facebook" value={form.facebook} onChange={v => set("facebook", v)} placeholder="facebook.com/…" />
+            <Field label="Instagram" value={form.instagram} onChange={v => set("instagram", v)} placeholder="@handle or URL" />
+          </div>
+          <Field label="Website" value={form.website} onChange={v => set("website", v)} placeholder="https://…" />
 
           <div>
             <label style={labelStyle}>Closeness</label>

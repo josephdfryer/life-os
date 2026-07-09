@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Still v2 - People Page Example</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #e9e3d8;
+      --surface: #f7f4ee;
+      --surface-2: #efe9df;
+      --surface-hover: #e8e1d6;
+      --border: #d9d0c3;
+      --border-subtle: #e5dfd4;
+      --ink: #2c2620;
+      --ink-2: #524a42;
+      --ink-3: #7a7268;
+      --ink-4: #a69c90;
+      --cognac: #8f6b4a;
+      --cognac-deep: #6e5238;
+      --cognac-soft: #f0e6d8;
+      --camel: #c4a574;
+      --camel-soft: #f5edd8;
+      --petrol: #1a2a35;
+      --petrol-soft: #e8edf0;
+      --attention: #b07d4f;
+      --attention-soft: #f8ece0;
+      --success: #6b7a63;
+      --success-soft: #e8ede6;
+      --radius-sm: 6px;
+      --radius: 10px;
+      --radius-lg: 14px;
+      --radius-pill: 100px;
+      --shadow-sm: 0 1px 3px rgba(44, 38, 32, 0.05);
+      --shadow: 0 2px 10px rgba(44, 38, 32, 0.07);
+      --shadow-lg: 0 8px 28px rgba(44, 38, 32, 0.09);
+      --font-display: "Newsreader", Georgia, serif;
+      --font-body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+      --nav-height: 52px;
+      --content-max: 1100px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--font-body);
+      font-size: 14px;
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    .shell {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .top-nav {
+      height: var(--nav-height);
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      padding: 0 24px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .brand {
+      font-family: var(--font-display);
+      font-size: 17px;
+      font-weight: 400;
+      color: var(--ink);
+      white-space: nowrap;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .nav-link {
+      border-radius: var(--radius-pill);
+      color: var(--ink-3);
+      font-size: 13px;
+      padding: 6px 14px;
+      white-space: nowrap;
+    }
+
+    .nav-link.active {
+      background: var(--cognac-soft);
+      color: var(--cognac-deep);
+      font-weight: 450;
+    }
+
+    .nav-link:hover:not(.active) {
+      background: var(--surface-hover);
+      color: var(--ink);
+    }
+
+    .user-chip {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--cognac-soft), var(--camel-soft));
+      color: var(--cognac-deep);
+      font-size: 11px;
+      font-weight: 550;
+      flex: 0 0 auto;
+    }
+
+    .page {
+      width: min(100%, var(--content-max));
+      margin: 0 auto;
+      padding: 36px 24px 48px;
+    }
+
+    .page-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 288px;
+      gap: 32px;
+      align-items: start;
+    }
+
+    .page-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+
+    .greeting {
+      margin: 0;
+      color: var(--ink);
+      font-family: var(--font-display);
+      font-size: 28px;
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+    }
+
+    .subhead {
+      margin: 6px 0 0;
+      color: var(--ink-3);
+      font-size: 13px;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .btn {
+      border: 0;
+      border-radius: var(--radius-pill);
+      cursor: default;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 36px;
+      padding: 9px 18px;
+      font-size: 13px;
+      font-weight: 450;
+      white-space: nowrap;
+    }
+
+    .btn-primary {
+      background: var(--cognac);
+      color: #fff;
+    }
+
+    .btn-secondary {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--ink-3);
+    }
+
+    .toolbar {
+      display: grid;
+      grid-template-columns: minmax(220px, 1fr) auto auto;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .search,
+    .select {
+      height: 42px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      color: var(--ink);
+      outline: none;
+      padding: 0 14px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .search::placeholder {
+      color: var(--ink-4);
+    }
+
+    .tabs {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 18px;
+      overflow-x: auto;
+      padding-bottom: 2px;
+    }
+
+    .tab {
+      border: 1px solid transparent;
+      border-radius: var(--radius-pill);
+      color: var(--ink-3);
+      flex: 0 0 auto;
+      font-size: 13px;
+      padding: 6px 13px;
+    }
+
+    .tab.active {
+      background: var(--surface);
+      border-color: var(--border-subtle);
+      color: var(--cognac-deep);
+      box-shadow: var(--shadow-sm);
+      font-weight: 450;
+    }
+
+    .people-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .person-row {
+      display: grid;
+      grid-template-columns: 40px minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 16px;
+      background: var(--surface);
+      border: 1px solid transparent;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .person-row:hover {
+      border-color: var(--cognac-soft);
+      box-shadow: var(--shadow);
+    }
+
+    .avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, var(--cognac-soft), var(--camel-soft));
+      color: var(--cognac-deep);
+      font-size: 12px;
+      font-weight: 550;
+    }
+
+    .person-main {
+      min-width: 0;
+    }
+
+    .person-name {
+      margin: 0;
+      color: var(--ink);
+      font-family: var(--font-display);
+      font-size: 17px;
+      font-weight: 400;
+      line-height: 1.2;
+    }
+
+    .person-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 5px;
+      color: var(--ink-3);
+      font-size: 12px;
+      min-width: 0;
+    }
+
+    .dot {
+      width: 3px;
+      height: 3px;
+      border-radius: 50%;
+      background: var(--ink-4);
+      flex: 0 0 auto;
+    }
+
+    .person-tags {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      border-radius: var(--radius-pill);
+      display: inline-flex;
+      align-items: center;
+      min-height: 22px;
+      padding: 3px 10px;
+      font-size: 11px;
+      white-space: nowrap;
+    }
+
+    .badge-default {
+      background: var(--cognac-soft);
+      color: var(--cognac-deep);
+    }
+
+    .badge-highlight {
+      background: var(--camel-soft);
+      color: #7a6040;
+    }
+
+    .badge-attention {
+      background: var(--attention-soft);
+      color: var(--attention);
+    }
+
+    .badge-success {
+      background: var(--success-soft);
+      color: var(--success);
+    }
+
+    .side-stack {
+      display: grid;
+      gap: 14px;
+    }
+
+    .sidebar-card {
+      background: var(--surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-sm);
+      padding: 22px;
+    }
+
+    .sidebar-card.dark {
+      background: var(--petrol);
+      border-color: #2a424c;
+      color: #e8e4dc;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .section-label {
+      color: var(--ink-4);
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      margin: 0 0 12px;
+      text-transform: uppercase;
+    }
+
+    .dark .section-label {
+      color: #6a858f;
+    }
+
+    .stat-number {
+      color: var(--cognac);
+      font-family: var(--font-display);
+      font-size: 40px;
+      font-weight: 400;
+      line-height: 1;
+      margin: 0 0 4px;
+    }
+
+    .dark .stat-number {
+      color: var(--camel);
+    }
+
+    .stat-caption {
+      color: var(--ink-3);
+      font-size: 13px;
+      margin: 0;
+    }
+
+    .dark .stat-caption {
+      color: #b7c2c4;
+    }
+
+    .sidebar-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      border-top: 1px solid rgba(232, 228, 220, 0.1);
+      color: #d8d2ca;
+      font-size: 13px;
+      padding: 11px 0;
+    }
+
+    .sidebar-row strong {
+      color: var(--camel);
+      font-weight: 500;
+    }
+
+    .card-title {
+      margin: 0 0 12px;
+      color: var(--ink);
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 400;
+      line-height: 1.2;
+    }
+
+    .mini-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .mini-person {
+      display: grid;
+      grid-template-columns: 32px minmax(0, 1fr);
+      gap: 10px;
+      align-items: center;
+    }
+
+    .mini-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--camel-soft);
+      color: #7a6040;
+      font-size: 10px;
+      font-weight: 550;
+    }
+
+    .mini-name {
+      color: var(--ink);
+      font-size: 13px;
+      font-weight: 500;
+      line-height: 1.2;
+    }
+
+    .mini-meta {
+      color: var(--ink-3);
+      font-size: 12px;
+      margin-top: 2px;
+    }
+
+    .empty-note {
+      border: 1px dashed var(--border);
+      border-radius: var(--radius);
+      color: var(--ink-3);
+      font-size: 13px;
+      padding: 16px;
+      text-align: center;
+    }
+
+    @media (max-width: 860px) {
+      .top-nav {
+        gap: 14px;
+        overflow-x: auto;
+      }
+
+      .nav-links {
+        flex: 0 0 auto;
+      }
+
+      .page-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .page-header,
+      .header-actions {
+        align-items: flex-start;
+        justify-content: flex-start;
+      }
+
+      .page-header {
+        flex-direction: column;
+      }
+
+      .toolbar {
+        grid-template-columns: 1fr;
+      }
+
+      .person-row {
+        grid-template-columns: 40px minmax(0, 1fr);
+      }
+
+      .person-tags {
+        grid-column: 2;
+        justify-content: flex-start;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .page {
+        padding: 24px 20px 40px;
+      }
+
+      .top-nav {
+        padding: 0 20px;
+      }
+
+      .greeting {
+        font-size: 26px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header class="top-nav">
+      <a class="brand" href="#">Persons</a>
+      <nav class="nav-links" aria-label="Primary">
+        <a class="nav-link" href="#">Today</a>
+        <a class="nav-link active" href="#">People</a>
+        <a class="nav-link" href="#">Inbox</a>
+        <a class="nav-link" href="#">Import</a>
+        <a class="nav-link" href="#">Admin</a>
+      </nav>
+      <span class="user-chip">JF</span>
+    </header>
+
+    <main class="page">
+      <div class="page-grid">
+        <section>
+          <div class="page-header">
+            <div>
+              <h1 class="greeting">People</h1>
+              <p class="subhead">1,284 people in the graph · 18 need attention this week</p>
+            </div>
+            <div class="header-actions">
+              <button class="btn btn-secondary">Export</button>
+              <button class="btn btn-primary">Add person</button>
+            </div>
+          </div>
+
+          <div class="toolbar">
+            <input class="search" type="search" placeholder="Search by name, company, or city" />
+            <select class="select" aria-label="Relationship">
+              <option>All circles</option>
+              <option>Inner circle</option>
+              <option>Clients</option>
+              <option>Family</option>
+            </select>
+            <select class="select" aria-label="Sort">
+              <option>Needs attention</option>
+              <option>Recently updated</option>
+              <option>A to Z</option>
+            </select>
+          </div>
+
+          <div class="tabs" aria-label="People filters">
+            <a class="tab active" href="#">All</a>
+            <a class="tab" href="#">Needs outreach</a>
+            <a class="tab" href="#">Birthdays</a>
+            <a class="tab" href="#">Recently met</a>
+            <a class="tab" href="#">No cadence</a>
+          </div>
+
+          <div class="people-list">
+            <article class="person-row">
+              <div class="avatar">AR</div>
+              <div class="person-main">
+                <h2 class="person-name">Ari Rosen</h2>
+                <div class="person-meta">
+                  <span>Last interaction 12 days ago</span>
+                  <span class="dot"></span>
+                  <span>Breakfast at Republique</span>
+                </div>
+              </div>
+              <div class="person-tags">
+                <span class="badge badge-default">Inner circle</span>
+                <span class="badge badge-attention">Reach out</span>
+              </div>
+            </article>
+
+            <article class="person-row">
+              <div class="avatar">MC</div>
+              <div class="person-main">
+                <h2 class="person-name">Maya Chen</h2>
+                <div class="person-meta">
+                  <span>Call yesterday</span>
+                  <span class="dot"></span>
+                  <span>Follow-up open</span>
+                </div>
+              </div>
+              <div class="person-tags">
+                <span class="badge badge-highlight">Client</span>
+                <span class="badge badge-success">Current</span>
+              </div>
+            </article>
+
+            <article class="person-row">
+              <div class="avatar">DF</div>
+              <div class="person-main">
+                <h2 class="person-name">Daniel Fryer</h2>
+                <div class="person-meta">
+                  <span>Birthday in 4 days</span>
+                  <span class="dot"></span>
+                  <span>Family</span>
+                </div>
+              </div>
+              <div class="person-tags">
+                <span class="badge badge-highlight">Birthday soon</span>
+                <span class="badge badge-default">Family</span>
+              </div>
+            </article>
+
+            <article class="person-row">
+              <div class="avatar">LW</div>
+              <div class="person-main">
+                <h2 class="person-name">Lauren Walsh</h2>
+                <div class="person-meta">
+                  <span>Dinner 3 weeks ago</span>
+                  <span class="dot"></span>
+                  <span>Energizing</span>
+                </div>
+              </div>
+              <div class="person-tags">
+                <span class="badge badge-default">Friend</span>
+              </div>
+            </article>
+
+            <article class="person-row">
+              <div class="avatar">KM</div>
+              <div class="person-main">
+                <h2 class="person-name">Khalid Mansour</h2>
+                <div class="person-meta">
+                  <span>No interaction in 47 days</span>
+                  <span class="dot"></span>
+                  <span>Expected monthly</span>
+                </div>
+              </div>
+              <div class="person-tags">
+                <span class="badge badge-attention">Drifting</span>
+                <span class="badge badge-default">Founder</span>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <aside class="side-stack">
+          <section class="sidebar-card dark">
+            <p class="section-label">Attention</p>
+            <p class="stat-number">18</p>
+            <p class="stat-caption">people need a nudge based on relationship cadence.</p>
+            <div style="height: 14px;"></div>
+            <div class="sidebar-row">
+              <span>Inner circle overdue</span>
+              <strong>5</strong>
+            </div>
+            <div class="sidebar-row">
+              <span>Client follow-ups</span>
+              <strong>7</strong>
+            </div>
+            <div class="sidebar-row">
+              <span>Birthday week</span>
+              <strong>3</strong>
+            </div>
+            <div style="height: 12px;"></div>
+            <button class="btn btn-primary" style="width: 100%;">Review outreach</button>
+          </section>
+
+          <section class="sidebar-card">
+            <p class="section-label">Upcoming</p>
+            <h2 class="card-title">This week</h2>
+            <div class="mini-list">
+              <div class="mini-person">
+                <span class="mini-avatar">DF</span>
+                <div>
+                  <div class="mini-name">Daniel Fryer</div>
+                  <div class="mini-meta">Birthday · Saturday</div>
+                </div>
+              </div>
+              <div class="mini-person">
+                <span class="mini-avatar">SK</span>
+                <div>
+                  <div class="mini-name">Sara Kim</div>
+                  <div class="mini-meta">Coffee · Thursday</div>
+                </div>
+              </div>
+              <div class="mini-person">
+                <span class="mini-avatar">MR</span>
+                <div>
+                  <div class="mini-name">Marco Ruiz</div>
+                  <div class="mini-meta">Contract renewal</div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="sidebar-card">
+            <p class="section-label">Signal</p>
+            <div class="empty-note">No new high-risk relationship gaps today.</div>
+          </section>
+        </aside>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

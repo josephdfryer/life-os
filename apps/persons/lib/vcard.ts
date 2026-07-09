@@ -15,6 +15,8 @@ export type ParsedContact = {
   linkedin: string | null
   twitter: string | null
   website: string | null
+  facebook: string | null
+  instagram: string | null
 }
 
 /**
@@ -116,15 +118,19 @@ function parseOneVCard(card: string): ParsedContact {
     if (meaningful.length) location = meaningful.join(", ")
   }
 
-  // URLs — sniff for LinkedIn/Twitter, else website
+  // URLs — sniff for LinkedIn/Twitter/Facebook/Instagram, else website
   const urls = getAll(/^URL[;:](.*)/i)
   let linkedin: string | null = null
   let twitter: string | null = null
   let website: string | null = null
+  let facebook: string | null = null
+  let instagram: string | null = null
   for (const url of urls) {
     const lower = url.toLowerCase()
     if (lower.includes("linkedin.com")) linkedin = url
     else if (lower.includes("twitter.com") || lower.includes("x.com")) twitter = url
+    else if (lower.includes("facebook.com") || lower.includes("fb.com")) facebook = url
+    else if (lower.includes("instagram.com")) instagram = url
     else if (!website) website = url
   }
 
@@ -143,6 +149,8 @@ function parseOneVCard(card: string): ParsedContact {
     linkedin,
     twitter,
     website,
+    facebook,
+    instagram,
   }
 }
 

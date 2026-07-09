@@ -36,9 +36,11 @@ export type ColumnMapping = {
   birthday: string | null
   notes:    string | null
   location: string | null
-  linkedin: string | null
-  twitter:  string | null
-  website:  string | null
+  linkedin:  string | null
+  twitter:   string | null
+  website:   string | null
+  facebook:  string | null
+  instagram: string | null
 }
 
 // ── Claude mapping detection ─────────────────────────────────────────────────
@@ -53,9 +55,11 @@ const FIELD_DESCRIPTIONS: Record<keyof ColumnMapping, string> = {
   birthday: "Date of birth (any format — will be normalized)",
   notes:    "Free-form notes, bio, or description",
   location: "City, region, or country",
-  linkedin: "LinkedIn profile URL or handle",
-  twitter:  "Twitter or X handle",
-  website:  "Personal or professional website URL",
+  linkedin:  "LinkedIn profile URL or handle",
+  twitter:   "Twitter or X handle",
+  website:   "Personal or professional website URL",
+  facebook:  "Facebook profile URL",
+  instagram: "Instagram handle or profile URL",
 }
 
 export async function detectColumnMapping(
@@ -141,6 +145,8 @@ export function applyMapping(
         linkedin:  get(row, mapping.linkedin),
         twitter:   get(row, mapping.twitter),
         website:   get(row, mapping.website),
+        facebook:  get(row, mapping.facebook),
+        instagram: get(row, mapping.instagram),
       }
     })
     .filter(c => c.first || c.last || c.email)

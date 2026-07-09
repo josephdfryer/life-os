@@ -14,6 +14,8 @@ const PLIST_NAMES = [
   "com.lifeos.krisp",
   "com.lifeos.synthesis",
   "com.lifeos.brief",
+  "com.lifeos.backup",
+  "com.lifeos.gmailsync",
 ]
 
 function main() {

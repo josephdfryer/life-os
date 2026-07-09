@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.lifeos.gmailsync</string>
+
+  <key>ProgramArguments</key>
+  <array>
+    <string>/bin/zsh</string>
+    <string>-c</string>
+    <string>KEY=$(sed -n 's/^API_KEY="\{0,1\}\([^"]*\)"\{0,1\}$/\1/p' LIFE_OS_ROOT/apps/persons/.env | head -1); curl -fsS -X POST -H "X-Api-Key: $KEY" --max-time 300 https://people.lacollecteur.com/api/v1/gmail/sync</string>
+  </array>
+
+  <key>WorkingDirectory</key>
+  <string>LIFE_OS_ROOT</string>
+
+  <key>StartInterval</key>
+  <integer>14400</integer>
+
+  <key>RunAtLoad</key>
+  <true/>
+
+  <key>StandardOutPath</key>
+  <string>LIFE_OS_ROOT/logs/gmailsync.log</string>
+
+  <key>StandardErrorPath</key>
+  <string>LIFE_OS_ROOT/logs/gmailsync.err.log</string>
+
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>PATH</key>
+    <string>/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin</string>
+  </dict>
+</dict>
+</plist>

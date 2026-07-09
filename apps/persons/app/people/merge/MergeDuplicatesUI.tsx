@@ -17,9 +17,11 @@ const FIELDS: { key: keyof Person; label: string; multiline?: boolean }[] = [
   { key: "location", label: "Location" },
   { key: "birthday", label: "Birthday" },
   { key: "closeness",label: "Closeness" },
-  { key: "linkedin", label: "LinkedIn" },
-  { key: "twitter",  label: "Twitter" },
-  { key: "website",  label: "Website" },
+  { key: "linkedin",  label: "LinkedIn" },
+  { key: "twitter",   label: "Twitter" },
+  { key: "website",   label: "Website" },
+  { key: "facebook",  label: "Facebook" },
+  { key: "instagram", label: "Instagram" },
   { key: "notes",    label: "Notes", multiline: true },
 ]
 
@@ -77,7 +79,7 @@ function buildFields(a: Person, b: Person, choices: Record<string, Choice>) {
 }
 
 function scoreColor(s: number) {
-  if (s >= 0.95) return "#c4572a"
+  if (s >= 0.95) return "var(--cognac)"
   if (s >= 0.87) return "#b45309"
   return "#7c6d00"
 }
@@ -89,7 +91,7 @@ function scoreBg(s: number) {
 }
 
 type AutoDedupeResult = { keepId: string; deleteId: string; score: number; reason: string; keepName: string; deleteName: string }
-type AutoDedupeState = { status: "idle" | "confirm" | "running" | "done" | "error"; merged: number; results: AutoDedupeResult[]; error?: string }
+type AutoDedupeState = { status: "idle" | "confirm" | "running" | "done" | "error"; merged: number; results: AutoDedupeResult[]; failed?: number; error?: string }
 type FilterKey = "all" | "definite" | "high" | "medium" | "lower"
 
 export default function MergeDuplicatesUI({ initialPairs }: { initialPairs: DupePair[] }) {
@@ -296,14 +298,26 @@ export default function MergeDuplicatesUI({ initialPairs }: { initialPairs: Dupe
 
   async function runAutoDedupe() {
     setAutoDedupe({ status: "running", merged: 0, results: [] })
+    let merged = 0
+    let failed = 0
+    let results: AutoDedupeResult[] = []
     try {
-      const res = await fetch("/api/contacts/auto-dedupe", { method: "POST" })
-      if (!res.ok) throw new Error(`${res.status}`)
-      const data = await res.json()
-      setAutoDedupe({ status: "done", merged: data.merged, results: data.results })
-      if (data.merged > 0) router.refresh()
+      // The server merges within a time budget and reports what's left, so a
+      // large backlog is processed across several calls instead of timing out.
+      for (let round = 0; round < 20; round++) {
+        const res = await fetch("/api/contacts/auto-dedupe", { method: "POST" })
+        if (!res.ok) throw new Error(`${res.status}`)
+        const data = await res.json()
+        merged += data.merged
+        failed += data.failed ?? 0
+        results = [...results, ...data.results]
+        setAutoDedupe({ status: "running", merged, results, failed })
+        if (!data.remaining) break
+      }
+      setAutoDedupe({ status: "done", merged, results, failed })
+      if (merged > 0) router.refresh()
     } catch (e) {
-      setAutoDedupe({ status: "error", merged: 0, results: [], error: String(e) })
+      setAutoDedupe({ status: "error", merged, results, failed, error: String(e) })
     }
   }
 
@@ -344,7 +358,7 @@ export default function MergeDuplicatesUI({ initialPairs }: { initialPairs: Dupe
           <StatCell label="Remaining" value={String(pairs.length)} accent />
           {reviewedCount > 0 && <StatCell label="Done this session" value={String(reviewedCount)} />}
           {stats.definite > 0 && (
-            <StatCell label="Same email"   value={String(stats.definite)} dot="#c4572a"       onClick={() => toggleFilter("definite")} active={activeFilter === "definite"} />
+            <StatCell label="Same email"   value={String(stats.definite)} dot="var(--cognac)"       onClick={() => toggleFilter("definite")} active={activeFilter === "definite"} />
           )}
           {stats.high > 0 && (
             <StatCell label="Very similar" value={String(stats.high)}     dot="#b45309"       onClick={() => toggleFilter("high")}     active={activeFilter === "high"} />
@@ -379,13 +393,20 @@ export default function MergeDuplicatesUI({ initialPairs }: { initialPairs: Dupe
       {autoDedupe.status === "running" && (
         <div style={{ marginBottom: "20px", padding: "16px 18px", background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "10px", display: "flex", alignItems: "center", gap: "12px" }}>
           <Spinner size={14} color="var(--accent)" />
-          <span style={{ fontSize: "12px", color: "var(--ink-3)" }}>Scanning all people… this may take a moment.</span>
+          <span style={{ fontSize: "12px", color: "var(--ink-3)" }}>
+            {autoDedupe.merged > 0
+              ? `Merging… ${autoDedupe.merged} duplicate${autoDedupe.merged === 1 ? "" : "s"} merged so far.`
+              : "Scanning all people… this may take a moment."}
+          </span>
         </div>
       )}
 
       {autoDedupe.status === "error" && (
         <div style={{ marginBottom: "20px", padding: "14px 18px", background: "#fef2f2", border: "1px solid #fecaca", borderRadius: "10px", fontSize: "12px", color: "#b91c1c", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <span>Auto-dedupe failed: {autoDedupe.error}</span>
+          <span>
+            Auto-dedupe failed: {autoDedupe.error}
+            {autoDedupe.merged > 0 ? ` — ${autoDedupe.merged} merged before the error; run again to continue.` : ""}
+          </span>
           <button onClick={() => setAutoDedupe(s => ({ ...s, status: "idle" }))} style={{ fontSize: "11px", color: "#b91c1c", background: "transparent", border: "none", cursor: "pointer", textDecoration: "underline", flexShrink: 0, marginLeft: "12px" }}>dismiss</button>
         </div>
       )}
@@ -408,6 +429,11 @@ export default function MergeDuplicatesUI({ initialPairs }: { initialPairs: Dupe
                       <span style={{ color: "#86efac", fontSize: "10px" }}>({r.reason}, {Math.round(r.score * 100)}%)</span>
                     </div>
                   ))}
+                </div>
+              )}
+              {(autoDedupe.failed ?? 0) > 0 && (
+                <div style={{ fontSize: "11px", color: "#b45309", marginTop: "8px" }}>
+                  {autoDedupe.failed} merge{autoDedupe.failed === 1 ? "" : "s"} failed — run again to retry.
                 </div>
               )}
             </div>

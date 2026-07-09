@@ -1,4 +1,1 @@
-{
-  "installCommand": "npm install",
-  "framework": "nextjs"
-}
+{"installCommand":"npm install","buildCommand":"npx turbo run build --filter=persons","outputDirectory":"apps/persons/.next","framework":"nextjs"}

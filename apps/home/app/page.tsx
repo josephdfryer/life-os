@@ -36,7 +36,7 @@ export default async function HomePage() {
   const personsUrl = lifeOsAppUrl('persons', 'http://localhost:3000')
 
   return (
-    <div className="min-h-screen pb-12" style={{ background: '#0d0d0d', color: '#fff' }}>
+    <div className="min-h-screen pb-12" style={{ background: 'var(--petrol)', color: '#e8e4dc' }}>
       <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '48px 24px 0' }}>
 
         {/* Header */}
@@ -44,9 +44,9 @@ export default async function HomePage() {
           <div>
             <h1
               style={{
-                fontFamily: 'var(--font-playfair)',
+                fontFamily: 'var(--font-display)',
                 fontSize: 'clamp(2rem, 5vw, 3.5rem)',
-                fontWeight: 600,
+                fontWeight: 400,
                 letterSpacing: '-0.02em',
                 lineHeight: 1.1,
                 margin: 0,
@@ -56,9 +56,8 @@ export default async function HomePage() {
             </h1>
             <p
               style={{
-                fontFamily: 'var(--font-dm-mono)',
                 fontSize: '1rem',
-                color: '#a1a1aa',
+                color: '#b7c2c4',
                 marginTop: '8px',
                 marginBottom: 0,
               }}
@@ -66,7 +65,7 @@ export default async function HomePage() {
               {dateStr}
             </p>
           </div>
-          <div style={{ fontSize: '12px', color: '#52525b' }}>Life OS</div>
+          <div style={{ fontFamily: 'var(--font-display)', fontSize: '17px', color: 'var(--camel)' }}>Life OS</div>
         </div>
 
         {/* Widgets grid */}
@@ -102,17 +101,16 @@ export default async function HomePage() {
         <div
           style={{
             marginTop: '64px',
-            borderTop: '1px solid #27272a',
+            borderTop: '1px solid #2a424c',
             paddingTop: '32px',
           }}
         >
           <div
             style={{
-              fontFamily: 'var(--font-dm-mono)',
               fontSize: '11px',
               letterSpacing: '0.1em',
               textTransform: 'uppercase',
-              color: '#52525b',
+              color: '#6a858f',
               marginBottom: '16px',
             }}
           >
@@ -124,6 +122,7 @@ export default async function HomePage() {
               { label: 'Events', href: lifeOsAppUrl('events', 'http://localhost:3006') },
               { label: 'Places', href: lifeOsAppUrl('places', 'http://localhost:3002') },
               { label: 'Stuff', href: lifeOsAppUrl('stuff', 'http://localhost:3001') },
+              { label: 'Assistant', href: lifeOsAppUrl('assistant', 'http://localhost:3005') },
               { label: 'Context', href: lifeOsAppUrl('context', 'http://localhost:3004') },
             ].map(({ label, href }) => (
               <a
@@ -145,16 +144,16 @@ function WidgetSkeleton() {
   return (
     <div
       style={{
-        background: 'rgba(24,24,27,0.5)',
-        border: '1px solid #27272a',
-        borderRadius: '24px',
+        background: '#1a2a35',
+        border: '1px solid #2a424c',
+        borderRadius: 'var(--radius)',
         padding: '32px',
       }}
     >
       <div
         style={{
           height: '28px',
-          background: '#27272a',
+          background: '#2a424c',
           borderRadius: '6px',
           width: '192px',
           marginBottom: '24px',
@@ -166,8 +165,8 @@ function WidgetSkeleton() {
           key={i}
           style={{
             height: '64px',
-            background: 'rgba(39,39,42,0.5)',
-            borderRadius: '16px',
+            background: 'rgba(42,66,76,0.58)',
+            borderRadius: 'var(--radius)',
             marginBottom: '16px',
             animation: 'pulse 2s infinite',
           }}

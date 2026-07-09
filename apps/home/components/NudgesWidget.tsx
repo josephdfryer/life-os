@@ -100,7 +100,7 @@ const card: React.CSSProperties = {
 }
 
 const heading: React.CSSProperties = {
-  fontFamily: 'var(--font-playfair)',
+  fontFamily: 'var(--font-display)',
   fontSize: '1.4rem',
   fontWeight: 600,
   margin: 0,

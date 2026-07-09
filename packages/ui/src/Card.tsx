@@ -21,7 +21,9 @@ export function Card({ title, headerAction, footer, children, style, bodyStyle }
     <div
       style={{
         background: 'var(--surface)',
-        border: '1px solid var(--border)',
+        border: '1px solid var(--border-subtle, var(--border))',
+        borderRadius: 'var(--radius)',
+        boxShadow: 'var(--shadow-sm)',
         display: 'flex',
         flexDirection: 'column',
         ...style,
@@ -33,17 +35,16 @@ export function Card({ title, headerAction, footer, children, style, bodyStyle }
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            padding: '12px 16px',
-            borderBottom: '1px solid var(--separator)',
+            padding: '16px 20px 0',
             gap: 12,
           }}
         >
           {title && (
             <span
               style={{
-                fontFamily: 'var(--font-mono)',
-                fontSize: 9,
-                letterSpacing: '0.14em',
+                fontFamily: 'var(--font-body)',
+                fontSize: 11,
+                letterSpacing: '0.1em',
                 color: 'var(--ink-4)',
                 textTransform: 'uppercase',
               }}
@@ -55,13 +56,13 @@ export function Card({ title, headerAction, footer, children, style, bodyStyle }
         </div>
       )}
 
-      <div style={{ padding: '16px', flex: 1, ...bodyStyle }}>{children}</div>
+      <div style={{ padding: title || headerAction ? '14px 20px 20px' : '22px 24px', flex: 1, ...bodyStyle }}>{children}</div>
 
       {footer && (
         <div
           style={{
-            borderTop: '1px solid var(--separator)',
-            padding: '10px 16px',
+            borderTop: '1px solid var(--border-subtle, var(--border))',
+            padding: '12px 20px',
           }}
         >
           {footer}

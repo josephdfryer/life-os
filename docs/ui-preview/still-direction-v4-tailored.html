@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Still v4 — Tailored</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet" />
+  <style>
+    /* STILL v4 · TAILORED — Fall suiting, petrol structure, cognac punch */
+    :root {
+      --bg:             #e6dfd4;
+      --surface:        #f5f1ea;
+      --surface-2:      #ebe5db;
+      --surface-hover:  #e0d9ce;
+
+      --border:         #cfc5b6;
+      --border-subtle:  #ddd6ca;
+
+      --ink:            #1f1b17;
+      --ink-2:          #443d36;
+      --ink-3:          #6e655c;
+      --ink-4:          #9a9086;
+
+      --cognac:         #8f5e35;
+      --cognac-bright:  #a67042;
+      --cognac-soft:    #ede0d0;
+
+      --camel:          #b89462;
+      --camel-soft:     #f2e8d4;
+
+      --petrol:         #152228;
+      --petrol-mid:     #1e3038;
+      --petrol-border:  #2a424c;
+
+      --espresso:       #2a221c;
+      --attention:      #a8652a;
+      --attention-soft: #f5e8d8;
+      --success:        #5a6e58;
+
+      --radius:         8px;
+      --radius-pill:    100px;
+      --shadow-sm:      0 1px 3px rgba(21, 17, 13, 0.06);
+      --shadow:         0 4px 16px rgba(21, 17, 13, 0.08);
+      --shadow-deep:    0 12px 32px rgba(21, 34, 40, 0.18);
+
+      --font-display:   'Newsreader', Georgia, serif;
+      --font-body:      'Inter', system-ui, sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: var(--font-body); font-size: 14px; line-height: 1.5; color: var(--ink); background: var(--bg); -webkit-font-smoothing: antialiased; }
+
+    .banner {
+      background: var(--petrol);
+      color: #e8e4dc;
+      padding: 48px 40px 36px;
+      max-width: 1080px;
+      margin: 0 auto;
+    }
+
+    .variant-tag {
+      display: inline-block;
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--camel);
+      background: var(--petrol-mid);
+      border: 1px solid var(--petrol-border);
+      padding: 5px 12px;
+      border-radius: var(--radius-pill);
+      margin-bottom: 14px;
+    }
+
+    .banner h1 { font-family: var(--font-display); font-size: 2.4rem; font-weight: 400; letter-spacing: -0.02em; margin-bottom: 10px; color: #f5f1ea; }
+    .banner .lead { color: #9aabb5; max-width: 520px; line-height: 1.75; font-size: 15px; }
+    .banner .angle { margin-top: 20px; font-size: 13px; color: #c5d0d6; max-width: 520px; line-height: 1.7; padding: 16px 18px; background: var(--petrol-mid); border-radius: var(--radius); border: 1px solid var(--petrol-border); }
+    .banner .angle strong { color: var(--camel); }
+
+    main { max-width: 1080px; margin: 0 auto; padding: 36px 40px 64px; }
+
+    .swatches { display: flex; gap: 8px; flex-wrap: wrap; margin: 24px 0; }
+    .sw { width: 48px; height: 36px; border-radius: 6px; border: 1px solid rgba(21,17,13,0.08); }
+
+    .app {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      background: var(--bg);
+      box-shadow: var(--shadow);
+    }
+
+    /* Dark petrol nav — the overcoat */
+    .nav {
+      height: 52px;
+      background: var(--petrol);
+      display: flex;
+      align-items: center;
+      padding: 0 28px;
+      gap: 28px;
+      border-bottom: 1px solid var(--petrol-border);
+    }
+
+    .nav-brand { font-family: var(--font-display); font-size: 17px; color: #f0ece6; }
+    .nav-links { display: flex; gap: 2px; }
+    .nav-link {
+      padding: 6px 14px;
+      border-radius: var(--radius-pill);
+      font-size: 13px;
+      color: #7a919c;
+      text-decoration: none;
+      transition: all 0.12s;
+    }
+    .nav-link.active { background: var(--petrol-mid); color: var(--camel); font-weight: 450; border: 1px solid var(--petrol-border); }
+    .nav-link:hover:not(.active) { color: #c5d0d6; }
+
+    .body {
+      padding: 32px;
+      display: grid;
+      grid-template-columns: 1fr 270px;
+      gap: 28px;
+    }
+    @media (max-width: 720px) { .body { grid-template-columns: 1fr; } }
+
+    .greeting { font-family: var(--font-display); font-size: 28px; font-weight: 400; letter-spacing: -0.02em; color: var(--espresso); }
+    .sub { font-size: 13px; color: var(--ink-3); margin: 4px 0 28px; }
+    .sub em { color: var(--cognac); font-style: normal; font-weight: 500; }
+
+    .label { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-4); margin-bottom: 10px; font-weight: 500; }
+
+    .row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 13px 16px;
+      background: var(--surface);
+      border-radius: var(--radius);
+      margin-bottom: 6px;
+      border: 1px solid var(--border-subtle);
+      transition: all 0.12s;
+      cursor: pointer;
+    }
+    .row:hover { border-color: var(--cognac); box-shadow: var(--shadow-sm); }
+
+    .av {
+      width: 38px; height: 38px; border-radius: 50%;
+      background: var(--cognac);
+      color: #fff;
+      display: grid; place-items: center;
+      font-size: 11px; font-weight: 550;
+    }
+
+    .name { font-family: var(--font-display); font-size: 17px; color: var(--espresso); }
+    .meta { font-size: 12px; color: var(--ink-3); }
+    .days { margin-left: auto; font-size: 12px; color: var(--ink-4); font-weight: 450; }
+    .days.warn { color: var(--attention); }
+
+    .side {
+      background: var(--petrol);
+      border-radius: var(--radius);
+      padding: 22px;
+      box-shadow: var(--shadow-deep);
+      border: 1px solid var(--petrol-border);
+      color: #e0dbd4;
+    }
+
+    .side h3 { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: #6a858f; margin-bottom: 14px; }
+    .big { font-family: var(--font-display); font-size: 42px; color: var(--camel); line-height: 1; }
+    .big-sub { font-size: 12px; color: #8a9da8; margin-top: 4px; }
+
+    .breakdown { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--petrol-border); }
+    .br { display: flex; justify-content: space-between; font-size: 13px; padding: 4px 0; color: #8a9da8; }
+    .br span:last-child { color: var(--camel); font-weight: 500; }
+
+    .btn {
+      margin-top: 16px; width: 100%;
+      padding: 10px 18px;
+      background: var(--cognac);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius-pill);
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.12s;
+    }
+    .btn:hover { background: var(--cognac-bright); }
+
+    .badge {
+      display: inline-block;
+      font-size: 10px;
+      padding: 2px 8px;
+      border-radius: var(--radius-pill);
+      background: var(--cognac-soft);
+      color: var(--cognac);
+      font-weight: 500;
+      margin-left: 8px;
+      vertical-align: middle;
+    }
+
+    .traits {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 12px;
+      margin-top: 28px;
+    }
+    .trait {
+      background: var(--surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius);
+      padding: 16px;
+      font-size: 12px;
+      color: var(--ink-3);
+      line-height: 1.6;
+    }
+    .trait strong { display: block; color: var(--cognac); font-size: 13px; margin-bottom: 4px; }
+
+    .compare-footer {
+      margin-top: 32px;
+      padding: 18px 20px;
+      background: var(--surface);
+      border-radius: var(--radius);
+      font-size: 13px;
+      color: var(--ink-2);
+      line-height: 1.7;
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--cognac);
+    }
+    .compare-footer strong { color: var(--cognac); }
+  </style>
+</head>
+<body>
+
+  <header class="banner">
+    <span class="variant-tag">Still v4 · Tailored</span>
+    <h1>The Gentlemen's Study</h1>
+    <p class="lead">Petrol nav bar. Cognac buttons. Espresso text. Dark structural pieces up top — like wearing the overcoat with the suit. Moto-influenced confidence.</p>
+    <p class="angle"><strong>The angle:</strong> Your motoinspired section, Brad Pitt in <em>The Gentlemen</em>, autumn brown suits, all-black formal. Structure and depth — not breezy, <em>composed</em>.</p>
+  </header>
+
+  <main>
+    <div class="swatches">
+      <div class="sw" style="background:#e6dfd4" title="bg"></div>
+      <div class="sw" style="background:#8f5e35" title="cognac"></div>
+      <div class="sw" style="background:#b89462" title="camel"></div>
+      <div class="sw" style="background:#152228" title="petrol"></div>
+      <div class="sw" style="background:#1f1b17" title="ink"></div>
+      <div class="sw" style="background:#a8652a" title="attention"></div>
+    </div>
+
+    <div class="app">
+      <nav class="nav">
+        <span class="nav-brand">Persons</span>
+        <div class="nav-links">
+          <a class="nav-link active" href="#">Today</a>
+          <a class="nav-link" href="#">People</a>
+          <a class="nav-link" href="#">Inbox</a>
+        </div>
+      </nav>
+      <div class="body">
+        <div>
+          <div class="greeting">Good morning, Joseph</div>
+          <div class="sub">Wednesday, July 8 · <em>3 birthdays this week</em><span class="badge">this week</span></div>
+          <div class="label">Reach out</div>
+          <div class="row">
+            <div class="av">AM</div>
+            <div><div class="name">Amara Mensah</div><div class="meta">Product Lead · Accra</div></div>
+            <div class="days warn">42 days</div>
+          </div>
+          <div class="row">
+            <div class="av">SR</div>
+            <div><div class="name">Sofia Ruiz</div><div class="meta">Northwind · Portland</div></div>
+            <div class="days warn">28 days</div>
+          </div>
+          <div class="label" style="margin-top:24px">Recent</div>
+          <div class="row">
+            <div class="av">KL</div>
+            <div><div class="name">Kenji Lee</div><div class="meta">VP Engineering · Meridian</div></div>
+            <div class="days">3 days</div>
+          </div>
+        </div>
+        <div class="side">
+          <h3>Inbox</h3>
+          <div class="big">12</div>
+          <div class="big-sub">pending items</div>
+          <div class="breakdown">
+            <div class="br"><span>gmail</span><span>8</span></div>
+            <div class="br"><span>imessage</span><span>3</span></div>
+            <div class="br"><span>calls</span><span>1</span></div>
+          </div>
+          <button class="btn">Process inbox</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="traits">
+      <div class="trait"><strong>Petrol nav bar</strong>Dark structure always visible — the overcoat never comes off</div>
+      <div class="trait"><strong>Cognac primary</strong>Richer, deeper brown — leather belt, not gold jewelry</div>
+      <div class="trait"><strong>8px radius</strong>Sharpest corners — tailored, not soft</div>
+      <div class="trait"><strong>Solid cognac avatars</strong>Filled, confident — no outlines</div>
+      <div class="trait"><strong>Tighter density</strong>More information per screen, less floaty</div>
+      <div class="trait"><strong>Best for</strong>Power use, inbox processing, feeling in control</div>
+    </div>
+
+    <div class="compare-footer">
+      <strong>vs v2:</strong> v2 had a light nav with a dark inbox card. v4 goes further — dark nav AND dark inbox, cognac punch on both. More contrast, more authority. The motoinspired pins made manifest.
+    </div>
+  </main>
+
+</body>
+</html>

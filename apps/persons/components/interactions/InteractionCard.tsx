@@ -20,7 +20,7 @@ const WEIGHT_COLORS: Record<string, string> = {
 const OUTCOME_COLORS: Record<string, string> = {
   Complete: "#3a8a5c",
   "Follow-up needed": "#a38a3a",
-  "Action required": "#c4572a",
+  "Action required": "var(--cognac)",
   Open: "#2a6ea3",
 }
 

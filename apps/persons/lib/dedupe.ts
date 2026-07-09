@@ -44,7 +44,8 @@ function jaroWinkler(s1: string, s2: string): number {
 }
 
 function norm(s: string): string {
-  return s.toLowerCase().trim().replace(/[^a-z0-9 ]/g, "")
+  // \p{L} keeps all Unicode letters (CJK, Arabic, etc.); requires the `u` flag
+  return s.toLowerCase().trim().replace(/[^\p{L}\p{N} ]/gu, "")
 }
 
 // ── Types ────────────────────────────────────────────────────────────────────

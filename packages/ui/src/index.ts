@@ -1,4 +1,4 @@
-// Warm Concrete — packages/ui
+// Still — packages/ui
 // Barrel export: import everything from '@lifeos/ui'
 
 export { TOKEN, v, warmConcreteTheme, injectTheme } from './tokens';
@@ -36,6 +36,18 @@ export type { SelectProps } from './Select';
 // Layout
 export { Card }         from './Card';
 export type { CardProps } from './Card';
+
+export { AppShell }     from './AppShell';
+export type { AppShellProps } from './AppShell';
+
+export { StillPage }    from './StillPage';
+export type { StillPageProps } from './StillPage';
+
+export { PageHeader }   from './PageHeader';
+export type { PageHeaderProps } from './PageHeader';
+
+export { EntityRow }    from './EntityRow';
+export type { EntityRowProps } from './EntityRow';
 
 export { StatBlock }    from './StatBlock';
 export type { StatBlockProps } from './StatBlock';

@@ -1,9 +1,10 @@
+import { cookies } from "next/headers"
 import { db } from "@/lib/db"
-import { parseTags } from "@/lib/utils"
+import { parseTags, isBirthdayToday, isBirthdayThisWeek, isTimestampToday, daysUntilBirthday } from "@/lib/utils"
 import { enrichWithAttention } from "@/lib/attention"
-import { isBirthdayToday, isBirthdayThisWeek } from "@/lib/utils"
 import AttentionCard from "@/components/today/AttentionCard"
 import BirthdayCard from "@/components/today/BirthdayCard"
+import TimezonePicker from "@/components/today/TimezonePicker"
 import type { Person } from "@/types"
 import { requireAccess } from "@/server/domain/access"
 
@@ -11,6 +12,7 @@ export const dynamic = "force-dynamic"
 
 export default async function TodayPage() {
   const actor = await requireAccess("people.read")
+  const tz = decodeURIComponent((await cookies()).get("tz")?.value ?? "") || "UTC"
   // Only load persons who are relevant to today:
   //   - closeness >= 2 (Friends / Inner Circle) for attention tracking
   //   - OR have a birthday set
@@ -60,13 +62,13 @@ export default async function TodayPage() {
     })
   )
 
-  const birthdaysToday    = persons.filter(p => isBirthdayToday(p.birthday))
-  const birthdaysThisWeek = persons.filter(p => !isBirthdayToday(p.birthday) && isBirthdayThisWeek(p.birthday))
+  const birthdaysToday    = persons.filter(p => isBirthdayToday(p.birthday, tz))
+  const birthdaysThisWeek = persons
+    .filter(p => !isBirthdayToday(p.birthday, tz) && isBirthdayThisWeek(p.birthday, tz))
+    .sort((a, b) => (daysUntilBirthday(a.birthday, tz) ?? 999) - (daysUntilBirthday(b.birthday, tz) ?? 999))
 
-  const todayStart = new Date()
-  todayStart.setHours(0, 0, 0, 0)
   const activeToday = persons.filter(p =>
-    p.interactions.some(ix => new Date(ix.timestamp) >= todayStart)
+    p.interactions.some(ix => isTimestampToday(ix.timestamp, tz))
   )
 
   const overdue = persons
@@ -74,27 +76,28 @@ export default async function TodayPage() {
     .sort((a, b) => b.attentionScore - a.attentionScore)
 
   const date = new Date().toLocaleDateString("en-US", {
-    weekday: "long", month: "long", day: "numeric",
+    timeZone: tz, weekday: "long", month: "long", day: "numeric",
   })
 
   return (
     <div style={{ maxWidth: "680px", margin: "0 auto", padding: "32px 24px" }}>
       <div style={{ marginBottom: "32px" }}>
-        <h1 style={{ fontFamily: "var(--font-playfair), serif", fontSize: "28px", fontWeight: 600, color: "var(--ink)", margin: "0 0 4px" }}>
+        <h1 style={{ fontFamily: "var(--font-display), serif", fontSize: "28px", fontWeight: 600, color: "var(--ink)", margin: "0 0 4px" }}>
           Today
         </h1>
         <div style={{ fontSize: "12px", color: "var(--ink-3)" }}>{date}</div>
+        <TimezonePicker current={tz} />
       </div>
 
       {birthdaysToday.length > 0 && (
         <Section title="🎂 Birthdays Today">
-          {birthdaysToday.map(p => <BirthdayCard key={p.id} person={p} isToday={true} />)}
+          {birthdaysToday.map(p => <BirthdayCard key={p.id} person={p} isToday={true} tz={tz} />)}
         </Section>
       )}
 
       {birthdaysThisWeek.length > 0 && (
         <Section title="Birthdays This Week">
-          {birthdaysThisWeek.map(p => <BirthdayCard key={p.id} person={p} isToday={false} />)}
+          {birthdaysThisWeek.map(p => <BirthdayCard key={p.id} person={p} isToday={false} tz={tz} />)}
         </Section>
       )}
 
@@ -118,7 +121,7 @@ export default async function TodayPage() {
 
       {persons.length === 0 && (
         <div style={{ padding: "48px 32px", background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "12px", textAlign: "center" }}>
-          <div style={{ fontFamily: "var(--font-playfair), serif", fontSize: "20px", color: "var(--ink)", marginBottom: "8px" }}>
+          <div style={{ fontFamily: "var(--font-display), serif", fontSize: "20px", color: "var(--ink)", marginBottom: "8px" }}>
             Welcome to Persons
           </div>
           <div style={{ fontSize: "12px", color: "var(--ink-3)", marginBottom: "20px" }}>

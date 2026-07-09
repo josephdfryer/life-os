@@ -16,6 +16,12 @@ const GOOGLE_CONTACTS_READONLY_SCOPE = "https://www.googleapis.com/auth/contacts
 const GMAIL_SCOPE = `${GMAIL_READONLY_SCOPE} ${GOOGLE_CONTACTS_READONLY_SCOPE}`
 const SOURCE = "gmail"
 const DEFAULT_BACKFILL_DAYS = 30
+// Stop fetching new messages after this long and report the run as
+// incomplete — Vercel kills the function at maxDuration and an unbounded
+// backfill can't finish in one invocation. Progress persists per message
+// (already-imported messages are skipped on the next run), so repeated runs
+// converge until one completes and incremental history sync takes over.
+const SYNC_BUDGET_MS = 240_000
 const MAX_BACKFILL_DAYS = 3650
 const ALL_TIME_BACKFILL_DAYS = 36500
 const GMAIL_PAGE_SIZE = 100
@@ -107,6 +113,7 @@ type ParsedMessage = {
   snippet: string | null
   body: string | null
   direction: string
+  labelIds: string[]
   metadata: Record<string, unknown>
 }
 
@@ -124,6 +131,10 @@ type GmailMessageMetadata = {
 type SyncOptions = {
   backfillDays?: number | null
   unmatchedMode?: "skip" | "stage" | null
+  // Only stage unmatched messages Gmail marks IMPORTANT (default on).
+  // Superhuman's Important/Other triage reads and writes this same signal,
+  // so the inbox inherits its sorting — including manual moves.
+  importantOnly?: boolean | null
 }
 
 type SyncStats = {
@@ -137,6 +148,8 @@ type SyncStats = {
   backfillDays: number
   incremental: boolean
   unmatchedMode: "skip" | "stage"
+  importantOnly: boolean
+  incomplete: boolean
 }
 
 export function gmailConfigured() {
@@ -409,6 +422,8 @@ export async function syncGmail(actor: AccessActor, options: SyncOptions = {}) {
   const accessToken = await usableAccessToken(connection)
   const backfillDays = normalizeBackfillDays(options.backfillDays)
   const unmatchedMode = options.unmatchedMode === "stage" ? "stage" : "skip"
+  const importantOnly = options.importantOnly !== false
+  const deadline = Date.now() + SYNC_BUDGET_MS
 
   try {
     const peopleByEmail = await peopleEmailIndex(actor.workspaceId)
@@ -423,6 +438,8 @@ export async function syncGmail(actor: AccessActor, options: SyncOptions = {}) {
       backfillDays,
       incremental: Boolean(connection.historyId),
       unmatchedMode,
+      importantOnly,
+      incomplete: false,
     }
 
     const listed = connection.historyId
@@ -432,6 +449,8 @@ export async function syncGmail(actor: AccessActor, options: SyncOptions = {}) {
         peopleByEmail,
         stats,
         unmatchedMode,
+        importantOnly,
+        deadline,
       })
       : await syncMessagePages(accessToken, {
         connection,
@@ -440,13 +459,21 @@ export async function syncGmail(actor: AccessActor, options: SyncOptions = {}) {
         stats,
         backfillDays,
         unmatchedMode,
+        importantOnly,
+        deadline,
       })
 
-    const profile = await fetchGmailProfile(accessToken)
+    stats.incomplete = Boolean(listed.incomplete)
+    const profile = listed.incomplete ? null : await fetchGmailProfile(accessToken)
     await db.gmailConnection.update({
       where: { id: connection.id },
       data: {
-        historyId: listed.historyId ?? profile.historyId ?? connection.historyId,
+        // Only advance the incremental checkpoint after a complete run —
+        // otherwise unprocessed messages older than the checkpoint would be
+        // skipped forever by history sync.
+        historyId: listed.incomplete
+          ? connection.historyId
+          : listed.historyId ?? profile?.historyId ?? connection.historyId,
         lastSyncedAt: new Date(),
         lastError: null,
       },
@@ -477,6 +504,8 @@ async function syncMessagePages(
     stats: SyncStats
     backfillDays: number
     unmatchedMode: "skip" | "stage"
+    importantOnly: boolean
+    deadline: number
   }
 ) {
   let pageToken: string | undefined
@@ -498,12 +527,13 @@ async function syncMessagePages(
       input.stats.batches += 1
       const result = await processMessageBatch(accessToken, { ...input, messageIds: batch })
       newestHistoryId = result.historyId ?? newestHistoryId
+      if (result.incomplete) return { historyId: newestHistoryId, incomplete: true }
     }
     pageToken = data.nextPageToken
     if (!pageToken) break
   }
 
-  return { historyId: newestHistoryId }
+  return { historyId: newestHistoryId, incomplete: false }
 }
 
 async function syncHistoryPages(
@@ -514,6 +544,8 @@ async function syncHistoryPages(
     peopleByEmail: Map<string, { id: string; first: string; last: string }>
     stats: SyncStats
     unmatchedMode: "skip" | "stage"
+    importantOnly: boolean
+    deadline: number
   }
 ) {
   let pageToken: string | undefined
@@ -548,14 +580,18 @@ async function syncHistoryPages(
     }
     for (const batch of chunk([...messageIds], DB_BATCH_SIZE)) {
       input.stats.batches += 1
-      await processMessageBatch(accessToken, { ...input, messageIds: batch })
+      const result = await processMessageBatch(accessToken, { ...input, messageIds: batch })
+      // Bail without advancing the checkpoint — the caller keeps the old
+      // historyId so the next run re-covers this window (already-imported
+      // messages are skipped cheaply).
+      if (result.incomplete) return { historyId: null, incomplete: true }
     }
     nextHistoryId = data.historyId ?? nextHistoryId
     pageToken = data.nextPageToken
     if (!pageToken) break
   }
 
-  return { historyId: nextHistoryId }
+  return { historyId: nextHistoryId, incomplete: false }
 }
 
 async function processMessageBatch(
@@ -567,10 +603,33 @@ async function processMessageBatch(
     stats: SyncStats
     messageIds: string[]
     unmatchedMode: "skip" | "stage"
+    importantOnly: boolean
+    deadline: number
   }
 ) {
   let newestHistoryId: string | null = null
+
+  // Skip messages already imported in a previous run without paying a Gmail
+  // fetch for each — this is what makes interrupted backfills resumable.
+  const existing = await db.gmailMessageLink.findMany({
+    where: {
+      workspaceId: input.connection.workspaceId,
+      provider: "google",
+      mailboxId: input.connection.mailboxId,
+      externalMessageId: { in: input.messageIds },
+    },
+    select: { externalMessageId: true },
+  })
+  const alreadyImported = new Set(existing.map(link => link.externalMessageId))
+
   for (const messageId of input.messageIds) {
+    if (alreadyImported.has(messageId)) {
+      input.stats.skipped += 1
+      continue
+    }
+    if (Date.now() > input.deadline) {
+      return { historyId: newestHistoryId, incomplete: true }
+    }
     const raw = await fetchMessage(accessToken, messageId)
     if (!raw) {
       input.stats.skipped += 1
@@ -588,13 +647,14 @@ async function processMessageBatch(
       peopleByEmail: input.peopleByEmail,
       message,
       unmatchedMode: input.unmatchedMode,
+      importantOnly: input.importantOnly,
     })
     input.stats.createdInteractions += result.createdInteractions
     input.stats.updatedInteractions += result.updatedInteractions
     input.stats.staged += result.staged
     input.stats.skipped += result.skipped
   }
-  return { historyId: newestHistoryId }
+  return { historyId: newestHistoryId, incomplete: false }
 }
 
 async function importMessage(input: {
@@ -606,8 +666,12 @@ async function importMessage(input: {
   peopleByEmail: Map<string, { id: string; first: string; last: string }>
   message: ParsedMessage
   unmatchedMode: "skip" | "stage"
+  importantOnly: boolean
 }) {
   const matchedPeople = matchedPeopleForMessage(input.message, input.peopleByEmail, input.mailboxEmail)
+  // Outgoing mail is always relevant (you wrote it); incoming unmatched mail
+  // must carry Gmail's IMPORTANT label when importantOnly is on.
+  const relevant = input.message.direction === "outgoing" || input.message.labelIds.includes("IMPORTANT")
   const contact = primaryContact(input.message, input.mailboxEmail)
   const summary = input.message.subject || input.message.snippet || "Gmail message"
   let createdInteractions = 0
@@ -650,7 +714,7 @@ async function importMessage(input: {
         },
       })
     }
-  } else if (input.unmatchedMode === "stage") {
+  } else if (input.unmatchedMode === "stage" && (!input.importantOnly || relevant)) {
     const stagedItem = await stageRecord({
       source: SOURCE,
       sourceId: input.message.id,
@@ -858,6 +922,7 @@ function parseMessage(raw: GmailMessage, mailboxEmail: string | null): ParsedMes
     snippet: raw.snippet ?? null,
     body,
     direction: fromSelf ? "outgoing" : "incoming",
+    labelIds: raw.labelIds ?? [],
     metadata: {
       source: SOURCE,
       gmailMessageId: raw.id,

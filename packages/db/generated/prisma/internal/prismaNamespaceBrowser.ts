@@ -169,6 +169,8 @@ export const PersonScalarFieldEnum = {
   linkedin: 'linkedin',
   twitter: 'twitter',
   website: 'website',
+  facebook: 'facebook',
+  instagram: 'instagram',
   color: 'color',
   colorSoft: 'colorSoft'
 } as const

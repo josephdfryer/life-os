@@ -6,7 +6,8 @@
   "types": "./index.ts",
   "exports": {
     ".": "./index.ts",
-    "./tokens.css": "./tokens.css"
+    "./tokens.css": "./tokens.css",
+    "./still-tokens.css": "./still-tokens.css"
   },
   "peerDependencies": {
     "react": "*",

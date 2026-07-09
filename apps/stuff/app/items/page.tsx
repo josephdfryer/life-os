@@ -35,11 +35,11 @@ export default async function ItemsPage({
   })
 
   return (
-    <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '40px 24px' }}>
-      <style>{`.item-card:hover { border-color: var(--accent) !important; }`}</style>
+    <div style={{ width: 'min(100%, var(--content-max, 1100px))', margin: '0 auto', padding: '36px 24px 48px' }}>
+      <style>{`.item-card:hover { border-color: var(--cognac-soft) !important; box-shadow: var(--shadow) !important; }`}</style>
 
       <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: '32px', gap: '16px', flexWrap: 'wrap' }}>
-        <h1 style={{ fontFamily: 'var(--font-playfair)', fontSize: '28px', fontWeight: 600, letterSpacing: '-0.02em', margin: 0 }}>
+        <h1 style={{ fontFamily: 'var(--font-display)', fontSize: '28px', fontWeight: 400, letterSpacing: '-0.02em', margin: 0 }}>
           Everything
         </h1>
         <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
@@ -51,9 +51,9 @@ export default async function ItemsPage({
               style={{
                 background: 'var(--surface)',
                 border: '1px solid var(--border)',
-                borderRadius: '8px',
-                padding: '6px 12px',
-                fontSize: '12px',
+                borderRadius: 'var(--radius)',
+                padding: '10px 14px',
+                fontSize: '14px',
                 color: 'var(--ink)',
                 outline: 'none',
                 width: '180px',
@@ -63,29 +63,29 @@ export default async function ItemsPage({
           <a
             href="/items/new"
             style={{
-              background: 'var(--accent)',
+              background: 'var(--cognac)',
               color: '#fff',
-              borderRadius: '8px',
-              padding: '6px 16px',
-              fontSize: '12px',
-              fontWeight: 500,
+              borderRadius: 'var(--radius-pill)',
+              padding: '9px 18px',
+              fontSize: '13px',
+              fontWeight: 450,
               textDecoration: 'none',
               whiteSpace: 'nowrap',
             }}
           >
-            + New item
+            New item
           </a>
         </div>
       </div>
 
       {items.length === 0 ? (
-        <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '12px', padding: '64px 32px', textAlign: 'center' }}>
+        <div style={{ background: 'var(--surface)', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius)', boxShadow: 'var(--shadow-sm)', padding: '64px 32px', textAlign: 'center' }}>
           <div style={{ fontSize: '13px', color: 'var(--ink-3)', marginBottom: '6px' }}>
             {search ? `No items matching "${search}"` : 'Nothing here yet.'}
           </div>
           {!search && (
             <div style={{ fontSize: '12px', color: 'var(--ink-4)' }}>
-              <a href="/items/new" style={{ color: 'var(--accent)', textDecoration: 'none' }}>Add your first item</a> to start cataloguing what you own.
+              <a href="/items/new" style={{ color: 'var(--cognac)', textDecoration: 'none' }}>Add your first item</a> to start cataloguing what you own.
             </div>
           )}
         </div>
@@ -102,8 +102,9 @@ export default async function ItemsPage({
                 className="item-card"
                 style={{
                   background: 'var(--surface)',
-                  border: '1px solid var(--border)',
-                  borderRadius: '12px',
+                  border: '1px solid transparent',
+                  borderRadius: 'var(--radius)',
+                  boxShadow: 'var(--shadow-sm)',
                   padding: '16px 18px',
                   textDecoration: 'none',
                   color: 'inherit',
@@ -113,12 +114,11 @@ export default async function ItemsPage({
               >
                 <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '8px', marginBottom: '8px' }}>
                   <span style={{
-                    fontFamily: 'var(--font-dm-mono)',
                     fontSize: '10px',
                     color: 'var(--ink-4)',
-                    background: 'var(--surface2)',
-                    padding: '2px 8px',
-                    borderRadius: '4px',
+                    background: 'var(--cognac-soft)',
+                    padding: '3px 10px',
+                    borderRadius: 'var(--radius-pill)',
                     flexShrink: 0,
                   }}>
                     {item.assetId}
@@ -135,7 +135,7 @@ export default async function ItemsPage({
                     }} />
                   )}
                 </div>
-                <div style={{ fontSize: '13px', fontWeight: 500, marginBottom: '4px' }}>{item.name}</div>
+                <div style={{ fontFamily: 'var(--font-display)', fontSize: '17px', fontWeight: 400, marginBottom: '4px' }}>{item.name}</div>
                 {item.category && (
                   <div style={{ fontSize: '11px', color: 'var(--ink-3)', marginBottom: '4px' }}>{item.category}</div>
                 )}

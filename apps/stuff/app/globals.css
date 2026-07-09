@@ -1,16 +1,9 @@
 @import "tailwindcss";
+@import "@life-os/ui/still-tokens.css";
 
 :root {
-  --bg: #f5f2ec;
-  --surface: #faf8f4;
-  --surface2: #eeebe3;
-  --border: #ddd9cf;
-  --ink: #1a1814;
-  --ink-2: #4a4640;
-  --ink-3: #8a8680;
-  --ink-4: #b8b4ae;
-  --accent: #c4572a;
-  --accent-soft: #f5ede8;
+  --surface2: var(--surface-2);
+  --separator: var(--border-subtle);
 }
 
 * {
@@ -26,9 +19,9 @@ html, body {
 body {
   background-color: var(--bg);
   color: var(--ink);
-  font-family: var(--font-dm-mono), monospace;
-  font-size: 13px;
-  line-height: 1.5;
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.55;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -45,7 +38,7 @@ body {
 }
 
 :focus-visible {
-  outline: 2px solid var(--accent);
+  outline: 2px solid var(--cognac);
   outline-offset: 2px;
 }
 

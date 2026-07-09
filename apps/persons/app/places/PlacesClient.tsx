@@ -452,8 +452,8 @@ function normalizePlaceType(value?: string) {
 
 function placeTypeColor(placeType?: string) {
   const palette: Record<string, string> = {
-    cafe: "#c4572a",
-    coffee: "#c4572a",
+    cafe: "var(--cognac)",
+    coffee: "var(--cognac)",
     restaurant: "#b85f35",
     bar: "#6f5ca8",
     store: "#3f7f6b",
@@ -471,7 +471,7 @@ function placeTypeColor(placeType?: string) {
 }
 
 function hashColor(value: string) {
-  const colors = ["#c4572a", "#3f7f6b", "#6f5ca8", "#8a6f3d", "#4f789e", "#b9475a", "#5f8b4c"]
+  const colors = ["var(--cognac)", "#3f7f6b", "#6f5ca8", "#8a6f3d", "#4f789e", "#b9475a", "#5f8b4c"]
   let hash = 0
   for (let i = 0; i < value.length; i++) hash = (hash * 31 + value.charCodeAt(i)) >>> 0
   return colors[hash % colors.length]

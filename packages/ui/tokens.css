@@ -1,3 +1,7 @@
+/* LEGACY — Warm Concrete tokens. Superseded by Still v2.
+   New work: docs/STILL_DESIGN_SYSTEM.md + packages/ui/still-tokens.css
+   Apps still import this file until explicitly migrated. Do not extend. */
+
 /* Life OS design tokens — import this in any app's globals.css */
 
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&display=swap');
@@ -11,8 +15,8 @@
   --ink-2: #4a4640;
   --ink-3: #8a8680;
   --ink-4: #b8b4ae;
-  --accent: #c4572a;
-  --accent-soft: #f5ede8;
+  --accent: var(--cognac);
+  --accent-soft: var(--cognac-soft);
 
   /* Typography */
   --font-display: 'Playfair Display', serif;

@@ -60,7 +60,7 @@ export default async function ScheduleWidget({ workspaceId }: Props) {
               >
                 <div
                   style={{
-                    fontFamily: 'var(--font-dm-mono)',
+                    fontFamily: 'var(--font-body)',
                     fontSize: '12px',
                     color: '#71717a',
                     paddingTop: '2px',
@@ -95,14 +95,14 @@ const card: React.CSSProperties = {
 }
 
 const heading: React.CSSProperties = {
-  fontFamily: 'var(--font-playfair)',
+  fontFamily: 'var(--font-display)',
   fontSize: '1.4rem',
   fontWeight: 600,
   margin: 0,
 }
 
 const badge: React.CSSProperties = {
-  fontFamily: 'var(--font-dm-mono)',
+  fontFamily: 'var(--font-body)',
   fontSize: '11px',
   padding: '4px 12px',
   background: 'rgba(6,78,59,0.4)',

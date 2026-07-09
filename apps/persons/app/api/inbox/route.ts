@@ -3,86 +3,88 @@ import { db } from "@/lib/db"
 import { parseTags } from "@/lib/utils"
 import { requireAccess } from "@/server/domain/access"
 
-type InboxItemCandidate = { id: string; first: string; last: string; title: string | null; company: string | null; emails: string; phones: string }
-type InboxItem = { id: string; status: string; source: string; sourceId: string | null; contactName: string | null; contactEmail: string | null; contactPhone: string | null; candidatePersonId: string | null; type: string; timestamp: Date; summary: string | null; body: string | null; direction: string | null; acceptedAt: Date | null; acceptedPersonId: string | null; interactionId: string | null; createdAt: Date; updatedAt: Date; candidatePerson: InboxItemCandidate | null }
-type RuleRunResult = { id: string; createdAt: Date; trigger: string; matched: boolean; mode: string; status: string; message: string | null; actionsPlanned: string | null; actionsApplied: string | null; targetId: string | null; rule: { id: string; name: string; trigger: string } | null }
+// List endpoint is intentionally lean: no bodies, no metadata, no rule runs.
+// Full detail is served per item by GET /api/inbox/[id] when a row expands.
 
 export async function GET(req: NextRequest) {
   const actor = await requireAccess("inbox.review")
   const { searchParams } = new URL(req.url)
-  const status = searchParams.get("status") ?? "pending"
-  const limit = Math.min(200, Math.max(1, Number(searchParams.get("limit") ?? 100)))
+  const status = searchParams.get("status") ?? "review"
+  const limit = Math.min(100, Math.max(1, Number(searchParams.get("limit") ?? 50)))
+  const cursor = searchParams.get("cursor")
 
-  const items = await db.stagedInteraction.findMany({
-    where: { ...inboxStatusWhere(status), workspaceId: actor.workspaceId },
-    orderBy: [{ createdAt: "desc" }],
-    take: limit,
-    include: {
-      candidatePerson: {
-        select: {
-          id: true,
-          first: true,
-          last: true,
-          title: true,
-          company: true,
-          emails: true,
-          phones: true,
+  const where = { ...inboxStatusWhere(status), workspaceId: actor.workspaceId }
+
+  const [rows, total] = await Promise.all([
+    db.stagedInteraction.findMany({
+      where,
+      orderBy: [{ createdAt: "desc" }, { id: "desc" }],
+      take: limit + 1,
+      ...(cursor ? { cursor: { id: cursor }, skip: 1 } : {}),
+      select: {
+        id: true,
+        source: true,
+        sourceId: true,
+        status: true,
+        contactName: true,
+        contactEmail: true,
+        contactPhone: true,
+        candidatePersonId: true,
+        type: true,
+        timestamp: true,
+        summary: true,
+        direction: true,
+        createdAt: true,
+        candidatePerson: {
+          select: { id: true, first: true, last: true, title: true, company: true, emails: true, phones: true },
         },
       },
-    },
-  }) as InboxItem[]
-  const itemIds = items.map((item: InboxItem) => item.id)
-  const runs: RuleRunResult[] = itemIds.length
+    }),
+    // Total only on the first page — the client keeps it in state after that.
+    cursor ? Promise.resolve(null) : db.stagedInteraction.count({ where }),
+  ])
+
+  const hasMore = rows.length > limit
+  const page = hasMore ? rows.slice(0, limit) : rows
+
+  const ids = page.map(item => item.id)
+  const suggested = ids.length
     ? await db.ruleRun.findMany({
-      where: { targetType: "stagedInteraction", targetId: { in: itemIds }, workspaceId: actor.workspaceId },
-      include: { rule: { select: { id: true, name: true, trigger: true } } },
-      orderBy: { createdAt: "desc" },
-      take: itemIds.length * 5,
-    }) as RuleRunResult[]
+      where: {
+        targetType: "stagedInteraction",
+        targetId: { in: ids },
+        workspaceId: actor.workspaceId,
+        mode: "suggest",
+        status: "suggested",
+      },
+      select: { targetId: true },
+    })
     : []
-  const runsByTarget = new Map<string, RuleRunResult[]>()
-  for (const run of runs) {
-    if (!run.targetId) continue
-    const current = runsByTarget.get(run.targetId) ?? []
-    if (current.length < 5) current.push(run)
-    runsByTarget.set(run.targetId, current)
-  }
+  const suggestedSet = new Set(suggested.map(run => run.targetId))
 
   return NextResponse.json({
-    items: items.map((item: InboxItem) => ({
+    items: page.map(item => ({
       ...item,
+      summary: truncate(item.summary, 240),
       candidatePerson: item.candidatePerson ? {
         ...item.candidatePerson,
         emails: parseTags(item.candidatePerson.emails),
         phones: parseTags(item.candidatePerson.phones),
       } : null,
-      ruleRuns: (runsByTarget.get(item.id) ?? []).map((run: RuleRunResult) => ({
-        id: run.id,
-        createdAt: run.createdAt,
-        trigger: run.trigger,
-        matched: run.matched,
-        mode: run.mode,
-        status: run.status,
-        message: run.message,
-        actionsPlanned: parseJson(run.actionsPlanned),
-        actionsApplied: parseJson(run.actionsApplied),
-        rule: run.rule,
-      })),
+      hasSuggestions: suggestedSet.has(item.id),
     })),
+    nextCursor: hasMore ? page[page.length - 1].id : null,
+    total,
   })
+}
+
+function truncate(value: string | null, max: number) {
+  if (!value) return value
+  return value.length > max ? `${value.slice(0, max)}…` : value
 }
 
 function inboxStatusWhere(status: string) {
   if (status === "all") return undefined
   if (status === "review") return { status: { in: ["pending", "blocked"] } }
   return { status }
-}
-
-function parseJson(value: string | null) {
-  if (!value) return null
-  try {
-    return JSON.parse(value)
-  } catch {
-    return value
-  }
 }

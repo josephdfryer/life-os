@@ -25,7 +25,7 @@ export default async function InboxWidget({ workspaceId, personsUrl }: Props) {
         <div style={{ textAlign: 'right' }}>
           <div
             style={{
-              fontFamily: 'var(--font-dm-mono)',
+              fontFamily: 'var(--font-body)',
               fontSize: '3rem',
               fontWeight: 500,
               lineHeight: 1,
@@ -49,7 +49,7 @@ export default async function InboxWidget({ workspaceId, personsUrl }: Props) {
         {Object.entries(bySource).map(([source, count]) => (
           <div key={source} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '14px' }}>
             <span style={{ color: '#a1a1aa', textTransform: 'capitalize' }}>{source}</span>
-            <span style={{ fontFamily: 'var(--font-dm-mono)' }}>{count}</span>
+            <span style={{ fontFamily: 'var(--font-body)' }}>{count}</span>
           </div>
         ))}
         {total === 0 && (
@@ -74,7 +74,7 @@ const card: React.CSSProperties = {
 }
 
 const heading: React.CSSProperties = {
-  fontFamily: 'var(--font-playfair)',
+  fontFamily: 'var(--font-display)',
   fontSize: '1.4rem',
   fontWeight: 600,
   margin: 0,

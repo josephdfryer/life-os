@@ -54,8 +54,8 @@ export default async function EventsPage({
   })
 
   return (
-    <div style={{ maxWidth: "900px", margin: "0 auto", padding: "40px 24px" }}>
-      <style>{`.event-row:hover { border-color: var(--accent) !important; }`}</style>
+    <div style={{ width: "min(100%, var(--content-max, 1100px))", margin: "0 auto", padding: "36px 24px 48px" }}>
+      <style>{`.event-row:hover { border-color: var(--cognac-soft) !important; box-shadow: var(--shadow) !important; }`}</style>
 
       <div
         style={{
@@ -70,9 +70,9 @@ export default async function EventsPage({
         <div>
           <h1
             style={{
-              fontFamily: "var(--font-playfair)",
+              fontFamily: "var(--font-display)",
               fontSize: "28px",
-              fontWeight: 600,
+              fontWeight: 400,
               letterSpacing: "-0.02em",
               margin: "0 0 6px",
             }}
@@ -89,9 +89,9 @@ export default async function EventsPage({
           style={{
             border: "1px solid var(--border)",
             color: "var(--ink-3)",
-            borderRadius: "8px",
-            padding: "8px 16px",
-            fontSize: "12px",
+            borderRadius: "var(--radius-pill)",
+            padding: "9px 18px",
+            fontSize: "13px",
             textDecoration: "none",
             whiteSpace: "nowrap",
           }}
@@ -101,17 +101,17 @@ export default async function EventsPage({
         <a
           href="/events/new"
           style={{
-            background: "var(--accent)",
-            color: "#0d0d0d",
-            borderRadius: "8px",
-            padding: "8px 16px",
-            fontSize: "12px",
-            fontWeight: 600,
+            background: "var(--cognac)",
+            color: "#fff",
+            borderRadius: "var(--radius-pill)",
+            padding: "9px 18px",
+            fontSize: "13px",
+            fontWeight: 450,
             textDecoration: "none",
             whiteSpace: "nowrap",
           }}
         >
-          + New event
+          New event
         </a>
         </div>
       </div>
@@ -129,11 +129,11 @@ export default async function EventsPage({
               style={{
                 padding: "6px 14px",
                 borderRadius: "999px",
-                fontSize: "11px",
+                fontSize: "13px",
                 textDecoration: "none",
-                border: `1px solid ${active ? "var(--accent)" : "var(--border)"}`,
-                background: active ? "var(--accent-soft)" : "transparent",
-                color: active ? "var(--accent)" : "var(--ink-3)",
+                border: `1px solid ${active ? "var(--cognac-soft)" : "var(--border)"}`,
+                background: active ? "var(--cognac-soft)" : "transparent",
+                color: active ? "var(--cognac-deep)" : "var(--ink-3)",
               }}
             >
               {item.label}
@@ -152,9 +152,9 @@ export default async function EventsPage({
             flex: 1,
             background: "var(--surface)",
             border: "1px solid var(--border)",
-            borderRadius: "8px",
-            padding: "8px 12px",
-            fontSize: "12px",
+            borderRadius: "var(--radius)",
+            padding: "10px 14px",
+            fontSize: "14px",
             color: "var(--ink)",
             outline: "none",
           }}
@@ -165,8 +165,9 @@ export default async function EventsPage({
         <div
           style={{
             background: "var(--surface)",
-            border: "1px solid var(--border)",
-            borderRadius: "16px",
+            border: "1px solid var(--border-subtle)",
+            borderRadius: "var(--radius)",
+            boxShadow: "var(--shadow-sm)",
             padding: "64px 32px",
             textAlign: "center",
           }}
@@ -175,7 +176,7 @@ export default async function EventsPage({
             {search ? `No events matching "${search}"` : "Nothing on the timeline yet."}
           </div>
           {!search && (
-            <a href="/events/new" style={{ fontSize: "12px", color: "var(--accent)", textDecoration: "none" }}>
+            <a href="/events/new" style={{ fontSize: "12px", color: "var(--cognac)", textDecoration: "none" }}>
               Log your first event
             </a>
           )}
@@ -207,22 +208,23 @@ export default async function EventsPage({
                     gap: "16px",
                     alignItems: "start",
                     background: "var(--surface)",
-                    border: "1px solid var(--border)",
-                    borderRadius: "14px",
+                    border: "1px solid transparent",
+                    borderRadius: "var(--radius)",
+                    boxShadow: "var(--shadow-sm)",
                     padding: "16px 18px",
                     textDecoration: "none",
                     color: "inherit",
-                    transition: "border-color 0.1s",
+                    transition: "border-color 0.1s, box-shadow 0.1s",
                   }}
                 >
                   <div>
                     <div style={{ fontSize: "11px", color: "var(--ink-4)", marginBottom: "4px" }}>{date}</div>
-                    <div style={{ fontFamily: "var(--font-dm-mono)", fontSize: "11px", color: "var(--accent)" }}>
+                    <div style={{ fontSize: "12px", color: "var(--cognac)" }}>
                       {range}
                     </div>
                   </div>
                   <div style={{ minWidth: 0 }}>
-                    <div style={{ fontSize: "14px", fontWeight: 500, marginBottom: "4px" }}>{event.name}</div>
+                    <div style={{ fontFamily: "var(--font-display)", fontSize: "17px", fontWeight: 400, marginBottom: "4px" }}>{event.name}</div>
                     {attendees.length > 0 && (
                       <div style={{ fontSize: "11px", color: "var(--ink-3)", marginBottom: "4px" }}>
                         with {attendees.join(", ")}
@@ -237,9 +239,9 @@ export default async function EventsPage({
                       style={{
                         fontSize: "10px",
                         color: "var(--ink-4)",
-                        background: "var(--surface2)",
+                        background: "var(--cognac-soft)",
                         padding: "3px 8px",
-                        borderRadius: "6px",
+                        borderRadius: "var(--radius-pill)",
                         whiteSpace: "nowrap",
                       }}
                     >

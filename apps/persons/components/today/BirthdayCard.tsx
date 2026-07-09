@@ -1,15 +1,23 @@
 import Link from "next/link"
 import PersonAvatar from "@/components/persons/PersonAvatar"
-import { formatBirthday, daysUntilBirthday } from "@/lib/utils"
+import { formatBirthday, daysUntilBirthday, birthdayTurningAge } from "@/lib/utils"
 import type { Person } from "@/types"
 
 type Props = {
   person: Person
   isToday: boolean
+  tz?: string
 }
 
-export default function BirthdayCard({ person, isToday }: Props) {
-  const days = daysUntilBirthday(person.birthday)
+export default function BirthdayCard({ person, isToday, tz = "UTC" }: Props) {
+  const days = daysUntilBirthday(person.birthday, tz)
+  const age = birthdayTurningAge(person.birthday, tz)
+
+  const timing = isToday
+    ? "🎂 Today!"
+    : days === 1
+    ? "Tomorrow"
+    : `In ${days} days`
 
   return (
     <Link href={`/people/${person.id}`} style={{ textDecoration: "none" }}>
@@ -36,7 +44,8 @@ export default function BirthdayCard({ person, isToday }: Props) {
           </div>
           <div style={{ fontSize: "11px", color: isToday ? "var(--accent)" : "var(--ink-3)" }}>
             {formatBirthday(person.birthday)}
-            {isToday ? " · 🎂 Today!" : days === 1 ? " · Tomorrow" : ` · In ${days} days`}
+            {age !== null ? ` · turns ${age}` : ""}
+            {" · "}{timing}
           </div>
         </div>
       </div>

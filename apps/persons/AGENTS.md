@@ -24,6 +24,12 @@ npm run agent:finish -- --agent claude --summary "What changed and why" --next "
 The local state lives in `.agent-sync/` and is intentionally ignored by git.
 <!-- END:cross-agent-sync -->
 
+<!-- BEGIN:still-design-system -->
+# Design System
+
+UI work in Persons (and all Life OS apps) follows **Still v2**. Read `docs/STILL_DESIGN_SYSTEM.md` before changing layout, styling, or components. Visual reference: `docs/ui-preview/still-direction-v2.html`.
+<!-- END:still-design-system -->
+
 <!-- BEGIN:persons-architecture-doc -->
 # Living Persons Architecture Map
 

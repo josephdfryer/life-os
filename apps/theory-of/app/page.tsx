@@ -26,11 +26,11 @@ export default async function HomePage() {
   const withoutTheory = people.filter(p => p.theorySnapshots.length === 0)
 
   return (
-    <div style={{ maxWidth: "820px", margin: "0 auto", padding: "40px 24px" }}>
+    <div style={{ width: "min(100%, 900px)", margin: "0 auto", padding: "36px 24px 48px" }}>
       <h1 style={{
-        fontFamily: "var(--font-playfair), serif",
+        fontFamily: "var(--font-display)",
         fontSize: "28px",
-        fontWeight: 600,
+        fontWeight: 400,
         color: "var(--ink)",
         letterSpacing: "-0.02em",
         margin: "0 0 6px",
@@ -100,7 +100,7 @@ function Section({ label, children }: { label: string; children: React.ReactNode
       }}>
         {label}
       </div>
-      <div style={{ display: "flex", flexDirection: "column", gap: "1px" }}>
+      <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
         {children}
       </div>
     </div>
@@ -119,9 +119,10 @@ function PersonRow({ id, name, headline, meta, hasTheory }: {
       href={`/person/${id}`}
       style={{
         background: "var(--surface)",
-        border: "1px solid var(--border)",
-        borderRadius: "10px",
-        padding: "13px 18px",
+        border: "1px solid transparent",
+        borderRadius: "var(--radius)",
+        boxShadow: "var(--shadow-sm)",
+        padding: "14px 16px",
         display: "flex",
         alignItems: "center",
         gap: "16px",
@@ -129,12 +130,12 @@ function PersonRow({ id, name, headline, meta, hasTheory }: {
       }}
     >
       <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ fontSize: "13px", fontWeight: 500, color: "var(--ink)" }}>{name}</div>
+        <div style={{ fontFamily: "var(--font-display)", fontSize: "17px", fontWeight: 400, color: "var(--ink)" }}>{name}</div>
         {headline && <div style={{ fontSize: "11px", color: "var(--ink-4)", marginTop: "2px" }}>{headline}</div>}
       </div>
       <div style={{
         fontSize: "11px",
-        color: hasTheory ? "var(--accent)" : "var(--ink-4)",
+        color: hasTheory ? "var(--cognac)" : "var(--ink-4)",
         textAlign: "right",
         whiteSpace: "nowrap",
       }}>
@@ -148,8 +149,9 @@ function EmptyBlock({ title, subtitle }: { title: string; subtitle: string }) {
   return (
     <div style={{
       background: "var(--surface)",
-      border: "1px solid var(--border)",
-      borderRadius: "12px",
+      border: "1px solid var(--border-subtle)",
+      borderRadius: "var(--radius)",
+      boxShadow: "var(--shadow-sm)",
       padding: "56px 32px",
       textAlign: "center",
     }}>

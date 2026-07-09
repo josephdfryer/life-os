@@ -84,7 +84,7 @@ export default async function ItemDetailPage({
   }
   const valStyle: React.CSSProperties = { fontSize: '13px', color: 'var(--ink)', flex: 1 }
   const sectionLabel: React.CSSProperties = {
-    fontFamily: 'var(--font-dm-mono)',
+    fontFamily: 'var(--font-body)',
     fontSize: '10px',
     letterSpacing: '0.08em',
     textTransform: 'uppercase',
@@ -102,7 +102,7 @@ export default async function ItemDetailPage({
       <div style={{ marginBottom: '40px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
           <span style={{
-            fontFamily: 'var(--font-dm-mono)',
+            fontFamily: 'var(--font-body)',
             fontSize: '11px',
             color: 'var(--ink-4)',
             background: 'var(--surface2)',
@@ -123,7 +123,7 @@ export default async function ItemDetailPage({
           )}
         </div>
         <h1 style={{
-          fontFamily: 'var(--font-playfair)',
+          fontFamily: 'var(--font-display)',
           fontSize: '28px',
           fontWeight: 600,
           margin: '0 0 4px',
@@ -141,7 +141,7 @@ export default async function ItemDetailPage({
           <div style={row}><span style={keyStyle}>Make / model</span><span style={valStyle}>{[item.make, item.model].filter(Boolean).join(' ')}</span></div>
         )}
         {item.serialNumber && (
-          <div style={row}><span style={keyStyle}>Serial number</span><span style={{ ...valStyle, fontFamily: 'var(--font-dm-mono)', fontSize: '12px' }}>{item.serialNumber}</span></div>
+          <div style={row}><span style={keyStyle}>Serial number</span><span style={{ ...valStyle, fontFamily: 'var(--font-body)', fontSize: '12px' }}>{item.serialNumber}</span></div>
         )}
         {item.quantity !== 1 && (
           <div style={row}><span style={keyStyle}>Quantity</span><span style={valStyle}>{item.quantity}</span></div>
@@ -207,7 +207,7 @@ export default async function ItemDetailPage({
                     marginBottom: '6px',
                   }}
                 >
-                  <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: '10px', color: 'var(--ink-4)' }}>
+                  <span style={{ fontFamily: 'var(--font-body)', fontSize: '10px', color: 'var(--ink-4)' }}>
                     {a.parentItem.assetId}
                   </span>
                   <span style={{ fontSize: '13px' }}>{a.parentItem.name}</span>
@@ -237,7 +237,7 @@ export default async function ItemDetailPage({
                     marginBottom: '6px',
                   }}
                 >
-                  <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: '10px', color: 'var(--ink-4)' }}>
+                  <span style={{ fontFamily: 'var(--font-body)', fontSize: '10px', color: 'var(--ink-4)' }}>
                     {a.childItem.assetId}
                   </span>
                   <span style={{ fontSize: '13px' }}>{a.childItem.name}</span>
@@ -269,7 +269,7 @@ export default async function ItemDetailPage({
                       ? `${interaction.person.first} ${interaction.person.last ?? ''}`.trim()
                       : '—'}
                   </span>
-                  <span style={{ fontFamily: 'var(--font-dm-mono)', fontSize: '11px', color: 'var(--ink-4)' }}>
+                  <span style={{ fontFamily: 'var(--font-body)', fontSize: '11px', color: 'var(--ink-4)' }}>
                     {formatDate(interaction.timestamp)}
                   </span>
                 </div>

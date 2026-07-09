@@ -240,7 +240,7 @@ export default function ImportInteractionsPage() {
     <div style={{ maxWidth: "720px", margin: "0 auto", padding: "32px 24px" }}>
 
         <div style={{ marginBottom: "28px" }}>
-          <h1 style={{ fontFamily: "var(--font-playfair), serif", fontSize: "28px", fontWeight: 600, color: "var(--ink)", margin: "0 0 6px" }}>
+          <h1 style={{ fontFamily: "var(--font-display), serif", fontSize: "28px", fontWeight: 600, color: "var(--ink)", margin: "0 0 6px" }}>
             Import Interactions
           </h1>
           <p style={{ color: "var(--ink-3)", fontSize: "12px", margin: 0 }}>
@@ -253,7 +253,7 @@ export default function ImportInteractionsPage() {
             <div style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "10px", padding: "16px 18px", marginBottom: "14px", display: "grid", gap: "13px" }}>
               <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) auto", gap: "14px", alignItems: "start" }}>
                 <div>
-                  <div style={{ fontFamily: "var(--font-playfair), serif", fontSize: "14px", fontWeight: 500, color: "var(--ink)", marginBottom: "5px" }}>Import Gmail Mail</div>
+                  <div style={{ fontFamily: "var(--font-display), serif", fontSize: "14px", fontWeight: 500, color: "var(--ink)", marginBottom: "5px" }}>Import Gmail Mail</div>
                   <div style={{ fontSize: "12px", color: "var(--ink-3)", lineHeight: 1.5 }}>
                     Sync email from the connected Gmail account into Interactions. It runs in batches, uses Gmail history after the first import, and defaults to Known People only.
                   </div>
@@ -426,7 +426,7 @@ export default function ImportInteractionsPage() {
         {step === "review" && (
           <>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "20px" }}>
-              <h2 style={{ fontFamily: "var(--font-playfair), serif", fontSize: "20px", fontWeight: 600, margin: 0, color: "var(--ink)" }}>
+              <h2 style={{ fontFamily: "var(--font-display), serif", fontSize: "20px", fontWeight: 600, margin: 0, color: "var(--ink)" }}>
                 Review Results
                 <span style={{ fontSize: "13px", fontWeight: 400, color: "var(--ink-3)", marginLeft: "8px" }}>
                   {results.length} people found
@@ -478,7 +478,7 @@ export default function ImportInteractionsPage() {
         {step === "done" && (
           <div style={{ textAlign: "center", padding: "60px 32px", background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "12px" }}>
             <div style={{ fontSize: "32px", marginBottom: "16px" }}>✓</div>
-            <h2 style={{ fontFamily: "var(--font-playfair), serif", fontSize: "22px", fontWeight: 600, color: "var(--ink)", margin: "0 0 8px" }}>
+            <h2 style={{ fontFamily: "var(--font-display), serif", fontSize: "22px", fontWeight: 600, color: "var(--ink)", margin: "0 0 8px" }}>
               Import Complete
             </h2>
             <p style={{ color: "var(--ink-3)", fontSize: "13px", marginBottom: "24px" }}>
@@ -622,7 +622,7 @@ function ResolveModal({
         </div>
       )}
 
-      <h2 style={{ fontFamily: "var(--font-playfair), serif", fontSize: "20px", fontWeight: 600, color: "var(--ink)", margin: "0 0 6px" }}>
+      <h2 style={{ fontFamily: "var(--font-display), serif", fontSize: "20px", fontWeight: 600, color: "var(--ink)", margin: "0 0 6px" }}>
         Who is "{person.name}"?
       </h2>
       <p style={{ fontSize: "12px", color: "var(--ink-3)", margin: "0 0 20px", lineHeight: 1.5 }}>

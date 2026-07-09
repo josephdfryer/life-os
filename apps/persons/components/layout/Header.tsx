@@ -39,23 +39,22 @@ export default function Header() {
   return (
     <header style={{
       background: "var(--surface)",
-      borderBottom: "1px solid var(--border)",
+      borderBottom: "1px solid var(--border-subtle)",
       padding: "0 24px",
       display: "flex",
       alignItems: "center",
       height: "52px",
-      gap: "32px",
+      gap: "24px",
       position: "sticky",
       top: 0,
       zIndex: 50,
     }}>
       <Link href="/today" style={{
-        fontFamily: "var(--font-playfair), serif",
-        fontSize: "18px",
-        fontWeight: 600,
+        fontFamily: "var(--font-display)",
+        fontSize: "17px",
+        fontWeight: 400,
         color: "var(--ink)",
         textDecoration: "none",
-        letterSpacing: "-0.01em",
       }}>
         Persons
       </Link>
@@ -74,12 +73,12 @@ export default function Header() {
           <button
             onClick={() => setImportOpen(o => !o)}
             style={{
-              padding: "5px 12px",
-              borderRadius: "6px",
-              fontSize: "12px",
+              padding: "6px 14px",
+              borderRadius: "var(--radius-pill)",
+              fontSize: "13px",
               fontWeight: importActive ? 500 : 400,
-              color: importActive ? "var(--accent)" : "var(--ink-3)",
-              background: importActive ? "var(--accent-soft)" : "transparent",
+              color: importActive ? "var(--cognac-deep)" : "var(--ink-3)",
+              background: importActive ? "var(--cognac-soft)" : "transparent",
               border: "none",
               cursor: "pointer",
               fontFamily: "inherit",
@@ -105,7 +104,7 @@ export default function Header() {
               top: "calc(100% + 6px)",
               left: 0,
               background: "var(--surface)",
-              border: "1px solid var(--border)",
+              border: "1px solid var(--border-subtle)",
               borderRadius: "10px",
               padding: "6px",
               minWidth: "220px",
@@ -125,7 +124,7 @@ export default function Header() {
                     textDecoration: "none",
                     transition: "background 0.1s",
                   }}
-                  onMouseEnter={e => (e.currentTarget.style.background = "var(--surface2)")}
+                  onMouseEnter={e => (e.currentTarget.style.background = "var(--surface-hover)")}
                   onMouseLeave={e => (e.currentTarget.style.background = "transparent")}
                 >
                   <div style={{ fontSize: "12px", fontWeight: 500, color: "var(--ink)", marginBottom: "1px" }}>
@@ -152,7 +151,7 @@ export default function Header() {
               height: "32px",
               borderRadius: "50%",
               background: "transparent",
-              border: pathname.startsWith("/admin") ? "1px solid var(--accent)" : "1px solid transparent",
+              border: pathname.startsWith("/admin") ? "1px solid var(--cognac)" : "1px solid transparent",
               cursor: "pointer",
               padding: "2px",
               display: "grid",
@@ -180,7 +179,7 @@ export default function Header() {
               right: 0,
               width: "210px",
               background: "var(--surface)",
-              border: "1px solid var(--border)",
+              border: "1px solid var(--border-subtle)",
               borderRadius: "10px",
               padding: "6px",
               boxShadow: "0 4px 16px rgba(26,24,20,0.10)",
@@ -195,8 +194,8 @@ export default function Header() {
                   padding: "9px 10px",
                   borderRadius: "7px",
                   textDecoration: "none",
-                  color: pathname.startsWith("/admin") ? "var(--accent)" : "var(--ink)",
-                  background: pathname.startsWith("/admin") ? "var(--accent-soft)" : "transparent",
+                  color: pathname.startsWith("/admin") ? "var(--cognac-deep)" : "var(--ink)",
+                  background: pathname.startsWith("/admin") ? "var(--cognac-soft)" : "transparent",
                   fontSize: "12px",
                 }}
               >
@@ -232,12 +231,12 @@ function NavLink({ href, label, active }: { href: string; label: string; active:
     <Link
       href={href}
       style={{
-        padding: "5px 12px",
-        borderRadius: "6px",
-        fontSize: "12px",
+        padding: "6px 14px",
+        borderRadius: "var(--radius-pill)",
+        fontSize: "13px",
         fontWeight: active ? 500 : 400,
-        color: active ? "var(--accent)" : "var(--ink-3)",
-        background: active ? "var(--accent-soft)" : "transparent",
+        color: active ? "var(--cognac-deep)" : "var(--ink-3)",
+        background: active ? "var(--cognac-soft)" : "transparent",
         textDecoration: "none",
         transition: "all 0.1s",
       }}

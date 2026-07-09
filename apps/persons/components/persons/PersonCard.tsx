@@ -13,9 +13,9 @@ const MAX_TAGS = 3
 const CADENCE_DAYS: Record<number, number> = { 1: 0, 2: 90, 3: 21, 4: 10 }
 
 function urgencyColor(score: number, personColor: string | null | undefined): string {
-  if (score < 0.5) return personColor ?? "var(--accent)"
-  if (score < 1.0) return "#d4873a"
-  return "#c44040"
+  if (score < 0.5) return personColor ?? "var(--cognac)"
+  if (score < 1.0) return "var(--attention)"
+  return "var(--attention)"
 }
 
 export default function PersonCard({ person }: Props) {
@@ -29,24 +29,25 @@ export default function PersonCard({ person }: Props) {
     <Link href={`/people/${person.id}`} style={{ textDecoration: "none", display: "block" }}>
       <div style={{
         background: "var(--surface)",
-        border: "1px solid var(--border)",
-        borderRadius: "8px",
+        border: "1px solid transparent",
+        borderRadius: "var(--radius)",
+        boxShadow: "var(--shadow-sm)",
         padding: "14px 16px",
         display: "flex",
         alignItems: "center",
-        gap: "12px",
+        gap: "14px",
         cursor: "pointer",
-        transition: "border-color 0.1s, background 0.1s",
+        transition: "border-color 0.1s, box-shadow 0.1s",
       }}
       onMouseEnter={e => {
         const el = e.currentTarget as HTMLDivElement
-        el.style.borderColor = person.color ?? "var(--accent)"
-        el.style.background = "var(--surface)"
+        el.style.borderColor = "var(--cognac-soft)"
+        el.style.boxShadow = "var(--shadow)"
       }}
       onMouseLeave={e => {
         const el = e.currentTarget as HTMLDivElement
-        el.style.borderColor = "var(--border)"
-        el.style.background = "var(--surface)"
+        el.style.borderColor = "transparent"
+        el.style.boxShadow = "var(--shadow-sm)"
       }}>
         <PersonAvatar
           first={person.first}
@@ -57,7 +58,7 @@ export default function PersonCard({ person }: Props) {
 
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "2px" }}>
-            <span style={{ color: "var(--ink)", fontWeight: 500, fontSize: "13px" }}>
+            <span style={{ color: "var(--ink)", fontFamily: "var(--font-display)", fontWeight: 400, fontSize: "17px" }}>
               {person.first} {person.last}
             </span>
             {overdue && (
@@ -65,7 +66,7 @@ export default function PersonCard({ person }: Props) {
                 width: "6px",
                 height: "6px",
                 borderRadius: "50%",
-                background: "var(--accent)",
+                background: "var(--attention)",
                 display: "inline-block",
                 flexShrink: 0,
               }} title="Overdue to reach out" />
@@ -73,7 +74,7 @@ export default function PersonCard({ person }: Props) {
           </div>
 
           {(person.title || person.headline) && (
-            <div style={{ color: "var(--ink-3)", fontSize: "11px", marginBottom: "4px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+            <div style={{ color: "var(--ink-3)", fontSize: "12px", marginBottom: "4px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
               {person.title ?? person.headline}
               {person.title && person.company ? ` at ${person.company}` : ""}
             </div>
@@ -82,27 +83,25 @@ export default function PersonCard({ person }: Props) {
           <div style={{ display: "flex", alignItems: "center", gap: "6px", flexWrap: "wrap" }}>
             {tags.slice(0, MAX_TAGS).map((tag: string) => (
               <span key={tag} style={{
-                background: person.colorSoft ?? "var(--surface2)",
-                color: person.color ?? "var(--ink-2)",
-                borderRadius: "4px",
-                padding: "1px 7px",
-                fontSize: "10px",
-                fontWeight: 500,
-                letterSpacing: "0.02em",
+                background: person.colorSoft ?? "var(--cognac-soft)",
+                color: person.color ?? "var(--cognac-deep)",
+                borderRadius: "var(--radius-pill)",
+                padding: "3px 10px",
+                fontSize: "11px",
               }}>
                 {tag}
               </span>
             ))}
             {tags.length > MAX_TAGS && (
-              <span style={{ color: "var(--ink-4)", fontSize: "10px" }}>+{tags.length - MAX_TAGS}</span>
+              <span style={{ color: "var(--ink-4)", fontSize: "11px" }}>+{tags.length - MAX_TAGS}</span>
             )}
           </div>
         </div>
 
         <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "5px", flexShrink: 0 }}>
           <span style={{
-            color: overdue ? "#c44040" : "var(--ink-4)",
-            fontSize: "11px",
+            color: overdue ? "var(--attention)" : "var(--ink-4)",
+            fontSize: "12px",
           }}>
             {relativeTime(person.lastInteractionDate)}
           </span>

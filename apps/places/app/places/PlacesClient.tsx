@@ -164,10 +164,10 @@ export default function PlacesClient({ places, layers }: { places: PlaceMapItem[
   }
 
   return (
-    <div style={{ maxWidth: "1180px", margin: "0 auto", padding: "28px 24px 40px" }}>
+    <div style={{ width: "min(100%, 1180px)", margin: "0 auto", padding: "36px 24px 48px" }}>
       <header style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: "16px", marginBottom: "18px", flexWrap: "wrap" }}>
         <div>
-          <h1 style={{ fontFamily: "var(--font-display)", fontSize: "28px", fontWeight: 600, margin: 0, color: "var(--ink)" }}>Places</h1>
+          <h1 style={{ fontFamily: "var(--font-display)", fontSize: "28px", fontWeight: 400, letterSpacing: "-0.02em", margin: 0, color: "var(--ink)" }}>Places</h1>
           <div style={{ color: "var(--ink-3)", fontSize: "12px", marginTop: "4px" }}>
             {formatInteger(places.length)} {places.length === 1 ? "place" : "places"}
             {totalSpend(filtered) > 0 && ` · ${money(totalSpend(filtered))} recorded spend`}
@@ -180,13 +180,13 @@ export default function PlacesClient({ places, layers }: { places: PlaceMapItem[
               key={item.key}
               onClick={() => { setFilter(item.key); setSelectedId(null); setSelectedVisitId(null) }}
               style={{
-                padding: "6px 11px",
-                borderRadius: "7px",
-                border: `1px solid ${filter === item.key ? "var(--accent)" : "var(--border)"}`,
-                background: filter === item.key ? "var(--accent-soft)" : "transparent",
-                color: filter === item.key ? "var(--accent)" : "var(--ink-3)",
+                padding: "6px 13px",
+                borderRadius: "var(--radius-pill)",
+                border: `1px solid ${filter === item.key ? "var(--cognac-soft)" : "var(--border)"}`,
+                background: filter === item.key ? "var(--cognac-soft)" : "transparent",
+                color: filter === item.key ? "var(--cognac-deep)" : "var(--ink-3)",
                 fontFamily: "inherit",
-                fontSize: "11px",
+                fontSize: "13px",
                 cursor: "pointer",
               }}
             >
@@ -196,12 +196,12 @@ export default function PlacesClient({ places, layers }: { places: PlaceMapItem[
           <Link
             href="/places/import"
             style={{
-              padding: "7px 12px",
-              borderRadius: "7px",
-              border: "1px solid var(--accent)",
-              background: "var(--accent)",
+              padding: "9px 18px",
+              borderRadius: "var(--radius-pill)",
+              border: "1px solid var(--cognac)",
+              background: "var(--cognac)",
               color: "#fff",
-              fontSize: "11px",
+              fontSize: "13px",
               textDecoration: "none",
             }}
           >
@@ -211,7 +211,7 @@ export default function PlacesClient({ places, layers }: { places: PlaceMapItem[
       </header>
 
       {places.length === 0 ? (
-        <div style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "10px" }}>
+        <div style={{ background: "var(--surface)", border: "1px solid var(--border-subtle)", borderRadius: "var(--radius)", boxShadow: "var(--shadow-sm)" }}>
           <EmptyState
             icon="◎"
             title="No places yet"
@@ -226,8 +226,9 @@ export default function PlacesClient({ places, layers }: { places: PlaceMapItem[
               minHeight: "620px",
               position: "relative",
               overflow: "hidden",
-              border: "1px solid var(--border)",
-              borderRadius: "10px",
+              border: "1px solid var(--border-subtle)",
+              borderRadius: "var(--radius)",
+              boxShadow: "var(--shadow-sm)",
               background: "linear-gradient(180deg, #f8f6f0 0%, #ede9df 100%)",
             }}
           >
@@ -280,7 +281,7 @@ export default function PlacesClient({ places, layers }: { places: PlaceMapItem[
                 step={1}
                 value={zoom}
                 onChange={event => setZoom(Number(event.target.value))}
-                style={{ width: "108px", accentColor: "var(--accent)" }}
+                style={{ width: "108px", accentColor: "var(--cognac)" }}
               />
               <button
                 aria-label="Zoom in"
@@ -338,7 +339,7 @@ export default function PlacesClient({ places, layers }: { places: PlaceMapItem[
                       transform: "translate(-50%, -50%)",
                       borderRadius: "50%",
                       border: selectedMarker ? "2px solid var(--ink)" : "1px solid #ffffff",
-                      background: selectedMarker ? "var(--accent)" : color,
+                      background: selectedMarker ? "var(--cognac)" : color,
                       boxShadow: selectedMarker ? `0 0 0 8px ${color}2b` : "0 8px 20px rgba(26, 24, 20, 0.16)",
                       color: "#fff",
                       cursor: "pointer",
@@ -397,7 +398,7 @@ export default function PlacesClient({ places, layers }: { places: PlaceMapItem[
             ) : selected ? (
               <PlacePreview place={selected} />
             ) : (
-              <div style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "10px" }}>
+              <div style={{ background: "var(--surface)", border: "1px solid var(--border-subtle)", borderRadius: "var(--radius)", boxShadow: "var(--shadow-sm)" }}>
                 <EmptyState icon="◎" title="Select a place" subtitle="Markers open a preview before you jump into the full memory page." />
               </div>
             )}
@@ -409,15 +410,16 @@ export default function PlacesClient({ places, layers }: { places: PlaceMapItem[
                   style={{
                     textAlign: "left",
                     padding: "10px 12px",
-                    border: `1px solid ${selected?.id === place.id ? "var(--accent)" : "var(--border)"}`,
-                    borderRadius: "8px",
-                    background: selected?.id === place.id ? "var(--accent-soft)" : "var(--surface)",
+                    border: `1px solid ${selected?.id === place.id ? "var(--cognac-soft)" : "transparent"}`,
+                    borderRadius: "var(--radius)",
+                    boxShadow: "var(--shadow-sm)",
+                    background: selected?.id === place.id ? "var(--cognac-soft)" : "var(--surface)",
                     color: "var(--ink)",
                     fontFamily: "inherit",
                     cursor: "pointer",
                   }}
                 >
-                  <div style={{ fontSize: "12px", fontWeight: 600 }}>{place.favorite ? "★ " : ""}{place.name}</div>
+                  <div style={{ fontFamily: "var(--font-display)", fontSize: "17px", fontWeight: 400 }}>{place.favorite ? "★ " : ""}{place.name}</div>
                   <div style={{ fontSize: "10px", color: "var(--ink-4)", marginTop: "2px" }}>
                     {place.stats.visitCount} visits · {place.stats.personCount} people{place.stats.totalSpend ? ` · ${money(place.stats.totalSpend)}` : ""}
                   </div>
@@ -435,7 +437,7 @@ function PlacePreview({ place }: { place: PlaceMapItem }) {
   const coordinateLabel = coordinatesLabel(place)
   const googleMapsHref = mapHref(place)
   return (
-    <div style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "10px", overflow: "hidden" }}>
+    <div style={{ background: "var(--surface)", border: "1px solid var(--border-subtle)", borderRadius: "var(--radius)", boxShadow: "var(--shadow-sm)", overflow: "hidden" }}>
       <div style={{ height: "130px", background: "linear-gradient(135deg, #e9dfcf, #cdd4cf)", borderBottom: "1px solid var(--border)", position: "relative" }}>
         <div style={{ position: "absolute", left: "18px", bottom: "14px", color: "#fff", textShadow: "0 1px 14px rgba(0,0,0,0.35)", fontSize: "24px" }}>◎</div>
       </div>
@@ -865,8 +867,8 @@ function normalizePlaceType(value?: string) {
 
 function placeTypeColor(placeType?: string) {
   const palette: Record<string, string> = {
-    cafe: "#c4572a",
-    coffee: "#c4572a",
+    cafe: "var(--cognac)",
+    coffee: "var(--cognac)",
     restaurant: "#b85f35",
     bar: "#6f5ca8",
     store: "#3f7f6b",
@@ -884,7 +886,7 @@ function placeTypeColor(placeType?: string) {
 }
 
 function hashColor(value: string) {
-  const colors = ["#c4572a", "#3f7f6b", "#6f5ca8", "#8a6f3d", "#4f789e", "#b9475a", "#5f8b4c"]
+  const colors = ["var(--cognac)", "#3f7f6b", "#6f5ca8", "#8a6f3d", "#4f789e", "#b9475a", "#5f8b4c"]
   let hash = 0
   for (let i = 0; i < value.length; i++) hash = (hash * 31 + value.charCodeAt(i)) >>> 0
   return colors[hash % colors.length]

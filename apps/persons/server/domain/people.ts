@@ -30,6 +30,8 @@ export type PersonInput = {
   linkedin?: unknown
   twitter?: unknown
   website?: unknown
+  facebook?: unknown
+  instagram?: unknown
   color?: unknown
   colorSoft?: unknown
 }
@@ -63,6 +65,8 @@ export async function createPerson(input: PersonInput, actor?: DomainActor) {
       linkedin: optionalString(input.linkedin),
       twitter: optionalString(input.twitter),
       website: optionalString(input.website),
+      facebook: optionalString(input.facebook),
+      instagram: optionalString(input.instagram),
       color: typeof input.color === "string" && input.color ? input.color : assigned.color,
       colorSoft: typeof input.colorSoft === "string" && input.colorSoft ? input.colorSoft : assigned.colorSoft,
     },
@@ -101,6 +105,8 @@ export async function updatePerson(id: string, input: PersonInput, actor?: Domai
   if (input.linkedin !== undefined) patch.linkedin = optionalString(input.linkedin)
   if (input.twitter !== undefined) patch.twitter = optionalString(input.twitter)
   if (input.website !== undefined) patch.website = optionalString(input.website)
+  if (input.facebook !== undefined) patch.facebook = optionalString(input.facebook)
+  if (input.instagram !== undefined) patch.instagram = optionalString(input.instagram)
 
   const existing = await db.person.findFirst({ where: { id, workspaceId }, select: { id: true } })
   if (!existing) throw notFound("Person not found", { id })

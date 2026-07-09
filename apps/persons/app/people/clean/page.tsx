@@ -141,7 +141,7 @@ export default function DataCleaningPage() {
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "16px", marginBottom: "22px" }}>
         <div>
           <Link href="/people" style={{ color: "var(--ink-4)", fontSize: "11px", textDecoration: "none" }}>← People</Link>
-          <h1 style={{ fontFamily: "var(--font-playfair), serif", fontSize: "28px", fontWeight: 600, color: "var(--ink)", margin: "6px 0 0" }}>
+          <h1 style={{ fontFamily: "var(--font-display), serif", fontSize: "28px", fontWeight: 600, color: "var(--ink)", margin: "6px 0 0" }}>
             Data Cleaning
             {stats && <span style={{ fontSize: "14px", fontWeight: 400, color: "var(--ink-4)", marginLeft: "10px" }}>{stats.needsCleanup.toLocaleString()}</span>}
           </h1>

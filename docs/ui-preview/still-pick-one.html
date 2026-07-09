@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Still — Pick Your Version</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Newsreader:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: #1a1814;
+      color: #e8e4dc;
+      padding: 48px 32px 80px;
+      -webkit-font-smoothing: antialiased;
+    }
+    h1 {
+      font-family: 'Newsreader', Georgia, serif;
+      font-size: 2rem;
+      font-weight: 400;
+      text-align: center;
+      margin-bottom: 8px;
+    }
+    .sub {
+      text-align: center;
+      color: #8a847c;
+      font-size: 14px;
+      margin-bottom: 40px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 16px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    a.card {
+      display: block;
+      text-decoration: none;
+      color: inherit;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 2px solid #3a3835;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    a.card:hover {
+      border-color: #8f6b4a;
+      transform: translateY(-3px);
+    }
+    .thumb {
+      height: 140px;
+      display: flex;
+      align-items: flex-end;
+      padding: 16px;
+      font-family: 'Newsreader', serif;
+      font-size: 22px;
+    }
+    .info {
+      padding: 16px;
+      background: #2a2620;
+    }
+    .info .ver {
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #8f6b4a;
+      margin-bottom: 6px;
+    }
+    .info p {
+      font-size: 12px;
+      color: #8a847c;
+      line-height: 1.6;
+    }
+    .info .pick {
+      display: inline-block;
+      margin-top: 12px;
+      font-size: 11px;
+      color: #c4a574;
+    }
+
+    /* Thumbnail previews */
+    .t2 { background: linear-gradient(160deg, #e9e3d8 0%, #f7f4ee 50%, #1a2a35 100%); color: #2c2620; }
+    .t3 { background: linear-gradient(160deg, #f7edd8 0%, #f3ece2 50%, #b8956a 100%); color: #3a342c; }
+    .t4 { background: linear-gradient(160deg, #152228 0%, #e6dfd4 40%, #8f5e35 100%); color: #f5f1ea; }
+
+    .matrix {
+      max-width: 1100px;
+      margin: 48px auto 0;
+      border: 1px solid #3a3835;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+    th, td {
+      padding: 12px 16px;
+      text-align: left;
+      border-bottom: 1px solid #3a3835;
+    }
+    th {
+      background: #2a2620;
+      color: #8a847c;
+      font-weight: 500;
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    td { color: #c5c0b8; }
+    td:first-child { color: #e8e4dc; font-weight: 500; }
+    tr:last-child td { border-bottom: none; }
+    .hi { color: #c4a574; }
+  </style>
+</head>
+<body>
+
+  <h1>Pick your Still</h1>
+  <p class="sub">Four versions · same bones · different personality · click to open full preview</p>
+
+  <div class="grid">
+    <a class="card" href="still-direction-v2.html" target="_blank">
+      <div class="thumb t2">Still v2</div>
+      <div class="info">
+        <div class="ver">v2 · Balanced</div>
+        <p>Light canvas + petrol inbox card. Cognac &amp; camel accents. The first fashion-informed draft you loved.</p>
+        <span class="pick">Open preview →</span>
+      </div>
+    </a>
+    <a class="card" href="still-direction-v3-linen.html" target="_blank">
+      <div class="thumb t3">Still v3</div>
+      <div class="info">
+        <div class="ver">v3 · Linen</div>
+        <p>All light. Camel leads. No dark panels. European summer — breezy and gold.</p>
+        <span class="pick">Open preview →</span>
+      </div>
+    </a>
+    <a class="card" href="still-direction-v4-tailored.html" target="_blank">
+      <div class="thumb t4">Still v4</div>
+      <div class="info">
+        <div class="ver">v4 · Tailored</div>
+        <p>Petrol nav + inbox. Cognac punch. Dark structure up top. The Gentlemen energy.</p>
+        <span class="pick">Open preview →</span>
+      </div>
+    </a>
+  </div>
+
+  <div class="matrix">
+    <table>
+      <thead>
+        <tr>
+          <th></th>
+          <th>v2 Balanced</th>
+          <th>v3 Linen</th>
+          <th>v4 Tailored</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Primary accent</td>
+          <td class="hi">Cognac</td>
+          <td class="hi">Camel</td>
+          <td class="hi">Cognac (deeper)</td>
+        </tr>
+        <tr>
+          <td>Dark elements</td>
+          <td>Inbox card only</td>
+          <td>None</td>
+          <td>Nav + inbox</td>
+        </tr>
+        <tr>
+          <td>Corner radius</td>
+          <td>10px</td>
+          <td>12px (softest)</td>
+          <td>8px (sharpest)</td>
+        </tr>
+        <tr>
+          <td>Density</td>
+          <td>Medium</td>
+          <td>Most airy</td>
+          <td>Most compact</td>
+        </tr>
+        <tr>
+          <td>Fashion pin</td>
+          <td>Full wardrobe</td>
+          <td>Italian summer linen</td>
+          <td>Moto + autumn suiting</td>
+        </tr>
+        <tr>
+          <td>Energy</td>
+          <td>Warm &amp; composed</td>
+          <td>Relaxed &amp; sunny</td>
+          <td>Structured &amp; confident</td>
+        </tr>
+        <tr>
+          <td>Best for</td>
+          <td>All-around daily use</td>
+          <td>Reading, calm sessions</td>
+          <td>Processing, power use</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</body>
+</html>

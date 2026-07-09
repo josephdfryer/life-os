@@ -14,6 +14,7 @@
     "capture:calls": "tsx scripts/capture/calls.ts",
     "capture:all": "npm run capture:whatsapp && npm run capture:calls",
     "krisp:sync": "tsx scripts/krisp/sync.ts",
+    "backup:people": "tsx scripts/backup-people.ts",
     "synthesis:run": "tsx scripts/synthesis/pipeline.ts",
     "brief:generate": "tsx scripts/brief/generate.ts",
     "brief:execute": "tsx scripts/brief/execute.ts",

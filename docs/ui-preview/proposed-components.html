@@ -1,0 +1,1323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Life OS — UI Component Preview</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Warm Concrete tokens (current Life OS) ── */
+    :root {
+      --bg: #f5f2ec;
+      --surface: #faf8f4;
+      --surface2: #eeebe3;
+      --surface-raised: #fdfcfa;
+      --border: #ddd9cf;
+      --separator: #ddd9cf;
+      --ink: #1a1814;
+      --ink-2: #4a4640;
+      --ink-3: #8a8680;
+      --ink-4: #b8b4ae;
+      --accent: #c4572a;
+      --accent-soft: #f5ede8;
+      --status-done: #b8b4ae;
+      --status-watch-text: #8a7060;
+      --status-watch-bg: #fef5ee;
+      --status-pending-bg: #f0ede8;
+      --font-display: 'Playfair Display', serif;
+      --font-mono: 'DM Mono', monospace;
+      --radius: 0px; /* current: square corners */
+      --radius-proposed: 6px; /* shadcn-adapted: subtle rounding */
+      --shadow-sm: 0 1px 2px rgba(26, 24, 20, 0.04);
+      --shadow-md: 0 4px 16px rgba(26, 24, 20, 0.08);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--font-mono);
+      font-size: 13px;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Page shell ── */
+    .page-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .page-header h1 {
+      font-family: var(--font-display);
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+
+    .page-header .meta {
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--ink-4);
+    }
+
+    .nav-pills {
+      display: flex;
+      gap: 4px;
+      flex-wrap: wrap;
+    }
+
+    .nav-pill {
+      padding: 5px 12px;
+      border-radius: var(--radius-proposed);
+      font-size: 11px;
+      color: var(--ink-3);
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      font-family: inherit;
+      text-decoration: none;
+      transition: all 0.12s;
+    }
+
+    .nav-pill:hover, .nav-pill.active {
+      color: var(--accent);
+      background: var(--accent-soft);
+    }
+
+    main {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 48px 32px 80px;
+    }
+
+    section {
+      margin-bottom: 72px;
+      scroll-margin-top: 72px;
+    }
+
+    .section-label {
+      font-size: 9px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--ink-4);
+      margin-bottom: 8px;
+    }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-size: 28px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+
+    .section-desc {
+      color: var(--ink-3);
+      max-width: 640px;
+      margin-bottom: 32px;
+      line-height: 1.7;
+    }
+
+    .compare-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    @media (max-width: 760px) {
+      .compare-grid { grid-template-columns: 1fr; }
+      main { padding: 32px 20px 60px; }
+    }
+
+    .panel {
+      border: 1px solid var(--border);
+      background: var(--surface);
+    }
+
+    .panel-header {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--separator);
+      font-size: 9px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--ink-4);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .panel-header .tag {
+      font-size: 8px;
+      padding: 2px 8px;
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+
+    .panel-header .tag.current { background: var(--status-pending-bg); color: var(--ink-3); }
+
+    .panel-body { padding: 24px; }
+
+    /* ── Current @life-os/ui components ── */
+    .btn {
+      font-family: var(--font-mono);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      border-radius: var(--radius);
+      transition: opacity 0.12s;
+      border: 1px solid transparent;
+    }
+
+    .btn-md { padding: 8px 16px; font-size: 11px; }
+    .btn-sm { padding: 5px 12px; font-size: 9px; }
+    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-ghost { background: transparent; color: var(--ink-3); border-color: var(--border); }
+    .btn-danger { background: var(--accent-soft); color: var(--accent); border-color: var(--accent); }
+
+    .btn-proposed {
+      border-radius: var(--radius-proposed);
+      transition: background 0.12s, border-color 0.12s, box-shadow 0.12s;
+    }
+
+    .btn-proposed.btn-ghost:hover { background: var(--surface2); border-color: var(--ink-4); }
+    .btn-proposed.btn-primary:hover { filter: brightness(1.05); box-shadow: var(--shadow-sm); }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--separator);
+    }
+
+    .card-title {
+      font-size: 9px;
+      letter-spacing: 0.14em;
+      color: var(--ink-4);
+      text-transform: uppercase;
+    }
+
+    .card-body { padding: 16px; }
+
+    .input-current, .input-proposed {
+      display: flex;
+      align-items: center;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      padding: 0 10px;
+      gap: 8px;
+      width: 100%;
+      transition: border-color 0.12s, box-shadow 0.12s;
+    }
+
+    .input-current input, .input-proposed input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 300;
+      color: var(--ink-2);
+      padding: 8px 0;
+    }
+
+    .input-proposed {
+      border-radius: var(--radius-proposed);
+    }
+
+    .input-proposed:focus-within {
+      border-color: var(--ink-4);
+      box-shadow: 0 0 0 2px var(--accent-soft);
+    }
+
+    .badge {
+      font-size: 8px;
+      letter-spacing: 0.06em;
+      padding: 3px 8px;
+      display: inline-block;
+      text-transform: lowercase;
+    }
+
+    .badge-accent { color: var(--accent); background: var(--accent-soft); }
+    .badge-muted { color: var(--ink-4); background: var(--status-pending-bg); }
+
+    .avatar {
+      border-radius: 50%;
+      background: var(--surface2);
+      display: grid;
+      place-items: center;
+      font-size: 11px;
+      color: var(--ink-3);
+      font-weight: 500;
+      flex-shrink: 0;
+    }
+
+    .avatar-md { width: 40px; height: 40px; }
+    .avatar-sm { width: 28px; height: 28px; font-size: 9px; }
+
+    /* ── Proposed: App shell mock ── */
+    .app-shell {
+      border: 1px solid var(--border);
+      background: var(--surface);
+      overflow: hidden;
+    }
+
+    .topnav {
+      height: 52px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      padding: 0 24px;
+      gap: 32px;
+    }
+
+    .topnav-brand {
+      font-family: var(--font-display);
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--ink);
+      text-decoration: none;
+    }
+
+    .topnav-links { display: flex; gap: 4px; }
+
+    .topnav-link {
+      padding: 5px 12px;
+      border-radius: var(--radius-proposed);
+      font-size: 12px;
+      color: var(--ink-3);
+      text-decoration: none;
+      transition: all 0.1s;
+    }
+
+    .topnav-link.active {
+      color: var(--accent);
+      background: var(--accent-soft);
+      font-weight: 500;
+    }
+
+    .topnav-right { margin-left: auto; position: relative; }
+
+    .dropdown-trigger {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: transparent;
+      cursor: pointer;
+      padding: 2px;
+      display: grid;
+      place-items: center;
+    }
+
+    .dropdown-menu {
+      position: absolute;
+      top: calc(100% + 8px);
+      right: 0;
+      width: 210px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 6px;
+      box-shadow: var(--shadow-md);
+      display: none;
+      z-index: 50;
+      animation: slideUp 0.12s ease;
+    }
+
+    .dropdown-menu.open { display: block; }
+
+    .dropdown-item {
+      display: block;
+      width: 100%;
+      text-align: left;
+      padding: 9px 10px;
+      border-radius: 7px;
+      font-size: 12px;
+      color: var(--ink);
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      font-family: inherit;
+      text-decoration: none;
+      transition: background 0.1s;
+    }
+
+    .dropdown-item:hover { background: var(--surface2); }
+
+    .shell-content {
+      padding: 24px;
+      background: var(--bg);
+      min-height: 200px;
+    }
+
+    /* ── Proposed: Person card ── */
+    .person-card {
+      display: flex;
+      gap: 14px;
+      padding: 16px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      border-radius: var(--radius-proposed);
+      transition: border-color 0.14s;
+      cursor: pointer;
+    }
+
+    .person-card:hover { border-color: var(--accent); }
+
+    .person-card h3 {
+      font-family: var(--font-display);
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .person-card .sub { font-size: 11px; color: var(--ink-3); }
+
+    /* ── Proposed: Data table ── */
+    .table-wrap {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-proposed);
+      overflow: hidden;
+      background: var(--surface);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+
+    th {
+      text-align: left;
+      padding: 10px 14px;
+      font-size: 9px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--ink-4);
+      background: var(--surface2);
+      border-bottom: 1px solid var(--border);
+      font-weight: 400;
+    }
+
+    td {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--separator);
+      color: var(--ink-2);
+    }
+
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: var(--surface-raised); }
+
+    /* ── Proposed: Dialog ── */
+    .dialog-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(26, 24, 20, 0.5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 200;
+      animation: fadeIn 0.15s ease;
+    }
+
+    .dialog-backdrop.open { display: flex; }
+
+    .dialog {
+      width: min(480px, 92vw);
+      max-height: 85vh;
+      overflow-y: auto;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      box-shadow: var(--shadow-md);
+      animation: slideUp 0.2s ease;
+    }
+
+    .dialog-header {
+      padding: 20px 24px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .dialog-header h2 {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 600;
+    }
+
+    .dialog-close {
+      background: transparent;
+      border: none;
+      color: var(--ink-4);
+      cursor: pointer;
+      font-size: 18px;
+      line-height: 1;
+      padding: 4px;
+    }
+
+    .dialog-body { padding: 20px 24px; }
+
+    .dialog-footer {
+      padding: 16px 24px 20px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      border-top: 1px solid var(--separator);
+    }
+
+    .form-row { margin-bottom: 16px; }
+
+    .form-label {
+      display: block;
+      font-size: 9px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--ink-4);
+      margin-bottom: 6px;
+    }
+
+    .form-input {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-proposed);
+      padding: 8px 12px;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: var(--ink);
+      outline: none;
+      transition: border-color 0.12s, box-shadow 0.12s;
+    }
+
+    .form-input:focus {
+      border-color: var(--ink-4);
+      box-shadow: 0 0 0 2px var(--accent-soft);
+    }
+
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+    /* ── Proposed: Tabs ── */
+    .tabs-list {
+      display: flex;
+      gap: 0;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 20px;
+    }
+
+    .tab {
+      padding: 8px 16px;
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--ink-4);
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid transparent;
+      cursor: pointer;
+      font-family: inherit;
+      margin-bottom: -1px;
+      transition: all 0.12s;
+    }
+
+    .tab.active {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+    }
+
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* ── Proposed: Toast ── */
+    .toast-demo-area {
+      position: relative;
+      min-height: 80px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: flex-end;
+    }
+
+    .toast {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 2px solid var(--accent);
+      padding: 10px 14px;
+      min-width: 240px;
+      border-radius: var(--radius-proposed);
+      box-shadow: var(--shadow-md);
+    }
+
+    .toast.success { border-left-color: var(--status-done); }
+    .toast .toast-label {
+      font-size: 8px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+
+    .toast.success .toast-label { color: var(--status-done); }
+
+    /* ── Proposed: Command palette ── */
+    .command {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--surface);
+      box-shadow: var(--shadow-md);
+      overflow: hidden;
+      max-width: 520px;
+    }
+
+    .command-input-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--separator);
+    }
+
+    .command-input-wrap input {
+      flex: 1;
+      border: none;
+      outline: none;
+      background: transparent;
+      font-family: var(--font-mono);
+      font-size: 14px;
+      color: var(--ink);
+    }
+
+    .command-group-label {
+      padding: 8px 16px 4px;
+      font-size: 9px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--ink-4);
+    }
+
+    .command-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 16px;
+      cursor: pointer;
+      transition: background 0.1s;
+    }
+
+    .command-item:hover, .command-item.selected { background: var(--accent-soft); }
+
+    .command-item kbd {
+      font-size: 9px;
+      color: var(--ink-4);
+      background: var(--surface2);
+      padding: 2px 6px;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+    }
+
+    /* ── Dark theme (Home app) ── */
+    .dark-panel {
+      background: #0d0d0d;
+      color: #fff;
+      border-color: #27272a;
+      border-radius: 24px;
+      padding: 32px;
+    }
+
+    .dark-panel h2 {
+      font-family: var(--font-display);
+      font-size: 1.4rem;
+      font-weight: 600;
+      margin-bottom: 24px;
+    }
+
+    .dark-stat {
+      font-family: var(--font-mono);
+      font-size: 3rem;
+      font-weight: 500;
+      line-height: 1;
+    }
+
+    .dark-muted { color: #a1a1aa; }
+    .dark-subtle { color: #71717a; }
+
+    .dark-card {
+      background: rgba(24, 24, 27, 0.5);
+      border: 1px solid #27272a;
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 12px;
+    }
+
+    /* ── Token swatches ── */
+    .swatches {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .swatch {
+      width: 72px;
+      text-align: center;
+    }
+
+    .swatch-color {
+      width: 72px;
+      height: 48px;
+      border: 1px solid var(--border);
+      margin-bottom: 6px;
+    }
+
+    .swatch-name {
+      font-size: 9px;
+      color: var(--ink-4);
+      letter-spacing: 0.04em;
+    }
+
+    /* ── Library cards ── */
+    .lib-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 16px;
+    }
+
+    .lib-card {
+      border: 1px solid var(--border);
+      background: var(--surface);
+      padding: 20px;
+      border-radius: var(--radius-proposed);
+      transition: border-color 0.14s;
+    }
+
+    .lib-card:hover { border-color: var(--accent); }
+
+    .lib-card h3 {
+      font-family: var(--font-display);
+      font-size: 16px;
+      margin-bottom: 4px;
+    }
+
+    .lib-card .stars {
+      font-size: 10px;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+
+    .lib-card p {
+      font-size: 11px;
+      color: var(--ink-3);
+      line-height: 1.6;
+    }
+
+    .lib-card .tier {
+      display: inline-block;
+      margin-top: 12px;
+      font-size: 8px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+
+    .lib-card .tier.t2 { background: var(--status-pending-bg); color: var(--ink-3); }
+
+    .row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+    .spacer { height: 16px; }
+
+    .icon { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+    .verdict {
+      border: 1px solid var(--accent);
+      background: var(--accent-soft);
+      padding: 24px;
+      border-radius: var(--radius-proposed);
+    }
+
+    .verdict h3 {
+      font-family: var(--font-display);
+      font-size: 20px;
+      margin-bottom: 8px;
+      color: var(--accent);
+    }
+
+    .verdict p { color: var(--ink-2); line-height: 1.7; }
+  </style>
+</head>
+<body>
+
+  <header class="page-header">
+    <div>
+      <h1>Life OS UI Preview</h1>
+      <div class="meta">Proposed component system · Warm Concrete + shadcn</div>
+    </div>
+    <nav class="nav-pills">
+      <a class="nav-pill active" href="#overview">Overview</a>
+      <a class="nav-pill" href="#tokens">Tokens</a>
+      <a class="nav-pill" href="#primitives">Primitives</a>
+      <a class="nav-pill" href="#patterns">Patterns</a>
+      <a class="nav-pill" href="#libraries">Libraries</a>
+      <a class="nav-pill" href="#verdict">Verdict</a>
+    </nav>
+  </header>
+
+  <main>
+
+    <!-- OVERVIEW -->
+    <section id="overview">
+      <div class="section-label">Section 01</div>
+      <h2 class="section-title">What this page shows</h2>
+      <p class="section-desc">
+        A visual preview of adopting <strong>shadcn/ui + Radix primitives</strong> themed to your existing
+        Warm Concrete design system. Left columns show what you have today in <code>@life-os/ui</code>;
+        right columns show the proposed evolution — same palette, same fonts, but with accessible
+        interactive components you'd pull in instead of hand-rolling.
+      </p>
+
+      <div class="compare-grid">
+        <div class="panel">
+          <div class="panel-header">Today <span class="tag current">inline styles</span></div>
+          <div class="panel-body">
+            <p style="color: var(--ink-3); font-size: 12px; line-height: 1.7; margin-bottom: 16px;">
+              ~1,500 inline <code>style={{}}</code> blocks across apps. Headers duplicated 4×.
+              Modals built from scratch. No shared Dialog, Dropdown, or Table.
+            </p>
+            <div class="row">
+              <button class="btn btn-md btn-primary">Save</button>
+              <button class="btn btn-md btn-ghost">Cancel</button>
+            </div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-header">Proposed <span class="tag">shadcn + tokens</span></div>
+          <div class="panel-body">
+            <p style="color: var(--ink-3); font-size: 12px; line-height: 1.7; margin-bottom: 16px;">
+              Components live in <code>packages/ui</code>, copy-paste owned by you. Radix handles
+              focus traps, keyboard nav, ARIA. Tailwind utilities replace most inline styles.
+            </p>
+            <div class="row">
+              <button class="btn btn-md btn-primary btn-proposed">Save</button>
+              <button class="btn btn-md btn-ghost btn-proposed">Cancel</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TOKENS -->
+    <section id="tokens">
+      <div class="section-label">Section 02</div>
+      <h2 class="section-title">Design tokens — unchanged</h2>
+      <p class="section-desc">
+        The proposal keeps your existing palette. shadcn CSS variables would map to these —
+        not replace your aesthetic.
+      </p>
+      <div class="swatches">
+        <div class="swatch"><div class="swatch-color" style="background: var(--bg)"></div><div class="swatch-name">--bg</div></div>
+        <div class="swatch"><div class="swatch-color" style="background: var(--surface)"></div><div class="swatch-name">--surface</div></div>
+        <div class="swatch"><div class="swatch-color" style="background: var(--surface2)"></div><div class="swatch-name">--surface2</div></div>
+        <div class="swatch"><div class="swatch-color" style="background: var(--border)"></div><div class="swatch-name">--border</div></div>
+        <div class="swatch"><div class="swatch-color" style="background: var(--ink)"></div><div class="swatch-name">--ink</div></div>
+        <div class="swatch"><div class="swatch-color" style="background: var(--ink-3)"></div><div class="swatch-name">--ink-3</div></div>
+        <div class="swatch"><div class="swatch-color" style="background: var(--accent)"></div><div class="swatch-name">--accent</div></div>
+        <div class="swatch"><div class="swatch-color" style="background: var(--accent-soft)"></div><div class="swatch-name">--accent-soft</div></div>
+      </div>
+      <div class="spacer"></div>
+      <p style="font-size: 12px; color: var(--ink-3);">
+        Fonts: <span style="font-family: var(--font-display); font-size: 16px;">Playfair Display</span> (headings) ·
+        <span style="font-family: var(--font-mono);">DM Mono</span> (body, labels, UI chrome)
+      </p>
+    </section>
+
+    <!-- PRIMITIVES -->
+    <section id="primitives">
+      <div class="section-label">Section 03</div>
+      <h2 class="section-title">Primitives</h2>
+      <p class="section-desc">Existing @life-os/ui components vs. proposed shadcn equivalents, themed identically.</p>
+
+      <div class="compare-grid" style="margin-bottom: 32px;">
+        <div class="panel">
+          <div class="panel-header">Buttons — current</div>
+          <div class="panel-body">
+            <div class="row">
+              <button class="btn btn-md btn-primary">Primary</button>
+              <button class="btn btn-md btn-ghost">Ghost</button>
+              <button class="btn btn-sm btn-danger">Danger</button>
+            </div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-header">Buttons — proposed <span class="tag">+ hover/focus</span></div>
+          <div class="panel-body">
+            <div class="row">
+              <button class="btn btn-md btn-primary btn-proposed">Primary</button>
+              <button class="btn btn-md btn-ghost btn-proposed">Ghost</button>
+              <button class="btn btn-sm btn-danger btn-proposed">Danger</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="compare-grid" style="margin-bottom: 32px;">
+        <div class="panel">
+          <div class="panel-header">Input — current</div>
+          <div class="panel-body">
+            <div class="input-current">
+              <svg class="icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+              <input placeholder="Search accounts…" />
+            </div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-header">Input — proposed <span class="tag">+ focus ring</span></div>
+          <div class="panel-body">
+            <div class="input-proposed">
+              <svg class="icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+              <input placeholder="Search accounts…" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="compare-grid">
+        <div class="panel">
+          <div class="panel-header">Card + badges — current</div>
+          <div class="panel-body">
+            <div class="card">
+              <div class="card-header"><span class="card-title">Contact</span></div>
+              <div class="card-body">
+                <div style="display: flex; gap: 12px; align-items: center;">
+                  <div class="avatar avatar-md">KL</div>
+                  <div>
+                    <div style="font-family: var(--font-display); font-size: 16px; font-weight: 600;">Kenji Lee</div>
+                    <div style="font-size: 11px; color: var(--ink-3);">VP Engineering · Meridian</div>
+                  </div>
+                </div>
+                <div class="spacer"></div>
+                <span class="badge badge-accent">close</span>
+                <span class="badge badge-muted" style="margin-left: 6px;">42d ago</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-header">Card — proposed <span class="tag">subtle radius</span></div>
+          <div class="panel-body">
+            <div class="card" style="border-radius: var(--radius-proposed);">
+              <div class="card-header"><span class="card-title">Contact</span>
+                <button class="btn btn-sm btn-ghost btn-proposed">Edit</button>
+              </div>
+              <div class="card-body">
+                <div style="display: flex; gap: 12px; align-items: center;">
+                  <div class="avatar avatar-md">KL</div>
+                  <div>
+                    <div style="font-family: var(--font-display); font-size: 16px; font-weight: 600;">Kenji Lee</div>
+                    <div style="font-size: 11px; color: var(--ink-3);">VP Engineering · Meridian</div>
+                  </div>
+                </div>
+                <div class="spacer"></div>
+                <span class="badge badge-accent">close</span>
+                <span class="badge badge-muted" style="margin-left: 6px;">42d ago</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PATTERNS -->
+    <section id="patterns">
+      <div class="section-label">Section 04</div>
+      <h2 class="section-title">App patterns</h2>
+      <p class="section-desc">
+        The highest-ROI wins: components you rebuild in every app today, replaced by one shared implementation.
+        Click the buttons to interact.
+      </p>
+
+      <!-- App shell -->
+      <div class="panel" style="margin-bottom: 32px;">
+        <div class="panel-header">Unified App Shell <span class="tag">replaces 4 Header.tsx files</span></div>
+        <div class="panel-body" style="padding: 0;">
+          <div class="app-shell">
+            <div class="topnav">
+              <a class="topnav-brand" href="#">Persons</a>
+              <div class="topnav-links">
+                <a class="topnav-link active" href="#">Today</a>
+                <a class="topnav-link" href="#">People</a>
+                <a class="topnav-link" href="#">Inbox</a>
+                <a class="topnav-link" href="#">Import ▾</a>
+              </div>
+              <div class="topnav-right">
+                <button class="dropdown-trigger" id="avatarBtn" aria-label="Profile menu">
+                  <div class="avatar avatar-sm">JF</div>
+                </button>
+                <div class="dropdown-menu" id="profileMenu">
+                  <a class="dropdown-item" href="#">Admin</a>
+                  <button class="dropdown-item" style="color: var(--ink-3);">Sign out</button>
+                </div>
+              </div>
+            </div>
+            <div class="shell-content">
+              <div class="person-card">
+                <div class="avatar avatar-md">AM</div>
+                <div>
+                  <h3>Amara Mensah</h3>
+                  <div class="sub">Product Lead · Accra</div>
+                  <div class="spacer" style="height: 8px;"></div>
+                  <span class="badge badge-accent">inner circle</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dialog -->
+      <div class="compare-grid" style="margin-bottom: 32px;">
+        <div class="panel">
+          <div class="panel-header">Dialog <span class="tag">shadcn Dialog + Radix</span></div>
+          <div class="panel-body">
+            <p style="font-size: 12px; color: var(--ink-3); margin-bottom: 16px;">
+              Replaces EditPersonModal, AddPersonModal, LogInteractionModal, etc.
+              Focus trap, Escape to close, scroll lock — free from Radix.
+            </p>
+            <button class="btn btn-md btn-primary btn-proposed" id="openDialog">Open edit person dialog</button>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-header">Data table <span class="tag">TanStack + shadcn Table</span></div>
+          <div class="panel-body" style="padding: 0;">
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Company</th>
+                    <th>Last contact</th>
+                    <th>Closeness</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td style="font-weight: 500; color: var(--ink);">Kenji Lee</td>
+                    <td>Meridian</td>
+                    <td>3d ago</td>
+                    <td><span class="badge badge-accent">close</span></td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight: 500; color: var(--ink);">Amara Mensah</td>
+                    <td>—</td>
+                    <td>42d ago</td>
+                    <td><span class="badge badge-muted">acquaintance</span></td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight: 500; color: var(--ink);">Sofia Ruiz</td>
+                    <td>Northwind</td>
+                    <td>1w ago</td>
+                    <td><span class="badge badge-accent">friend</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabs + Toast + Command -->
+      <div class="compare-grid" style="margin-bottom: 32px;">
+        <div class="panel">
+          <div class="panel-header">Tabs <span class="tag">Person detail sections</span></div>
+          <div class="panel-body">
+            <div class="tabs-list">
+              <button class="tab active" data-tab="interactions">Interactions</button>
+              <button class="tab" data-tab="plans">Plans</button>
+              <button class="tab" data-tab="notes">Notes</button>
+            </div>
+            <div class="tab-panel active" id="tab-interactions">
+              <p style="color: var(--ink-3); font-size: 12px;">Coffee at Sightglass · 3 days ago</p>
+            </div>
+            <div class="tab-panel" id="tab-plans">
+              <p style="color: var(--ink-3); font-size: 12px;">Dinner next month · pending</p>
+            </div>
+            <div class="tab-panel" id="tab-notes">
+              <p style="color: var(--ink-3); font-size: 12px;">Met through Yuki. Interested in the synthesis pipeline.</p>
+            </div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-header">Toast <span class="tag">Sonner</span></div>
+          <div class="panel-body">
+            <div class="toast-demo-area">
+              <div class="toast success" id="toast" style="display: none;">
+                <span class="toast-label">ok</span>
+                <span style="font-size: 12px; color: var(--ink-2);">Person saved.</span>
+              </div>
+            </div>
+            <div class="spacer"></div>
+            <button class="btn btn-md btn-ghost btn-proposed" id="showToast">Show toast</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Command palette -->
+      <div class="panel" style="margin-bottom: 32px;">
+        <div class="panel-header">Command palette <span class="tag">cmdk — cross-app navigation</span></div>
+        <div class="panel-body">
+          <div class="command">
+            <div class="command-input-wrap">
+              <svg class="icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+              <input placeholder="Search people, places, go to app…" value="ken" />
+            </div>
+            <div class="command-group-label">People</div>
+            <div class="command-item selected">
+              <span>Kenji Lee</span>
+              <span style="font-size: 11px; color: var(--ink-4);">Meridian</span>
+            </div>
+            <div class="command-item">
+              <span>Kendra Wu</span>
+              <span style="font-size: 11px; color: var(--ink-4);">Northwind</span>
+            </div>
+            <div class="command-group-label">Apps</div>
+            <div class="command-item">
+              <span>Go to Inbox</span>
+              <kbd>↵</kbd>
+            </div>
+            <div class="command-item">
+              <span>Go to Events</span>
+              <kbd>↵</kbd>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Home dark theme -->
+      <div class="panel">
+        <div class="panel-header">Home dashboard — separate theme <span class="tag current">unchanged for now</span></div>
+        <div class="panel-body">
+          <p style="font-size: 12px; color: var(--ink-3); margin-bottom: 20px;">
+            The Home app uses a dark zinc palette. The proposal keeps this as a second token set in
+            <code>packages/ui</code> rather than forcing warm concrete everywhere.
+          </p>
+          <div class="dark-panel">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+              <h2>Inbox</h2>
+              <div style="text-align: right;">
+                <div class="dark-stat">12</div>
+                <div class="dark-subtle" style="font-size: 11px;">pending</div>
+              </div>
+            </div>
+            <div class="dark-card">
+              <span class="dark-muted">gmail</span>
+              <span style="float: right; font-family: var(--font-mono);">8</span>
+            </div>
+            <div class="dark-card">
+              <span class="dark-muted">imessage</span>
+              <span style="float: right; font-family: var(--font-mono);">4</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- LIBRARIES -->
+    <section id="libraries">
+      <div class="section-label">Section 05</div>
+      <h2 class="section-title">Recommended libraries</h2>
+      <p class="section-desc">All free / open-source. Tier 1 is the foundation; Tier 2 fills specific gaps as you need them.</p>
+
+      <div class="lib-grid">
+        <div class="lib-card">
+          <h3>shadcn/ui</h3>
+          <div class="stars">★ 118k · MIT · copy-paste</div>
+          <p>Foundation for Dialog, Dropdown, Table, Tabs, Select, Calendar. Tailwind v4 supported. Lives in your repo.</p>
+          <span class="tier">Tier 1 — adopt first</span>
+        </div>
+        <div class="lib-card">
+          <h3>Radix UI</h3>
+          <div class="stars">★ 18k · MIT · headless</div>
+          <p>Accessibility layer under shadcn. Focus traps, keyboard nav, ARIA. Use when you need behavior without default styling.</p>
+          <span class="tier">Tier 1 — adopt first</span>
+        </div>
+        <div class="lib-card">
+          <h3>Lucide React</h3>
+          <div class="stars">★ 12k · ISC · icons</div>
+          <p>1,600+ tree-shakeable icons. Replaces ad-hoc SVGs and text arrows across Headers and forms.</p>
+          <span class="tier">Tier 1 — adopt first</span>
+        </div>
+        <div class="lib-card">
+          <h3>Dice UI</h3>
+          <div class="stars">★ 2k · 242 components</div>
+          <p>shadcn-compatible: data tables, comboboxes, date pickers. Great for CRM filters and birthday fields.</p>
+          <span class="tier t2">Tier 2 — as needed</span>
+        </div>
+        <div class="lib-card">
+          <h3>TanStack Table</h3>
+          <div class="stars">★ 26k · headless</div>
+          <p>Sorting, filtering, pagination for People list, Inbox, Admin. Pair with shadcn Table styling.</p>
+          <span class="tier t2">Tier 2 — as needed</span>
+        </div>
+        <div class="lib-card">
+          <h3>cmdk</h3>
+          <div class="stars">★ 9k · command palette</div>
+          <p>⌘K search across people, places, apps. Natural fit for Life OS cross-app navigation.</p>
+          <span class="tier t2">Tier 2 — as needed</span>
+        </div>
+        <div class="lib-card">
+          <h3>Sonner</h3>
+          <div class="stars">★ 10k · toasts</div>
+          <p>Toast notifications with stacking and theming. Replaces hand-rolled Toast in @life-os/ui.</p>
+          <span class="tier t2">Tier 2 — as needed</span>
+        </div>
+        <div class="lib-card">
+          <h3>Better Upload</h3>
+          <div class="stars">★ 1.3k · file upload</div>
+          <p>Drop zones for vCard, CSV, Google Timeline import flows in Persons and Places.</p>
+          <span class="tier t2">Tier 2 — as needed</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- VERDICT -->
+    <section id="verdict">
+      <div class="section-label">Section 06</div>
+      <h2 class="section-title">Recommendation</h2>
+      <div class="verdict">
+        <h3>Keep Warm Concrete. Add shadcn for complex primitives.</h3>
+        <p>
+          You already have a distinctive design system in <code>@life-os/ui</code> — the gap isn't aesthetics,
+          it's interactive components (dialogs, dropdowns, tables, date pickers) rebuilt from scratch in every app.
+          Initialize shadcn in <code>packages/ui</code>, map its CSS variables to your existing tokens, and
+          migrate the highest-duplication patterns first: Header → AppShell, modals → Dialog, People/Inbox → DataTable.
+        </p>
+        <div class="spacer"></div>
+        <p style="font-size: 11px; color: var(--ink-3);">
+          Estimated Phase 1 setup: one session. No visual breaking changes if tokens are mapped correctly.
+        </p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Dialog overlay -->
+  <div class="dialog-backdrop" id="dialogBackdrop" role="dialog" aria-modal="true" aria-labelledby="dialogTitle">
+    <div class="dialog">
+      <div class="dialog-header">
+        <h2 id="dialogTitle">Edit person</h2>
+        <button class="dialog-close" id="closeDialog" aria-label="Close">×</button>
+      </div>
+      <div class="dialog-body">
+        <div class="form-grid">
+          <div class="form-row">
+            <label class="form-label">First name</label>
+            <input class="form-input" value="Kenji" />
+          </div>
+          <div class="form-row">
+            <label class="form-label">Last name</label>
+            <input class="form-input" value="Lee" />
+          </div>
+        </div>
+        <div class="form-row">
+          <label class="form-label">Company</label>
+          <input class="form-input" value="Meridian" />
+        </div>
+        <div class="form-row">
+          <label class="form-label">Location</label>
+          <input class="form-input" value="San Francisco" />
+        </div>
+        <div class="form-row">
+          <label class="form-label">Notes</label>
+          <textarea class="form-input" rows="3" style="resize: vertical;">Met through Yuki at the synthesis workshop.</textarea>
+        </div>
+      </div>
+      <div class="dialog-footer">
+        <button class="btn btn-md btn-ghost btn-proposed" id="cancelDialog">Cancel</button>
+        <button class="btn btn-md btn-primary btn-proposed">Save changes</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Profile dropdown
+    const avatarBtn = document.getElementById('avatarBtn');
+    const profileMenu = document.getElementById('profileMenu');
+    avatarBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      profileMenu.classList.toggle('open');
+    });
+    document.addEventListener('click', () => profileMenu.classList.remove('open'));
+
+    // Dialog
+    const backdrop = document.getElementById('dialogBackdrop');
+    document.getElementById('openDialog').addEventListener('click', () => backdrop.classList.add('open'));
+    document.getElementById('closeDialog').addEventListener('click', () => backdrop.classList.remove('open'));
+    document.getElementById('cancelDialog').addEventListener('click', () => backdrop.classList.remove('open'));
+    backdrop.addEventListener('click', (e) => { if (e.target === backdrop) backdrop.classList.remove('open'); });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') backdrop.classList.remove('open');
+    });
+
+    // Tabs
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+        tab.classList.add('active');
+        document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
+      });
+    });
+
+    // Toast
+    document.getElementById('showToast').addEventListener('click', () => {
+      const toast = document.getElementById('toast');
+      toast.style.display = 'inline-flex';
+      setTimeout(() => { toast.style.display = 'none'; }, 3000);
+    });
+
+    // Nav pill active state on scroll
+    const sections = document.querySelectorAll('section[id]');
+    const pills = document.querySelectorAll('.nav-pill');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          pills.forEach(p => p.classList.remove('active'));
+          const link = document.querySelector(`.nav-pill[href="#${entry.target.id}"]`);
+          if (link) link.classList.add('active');
+        }
+      });
+    }, { rootMargin: '-30% 0px -60% 0px' });
+    sections.forEach(s => observer.observe(s));
+  </script>
+
+</body>
+</html>

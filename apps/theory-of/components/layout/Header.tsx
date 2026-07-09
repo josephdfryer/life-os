@@ -13,23 +13,22 @@ export default function Header() {
   return (
     <header style={{
       background: "var(--surface)",
-      borderBottom: "1px solid var(--border)",
+      borderBottom: "1px solid var(--border-subtle)",
       padding: "0 24px",
       display: "flex",
       alignItems: "center",
       height: "52px",
-      gap: "32px",
+      gap: "24px",
       position: "sticky",
       top: 0,
       zIndex: 50,
     }}>
       <Link href="/" style={{
-        fontFamily: "var(--font-playfair), serif",
-        fontSize: "18px",
-        fontWeight: 600,
+        fontFamily: "var(--font-display)",
+        fontSize: "17px",
+        fontWeight: 400,
         color: "var(--ink)",
         textDecoration: "none",
-        letterSpacing: "-0.01em",
       }}>
         Theory of
       </Link>
@@ -54,8 +53,8 @@ export default function Header() {
             onClick={() => signOut({ callbackUrl: "/login" })}
             style={{
               padding: "4px 10px",
-              borderRadius: "6px",
-              fontSize: "11px",
+              borderRadius: "var(--radius-pill)",
+              fontSize: "12px",
               color: "var(--ink-3)",
               background: "transparent",
               border: "1px solid var(--border)",

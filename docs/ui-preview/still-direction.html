@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Still — Your Life OS Direction</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet" />
+  <style>
+    /* ══════════════════════════════════════════
+       STILL — synthesized from Muji + Things + Aesop
+       ══════════════════════════════════════════ */
+    :root {
+      /* Warm neutrals — no cool zinc, no terracotta */
+      --bg:           #efede8;
+      --surface:      #faf9f6;
+      --surface-2:    #f3f1ec;
+      --surface-hover:#ebe8e2;
+      --border:       #e0dbd3;
+      --border-subtle:#ebe8e2;
+
+      --ink:          #2e2c29;
+      --ink-2:        #5c5852;
+      --ink-3:        #8a847c;
+      --ink-4:        #b5afa6;
+
+      --accent:       #4a4640;
+      --accent-hover: #3a3835;
+      --accent-soft:  #e8e4dc;
+
+      --success:      #6b7c6a;
+      --attention:    #9a7b5c;
+
+      /* Things: soft radius. Muji: nearly flat. Aesop: none on chrome.
+         Compromise → gentle 10px, pill only for primary CTAs */
+      --radius-sm:    6px;
+      --radius:       10px;
+      --radius-pill:  100px;
+
+      /* Things-level shadow, Aesop restraint */
+      --shadow-sm:    0 1px 2px rgba(46, 44, 41, 0.04);
+      --shadow:       0 2px 8px rgba(46, 44, 41, 0.06);
+      --shadow-lg:    0 8px 24px rgba(46, 44, 41, 0.08);
+
+      /* Aesop: serif for names only. Muji/Things: sans for everything else */
+      --font-display: 'Newsreader', Georgia, serif;
+      --font-body:    'Inter', -apple-system, system-ui, sans-serif;
+
+      --space-xs:  4px;
+      --space-sm:  8px;
+      --space-md:  16px;
+      --space-lg:  24px;
+      --space-xl:  40px;
+      --space-2xl: 64px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body);
+      font-size: 14px;
+      line-height: 1.55;
+      color: var(--ink);
+      background: var(--bg);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Page chrome ── */
+    .doc-header {
+      padding: var(--space-2xl) var(--space-xl) var(--space-xl);
+      max-width: 1080px;
+      margin: 0 auto;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .doc-header .eyebrow {
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--ink-4);
+      margin-bottom: var(--space-sm);
+    }
+
+    .doc-header h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 4vw, 2.75rem);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+      margin-bottom: var(--space-md);
+    }
+
+    .doc-header .lead {
+      color: var(--ink-3);
+      max-width: 520px;
+      font-size: 15px;
+      line-height: 1.7;
+    }
+
+    .blend-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: var(--space-lg);
+    }
+
+    .blend-tag {
+      font-size: 11px;
+      padding: 5px 12px;
+      border-radius: var(--radius-pill);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--ink-3);
+    }
+
+    .blend-tag strong { color: var(--ink-2); font-weight: 500; }
+
+    main {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: var(--space-xl);
+    }
+
+    section { margin-bottom: var(--space-2xl); }
+
+    .section-eyebrow {
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ink-4);
+      margin-bottom: var(--space-sm);
+    }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 400;
+      margin-bottom: var(--space-md);
+    }
+
+    .section-desc {
+      color: var(--ink-3);
+      font-size: 14px;
+      line-height: 1.7;
+      max-width: 560px;
+      margin-bottom: var(--space-lg);
+    }
+
+    /* ── Principles grid ── */
+    .principles {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: var(--space-md);
+    }
+
+    .principle {
+      background: var(--surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius);
+      padding: var(--space-lg);
+    }
+
+    .principle h3 {
+      font-size: 13px;
+      font-weight: 500;
+      margin-bottom: 6px;
+      color: var(--ink);
+    }
+
+    .principle p {
+      font-size: 12px;
+      color: var(--ink-3);
+      line-height: 1.6;
+    }
+
+    .principle .from {
+      font-size: 10px;
+      color: var(--ink-4);
+      margin-top: 10px;
+      letter-spacing: 0.04em;
+    }
+
+    /* ── Tokens ── */
+    .token-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: var(--space-lg);
+    }
+
+    .token {
+      text-align: center;
+    }
+
+    .token-swatch {
+      width: 64px;
+      height: 48px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      margin-bottom: 6px;
+    }
+
+    .token-name {
+      font-size: 10px;
+      color: var(--ink-4);
+    }
+
+    .type-sample {
+      background: var(--surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius);
+      padding: var(--space-lg);
+      margin-bottom: var(--space-md);
+    }
+
+    .type-display {
+      font-family: var(--font-display);
+      font-size: 32px;
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+
+    .type-body {
+      font-family: var(--font-body);
+      font-size: 14px;
+      color: var(--ink-2);
+    }
+
+    .type-label {
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--ink-4);
+    }
+
+    /* ── Component primitives ── */
+    .component-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: var(--space-md);
+    }
+
+    .btn {
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 450;
+      padding: 9px 18px;
+      border: none;
+      cursor: pointer;
+      transition: background 0.15s, box-shadow 0.15s;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: var(--surface);
+      border-radius: var(--radius-pill);
+    }
+
+    .btn-primary:hover { background: var(--accent-hover); }
+
+    .btn-secondary {
+      background: var(--surface);
+      color: var(--ink-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-pill);
+    }
+
+    .btn-secondary:hover { background: var(--surface-hover); }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--ink-3);
+      border-radius: var(--radius-sm);
+      padding: 7px 12px;
+    }
+
+    .btn-ghost:hover { background: var(--surface-hover); color: var(--ink); }
+
+    .input {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 10px 14px;
+      font-family: var(--font-body);
+      font-size: 14px;
+      color: var(--ink);
+      outline: none;
+      width: 240px;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+
+    .input::placeholder { color: var(--ink-4); }
+
+    .input:focus {
+      border-color: var(--ink-4);
+      box-shadow: 0 0 0 3px var(--accent-soft);
+    }
+
+    .badge {
+      font-size: 11px;
+      padding: 3px 10px;
+      border-radius: var(--radius-pill);
+      background: var(--accent-soft);
+      color: var(--ink-3);
+    }
+
+    .badge-attention {
+      background: #f5efe8;
+      color: var(--attention);
+    }
+
+    /* ── Full app mock ── */
+    .app-mock {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      background: var(--bg);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .app-nav {
+      height: 52px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      padding: 0 var(--space-lg);
+      gap: var(--space-lg);
+    }
+
+    .app-nav-brand {
+      font-family: var(--font-display);
+      font-size: 17px;
+      font-weight: 400;
+      color: var(--ink);
+      text-decoration: none;
+    }
+
+    .app-nav-links {
+      display: flex;
+      gap: 2px;
+    }
+
+    .app-nav-link {
+      padding: 6px 14px;
+      border-radius: var(--radius-pill);
+      font-size: 13px;
+      color: var(--ink-3);
+      text-decoration: none;
+      transition: all 0.12s;
+    }
+
+    .app-nav-link:hover { color: var(--ink); background: var(--surface-hover); }
+
+    .app-nav-link.active {
+      color: var(--ink);
+      background: var(--surface-2);
+      font-weight: 450;
+    }
+
+    .app-body {
+      padding: var(--space-xl);
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      gap: var(--space-xl);
+    }
+
+    @media (max-width: 720px) {
+      .app-body { grid-template-columns: 1fr; }
+    }
+
+    .today-greeting {
+      font-family: var(--font-display);
+      font-size: 26px;
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      margin-bottom: 4px;
+    }
+
+    .today-date {
+      font-size: 13px;
+      color: var(--ink-3);
+      margin-bottom: var(--space-xl);
+    }
+
+    .section-label {
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--ink-4);
+      margin-bottom: var(--space-md);
+    }
+
+    /* Person row — Things list item meets Aesop restraint */
+    .person-row {
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+      padding: 14px var(--space-md);
+      background: var(--surface);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-sm);
+      margin-bottom: var(--space-sm);
+      cursor: pointer;
+      transition: box-shadow 0.15s, transform 0.15s;
+      border: 1px solid transparent;
+    }
+
+    .person-row:hover {
+      box-shadow: var(--shadow);
+      border-color: var(--border-subtle);
+    }
+
+    .avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--surface-2);
+      display: grid;
+      place-items: center;
+      font-size: 13px;
+      color: var(--ink-3);
+      font-weight: 450;
+      flex-shrink: 0;
+    }
+
+    .person-name {
+      font-family: var(--font-display);
+      font-size: 17px;
+      font-weight: 400;
+      color: var(--ink);
+      margin-bottom: 1px;
+    }
+
+    .person-meta {
+      font-size: 12px;
+      color: var(--ink-3);
+    }
+
+    .person-days {
+      margin-left: auto;
+      font-size: 12px;
+      color: var(--ink-4);
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    .person-days.warn { color: var(--attention); }
+
+    /* Sidebar card */
+    .sidebar-card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: var(--space-lg);
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border-subtle);
+    }
+
+    .sidebar-card h3 {
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--ink-4);
+      margin-bottom: var(--space-md);
+      font-weight: 450;
+    }
+
+    .stat-big {
+      font-family: var(--font-display);
+      font-size: 36px;
+      font-weight: 400;
+      color: var(--ink);
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: var(--ink-3);
+      margin-top: 4px;
+    }
+
+    .inbox-breakdown {
+      margin-top: var(--space-md);
+      padding-top: var(--space-md);
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .inbox-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      padding: 5px 0;
+      color: var(--ink-3);
+    }
+
+    .inbox-row span:last-child { color: var(--ink-2); }
+
+    /* Person detail snippet */
+    .detail-mock {
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: var(--space-xl);
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border-subtle);
+    }
+
+    .detail-header {
+      display: flex;
+      gap: var(--space-lg);
+      align-items: flex-start;
+      margin-bottom: var(--space-xl);
+      padding-bottom: var(--space-xl);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .detail-header .avatar { width: 56px; height: 56px; font-size: 18px; }
+
+    .detail-name {
+      font-family: var(--font-display);
+      font-size: 28px;
+      font-weight: 400;
+      letter-spacing: -0.02em;
+    }
+
+    .detail-sub {
+      font-size: 14px;
+      color: var(--ink-3);
+      margin-top: 4px;
+    }
+
+    .detail-tabs {
+      display: flex;
+      gap: 0;
+      border-bottom: 1px solid var(--border-subtle);
+      margin-bottom: var(--space-lg);
+    }
+
+    .detail-tab {
+      padding: 8px 16px;
+      font-size: 13px;
+      color: var(--ink-4);
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      cursor: pointer;
+      font-family: inherit;
+      margin-bottom: -1px;
+    }
+
+    .detail-tab.active {
+      color: var(--ink);
+      border-bottom-color: var(--accent);
+    }
+
+    .interaction-item {
+      padding: var(--space-md) 0;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .interaction-item:last-child { border-bottom: none; }
+
+    .interaction-date {
+      font-size: 11px;
+      color: var(--ink-4);
+      letter-spacing: 0.04em;
+      margin-bottom: 4px;
+    }
+
+    .interaction-text {
+      font-size: 14px;
+      color: var(--ink-2);
+      line-height: 1.6;
+    }
+
+    /* Comparison strip */
+    .compare-strip {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-md);
+      margin-top: var(--space-lg);
+    }
+
+    @media (max-width: 600px) { .compare-strip { grid-template-columns: 1fr; } }
+
+    .compare-box {
+      padding: var(--space-md);
+      border-radius: var(--radius-sm);
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .compare-box.old {
+      background: #f5f2ec;
+      border: 1px solid #ddd9cf;
+      color: #8a8680;
+    }
+
+    .compare-box.new {
+      background: var(--accent-soft);
+      border: 1px solid var(--border);
+      color: var(--ink-2);
+    }
+
+    .compare-box strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .compare-box.old strong { color: #c4572a; }
+    .compare-box.new strong { color: var(--accent); }
+
+    /* Decision callouts */
+    .decisions {
+      display: grid;
+      gap: var(--space-md);
+    }
+
+    .decision {
+      display: grid;
+      grid-template-columns: 140px 1fr;
+      gap: var(--space-md);
+      padding: var(--space-md) 0;
+      border-bottom: 1px solid var(--border-subtle);
+      font-size: 13px;
+    }
+
+    .decision .q { color: var(--ink-3); }
+    .decision .a { color: var(--ink); font-weight: 450; }
+
+    .footer-note {
+      padding: var(--space-xl);
+      text-align: center;
+      font-size: 13px;
+      color: var(--ink-4);
+      border-top: 1px solid var(--border);
+      max-width: 1080px;
+      margin: 0 auto;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="doc-header">
+    <div class="eyebrow">Your direction · synthesized</div>
+    <h1>Still</h1>
+    <p class="lead">
+      Warm, quiet, breathable. A personal system that feels like a well-made object —
+      not software shouting for attention. Built from what you picked:
+    </p>
+    <div class="blend-tags">
+      <span class="blend-tag"><strong>Muji</strong> — warm gray, restraint, object-ness</span>
+      <span class="blend-tag"><strong>Things</strong> — soft cards, calm spacing, rounded ease</span>
+      <span class="blend-tag"><strong>Aesop</strong> — cream surfaces, adult typography, no noise</span>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- PRINCIPLES -->
+    <section>
+      <div class="section-eyebrow">What you chose</div>
+      <h2 class="section-title">Shared DNA</h2>
+      <div class="principles">
+        <div class="principle">
+          <h3>Warm, never cold</h3>
+          <p>Cream and stone grays. No blue accents, no zinc, no terracotta.</p>
+          <div class="from">Muji + Aesop</div>
+        </div>
+        <div class="principle">
+          <h3>Breathable space</h3>
+          <p>Generous padding, unhurried layouts. Lists don't feel like spreadsheets.</p>
+          <div class="from">Things</div>
+        </div>
+        <div class="principle">
+          <h3>Quiet hierarchy</h3>
+          <p>Serif only for names &amp; greetings. Everything else is soft sans-serif.</p>
+          <div class="from">Aesop</div>
+        </div>
+        <div class="principle">
+          <h3>Soft elevation</h3>
+          <p>Cards float gently — subtle shadow, not hard borders everywhere.</p>
+          <div class="from">Things</div>
+        </div>
+        <div class="principle">
+          <h3>Low saturation</h3>
+          <p>Colors at ~80% intensity. Attention states are warm amber, not red alert.</p>
+          <div class="from">Muji</div>
+        </div>
+        <div class="principle">
+          <h3>No uppercase shouting</h3>
+          <p>Labels are small and spaced, not military-grade micro-type.</p>
+          <div class="from">vs. current Warm Concrete</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TOKENS -->
+    <section>
+      <div class="section-eyebrow">Design tokens</div>
+      <h2 class="section-title">Palette &amp; type</h2>
+      <p class="section-desc">Stone and linen — replaces the terracotta mono combo entirely.</p>
+
+      <div class="token-row">
+        <div class="token"><div class="token-swatch" style="background:var(--bg)"></div><div class="token-name">bg</div></div>
+        <div class="token"><div class="token-swatch" style="background:var(--surface)"></div><div class="token-name">surface</div></div>
+        <div class="token"><div class="token-swatch" style="background:var(--surface-2)"></div><div class="token-name">surface-2</div></div>
+        <div class="token"><div class="token-swatch" style="background:var(--border)"></div><div class="token-name">border</div></div>
+        <div class="token"><div class="token-swatch" style="background:var(--ink)"></div><div class="token-name">ink</div></div>
+        <div class="token"><div class="token-swatch" style="background:var(--accent)"></div><div class="token-name">accent</div></div>
+        <div class="token"><div class="token-swatch" style="background:var(--attention)"></div><div class="token-name">attention</div></div>
+      </div>
+
+      <div class="type-sample">
+        <div class="type-display">Kenji Lee</div>
+        <div class="type-body">Newsreader — person names, greetings, page titles. Literary but not dramatic.</div>
+      </div>
+      <div class="type-sample">
+        <div class="type-label">Last contact · 3 days ago</div>
+        <div class="type-body" style="margin-top:6px">Inter — UI labels, body text, nav, buttons. Invisible, readable, calm.</div>
+      </div>
+    </section>
+
+    <!-- COMPONENTS -->
+    <section>
+      <div class="section-eyebrow">Components</div>
+      <h2 class="section-title">Primitives</h2>
+      <div class="component-row">
+        <button class="btn btn-primary">Log interaction</button>
+        <button class="btn btn-secondary">Cancel</button>
+        <button class="btn btn-ghost">Edit</button>
+      </div>
+      <div class="component-row">
+        <input class="input" placeholder="Search people…" />
+        <span class="badge">inner circle</span>
+        <span class="badge badge-attention">42 days</span>
+      </div>
+
+      <div class="compare-strip">
+        <div class="compare-box old">
+          <strong>Before (Warm Concrete)</strong>
+          DM Mono everywhere · terracotta accent · square corners · uppercase buttons
+        </div>
+        <div class="compare-box new">
+          <strong>After (Still)</strong>
+          Inter + Newsreader · warm stone accent · 10px radius · sentence-case buttons
+        </div>
+      </div>
+    </section>
+
+    <!-- APP MOCK -->
+    <section>
+      <div class="section-eyebrow">In context</div>
+      <h2 class="section-title">Persons — Today view</h2>
+      <p class="section-desc">How your most-used screen could feel.</p>
+
+      <div class="app-mock">
+        <nav class="app-nav">
+          <a class="app-nav-brand" href="#">Persons</a>
+          <div class="app-nav-links">
+            <a class="app-nav-link active" href="#">Today</a>
+            <a class="app-nav-link" href="#">People</a>
+            <a class="app-nav-link" href="#">Inbox</a>
+          </div>
+        </nav>
+        <div class="app-body">
+          <div>
+            <div class="today-greeting">Good morning, Joseph</div>
+            <div class="today-date">Wednesday, July 8</div>
+
+            <div class="section-label">Reach out</div>
+            <div class="person-row">
+              <div class="avatar">AM</div>
+              <div>
+                <div class="person-name">Amara Mensah</div>
+                <div class="person-meta">Product Lead · Accra</div>
+              </div>
+              <div class="person-days warn">42 days</div>
+            </div>
+            <div class="person-row">
+              <div class="avatar">SR</div>
+              <div>
+                <div class="person-name">Sofia Ruiz</div>
+                <div class="person-meta">Northwind · Portland</div>
+              </div>
+              <div class="person-days warn">28 days</div>
+            </div>
+
+            <div class="section-label" style="margin-top:28px">Recent</div>
+            <div class="person-row">
+              <div class="avatar">KL</div>
+              <div>
+                <div class="person-name">Kenji Lee</div>
+                <div class="person-meta">VP Engineering · Meridian</div>
+              </div>
+              <div class="person-days">3 days</div>
+            </div>
+          </div>
+
+          <div>
+            <div class="sidebar-card">
+              <h3>Inbox</h3>
+              <div class="stat-big">12</div>
+              <div class="stat-label">pending items</div>
+              <div class="inbox-breakdown">
+                <div class="inbox-row"><span>gmail</span><span>8</span></div>
+                <div class="inbox-row"><span>imessage</span><span>3</span></div>
+                <div class="inbox-row"><span>calls</span><span>1</span></div>
+              </div>
+              <div style="margin-top:16px">
+                <button class="btn btn-secondary" style="width:100%">Process inbox</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PERSON DETAIL -->
+    <section>
+      <div class="section-eyebrow">In context</div>
+      <h2 class="section-title">Person detail</h2>
+      <div class="detail-mock">
+        <div class="detail-header">
+          <div class="avatar">KL</div>
+          <div>
+            <div class="detail-name">Kenji Lee</div>
+            <div class="detail-sub">VP Engineering · Meridian Group · San Francisco</div>
+            <div style="margin-top:12px; display:flex; gap:8px;">
+              <span class="badge">inner circle</span>
+              <button class="btn btn-ghost" style="padding:3px 10px; font-size:12px">Edit</button>
+            </div>
+          </div>
+        </div>
+        <div class="detail-tabs">
+          <button class="detail-tab active">Interactions</button>
+          <button class="detail-tab">Plans</button>
+          <button class="detail-tab">Notes</button>
+        </div>
+        <div class="interaction-item">
+          <div class="interaction-date">March 12 · Coffee</div>
+          <div class="interaction-text">Caught up at Sightglass. Talked about the synthesis pipeline and what it means to actually remember people.</div>
+        </div>
+        <div class="interaction-item">
+          <div class="interaction-date">February 3 · Email</div>
+          <div class="interaction-text">Introduced him to Amara. Follow up on whether they connected.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DECISIONS -->
+    <section>
+      <div class="section-eyebrow">Resolved tensions</div>
+      <h2 class="section-title">How the three blend</h2>
+      <div class="decisions">
+        <div class="decision">
+          <div class="q">Corner radius?</div>
+          <div class="a">10px cards, pill buttons — Things softness, not Muji's 2px flatness</div>
+        </div>
+        <div class="decision">
+          <div class="q">Accent color?</div>
+          <div class="a">Warm stone (#4a4640) — Aesop's dark button, not Things blue or old terracotta</div>
+        </div>
+        <div class="decision">
+          <div class="q">Typography?</div>
+          <div class="a">Newsreader for names only, Inter for everything else — no mono</div>
+        </div>
+        <div class="decision">
+          <div class="q">Light or dark?</div>
+          <div class="a">Light default — all three picks are light. Home dashboard can get a muted dark variant later</div>
+        </div>
+        <div class="decision">
+          <div class="q">Density?</div>
+          <div class="a">Medium — more air than Muji, less bubbly than Things</div>
+        </div>
+        <div class="decision">
+          <div class="q">Attention / urgency?</div>
+          <div class="a">Warm amber (#9a7b5c), never red. "42 days" is a gentle nudge, not an alarm</div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer-note">
+    Tell me what feels right or off — then we can codify this into <code>packages/ui</code> tokens and start applying it app by app.
+  </footer>
+
+</body>
+</html>
