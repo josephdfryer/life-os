@@ -23,6 +23,8 @@ export type RawVisit = {
   userActivityType?: string
   probability?: number
   semanticType?: string
+  googleTypes?: string[]
+  placeType?: string
 }
 
 type ImportJobRow = Awaited<ReturnType<typeof getImportJob>>
@@ -238,6 +240,37 @@ export async function updateStagedVisit(jobId: string, visitId: string, workspac
   }
   await auditAction({ actor, action: "places.import.visit.accept", targetType: "importStagedVisit", targetId: visit.id, metadata: { placeId: place.id, eventId: event?.id ?? null, skipped } })
   return accepted
+}
+
+export async function acceptStagedVisitById(
+  visitId: string,
+  workspaceId: string,
+  opts: { actor?: DomainActor; placeOverride?: Partial<Pick<RawVisit, "placeName" | "placeAddress" | "latitude" | "longitude" | "googlePlaceId" | "placeType">> } = {},
+) {
+  const visit = await db.importStagedVisit.findFirst({ where: { id: visitId, workspaceId } })
+  if (!visit) throw notFound("Staged visit not found", { visitId })
+  if (visit.status !== "pending") return { visit, accepted: false, skipped: true, placeId: visit.resolvedPlaceId, eventId: visit.resolvedEventId }
+
+  const { place, event, skipped } = await acceptVisit(stagedVisitToRawVisit(visit, opts.placeOverride), workspaceId)
+  const accepted = await db.importStagedVisit.update({
+    where: { id: visit.id },
+    data: {
+      status: "accepted",
+      resolvedPlaceId: place.id,
+      resolvedEventId: event?.id ?? null,
+    },
+  })
+  if (!skipped) {
+    await db.importJob.update({ where: { id: visit.importJobId }, data: { createdRows: { increment: 1 } } })
+  }
+  await auditAction({
+    actor: opts.actor,
+    action: "places.import.visit.accept",
+    targetType: "importStagedVisit",
+    targetId: visit.id,
+    metadata: { placeId: place.id, eventId: event?.id ?? null, skipped, source: "places.promote_resolved" },
+  })
+  return { visit: accepted, accepted: true, skipped, placeId: place.id, eventId: event?.id ?? null }
 }
 
 export async function bulkUpdateStagedVisits(jobId: string, workspaceId: string, input: { action: StagedVisitAction; minConfidence?: number; visitIds?: string[] }, actor?: DomainActor) {
@@ -566,7 +599,7 @@ async function upsertPlace(visit: RawVisit, workspaceId: string) {
       workspaceId,
       name: visit.placeName || "Unnamed Google place",
       googlePlaceId: visit.googlePlaceId,
-      type: "visited_place",
+      type: visit.placeType ?? meaningfulPlaceType(visit.googleTypes) ?? "visited_place",
       address: visit.placeAddress,
       coordinates: hasCoordinates(visit) ? JSON.stringify({ latitude: visit.latitude, longitude: visit.longitude }) : undefined,
       meaning: visit.placeName ? undefined : "Imported from Google Maps Timeline without a name. Review and rename this place.",
@@ -619,19 +652,25 @@ async function findDuplicateEvent(placeId: string, startedAt: Date, workspaceId:
   })
 }
 
-function stagedVisitToRawVisit(visit: { rawData: unknown; placeName: string | null; placeAddress: string | null; latitude: number | null; longitude: number | null; googlePlaceId: string | null; startedAt: Date; endedAt: Date | null; confidence: number }): RawVisit {
+function stagedVisitToRawVisit(
+  visit: { rawData: unknown; aiEnrichment?: unknown; placeName: string | null; placeAddress: string | null; latitude: number | null; longitude: number | null; googlePlaceId: string | null; startedAt: Date; endedAt: Date | null; confidence: number },
+  placeOverride: Partial<Pick<RawVisit, "placeName" | "placeAddress" | "latitude" | "longitude" | "googlePlaceId" | "placeType">> = {},
+): RawVisit {
+  const enrichment = parseVisitEnrichment(visit.aiEnrichment)
   return {
     raw: visit.rawData,
     format: "legacy_takeout",
-    placeName: visit.placeName ?? undefined,
-    placeAddress: visit.placeAddress ?? undefined,
-    latitude: visit.latitude ?? undefined,
-    longitude: visit.longitude ?? undefined,
-    googlePlaceId: visit.googlePlaceId ?? undefined,
+    placeName: placeOverride.placeName ?? enrichment?.placeName ?? visit.placeName ?? undefined,
+    placeAddress: placeOverride.placeAddress ?? visit.placeAddress ?? undefined,
+    latitude: placeOverride.latitude ?? visit.latitude ?? undefined,
+    longitude: placeOverride.longitude ?? visit.longitude ?? undefined,
+    googlePlaceId: placeOverride.googlePlaceId ?? visit.googlePlaceId ?? undefined,
     startedAt: visit.startedAt,
     endedAt: visit.endedAt ?? undefined,
     visitConfidence: visit.confidence,
     placeConfidence: "MEDIUM_CONFIDENCE",
+    googleTypes: enrichment?.googleTypes,
+    placeType: placeOverride.placeType ?? meaningfulPlaceType(enrichment?.googleTypes, enrichment?.category),
   }
 }
 
@@ -712,6 +751,24 @@ function numberFrom(value: unknown) {
     if (Number.isFinite(n)) return n
   }
   return undefined
+}
+
+function parseVisitEnrichment(value: unknown) {
+  if (!isRecord(value)) return null
+  const googleTypes = Array.isArray(value.googleTypes)
+    ? value.googleTypes.filter((item): item is string => typeof item === "string" && item.trim().length > 0)
+    : undefined
+  return {
+    placeName: stringFrom(value.placeName),
+    category: stringFrom(value.category),
+    googleTypes,
+  }
+}
+
+function meaningfulPlaceType(googleTypes?: string[], category?: string) {
+  const candidates = googleTypes?.length ? googleTypes : category?.split(/\s+/)
+  const ignored = new Set(["point_of_interest", "establishment", "store", "service"])
+  return candidates?.find(type => type && !ignored.has(type)) ?? undefined
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {

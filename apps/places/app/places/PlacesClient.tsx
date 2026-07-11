@@ -1,6 +1,6 @@
 "use client"
 
-import { useMemo, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import Link from "next/link"
 import { useRouter, useSearchParams } from "next/navigation"
 import { EmptyState } from "@life-os/ui"
@@ -119,8 +119,15 @@ export default function PlacesClient({ places, layers }: { places: PlaceMapItem[
   const [filter, setFilter] = useState<FilterKey>("all")
   const [selectedId, setSelectedId] = useState<string | null>(places[0]?.id ?? null)
   const [selectedVisitId, setSelectedVisitId] = useState<string | null>(null)
-  const [zoom, setZoom] = useState(1)
+  // Camera: geographic center + fractional tile zoom (3–19). null = auto-fit.
+  const [camera, setCamera] = useState<Camera | null>(null)
+  const [mapSize, setMapSize] = useState({ width: 820, height: 620 })
+  const mapRef = useRef<HTMLElement>(null)
+  const cameraRef = useRef<Camera | null>(null)
+  cameraRef.current = camera
   const activeLayerIds = useMemo(() => layersFromParam(searchParams.get("layers")), [searchParams])
+  const legendCollapsed = searchParams.get("legend") === "collapsed"
+  const allLayersActive = activeLayerIds.size === ALL_LAYER_IDS.length
 
   const filtered = useMemo(() => places.filter(place => {
     if (filter === "favorites") return place.favorite
@@ -138,9 +145,15 @@ export default function PlacesClient({ places, layers }: { places: PlaceMapItem[
   const photosActive = activeLayerIds.has("photos")
   const enrichmentActive = activeLayerIds.has("enrichment")
   const viewportSources = locationActive ? [...filtered, ...layers.unresolvedVisits] : filtered
-  const viewport = useMemo(() => buildMapViewport(filtered, zoom, viewportSources), [filtered, zoom, viewportSources])
+  const fittedCamera = useMemo(() => fitCamera(viewportSources, mapSize.width, mapSize.height), [viewportSources, mapSize])
+  const activeCamera = camera ?? fittedCamera
+  const viewport = useMemo(
+    () => buildCameraViewport(filtered, activeCamera, mapSize.width, mapSize.height),
+    [filtered, activeCamera, mapSize],
+  )
+  const legacyZoom = legacyZoomBucket(viewport.tileZoom ?? 13)
   const plotted = viewport.points.length ? viewport.points : plotPlaces(filtered)
-  const clusters = useMemo(() => clusterPlaces(plotted, zoom), [plotted, zoom])
+  const clusters = useMemo(() => clusterPlaces(plotted, legacyZoom), [plotted, legacyZoom])
   const unresolvedPoints = useMemo(() => projectCoordinates(layers.unresolvedVisits, viewport), [layers.unresolvedVisits, viewport])
   const interactionsByPlace = useMemo(() => new Map(layers.interactions.map(item => [item.placeId, item])), [layers.interactions])
   const financeByPlace = useMemo(() => new Map(layers.finance.map(item => [item.placeId, item])), [layers.finance])
@@ -152,15 +165,163 @@ export default function PlacesClient({ places, layers }: { places: PlaceMapItem[
     { id: "interactions", label: "Interactions", icon: "In", color: "#d4742f", count: layers.interactions.reduce((sum, item) => sum + item.interactionCount, 0), active: interactionActive },
     { id: "enrichment", label: "AI enrichment", icon: "AI", color: "#d2a321", count: layers.unresolvedVisits.filter(visit => visit.aiEnrichment).length, active: enrichmentActive },
   ], [filtered.length, layers, locationActive, financeActive, photosActive, interactionActive, enrichmentActive])
-  const zoomLevelLabel = zoom <= 1 ? "Group spend" : zoom < 4 ? "Neighborhood spend" : "Place spend"
+  const zoomLevelLabel = legacyZoom <= 1 ? "Group spend" : legacyZoom < 4 ? "Neighborhood spend" : "Place spend"
+
+  // ── Google Maps-style trackpad navigation ────────────────────
+  // two-finger scroll = pan · pinch (ctrl+wheel / gesture events) = zoom to
+  // cursor · click-drag = pan · double-click = zoom in
+  const applyCamera = (updater: (current: Camera) => Camera) => {
+    setCamera(prev => {
+      const current = prev ?? fittedCamera
+      if (!current) return prev
+      return clampCamera(updater(current))
+    })
+  }
+
+  useEffect(() => {
+    const el = mapRef.current
+    if (!el) return
+
+    const observer = new ResizeObserver(entries => {
+      const rect = entries[0]?.contentRect
+      if (rect && rect.width > 0) setMapSize({ width: rect.width, height: Math.max(rect.height, 420) })
+    })
+    observer.observe(el)
+
+    const panBy = (dx: number, dy: number) => {
+      setCamera(prev => {
+        const current = prev ?? cameraRef.current ?? fittedCameraRef.current
+        if (!current) return prev
+        return clampCamera(panCamera(current, dx, dy))
+      })
+    }
+    const zoomAt = (delta: number, clientX: number, clientY: number) => {
+      const rect = el.getBoundingClientRect()
+      setCamera(prev => {
+        const current = prev ?? cameraRef.current ?? fittedCameraRef.current
+        if (!current) return prev
+        return clampCamera(zoomCameraAt(current, delta, clientX - rect.left, clientY - rect.top, rect.width, rect.height))
+      })
+    }
+
+    const onWheel = (event: WheelEvent) => {
+      event.preventDefault()
+      if (event.ctrlKey || event.metaKey) {
+        zoomAt(-event.deltaY * 0.022, event.clientX, event.clientY)
+      } else {
+        panBy(event.deltaX, event.deltaY)
+      }
+    }
+
+    // Safari trackpad pinch
+    let gestureScale = 1
+    const onGestureStart = (event: Event) => { event.preventDefault(); gestureScale = 1 }
+    const onGestureChange = (event: Event) => {
+      event.preventDefault()
+      const e = event as Event & { scale: number; clientX: number; clientY: number }
+      const delta = Math.log2(e.scale / gestureScale)
+      gestureScale = e.scale
+      zoomAt(delta, e.clientX, e.clientY)
+    }
+
+    let dragging = false
+    let lastX = 0
+    let lastY = 0
+    const onPointerDown = (event: PointerEvent) => {
+      if (event.button !== 0) return
+      const target = event.target as HTMLElement
+      if (target.closest("button, input, a")) return
+      dragging = true
+      lastX = event.clientX
+      lastY = event.clientY
+      el.setPointerCapture(event.pointerId)
+      el.style.cursor = "grabbing"
+    }
+    const onPointerMove = (event: PointerEvent) => {
+      if (!dragging) return
+      panBy(lastX - event.clientX, lastY - event.clientY)
+      lastX = event.clientX
+      lastY = event.clientY
+    }
+    const onPointerUp = (event: PointerEvent) => {
+      dragging = false
+      el.style.cursor = "grab"
+      try { el.releasePointerCapture(event.pointerId) } catch { /* released */ }
+    }
+    const onDoubleClick = (event: MouseEvent) => {
+      if ((event.target as HTMLElement).closest("button, input, a")) return
+      event.preventDefault()
+      zoomAt(1, event.clientX, event.clientY)
+    }
+
+    el.style.cursor = "grab"
+    el.style.touchAction = "none"
+    el.addEventListener("wheel", onWheel, { passive: false })
+    el.addEventListener("gesturestart", onGestureStart as EventListener, { passive: false } as AddEventListenerOptions)
+    el.addEventListener("gesturechange", onGestureChange as EventListener, { passive: false } as AddEventListenerOptions)
+    el.addEventListener("pointerdown", onPointerDown)
+    el.addEventListener("pointermove", onPointerMove)
+    el.addEventListener("pointerup", onPointerUp)
+    el.addEventListener("pointercancel", onPointerUp)
+    el.addEventListener("dblclick", onDoubleClick)
+    return () => {
+      observer.disconnect()
+      el.removeEventListener("wheel", onWheel)
+      el.removeEventListener("gesturestart", onGestureStart as EventListener)
+      el.removeEventListener("gesturechange", onGestureChange as EventListener)
+      el.removeEventListener("pointerdown", onPointerDown)
+      el.removeEventListener("pointermove", onPointerMove)
+      el.removeEventListener("pointerup", onPointerUp)
+      el.removeEventListener("pointercancel", onPointerUp)
+      el.removeEventListener("dblclick", onDoubleClick)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  // Latest fitted camera for gesture handlers created once
+  const fittedCameraRef = useRef<Camera | null>(null)
+  fittedCameraRef.current = fittedCamera
+
+  const replaceParams = (nextParams: URLSearchParams) => {
+    const query = nextParams.toString()
+    router.replace(query ? `?${query}` : "?", { scroll: false })
+  }
+
+  const setLayerParam = (ids: Set<LayerId>) => {
+    const params = new URLSearchParams(searchParams.toString())
+    params.set("layers", ALL_LAYER_IDS.filter(layerId => ids.has(layerId)).join(","))
+    replaceParams(params)
+  }
+
+  const resetLayers = () => {
+    const params = new URLSearchParams(searchParams.toString())
+    params.delete("layers")
+    replaceParams(params)
+  }
+
+  const setLegendCollapsed = (collapsed: boolean) => {
+    const params = new URLSearchParams(searchParams.toString())
+    if (collapsed) params.set("legend", "collapsed")
+    else params.delete("legend")
+    replaceParams(params)
+  }
 
   const toggleLayer = (id: LayerId) => {
+    if (allLayersActive) {
+      setLayerParam(new Set([id]))
+      return
+    }
+
     const next = new Set(activeLayerIds)
     if (next.has(id)) next.delete(id)
     else next.add(id)
-    const params = new URLSearchParams(searchParams.toString())
-    params.set("layers", ALL_LAYER_IDS.filter(layerId => next.has(layerId)).join(","))
-    router.replace(`?${params.toString()}`, { scroll: false })
+
+    if (next.size === 0 || next.size === ALL_LAYER_IDS.length) {
+      resetLayers()
+      return
+    }
+
+    setLayerParam(next)
   }
 
   return (
@@ -221,6 +382,7 @@ export default function PlacesClient({ places, layers }: { places: PlaceMapItem[
       ) : (
         <div className="places-map-layout" style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) 320px", gap: "18px", alignItems: "stretch" }}>
           <section
+            ref={mapRef}
             aria-label="Places map"
             style={{
               minHeight: "620px",
@@ -251,7 +413,14 @@ export default function PlacesClient({ places, layers }: { places: PlaceMapItem[
               />
             ))}
             <div style={{ position: "absolute", inset: 0, background: "rgba(250, 248, 244, 0.1)" }} />
-            <LayerPanel layers={layerConfigs} onToggle={toggleLayer} />
+            <LayerPanel
+              layers={layerConfigs}
+              collapsed={legendCollapsed}
+              allActive={allLayersActive}
+              onToggle={toggleLayer}
+              onReset={resetLayers}
+              onCollapsedChange={setLegendCollapsed}
+            />
             <div style={{
               position: "absolute",
               top: "14px",
@@ -268,7 +437,7 @@ export default function PlacesClient({ places, layers }: { places: PlaceMapItem[
             }}>
               <button
                 aria-label="Zoom out"
-                onClick={() => setZoom(value => Math.max(0, value - 1))}
+                onClick={() => applyCamera(current => ({ ...current, zoom: current.zoom - 1 }))}
                 style={zoomButtonStyle}
               >
                 −
@@ -276,19 +445,27 @@ export default function PlacesClient({ places, layers }: { places: PlaceMapItem[
               <input
                 aria-label="Map zoom"
                 type="range"
-                min={0}
-                max={4}
-                step={1}
-                value={zoom}
-                onChange={event => setZoom(Number(event.target.value))}
+                min={3}
+                max={19}
+                step={0.5}
+                value={activeCamera?.zoom ?? 13}
+                onChange={event => applyCamera(current => ({ ...current, zoom: Number(event.target.value) }))}
                 style={{ width: "108px", accentColor: "var(--cognac)" }}
               />
               <button
                 aria-label="Zoom in"
-                onClick={() => setZoom(value => Math.min(4, value + 1))}
+                onClick={() => applyCamera(current => ({ ...current, zoom: current.zoom + 1 }))}
                 style={zoomButtonStyle}
               >
                 +
+              </button>
+              <button
+                aria-label="Fit map to places"
+                title="Fit to places"
+                onClick={() => setCamera(null)}
+                style={{ ...zoomButtonStyle, width: "auto", borderRadius: "12px", padding: "0 9px", fontSize: "11px" }}
+              >
+                Fit
               </button>
             </div>
             <div style={{
@@ -324,8 +501,13 @@ export default function PlacesClient({ places, layers }: { places: PlaceMapItem[
                     key={cluster.id}
                     aria-label={label}
                     onClick={() => {
-                      if (cluster.places.length > 1 && zoom < 4) {
-                        setZoom(value => Math.min(4, value + 1))
+                      if (cluster.places.length > 1) {
+                        const coords = cluster.places.filter(place => typeof place.latitude === "number" && typeof place.longitude === "number")
+                        if (coords.length) {
+                          const lat = coords.reduce((sum, place) => sum + place.latitude!, 0) / coords.length
+                          const lng = coords.reduce((sum, place) => sum + place.longitude!, 0) / coords.length
+                          applyCamera(current => ({ lat, lng, zoom: Math.min(19, current.zoom + 2) }))
+                        }
                       }
                       setSelectedId(cluster.places[0]?.id ?? null)
                       setSelectedVisitId(null)
@@ -345,7 +527,7 @@ export default function PlacesClient({ places, layers }: { places: PlaceMapItem[
                       cursor: "pointer",
                       fontSize: cluster.level !== "place" ? "11px" : 0,
                       fontWeight: 700,
-                      transition: "left 180ms ease, top 180ms ease, width 180ms ease, height 180ms ease, box-shadow 180ms ease",
+                      transition: "width 180ms ease, height 180ms ease, box-shadow 180ms ease",
                     }}
                     title={`${label}${cluster.totalSpend > 0 ? ` · ${money(cluster.totalSpend)}` : " · no spend yet"}`}
                   >
@@ -406,7 +588,13 @@ export default function PlacesClient({ places, layers }: { places: PlaceMapItem[
               {filtered.slice(0, 250).map(place => (
                 <button
                   key={place.id}
-                  onClick={() => { setSelectedId(place.id); setSelectedVisitId(null) }}
+                  onClick={() => {
+                    setSelectedId(place.id)
+                    setSelectedVisitId(null)
+                    if (typeof place.latitude === "number" && typeof place.longitude === "number") {
+                      applyCamera(current => ({ lat: place.latitude!, lng: place.longitude!, zoom: Math.max(current.zoom, 15) }))
+                    }
+                  }}
                   style={{
                     textAlign: "left",
                     padding: "10px 12px",
@@ -588,9 +776,6 @@ function MiniStat({ label, value }: { label: string; value: number | string }) {
 }
 
 function plotPlaces(places: PlaceMapItem[]): PlottedPlace[] {
-  const viewport = buildMapViewport(places, 1, places)
-  if (viewport.points.length) return viewport.points
-
   const withCoordinates = places.filter(place => typeof place.latitude === "number" && typeof place.longitude === "number")
   if (!withCoordinates.length) {
     return places.map((place, index) => ({
@@ -615,36 +800,70 @@ function plotPlaces(places: PlaceMapItem[]): PlottedPlace[] {
   })
 }
 
-function buildMapViewport(places: PlaceMapItem[], zoom: number, sources: CoordinateSource[]): MapViewport {
-  const width = 820
-  const height = 620
+type Camera = { lat: number; lng: number; zoom: number }
+
+const MIN_ZOOM = 3
+const MAX_ZOOM = 19
+
+function clampCamera(camera: Camera): Camera {
+  return {
+    lat: Math.max(-85, Math.min(85, camera.lat)),
+    lng: ((camera.lng + 540) % 360) - 180,
+    zoom: Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, camera.zoom)),
+  }
+}
+
+function panCamera(camera: Camera, dxPx: number, dyPx: number): Camera {
+  const tz = camera.zoom
+  const point = project(camera.lat, camera.lng, tz)
+  const next = unproject(point.x + dxPx, point.y + dyPx, tz)
+  return { ...next, zoom: camera.zoom }
+}
+
+// Zoom keeping the geographic point under the cursor fixed — the core of
+// the Google Maps pinch feel.
+function zoomCameraAt(camera: Camera, zoomDelta: number, cursorX: number, cursorY: number, width: number, height: number): Camera {
+  const newZoom = Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, camera.zoom + zoomDelta))
+  if (newZoom === camera.zoom) return camera
+  const dx = cursorX - width / 2
+  const dy = cursorY - height / 2
+  const before = project(camera.lat, camera.lng, camera.zoom)
+  const anchor = unproject(before.x + dx, before.y + dy, camera.zoom)
+  const anchorAfter = project(anchor.lat, anchor.lng, newZoom)
+  const centerAfter = unproject(anchorAfter.x - dx, anchorAfter.y - dy, newZoom)
+  return { ...centerAfter, zoom: newZoom }
+}
+
+function fitCamera(sources: CoordinateSource[], width: number, height: number): Camera | null {
   const withCoordinates = sources.filter(item => typeof item.latitude === "number" && typeof item.longitude === "number")
-  if (!withCoordinates.length) {
-    return {
-      tiles: [],
-      points: [],
-      centerLabel: "No coordinates yet",
-      width,
-      height,
-    }
+  if (!withCoordinates.length) return null
+  const lat = withCoordinates.reduce((sum, item) => sum + item.latitude!, 0) / withCoordinates.length
+  const lng = withCoordinates.reduce((sum, item) => sum + item.longitude!, 0) / withCoordinates.length
+  return { lat, lng, zoom: fitTileZoom(withCoordinates, width, height, 1) }
+}
+
+function buildCameraViewport(places: PlaceMapItem[], camera: Camera | null, width: number, height: number): MapViewport {
+  if (!camera) {
+    return { tiles: [], points: [], centerLabel: "No coordinates yet", width, height }
   }
 
-  const centerLat = withCoordinates.reduce((sum, place) => sum + place.latitude!, 0) / withCoordinates.length
-  const centerLng = withCoordinates.reduce((sum, place) => sum + place.longitude!, 0) / withCoordinates.length
-  const tileZoom = fitTileZoom(withCoordinates, width, height, zoom)
-  const center = project(centerLat, centerLng, tileZoom)
+  const tileZoom = Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, Math.round(camera.zoom)))
+  const worldSize = 256 * 2 ** tileZoom
+  const center = project(camera.lat, camera.lng, tileZoom)
   const topLeft = { x: center.x - width / 2, y: center.y - height / 2 }
+  const maxTile = 2 ** tileZoom - 1
   const startX = Math.floor(topLeft.x / 256)
   const endX = Math.floor((topLeft.x + width) / 256)
-  const startY = Math.floor(topLeft.y / 256)
-  const endY = Math.floor((topLeft.y + height) / 256)
+  const startY = Math.max(0, Math.floor(topLeft.y / 256))
+  const endY = Math.min(maxTile, Math.floor((topLeft.y + height) / 256))
   const tiles: Tile[] = []
 
   for (let x = startX; x <= endX; x++) {
+    const wrappedX = ((x % (maxTile + 1)) + maxTile + 1) % (maxTile + 1)
     for (let y = startY; y <= endY; y++) {
       tiles.push({
         key: `${tileZoom}:${x}:${y}`,
-        src: `https://tile.openstreetmap.org/${tileZoom}/${x}/${y}.png`,
+        src: `https://tile.openstreetmap.org/${tileZoom}/${wrappedX}/${y}.png`,
         left: x * 256 - topLeft.x,
         top: y * 256 - topLeft.y,
       })
@@ -653,19 +872,35 @@ function buildMapViewport(places: PlaceMapItem[], zoom: number, sources: Coordin
 
   return {
     tiles,
-    points: places.map((place, index) => {
-      if (typeof place.latitude !== "number" || typeof place.longitude !== "number") {
-        return { place, x: 24 + (index % 4) * 22, y: height - 46 }
-      }
+    points: places.flatMap(place => {
+      if (typeof place.latitude !== "number" || typeof place.longitude !== "number") return []
       const point = project(place.latitude, place.longitude, tileZoom)
-      return { place, x: point.x - topLeft.x, y: point.y - topLeft.y }
+      const x = point.x - topLeft.x
+      const y = point.y - topLeft.y
+      // Cull far off-screen markers so panning stays cheap
+      if (x < -120 || x > width + 120 || y < -120 || y > height + 120) return []
+      return [{ place, x, y }]
     }),
-    centerLabel: coordinatesText(centerLat, centerLng),
+    centerLabel: coordinatesText(camera.lat, camera.lng),
     tileZoom,
     topLeft,
     width,
     height,
   }
+}
+
+function legacyZoomBucket(tileZoom: number) {
+  if (tileZoom <= 11) return 1
+  if (tileZoom <= 12) return 2
+  if (tileZoom <= 14) return 3
+  return 4
+}
+
+function unproject(x: number, y: number, zoom: number) {
+  const scale = 256 * 2 ** zoom
+  const lng = (x / scale) * 360 - 180
+  const lat = Math.asin(Math.tanh(Math.PI * (1 - (2 * y) / scale))) * 180 / Math.PI
+  return { lat, lng }
 }
 
 function projectCoordinates<T extends CoordinateSource>(items: T[], viewport: MapViewport): Array<PlottedCoordinate<T>> {
@@ -677,7 +912,10 @@ function projectCoordinates<T extends CoordinateSource>(items: T[], viewport: Ma
       return [{ item, x: 96 + (index % 5) * 40, y: viewport.height - 72 }]
     }
     const point = project(item.latitude, item.longitude, viewport.tileZoom!)
-    return [{ item, x: point.x - viewport.topLeft!.x, y: point.y - viewport.topLeft!.y }]
+    const x = point.x - viewport.topLeft!.x
+    const y = point.y - viewport.topLeft!.y
+    if (x < -80 || x > viewport.width + 80 || y < -80 || y > viewport.height + 80) return []
+    return [{ item, x, y }]
   })
 }
 

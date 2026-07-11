@@ -134,7 +134,71 @@ export async function getInteractionLayerItems(workspaceId: string, placeIds: st
 }
 
 export async function getFinanceLayerItems(): Promise<FinanceLayerItem[]> {
-  return []
+  // Two sources, merged per place:
+  //  1. Accepted financial Interactions carrying placeId (canonical graph)
+  //  2. Era-staged transactions whose placeMatch resolved a merchant place
+  //     (pre-acceptance signal, joined to Places by googlePlaceId)
+  // Derived on every request — never stored.
+  const [interactions, places, staged] = await Promise.all([
+    db.interaction.findMany({
+      where: { type: "financial", placeId: { not: null }, amount: { not: null } },
+      select: { placeId: true, amount: true, summary: true, timestamp: true },
+    }),
+    db.place.findMany({
+      where: { googlePlaceId: { not: null } },
+      select: { id: true, googlePlaceId: true },
+    }),
+    db.stagedInteraction.findMany({
+      where: { source: "era", status: "pending" },
+      select: { contactName: true, timestamp: true, metadata: true },
+    }),
+  ])
+
+  const placeIdByGoogleId = new Map(places.map(place => [place.googlePlaceId!, place.id]))
+  const byPlace = new Map<string, FinanceLayerItem>()
+
+  const add = (placeId: string, merchant: string, amount: number, date: Date) => {
+    const item = byPlace.get(placeId) ?? { placeId, transactionCount: 0, totalAmount: 0, transactions: [] }
+    item.transactionCount += 1
+    item.totalAmount = Math.round((item.totalAmount + amount) * 100) / 100
+    if (item.transactions.length < 12) {
+      item.transactions.push({ merchant, amount, date: date.toISOString().slice(0, 10) })
+    }
+    byPlace.set(placeId, item)
+  }
+
+  for (const interaction of interactions) {
+    add(interaction.placeId!, interaction.summary ?? "transaction", Math.abs(interaction.amount!), interaction.timestamp)
+  }
+
+  for (const row of staged) {
+    const meta = parseStagedMeta(row.metadata)
+    const match = meta?.placeMatch
+    if (!match?.merchantPlace?.googlePlaceId) continue
+    if (!["auto", "adjudicated"].includes(match.band ?? "")) continue
+    const placeId = placeIdByGoogleId.get(match.merchantPlace.googlePlaceId)
+    if (!placeId) continue
+    add(placeId, row.contactName ?? match.merchantPlace.name, Number(meta?.amount ?? 0), row.timestamp)
+  }
+
+  return [...byPlace.values()]
+}
+
+type StagedFinanceMeta = {
+  amount?: number
+  placeMatch?: {
+    band?: string
+    merchantPlace?: { name: string; googlePlaceId: string | null } | null
+  }
+}
+
+function parseStagedMeta(value: string | null): StagedFinanceMeta | null {
+  if (!value) return null
+  try {
+    return JSON.parse(value) as StagedFinanceMeta
+  } catch {
+    return null
+  }
 }
 
 export async function getPhotoLayerItems(): Promise<PhotoLayerItem[]> {
