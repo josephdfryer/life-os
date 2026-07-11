@@ -74,7 +74,8 @@ Still is the approved visual language for all Life OS apps (warm linen, cognac/c
 | Resource | Purpose |
 |----------|---------|
 | `docs/STILL_DESIGN_SYSTEM.md` | Canonical spec for agents |
-| `docs/STILL_UI_MIGRATION_PLAN.md` | Migration order and current status |
+| `docs/STILL_MIGRATION_PLAN.md` | Detailed phased migration plan (execute this) |
+| `docs/STILL_UI_MIGRATION_PLAN.md` | Short status + pointer to full plan |
 | `packages/ui/still-tokens.css` | CSS custom properties |
 | `docs/ui-preview/still-direction-v2.html` | Visual reference (open in browser) |
 | `packages/ui/AGENTS.md` | Package-level UI notes |

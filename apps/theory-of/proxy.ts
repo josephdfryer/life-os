@@ -2,8 +2,11 @@ import { auth } from "@/auth"
 import { NextResponse } from "next/server"
 
 export default auth((req) => {
-  // DEV_BYPASS=true skips auth entirely — for local development without OAuth credentials
-  if (process.env.DEV_BYPASS === "true") return NextResponse.next()
+  // Local auth bypass — see AGENTS.md "Local Development: Always Bypass Auth".
+  // LIFE_OS_LOCAL_REVIEW=1 is the standard flag; DEV_BYPASS=true kept for compat.
+  const localBypass = process.env.NODE_ENV !== "production"
+    && (process.env.LIFE_OS_LOCAL_REVIEW === "1" || process.env.DEV_BYPASS === "true")
+  if (localBypass) return NextResponse.next()
 
   if (req.auth) return NextResponse.next()
 
