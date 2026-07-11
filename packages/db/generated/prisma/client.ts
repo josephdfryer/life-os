@@ -122,6 +122,21 @@ export type GmailConnection = Prisma.GmailConnectionModel
  */
 export type GmailMessageLink = Prisma.GmailMessageLinkModel
 /**
+ * Model EraConnection
+ * 
+ */
+export type EraConnection = Prisma.EraConnectionModel
+/**
+ * Model EraAccountLink
+ * 
+ */
+export type EraAccountLink = Prisma.EraAccountLinkModel
+/**
+ * Model EraTransactionLink
+ * 
+ */
+export type EraTransactionLink = Prisma.EraTransactionLinkModel
+/**
  * Model Rule
  * 
  */

@@ -1,7 +1,7 @@
 # Era Finance Integration
 
-**Status:** Research / Pre-implementation  
-**Last updated:** May 11, 2026  
+**Status:** Research / Pre-implementation — API shapes verified against live Era MCP  
+**Last updated:** July 9, 2026  
 **Author:** Claude (Cowork)  
 **For:** Codex implementation agent
 
@@ -571,13 +571,90 @@ These are the Era MCP tools Life OS will actually call — not the full 43:
 
 ---
 
+## Verified Shapes (July 9, 2026 — live MCP inspection)
+
+Inspected via the live Era Context MCP connection. These supersede the inferred
+shapes above where they differ.
+
+**Transaction (actual):**
+
+```json
+{
+  "transaction_id": "utgr_GlzxYv1Dkmh",          // stable — dedup key
+  "account_group_key": "uagr_9pBYqjyRTzX",       // FK to account
+  "account_name": "Platinum Card®",
+  "amount": -20.00,                               // NEGATIVE = money out (opposite of inferred!)
+  "is_cash_outflow": true,                        // explicit direction flag — use this
+  "currency": "USD",
+  "description": "Summerlin Tennis Clulas",       // cleaned merchant — primary matching signal
+  "merchant_name": "Google Pay",                  // UNRELIABLE: often absent, or the payment rail
+  "original_description": "SUMMERLIN TENNIS CLULAS VEGAS NV",  // raw — trailing "CITY ST"
+  "transaction_date": "2026-07-08",               // DATE ONLY, no time component
+  "posted_date": "2026-07-08",
+  "is_pending": false,
+  "category": "Dining out",
+  "category_key": "fcat_42pmXjDBL44",
+  "applied_rules": [], "applied_tags": [],
+  "scope": "Owner"
+}
+```
+
+Key corrections to the plan:
+
+- **Sign convention:** negative amount = outflow. Map `direction` from `is_cash_outflow`, not the sign guess above.
+- **Merchant matching:** use `description` (cleaned), not `merchant_name` (frequently the payment processor — "Google Pay", "Chase" — or missing). Keep `original_description` for audit and location parsing.
+- **No structured location** — no lat/lng, no address. But `original_description` usually ends with `CITY ST` (card-processor format). See "Places Interface" below.
+- **Pagination is page-based** (`page`/`page_size`, max 100; ~5,300 transactions ≈ 53 pages). No cursor. Incremental sync should use a **date watermark** (`from_date = lastSyncedAt − 5 days` to catch late postings) with `EraTransactionLink` dedup, not page state. `syncCursor` stores the watermark date.
+- **Pending transactions are already excluded** by `list_transactions` (posted/settled only) — the pending-volatility concern below is moot.
+- **Backfill volume:** ~5,300 transactions. The initial sync needs the same time-budgeted, resumable pattern as the Gmail sync (`server/domain/gmail.ts`), and auto-accept rules matter from day one — most grocery/gas/subscription rows should never hit the review inbox.
+
+**Account (actual):** `account_group_key` (stable, `uagr_*`), `name`, `institution`
+("Chase Bank", "American Express"), `provider_id` ("mx" — MX is the aggregator),
+`type` (`Checking | Savings | CreditCard | LineOfCredit`), `balance.current` /
+`balance.available`, `last_synced`. Maps cleanly onto `EraAccountLink`
+(`eraAccountId` ← `account_group_key`). 11 accounts connected as of inspection.
+
+---
+
+## Places Interface
+
+Places is already finance-ready on the read side: `PlaceProfile.stats.totalSpend`
+is derived from `Interaction.amount` on Events at each Place, and the map has a
+**finance layer stubbed** waiting for transactions to carry `placeId`
+(see `docs/PLACES_ARCHITECTURE.md`). The entire Places integration reduces to one
+problem: **resolving a transaction to a `placeId`**. Resolution ladder, strongest
+signal first:
+
+1. **Google Timeline join (highest confidence).** Places already imports Timeline
+   visits as Events at Places with time windows. A transaction's
+   `transaction_date` × fuzzy match of `description` against that day's visited
+   place names → `placeId`. Date-only granularity is fine: few named commercial
+   places are visited per day. This is the signature move — no finance app can
+   do it because none of them have the location graph.
+2. **Learned merchant→Place map.** Once a description→place link is confirmed
+   (via timeline join or manual review), remember it (Rules engine or a mapping
+   table) so every future "SPROUTS MARKELAS VEGAS NV" auto-links.
+3. **City/state parse.** Extract trailing `CITY ST` from `original_description`.
+   If exactly one existing Place matches name + city, link it; otherwise keep
+   city/state in metadata for map region rollups.
+4. **Stage for review.** Everything ambiguous lands in the (now fast) inbox with
+   suggested candidates, same as Gmail and Timeline imports.
+
+What lights up in Places once `placeId` is set — with **zero additional Places
+work**: place-profile `totalSpend` becomes real, the map finance layer can render
+spend-weighted pins/heat, and the cross-domain queries from
+`FINANCE_FRAMEWORK.md` ("what did this trip cost", "spend at places with
+person X") become graph traversals.
+
+---
+
 ## Open Questions for Implementation
 
-1. **Era's exact transaction response shape** — the tool docs describe capabilities but not the JSON schema. The sync code will need to handle this empirically on first connection. Use `knowledge__get_financial_context_and_overview` first to inspect what comes back.
+1. ~~**Era's exact transaction response shape**~~ — **Resolved.** See "Verified Shapes" above.
 
-2. **Pagination API** — Era docs mention `list_transactions` is paginated but don't specify cursor vs. offset. The `syncCursor` field in `EraConnection` is typed as `String?` to handle either.
+2. ~~**Pagination API**~~ — **Resolved.** Page-based; use date-watermark incremental sync.
 
-3. **Pending transaction handling** — pending transactions have volatile amounts and may disappear (declines) or update (posting). The sync should re-check pending transactions on each run and update `StagedInteraction` metadata accordingly rather than promoting them to `Interaction` until they clear.
+3. ~~**Pending transaction handling**~~ — **Resolved.** `list_transactions` returns only posted/settled transactions; pending rows never reach Life OS.
 
 4. **Transfer linking** — Era's `transactions__manage_transfer_links` handles internal transfers (e.g., savings → checking). These should map to `direction: "transfer"` in Life OS and get a special treatment in cash flow calculations to avoid double-counting.
 

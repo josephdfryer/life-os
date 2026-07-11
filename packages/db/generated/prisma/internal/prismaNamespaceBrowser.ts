@@ -67,6 +67,9 @@ export const ModelName = {
   CalendarEventLink: 'CalendarEventLink',
   GmailConnection: 'GmailConnection',
   GmailMessageLink: 'GmailMessageLink',
+  EraConnection: 'EraConnection',
+  EraAccountLink: 'EraAccountLink',
+  EraTransactionLink: 'EraTransactionLink',
   Rule: 'Rule',
   RuleRun: 'RuleRun',
   StagedInteraction: 'StagedInteraction',
@@ -356,6 +359,61 @@ export const GmailMessageLinkScalarFieldEnum = {
 } as const
 
 export type GmailMessageLinkScalarFieldEnum = (typeof GmailMessageLinkScalarFieldEnum)[keyof typeof GmailMessageLinkScalarFieldEnum]
+
+
+export const EraConnectionScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  userId: 'userId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  status: 'status',
+  accountEmail: 'accountEmail',
+  accessToken: 'accessToken',
+  refreshToken: 'refreshToken',
+  expiresAt: 'expiresAt',
+  scope: 'scope',
+  lastSyncedAt: 'lastSyncedAt',
+  lastError: 'lastError',
+  syncCursor: 'syncCursor'
+} as const
+
+export type EraConnectionScalarFieldEnum = (typeof EraConnectionScalarFieldEnum)[keyof typeof EraConnectionScalarFieldEnum]
+
+
+export const EraAccountLinkScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  connectionId: 'connectionId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  eraAccountId: 'eraAccountId',
+  institution: 'institution',
+  accountName: 'accountName',
+  accountType: 'accountType',
+  currency: 'currency',
+  status: 'status',
+  lastSeenAt: 'lastSeenAt'
+} as const
+
+export type EraAccountLinkScalarFieldEnum = (typeof EraAccountLinkScalarFieldEnum)[keyof typeof EraAccountLinkScalarFieldEnum]
+
+
+export const EraTransactionLinkScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  connectionId: 'connectionId',
+  accountLinkId: 'accountLinkId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  eraTransactionId: 'eraTransactionId',
+  interactionId: 'interactionId',
+  stagedItemId: 'stagedItemId',
+  status: 'status',
+  lastSeenAt: 'lastSeenAt'
+} as const
+
+export type EraTransactionLinkScalarFieldEnum = (typeof EraTransactionLinkScalarFieldEnum)[keyof typeof EraTransactionLinkScalarFieldEnum]
 
 
 export const RuleScalarFieldEnum = {

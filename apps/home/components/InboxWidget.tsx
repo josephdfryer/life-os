@@ -7,7 +7,8 @@ interface Props {
 
 export default async function InboxWidget({ workspaceId, personsUrl }: Props) {
   const pending = await db.stagedInteraction.findMany({
-    where: { workspaceId, status: 'pending' },
+    // Financial staging (era) has its own review surface — not this inbox.
+    where: { workspaceId, status: 'pending', type: { not: 'financial' } },
     select: { source: true },
   })
 

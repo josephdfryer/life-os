@@ -60,6 +60,9 @@ model Workspace {
   importStagedVisits   ImportStagedVisit[]
   planExpectedPersons  PlanExpectedPerson[]
   assistantMessages    AssistantMessage[]
+  eraConnections       EraConnection[]
+  eraAccountLinks      EraAccountLink[]
+  eraTransactionLinks  EraTransactionLink[]
 
   @@index([ownerUserId])
   @@index([status])
@@ -176,6 +179,7 @@ model User {
   approvedEmailsSent   ApprovedEmail[] @relation("ApprovedEmailInviter")
   calendarConnections  CalendarConnection[]
   gmailConnections     GmailConnection[]
+  eraConnections       EraConnection[]
 
   @@index([email])
   @@index([status])
@@ -395,6 +399,82 @@ model GmailMessageLink {
 }
 
 // ─────────────────────────────────────────────
+// INTEGRATIONS: Era Finance
+// ─────────────────────────────────────────────
+
+model EraConnection {
+  id               String   @id @default(cuid())
+  workspaceId      String   @default("default-workspace")
+  workspace        Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  userId           String
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  status           String   @default("active")
+  accountEmail     String?
+  accessToken      String?
+  refreshToken     String?
+  expiresAt        DateTime?
+  scope            String?
+  lastSyncedAt     DateTime?
+  lastError        String?
+  syncCursor       String?
+  transactionLinks EraTransactionLink[]
+  accountLinks     EraAccountLink[]
+
+  @@unique([workspaceId, userId])
+  @@index([userId])
+  @@index([workspaceId, status])
+}
+
+model EraAccountLink {
+  id               String        @id @default(cuid())
+  workspaceId      String        @default("default-workspace")
+  workspace        Workspace     @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  connectionId     String
+  connection       EraConnection @relation(fields: [connectionId], references: [id], onDelete: Cascade)
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+  eraAccountId     String
+  institution      String?
+  accountName      String?
+  accountType      String?
+  currency         String?       @default("USD")
+  status           String        @default("active")
+  lastSeenAt       DateTime?
+  transactionLinks EraTransactionLink[]
+
+  @@unique([workspaceId, eraAccountId])
+  @@index([connectionId])
+  @@index([workspaceId, status])
+}
+
+model EraTransactionLink {
+  id               String         @id @default(cuid())
+  workspaceId      String         @default("default-workspace")
+  workspace        Workspace      @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  connectionId     String
+  connection       EraConnection  @relation(fields: [connectionId], references: [id], onDelete: Cascade)
+  accountLinkId    String?
+  accountLink      EraAccountLink? @relation(fields: [accountLinkId], references: [id], onDelete: SetNull)
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  eraTransactionId String
+  interactionId    String?
+  interaction      Interaction?   @relation(fields: [interactionId], references: [id], onDelete: SetNull)
+  stagedItemId     String?
+  stagedItem       StagedInteraction? @relation(fields: [stagedItemId], references: [id], onDelete: SetNull)
+  status           String         @default("staged")
+  lastSeenAt       DateTime?
+
+  @@unique([workspaceId, eraTransactionId])
+  @@index([connectionId])
+  @@index([interactionId])
+  @@index([stagedItemId])
+  @@index([workspaceId, status])
+}
+
+// ─────────────────────────────────────────────
 // RULES: deterministic policy and enrichment engine
 // ─────────────────────────────────────────────
 
@@ -482,6 +562,7 @@ model StagedInteraction {
   priority          Int       @default(3)
   enrichedAt        DateTime?
   gmailLinks        GmailMessageLink[]
+  eraLinks          EraTransactionLink[]
 
   @@unique([workspaceId, source, sourceId])
   @@index([status, priority, createdAt])
@@ -566,6 +647,7 @@ model Interaction {
   sourceNote      Note?             @relation(fields: [sourceNoteId], references: [id], onDelete: SetNull)
   itemInteractions ItemInteraction[]
   gmailLinks       GmailMessageLink[]
+  eraLinks         EraTransactionLink[]
 
   @@index([personId, timestamp(sort: Desc)])
   @@index([workspaceId, timestamp(sort: Desc)])

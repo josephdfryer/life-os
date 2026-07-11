@@ -10,6 +10,7 @@
     "agent:finish": "node scripts/agent-sync.mjs finish",
     "agent:status": "node scripts/agent-sync.mjs status",
     "imessage:sync": "tsx scripts/imessage-sync.ts",
+    "health:sync": "tsx scripts/health-sync.ts",
     "capture:whatsapp": "tsx scripts/capture/whatsapp.ts",
     "capture:calls": "tsx scripts/capture/calls.ts",
     "capture:all": "npm run capture:whatsapp && npm run capture:calls",

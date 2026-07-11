@@ -400,6 +400,9 @@ export const ModelName = {
   CalendarEventLink: 'CalendarEventLink',
   GmailConnection: 'GmailConnection',
   GmailMessageLink: 'GmailMessageLink',
+  EraConnection: 'EraConnection',
+  EraAccountLink: 'EraAccountLink',
+  EraTransactionLink: 'EraTransactionLink',
   Rule: 'Rule',
   RuleRun: 'RuleRun',
   StagedInteraction: 'StagedInteraction',
@@ -440,7 +443,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "workspace" | "workspaceMember" | "approvedEmail" | "person" | "user" | "role" | "permission" | "userRole" | "rolePermission" | "apiKey" | "apiKeyScope" | "auditLog" | "calendarConnection" | "calendarEventLink" | "gmailConnection" | "gmailMessageLink" | "rule" | "ruleRun" | "stagedInteraction" | "event" | "interaction" | "plan" | "planExpectedPerson" | "place" | "importJob" | "importStagedVisit" | "placeNote" | "item" | "assembly" | "itemInteraction" | "importedFile" | "group" | "personGroup" | "groupGroup" | "placeGroup" | "note" | "theorySnapshot" | "theorySnapshotSource" | "stateDefinition" | "state" | "assistantMessage"
+    modelProps: "workspace" | "workspaceMember" | "approvedEmail" | "person" | "user" | "role" | "permission" | "userRole" | "rolePermission" | "apiKey" | "apiKeyScope" | "auditLog" | "calendarConnection" | "calendarEventLink" | "gmailConnection" | "gmailMessageLink" | "eraConnection" | "eraAccountLink" | "eraTransactionLink" | "rule" | "ruleRun" | "stagedInteraction" | "event" | "interaction" | "plan" | "planExpectedPerson" | "place" | "importJob" | "importStagedVisit" | "placeNote" | "item" | "assembly" | "itemInteraction" | "importedFile" | "group" | "personGroup" | "groupGroup" | "placeGroup" | "note" | "theorySnapshot" | "theorySnapshotSource" | "stateDefinition" | "state" | "assistantMessage"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1625,6 +1628,228 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.GmailMessageLinkCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.GmailMessageLinkCountAggregateOutputType> | number
+        }
+      }
+    }
+    EraConnection: {
+      payload: Prisma.$EraConnectionPayload<ExtArgs>
+      fields: Prisma.EraConnectionFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.EraConnectionFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EraConnectionPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.EraConnectionFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EraConnectionPayload>
+        }
+        findFirst: {
+          args: Prisma.EraConnectionFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EraConnectionPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.EraConnectionFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EraConnectionPayload>
+        }
+        findMany: {
+          args: Prisma.EraConnectionFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EraConnectionPayload>[]
+        }
+        create: {
+          args: Prisma.EraConnectionCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EraConnectionPayload>
+        }
+        createMany: {
+          args: Prisma.EraConnectionCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.EraConnectionCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EraConnectionPayload>[]
+        }
+        delete: {
+          args: Prisma.EraConnectionDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EraConnectionPayload>
+        }
+        update: {
+          args: Prisma.EraConnectionUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EraConnectionPayload>
+        }
+        deleteMany: {
+          args: Prisma.EraConnectionDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.EraConnectionUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.EraConnectionUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EraConnectionPayload>[]
+        }
+        upsert: {
+          args: Prisma.EraConnectionUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EraConnectionPayload>
+        }
+        aggregate: {
+          args: Prisma.EraConnectionAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateEraConnection>
+        }
+        groupBy: {
+          args: Prisma.EraConnectionGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.EraConnectionGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.EraConnectionCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.EraConnectionCountAggregateOutputType> | number
+        }
+      }
+    }
+    EraAccountLink: {
+      payload: Prisma.$EraAccountLinkPayload<ExtArgs>
+      fields: Prisma.EraAccountLinkFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.EraAccountLinkFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EraAccountLinkPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.EraAccountLinkFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EraAccountLinkPayload>
+        }
+        findFirst: {
+          args: Prisma.EraAccountLinkFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EraAccountLinkPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.EraAccountLinkFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EraAccountLinkPayload>
+        }
+        findMany: {
+          args: Prisma.EraAccountLinkFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EraAccountLinkPayload>[]
+        }
+        create: {
+          args: Prisma.EraAccountLinkCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EraAccountLinkPayload>
+        }
+        createMany: {
+          args: Prisma.EraAccountLinkCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.EraAccountLinkCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EraAccountLinkPayload>[]
+        }
+        delete: {
+          args: Prisma.EraAccountLinkDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EraAccountLinkPayload>
+        }
+        update: {
+          args: Prisma.EraAccountLinkUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EraAccountLinkPayload>
+        }
+        deleteMany: {
+          args: Prisma.EraAccountLinkDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.EraAccountLinkUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.EraAccountLinkUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EraAccountLinkPayload>[]
+        }
+        upsert: {
+          args: Prisma.EraAccountLinkUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EraAccountLinkPayload>
+        }
+        aggregate: {
+          args: Prisma.EraAccountLinkAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateEraAccountLink>
+        }
+        groupBy: {
+          args: Prisma.EraAccountLinkGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.EraAccountLinkGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.EraAccountLinkCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.EraAccountLinkCountAggregateOutputType> | number
+        }
+      }
+    }
+    EraTransactionLink: {
+      payload: Prisma.$EraTransactionLinkPayload<ExtArgs>
+      fields: Prisma.EraTransactionLinkFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.EraTransactionLinkFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EraTransactionLinkPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.EraTransactionLinkFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EraTransactionLinkPayload>
+        }
+        findFirst: {
+          args: Prisma.EraTransactionLinkFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EraTransactionLinkPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.EraTransactionLinkFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EraTransactionLinkPayload>
+        }
+        findMany: {
+          args: Prisma.EraTransactionLinkFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EraTransactionLinkPayload>[]
+        }
+        create: {
+          args: Prisma.EraTransactionLinkCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EraTransactionLinkPayload>
+        }
+        createMany: {
+          args: Prisma.EraTransactionLinkCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.EraTransactionLinkCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EraTransactionLinkPayload>[]
+        }
+        delete: {
+          args: Prisma.EraTransactionLinkDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EraTransactionLinkPayload>
+        }
+        update: {
+          args: Prisma.EraTransactionLinkUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EraTransactionLinkPayload>
+        }
+        deleteMany: {
+          args: Prisma.EraTransactionLinkDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.EraTransactionLinkUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.EraTransactionLinkUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EraTransactionLinkPayload>[]
+        }
+        upsert: {
+          args: Prisma.EraTransactionLinkUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EraTransactionLinkPayload>
+        }
+        aggregate: {
+          args: Prisma.EraTransactionLinkAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateEraTransactionLink>
+        }
+        groupBy: {
+          args: Prisma.EraTransactionLinkGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.EraTransactionLinkGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.EraTransactionLinkCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.EraTransactionLinkCountAggregateOutputType> | number
         }
       }
     }
@@ -3765,6 +3990,61 @@ export const GmailMessageLinkScalarFieldEnum = {
 export type GmailMessageLinkScalarFieldEnum = (typeof GmailMessageLinkScalarFieldEnum)[keyof typeof GmailMessageLinkScalarFieldEnum]
 
 
+export const EraConnectionScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  userId: 'userId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  status: 'status',
+  accountEmail: 'accountEmail',
+  accessToken: 'accessToken',
+  refreshToken: 'refreshToken',
+  expiresAt: 'expiresAt',
+  scope: 'scope',
+  lastSyncedAt: 'lastSyncedAt',
+  lastError: 'lastError',
+  syncCursor: 'syncCursor'
+} as const
+
+export type EraConnectionScalarFieldEnum = (typeof EraConnectionScalarFieldEnum)[keyof typeof EraConnectionScalarFieldEnum]
+
+
+export const EraAccountLinkScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  connectionId: 'connectionId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  eraAccountId: 'eraAccountId',
+  institution: 'institution',
+  accountName: 'accountName',
+  accountType: 'accountType',
+  currency: 'currency',
+  status: 'status',
+  lastSeenAt: 'lastSeenAt'
+} as const
+
+export type EraAccountLinkScalarFieldEnum = (typeof EraAccountLinkScalarFieldEnum)[keyof typeof EraAccountLinkScalarFieldEnum]
+
+
+export const EraTransactionLinkScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  connectionId: 'connectionId',
+  accountLinkId: 'accountLinkId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  eraTransactionId: 'eraTransactionId',
+  interactionId: 'interactionId',
+  stagedItemId: 'stagedItemId',
+  status: 'status',
+  lastSeenAt: 'lastSeenAt'
+} as const
+
+export type EraTransactionLinkScalarFieldEnum = (typeof EraTransactionLinkScalarFieldEnum)[keyof typeof EraTransactionLinkScalarFieldEnum]
+
+
 export const RuleScalarFieldEnum = {
   id: 'id',
   workspaceId: 'workspaceId',
@@ -4445,6 +4725,9 @@ export type GlobalOmitConfig = {
   calendarEventLink?: Prisma.CalendarEventLinkOmit
   gmailConnection?: Prisma.GmailConnectionOmit
   gmailMessageLink?: Prisma.GmailMessageLinkOmit
+  eraConnection?: Prisma.EraConnectionOmit
+  eraAccountLink?: Prisma.EraAccountLinkOmit
+  eraTransactionLink?: Prisma.EraTransactionLinkOmit
   rule?: Prisma.RuleOmit
   ruleRun?: Prisma.RuleRunOmit
   stagedInteraction?: Prisma.StagedInteractionOmit

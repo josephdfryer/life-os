@@ -13,7 +13,13 @@ export async function GET(req: NextRequest) {
   const limit = Math.min(100, Math.max(1, Number(searchParams.get("limit") ?? 50)))
   const cursor = searchParams.get("cursor")
 
-  const where = { ...inboxStatusWhere(status), workspaceId: actor.workspaceId }
+  // This inbox reviews person-communication items (gmail, krisp, imports).
+  // Financial staging (source: era) has its own review surface — keep it out.
+  const where = {
+    ...inboxStatusWhere(status),
+    workspaceId: actor.workspaceId,
+    type: { not: "financial" },
+  }
 
   const [rows, total] = await Promise.all([
     db.stagedInteraction.findMany({
