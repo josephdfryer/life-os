@@ -25,6 +25,7 @@ export async function GET(req: NextRequest) {
     where: {
       workspaceId,
       start: { gte: start, lte: end },
+      type: { notIn: ["message", "message_thread", "email"] },
     },
     include: {
       place: { select: { name: true } },

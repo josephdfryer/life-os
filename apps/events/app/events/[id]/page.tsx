@@ -23,7 +23,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
   const event = await db.event.findFirst({
     where: { id, workspaceId },
     include: {
-      place: true,
+      place: { select: { id: true, name: true } },
       sourcePlan: {
         select: {
           id: true,

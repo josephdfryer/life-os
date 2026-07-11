@@ -144,7 +144,7 @@ flowchart TD
   RuleRuns --> PersonsDB
 ```
 
-Important idea: unmatched iMessages do not create random new people anymore. They go to the Inbox staging area where you can review them.
+Important idea: iMessages are person-level Interactions, not Event nodes. Matched iMessages append into one daily message Interaction per Person; unmatched iMessages do not create random new people and instead go to the Inbox staging area where you can review them.
 
 Group texts are intentionally ignored by default before matching or staging. The watcher identifies multi-person chats from the Messages chat participant table, with the chat identifier as a fallback, so noisy group threads do not fill the Persons inbox or get appended to one person's daily interaction log. A one-off backfill can opt in with `--include-group-chats` when that is explicitly useful.
 
@@ -525,7 +525,7 @@ Plain English version:
 - **Place**: a location at any scale, from a city to a room or shelf. Places are shown through `/places` and `/places/[id]`.
 - **PlaceNote**: a memory note attached to a Place, optionally anchored to one Event at that Place.
 - **Interaction**: a thing that happened with a person.
-- **Event**: a grouping around an interaction, such as a message day, meeting, call, dinner, or imported event.
+- **Event**: a real-world occurrence such as a meeting, call, dinner, trip, or imported calendar event. Message-only imports stay as Interactions and should not create Event nodes.
 - **Plan**: what you want to do next with a person.
 - **StagedInteraction**: universal inbox item waiting for review. Any source can stage a record here. The `itemType` field (`interaction`, `person`, `event`) indicates what kind of record will be created when accepted.
 - **ImportedFile**: source material that was uploaded or ingested.

@@ -89,6 +89,7 @@ export async function googleCalendarStatus(actor: AccessActor) {
   return {
     configured: googleCalendarConfigured(),
     redirectUri: googleCalendarRedirectUri(null),
+    expectedAccountEmail: calendarAccountEmail(),
     connection: connection ? {
       ...connection,
       eventCount: connection._count.eventLinks,
@@ -206,6 +207,8 @@ export function googleCalendarAuthUrl(actor: AccessActor, origin: string, return
     include_granted_scopes: "true",
     state,
   })
+  const expectedEmail = calendarAccountEmail()
+  if (expectedEmail) params.set("login_hint", expectedEmail)
   return `${GOOGLE_AUTH_URL}?${params.toString()}`
 }
 
@@ -217,6 +220,7 @@ export async function handleGoogleCalendarCallback(input: { code: string; state:
   }
 
   const accountEmail = await fetchGoogleAccountEmail(token.access_token)
+  assertExpectedCalendarAccount(accountEmail)
   const calendar = await fetchPrimaryCalendar(token.access_token)
   const calendarId = "primary"
   const expiresAt = token.expires_in ? new Date(Date.now() + token.expires_in * 1000) : null
@@ -264,6 +268,67 @@ export async function handleGoogleCalendarCallback(input: { code: string; state:
   })
 
   return { returnTo: state.returnTo, connectionId: connection.id }
+}
+
+export async function resetGoogleCalendarImport(actor: AccessActor) {
+  const connection = await db.calendarConnection.findFirst({
+    where: { workspaceId: actor.workspaceId, provider: "google" },
+    orderBy: { updatedAt: "desc" },
+    include: { eventLinks: { select: { id: true, eventId: true } } },
+  })
+  if (!connection) {
+    return { deletedInteractions: 0, deletedEvents: 0, deletedLinks: 0, disconnected: false }
+  }
+
+  const eventIds = [...new Set(connection.eventLinks.map(link => link.eventId).filter((id): id is string => Boolean(id)))]
+
+  const result = await db.$transaction(async tx => {
+    const deletedInteractions = eventIds.length
+      ? await tx.interaction.deleteMany({
+        where: {
+          workspaceId: actor.workspaceId,
+          type: "calendar",
+          eventId: { in: eventIds },
+          notes: { contains: SOURCE },
+        },
+      })
+      : { count: 0 }
+
+    const deletedLinks = await tx.calendarEventLink.deleteMany({
+      where: { workspaceId: actor.workspaceId, provider: "google", connectionId: connection.id },
+    })
+
+    const deletedEvents = eventIds.length
+      ? await tx.event.deleteMany({
+        where: {
+          workspaceId: actor.workspaceId,
+          id: { in: eventIds },
+          type: "calendar",
+          metadata: { contains: `"source":"${SOURCE}"` },
+          interactions: { none: {} },
+        },
+      })
+      : { count: 0 }
+
+    await tx.calendarConnection.delete({ where: { id: connection.id } })
+
+    return {
+      deletedInteractions: deletedInteractions.count,
+      deletedEvents: deletedEvents.count,
+      deletedLinks: deletedLinks.count,
+      disconnected: true,
+    }
+  })
+
+  await auditAction({
+    actor: actor.actor,
+    action: "calendar.sync",
+    targetType: "calendarConnection",
+    targetId: connection.id,
+    metadata: { provider: "google", mode: "calendar-reset", ...result },
+  })
+
+  return result
 }
 
 type SyncOptions = {
@@ -717,6 +782,22 @@ function calendarClientId() {
 
 function calendarClientSecret() {
   return process.env.GOOGLE_CALENDAR_CLIENT_SECRET || process.env.GOOGLE_CLIENT_SECRET || null
+}
+
+function calendarAccountEmail() {
+  return (process.env.GOOGLE_CALENDAR_ACCOUNT_EMAIL || "jdf247@gmail.com").trim().toLowerCase()
+}
+
+function assertExpectedCalendarAccount(accountEmail: string | null) {
+  const expected = calendarAccountEmail()
+  if (!expected) return
+  const actual = accountEmail?.trim().toLowerCase() ?? null
+  if (actual !== expected) {
+    throw badRequest(`Connect ${expected} to Calendar, not ${actual ?? "an unknown Google account"}.`, {
+      expectedAccountEmail: expected,
+      accountEmail: actual,
+    })
+  }
 }
 
 function vercelProductionUrl() {

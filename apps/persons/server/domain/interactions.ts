@@ -181,22 +181,24 @@ export async function appendDailySourceInteraction(input: {
     return { interactionId: interaction.id, created: false, updated: true }
   }
 
-  const event = await db.event.create({
-    data: {
-      name: `${input.source} ${dayKey(input.timestamp)}`.slice(0, 80),
-      workspaceId,
-      type: input.type,
-      start: input.timestamp,
-      timestamp: input.timestamp,
-      metadata: JSON.stringify({ source: input.source, day: dayKey(input.timestamp) }),
-    },
-  })
+  const event = input.source === "imessage"
+    ? null
+    : await db.event.create({
+      data: {
+        name: `${input.source} ${dayKey(input.timestamp)}`.slice(0, 80),
+        workspaceId,
+        type: input.type,
+        start: input.timestamp,
+        timestamp: input.timestamp,
+        metadata: JSON.stringify({ source: input.source, day: dayKey(input.timestamp) }),
+      },
+    })
 
   const interaction = await db.interaction.create({
     data: {
       personId: input.personId,
       workspaceId,
-      eventId: event.id,
+      eventId: event?.id ?? null,
       type: input.type,
       timestamp: input.timestamp,
       summary: line,

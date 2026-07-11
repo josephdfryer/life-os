@@ -34,4 +34,7 @@ cp apps/persons/.vercel/project.json .vercel/project.json  # restore default
 
 Add Google OAuth callback: `https://events.lacollecteur.com/api/calendar/google/callback`
 
+Calendar sync is scoped to `jdf247@gmail.com` by default. Override with
+`GOOGLE_CALENDAR_ACCOUNT_EMAIL` only if the intended source calendar changes.
+
 Set the same shared auth env vars as other apps (`AUTH_SECRET`, `AUTH_COOKIE_DOMAIN`, Turso vars).

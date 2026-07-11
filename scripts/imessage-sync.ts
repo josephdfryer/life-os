@@ -392,22 +392,10 @@ async function upsertDailyMessageInteraction(input: {
     return "updated"
   }
 
-  const event = await db.event.create({
-    data: {
-      workspaceId: WORKSPACE_ID,
-      name: `iMessage ${dayKey(input.timestamp)}`,
-      type: "message",
-      start: input.timestamp,
-      timestamp: input.timestamp,
-      metadata: JSON.stringify({ source: "imessage", day: dayKey(input.timestamp), service: input.service }),
-    },
-  })
-
   await db.interaction.create({
     data: {
       workspaceId: WORKSPACE_ID,
       personId: input.personId,
-      eventId: event.id,
       type: "message",
       timestamp: input.timestamp,
       summary: line,

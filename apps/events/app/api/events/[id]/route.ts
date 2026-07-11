@@ -14,7 +14,7 @@ export async function GET(_req: NextRequest, { params }: Params) {
   const event = await db.event.findFirst({
     where: { id, workspaceId },
     include: {
-      place: true,
+      place: { select: { id: true, name: true } },
       sourcePlan: { select: { id: true, text: true } },
       parentEvent: { select: { id: true, name: true, start: true } },
       childEvents: { select: { id: true, name: true, start: true }, orderBy: { start: "asc" } },
