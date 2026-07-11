@@ -1,6 +1,12 @@
 import { NextRequest, NextResponse } from "next/server"
-import { validateTwilioSignature, isAllowedSender, twimlReply } from "@/lib/twilio"
-import { callClaude } from "@/lib/claude"
+import { after } from "next/server"
+import { validateTwilioSignature, isAllowedSender, twimlReply, twimlEmpty, sendWhatsApp } from "@/lib/twilio"
+import { runAgent } from "@/lib/agent"
+import { db } from "@/lib/db"
+
+export const maxDuration = 300
+
+const WORKSPACE_ID = process.env.LIFE_OS_WORKSPACE_ID ?? "default-workspace"
 
 export async function POST(req: NextRequest) {
   const url = req.url
@@ -22,31 +28,49 @@ export async function POST(req: NextRequest) {
   }
 
   const from = params["From"] ?? ""
+  const to = params["To"] ?? "" // our WhatsApp number — reused as outbound sender
   const body = (params["Body"] ?? "").trim()
 
   if (!isAllowedSender(from)) {
-    console.error("Sender not allowed", {
-      from,
-      hasMyNumber: Boolean(process.env.MY_WHATSAPP_NUMBER),
-    })
+    console.error("Sender not allowed", { from, hasMyNumber: Boolean(process.env.MY_WHATSAPP_NUMBER) })
     return new NextResponse("Forbidden", { status: 403 })
   }
 
   if (!body) {
-    return new NextResponse(twimlReply("Got an empty message — try again."), {
-      headers: { "Content-Type": "text/xml" },
-    })
+    return xml(twimlReply("Got an empty message — try again."))
   }
 
-  try {
-    const reply = await callClaude(from, body)
-    return new NextResponse(twimlReply(reply), {
-      headers: { "Content-Type": "text/xml" },
+  // Fast path: "note: ..." / "n: ..." captures directly, no model round-trip.
+  const noteMatch = body.match(/^(?:note|n):\s*([\s\S]+)$/i)
+  if (noteMatch) {
+    const content = noteMatch[1].trim()
+    await db.note.create({
+      data: {
+        workspaceId: WORKSPACE_ID,
+        timestamp: new Date(),
+        type: "thought",
+        content,
+        metadata: JSON.stringify({ source: "whatsapp" }),
+      },
     })
-  } catch (err) {
-    console.error("Claude call failed:", err)
-    return new NextResponse(twimlReply("Something went wrong. Try again in a moment."), {
-      headers: { "Content-Type": "text/xml" },
-    })
+    return xml(twimlReply(`Noted ✓ "${content.slice(0, 60)}${content.length > 60 ? "…" : ""}"`))
   }
+
+  // Agentic runs can take longer than Twilio's webhook window: ack now with
+  // an empty TwiML response, then reply out-of-band via the REST API.
+  after(async () => {
+    try {
+      const reply = await runAgent({ channel: "whatsapp", from, userMessage: body })
+      await sendWhatsApp(from, to, reply)
+    } catch (err) {
+      console.error("Agent run failed:", err)
+      await sendWhatsApp(from, to, "Something went wrong on my end. Try again in a moment.").catch(() => {})
+    }
+  })
+
+  return xml(twimlEmpty())
+}
+
+function xml(body: string) {
+  return new NextResponse(body, { headers: { "Content-Type": "text/xml" } })
 }
