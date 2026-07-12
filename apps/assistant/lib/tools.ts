@@ -1,5 +1,6 @@
 import type Anthropic from "@anthropic-ai/sdk"
 import { db } from "@/lib/db"
+import { getSpendBreakdown, type SpendBreakdownInput } from "@/lib/finance"
 
 const WORKSPACE_ID = process.env.LIFE_OS_WORKSPACE_ID ?? "default-workspace"
 const TZ = "America/Los_Angeles"
@@ -61,13 +62,30 @@ export const TOOLS: Anthropic.Tool[] = [
   },
   {
     name: "query_finance",
-    description: "Spending summary from synced transactions: total paid, top merchants, top categories. Optionally filter by merchant text or category.",
+    description: "Compatibility spending summary over the last N days. Prefer get_spend_breakdown for exact dates, named periods, and breakdown questions.",
     input_schema: {
       type: "object",
       properties: {
         sinceDays: { type: "number", description: "Lookback window in days, default 30" },
         merchant: { type: "string", description: "Filter: merchant name contains" },
         category: { type: "string", description: "Filter: category name contains (e.g. Groceries, Dining out)" },
+      },
+      required: [],
+    },
+  },
+  {
+    name: "get_spend_breakdown",
+    description: "Read-only spend total and breakdown for a specific date or range. Use for questions like 'how much did I spend yesterday?', 'break it down by category', or 'what did I spend at restaurants last week?'.",
+    input_schema: {
+      type: "object",
+      properties: {
+        dateExpression: { type: "string", description: "Natural period: today, yesterday, this week, last week, this month, last month, last 7 days, YYYY-MM-DD, YYYY-MM, or July 2026. Default last 30 days." },
+        startDate: { type: "string", description: "YYYY-MM-DD inclusive. Use with endDate for a custom range." },
+        endDate: { type: "string", description: "YYYY-MM-DD inclusive. Optional when startDate is one day." },
+        merchant: { type: "string", description: "Filter: merchant name contains" },
+        category: { type: "string", description: "Filter: category name contains, e.g. Groceries or Dining out" },
+        placeName: { type: "string", description: "Filter: matched physical place name contains" },
+        limit: { type: "number", description: "Number of rows per breakdown, default 10" },
       },
       required: [],
     },
@@ -112,6 +130,7 @@ export async function executeTool(name: string, input: Record<string, unknown>):
       case "capture_note": return await captureNote(String(input.content ?? ""), input.noteType ? String(input.noteType) : "thought")
       case "log_interaction": return await logInteraction(String(input.personId ?? ""), String(input.type ?? "message"), String(input.summary ?? ""))
       case "query_finance": return await queryFinance(Number(input.sinceDays ?? 30), input.merchant ? String(input.merchant) : undefined, input.category ? String(input.category) : undefined)
+      case "get_spend_breakdown": return await spendBreakdown(input)
       case "get_place_spend": return await getPlaceSpend(input.placeName ? String(input.placeName) : undefined)
       case "search_notes": return await searchNotes(String(input.query ?? ""))
       case "list_inbox": return await listInbox(Number(input.limit ?? 5))
@@ -213,41 +232,70 @@ async function logInteraction(personId: string, type: string, summary: string) {
 }
 
 async function queryFinance(sinceDays: number, merchant?: string, category?: string) {
-  const since = new Date(Date.now() - Math.min(365, Math.max(1, sinceDays)) * 86400000)
-  const rows = await db.stagedInteraction.findMany({
-    where: { workspaceId: WORKSPACE_ID, source: "era", timestamp: { gte: since } },
-    select: { contactName: true, timestamp: true, metadata: true },
-  })
-  type Meta = { amount?: number; eraCategory?: string; transfer?: boolean; rawAmount?: number }
-  let total = 0
-  const byMerchant = new Map<string, number>()
-  const byCategory = new Map<string, number>()
-  let count = 0
-  for (const row of rows) {
-    let meta: Meta = {}
-    try { meta = JSON.parse(row.metadata ?? "{}") } catch { /* skip */ }
-    if (meta.transfer) continue
-    const paid = (meta.rawAmount ?? 0) < 0
-    if (!paid) continue
-    const name = row.contactName ?? "unknown"
-    const cat = meta.eraCategory ?? "uncategorized"
-    if (merchant && !name.toLowerCase().includes(merchant.toLowerCase())) continue
-    if (category && !cat.toLowerCase().includes(category.toLowerCase())) continue
-    const amount = meta.amount ?? 0
-    total += amount
-    count += 1
-    byMerchant.set(name, (byMerchant.get(name) ?? 0) + amount)
-    byCategory.set(cat, (byCategory.get(cat) ?? 0) + amount)
+  const days = Math.min(365, Math.max(1, Math.round(Number.isFinite(sinceDays) ? sinceDays : 30)))
+  return formatSpendBreakdown(await getSpendBreakdown({ dateExpression: `last ${days} days`, merchant, category, limit: 8 }, WORKSPACE_ID))
+}
+
+async function spendBreakdown(input: Record<string, unknown>) {
+  const query: SpendBreakdownInput = {
+    dateExpression: optionalString(input.dateExpression),
+    startDate: optionalString(input.startDate),
+    endDate: optionalString(input.endDate),
+    merchant: optionalString(input.merchant),
+    category: optionalString(input.category),
+    placeName: optionalString(input.placeName),
+    limit: typeof input.limit === "number" ? input.limit : undefined,
   }
-  if (!count) return `No matching transactions in the last ${sinceDays} days`
-  const top = (m: Map<string, number>, n: number) =>
-    [...m.entries()].sort((a, b) => b[1] - a[1]).slice(0, n).map(([k, v]) => `  ${k}: $${v.toFixed(2)}`).join("\n")
+  return formatSpendBreakdown(await getSpendBreakdown(query, WORKSPACE_ID))
+}
+
+type SpendBreakdownResult = Awaited<ReturnType<typeof getSpendBreakdown>>
+
+function formatSpendBreakdown(result: SpendBreakdownResult) {
+  const filters = [
+    result.filters.merchant ? `merchant~"${result.filters.merchant}"` : "",
+    result.filters.category ? `category~"${result.filters.category}"` : "",
+    result.filters.placeName ? `place~"${result.filters.placeName}"` : "",
+  ].filter(Boolean)
+
+  const heading = `Spend breakdown for ${result.range.label} (${result.range.startDate}${result.range.endDate !== result.range.startDate ? ` through ${result.range.endDate}` : ""}, ${result.range.timezone})${filters.length ? ` · ${filters.join(" · ")}` : ""}`
+  if (!result.transactionCount) return `${heading}\nNo paid transactions found.`
+
   return [
-    `Last ${sinceDays} days${merchant ? ` · merchant~"${merchant}"` : ""}${category ? ` · category~"${category}"` : ""}:`,
-    `Total paid: $${total.toFixed(2)} across ${count} transactions`,
-    `Top merchants:\n${top(byMerchant, 8)}`,
-    `Top categories:\n${top(byCategory, 6)}`,
+    heading,
+    `Total paid: ${currency(result.total)} across ${result.transactionCount} transaction${result.transactionCount === 1 ? "" : "s"}`,
+    formatGroup("By category", result.byCategory),
+    formatGroup("By merchant", result.byMerchant),
+    result.byPlace.length ? formatGroup("By place", result.byPlace) : "",
+    formatTransactions("Largest transactions", result.largestTransactions),
+  ].filter(Boolean).join("\n\n")
+}
+
+function formatGroup(title: string, rows: Array<{ name: string; total: number; count: number }>) {
+  if (!rows.length) return `${title}: none`
+  return [
+    `${title}:`,
+    ...rows.map(row => `- ${row.name}: ${currency(row.total)} (${row.count}x)`),
   ].join("\n")
+}
+
+function formatTransactions(title: string, rows: SpendBreakdownResult["largestTransactions"]) {
+  if (!rows.length) return ""
+  return [
+    `${title}:`,
+    ...rows.map(row => {
+      const suffix = [row.category, row.place].filter(Boolean).join(" · ")
+      return `- ${row.date} ${row.merchant}: ${currency(row.amount)}${suffix ? ` (${suffix})` : ""}`
+    }),
+  ].join("\n")
+}
+
+function currency(value: number) {
+  return `$${value.toFixed(2)}`
+}
+
+function optionalString(value: unknown) {
+  return typeof value === "string" && value.trim() ? value.trim() : undefined
 }
 
 async function getPlaceSpend(placeName?: string) {
