@@ -144,17 +144,24 @@ export async function executeTool(name: string, input: Record<string, unknown>):
 async function searchPeople(query: string) {
   if (!query.trim()) return "Empty query"
   const q = query.trim()
+  const parts = q.split(/\s+/)
+
+  // Build OR clauses — also handle "First Last" full-name queries by matching parts individually
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const orClauses: any[] = [
+    { first: { contains: q } },
+    { last: { contains: q } },
+    { company: { contains: q } },
+    { emailSearch: { contains: q.toLowerCase() } },
+    { nickname: { contains: q } },
+  ]
+  if (parts.length >= 2) {
+    // "Joseph Fryer" → first contains "Joseph" AND last contains "Fryer"
+    orClauses.push({ AND: [{ first: { contains: parts[0] } }, { last: { contains: parts[parts.length - 1] } }] })
+  }
+
   const people = await db.person.findMany({
-    where: {
-      workspaceId: WORKSPACE_ID,
-      OR: [
-        { first: { contains: q } },
-        { last: { contains: q } },
-        { company: { contains: q } },
-        { emailSearch: { contains: q.toLowerCase() } },
-        { nickname: { contains: q } },
-      ],
-    },
+    where: { workspaceId: WORKSPACE_ID, OR: orClauses },
     select: {
       id: true, first: true, last: true, nickname: true, company: true, closeness: true,
       interactions: { select: { timestamp: true }, orderBy: { timestamp: "desc" }, take: 1 },
@@ -169,19 +176,45 @@ async function searchPeople(query: string) {
 }
 
 async function getPerson(personId: string) {
-  const p = await db.person.findFirst({
-    where: { id: personId, workspaceId: WORKSPACE_ID },
-    include: {
-      interactions: { orderBy: { timestamp: "desc" }, take: 5, select: { type: true, timestamp: true, summary: true } },
-      plans: { where: { status: "active" }, take: 5, select: { text: true, timescale: true } },
-    },
-  })
+  const [p, recentStates] = await Promise.all([
+    db.person.findFirst({
+      where: { id: personId, workspaceId: WORKSPACE_ID },
+      include: {
+        interactions: { orderBy: { timestamp: "desc" }, take: 5, select: { type: true, timestamp: true, summary: true } },
+        plans: { where: { status: "active" }, take: 5, select: { text: true, timescale: true } },
+      },
+    }),
+    // Fetch most recent state per type (health metrics, capacity, etc.)
+    db.state.findMany({
+      where: { entityId: personId, workspaceId: WORKSPACE_ID },
+      include: { definition: { select: { type: true, value: true } } },
+      orderBy: { recordedAt: "desc" },
+      take: 30,
+    }),
+  ])
   if (!p) return "Person not found"
+
+  // Dedupe states — keep most recent per (type, value) pair
+  const latestByType = new Map<string, { value: string; severity: number | null; recordedAt: Date }>()
+  for (const s of recentStates) {
+    const key = s.definition.type
+    if (!latestByType.has(key)) {
+      latestByType.set(key, { value: s.definition.value, severity: s.severity, recordedAt: s.recordedAt })
+    }
+  }
+
+  const stateLines = [...latestByType.entries()].map(([type, s]) => {
+    const val = s.severity !== null ? `${s.value} (${s.severity})` : s.value
+    return `  ${type}: ${val} as of ${s.recordedAt.toLocaleDateString("en-US", { month: "short", day: "numeric" })}`
+  })
+
   const lines = [
     `${p.first} ${p.last}${p.nickname ? ` "${p.nickname}"` : ""}`,
     [p.title, p.company, p.location].filter(Boolean).join(" · "),
     p.birthday ? `Birthday: ${p.birthday}` : "",
     p.notes ? `Notes: ${p.notes.slice(0, 300)}` : "",
+    stateLines.length ? "\nCurrent state data:" : "",
+    ...stateLines,
     p.interactions.length ? "\nRecent interactions:" : "",
     ...p.interactions.map(ix => `  - ${ix.type} ${daysAgo(ix.timestamp)}: ${(ix.summary ?? "").slice(0, 120)}`),
     p.plans.length ? "\nActive plans:" : "",
