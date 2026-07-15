@@ -1,4 +1,5 @@
 import { db } from "@/lib/db"
+import { centsToDollars } from "@life-os/db"
 
 const TZ = "America/Los_Angeles"
 const DEFAULT_LIMIT = 10
@@ -122,7 +123,7 @@ export async function getSpendBreakdown(input: SpendBreakdownInput, workspaceId:
       timestamp: row.timestamp,
       merchant: row.summary ?? "transaction",
       category: meta?.eraCategory ?? "uncategorized",
-      amount: roundMoney(Math.abs(row.amount ?? 0)),
+      amount: roundMoney(Math.abs(centsToDollars(row.amount) ?? 0)),
       rawAmount: meta?.rawAmount ?? null,
       placeName: row.place?.name ?? placeNameFromMatch(meta?.placeMatch, placeNameByGoogleId),
       placeGooglePlaceId: row.place?.googlePlaceId ?? meta?.placeMatch?.merchantPlace?.googlePlaceId ?? null,

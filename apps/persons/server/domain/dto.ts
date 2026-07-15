@@ -1,4 +1,5 @@
 import { parseTags } from "@/lib/utils"
+import { centsToDollars } from "@life-os/db"
 
 type JsonListRecord = {
   tags?: string | string[] | null
@@ -19,10 +20,11 @@ export function formatPerson<T extends JsonListRecord>(person: T) {
   }
 }
 
-export function formatInteraction<T extends JsonListRecord>(interaction: T) {
+export function formatInteraction<T extends JsonListRecord & { amount?: number | null }>(interaction: T) {
   return {
     ...interaction,
     actionItems: parseTags(interaction.actionItems),
+    ...("amount" in interaction ? { amount: centsToDollars(interaction.amount) } : {}),
   }
 }
 

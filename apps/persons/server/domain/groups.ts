@@ -1,4 +1,5 @@
 import { db } from "@/lib/db"
+import { centsToDollars } from "@life-os/db"
 import { badRequest, notFound } from "@/server/api/errors"
 import { auditAction, type DomainActor } from "./audit"
 
@@ -337,7 +338,7 @@ export async function sumInteractionsByPlace(
 
   return {
     placeId,
-    total: rows.reduce((sum, r) => sum + (r.amount ?? 0), 0),
+    total: centsToDollars(rows.reduce((sum, r) => sum + (r.amount ?? 0), 0)) ?? 0,
     count: rows.length,
   }
 }
@@ -380,7 +381,7 @@ export async function sumInteractionsByGroup(
   const rows = await db.interaction.findMany({ where, select: { amount: true } })
   return {
     groupId,
-    total: rows.reduce((sum, r) => sum + (r.amount ?? 0), 0),
+    total: centsToDollars(rows.reduce((sum, r) => sum + (r.amount ?? 0), 0)) ?? 0,
     count: rows.length,
     placeIds,
   }

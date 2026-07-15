@@ -304,11 +304,12 @@ model CalendarConnection {
   accountEmail    String?
   calendarId      String   @default("primary")
   calendarSummary String?
-  accessToken     String?
-  refreshToken    String?
+  // Ciphertext ("iv:authTag:ciphertext"), see packages/db/src/crypto.ts. Never store plaintext tokens.
+  accessTokenEncrypted  String?
+  refreshTokenEncrypted String?
   expiresAt       DateTime?
   scope           String?
-  syncToken       String?
+  syncTokenEncrypted    String?
   lastSyncedAt    DateTime?
   lastError       String?
   eventLinks      CalendarEventLink[]
@@ -357,8 +358,9 @@ model GmailConnection {
   status         String   @default("active")
   accountEmail   String?
   mailboxId      String   @default("me")
-  accessToken    String?
-  refreshToken   String?
+  // Ciphertext ("iv:authTag:ciphertext"), see packages/db/src/crypto.ts. Never store plaintext tokens.
+  accessTokenEncrypted  String?
+  refreshTokenEncrypted String?
   expiresAt      DateTime?
   scope          String?
   historyId      String?
@@ -412,8 +414,9 @@ model EraConnection {
   updatedAt        DateTime @updatedAt
   status           String   @default("active")
   accountEmail     String?
-  accessToken      String?
-  refreshToken     String?
+  // Ciphertext ("iv:authTag:ciphertext"), see packages/db/src/crypto.ts. Never store plaintext tokens.
+  accessTokenEncrypted  String?
+  refreshTokenEncrypted String?
   expiresAt        DateTime?
   scope            String?
   lastSyncedAt     DateTime?
@@ -638,7 +641,8 @@ model Interaction {
   notes           String?
   actionItems     String?
   billable        Boolean           @default(false)
-  amount          Float?
+  // Integer minor units (cents), not Float — avoids floating-point drift in money.
+  amount          Int?
   direction       String?
   sourceFileId    String?
   sourceFile      ImportedFile?     @relation(fields: [sourceFileId], references: [id])
@@ -847,7 +851,8 @@ model Item {
 
   // Acquisition
   purchaseDate     DateTime?
-  purchasePrice    Float?
+  // Integer minor units (cents), not Float — avoids floating-point drift in money.
+  purchasePrice    Int?
   purchaseFrom     String?
 
   // Warranty

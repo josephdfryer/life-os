@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import { db } from "@/lib/db"
+import { centsToDollars } from "@life-os/db"
 import { parseTags } from "@/lib/utils"
 import { enrichWithAttention } from "@/lib/attention"
 import type { Interaction } from "@/types"
@@ -138,6 +139,7 @@ export async function GET(req: NextRequest) {
     const interactions: Interaction[] = p.interactions.map((ix: typeof p.interactions[number]) => ({
       ...ix,
       actionItems: parseTags(ix.actionItems) as unknown as string[],
+      amount: centsToDollars(ix.amount),
       event: null,
       sourceFile: null,
     })) as unknown as Interaction[]

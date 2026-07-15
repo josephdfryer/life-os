@@ -1,5 +1,6 @@
 import type Anthropic from "@anthropic-ai/sdk"
 import { db } from "@/lib/db"
+import { centsToDollars } from "@life-os/db"
 import { getSpendBreakdown, type SpendBreakdownInput } from "@/lib/finance"
 
 const WORKSPACE_ID = process.env.LIFE_OS_WORKSPACE_ID ?? "default-workspace"
@@ -577,7 +578,7 @@ async function getItem(itemId: string) {
       : item.place ? `Location: ${item.place.name}` : "Location: not set",
     item.ownedBy ? `Owner: ${item.ownedBy.first} ${item.ownedBy.last}` : "",
     item.components.length ? `Contains: ${item.components.map(c => c.childItem.name).join(", ")}` : "",
-    item.purchaseDate ? `Purchased: ${item.purchaseDate.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}${item.purchasePrice ? ` for $${item.purchasePrice}` : ""}${item.purchaseFrom ? ` from ${item.purchaseFrom}` : ""}` : "",
+    item.purchaseDate ? `Purchased: ${item.purchaseDate.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}${item.purchasePrice ? ` for $${centsToDollars(item.purchasePrice)}` : ""}${item.purchaseFrom ? ` from ${item.purchaseFrom}` : ""}` : "",
     item.lifetimeWarranty ? "Warranty: lifetime" : item.warrantyExpires ? `Warranty until ${item.warrantyExpires.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}` : "",
     item.notes ? `Notes: ${item.notes.slice(0, 300)}` : "",
   ]

@@ -117,7 +117,7 @@ test("places map and profile derive stats from events, interactions, groups, pho
   })
   await db.interaction.createMany({
     data: [
-      { workspaceId: workspace.id, personId: qin.id, eventId: event.id, placeId: place.id, type: "coffee", timestamp: event.timestamp, amount: 18.25 },
+      { workspaceId: workspace.id, personId: qin.id, eventId: event.id, placeId: place.id, type: "coffee", timestamp: event.timestamp, amount: 1825 },
       { workspaceId: workspace.id, personId: maya.id, eventId: event.id, placeId: place.id, type: "coffee", timestamp: event.timestamp },
     ],
   })

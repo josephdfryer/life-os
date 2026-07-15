@@ -1,4 +1,5 @@
 import { db } from "@/lib/db"
+import { centsToDollars } from "@life-os/db"
 
 export type FinanceLayerItem = {
   placeId: string
@@ -168,7 +169,7 @@ export async function getFinanceLayerItems(): Promise<FinanceLayerItem[]> {
   }
 
   for (const interaction of interactions) {
-    add(interaction.placeId!, interaction.summary ?? "transaction", Math.abs(interaction.amount!), interaction.timestamp)
+    add(interaction.placeId!, interaction.summary ?? "transaction", Math.abs(centsToDollars(interaction.amount) ?? 0), interaction.timestamp)
   }
 
   for (const row of staged) {

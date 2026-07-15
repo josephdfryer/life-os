@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/auth'
 import { db } from '@/lib/db'
+import { centsToDollars, dollarsToCents } from '@life-os/db'
 
 async function getWorkspaceId(email: string): Promise<string> {
   const member = await db.workspaceMember.findFirst({
@@ -31,7 +32,7 @@ export async function GET(req: NextRequest) {
     take,
   })
 
-  return NextResponse.json(items)
+  return NextResponse.json(items.map(item => ({ ...item, purchasePrice: centsToDollars(item.purchasePrice) })))
 }
 
 export async function POST(req: NextRequest) {
@@ -79,7 +80,7 @@ export async function POST(req: NextRequest) {
       ...(color ? { color: color as string } : {}),
       ...(colorSoft ? { colorSoft: colorSoft as string } : {}),
       ...(purchaseDate ? { purchaseDate: new Date(purchaseDate as string) } : {}),
-      ...(purchasePrice != null && purchasePrice !== '' ? { purchasePrice: Number(purchasePrice) } : {}),
+      ...(purchasePrice != null && purchasePrice !== '' ? { purchasePrice: dollarsToCents(purchasePrice) } : {}),
       ...(purchaseFrom ? { purchaseFrom: purchaseFrom as string } : {}),
       ...(warrantyExpires ? { warrantyExpires: new Date(warrantyExpires as string) } : {}),
       lifetimeWarranty: Boolean(lifetimeWarranty),
@@ -87,5 +88,5 @@ export async function POST(req: NextRequest) {
     },
   })
 
-  return NextResponse.json(item, { status: 201 })
+  return NextResponse.json({ ...item, purchasePrice: centsToDollars(item.purchasePrice) }, { status: 201 })
 }

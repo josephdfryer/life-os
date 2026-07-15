@@ -17,9 +17,9 @@ function formatDate(d: Date | null | undefined) {
   return new Date(d).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })
 }
 
-function formatPrice(n: number | null | undefined) {
-  if (n == null) return '—'
-  return `$${n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+function formatPrice(cents: number | null | undefined) {
+  if (cents == null) return '—'
+  return `$${(cents / 100).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
 }
 
 export default async function ItemDetailPage({

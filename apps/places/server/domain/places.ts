@@ -1,4 +1,5 @@
 import { db } from "@/lib/db"
+import { centsToDollars } from "@life-os/db"
 import { badRequest, notFound, requiredString } from "@/server/api/errors"
 import { auditAction, type DomainActor } from "./audit"
 
@@ -419,7 +420,8 @@ function photosForEvent(event: EventRow) {
 }
 
 function sumEventSpend(event: EventRow) {
-  return event.interactions.reduce((sum, interaction) => sum + (interaction.amount ?? 0), 0)
+  const cents = event.interactions.reduce((sum, interaction) => sum + (interaction.amount ?? 0), 0)
+  return centsToDollars(cents) ?? 0
 }
 
 function affiliationToSummary(row: PlaceGroupRow): PlaceGroupSummary {

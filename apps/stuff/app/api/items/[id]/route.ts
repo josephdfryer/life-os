@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/auth'
 import { db } from '@/lib/db'
+import { centsToDollars, dollarsToCents } from '@life-os/db'
 
 async function getWorkspaceId(email: string): Promise<string> {
   const member = await db.workspaceMember.findFirst({
@@ -42,7 +43,7 @@ export async function PATCH(
   if ('quantity' in body) updates.quantity = Number(body.quantity)
   if ('purchasePrice' in body) {
     updates.purchasePrice = body.purchasePrice != null && body.purchasePrice !== ''
-      ? Number(body.purchasePrice)
+      ? dollarsToCents(body.purchasePrice)
       : null
   }
   if ('purchaseDate' in body) {
@@ -53,7 +54,7 @@ export async function PATCH(
   }
 
   const item = await db.item.update({ where: { id }, data: updates })
-  return NextResponse.json(item)
+  return NextResponse.json({ ...item, purchasePrice: centsToDollars(item.purchasePrice) })
 }
 
 export async function DELETE(

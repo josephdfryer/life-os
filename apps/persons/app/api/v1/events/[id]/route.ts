@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import { db } from "@/lib/db"
+import { centsToDollars } from "@life-os/db"
 import { authorizeApiRequest, unauthorized } from "@/lib/api-auth"
 import { updateEvent, deleteEvent } from "@/server/domain/events"
 import { handleRouteError, noContent } from "@/server/api/respond"
@@ -20,6 +21,7 @@ export async function GET(req: NextRequest, { params }: Params) {
   return NextResponse.json({
     ...event,
     metadata: event.metadata ? JSON.parse(event.metadata) : null,
+    interactions: event.interactions.map(ix => ({ ...ix, amount: centsToDollars(ix.amount) })),
   })
 }
 

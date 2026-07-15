@@ -44,3 +44,17 @@ const globalForPrisma = globalThis as unknown as { prisma: PrismaClient | undefi
 export const db = globalForPrisma.prisma ?? createClient()
 
 globalForPrisma.prisma = db
+
+// Money is stored as integer minor units (cents). These convert at the
+// application boundary so callers keep working with dollar floats.
+export function centsToDollars(cents: number | null | undefined): number | null {
+  if (cents === null || cents === undefined) return null
+  return Math.round(cents) / 100
+}
+
+export function dollarsToCents(dollars: unknown): number | null {
+  if (dollars === null || dollars === undefined || dollars === "") return null
+  const value = Number(dollars)
+  if (!Number.isFinite(value)) return null
+  return Math.round(value * 100)
+}

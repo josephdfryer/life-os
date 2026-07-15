@@ -1,5 +1,6 @@
 import { cookies } from "next/headers"
 import { db } from "@/lib/db"
+import { centsToDollars } from "@life-os/db"
 import { parseTags, isBirthdayToday, isBirthdayThisWeek, isTimestampToday, daysUntilBirthday } from "@/lib/utils"
 import { enrichWithAttention } from "@/lib/attention"
 import AttentionCard from "@/components/today/AttentionCard"
@@ -55,6 +56,7 @@ export default async function TodayPage() {
       interactions: p.interactions.map((ix: typeof p.interactions[number]) => ({
         ...ix,
         actionItems: parseTags(ix.actionItems) as unknown as string[],
+        amount: centsToDollars(ix.amount),
         event: null,
         sourceFile: null,
       })) as never,

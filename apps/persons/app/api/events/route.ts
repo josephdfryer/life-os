@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import { db } from "@/lib/db"
+import { centsToDollars } from "@life-os/db"
 import { created, handleRouteError } from "@/server/api/respond"
 import { requireAccess } from "@/server/domain/access"
 import { createEvent } from "@/server/domain/events"
@@ -11,7 +12,10 @@ export async function GET() {
     include: { place: true, interactions: { include: { person: true } } },
     orderBy: { timestamp: "desc" },
   })
-  return NextResponse.json(events)
+  return NextResponse.json(events.map(event => ({
+    ...event,
+    interactions: event.interactions.map(ix => ({ ...ix, amount: centsToDollars(ix.amount) })),
+  })))
 }
 
 export async function POST(req: NextRequest) {

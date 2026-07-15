@@ -1,4 +1,5 @@
 import { db } from "@/lib/db"
+import { dollarsToCents } from "@life-os/db"
 import { badRequest, notFound, optionalString, optionalStringArray, requiredString } from "@/server/api/errors"
 import { auditAction, type DomainActor } from "./audit"
 import { formatInteraction, jsonList } from "./dto"
@@ -68,7 +69,7 @@ export async function createInteraction(input: InteractionInput, actor?: DomainA
       outcome: optionalString(input.outcome),
       actionItems: Array.isArray(input.actionItems) ? jsonList(optionalStringArray(input.actionItems)) : null,
       billable: Boolean(input.billable),
-      amount: input.amount ? Number(input.amount) : null,
+      amount: dollarsToCents(input.amount),
       direction: optionalString(input.direction),
       sourceFileId: optionalString(input.sourceFileId),
     },
@@ -110,7 +111,7 @@ export async function updateInteraction(id: string, input: Partial<InteractionIn
   if (input.actionItems !== undefined) patch.actionItems = Array.isArray(input.actionItems) ? jsonList(optionalStringArray(input.actionItems)) : null
   if (input.direction !== undefined) patch.direction = optionalString(input.direction)
   if (input.billable !== undefined) patch.billable = Boolean(input.billable)
-  if (input.amount !== undefined) patch.amount = input.amount ? Number(input.amount) : null
+  if (input.amount !== undefined) patch.amount = dollarsToCents(input.amount)
   if (input.duration !== undefined) patch.duration = input.duration ? Number(input.duration) : null
 
   const interaction = await db.interaction.update({
