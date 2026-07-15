@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation"
 import Link from "next/link"
 import {
   Avatar, BackLink, Button, Card, Chip,
-  EmptyState, Spinner,
+  EmptyState, Spinner, StatBlock,
 } from "@life-os/ui"
 import InteractionCard from "@/components/interactions/InteractionCard"
 import EditPersonModal from "@/components/persons/EditPersonModal"
@@ -15,7 +15,7 @@ import {
   relativeTime, closenessLabel, parseTags, parseJsonArray, formatBirthday,
 } from "@/lib/utils"
 import { enrichWithAttention } from "@/lib/attention"
-import type { Person, Interaction, Plan } from "@/types"
+import type { Person, Interaction, Plan, PersonHealthSummary } from "@/types"
 
 type FullPerson = Person & {
   interactions: Interaction[]
@@ -23,6 +23,7 @@ type FullPerson = Person & {
   attentionScore: number
   lastInteractionDate: Date | null
   daysSinceLast: number | null
+  health?: PersonHealthSummary | null
 }
 
 const closenessPercent: Record<number, number> = { 1: 25, 2: 50, 3: 75, 4: 100 }
@@ -38,6 +39,7 @@ export default function PersonDetailClient({ id, initialData }: { id: string; in
   const [showEdit, setShowEdit] = useState(false)
   const [showLogInteraction, setShowLogInteraction] = useState(false)
   const [showAddPlan, setShowAddPlan] = useState(false)
+  const [showHealthLog, setShowHealthLog] = useState(false)
 
   async function load() {
     setLoading(true)
@@ -194,6 +196,58 @@ export default function PersonDetailClient({ id, initialData }: { id: string; in
           </div>
         )}
       </Card>
+
+      {/* ── Health ──────────────────────────────────────────────── */}
+      {person.health && (
+        <Card
+          title="Health"
+          headerAction={
+            <span style={{ fontSize: "10px", color: "var(--ink-4)" }}>
+              latest {relativeTime(new Date(person.health.latestDate))}
+            </span>
+          }
+          style={{ borderRadius: "14px", marginBottom: "20px", overflow: "hidden" }}
+        >
+          {person.health.metrics.length > 0 && (
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(110px, 1fr))", gap: "8px", marginBottom: "12px" }}>
+              {person.health.metrics.map(metric => (
+                <StatBlock
+                  key={metric.key}
+                  label={metric.label}
+                  value={`${Math.round(metric.value * 10) / 10}${metric.unit ? ` ${metric.unit}` : ""}`}
+                  style={{ borderRadius: "8px" }}
+                />
+              ))}
+            </div>
+          )}
+          <button
+            onClick={() => setShowHealthLog(v => !v)}
+            style={{
+              background: "none", border: "none", padding: 0, cursor: "pointer",
+              fontSize: "11px", color: "var(--ink-4)", textDecoration: "underline",
+            }}
+          >
+            {showHealthLog ? "Hide" : "Show"} daily log ({person.health.totalReadings} readings tracked)
+          </button>
+          {showHealthLog && (
+            <div style={{ display: "flex", flexDirection: "column", gap: "8px", marginTop: "10px" }}>
+              {person.health.recentLog.map(entry => (
+                <div key={entry.id} style={{
+                  padding: "10px 12px",
+                  background: "var(--bg)",
+                  border: "1px solid var(--border)",
+                  borderRadius: "8px",
+                }}>
+                  <div style={{ fontSize: "10px", color: "var(--ink-4)", marginBottom: "4px" }}>
+                    {new Date(entry.date).toLocaleDateString(undefined, { timeZone: "UTC" })}
+                  </div>
+                  <div style={{ fontSize: "11px", color: "var(--ink-2)", lineHeight: 1.6 }}>{entry.content}</div>
+                </div>
+              ))}
+            </div>
+          )}
+        </Card>
+      )}
 
       {/* ── Notes ───────────────────────────────────────────────── */}
       {person.notes && (

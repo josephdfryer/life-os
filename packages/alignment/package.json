@@ -1,0 +1,14 @@
+{
+  "name": "@life-os/alignment",
+  "version": "0.0.1",
+  "private": true,
+  "main": "./index.ts",
+  "types": "./index.ts",
+  "exports": {
+    ".": "./index.ts",
+    "./pure": "./pure.ts"
+  },
+  "dependencies": {
+    "@life-os/db": "*"
+  }
+}

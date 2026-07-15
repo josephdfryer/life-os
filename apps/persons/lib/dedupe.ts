@@ -110,6 +110,12 @@ export function scorePair(
 //   2. Phone matches:  O(n) via hashmap — same pattern
 //   3. Name similarity: 3-char last-name prefix buckets — limits inner loop to
 //      ~10–30 people per bucket instead of n², and JW ≥ 0.92 always shares 3 chars.
+//   4. Swapped name fields: some CSV/vCard imports land "Last, First" whole into
+//      `first` with `last` empty or reversed (e.g. first="Fryer," last="Brittany"
+//      vs. the clean first="Brittany" last="Fryer"). JW is order-sensitive so pass 3
+//      never scores these as similar even when they land in the same bucket — this
+//      pass instead compares the *set* of name tokens regardless of order or which
+//      field they landed in.
 //
 // Pre-computing normalized values once cuts redundant string work in the inner loop.
 
@@ -117,14 +123,20 @@ export function findDuplicates(
   persons: (Person & { interactionCount: number; planCount: number })[],
 ): DupePair[] {
   // Pre-compute enriched values for each person
-  const enriched = persons.map(p => ({
-    p,
-    emails: new Set((p.emails as unknown as string[]).map(e => norm(e)).filter(Boolean)),
-    phones: new Set((p.phones as unknown as string[]).map(ph => ph.replace(/\D/g, "")).filter(ph => ph.length >= 7)),
-    fullName: norm(`${p.first} ${p.last}`),
-    company: p.company ? norm(p.company) : null,
-    location: p.location ? norm(p.location) : null,
-  }))
+  const enriched = persons.map(p => {
+    const tokens = norm(`${p.first} ${p.last}`).split(/\s+/).filter(Boolean)
+    return {
+      p,
+      emails: new Set((p.emails as unknown as string[]).map(e => norm(e)).filter(Boolean)),
+      phones: new Set((p.phones as unknown as string[]).map(ph => ph.replace(/\D/g, "")).filter(ph => ph.length >= 7)),
+      fullName: norm(`${p.first} ${p.last}`),
+      company: p.company ? norm(p.company) : null,
+      location: p.location ? norm(p.location) : null,
+      // Order-independent key: catches "Last, First" dumped whole into one field
+      // (tokens {fryer, brittany} match regardless of which field held what).
+      tokenKey: tokens.length >= 2 ? [...tokens].sort().join(" ") : null,
+    }
+  })
 
   const pairs: DupePair[] = []
   // Track index pairs already found via email/phone to avoid duplicates in name pass
@@ -202,6 +214,23 @@ export function findDuplicates(
         }
       }
     }
+  }
+
+  // 4. Swapped name fields — exact match on the sorted token set, independent
+  // of which field ("first" vs "last") each token landed in or bucket prefix.
+  const byTokenKey = new Map<string, number[]>()
+  for (let i = 0; i < enriched.length; i++) {
+    const key = enriched[i].tokenKey
+    if (!key) continue
+    const bucket = byTokenKey.get(key) ?? []
+    bucket.push(i)
+    byTokenKey.set(key, bucket)
+  }
+  for (const bucket of byTokenKey.values()) {
+    if (bucket.length < 2) continue
+    for (let x = 0; x < bucket.length; x++)
+      for (let y = x + 1; y < bucket.length; y++)
+        addPair(bucket[x], bucket[y], 0.95, "Same name, different field order")
   }
 
   return pairs.sort((a, b) => b.score - a.score)

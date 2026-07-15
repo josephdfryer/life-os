@@ -23,6 +23,7 @@ flowchart LR
     Krisp["Krisp meeting transcripts"]
     Files["Imported files and transcripts"]
     ExternalTools["External scripts, automations, future apps"]
+    HealthExport["Health Auto Export zip (Apple Health)"]
   end
 
   subgraph FrontDoors["Front doors into Persons"]
@@ -34,6 +35,7 @@ flowchart LR
     CalendarOAuth["Google Calendar OAuth + sync"]
     GmailOAuth["Gmail OAuth + sync"]
     KrispWorker["Local Krisp-to-Team-OS worker"]
+    HealthSync["Health sync script (scripts/health-sync.ts)"]
   end
 
   subgraph Plumbing["Business plumbing"]
@@ -55,6 +57,8 @@ flowchart LR
     AccessDB["Users, roles, API keys"]
     RulesDB["Rules and rule runs"]
     AuditDB["Audit log"]
+    StatesDB["States and state definitions"]
+    NotesDB["Notes"]
   end
 
   Human --> UI
@@ -65,6 +69,7 @@ flowchart LR
   Gmail --> GmailOAuth
   Files --> ImportUI
   ExternalTools --> PublicAPI
+  HealthExport --> HealthSync
 
   UI --> Access
   ImportUI --> Access
@@ -73,6 +78,7 @@ flowchart LR
   Watcher --> Commands
   CalendarOAuth --> Commands
   GmailOAuth --> Commands
+  HealthSync --> Commands
 
   Access --> Commands
   Commands --> Rules
@@ -88,6 +94,8 @@ flowchart LR
   Commands --> GmailDB
   Commands --> Inbox
   Commands --> FilesDB
+  Commands --> StatesDB
+  Commands --> NotesDB
   Access --> AccessDB
   Rules --> RulesDB
   Audit --> AuditDB
@@ -297,6 +305,44 @@ Its launch agent is `com.lifeos.krisp`; state lives in
 the relevant meeting notes without rescanning every transcript. See
 `docs/KRISP_TEAM_OS_AUTOMATION.md` for setup and operating commands.
 
+### 3e. Health Auto Export sync
+
+```mermaid
+flowchart TD
+  Zip["HealthAutoExport_*.zip in iCloud Drive"] --> Sync["scripts/health-sync.ts"]
+  Sync --> Daily["Daily aggregate CSV rows"]
+  Sync --> Workouts["Workout rows"]
+
+  Daily --> DayNote["One Note per day (digest text + raw metrics)"]
+  DayNote --> States["State rows per populated metric, linked via sourceNoteId"]
+
+  Workouts --> WorkoutEvent["One Event per workout (type=workout)"]
+  Workouts -->|GPX route matched| RouteFile["Archive route as ImportedFile"]
+  RouteFile -.-> WorkoutEvent
+
+  States --> PersonsDB["Persons database"]
+  WorkoutEvent --> PersonsDB
+```
+
+Plain English: `npm run health:sync` (or `scripts/health-sync.ts` directly)
+parses an Apple Health "Health Auto Export" zip and attaches the data to one
+self Person (`--person-id`, or `$HEALTH_SYNC_PERSON_ID`, or a built-in
+default — the script refuses to guess or auto-create this Person). Daily
+metrics (steps, heart rate, sleep, etc.) become **State** rows against that
+Person, one **Note** per day holding the full digest text as provenance.
+Workouts become **Event** rows (with matched GPX routes archived as
+`ImportedFile`) — deliberately *not* Interactions. A solo workout isn't a
+relationship touchpoint the way a call or message is, and earlier versions
+that logged every workout as an Interaction drowned a real Interaction log
+under hundreds of walks. Both the sync script and every write it makes are
+idempotent: re-running with the same zip upserts by a `sourceMarker` in each
+row's metadata rather than duplicating.
+
+The Person detail page renders a "Health" card (only when a Person has
+`health_metric` States) showing the latest day's highlight metrics plus an
+expandable log of recent daily digest Notes — see
+`apps/persons/server/domain/health.ts`.
+
 ### 4. Inbox review flow
 
 ```mermaid
@@ -490,6 +536,10 @@ erDiagram
   Person ||--o{ Plan : has
   Person ||--o{ StagedInteraction : candidate
   ImportedFile ||--o{ Interaction : source
+  Person ||--o{ State : tracks
+  StateDefinition ||--o{ State : defines
+  Note ||--o{ State : sources
+  Note ||--o{ Event : sources
 
   Workspace ||--o{ WorkspaceMember : has
   Workspace ||--o{ Person : owns
@@ -536,6 +586,8 @@ Plain English version:
 - **Workspace, WorkspaceMember, ApprovedEmail**: tenancy system. These decide who can sign in and which private workspace their People data belongs to.
 - **CalendarConnection, CalendarEventLink**: Google Calendar integration state. Connections store OAuth/sync state; event links make imports repeatable without duplicating Events.
 - **GmailConnection, GmailMessageLink**: Gmail integration state. Connections store OAuth/history state; message links make email imports repeatable and tie Gmail messages to Interactions or Inbox items.
+- **State, StateDefinition**: a timestamped condition on any entity (currently: health metrics on a self Person). `StateDefinition` is the taxonomy entry (key + unit/description); `State` is one dated reading, optionally tracing back to the Note it was derived from via `sourceNoteId`.
+- **Note**: raw captured input — currently the daily digest text the health sync writes per day, with the day's metrics as its `raw` metadata and States as its structured children. Not yet shown generically in the UI; the Person page's Health card is the first place Notes surface.
 
 ## Outputs
 
@@ -611,6 +663,7 @@ flowchart LR
 - Google Contacts import: `/import/people` can pull People candidates from the connected Gmail account's Google Contacts and review them with the same create/update/skip flow as vCard and CSV imports.
 - Gmail Mail import: `/import/interactions` can launch the same batched Gmail sync from the import area, defaulting to a 30-day Known People only import.
 - Krisp transcript automation: a local scheduled worker archives completed transcripts, maps them to calendar context, splits mixed customer discussions, and writes Team OS meeting records with a private ambiguity queue.
+- Health Auto Export sync: `scripts/health-sync.ts` attaches Apple Health data to a self Person as States (daily metrics) and Notes (daily digests), and workouts as Events — not Interactions, so the relationship-tracking Interaction log stays uncluttered. The Person detail page surfaces this via a Health card (`apps/persons/server/domain/health.ts`).
 
 ### Future
 

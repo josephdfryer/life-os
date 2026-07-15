@@ -3,6 +3,7 @@ import { db } from "@/lib/db"
 import { parseTags } from "@/lib/utils"
 import { requireAccess } from "@/server/domain/access"
 import { AppError } from "@/server/api/errors"
+import { getPersonHealthSummary } from "@/server/domain/health"
 import PersonDetailClient from "./PersonDetailClient"
 import type { Interaction } from "@/types"
 
@@ -35,6 +36,8 @@ export default async function PersonDetailPage({ params }: { params: Promise<{ i
         : null,
     })) as unknown as Interaction[]
 
+    const health = await getPersonHealthSummary(person.id, actor.workspaceId)
+
     return (
       <PersonDetailClient
         id={id}
@@ -45,6 +48,7 @@ export default async function PersonDetailPage({ params }: { params: Promise<{ i
           emails: parseTags(person.emails),
           phones: parseTags(person.phones),
           interactions,
+          health,
           plans: person.plans.map((p: typeof person.plans[number]) => ({
             ...p,
             successSignals: parseTags(p.successSignals),

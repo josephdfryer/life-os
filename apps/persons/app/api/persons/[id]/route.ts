@@ -3,6 +3,7 @@ import { db } from "@/lib/db"
 import { parseTags } from "@/lib/utils"
 import type { Interaction } from "@/types"
 import { deletePerson, updatePerson } from "@/server/domain/people"
+import { getPersonHealthSummary } from "@/server/domain/health"
 import { handleRouteError, noContent } from "@/server/api/respond"
 import { requireAccess } from "@/server/domain/access"
 
@@ -34,6 +35,8 @@ export async function GET(_req: NextRequest, { params }: Params) {
       : null,
   })) as unknown as Interaction[]
 
+  const health = await getPersonHealthSummary(person.id, actor.workspaceId)
+
   return NextResponse.json({
     ...person,
     tags:   parseTags(person.tags),
@@ -41,6 +44,7 @@ export async function GET(_req: NextRequest, { params }: Params) {
     emails: parseTags(person.emails),
     phones: parseTags(person.phones),
     interactions,
+    health,
     plans: person.plans.map((p: typeof person.plans[number]) => ({
       ...p,
       successSignals: parseTags(p.successSignals),

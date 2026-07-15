@@ -18,16 +18,33 @@ let db: PrismaClient
 async function main() {
   db = (await import("@life-os/db")).db
 
-  const people = await db.person.findMany({
-    where: { workspaceId: WORKSPACE_ID },
-    include: {
-      interactions: {
-        select: { id: true, type: true, timestamp: true, summary: true, emotionalWeight: true, outcome: true },
-        orderBy: { timestamp: "desc" },
+  // Paginated fetch — a single unbounded query against 7000+ people, each
+  // pulling their full interaction history, blows past Turso/libSQL's query
+  // parameter limit. Batching keeps each query's parameter count bounded.
+  const BATCH_SIZE = 500
+  async function fetchBatch(skip: number, take: number) {
+    return db.person.findMany({
+      where: { workspaceId: WORKSPACE_ID },
+      include: {
+        interactions: {
+          select: { id: true, type: true, timestamp: true, summary: true, emotionalWeight: true, outcome: true },
+          orderBy: { timestamp: "desc" },
+        },
       },
-    },
-    orderBy: { createdAt: "asc" },
-  })
+      orderBy: { createdAt: "asc" },
+      skip,
+      take,
+    })
+  }
+
+  const people: Awaited<ReturnType<typeof fetchBatch>> = []
+  let skip = 0
+  for (;;) {
+    const batch = await fetchBatch(skip, BATCH_SIZE)
+    people.push(...batch)
+    if (batch.length < BATCH_SIZE) break
+    skip += BATCH_SIZE
+  }
 
   const date = new Date().toISOString().slice(0, 10)
   const filename = `people-${date}.json`

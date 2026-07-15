@@ -9,6 +9,7 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
+    "@life-os/alignment": "*",
     "@life-os/auth": "*",
     "@life-os/db": "*",
     "@life-os/ui": "*",

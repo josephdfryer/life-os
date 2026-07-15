@@ -1,4 +1,5 @@
 import { db } from '@life-os/db'
+import { getRelationshipGaps } from '@life-os/alignment'
 
 interface Props {
   workspaceId: string
@@ -6,37 +7,27 @@ interface Props {
 }
 
 export default async function NudgesWidget({ workspaceId, personsUrl }: Props) {
-  const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)
+  // Shared with Persons (Today page) and the assistant — one definition of
+  // "overdue" instead of three apps quietly disagreeing with each other.
+  const gaps = await getRelationshipGaps(workspaceId)
+  const top = gaps.slice(0, 3)
 
-  // Fetch persons with closeness >= 3, include their most recent interaction
-  const persons = await db.person.findMany({
-    where: { workspaceId, closeness: { gte: 3 } },
-    include: {
-      interactions: {
-        orderBy: { timestamp: 'desc' },
-        take: 1,
-        select: { timestamp: true, summary: true },
-      },
-    },
-    take: 100, // fetch a reasonable set to filter from
-  })
+  // Signals are intentionally minimal (kind/severity/subject/detail) so the
+  // assistant can consume them as plain text — fetch the display-only summary
+  // snippet here, bounded to the handful actually shown.
+  const summaries = await Promise.all(
+    top.map(signal =>
+      signal.personId
+        ? db.interaction.findFirst({
+            where: { personId: signal.personId },
+            orderBy: { timestamp: 'desc' },
+            select: { summary: true },
+          })
+        : null
+    )
+  )
 
-  // Filter to those not contacted in 30 days, sort oldest first, take top 3
-  const nudges = persons
-    .filter((p) => {
-      const last = p.interactions[0]?.timestamp
-      return !last || new Date(last) < thirtyDaysAgo
-    })
-    .sort((a, b) => {
-      const aLast = a.interactions[0]?.timestamp
-        ? new Date(a.interactions[0].timestamp).getTime()
-        : 0
-      const bLast = b.interactions[0]?.timestamp
-        ? new Date(b.interactions[0].timestamp).getTime()
-        : 0
-      return aLast - bLast
-    })
-    .slice(0, 3)
+  const nudges = top.map((signal, i) => ({ signal, summary: summaries[i]?.summary ?? null }))
 
   return (
     <div style={card}>
@@ -48,44 +39,35 @@ export default async function NudgesWidget({ workspaceId, personsUrl }: Props) {
         </div>
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-          {nudges.map((person) => {
-            const last = person.interactions[0]
-            const daysAgo = last?.timestamp
-              ? Math.floor((Date.now() - new Date(last.timestamp).getTime()) / 86400000)
-              : null
-
-            return (
-              <div
-                key={person.id}
-                style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '16px' }}
-              >
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontWeight: 500 }}>
-                    {person.first} {person.last}
-                  </div>
-                  <div style={{ fontSize: '12px', color: '#71717a', marginTop: '4px' }}>
-                    {daysAgo !== null ? `${daysAgo} days ago` : 'Never contacted'}
-                    {last?.summary ? ` · ${last.summary.slice(0, 60)}` : ''}
-                  </div>
+          {nudges.map(({ signal, summary }) => (
+            <div
+              key={signal.personId}
+              style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '16px' }}
+            >
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ fontWeight: 500 }}>{signal.subject}</div>
+                <div style={{ fontSize: '12px', color: '#71717a', marginTop: '4px' }}>
+                  {signal.detail}
+                  {summary ? ` · ${summary.slice(0, 60)}` : ''}
                 </div>
-                <a
-                  href={`${personsUrl}/people/${person.id}`}
-                  style={{
-                    flexShrink: 0,
-                    fontSize: '12px',
-                    padding: '6px 16px',
-                    background: '#27272a',
-                    borderRadius: '999px',
-                    color: '#e4e4e7',
-                    textDecoration: 'none',
-                    whiteSpace: 'nowrap',
-                  }}
-                >
-                  Reach out
-                </a>
               </div>
-            )
-          })}
+              <a
+                href={`${personsUrl}/people/${signal.personId}`}
+                style={{
+                  flexShrink: 0,
+                  fontSize: '12px',
+                  padding: '6px 16px',
+                  background: '#27272a',
+                  borderRadius: '999px',
+                  color: '#e4e4e7',
+                  textDecoration: 'none',
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                Reach out
+              </a>
+            </div>
+          ))}
         </div>
       )}
     </div>

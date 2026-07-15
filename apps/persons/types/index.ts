@@ -29,6 +29,26 @@ export type PersonWithInteractions = Person & {
   interactions: Interaction[]
 }
 
+export type HealthMetricPoint = {
+  key: string
+  label: string
+  value: number
+  unit: string
+}
+
+export type HealthDailyLogEntry = {
+  id: string
+  date: string
+  content: string
+}
+
+export type PersonHealthSummary = {
+  latestDate: string
+  metrics: HealthMetricPoint[]
+  recentLog: HealthDailyLogEntry[]
+  totalReadings: number
+}
+
 export type Event = {
   id: string
   createdAt: Date
@@ -98,6 +118,7 @@ export type PersonWithAttention = Person & {
   attentionScore: number
   lastInteractionDate: Date | null
   daysSinceLast: number | null
+  health?: PersonHealthSummary | null
 }
 
 // Import types

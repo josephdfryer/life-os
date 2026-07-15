@@ -115,7 +115,6 @@ async function main() {
       const result = await syncWorkout({
         workout,
         workspaceId: person.workspaceId,
-        personId: person.id,
         runNoteId: runNote.id,
         parsed,
         verbose: options.verbose,
@@ -252,12 +251,11 @@ async function findNoteByMarker(workspaceId: string, marker: string) {
 async function syncWorkout(input: {
   workout: WorkoutRow
   workspaceId: string
-  personId: string
   runNoteId: string
   parsed: ParsedExport
   verbose: boolean
 }): Promise<{ created: boolean; routeArchived: boolean }> {
-  const { workout, workspaceId, personId, runNoteId, parsed } = input
+  const { workout, workspaceId, runNoteId, parsed } = input
   const marker = `${SOURCE}-workout:${workout.sourceId}`
 
   let sourceFileId: string | null = null
@@ -288,15 +286,24 @@ async function syncWorkout(input: {
     }
   }
 
-  const eventMetadataJson = JSON.stringify({ sourceMarker: marker })
+  // Workouts are recorded as Events (world occurrences), not Interactions —
+  // a solo workout isn't a relationship touchpoint with a Person, and folding
+  // it in was drowning the real Interaction log (105 walks vs. 1 email).
+  const eventMetadataJson = JSON.stringify({ sourceMarker: marker, sourceFileId })
   const existingEvent = await findEventByMarker(workspaceId, marker)
-  const event = existingEvent
-    ? await db.event.update({
+  const created = !existingEvent
+  if (existingEvent) {
+    await db.event.update({
       where: { id: existingEvent.id },
-      data: { end: workout.end, metadata: eventMetadataJson },
+      data: {
+        end: workout.end,
+        metadata: eventMetadataJson,
+        notes: summarizeWorkout(workout),
+      },
       select: { id: true },
     })
-    : await db.event.create({
+  } else {
+    await db.event.create({
       data: {
         workspaceId,
         name: `${workout.workoutType} workout`,
@@ -304,38 +311,11 @@ async function syncWorkout(input: {
         start: workout.start,
         end: workout.end,
         timestamp: workout.start,
+        notes: summarizeWorkout(workout),
         metadata: eventMetadataJson,
         sourceNoteId: runNoteId,
       },
       select: { id: true },
-    })
-
-  const summary = summarizeWorkout(workout)
-  const existingInteraction = await findInteractionByMarker(workspaceId, personId, marker)
-  const created = !existingInteraction
-  if (existingInteraction) {
-    await db.interaction.update({
-      where: { id: existingInteraction.id },
-      data: {
-        summary,
-        duration: Math.round(workout.durationMinutes),
-        sourceFileId: sourceFileId ?? undefined,
-      },
-    })
-  } else {
-    await db.interaction.create({
-      data: {
-        workspaceId,
-        personId,
-        eventId: event.id,
-        type: "workout",
-        timestamp: workout.start,
-        duration: Math.round(workout.durationMinutes),
-        summary,
-        notes: marker,
-        sourceFileId: sourceFileId ?? undefined,
-        sourceNoteId: runNoteId,
-      },
     })
   }
 
@@ -365,15 +345,6 @@ async function findEventByMarker(workspaceId: string, marker: string) {
       return false
     }
   }) ?? null
-}
-
-async function findInteractionByMarker(workspaceId: string, personId: string, marker: string) {
-  const candidates = await db.interaction.findMany({
-    where: { workspaceId, personId, notes: { contains: marker } },
-    select: { id: true, notes: true },
-    take: 10,
-  })
-  return candidates.find(candidate => (candidate.notes ?? "").split(/\s+/).includes(marker)) ?? null
 }
 
 function parseArgs(args: string[]): Options {
