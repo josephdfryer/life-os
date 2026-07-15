@@ -652,11 +652,35 @@ model Interaction {
   itemInteractions ItemInteraction[]
   gmailLinks       GmailMessageLink[]
   eraLinks         EraTransactionLink[]
+  // Typed participant edges — lets Group, Plan, State, Note, and Item join as
+  // full participants, not just Person/Event/Place via the direct fields above.
+  participants     InteractionParticipant[]
 
   @@index([personId, timestamp(sort: Desc)])
   @@index([workspaceId, timestamp(sort: Desc)])
   @@index([timestamp(sort: Desc)])
   @@index([placeId])
+}
+
+// ─────────────────────────────────────────────
+// JUNCTION: InteractionParticipant
+// Typed edge letting any primitive join an Interaction as a participant.
+// Coexists with Interaction's direct personId/eventId/placeId fields (kept
+// for backward compatibility); those are dual-written here on create.
+// ─────────────────────────────────────────────
+
+model InteractionParticipant {
+  id            String      @id @default(cuid())
+  interactionId String
+  interaction   Interaction @relation(fields: [interactionId], references: [id], onDelete: Cascade)
+  entityType    String      // "Person" | "Place" | "Event" | "Group" | "Plan" | "State" | "Note" | "Item"
+  entityId      String
+  role          String?     // "subject" | "observer" | "mentioned" etc
+  workspaceId   String
+
+  @@index([interactionId])
+  @@index([entityType, entityId])
+  @@index([workspaceId])
 }
 
 // ─────────────────────────────────────────────

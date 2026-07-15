@@ -25,6 +25,32 @@ export type InteractionInput = {
   sourceFileId?: unknown
 }
 
+// An Interaction must have at least one participant. SQLite CHECK constraints
+// can't reference a related table, so this is enforced here rather than at
+// the database level (the InteractionParticipant rows below are the
+// forward-looking participant model; personId/eventId/placeId are the
+// legacy direct fields, dual-written into InteractionParticipant on create).
+function assertHasParticipant(fields: { personId?: string | null; eventId?: string | null; placeId?: string | null }) {
+  if (!fields.personId && !fields.eventId && !fields.placeId) {
+    throw badRequest("Interaction must have at least one participant (personId, eventId, or placeId)", { field: "participants" })
+  }
+}
+
+async function writeInteractionParticipants(
+  interactionId: string,
+  fields: { personId?: string | null; eventId?: string | null; placeId?: string | null },
+  workspaceId: string,
+) {
+  const rows: { entityType: string; entityId: string }[] = []
+  if (fields.personId) rows.push({ entityType: "Person", entityId: fields.personId })
+  if (fields.eventId) rows.push({ entityType: "Event", entityId: fields.eventId })
+  if (fields.placeId) rows.push({ entityType: "Place", entityId: fields.placeId })
+  if (!rows.length) return
+  await db.interactionParticipant.createMany({
+    data: rows.map(row => ({ ...row, interactionId, workspaceId })),
+  })
+}
+
 export async function createInteraction(input: InteractionInput, actor?: DomainActor) {
   const workspaceId = actor?.workspaceId ?? "default-workspace"
   const type = requiredString(input.type, "type")
@@ -55,6 +81,8 @@ export async function createInteraction(input: InteractionInput, actor?: DomainA
     if (!event) throw notFound("Event not found", { eventId: resolvedEventId })
   }
 
+  assertHasParticipant({ personId, eventId: resolvedEventId })
+
   const interaction = await db.interaction.create({
     data: {
       personId,
@@ -75,6 +103,8 @@ export async function createInteraction(input: InteractionInput, actor?: DomainA
     },
     include: { event: true, sourceFile: true },
   })
+
+  await writeInteractionParticipants(interaction.id, { personId, eventId: resolvedEventId }, workspaceId)
 
   await auditAction({ actor, action: "interaction.create", targetType: "interaction", targetId: interaction.id })
   await runRulesForTarget({
@@ -208,6 +238,7 @@ export async function appendDailySourceInteraction(input: {
     },
     select: { id: true },
   })
+  await writeInteractionParticipants(interaction.id, { personId: input.personId, eventId: event?.id ?? null }, workspaceId)
   await auditAction({ actor: input.actor, action: "interaction.create", targetType: "interaction", targetId: interaction.id, metadata: { mode: "create", source: input.source, sourceId: input.sourceId } })
   await runRulesForTarget({
     trigger: "interaction.create",
