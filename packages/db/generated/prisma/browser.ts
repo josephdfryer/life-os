@@ -138,6 +138,11 @@ export type Event = Prisma.EventModel
  */
 export type Interaction = Prisma.InteractionModel
 /**
+ * Model InteractionParticipant
+ * 
+ */
+export type InteractionParticipant = Prisma.InteractionParticipantModel
+/**
  * Model Plan
  * 
  */

@@ -27,8 +27,12 @@ export type PersistedImportPerson = {
   interactionCount: number
 }
 
-export async function confirmImport(results: ImportedPerson[], options: PersistOptions = {}) {
+export async function confirmImport(results: ImportedPerson[], workspaceId: string, options: PersistOptions = {}) {
   if (!Array.isArray(results)) throw badRequest("results must be an array", { field: "results" })
+
+  // Force the actor's workspace to the trusted, caller-supplied workspaceId —
+  // never trust an actor object's own workspaceId for this write path.
+  const actor: DomainActor | undefined = options.actor ? { ...options.actor, workspaceId } : undefined
 
   let importedFileId = options.importedFileId ?? null
   if (!importedFileId && options.fileData) {
@@ -38,7 +42,7 @@ export async function confirmImport(results: ImportedPerson[], options: PersistO
 
   const created: PersistedImportPerson[] = []
   for (const result of results) {
-    const { personId, action } = await resolveImportedPerson(result, options.actor)
+    const { personId, action } = await resolveImportedPerson(result, workspaceId, actor)
     await runRulesForTarget({
       trigger: "import.person",
       targetType: "person",
@@ -53,7 +57,7 @@ export async function confirmImport(results: ImportedPerson[], options: PersistO
         guessedTags: result.guessedTags,
         importedFileId,
       },
-      actor: options.actor,
+      actor,
     })
     let interactionCount = 0
 
@@ -63,7 +67,7 @@ export async function confirmImport(results: ImportedPerson[], options: PersistO
         name: interaction.summary?.slice(0, 80) || `${interaction.eventType} with ${result.name}`,
         type: interaction.eventType,
         timestamp,
-      }, options.actor)
+      }, actor)
 
       const createdInteraction = await createInteraction({
         personId,
@@ -75,7 +79,7 @@ export async function confirmImport(results: ImportedPerson[], options: PersistO
         outcome: interaction.outcome,
         actionItems: interaction.keyTopics,
         sourceFileId: importedFileId,
-      }, options.actor)
+      }, actor)
       await runRulesForTarget({
         trigger: "import.interaction",
         targetType: "interaction",
@@ -93,7 +97,7 @@ export async function confirmImport(results: ImportedPerson[], options: PersistO
           keyTopics: interaction.keyTopics,
           importedFileId,
         },
-        actor: options.actor,
+        actor,
       })
       interactionCount++
     }
@@ -102,7 +106,7 @@ export async function confirmImport(results: ImportedPerson[], options: PersistO
   }
 
   await auditAction({
-    actor: options.actor,
+    actor,
     action: "import.confirm",
     targetType: "import",
     targetId: importedFileId,
@@ -115,16 +119,16 @@ export async function confirmImport(results: ImportedPerson[], options: PersistO
   return { importedFileId, created }
 }
 
-async function resolveImportedPerson(result: ImportedPerson, actor?: DomainActor) {
+async function resolveImportedPerson(result: ImportedPerson, workspaceId: string, actor?: DomainActor) {
   if (result.matchedPersonId) {
-    const existing = await db.person.findUnique({ where: { id: result.matchedPersonId }, select: { id: true } })
+    const existing = await db.person.findFirst({ where: { id: result.matchedPersonId, workspaceId }, select: { id: true } })
     if (existing) return { personId: existing.id, action: "matched" as const }
   }
 
   if (!result.isNew) {
     const { first, last } = splitName(result.name)
     const existing = await db.person.findFirst({
-      where: { first: { equals: first }, last: { equals: last } },
+      where: { first: { equals: first }, last: { equals: last }, workspaceId },
       select: { id: true },
     })
     if (existing) return { personId: existing.id, action: "matched" as const }

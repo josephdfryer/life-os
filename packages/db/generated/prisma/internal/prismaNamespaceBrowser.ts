@@ -75,6 +75,7 @@ export const ModelName = {
   StagedInteraction: 'StagedInteraction',
   Event: 'Event',
   Interaction: 'Interaction',
+  InteractionParticipant: 'InteractionParticipant',
   Plan: 'Plan',
   PlanExpectedPerson: 'PlanExpectedPerson',
   Place: 'Place',
@@ -289,11 +290,11 @@ export const CalendarConnectionScalarFieldEnum = {
   accountEmail: 'accountEmail',
   calendarId: 'calendarId',
   calendarSummary: 'calendarSummary',
-  accessToken: 'accessToken',
-  refreshToken: 'refreshToken',
+  accessTokenEncrypted: 'accessTokenEncrypted',
+  refreshTokenEncrypted: 'refreshTokenEncrypted',
   expiresAt: 'expiresAt',
   scope: 'scope',
-  syncToken: 'syncToken',
+  syncTokenEncrypted: 'syncTokenEncrypted',
   lastSyncedAt: 'lastSyncedAt',
   lastError: 'lastError'
 } as const
@@ -329,8 +330,8 @@ export const GmailConnectionScalarFieldEnum = {
   status: 'status',
   accountEmail: 'accountEmail',
   mailboxId: 'mailboxId',
-  accessToken: 'accessToken',
-  refreshToken: 'refreshToken',
+  accessTokenEncrypted: 'accessTokenEncrypted',
+  refreshTokenEncrypted: 'refreshTokenEncrypted',
   expiresAt: 'expiresAt',
   scope: 'scope',
   historyId: 'historyId',
@@ -369,8 +370,8 @@ export const EraConnectionScalarFieldEnum = {
   updatedAt: 'updatedAt',
   status: 'status',
   accountEmail: 'accountEmail',
-  accessToken: 'accessToken',
-  refreshToken: 'refreshToken',
+  accessTokenEncrypted: 'accessTokenEncrypted',
+  refreshTokenEncrypted: 'refreshTokenEncrypted',
   expiresAt: 'expiresAt',
   scope: 'scope',
   lastSyncedAt: 'lastSyncedAt',
@@ -531,6 +532,18 @@ export const InteractionScalarFieldEnum = {
 } as const
 
 export type InteractionScalarFieldEnum = (typeof InteractionScalarFieldEnum)[keyof typeof InteractionScalarFieldEnum]
+
+
+export const InteractionParticipantScalarFieldEnum = {
+  id: 'id',
+  interactionId: 'interactionId',
+  entityType: 'entityType',
+  entityId: 'entityId',
+  role: 'role',
+  workspaceId: 'workspaceId'
+} as const
+
+export type InteractionParticipantScalarFieldEnum = (typeof InteractionParticipantScalarFieldEnum)[keyof typeof InteractionParticipantScalarFieldEnum]
 
 
 export const PlanScalarFieldEnum = {

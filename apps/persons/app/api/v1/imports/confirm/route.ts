@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "results must be an array" }, { status: 400 })
     }
 
-    const outcome = await confirmImport(results, {
+    const outcome = await confirmImport(results, auth.workspaceId, {
       fileData: filename ? { name: filename, format: source ?? "api", content: "" } : undefined,
       actor: auth.actor,
     })

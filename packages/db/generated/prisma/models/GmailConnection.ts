@@ -34,8 +34,8 @@ export type GmailConnectionMinAggregateOutputType = {
   status: string | null
   accountEmail: string | null
   mailboxId: string | null
-  accessToken: string | null
-  refreshToken: string | null
+  accessTokenEncrypted: string | null
+  refreshTokenEncrypted: string | null
   expiresAt: Date | null
   scope: string | null
   historyId: string | null
@@ -53,8 +53,8 @@ export type GmailConnectionMaxAggregateOutputType = {
   status: string | null
   accountEmail: string | null
   mailboxId: string | null
-  accessToken: string | null
-  refreshToken: string | null
+  accessTokenEncrypted: string | null
+  refreshTokenEncrypted: string | null
   expiresAt: Date | null
   scope: string | null
   historyId: string | null
@@ -72,8 +72,8 @@ export type GmailConnectionCountAggregateOutputType = {
   status: number
   accountEmail: number
   mailboxId: number
-  accessToken: number
-  refreshToken: number
+  accessTokenEncrypted: number
+  refreshTokenEncrypted: number
   expiresAt: number
   scope: number
   historyId: number
@@ -93,8 +93,8 @@ export type GmailConnectionMinAggregateInputType = {
   status?: true
   accountEmail?: true
   mailboxId?: true
-  accessToken?: true
-  refreshToken?: true
+  accessTokenEncrypted?: true
+  refreshTokenEncrypted?: true
   expiresAt?: true
   scope?: true
   historyId?: true
@@ -112,8 +112,8 @@ export type GmailConnectionMaxAggregateInputType = {
   status?: true
   accountEmail?: true
   mailboxId?: true
-  accessToken?: true
-  refreshToken?: true
+  accessTokenEncrypted?: true
+  refreshTokenEncrypted?: true
   expiresAt?: true
   scope?: true
   historyId?: true
@@ -131,8 +131,8 @@ export type GmailConnectionCountAggregateInputType = {
   status?: true
   accountEmail?: true
   mailboxId?: true
-  accessToken?: true
-  refreshToken?: true
+  accessTokenEncrypted?: true
+  refreshTokenEncrypted?: true
   expiresAt?: true
   scope?: true
   historyId?: true
@@ -223,8 +223,8 @@ export type GmailConnectionGroupByOutputType = {
   status: string
   accountEmail: string | null
   mailboxId: string
-  accessToken: string | null
-  refreshToken: string | null
+  accessTokenEncrypted: string | null
+  refreshTokenEncrypted: string | null
   expiresAt: Date | null
   scope: string | null
   historyId: string | null
@@ -263,8 +263,8 @@ export type GmailConnectionWhereInput = {
   status?: Prisma.StringFilter<"GmailConnection"> | string
   accountEmail?: Prisma.StringNullableFilter<"GmailConnection"> | string | null
   mailboxId?: Prisma.StringFilter<"GmailConnection"> | string
-  accessToken?: Prisma.StringNullableFilter<"GmailConnection"> | string | null
-  refreshToken?: Prisma.StringNullableFilter<"GmailConnection"> | string | null
+  accessTokenEncrypted?: Prisma.StringNullableFilter<"GmailConnection"> | string | null
+  refreshTokenEncrypted?: Prisma.StringNullableFilter<"GmailConnection"> | string | null
   expiresAt?: Prisma.DateTimeNullableFilter<"GmailConnection"> | Date | string | null
   scope?: Prisma.StringNullableFilter<"GmailConnection"> | string | null
   historyId?: Prisma.StringNullableFilter<"GmailConnection"> | string | null
@@ -285,8 +285,8 @@ export type GmailConnectionOrderByWithRelationInput = {
   status?: Prisma.SortOrder
   accountEmail?: Prisma.SortOrderInput | Prisma.SortOrder
   mailboxId?: Prisma.SortOrder
-  accessToken?: Prisma.SortOrderInput | Prisma.SortOrder
-  refreshToken?: Prisma.SortOrderInput | Prisma.SortOrder
+  accessTokenEncrypted?: Prisma.SortOrderInput | Prisma.SortOrder
+  refreshTokenEncrypted?: Prisma.SortOrderInput | Prisma.SortOrder
   expiresAt?: Prisma.SortOrderInput | Prisma.SortOrder
   scope?: Prisma.SortOrderInput | Prisma.SortOrder
   historyId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -311,8 +311,8 @@ export type GmailConnectionWhereUniqueInput = Prisma.AtLeast<{
   status?: Prisma.StringFilter<"GmailConnection"> | string
   accountEmail?: Prisma.StringNullableFilter<"GmailConnection"> | string | null
   mailboxId?: Prisma.StringFilter<"GmailConnection"> | string
-  accessToken?: Prisma.StringNullableFilter<"GmailConnection"> | string | null
-  refreshToken?: Prisma.StringNullableFilter<"GmailConnection"> | string | null
+  accessTokenEncrypted?: Prisma.StringNullableFilter<"GmailConnection"> | string | null
+  refreshTokenEncrypted?: Prisma.StringNullableFilter<"GmailConnection"> | string | null
   expiresAt?: Prisma.DateTimeNullableFilter<"GmailConnection"> | Date | string | null
   scope?: Prisma.StringNullableFilter<"GmailConnection"> | string | null
   historyId?: Prisma.StringNullableFilter<"GmailConnection"> | string | null
@@ -333,8 +333,8 @@ export type GmailConnectionOrderByWithAggregationInput = {
   status?: Prisma.SortOrder
   accountEmail?: Prisma.SortOrderInput | Prisma.SortOrder
   mailboxId?: Prisma.SortOrder
-  accessToken?: Prisma.SortOrderInput | Prisma.SortOrder
-  refreshToken?: Prisma.SortOrderInput | Prisma.SortOrder
+  accessTokenEncrypted?: Prisma.SortOrderInput | Prisma.SortOrder
+  refreshTokenEncrypted?: Prisma.SortOrderInput | Prisma.SortOrder
   expiresAt?: Prisma.SortOrderInput | Prisma.SortOrder
   scope?: Prisma.SortOrderInput | Prisma.SortOrder
   historyId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -358,8 +358,8 @@ export type GmailConnectionScalarWhereWithAggregatesInput = {
   status?: Prisma.StringWithAggregatesFilter<"GmailConnection"> | string
   accountEmail?: Prisma.StringNullableWithAggregatesFilter<"GmailConnection"> | string | null
   mailboxId?: Prisma.StringWithAggregatesFilter<"GmailConnection"> | string
-  accessToken?: Prisma.StringNullableWithAggregatesFilter<"GmailConnection"> | string | null
-  refreshToken?: Prisma.StringNullableWithAggregatesFilter<"GmailConnection"> | string | null
+  accessTokenEncrypted?: Prisma.StringNullableWithAggregatesFilter<"GmailConnection"> | string | null
+  refreshTokenEncrypted?: Prisma.StringNullableWithAggregatesFilter<"GmailConnection"> | string | null
   expiresAt?: Prisma.DateTimeNullableWithAggregatesFilter<"GmailConnection"> | Date | string | null
   scope?: Prisma.StringNullableWithAggregatesFilter<"GmailConnection"> | string | null
   historyId?: Prisma.StringNullableWithAggregatesFilter<"GmailConnection"> | string | null
@@ -375,8 +375,8 @@ export type GmailConnectionCreateInput = {
   status?: string
   accountEmail?: string | null
   mailboxId?: string
-  accessToken?: string | null
-  refreshToken?: string | null
+  accessTokenEncrypted?: string | null
+  refreshTokenEncrypted?: string | null
   expiresAt?: Date | string | null
   scope?: string | null
   historyId?: string | null
@@ -397,8 +397,8 @@ export type GmailConnectionUncheckedCreateInput = {
   status?: string
   accountEmail?: string | null
   mailboxId?: string
-  accessToken?: string | null
-  refreshToken?: string | null
+  accessTokenEncrypted?: string | null
+  refreshTokenEncrypted?: string | null
   expiresAt?: Date | string | null
   scope?: string | null
   historyId?: string | null
@@ -415,8 +415,8 @@ export type GmailConnectionUpdateInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   accountEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mailboxId?: Prisma.StringFieldUpdateOperationsInput | string
-  accessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accessTokenEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refreshTokenEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scope?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   historyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -437,8 +437,8 @@ export type GmailConnectionUncheckedUpdateInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   accountEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mailboxId?: Prisma.StringFieldUpdateOperationsInput | string
-  accessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accessTokenEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refreshTokenEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scope?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   historyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -457,8 +457,8 @@ export type GmailConnectionCreateManyInput = {
   status?: string
   accountEmail?: string | null
   mailboxId?: string
-  accessToken?: string | null
-  refreshToken?: string | null
+  accessTokenEncrypted?: string | null
+  refreshTokenEncrypted?: string | null
   expiresAt?: Date | string | null
   scope?: string | null
   historyId?: string | null
@@ -474,8 +474,8 @@ export type GmailConnectionUpdateManyMutationInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   accountEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mailboxId?: Prisma.StringFieldUpdateOperationsInput | string
-  accessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accessTokenEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refreshTokenEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scope?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   historyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -493,8 +493,8 @@ export type GmailConnectionUncheckedUpdateManyInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   accountEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mailboxId?: Prisma.StringFieldUpdateOperationsInput | string
-  accessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accessTokenEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refreshTokenEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scope?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   historyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -528,8 +528,8 @@ export type GmailConnectionCountOrderByAggregateInput = {
   status?: Prisma.SortOrder
   accountEmail?: Prisma.SortOrder
   mailboxId?: Prisma.SortOrder
-  accessToken?: Prisma.SortOrder
-  refreshToken?: Prisma.SortOrder
+  accessTokenEncrypted?: Prisma.SortOrder
+  refreshTokenEncrypted?: Prisma.SortOrder
   expiresAt?: Prisma.SortOrder
   scope?: Prisma.SortOrder
   historyId?: Prisma.SortOrder
@@ -547,8 +547,8 @@ export type GmailConnectionMaxOrderByAggregateInput = {
   status?: Prisma.SortOrder
   accountEmail?: Prisma.SortOrder
   mailboxId?: Prisma.SortOrder
-  accessToken?: Prisma.SortOrder
-  refreshToken?: Prisma.SortOrder
+  accessTokenEncrypted?: Prisma.SortOrder
+  refreshTokenEncrypted?: Prisma.SortOrder
   expiresAt?: Prisma.SortOrder
   scope?: Prisma.SortOrder
   historyId?: Prisma.SortOrder
@@ -566,8 +566,8 @@ export type GmailConnectionMinOrderByAggregateInput = {
   status?: Prisma.SortOrder
   accountEmail?: Prisma.SortOrder
   mailboxId?: Prisma.SortOrder
-  accessToken?: Prisma.SortOrder
-  refreshToken?: Prisma.SortOrder
+  accessTokenEncrypted?: Prisma.SortOrder
+  refreshTokenEncrypted?: Prisma.SortOrder
   expiresAt?: Prisma.SortOrder
   scope?: Prisma.SortOrder
   historyId?: Prisma.SortOrder
@@ -686,8 +686,8 @@ export type GmailConnectionCreateWithoutWorkspaceInput = {
   status?: string
   accountEmail?: string | null
   mailboxId?: string
-  accessToken?: string | null
-  refreshToken?: string | null
+  accessTokenEncrypted?: string | null
+  refreshTokenEncrypted?: string | null
   expiresAt?: Date | string | null
   scope?: string | null
   historyId?: string | null
@@ -706,8 +706,8 @@ export type GmailConnectionUncheckedCreateWithoutWorkspaceInput = {
   status?: string
   accountEmail?: string | null
   mailboxId?: string
-  accessToken?: string | null
-  refreshToken?: string | null
+  accessTokenEncrypted?: string | null
+  refreshTokenEncrypted?: string | null
   expiresAt?: Date | string | null
   scope?: string | null
   historyId?: string | null
@@ -754,8 +754,8 @@ export type GmailConnectionScalarWhereInput = {
   status?: Prisma.StringFilter<"GmailConnection"> | string
   accountEmail?: Prisma.StringNullableFilter<"GmailConnection"> | string | null
   mailboxId?: Prisma.StringFilter<"GmailConnection"> | string
-  accessToken?: Prisma.StringNullableFilter<"GmailConnection"> | string | null
-  refreshToken?: Prisma.StringNullableFilter<"GmailConnection"> | string | null
+  accessTokenEncrypted?: Prisma.StringNullableFilter<"GmailConnection"> | string | null
+  refreshTokenEncrypted?: Prisma.StringNullableFilter<"GmailConnection"> | string | null
   expiresAt?: Prisma.DateTimeNullableFilter<"GmailConnection"> | Date | string | null
   scope?: Prisma.StringNullableFilter<"GmailConnection"> | string | null
   historyId?: Prisma.StringNullableFilter<"GmailConnection"> | string | null
@@ -771,8 +771,8 @@ export type GmailConnectionCreateWithoutUserInput = {
   status?: string
   accountEmail?: string | null
   mailboxId?: string
-  accessToken?: string | null
-  refreshToken?: string | null
+  accessTokenEncrypted?: string | null
+  refreshTokenEncrypted?: string | null
   expiresAt?: Date | string | null
   scope?: string | null
   historyId?: string | null
@@ -791,8 +791,8 @@ export type GmailConnectionUncheckedCreateWithoutUserInput = {
   status?: string
   accountEmail?: string | null
   mailboxId?: string
-  accessToken?: string | null
-  refreshToken?: string | null
+  accessTokenEncrypted?: string | null
+  refreshTokenEncrypted?: string | null
   expiresAt?: Date | string | null
   scope?: string | null
   historyId?: string | null
@@ -834,8 +834,8 @@ export type GmailConnectionCreateWithoutMessageLinksInput = {
   status?: string
   accountEmail?: string | null
   mailboxId?: string
-  accessToken?: string | null
-  refreshToken?: string | null
+  accessTokenEncrypted?: string | null
+  refreshTokenEncrypted?: string | null
   expiresAt?: Date | string | null
   scope?: string | null
   historyId?: string | null
@@ -855,8 +855,8 @@ export type GmailConnectionUncheckedCreateWithoutMessageLinksInput = {
   status?: string
   accountEmail?: string | null
   mailboxId?: string
-  accessToken?: string | null
-  refreshToken?: string | null
+  accessTokenEncrypted?: string | null
+  refreshTokenEncrypted?: string | null
   expiresAt?: Date | string | null
   scope?: string | null
   historyId?: string | null
@@ -888,8 +888,8 @@ export type GmailConnectionUpdateWithoutMessageLinksInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   accountEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mailboxId?: Prisma.StringFieldUpdateOperationsInput | string
-  accessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accessTokenEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refreshTokenEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scope?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   historyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -909,8 +909,8 @@ export type GmailConnectionUncheckedUpdateWithoutMessageLinksInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   accountEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mailboxId?: Prisma.StringFieldUpdateOperationsInput | string
-  accessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accessTokenEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refreshTokenEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scope?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   historyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -927,8 +927,8 @@ export type GmailConnectionCreateManyWorkspaceInput = {
   status?: string
   accountEmail?: string | null
   mailboxId?: string
-  accessToken?: string | null
-  refreshToken?: string | null
+  accessTokenEncrypted?: string | null
+  refreshTokenEncrypted?: string | null
   expiresAt?: Date | string | null
   scope?: string | null
   historyId?: string | null
@@ -944,8 +944,8 @@ export type GmailConnectionUpdateWithoutWorkspaceInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   accountEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mailboxId?: Prisma.StringFieldUpdateOperationsInput | string
-  accessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accessTokenEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refreshTokenEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scope?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   historyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -964,8 +964,8 @@ export type GmailConnectionUncheckedUpdateWithoutWorkspaceInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   accountEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mailboxId?: Prisma.StringFieldUpdateOperationsInput | string
-  accessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accessTokenEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refreshTokenEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scope?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   historyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -983,8 +983,8 @@ export type GmailConnectionUncheckedUpdateManyWithoutWorkspaceInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   accountEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mailboxId?: Prisma.StringFieldUpdateOperationsInput | string
-  accessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accessTokenEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refreshTokenEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scope?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   historyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1001,8 +1001,8 @@ export type GmailConnectionCreateManyUserInput = {
   status?: string
   accountEmail?: string | null
   mailboxId?: string
-  accessToken?: string | null
-  refreshToken?: string | null
+  accessTokenEncrypted?: string | null
+  refreshTokenEncrypted?: string | null
   expiresAt?: Date | string | null
   scope?: string | null
   historyId?: string | null
@@ -1018,8 +1018,8 @@ export type GmailConnectionUpdateWithoutUserInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   accountEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mailboxId?: Prisma.StringFieldUpdateOperationsInput | string
-  accessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accessTokenEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refreshTokenEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scope?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   historyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1038,8 +1038,8 @@ export type GmailConnectionUncheckedUpdateWithoutUserInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   accountEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mailboxId?: Prisma.StringFieldUpdateOperationsInput | string
-  accessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accessTokenEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refreshTokenEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scope?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   historyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1057,8 +1057,8 @@ export type GmailConnectionUncheckedUpdateManyWithoutUserInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   accountEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mailboxId?: Prisma.StringFieldUpdateOperationsInput | string
-  accessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accessTokenEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refreshTokenEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scope?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   historyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1107,8 +1107,8 @@ export type GmailConnectionSelect<ExtArgs extends runtime.Types.Extensions.Inter
   status?: boolean
   accountEmail?: boolean
   mailboxId?: boolean
-  accessToken?: boolean
-  refreshToken?: boolean
+  accessTokenEncrypted?: boolean
+  refreshTokenEncrypted?: boolean
   expiresAt?: boolean
   scope?: boolean
   historyId?: boolean
@@ -1130,8 +1130,8 @@ export type GmailConnectionSelectCreateManyAndReturn<ExtArgs extends runtime.Typ
   status?: boolean
   accountEmail?: boolean
   mailboxId?: boolean
-  accessToken?: boolean
-  refreshToken?: boolean
+  accessTokenEncrypted?: boolean
+  refreshTokenEncrypted?: boolean
   expiresAt?: boolean
   scope?: boolean
   historyId?: boolean
@@ -1151,8 +1151,8 @@ export type GmailConnectionSelectUpdateManyAndReturn<ExtArgs extends runtime.Typ
   status?: boolean
   accountEmail?: boolean
   mailboxId?: boolean
-  accessToken?: boolean
-  refreshToken?: boolean
+  accessTokenEncrypted?: boolean
+  refreshTokenEncrypted?: boolean
   expiresAt?: boolean
   scope?: boolean
   historyId?: boolean
@@ -1172,8 +1172,8 @@ export type GmailConnectionSelectScalar = {
   status?: boolean
   accountEmail?: boolean
   mailboxId?: boolean
-  accessToken?: boolean
-  refreshToken?: boolean
+  accessTokenEncrypted?: boolean
+  refreshTokenEncrypted?: boolean
   expiresAt?: boolean
   scope?: boolean
   historyId?: boolean
@@ -1181,7 +1181,7 @@ export type GmailConnectionSelectScalar = {
   lastError?: boolean
 }
 
-export type GmailConnectionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "workspaceId" | "userId" | "createdAt" | "updatedAt" | "provider" | "status" | "accountEmail" | "mailboxId" | "accessToken" | "refreshToken" | "expiresAt" | "scope" | "historyId" | "lastSyncedAt" | "lastError", ExtArgs["result"]["gmailConnection"]>
+export type GmailConnectionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "workspaceId" | "userId" | "createdAt" | "updatedAt" | "provider" | "status" | "accountEmail" | "mailboxId" | "accessTokenEncrypted" | "refreshTokenEncrypted" | "expiresAt" | "scope" | "historyId" | "lastSyncedAt" | "lastError", ExtArgs["result"]["gmailConnection"]>
 export type GmailConnectionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -1214,8 +1214,8 @@ export type $GmailConnectionPayload<ExtArgs extends runtime.Types.Extensions.Int
     status: string
     accountEmail: string | null
     mailboxId: string
-    accessToken: string | null
-    refreshToken: string | null
+    accessTokenEncrypted: string | null
+    refreshTokenEncrypted: string | null
     expiresAt: Date | null
     scope: string | null
     historyId: string | null
@@ -1656,8 +1656,8 @@ export interface GmailConnectionFieldRefs {
   readonly status: Prisma.FieldRef<"GmailConnection", 'String'>
   readonly accountEmail: Prisma.FieldRef<"GmailConnection", 'String'>
   readonly mailboxId: Prisma.FieldRef<"GmailConnection", 'String'>
-  readonly accessToken: Prisma.FieldRef<"GmailConnection", 'String'>
-  readonly refreshToken: Prisma.FieldRef<"GmailConnection", 'String'>
+  readonly accessTokenEncrypted: Prisma.FieldRef<"GmailConnection", 'String'>
+  readonly refreshTokenEncrypted: Prisma.FieldRef<"GmailConnection", 'String'>
   readonly expiresAt: Prisma.FieldRef<"GmailConnection", 'DateTime'>
   readonly scope: Prisma.FieldRef<"GmailConnection", 'String'>
   readonly historyId: Prisma.FieldRef<"GmailConnection", 'String'>

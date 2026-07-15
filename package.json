@@ -32,8 +32,14 @@
     "type-check": "tsc --noEmit -p tsconfig.json && turbo run type-check"
   },
   "packageManager": "npm@11.12.1",
+  "overrides": {
+    "@hono/node-server": "^1.19.13",
+    "postcss": "^8.5.19",
+    "uuid": "^11.1.1"
+  },
   "devDependencies": {
     "@modelcontextprotocol/sdk": "^1.29.0",
+    "@types/better-sqlite3": "^7.6.13",
     "exceljs": "^4.4.0",
     "mcp-remote": "^0.1.38",
     "tsx": "^4.22.4",

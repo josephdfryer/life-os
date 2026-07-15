@@ -6,6 +6,10 @@ import { db } from "@/lib/db"
 
 export const maxDuration = 300
 
+// Twilio webhooks carry no Life OS session — the trust boundary here is the
+// Twilio signature plus the MY_WHATSAPP_NUMBER allowlist, not a workspace
+// membership lookup. This deployment's single owner workspace is fixed via
+// env, unlike the session-authenticated web chat route.
 const WORKSPACE_ID = process.env.LIFE_OS_WORKSPACE_ID ?? "default-workspace"
 
 export async function POST(req: NextRequest) {
@@ -60,7 +64,7 @@ export async function POST(req: NextRequest) {
   // an empty TwiML response, then reply out-of-band via the REST API.
   after(async () => {
     try {
-      const reply = await runAgent({ channel: "whatsapp", from, userMessage: body })
+      const reply = await runAgent({ channel: "whatsapp", from, userMessage: body, workspaceId: WORKSPACE_ID })
       await sendWhatsApp(from, to, reply)
     } catch (err) {
       console.error("Agent run failed:", err)

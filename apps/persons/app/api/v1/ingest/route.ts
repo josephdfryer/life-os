@@ -40,8 +40,10 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "No content provided" }, { status: 400 })
     }
 
-    // Load existing people for matching
+    // Load existing people for matching — scoped to this API key's workspace
+    // so Claude never sees (and can never "match" against) another tenant's contacts.
     const existingPersons = await db.person.findMany({
+      where: { workspaceId: auth.workspaceId },
       select: { id: true, first: true, last: true, title: true, headline: true, emails: true, phones: true },
     })
 
@@ -51,7 +53,7 @@ export async function POST(req: NextRequest) {
     // Store the file
     const fileRecord = await storeFile(filename, source ?? "api", content)
 
-    const { created } = await confirmImport(toImportedPersons(analysisResult), {
+    const { created } = await confirmImport(toImportedPersons(analysisResult), auth.workspaceId, {
       importedFileId: fileRecord.id,
       actor: auth.actor,
     })

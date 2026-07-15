@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server"
 import { db } from "@/lib/db"
+import { accessErrorResponse, requireWorkspaceAccess } from "@/lib/access"
 
 export const dynamic = "force-dynamic"
 
@@ -10,6 +11,7 @@ type Params = { params: Promise<{ personId: string }> }
 // can pick it up as a source.
 export async function POST(request: Request, { params }: Params) {
   try {
+    const access = await requireWorkspaceAccess()
     const { personId } = await params
     const payload = await request.json().catch(() => null)
     const body = typeof payload?.body === "string" ? payload.body.trim() : ""
@@ -17,8 +19,10 @@ export async function POST(request: Request, { params }: Params) {
       return NextResponse.json({ error: "Note body is required" }, { status: 400 })
     }
 
+    // Person must belong to the caller's own workspace — otherwise a
+    // caller could attach a note to someone else's tenant graph.
     const person = await db.person.findFirst({
-      where: { id: personId },
+      where: { id: personId, workspaceId: access.workspaceId },
       select: { id: true, workspaceId: true },
     })
     if (!person) {
@@ -38,9 +42,7 @@ export async function POST(request: Request, { params }: Params) {
 
     return NextResponse.json({ ok: true, noteId: note.id })
   } catch (error) {
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Failed to save note" },
-      { status: 500 }
-    )
+    const { error: message, status } = accessErrorResponse(error)
+    return NextResponse.json({ error: message }, { status })
   }
 }

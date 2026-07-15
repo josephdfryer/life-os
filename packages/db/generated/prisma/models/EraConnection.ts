@@ -32,8 +32,8 @@ export type EraConnectionMinAggregateOutputType = {
   updatedAt: Date | null
   status: string | null
   accountEmail: string | null
-  accessToken: string | null
-  refreshToken: string | null
+  accessTokenEncrypted: string | null
+  refreshTokenEncrypted: string | null
   expiresAt: Date | null
   scope: string | null
   lastSyncedAt: Date | null
@@ -49,8 +49,8 @@ export type EraConnectionMaxAggregateOutputType = {
   updatedAt: Date | null
   status: string | null
   accountEmail: string | null
-  accessToken: string | null
-  refreshToken: string | null
+  accessTokenEncrypted: string | null
+  refreshTokenEncrypted: string | null
   expiresAt: Date | null
   scope: string | null
   lastSyncedAt: Date | null
@@ -66,8 +66,8 @@ export type EraConnectionCountAggregateOutputType = {
   updatedAt: number
   status: number
   accountEmail: number
-  accessToken: number
-  refreshToken: number
+  accessTokenEncrypted: number
+  refreshTokenEncrypted: number
   expiresAt: number
   scope: number
   lastSyncedAt: number
@@ -85,8 +85,8 @@ export type EraConnectionMinAggregateInputType = {
   updatedAt?: true
   status?: true
   accountEmail?: true
-  accessToken?: true
-  refreshToken?: true
+  accessTokenEncrypted?: true
+  refreshTokenEncrypted?: true
   expiresAt?: true
   scope?: true
   lastSyncedAt?: true
@@ -102,8 +102,8 @@ export type EraConnectionMaxAggregateInputType = {
   updatedAt?: true
   status?: true
   accountEmail?: true
-  accessToken?: true
-  refreshToken?: true
+  accessTokenEncrypted?: true
+  refreshTokenEncrypted?: true
   expiresAt?: true
   scope?: true
   lastSyncedAt?: true
@@ -119,8 +119,8 @@ export type EraConnectionCountAggregateInputType = {
   updatedAt?: true
   status?: true
   accountEmail?: true
-  accessToken?: true
-  refreshToken?: true
+  accessTokenEncrypted?: true
+  refreshTokenEncrypted?: true
   expiresAt?: true
   scope?: true
   lastSyncedAt?: true
@@ -209,8 +209,8 @@ export type EraConnectionGroupByOutputType = {
   updatedAt: Date
   status: string
   accountEmail: string | null
-  accessToken: string | null
-  refreshToken: string | null
+  accessTokenEncrypted: string | null
+  refreshTokenEncrypted: string | null
   expiresAt: Date | null
   scope: string | null
   lastSyncedAt: Date | null
@@ -247,8 +247,8 @@ export type EraConnectionWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"EraConnection"> | Date | string
   status?: Prisma.StringFilter<"EraConnection"> | string
   accountEmail?: Prisma.StringNullableFilter<"EraConnection"> | string | null
-  accessToken?: Prisma.StringNullableFilter<"EraConnection"> | string | null
-  refreshToken?: Prisma.StringNullableFilter<"EraConnection"> | string | null
+  accessTokenEncrypted?: Prisma.StringNullableFilter<"EraConnection"> | string | null
+  refreshTokenEncrypted?: Prisma.StringNullableFilter<"EraConnection"> | string | null
   expiresAt?: Prisma.DateTimeNullableFilter<"EraConnection"> | Date | string | null
   scope?: Prisma.StringNullableFilter<"EraConnection"> | string | null
   lastSyncedAt?: Prisma.DateTimeNullableFilter<"EraConnection"> | Date | string | null
@@ -268,8 +268,8 @@ export type EraConnectionOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   status?: Prisma.SortOrder
   accountEmail?: Prisma.SortOrderInput | Prisma.SortOrder
-  accessToken?: Prisma.SortOrderInput | Prisma.SortOrder
-  refreshToken?: Prisma.SortOrderInput | Prisma.SortOrder
+  accessTokenEncrypted?: Prisma.SortOrderInput | Prisma.SortOrder
+  refreshTokenEncrypted?: Prisma.SortOrderInput | Prisma.SortOrder
   expiresAt?: Prisma.SortOrderInput | Prisma.SortOrder
   scope?: Prisma.SortOrderInput | Prisma.SortOrder
   lastSyncedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -293,8 +293,8 @@ export type EraConnectionWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"EraConnection"> | Date | string
   status?: Prisma.StringFilter<"EraConnection"> | string
   accountEmail?: Prisma.StringNullableFilter<"EraConnection"> | string | null
-  accessToken?: Prisma.StringNullableFilter<"EraConnection"> | string | null
-  refreshToken?: Prisma.StringNullableFilter<"EraConnection"> | string | null
+  accessTokenEncrypted?: Prisma.StringNullableFilter<"EraConnection"> | string | null
+  refreshTokenEncrypted?: Prisma.StringNullableFilter<"EraConnection"> | string | null
   expiresAt?: Prisma.DateTimeNullableFilter<"EraConnection"> | Date | string | null
   scope?: Prisma.StringNullableFilter<"EraConnection"> | string | null
   lastSyncedAt?: Prisma.DateTimeNullableFilter<"EraConnection"> | Date | string | null
@@ -314,8 +314,8 @@ export type EraConnectionOrderByWithAggregationInput = {
   updatedAt?: Prisma.SortOrder
   status?: Prisma.SortOrder
   accountEmail?: Prisma.SortOrderInput | Prisma.SortOrder
-  accessToken?: Prisma.SortOrderInput | Prisma.SortOrder
-  refreshToken?: Prisma.SortOrderInput | Prisma.SortOrder
+  accessTokenEncrypted?: Prisma.SortOrderInput | Prisma.SortOrder
+  refreshTokenEncrypted?: Prisma.SortOrderInput | Prisma.SortOrder
   expiresAt?: Prisma.SortOrderInput | Prisma.SortOrder
   scope?: Prisma.SortOrderInput | Prisma.SortOrder
   lastSyncedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -337,8 +337,8 @@ export type EraConnectionScalarWhereWithAggregatesInput = {
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"EraConnection"> | Date | string
   status?: Prisma.StringWithAggregatesFilter<"EraConnection"> | string
   accountEmail?: Prisma.StringNullableWithAggregatesFilter<"EraConnection"> | string | null
-  accessToken?: Prisma.StringNullableWithAggregatesFilter<"EraConnection"> | string | null
-  refreshToken?: Prisma.StringNullableWithAggregatesFilter<"EraConnection"> | string | null
+  accessTokenEncrypted?: Prisma.StringNullableWithAggregatesFilter<"EraConnection"> | string | null
+  refreshTokenEncrypted?: Prisma.StringNullableWithAggregatesFilter<"EraConnection"> | string | null
   expiresAt?: Prisma.DateTimeNullableWithAggregatesFilter<"EraConnection"> | Date | string | null
   scope?: Prisma.StringNullableWithAggregatesFilter<"EraConnection"> | string | null
   lastSyncedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"EraConnection"> | Date | string | null
@@ -352,8 +352,8 @@ export type EraConnectionCreateInput = {
   updatedAt?: Date | string
   status?: string
   accountEmail?: string | null
-  accessToken?: string | null
-  refreshToken?: string | null
+  accessTokenEncrypted?: string | null
+  refreshTokenEncrypted?: string | null
   expiresAt?: Date | string | null
   scope?: string | null
   lastSyncedAt?: Date | string | null
@@ -373,8 +373,8 @@ export type EraConnectionUncheckedCreateInput = {
   updatedAt?: Date | string
   status?: string
   accountEmail?: string | null
-  accessToken?: string | null
-  refreshToken?: string | null
+  accessTokenEncrypted?: string | null
+  refreshTokenEncrypted?: string | null
   expiresAt?: Date | string | null
   scope?: string | null
   lastSyncedAt?: Date | string | null
@@ -390,8 +390,8 @@ export type EraConnectionUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   accountEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  accessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accessTokenEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refreshTokenEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scope?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastSyncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -411,8 +411,8 @@ export type EraConnectionUncheckedUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   accountEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  accessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accessTokenEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refreshTokenEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scope?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastSyncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -430,8 +430,8 @@ export type EraConnectionCreateManyInput = {
   updatedAt?: Date | string
   status?: string
   accountEmail?: string | null
-  accessToken?: string | null
-  refreshToken?: string | null
+  accessTokenEncrypted?: string | null
+  refreshTokenEncrypted?: string | null
   expiresAt?: Date | string | null
   scope?: string | null
   lastSyncedAt?: Date | string | null
@@ -445,8 +445,8 @@ export type EraConnectionUpdateManyMutationInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   accountEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  accessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accessTokenEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refreshTokenEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scope?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastSyncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -462,8 +462,8 @@ export type EraConnectionUncheckedUpdateManyInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   accountEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  accessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accessTokenEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refreshTokenEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scope?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastSyncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -494,8 +494,8 @@ export type EraConnectionCountOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
   status?: Prisma.SortOrder
   accountEmail?: Prisma.SortOrder
-  accessToken?: Prisma.SortOrder
-  refreshToken?: Prisma.SortOrder
+  accessTokenEncrypted?: Prisma.SortOrder
+  refreshTokenEncrypted?: Prisma.SortOrder
   expiresAt?: Prisma.SortOrder
   scope?: Prisma.SortOrder
   lastSyncedAt?: Prisma.SortOrder
@@ -511,8 +511,8 @@ export type EraConnectionMaxOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
   status?: Prisma.SortOrder
   accountEmail?: Prisma.SortOrder
-  accessToken?: Prisma.SortOrder
-  refreshToken?: Prisma.SortOrder
+  accessTokenEncrypted?: Prisma.SortOrder
+  refreshTokenEncrypted?: Prisma.SortOrder
   expiresAt?: Prisma.SortOrder
   scope?: Prisma.SortOrder
   lastSyncedAt?: Prisma.SortOrder
@@ -528,8 +528,8 @@ export type EraConnectionMinOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
   status?: Prisma.SortOrder
   accountEmail?: Prisma.SortOrder
-  accessToken?: Prisma.SortOrder
-  refreshToken?: Prisma.SortOrder
+  accessTokenEncrypted?: Prisma.SortOrder
+  refreshTokenEncrypted?: Prisma.SortOrder
   expiresAt?: Prisma.SortOrder
   scope?: Prisma.SortOrder
   lastSyncedAt?: Prisma.SortOrder
@@ -660,8 +660,8 @@ export type EraConnectionCreateWithoutWorkspaceInput = {
   updatedAt?: Date | string
   status?: string
   accountEmail?: string | null
-  accessToken?: string | null
-  refreshToken?: string | null
+  accessTokenEncrypted?: string | null
+  refreshTokenEncrypted?: string | null
   expiresAt?: Date | string | null
   scope?: string | null
   lastSyncedAt?: Date | string | null
@@ -679,8 +679,8 @@ export type EraConnectionUncheckedCreateWithoutWorkspaceInput = {
   updatedAt?: Date | string
   status?: string
   accountEmail?: string | null
-  accessToken?: string | null
-  refreshToken?: string | null
+  accessTokenEncrypted?: string | null
+  refreshTokenEncrypted?: string | null
   expiresAt?: Date | string | null
   scope?: string | null
   lastSyncedAt?: Date | string | null
@@ -726,8 +726,8 @@ export type EraConnectionScalarWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"EraConnection"> | Date | string
   status?: Prisma.StringFilter<"EraConnection"> | string
   accountEmail?: Prisma.StringNullableFilter<"EraConnection"> | string | null
-  accessToken?: Prisma.StringNullableFilter<"EraConnection"> | string | null
-  refreshToken?: Prisma.StringNullableFilter<"EraConnection"> | string | null
+  accessTokenEncrypted?: Prisma.StringNullableFilter<"EraConnection"> | string | null
+  refreshTokenEncrypted?: Prisma.StringNullableFilter<"EraConnection"> | string | null
   expiresAt?: Prisma.DateTimeNullableFilter<"EraConnection"> | Date | string | null
   scope?: Prisma.StringNullableFilter<"EraConnection"> | string | null
   lastSyncedAt?: Prisma.DateTimeNullableFilter<"EraConnection"> | Date | string | null
@@ -741,8 +741,8 @@ export type EraConnectionCreateWithoutUserInput = {
   updatedAt?: Date | string
   status?: string
   accountEmail?: string | null
-  accessToken?: string | null
-  refreshToken?: string | null
+  accessTokenEncrypted?: string | null
+  refreshTokenEncrypted?: string | null
   expiresAt?: Date | string | null
   scope?: string | null
   lastSyncedAt?: Date | string | null
@@ -760,8 +760,8 @@ export type EraConnectionUncheckedCreateWithoutUserInput = {
   updatedAt?: Date | string
   status?: string
   accountEmail?: string | null
-  accessToken?: string | null
-  refreshToken?: string | null
+  accessTokenEncrypted?: string | null
+  refreshTokenEncrypted?: string | null
   expiresAt?: Date | string | null
   scope?: string | null
   lastSyncedAt?: Date | string | null
@@ -802,8 +802,8 @@ export type EraConnectionCreateWithoutAccountLinksInput = {
   updatedAt?: Date | string
   status?: string
   accountEmail?: string | null
-  accessToken?: string | null
-  refreshToken?: string | null
+  accessTokenEncrypted?: string | null
+  refreshTokenEncrypted?: string | null
   expiresAt?: Date | string | null
   scope?: string | null
   lastSyncedAt?: Date | string | null
@@ -822,8 +822,8 @@ export type EraConnectionUncheckedCreateWithoutAccountLinksInput = {
   updatedAt?: Date | string
   status?: string
   accountEmail?: string | null
-  accessToken?: string | null
-  refreshToken?: string | null
+  accessTokenEncrypted?: string | null
+  refreshTokenEncrypted?: string | null
   expiresAt?: Date | string | null
   scope?: string | null
   lastSyncedAt?: Date | string | null
@@ -854,8 +854,8 @@ export type EraConnectionUpdateWithoutAccountLinksInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   accountEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  accessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accessTokenEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refreshTokenEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scope?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastSyncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -874,8 +874,8 @@ export type EraConnectionUncheckedUpdateWithoutAccountLinksInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   accountEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  accessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accessTokenEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refreshTokenEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scope?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastSyncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -890,8 +890,8 @@ export type EraConnectionCreateWithoutTransactionLinksInput = {
   updatedAt?: Date | string
   status?: string
   accountEmail?: string | null
-  accessToken?: string | null
-  refreshToken?: string | null
+  accessTokenEncrypted?: string | null
+  refreshTokenEncrypted?: string | null
   expiresAt?: Date | string | null
   scope?: string | null
   lastSyncedAt?: Date | string | null
@@ -910,8 +910,8 @@ export type EraConnectionUncheckedCreateWithoutTransactionLinksInput = {
   updatedAt?: Date | string
   status?: string
   accountEmail?: string | null
-  accessToken?: string | null
-  refreshToken?: string | null
+  accessTokenEncrypted?: string | null
+  refreshTokenEncrypted?: string | null
   expiresAt?: Date | string | null
   scope?: string | null
   lastSyncedAt?: Date | string | null
@@ -942,8 +942,8 @@ export type EraConnectionUpdateWithoutTransactionLinksInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   accountEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  accessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accessTokenEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refreshTokenEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scope?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastSyncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -962,8 +962,8 @@ export type EraConnectionUncheckedUpdateWithoutTransactionLinksInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   accountEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  accessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accessTokenEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refreshTokenEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scope?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastSyncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -979,8 +979,8 @@ export type EraConnectionCreateManyWorkspaceInput = {
   updatedAt?: Date | string
   status?: string
   accountEmail?: string | null
-  accessToken?: string | null
-  refreshToken?: string | null
+  accessTokenEncrypted?: string | null
+  refreshTokenEncrypted?: string | null
   expiresAt?: Date | string | null
   scope?: string | null
   lastSyncedAt?: Date | string | null
@@ -994,8 +994,8 @@ export type EraConnectionUpdateWithoutWorkspaceInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   accountEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  accessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accessTokenEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refreshTokenEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scope?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastSyncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1013,8 +1013,8 @@ export type EraConnectionUncheckedUpdateWithoutWorkspaceInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   accountEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  accessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accessTokenEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refreshTokenEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scope?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastSyncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1031,8 +1031,8 @@ export type EraConnectionUncheckedUpdateManyWithoutWorkspaceInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   accountEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  accessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accessTokenEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refreshTokenEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scope?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastSyncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1047,8 +1047,8 @@ export type EraConnectionCreateManyUserInput = {
   updatedAt?: Date | string
   status?: string
   accountEmail?: string | null
-  accessToken?: string | null
-  refreshToken?: string | null
+  accessTokenEncrypted?: string | null
+  refreshTokenEncrypted?: string | null
   expiresAt?: Date | string | null
   scope?: string | null
   lastSyncedAt?: Date | string | null
@@ -1062,8 +1062,8 @@ export type EraConnectionUpdateWithoutUserInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   accountEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  accessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accessTokenEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refreshTokenEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scope?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastSyncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1081,8 +1081,8 @@ export type EraConnectionUncheckedUpdateWithoutUserInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   accountEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  accessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accessTokenEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refreshTokenEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scope?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastSyncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1099,8 +1099,8 @@ export type EraConnectionUncheckedUpdateManyWithoutUserInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   accountEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  accessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accessTokenEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refreshTokenEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scope?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastSyncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1156,8 +1156,8 @@ export type EraConnectionSelect<ExtArgs extends runtime.Types.Extensions.Interna
   updatedAt?: boolean
   status?: boolean
   accountEmail?: boolean
-  accessToken?: boolean
-  refreshToken?: boolean
+  accessTokenEncrypted?: boolean
+  refreshTokenEncrypted?: boolean
   expiresAt?: boolean
   scope?: boolean
   lastSyncedAt?: boolean
@@ -1178,8 +1178,8 @@ export type EraConnectionSelectCreateManyAndReturn<ExtArgs extends runtime.Types
   updatedAt?: boolean
   status?: boolean
   accountEmail?: boolean
-  accessToken?: boolean
-  refreshToken?: boolean
+  accessTokenEncrypted?: boolean
+  refreshTokenEncrypted?: boolean
   expiresAt?: boolean
   scope?: boolean
   lastSyncedAt?: boolean
@@ -1197,8 +1197,8 @@ export type EraConnectionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types
   updatedAt?: boolean
   status?: boolean
   accountEmail?: boolean
-  accessToken?: boolean
-  refreshToken?: boolean
+  accessTokenEncrypted?: boolean
+  refreshTokenEncrypted?: boolean
   expiresAt?: boolean
   scope?: boolean
   lastSyncedAt?: boolean
@@ -1216,8 +1216,8 @@ export type EraConnectionSelectScalar = {
   updatedAt?: boolean
   status?: boolean
   accountEmail?: boolean
-  accessToken?: boolean
-  refreshToken?: boolean
+  accessTokenEncrypted?: boolean
+  refreshTokenEncrypted?: boolean
   expiresAt?: boolean
   scope?: boolean
   lastSyncedAt?: boolean
@@ -1225,7 +1225,7 @@ export type EraConnectionSelectScalar = {
   syncCursor?: boolean
 }
 
-export type EraConnectionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "workspaceId" | "userId" | "createdAt" | "updatedAt" | "status" | "accountEmail" | "accessToken" | "refreshToken" | "expiresAt" | "scope" | "lastSyncedAt" | "lastError" | "syncCursor", ExtArgs["result"]["eraConnection"]>
+export type EraConnectionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "workspaceId" | "userId" | "createdAt" | "updatedAt" | "status" | "accountEmail" | "accessTokenEncrypted" | "refreshTokenEncrypted" | "expiresAt" | "scope" | "lastSyncedAt" | "lastError" | "syncCursor", ExtArgs["result"]["eraConnection"]>
 export type EraConnectionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -1258,8 +1258,8 @@ export type $EraConnectionPayload<ExtArgs extends runtime.Types.Extensions.Inter
     updatedAt: Date
     status: string
     accountEmail: string | null
-    accessToken: string | null
-    refreshToken: string | null
+    accessTokenEncrypted: string | null
+    refreshTokenEncrypted: string | null
     expiresAt: Date | null
     scope: string | null
     lastSyncedAt: Date | null
@@ -1699,8 +1699,8 @@ export interface EraConnectionFieldRefs {
   readonly updatedAt: Prisma.FieldRef<"EraConnection", 'DateTime'>
   readonly status: Prisma.FieldRef<"EraConnection", 'String'>
   readonly accountEmail: Prisma.FieldRef<"EraConnection", 'String'>
-  readonly accessToken: Prisma.FieldRef<"EraConnection", 'String'>
-  readonly refreshToken: Prisma.FieldRef<"EraConnection", 'String'>
+  readonly accessTokenEncrypted: Prisma.FieldRef<"EraConnection", 'String'>
+  readonly refreshTokenEncrypted: Prisma.FieldRef<"EraConnection", 'String'>
   readonly expiresAt: Prisma.FieldRef<"EraConnection", 'DateTime'>
   readonly scope: Prisma.FieldRef<"EraConnection", 'String'>
   readonly lastSyncedAt: Prisma.FieldRef<"EraConnection", 'DateTime'>

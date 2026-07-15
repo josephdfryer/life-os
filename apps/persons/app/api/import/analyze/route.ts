@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import Anthropic from "@anthropic-ai/sdk"
+import { requireAccess } from "@/server/domain/access"
+import { handleRouteError } from "@/server/api/respond"
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
 
@@ -77,6 +79,7 @@ Rules:
 
 export async function POST(req: NextRequest) {
   try {
+    await requireAccess("people.write")
     const body = await req.json()
     const { content, filename, existingContacts = [] } = body
 
@@ -133,10 +136,6 @@ ${content.slice(0, 40000)}
 
     return NextResponse.json({ results })
   } catch (error) {
-    console.error("Import analyze error:", error)
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Unknown error" },
-      { status: 500 }
-    )
+    return handleRouteError(error)
   }
 }

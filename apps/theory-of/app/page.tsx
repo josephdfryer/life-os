@@ -1,10 +1,13 @@
 import Link from "next/link"
 import { db } from "@/lib/db"
+import { requireWorkspaceAccess } from "@/lib/access"
 
 export const dynamic = "force-dynamic"
 
 export default async function HomePage() {
+  const access = await requireWorkspaceAccess()
   const people = await db.person.findMany({
+    where: { workspaceId: access.workspaceId },
     orderBy: [{ first: "asc" }, { last: "asc" }],
     take: 200,
     select: {

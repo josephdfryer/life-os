@@ -35,11 +35,11 @@ export type CalendarConnectionMinAggregateOutputType = {
   accountEmail: string | null
   calendarId: string | null
   calendarSummary: string | null
-  accessToken: string | null
-  refreshToken: string | null
+  accessTokenEncrypted: string | null
+  refreshTokenEncrypted: string | null
   expiresAt: Date | null
   scope: string | null
-  syncToken: string | null
+  syncTokenEncrypted: string | null
   lastSyncedAt: Date | null
   lastError: string | null
 }
@@ -55,11 +55,11 @@ export type CalendarConnectionMaxAggregateOutputType = {
   accountEmail: string | null
   calendarId: string | null
   calendarSummary: string | null
-  accessToken: string | null
-  refreshToken: string | null
+  accessTokenEncrypted: string | null
+  refreshTokenEncrypted: string | null
   expiresAt: Date | null
   scope: string | null
-  syncToken: string | null
+  syncTokenEncrypted: string | null
   lastSyncedAt: Date | null
   lastError: string | null
 }
@@ -75,11 +75,11 @@ export type CalendarConnectionCountAggregateOutputType = {
   accountEmail: number
   calendarId: number
   calendarSummary: number
-  accessToken: number
-  refreshToken: number
+  accessTokenEncrypted: number
+  refreshTokenEncrypted: number
   expiresAt: number
   scope: number
-  syncToken: number
+  syncTokenEncrypted: number
   lastSyncedAt: number
   lastError: number
   _all: number
@@ -97,11 +97,11 @@ export type CalendarConnectionMinAggregateInputType = {
   accountEmail?: true
   calendarId?: true
   calendarSummary?: true
-  accessToken?: true
-  refreshToken?: true
+  accessTokenEncrypted?: true
+  refreshTokenEncrypted?: true
   expiresAt?: true
   scope?: true
-  syncToken?: true
+  syncTokenEncrypted?: true
   lastSyncedAt?: true
   lastError?: true
 }
@@ -117,11 +117,11 @@ export type CalendarConnectionMaxAggregateInputType = {
   accountEmail?: true
   calendarId?: true
   calendarSummary?: true
-  accessToken?: true
-  refreshToken?: true
+  accessTokenEncrypted?: true
+  refreshTokenEncrypted?: true
   expiresAt?: true
   scope?: true
-  syncToken?: true
+  syncTokenEncrypted?: true
   lastSyncedAt?: true
   lastError?: true
 }
@@ -137,11 +137,11 @@ export type CalendarConnectionCountAggregateInputType = {
   accountEmail?: true
   calendarId?: true
   calendarSummary?: true
-  accessToken?: true
-  refreshToken?: true
+  accessTokenEncrypted?: true
+  refreshTokenEncrypted?: true
   expiresAt?: true
   scope?: true
-  syncToken?: true
+  syncTokenEncrypted?: true
   lastSyncedAt?: true
   lastError?: true
   _all?: true
@@ -230,11 +230,11 @@ export type CalendarConnectionGroupByOutputType = {
   accountEmail: string | null
   calendarId: string
   calendarSummary: string | null
-  accessToken: string | null
-  refreshToken: string | null
+  accessTokenEncrypted: string | null
+  refreshTokenEncrypted: string | null
   expiresAt: Date | null
   scope: string | null
-  syncToken: string | null
+  syncTokenEncrypted: string | null
   lastSyncedAt: Date | null
   lastError: string | null
   _count: CalendarConnectionCountAggregateOutputType | null
@@ -271,11 +271,11 @@ export type CalendarConnectionWhereInput = {
   accountEmail?: Prisma.StringNullableFilter<"CalendarConnection"> | string | null
   calendarId?: Prisma.StringFilter<"CalendarConnection"> | string
   calendarSummary?: Prisma.StringNullableFilter<"CalendarConnection"> | string | null
-  accessToken?: Prisma.StringNullableFilter<"CalendarConnection"> | string | null
-  refreshToken?: Prisma.StringNullableFilter<"CalendarConnection"> | string | null
+  accessTokenEncrypted?: Prisma.StringNullableFilter<"CalendarConnection"> | string | null
+  refreshTokenEncrypted?: Prisma.StringNullableFilter<"CalendarConnection"> | string | null
   expiresAt?: Prisma.DateTimeNullableFilter<"CalendarConnection"> | Date | string | null
   scope?: Prisma.StringNullableFilter<"CalendarConnection"> | string | null
-  syncToken?: Prisma.StringNullableFilter<"CalendarConnection"> | string | null
+  syncTokenEncrypted?: Prisma.StringNullableFilter<"CalendarConnection"> | string | null
   lastSyncedAt?: Prisma.DateTimeNullableFilter<"CalendarConnection"> | Date | string | null
   lastError?: Prisma.StringNullableFilter<"CalendarConnection"> | string | null
   workspace?: Prisma.XOR<Prisma.WorkspaceScalarRelationFilter, Prisma.WorkspaceWhereInput>
@@ -294,11 +294,11 @@ export type CalendarConnectionOrderByWithRelationInput = {
   accountEmail?: Prisma.SortOrderInput | Prisma.SortOrder
   calendarId?: Prisma.SortOrder
   calendarSummary?: Prisma.SortOrderInput | Prisma.SortOrder
-  accessToken?: Prisma.SortOrderInput | Prisma.SortOrder
-  refreshToken?: Prisma.SortOrderInput | Prisma.SortOrder
+  accessTokenEncrypted?: Prisma.SortOrderInput | Prisma.SortOrder
+  refreshTokenEncrypted?: Prisma.SortOrderInput | Prisma.SortOrder
   expiresAt?: Prisma.SortOrderInput | Prisma.SortOrder
   scope?: Prisma.SortOrderInput | Prisma.SortOrder
-  syncToken?: Prisma.SortOrderInput | Prisma.SortOrder
+  syncTokenEncrypted?: Prisma.SortOrderInput | Prisma.SortOrder
   lastSyncedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   lastError?: Prisma.SortOrderInput | Prisma.SortOrder
   workspace?: Prisma.WorkspaceOrderByWithRelationInput
@@ -321,11 +321,11 @@ export type CalendarConnectionWhereUniqueInput = Prisma.AtLeast<{
   accountEmail?: Prisma.StringNullableFilter<"CalendarConnection"> | string | null
   calendarId?: Prisma.StringFilter<"CalendarConnection"> | string
   calendarSummary?: Prisma.StringNullableFilter<"CalendarConnection"> | string | null
-  accessToken?: Prisma.StringNullableFilter<"CalendarConnection"> | string | null
-  refreshToken?: Prisma.StringNullableFilter<"CalendarConnection"> | string | null
+  accessTokenEncrypted?: Prisma.StringNullableFilter<"CalendarConnection"> | string | null
+  refreshTokenEncrypted?: Prisma.StringNullableFilter<"CalendarConnection"> | string | null
   expiresAt?: Prisma.DateTimeNullableFilter<"CalendarConnection"> | Date | string | null
   scope?: Prisma.StringNullableFilter<"CalendarConnection"> | string | null
-  syncToken?: Prisma.StringNullableFilter<"CalendarConnection"> | string | null
+  syncTokenEncrypted?: Prisma.StringNullableFilter<"CalendarConnection"> | string | null
   lastSyncedAt?: Prisma.DateTimeNullableFilter<"CalendarConnection"> | Date | string | null
   lastError?: Prisma.StringNullableFilter<"CalendarConnection"> | string | null
   workspace?: Prisma.XOR<Prisma.WorkspaceScalarRelationFilter, Prisma.WorkspaceWhereInput>
@@ -344,11 +344,11 @@ export type CalendarConnectionOrderByWithAggregationInput = {
   accountEmail?: Prisma.SortOrderInput | Prisma.SortOrder
   calendarId?: Prisma.SortOrder
   calendarSummary?: Prisma.SortOrderInput | Prisma.SortOrder
-  accessToken?: Prisma.SortOrderInput | Prisma.SortOrder
-  refreshToken?: Prisma.SortOrderInput | Prisma.SortOrder
+  accessTokenEncrypted?: Prisma.SortOrderInput | Prisma.SortOrder
+  refreshTokenEncrypted?: Prisma.SortOrderInput | Prisma.SortOrder
   expiresAt?: Prisma.SortOrderInput | Prisma.SortOrder
   scope?: Prisma.SortOrderInput | Prisma.SortOrder
-  syncToken?: Prisma.SortOrderInput | Prisma.SortOrder
+  syncTokenEncrypted?: Prisma.SortOrderInput | Prisma.SortOrder
   lastSyncedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   lastError?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.CalendarConnectionCountOrderByAggregateInput
@@ -370,11 +370,11 @@ export type CalendarConnectionScalarWhereWithAggregatesInput = {
   accountEmail?: Prisma.StringNullableWithAggregatesFilter<"CalendarConnection"> | string | null
   calendarId?: Prisma.StringWithAggregatesFilter<"CalendarConnection"> | string
   calendarSummary?: Prisma.StringNullableWithAggregatesFilter<"CalendarConnection"> | string | null
-  accessToken?: Prisma.StringNullableWithAggregatesFilter<"CalendarConnection"> | string | null
-  refreshToken?: Prisma.StringNullableWithAggregatesFilter<"CalendarConnection"> | string | null
+  accessTokenEncrypted?: Prisma.StringNullableWithAggregatesFilter<"CalendarConnection"> | string | null
+  refreshTokenEncrypted?: Prisma.StringNullableWithAggregatesFilter<"CalendarConnection"> | string | null
   expiresAt?: Prisma.DateTimeNullableWithAggregatesFilter<"CalendarConnection"> | Date | string | null
   scope?: Prisma.StringNullableWithAggregatesFilter<"CalendarConnection"> | string | null
-  syncToken?: Prisma.StringNullableWithAggregatesFilter<"CalendarConnection"> | string | null
+  syncTokenEncrypted?: Prisma.StringNullableWithAggregatesFilter<"CalendarConnection"> | string | null
   lastSyncedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"CalendarConnection"> | Date | string | null
   lastError?: Prisma.StringNullableWithAggregatesFilter<"CalendarConnection"> | string | null
 }
@@ -388,11 +388,11 @@ export type CalendarConnectionCreateInput = {
   accountEmail?: string | null
   calendarId?: string
   calendarSummary?: string | null
-  accessToken?: string | null
-  refreshToken?: string | null
+  accessTokenEncrypted?: string | null
+  refreshTokenEncrypted?: string | null
   expiresAt?: Date | string | null
   scope?: string | null
-  syncToken?: string | null
+  syncTokenEncrypted?: string | null
   lastSyncedAt?: Date | string | null
   lastError?: string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutCalendarConnectionsInput
@@ -411,11 +411,11 @@ export type CalendarConnectionUncheckedCreateInput = {
   accountEmail?: string | null
   calendarId?: string
   calendarSummary?: string | null
-  accessToken?: string | null
-  refreshToken?: string | null
+  accessTokenEncrypted?: string | null
+  refreshTokenEncrypted?: string | null
   expiresAt?: Date | string | null
   scope?: string | null
-  syncToken?: string | null
+  syncTokenEncrypted?: string | null
   lastSyncedAt?: Date | string | null
   lastError?: string | null
   eventLinks?: Prisma.CalendarEventLinkUncheckedCreateNestedManyWithoutConnectionInput
@@ -430,11 +430,11 @@ export type CalendarConnectionUpdateInput = {
   accountEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   calendarId?: Prisma.StringFieldUpdateOperationsInput | string
   calendarSummary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  accessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accessTokenEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refreshTokenEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scope?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  syncToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  syncTokenEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastSyncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutCalendarConnectionsNestedInput
@@ -453,11 +453,11 @@ export type CalendarConnectionUncheckedUpdateInput = {
   accountEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   calendarId?: Prisma.StringFieldUpdateOperationsInput | string
   calendarSummary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  accessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accessTokenEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refreshTokenEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scope?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  syncToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  syncTokenEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastSyncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   eventLinks?: Prisma.CalendarEventLinkUncheckedUpdateManyWithoutConnectionNestedInput
@@ -474,11 +474,11 @@ export type CalendarConnectionCreateManyInput = {
   accountEmail?: string | null
   calendarId?: string
   calendarSummary?: string | null
-  accessToken?: string | null
-  refreshToken?: string | null
+  accessTokenEncrypted?: string | null
+  refreshTokenEncrypted?: string | null
   expiresAt?: Date | string | null
   scope?: string | null
-  syncToken?: string | null
+  syncTokenEncrypted?: string | null
   lastSyncedAt?: Date | string | null
   lastError?: string | null
 }
@@ -492,11 +492,11 @@ export type CalendarConnectionUpdateManyMutationInput = {
   accountEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   calendarId?: Prisma.StringFieldUpdateOperationsInput | string
   calendarSummary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  accessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accessTokenEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refreshTokenEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scope?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  syncToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  syncTokenEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastSyncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
@@ -512,11 +512,11 @@ export type CalendarConnectionUncheckedUpdateManyInput = {
   accountEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   calendarId?: Prisma.StringFieldUpdateOperationsInput | string
   calendarSummary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  accessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accessTokenEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refreshTokenEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scope?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  syncToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  syncTokenEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastSyncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
@@ -548,11 +548,11 @@ export type CalendarConnectionCountOrderByAggregateInput = {
   accountEmail?: Prisma.SortOrder
   calendarId?: Prisma.SortOrder
   calendarSummary?: Prisma.SortOrder
-  accessToken?: Prisma.SortOrder
-  refreshToken?: Prisma.SortOrder
+  accessTokenEncrypted?: Prisma.SortOrder
+  refreshTokenEncrypted?: Prisma.SortOrder
   expiresAt?: Prisma.SortOrder
   scope?: Prisma.SortOrder
-  syncToken?: Prisma.SortOrder
+  syncTokenEncrypted?: Prisma.SortOrder
   lastSyncedAt?: Prisma.SortOrder
   lastError?: Prisma.SortOrder
 }
@@ -568,11 +568,11 @@ export type CalendarConnectionMaxOrderByAggregateInput = {
   accountEmail?: Prisma.SortOrder
   calendarId?: Prisma.SortOrder
   calendarSummary?: Prisma.SortOrder
-  accessToken?: Prisma.SortOrder
-  refreshToken?: Prisma.SortOrder
+  accessTokenEncrypted?: Prisma.SortOrder
+  refreshTokenEncrypted?: Prisma.SortOrder
   expiresAt?: Prisma.SortOrder
   scope?: Prisma.SortOrder
-  syncToken?: Prisma.SortOrder
+  syncTokenEncrypted?: Prisma.SortOrder
   lastSyncedAt?: Prisma.SortOrder
   lastError?: Prisma.SortOrder
 }
@@ -588,11 +588,11 @@ export type CalendarConnectionMinOrderByAggregateInput = {
   accountEmail?: Prisma.SortOrder
   calendarId?: Prisma.SortOrder
   calendarSummary?: Prisma.SortOrder
-  accessToken?: Prisma.SortOrder
-  refreshToken?: Prisma.SortOrder
+  accessTokenEncrypted?: Prisma.SortOrder
+  refreshTokenEncrypted?: Prisma.SortOrder
   expiresAt?: Prisma.SortOrder
   scope?: Prisma.SortOrder
-  syncToken?: Prisma.SortOrder
+  syncTokenEncrypted?: Prisma.SortOrder
   lastSyncedAt?: Prisma.SortOrder
   lastError?: Prisma.SortOrder
 }
@@ -709,11 +709,11 @@ export type CalendarConnectionCreateWithoutWorkspaceInput = {
   accountEmail?: string | null
   calendarId?: string
   calendarSummary?: string | null
-  accessToken?: string | null
-  refreshToken?: string | null
+  accessTokenEncrypted?: string | null
+  refreshTokenEncrypted?: string | null
   expiresAt?: Date | string | null
   scope?: string | null
-  syncToken?: string | null
+  syncTokenEncrypted?: string | null
   lastSyncedAt?: Date | string | null
   lastError?: string | null
   user: Prisma.UserCreateNestedOneWithoutCalendarConnectionsInput
@@ -730,11 +730,11 @@ export type CalendarConnectionUncheckedCreateWithoutWorkspaceInput = {
   accountEmail?: string | null
   calendarId?: string
   calendarSummary?: string | null
-  accessToken?: string | null
-  refreshToken?: string | null
+  accessTokenEncrypted?: string | null
+  refreshTokenEncrypted?: string | null
   expiresAt?: Date | string | null
   scope?: string | null
-  syncToken?: string | null
+  syncTokenEncrypted?: string | null
   lastSyncedAt?: Date | string | null
   lastError?: string | null
   eventLinks?: Prisma.CalendarEventLinkUncheckedCreateNestedManyWithoutConnectionInput
@@ -779,11 +779,11 @@ export type CalendarConnectionScalarWhereInput = {
   accountEmail?: Prisma.StringNullableFilter<"CalendarConnection"> | string | null
   calendarId?: Prisma.StringFilter<"CalendarConnection"> | string
   calendarSummary?: Prisma.StringNullableFilter<"CalendarConnection"> | string | null
-  accessToken?: Prisma.StringNullableFilter<"CalendarConnection"> | string | null
-  refreshToken?: Prisma.StringNullableFilter<"CalendarConnection"> | string | null
+  accessTokenEncrypted?: Prisma.StringNullableFilter<"CalendarConnection"> | string | null
+  refreshTokenEncrypted?: Prisma.StringNullableFilter<"CalendarConnection"> | string | null
   expiresAt?: Prisma.DateTimeNullableFilter<"CalendarConnection"> | Date | string | null
   scope?: Prisma.StringNullableFilter<"CalendarConnection"> | string | null
-  syncToken?: Prisma.StringNullableFilter<"CalendarConnection"> | string | null
+  syncTokenEncrypted?: Prisma.StringNullableFilter<"CalendarConnection"> | string | null
   lastSyncedAt?: Prisma.DateTimeNullableFilter<"CalendarConnection"> | Date | string | null
   lastError?: Prisma.StringNullableFilter<"CalendarConnection"> | string | null
 }
@@ -797,11 +797,11 @@ export type CalendarConnectionCreateWithoutUserInput = {
   accountEmail?: string | null
   calendarId?: string
   calendarSummary?: string | null
-  accessToken?: string | null
-  refreshToken?: string | null
+  accessTokenEncrypted?: string | null
+  refreshTokenEncrypted?: string | null
   expiresAt?: Date | string | null
   scope?: string | null
-  syncToken?: string | null
+  syncTokenEncrypted?: string | null
   lastSyncedAt?: Date | string | null
   lastError?: string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutCalendarConnectionsInput
@@ -818,11 +818,11 @@ export type CalendarConnectionUncheckedCreateWithoutUserInput = {
   accountEmail?: string | null
   calendarId?: string
   calendarSummary?: string | null
-  accessToken?: string | null
-  refreshToken?: string | null
+  accessTokenEncrypted?: string | null
+  refreshTokenEncrypted?: string | null
   expiresAt?: Date | string | null
   scope?: string | null
-  syncToken?: string | null
+  syncTokenEncrypted?: string | null
   lastSyncedAt?: Date | string | null
   lastError?: string | null
   eventLinks?: Prisma.CalendarEventLinkUncheckedCreateNestedManyWithoutConnectionInput
@@ -862,11 +862,11 @@ export type CalendarConnectionCreateWithoutEventLinksInput = {
   accountEmail?: string | null
   calendarId?: string
   calendarSummary?: string | null
-  accessToken?: string | null
-  refreshToken?: string | null
+  accessTokenEncrypted?: string | null
+  refreshTokenEncrypted?: string | null
   expiresAt?: Date | string | null
   scope?: string | null
-  syncToken?: string | null
+  syncTokenEncrypted?: string | null
   lastSyncedAt?: Date | string | null
   lastError?: string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutCalendarConnectionsInput
@@ -884,11 +884,11 @@ export type CalendarConnectionUncheckedCreateWithoutEventLinksInput = {
   accountEmail?: string | null
   calendarId?: string
   calendarSummary?: string | null
-  accessToken?: string | null
-  refreshToken?: string | null
+  accessTokenEncrypted?: string | null
+  refreshTokenEncrypted?: string | null
   expiresAt?: Date | string | null
   scope?: string | null
-  syncToken?: string | null
+  syncTokenEncrypted?: string | null
   lastSyncedAt?: Date | string | null
   lastError?: string | null
 }
@@ -918,11 +918,11 @@ export type CalendarConnectionUpdateWithoutEventLinksInput = {
   accountEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   calendarId?: Prisma.StringFieldUpdateOperationsInput | string
   calendarSummary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  accessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accessTokenEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refreshTokenEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scope?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  syncToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  syncTokenEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastSyncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutCalendarConnectionsNestedInput
@@ -940,11 +940,11 @@ export type CalendarConnectionUncheckedUpdateWithoutEventLinksInput = {
   accountEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   calendarId?: Prisma.StringFieldUpdateOperationsInput | string
   calendarSummary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  accessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accessTokenEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refreshTokenEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scope?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  syncToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  syncTokenEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastSyncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
@@ -959,11 +959,11 @@ export type CalendarConnectionCreateManyWorkspaceInput = {
   accountEmail?: string | null
   calendarId?: string
   calendarSummary?: string | null
-  accessToken?: string | null
-  refreshToken?: string | null
+  accessTokenEncrypted?: string | null
+  refreshTokenEncrypted?: string | null
   expiresAt?: Date | string | null
   scope?: string | null
-  syncToken?: string | null
+  syncTokenEncrypted?: string | null
   lastSyncedAt?: Date | string | null
   lastError?: string | null
 }
@@ -977,11 +977,11 @@ export type CalendarConnectionUpdateWithoutWorkspaceInput = {
   accountEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   calendarId?: Prisma.StringFieldUpdateOperationsInput | string
   calendarSummary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  accessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accessTokenEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refreshTokenEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scope?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  syncToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  syncTokenEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastSyncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   user?: Prisma.UserUpdateOneRequiredWithoutCalendarConnectionsNestedInput
@@ -998,11 +998,11 @@ export type CalendarConnectionUncheckedUpdateWithoutWorkspaceInput = {
   accountEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   calendarId?: Prisma.StringFieldUpdateOperationsInput | string
   calendarSummary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  accessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accessTokenEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refreshTokenEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scope?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  syncToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  syncTokenEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastSyncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   eventLinks?: Prisma.CalendarEventLinkUncheckedUpdateManyWithoutConnectionNestedInput
@@ -1018,11 +1018,11 @@ export type CalendarConnectionUncheckedUpdateManyWithoutWorkspaceInput = {
   accountEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   calendarId?: Prisma.StringFieldUpdateOperationsInput | string
   calendarSummary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  accessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accessTokenEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refreshTokenEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scope?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  syncToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  syncTokenEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastSyncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
@@ -1037,11 +1037,11 @@ export type CalendarConnectionCreateManyUserInput = {
   accountEmail?: string | null
   calendarId?: string
   calendarSummary?: string | null
-  accessToken?: string | null
-  refreshToken?: string | null
+  accessTokenEncrypted?: string | null
+  refreshTokenEncrypted?: string | null
   expiresAt?: Date | string | null
   scope?: string | null
-  syncToken?: string | null
+  syncTokenEncrypted?: string | null
   lastSyncedAt?: Date | string | null
   lastError?: string | null
 }
@@ -1055,11 +1055,11 @@ export type CalendarConnectionUpdateWithoutUserInput = {
   accountEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   calendarId?: Prisma.StringFieldUpdateOperationsInput | string
   calendarSummary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  accessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accessTokenEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refreshTokenEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scope?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  syncToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  syncTokenEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastSyncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutCalendarConnectionsNestedInput
@@ -1076,11 +1076,11 @@ export type CalendarConnectionUncheckedUpdateWithoutUserInput = {
   accountEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   calendarId?: Prisma.StringFieldUpdateOperationsInput | string
   calendarSummary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  accessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accessTokenEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refreshTokenEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scope?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  syncToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  syncTokenEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastSyncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   eventLinks?: Prisma.CalendarEventLinkUncheckedUpdateManyWithoutConnectionNestedInput
@@ -1096,11 +1096,11 @@ export type CalendarConnectionUncheckedUpdateManyWithoutUserInput = {
   accountEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   calendarId?: Prisma.StringFieldUpdateOperationsInput | string
   calendarSummary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  accessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accessTokenEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refreshTokenEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scope?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  syncToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  syncTokenEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastSyncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
@@ -1147,11 +1147,11 @@ export type CalendarConnectionSelect<ExtArgs extends runtime.Types.Extensions.In
   accountEmail?: boolean
   calendarId?: boolean
   calendarSummary?: boolean
-  accessToken?: boolean
-  refreshToken?: boolean
+  accessTokenEncrypted?: boolean
+  refreshTokenEncrypted?: boolean
   expiresAt?: boolean
   scope?: boolean
-  syncToken?: boolean
+  syncTokenEncrypted?: boolean
   lastSyncedAt?: boolean
   lastError?: boolean
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
@@ -1171,11 +1171,11 @@ export type CalendarConnectionSelectCreateManyAndReturn<ExtArgs extends runtime.
   accountEmail?: boolean
   calendarId?: boolean
   calendarSummary?: boolean
-  accessToken?: boolean
-  refreshToken?: boolean
+  accessTokenEncrypted?: boolean
+  refreshTokenEncrypted?: boolean
   expiresAt?: boolean
   scope?: boolean
-  syncToken?: boolean
+  syncTokenEncrypted?: boolean
   lastSyncedAt?: boolean
   lastError?: boolean
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
@@ -1193,11 +1193,11 @@ export type CalendarConnectionSelectUpdateManyAndReturn<ExtArgs extends runtime.
   accountEmail?: boolean
   calendarId?: boolean
   calendarSummary?: boolean
-  accessToken?: boolean
-  refreshToken?: boolean
+  accessTokenEncrypted?: boolean
+  refreshTokenEncrypted?: boolean
   expiresAt?: boolean
   scope?: boolean
-  syncToken?: boolean
+  syncTokenEncrypted?: boolean
   lastSyncedAt?: boolean
   lastError?: boolean
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
@@ -1215,16 +1215,16 @@ export type CalendarConnectionSelectScalar = {
   accountEmail?: boolean
   calendarId?: boolean
   calendarSummary?: boolean
-  accessToken?: boolean
-  refreshToken?: boolean
+  accessTokenEncrypted?: boolean
+  refreshTokenEncrypted?: boolean
   expiresAt?: boolean
   scope?: boolean
-  syncToken?: boolean
+  syncTokenEncrypted?: boolean
   lastSyncedAt?: boolean
   lastError?: boolean
 }
 
-export type CalendarConnectionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "workspaceId" | "userId" | "createdAt" | "updatedAt" | "provider" | "status" | "accountEmail" | "calendarId" | "calendarSummary" | "accessToken" | "refreshToken" | "expiresAt" | "scope" | "syncToken" | "lastSyncedAt" | "lastError", ExtArgs["result"]["calendarConnection"]>
+export type CalendarConnectionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "workspaceId" | "userId" | "createdAt" | "updatedAt" | "provider" | "status" | "accountEmail" | "calendarId" | "calendarSummary" | "accessTokenEncrypted" | "refreshTokenEncrypted" | "expiresAt" | "scope" | "syncTokenEncrypted" | "lastSyncedAt" | "lastError", ExtArgs["result"]["calendarConnection"]>
 export type CalendarConnectionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -1258,11 +1258,11 @@ export type $CalendarConnectionPayload<ExtArgs extends runtime.Types.Extensions.
     accountEmail: string | null
     calendarId: string
     calendarSummary: string | null
-    accessToken: string | null
-    refreshToken: string | null
+    accessTokenEncrypted: string | null
+    refreshTokenEncrypted: string | null
     expiresAt: Date | null
     scope: string | null
-    syncToken: string | null
+    syncTokenEncrypted: string | null
     lastSyncedAt: Date | null
     lastError: string | null
   }, ExtArgs["result"]["calendarConnection"]>
@@ -1701,11 +1701,11 @@ export interface CalendarConnectionFieldRefs {
   readonly accountEmail: Prisma.FieldRef<"CalendarConnection", 'String'>
   readonly calendarId: Prisma.FieldRef<"CalendarConnection", 'String'>
   readonly calendarSummary: Prisma.FieldRef<"CalendarConnection", 'String'>
-  readonly accessToken: Prisma.FieldRef<"CalendarConnection", 'String'>
-  readonly refreshToken: Prisma.FieldRef<"CalendarConnection", 'String'>
+  readonly accessTokenEncrypted: Prisma.FieldRef<"CalendarConnection", 'String'>
+  readonly refreshTokenEncrypted: Prisma.FieldRef<"CalendarConnection", 'String'>
   readonly expiresAt: Prisma.FieldRef<"CalendarConnection", 'DateTime'>
   readonly scope: Prisma.FieldRef<"CalendarConnection", 'String'>
-  readonly syncToken: Prisma.FieldRef<"CalendarConnection", 'String'>
+  readonly syncTokenEncrypted: Prisma.FieldRef<"CalendarConnection", 'String'>
   readonly lastSyncedAt: Prisma.FieldRef<"CalendarConnection", 'DateTime'>
   readonly lastError: Prisma.FieldRef<"CalendarConnection", 'String'>
 }

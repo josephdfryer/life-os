@@ -361,7 +361,7 @@ export type ItemWhereInput = {
   assetId?: Prisma.StringFilter<"Item"> | string
   quantity?: Prisma.FloatFilter<"Item"> | number
   purchaseDate?: Prisma.DateTimeNullableFilter<"Item"> | Date | string | null
-  purchasePrice?: Prisma.FloatNullableFilter<"Item"> | number | null
+  purchasePrice?: Prisma.IntNullableFilter<"Item"> | number | null
   purchaseFrom?: Prisma.StringNullableFilter<"Item"> | string | null
   warrantyExpires?: Prisma.DateTimeNullableFilter<"Item"> | Date | string | null
   lifetimeWarranty?: Prisma.BoolFilter<"Item"> | boolean
@@ -430,7 +430,7 @@ export type ItemWhereUniqueInput = Prisma.AtLeast<{
   serialNumber?: Prisma.StringNullableFilter<"Item"> | string | null
   quantity?: Prisma.FloatFilter<"Item"> | number
   purchaseDate?: Prisma.DateTimeNullableFilter<"Item"> | Date | string | null
-  purchasePrice?: Prisma.FloatNullableFilter<"Item"> | number | null
+  purchasePrice?: Prisma.IntNullableFilter<"Item"> | number | null
   purchaseFrom?: Prisma.StringNullableFilter<"Item"> | string | null
   warrantyExpires?: Prisma.DateTimeNullableFilter<"Item"> | Date | string | null
   lifetimeWarranty?: Prisma.BoolFilter<"Item"> | boolean
@@ -498,7 +498,7 @@ export type ItemScalarWhereWithAggregatesInput = {
   assetId?: Prisma.StringWithAggregatesFilter<"Item"> | string
   quantity?: Prisma.FloatWithAggregatesFilter<"Item"> | number
   purchaseDate?: Prisma.DateTimeNullableWithAggregatesFilter<"Item"> | Date | string | null
-  purchasePrice?: Prisma.FloatNullableWithAggregatesFilter<"Item"> | number | null
+  purchasePrice?: Prisma.IntNullableWithAggregatesFilter<"Item"> | number | null
   purchaseFrom?: Prisma.StringNullableWithAggregatesFilter<"Item"> | string | null
   warrantyExpires?: Prisma.DateTimeNullableWithAggregatesFilter<"Item"> | Date | string | null
   lifetimeWarranty?: Prisma.BoolWithAggregatesFilter<"Item"> | boolean
@@ -584,7 +584,7 @@ export type ItemUpdateInput = {
   assetId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   purchaseDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  purchasePrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  purchasePrice?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   purchaseFrom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   warrantyExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lifetimeWarranty?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -615,7 +615,7 @@ export type ItemUncheckedUpdateInput = {
   assetId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   purchaseDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  purchasePrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  purchasePrice?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   purchaseFrom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   warrantyExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lifetimeWarranty?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -671,7 +671,7 @@ export type ItemUpdateManyMutationInput = {
   assetId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   purchaseDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  purchasePrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  purchasePrice?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   purchaseFrom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   warrantyExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lifetimeWarranty?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -696,7 +696,7 @@ export type ItemUncheckedUpdateManyInput = {
   assetId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   purchaseDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  purchasePrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  purchasePrice?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   purchaseFrom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   warrantyExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lifetimeWarranty?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1083,7 +1083,7 @@ export type ItemScalarWhereInput = {
   assetId?: Prisma.StringFilter<"Item"> | string
   quantity?: Prisma.FloatFilter<"Item"> | number
   purchaseDate?: Prisma.DateTimeNullableFilter<"Item"> | Date | string | null
-  purchasePrice?: Prisma.FloatNullableFilter<"Item"> | number | null
+  purchasePrice?: Prisma.IntNullableFilter<"Item"> | number | null
   purchaseFrom?: Prisma.StringNullableFilter<"Item"> | string | null
   warrantyExpires?: Prisma.DateTimeNullableFilter<"Item"> | Date | string | null
   lifetimeWarranty?: Prisma.BoolFilter<"Item"> | boolean
@@ -1412,7 +1412,7 @@ export type ItemUpdateWithoutAssembledIntoInput = {
   assetId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   purchaseDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  purchasePrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  purchasePrice?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   purchaseFrom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   warrantyExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lifetimeWarranty?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1442,7 +1442,7 @@ export type ItemUncheckedUpdateWithoutAssembledIntoInput = {
   assetId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   purchaseDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  purchasePrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  purchasePrice?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   purchaseFrom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   warrantyExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lifetimeWarranty?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1481,7 +1481,7 @@ export type ItemUpdateWithoutComponentsInput = {
   assetId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   purchaseDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  purchasePrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  purchasePrice?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   purchaseFrom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   warrantyExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lifetimeWarranty?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1511,7 +1511,7 @@ export type ItemUncheckedUpdateWithoutComponentsInput = {
   assetId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   purchaseDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  purchasePrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  purchasePrice?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   purchaseFrom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   warrantyExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lifetimeWarranty?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1613,7 +1613,7 @@ export type ItemUpdateWithoutItemInteractionsInput = {
   assetId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   purchaseDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  purchasePrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  purchasePrice?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   purchaseFrom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   warrantyExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lifetimeWarranty?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1643,7 +1643,7 @@ export type ItemUncheckedUpdateWithoutItemInteractionsInput = {
   assetId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   purchaseDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  purchasePrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  purchasePrice?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   purchaseFrom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   warrantyExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lifetimeWarranty?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1697,7 +1697,7 @@ export type ItemUpdateWithoutWorkspaceInput = {
   assetId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   purchaseDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  purchasePrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  purchasePrice?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   purchaseFrom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   warrantyExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lifetimeWarranty?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1726,7 +1726,7 @@ export type ItemUncheckedUpdateWithoutWorkspaceInput = {
   assetId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   purchaseDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  purchasePrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  purchasePrice?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   purchaseFrom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   warrantyExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lifetimeWarranty?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1755,7 +1755,7 @@ export type ItemUncheckedUpdateManyWithoutWorkspaceInput = {
   assetId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   purchaseDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  purchasePrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  purchasePrice?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   purchaseFrom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   warrantyExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lifetimeWarranty?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1807,7 +1807,7 @@ export type ItemUpdateWithoutOwnedByInput = {
   assetId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   purchaseDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  purchasePrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  purchasePrice?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   purchaseFrom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   warrantyExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lifetimeWarranty?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1837,7 +1837,7 @@ export type ItemUncheckedUpdateWithoutOwnedByInput = {
   assetId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   purchaseDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  purchasePrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  purchasePrice?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   purchaseFrom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   warrantyExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lifetimeWarranty?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1866,7 +1866,7 @@ export type ItemUncheckedUpdateManyWithoutOwnedByInput = {
   assetId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   purchaseDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  purchasePrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  purchasePrice?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   purchaseFrom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   warrantyExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lifetimeWarranty?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1917,7 +1917,7 @@ export type ItemUpdateWithoutPlaceInput = {
   assetId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   purchaseDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  purchasePrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  purchasePrice?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   purchaseFrom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   warrantyExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lifetimeWarranty?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1947,7 +1947,7 @@ export type ItemUncheckedUpdateWithoutPlaceInput = {
   assetId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   purchaseDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  purchasePrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  purchasePrice?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   purchaseFrom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   warrantyExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lifetimeWarranty?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1976,7 +1976,7 @@ export type ItemUncheckedUpdateManyWithoutPlaceInput = {
   assetId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   purchaseDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  purchasePrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  purchasePrice?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   purchaseFrom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   warrantyExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lifetimeWarranty?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2656,7 +2656,7 @@ export interface ItemFieldRefs {
   readonly assetId: Prisma.FieldRef<"Item", 'String'>
   readonly quantity: Prisma.FieldRef<"Item", 'Float'>
   readonly purchaseDate: Prisma.FieldRef<"Item", 'DateTime'>
-  readonly purchasePrice: Prisma.FieldRef<"Item", 'Float'>
+  readonly purchasePrice: Prisma.FieldRef<"Item", 'Int'>
   readonly purchaseFrom: Prisma.FieldRef<"Item", 'String'>
   readonly warrantyExpires: Prisma.FieldRef<"Item", 'DateTime'>
   readonly lifetimeWarranty: Prisma.FieldRef<"Item", 'Boolean'>

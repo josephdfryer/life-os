@@ -11,7 +11,7 @@ export async function POST(req: NextRequest, { params }: Params) {
   try {
     const { id } = await params
     const body = await req.json()
-    return json(await mergePersons({ keepId: id, deleteId: body.targetId, fields: body.fields }, auth.actor))
+    return json(await mergePersons({ keepId: id, deleteId: body.targetId, fields: body.fields }, auth.workspaceId, auth.actor))
   } catch (error) {
     return handleRouteError(error)
   }

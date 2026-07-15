@@ -8,7 +8,7 @@ export async function POST(req: NextRequest) {
   if (!auth) return unauthorized()
   try {
     const { pairs } = await req.json() as { pairs: { aId: string; bId: string }[] }
-    return json(await mergePersonClusters(pairs, auth.actor))
+    return json(await mergePersonClusters(pairs, auth.workspaceId, auth.actor))
   } catch (error) {
     return handleRouteError(error)
   }

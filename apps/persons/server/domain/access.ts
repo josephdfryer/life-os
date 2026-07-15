@@ -1,6 +1,7 @@
 import { randomBytes, createHash } from "crypto"
 import { auth } from "@/auth"
 import { db } from "@/lib/db"
+import { WorkspaceRole } from "@life-os/db"
 import { badRequest, forbidden, notFound, optionalString, optionalStringArray, requiredString, unauthorized } from "@/server/api/errors"
 import { auditAction, type DomainActor } from "./audit"
 import { localReviewEnabled } from "@/lib/local-review"
@@ -127,9 +128,14 @@ export async function seedDefaultAccess(actor?: DomainActor) {
 // Per-instance cache: avoids 6+ sequential Turso RTTs on every request.
 // Fluid Compute reuses instances across requests, so this is effective in production.
 // 60s TTL means role/scope changes propagate within a minute.
+// Keyed by (email, requested workspace) so a cached resolution for one workspace
+// can never be handed back to a caller asking about a different workspace.
 const _accessCache = new Map<string, { value: AccessActor; expiresAt: number }>()
 
-export async function requireAccess(requiredScope: string): Promise<AccessActor> {
+// `workspaceId` lets a caller pin the exact workspace this request must act on
+// (trusted route/session context), instead of relying on membership-count
+// heuristics that can silently pick the wrong tenant.
+export async function requireAccess(requiredScope: string, workspaceId?: string): Promise<AccessActor> {
   if (localReviewEnabled()) return localReviewActor()
 
   const session = await auth()
@@ -138,7 +144,8 @@ export async function requireAccess(requiredScope: string): Promise<AccessActor>
 
   await seedDefaultAccess()
 
-  const hit = _accessCache.get(email)
+  const cacheKey = `${email}::${workspaceId ?? "__auto__"}`
+  const hit = _accessCache.get(cacheKey)
   if (hit && hit.expiresAt > Date.now()) {
     if (!hasScope(hit.value.scopes, requiredScope)) throw forbidden("Missing required permission", { requiredScope })
     return hit.value
@@ -161,28 +168,25 @@ export async function requireAccess(requiredScope: string): Promise<AccessActor>
     throw forbidden("Email is not approved for this app", { email })
   }
 
+  // A disabled account must stay disabled on sign-in: never resurrect status
+  // here, and never let a disabled user reach workspace/scope resolution.
+  if (existingUser && existingUser.status !== "active") {
+    throw forbidden("Account is disabled", { email })
+  }
+
   const isFirstUser = existingUser === null
 
-  const user = await db.user.upsert({
-    where: { email },
-    update: { name, image, status: "active" },
-    create: { email, name, image, status: "active" },
-  })
+  // Profile sync only (name/image). Status is intentionally never written by
+  // a permission check — it must only change via an explicit admin action.
+  const user = existingUser
+    ? await db.user.update({ where: { id: existingUser.id }, data: { name, image } })
+    : await db.user.create({ data: { email, name, image, status: "active" } })
 
   if (isFirstUser || isOwner) await grantRole(user.id, "owner")
 
-  // Parallel batch 2: workspace membership + permission scopes
-  const [workspaceMember, scopes] = await Promise.all([
-    db.workspaceMember.findFirst({
-      where: { userId: user.id, status: "active", workspace: { status: "active" } },
-      include: { workspace: true },
-      orderBy: { createdAt: "asc" },
-    }),
-    userScopes(user.id),
-  ])
+  const scopes = await userScopes(user.id)
 
-  const workspace = workspaceMember?.workspace
-    ?? await _buildWorkspace(user.id, email, isFirstUser || isOwner, approvedRow?.workspaceId ?? null)
+  const workspace = await resolveWorkspace(user.id, email, workspaceId, isFirstUser || isOwner, approvedRow?.workspaceId ?? null)
 
   if (!hasScope(scopes, requiredScope)) throw forbidden("Missing required permission", { requiredScope })
 
@@ -195,8 +199,40 @@ export async function requireAccess(requiredScope: string): Promise<AccessActor>
     actor: { type: "user", id: user.id, label: email, workspaceId: workspace.id } satisfies DomainActor,
   }
 
-  _accessCache.set(email, { value: result, expiresAt: Date.now() + 60_000 })
+  _accessCache.set(cacheKey, { value: result, expiresAt: Date.now() + 60_000 })
   return result
+}
+
+async function resolveWorkspace(
+  userId: string,
+  email: string,
+  workspaceId: string | undefined,
+  useDefaultBootstrap: boolean,
+  approvedWorkspaceId: string | null,
+) {
+  if (workspaceId) {
+    const member = await db.workspaceMember.findFirst({
+      where: { userId, workspaceId, status: "active", workspace: { status: "active" } },
+      include: { workspace: true },
+    })
+    if (!member) throw forbidden("Not a member of the requested workspace", { workspaceId })
+    return member.workspace
+  }
+
+  // No explicit workspace requested: only auto-select when the choice is
+  // unambiguous. A user with more than one active membership must have the
+  // caller specify which workspace this request is for.
+  const memberships = await db.workspaceMember.findMany({
+    where: { userId, status: "active", workspace: { status: "active" } },
+    include: { workspace: true },
+    orderBy: { createdAt: "asc" },
+  })
+  if (memberships.length > 1) {
+    throw badRequest("Multiple workspace memberships; workspace must be specified explicitly", { userId })
+  }
+  if (memberships.length === 1) return memberships[0].workspace
+
+  return _buildWorkspace(userId, email, useDefaultBootstrap, approvedWorkspaceId)
 }
 
 async function localReviewActor(): Promise<AccessActor> {
@@ -250,8 +286,12 @@ async function _buildWorkspace(userId: string, email: string, useDefault: boolea
 
 export async function accessOverview(actor: AccessActor) {
   await seedDefaultAccess(actor.actor)
+  // Role/Permission are genuinely global (they aren't tenant data), but
+  // users, approved emails, and workspaces must be scoped to the caller's
+  // own workspace — this is an admin view, not a cross-tenant directory.
   const [users, roles, permissions, apiKeys, auditCount, approvedEmails, workspaces] = await Promise.all([
     db.user.findMany({
+      where: { workspaceMemberships: { some: { workspaceId: actor.workspaceId } } },
       include: { roles: { include: { role: true } } },
       orderBy: { createdAt: "asc" },
     }),
@@ -267,10 +307,11 @@ export async function accessOverview(actor: AccessActor) {
     }),
     db.auditLog.count({ where: { workspaceId: actor.workspaceId } }),
     db.approvedEmail.findMany({
+      where: { workspaceId: actor.workspaceId },
       include: { workspace: true, invitedBy: true },
       orderBy: { createdAt: "desc" },
     }),
-    db.workspace.findMany({ orderBy: { name: "asc" } }),
+    db.workspace.findMany({ where: { id: actor.workspaceId }, orderBy: { name: "asc" } }),
   ])
 
   return {
@@ -295,7 +336,9 @@ export async function accessOverview(actor: AccessActor) {
 
 export async function addApprovedEmail(input: Record<string, unknown>, actor: AccessActor) {
   const email = requiredString(input.email, "email").toLowerCase().trim()
-  const workspaceId = optionalString(input.workspaceId) || null
+  // An admin can only invite people into their own workspace — never an
+  // arbitrary workspaceId supplied by the client.
+  const workspaceId = actor.workspaceId
 
   const existing = await db.approvedEmail.findUnique({ where: { email } })
   if (existing) throw badRequest("Email is already approved", { field: "email" })
@@ -317,12 +360,13 @@ export async function addApprovedEmail(input: Record<string, unknown>, actor: Ac
 }
 
 export async function updateApprovedEmail(id: string, input: Record<string, unknown>, actor: AccessActor) {
-  const existing = await db.approvedEmail.findUnique({ where: { id } })
+  const existing = await db.approvedEmail.findFirst({ where: { id, workspaceId: actor.workspaceId } })
   if (!existing) throw notFound("Approved email not found", { id })
 
   const patch: Record<string, unknown> = {}
   if (input.status !== undefined) patch.status = requiredString(input.status, "status")
-  if ("workspaceId" in input) patch.workspaceId = optionalString(input.workspaceId) || null
+  // workspaceId is intentionally not re-assignable via this endpoint — an
+  // admin cannot move an approval into a different tenant.
 
   const updated = await db.approvedEmail.update({
     where: { id },
@@ -501,10 +545,11 @@ export async function updateUserRoles(userId: string, input: Record<string, unkn
   })
 }
 
-export async function auditLogList(input: { limit?: number; action?: string | null; actorType?: string | null }) {
+export async function auditLogList(input: { workspaceId: string; limit?: number; action?: string | null; actorType?: string | null }) {
   const limit = Math.min(Math.max(input.limit ?? 100, 1), 250)
   const logs = await db.auditLog.findMany({
     where: {
+      workspaceId: input.workspaceId,
       ...(input.action ? { action: input.action } : {}),
       ...(input.actorType ? { actorType: input.actorType } : {}),
     },
@@ -535,7 +580,7 @@ async function grantRole(userId: string, key: string) {
 }
 
 
-async function addWorkspaceMember(workspaceId: string, userId: string, role: string) {
+async function addWorkspaceMember(workspaceId: string, userId: string, role: WorkspaceRole) {
   await db.workspaceMember.upsert({
     where: { workspaceId_userId: { workspaceId, userId } },
     update: { role, status: "active" },

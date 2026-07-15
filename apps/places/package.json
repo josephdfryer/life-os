@@ -11,12 +11,12 @@
     "location:sync": "tsx scripts/location-sync.ts"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.88.0",
+    "@anthropic-ai/sdk": "^0.92.0",
     "@life-os/auth": "*",
     "@life-os/db": "*",
     "@life-os/ui": "*",
     "jszip": "^3.10.1",
-    "next": "16.2.3",
+    "next": "16.2.10",
     "next-auth": "^5.0.0-beta.30",
     "react": "19.2.4",
     "react-dom": "19.2.4"

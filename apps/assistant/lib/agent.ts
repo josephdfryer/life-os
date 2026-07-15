@@ -2,7 +2,6 @@ import Anthropic from "@anthropic-ai/sdk"
 import { TOOLS, executeTool } from "@/lib/tools"
 import { db } from "@/lib/db"
 
-const WORKSPACE_ID = process.env.LIFE_OS_WORKSPACE_ID ?? "default-workspace"
 const MODEL = "claude-sonnet-4-6"
 const MAX_HISTORY = 30
 const MAX_TOOL_ROUNDS = 8
@@ -28,11 +27,12 @@ export async function runAgent(input: {
   channel: "whatsapp" | "web"
   from: string
   userMessage: string
+  workspaceId: string
 }): Promise<string> {
   const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
 
   const history = await db.assistantMessage.findMany({
-    where: { workspaceId: WORKSPACE_ID, from: input.from },
+    where: { workspaceId: input.workspaceId, from: input.from },
     orderBy: { createdAt: "desc" },
     take: MAX_HISTORY,
   })
@@ -66,7 +66,7 @@ export async function runAgent(input: {
     messages.push({ role: "assistant", content: response.content })
     const results: Anthropic.ToolResultBlockParam[] = []
     for (const use of toolUses) {
-      const output = await executeTool(use.name, (use.input ?? {}) as Record<string, unknown>)
+      const output = await executeTool(use.name, (use.input ?? {}) as Record<string, unknown>, input.workspaceId)
       results.push({ type: "tool_result", tool_use_id: use.id, content: output })
     }
     messages.push({ role: "user", content: results })
@@ -78,8 +78,8 @@ export async function runAgent(input: {
 
   await db.assistantMessage.createMany({
     data: [
-      { workspaceId: WORKSPACE_ID, channel: input.channel, from: input.from, role: "user", content: input.userMessage },
-      { workspaceId: WORKSPACE_ID, channel: input.channel, from: input.from, role: "assistant", content: finalText },
+      { workspaceId: input.workspaceId, channel: input.channel, from: input.from, role: "user", content: input.userMessage },
+      { workspaceId: input.workspaceId, channel: input.channel, from: input.from, role: "assistant", content: finalText },
     ],
   })
 

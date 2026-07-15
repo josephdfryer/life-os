@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from "next/server"
 import { db } from "@/lib/db"
+import { accessErrorResponse, requireWorkspaceAccess } from "@/lib/access"
 
 export const dynamic = "force-dynamic"
 
-const WORKSPACE_ID = "default-workspace"
 const NOTE_TYPES = ["thought", "observation", "declaration", "voice_transcript", "import", "theory_observation"]
 
 type Params = { params: Promise<{ id: string }> }
@@ -12,9 +12,10 @@ type Params = { params: Promise<{ id: string }> }
 // "Provenance is sacred" — the note is the raw thing conclusions trace back to.
 export async function GET(_req: NextRequest, { params }: Params) {
   try {
+    const access = await requireWorkspaceAccess()
     const { id } = await params
     const note = await db.note.findFirst({
-      where: { id, workspaceId: WORKSPACE_ID },
+      where: { id, workspaceId: access.workspaceId },
       include: {
         sourceFile: { select: { id: true, filename: true, format: true } },
         plans: { select: { id: true, text: true, status: true } },
@@ -41,17 +42,16 @@ export async function GET(_req: NextRequest, { params }: Params) {
       metadata: parseJson(note.metadata),
     })
   } catch (error) {
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Failed to load note" },
-      { status: 500 }
-    )
+    const { error: message, status } = accessErrorResponse(error)
+    return NextResponse.json({ error: message }, { status })
   }
 }
 
 export async function PATCH(req: NextRequest, { params }: Params) {
   try {
+    const access = await requireWorkspaceAccess()
     const { id } = await params
-    const existing = await db.note.findFirst({ where: { id, workspaceId: WORKSPACE_ID }, select: { id: true } })
+    const existing = await db.note.findFirst({ where: { id, workspaceId: access.workspaceId }, select: { id: true } })
     if (!existing) return NextResponse.json({ error: "Note not found" }, { status: 404 })
 
     const payload = await req.json().catch(() => null)
@@ -67,13 +67,14 @@ export async function PATCH(req: NextRequest, { params }: Params) {
       return NextResponse.json({ error: "Nothing to update" }, { status: 400 })
     }
 
-    const note = await db.note.update({ where: { id }, data })
+    // updateMany (not update) so the workspace filter guards the write
+    // itself, not just the preceding existence check.
+    await db.note.updateMany({ where: { id, workspaceId: access.workspaceId }, data })
+    const note = await db.note.findUnique({ where: { id } })
     return NextResponse.json(note)
   } catch (error) {
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Failed to update note" },
-      { status: 500 }
-    )
+    const { error: message, status } = accessErrorResponse(error)
+    return NextResponse.json({ error: message }, { status })
   }
 }
 
@@ -81,16 +82,15 @@ export async function PATCH(req: NextRequest, { params }: Params) {
 // provenance link just becomes null (SetNull relations).
 export async function DELETE(_req: NextRequest, { params }: Params) {
   try {
+    const access = await requireWorkspaceAccess()
     const { id } = await params
-    const existing = await db.note.findFirst({ where: { id, workspaceId: WORKSPACE_ID }, select: { id: true } })
+    const existing = await db.note.findFirst({ where: { id, workspaceId: access.workspaceId }, select: { id: true } })
     if (!existing) return NextResponse.json({ error: "Note not found" }, { status: 404 })
-    await db.note.delete({ where: { id } })
+    await db.note.deleteMany({ where: { id, workspaceId: access.workspaceId } })
     return new NextResponse(null, { status: 204 })
   } catch (error) {
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Failed to delete note" },
-      { status: 500 }
-    )
+    const { error: message, status } = accessErrorResponse(error)
+    return NextResponse.json({ error: message }, { status })
   }
 }
 

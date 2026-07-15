@@ -2,16 +2,18 @@ import Link from "next/link"
 import { db } from "@/lib/db"
 import { getCurrentTheorySnapshot, listTheorySnapshots } from "@life-os/theory"
 import { renderTheoryMarkdown, extractSectionItems } from "@/lib/markdown"
+import { requireWorkspaceAccess } from "@/lib/access"
 import RegenerateButton from "./RegenerateButton"
 import AddTheoryNote from "./AddTheoryNote"
 
 export const dynamic = "force-dynamic"
 
 export default async function TheoryOfPersonPage({ params }: { params: Promise<{ personId: string }> }) {
+  const access = await requireWorkspaceAccess()
   const { personId } = await params
 
   const person = await db.person.findFirst({
-    where: { id: personId },
+    where: { id: personId, workspaceId: access.workspaceId },
     select: { id: true, first: true, last: true, nickname: true, headline: true },
   })
 

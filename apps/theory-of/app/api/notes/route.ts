@@ -1,14 +1,15 @@
 import { NextRequest, NextResponse } from "next/server"
 import { db } from "@/lib/db"
+import { accessErrorResponse, requireWorkspaceAccess } from "@/lib/access"
 
 export const dynamic = "force-dynamic"
 
-const WORKSPACE_ID = "default-workspace"
 const NOTE_TYPES = ["thought", "observation", "declaration", "voice_transcript", "import", "theory_observation"]
 
 // Lean paginated list. Full provenance is served by GET /api/notes/[id].
 export async function GET(req: NextRequest) {
   try {
+    const access = await requireWorkspaceAccess()
     const { searchParams } = new URL(req.url)
     const limit = Math.min(100, Math.max(1, Number(searchParams.get("limit") ?? 50)))
     const cursor = searchParams.get("cursor")
@@ -16,7 +17,7 @@ export async function GET(req: NextRequest) {
     const q = searchParams.get("q")?.trim()
 
     const where = {
-      workspaceId: WORKSPACE_ID,
+      workspaceId: access.workspaceId,
       ...(type ? { type } : {}),
       ...(q ? { content: { contains: q } } : {}),
     }
@@ -56,15 +57,14 @@ export async function GET(req: NextRequest) {
       total,
     })
   } catch (error) {
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Failed to list notes" },
-      { status: 500 }
-    )
+    const { error: message, status } = accessErrorResponse(error)
+    return NextResponse.json({ error: message }, { status })
   }
 }
 
 export async function POST(req: NextRequest) {
   try {
+    const access = await requireWorkspaceAccess()
     const payload = await req.json().catch(() => null)
     const content = typeof payload?.content === "string" ? payload.content.trim() : ""
     if (!content) {
@@ -78,7 +78,7 @@ export async function POST(req: NextRequest) {
 
     const note = await db.note.create({
       data: {
-        workspaceId: WORKSPACE_ID,
+        workspaceId: access.workspaceId,
         timestamp,
         type,
         content,
@@ -88,9 +88,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json(note, { status: 201 })
   } catch (error) {
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Failed to create note" },
-      { status: 500 }
-    )
+    const { error: message, status } = accessErrorResponse(error)
+    return NextResponse.json({ error: message }, { status })
   }
 }

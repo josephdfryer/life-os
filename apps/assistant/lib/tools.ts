@@ -3,7 +3,6 @@ import { db } from "@/lib/db"
 import { centsToDollars } from "@life-os/db"
 import { getSpendBreakdown, type SpendBreakdownInput } from "@/lib/finance"
 
-const WORKSPACE_ID = process.env.LIFE_OS_WORKSPACE_ID ?? "default-workspace"
 const TZ = "America/Los_Angeles"
 
 // ── Tool schemas (Anthropic tool-use format) ─────────────────────
@@ -188,26 +187,29 @@ export const TOOLS: Anthropic.Tool[] = [
 
 // ── Executors ────────────────────────────────────────────────────
 
-export async function executeTool(name: string, input: Record<string, unknown>): Promise<string> {
+// workspaceId always comes from the authenticated caller's resolved
+// membership (see requireWorkspaceAccess in lib/access.ts) — never from an
+// env var or default. Every DB call below is scoped to it.
+export async function executeTool(name: string, input: Record<string, unknown>, workspaceId: string): Promise<string> {
   try {
     switch (name) {
-      case "search_people": return await searchPeople(String(input.query ?? ""))
-      case "get_person": return await getPerson(String(input.personId ?? ""))
-      case "get_schedule": return await getSchedule(input.date ? String(input.date) : undefined)
-      case "capture_note": return await captureNote(String(input.content ?? ""), input.noteType ? String(input.noteType) : "thought")
-      case "log_interaction": return await logInteraction(String(input.personId ?? ""), String(input.type ?? "message"), String(input.summary ?? ""))
-      case "query_finance": return await queryFinance(Number(input.sinceDays ?? 30), input.merchant ? String(input.merchant) : undefined, input.category ? String(input.category) : undefined)
-      case "get_spend_breakdown": return await spendBreakdown(input)
-      case "get_place_spend": return await getPlaceSpend(input.placeName ? String(input.placeName) : undefined)
-      case "search_notes": return await searchNotes(String(input.query ?? ""))
-      case "list_inbox": return await listInbox(Number(input.limit ?? 5))
-      case "search_places": return await searchPlaces(String(input.query ?? ""))
-      case "get_place": return await getPlace(String(input.placeId ?? ""))
-      case "search_items": return await searchItems(String(input.query ?? ""))
-      case "get_item": return await getItem(String(input.itemId ?? ""))
-      case "search_events": return await searchEvents(String(input.query ?? ""), Number(input.sinceDays ?? 90))
-      case "get_theory": return await getTheory(String(input.personId ?? ""))
-      case "get_alignment_signals": return await getAlignmentSignalsTool()
+      case "search_people": return await searchPeople(String(input.query ?? ""), workspaceId)
+      case "get_person": return await getPerson(String(input.personId ?? ""), workspaceId)
+      case "get_schedule": return await getSchedule(workspaceId, input.date ? String(input.date) : undefined)
+      case "capture_note": return await captureNote(String(input.content ?? ""), input.noteType ? String(input.noteType) : "thought", workspaceId)
+      case "log_interaction": return await logInteraction(String(input.personId ?? ""), String(input.type ?? "message"), String(input.summary ?? ""), workspaceId)
+      case "query_finance": return await queryFinance(Number(input.sinceDays ?? 30), workspaceId, input.merchant ? String(input.merchant) : undefined, input.category ? String(input.category) : undefined)
+      case "get_spend_breakdown": return await spendBreakdown(input, workspaceId)
+      case "get_place_spend": return await getPlaceSpend(workspaceId, input.placeName ? String(input.placeName) : undefined)
+      case "search_notes": return await searchNotes(String(input.query ?? ""), workspaceId)
+      case "list_inbox": return await listInbox(Number(input.limit ?? 5), workspaceId)
+      case "search_places": return await searchPlaces(String(input.query ?? ""), workspaceId)
+      case "get_place": return await getPlace(String(input.placeId ?? ""), workspaceId)
+      case "search_items": return await searchItems(String(input.query ?? ""), workspaceId)
+      case "get_item": return await getItem(String(input.itemId ?? ""), workspaceId)
+      case "search_events": return await searchEvents(String(input.query ?? ""), Number(input.sinceDays ?? 90), workspaceId)
+      case "get_theory": return await getTheory(String(input.personId ?? ""), workspaceId)
+      case "get_alignment_signals": return await getAlignmentSignalsTool(workspaceId)
       default: return `Unknown tool: ${name}`
     }
   } catch (error) {
@@ -215,7 +217,7 @@ export async function executeTool(name: string, input: Record<string, unknown>):
   }
 }
 
-async function searchPeople(query: string) {
+async function searchPeople(query: string, workspaceId: string) {
   if (!query.trim()) return "Empty query"
   const q = query.trim()
   const parts = q.split(/\s+/)
@@ -235,7 +237,7 @@ async function searchPeople(query: string) {
   }
 
   const people = await db.person.findMany({
-    where: { workspaceId: WORKSPACE_ID, OR: orClauses },
+    where: { workspaceId, OR: orClauses },
     select: {
       id: true, first: true, last: true, nickname: true, company: true, closeness: true,
       interactions: { select: { timestamp: true }, orderBy: { timestamp: "desc" }, take: 1 },
@@ -249,10 +251,10 @@ async function searchPeople(query: string) {
   }).join("\n")
 }
 
-async function getPerson(personId: string) {
+async function getPerson(personId: string, workspaceId: string) {
   const [p, recentStates] = await Promise.all([
     db.person.findFirst({
-      where: { id: personId, workspaceId: WORKSPACE_ID },
+      where: { id: personId, workspaceId },
       include: {
         interactions: { orderBy: { timestamp: "desc" }, take: 5, select: { type: true, timestamp: true, summary: true } },
         plans: { where: { status: "active" }, take: 5, select: { text: true, timescale: true } },
@@ -260,7 +262,7 @@ async function getPerson(personId: string) {
     }),
     // Fetch most recent state per type (health metrics, capacity, etc.)
     db.state.findMany({
-      where: { entityId: personId, workspaceId: WORKSPACE_ID },
+      where: { entityId: personId, workspaceId },
       include: { definition: { select: { type: true, value: true } } },
       orderBy: { recordedAt: "desc" },
       take: 30,
@@ -297,12 +299,12 @@ async function getPerson(personId: string) {
   return lines.filter(Boolean).join("\n")
 }
 
-async function getSchedule(date?: string) {
+async function getSchedule(workspaceId: string, date?: string) {
   const day = date ?? new Intl.DateTimeFormat("en-CA", { timeZone: TZ }).format(new Date())
   const start = new Date(`${day}T00:00:00-07:00`)
   const end = new Date(`${day}T23:59:59-07:00`)
   const events = await db.event.findMany({
-    where: { workspaceId: WORKSPACE_ID, start: { gte: start, lte: end } },
+    where: { workspaceId, start: { gte: start, lte: end } },
     select: { name: true, start: true, end: true, place: { select: { name: true } } },
     orderBy: { start: "asc" },
     take: 20,
@@ -314,12 +316,12 @@ async function getSchedule(date?: string) {
   }).join("\n")
 }
 
-async function captureNote(content: string, noteType: string) {
+async function captureNote(content: string, noteType: string, workspaceId: string) {
   if (!content.trim()) return "Empty note"
   const type = ["thought", "observation", "declaration"].includes(noteType) ? noteType : "thought"
   const note = await db.note.create({
     data: {
-      workspaceId: WORKSPACE_ID,
+      workspaceId,
       timestamp: new Date(),
       type,
       content: content.trim(),
@@ -329,21 +331,21 @@ async function captureNote(content: string, noteType: string) {
   return `Captured ${type} (${note.id}). It will flow into synthesis.`
 }
 
-async function logInteraction(personId: string, type: string, summary: string) {
-  const person = await db.person.findFirst({ where: { id: personId, workspaceId: WORKSPACE_ID }, select: { id: true, first: true, last: true } })
+async function logInteraction(personId: string, type: string, summary: string, workspaceId: string) {
+  const person = await db.person.findFirst({ where: { id: personId, workspaceId }, select: { id: true, first: true, last: true } })
   if (!person) return "Person not found — search_people first"
   await db.interaction.create({
-    data: { workspaceId: WORKSPACE_ID, personId, type, timestamp: new Date(), summary },
+    data: { workspaceId, personId, type, timestamp: new Date(), summary },
   })
   return `Logged ${type} with ${person.first} ${person.last}: ${summary}`
 }
 
-async function queryFinance(sinceDays: number, merchant?: string, category?: string) {
+async function queryFinance(sinceDays: number, workspaceId: string, merchant?: string, category?: string) {
   const days = Math.min(365, Math.max(1, Math.round(Number.isFinite(sinceDays) ? sinceDays : 30)))
-  return formatSpendBreakdown(await getSpendBreakdown({ dateExpression: `last ${days} days`, merchant, category, limit: 8 }, WORKSPACE_ID))
+  return formatSpendBreakdown(await getSpendBreakdown({ dateExpression: `last ${days} days`, merchant, category, limit: 8 }, workspaceId))
 }
 
-async function spendBreakdown(input: Record<string, unknown>) {
+async function spendBreakdown(input: Record<string, unknown>, workspaceId: string) {
   const query: SpendBreakdownInput = {
     dateExpression: optionalString(input.dateExpression),
     startDate: optionalString(input.startDate),
@@ -353,7 +355,7 @@ async function spendBreakdown(input: Record<string, unknown>) {
     placeName: optionalString(input.placeName),
     limit: typeof input.limit === "number" ? input.limit : undefined,
   }
-  return formatSpendBreakdown(await getSpendBreakdown(query, WORKSPACE_ID))
+  return formatSpendBreakdown(await getSpendBreakdown(query, workspaceId))
 }
 
 type SpendBreakdownResult = Awaited<ReturnType<typeof getSpendBreakdown>>
@@ -405,14 +407,14 @@ function optionalString(value: unknown) {
   return typeof value === "string" && value.trim() ? value.trim() : undefined
 }
 
-async function getPlaceSpend(placeName?: string) {
+async function getPlaceSpend(workspaceId: string, placeName?: string) {
   const [rows, places] = await Promise.all([
     db.stagedInteraction.findMany({
-      where: { workspaceId: WORKSPACE_ID, source: "era" },
+      where: { workspaceId, source: "era" },
       select: { contactName: true, metadata: true },
     }),
     db.place.findMany({
-      where: { workspaceId: WORKSPACE_ID, googlePlaceId: { not: null } },
+      where: { workspaceId, googlePlaceId: { not: null } },
       select: { name: true, googlePlaceId: true },
     }),
   ])
@@ -439,9 +441,9 @@ async function getPlaceSpend(placeName?: string) {
     .join("\n")
 }
 
-async function searchNotes(query: string) {
+async function searchNotes(query: string, workspaceId: string) {
   const notes = await db.note.findMany({
-    where: { workspaceId: WORKSPACE_ID, content: { contains: query } },
+    where: { workspaceId, content: { contains: query } },
     orderBy: { timestamp: "desc" },
     take: 5,
     select: { type: true, timestamp: true, content: true, metadata: true },
@@ -473,14 +475,14 @@ function parseExtraction(metadata: string | null): { summary: string; facts: Arr
   }
 }
 
-async function listInbox(limit: number) {
+async function listInbox(limit: number, workspaceId: string) {
   const items = await db.stagedInteraction.findMany({
-    where: { workspaceId: WORKSPACE_ID, status: "pending", type: { not: "financial" } },
+    where: { workspaceId, status: "pending", type: { not: "financial" } },
     orderBy: { createdAt: "desc" },
     take: Math.min(10, Math.max(1, limit)),
     select: { contactName: true, contactEmail: true, summary: true, source: true, timestamp: true },
   })
-  const total = await db.stagedInteraction.count({ where: { workspaceId: WORKSPACE_ID, status: "pending", type: { not: "financial" } } })
+  const total = await db.stagedInteraction.count({ where: { workspaceId, status: "pending", type: { not: "financial" } } })
   if (!total) return "Inbox is clear"
   return [
     `${total} pending items. Most recent:`,
@@ -488,12 +490,12 @@ async function listInbox(limit: number) {
   ].join("\n")
 }
 
-async function searchPlaces(query: string) {
+async function searchPlaces(query: string, workspaceId: string) {
   if (!query.trim()) return "Empty query"
   const q = query.trim()
   const places = await db.place.findMany({
     where: {
-      workspaceId: WORKSPACE_ID,
+      workspaceId,
       OR: [{ name: { contains: q } }, { address: { contains: q } }, { type: { contains: q } }],
     },
     select: {
@@ -508,9 +510,9 @@ async function searchPlaces(query: string) {
   ).join("\n")
 }
 
-async function getPlace(placeId: string) {
+async function getPlace(placeId: string, workspaceId: string) {
   const place = await db.place.findFirst({
-    where: { id: placeId, workspaceId: WORKSPACE_ID },
+    where: { id: placeId, workspaceId },
     include: {
       parentPlace: { select: { name: true } },
       childPlaces: { select: { name: true }, take: 10 },
@@ -537,12 +539,12 @@ async function getPlace(placeId: string) {
   return lines.filter(Boolean).join("\n")
 }
 
-async function searchItems(query: string) {
+async function searchItems(query: string, workspaceId: string) {
   if (!query.trim()) return "Empty query"
   const q = query.trim()
   const items = await db.item.findMany({
     where: {
-      workspaceId: WORKSPACE_ID,
+      workspaceId,
       OR: [
         { name: { contains: q } }, { category: { contains: q } },
         { make: { contains: q } }, { model: { contains: q } }, { assetId: { contains: q } },
@@ -557,9 +559,9 @@ async function searchItems(query: string) {
   ).join("\n")
 }
 
-async function getItem(itemId: string) {
+async function getItem(itemId: string, workspaceId: string) {
   const item = await db.item.findFirst({
-    where: { id: itemId, workspaceId: WORKSPACE_ID },
+    where: { id: itemId, workspaceId },
     include: {
       place: { select: { name: true } },
       ownedBy: { select: { first: true, last: true } },
@@ -585,14 +587,14 @@ async function getItem(itemId: string) {
   return lines.filter(Boolean).join("\n")
 }
 
-async function searchEvents(query: string, sinceDays: number) {
+async function searchEvents(query: string, sinceDays: number, workspaceId: string) {
   if (!query.trim()) return "Empty query"
   const q = query.trim()
   const days = Math.min(730, Math.max(1, Math.round(Number.isFinite(sinceDays) ? sinceDays : 90)))
   const since = new Date(Date.now() - days * 86400000)
   const events = await db.event.findMany({
     where: {
-      workspaceId: WORKSPACE_ID,
+      workspaceId,
       start: { gte: since },
       OR: [{ name: { contains: q } }, { notes: { contains: q } }],
     },
@@ -607,9 +609,9 @@ async function searchEvents(query: string, sinceDays: number) {
   }).join("\n")
 }
 
-async function getTheory(personId: string) {
+async function getTheory(personId: string, workspaceId: string) {
   const theory = await db.theorySnapshot.findFirst({
-    where: { subjectPersonId: personId, workspaceId: WORKSPACE_ID, status: "current" },
+    where: { subjectPersonId: personId, workspaceId, status: "current" },
     orderBy: { version: "desc" },
     select: { title: true, summary: true, markdownBody: true, confidence: true, synthesizedAt: true },
   })
@@ -624,9 +626,9 @@ async function getTheory(personId: string) {
   ].join("\n")
 }
 
-async function getAlignmentSignalsTool() {
+async function getAlignmentSignalsTool(workspaceId: string) {
   const { getAlignmentSignals } = await import("@life-os/alignment")
-  const signals = await getAlignmentSignals(WORKSPACE_ID)
+  const signals = await getAlignmentSignals(workspaceId)
   if (!signals.length) return "No gaps detected — relationships and person-linked plans are all on track."
   return signals
     .map(s => `[${s.kind}] ${s.subject}: ${s.detail} (${s.severity.toFixed(1)}x threshold)`)

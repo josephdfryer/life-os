@@ -32,7 +32,7 @@ export type PlanMinAggregateOutputType = {
   text: string | null
   timescale: string | null
   successSignals: string | null
-  status: string | null
+  status: $Enums.PlanStatus | null
   parentId: string | null
   scheduledStart: Date | null
   scheduledEnd: Date | null
@@ -50,7 +50,7 @@ export type PlanMaxAggregateOutputType = {
   text: string | null
   timescale: string | null
   successSignals: string | null
-  status: string | null
+  status: $Enums.PlanStatus | null
   parentId: string | null
   scheduledStart: Date | null
   scheduledEnd: Date | null
@@ -215,7 +215,7 @@ export type PlanGroupByOutputType = {
   text: string
   timescale: string | null
   successSignals: string | null
-  status: string
+  status: $Enums.PlanStatus
   parentId: string | null
   scheduledStart: Date | null
   scheduledEnd: Date | null
@@ -254,7 +254,7 @@ export type PlanWhereInput = {
   text?: Prisma.StringFilter<"Plan"> | string
   timescale?: Prisma.StringNullableFilter<"Plan"> | string | null
   successSignals?: Prisma.StringNullableFilter<"Plan"> | string | null
-  status?: Prisma.StringFilter<"Plan"> | string
+  status?: Prisma.EnumPlanStatusFilter<"Plan"> | $Enums.PlanStatus
   parentId?: Prisma.StringNullableFilter<"Plan"> | string | null
   scheduledStart?: Prisma.DateTimeNullableFilter<"Plan"> | Date | string | null
   scheduledEnd?: Prisma.DateTimeNullableFilter<"Plan"> | Date | string | null
@@ -310,7 +310,7 @@ export type PlanWhereUniqueInput = Prisma.AtLeast<{
   text?: Prisma.StringFilter<"Plan"> | string
   timescale?: Prisma.StringNullableFilter<"Plan"> | string | null
   successSignals?: Prisma.StringNullableFilter<"Plan"> | string | null
-  status?: Prisma.StringFilter<"Plan"> | string
+  status?: Prisma.EnumPlanStatusFilter<"Plan"> | $Enums.PlanStatus
   parentId?: Prisma.StringNullableFilter<"Plan"> | string | null
   scheduledStart?: Prisma.DateTimeNullableFilter<"Plan"> | Date | string | null
   scheduledEnd?: Prisma.DateTimeNullableFilter<"Plan"> | Date | string | null
@@ -359,7 +359,7 @@ export type PlanScalarWhereWithAggregatesInput = {
   text?: Prisma.StringWithAggregatesFilter<"Plan"> | string
   timescale?: Prisma.StringNullableWithAggregatesFilter<"Plan"> | string | null
   successSignals?: Prisma.StringNullableWithAggregatesFilter<"Plan"> | string | null
-  status?: Prisma.StringWithAggregatesFilter<"Plan"> | string
+  status?: Prisma.EnumPlanStatusWithAggregatesFilter<"Plan"> | $Enums.PlanStatus
   parentId?: Prisma.StringNullableWithAggregatesFilter<"Plan"> | string | null
   scheduledStart?: Prisma.DateTimeNullableWithAggregatesFilter<"Plan"> | Date | string | null
   scheduledEnd?: Prisma.DateTimeNullableWithAggregatesFilter<"Plan"> | Date | string | null
@@ -375,7 +375,7 @@ export type PlanCreateInput = {
   text: string
   timescale?: string | null
   successSignals?: string | null
-  status?: string
+  status?: $Enums.PlanStatus
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
   externalSource?: string | null
@@ -398,7 +398,7 @@ export type PlanUncheckedCreateInput = {
   text: string
   timescale?: string | null
   successSignals?: string | null
-  status?: string
+  status?: $Enums.PlanStatus
   parentId?: string | null
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
@@ -417,7 +417,7 @@ export type PlanUpdateInput = {
   text?: Prisma.StringFieldUpdateOperationsInput | string
   timescale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   successSignals?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumPlanStatusFieldUpdateOperationsInput | $Enums.PlanStatus
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   externalSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -440,7 +440,7 @@ export type PlanUncheckedUpdateInput = {
   text?: Prisma.StringFieldUpdateOperationsInput | string
   timescale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   successSignals?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumPlanStatusFieldUpdateOperationsInput | $Enums.PlanStatus
   parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -461,7 +461,7 @@ export type PlanCreateManyInput = {
   text: string
   timescale?: string | null
   successSignals?: string | null
-  status?: string
+  status?: $Enums.PlanStatus
   parentId?: string | null
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
@@ -477,7 +477,7 @@ export type PlanUpdateManyMutationInput = {
   text?: Prisma.StringFieldUpdateOperationsInput | string
   timescale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   successSignals?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumPlanStatusFieldUpdateOperationsInput | $Enums.PlanStatus
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   externalSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -492,7 +492,7 @@ export type PlanUncheckedUpdateManyInput = {
   text?: Prisma.StringFieldUpdateOperationsInput | string
   timescale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   successSignals?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumPlanStatusFieldUpdateOperationsInput | $Enums.PlanStatus
   parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -696,6 +696,10 @@ export type PlanUncheckedCreateNestedManyWithoutParentInput = {
   connect?: Prisma.PlanWhereUniqueInput | Prisma.PlanWhereUniqueInput[]
 }
 
+export type EnumPlanStatusFieldUpdateOperationsInput = {
+  set?: $Enums.PlanStatus
+}
+
 export type PlanUpdateManyWithoutParentNestedInput = {
   create?: Prisma.XOR<Prisma.PlanCreateWithoutParentInput, Prisma.PlanUncheckedCreateWithoutParentInput> | Prisma.PlanCreateWithoutParentInput[] | Prisma.PlanUncheckedCreateWithoutParentInput[]
   connectOrCreate?: Prisma.PlanCreateOrConnectWithoutParentInput | Prisma.PlanCreateOrConnectWithoutParentInput[]
@@ -838,7 +842,7 @@ export type PlanCreateWithoutWorkspaceInput = {
   text: string
   timescale?: string | null
   successSignals?: string | null
-  status?: string
+  status?: $Enums.PlanStatus
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
   externalSource?: string | null
@@ -859,7 +863,7 @@ export type PlanUncheckedCreateWithoutWorkspaceInput = {
   text: string
   timescale?: string | null
   successSignals?: string | null
-  status?: string
+  status?: $Enums.PlanStatus
   parentId?: string | null
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
@@ -908,7 +912,7 @@ export type PlanScalarWhereInput = {
   text?: Prisma.StringFilter<"Plan"> | string
   timescale?: Prisma.StringNullableFilter<"Plan"> | string | null
   successSignals?: Prisma.StringNullableFilter<"Plan"> | string | null
-  status?: Prisma.StringFilter<"Plan"> | string
+  status?: Prisma.EnumPlanStatusFilter<"Plan"> | $Enums.PlanStatus
   parentId?: Prisma.StringNullableFilter<"Plan"> | string | null
   scheduledStart?: Prisma.DateTimeNullableFilter<"Plan"> | Date | string | null
   scheduledEnd?: Prisma.DateTimeNullableFilter<"Plan"> | Date | string | null
@@ -924,7 +928,7 @@ export type PlanCreateWithoutPersonInput = {
   text: string
   timescale?: string | null
   successSignals?: string | null
-  status?: string
+  status?: $Enums.PlanStatus
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
   externalSource?: string | null
@@ -945,7 +949,7 @@ export type PlanUncheckedCreateWithoutPersonInput = {
   text: string
   timescale?: string | null
   successSignals?: string | null
-  status?: string
+  status?: $Enums.PlanStatus
   parentId?: string | null
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
@@ -989,7 +993,7 @@ export type PlanCreateWithoutFulfilledByInput = {
   text: string
   timescale?: string | null
   successSignals?: string | null
-  status?: string
+  status?: $Enums.PlanStatus
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
   externalSource?: string | null
@@ -1011,7 +1015,7 @@ export type PlanUncheckedCreateWithoutFulfilledByInput = {
   text: string
   timescale?: string | null
   successSignals?: string | null
-  status?: string
+  status?: $Enums.PlanStatus
   parentId?: string | null
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
@@ -1045,7 +1049,7 @@ export type PlanUpdateWithoutFulfilledByInput = {
   text?: Prisma.StringFieldUpdateOperationsInput | string
   timescale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   successSignals?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumPlanStatusFieldUpdateOperationsInput | $Enums.PlanStatus
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   externalSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1067,7 +1071,7 @@ export type PlanUncheckedUpdateWithoutFulfilledByInput = {
   text?: Prisma.StringFieldUpdateOperationsInput | string
   timescale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   successSignals?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumPlanStatusFieldUpdateOperationsInput | $Enums.PlanStatus
   parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1085,7 +1089,7 @@ export type PlanCreateWithoutParentInput = {
   text: string
   timescale?: string | null
   successSignals?: string | null
-  status?: string
+  status?: $Enums.PlanStatus
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
   externalSource?: string | null
@@ -1107,7 +1111,7 @@ export type PlanUncheckedCreateWithoutParentInput = {
   text: string
   timescale?: string | null
   successSignals?: string | null
-  status?: string
+  status?: $Enums.PlanStatus
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
   placeId?: string | null
@@ -1134,7 +1138,7 @@ export type PlanCreateWithoutChildrenInput = {
   text: string
   timescale?: string | null
   successSignals?: string | null
-  status?: string
+  status?: $Enums.PlanStatus
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
   externalSource?: string | null
@@ -1156,7 +1160,7 @@ export type PlanUncheckedCreateWithoutChildrenInput = {
   text: string
   timescale?: string | null
   successSignals?: string | null
-  status?: string
+  status?: $Enums.PlanStatus
   parentId?: string | null
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
@@ -1206,7 +1210,7 @@ export type PlanUpdateWithoutChildrenInput = {
   text?: Prisma.StringFieldUpdateOperationsInput | string
   timescale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   successSignals?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumPlanStatusFieldUpdateOperationsInput | $Enums.PlanStatus
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   externalSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1228,7 +1232,7 @@ export type PlanUncheckedUpdateWithoutChildrenInput = {
   text?: Prisma.StringFieldUpdateOperationsInput | string
   timescale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   successSignals?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumPlanStatusFieldUpdateOperationsInput | $Enums.PlanStatus
   parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1246,7 +1250,7 @@ export type PlanCreateWithoutExpectedPeopleInput = {
   text: string
   timescale?: string | null
   successSignals?: string | null
-  status?: string
+  status?: $Enums.PlanStatus
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
   externalSource?: string | null
@@ -1268,7 +1272,7 @@ export type PlanUncheckedCreateWithoutExpectedPeopleInput = {
   text: string
   timescale?: string | null
   successSignals?: string | null
-  status?: string
+  status?: $Enums.PlanStatus
   parentId?: string | null
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
@@ -1302,7 +1306,7 @@ export type PlanUpdateWithoutExpectedPeopleInput = {
   text?: Prisma.StringFieldUpdateOperationsInput | string
   timescale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   successSignals?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumPlanStatusFieldUpdateOperationsInput | $Enums.PlanStatus
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   externalSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1324,7 +1328,7 @@ export type PlanUncheckedUpdateWithoutExpectedPeopleInput = {
   text?: Prisma.StringFieldUpdateOperationsInput | string
   timescale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   successSignals?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumPlanStatusFieldUpdateOperationsInput | $Enums.PlanStatus
   parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1342,7 +1346,7 @@ export type PlanCreateWithoutPlaceInput = {
   text: string
   timescale?: string | null
   successSignals?: string | null
-  status?: string
+  status?: $Enums.PlanStatus
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
   externalSource?: string | null
@@ -1364,7 +1368,7 @@ export type PlanUncheckedCreateWithoutPlaceInput = {
   text: string
   timescale?: string | null
   successSignals?: string | null
-  status?: string
+  status?: $Enums.PlanStatus
   parentId?: string | null
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
@@ -1407,7 +1411,7 @@ export type PlanCreateWithoutSourceNoteInput = {
   text: string
   timescale?: string | null
   successSignals?: string | null
-  status?: string
+  status?: $Enums.PlanStatus
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
   externalSource?: string | null
@@ -1429,7 +1433,7 @@ export type PlanUncheckedCreateWithoutSourceNoteInput = {
   text: string
   timescale?: string | null
   successSignals?: string | null
-  status?: string
+  status?: $Enums.PlanStatus
   parentId?: string | null
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
@@ -1473,7 +1477,7 @@ export type PlanCreateManyWorkspaceInput = {
   text: string
   timescale?: string | null
   successSignals?: string | null
-  status?: string
+  status?: $Enums.PlanStatus
   parentId?: string | null
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
@@ -1489,7 +1493,7 @@ export type PlanUpdateWithoutWorkspaceInput = {
   text?: Prisma.StringFieldUpdateOperationsInput | string
   timescale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   successSignals?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumPlanStatusFieldUpdateOperationsInput | $Enums.PlanStatus
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   externalSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1510,7 +1514,7 @@ export type PlanUncheckedUpdateWithoutWorkspaceInput = {
   text?: Prisma.StringFieldUpdateOperationsInput | string
   timescale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   successSignals?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumPlanStatusFieldUpdateOperationsInput | $Enums.PlanStatus
   parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1530,7 +1534,7 @@ export type PlanUncheckedUpdateManyWithoutWorkspaceInput = {
   text?: Prisma.StringFieldUpdateOperationsInput | string
   timescale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   successSignals?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumPlanStatusFieldUpdateOperationsInput | $Enums.PlanStatus
   parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1547,7 +1551,7 @@ export type PlanCreateManyPersonInput = {
   text: string
   timescale?: string | null
   successSignals?: string | null
-  status?: string
+  status?: $Enums.PlanStatus
   parentId?: string | null
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
@@ -1563,7 +1567,7 @@ export type PlanUpdateWithoutPersonInput = {
   text?: Prisma.StringFieldUpdateOperationsInput | string
   timescale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   successSignals?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumPlanStatusFieldUpdateOperationsInput | $Enums.PlanStatus
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   externalSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1584,7 +1588,7 @@ export type PlanUncheckedUpdateWithoutPersonInput = {
   text?: Prisma.StringFieldUpdateOperationsInput | string
   timescale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   successSignals?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumPlanStatusFieldUpdateOperationsInput | $Enums.PlanStatus
   parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1604,7 +1608,7 @@ export type PlanUncheckedUpdateManyWithoutPersonInput = {
   text?: Prisma.StringFieldUpdateOperationsInput | string
   timescale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   successSignals?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumPlanStatusFieldUpdateOperationsInput | $Enums.PlanStatus
   parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1622,7 +1626,7 @@ export type PlanCreateManyParentInput = {
   text: string
   timescale?: string | null
   successSignals?: string | null
-  status?: string
+  status?: $Enums.PlanStatus
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
   placeId?: string | null
@@ -1637,7 +1641,7 @@ export type PlanUpdateWithoutParentInput = {
   text?: Prisma.StringFieldUpdateOperationsInput | string
   timescale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   successSignals?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumPlanStatusFieldUpdateOperationsInput | $Enums.PlanStatus
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   externalSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1659,7 +1663,7 @@ export type PlanUncheckedUpdateWithoutParentInput = {
   text?: Prisma.StringFieldUpdateOperationsInput | string
   timescale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   successSignals?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumPlanStatusFieldUpdateOperationsInput | $Enums.PlanStatus
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   placeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1679,7 +1683,7 @@ export type PlanUncheckedUpdateManyWithoutParentInput = {
   text?: Prisma.StringFieldUpdateOperationsInput | string
   timescale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   successSignals?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumPlanStatusFieldUpdateOperationsInput | $Enums.PlanStatus
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   placeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1696,7 +1700,7 @@ export type PlanCreateManyPlaceInput = {
   text: string
   timescale?: string | null
   successSignals?: string | null
-  status?: string
+  status?: $Enums.PlanStatus
   parentId?: string | null
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
@@ -1711,7 +1715,7 @@ export type PlanUpdateWithoutPlaceInput = {
   text?: Prisma.StringFieldUpdateOperationsInput | string
   timescale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   successSignals?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumPlanStatusFieldUpdateOperationsInput | $Enums.PlanStatus
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   externalSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1733,7 +1737,7 @@ export type PlanUncheckedUpdateWithoutPlaceInput = {
   text?: Prisma.StringFieldUpdateOperationsInput | string
   timescale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   successSignals?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumPlanStatusFieldUpdateOperationsInput | $Enums.PlanStatus
   parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1753,7 +1757,7 @@ export type PlanUncheckedUpdateManyWithoutPlaceInput = {
   text?: Prisma.StringFieldUpdateOperationsInput | string
   timescale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   successSignals?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumPlanStatusFieldUpdateOperationsInput | $Enums.PlanStatus
   parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1770,7 +1774,7 @@ export type PlanCreateManySourceNoteInput = {
   text: string
   timescale?: string | null
   successSignals?: string | null
-  status?: string
+  status?: $Enums.PlanStatus
   parentId?: string | null
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
@@ -1785,7 +1789,7 @@ export type PlanUpdateWithoutSourceNoteInput = {
   text?: Prisma.StringFieldUpdateOperationsInput | string
   timescale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   successSignals?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumPlanStatusFieldUpdateOperationsInput | $Enums.PlanStatus
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   externalSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1807,7 +1811,7 @@ export type PlanUncheckedUpdateWithoutSourceNoteInput = {
   text?: Prisma.StringFieldUpdateOperationsInput | string
   timescale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   successSignals?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumPlanStatusFieldUpdateOperationsInput | $Enums.PlanStatus
   parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1827,7 +1831,7 @@ export type PlanUncheckedUpdateManyWithoutSourceNoteInput = {
   text?: Prisma.StringFieldUpdateOperationsInput | string
   timescale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   successSignals?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumPlanStatusFieldUpdateOperationsInput | $Enums.PlanStatus
   parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2023,7 +2027,7 @@ export type $PlanPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     text: string
     timescale: string | null
     successSignals: string | null
-    status: string
+    status: $Enums.PlanStatus
     parentId: string | null
     scheduledStart: Date | null
     scheduledEnd: Date | null
@@ -2469,7 +2473,7 @@ export interface PlanFieldRefs {
   readonly text: Prisma.FieldRef<"Plan", 'String'>
   readonly timescale: Prisma.FieldRef<"Plan", 'String'>
   readonly successSignals: Prisma.FieldRef<"Plan", 'String'>
-  readonly status: Prisma.FieldRef<"Plan", 'String'>
+  readonly status: Prisma.FieldRef<"Plan", 'PlanStatus'>
   readonly parentId: Prisma.FieldRef<"Plan", 'String'>
   readonly scheduledStart: Prisma.FieldRef<"Plan", 'DateTime'>
   readonly scheduledEnd: Prisma.FieldRef<"Plan", 'DateTime'>

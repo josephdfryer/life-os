@@ -1,4 +1,5 @@
 import { createHmac, randomBytes } from "crypto"
+import { decryptNullable, encryptNullable } from "@life-os/db/crypto"
 import { db } from "@/lib/db"
 import { badRequest, forbidden, notFound } from "@/server/api/errors"
 import { auditAction, type DomainActor } from "./audit"
@@ -53,6 +54,23 @@ type EventsListResponse = {
   summary?: string
 }
 
+type GoogleCalendarListEntry = {
+  id: string
+  summary?: string
+  description?: string
+  primary?: boolean
+  accessRole?: "freeBusyReader" | "reader" | "writer" | "owner"
+  backgroundColor?: string
+  foregroundColor?: string
+  hidden?: boolean
+  deleted?: boolean
+}
+
+type CalendarListResponse = {
+  items?: GoogleCalendarListEntry[]
+  nextPageToken?: string
+}
+
 type CalendarEventMetadata = {
   htmlLink?: string | null
   location?: string | null
@@ -68,9 +86,9 @@ export function googleCalendarConfigured() {
 }
 
 export async function googleCalendarStatus(actor: AccessActor) {
-  const connection = await db.calendarConnection.findFirst({
+  const connections = await db.calendarConnection.findMany({
     where: { workspaceId: actor.workspaceId, provider: "google" },
-    orderBy: { updatedAt: "desc" },
+    orderBy: [{ status: "asc" }, { calendarSummary: "asc" }],
     select: {
       id: true,
       status: true,
@@ -78,7 +96,6 @@ export async function googleCalendarStatus(actor: AccessActor) {
       calendarId: true,
       calendarSummary: true,
       scope: true,
-      syncToken: true,
       lastSyncedAt: true,
       lastError: true,
       updatedAt: true,
@@ -86,23 +103,45 @@ export async function googleCalendarStatus(actor: AccessActor) {
     },
   })
 
+  const credential = await calendarCredential(actor.workspaceId)
+  let availableCalendars: Array<ReturnType<typeof presentCalendarListEntry> & { selected: boolean }> = []
+  let discoveryError: string | null = null
+
+  if (credential) {
+    try {
+      const accessToken = await usableAccessToken(decryptedCredential(credential))
+      const selectedIds = new Set(connections.filter(connection => connection.status === "active").map(connection => connection.calendarId))
+      availableCalendars = (await fetchCalendarList(accessToken)).map(entry => ({
+        ...presentCalendarListEntry(entry),
+        selected: selectedIds.has(normalizedCalendarId(entry)),
+      }))
+    } catch (error) {
+      discoveryError = error instanceof Error ? error.message : "Could not load Google calendars"
+    }
+  }
+
+  const presentedConnections = connections.map(connection => ({
+    ...connection,
+    eventCount: connection._count.eventLinks,
+    _count: undefined,
+  }))
+
   return {
     configured: googleCalendarConfigured(),
     redirectUri: googleCalendarRedirectUri(null),
     expectedAccountEmail: calendarAccountEmail(),
-    connection: connection ? {
-      ...connection,
-      eventCount: connection._count.eventLinks,
-      _count: undefined,
-    } : null,
+    connection: presentedConnections[0] ?? null,
+    connections: presentedConnections,
+    availableCalendars,
+    discoveryError,
   }
 }
 
 export async function googleCalendarTrace(actor: AccessActor, options: { limit?: number } = {}) {
   const limit = normalizeTraceLimit(options.limit)
-  const connection = await db.calendarConnection.findFirst({
+  const connections = await db.calendarConnection.findMany({
     where: { workspaceId: actor.workspaceId, provider: "google" },
-    orderBy: { updatedAt: "desc" },
+    orderBy: { calendarSummary: "asc" },
     select: { id: true, calendarId: true, accountEmail: true, calendarSummary: true },
   })
 
@@ -113,8 +152,8 @@ export async function googleCalendarTrace(actor: AccessActor, options: { limit?:
     select: { id: true, createdAt: true, actorLabel: true, metadata: true },
   })
 
-  const links = connection ? await db.calendarEventLink.findMany({
-    where: { workspaceId: actor.workspaceId, provider: "google", connectionId: connection.id },
+  const links = connections.length ? await db.calendarEventLink.findMany({
+    where: { workspaceId: actor.workspaceId, provider: "google", connectionId: { in: connections.map(connection => connection.id) } },
     orderBy: [{ updatedAt: "desc" }, { createdAt: "desc" }],
     take: limit,
     include: {
@@ -143,7 +182,8 @@ export async function googleCalendarTrace(actor: AccessActor, options: { limit?:
   }) : []
 
   return {
-    connection,
+    connection: connections[0] ?? null,
+    connections,
     runs: runs.map(run => ({
       id: run.id,
       createdAt: run.createdAt,
@@ -238,8 +278,8 @@ export async function handleGoogleCalendarCallback(input: { code: string; state:
       status: "active",
       accountEmail,
       calendarSummary: calendar.summary ?? accountEmail,
-      accessToken: token.access_token,
-      refreshToken: token.refresh_token,
+      accessTokenEncrypted: encryptNullable(token.access_token),
+      refreshTokenEncrypted: encryptNullable(token.refresh_token),
       expiresAt,
       scope: token.scope ?? CALENDAR_SCOPE,
       lastError: null,
@@ -252,10 +292,27 @@ export async function handleGoogleCalendarCallback(input: { code: string; state:
       accountEmail,
       calendarId,
       calendarSummary: calendar.summary ?? accountEmail,
-      accessToken: token.access_token,
-      refreshToken: token.refresh_token,
+      accessTokenEncrypted: encryptNullable(token.access_token),
+      refreshTokenEncrypted: encryptNullable(token.refresh_token),
       expiresAt,
       scope: token.scope ?? CALENDAR_SCOPE,
+    },
+  })
+
+  await db.calendarConnection.updateMany({
+    where: {
+      workspaceId: state.workspaceId,
+      provider: "google",
+      id: { not: connection.id },
+    },
+    data: {
+      userId: state.userId,
+      accountEmail,
+      accessTokenEncrypted: encryptNullable(token.access_token),
+      refreshTokenEncrypted: encryptNullable(token.refresh_token),
+      expiresAt,
+      scope: token.scope ?? CALENDAR_SCOPE,
+      lastError: null,
     },
   })
 
@@ -270,17 +327,92 @@ export async function handleGoogleCalendarCallback(input: { code: string; state:
   return { returnTo: state.returnTo, connectionId: connection.id }
 }
 
-export async function resetGoogleCalendarImport(actor: AccessActor) {
-  const connection = await db.calendarConnection.findFirst({
+export async function saveGoogleCalendarSelection(actor: AccessActor, calendarIds: string[]) {
+  const credential = await calendarCredential(actor.workspaceId)
+  if (!credential) throw notFound("Google Calendar is not connected")
+
+  const accessToken = await usableAccessToken(decryptedCredential(credential))
+  const calendars = await fetchCalendarList(accessToken)
+  const availableById = new Map(calendars.map(calendar => [normalizedCalendarId(calendar), calendar]))
+  const selectedIds = [...new Set(calendarIds.map(value => value.trim()).filter(Boolean))]
+  if (selectedIds.length > 100) throw badRequest("Choose no more than 100 calendars")
+
+  const unavailable = selectedIds.filter(calendarId => !availableById.has(calendarId))
+  if (unavailable.length) throw forbidden("One or more calendars are not available to this Google account", { calendarIds: unavailable })
+
+  const refreshedCredential = await db.calendarConnection.findUnique({ where: { id: credential.id } })
+  if (!refreshedCredential) throw notFound("Google Calendar connection was removed")
+
+  const existing = await db.calendarConnection.findMany({
     where: { workspaceId: actor.workspaceId, provider: "google" },
-    orderBy: { updatedAt: "desc" },
+    select: { id: true, calendarId: true },
+  })
+  const selectedSet = new Set(selectedIds)
+
+  await db.$transaction([
+    ...existing.map(connection => db.calendarConnection.update({
+      where: { id: connection.id },
+      data: { status: selectedSet.has(connection.calendarId) ? "active" : "inactive" },
+    })),
+    ...selectedIds.map(calendarId => {
+      const calendar = availableById.get(calendarId)!
+      return db.calendarConnection.upsert({
+        where: {
+          workspaceId_provider_calendarId: {
+            workspaceId: actor.workspaceId,
+            provider: "google",
+            calendarId,
+          },
+        },
+        update: {
+          userId: actor.userId,
+          status: "active",
+          accountEmail: refreshedCredential.accountEmail,
+          calendarSummary: calendar.summary ?? calendar.id,
+          accessTokenEncrypted: refreshedCredential.accessTokenEncrypted,
+          refreshTokenEncrypted: refreshedCredential.refreshTokenEncrypted,
+          expiresAt: refreshedCredential.expiresAt,
+          scope: refreshedCredential.scope,
+          lastError: null,
+        },
+        create: {
+          workspaceId: actor.workspaceId,
+          userId: actor.userId,
+          provider: "google",
+          status: "active",
+          accountEmail: refreshedCredential.accountEmail,
+          calendarId,
+          calendarSummary: calendar.summary ?? calendar.id,
+          accessTokenEncrypted: refreshedCredential.accessTokenEncrypted,
+          refreshTokenEncrypted: refreshedCredential.refreshTokenEncrypted,
+          expiresAt: refreshedCredential.expiresAt,
+          scope: refreshedCredential.scope,
+        },
+      })
+    }),
+  ])
+
+  await auditAction({
+    actor: actor.actor,
+    action: "calendar.connect",
+    targetType: "calendarConnection",
+    targetId: credential.id,
+    metadata: { provider: "google", mode: "calendar-selection", calendarIds: selectedIds },
+  })
+
+  return googleCalendarStatus(actor)
+}
+
+export async function resetGoogleCalendarImport(actor: AccessActor) {
+  const connections = await db.calendarConnection.findMany({
+    where: { workspaceId: actor.workspaceId, provider: "google" },
     include: { eventLinks: { select: { id: true, eventId: true } } },
   })
-  if (!connection) {
+  if (!connections.length) {
     return { deletedInteractions: 0, deletedEvents: 0, deletedLinks: 0, disconnected: false }
   }
 
-  const eventIds = [...new Set(connection.eventLinks.map(link => link.eventId).filter((id): id is string => Boolean(id)))]
+  const eventIds = [...new Set(connections.flatMap(connection => connection.eventLinks).map(link => link.eventId).filter((id): id is string => Boolean(id)))]
 
   const result = await db.$transaction(async tx => {
     const deletedInteractions = eventIds.length
@@ -295,7 +427,7 @@ export async function resetGoogleCalendarImport(actor: AccessActor) {
       : { count: 0 }
 
     const deletedLinks = await tx.calendarEventLink.deleteMany({
-      where: { workspaceId: actor.workspaceId, provider: "google", connectionId: connection.id },
+      where: { workspaceId: actor.workspaceId, provider: "google" },
     })
 
     const deletedEvents = eventIds.length
@@ -310,7 +442,7 @@ export async function resetGoogleCalendarImport(actor: AccessActor) {
       })
       : { count: 0 }
 
-    await tx.calendarConnection.delete({ where: { id: connection.id } })
+    await tx.calendarConnection.deleteMany({ where: { workspaceId: actor.workspaceId, provider: "google" } })
 
     return {
       deletedInteractions: deletedInteractions.count,
@@ -324,8 +456,8 @@ export async function resetGoogleCalendarImport(actor: AccessActor) {
     actor: actor.actor,
     action: "calendar.sync",
     targetType: "calendarConnection",
-    targetId: connection.id,
-    metadata: { provider: "google", mode: "calendar-reset", ...result },
+    targetId: connections[0].id,
+    metadata: { provider: "google", mode: "calendar-reset", connectionCount: connections.length, ...result },
   })
 
   return result
@@ -336,6 +468,8 @@ type SyncOptions = {
 }
 
 type SyncStats = {
+  calendarId: string
+  calendarSummary: string | null
   createdEvents: number
   updatedEvents: number
   createdInteractions: number
@@ -344,34 +478,86 @@ type SyncStats = {
   batches: number
   backfillDays: number
   incremental: boolean
+  error: string | null
+}
+
+type SyncConnection = {
+  id: string
+  calendarId: string
+  calendarSummary: string | null
+  accessTokenEncrypted: string | null
+  refreshTokenEncrypted: string | null
+  syncTokenEncrypted: string | null
+  expiresAt: Date | null
 }
 
 export async function syncGoogleCalendar(actor: AccessActor, options: SyncOptions = {}) {
-  const connection = await db.calendarConnection.findFirst({
+  const connections = await db.calendarConnection.findMany({
     where: { workspaceId: actor.workspaceId, provider: "google", status: "active" },
-    orderBy: { updatedAt: "desc" },
+    orderBy: { calendarSummary: "asc" },
   })
-  if (!connection) throw notFound("Google Calendar is not connected")
-  if (!connection.refreshToken && !connection.accessToken) throw badRequest("Google Calendar connection has no usable token")
+  if (!connections.length) throw notFound("Choose at least one Google Calendar to sync")
 
-  const accessToken = await usableAccessToken(connection)
   const backfillDays = normalizeBackfillDays(options.backfillDays)
+  const peopleByEmail = await peopleEmailIndex(actor.workspaceId)
+  const calendars: SyncStats[] = []
 
-  try {
-    const peopleByEmail = await peopleEmailIndex(actor.workspaceId)
-    const stats: SyncStats = {
+  for (const connection of connections) {
+    calendars.push(await syncGoogleCalendarConnection(actor, connection, peopleByEmail, backfillDays))
+  }
+
+  return {
+    calendars,
+    totals: calendars.reduce((totals, calendar) => ({
+      createdEvents: totals.createdEvents + calendar.createdEvents,
+      updatedEvents: totals.updatedEvents + calendar.updatedEvents,
+      createdInteractions: totals.createdInteractions + calendar.createdInteractions,
+      cancelled: totals.cancelled + calendar.cancelled,
+      fetched: totals.fetched + calendar.fetched,
+      batches: totals.batches + calendar.batches,
+      failedCalendars: totals.failedCalendars + (calendar.error ? 1 : 0),
+    }), {
       createdEvents: 0,
       updatedEvents: 0,
       createdInteractions: 0,
       cancelled: 0,
       fetched: 0,
       batches: 0,
-      backfillDays,
-      incremental: Boolean(connection.syncToken),
+      failedCalendars: 0,
+    }),
+    backfillDays,
+  }
+}
+
+async function syncGoogleCalendarConnection(
+  actor: AccessActor,
+  connection: SyncConnection,
+  peopleByEmail: Map<string, { id: string; first: string; last: string }>,
+  backfillDays: number,
+) {
+  const syncToken = decryptNullable(connection.syncTokenEncrypted)
+  const stats: SyncStats = {
+    calendarId: connection.calendarId,
+    calendarSummary: connection.calendarSummary,
+    createdEvents: 0,
+    updatedEvents: 0,
+    createdInteractions: 0,
+    cancelled: 0,
+    fetched: 0,
+    batches: 0,
+    backfillDays,
+    incremental: Boolean(syncToken),
+    error: null,
+  }
+
+  try {
+    if (!connection.refreshTokenEncrypted && !connection.accessTokenEncrypted) {
+      throw badRequest("Google Calendar connection has no usable token")
     }
+    const accessToken = await usableAccessToken(decryptedCredential(connection))
     const listed = await syncEventPages(accessToken, {
       calendarId: connection.calendarId,
-      syncToken: connection.syncToken,
+      syncToken,
       backfillDays,
       onBatch: async items => {
         stats.batches += 1
@@ -395,7 +581,7 @@ export async function syncGoogleCalendar(actor: AccessActor, options: SyncOption
     await db.calendarConnection.update({
       where: { id: connection.id },
       data: {
-        syncToken: listed.nextSyncToken ?? connection.syncToken,
+        syncTokenEncrypted: encryptNullable(listed.nextSyncToken ?? syncToken),
         lastSyncedAt: new Date(),
         lastError: null,
       },
@@ -413,7 +599,7 @@ export async function syncGoogleCalendar(actor: AccessActor, options: SyncOption
   } catch (error) {
     const message = error instanceof Error ? error.message : "Google Calendar sync failed"
     await db.calendarConnection.update({ where: { id: connection.id }, data: { lastError: message } })
-    throw error
+    return { ...stats, error: message }
   }
 }
 
@@ -633,9 +819,9 @@ async function usableAccessToken(connection: { id: string; accessToken: string |
   await db.calendarConnection.update({
     where: { id: connection.id },
     data: {
-      accessToken: token.access_token,
+      accessTokenEncrypted: encryptNullable(token.access_token),
       expiresAt: token.expires_in ? new Date(Date.now() + token.expires_in * 1000) : null,
-      refreshToken: token.refresh_token ?? connection.refreshToken,
+      refreshTokenEncrypted: encryptNullable(token.refresh_token ?? connection.refreshToken),
       scope: token.scope ?? undefined,
     },
   })
@@ -734,6 +920,73 @@ async function fetchPrimaryCalendar(accessToken: string) {
   const res = await googleFetch(`${GOOGLE_CALENDAR_BASE}/calendars/primary`, accessToken)
   if (!res.ok) return {}
   return await res.json() as { summary?: string }
+}
+
+async function fetchCalendarList(accessToken: string) {
+  const calendars: GoogleCalendarListEntry[] = []
+  let pageToken: string | undefined
+
+  do {
+    const params = new URLSearchParams({ maxResults: "250", showDeleted: "false", showHidden: "true" })
+    if (pageToken) params.set("pageToken", pageToken)
+    const res = await googleFetch(`${GOOGLE_CALENDAR_BASE}/users/me/calendarList?${params}`, accessToken)
+    if (!res.ok) throw new Error(`Google Calendar list failed (${res.status})`)
+    const data = await res.json() as CalendarListResponse
+    calendars.push(...(data.items ?? []).filter(calendar => !calendar.deleted))
+    pageToken = data.nextPageToken
+  } while (pageToken)
+
+  return calendars.sort((a, b) => {
+    if (a.primary) return -1
+    if (b.primary) return 1
+    return (a.summary ?? a.id).localeCompare(b.summary ?? b.id)
+  })
+}
+
+function normalizedCalendarId(calendar: GoogleCalendarListEntry) {
+  return calendar.primary ? "primary" : calendar.id
+}
+
+function presentCalendarListEntry(calendar: GoogleCalendarListEntry) {
+  return {
+    id: normalizedCalendarId(calendar),
+    googleCalendarId: calendar.id,
+    summary: calendar.summary ?? calendar.id,
+    description: calendar.description ?? null,
+    primary: Boolean(calendar.primary),
+    accessRole: calendar.accessRole ?? null,
+    backgroundColor: calendar.backgroundColor ?? null,
+    foregroundColor: calendar.foregroundColor ?? null,
+    hidden: Boolean(calendar.hidden),
+  }
+}
+
+async function calendarCredential(workspaceId: string) {
+  return db.calendarConnection.findFirst({
+    where: {
+      workspaceId,
+      provider: "google",
+      OR: [
+        { refreshTokenEncrypted: { not: null } },
+        { accessTokenEncrypted: { not: null } },
+      ],
+    },
+    orderBy: [{ calendarId: "asc" }, { updatedAt: "desc" }],
+  })
+}
+
+function decryptedCredential(connection: {
+  id: string
+  accessTokenEncrypted: string | null
+  refreshTokenEncrypted: string | null
+  expiresAt: Date | null
+}) {
+  return {
+    id: connection.id,
+    accessToken: decryptNullable(connection.accessTokenEncrypted),
+    refreshToken: decryptNullable(connection.refreshTokenEncrypted),
+    expiresAt: connection.expiresAt,
+  }
 }
 
 async function fetchGoogleAccountEmail(accessToken: string) {

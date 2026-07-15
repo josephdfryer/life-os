@@ -94,7 +94,6 @@ type CalendarStatus = {
     calendarId: string
     calendarSummary: string | null
     scope: string | null
-    syncToken: string | null
     lastSyncedAt: string | null
     lastError: string | null
     updatedAt: string

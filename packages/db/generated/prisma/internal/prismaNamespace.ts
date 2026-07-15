@@ -408,6 +408,7 @@ export const ModelName = {
   StagedInteraction: 'StagedInteraction',
   Event: 'Event',
   Interaction: 'Interaction',
+  InteractionParticipant: 'InteractionParticipant',
   Plan: 'Plan',
   PlanExpectedPerson: 'PlanExpectedPerson',
   Place: 'Place',
@@ -443,7 +444,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "workspace" | "workspaceMember" | "approvedEmail" | "person" | "user" | "role" | "permission" | "userRole" | "rolePermission" | "apiKey" | "apiKeyScope" | "auditLog" | "calendarConnection" | "calendarEventLink" | "gmailConnection" | "gmailMessageLink" | "eraConnection" | "eraAccountLink" | "eraTransactionLink" | "rule" | "ruleRun" | "stagedInteraction" | "event" | "interaction" | "plan" | "planExpectedPerson" | "place" | "importJob" | "importStagedVisit" | "placeNote" | "item" | "assembly" | "itemInteraction" | "importedFile" | "group" | "personGroup" | "groupGroup" | "placeGroup" | "note" | "theorySnapshot" | "theorySnapshotSource" | "stateDefinition" | "state" | "assistantMessage"
+    modelProps: "workspace" | "workspaceMember" | "approvedEmail" | "person" | "user" | "role" | "permission" | "userRole" | "rolePermission" | "apiKey" | "apiKeyScope" | "auditLog" | "calendarConnection" | "calendarEventLink" | "gmailConnection" | "gmailMessageLink" | "eraConnection" | "eraAccountLink" | "eraTransactionLink" | "rule" | "ruleRun" | "stagedInteraction" | "event" | "interaction" | "interactionParticipant" | "plan" | "planExpectedPerson" | "place" | "importJob" | "importStagedVisit" | "placeNote" | "item" | "assembly" | "itemInteraction" | "importedFile" | "group" | "personGroup" | "groupGroup" | "placeGroup" | "note" | "theorySnapshot" | "theorySnapshotSource" | "stateDefinition" | "state" | "assistantMessage"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -2223,6 +2224,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    InteractionParticipant: {
+      payload: Prisma.$InteractionParticipantPayload<ExtArgs>
+      fields: Prisma.InteractionParticipantFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.InteractionParticipantFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InteractionParticipantPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.InteractionParticipantFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InteractionParticipantPayload>
+        }
+        findFirst: {
+          args: Prisma.InteractionParticipantFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InteractionParticipantPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.InteractionParticipantFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InteractionParticipantPayload>
+        }
+        findMany: {
+          args: Prisma.InteractionParticipantFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InteractionParticipantPayload>[]
+        }
+        create: {
+          args: Prisma.InteractionParticipantCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InteractionParticipantPayload>
+        }
+        createMany: {
+          args: Prisma.InteractionParticipantCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.InteractionParticipantCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InteractionParticipantPayload>[]
+        }
+        delete: {
+          args: Prisma.InteractionParticipantDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InteractionParticipantPayload>
+        }
+        update: {
+          args: Prisma.InteractionParticipantUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InteractionParticipantPayload>
+        }
+        deleteMany: {
+          args: Prisma.InteractionParticipantDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.InteractionParticipantUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.InteractionParticipantUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InteractionParticipantPayload>[]
+        }
+        upsert: {
+          args: Prisma.InteractionParticipantUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InteractionParticipantPayload>
+        }
+        aggregate: {
+          args: Prisma.InteractionParticipantAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateInteractionParticipant>
+        }
+        groupBy: {
+          args: Prisma.InteractionParticipantGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.InteractionParticipantGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.InteractionParticipantCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.InteractionParticipantCountAggregateOutputType> | number
+        }
+      }
+    }
     Plan: {
       payload: Prisma.$PlanPayload<ExtArgs>
       fields: Prisma.PlanFieldRefs
@@ -3918,11 +3993,11 @@ export const CalendarConnectionScalarFieldEnum = {
   accountEmail: 'accountEmail',
   calendarId: 'calendarId',
   calendarSummary: 'calendarSummary',
-  accessToken: 'accessToken',
-  refreshToken: 'refreshToken',
+  accessTokenEncrypted: 'accessTokenEncrypted',
+  refreshTokenEncrypted: 'refreshTokenEncrypted',
   expiresAt: 'expiresAt',
   scope: 'scope',
-  syncToken: 'syncToken',
+  syncTokenEncrypted: 'syncTokenEncrypted',
   lastSyncedAt: 'lastSyncedAt',
   lastError: 'lastError'
 } as const
@@ -3958,8 +4033,8 @@ export const GmailConnectionScalarFieldEnum = {
   status: 'status',
   accountEmail: 'accountEmail',
   mailboxId: 'mailboxId',
-  accessToken: 'accessToken',
-  refreshToken: 'refreshToken',
+  accessTokenEncrypted: 'accessTokenEncrypted',
+  refreshTokenEncrypted: 'refreshTokenEncrypted',
   expiresAt: 'expiresAt',
   scope: 'scope',
   historyId: 'historyId',
@@ -3998,8 +4073,8 @@ export const EraConnectionScalarFieldEnum = {
   updatedAt: 'updatedAt',
   status: 'status',
   accountEmail: 'accountEmail',
-  accessToken: 'accessToken',
-  refreshToken: 'refreshToken',
+  accessTokenEncrypted: 'accessTokenEncrypted',
+  refreshTokenEncrypted: 'refreshTokenEncrypted',
   expiresAt: 'expiresAt',
   scope: 'scope',
   lastSyncedAt: 'lastSyncedAt',
@@ -4160,6 +4235,18 @@ export const InteractionScalarFieldEnum = {
 } as const
 
 export type InteractionScalarFieldEnum = (typeof InteractionScalarFieldEnum)[keyof typeof InteractionScalarFieldEnum]
+
+
+export const InteractionParticipantScalarFieldEnum = {
+  id: 'id',
+  interactionId: 'interactionId',
+  entityType: 'entityType',
+  entityId: 'entityId',
+  role: 'role',
+  workspaceId: 'workspaceId'
+} as const
+
+export type InteractionParticipantScalarFieldEnum = (typeof InteractionParticipantScalarFieldEnum)[keyof typeof InteractionParticipantScalarFieldEnum]
 
 
 export const PlanScalarFieldEnum = {
@@ -4538,6 +4625,13 @@ export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel
 
 
 /**
+ * Reference to a field of type 'WorkspaceRole'
+ */
+export type EnumWorkspaceRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'WorkspaceRole'>
+    
+
+
+/**
  * Reference to a field of type 'Int'
  */
 export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
@@ -4555,6 +4649,13 @@ export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel,
  * Reference to a field of type 'Float'
  */
 export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
+    
+
+
+/**
+ * Reference to a field of type 'PlanStatus'
+ */
+export type EnumPlanStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PlanStatus'>
     
 
 
@@ -4733,6 +4834,7 @@ export type GlobalOmitConfig = {
   stagedInteraction?: Prisma.StagedInteractionOmit
   event?: Prisma.EventOmit
   interaction?: Prisma.InteractionOmit
+  interactionParticipant?: Prisma.InteractionParticipantOmit
   plan?: Prisma.PlanOmit
   planExpectedPerson?: Prisma.PlanExpectedPersonOmit
   place?: Prisma.PlaceOmit

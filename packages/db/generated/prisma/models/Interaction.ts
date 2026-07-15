@@ -328,7 +328,7 @@ export type InteractionWhereInput = {
   notes?: Prisma.StringNullableFilter<"Interaction"> | string | null
   actionItems?: Prisma.StringNullableFilter<"Interaction"> | string | null
   billable?: Prisma.BoolFilter<"Interaction"> | boolean
-  amount?: Prisma.FloatNullableFilter<"Interaction"> | number | null
+  amount?: Prisma.IntNullableFilter<"Interaction"> | number | null
   direction?: Prisma.StringNullableFilter<"Interaction"> | string | null
   sourceFileId?: Prisma.StringNullableFilter<"Interaction"> | string | null
   sourceNoteId?: Prisma.StringNullableFilter<"Interaction"> | string | null
@@ -341,6 +341,7 @@ export type InteractionWhereInput = {
   itemInteractions?: Prisma.ItemInteractionListRelationFilter
   gmailLinks?: Prisma.GmailMessageLinkListRelationFilter
   eraLinks?: Prisma.EraTransactionLinkListRelationFilter
+  participants?: Prisma.InteractionParticipantListRelationFilter
 }
 
 export type InteractionOrderByWithRelationInput = {
@@ -372,6 +373,7 @@ export type InteractionOrderByWithRelationInput = {
   itemInteractions?: Prisma.ItemInteractionOrderByRelationAggregateInput
   gmailLinks?: Prisma.GmailMessageLinkOrderByRelationAggregateInput
   eraLinks?: Prisma.EraTransactionLinkOrderByRelationAggregateInput
+  participants?: Prisma.InteractionParticipantOrderByRelationAggregateInput
 }
 
 export type InteractionWhereUniqueInput = Prisma.AtLeast<{
@@ -393,7 +395,7 @@ export type InteractionWhereUniqueInput = Prisma.AtLeast<{
   notes?: Prisma.StringNullableFilter<"Interaction"> | string | null
   actionItems?: Prisma.StringNullableFilter<"Interaction"> | string | null
   billable?: Prisma.BoolFilter<"Interaction"> | boolean
-  amount?: Prisma.FloatNullableFilter<"Interaction"> | number | null
+  amount?: Prisma.IntNullableFilter<"Interaction"> | number | null
   direction?: Prisma.StringNullableFilter<"Interaction"> | string | null
   sourceFileId?: Prisma.StringNullableFilter<"Interaction"> | string | null
   sourceNoteId?: Prisma.StringNullableFilter<"Interaction"> | string | null
@@ -406,6 +408,7 @@ export type InteractionWhereUniqueInput = Prisma.AtLeast<{
   itemInteractions?: Prisma.ItemInteractionListRelationFilter
   gmailLinks?: Prisma.GmailMessageLinkListRelationFilter
   eraLinks?: Prisma.EraTransactionLinkListRelationFilter
+  participants?: Prisma.InteractionParticipantListRelationFilter
 }, "id">
 
 export type InteractionOrderByWithAggregationInput = {
@@ -454,7 +457,7 @@ export type InteractionScalarWhereWithAggregatesInput = {
   notes?: Prisma.StringNullableWithAggregatesFilter<"Interaction"> | string | null
   actionItems?: Prisma.StringNullableWithAggregatesFilter<"Interaction"> | string | null
   billable?: Prisma.BoolWithAggregatesFilter<"Interaction"> | boolean
-  amount?: Prisma.FloatNullableWithAggregatesFilter<"Interaction"> | number | null
+  amount?: Prisma.IntNullableWithAggregatesFilter<"Interaction"> | number | null
   direction?: Prisma.StringNullableWithAggregatesFilter<"Interaction"> | string | null
   sourceFileId?: Prisma.StringNullableWithAggregatesFilter<"Interaction"> | string | null
   sourceNoteId?: Prisma.StringNullableWithAggregatesFilter<"Interaction"> | string | null
@@ -483,6 +486,7 @@ export type InteractionCreateInput = {
   itemInteractions?: Prisma.ItemInteractionCreateNestedManyWithoutInteractionInput
   gmailLinks?: Prisma.GmailMessageLinkCreateNestedManyWithoutInteractionInput
   eraLinks?: Prisma.EraTransactionLinkCreateNestedManyWithoutInteractionInput
+  participants?: Prisma.InteractionParticipantCreateNestedManyWithoutInteractionInput
 }
 
 export type InteractionUncheckedCreateInput = {
@@ -508,6 +512,7 @@ export type InteractionUncheckedCreateInput = {
   itemInteractions?: Prisma.ItemInteractionUncheckedCreateNestedManyWithoutInteractionInput
   gmailLinks?: Prisma.GmailMessageLinkUncheckedCreateNestedManyWithoutInteractionInput
   eraLinks?: Prisma.EraTransactionLinkUncheckedCreateNestedManyWithoutInteractionInput
+  participants?: Prisma.InteractionParticipantUncheckedCreateNestedManyWithoutInteractionInput
 }
 
 export type InteractionUpdateInput = {
@@ -522,7 +527,7 @@ export type InteractionUpdateInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actionItems?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   billable?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  amount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  amount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutInteractionsNestedInput
   person?: Prisma.PersonUpdateOneWithoutInteractionsNestedInput
@@ -533,6 +538,7 @@ export type InteractionUpdateInput = {
   itemInteractions?: Prisma.ItemInteractionUpdateManyWithoutInteractionNestedInput
   gmailLinks?: Prisma.GmailMessageLinkUpdateManyWithoutInteractionNestedInput
   eraLinks?: Prisma.EraTransactionLinkUpdateManyWithoutInteractionNestedInput
+  participants?: Prisma.InteractionParticipantUpdateManyWithoutInteractionNestedInput
 }
 
 export type InteractionUncheckedUpdateInput = {
@@ -551,13 +557,14 @@ export type InteractionUncheckedUpdateInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actionItems?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   billable?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  amount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  amount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   itemInteractions?: Prisma.ItemInteractionUncheckedUpdateManyWithoutInteractionNestedInput
   gmailLinks?: Prisma.GmailMessageLinkUncheckedUpdateManyWithoutInteractionNestedInput
   eraLinks?: Prisma.EraTransactionLinkUncheckedUpdateManyWithoutInteractionNestedInput
+  participants?: Prisma.InteractionParticipantUncheckedUpdateManyWithoutInteractionNestedInput
 }
 
 export type InteractionCreateManyInput = {
@@ -594,7 +601,7 @@ export type InteractionUpdateManyMutationInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actionItems?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   billable?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  amount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  amount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
@@ -614,7 +621,7 @@ export type InteractionUncheckedUpdateManyInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actionItems?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   billable?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  amount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  amount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -882,6 +889,20 @@ export type NullableIntFieldUpdateOperationsInput = {
   divide?: number
 }
 
+export type InteractionCreateNestedOneWithoutParticipantsInput = {
+  create?: Prisma.XOR<Prisma.InteractionCreateWithoutParticipantsInput, Prisma.InteractionUncheckedCreateWithoutParticipantsInput>
+  connectOrCreate?: Prisma.InteractionCreateOrConnectWithoutParticipantsInput
+  connect?: Prisma.InteractionWhereUniqueInput
+}
+
+export type InteractionUpdateOneRequiredWithoutParticipantsNestedInput = {
+  create?: Prisma.XOR<Prisma.InteractionCreateWithoutParticipantsInput, Prisma.InteractionUncheckedCreateWithoutParticipantsInput>
+  connectOrCreate?: Prisma.InteractionCreateOrConnectWithoutParticipantsInput
+  upsert?: Prisma.InteractionUpsertWithoutParticipantsInput
+  connect?: Prisma.InteractionWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.InteractionUpdateToOneWithWhereWithoutParticipantsInput, Prisma.InteractionUpdateWithoutParticipantsInput>, Prisma.InteractionUncheckedUpdateWithoutParticipantsInput>
+}
+
 export type InteractionCreateNestedManyWithoutPlaceInput = {
   create?: Prisma.XOR<Prisma.InteractionCreateWithoutPlaceInput, Prisma.InteractionUncheckedCreateWithoutPlaceInput> | Prisma.InteractionCreateWithoutPlaceInput[] | Prisma.InteractionUncheckedCreateWithoutPlaceInput[]
   connectOrCreate?: Prisma.InteractionCreateOrConnectWithoutPlaceInput | Prisma.InteractionCreateOrConnectWithoutPlaceInput[]
@@ -1044,6 +1065,7 @@ export type InteractionCreateWithoutWorkspaceInput = {
   itemInteractions?: Prisma.ItemInteractionCreateNestedManyWithoutInteractionInput
   gmailLinks?: Prisma.GmailMessageLinkCreateNestedManyWithoutInteractionInput
   eraLinks?: Prisma.EraTransactionLinkCreateNestedManyWithoutInteractionInput
+  participants?: Prisma.InteractionParticipantCreateNestedManyWithoutInteractionInput
 }
 
 export type InteractionUncheckedCreateWithoutWorkspaceInput = {
@@ -1068,6 +1090,7 @@ export type InteractionUncheckedCreateWithoutWorkspaceInput = {
   itemInteractions?: Prisma.ItemInteractionUncheckedCreateNestedManyWithoutInteractionInput
   gmailLinks?: Prisma.GmailMessageLinkUncheckedCreateNestedManyWithoutInteractionInput
   eraLinks?: Prisma.EraTransactionLinkUncheckedCreateNestedManyWithoutInteractionInput
+  participants?: Prisma.InteractionParticipantUncheckedCreateNestedManyWithoutInteractionInput
 }
 
 export type InteractionCreateOrConnectWithoutWorkspaceInput = {
@@ -1114,7 +1137,7 @@ export type InteractionScalarWhereInput = {
   notes?: Prisma.StringNullableFilter<"Interaction"> | string | null
   actionItems?: Prisma.StringNullableFilter<"Interaction"> | string | null
   billable?: Prisma.BoolFilter<"Interaction"> | boolean
-  amount?: Prisma.FloatNullableFilter<"Interaction"> | number | null
+  amount?: Prisma.IntNullableFilter<"Interaction"> | number | null
   direction?: Prisma.StringNullableFilter<"Interaction"> | string | null
   sourceFileId?: Prisma.StringNullableFilter<"Interaction"> | string | null
   sourceNoteId?: Prisma.StringNullableFilter<"Interaction"> | string | null
@@ -1142,6 +1165,7 @@ export type InteractionCreateWithoutPersonInput = {
   itemInteractions?: Prisma.ItemInteractionCreateNestedManyWithoutInteractionInput
   gmailLinks?: Prisma.GmailMessageLinkCreateNestedManyWithoutInteractionInput
   eraLinks?: Prisma.EraTransactionLinkCreateNestedManyWithoutInteractionInput
+  participants?: Prisma.InteractionParticipantCreateNestedManyWithoutInteractionInput
 }
 
 export type InteractionUncheckedCreateWithoutPersonInput = {
@@ -1166,6 +1190,7 @@ export type InteractionUncheckedCreateWithoutPersonInput = {
   itemInteractions?: Prisma.ItemInteractionUncheckedCreateNestedManyWithoutInteractionInput
   gmailLinks?: Prisma.GmailMessageLinkUncheckedCreateNestedManyWithoutInteractionInput
   eraLinks?: Prisma.EraTransactionLinkUncheckedCreateNestedManyWithoutInteractionInput
+  participants?: Prisma.InteractionParticipantUncheckedCreateNestedManyWithoutInteractionInput
 }
 
 export type InteractionCreateOrConnectWithoutPersonInput = {
@@ -1215,6 +1240,7 @@ export type InteractionCreateWithoutGmailLinksInput = {
   sourceNote?: Prisma.NoteCreateNestedOneWithoutInteractionsInput
   itemInteractions?: Prisma.ItemInteractionCreateNestedManyWithoutInteractionInput
   eraLinks?: Prisma.EraTransactionLinkCreateNestedManyWithoutInteractionInput
+  participants?: Prisma.InteractionParticipantCreateNestedManyWithoutInteractionInput
 }
 
 export type InteractionUncheckedCreateWithoutGmailLinksInput = {
@@ -1239,6 +1265,7 @@ export type InteractionUncheckedCreateWithoutGmailLinksInput = {
   sourceNoteId?: string | null
   itemInteractions?: Prisma.ItemInteractionUncheckedCreateNestedManyWithoutInteractionInput
   eraLinks?: Prisma.EraTransactionLinkUncheckedCreateNestedManyWithoutInteractionInput
+  participants?: Prisma.InteractionParticipantUncheckedCreateNestedManyWithoutInteractionInput
 }
 
 export type InteractionCreateOrConnectWithoutGmailLinksInput = {
@@ -1269,7 +1296,7 @@ export type InteractionUpdateWithoutGmailLinksInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actionItems?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   billable?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  amount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  amount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutInteractionsNestedInput
   person?: Prisma.PersonUpdateOneWithoutInteractionsNestedInput
@@ -1279,6 +1306,7 @@ export type InteractionUpdateWithoutGmailLinksInput = {
   sourceNote?: Prisma.NoteUpdateOneWithoutInteractionsNestedInput
   itemInteractions?: Prisma.ItemInteractionUpdateManyWithoutInteractionNestedInput
   eraLinks?: Prisma.EraTransactionLinkUpdateManyWithoutInteractionNestedInput
+  participants?: Prisma.InteractionParticipantUpdateManyWithoutInteractionNestedInput
 }
 
 export type InteractionUncheckedUpdateWithoutGmailLinksInput = {
@@ -1297,12 +1325,13 @@ export type InteractionUncheckedUpdateWithoutGmailLinksInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actionItems?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   billable?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  amount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  amount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   itemInteractions?: Prisma.ItemInteractionUncheckedUpdateManyWithoutInteractionNestedInput
   eraLinks?: Prisma.EraTransactionLinkUncheckedUpdateManyWithoutInteractionNestedInput
+  participants?: Prisma.InteractionParticipantUncheckedUpdateManyWithoutInteractionNestedInput
 }
 
 export type InteractionCreateWithoutEraLinksInput = {
@@ -1327,6 +1356,7 @@ export type InteractionCreateWithoutEraLinksInput = {
   sourceNote?: Prisma.NoteCreateNestedOneWithoutInteractionsInput
   itemInteractions?: Prisma.ItemInteractionCreateNestedManyWithoutInteractionInput
   gmailLinks?: Prisma.GmailMessageLinkCreateNestedManyWithoutInteractionInput
+  participants?: Prisma.InteractionParticipantCreateNestedManyWithoutInteractionInput
 }
 
 export type InteractionUncheckedCreateWithoutEraLinksInput = {
@@ -1351,6 +1381,7 @@ export type InteractionUncheckedCreateWithoutEraLinksInput = {
   sourceNoteId?: string | null
   itemInteractions?: Prisma.ItemInteractionUncheckedCreateNestedManyWithoutInteractionInput
   gmailLinks?: Prisma.GmailMessageLinkUncheckedCreateNestedManyWithoutInteractionInput
+  participants?: Prisma.InteractionParticipantUncheckedCreateNestedManyWithoutInteractionInput
 }
 
 export type InteractionCreateOrConnectWithoutEraLinksInput = {
@@ -1381,7 +1412,7 @@ export type InteractionUpdateWithoutEraLinksInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actionItems?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   billable?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  amount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  amount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutInteractionsNestedInput
   person?: Prisma.PersonUpdateOneWithoutInteractionsNestedInput
@@ -1391,6 +1422,7 @@ export type InteractionUpdateWithoutEraLinksInput = {
   sourceNote?: Prisma.NoteUpdateOneWithoutInteractionsNestedInput
   itemInteractions?: Prisma.ItemInteractionUpdateManyWithoutInteractionNestedInput
   gmailLinks?: Prisma.GmailMessageLinkUpdateManyWithoutInteractionNestedInput
+  participants?: Prisma.InteractionParticipantUpdateManyWithoutInteractionNestedInput
 }
 
 export type InteractionUncheckedUpdateWithoutEraLinksInput = {
@@ -1409,12 +1441,13 @@ export type InteractionUncheckedUpdateWithoutEraLinksInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actionItems?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   billable?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  amount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  amount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   itemInteractions?: Prisma.ItemInteractionUncheckedUpdateManyWithoutInteractionNestedInput
   gmailLinks?: Prisma.GmailMessageLinkUncheckedUpdateManyWithoutInteractionNestedInput
+  participants?: Prisma.InteractionParticipantUncheckedUpdateManyWithoutInteractionNestedInput
 }
 
 export type InteractionCreateWithoutEventInput = {
@@ -1439,6 +1472,7 @@ export type InteractionCreateWithoutEventInput = {
   itemInteractions?: Prisma.ItemInteractionCreateNestedManyWithoutInteractionInput
   gmailLinks?: Prisma.GmailMessageLinkCreateNestedManyWithoutInteractionInput
   eraLinks?: Prisma.EraTransactionLinkCreateNestedManyWithoutInteractionInput
+  participants?: Prisma.InteractionParticipantCreateNestedManyWithoutInteractionInput
 }
 
 export type InteractionUncheckedCreateWithoutEventInput = {
@@ -1463,6 +1497,7 @@ export type InteractionUncheckedCreateWithoutEventInput = {
   itemInteractions?: Prisma.ItemInteractionUncheckedCreateNestedManyWithoutInteractionInput
   gmailLinks?: Prisma.GmailMessageLinkUncheckedCreateNestedManyWithoutInteractionInput
   eraLinks?: Prisma.EraTransactionLinkUncheckedCreateNestedManyWithoutInteractionInput
+  participants?: Prisma.InteractionParticipantUncheckedCreateNestedManyWithoutInteractionInput
 }
 
 export type InteractionCreateOrConnectWithoutEventInput = {
@@ -1490,6 +1525,122 @@ export type InteractionUpdateManyWithWhereWithoutEventInput = {
   data: Prisma.XOR<Prisma.InteractionUpdateManyMutationInput, Prisma.InteractionUncheckedUpdateManyWithoutEventInput>
 }
 
+export type InteractionCreateWithoutParticipantsInput = {
+  id?: string
+  createdAt?: Date | string
+  type: string
+  timestamp: Date | string
+  duration?: number | null
+  emotionalWeight?: string | null
+  outcome?: string | null
+  summary?: string | null
+  notes?: string | null
+  actionItems?: string | null
+  billable?: boolean
+  amount?: number | null
+  direction?: string | null
+  workspace?: Prisma.WorkspaceCreateNestedOneWithoutInteractionsInput
+  person?: Prisma.PersonCreateNestedOneWithoutInteractionsInput
+  event?: Prisma.EventCreateNestedOneWithoutInteractionsInput
+  place?: Prisma.PlaceCreateNestedOneWithoutInteractionsInput
+  sourceFile?: Prisma.ImportedFileCreateNestedOneWithoutInteractionsInput
+  sourceNote?: Prisma.NoteCreateNestedOneWithoutInteractionsInput
+  itemInteractions?: Prisma.ItemInteractionCreateNestedManyWithoutInteractionInput
+  gmailLinks?: Prisma.GmailMessageLinkCreateNestedManyWithoutInteractionInput
+  eraLinks?: Prisma.EraTransactionLinkCreateNestedManyWithoutInteractionInput
+}
+
+export type InteractionUncheckedCreateWithoutParticipantsInput = {
+  id?: string
+  workspaceId?: string
+  createdAt?: Date | string
+  personId?: string | null
+  eventId?: string | null
+  placeId?: string | null
+  type: string
+  timestamp: Date | string
+  duration?: number | null
+  emotionalWeight?: string | null
+  outcome?: string | null
+  summary?: string | null
+  notes?: string | null
+  actionItems?: string | null
+  billable?: boolean
+  amount?: number | null
+  direction?: string | null
+  sourceFileId?: string | null
+  sourceNoteId?: string | null
+  itemInteractions?: Prisma.ItemInteractionUncheckedCreateNestedManyWithoutInteractionInput
+  gmailLinks?: Prisma.GmailMessageLinkUncheckedCreateNestedManyWithoutInteractionInput
+  eraLinks?: Prisma.EraTransactionLinkUncheckedCreateNestedManyWithoutInteractionInput
+}
+
+export type InteractionCreateOrConnectWithoutParticipantsInput = {
+  where: Prisma.InteractionWhereUniqueInput
+  create: Prisma.XOR<Prisma.InteractionCreateWithoutParticipantsInput, Prisma.InteractionUncheckedCreateWithoutParticipantsInput>
+}
+
+export type InteractionUpsertWithoutParticipantsInput = {
+  update: Prisma.XOR<Prisma.InteractionUpdateWithoutParticipantsInput, Prisma.InteractionUncheckedUpdateWithoutParticipantsInput>
+  create: Prisma.XOR<Prisma.InteractionCreateWithoutParticipantsInput, Prisma.InteractionUncheckedCreateWithoutParticipantsInput>
+  where?: Prisma.InteractionWhereInput
+}
+
+export type InteractionUpdateToOneWithWhereWithoutParticipantsInput = {
+  where?: Prisma.InteractionWhereInput
+  data: Prisma.XOR<Prisma.InteractionUpdateWithoutParticipantsInput, Prisma.InteractionUncheckedUpdateWithoutParticipantsInput>
+}
+
+export type InteractionUpdateWithoutParticipantsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  duration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  emotionalWeight?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  outcome?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  actionItems?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billable?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  amount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutInteractionsNestedInput
+  person?: Prisma.PersonUpdateOneWithoutInteractionsNestedInput
+  event?: Prisma.EventUpdateOneWithoutInteractionsNestedInput
+  place?: Prisma.PlaceUpdateOneWithoutInteractionsNestedInput
+  sourceFile?: Prisma.ImportedFileUpdateOneWithoutInteractionsNestedInput
+  sourceNote?: Prisma.NoteUpdateOneWithoutInteractionsNestedInput
+  itemInteractions?: Prisma.ItemInteractionUpdateManyWithoutInteractionNestedInput
+  gmailLinks?: Prisma.GmailMessageLinkUpdateManyWithoutInteractionNestedInput
+  eraLinks?: Prisma.EraTransactionLinkUpdateManyWithoutInteractionNestedInput
+}
+
+export type InteractionUncheckedUpdateWithoutParticipantsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  personId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  eventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  placeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  duration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  emotionalWeight?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  outcome?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  actionItems?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billable?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  amount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  itemInteractions?: Prisma.ItemInteractionUncheckedUpdateManyWithoutInteractionNestedInput
+  gmailLinks?: Prisma.GmailMessageLinkUncheckedUpdateManyWithoutInteractionNestedInput
+  eraLinks?: Prisma.EraTransactionLinkUncheckedUpdateManyWithoutInteractionNestedInput
+}
+
 export type InteractionCreateWithoutPlaceInput = {
   id?: string
   createdAt?: Date | string
@@ -1512,6 +1663,7 @@ export type InteractionCreateWithoutPlaceInput = {
   itemInteractions?: Prisma.ItemInteractionCreateNestedManyWithoutInteractionInput
   gmailLinks?: Prisma.GmailMessageLinkCreateNestedManyWithoutInteractionInput
   eraLinks?: Prisma.EraTransactionLinkCreateNestedManyWithoutInteractionInput
+  participants?: Prisma.InteractionParticipantCreateNestedManyWithoutInteractionInput
 }
 
 export type InteractionUncheckedCreateWithoutPlaceInput = {
@@ -1536,6 +1688,7 @@ export type InteractionUncheckedCreateWithoutPlaceInput = {
   itemInteractions?: Prisma.ItemInteractionUncheckedCreateNestedManyWithoutInteractionInput
   gmailLinks?: Prisma.GmailMessageLinkUncheckedCreateNestedManyWithoutInteractionInput
   eraLinks?: Prisma.EraTransactionLinkUncheckedCreateNestedManyWithoutInteractionInput
+  participants?: Prisma.InteractionParticipantUncheckedCreateNestedManyWithoutInteractionInput
 }
 
 export type InteractionCreateOrConnectWithoutPlaceInput = {
@@ -1585,6 +1738,7 @@ export type InteractionCreateWithoutItemInteractionsInput = {
   sourceNote?: Prisma.NoteCreateNestedOneWithoutInteractionsInput
   gmailLinks?: Prisma.GmailMessageLinkCreateNestedManyWithoutInteractionInput
   eraLinks?: Prisma.EraTransactionLinkCreateNestedManyWithoutInteractionInput
+  participants?: Prisma.InteractionParticipantCreateNestedManyWithoutInteractionInput
 }
 
 export type InteractionUncheckedCreateWithoutItemInteractionsInput = {
@@ -1609,6 +1763,7 @@ export type InteractionUncheckedCreateWithoutItemInteractionsInput = {
   sourceNoteId?: string | null
   gmailLinks?: Prisma.GmailMessageLinkUncheckedCreateNestedManyWithoutInteractionInput
   eraLinks?: Prisma.EraTransactionLinkUncheckedCreateNestedManyWithoutInteractionInput
+  participants?: Prisma.InteractionParticipantUncheckedCreateNestedManyWithoutInteractionInput
 }
 
 export type InteractionCreateOrConnectWithoutItemInteractionsInput = {
@@ -1639,7 +1794,7 @@ export type InteractionUpdateWithoutItemInteractionsInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actionItems?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   billable?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  amount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  amount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutInteractionsNestedInput
   person?: Prisma.PersonUpdateOneWithoutInteractionsNestedInput
@@ -1649,6 +1804,7 @@ export type InteractionUpdateWithoutItemInteractionsInput = {
   sourceNote?: Prisma.NoteUpdateOneWithoutInteractionsNestedInput
   gmailLinks?: Prisma.GmailMessageLinkUpdateManyWithoutInteractionNestedInput
   eraLinks?: Prisma.EraTransactionLinkUpdateManyWithoutInteractionNestedInput
+  participants?: Prisma.InteractionParticipantUpdateManyWithoutInteractionNestedInput
 }
 
 export type InteractionUncheckedUpdateWithoutItemInteractionsInput = {
@@ -1667,12 +1823,13 @@ export type InteractionUncheckedUpdateWithoutItemInteractionsInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actionItems?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   billable?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  amount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  amount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gmailLinks?: Prisma.GmailMessageLinkUncheckedUpdateManyWithoutInteractionNestedInput
   eraLinks?: Prisma.EraTransactionLinkUncheckedUpdateManyWithoutInteractionNestedInput
+  participants?: Prisma.InteractionParticipantUncheckedUpdateManyWithoutInteractionNestedInput
 }
 
 export type InteractionCreateWithoutSourceFileInput = {
@@ -1697,6 +1854,7 @@ export type InteractionCreateWithoutSourceFileInput = {
   itemInteractions?: Prisma.ItemInteractionCreateNestedManyWithoutInteractionInput
   gmailLinks?: Prisma.GmailMessageLinkCreateNestedManyWithoutInteractionInput
   eraLinks?: Prisma.EraTransactionLinkCreateNestedManyWithoutInteractionInput
+  participants?: Prisma.InteractionParticipantCreateNestedManyWithoutInteractionInput
 }
 
 export type InteractionUncheckedCreateWithoutSourceFileInput = {
@@ -1721,6 +1879,7 @@ export type InteractionUncheckedCreateWithoutSourceFileInput = {
   itemInteractions?: Prisma.ItemInteractionUncheckedCreateNestedManyWithoutInteractionInput
   gmailLinks?: Prisma.GmailMessageLinkUncheckedCreateNestedManyWithoutInteractionInput
   eraLinks?: Prisma.EraTransactionLinkUncheckedCreateNestedManyWithoutInteractionInput
+  participants?: Prisma.InteractionParticipantUncheckedCreateNestedManyWithoutInteractionInput
 }
 
 export type InteractionCreateOrConnectWithoutSourceFileInput = {
@@ -1770,6 +1929,7 @@ export type InteractionCreateWithoutSourceNoteInput = {
   itemInteractions?: Prisma.ItemInteractionCreateNestedManyWithoutInteractionInput
   gmailLinks?: Prisma.GmailMessageLinkCreateNestedManyWithoutInteractionInput
   eraLinks?: Prisma.EraTransactionLinkCreateNestedManyWithoutInteractionInput
+  participants?: Prisma.InteractionParticipantCreateNestedManyWithoutInteractionInput
 }
 
 export type InteractionUncheckedCreateWithoutSourceNoteInput = {
@@ -1794,6 +1954,7 @@ export type InteractionUncheckedCreateWithoutSourceNoteInput = {
   itemInteractions?: Prisma.ItemInteractionUncheckedCreateNestedManyWithoutInteractionInput
   gmailLinks?: Prisma.GmailMessageLinkUncheckedCreateNestedManyWithoutInteractionInput
   eraLinks?: Prisma.EraTransactionLinkUncheckedCreateNestedManyWithoutInteractionInput
+  participants?: Prisma.InteractionParticipantUncheckedCreateNestedManyWithoutInteractionInput
 }
 
 export type InteractionCreateOrConnectWithoutSourceNoteInput = {
@@ -1854,7 +2015,7 @@ export type InteractionUpdateWithoutWorkspaceInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actionItems?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   billable?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  amount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  amount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   person?: Prisma.PersonUpdateOneWithoutInteractionsNestedInput
   event?: Prisma.EventUpdateOneWithoutInteractionsNestedInput
@@ -1864,6 +2025,7 @@ export type InteractionUpdateWithoutWorkspaceInput = {
   itemInteractions?: Prisma.ItemInteractionUpdateManyWithoutInteractionNestedInput
   gmailLinks?: Prisma.GmailMessageLinkUpdateManyWithoutInteractionNestedInput
   eraLinks?: Prisma.EraTransactionLinkUpdateManyWithoutInteractionNestedInput
+  participants?: Prisma.InteractionParticipantUpdateManyWithoutInteractionNestedInput
 }
 
 export type InteractionUncheckedUpdateWithoutWorkspaceInput = {
@@ -1881,13 +2043,14 @@ export type InteractionUncheckedUpdateWithoutWorkspaceInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actionItems?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   billable?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  amount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  amount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   itemInteractions?: Prisma.ItemInteractionUncheckedUpdateManyWithoutInteractionNestedInput
   gmailLinks?: Prisma.GmailMessageLinkUncheckedUpdateManyWithoutInteractionNestedInput
   eraLinks?: Prisma.EraTransactionLinkUncheckedUpdateManyWithoutInteractionNestedInput
+  participants?: Prisma.InteractionParticipantUncheckedUpdateManyWithoutInteractionNestedInput
 }
 
 export type InteractionUncheckedUpdateManyWithoutWorkspaceInput = {
@@ -1905,7 +2068,7 @@ export type InteractionUncheckedUpdateManyWithoutWorkspaceInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actionItems?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   billable?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  amount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  amount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1944,7 +2107,7 @@ export type InteractionUpdateWithoutPersonInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actionItems?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   billable?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  amount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  amount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutInteractionsNestedInput
   event?: Prisma.EventUpdateOneWithoutInteractionsNestedInput
@@ -1954,6 +2117,7 @@ export type InteractionUpdateWithoutPersonInput = {
   itemInteractions?: Prisma.ItemInteractionUpdateManyWithoutInteractionNestedInput
   gmailLinks?: Prisma.GmailMessageLinkUpdateManyWithoutInteractionNestedInput
   eraLinks?: Prisma.EraTransactionLinkUpdateManyWithoutInteractionNestedInput
+  participants?: Prisma.InteractionParticipantUpdateManyWithoutInteractionNestedInput
 }
 
 export type InteractionUncheckedUpdateWithoutPersonInput = {
@@ -1971,13 +2135,14 @@ export type InteractionUncheckedUpdateWithoutPersonInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actionItems?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   billable?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  amount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  amount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   itemInteractions?: Prisma.ItemInteractionUncheckedUpdateManyWithoutInteractionNestedInput
   gmailLinks?: Prisma.GmailMessageLinkUncheckedUpdateManyWithoutInteractionNestedInput
   eraLinks?: Prisma.EraTransactionLinkUncheckedUpdateManyWithoutInteractionNestedInput
+  participants?: Prisma.InteractionParticipantUncheckedUpdateManyWithoutInteractionNestedInput
 }
 
 export type InteractionUncheckedUpdateManyWithoutPersonInput = {
@@ -1995,7 +2160,7 @@ export type InteractionUncheckedUpdateManyWithoutPersonInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actionItems?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   billable?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  amount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  amount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2034,7 +2199,7 @@ export type InteractionUpdateWithoutEventInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actionItems?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   billable?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  amount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  amount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutInteractionsNestedInput
   person?: Prisma.PersonUpdateOneWithoutInteractionsNestedInput
@@ -2044,6 +2209,7 @@ export type InteractionUpdateWithoutEventInput = {
   itemInteractions?: Prisma.ItemInteractionUpdateManyWithoutInteractionNestedInput
   gmailLinks?: Prisma.GmailMessageLinkUpdateManyWithoutInteractionNestedInput
   eraLinks?: Prisma.EraTransactionLinkUpdateManyWithoutInteractionNestedInput
+  participants?: Prisma.InteractionParticipantUpdateManyWithoutInteractionNestedInput
 }
 
 export type InteractionUncheckedUpdateWithoutEventInput = {
@@ -2061,13 +2227,14 @@ export type InteractionUncheckedUpdateWithoutEventInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actionItems?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   billable?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  amount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  amount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   itemInteractions?: Prisma.ItemInteractionUncheckedUpdateManyWithoutInteractionNestedInput
   gmailLinks?: Prisma.GmailMessageLinkUncheckedUpdateManyWithoutInteractionNestedInput
   eraLinks?: Prisma.EraTransactionLinkUncheckedUpdateManyWithoutInteractionNestedInput
+  participants?: Prisma.InteractionParticipantUncheckedUpdateManyWithoutInteractionNestedInput
 }
 
 export type InteractionUncheckedUpdateManyWithoutEventInput = {
@@ -2085,7 +2252,7 @@ export type InteractionUncheckedUpdateManyWithoutEventInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actionItems?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   billable?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  amount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  amount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2124,7 +2291,7 @@ export type InteractionUpdateWithoutPlaceInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actionItems?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   billable?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  amount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  amount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutInteractionsNestedInput
   person?: Prisma.PersonUpdateOneWithoutInteractionsNestedInput
@@ -2134,6 +2301,7 @@ export type InteractionUpdateWithoutPlaceInput = {
   itemInteractions?: Prisma.ItemInteractionUpdateManyWithoutInteractionNestedInput
   gmailLinks?: Prisma.GmailMessageLinkUpdateManyWithoutInteractionNestedInput
   eraLinks?: Prisma.EraTransactionLinkUpdateManyWithoutInteractionNestedInput
+  participants?: Prisma.InteractionParticipantUpdateManyWithoutInteractionNestedInput
 }
 
 export type InteractionUncheckedUpdateWithoutPlaceInput = {
@@ -2151,13 +2319,14 @@ export type InteractionUncheckedUpdateWithoutPlaceInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actionItems?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   billable?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  amount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  amount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   itemInteractions?: Prisma.ItemInteractionUncheckedUpdateManyWithoutInteractionNestedInput
   gmailLinks?: Prisma.GmailMessageLinkUncheckedUpdateManyWithoutInteractionNestedInput
   eraLinks?: Prisma.EraTransactionLinkUncheckedUpdateManyWithoutInteractionNestedInput
+  participants?: Prisma.InteractionParticipantUncheckedUpdateManyWithoutInteractionNestedInput
 }
 
 export type InteractionUncheckedUpdateManyWithoutPlaceInput = {
@@ -2175,7 +2344,7 @@ export type InteractionUncheckedUpdateManyWithoutPlaceInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actionItems?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   billable?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  amount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  amount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2214,7 +2383,7 @@ export type InteractionUpdateWithoutSourceFileInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actionItems?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   billable?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  amount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  amount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutInteractionsNestedInput
   person?: Prisma.PersonUpdateOneWithoutInteractionsNestedInput
@@ -2224,6 +2393,7 @@ export type InteractionUpdateWithoutSourceFileInput = {
   itemInteractions?: Prisma.ItemInteractionUpdateManyWithoutInteractionNestedInput
   gmailLinks?: Prisma.GmailMessageLinkUpdateManyWithoutInteractionNestedInput
   eraLinks?: Prisma.EraTransactionLinkUpdateManyWithoutInteractionNestedInput
+  participants?: Prisma.InteractionParticipantUpdateManyWithoutInteractionNestedInput
 }
 
 export type InteractionUncheckedUpdateWithoutSourceFileInput = {
@@ -2242,12 +2412,13 @@ export type InteractionUncheckedUpdateWithoutSourceFileInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actionItems?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   billable?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  amount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  amount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   itemInteractions?: Prisma.ItemInteractionUncheckedUpdateManyWithoutInteractionNestedInput
   gmailLinks?: Prisma.GmailMessageLinkUncheckedUpdateManyWithoutInteractionNestedInput
   eraLinks?: Prisma.EraTransactionLinkUncheckedUpdateManyWithoutInteractionNestedInput
+  participants?: Prisma.InteractionParticipantUncheckedUpdateManyWithoutInteractionNestedInput
 }
 
 export type InteractionUncheckedUpdateManyWithoutSourceFileInput = {
@@ -2266,7 +2437,7 @@ export type InteractionUncheckedUpdateManyWithoutSourceFileInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actionItems?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   billable?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  amount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  amount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
@@ -2304,7 +2475,7 @@ export type InteractionUpdateWithoutSourceNoteInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actionItems?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   billable?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  amount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  amount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutInteractionsNestedInput
   person?: Prisma.PersonUpdateOneWithoutInteractionsNestedInput
@@ -2314,6 +2485,7 @@ export type InteractionUpdateWithoutSourceNoteInput = {
   itemInteractions?: Prisma.ItemInteractionUpdateManyWithoutInteractionNestedInput
   gmailLinks?: Prisma.GmailMessageLinkUpdateManyWithoutInteractionNestedInput
   eraLinks?: Prisma.EraTransactionLinkUpdateManyWithoutInteractionNestedInput
+  participants?: Prisma.InteractionParticipantUpdateManyWithoutInteractionNestedInput
 }
 
 export type InteractionUncheckedUpdateWithoutSourceNoteInput = {
@@ -2332,12 +2504,13 @@ export type InteractionUncheckedUpdateWithoutSourceNoteInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actionItems?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   billable?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  amount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  amount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   itemInteractions?: Prisma.ItemInteractionUncheckedUpdateManyWithoutInteractionNestedInput
   gmailLinks?: Prisma.GmailMessageLinkUncheckedUpdateManyWithoutInteractionNestedInput
   eraLinks?: Prisma.EraTransactionLinkUncheckedUpdateManyWithoutInteractionNestedInput
+  participants?: Prisma.InteractionParticipantUncheckedUpdateManyWithoutInteractionNestedInput
 }
 
 export type InteractionUncheckedUpdateManyWithoutSourceNoteInput = {
@@ -2356,7 +2529,7 @@ export type InteractionUncheckedUpdateManyWithoutSourceNoteInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actionItems?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   billable?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  amount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  amount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
@@ -2370,12 +2543,14 @@ export type InteractionCountOutputType = {
   itemInteractions: number
   gmailLinks: number
   eraLinks: number
+  participants: number
 }
 
 export type InteractionCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   itemInteractions?: boolean | InteractionCountOutputTypeCountItemInteractionsArgs
   gmailLinks?: boolean | InteractionCountOutputTypeCountGmailLinksArgs
   eraLinks?: boolean | InteractionCountOutputTypeCountEraLinksArgs
+  participants?: boolean | InteractionCountOutputTypeCountParticipantsArgs
 }
 
 /**
@@ -2409,6 +2584,13 @@ export type InteractionCountOutputTypeCountEraLinksArgs<ExtArgs extends runtime.
   where?: Prisma.EraTransactionLinkWhereInput
 }
 
+/**
+ * InteractionCountOutputType without action
+ */
+export type InteractionCountOutputTypeCountParticipantsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.InteractionParticipantWhereInput
+}
+
 
 export type InteractionSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -2439,6 +2621,7 @@ export type InteractionSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   itemInteractions?: boolean | Prisma.Interaction$itemInteractionsArgs<ExtArgs>
   gmailLinks?: boolean | Prisma.Interaction$gmailLinksArgs<ExtArgs>
   eraLinks?: boolean | Prisma.Interaction$eraLinksArgs<ExtArgs>
+  participants?: boolean | Prisma.Interaction$participantsArgs<ExtArgs>
   _count?: boolean | Prisma.InteractionCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["interaction"]>
 
@@ -2531,6 +2714,7 @@ export type InteractionInclude<ExtArgs extends runtime.Types.Extensions.Internal
   itemInteractions?: boolean | Prisma.Interaction$itemInteractionsArgs<ExtArgs>
   gmailLinks?: boolean | Prisma.Interaction$gmailLinksArgs<ExtArgs>
   eraLinks?: boolean | Prisma.Interaction$eraLinksArgs<ExtArgs>
+  participants?: boolean | Prisma.Interaction$participantsArgs<ExtArgs>
   _count?: boolean | Prisma.InteractionCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type InteractionIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2562,6 +2746,7 @@ export type $InteractionPayload<ExtArgs extends runtime.Types.Extensions.Interna
     itemInteractions: Prisma.$ItemInteractionPayload<ExtArgs>[]
     gmailLinks: Prisma.$GmailMessageLinkPayload<ExtArgs>[]
     eraLinks: Prisma.$EraTransactionLinkPayload<ExtArgs>[]
+    participants: Prisma.$InteractionParticipantPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2986,6 +3171,7 @@ export interface Prisma__InteractionClient<T, Null = never, ExtArgs extends runt
   itemInteractions<T extends Prisma.Interaction$itemInteractionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Interaction$itemInteractionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ItemInteractionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   gmailLinks<T extends Prisma.Interaction$gmailLinksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Interaction$gmailLinksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$GmailMessageLinkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   eraLinks<T extends Prisma.Interaction$eraLinksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Interaction$eraLinksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EraTransactionLinkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  participants<T extends Prisma.Interaction$participantsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Interaction$participantsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InteractionParticipantPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3030,7 +3216,7 @@ export interface InteractionFieldRefs {
   readonly notes: Prisma.FieldRef<"Interaction", 'String'>
   readonly actionItems: Prisma.FieldRef<"Interaction", 'String'>
   readonly billable: Prisma.FieldRef<"Interaction", 'Boolean'>
-  readonly amount: Prisma.FieldRef<"Interaction", 'Float'>
+  readonly amount: Prisma.FieldRef<"Interaction", 'Int'>
   readonly direction: Prisma.FieldRef<"Interaction", 'String'>
   readonly sourceFileId: Prisma.FieldRef<"Interaction", 'String'>
   readonly sourceNoteId: Prisma.FieldRef<"Interaction", 'String'>
@@ -3597,6 +3783,30 @@ export type Interaction$eraLinksArgs<ExtArgs extends runtime.Types.Extensions.In
   take?: number
   skip?: number
   distinct?: Prisma.EraTransactionLinkScalarFieldEnum | Prisma.EraTransactionLinkScalarFieldEnum[]
+}
+
+/**
+ * Interaction.participants
+ */
+export type Interaction$participantsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the InteractionParticipant
+   */
+  select?: Prisma.InteractionParticipantSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the InteractionParticipant
+   */
+  omit?: Prisma.InteractionParticipantOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.InteractionParticipantInclude<ExtArgs> | null
+  where?: Prisma.InteractionParticipantWhereInput
+  orderBy?: Prisma.InteractionParticipantOrderByWithRelationInput | Prisma.InteractionParticipantOrderByWithRelationInput[]
+  cursor?: Prisma.InteractionParticipantWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.InteractionParticipantScalarFieldEnum | Prisma.InteractionParticipantScalarFieldEnum[]
 }
 
 /**

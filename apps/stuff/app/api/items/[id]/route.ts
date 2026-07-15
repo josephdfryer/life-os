@@ -34,11 +34,36 @@ export async function PATCH(
   const stringFields = [
     'name', 'category', 'make', 'model', 'serialNumber',
     'description', 'notes', 'tags', 'color', 'colorSoft',
-    'purchaseFrom', 'warrantyDetails', 'placeId', 'ownedById',
+    'purchaseFrom', 'warrantyDetails',
   ]
   for (const key of stringFields) {
     if (key in body) updates[key] = body[key]
   }
+
+  // placeId/ownedById are foreign keys into other tenants' data if left
+  // unchecked — verify the referenced Place/Person actually belongs to this
+  // workspace before allowing the link.
+  if ('placeId' in body) {
+    const placeId = body.placeId
+    if (placeId == null || placeId === '') {
+      updates.placeId = null
+    } else {
+      const place = await db.place.findFirst({ where: { id: placeId as string, workspaceId }, select: { id: true } })
+      if (!place) return NextResponse.json({ error: 'Place not found' }, { status: 400 })
+      updates.placeId = place.id
+    }
+  }
+  if ('ownedById' in body) {
+    const ownedById = body.ownedById
+    if (ownedById == null || ownedById === '') {
+      updates.ownedById = null
+    } else {
+      const person = await db.person.findFirst({ where: { id: ownedById as string, workspaceId }, select: { id: true } })
+      if (!person) return NextResponse.json({ error: 'Person not found' }, { status: 400 })
+      updates.ownedById = person.id
+    }
+  }
+
   if ('lifetimeWarranty' in body) updates.lifetimeWarranty = Boolean(body.lifetimeWarranty)
   if ('quantity' in body) updates.quantity = Number(body.quantity)
   if ('purchasePrice' in body) {
@@ -53,7 +78,9 @@ export async function PATCH(
     updates.warrantyExpires = body.warrantyExpires ? new Date(body.warrantyExpires as string) : null
   }
 
-  const item = await db.item.update({ where: { id }, data: updates })
+  // updateMany (not update) so the workspace filter guards the write itself.
+  await db.item.updateMany({ where: { id, workspaceId }, data: updates })
+  const item = await db.item.findUniqueOrThrow({ where: { id } })
   return NextResponse.json({ ...item, purchasePrice: centsToDollars(item.purchasePrice) })
 }
 
@@ -69,6 +96,6 @@ export async function DELETE(
   const existing = await db.item.findFirst({ where: { id, workspaceId } })
   if (!existing) return NextResponse.json({ error: 'Not found' }, { status: 404 })
 
-  await db.item.delete({ where: { id } })
+  await db.item.deleteMany({ where: { id, workspaceId } })
   return new NextResponse(null, { status: 204 })
 }

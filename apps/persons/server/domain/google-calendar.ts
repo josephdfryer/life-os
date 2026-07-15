@@ -1,4 +1,5 @@
 import { createHmac, randomBytes } from "crypto"
+import { decryptNullable, encryptNullable } from "@life-os/db/crypto"
 import { db } from "@/lib/db"
 import { badRequest, forbidden, notFound } from "@/server/api/errors"
 import { auditAction, type DomainActor } from "./audit"
@@ -78,7 +79,6 @@ export async function googleCalendarStatus(actor: AccessActor) {
       calendarId: true,
       calendarSummary: true,
       scope: true,
-      syncToken: true,
       lastSyncedAt: true,
       lastError: true,
       updatedAt: true,
@@ -234,8 +234,8 @@ export async function handleGoogleCalendarCallback(input: { code: string; state:
       status: "active",
       accountEmail,
       calendarSummary: calendar.summary ?? accountEmail,
-      accessToken: token.access_token,
-      refreshToken: token.refresh_token,
+      accessTokenEncrypted: encryptNullable(token.access_token),
+      refreshTokenEncrypted: encryptNullable(token.refresh_token),
       expiresAt,
       scope: token.scope ?? CALENDAR_SCOPE,
       lastError: null,
@@ -248,8 +248,8 @@ export async function handleGoogleCalendarCallback(input: { code: string; state:
       accountEmail,
       calendarId,
       calendarSummary: calendar.summary ?? accountEmail,
-      accessToken: token.access_token,
-      refreshToken: token.refresh_token,
+      accessTokenEncrypted: encryptNullable(token.access_token),
+      refreshTokenEncrypted: encryptNullable(token.refresh_token),
       expiresAt,
       scope: token.scope ?? CALENDAR_SCOPE,
     },
@@ -287,9 +287,15 @@ export async function syncGoogleCalendar(actor: AccessActor, options: SyncOption
     orderBy: { updatedAt: "desc" },
   })
   if (!connection) throw notFound("Google Calendar is not connected")
-  if (!connection.refreshToken && !connection.accessToken) throw badRequest("Google Calendar connection has no usable token")
+  if (!connection.refreshTokenEncrypted && !connection.accessTokenEncrypted) throw badRequest("Google Calendar connection has no usable token")
 
-  const accessToken = await usableAccessToken(connection)
+  const accessToken = await usableAccessToken({
+    id: connection.id,
+    accessToken: decryptNullable(connection.accessTokenEncrypted),
+    refreshToken: decryptNullable(connection.refreshTokenEncrypted),
+    expiresAt: connection.expiresAt,
+  })
+  const syncToken = decryptNullable(connection.syncTokenEncrypted)
   const backfillDays = normalizeBackfillDays(options.backfillDays)
 
   try {
@@ -302,11 +308,11 @@ export async function syncGoogleCalendar(actor: AccessActor, options: SyncOption
       fetched: 0,
       batches: 0,
       backfillDays,
-      incremental: Boolean(connection.syncToken),
+      incremental: Boolean(syncToken),
     }
     const listed = await syncEventPages(accessToken, {
       calendarId: connection.calendarId,
-      syncToken: connection.syncToken,
+      syncToken,
       backfillDays,
       onBatch: async items => {
         stats.batches += 1
@@ -330,7 +336,7 @@ export async function syncGoogleCalendar(actor: AccessActor, options: SyncOption
     await db.calendarConnection.update({
       where: { id: connection.id },
       data: {
-        syncToken: listed.nextSyncToken ?? connection.syncToken,
+        syncTokenEncrypted: encryptNullable(listed.nextSyncToken ?? syncToken),
         lastSyncedAt: new Date(),
         lastError: null,
       },
@@ -568,9 +574,9 @@ async function usableAccessToken(connection: { id: string; accessToken: string |
   await db.calendarConnection.update({
     where: { id: connection.id },
     data: {
-      accessToken: token.access_token,
+      accessTokenEncrypted: encryptNullable(token.access_token),
       expiresAt: token.expires_in ? new Date(Date.now() + token.expires_in * 1000) : null,
-      refreshToken: token.refresh_token ?? connection.refreshToken,
+      refreshTokenEncrypted: encryptNullable(token.refresh_token ?? connection.refreshToken),
       scope: token.scope ?? undefined,
     },
   })

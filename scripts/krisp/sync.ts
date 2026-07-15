@@ -240,6 +240,7 @@ async function matchCalendarEvent(meeting: KrispMeeting): Promise<CalendarMatch 
   if (icsBest) return icsBest
 
   const { db } = await import("@life-os/db")
+  const { decryptNullable } = await import("@life-os/db/crypto")
   const connection = await db.calendarConnection.findFirst({
     where: { provider: "google", status: "active" },
     orderBy: { updatedAt: "desc" },
@@ -247,13 +248,17 @@ async function matchCalendarEvent(meeting: KrispMeeting): Promise<CalendarMatch 
       id: true,
       workspaceId: true,
       calendarId: true,
-      accessToken: true,
-      refreshToken: true,
+      accessTokenEncrypted: true,
+      refreshTokenEncrypted: true,
       expiresAt: true,
     },
   })
   if (!connection) return null
-  const accessToken = await googleAccessToken(connection)
+  const accessToken = await googleAccessToken({
+    accessToken: decryptNullable(connection.accessTokenEncrypted),
+    refreshToken: decryptNullable(connection.refreshTokenEncrypted),
+    expiresAt: connection.expiresAt,
+  })
   const candidates = await fetchGoogleCalendarCandidates(
     accessToken,
     connection.calendarId,

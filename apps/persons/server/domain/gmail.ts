@@ -1,4 +1,5 @@
 import { createHmac, randomBytes } from "crypto"
+import { decryptNullable, encryptNullable } from "@life-os/db/crypto"
 import { db } from "@/lib/db"
 import { badRequest, forbidden, notFound } from "@/server/api/errors"
 import { auditAction, type DomainActor } from "./audit"
@@ -333,7 +334,12 @@ export async function importGmailContactsPreview(actor: AccessActor) {
     })
   }
 
-  const accessToken = await usableAccessToken(connection)
+  const accessToken = await usableAccessToken({
+    id: connection.id,
+    accessToken: decryptNullable(connection.accessTokenEncrypted),
+    refreshToken: decryptNullable(connection.refreshTokenEncrypted),
+    expiresAt: connection.expiresAt,
+  })
   const contacts = await fetchGoogleContacts(accessToken)
   return { contacts, count: contacts.length, method: "google-contacts", accountEmail: connection.accountEmail }
 }
@@ -380,8 +386,8 @@ export async function handleGmailCallback(input: { code: string; state: string; 
       userId: state.userId,
       status: "active",
       accountEmail,
-      accessToken: token.access_token,
-      refreshToken: token.refresh_token,
+      accessTokenEncrypted: encryptNullable(token.access_token),
+      refreshTokenEncrypted: encryptNullable(token.refresh_token),
       expiresAt,
       scope: token.scope ?? GMAIL_SCOPE,
       lastError: null,
@@ -393,8 +399,8 @@ export async function handleGmailCallback(input: { code: string; state: string; 
       status: "active",
       accountEmail,
       mailboxId,
-      accessToken: token.access_token,
-      refreshToken: token.refresh_token,
+      accessTokenEncrypted: encryptNullable(token.access_token),
+      refreshTokenEncrypted: encryptNullable(token.refresh_token),
       expiresAt,
       scope: token.scope ?? GMAIL_SCOPE,
     },
@@ -417,9 +423,14 @@ export async function syncGmail(actor: AccessActor, options: SyncOptions = {}) {
     orderBy: { updatedAt: "desc" },
   })
   if (!connection) throw notFound("Gmail is not connected")
-  if (!connection.refreshToken && !connection.accessToken) throw badRequest("Gmail connection has no usable token")
+  if (!connection.refreshTokenEncrypted && !connection.accessTokenEncrypted) throw badRequest("Gmail connection has no usable token")
 
-  const accessToken = await usableAccessToken(connection)
+  const accessToken = await usableAccessToken({
+    id: connection.id,
+    accessToken: decryptNullable(connection.accessTokenEncrypted),
+    refreshToken: decryptNullable(connection.refreshTokenEncrypted),
+    expiresAt: connection.expiresAt,
+  })
   const backfillDays = normalizeBackfillDays(options.backfillDays)
   const unmatchedMode = options.unmatchedMode === "stage" ? "stage" : "skip"
   const importantOnly = options.importantOnly !== false
@@ -838,9 +849,9 @@ async function usableAccessToken(connection: { id: string; accessToken: string |
   await db.gmailConnection.update({
     where: { id: connection.id },
     data: {
-      accessToken: token.access_token,
+      accessTokenEncrypted: encryptNullable(token.access_token),
       expiresAt: token.expires_in ? new Date(Date.now() + token.expires_in * 1000) : null,
-      refreshToken: token.refresh_token ?? connection.refreshToken,
+      refreshTokenEncrypted: encryptNullable(token.refresh_token ?? connection.refreshToken),
       scope: token.scope ?? undefined,
     },
   })
@@ -1202,8 +1213,8 @@ type GmailConnectionShape = {
   status: string
   accountEmail: string | null
   mailboxId: string
-  accessToken: string | null
-  refreshToken: string | null
+  accessTokenEncrypted: string | null
+  refreshTokenEncrypted: string | null
   expiresAt: Date | null
   scope: string | null
   historyId: string | null

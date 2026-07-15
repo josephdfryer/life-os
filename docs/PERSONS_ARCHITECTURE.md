@@ -213,11 +213,13 @@ For local recovery review only, `LIFE_OS_LOCAL_REVIEW=1` bypasses Google OAuth w
 
 ```mermaid
 flowchart TD
-  Admin["Admin Calendar tab"] --> Connect["Connect Google Calendar"]
+  Admin["Calendar settings"] --> Connect["Connect Google account"]
   Connect --> OAuth["Google OAuth consent"]
-  OAuth --> Connection["CalendarConnection stores tokens and sync state"]
+  OAuth --> Discover["Read calendars visible to the account"]
+  Discover --> Select["Choose primary, shared, and subscribed calendars"]
+  Select --> Connection["One CalendarConnection per selected calendar"]
   Admin --> Sync["Sync now"]
-  Sync --> GoogleEvents["Read Google Calendar events"]
+  Sync --> GoogleEvents["Read each selected calendar"]
   GoogleEvents --> Link["CalendarEventLink by calendarId + Google event id"]
   Link --> Event["Create or update local Event"]
   GoogleEvents --> Match["Match attendees to People by email"]
@@ -228,11 +230,11 @@ flowchart TD
   Trace --> Interaction
 ```
 
-Plain English: Google Calendar remains the source of truth. Persons imports calendar entries into local Events and creates Interactions only when an attendee email already matches a Person in the current workspace. Re-running sync is idempotent because `CalendarEventLink` remembers which Google event maps to which local Event.
+Plain English: Google Calendar remains the source of truth. After OAuth connects an account, `/api/calendar/google/status` reads Google's Calendar List so the settings screen can show primary, shared, and subscribed calendars. `/api/calendar/google/selection` records the checked calendars as active `CalendarConnection` rows; the OAuth credentials remain encrypted and are reused for calendars visible to that same Google account. Sync imports every active calendar into local Events and creates Interactions only when an attendee email already matches a Person in the current workspace. Re-running sync is idempotent because `CalendarEventLink` remembers the calendar ID and Google event ID that map to each local Event.
 
-To keep first-time imports from hogging resources, the Admin Calendar screen asks for a backfill range before syncing. The server fetches Google events in restrained pages and writes them in small batches rather than holding one giant event list in memory. Once Google gives Persons an incremental sync token, later syncs ignore the historical backfill range and only ask Google for changed events.
+To keep first-time imports from hogging resources, the Calendar settings screen asks for a backfill range before syncing. The server processes selected calendars sequentially, fetches each one in restrained pages, and writes events in small batches rather than holding one giant event list in memory. Each calendar keeps its own incremental sync token, error, and last-synced time, so one failing calendar does not hide the status of the others. Once Google gives Life OS an incremental sync token, later syncs ignore the historical backfill range and only ask that calendar for changed events.
 
-The Admin Calendar tab also has a sync trace. It reads recent `calendar.sync` audit rows plus the actual `CalendarEventLink`, `Event`, and `Interaction` records so an operator can see which Google events landed locally and which People were linked.
+The Calendar settings screen also has a combined sync trace. It reads recent `calendar.sync` audit rows plus `CalendarEventLink`, `Event`, and `Interaction` records across every connected calendar so an operator can see which Google events landed locally and which People were linked.
 
 Runtime configuration:
 

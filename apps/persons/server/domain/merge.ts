@@ -1,7 +1,7 @@
 import { db } from "@/lib/db"
 import { findDuplicates } from "@/lib/dedupe"
 import { parseTags } from "@/lib/utils"
-import { badRequest } from "@/server/api/errors"
+import { badRequest, notFound } from "@/server/api/errors"
 import { auditAction, type DomainActor } from "./audit"
 import { formatPerson } from "./dto"
 
@@ -70,12 +70,13 @@ const mergeSelect = {
   _count: { select: { interactions: true, plans: true } },
 } as const
 
-export async function mergePersons(input: PairInput & { fields?: Record<string, unknown> }, actor?: DomainActor) {
+export async function mergePersons(input: PairInput & { fields?: Record<string, unknown> }, workspaceId: string, actor?: DomainActor) {
   validatePair(input)
-  const patch = input.fields ? explicitPatch(input.fields) : await automaticPairPatch(input.keepId, input.deleteId)
+  await assertPersonsInWorkspace(workspaceId, [input.keepId, input.deleteId])
+  const patch = input.fields ? explicitPatch(input.fields) : await automaticPairPatch(input.keepId, input.deleteId, workspaceId)
 
   await db.$transaction(async tx => {
-    await applyMerge(tx, input.keepId, input.deleteId, patch)
+    await applyMerge(tx, input.keepId, input.deleteId, patch, workspaceId)
   })
 
   await auditAction({
@@ -89,12 +90,13 @@ export async function mergePersons(input: PairInput & { fields?: Record<string, 
   return { ok: true, keptId: input.keepId }
 }
 
-export async function mergePersonPairs(pairs: PairInput[], actor?: DomainActor) {
+export async function mergePersonPairs(pairs: PairInput[], workspaceId: string, actor?: DomainActor) {
   if (!Array.isArray(pairs) || pairs.length === 0) throw badRequest("pairs required", { field: "pairs" })
   for (const pair of pairs) validatePair(pair)
 
   const ids = [...new Set(pairs.flatMap(pair => [pair.keepId, pair.deleteId]))]
-  const persons = await db.person.findMany({ where: { id: { in: ids } }, select: mergeSelect })
+  await assertPersonsInWorkspace(workspaceId, ids)
+  const persons = await db.person.findMany({ where: { id: { in: ids }, workspaceId }, select: mergeSelect })
   const byId = new Map(persons.map(person => [person.id, person as MergePerson]))
   const deletedIds: string[] = []
 
@@ -104,7 +106,7 @@ export async function mergePersonPairs(pairs: PairInput[], actor?: DomainActor) 
     if (!keeper || !loser) continue
     const patch = automaticPatch(keeper, loser)
     await db.$transaction(async tx => {
-      await applyMerge(tx, pair.keepId, pair.deleteId, patch)
+      await applyMerge(tx, pair.keepId, pair.deleteId, patch, workspaceId)
     }, TX_OPTS)
     Object.assign(keeper, patch)
     deletedIds.push(pair.deleteId)
@@ -119,13 +121,14 @@ export async function mergePersonPairs(pairs: PairInput[], actor?: DomainActor) 
   return { merged: deletedIds.length, deletedIds }
 }
 
-export async function mergePersonClusters(pairs: ClusterPairInput[], actor?: DomainActor) {
+export async function mergePersonClusters(pairs: ClusterPairInput[], workspaceId: string, actor?: DomainActor) {
   if (!Array.isArray(pairs) || pairs.length === 0) throw badRequest("pairs required", { field: "pairs" })
   const components = buildComponents(pairs)
   if (components.length === 0) return { merged: 0, deletedIds: [] as string[] }
 
   const ids = [...new Set(components.flat())]
-  const persons = await db.person.findMany({ where: { id: { in: ids } }, select: mergeSelect })
+  await assertPersonsInWorkspace(workspaceId, ids)
+  const persons = await db.person.findMany({ where: { id: { in: ids }, workspaceId }, select: mergeSelect })
   const byId = new Map(persons.map(person => [person.id, person as MergePerson]))
   const deletedIds: string[] = []
 
@@ -136,10 +139,10 @@ export async function mergePersonClusters(pairs: ClusterPairInput[], actor?: Dom
     const patch = clusterPatch(keeper, losers)
     await db.$transaction(async tx => {
       if (Object.keys(patch).length > 0) {
-        await tx.person.update({ where: { id: keeper.id }, data: patch })
+        await tx.person.updateMany({ where: { id: keeper.id, workspaceId }, data: patch })
       }
       for (const loser of losers) {
-        await reassignAndDelete(tx, keeper.id, loser.id)
+        await reassignAndDelete(tx, keeper.id, loser.id, workspaceId)
       }
     }, TX_OPTS)
     deletedIds.push(...losers.map(loser => loser.id))
@@ -154,8 +157,8 @@ export async function mergePersonClusters(pairs: ClusterPairInput[], actor?: Dom
   return { merged: deletedIds.length, deletedIds }
 }
 
-export async function mergeSameEmailPersons(actor?: DomainActor) {
-  const all = await db.person.findMany({ select: mergeSelect })
+export async function mergeSameEmailPersons(workspaceId: string, actor?: DomainActor) {
+  const all = await db.person.findMany({ where: { workspaceId }, select: mergeSelect })
   const byEmail = new Map<string, MergePerson[]>()
   for (const person of all as MergePerson[]) {
     for (const email of parseTags(person.emails)) {
@@ -176,7 +179,7 @@ export async function mergeSameEmailPersons(actor?: DomainActor) {
       if (deleted.has(loser.id) || deleted.has(keeper.id)) continue
       const patch = automaticPatch(keeper, loser)
       await db.$transaction(async tx => {
-        await applyMerge(tx, keeper.id, loser.id, patch)
+        await applyMerge(tx, keeper.id, loser.id, patch, workspaceId)
       }, TX_OPTS)
       Object.assign(keeper, patch)
       deleted.add(loser.id)
@@ -198,15 +201,15 @@ export async function mergeSameEmailPersons(actor?: DomainActor) {
 // exceed this). The UI re-invokes until `remaining` is 0.
 const DEDUPE_BUDGET_MS = 250_000
 
-export async function autoDedupePersons(workspaceId?: string, actor?: DomainActor) {
+export async function autoDedupePersons(workspaceId: string, actor?: DomainActor) {
   const deadline = Date.now() + DEDUPE_BUDGET_MS
   const all = await db.person.findMany({
-    where: workspaceId ? { workspaceId } : undefined,
+    where: { workspaceId },
     select: mergeSelect,
   })
   const toMerge = findAutoMergePairs(all as MergePerson[])
   const byId = new Map((all as MergePerson[]).map(person => [person.id, person]))
-  const refs = await loserRefSets(toMerge.map(pair => pair.deleteId))
+  const refs = await loserRefSets(toMerge.map(pair => pair.deleteId), workspaceId)
   const results: PairResult[] = []
   const failures: { pair: PairResult; error: string }[] = []
   let remaining = 0
@@ -224,9 +227,9 @@ export async function autoDedupePersons(workspaceId?: string, actor?: DomainActo
     try {
       await db.$transaction(async tx => {
         if (Object.keys(patch).length > 0) {
-          await tx.person.update({ where: { id: pair.keepId }, data: patch })
+          await tx.person.updateMany({ where: { id: pair.keepId, workspaceId }, data: patch })
         }
-        await reassignAndDelete(tx, pair.keepId, pair.deleteId, {
+        await reassignAndDelete(tx, pair.keepId, pair.deleteId, workspaceId, {
           interactions: loser._count.interactions > 0,
           plans: (loser._count.plans ?? 0) > 0,
           stagedCandidate: refs.stagedCandidate.has(pair.deleteId),
@@ -260,7 +263,7 @@ export async function autoDedupePersons(workspaceId?: string, actor?: DomainActo
 // statements that would touch zero rows — with Turso every statement is a
 // network round-trip, and most losers have no staged items, api keys, or
 // audit entries.
-async function loserRefSets(ids: string[]) {
+async function loserRefSets(ids: string[], workspaceId: string) {
   const empty = {
     stagedCandidate: new Set<string>(),
     stagedAccepted: new Set<string>(),
@@ -269,10 +272,10 @@ async function loserRefSets(ids: string[]) {
   }
   if (ids.length === 0) return empty
   const [stagedCandidate, stagedAccepted, apiKeys, audits] = await Promise.all([
-    db.stagedInteraction.findMany({ where: { candidatePersonId: { in: ids } }, select: { candidatePersonId: true } }),
-    db.stagedInteraction.findMany({ where: { acceptedPersonId: { in: ids } }, select: { acceptedPersonId: true } }),
-    db.apiKey.findMany({ where: { ownerPersonId: { in: ids } }, select: { ownerPersonId: true } }),
-    db.auditLog.findMany({ where: { personId: { in: ids } }, select: { personId: true } }),
+    db.stagedInteraction.findMany({ where: { candidatePersonId: { in: ids }, workspaceId }, select: { candidatePersonId: true } }),
+    db.stagedInteraction.findMany({ where: { acceptedPersonId: { in: ids }, workspaceId }, select: { acceptedPersonId: true } }),
+    db.apiKey.findMany({ where: { ownerPersonId: { in: ids }, workspaceId }, select: { ownerPersonId: true } }),
+    db.auditLog.findMany({ where: { personId: { in: ids }, workspaceId }, select: { personId: true } }),
   ])
   return {
     stagedCandidate: new Set(stagedCandidate.map(row => row.candidatePersonId).filter(Boolean) as string[]),
@@ -282,8 +285,9 @@ async function loserRefSets(ids: string[]) {
   }
 }
 
-export async function findPersonDuplicates() {
+export async function findPersonDuplicates(workspaceId: string) {
   const persons = await db.person.findMany({
+    where: { workspaceId },
     include: {
       _count: { select: { interactions: true, plans: true } },
     },
@@ -304,8 +308,18 @@ function validatePair(pair: PairInput) {
   }
 }
 
-async function automaticPairPatch(keepId: string, deleteId: string) {
-  const persons = await db.person.findMany({ where: { id: { in: [keepId, deleteId] } }, select: mergeSelect })
+// Guards every merge entry point against cross-tenant IDs: a person ID that
+// resolves in another workspace must look identical to a nonexistent one.
+async function assertPersonsInWorkspace(workspaceId: string, ids: string[]) {
+  const unique = [...new Set(ids)]
+  const rows = await db.person.findMany({ where: { id: { in: unique }, workspaceId }, select: { id: true } })
+  const found = new Set(rows.map(row => row.id))
+  const missing = unique.filter(id => !found.has(id))
+  if (missing.length) throw notFound("Person not found", { ids: missing })
+}
+
+async function automaticPairPatch(keepId: string, deleteId: string, workspaceId: string) {
+  const persons = await db.person.findMany({ where: { id: { in: [keepId, deleteId] }, workspaceId }, select: mergeSelect })
   const keeper = persons.find(person => person.id === keepId) as MergePerson | undefined
   const loser = persons.find(person => person.id === deleteId) as MergePerson | undefined
   if (!keeper || !loser) return {}
@@ -369,11 +383,14 @@ async function applyMerge(
   keepId: string,
   deleteId: string,
   patch: Record<string, unknown>,
+  workspaceId: string,
 ) {
   if (Object.keys(patch).length > 0) {
-    await tx.person.update({ where: { id: keepId }, data: patch })
+    // updateMany (not update) so the workspace filter is enforced even if
+    // keepId somehow slipped through an earlier check unscoped.
+    await tx.person.updateMany({ where: { id: keepId, workspaceId }, data: patch })
   }
-  await reassignAndDelete(tx, keepId, deleteId)
+  await reassignAndDelete(tx, keepId, deleteId, workspaceId)
 }
 
 type ReassignHints = {
@@ -390,16 +407,19 @@ async function reassignAndDelete(
   tx: any,
   keepId: string,
   deleteId: string,
+  workspaceId: string,
   hints?: ReassignHints,
 ) {
-  // When hints are provided, statements known to touch zero rows are skipped.
-  if (hints?.interactions !== false) await tx.interaction.updateMany({ where: { personId: deleteId }, data: { personId: keepId } })
-  if (hints?.plans !== false) await tx.plan.updateMany({ where: { personId: deleteId }, data: { personId: keepId } })
-  if (hints?.stagedCandidate !== false) await tx.stagedInteraction.updateMany({ where: { candidatePersonId: deleteId }, data: { candidatePersonId: keepId } })
-  if (hints?.stagedAccepted !== false) await tx.stagedInteraction.updateMany({ where: { acceptedPersonId: deleteId }, data: { acceptedPersonId: keepId } })
-  if (hints?.apiKeys !== false) await tx.apiKey.updateMany({ where: { ownerPersonId: deleteId }, data: { ownerPersonId: keepId } })
-  if (hints?.audits !== false) await tx.auditLog.updateMany({ where: { personId: deleteId }, data: { personId: keepId } })
-  await tx.person.delete({ where: { id: deleteId } })
+  // Every reassignment and the final delete carry workspaceId in their WHERE
+  // clause as defense-in-depth, even though callers already verified both
+  // persons belong to this workspace before reaching here.
+  if (hints?.interactions !== false) await tx.interaction.updateMany({ where: { personId: deleteId, workspaceId }, data: { personId: keepId } })
+  if (hints?.plans !== false) await tx.plan.updateMany({ where: { personId: deleteId, workspaceId }, data: { personId: keepId } })
+  if (hints?.stagedCandidate !== false) await tx.stagedInteraction.updateMany({ where: { candidatePersonId: deleteId, workspaceId }, data: { candidatePersonId: keepId } })
+  if (hints?.stagedAccepted !== false) await tx.stagedInteraction.updateMany({ where: { acceptedPersonId: deleteId, workspaceId }, data: { acceptedPersonId: keepId } })
+  if (hints?.apiKeys !== false) await tx.apiKey.updateMany({ where: { ownerPersonId: deleteId, workspaceId }, data: { ownerPersonId: keepId } })
+  if (hints?.audits !== false) await tx.auditLog.updateMany({ where: { personId: deleteId, workspaceId }, data: { personId: keepId } })
+  await tx.person.deleteMany({ where: { id: deleteId, workspaceId } })
 }
 
 function sortByKeepPreference(persons: MergePerson[]) {

@@ -9,6 +9,27 @@
 * 🟢 You can import this file directly.
 */
 
+export const WorkspaceRole = {
+  owner: 'owner',
+  admin: 'admin',
+  member: 'member',
+  viewer: 'viewer'
+} as const
+
+export type WorkspaceRole = (typeof WorkspaceRole)[keyof typeof WorkspaceRole]
+
+
+export const PlanStatus = {
+  draft: 'draft',
+  active: 'active',
+  blocked: 'blocked',
+  completed: 'completed',
+  abandoned: 'abandoned'
+} as const
+
+export type PlanStatus = (typeof PlanStatus)[keyof typeof PlanStatus]
+
+
 export const ImportJobStatus = {
   pending: 'pending',
   running: 'running',

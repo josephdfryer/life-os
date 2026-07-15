@@ -2,9 +2,12 @@ import { NextRequest, NextResponse } from "next/server"
 import { parseVCards } from "@/lib/vcard"
 import { parseCSVRows } from "@/lib/csv-contacts"
 import { detectColumnMapping, applyMapping } from "@/lib/contact-normalizer"
+import { requireAccess } from "@/server/domain/access"
+import { handleRouteError } from "@/server/api/respond"
 
 export async function POST(req: NextRequest) {
   try {
+    await requireAccess("people.write")
     const body = await req.json()
     const { content, format }: { content: string; format?: string } = body
 
@@ -57,10 +60,6 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ contacts, count: contacts.length, method: "claude", mapping })
   } catch (error) {
-    console.error("Contact import error:", error)
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Import failed" },
-      { status: 500 }
-    )
+    return handleRouteError(error)
   }
 }

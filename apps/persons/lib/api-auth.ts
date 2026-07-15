@@ -19,15 +19,12 @@ export async function authorizeApiRequest(
   if (!provided) return null
 
   const scopes = Array.isArray(requiredScopes) ? requiredScopes : [requiredScopes]
-  const legacyKey = process.env.API_KEY
-  if (legacyKey && provided === legacyKey) {
-    return {
-      actor: { type: "api_key", id: "env", label: "legacy-env-api-key", workspaceId: "default-workspace" },
-      scopes: ["*"],
-      workspaceId: "default-workspace",
-    }
-  }
 
+  // The legacy `API_KEY` env var used to grant wildcard ("*") access to
+  // default-workspace to any caller presenting that single shared secret,
+  // bypassing scopes, expiry, and status checks entirely. Removed for
+  // security — all callers must use a scoped, hashed ApiKey record instead
+  // (see db.apiKey below).
   const hashed = hashApiKey(provided)
   const apiKey = await db.apiKey.findUnique({
     where: { keyHash: hashed },

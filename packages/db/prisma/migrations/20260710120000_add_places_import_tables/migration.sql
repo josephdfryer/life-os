@@ -2,8 +2,13 @@
 -- ImportJob + ImportStagedVisit existed only in local dev.db -- production
 -- Turso never received them. Required for timeline imports and finance
 -- place-matching in production.
+--
+-- IF NOT EXISTS guards: on a clean migration replay, these tables are
+-- already created by 20260513010000_add_google_maps_import (and
+-- 20260517033000_add_import_staged_visit_ai_enrichment for aiEnrichment).
+-- This migration exists to repair databases where drift left them missing.
 
-CREATE TABLE "ImportJob" (
+CREATE TABLE IF NOT EXISTS "ImportJob" (
   "id" TEXT NOT NULL PRIMARY KEY,
   "workspaceId" TEXT NOT NULL,
   "status" TEXT NOT NULL DEFAULT 'pending',
@@ -21,10 +26,10 @@ CREATE TABLE "ImportJob" (
   "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT "ImportJob_workspaceId_fkey" FOREIGN KEY ("workspaceId") REFERENCES "Workspace" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
-CREATE INDEX "ImportJob_workspaceId_createdAt_idx" ON "ImportJob"("workspaceId", "createdAt");
-CREATE INDEX "ImportJob_workspaceId_status_idx" ON "ImportJob"("workspaceId", "status");
+CREATE INDEX IF NOT EXISTS "ImportJob_workspaceId_createdAt_idx" ON "ImportJob"("workspaceId", "createdAt");
+CREATE INDEX IF NOT EXISTS "ImportJob_workspaceId_status_idx" ON "ImportJob"("workspaceId", "status");
 
-CREATE TABLE "ImportStagedVisit" (
+CREATE TABLE IF NOT EXISTS "ImportStagedVisit" (
   "id" TEXT NOT NULL PRIMARY KEY,
   "importJobId" TEXT NOT NULL,
   "workspaceId" TEXT NOT NULL,
@@ -46,6 +51,6 @@ CREATE TABLE "ImportStagedVisit" (
   CONSTRAINT "ImportStagedVisit_workspaceId_fkey" FOREIGN KEY ("workspaceId") REFERENCES "Workspace" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT "ImportStagedVisit_resolvedPlaceId_fkey" FOREIGN KEY ("resolvedPlaceId") REFERENCES "Place" ("id") ON DELETE SET NULL ON UPDATE CASCADE
 );
-CREATE INDEX "ImportStagedVisit_importJobId_status_confidence_idx" ON "ImportStagedVisit"("importJobId", "status", "confidence");
-CREATE INDEX "ImportStagedVisit_workspaceId_status_startedAt_idx" ON "ImportStagedVisit"("workspaceId", "status", "startedAt");
-CREATE INDEX "ImportStagedVisit_googlePlaceId_idx" ON "ImportStagedVisit"("googlePlaceId");
+CREATE INDEX IF NOT EXISTS "ImportStagedVisit_importJobId_status_confidence_idx" ON "ImportStagedVisit"("importJobId", "status", "confidence");
+CREATE INDEX IF NOT EXISTS "ImportStagedVisit_workspaceId_status_startedAt_idx" ON "ImportStagedVisit"("workspaceId", "status", "startedAt");
+CREATE INDEX IF NOT EXISTS "ImportStagedVisit_googlePlaceId_idx" ON "ImportStagedVisit"("googlePlaceId");
