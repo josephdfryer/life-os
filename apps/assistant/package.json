@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.88.0",
+    "@life-os/alignment": "*",
     "@life-os/db": "*",
     "@paralleldrive/cuid2": "^3.3.0",
     "next": "16.2.3",

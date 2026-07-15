@@ -11,6 +11,10 @@
     "agent:status": "node scripts/agent-sync.mjs status",
     "imessage:sync": "tsx scripts/imessage-sync.ts",
     "health:sync": "tsx scripts/health-sync.ts",
+    "voice-journal:sync": "tsx scripts/voice-journal-sync.ts",
+    "photos:sync": "tsx scripts/photos-sync.ts",
+    "document:sync": "tsx scripts/document-sync.ts",
+    "notes:extract-facts": "tsx scripts/synthesis/note-facts.ts",
     "capture:whatsapp": "tsx scripts/capture/whatsapp.ts",
     "capture:calls": "tsx scripts/capture/calls.ts",
     "capture:all": "npm run capture:whatsapp && npm run capture:calls",
@@ -30,6 +34,7 @@
   "packageManager": "npm@11.12.1",
   "devDependencies": {
     "@modelcontextprotocol/sdk": "^1.29.0",
+    "exceljs": "^4.4.0",
     "mcp-remote": "^0.1.38",
     "tsx": "^4.22.4",
     "turbo": "latest"

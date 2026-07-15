@@ -117,6 +117,72 @@ export const TOOLS: Anthropic.Tool[] = [
       required: [],
     },
   },
+  {
+    name: "search_places",
+    description: "Search Joseph's places by name, address, or type (city, home, room, shelf, etc). Returns compact matches with ids for use in get_place.",
+    input_schema: {
+      type: "object",
+      properties: { query: { type: "string", description: "Name, address, or type fragment" } },
+      required: ["query"],
+    },
+  },
+  {
+    name: "get_place",
+    description: "Full detail for one place: hierarchy, meaning, recent notes, items stored there, recent events there. Use the id from search_places.",
+    input_schema: {
+      type: "object",
+      properties: { placeId: { type: "string" } },
+      required: ["placeId"],
+    },
+  },
+  {
+    name: "search_items",
+    description: "Search Joseph's physical belongings (Stuff app) by name, category, make/model, or asset id. Returns compact matches with ids for use in get_item.",
+    input_schema: {
+      type: "object",
+      properties: { query: { type: "string", description: "Name, category, make, model, or asset id fragment" } },
+      required: ["query"],
+    },
+  },
+  {
+    name: "get_item",
+    description: "Full detail for one physical item: location, owner, purchase/warranty info, and assembly (what it's inside, what's inside it). Use the id from search_items.",
+    input_schema: {
+      type: "object",
+      properties: { itemId: { type: "string" } },
+      required: ["itemId"],
+    },
+  },
+  {
+    name: "search_events",
+    description: "Keyword search over Joseph's events/calendar within a lookback window — use for 'when did I last...' or finding a specific past/future event by name, unlike get_schedule which only covers one day.",
+    input_schema: {
+      type: "object",
+      properties: {
+        query: { type: "string", description: "Event name/notes fragment" },
+        sinceDays: { type: "number", description: "Lookback window in days, default 90" },
+      },
+      required: ["query"],
+    },
+  },
+  {
+    name: "get_theory",
+    description: "Joseph's current 'theory of mind' synthesis for a person — a standing derived read on who they are, patterns, and context, built from their notes/interactions/events over time. Use the id from search_people.",
+    input_schema: {
+      type: "object",
+      properties: { personId: { type: "string" } },
+      required: ["personId"],
+    },
+  },
+  {
+    name: "get_alignment_signals",
+    description: "Compare Joseph's declared intentions against his actual behavior to surface where they've drifted apart — relationships going cold relative to how close he says they are, and person-linked goals with no follow-through since he declared them. Use when he asks what he's neglecting, what needs attention, or wants a check-in on his stated priorities.",
+    input_schema: {
+      type: "object",
+      properties: {},
+      required: [],
+    },
+  },
 ]
 
 // ── Executors ────────────────────────────────────────────────────
@@ -134,6 +200,13 @@ export async function executeTool(name: string, input: Record<string, unknown>):
       case "get_place_spend": return await getPlaceSpend(input.placeName ? String(input.placeName) : undefined)
       case "search_notes": return await searchNotes(String(input.query ?? ""))
       case "list_inbox": return await listInbox(Number(input.limit ?? 5))
+      case "search_places": return await searchPlaces(String(input.query ?? ""))
+      case "get_place": return await getPlace(String(input.placeId ?? ""))
+      case "search_items": return await searchItems(String(input.query ?? ""))
+      case "get_item": return await getItem(String(input.itemId ?? ""))
+      case "search_events": return await searchEvents(String(input.query ?? ""), Number(input.sinceDays ?? 90))
+      case "get_theory": return await getTheory(String(input.personId ?? ""))
+      case "get_alignment_signals": return await getAlignmentSignalsTool()
       default: return `Unknown tool: ${name}`
     }
   } catch (error) {
@@ -370,10 +443,33 @@ async function searchNotes(query: string) {
     where: { workspaceId: WORKSPACE_ID, content: { contains: query } },
     orderBy: { timestamp: "desc" },
     take: 5,
-    select: { type: true, timestamp: true, content: true },
+    select: { type: true, timestamp: true, content: true, metadata: true },
   })
   if (!notes.length) return `No notes matching "${query}"`
-  return notes.map(n => `[${n.type} · ${daysAgo(n.timestamp)}] ${n.content.slice(0, 200)}`).join("\n---\n")
+  return notes.map(n => `[${n.type} · ${daysAgo(n.timestamp)}] ${formatNoteBody(n)}`).join("\n---\n")
+}
+
+// Long captured Notes (documents, voice transcripts, photo digests) get a
+// lightweight LLM fact extraction pass (scripts/synthesis/note-facts.ts) that
+// lands in metadata.extraction — prefer that compact form over dumping the
+// first 200 characters of, say, a 200,000-character lease agreement.
+function formatNoteBody(note: { content: string; metadata: string | null }): string {
+  const extraction = parseExtraction(note.metadata)
+  if (!extraction) return note.content.slice(0, 200)
+
+  const factsLine = extraction.facts.map(f => `${f.key}: ${f.value}`).join(" · ")
+  return [extraction.summary, factsLine].filter(Boolean).join("\n  ")
+}
+
+function parseExtraction(metadata: string | null): { summary: string; facts: Array<{ key: string; value: string }> } | null {
+  if (!metadata) return null
+  try {
+    const parsed = JSON.parse(metadata) as { extraction?: { summary?: string; facts?: Array<{ key: string; value: string }> } }
+    if (!parsed.extraction?.summary) return null
+    return { summary: parsed.extraction.summary, facts: parsed.extraction.facts ?? [] }
+  } catch {
+    return null
+  }
 }
 
 async function listInbox(limit: number) {
@@ -389,6 +485,151 @@ async function listInbox(limit: number) {
     `${total} pending items. Most recent:`,
     ...items.map(i => `- [${i.source}] ${i.contactName ?? i.contactEmail ?? "unknown"} ${daysAgo(i.timestamp)}: ${(i.summary ?? "").slice(0, 100)}`),
   ].join("\n")
+}
+
+async function searchPlaces(query: string) {
+  if (!query.trim()) return "Empty query"
+  const q = query.trim()
+  const places = await db.place.findMany({
+    where: {
+      workspaceId: WORKSPACE_ID,
+      OR: [{ name: { contains: q } }, { address: { contains: q } }, { type: { contains: q } }],
+    },
+    select: {
+      id: true, name: true, type: true, address: true, favorite: true,
+      parentPlace: { select: { name: true } },
+    },
+    take: 8,
+  })
+  if (!places.length) return `No places matching "${q}"`
+  return places.map(p =>
+    `${p.name}${p.favorite ? " ★" : ""} · id=${p.id} · ${p.type ?? "unknown type"}${p.parentPlace ? ` · in ${p.parentPlace.name}` : ""}${p.address ? ` · ${p.address}` : ""}`
+  ).join("\n")
+}
+
+async function getPlace(placeId: string) {
+  const place = await db.place.findFirst({
+    where: { id: placeId, workspaceId: WORKSPACE_ID },
+    include: {
+      parentPlace: { select: { name: true } },
+      childPlaces: { select: { name: true }, take: 10 },
+      notes: { orderBy: { createdAt: "desc" }, take: 5, select: { body: true, createdAt: true } },
+      items: { select: { name: true, category: true }, take: 15 },
+      events: { orderBy: { start: "desc" }, take: 5, select: { name: true, start: true } },
+    },
+  })
+  if (!place) return "Place not found"
+
+  const lines = [
+    `${place.name}${place.favorite ? " ★ favorite" : ""}`,
+    [place.type, place.address].filter(Boolean).join(" · "),
+    place.meaning ? `Meaning: ${place.meaning}` : "",
+    place.parentPlace ? `In: ${place.parentPlace.name}` : "",
+    place.childPlaces.length ? `Contains: ${place.childPlaces.map(c => c.name).join(", ")}` : "",
+    place.items.length ? "\nItems here:" : "",
+    ...place.items.map(i => `  - ${i.name}${i.category ? ` (${i.category})` : ""}`),
+    place.notes.length ? "\nRecent notes:" : "",
+    ...place.notes.map(n => `  - ${daysAgo(n.createdAt)}: ${n.body.slice(0, 150)}`),
+    place.events.length ? "\nRecent events here:" : "",
+    ...place.events.map(e => `  - ${e.name} (${daysAgo(e.start)})`),
+  ]
+  return lines.filter(Boolean).join("\n")
+}
+
+async function searchItems(query: string) {
+  if (!query.trim()) return "Empty query"
+  const q = query.trim()
+  const items = await db.item.findMany({
+    where: {
+      workspaceId: WORKSPACE_ID,
+      OR: [
+        { name: { contains: q } }, { category: { contains: q } },
+        { make: { contains: q } }, { model: { contains: q } }, { assetId: { contains: q } },
+      ],
+    },
+    select: { id: true, name: true, category: true, assetId: true, place: { select: { name: true } } },
+    take: 8,
+  })
+  if (!items.length) return `No items matching "${q}"`
+  return items.map(i =>
+    `${i.name} · id=${i.id} · ${i.assetId}${i.category ? ` · ${i.category}` : ""}${i.place ? ` · at ${i.place.name}` : " · no location set"}`
+  ).join("\n")
+}
+
+async function getItem(itemId: string) {
+  const item = await db.item.findFirst({
+    where: { id: itemId, workspaceId: WORKSPACE_ID },
+    include: {
+      place: { select: { name: true } },
+      ownedBy: { select: { first: true, last: true } },
+      components: { where: { disassembledAt: null }, select: { childItem: { select: { name: true } } } },
+      assembledInto: { where: { disassembledAt: null }, select: { parentItem: { select: { name: true } } } },
+    },
+  })
+  if (!item) return "Item not found"
+
+  const lines = [
+    `${item.name} (${item.assetId})`,
+    [item.category, item.make, item.model].filter(Boolean).join(" · "),
+    item.serialNumber ? `Serial: ${item.serialNumber}` : "",
+    item.assembledInto.length
+      ? `Currently inside: ${item.assembledInto.map(a => a.parentItem.name).join(", ")}`
+      : item.place ? `Location: ${item.place.name}` : "Location: not set",
+    item.ownedBy ? `Owner: ${item.ownedBy.first} ${item.ownedBy.last}` : "",
+    item.components.length ? `Contains: ${item.components.map(c => c.childItem.name).join(", ")}` : "",
+    item.purchaseDate ? `Purchased: ${item.purchaseDate.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}${item.purchasePrice ? ` for $${item.purchasePrice}` : ""}${item.purchaseFrom ? ` from ${item.purchaseFrom}` : ""}` : "",
+    item.lifetimeWarranty ? "Warranty: lifetime" : item.warrantyExpires ? `Warranty until ${item.warrantyExpires.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}` : "",
+    item.notes ? `Notes: ${item.notes.slice(0, 300)}` : "",
+  ]
+  return lines.filter(Boolean).join("\n")
+}
+
+async function searchEvents(query: string, sinceDays: number) {
+  if (!query.trim()) return "Empty query"
+  const q = query.trim()
+  const days = Math.min(730, Math.max(1, Math.round(Number.isFinite(sinceDays) ? sinceDays : 90)))
+  const since = new Date(Date.now() - days * 86400000)
+  const events = await db.event.findMany({
+    where: {
+      workspaceId: WORKSPACE_ID,
+      start: { gte: since },
+      OR: [{ name: { contains: q } }, { notes: { contains: q } }],
+    },
+    select: { name: true, type: true, start: true, place: { select: { name: true } } },
+    orderBy: { start: "desc" },
+    take: 10,
+  })
+  if (!events.length) return `No events matching "${q}" in the last ${days} days`
+  return events.map(e => {
+    const when = e.start.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })
+    return `${when} · ${e.name}${e.place ? ` @ ${e.place.name}` : ""}`
+  }).join("\n")
+}
+
+async function getTheory(personId: string) {
+  const theory = await db.theorySnapshot.findFirst({
+    where: { subjectPersonId: personId, workspaceId: WORKSPACE_ID, status: "current" },
+    orderBy: { version: "desc" },
+    select: { title: true, summary: true, markdownBody: true, confidence: true, synthesizedAt: true },
+  })
+  if (!theory) return "No theory synthesized for this person yet"
+  return [
+    `${theory.title}${theory.confidence != null ? ` (confidence ${Math.round(theory.confidence * 100)}%)` : ""}`,
+    `Synthesized ${daysAgo(theory.synthesizedAt)}`,
+    "",
+    theory.summary,
+    "",
+    theory.markdownBody.slice(0, 1500),
+  ].join("\n")
+}
+
+async function getAlignmentSignalsTool() {
+  const { getAlignmentSignals } = await import("@life-os/alignment")
+  const signals = await getAlignmentSignals(WORKSPACE_ID)
+  if (!signals.length) return "No gaps detected — relationships and person-linked plans are all on track."
+  return signals
+    .map(s => `[${s.kind}] ${s.subject}: ${s.detail} (${s.severity.toFixed(1)}x threshold)`)
+    .join("\n")
 }
 
 function daysAgo(date: Date) {

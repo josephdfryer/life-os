@@ -16,6 +16,11 @@ const PLIST_NAMES = [
   "com.lifeos.brief",
   "com.lifeos.backup",
   "com.lifeos.gmailsync",
+  "com.lifeos.locationsync",
+  "com.lifeos.voicejournal",
+  "com.lifeos.photossync",
+  "com.lifeos.documentsync",
+  "com.lifeos.notefacts",
 ]
 
 function main() {

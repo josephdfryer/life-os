@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "test": "tsx --test tests/*.test.ts",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "location:sync": "tsx scripts/location-sync.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.88.0",
