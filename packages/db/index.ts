@@ -58,3 +58,22 @@ export function dollarsToCents(dollars: unknown): number | null {
   if (!Number.isFinite(value)) return null
   return Math.round(value * 100)
 }
+
+// Canonical phone comparison key: strip everything but digits, then drop a
+// US country-code "1" prefix if present, leaving the bare national number.
+// Phones get captured in whatever format the source gives ("+17085341552"
+// from iMessage, "7085341552" typed by hand) — comparing on this bare form
+// means "+1" or no "+1" never causes a real match to be missed.
+export function normalizePhoneDigits(value: string): string | null {
+  let digits = value.replace(/\D/g, "")
+  if (digits.length < 7) return null
+  digits = digits.replace(/^00/, "") // international dialing prefix, equivalent to a leading "+"
+  if (digits.length === 11 && digits.startsWith("1")) return digits.slice(1)
+  return digits
+}
+
+export function phoneNumbersMatch(a: string, b: string): boolean {
+  const na = normalizePhoneDigits(a)
+  const nb = normalizePhoneDigits(b)
+  return na !== null && na === nb
+}

@@ -80,6 +80,11 @@ const dotenv = require("dotenv") as { config(options: { path: string; quiet?: bo
 loadEnv()
 
 let db: PrismaClient
+// Assigned in main() alongside `db` — a static top-level import of anything
+// from @life-os/db (even a pure string-utility function) would evaluate the
+// module's eager Prisma client creation before loadEnv() above runs.
+let normalizePhone: (value: string) => string | null
+let phonesMatch: (a: string, b: string) => boolean
 
 const APPLE_EPOCH_MS = Date.UTC(2001, 0, 1)
 const SOURCE_PREFIX = "imessage:"
@@ -87,7 +92,10 @@ const DAY_TIME_ZONE = process.env.IMESSAGE_SYNC_DAY_TIME_ZONE ?? "America/Los_An
 const WORKSPACE_ID = process.env.IMESSAGE_SYNC_WORKSPACE_ID ?? "default-workspace"
 
 async function main() {
-  db = (await import("@life-os/db")).db
+  const dbModule = await import("@life-os/db")
+  db = dbModule.db
+  normalizePhone = dbModule.normalizePhoneDigits
+  phonesMatch = dbModule.phoneNumbersMatch
   const options = parseArgs(process.argv.slice(2))
 
   if (options.initWatermark) {
@@ -303,7 +311,8 @@ function findPerson(
     if (person) return person
   }
   if (contact.phone) {
-    const person = people.byPhone.get(normalizePhone(contact.phone))
+    const key = normalizePhone(contact.phone)
+    const person = key ? people.byPhone.get(key) : undefined
     if (person) return person
   }
   return null
@@ -340,7 +349,7 @@ async function updatePersonContact(existing: ExistingPerson, contact: ReturnType
     emails.push(contact.email)
     updated = true
   }
-  if (contact.phone && !phones.some(phone => normalizePhone(phone) === normalizePhone(contact.phone!))) {
+  if (contact.phone && !phones.some(phone => phonesMatch(phone, contact.phone!))) {
     phones.push(contact.phone)
     updated = true
   }
@@ -924,14 +933,6 @@ function normalizeIdentifier(value: string | null | undefined): string | null {
 
 function normalizeEmail(value: string): string {
   return value.trim().toLowerCase()
-}
-
-function normalizePhone(value: string): string {
-  const trimmed = value.trim()
-  if (!trimmed) return ""
-  const digits = trimmed.replace(/\D/g, "")
-  if (digits.length < 7) return trimmed
-  return digits.length === 10 ? `+1${digits}` : `+${digits.replace(/^00/, "")}`
 }
 
 function displayNameFromIdentifier(identifier: string): string {

@@ -1,5 +1,7 @@
 import Anthropic from "@anthropic-ai/sdk"
 import { db } from "@/lib/db"
+import { normalizePhoneDigits, phoneNumbersMatch } from "@life-os/db"
+import { auditAction, type DomainActor } from "./audit"
 import type { StageRecordInput } from "./inbox"
 
 let client: Anthropic | null = null
@@ -18,6 +20,7 @@ export type EnrichResult = {
   matchReason: string
   summary: string | null
   priority: number
+  autoDismissed: boolean
 }
 
 type PersonCandidate = {
@@ -35,12 +38,14 @@ type HaikuResponse = {
   reason: string
   summary: string | null
   priority: number
+  isAutomatedOrAd: boolean
 }
 
 export async function enrichInboxItem(
   stagedId: string,
   input: StageRecordInput,
   workspaceId: string,
+  actor?: DomainActor,
 ): Promise<EnrichResult | null> {
   if (!process.env.ANTHROPIC_API_KEY) return null
 
@@ -52,12 +57,20 @@ export async function enrichInboxItem(
     const validPersonId =
       raw.personId && candidates.some(c => c.id === raw.personId) ? raw.personId : null
 
+    // Obvious ads/automated notifications aren't from a person at all — no
+    // amount of candidate-matching should apply to them. Dismiss immediately
+    // rather than leaving them for manual review, but keep it reversible:
+    // dismissed items stay visible via ?status=dismissed/all and can be
+    // manually reset to pending, same as any other dismiss.
+    const autoDismissed = raw.isAutomatedOrAd === true && !validPersonId
+
     const result: EnrichResult = {
       candidatePersonId: validPersonId,
       confidence: Math.max(0, Math.min(100, raw.confidence ?? 0)),
       matchReason: raw.reason ?? "",
       summary: raw.summary ?? null,
       priority: Math.max(1, Math.min(5, raw.priority ?? 3)),
+      autoDismissed,
     }
 
     await db.stagedInteraction.update({
@@ -69,8 +82,19 @@ export async function enrichInboxItem(
         ...(result.summary ? { summary: result.summary } : {}),
         priority: result.priority,
         enrichedAt: new Date(),
+        ...(autoDismissed ? { status: "dismissed" } : {}),
       },
     })
+
+    if (autoDismissed) {
+      await auditAction({
+        actor,
+        action: "inbox.dismiss",
+        targetType: "stagedInteraction",
+        targetId: stagedId,
+        metadata: { auto: true, reason: result.matchReason },
+      })
+    }
 
     return result
   } catch {
@@ -87,19 +111,13 @@ async function queryCandidates(
 
   const emailMatches = input.contactEmail
     ? await db.person.findMany({
-        where: { workspaceId, emails: { contains: input.contactEmail } },
+        where: { workspaceId, emailSearch: { contains: input.contactEmail.toLowerCase() } },
         select: { id: true, first: true, last: true, emails: true, phones: true, closeness: true },
         take: 5,
       })
     : []
 
-  const phoneMatches = input.contactPhone
-    ? await db.person.findMany({
-        where: { workspaceId, phones: { contains: input.contactPhone } },
-        select: { id: true, first: true, last: true, emails: true, phones: true, closeness: true },
-        take: 5,
-      })
-    : []
+  const phoneMatches = input.contactPhone ? await queryPhoneCandidates(input.contactPhone, workspaceId) : []
 
   for (const p of [...emailMatches, ...phoneMatches]) {
     if (!seen.has(p.id)) {
@@ -124,6 +142,26 @@ async function queryCandidates(
   }
 
   return results
+}
+
+// Prisma/SQLite can't normalize the stored JSON string in-query, so this
+// narrows via a cheap substring match on the trailing digits (survives "+1"
+// / country-code / punctuation differences) and then confirms each
+// candidate with a real normalized comparison before trusting it — avoids
+// both the false-negative this replaced (raw contains on an unnormalized
+// value) and false positives from a coincidental short substring match.
+async function queryPhoneCandidates(contactPhone: string, workspaceId: string): Promise<PersonCandidate[]> {
+  const normalized = normalizePhoneDigits(contactPhone)
+  if (!normalized) return []
+  const suffix = normalized.slice(-7)
+
+  const loose = await db.person.findMany({
+    where: { workspaceId, phones: { contains: suffix } },
+    select: { id: true, first: true, last: true, emails: true, phones: true, closeness: true },
+    take: 20,
+  })
+
+  return loose.filter(p => safeJsonArray(p.phones).some(phone => phoneNumbersMatch(phone, contactPhone)))
 }
 
 async function callHaiku(
@@ -162,7 +200,8 @@ Required JSON:
   "confidence": <0-100, where 95+=email/phone exact match, 80+=name+context match, 50-79=partial match, <50=no good match>,
   "reason": "<one sentence explaining the match or non-match>",
   "summary": "<1-2 sentence summary of the interaction content, or null if the body is trivial/empty>",
-  "priority": <1-5, where 5=urgent question or commitment with deadline, 4=substantive exchange with known contact, 3=normal conversation, 2=fyi/informational, 1=automated or one-liner>
+  "priority": <1-5, where 5=urgent question or commitment with deadline, 4=substantive exchange with known contact, 3=normal conversation, 2=fyi/informational, 1=automated or one-liner>,
+  "isAutomatedOrAd": <true ONLY if this is clearly a marketing message, advertisement, promotional blast, automated notification/receipt, appointment reminder, verification/2FA code, or similar non-personal automated content — not an actual message from a person. When in doubt, false.>
 }`
 
   const c = getClient()

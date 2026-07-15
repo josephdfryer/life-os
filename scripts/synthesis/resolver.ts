@@ -1,4 +1,5 @@
 import type { PrismaClient } from "@life-os/db"
+import { normalizePhoneDigits, phoneNumbersMatch } from "@life-os/db"
 import type { Extraction, ResolvedExtraction, ResolvedParticipant, TriagedItem } from "./types"
 
 const WORKSPACE_ID = process.env.SYNTHESIS_WORKSPACE_ID ?? "default-workspace"
@@ -46,14 +47,18 @@ async function findPerson(
   }
 
   if (participant.phone) {
-    const normalized = normalizePhone(participant.phone)
+    const normalized = normalizePhoneDigits(participant.phone)
     if (normalized) {
-      const persons = await db.person.findMany({
-        where: { workspaceId: WORKSPACE_ID, phones: { contains: normalized } },
-        select: { id: true, first: true, last: true },
-        take: 1,
+      // Narrow via a cheap trailing-digits substring (survives "+1"/country-code
+      // differences a raw contains on the full normalized value would miss),
+      // then confirm each candidate with a true normalized comparison.
+      const loose = await db.person.findMany({
+        where: { workspaceId: WORKSPACE_ID, phones: { contains: normalized.slice(-7) } },
+        select: { id: true, first: true, last: true, phones: true },
+        take: 10,
       })
-      if (persons.length > 0) return persons[0]
+      const match = loose.find(p => safeJsonArray(p.phones).some(phone => phoneNumbersMatch(phone, participant.phone!)))
+      if (match) return match
     }
   }
 
@@ -99,8 +104,12 @@ async function resolvePlans(mentions: string[], db: PrismaClient): Promise<strin
   return ids
 }
 
-export function normalizePhone(value: string): string | null {
-  const digits = value.replace(/\D/g, "")
-  if (digits.length < 7) return null
-  return digits.length === 10 ? `+1${digits}` : `+${digits.replace(/^00/, "")}`
+function safeJsonArray(value: string | null): string[] {
+  if (!value) return []
+  try {
+    const parsed = JSON.parse(value) as unknown
+    return Array.isArray(parsed) ? parsed.map(String) : []
+  } catch {
+    return []
+  }
 }

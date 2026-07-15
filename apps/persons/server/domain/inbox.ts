@@ -82,8 +82,14 @@ export async function stageRecord(input: StageRecordInput, actor?: DomainActor) 
 
   // Enrich before rules fire so confidence/priority are available for condition matching
   const enriched = staged.status === "pending"
-    ? await (await import("./inbox-enrich")).enrichInboxItem(staged.id, input, workspaceId)
+    ? await (await import("./inbox-enrich")).enrichInboxItem(staged.id, input, workspaceId, actor)
     : null
+
+  // Obvious ads/automated content already got dismissed inside enrichInboxItem
+  // — don't let a matching rule (e.g. an auto-accept rule) revive it.
+  if (enriched?.autoDismissed) {
+    return { ...staged, status: "dismissed" }
+  }
 
   const ruleResult = await runRulesForTarget({
     trigger: input.trigger ?? "inbox.stage",
