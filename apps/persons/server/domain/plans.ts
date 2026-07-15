@@ -1,5 +1,6 @@
 import { db } from "@/lib/db"
-import { notFound, optionalString, optionalStringArray, requiredString } from "@/server/api/errors"
+import { PlanStatus } from "@life-os/db"
+import { notFound, optionalString, optionalStringArray, badRequest, requiredString } from "@/server/api/errors"
 import { auditAction, type DomainActor } from "./audit"
 import { formatPlan, jsonList } from "./dto"
 
@@ -10,6 +11,15 @@ export type PlanInput = {
   successSignals?: unknown
   parentId?: unknown
   status?: unknown
+}
+
+const PLAN_STATUSES = Object.values(PlanStatus)
+
+function validPlanStatus(value: unknown): PlanStatus {
+  if (!PLAN_STATUSES.includes(value as PlanStatus)) {
+    throw badRequest(`status must be one of: ${PLAN_STATUSES.join(", ")}`, { field: "status" })
+  }
+  return value as PlanStatus
 }
 
 export async function createPlan(input: PlanInput, actor?: DomainActor) {
@@ -29,7 +39,7 @@ export async function createPlan(input: PlanInput, actor?: DomainActor) {
       successSignals: Array.isArray(input.successSignals)
         ? jsonList(optionalStringArray(input.successSignals))
         : null,
-      status: optionalString(input.status) ?? "active",
+      status: input.status !== undefined ? validPlanStatus(input.status) : PlanStatus.active,
       parentId: optionalString(input.parentId),
     },
   })
@@ -44,7 +54,7 @@ export async function updatePlan(id: string, input: PlanInput, actor?: DomainAct
   if (!existing) throw notFound("Plan not found", { id })
 
   const patch: Record<string, unknown> = {}
-  if (input.status !== undefined) patch.status = requiredString(input.status, "status")
+  if (input.status !== undefined) patch.status = validPlanStatus(input.status)
   if (input.text !== undefined) patch.text = requiredString(input.text, "text")
   if (input.timescale !== undefined) patch.timescale = optionalString(input.timescale)
   if (input.successSignals !== undefined) {

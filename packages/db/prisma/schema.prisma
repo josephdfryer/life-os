@@ -68,16 +68,23 @@ model Workspace {
   @@index([status])
 }
 
+enum WorkspaceRole {
+  owner
+  admin
+  member
+  viewer
+}
+
 model WorkspaceMember {
-  id          String    @id @default(cuid())
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  id          String        @id @default(cuid())
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
   workspaceId String
   userId      String
-  role        String    @default("owner")
-  status      String    @default("active")
-  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role        WorkspaceRole @default(owner)
+  status      String        @default("active")
+  workspace   Workspace     @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([workspaceId, userId])
   @@index([userId])
@@ -687,17 +694,25 @@ model InteractionParticipant {
 // PRIMARY: Plan
 // ─────────────────────────────────────────────
 
+enum PlanStatus {
+  draft
+  active
+  blocked
+  completed
+  abandoned
+}
+
 model Plan {
-  id             String   @id @default(cuid())
-  workspaceId    String   @default("default-workspace")
+  id             String     @id @default(cuid())
+  workspaceId    String     @default("default-workspace")
   workspace      Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  createdAt      DateTime @default(now())
+  createdAt      DateTime   @default(now())
   personId       String?
   person         Person?  @relation(fields: [personId], references: [id], onDelete: Cascade)
   text           String
   timescale      String?
   successSignals String?
-  status         String   @default("active")
+  status         PlanStatus @default(active)
   parentId       String?
   children       Plan[]   @relation("PlanHierarchy")
   parent         Plan?    @relation("PlanHierarchy", fields: [parentId], references: [id])

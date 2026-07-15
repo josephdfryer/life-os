@@ -1,6 +1,7 @@
 import { randomBytes, createHash } from "crypto"
 import { auth } from "@/auth"
 import { db } from "@/lib/db"
+import { WorkspaceRole } from "@life-os/db"
 import { badRequest, forbidden, notFound, optionalString, optionalStringArray, requiredString, unauthorized } from "@/server/api/errors"
 import { auditAction, type DomainActor } from "./audit"
 import { localReviewEnabled } from "@/lib/local-review"
@@ -537,7 +538,7 @@ async function grantRole(userId: string, key: string) {
 }
 
 
-async function addWorkspaceMember(workspaceId: string, userId: string, role: string) {
+async function addWorkspaceMember(workspaceId: string, userId: string, role: WorkspaceRole) {
   await db.workspaceMember.upsert({
     where: { workspaceId_userId: { workspaceId, userId } },
     update: { role, status: "active" },
