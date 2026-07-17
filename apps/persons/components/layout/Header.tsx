@@ -14,8 +14,6 @@ export default function Header() {
   const pathname = usePathname()
   const [importOpen, setImportOpen] = useState(false)
   const [profileOpen, setProfileOpen] = useState(false)
-
-  if (pathname === "/login") return null
   const dropdownRef = useRef<HTMLDivElement>(null)
   const profileRef = useRef<HTMLDivElement>(null)
   const { data: session } = useSession()
@@ -35,6 +33,8 @@ export default function Header() {
     document.addEventListener("mousedown", handle)
     return () => document.removeEventListener("mousedown", handle)
   }, [])
+
+  if (pathname === "/login") return null
 
   return (
     <header style={{

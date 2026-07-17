@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation"
 import { db } from "@/lib/db"
-import { parseTags } from "@/lib/utils"
+import { parseStoredRecord, parseTags } from "@/lib/utils"
 import { requireAccess } from "@/server/domain/access"
 import { AppError } from "@/server/api/errors"
 import { getPersonHealthSummary } from "@/server/domain/health"
@@ -32,7 +32,7 @@ export default async function PersonDetailPage({ params }: { params: Promise<{ i
       ...ix,
       actionItems: parseTags(ix.actionItems) as unknown as string[],
       event: ix.event
-        ? { ...ix.event, metadata: ix.event.metadata ? JSON.parse(ix.event.metadata) : null }
+        ? { ...ix.event, metadata: ix.event.metadata ? parseStoredRecord(ix.event.metadata, "Event.metadata") : null }
         : null,
     })) as unknown as Interaction[]
 

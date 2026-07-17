@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { db } from "@/lib/db"
 import { authorizeApiRequest, unauthorized } from "@/lib/api-auth"
 import { storeFile } from "@/lib/file-storage"
+import { parseTags } from "@/lib/utils"
 import { handleRouteError } from "@/server/api/respond"
 import { confirmImport } from "@/server/domain/imports"
 import type { ImportedPerson } from "@/types"
@@ -102,8 +103,8 @@ async function analyzeWithClaude(
         const parts = [`id: "${c.id}"`, `name: "${c.first} ${c.last}"`]
         if (c.title) parts.push(`title: "${c.title}"`)
         if (c.headline) parts.push(`headline: "${c.headline}"`)
-        const emails = JSON.parse(c.emails) as string[]
-        const phones = JSON.parse(c.phones) as string[]
+        const emails = parseTags(c.emails)
+        const phones = parseTags(c.phones)
         if (emails[0]) parts.push(`email: "${emails[0]}"`)
         if (phones[0]) parts.push(`phone: "${phones[0]}"`)
         return `  - ${parts.join(", ")}`

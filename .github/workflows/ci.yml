@@ -8,6 +8,10 @@ on:
 jobs:
   check:
     runs-on: ubuntu-latest
+    env:
+      AUTH_SECRET: life-os-ci-only-secret
+      DATABASE_URL: file:${{ runner.temp }}/life-os-ci.db
+      NEXTAUTH_SECRET: life-os-ci-only-secret
     steps:
       - uses: actions/checkout@v4
 
@@ -19,11 +23,38 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Validate Prisma schema
+        run: npm exec --workspace @life-os/db -- prisma validate
+
       - name: Generate Prisma client
         run: npm run generate -w @life-os/db
+
+      - name: Check generated Prisma client is current
+        run: git diff --exit-code -- packages/db/generated
+
+      - name: Apply migrations to an empty database
+        run: npm run migrate:deploy -w @life-os/db
+
+      - name: Verify migration upgrade and restore
+        run: npm run db:drill
+
+      - name: Lint
+        run: npm run lint
 
       - name: Type-check
         run: npm run type-check
 
       - name: Test
         run: npm run test
+
+      - name: Install Playwright browser
+        run: npx playwright install --with-deps chromium
+
+      - name: Critical-path E2E
+        run: npm run e2e
+
+      - name: Production build
+        run: npm run build
+
+      - name: Check performance and bundle budgets
+        run: npm run perf:check:built

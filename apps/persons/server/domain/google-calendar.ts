@@ -4,16 +4,24 @@ import { db } from "@/lib/db"
 import { badRequest, forbidden, notFound } from "@/server/api/errors"
 import { auditAction, type DomainActor } from "./audit"
 import type { AccessActor } from "./access"
+import { googleFetch, requestGoogleToken, type GoogleTokenResponse } from "@/server/integrations/google/client"
+import { listGoogleCalendarEventPages } from "@/server/integrations/google/calendar-client"
+import {
+  googleEventMetadata,
+  parseGoogleDate,
+  type CalendarEventMetadata,
+  type GoogleCalendarEvent,
+} from "@/server/integrations/google/calendar-event-parser"
+import { calendarEventMetadataContract, decodeStoredJson, storedStringList } from "@life-os/contracts"
+import { startWorkflowRun, syncHealth } from "@/server/observability/workflow"
 
 const GOOGLE_AUTH_URL = "https://accounts.google.com/o/oauth2/v2/auth"
-const GOOGLE_TOKEN_URL = "https://oauth2.googleapis.com/token"
 const GOOGLE_CALENDAR_BASE = "https://www.googleapis.com/calendar/v3"
 const GOOGLE_USERINFO_URL = "https://www.googleapis.com/oauth2/v2/userinfo"
 const CALENDAR_SCOPE = "https://www.googleapis.com/auth/calendar.readonly"
 const SOURCE = "google-calendar"
 const DEFAULT_BACKFILL_DAYS = 180
 const MAX_BACKFILL_DAYS = 3650
-const GOOGLE_PAGE_SIZE = 100
 const DB_BATCH_SIZE = 25
 
 type OAuthState = {
@@ -23,46 +31,7 @@ type OAuthState = {
   returnTo: string
 }
 
-type TokenResponse = {
-  access_token: string
-  expires_in?: number
-  refresh_token?: string
-  scope?: string
-  token_type?: string
-}
-
-type GoogleCalendarEvent = {
-  id: string
-  iCalUID?: string
-  status?: string
-  summary?: string
-  description?: string
-  location?: string
-  htmlLink?: string
-  start?: { dateTime?: string; date?: string; timeZone?: string }
-  end?: { dateTime?: string; date?: string; timeZone?: string }
-  attendees?: { email?: string; displayName?: string; self?: boolean; responseStatus?: string }[]
-  organizer?: { email?: string; displayName?: string; self?: boolean }
-  creator?: { email?: string; displayName?: string; self?: boolean }
-  updated?: string
-}
-
-type EventsListResponse = {
-  items?: GoogleCalendarEvent[]
-  nextPageToken?: string
-  nextSyncToken?: string
-  summary?: string
-}
-
-type CalendarEventMetadata = {
-  htmlLink?: string | null
-  location?: string | null
-  start?: { dateTime?: string; date?: string; timeZone?: string } | null
-  end?: { dateTime?: string; date?: string; timeZone?: string } | null
-  attendees?: { email?: string | null; displayName?: string | null; responseStatus?: string | null; self?: boolean }[]
-  organizer?: { email?: string; displayName?: string; self?: boolean } | null
-  creator?: { email?: string; displayName?: string; self?: boolean } | null
-}
+type TokenResponse = GoogleTokenResponse
 
 export function googleCalendarConfigured() {
   return Boolean(calendarClientId() && calendarClientSecret())
@@ -92,6 +61,7 @@ export async function googleCalendarStatus(actor: AccessActor) {
     connection: connection ? {
       ...connection,
       eventCount: connection._count.eventLinks,
+      syncHealth: syncHealth(connection.lastSyncedAt, connection.lastError),
       _count: undefined,
     } : null,
   }
@@ -297,19 +267,20 @@ export async function syncGoogleCalendar(actor: AccessActor, options: SyncOption
   })
   const syncToken = decryptNullable(connection.syncTokenEncrypted)
   const backfillDays = normalizeBackfillDays(options.backfillDays)
+  const stats: SyncStats = {
+    createdEvents: 0,
+    updatedEvents: 0,
+    createdInteractions: 0,
+    cancelled: 0,
+    fetched: 0,
+    batches: 0,
+    backfillDays,
+    incremental: Boolean(syncToken),
+  }
+  const telemetry = startWorkflowRun({ workflow: "calendar.sync", workspaceId: actor.workspaceId, targetId: connection.id, context: { calendarId: connection.calendarId, incremental: stats.incremental } })
 
   try {
     const peopleByEmail = await peopleEmailIndex(actor.workspaceId)
-    const stats: SyncStats = {
-      createdEvents: 0,
-      updatedEvents: 0,
-      createdInteractions: 0,
-      cancelled: 0,
-      fetched: 0,
-      batches: 0,
-      backfillDays,
-      incremental: Boolean(syncToken),
-    }
     const listed = await syncEventPages(accessToken, {
       calendarId: connection.calendarId,
       syncToken,
@@ -350,10 +321,12 @@ export async function syncGoogleCalendar(actor: AccessActor, options: SyncOption
       metadata: { provider: "google", ...stats },
     })
 
-    return stats
+    telemetry.finish("succeeded", stats)
+    return { ...stats, runId: telemetry.runId }
   } catch (error) {
     const message = error instanceof Error ? error.message : "Google Calendar sync failed"
     await db.calendarConnection.update({ where: { id: connection.id }, data: { lastError: message } })
+    telemetry.finish("failed", stats, error)
     throw error
   }
 }
@@ -592,83 +565,40 @@ async function syncEventPages(
     onBatch: (items: GoogleCalendarEvent[]) => Promise<void>
   }
 ) {
-  let pageToken: string | undefined
-  let nextSyncToken: string | undefined
-  let useSyncToken = Boolean(input.syncToken)
-  let usedSyncToken = useSyncToken
-
-  for (;;) {
-    const params = new URLSearchParams({
-      maxResults: String(GOOGLE_PAGE_SIZE),
-      showDeleted: "true",
-      singleEvents: "true",
-    })
-    if (pageToken) params.set("pageToken", pageToken)
-    if (useSyncToken && input.syncToken) {
-      params.set("syncToken", input.syncToken)
-    } else {
-      usedSyncToken = false
-      const now = Date.now()
-      params.set("timeMin", new Date(now - input.backfillDays * 24 * 60 * 60 * 1000).toISOString())
-      params.set("timeMax", new Date(now + 365 * 24 * 60 * 60 * 1000).toISOString())
-      params.set("orderBy", "startTime")
-    }
-
-    const res = await googleFetch(`${GOOGLE_CALENDAR_BASE}/calendars/${encodeURIComponent(input.calendarId)}/events?${params}`, accessToken)
-    if (res.status === 410 && useSyncToken) {
-      useSyncToken = false
-      usedSyncToken = false
-      pageToken = undefined
-      continue
-    }
-    if (!res.ok) throw new Error(`Google Calendar events request failed (${res.status})`)
-    const data = await res.json() as EventsListResponse
-    for (const batch of chunk(data.items ?? [], DB_BATCH_SIZE)) {
-      await input.onBatch(batch)
-    }
-    pageToken = data.nextPageToken
-    nextSyncToken = data.nextSyncToken ?? nextSyncToken
-    if (!pageToken) break
-  }
-
-  return { nextSyncToken, usedSyncToken }
+  return await listGoogleCalendarEventPages({
+    accessToken,
+    calendarId: input.calendarId,
+    syncToken: input.syncToken,
+    backfillDays: input.backfillDays,
+    onPage: async items => {
+      for (const batch of chunk(items, DB_BATCH_SIZE)) await input.onBatch(batch)
+    },
+  })
 }
 
 async function exchangeCode(code: string, redirectUri: string) {
   const clientId = calendarClientId()
   const clientSecret = calendarClientSecret()
   if (!clientId || !clientSecret) throw badRequest("Google Calendar OAuth is not configured")
-  const res = await fetch(GOOGLE_TOKEN_URL, {
-    method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    body: new URLSearchParams({
+  return await requestGoogleToken({
       code,
       client_id: clientId,
       client_secret: clientSecret,
       redirect_uri: redirectUri,
       grant_type: "authorization_code",
-    }),
   })
-  if (!res.ok) throw new Error(`Google token exchange failed (${res.status})`)
-  return await res.json() as TokenResponse
 }
 
 async function refreshAccessToken(refreshToken: string) {
   const clientId = calendarClientId()
   const clientSecret = calendarClientSecret()
   if (!clientId || !clientSecret) throw badRequest("Google Calendar OAuth is not configured")
-  const res = await fetch(GOOGLE_TOKEN_URL, {
-    method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    body: new URLSearchParams({
+  return await requestGoogleToken({
       refresh_token: refreshToken,
       client_id: clientId,
       client_secret: clientSecret,
       grant_type: "refresh_token",
-    }),
   })
-  if (!res.ok) throw new Error(`Google token refresh failed (${res.status})`)
-  return await res.json() as TokenResponse
 }
 
 async function fetchPrimaryCalendar(accessToken: string) {
@@ -682,10 +612,6 @@ async function fetchGoogleAccountEmail(accessToken: string) {
   if (!res.ok) return null
   const data = await res.json() as { email?: string }
   return data.email ?? null
-}
-
-function googleFetch(url: string, accessToken: string) {
-  return fetch(url, { headers: { Authorization: `Bearer ${accessToken}` } })
 }
 
 function googleCalendarRedirectUri(origin: string | null) {
@@ -730,49 +656,12 @@ function vercelProductionUrl() {
   return host ? `https://${host}` : null
 }
 
-function parseGoogleDate(value: GoogleCalendarEvent["start"] | GoogleCalendarEvent["end"]) {
-  const raw = value?.dateTime ?? value?.date
-  if (!raw) return null
-  const date = new Date(raw)
-  return Number.isNaN(date.getTime()) ? null : date
-}
-
-function googleEventMetadata(item: GoogleCalendarEvent, calendarId: string) {
-  return {
-    source: SOURCE,
-    calendarId,
-    googleEventId: item.id,
-    googleEventKey: `${calendarId}:${item.id}`,
-    iCalUID: item.iCalUID ?? null,
-    status: item.status ?? null,
-    htmlLink: item.htmlLink ?? null,
-    location: item.location ?? null,
-    start: item.start ?? null,
-    end: item.end ?? null,
-    updated: item.updated ?? null,
-    attendees: (item.attendees ?? []).map(attendee => ({
-      email: attendee.email ?? null,
-      displayName: attendee.displayName ?? null,
-      responseStatus: attendee.responseStatus ?? null,
-      self: Boolean(attendee.self),
-    })),
-    organizer: item.organizer ?? null,
-    creator: item.creator ?? null,
-  }
-}
-
 function sourceMarker(calendarId: string, eventId: string) {
   return `${SOURCE}:${calendarId}:${eventId}`
 }
 
 function parseJsonList(value: string | null) {
-  if (!value) return []
-  try {
-    const parsed = JSON.parse(value)
-    return Array.isArray(parsed) ? parsed.filter((item): item is string => typeof item === "string" && item.trim().length > 0) : []
-  } catch {
-    return []
-  }
+  return decodeStoredJson(value, storedStringList, "Person.emails", [])
 }
 
 function parseJsonObject(value: string | null) {
@@ -786,8 +675,7 @@ function parseJsonObject(value: string | null) {
 }
 
 function parseCalendarMetadata(value: string | null | undefined): CalendarEventMetadata {
-  const parsed = parseJsonObject(value ?? null) as CalendarEventMetadata | null
-  return parsed ?? {}
+  return decodeStoredJson(value, calendarEventMetadataContract, "Event.calendarMetadata", {}) as CalendarEventMetadata
 }
 
 function normalizeBackfillDays(value: number | null | undefined) {

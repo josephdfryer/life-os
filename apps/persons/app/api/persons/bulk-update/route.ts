@@ -2,26 +2,24 @@ import { NextRequest, NextResponse } from "next/server"
 import { db } from "@/lib/db"
 import { requireAccess } from "@/server/domain/access"
 import { handleRouteError } from "@/server/api/respond"
-import { badRequest, optionalString, optionalStringArray } from "@/server/api/errors"
+import { optionalString, optionalStringArray } from "@/server/api/errors"
 import { jsonList } from "@/server/domain/dto"
 import { normalizeBirthday } from "@/lib/birthday"
 import { revalidatePeopleCache } from "@/server/domain/people"
+import { bulkUpdatePeopleContract } from "@life-os/contracts"
+import { parseJsonBody } from "@/server/api/contracts"
 
 export async function POST(req: NextRequest) {
   try {
     const actor = await requireAccess("people.write")
-    const body = await req.json()
-    const updates: unknown[] = Array.isArray(body.updates) ? body.updates : []
-    if (updates.length === 0) throw badRequest("updates must be a non-empty array")
-    if (updates.length > 200) throw badRequest("Maximum 200 updates per request")
+    const { updates } = await parseJsonBody(req, bulkUpdatePeopleContract)
 
     let count = 0
     await db.$transaction(async tx => {
-      for (const u of updates) {
-        const update = u as Record<string, unknown>
+      for (const update of updates) {
         const id = optionalString(update.id)
         if (!id) continue
-        const fields = (update.fields ?? {}) as Record<string, unknown>
+        const fields = update.fields
         const patch: Record<string, unknown> = {}
 
         if (fields.email !== undefined || fields.emails !== undefined) {

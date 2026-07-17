@@ -393,6 +393,13 @@ Plain English: the Data Cleaning page is a focused People quality view. It count
 
 There are two API families.
 
+Mutation routes validate untrusted JSON at the HTTP boundary with shared Zod
+schemas from `packages/contracts`. Persons' `server/api/contracts.ts` adapter
+turns schema failures into the same structured `bad_request` envelope as other
+domain validation errors. Bulk People changes, merges, access administration,
+and import confirmation therefore reject malformed or oversized requests before
+they reach Prisma or domain commands.
+
 ### App APIs
 
 These power the web app itself. They are mostly behind your normal login.
@@ -436,6 +443,12 @@ Plain English: the headless API is how Persons can become programmable. Anything
 
 Browser auth is shared across Life OS apps. Persons keeps a local `apps/persons/auth.ts`
 wrapper, but the actual Google sign-in policy now lives in `packages/auth`.
+The next authorization step is also shared: `packages/access` is the canonical
+session-to-user, workspace-selection, disabled-user, role/scope, and short-lived
+cache policy used by Persons, Places, and Events. Each app supplies its local
+Auth.js session function plus compatible error and audit adapters; app-local
+access modules retain only their existing admin-management surface while that
+larger UI is decomposed.
 Home, Persons, Places, and Stuff can share the same session when deployed on a
 common parent domain and configured with the same `AUTH_SECRET` plus
 `AUTH_COOKIE_DOMAIN` or `LIFE_OS_COOKIE_DOMAIN`.
@@ -487,6 +500,12 @@ flowchart TD
 ```
 
 Plain English: a login is allowed only when the email is in `OWNER_EMAILS`, `ADMIN_EMAILS`, `ALLOWED_EMAILS`, is the first user in an empty database, or has an approved `ApprovedEmail` record. Once allowed, the user gets a `WorkspaceMember` record. All core People memory then belongs to that workspace through `workspaceId`.
+
+If a user belongs to more than one active workspace, the shared access policy
+refuses to guess: the caller must provide the intended workspace. Cache entries
+are keyed by both email and requested workspace, disabled users are rejected
+without being silently reactivated, and explicit workspace requests must match
+an active membership.
 
 The current migration preserves existing data in `default-workspace`. Owner and env-allowlisted emails land there. Future approved emails can be attached to a specific workspace or can create their own clean workspace on first sign-in. API keys also carry `workspaceId`, so headless API calls read and write inside the same boundary as browser users.
 
@@ -609,6 +628,16 @@ flowchart LR
 
 Plain English: the database is the source of truth. The UI, API, admin screens, audit log, and future automations all read from it.
 
+## Critical-Path Verification
+
+The repository-level Playwright suite (`tests/e2e/persons-critical.spec.ts`) starts
+Persons with local-review access and a disposable SQLite database under
+`/private/tmp`. The fixture database is rebuilt by applying the real migration
+history, then seeded with only synthetic records. It verifies browser-level
+People creation, API read/update/delete, workspace isolation, relationship-safe
+merging, staged Inbox acceptance, and stable request-contract errors. CI runs
+this suite without production OAuth credentials or production database access.
+
 ## Mental Model
 
 If you only remember one thing:
@@ -629,6 +658,43 @@ The architecture goal is:
 - You stay the filter when confidence is low.
 - The database remains clean and traceable.
 - APIs make everything programmable later.
+
+The Admin UI's browser requests are centralized in
+`app/admin/api-client.ts`. It owns JSON request construction and the stable
+error-message boundary for access, rules, audit, Calendar, and Gmail panels;
+typed components under `app/admin/tabs/` own feature presentation. Permissions,
+Calendar, Audit, Workspace access management, API Keys, Roles, Rules, and Gmail
+no longer depend on the full Admin controller component. The controller owns
+orchestration and mutation state; each tab receives a typed view model and
+callbacks and can evolve independently.
+
+People import matching is isolated in `app/import/people/matching.ts`. It is a
+pure, fixture-tested boundary for email and normalized-phone identity, fuzzy
+name/company similarity, safe fillable-field calculation, inferred names,
+review status, sorting, and quality counts. The import page orchestrates parsing,
+human review, and confirmed writes without reimplementing match policy.
+
+Stored JSON crosses a typed boundary in `@life-os/contracts`. Person contact
+lists, rule conditions/actions, and Google message/event metadata are decoded
+with named schemas instead of scattered `JSON.parse` calls. Malformed persisted
+structures identify the field and fail predictably rather than silently becoming
+empty state. Stable database vocabularies continue to use the existing Prisma
+enums; free-form domain values remain strings until their vocabulary is proven.
+
+Google integrations share `server/integrations/google/client.ts` for bearer
+transport and OAuth token exchange. The transport accepts an injected fetch
+implementation for fixture tests. Gmail payload interpretation lives in
+`gmail-message-parser.ts`, separate from token lifecycle, pagination, matching,
+persistence, audit, and sync orchestration. Calendar event interpretation lives
+in `calendar-event-parser.ts`, while `calendar-client.ts` owns provider paging,
+incremental sync tokens, and bounded full-sync fallback when Google expires a
+token. Those provider paths run against fixtures without a live Google account;
+the domain modules retain Life OS persistence, matching, audit, and trace flow.
+Each Gmail and Calendar sync also emits a structured `workflow.run` start and
+terminal record with a correlation ID, duration, counters, terminal status, and
+error when present. Sync responses return that run ID, while status responses
+include sync age, staleness, and failure state so operators can diagnose a
+partial or failed ingestion without first reproducing it locally.
 
 ## Current Journey
 

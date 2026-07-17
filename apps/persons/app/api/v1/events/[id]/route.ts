@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import { db } from "@/lib/db"
+import { parseStoredRecord } from "@/lib/utils"
 import { centsToDollars } from "@life-os/db"
 import { authorizeApiRequest, unauthorized } from "@/lib/api-auth"
 import { updateEvent, deleteEvent } from "@/server/domain/events"
@@ -20,7 +21,7 @@ export async function GET(req: NextRequest, { params }: Params) {
   if (!event) return NextResponse.json({ error: "Not found" }, { status: 404 })
   return NextResponse.json({
     ...event,
-    metadata: event.metadata ? JSON.parse(event.metadata) : null,
+    metadata: event.metadata ? parseStoredRecord(event.metadata, "Event.metadata") : null,
     interactions: event.interactions.map(ix => ({ ...ix, amount: centsToDollars(ix.amount) })),
   })
 }

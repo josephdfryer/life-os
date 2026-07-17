@@ -87,7 +87,11 @@ export async function auditAction(input: AuditInput) {
         workspaceId: actor.workspaceId ?? null,
         userId: actor.type === "user" ? actorId : null,
         apiKeyId: actor.type === "api_key" && actorId !== "env" ? actorId : null,
-        personId: input.targetType === "person" ? input.targetId ?? null : null,
+        // A delete audit is written after the Person is removed. Keep the stable
+        // targetId, but do not create a dangling relational foreign key.
+        personId: input.targetType === "person" && input.action !== "person.delete"
+          ? input.targetId ?? null
+          : null,
         metadata: input.metadata ? JSON.stringify(input.metadata) : null,
       },
     })

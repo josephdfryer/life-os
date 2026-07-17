@@ -2,23 +2,19 @@ import { NextRequest, NextResponse } from "next/server"
 import { db } from "@/lib/db"
 import { requireAccess } from "@/server/domain/access"
 import { handleRouteError } from "@/server/api/respond"
-import { badRequest, optionalString, optionalStringArray, requiredString } from "@/server/api/errors"
+import { optionalString, optionalStringArray, requiredString } from "@/server/api/errors"
 import { jsonList } from "@/server/domain/dto"
 import { normalizeBirthday } from "@/lib/birthday"
 import { revalidatePeopleCache } from "@/server/domain/people"
-
-const MAX_BATCH = 500
+import { bulkCreatePeopleContract } from "@life-os/contracts"
+import { parseJsonBody } from "@/server/api/contracts"
 
 export async function POST(req: NextRequest) {
   try {
     const actor = await requireAccess("people.write")
-    const body = await req.json()
-    const contacts: unknown[] = Array.isArray(body.contacts) ? body.contacts : []
-    if (contacts.length === 0) throw badRequest("contacts must be a non-empty array")
-    if (contacts.length > MAX_BATCH) throw badRequest(`Maximum ${MAX_BATCH} contacts per request`)
+    const { contacts } = await parseJsonBody(req, bulkCreatePeopleContract)
 
-    const rows = contacts.map((c: unknown) => {
-      const contact = c as Record<string, unknown>
+    const rows = contacts.map(contact => {
       const emailsList = (() => {
         const arr = optionalStringArray(contact.emails)
         if (arr.length) return arr

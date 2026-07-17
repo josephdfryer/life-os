@@ -1,4 +1,5 @@
 import { birthdayMonthDay, normalizeBirthday } from "./birthday"
+import { decodeStoredJson, storedRecord, storedStringList } from "@life-os/contracts"
 
 export function relativeTime(date: Date | string | null): string {
   if (!date) return "Never"
@@ -33,28 +34,20 @@ export function parseTags(raw: string | string[] | null | undefined): string[] {
         : []
     )
   }
-  try {
-    const parsed = JSON.parse(raw)
-    if (!Array.isArray(parsed)) return []
-    return parsed.flatMap((item: unknown) =>
-      typeof item === "string"
-        ? item.split(" ::: ").map(s => s.trim()).filter(Boolean)
-        : []
-    )
-  } catch {
-    // Raw legacy string (not JSON at all)
-    return raw.split(" ::: ").map(s => s.trim()).filter(Boolean)
+  if (raw.trim().startsWith("[")) {
+    return decodeStoredJson(raw, storedStringList, "stored string list", [])
+      .flatMap(item => item.split(" ::: ").map(s => s.trim()).filter(Boolean))
   }
+  // Raw legacy string (not JSON at all).
+  return raw.split(" ::: ").map(s => s.trim()).filter(Boolean)
 }
 
 export function parseJsonArray(raw: string | null | undefined): string[] {
-  if (!raw) return []
-  try {
-    const v = JSON.parse(raw)
-    return Array.isArray(v) ? v : []
-  } catch {
-    return []
-  }
+  return decodeStoredJson(raw, storedStringList, "stored string list", [])
+}
+
+export function parseStoredRecord(raw: string | null | undefined, field = "stored metadata") {
+  return decodeStoredJson(raw, storedRecord, field, {})
 }
 
 export function formatBirthday(birthday: string | null): string | null {

@@ -12,6 +12,8 @@ out
 # Build outputs
 dist
 *.tsbuildinfo
+playwright-report/
+test-results/
 
 # Env files
 .env

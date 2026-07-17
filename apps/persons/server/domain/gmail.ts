@@ -7,9 +7,12 @@ import type { AccessActor } from "./access"
 import { stageRecord } from "./inbox"
 import { appendDailySourceInteraction } from "./interactions"
 import { sourceMarkers } from "./idempotency"
+import { googleFetch, requestGoogleToken, type GoogleTokenResponse } from "@/server/integrations/google/client"
+import { parseGmailMessage as parseMessage, type EmailParty, type GmailMessage, type ParsedMessage } from "@/server/integrations/google/gmail-message-parser"
+import { decodeStoredJson, gmailMessageMetadataContract, storedStringList } from "@life-os/contracts"
+import { startWorkflowRun, syncHealth } from "@/server/observability/workflow"
 
 const GOOGLE_AUTH_URL = "https://accounts.google.com/o/oauth2/v2/auth"
-const GOOGLE_TOKEN_URL = "https://oauth2.googleapis.com/token"
 const GMAIL_BASE = "https://gmail.googleapis.com/gmail/v1"
 const GOOGLE_PEOPLE_BASE = "https://people.googleapis.com/v1"
 const GMAIL_READONLY_SCOPE = "https://www.googleapis.com/auth/gmail.readonly"
@@ -35,12 +38,7 @@ type OAuthState = {
   returnTo: string
 }
 
-type TokenResponse = {
-  access_token: string
-  expires_in?: number
-  refresh_token?: string
-  scope?: string
-}
+type TokenResponse = GoogleTokenResponse
 
 type GmailProfile = {
   emailAddress?: string
@@ -81,42 +79,6 @@ type GmailHistoryResponse = {
   historyId?: string
 }
 
-type GmailMessage = {
-  id: string
-  threadId?: string
-  historyId?: string
-  internalDate?: string
-  labelIds?: string[]
-  snippet?: string
-  payload?: {
-    mimeType?: string
-    headers?: { name?: string; value?: string }[]
-    body?: { data?: string }
-    parts?: GmailMessage["payload"][]
-  }
-}
-
-type EmailParty = {
-  name: string | null
-  email: string
-}
-
-type ParsedMessage = {
-  id: string
-  threadId: string | null
-  historyId: string | null
-  subject: string | null
-  from: EmailParty[]
-  to: EmailParty[]
-  cc: EmailParty[]
-  bcc: EmailParty[]
-  timestamp: Date
-  snippet: string | null
-  body: string | null
-  direction: string
-  labelIds: string[]
-  metadata: Record<string, unknown>
-}
 
 type GmailMessageMetadata = {
   subject?: string | null
@@ -181,6 +143,7 @@ export async function gmailStatus(actor: AccessActor) {
     connection: connection ? {
       ...connection,
       messageCount: connection._count.messageLinks,
+      syncHealth: syncHealth(connection.lastSyncedAt, connection.lastError),
       _count: undefined,
     } : null,
   }
@@ -435,23 +398,24 @@ export async function syncGmail(actor: AccessActor, options: SyncOptions = {}) {
   const unmatchedMode = options.unmatchedMode === "stage" ? "stage" : "skip"
   const importantOnly = options.importantOnly !== false
   const deadline = Date.now() + SYNC_BUDGET_MS
+  const stats: SyncStats = {
+    createdInteractions: 0,
+    updatedInteractions: 0,
+    staged: 0,
+    skipped: 0,
+    deleted: 0,
+    fetched: 0,
+    batches: 0,
+    backfillDays,
+    incremental: Boolean(connection.historyId),
+    unmatchedMode,
+    importantOnly,
+    incomplete: false,
+  }
+  const telemetry = startWorkflowRun({ workflow: "gmail.sync", workspaceId: actor.workspaceId, targetId: connection.id, context: { incremental: stats.incremental } })
 
   try {
     const peopleByEmail = await peopleEmailIndex(actor.workspaceId)
-    const stats: SyncStats = {
-      createdInteractions: 0,
-      updatedInteractions: 0,
-      staged: 0,
-      skipped: 0,
-      deleted: 0,
-      fetched: 0,
-      batches: 0,
-      backfillDays,
-      incremental: Boolean(connection.historyId),
-      unmatchedMode,
-      importantOnly,
-      incomplete: false,
-    }
 
     const listed = connection.historyId
       ? await syncHistoryPages(accessToken, {
@@ -498,10 +462,12 @@ export async function syncGmail(actor: AccessActor, options: SyncOptions = {}) {
       metadata: { provider: "google", ...stats },
     })
 
-    return stats
+    telemetry.finish(stats.incomplete ? "partial" : "succeeded", stats)
+    return { ...stats, runId: telemetry.runId }
   } catch (error) {
     const message = error instanceof Error ? error.message : "Gmail sync failed"
     await db.gmailConnection.update({ where: { id: connection.id }, data: { lastError: message } })
+    telemetry.finish("failed", stats, error)
     throw error
   }
 }
@@ -876,141 +842,29 @@ async function exchangeCode(code: string, redirectUri: string) {
   const clientId = gmailClientId()
   const clientSecret = gmailClientSecret()
   if (!clientId || !clientSecret) throw badRequest("Gmail OAuth is not configured")
-  const res = await fetch(GOOGLE_TOKEN_URL, {
-    method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    body: new URLSearchParams({
+  return await requestGoogleToken({
       code,
       client_id: clientId,
       client_secret: clientSecret,
       redirect_uri: redirectUri,
       grant_type: "authorization_code",
-    }),
   })
-  if (!res.ok) throw new Error(`Google token exchange failed (${res.status})`)
-  return await res.json() as TokenResponse
 }
 
 async function refreshAccessToken(refreshToken: string) {
   const clientId = gmailClientId()
   const clientSecret = gmailClientSecret()
   if (!clientId || !clientSecret) throw badRequest("Gmail OAuth is not configured")
-  const res = await fetch(GOOGLE_TOKEN_URL, {
-    method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    body: new URLSearchParams({
+  return await requestGoogleToken({
       refresh_token: refreshToken,
       client_id: clientId,
       client_secret: clientSecret,
       grant_type: "refresh_token",
-    }),
   })
-  if (!res.ok) throw new Error(`Google token refresh failed (${res.status})`)
-  return await res.json() as TokenResponse
 }
 
-function parseMessage(raw: GmailMessage, mailboxEmail: string | null): ParsedMessage {
-  const headers = headersMap(raw.payload?.headers ?? [])
-  const timestamp = parseTimestamp(headers.get("date") ?? null, raw.internalDate)
-  const from = parseAddressList(headers.get("from"))
-  const to = parseAddressList(headers.get("to"))
-  const cc = parseAddressList(headers.get("cc"))
-  const bcc = parseAddressList(headers.get("bcc"))
-  const self = mailboxEmail ? normalizeEmail(mailboxEmail) : null
-  const fromSelf = self ? from.some(party => normalizeEmail(party.email) === self) : Boolean(raw.labelIds?.includes("SENT"))
-  const body = extractBody(raw.payload) ?? raw.snippet ?? null
 
-  return {
-    id: raw.id,
-    threadId: raw.threadId ?? null,
-    historyId: raw.historyId ?? null,
-    subject: headers.get("subject") ?? null,
-    from,
-    to,
-    cc,
-    bcc,
-    timestamp,
-    snippet: raw.snippet ?? null,
-    body,
-    direction: fromSelf ? "outgoing" : "incoming",
-    labelIds: raw.labelIds ?? [],
-    metadata: {
-      source: SOURCE,
-      gmailMessageId: raw.id,
-      threadId: raw.threadId ?? null,
-      historyId: raw.historyId ?? null,
-      labelIds: raw.labelIds ?? [],
-      subject: headers.get("subject") ?? null,
-      from,
-      to,
-      cc,
-      bcc,
-      snippet: raw.snippet ?? null,
-    },
-  }
-}
-
-function headersMap(headers: { name?: string; value?: string }[]) {
-  const map = new Map<string, string>()
-  for (const header of headers) {
-    if (!header.name || header.value === undefined) continue
-    map.set(header.name.toLowerCase(), header.value)
-  }
-  return map
-}
-
-function parseTimestamp(dateHeader: string | null, internalDate: string | undefined) {
-  const fromHeader = dateHeader ? new Date(dateHeader) : null
-  if (fromHeader && !Number.isNaN(fromHeader.getTime())) return fromHeader
-  const millis = internalDate ? Number(internalDate) : NaN
-  const fromInternal = Number.isFinite(millis) ? new Date(millis) : null
-  return fromInternal && !Number.isNaN(fromInternal.getTime()) ? fromInternal : new Date()
-}
-
-function parseAddressList(value: string | null | undefined) {
-  if (!value) return []
-  return value.split(/,(?=(?:[^"]*"[^"]*")*[^"]*$)/)
-    .map(part => part.trim())
-    .map(parseAddress)
-    .filter((party): party is EmailParty => Boolean(party?.email))
-}
-
-function parseAddress(value: string) {
-  const bracket = value.match(/^(.*)<([^>]+)>$/)
-  if (bracket) {
-    return {
-      name: cleanName(bracket[1]),
-      email: bracket[2].trim().toLowerCase(),
-    }
-  }
-  const email = value.match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i)?.[0]
-  if (!email) return null
-  return { name: cleanName(value.replace(email, "")), email: email.toLowerCase() }
-}
-
-function cleanName(value: string) {
-  const cleaned = value.trim().replace(/^"+|"+$/g, "").trim()
-  return cleaned || null
-}
-
-function extractBody(part: GmailMessage["payload"]): string | null {
-  if (!part) return null
-  if (part.mimeType === "text/plain" && part.body?.data) return decodeBase64Url(part.body.data)
-  for (const child of part.parts ?? []) {
-    const text = extractBody(child)
-    if (text) return text
-  }
-  if (part.body?.data && part.mimeType?.startsWith("text/")) return decodeBase64Url(part.body.data)
-  return null
-}
-
-function decodeBase64Url(value: string) {
-  return Buffer.from(value.replace(/-/g, "+").replace(/_/g, "/"), "base64").toString("utf8").trim()
-}
-
-function gmailFetch(url: string, accessToken: string) {
-  return fetch(url, { headers: { Authorization: `Bearer ${accessToken}` } })
-}
+const gmailFetch = googleFetch
 
 async function fetchGoogleContacts(accessToken: string) {
   const contacts: ReturnType<typeof googlePersonToParsedContact>[] = []
@@ -1151,13 +1005,7 @@ function googleBirthday(date: GoogleBirthdayDate | undefined) {
 }
 
 function parseJsonList(value: string | null) {
-  if (!value) return []
-  try {
-    const parsed = JSON.parse(value)
-    return Array.isArray(parsed) ? parsed.filter((item): item is string => typeof item === "string" && item.trim().length > 0) : []
-  } catch {
-    return []
-  }
+  return decodeStoredJson(value, storedStringList, "Person.emails", [])
 }
 
 function parseJsonObject(value: string | null) {
@@ -1171,8 +1019,7 @@ function parseJsonObject(value: string | null) {
 }
 
 function parseGmailMetadata(value: string | null | undefined): GmailMessageMetadata {
-  const parsed = parseJsonObject(value ?? null) as GmailMessageMetadata | null
-  return parsed ?? {}
+  return decodeStoredJson(value, gmailMessageMetadataContract, "Gmail.messageMetadata", {}) as GmailMessageMetadata
 }
 
 function normalizeEmail(value: string) {

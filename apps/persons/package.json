@@ -12,6 +12,8 @@
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.92.0",
+    "@life-os/access": "*",
+    "@life-os/contracts": "*",
     "jszip": "^3.10.1",
     "@life-os/alignment": "*",
     "@life-os/auth": "*",

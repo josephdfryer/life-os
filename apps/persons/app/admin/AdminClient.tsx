@@ -2,6 +2,13 @@
 
 import type React from "react"
 import { useEffect, useMemo, useState } from "react"
+import { adminRequest, jsonRequest } from "./api-client"
+import { AuditTab, CalendarTab, PermissionsTab } from "./tabs/SimpleAdminTabs"
+import { WorkspaceTab } from "./tabs/WorkspaceTab"
+import { ApiKeysTab } from "./tabs/ApiKeysTab"
+import { RolesTab } from "./tabs/RolesTab"
+import { RulesTab } from "./tabs/RulesTab"
+import { GmailTab } from "./tabs/GmailTab"
 const EVENTS_APP_URL = process.env.NEXT_PUBLIC_EVENTS_URL || "http://localhost:3006"
 
 type Permission = { id: string; scope: string; description: string | null }
@@ -84,63 +91,6 @@ type RuleRun = {
   actionsApplied: unknown
   rule: { id: string; name: string; trigger: string }
 }
-type CalendarStatus = {
-  configured: boolean
-  redirectUri: string
-  connection: {
-    id: string
-    status: string
-    accountEmail: string | null
-    calendarId: string
-    calendarSummary: string | null
-    scope: string | null
-    lastSyncedAt: string | null
-    lastError: string | null
-    updatedAt: string
-    eventCount: number
-  } | null
-}
-type CalendarTrace = {
-  connection: {
-    id: string
-    calendarId: string
-    accountEmail: string | null
-    calendarSummary: string | null
-  } | null
-  runs: {
-    id: string
-    createdAt: string
-    actorLabel: string | null
-    metadata: Record<string, unknown> | null
-  }[]
-  events: {
-    id: string
-    status: string
-    calendarId: string
-    externalEventId: string
-    iCalUID: string | null
-    createdAt: string
-    updatedAt: string
-    lastSeenAt: string | null
-    event: {
-      id: string
-      name: string
-      timestamp: string
-      createdAt: string
-      htmlLink: string | null
-      location: string | null
-      attendeeCount: number
-      attendees: { email?: string | null; displayName?: string | null; responseStatus?: string | null; self?: boolean }[]
-    } | null
-    linkedPeople: {
-      id: string
-      createdAt: string
-      timestamp: string
-      summary: string | null
-      person: { id: string; name: string; emails: string[] } | null
-    }[]
-  }[]
-}
 type GmailStatus = {
   configured: boolean
   redirectUri: string
@@ -218,14 +168,6 @@ type Overview = {
 
 const TABS = ["apiKeys", "roles", "rules", "permissions", "audit", "workspace", "calendar", "gmail"] as const
 type Tab = typeof TABS[number]
-const CALENDAR_BACKFILL_OPTIONS = [
-  { value: "30", label: "Past 30 days" },
-  { value: "90", label: "Past 90 days" },
-  { value: "180", label: "Past 6 months" },
-  { value: "365", label: "Past year" },
-  { value: "730", label: "Past 2 years" },
-  { value: "3650", label: "Past 10 years" },
-] as const
 const GMAIL_BACKFILL_OPTIONS = [
   { value: "7", label: "Past 7 days" },
   { value: "30", label: "Past 30 days" },
@@ -339,10 +281,6 @@ export default function AdminClient({
   const [auditLogs, setAuditLogs] = useState<AuditLog[]>([])
   const [rules, setRules] = useState<Rule[]>([])
   const [ruleRuns, setRuleRuns] = useState<RuleRun[]>([])
-  const [calendarStatus, setCalendarStatus] = useState<CalendarStatus | null>(null)
-  const [calendarTrace, setCalendarTrace] = useState<CalendarTrace | null>(null)
-  const [calendarSyncResult, setCalendarSyncResult] = useState<string | null>(null)
-  const [calendarBackfillDays, setCalendarBackfillDays] = useState("180")
   const [gmailStatus, setGmailStatus] = useState<GmailStatus | null>(null)
   const [gmailTrace, setGmailTrace] = useState<GmailTrace | null>(null)
   const [gmailSyncResult, setGmailSyncResult] = useState<string | null>(null)
@@ -410,10 +348,6 @@ export default function AdminClient({
       loadRules()
       loadRuleRuns()
     }
-    if (tab === "calendar") {
-      loadCalendarStatus()
-      loadCalendarTrace()
-    }
     if (tab === "gmail") {
       loadGmailStatus()
       loadGmailTrace()
@@ -443,9 +377,7 @@ export default function AdminClient({
     setLoading(true)
     setError(null)
     try {
-      const res = await fetch("/api/admin/access")
-      const data = await res.json()
-      if (!res.ok) throw new Error(data.error?.message || data.error || "Could not load admin data")
+      const data = await adminRequest<Overview>("/api/admin/access", undefined, "Could not load admin data")
       setOverview(data)
       setSelectedRoleId(data.roles?.[0]?.id ?? null)
       setUserRoleDraft(userRolesDraft(data))
@@ -458,9 +390,7 @@ export default function AdminClient({
 
   async function loadAudit() {
     try {
-      const res = await fetch("/api/admin/audit?limit=150")
-      const data = await res.json()
-      if (!res.ok) throw new Error(data.error?.message || data.error || "Could not load audit log")
+      const data = await adminRequest<{ logs?: AuditLog[] }>("/api/admin/audit?limit=150", undefined, "Could not load audit log")
       setAuditLogs(data.logs ?? [])
     } catch (e) {
       setError(e instanceof Error ? e.message : "Could not load audit log")
@@ -469,9 +399,7 @@ export default function AdminClient({
 
   async function loadRules() {
     try {
-      const res = await fetch("/api/admin/rules")
-      const data = await res.json()
-      if (!res.ok) throw new Error(data.error?.message || data.error || "Could not load rules")
+      const data = await adminRequest<{ rules?: Rule[] }>("/api/admin/rules", undefined, "Could not load rules")
       setRules(data.rules ?? [])
       setSelectedRuleId((data.rules ?? [])[0]?.id ?? null)
     } catch (e) {
@@ -487,63 +415,16 @@ export default function AdminClient({
       if (runFilterMatched !== "all") params.set("matched", runFilterMatched)
       if (runFilterStatus !== "all") params.set("status", runFilterStatus)
       const query = params.toString()
-      const res = await fetch(`/api/admin/rule-runs${query ? `?${query}` : ""}`)
-      const data = await res.json()
-      if (!res.ok) throw new Error(data.error?.message || data.error || "Could not load rule runs")
+      const data = await adminRequest<{ runs?: RuleRun[] }>(`/api/admin/rule-runs${query ? `?${query}` : ""}`, undefined, "Could not load rule runs")
       setRuleRuns(data.runs ?? [])
     } catch (e) {
       setError(e instanceof Error ? e.message : "Could not load rule runs")
     }
   }
 
-  async function loadCalendarStatus() {
-    try {
-      const res = await fetch("/api/calendar/google/status")
-      const data = await res.json()
-      if (!res.ok) throw new Error(data.error?.message || data.error || "Could not load calendar status")
-      setCalendarStatus(data)
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Could not load calendar status")
-    }
-  }
-
-  async function loadCalendarTrace() {
-    try {
-      const res = await fetch("/api/calendar/google/trace?limit=75")
-      const data = await res.json()
-      if (!res.ok) throw new Error(data.error?.message || data.error || "Could not load calendar trace")
-      setCalendarTrace(data)
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Could not load calendar trace")
-    }
-  }
-
-  async function syncCalendar() {
-    setSaving(true)
-    setError(null)
-    setCalendarSyncResult(null)
-    try {
-      const res = await fetch("/api/calendar/google/sync", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ backfillDays: Number(calendarBackfillDays) }),
-      })
-      const data = await res.json()
-      if (!res.ok) throw new Error(data.error?.message || data.error || "Could not sync Google Calendar")
-      setCalendarSyncResult(JSON.stringify(data, null, 2))
-      await Promise.all([loadCalendarStatus(), loadCalendarTrace()])
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Could not sync Google Calendar")
-    } finally {
-      setSaving(false)
-    }
-  }
-
   async function loadGmailStatus() {
     try {
-      const res = await fetch("/api/gmail/google/status")
-      const data = await res.json()
-      if (!res.ok) throw new Error(data.error?.message || data.error || "Could not load Gmail status")
+      const data = await adminRequest<GmailStatus>("/api/gmail/google/status", undefined, "Could not load Gmail status")
       setGmailStatus(data)
     } catch (e) {
       setError(e instanceof Error ? e.message : "Could not load Gmail status")
@@ -552,9 +433,7 @@ export default function AdminClient({
 
   async function loadGmailTrace() {
     try {
-      const res = await fetch("/api/gmail/google/trace?limit=75")
-      const data = await res.json()
-      if (!res.ok) throw new Error(data.error?.message || data.error || "Could not load Gmail trace")
+      const data = await adminRequest<GmailTrace>("/api/gmail/google/trace?limit=75", undefined, "Could not load Gmail trace")
       setGmailTrace(data)
     } catch (e) {
       setError(e instanceof Error ? e.message : "Could not load Gmail trace")
@@ -566,13 +445,9 @@ export default function AdminClient({
     setError(null)
     setGmailSyncResult(null)
     try {
-      const res = await fetch("/api/gmail/google/sync", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ backfillDays: Number(gmailBackfillDays), unmatchedMode: gmailUnmatchedMode }),
-      })
-      const data = await res.json()
-      if (!res.ok) throw new Error(data.error?.message || data.error || "Could not sync Gmail")
+      const data = await adminRequest<unknown>("/api/gmail/google/sync", jsonRequest("POST", {
+        backfillDays: Number(gmailBackfillDays), unmatchedMode: gmailUnmatchedMode,
+      }), "Could not sync Gmail")
       setGmailSyncResult(JSON.stringify(data, null, 2))
       await Promise.all([loadGmailStatus(), loadGmailTrace()])
     } catch (e) {
@@ -588,13 +463,9 @@ export default function AdminClient({
     setError(null)
     setNewSecret(null)
     try {
-      const res = await fetch("/api/admin/api-keys", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: keyName, scopes: keyScopes }),
-      })
-      const data = await res.json()
-      if (!res.ok) throw new Error(data.error?.message || data.error || "Could not create API key")
+      const data = await adminRequest<{ secret: string }>("/api/admin/api-keys", jsonRequest("POST", {
+        name: keyName, scopes: keyScopes,
+      }), "Could not create API key")
       setNewSecret(data.secret)
       setKeyName("")
       await loadOverview()
@@ -609,13 +480,7 @@ export default function AdminClient({
     setSaving(true)
     setError(null)
     try {
-      const res = await fetch(`/api/admin/api-keys/${id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status }),
-      })
-      const data = await res.json()
-      if (!res.ok) throw new Error(data.error?.message || data.error || "Could not update API key")
+      await adminRequest(`/api/admin/api-keys/${id}`, jsonRequest("PATCH", { status }), "Could not update API key")
       await loadOverview()
     } catch (e) {
       setError(e instanceof Error ? e.message : "Could not update API key")
@@ -629,13 +494,9 @@ export default function AdminClient({
     setSaving(true)
     setError(null)
     try {
-      const res = await fetch("/api/admin/roles", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ key: roleKey, name: roleName, description: roleDescription, scopes: [] }),
-      })
-      const data = await res.json()
-      if (!res.ok) throw new Error(data.error?.message || data.error || "Could not create role")
+      const data = await adminRequest<{ id: string }>("/api/admin/roles", jsonRequest("POST", {
+        key: roleKey, name: roleName, description: roleDescription, scopes: [],
+      }), "Could not create role")
       setRoleName("")
       setRoleKey("")
       setRoleDescription("")
@@ -653,13 +514,9 @@ export default function AdminClient({
     setSaving(true)
     setError(null)
     try {
-      const res = await fetch(`/api/admin/roles/${selectedRole.id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ scopes: selectedRoleScopes }),
-      })
-      const data = await res.json()
-      if (!res.ok) throw new Error(data.error?.message || data.error || "Could not update role")
+      await adminRequest(`/api/admin/roles/${selectedRole.id}`, jsonRequest("PATCH", {
+        scopes: selectedRoleScopes,
+      }), "Could not update role")
       await loadOverview()
     } catch (e) {
       setError(e instanceof Error ? e.message : "Could not update role")
@@ -672,13 +529,9 @@ export default function AdminClient({
     setSaving(true)
     setError(null)
     try {
-      const res = await fetch(`/api/admin/users/${userId}/roles`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ roleIds: userRoleDraft[userId] ?? [] }),
-      })
-      const data = await res.json()
-      if (!res.ok) throw new Error(data.error?.message || data.error || "Could not update user roles")
+      await adminRequest(`/api/admin/users/${userId}/roles`, jsonRequest("PATCH", {
+        roleIds: userRoleDraft[userId] ?? [],
+      }), "Could not update user roles")
       await loadOverview()
     } catch (e) {
       setError(e instanceof Error ? e.message : "Could not update user roles")
@@ -692,13 +545,7 @@ export default function AdminClient({
     setError(null)
     setTestResult(null)
     try {
-      const res = await fetch("/api/admin/rules", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(rulePayload()),
-      })
-      const data = await res.json()
-      if (!res.ok) throw new Error(data.error?.message || data.error || "Could not create rule")
+      const data = await adminRequest<{ id: string }>("/api/admin/rules", jsonRequest("POST", rulePayload()), "Could not create rule")
       await loadRules()
       setSelectedRuleId(data.id)
     } catch (e) {
@@ -714,13 +561,7 @@ export default function AdminClient({
     setError(null)
     setTestResult(null)
     try {
-      const res = await fetch(`/api/admin/rules/${selectedRule.id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(rulePayload()),
-      })
-      const data = await res.json()
-      if (!res.ok) throw new Error(data.error?.message || data.error || "Could not update rule")
+      const data = await adminRequest<{ id: string }>(`/api/admin/rules/${selectedRule.id}`, jsonRequest("PATCH", rulePayload()), "Could not update rule")
       await loadRules()
       setSelectedRuleId(data.id)
     } catch (e) {
@@ -735,17 +576,11 @@ export default function AdminClient({
     setError(null)
     setTestResult(null)
     try {
-      const res = await fetch("/api/admin/rules/test", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
+      const data = await adminRequest<unknown>("/api/admin/rules/test", jsonRequest("POST", {
           ruleId: selectedRule?.id ?? null,
           rule: selectedRule ? undefined : rulePayload(),
           payload: testPayload,
-        }),
-      })
-      const data = await res.json()
-      if (!res.ok) throw new Error(data.error?.message || data.error || "Could not test rule")
+      }), "Could not test rule")
       setTestResult(JSON.stringify(data, null, 2))
       await loadRuleRuns()
     } catch (e) {
@@ -761,13 +596,9 @@ export default function AdminClient({
     setError(null)
     try {
       const workspaceId = inviteWorkspaceId === "own" ? null : inviteWorkspaceId
-      const res = await fetch("/api/admin/approved-emails", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: inviteEmail.trim(), workspaceId }),
-      })
-      const data = await res.json()
-      if (!res.ok) throw new Error(data.error?.message || data.error || "Could not approve email")
+      await adminRequest("/api/admin/approved-emails", jsonRequest("POST", {
+        email: inviteEmail.trim(), workspaceId,
+      }), "Could not approve email")
       setInviteEmail("")
       await loadOverview()
     } catch (e) {
@@ -781,13 +612,7 @@ export default function AdminClient({
     setSaving(true)
     setError(null)
     try {
-      const res = await fetch(`/api/admin/approved-emails/${id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status }),
-      })
-      const data = await res.json()
-      if (!res.ok) throw new Error(data.error?.message || data.error || "Could not update approval")
+      await adminRequest(`/api/admin/approved-emails/${id}`, jsonRequest("PATCH", { status }), "Could not update approval")
       await loadOverview()
     } catch (e) {
       setError(e instanceof Error ? e.message : "Could not update approval")
@@ -903,532 +728,84 @@ export default function AdminClient({
           {loading && <div style={{ fontSize: "12px", color: "var(--ink-3)" }}>Loading...</div>}
 
           {!loading && overview && tab === "apiKeys" && (
-            <section style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) 320px", gap: "18px" }}>
-              <Panel title="API Keys" meta={`${overview.apiKeys.length} keys`}>
-                <div style={{ overflowX: "auto" }}>
-                  <table style={tableStyle}>
-                    <thead>
-                      <tr>
-                        <Th>Name</Th>
-                        <Th>Prefix</Th>
-                        <Th>Status</Th>
-                        <Th>Scopes</Th>
-                        <Th>Last Used</Th>
-                        <Th></Th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {overview.apiKeys.map(key => (
-                        <tr key={key.id}>
-                          <Td strong>{key.name}</Td>
-                          <Td>{key.keyPrefix}</Td>
-                          <Td><StatusPill status={key.status} /></Td>
-                          <Td>{key.scopes.join(", ")}</Td>
-                          <Td>{formatDate(key.lastUsedAt)}</Td>
-                          <Td align="right">
-                            <button style={smallButtonStyle} disabled={saving} onClick={() => updateKeyStatus(key.id, key.status === "active" ? "revoked" : "active")}>
-                              {key.status === "active" ? "Revoke" : "Activate"}
-                            </button>
-                          </Td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </Panel>
-
-              <Panel title="New Key">
-                <Field label="Name" value={keyName} onChange={setKeyName} placeholder="iMessage watcher" />
-                <ScopePicker permissions={permissions} selected={keyScopes} onToggle={scope => toggleScope(scope, keyScopes, setKeyScopes)} compact />
-                <button style={primaryButtonStyle} disabled={saving || !keyName.trim() || !keyScopes.length} onClick={createKey}>
-                  Create
-                </button>
-                {newSecret && (
-                  <div style={{ marginTop: "12px" }}>
-                    <div style={{ fontSize: "10px", color: "var(--ink-4)", marginBottom: "5px" }}>Secret</div>
-                    <div style={{ border: "1px solid var(--border)", borderRadius: "8px", background: "var(--bg)", padding: "9px", fontSize: "11px", lineHeight: 1.4, wordBreak: "break-all" }}>
-                      {newSecret}
-                    </div>
-                  </div>
-                )}
-              </Panel>
-            </section>
+            <ApiKeysTab apiKeys={overview.apiKeys} permissions={permissions} selectedScopes={keyScopes} name={keyName} secret={newSecret} saving={saving} onNameChange={setKeyName} onScopeToggle={scope => toggleScope(scope, keyScopes, setKeyScopes)} onCreate={createKey} onStatusChange={updateKeyStatus} />
           )}
 
           {!loading && overview && tab === "roles" && (
-            <section style={{ display: "grid", gridTemplateColumns: "280px minmax(0, 1fr) 300px", gap: "18px" }}>
-              <Panel title="Roles" meta={`${overview.roles.length} roles`}>
-                <div style={{ display: "grid", gap: "8px" }}>
-                  {overview.roles.map(role => (
-                    <button
-                      key={role.id}
-                      onClick={() => setSelectedRoleId(role.id)}
-                      style={{
-                        textAlign: "left",
-                        border: `1px solid ${role.id === selectedRole?.id ? "var(--accent)" : "var(--border)"}`,
-                        background: role.id === selectedRole?.id ? "var(--accent-soft)" : "var(--bg)",
-                        borderRadius: "8px",
-                        padding: "10px",
-                        cursor: "pointer",
-                        fontFamily: "inherit",
-                      }}
-                    >
-                      <div style={{ fontSize: "12px", fontWeight: 600 }}>{role.name}</div>
-                      <div style={{ fontSize: "10px", color: "var(--ink-4)" }}>{role.key} · {role.userCount} users</div>
-                    </button>
-                  ))}
-                </div>
-              </Panel>
-
-              <Panel title={selectedRole?.name ?? "Role"} meta={selectedRole?.key}>
-                {selectedRole && (
-                  <>
-                    <div style={{ marginBottom: "12px", fontSize: "12px", color: "var(--ink-3)", minHeight: "18px" }}>
-                      {selectedRole.description}
-                    </div>
-                    <ScopePicker permissions={permissions} selected={selectedRoleScopes} onToggle={scope => toggleScope(scope, selectedRoleScopes, setSelectedRoleScopes)} />
-                    <button style={primaryButtonStyle} disabled={saving} onClick={saveRoleScopes}>
-                      Save Role
-                    </button>
-                  </>
-                )}
-              </Panel>
-
-              <Panel title="New Role">
-                <Field label="Key" value={roleKey} onChange={setRoleKey} placeholder="partner" />
-                <Field label="Name" value={roleName} onChange={setRoleName} placeholder="Partner" />
-                <Field label="Description" value={roleDescription} onChange={setRoleDescription} placeholder="External collaborator" />
-                <button style={primaryButtonStyle} disabled={saving || !roleName.trim() || !roleKey.trim()} onClick={createRole}>
-                  Create
-                </button>
-                <div style={{ marginTop: "16px", borderTop: "1px solid var(--border)", paddingTop: "12px" }}>
-                  <div style={{ fontSize: "11px", color: "var(--ink-4)", marginBottom: "8px" }}>Users</div>
-                  <div style={{ display: "grid", gap: "9px" }}>
-                    {overview.users.map(user => (
-                      <div key={user.id} style={{ border: "1px solid var(--border)", borderRadius: "8px", padding: "8px", background: "var(--bg)" }}>
-                        <div style={{ fontSize: "11px", color: "var(--ink)" }}>{user.email}</div>
-                        <div style={{ display: "grid", gap: "5px", marginTop: "7px" }}>
-                          {overview.roles.map(role => (
-                            <label key={role.id} style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "10px", color: "var(--ink-3)" }}>
-                              <input
-                                type="checkbox"
-                                checked={(userRoleDraft[user.id] ?? []).includes(role.id)}
-                                onChange={() => {
-                                  const selected = userRoleDraft[user.id] ?? []
-                                  setUserRoleDraft(prev => ({
-                                    ...prev,
-                                    [user.id]: selected.includes(role.id)
-                                      ? selected.filter(id => id !== role.id)
-                                      : [...selected, role.id],
-                                  }))
-                                }}
-                              />
-                              {role.name}
-                            </label>
-                          ))}
-                        </div>
-                        <button style={{ ...smallButtonStyle, marginTop: "8px" }} disabled={saving} onClick={() => saveUserRoles(user.id)}>
-                          Save
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </Panel>
-            </section>
+            <RolesTab
+              roles={overview.roles}
+              users={overview.users}
+              permissions={permissions}
+              selectedRole={selectedRole}
+              selectedScopes={selectedRoleScopes}
+              userRoleDraft={userRoleDraft}
+              newRole={{ key: roleKey, name: roleName, description: roleDescription }}
+              saving={saving}
+              onSelectRole={setSelectedRoleId}
+              onScopeToggle={scope => toggleScope(scope, selectedRoleScopes, setSelectedRoleScopes)}
+              onNewRoleChange={(field, value) => field === "key" ? setRoleKey(value) : field === "name" ? setRoleName(value) : setRoleDescription(value)}
+              onCreateRole={createRole}
+              onSaveRole={saveRoleScopes}
+              onToggleUserRole={(userId, roleId) => setUserRoleDraft(previous => {
+                const selected = previous[userId] ?? []
+                return { ...previous, [userId]: selected.includes(roleId) ? selected.filter(id => id !== roleId) : [...selected, roleId] }
+              })}
+              onSaveUserRoles={saveUserRoles}
+            />
           )}
+
 
           {!loading && overview && tab === "rules" && (
-            <section style={{ display: "grid", gridTemplateColumns: "280px minmax(0, 1fr) 340px", gap: "18px" }}>
-              <Panel title="Rules" meta={`${rules.length} rules`}>
-                <button style={{ ...smallButtonStyle, marginBottom: "10px" }} onClick={resetRuleForm}>New Rule</button>
-                <div style={{ display: "grid", gap: "7px", marginBottom: "12px" }}>
-                  {RULE_TEMPLATES.map(template => (
-                    <button key={template.name} style={templateButtonStyle} onClick={() => applyRuleTemplate(template)}>
-                      <span style={{ display: "block", fontSize: "11px", color: "var(--ink)", fontWeight: 600 }}>{template.name}</span>
-                      <span style={{ display: "block", fontSize: "10px", color: "var(--ink-4)", marginTop: "3px", lineHeight: 1.35 }}>{template.trigger} · {template.mode}</span>
-                    </button>
-                  ))}
-                </div>
-                <div style={{ display: "grid", gap: "8px" }}>
-                  {rules.map(rule => (
-                    <button
-                      key={rule.id}
-                      onClick={() => setSelectedRuleId(rule.id)}
-                      style={{
-                        textAlign: "left",
-                        border: `1px solid ${rule.id === selectedRule?.id ? "var(--accent)" : "var(--border)"}`,
-                        background: rule.id === selectedRule?.id ? "var(--accent-soft)" : "var(--bg)",
-                        borderRadius: "8px",
-                        padding: "10px",
-                        cursor: "pointer",
-                        fontFamily: "inherit",
-                      }}
-                    >
-                      <div style={{ display: "flex", justifyContent: "space-between", gap: "8px" }}>
-                        <span style={{ fontSize: "12px", fontWeight: 600 }}>{rule.name}</span>
-                        <StatusPill status={rule.status} />
-                      </div>
-                      <div style={{ fontSize: "10px", color: "var(--ink-4)", marginTop: "4px" }}>
-                        {rule.trigger} · {rule.mode} · p{rule.priority}
-                      </div>
-                    </button>
-                  ))}
-                </div>
-              </Panel>
-
-              <Panel title={selectedRule ? "Edit Rule" : "New Rule"} meta={selectedRule?.id.slice(0, 8)}>
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}>
-                  <Field label="Name" value={ruleName} onChange={setRuleName} placeholder="Stage unknown iMessages" />
-                  <SelectField label="Trigger" value={ruleTrigger} onChange={setRuleTrigger} options={TRIGGER_OPTIONS} />
-                  <SelectField label="Status" value={ruleStatus} onChange={setRuleStatus} options={["active", "paused", "draft"]} />
-                  <SelectField label="Mode" value={ruleMode} onChange={setRuleMode} options={["auto", "suggest", "block", "dry_run"]} />
-                  <Field label="Priority" value={rulePriority} onChange={setRulePriority} placeholder="100" />
-                  <label style={{ display: "flex", gap: "8px", alignItems: "center", marginTop: "20px", fontSize: "11px", color: "var(--ink-3)" }}>
-                    <input type="checkbox" checked={ruleStopProcessing} onChange={event => setRuleStopProcessing(event.target.checked)} />
-                    Stop after match
-                  </label>
-                </div>
-                <Field label="Description" value={ruleDescription} onChange={setRuleDescription} placeholder="What this rule should do" />
-                <HelperRow label="Condition shortcuts">
-                  {CONDITION_HELPERS.map(helper => (
-                    <button key={helper.label} type="button" style={chipButtonStyle} onClick={() => appendCondition(helper.item)}>
-                      {helper.label}
-                    </button>
-                  ))}
-                </HelperRow>
-                <CodeField label="Conditions" value={ruleConditions} onChange={setRuleConditions} />
-                <HelperRow label="Action shortcuts">
-                  {ACTION_HELPERS.map(helper => (
-                    <button key={helper.label} type="button" style={chipButtonStyle} onClick={() => appendAction(helper.item)}>
-                      {helper.label}
-                    </button>
-                  ))}
-                </HelperRow>
-                <CodeField label="Actions" value={ruleActions} onChange={setRuleActions} />
-                <div style={{ display: "flex", gap: "8px" }}>
-                  <button style={primaryButtonStyle} disabled={saving || !ruleName.trim() || !ruleTrigger.trim()} onClick={selectedRule ? updateRule : createRule}>
-                    {selectedRule ? "Save Rule" : "Create Rule"}
-                  </button>
-                  <button style={smallButtonStyle} disabled={saving} onClick={testCurrentRule}>Dry Run</button>
-                </div>
-              </Panel>
-
-              <Panel title="Test & Runs" meta={`${ruleRuns.length} runs`}>
-                <CodeField label="Payload" value={testPayload} onChange={setTestPayload} />
-                <div style={{ borderTop: "1px solid var(--border)", paddingTop: "10px", marginBottom: "12px" }}>
-                  <div style={{ fontSize: "10px", color: "var(--ink-4)", marginBottom: "8px" }}>Run filters</div>
-                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px" }}>
-                    <SelectOptionField label="Rule" value={runFilterRuleId} onChange={setRunFilterRuleId} options={ruleFilterOptions} />
-                    <SelectField label="Trigger" value={runFilterTrigger} onChange={setRunFilterTrigger} options={["all", ...TRIGGER_OPTIONS]} />
-                    <SelectField label="Outcome" value={runFilterMatched} onChange={setRunFilterMatched} options={["all", "matched", "skipped"]} />
-                    <SelectField label="Status" value={runFilterStatus} onChange={setRunFilterStatus} options={RUN_STATUS_OPTIONS} />
-                  </div>
-                  <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
-                    <button style={smallButtonStyle} disabled={saving} onClick={loadRuleRuns}>Refresh</button>
-                    <button style={smallButtonStyle} disabled={!selectedRule} onClick={focusRunsOnSelectedRule}>Selected Rule</button>
-                  </div>
-                </div>
-                {testResult && (
-                  <div style={{ marginBottom: "12px" }}>
-                    <div style={{ fontSize: "10px", color: "var(--ink-4)", marginBottom: "5px" }}>Result</div>
-                    <pre style={preStyle}>{testResult}</pre>
-                  </div>
-                )}
-                <div style={{ display: "grid", gap: "8px", maxHeight: "420px", overflowY: "auto" }}>
-                  {ruleRuns.map(run => (
-                    <div key={run.id} style={{ border: "1px solid var(--border)", borderRadius: "8px", background: "var(--bg)", padding: "8px" }}>
-                      <div style={{ display: "flex", justifyContent: "space-between", gap: "8px", marginBottom: "4px" }}>
-                        <span style={{ fontSize: "11px", color: "var(--ink)", fontWeight: 600 }}>{run.rule.name}</span>
-                        <span style={{ fontSize: "10px", color: run.matched ? "#526b37" : "var(--ink-4)" }}>{run.matched ? "matched" : "skipped"}</span>
-                      </div>
-                      <div style={{ fontSize: "10px", color: "var(--ink-4)" }}>
-                        {formatDate(run.createdAt)} · {run.status}{run.targetType ? ` · ${run.targetType}${run.targetId ? `:${run.targetId.slice(0, 8)}` : ""}` : ""}
-                      </div>
-                      {run.message && <div style={{ fontSize: "10px", color: "var(--ink-3)", marginTop: "4px" }}>{run.message}</div>}
-                      {(actionCount(run.actionsPlanned) > 0 || actionCount(run.actionsApplied) > 0) && (
-                        <div style={{ display: "flex", gap: "6px", marginTop: "6px", flexWrap: "wrap" }}>
-                          {actionCount(run.actionsPlanned) > 0 && <StatusPill status={`${actionCount(run.actionsPlanned)} planned`} />}
-                          {actionCount(run.actionsApplied) > 0 && <StatusPill status={`${actionCount(run.actionsApplied)} applied`} />}
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </Panel>
-            </section>
+            <RulesTab
+              rules={rules} runs={ruleRuns} selectedRule={selectedRule} templates={RULE_TEMPLATES}
+              conditionHelpers={CONDITION_HELPERS} actionHelpers={ACTION_HELPERS}
+              editor={{ name: ruleName, description: ruleDescription, trigger: ruleTrigger, status: ruleStatus, mode: ruleMode, priority: rulePriority, stopProcessing: ruleStopProcessing, conditions: ruleConditions, actions: ruleActions }}
+              testPayload={testPayload} testResult={testResult}
+              filters={{ ruleId: runFilterRuleId, trigger: runFilterTrigger, matched: runFilterMatched, status: runFilterStatus }}
+              ruleOptions={ruleFilterOptions} triggerOptions={TRIGGER_OPTIONS} runStatusOptions={RUN_STATUS_OPTIONS} saving={saving}
+              onSelectRule={setSelectedRuleId} onNewRule={resetRuleForm}
+              onTemplate={template => { const full = RULE_TEMPLATES.find(item => item.name === template.name); if (full) applyRuleTemplate(full) }}
+              onEditorChange={(field, value) => {
+                if (field === "name") setRuleName(String(value)); else if (field === "description") setRuleDescription(String(value)); else if (field === "trigger") setRuleTrigger(String(value)); else if (field === "status") setRuleStatus(String(value)); else if (field === "mode") setRuleMode(String(value)); else if (field === "priority") setRulePriority(String(value)); else if (field === "stopProcessing") setRuleStopProcessing(Boolean(value)); else if (field === "conditions") setRuleConditions(String(value)); else setRuleActions(String(value))
+              }}
+              onAppendCondition={appendCondition} onAppendAction={appendAction}
+              onSave={selectedRule ? updateRule : createRule} onTest={testCurrentRule}
+              onTestPayloadChange={setTestPayload}
+              onFilterChange={(field, value) => field === "ruleId" ? setRunFilterRuleId(value) : field === "trigger" ? setRunFilterTrigger(value) : field === "matched" ? setRunFilterMatched(value) : setRunFilterStatus(value)}
+              onRefreshRuns={loadRuleRuns} onFocusSelected={focusRunsOnSelectedRule}
+            />
           )}
 
+
           {!loading && overview && tab === "permissions" && (
-            <Panel title="Permissions" meta={`${permissions.length} scopes`}>
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: "10px" }}>
-                {permissions.map(permission => (
-                  <div key={permission.id} style={{ border: "1px solid var(--border)", borderRadius: "8px", padding: "10px", background: "var(--surface)" }}>
-                    <div style={{ fontSize: "12px", fontWeight: 600 }}>{permission.scope}</div>
-                    <div style={{ fontSize: "11px", color: "var(--ink-3)", marginTop: "4px" }}>{permission.description}</div>
-                  </div>
-                ))}
-              </div>
-            </Panel>
+            <PermissionsTab permissions={permissions} />
           )}
 
           {!loading && overview && tab === "workspace" && (
-            <section style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) 300px", gap: "18px" }}>
-              <Panel title="Approved Sign-ins" meta={`${overview.approvedEmails.length} emails`}>
-                <div style={{ overflowX: "auto" }}>
-                  <table style={tableStyle}>
-                    <thead>
-                      <tr>
-                        <Th>Email</Th>
-                        <Th>Status</Th>
-                        <Th>Workspace</Th>
-                        <Th>Invited by</Th>
-                        <Th>Approved</Th>
-                        <Th></Th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {overview.approvedEmails.map(entry => (
-                        <tr key={entry.id}>
-                          <Td strong>{entry.email}</Td>
-                          <Td><StatusPill status={entry.status} /></Td>
-                          <Td>{entry.workspace?.name ?? <span style={{ color: "var(--ink-4)" }}>own workspace</span>}</Td>
-                          <Td>{entry.invitedBy?.email ?? "—"}</Td>
-                          <Td>{formatDate(entry.createdAt)}</Td>
-                          <Td align="right">
-                            <button
-                              style={smallButtonStyle}
-                              disabled={saving}
-                              onClick={() => updateApprovedEmailStatus(entry.id, entry.status === "approved" ? "revoked" : "approved")}
-                            >
-                              {entry.status === "approved" ? "Revoke" : "Re-approve"}
-                            </button>
-                          </Td>
-                        </tr>
-                      ))}
-                      {overview.approvedEmails.length === 0 && (
-                        <tr>
-                          <td colSpan={6} style={{ textAlign: "center", padding: "18px", fontSize: "11px", color: "var(--ink-4)" }}>No approved emails yet</td>
-                        </tr>
-                      )}
-                    </tbody>
-                  </table>
-                </div>
-              </Panel>
-
-              <Panel title="Approve Email">
-                <Field label="Email" value={inviteEmail} onChange={setInviteEmail} placeholder="name@example.com" />
-                <label style={{ display: "grid", gap: "5px", marginBottom: "12px" }}>
-                  <span style={{ fontSize: "10px", color: "var(--ink-4)" }}>Workspace</span>
-                  <select
-                    value={inviteWorkspaceId}
-                    onChange={event => setInviteWorkspaceId(event.target.value)}
-                    style={{ height: "34px", border: "1px solid var(--border)", borderRadius: "7px", background: "var(--bg)", color: "var(--ink)", padding: "0 9px", fontFamily: "inherit", fontSize: "12px" }}
-                  >
-                    <option value="own">Own workspace (isolated)</option>
-                    {overview.workspaces.map(ws => (
-                      <option key={ws.id} value={ws.id}>{ws.name}</option>
-                    ))}
-                  </select>
-                </label>
-                <div style={{ fontSize: "11px", color: "var(--ink-4)", marginBottom: "12px", lineHeight: 1.5 }}>
-                  {inviteWorkspaceId === "own"
-                    ? "This person gets a clean, private workspace when they first sign in."
-                    : `This person will share data in "${overview.workspaces.find(ws => ws.id === inviteWorkspaceId)?.name}".`}
-                </div>
-                <button style={primaryButtonStyle} disabled={saving || !inviteEmail.trim()} onClick={sendInvite}>
-                  Approve
-                </button>
-              </Panel>
-            </section>
+            <WorkspaceTab
+              approvedEmails={overview.approvedEmails}
+              workspaces={overview.workspaces}
+              saving={saving}
+              inviteEmail={inviteEmail}
+              inviteWorkspaceId={inviteWorkspaceId}
+              onInviteEmailChange={setInviteEmail}
+              onInviteWorkspaceChange={setInviteWorkspaceId}
+              onSendInvite={sendInvite}
+              onStatusChange={updateApprovedEmailStatus}
+            />
           )}
 
           {!loading && overview && tab === "calendar" && (
-            <section>
-              <Panel title="Google Calendar moved to Events">
-                <div style={{ fontSize: "12px", color: "var(--ink-3)", lineHeight: 1.6, marginBottom: "14px" }}>
-                  Calendar connect, sync, and import trace now live in the Events app — the lens for the Event primitive.
-                </div>
-                <a
-                  href={`${EVENTS_APP_URL}/settings/calendar`}
-                  style={{ ...primaryLinkStyle, display: "inline-block", textDecoration: "none" }}
-                >
-                  Open Calendar sync in Events
-                </a>
-              </Panel>
-            </section>
+            <CalendarTab eventsAppUrl={EVENTS_APP_URL} />
           )}
 
           {!loading && overview && tab === "gmail" && (
-            <section style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) 320px", gap: "18px" }}>
-              <Panel title="Gmail" meta={gmailStatus?.connection?.status ?? "not connected"}>
-                {!gmailStatus && (
-                  <div style={{ fontSize: "12px", color: "var(--ink-3)" }}>Loading Gmail status...</div>
-                )}
-                {gmailStatus && !gmailStatus.configured && (
-                  <div style={{ border: "1px solid var(--border)", borderRadius: "8px", background: "var(--bg)", padding: "12px", fontSize: "12px", color: "var(--ink-3)", lineHeight: 1.5 }}>
-                    Gmail OAuth is not configured yet. Add `GOOGLE_GMAIL_CLIENT_ID` and `GOOGLE_GMAIL_CLIENT_SECRET` in Vercel, or reuse the existing Google OAuth client with Gmail API enabled.
-                  </div>
-                )}
-                {gmailStatus && (
-                  <div style={{ border: "1px solid var(--border)", borderRadius: "8px", background: "var(--bg)", padding: "10px", fontSize: "11px", color: "var(--ink-3)", lineHeight: 1.5, wordBreak: "break-word" }}>
-                    <div style={{ fontSize: "10px", color: "var(--ink-4)", marginBottom: "4px" }}>Google Cloud redirect URI</div>
-                    {gmailStatus.redirectUri}
-                  </div>
-                )}
-                {gmailStatus?.connection ? (
-                  <div style={{ display: "grid", gap: "10px", marginTop: "10px" }}>
-                    <div style={{ border: "1px solid var(--border)", borderRadius: "8px", background: "var(--bg)", padding: "10px" }}>
-                      <div style={{ fontSize: "13px", fontWeight: 600 }}>{gmailStatus.connection.accountEmail ?? "Gmail account"}</div>
-                      <div style={{ fontSize: "11px", color: "var(--ink-4)", marginTop: "4px" }}>{gmailStatus.connection.mailboxId}</div>
-                      <div style={{ display: "flex", gap: "7px", flexWrap: "wrap", marginTop: "9px" }}>
-                        <StatusPill status={gmailStatus.connection.status} />
-                        <StatusPill status={`${gmailStatus.connection.messageCount} synced messages`} />
-                        {gmailStatus.connection.historyId && <StatusPill status="incremental sync" />}
-                      </div>
-                    </div>
-                    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(170px, 1fr))", gap: "8px" }}>
-                      <InfoTile label="Last synced" value={formatDate(gmailStatus.connection.lastSyncedAt)} />
-                      <InfoTile label="History ID" value={gmailStatus.connection.historyId ?? "Not set"} />
-                    </div>
-                    {gmailStatus.connection.lastError && (
-                      <div style={{ border: "1px solid #d46a3a", background: "#fff3ed", color: "#8f3518", borderRadius: "8px", padding: "10px", fontSize: "11px" }}>
-                        {gmailStatus.connection.lastError}
-                      </div>
-                    )}
-                    {gmailSyncResult && (
-                      <div>
-                        <div style={{ fontSize: "10px", color: "var(--ink-4)", marginBottom: "5px" }}>Last sync result</div>
-                        <pre style={preStyle}>{gmailSyncResult}</pre>
-                      </div>
-                    )}
-                  </div>
-                ) : gmailStatus?.configured ? (
-                  <div style={{ fontSize: "12px", color: "var(--ink-3)", lineHeight: 1.5, marginTop: "10px" }}>
-                    Connect Gmail to import email into Interactions for People matched by email. Messages without a matching Person go to Inbox for review.
-                  </div>
-                ) : null}
-              </Panel>
-
-              <Panel title="Actions">
-                <a href="/api/gmail/google/connect?returnTo=/admin" style={{ ...primaryLinkStyle, display: "block", textAlign: "center", marginBottom: "10px" }}>
-                  {gmailStatus?.connection ? "Reconnect Gmail" : "Connect Gmail"}
-                </a>
-                <SelectOptionField
-                  label="Backfill range"
-                  value={gmailBackfillDays}
-                  onChange={setGmailBackfillDays}
-                  options={[...GMAIL_BACKFILL_OPTIONS]}
-                />
-                <SelectOptionField
-                  label="Unmatched email"
-                  value={gmailUnmatchedMode}
-                  onChange={value => setGmailUnmatchedMode(value === "stage" ? "stage" : "skip")}
-                  options={[
-                    { value: "skip", label: "Known People only" },
-                    { value: "stage", label: "Stage unmatched in Inbox" },
-                  ]}
-                />
-                <button style={primaryButtonStyle} disabled={saving || !gmailStatus?.connection} onClick={syncGmail}>
-                  {saving ? "Syncing..." : "Sync now"}
-                </button>
-                <button style={{ ...smallButtonStyle, width: "100%", marginTop: "9px" }} onClick={loadGmailStatus}>
-                  Refresh Status
-                </button>
-                <div style={{ fontSize: "11px", color: "var(--ink-4)", marginTop: "12px", lineHeight: 1.5 }}>
-                  Sync is read-only, batched, and uses Gmail history after the first import. By default, only email involving existing People is imported.
-                </div>
-              </Panel>
-
-              <div style={{ gridColumn: "1 / -1" }}>
-              <Panel title="Sync Trace" meta={gmailTrace ? `${gmailTrace.messages.length} recent messages` : "loading"}>
-                <div style={{ display: "flex", justifyContent: "space-between", gap: "10px", alignItems: "center", marginBottom: "10px" }}>
-                  <div style={{ fontSize: "11px", color: "var(--ink-4)", lineHeight: 1.45 }}>
-                    Recent Gmail imports with their matched People, staged Inbox records, or skipped status.
-                  </div>
-                  <button style={smallButtonStyle} onClick={loadGmailTrace}>Refresh Trace</button>
-                </div>
-
-                {gmailTrace?.runs.length ? (
-                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(190px, 1fr))", gap: "8px", marginBottom: "12px" }}>
-                    {gmailTrace.runs.slice(0, 3).map(run => (
-                      <div key={run.id} style={{ border: "1px solid var(--border)", borderRadius: "8px", background: "var(--bg)", padding: "9px" }}>
-                        <div style={{ fontSize: "10px", color: "var(--ink-4)", marginBottom: "5px" }}>{formatDate(run.createdAt)}</div>
-                        <div style={{ fontSize: "11px", color: "var(--ink-2)", lineHeight: 1.45 }}>{formatGmailSyncRun(run.metadata)}</div>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div style={{ fontSize: "11px", color: "var(--ink-4)", marginBottom: "12px" }}>No Gmail sync runs logged yet.</div>
-                )}
-
-                <div style={{ display: "grid", gap: "8px" }}>
-                  {(gmailTrace?.messages ?? []).map(message => (
-                    <div key={message.id} style={{ border: "1px solid var(--border)", borderRadius: "8px", background: "var(--bg)", padding: "10px" }}>
-                      <div style={{ display: "flex", justifyContent: "space-between", gap: "12px", alignItems: "baseline", marginBottom: "7px" }}>
-                        <div style={{ minWidth: 0 }}>
-                          <div style={{ fontSize: "13px", fontWeight: 600, color: "var(--ink)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                            {message.subject || message.stagedItem?.summary || "Gmail message"}
-                          </div>
-                          <div style={{ fontSize: "10px", color: "var(--ink-4)", marginTop: "3px" }}>
-                            {formatDate(message.lastSeenAt ?? message.updatedAt)} · {message.status} · thread {shortId(message.threadId)}
-                          </div>
-                        </div>
-                        <StatusPill status={message.status} />
-                      </div>
-                      <div style={{ fontSize: "10px", color: "var(--ink-4)", marginBottom: "7px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                        {formatEmailParties("From", message.from)} {message.to.length ? ` · ${formatEmailParties("To", message.to)}` : ""}
-                      </div>
-                      <GmailTraceOutcome message={message} />
-                      <details style={{ marginTop: "8px" }}>
-                        <summary style={{ fontSize: "10px", color: "var(--ink-4)", cursor: "pointer" }}>Message IDs</summary>
-                        <div style={{ marginTop: "7px", display: "grid", gap: "5px" }}>
-                          <div style={{ fontSize: "10px", color: "var(--ink-4)", wordBreak: "break-word" }}>Gmail message: {message.externalMessageId}</div>
-                          {message.threadId && <div style={{ fontSize: "10px", color: "var(--ink-4)", wordBreak: "break-word" }}>Thread: {message.threadId}</div>}
-                          {message.historyId && <div style={{ fontSize: "10px", color: "var(--ink-4)", wordBreak: "break-word" }}>History: {message.historyId}</div>}
-                          {message.snippet && <div style={{ fontSize: "10px", color: "var(--ink-3)", lineHeight: 1.45 }}>{message.snippet}</div>}
-                        </div>
-                      </details>
-                    </div>
-                  ))}
-                  {gmailTrace && gmailTrace.messages.length === 0 && (
-                    <div style={{ fontSize: "11px", color: "var(--ink-4)", border: "1px solid var(--border)", borderRadius: "8px", background: "var(--bg)", padding: "10px" }}>
-                      No Gmail messages to trace yet.
-                    </div>
-                  )}
-                </div>
-              </Panel>
-              </div>
-            </section>
+            <GmailTab status={gmailStatus} trace={gmailTrace} syncResult={gmailSyncResult} backfillDays={gmailBackfillDays} unmatchedMode={gmailUnmatchedMode} saving={saving} backfillOptions={GMAIL_BACKFILL_OPTIONS} onBackfillChange={setGmailBackfillDays} onUnmatchedModeChange={setGmailUnmatchedMode} onSync={syncGmail} onRefreshStatus={loadGmailStatus} onRefreshTrace={loadGmailTrace} />
           )}
 
+
           {!loading && overview && tab === "audit" && (
-            <Panel title="Audit" meta={`${overview.auditCount} total`}>
-              <div style={{ overflowX: "auto" }}>
-                <table style={tableStyle}>
-                  <thead>
-                    <tr>
-                      <Th>Time</Th>
-                      <Th>Action</Th>
-                      <Th>Actor</Th>
-                      <Th>Target</Th>
-                      <Th>Metadata</Th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {auditLogs.map(log => (
-                      <tr key={log.id}>
-                        <Td>{formatDate(log.createdAt)}</Td>
-                        <Td strong>{log.action}</Td>
-                        <Td>{log.actorLabel || log.actorType}</Td>
-                        <Td>{log.targetType}{log.targetId ? `:${log.targetId.slice(0, 8)}` : ""}</Td>
-                        <Td>{formatMetadata(log.metadata)}</Td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </Panel>
+            <AuditTab logs={auditLogs} total={overview.auditCount} />
           )}
         </main>
       </div>
@@ -1623,25 +1000,6 @@ function InfoTile({ label, value }: { label: string; value: string }) {
     <div style={{ border: "1px solid var(--border)", borderRadius: "8px", background: "var(--bg)", padding: "9px" }}>
       <div style={{ fontSize: "10px", color: "var(--ink-4)", marginBottom: "4px" }}>{label}</div>
       <div style={{ fontSize: "11px", color: "var(--ink-2)", wordBreak: "break-word" }}>{value}</div>
-    </div>
-  )
-}
-
-function TracePeople({ people }: { people: CalendarTrace["events"][number]["linkedPeople"] }) {
-  if (!people.length) {
-    return <div style={{ fontSize: "11px", color: "var(--ink-4)" }}>No People were matched for this event.</div>
-  }
-  return (
-    <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
-      {people.map(item => item.person ? (
-        <a
-          key={item.id}
-          href={`/people/${item.person.id}`}
-          style={{ border: "1px solid #88a06a", color: "#526b37", borderRadius: "999px", padding: "3px 8px", fontSize: "10px", textDecoration: "none", background: "#f3f8ee" }}
-        >
-          {item.person.name}
-        </a>
-      ) : null)}
     </div>
   )
 }

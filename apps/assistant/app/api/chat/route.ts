@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { runAgent } from "@/lib/agent"
 import { db } from "@/lib/db"
 import { accessErrorResponse, requireWorkspaceAccess } from "@/lib/access"
+import { chatMessageContract, contractIssues } from "@life-os/contracts"
 
 export const maxDuration = 300
 export const dynamic = "force-dynamic"
@@ -33,9 +34,11 @@ export async function POST(req: NextRequest) {
   }
 
   const from = `web:${access.email}`
-  const body = await req.json().catch(() => null)
-  const message = typeof body?.message === "string" ? body.message.trim() : ""
-  if (!message) return NextResponse.json({ error: "message is required" }, { status: 400 })
+  const parsed = chatMessageContract.safeParse(await req.json().catch(() => null))
+  if (!parsed.success) {
+    return NextResponse.json({ error: "Invalid message", issues: contractIssues(parsed.error) }, { status: 400 })
+  }
+  const { message } = parsed.data
 
   try {
     const reply = await runAgent({ channel: "web", from, userMessage: message, workspaceId: access.workspaceId })

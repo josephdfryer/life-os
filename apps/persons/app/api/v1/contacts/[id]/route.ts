@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { db } from "@/lib/db"
 import { authorizeApiRequest, unauthorized } from "@/lib/api-auth"
 import { parseTags } from "@/lib/utils"
+import { parseStoredRecord } from "@/lib/utils"
 import { formatPerson } from "@/server/domain/dto"
 import { deletePerson, updatePerson } from "@/server/domain/people"
 import { handleRouteError, noContent } from "@/server/api/respond"
@@ -32,7 +33,7 @@ export async function GET(req: NextRequest, { params }: Params) {
       ...ix,
       keyTopics: parseTags(ix.actionItems),
       event: ix.event
-        ? { ...ix.event, metadata: ix.event.metadata ? JSON.parse(ix.event.metadata) : null }
+        ? { ...ix.event, metadata: ix.event.metadata ? parseStoredRecord(ix.event.metadata, "Event.metadata") : null }
         : null,
       file: ix.sourceFile
         ? { id: ix.sourceFile.id, filename: ix.sourceFile.filename, retrieveUrl: `/api/v1/files/${ix.sourceFile.id}` }

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { db } from "@/lib/db"
 import { parseTags } from "@/lib/utils"
+import { parseStoredRecord } from "@/lib/utils"
 import type { Interaction } from "@/types"
 import { deletePerson, updatePerson } from "@/server/domain/people"
 import { getPersonHealthSummary } from "@/server/domain/health"
@@ -31,7 +32,7 @@ export async function GET(_req: NextRequest, { params }: Params) {
     ...ix,
     actionItems: parseTags(ix.actionItems) as unknown as string[],
     event: ix.event
-      ? { ...ix.event, metadata: ix.event.metadata ? JSON.parse(ix.event.metadata) : null }
+      ? { ...ix.event, metadata: ix.event.metadata ? parseStoredRecord(ix.event.metadata, "Event.metadata") : null }
       : null,
   })) as unknown as Interaction[]
 

@@ -1,0 +1,10 @@
+# Default owner. Replace or add domain owners as the team grows.
+* @josephdfryer
+
+# Safety- and contract-critical surfaces.
+/packages/db/ @josephdfryer
+/packages/contracts/ @josephdfryer
+/packages/access/ @josephdfryer
+/.github/workflows/ @josephdfryer
+/docs/MANIFESTO.md @josephdfryer
+/docs/adr/ @josephdfryer

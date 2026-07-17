@@ -1,5 +1,12 @@
 import { db } from "@/lib/db"
 import type { Prisma } from "@life-os/db"
+import {
+  decodeStoredJson,
+  encodeStoredJson,
+  ruleActionsContract,
+  ruleConditionsContract,
+  storedStringList,
+} from "@life-os/contracts"
 import { badRequest, notFound, optionalString, requiredString } from "@/server/api/errors"
 import { auditAction, type DomainActor } from "./audit"
 import type { AccessActor } from "./access"
@@ -27,8 +34,8 @@ async function _loadActiveRules(workspaceId: string, trigger: string): Promise<E
     id: r.id,
     trigger: r.trigger,
     mode: r.mode,
-    conditions: parseStoredArray(r.conditions) as RuleCondition[],
-    actions: parseStoredArray(r.actions) as RuleAction[],
+    conditions: decodeStoredJson(r.conditions, ruleConditionsContract, "Rule.conditions", []),
+    actions: decodeStoredJson(r.actions, ruleActionsContract, "Rule.actions", []),
     stopProcessing: r.stopProcessing,
   }))
   _rulesCache.set(key, { value, expiresAt: Date.now() + 30_000 })
@@ -101,8 +108,8 @@ export async function createRule(input: RuleInput, actor: AccessActor) {
       status: optionalString(input.status) ?? "active",
       priority: numberValue(input.priority, 100),
       mode: optionalString(input.mode) ?? "suggest",
-      conditions: JSON.stringify(conditions),
-      actions: JSON.stringify(actions),
+      conditions: encodeStoredJson(conditions, ruleConditionsContract, "Rule.conditions"),
+      actions: encodeStoredJson(actions, ruleActionsContract, "Rule.actions"),
       stopProcessing: Boolean(input.stopProcessing),
       createdByUserId: actor.userId,
     },
@@ -131,8 +138,8 @@ export async function updateRule(id: string, input: RuleInput, actor: AccessActo
   if (input.status !== undefined) patch.status = requiredString(input.status, "status")
   if (input.priority !== undefined) patch.priority = numberValue(input.priority, 100)
   if (input.mode !== undefined) patch.mode = requiredString(input.mode, "mode")
-  if (input.conditions !== undefined) patch.conditions = JSON.stringify(parseJsonArray(input.conditions, "conditions"))
-  if (input.actions !== undefined) patch.actions = JSON.stringify(parseJsonArray(input.actions, "actions"))
+  if (input.conditions !== undefined) patch.conditions = encodeStoredJson(parseJsonArray(input.conditions, "conditions"), ruleConditionsContract, "Rule.conditions")
+  if (input.actions !== undefined) patch.actions = encodeStoredJson(parseJsonArray(input.actions, "actions"), ruleActionsContract, "Rule.actions")
   if (input.stopProcessing !== undefined) patch.stopProcessing = Boolean(input.stopProcessing)
 
   const rule = await db.rule.update({
@@ -170,8 +177,8 @@ export async function testRule(input: { ruleId?: string | null; rule?: RuleInput
       id: rule.id,
       trigger: rule.trigger,
       mode: rule.mode,
-      conditions: parseStoredArray(rule.conditions),
-      actions: parseStoredArray(rule.actions),
+      conditions: decodeStoredJson(rule.conditions, ruleConditionsContract, "Rule.conditions", []),
+      actions: decodeStoredJson(rule.actions, ruleActionsContract, "Rule.actions", []),
       stopProcessing: rule.stopProcessing,
     }
     : {
@@ -427,7 +434,7 @@ async function applyPersonTagActions(actions: RuleAction[], stagedId: string, wo
   })
   if (!person) return []
 
-  let tags = parseStoredArray(person.tags) as string[]
+  let tags = decodeStoredJson(person.tags, storedStringList, "Person.tags", [])
   const applied: RuleAction[] = []
 
   for (const action of actions) {
@@ -470,7 +477,7 @@ export async function applyRuleRunSuggestions(
   const updatedRunIds: string[] = []
 
   for (const run of runs) {
-    const planned = parseStoredArray(run.actionsPlanned) as RuleAction[]
+    const planned = decodeStoredJson(run.actionsPlanned, ruleActionsContract, "RuleRun.actionsPlanned", [])
     if (!planned.length) continue
 
     const applied = await applyPersonTagActions(
@@ -544,16 +551,6 @@ function parseJsonArray(value: unknown, field: string) {
   }
 }
 
-function parseStoredArray(value: string | null) {
-  if (!value) return []
-  try {
-    const parsed = JSON.parse(value)
-    return Array.isArray(parsed) ? parsed : []
-  } catch {
-    return []
-  }
-}
-
 function parseStoredValue(value: string | null) {
   if (!value) return null
   try {
@@ -601,8 +598,8 @@ function formatRule(rule: {
 }) {
   return {
     ...rule,
-    conditions: parseStoredArray(rule.conditions),
-    actions: parseStoredArray(rule.actions),
+    conditions: decodeStoredJson(rule.conditions, ruleConditionsContract, "Rule.conditions", []),
+    actions: decodeStoredJson(rule.actions, ruleActionsContract, "Rule.actions", []),
     createdByUser: rule.createdByUser ? {
       id: rule.createdByUser.id,
       email: rule.createdByUser.email,

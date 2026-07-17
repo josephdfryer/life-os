@@ -5,7 +5,7 @@ import os from "node:os"
 import path from "node:path"
 import { createRequire } from "node:module"
 import type { PrismaClient } from "@life-os/db"
-import { assignColor } from "../apps/persons/lib/colors"
+import { assignColor } from "./lib/colors"
 
 type BetterSqliteDatabase = {
   pragma(sql: string): unknown

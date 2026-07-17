@@ -5,6 +5,16 @@ import { WorkspaceRole } from "@life-os/db"
 import { badRequest, forbidden, notFound, optionalString, optionalStringArray, requiredString, unauthorized } from "@/server/api/errors"
 import { auditAction, type DomainActor } from "./audit"
 import { localReviewEnabled } from "@/lib/local-review"
+import { createAccessService, type AccessActor as SharedAccessActor } from "@life-os/access"
+
+const sharedAccess = createAccessService({
+  getSession: auth,
+  errors: { badRequest, forbidden, unauthorized },
+  auditAction,
+  localReviewEnabled,
+})
+
+export const requireAccess = sharedAccess.requireAccess
 
 export const DEFAULT_PERMISSIONS = [
   { scope: "*", description: "Full system access" },
@@ -67,14 +77,7 @@ const DEFAULT_ROLES = [
   },
 ]
 
-export type AccessActor = {
-  userId: string
-  email: string
-  workspaceId: string
-  workspaceName: string
-  actor: DomainActor
-  scopes: string[]
-}
+export type AccessActor = SharedAccessActor
 
 // Instance-level flag: once seeded in this Fluid Compute instance, skip all
 // subsequent seed checks. Fluid Compute reuses instances across requests, so
@@ -135,7 +138,7 @@ const _accessCache = new Map<string, { value: AccessActor; expiresAt: number }>(
 // `workspaceId` lets a caller pin the exact workspace this request must act on
 // (trusted route/session context), instead of relying on membership-count
 // heuristics that can silently pick the wrong tenant.
-export async function requireAccess(requiredScope: string, workspaceId?: string): Promise<AccessActor> {
+async function legacyRequireAccess(requiredScope: string, workspaceId?: string): Promise<AccessActor> {
   if (localReviewEnabled()) return localReviewActor()
 
   const session = await auth()

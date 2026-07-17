@@ -5,91 +5,18 @@ import { useRouter } from "next/navigation"
 import type { ParsedContact } from "@/lib/vcard"
 import type { Person } from "@/types"
 import { assignColor } from "@/lib/colors"
+import { DUPLICATE_THRESHOLD, computeStats, findMatch, getStatus, guessNameFromEmail, sortByStatus, type ContactAction, type ContactStatus, type ReviewContact } from "./matching"
+import { ContactReviewCard } from "./components/ContactReviewCard"
+import { clearSelection as clearReviewSelection, keepOnly, setActionAt, setSelectedAt, skipAt, skipWhere } from "./review-transitions"
 
 const PAGE_SIZE = 25
-const DUPLICATE_THRESHOLD = 0.85
-const POSSIBLE_THRESHOLD  = 0.70
-
-// ── Jaro-Winkler (inline for client-side matching) ────────────────────────────
-
-function jaro(s1: string, s2: string): number {
-  if (s1 === s2) return 1
-  const l1 = s1.length, l2 = s2.length
-  if (!l1 || !l2) return 0
-  const md = Math.max(Math.floor(Math.max(l1, l2) / 2) - 1, 0)
-  const m1 = new Array(l1).fill(false), m2 = new Array(l2).fill(false)
-  let m = 0
-  for (let i = 0; i < l1; i++) {
-    for (let j = Math.max(0, i - md); j < Math.min(i + md + 1, l2); j++) {
-      if (m2[j] || s1[i] !== s2[j]) continue
-      m1[i] = m2[j] = true; m++; break
-    }
-  }
-  if (!m) return 0
-  let t = 0, k = 0
-  for (let i = 0; i < l1; i++) {
-    if (!m1[i]) continue
-    while (!m2[k]) k++
-    if (s1[i] !== s2[k]) t++
-    k++
-  }
-  return (m / l1 + m / l2 + (m - t / 2) / m) / 3
-}
-
-function jaroWinkler(a: string, b: string): number {
-  const j = jaro(a, b)
-  let p = 0
-  for (let i = 0; i < Math.min(4, a.length, b.length); i++) {
-    if (a[i] === b[i]) p++; else break
-  }
-  return j + p * 0.1 * (1 - j)
-}
-
-function norm(s: string) { return s.toLowerCase().trim().replace(/[^a-z0-9 ]/g, "") }
-
 // ── Types ─────────────────────────────────────────────────────────────────────
 
-type MatchResult = {
-  personId:      string
-  personName:    string
-  personEmail:   string | null  // first email for display
-  personCompany: string | null
-  score:         number
-  reason:        string
-  fillableFields: Record<string, string>
-  fillableCount:  number
-}
-
-type ContactAction = "import" | "update_existing" | "import_new" | "skip"
-
-type ReviewContact = ParsedContact & {
-  closeness:   number
-  tags:        string
-  skip:        boolean
-  colorIdx:    number
-  guessedName: boolean
-  guessedFrom: string | null
-  needsReview: boolean
-  matchResult: MatchResult | null
-  action:      ContactAction
-  selected:    boolean
-}
-
-type ContactStatus = "ready" | "review" | "error" | "duplicate" | "possible"
 type FilterKey     = "all" | "new" | ContactStatus
 
 type Step = "upload" | "review" | "done"
 
 // ── Status helpers ─────────────────────────────────────────────────────────────
-
-function getStatus(c: ReviewContact): ContactStatus {
-  if (c.matchResult) {
-    return c.matchResult.score >= DUPLICATE_THRESHOLD ? "duplicate" : "possible"
-  }
-  if (!c.first?.trim() && !c.email) return "error"
-  if (c.guessedName || !c.email) return "review"
-  return "ready"
-}
 
 const STATUS_COLOR: Record<ContactStatus | "skipped", string> = {
   duplicate: "#7c3aed",
@@ -108,118 +35,6 @@ const STATUS_LABEL: Record<FilterKey, string> = {
   ready:     "Ready",
   review:    "Needs Review",
   error:     "Errors",
-}
-
-function sortByStatus(contacts: ReviewContact[]): ReviewContact[] {
-  const order = (c: ReviewContact) => {
-    if (c.skip) return 5
-    const s = getStatus(c)
-    if (s === "duplicate") return 0
-    if (s === "possible")  return 1
-    if (s === "error")     return 2
-    if (s === "review")    return 3
-    return 4
-  }
-  return [...contacts].sort((a, b) => order(a) - order(b))
-}
-
-// ── Matching ──────────────────────────────────────────────────────────────────
-
-function computeFillableFields(contact: ParsedContact, person: Person): Record<string, string> {
-  const result: Record<string, string> = {}
-  // email: fillable if contact has an email not already in person's list
-  if (contact.email?.trim() && !person.emails.some(e => e.toLowerCase() === contact.email!.toLowerCase().trim())) {
-    result.email = contact.email.trim()
-  }
-  // phone: fillable if contact has a phone not already in person's list
-  if (contact.phone?.trim()) {
-    const cp = contact.phone.trim().replace(/\D/g, "")
-    if (cp.length >= 7 && !person.phones.some(p => p.replace(/\D/g, "") === cp)) {
-      result.phone = contact.phone.trim()
-    }
-  }
-  const pairs: [keyof ParsedContact, keyof Person][] = [
-    ["title", "title"], ["company", "company"], ["headline", "headline"], ["birthday", "birthday"],
-    ["location", "location"], ["linkedin", "linkedin"], ["twitter", "twitter"],
-    ["website", "website"], ["facebook", "facebook"], ["instagram", "instagram"], ["notes", "notes"],
-  ]
-  for (const [ck, pk] of pairs) {
-    const cv = (contact[ck] as string | null)?.trim()
-    const pv = (person[pk] as string | null)?.trim()
-    if (cv && !pv) result[pk as string] = cv
-  }
-  return result
-}
-
-function findMatch(contact: ParsedContact, persons: Person[]): MatchResult | null {
-  let best: { score: number; reason: string; person: Person } | null = null
-
-  for (const p of persons) {
-    // Any matching email
-    if (contact.email?.trim() && p.emails.length) {
-      const ce = contact.email.toLowerCase().trim()
-      if (p.emails.some(e => e.toLowerCase().trim() === ce)) {
-        if (!best || 1.0 > best.score) { best = { score: 1.0, reason: "Same email address", person: p }; continue }
-      }
-    }
-    // Any matching phone
-    const cp = (contact.phone ?? "").replace(/\D/g, "")
-    if (cp.length >= 7 && p.phones.some(ph => ph.replace(/\D/g, "") === cp)) {
-      if (!best || 0.97 > best.score) { best = { score: 0.97, reason: "Same phone number", person: p }; continue }
-    }
-    // Name similarity
-    const cn = norm(`${contact.first ?? ""} ${contact.last ?? ""}`)
-    const pn = norm(`${p.first} ${p.last}`)
-    if (!cn || !pn) continue
-    const nameSim = jaroWinkler(cn, pn)
-    const sameCompany = !!(contact.company && p.company &&
-      jaroWinkler(norm(contact.company), norm(p.company)) > 0.85)
-
-    let score = 0, reason = ""
-    if (nameSim >= 0.92) {
-      score  = Math.min(1, nameSim + (sameCompany ? 0.03 : 0))
-      reason = sameCompany ? "Similar name, same company" : "Very similar name"
-    } else if (nameSim >= 0.80 && sameCompany) {
-      score  = nameSim
-      reason = "Similar name, same company"
-    } else if (nameSim >= POSSIBLE_THRESHOLD) {
-      score  = nameSim
-      reason = "Similar name"
-    }
-
-    if (score >= POSSIBLE_THRESHOLD && (!best || score > best.score)) {
-      best = { score, reason, person: p }
-    }
-  }
-
-  if (!best) return null
-  const fillableFields = computeFillableFields(contact, best.person)
-  return {
-    personId:      best.person.id,
-    personName:    `${best.person.first} ${best.person.last}`.trim(),
-    personEmail:   best.person.emails[0] ?? null,
-    personCompany: best.person.company,
-    score:         best.score,
-    reason:        best.reason,
-    fillableFields,
-    fillableCount: Object.keys(fillableFields).length,
-  }
-}
-
-// ── Name guessing ─────────────────────────────────────────────────────────────
-
-function capitalize(s: string) { return s.charAt(0).toUpperCase() + s.slice(1).toLowerCase() }
-
-function guessNameFromEmail(email: string): { first: string; last: string } | null {
-  const local = email.split("@")[0]
-  if (!local) return null
-  const cleaned = local.replace(/\d+$/, "").replace(/^[._-]+|[._-]+$/g, "")
-  if (!cleaned || cleaned.length < 2) return null
-  for (const sep of [".", "_", "-"]) {
-    const parts = cleaned.split(sep).filter(p => p.length >= 2)
-    if (parts.length >= 2) return { first: capitalize(parts[0]), last: capitalize(parts[parts.length - 1]) }
-  }
-  return { first: capitalize(cleaned), last: "" }
 }
 
 // ── Field filter chips ────────────────────────────────────────────────────────
@@ -246,27 +61,6 @@ const FIELD_CHIPS: FieldChip[] = [
   { key: "notes",     label: "Notes",      check: c => !!(c.notes?.trim()) },
   { key: "guessed",  label: "Guessed name", check: c => c.guessedName },
 ]
-
-// ── Quality stats ─────────────────────────────────────────────────────────────
-
-type QualityStats = {
-  total: number; needsReview: number; guessedName: number
-  noEmail: number; noPhone: number; noCompany: number
-  duplicates: number; possibles: number
-}
-
-function computeStats(contacts: ReviewContact[]): QualityStats {
-  return {
-    total:       contacts.length,
-    needsReview: contacts.filter(c => c.needsReview).length,
-    guessedName: contacts.filter(c => c.guessedName).length,
-    noEmail:     contacts.filter(c => !c.email).length,
-    noPhone:     contacts.filter(c => !c.phone).length,
-    noCompany:   contacts.filter(c => !c.company).length,
-    duplicates:  contacts.filter(c => !c.skip && c.matchResult !== null && c.matchResult.score >= DUPLICATE_THRESHOLD).length,
-    possibles:   contacts.filter(c => !c.skip && c.matchResult !== null && c.matchResult.score < DUPLICATE_THRESHOLD).length,
-  }
-}
 
 // ── Page ──────────────────────────────────────────────────────────────────────
 
@@ -563,47 +357,36 @@ export default function ImportContactsPage() {
 
   function toggleSelectAll() {
     const target = !allFilterSelected
-    filteredPairs.forEach(({ globalIndex }) => update(globalIndex, { selected: target }))
+    setContacts(previous => setSelectedAt(previous, filteredPairs.map(pair => pair.globalIndex), target))
   }
 
   function clearSelection() {
-    setContacts(prev => prev.map(c => ({ ...c, selected: false })))
+    setContacts(clearReviewSelection)
   }
 
   function skipAllInFilter() {
-    filteredPairs.filter(p => !p.contact.skip).forEach(({ globalIndex }) =>
-      update(globalIndex, { skip: true })
-    )
+    setContacts(previous => skipAt(previous, filteredPairs.filter(pair => !pair.contact.skip).map(pair => pair.globalIndex)))
   }
 
   function bulkSetAction(action: ContactAction) {
-    selectedPairs.forEach(({ globalIndex }) => update(globalIndex, { action, selected: false }))
+    setContacts(previous => setActionAt(previous, selectedPairs.map(pair => pair.globalIndex), action))
   }
 
   function bulkSkip() {
-    selectedPairs.forEach(({ globalIndex }) => update(globalIndex, { skip: true, selected: false }))
+    setContacts(previous => skipAt(previous, selectedPairs.map(pair => pair.globalIndex)))
   }
 
   // Keep only selected contacts — skip everything else that isn't already skipped
   function bulkKeepOnly() {
-    const selectedIds = new Set(selectedPairs.map(p => p.globalIndex))
-    setContacts(prev => prev.map((c, i) => {
-      if (c.skip) return c
-      if (selectedIds.has(i)) return { ...c, selected: false }
-      return { ...c, skip: true }
-    }))
+    setContacts(previous => keepOnly(previous, selectedPairs.map(pair => pair.globalIndex)))
   }
 
   // Skip all contacts that don't pass the current field filter
   function skipNonMatching() {
-    setContacts(prev => prev.map(c => {
-      if (c.skip) return c
-      for (const key of requiredFields) {
-        const chip = FIELD_CHIPS.find(fc => fc.key === key)
-        if (chip && !chip.check(c)) return { ...c, skip: true }
-      }
-      return c
-    }))
+    setContacts(previous => skipWhere(previous, contact => Array.from(requiredFields).some(key => {
+      const chip = FIELD_CHIPS.find(field => field.key === key)
+      return Boolean(chip && !chip.check(contact))
+    })))
   }
 
   const filterKeys: FilterKey[] = ["all", "duplicate", "possible", "new", "review", "error"]
@@ -1037,258 +820,6 @@ function StatChip({ value, label, of: total, good, warn }: { value: number; labe
 
 // ── Contact review card ───────────────────────────────────────────────────────
 
-function ContactReviewCard({
-  contact,
-  onChange,
-}: {
-  contact: ReviewContact
-  onChange: (patch: Partial<ReviewContact>) => void
-}) {
-  const [open, setOpen]   = useState(false)
-  const { color }         = assignColor(contact.colorIdx)
-  const initials          = (contact.first[0] ?? "?") + (contact.last[0] ?? "")
-  const statusKey         = contact.skip ? "skipped" : getStatus(contact)
-  const statusColor       = STATUS_COLOR[statusKey]
-  const isDuplicate       = statusKey === "duplicate"
-  const isPossible        = statusKey === "possible"
-  const isMatch           = isDuplicate || isPossible
-
-  return (
-    <div style={{ background: "var(--surface)", border: "1px solid var(--border)", borderLeft: `3px solid ${statusColor}`, borderRadius: "8px", overflow: "hidden", opacity: contact.skip ? 0.4 : 1, transition: "opacity 0.15s" }}>
-      {/* Card header row */}
-      <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "10px 13px" }}>
-
-        {/* Checkbox */}
-        {!contact.skip && (
-          <input
-            type="checkbox"
-            checked={contact.selected}
-            onChange={e => onChange({ selected: e.target.checked })}
-            onClick={e => e.stopPropagation()}
-            style={{ width: "14px", height: "14px", flexShrink: 0, cursor: "pointer", accentColor: statusColor }}
-          />
-        )}
-
-        {/* Status dot */}
-        <div style={{ width: 6, height: 6, borderRadius: "50%", background: statusColor, flexShrink: 0 }} />
-
-        {/* Avatar */}
-        <div
-          style={{ width: 28, height: 28, borderRadius: "50%", background: `${color}22`, color, display: "flex", alignItems: "center", justifyContent: "center", fontSize: "10px", fontWeight: 500, flexShrink: 0, cursor: contact.skip ? "default" : "pointer" }}
-          onClick={() => !contact.skip && setOpen(o => !o)}
-        >
-          {initials}
-        </div>
-
-        {/* Name + sub */}
-        <div style={{ flex: 1, minWidth: 0, cursor: contact.skip ? "default" : "pointer" }} onClick={() => !contact.skip && setOpen(o => !o)}>
-          <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-            <span style={{ fontSize: "12px", fontWeight: 500, color: contact.guessedName ? "#92400e" : "var(--ink)" }}>
-              {contact.first} {contact.last}
-            </span>
-            {contact.guessedName && !contact.skip && (
-              <span style={{ fontSize: "9px", background: "#fef3c7", border: "1px solid #fde68a", color: "#92400e", padding: "1px 5px", borderRadius: "20px", flexShrink: 0 }}>guessed</span>
-            )}
-          </div>
-          <div style={{ fontSize: "11px", color: "var(--ink-4)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-            {contact.guessedName && contact.guessedFrom ? contact.guessedFrom : (contact.email ?? contact.headline ?? "")}
-          </div>
-        </div>
-
-        {/* Right side controls */}
-        <div style={{ display: "flex", alignItems: "center", gap: "6px", flexShrink: 0 }}>
-          {!contact.skip && !isMatch && (
-            <span style={{ fontSize: "10px", color: "var(--ink-4)", background: "var(--surface2)", padding: "2px 7px", borderRadius: "10px" }}>
-              {["", "Acquaintance", "Friend", "Inner Circle"][contact.closeness]}
-            </span>
-          )}
-          <button
-            onClick={e => { e.stopPropagation(); onChange({ skip: !contact.skip }) }}
-            style={{ fontSize: "10px", padding: "3px 8px", borderRadius: "5px", border: "1px solid var(--border)", background: "transparent", color: "var(--ink-4)", cursor: "pointer", fontFamily: "inherit" }}
-          >
-            {contact.skip ? "Undo" : "Skip"}
-          </button>
-          {!contact.skip && (
-            <span style={{ color: "var(--ink-4)", fontSize: "10px", cursor: "pointer" }} onClick={() => setOpen(o => !o)}>
-              {open ? "▾" : "▸"}
-            </span>
-          )}
-        </div>
-      </div>
-
-      {/* Match banner */}
-      {isMatch && !contact.skip && (
-        <div style={{
-          margin: "0 13px 8px",
-          padding: "8px 10px",
-          background: isDuplicate ? "#f3f0ff" : "#fff7ed",
-          border: `1px solid ${isDuplicate ? "#ddd6fe" : "#fed7aa"}`,
-          borderRadius: "6px",
-          fontSize: "11px",
-        }}>
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "8px" }}>
-            <div>
-              <span style={{ color: isDuplicate ? "#5b21b6" : "#9a3412", fontWeight: 500 }}>
-                {isDuplicate ? "Duplicate" : "Possible match"}:
-              </span>
-              {" "}
-              <a href={`/people/${contact.matchResult!.personId}`} target="_blank" rel="noreferrer"
-                style={{ color: isDuplicate ? "#7c3aed" : "#ea580c", textDecoration: "underline", cursor: "pointer" }}>
-                {contact.matchResult!.personName}
-              </a>
-              {contact.matchResult!.personEmail && (
-                <span style={{ color: "var(--ink-4)", marginLeft: "4px" }}>· {contact.matchResult!.personEmail}</span>
-              )}
-              <span style={{ color: "var(--ink-4)", marginLeft: "4px" }}>
-                · {Math.round(contact.matchResult!.score * 100)}% ({contact.matchResult!.reason})
-              </span>
-            </div>
-          </div>
-
-          {/* Fillable fields preview */}
-          {contact.matchResult!.fillableCount > 0 && contact.action === "update_existing" && (
-            <div style={{ marginTop: "5px", color: "var(--ink-3)", fontSize: "10px" }}>
-              Would add: {Object.keys(contact.matchResult!.fillableFields).join(", ")}
-            </div>
-          )}
-
-          {/* Action selector */}
-          <div style={{ display: "flex", gap: "5px", marginTop: "8px" }}>
-            <ActionBtn
-              label={`Update ${contact.matchResult!.personName.split(" ")[0]}`}
-              sublabel={contact.matchResult!.fillableCount > 0 ? `+${contact.matchResult!.fillableCount} fields` : "nothing new"}
-              active={contact.action === "update_existing"}
-              color={isDuplicate ? "#7c3aed" : "#ea580c"}
-              onClick={() => onChange({ action: "update_existing" })}
-              disabled={contact.matchResult!.fillableCount === 0}
-            />
-            <ActionBtn
-              label="Import as new"
-              sublabel="create separate"
-              active={contact.action === "import_new"}
-              color="#6b7280"
-              onClick={() => onChange({ action: "import_new" })}
-            />
-            <ActionBtn
-              label="Skip"
-              sublabel="don't import"
-              active={contact.action === "skip"}
-              color="#6b7280"
-              onClick={() => onChange({ action: "skip" })}
-            />
-          </div>
-        </div>
-      )}
-
-      {/* Expanded edit panel */}
-      {open && !contact.skip && (
-        <div style={{ padding: "0 13px 13px", borderTop: "1px solid var(--border)" }}>
-          <div style={{ height: "10px" }} />
-
-          {contact.guessedName && (
-            <div style={{ marginBottom: "10px", padding: "7px 10px", background: "#fef3c7", border: "1px solid #fde68a", borderRadius: "6px", fontSize: "11px", color: "#92400e" }}>
-              Name guessed from <strong>{contact.guessedFrom}</strong> — verify below.
-            </div>
-          )}
-
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px", marginBottom: "10px" }}>
-            <Field label="First Name"><input type="text" value={contact.first} onChange={e => onChange({ first: e.target.value })} style={inputStyle} /></Field>
-            <Field label="Last Name"><input type="text" value={contact.last} onChange={e => onChange({ last: e.target.value })} style={inputStyle} /></Field>
-          </div>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px", marginBottom: "10px" }}>
-            <Field label="Title"><input type="text" value={contact.title ?? ""} onChange={e => onChange({ title: e.target.value || null })} placeholder="e.g. Product Designer" style={inputStyle} /></Field>
-            <Field label="Headline"><input type="text" value={contact.headline ?? ""} onChange={e => onChange({ headline: e.target.value || null })} placeholder="e.g. Climate, board games, old teammate" style={inputStyle} /></Field>
-            <Field label="Company"><input type="text" value={contact.company ?? ""} onChange={e => onChange({ company: e.target.value || null })} placeholder="e.g. Acme Corp" style={inputStyle} /></Field>
-          </div>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px", marginBottom: "10px" }}>
-            <Field label="Email"><input type="email" value={contact.email ?? ""} onChange={e => onChange({ email: e.target.value || null })} placeholder="email@example.com" style={inputStyle} /></Field>
-            <Field label="Phone"><input type="tel" value={contact.phone ?? ""} onChange={e => onChange({ phone: e.target.value || null })} placeholder="+1 555 000 0000" style={inputStyle} /></Field>
-          </div>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px", marginBottom: "10px" }}>
-            <Field label="Birthday"><input type="text" value={contact.birthday ?? ""} onChange={e => onChange({ birthday: e.target.value || null })} placeholder="MM-DD or YYYY-MM-DD" style={inputStyle} /></Field>
-            <Field label="Location"><input type="text" value={contact.location ?? ""} onChange={e => onChange({ location: e.target.value || null })} placeholder="City, State" style={inputStyle} /></Field>
-          </div>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "8px", marginBottom: "10px" }}>
-            <Field label="LinkedIn"><input type="url" value={contact.linkedin ?? ""} onChange={e => onChange({ linkedin: e.target.value || null })} placeholder="linkedin.com/in/…" style={inputStyle} /></Field>
-            <Field label="Twitter"><input type="text" value={contact.twitter ?? ""} onChange={e => onChange({ twitter: e.target.value || null })} placeholder="@handle" style={inputStyle} /></Field>
-            <Field label="Website"><input type="url" value={contact.website ?? ""} onChange={e => onChange({ website: e.target.value || null })} placeholder="https://…" style={inputStyle} /></Field>
-          </div>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px", marginBottom: "10px" }}>
-            <Field label="Facebook"><input type="url" value={contact.facebook ?? ""} onChange={e => onChange({ facebook: e.target.value || null })} placeholder="facebook.com/…" style={inputStyle} /></Field>
-            <Field label="Instagram"><input type="text" value={contact.instagram ?? ""} onChange={e => onChange({ instagram: e.target.value || null })} placeholder="instagram.com/…" style={inputStyle} /></Field>
-          </div>
-
-          {!isMatch && (
-            <div style={{ marginBottom: "10px" }}>
-              <label style={labelStyle}>Closeness</label>
-              <div style={{ display: "flex", gap: "5px", marginTop: "5px" }}>
-                {([[1, "Acquaintance"], [2, "Friend"], [3, "Inner Circle"]] as [number, string][]).map(([val, lbl]) => (
-                  <button key={val} type="button" onClick={() => onChange({ closeness: val })}
-                    style={{ flex: 1, padding: "5px 4px", borderRadius: "5px", border: `1px solid ${contact.closeness === val ? "var(--accent)" : "var(--border)"}`, background: contact.closeness === val ? "var(--accent-soft)" : "var(--surface2)", color: contact.closeness === val ? "var(--accent)" : "var(--ink-3)", fontSize: "10px", cursor: "pointer", fontFamily: "inherit" }}
-                  >{lbl}</button>
-                ))}
-              </div>
-            </div>
-          )}
-
-          <Field label="Tags (comma separated)">
-            <input type="text" value={contact.tags} onChange={e => onChange({ tags: e.target.value })} placeholder="designer, sf, college friend…" style={inputStyle} />
-          </Field>
-          <div style={{ height: "8px" }} />
-          <Field label="Notes">
-            <textarea value={contact.notes ?? ""} onChange={e => onChange({ notes: e.target.value || null })} rows={3} style={{ ...inputStyle, resize: "vertical", lineHeight: 1.5 }} />
-          </Field>
-        </div>
-      )}
-    </div>
-  )
-}
-
-// ── Action button (for match banner) ─────────────────────────────────────────
-
-function ActionBtn({ label, sublabel, active, color, onClick, disabled }: {
-  label: string; sublabel: string; active: boolean; color: string
-  onClick: () => void; disabled?: boolean
-}) {
-  return (
-    <button
-      onClick={onClick}
-      disabled={disabled}
-      style={{
-        flex: 1, padding: "5px 8px", borderRadius: "6px", fontFamily: "inherit",
-        border: `1px solid ${active ? color : "var(--border)"}`,
-        background: active ? `${color}18` : "transparent",
-        cursor: disabled ? "not-allowed" : "pointer",
-        opacity: disabled ? 0.4 : 1,
-        textAlign: "left" as const,
-      }}
-    >
-      <div style={{ fontSize: "10px", fontWeight: 500, color: active ? color : "var(--ink-3)" }}>{label}</div>
-      <div style={{ fontSize: "9px", color: "var(--ink-4)" }}>{sublabel}</div>
-    </button>
-  )
-}
-
-function Field({ label, children }: { label: string; children: React.ReactNode }) {
-  return (
-    <div>
-      <label style={labelStyle}>{label}</label>
-      {children}
-    </div>
-  )
-}
-
-// ── Styles ────────────────────────────────────────────────────────────────────
-
-const labelStyle: React.CSSProperties = {
-  color: "var(--ink-3)", fontSize: "10px", fontWeight: 500, letterSpacing: "0.06em", textTransform: "uppercase",
-}
-
-const inputStyle: React.CSSProperties = {
-  width: "100%", padding: "6px 9px", background: "var(--bg)", border: "1px solid var(--border)",
-  borderRadius: "6px", color: "var(--ink)", fontFamily: "inherit", fontSize: "12px",
-  marginTop: "4px", boxSizing: "border-box",
-}
 
 const ghostBtnStyle: React.CSSProperties = {
   padding: "6px 13px", borderRadius: "6px", border: "1px solid var(--border)",
