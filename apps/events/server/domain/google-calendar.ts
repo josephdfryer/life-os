@@ -894,7 +894,11 @@ async function exchangeCode(code: string, redirectUri: string) {
       grant_type: "authorization_code",
     }),
   })
-  if (!res.ok) throw new Error(`Google token exchange failed (${res.status})`)
+  if (!res.ok) {
+    const body = await res.text().catch(() => "")
+    console.error("[google-calendar] token exchange failed", { status: res.status, body, redirectUri })
+    throw new Error(`Google token exchange failed (${res.status}): ${body}`)
+  }
   return await res.json() as TokenResponse
 }
 
