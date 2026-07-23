@@ -11,20 +11,20 @@ That document is the canonical spec for colors, typography, spacing, components,
 | `docs/STILL_DESIGN_SYSTEM.md` | Full agent-facing design system |
 | `packages/ui/still-tokens.css` | Approved CSS custom properties (reference) |
 | `docs/ui-preview/still-direction-v2.html` | Visual preview — open in browser |
-| `packages/ui/tokens.css` | **Legacy** Warm Concrete — do not extend |
+| `packages/ui/tokens.css` | Deprecated compatibility shim to Still |
 
 ## Migration status
 
-**Still is approved but not yet wired into apps.** Production apps still import legacy `tokens.css` values (Playfair + DM Mono + terracotta). When implementing new UI:
+**Still is migrated across production apps.** Production apps import `still-tokens.css`; the legacy `tokens.css` path is only a compatibility shim. When implementing new UI:
 
 1. Follow Still tokens and patterns from the design system doc.
-2. Use CSS variables from `still-tokens.css` (copy values or import when the app is migrated).
+2. Use CSS variables from `still-tokens.css`; do not copy palette values into app-local themes.
 3. Do **not** introduce new Warm Concrete patterns (terracotta accent, DM Mono body, square corners, uppercase buttons).
 
 ## Package contents
 
 - `still-tokens.css` — Still v2 tokens (canonical)
-- `tokens.css` — legacy tokens (deprecated)
-- `src/*` — shared React primitives (being aligned to Still in a future pass)
+- `tokens.css` — compatibility shim to Still (deprecated import path)
+- `src/*` — shared Still-native React primitives
 
 When adding shared components, match Still specs in the design system doc and export from `index.ts`.

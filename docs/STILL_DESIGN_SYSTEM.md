@@ -1,6 +1,6 @@
 # Still — Life OS Design System (v2)
 
-**Status:** Approved direction · **Not yet migrated** into production apps  
+**Status:** Migrated across production apps · **July 22, 2026**
 **Audience:** Claude, Codex, and any agent building Life OS UI  
 **Visual reference:** [`docs/ui-preview/still-direction-v2.html`](ui-preview/still-direction-v2.html)  
 **Token source:** [`packages/ui/still-tokens.css`](../packages/ui/still-tokens.css)

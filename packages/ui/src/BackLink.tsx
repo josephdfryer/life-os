@@ -19,15 +19,13 @@ export function BackLink({ label, href, component: Component = 'a', style }: Bac
     <Component
       href={href}
       style={{
-        fontFamily: 'var(--font-mono)',
-        fontSize: 9,
-        letterSpacing: '0.10em',
-        textTransform: 'uppercase',
+        fontFamily: 'var(--font-body)',
+        fontSize: 12,
         color: 'var(--ink-4)',
         textDecoration: 'none',
         display: 'inline-flex',
         alignItems: 'center',
-        gap: 6,
+        gap: 7,
         transition: 'color 0.12s',
         ...style,
       }}

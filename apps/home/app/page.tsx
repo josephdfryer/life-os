@@ -36,7 +36,7 @@ export default async function HomePage() {
   const personsUrl = lifeOsAppUrl('persons', 'http://localhost:3000')
 
   return (
-    <div className="min-h-screen pb-12" style={{ background: 'var(--petrol)', color: '#e8e4dc' }}>
+    <div className="dashboard-page min-h-screen pb-12">
       <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '48px 24px 0' }}>
 
         {/* Header */}
@@ -57,7 +57,7 @@ export default async function HomePage() {
             <p
               style={{
                 fontSize: '1rem',
-                color: '#b7c2c4',
+                color: 'var(--ink-3)',
                 marginTop: '8px',
                 marginBottom: 0,
               }}

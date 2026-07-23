@@ -35,6 +35,16 @@ a {
   outline-offset: 3px;
 }
 
+.dashboard-page {
+  --ink: #f7f4ee;
+  --ink-2: #d8d2c8;
+  --ink-3: #9cabb0;
+  --ink-4: #6f858d;
+  min-height: 100vh;
+  background: var(--petrol);
+  color: var(--ink);
+}
+
 .page {
   min-height: 100vh;
   padding: 28px;
@@ -117,7 +127,8 @@ a {
 .login-title {
   font-family: var(--font-display), Georgia, serif;
   font-size: 32px;
-  font-weight: 600;
+  font-weight: 400;
+  letter-spacing: -0.02em;
 }
 
 .login-copy {
@@ -128,22 +139,29 @@ a {
 .login-button {
   width: 100%;
   min-height: 42px;
-  border: 0;
-  background: var(--ink);
-  color: var(--surface);
+  border: 1px solid transparent;
+  border-radius: var(--radius-pill);
+  background: var(--cognac);
+  color: #fff;
   cursor: pointer;
   font: inherit;
+  font-weight: 500;
+  transition: background 0.14s ease;
+}
+
+.login-button:hover {
+  background: var(--cognac-deep);
 }
 
 .dashboard-app-link {
   font-size: 14px;
-  color: #a1a1aa;
+  color: var(--ink-3);
   text-decoration: none;
   transition: color 0.14s ease;
 }
 
 .dashboard-app-link:hover {
-  color: #fff;
+  color: var(--camel);
 }
 
 .dashboard-inbox-link {
@@ -151,17 +169,17 @@ a {
   width: 100%;
   text-align: center;
   padding: 12px;
-  border: 1px solid #3f3f46;
-  border-radius: 16px;
+  border: 1px solid rgba(196, 165, 116, 0.28);
+  border-radius: var(--radius-pill);
   font-size: 14px;
-  color: #a1a1aa;
+  color: var(--ink-3);
   text-decoration: none;
   transition: background 0.15s, color 0.15s;
 }
 
 .dashboard-inbox-link:hover {
-  background: #27272a;
-  color: #fff;
+  background: rgba(196, 165, 116, 0.12);
+  color: var(--camel);
 }
 
 @media (max-width: 760px) {

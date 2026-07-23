@@ -34,7 +34,7 @@ export default async function NudgesWidget({ workspaceId, personsUrl }: Props) {
       <h2 style={{ ...heading, marginBottom: '24px' }}>Relationship Nudges</h2>
 
       {nudges.length === 0 ? (
-        <div style={{ padding: '48px 0', textAlign: 'center', color: '#71717a' }}>
+        <div style={{ padding: '48px 0', textAlign: 'center', color: 'var(--ink-3)' }}>
           All relationships warm
         </div>
       ) : (
@@ -46,7 +46,7 @@ export default async function NudgesWidget({ workspaceId, personsUrl }: Props) {
             >
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ fontWeight: 500 }}>{signal.subject}</div>
-                <div style={{ fontSize: '12px', color: '#71717a', marginTop: '4px' }}>
+                <div style={{ fontSize: '12px', color: 'var(--ink-3)', marginTop: '4px' }}>
                   {signal.detail}
                   {summary ? ` · ${summary.slice(0, 60)}` : ''}
                 </div>
@@ -57,9 +57,9 @@ export default async function NudgesWidget({ workspaceId, personsUrl }: Props) {
                   flexShrink: 0,
                   fontSize: '12px',
                   padding: '6px 16px',
-                  background: '#27272a',
-                  borderRadius: '999px',
-                  color: '#e4e4e7',
+                  background: 'var(--cognac)',
+                  borderRadius: 'var(--radius-pill)',
+                  color: '#fff',
                   textDecoration: 'none',
                   whiteSpace: 'nowrap',
                 }}
@@ -75,15 +75,15 @@ export default async function NudgesWidget({ workspaceId, personsUrl }: Props) {
 }
 
 const card: React.CSSProperties = {
-  background: 'rgba(24,24,27,0.5)',
-  border: '1px solid #27272a',
-  borderRadius: '24px',
+  background: 'rgba(247, 244, 238, 0.045)',
+  border: '1px solid rgba(196, 165, 116, 0.18)',
+  borderRadius: 'var(--radius-lg)',
   padding: '32px',
 }
 
 const heading: React.CSSProperties = {
   fontFamily: 'var(--font-display)',
   fontSize: '1.4rem',
-  fontWeight: 600,
+  fontWeight: 400,
   margin: 0,
 }

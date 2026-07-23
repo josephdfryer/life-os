@@ -35,9 +35,10 @@ export function Avatar({ name, size = 'md', color, textColor, style }: AvatarPro
       style={{
         width: box,
         height: box,
+        borderRadius: '50%',
         background: color ?? 'var(--border)',
         color: textColor ?? 'var(--ink-2)',
-        fontFamily: 'var(--font-mono)',
+        fontFamily: 'var(--font-body)',
         fontSize: font,
         letterSpacing: '0.06em',
         display: 'flex',

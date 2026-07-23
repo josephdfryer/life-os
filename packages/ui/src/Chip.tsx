@@ -23,10 +23,10 @@ export function Chip({ label, variant = 'default', onClick, onRemove, style }: C
     <span
       onClick={onClick}
       style={{
-        fontFamily: 'var(--font-mono)',
-        fontSize: 9,
-        letterSpacing: '0.06em',
-        padding: '3px 8px',
+        fontFamily: 'var(--font-body)',
+        fontSize: 11,
+        padding: '3px 9px',
+        borderRadius: 'var(--radius-pill)',
         border: '1px solid var(--border)',
         display: 'inline-flex',
         alignItems: 'center',
@@ -45,7 +45,7 @@ export function Chip({ label, variant = 'default', onClick, onRemove, style }: C
       {variant === 'removable' && (
         <span
           onClick={e => { e.stopPropagation(); onRemove?.(); }}
-          style={{ color: 'var(--ink-4)', fontSize: 10, lineHeight: 1, cursor: 'pointer' }}
+          style={{ color: 'var(--ink-4)', fontSize: 12, lineHeight: 1, cursor: 'pointer' }}
         >
           ×
         </span>

@@ -1,32 +1,20 @@
-# Still UI Migration — Status
+# Still UI Migration — Complete
 
 **Full execution plan:** [`docs/STILL_MIGRATION_PLAN.md`](STILL_MIGRATION_PLAN.md)  
 **Design system:** [`docs/STILL_DESIGN_SYSTEM.md`](STILL_DESIGN_SYSTEM.md)  
 **Preview:** `docs/ui-preview/still-direction-v2.html`
 
-## Done (foundation / first pass)
+## Completed July 22, 2026
 
 - Still tokens: `packages/ui/still-tokens.css`
-- Shared primitives partially Still-aligned (`packages/ui/src/*`)
+- Shared primitives Still-aligned (`packages/ui/src/*`), including the petrol dashboard panel pattern
 - App layouts load Inter + Newsreader
 - App globals import `@life-os/ui/still-tokens.css`
-- Main headers use 52px Still nav shape (per app)
-- First-pass treatment on several list/home pages (Persons people, Home, Stuff items, Events list, Places list, Theory home, Assistant home)
+- Main headers use the shared 52px Still nav shape
+- Deep and primary surfaces across Persons, Home, Stuff, Events, Places, Theory, and Assistant use Still tokens and typography
+- Legacy `tokens.css` is a compatibility shim to `still-tokens.css`; external Playfair/DM Mono loading is removed
+- Legacy grep, lint, and repository-wide type-check pass
 
-## Remaining (see detailed plan for checklists)
+## Ongoing rule
 
-1. **Persons deep:** Today, person detail, inbox, modals, merge/clean/admin, import  
-2. **Stuff / Theory / Events / Places** detail, forms, calendar, map chrome, import  
-3. **Home widgets** full petrol Still language  
-4. **Replace repeated inline** button/input/card with `@life-os/ui`  
-5. **Grep purge** Playfair, DM Mono, `#c4572a`, square CTAs, uppercase button labels  
-6. **No domain/API changes** in UI PRs  
-
-## Rollout order
-
-1. Verify Phase 0–1 foundation  
-2. Persons core workflows  
-3. Stuff → Events → Places → Theory → Home → Assistant  
-4. Cleanup + QA matrix in `STILL_MIGRATION_PLAN.md` Phase 8  
-
-Agents executing work should follow **`STILL_MIGRATION_PLAN.md`**, not only this status page.
+This migration is closed. New surfaces must follow `STILL_DESIGN_SYSTEM.md`; repeated patterns belong in `@life-os/ui`. Use the QA matrix in `STILL_MIGRATION_PLAN.md` whenever shared chrome or tokens change.

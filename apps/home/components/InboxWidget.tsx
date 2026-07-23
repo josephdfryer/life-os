@@ -35,7 +35,7 @@ export default async function InboxWidget({ workspaceId, personsUrl }: Props) {
           >
             {total}
           </div>
-          <div style={{ fontSize: '11px', color: '#71717a', marginTop: '2px' }}>pending</div>
+          <div style={{ fontSize: '11px', color: 'var(--camel)', marginTop: '2px' }}>pending</div>
         </div>
       </div>
 
@@ -49,12 +49,12 @@ export default async function InboxWidget({ workspaceId, personsUrl }: Props) {
       >
         {Object.entries(bySource).map(([source, count]) => (
           <div key={source} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '14px' }}>
-            <span style={{ color: '#a1a1aa', textTransform: 'capitalize' }}>{source}</span>
+            <span style={{ color: 'var(--ink-3)', textTransform: 'capitalize' }}>{source}</span>
             <span style={{ fontFamily: 'var(--font-body)' }}>{count}</span>
           </div>
         ))}
         {total === 0 && (
-          <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '16px 0', color: '#71717a' }}>
+          <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '16px 0', color: 'var(--ink-3)' }}>
             Inbox is clear
           </div>
         )}
@@ -68,15 +68,15 @@ export default async function InboxWidget({ workspaceId, personsUrl }: Props) {
 }
 
 const card: React.CSSProperties = {
-  background: 'rgba(24,24,27,0.5)',
-  border: '1px solid #27272a',
-  borderRadius: '24px',
+  background: 'rgba(247, 244, 238, 0.045)',
+  border: '1px solid rgba(196, 165, 116, 0.18)',
+  borderRadius: 'var(--radius-lg)',
   padding: '32px',
 }
 
 const heading: React.CSSProperties = {
   fontFamily: 'var(--font-display)',
   fontSize: '1.4rem',
-  fontWeight: 600,
+  fontWeight: 400,
   margin: 0,
 }

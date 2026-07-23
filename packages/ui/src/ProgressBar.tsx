@@ -16,7 +16,7 @@ export function ProgressBar({
   value,
   color = 'var(--status-done)',
   trackColor = 'var(--border)',
-  height = 3,
+  height = 4,
   style,
 }: ProgressBarProps) {
   const clamped = Math.min(100, Math.max(0, value));
@@ -26,7 +26,7 @@ export function ProgressBar({
         width: '100%',
         height,
         background: trackColor,
-        borderRadius: 1,
+        borderRadius: 'var(--radius-pill)',
         overflow: 'hidden',
         ...style,
       }}
@@ -36,7 +36,7 @@ export function ProgressBar({
           width: `${clamped}%`,
           height: '100%',
           background: color,
-          borderRadius: 1,
+          borderRadius: 'var(--radius-pill)',
           transition: 'width 0.25s ease',
         }}
       />

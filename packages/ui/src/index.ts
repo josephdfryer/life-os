@@ -37,6 +37,9 @@ export type { SelectProps } from './Select';
 export { Card }         from './Card';
 export type { CardProps } from './Card';
 
+export { PetrolCard } from './PetrolCard';
+export type { PetrolCardProps } from './PetrolCard';
+
 export { AppShell }     from './AppShell';
 export type { AppShellProps } from './AppShell';
 

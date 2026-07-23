@@ -41,7 +41,7 @@ export default async function ScheduleWidget({ workspaceId }: Props) {
       </div>
 
       {events.length === 0 ? (
-        <div style={{ padding: '48px 0', textAlign: 'center', color: '#71717a' }}>
+        <div style={{ padding: '48px 0', textAlign: 'center', color: 'var(--ink-3)' }}>
           Clear day
         </div>
       ) : (
@@ -62,7 +62,7 @@ export default async function ScheduleWidget({ workspaceId }: Props) {
                   style={{
                     fontFamily: 'var(--font-body)',
                     fontSize: '12px',
-                    color: '#71717a',
+                    color: 'var(--ink-3)',
                     paddingTop: '2px',
                     minWidth: '72px',
                     flexShrink: 0,
@@ -73,7 +73,7 @@ export default async function ScheduleWidget({ workspaceId }: Props) {
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ fontWeight: 500, lineHeight: 1.3 }}>{event.name}</div>
                   {uniqueAttendees.length > 0 && (
-                    <div style={{ fontSize: '12px', color: '#71717a', marginTop: '4px' }}>
+                    <div style={{ fontSize: '12px', color: 'var(--ink-3)', marginTop: '4px' }}>
                       with {uniqueAttendees.join(', ')}
                     </div>
                   )}
@@ -88,16 +88,16 @@ export default async function ScheduleWidget({ workspaceId }: Props) {
 }
 
 const card: React.CSSProperties = {
-  background: 'rgba(24,24,27,0.5)',
-  border: '1px solid #27272a',
-  borderRadius: '24px',
+  background: 'rgba(247, 244, 238, 0.045)',
+  border: '1px solid rgba(196, 165, 116, 0.18)',
+  borderRadius: 'var(--radius-lg)',
   padding: '32px',
 }
 
 const heading: React.CSSProperties = {
   fontFamily: 'var(--font-display)',
   fontSize: '1.4rem',
-  fontWeight: 600,
+  fontWeight: 400,
   margin: 0,
 }
 
@@ -105,7 +105,7 @@ const badge: React.CSSProperties = {
   fontFamily: 'var(--font-body)',
   fontSize: '11px',
   padding: '4px 12px',
-  background: 'rgba(6,78,59,0.4)',
-  color: '#34d399',
-  borderRadius: '999px',
+  background: 'rgba(196, 165, 116, 0.14)',
+  color: 'var(--camel)',
+  borderRadius: 'var(--radius-pill)',
 }

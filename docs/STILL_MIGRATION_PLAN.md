@@ -1,12 +1,18 @@
 # Still Design System — Full App Migration Plan
 
-**Status:** In progress (foundation + first-pass surfaces started)  
+**Status:** Complete (July 22, 2026)
 **Design source of truth:** [`docs/STILL_DESIGN_SYSTEM.md`](STILL_DESIGN_SYSTEM.md)  
 **Visual reference:** open `docs/ui-preview/still-direction-v2.html` while working  
 **Tokens:** `packages/ui/still-tokens.css`  
 **Short status pointer:** [`docs/STILL_UI_MIGRATION_PLAN.md`](STILL_UI_MIGRATION_PLAN.md)
 
 This is the **detailed execution plan** for migrating every Life OS app from legacy Warm Concrete (or partial Still) to full Still v2. Write it so Claude, Codex, or any agent can execute without re-deriving the design.
+
+## Completion record
+
+All seven production apps now load Inter + Newsreader and the canonical Still token sheet. Shared `@life-os/ui` primitives use Still typography, radii, palette, controls, rows, navigation, and the petrol-panel pattern. Deep Persons workflows, Stuff, Theory, Events, Places, Home, and Assistant use the shared visual language; Home intentionally retains the approved petrol dashboard variant. The legacy `tokens.css` entry point is now a compatibility shim to `still-tokens.css` and no longer loads Playfair, DM Mono, or Warm Concrete values.
+
+The final legacy grep is clean for Playfair, DM Mono, and terracotta. Lint and repository-wide type-check pass. Automated browser journeys remain the behavioral UI gate; future UI changes should use the QA matrix below for manual visual review.
 
 ---
 

@@ -63,14 +63,14 @@ export default async function ActionItemsWidget({ workspaceId, personsUrl }: Pro
         <h2 style={heading}>Action Items</h2>
         <a
           href={personsUrl}
-          style={{ fontSize: '12px', color: '#a1a1aa', textDecoration: 'none' }}
+          style={{ fontSize: '12px', color: 'var(--camel)', textDecoration: 'none' }}
         >
           Persons →
         </a>
       </div>
 
       {rows.length === 0 ? (
-        <div style={{ padding: '40px 0', textAlign: 'center', color: '#71717a' }}>
+        <div style={{ padding: '40px 0', textAlign: 'center', color: 'var(--ink-3)' }}>
           No action items logged
         </div>
       ) : (
@@ -79,18 +79,18 @@ export default async function ActionItemsWidget({ workspaceId, personsUrl }: Pro
             <div
               key={row.id}
               style={{
-                borderLeft: '2px solid #3f3f46',
+                borderLeft: '2px solid rgba(196, 165, 116, 0.34)',
                 paddingLeft: '12px',
                 paddingTop: '6px',
                 paddingBottom: '6px',
               }}
             >
               <div style={{ fontSize: '14px', lineHeight: 1.4 }}>{row.item}</div>
-              <div style={{ fontSize: '12px', color: '#71717a', marginTop: '4px' }}>
+              <div style={{ fontSize: '12px', color: 'var(--ink-3)', marginTop: '4px' }}>
                 {row.personName ? (
                   <a
                     href={`${personsUrl}/people/${row.personId}`}
-                    style={{ color: '#a1a1aa', textDecoration: 'none' }}
+                    style={{ color: 'var(--camel)', textDecoration: 'none' }}
                   >
                     {row.personName}
                   </a>
@@ -106,15 +106,15 @@ export default async function ActionItemsWidget({ workspaceId, personsUrl }: Pro
 }
 
 const card: React.CSSProperties = {
-  background: 'rgba(24,24,27,0.5)',
-  border: '1px solid #27272a',
-  borderRadius: '24px',
+  background: 'rgba(247, 244, 238, 0.045)',
+  border: '1px solid rgba(196, 165, 116, 0.18)',
+  borderRadius: 'var(--radius-lg)',
   padding: '32px',
 }
 
 const heading: React.CSSProperties = {
   fontFamily: 'var(--font-display)',
   fontSize: '1.4rem',
-  fontWeight: 600,
+  fontWeight: 400,
   margin: 0,
 }

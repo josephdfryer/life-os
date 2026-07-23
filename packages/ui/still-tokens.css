@@ -1,8 +1,7 @@
 /* ══════════════════════════════════════════════════════════════════
    STILL v2 — Life OS design tokens (canonical reference)
 
-   Status: APPROVED design direction. Apps still use legacy Warm Concrete
-   tokens until an explicit migration. Agents building new UI should follow
+   Status: MIGRATED. All production apps use this palette. Agents building UI should follow
    docs/STILL_DESIGN_SYSTEM.md and use these variables.
 
    Preview: docs/ui-preview/still-direction-v2.html
@@ -70,7 +69,7 @@
   --font-display:    'Newsreader', Georgia, 'Times New Roman', serif;
   --font-body:       'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
 
-  /* Legacy — do not use in new Still UI */
+  /* Compatibility alias for older components; resolves to Inter. */
   --font-mono:       var(--font-body);
 
   /* ── Radius ── */

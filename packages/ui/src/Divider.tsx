@@ -36,9 +36,9 @@ export function Divider({ label, style }: DividerProps) {
       <div style={{ flex: 1, height: 1, background: 'var(--separator)' }} />
       <span
         style={{
-          fontFamily: 'var(--font-mono)',
-          fontSize: 8,
-          letterSpacing: '0.14em',
+          fontFamily: 'var(--font-body)',
+          fontSize: 11,
+          letterSpacing: '0.1em',
           color: 'var(--ink-4)',
           textTransform: 'uppercase',
           whiteSpace: 'nowrap',
