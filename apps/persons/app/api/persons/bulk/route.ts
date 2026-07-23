@@ -3,7 +3,7 @@ import { db } from "@/lib/db"
 import { handleRouteError, noContent } from "@/server/api/respond"
 import { requireAccess } from "@/server/domain/access"
 import { auditAction } from "@/server/domain/audit"
-import { revalidatePeopleCache } from "@/server/domain/people"
+import { revalidatePersonsCache } from "@/server/domain/persons"
 import { bulkDeletePeopleContract } from "@life-os/contracts"
 import { parseJsonBody } from "@/server/api/contracts"
 
@@ -17,7 +17,7 @@ export async function DELETE(req: NextRequest) {
     })
 
     await auditAction({ actor: actor.actor, action: "person.delete", targetType: "person", targetId: stringIds.join(",") })
-    revalidatePeopleCache(actor.workspaceId)
+    revalidatePersonsCache(actor.workspaceId)
     return noContent()
   } catch (error) {
     return handleRouteError(error)

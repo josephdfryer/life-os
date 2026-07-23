@@ -328,7 +328,7 @@ export default function MergeDuplicatesUI({ initialPairs }: { initialPairs: Dupe
   return (
     <div style={{ maxWidth: "1020px", margin: "0 auto", padding: "32px 24px" }}>
 
-      <BackLink label="People" href="/people" component={Link} style={{ marginBottom: "16px" }} />
+      <BackLink label="Persons" href="/persons" component={Link} style={{ marginBottom: "16px" }} />
 
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: pairs.length > 0 ? "14px" : "24px" }}>
         <h1 style={{ fontFamily: "var(--font-display)", fontSize: "24px", fontWeight: 600, color: "var(--ink)", margin: 0 }}>

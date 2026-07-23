@@ -5,7 +5,7 @@ import { handleRouteError } from "@/server/api/respond"
 import { optionalString, optionalStringArray } from "@/server/api/errors"
 import { jsonList } from "@/server/domain/dto"
 import { normalizeBirthday } from "@/lib/birthday"
-import { revalidatePeopleCache } from "@/server/domain/people"
+import { revalidatePersonsCache } from "@/server/domain/persons"
 import { bulkUpdatePeopleContract } from "@life-os/contracts"
 import { parseJsonBody } from "@/server/api/contracts"
 
@@ -60,7 +60,7 @@ export async function POST(req: NextRequest) {
       }
     })
 
-    revalidatePeopleCache(actor.workspaceId)
+    revalidatePersonsCache(actor.workspaceId)
     return NextResponse.json({ updated: count })
   } catch (error) {
     return handleRouteError(error)

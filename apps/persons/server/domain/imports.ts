@@ -5,7 +5,7 @@ import type { ImportedPerson } from "@/types"
 import { auditAction, type DomainActor } from "./audit"
 import { createEvent, parseTimestamp } from "./events"
 import { createInteraction } from "./interactions"
-import { createPerson } from "./people"
+import { createPerson } from "./persons"
 import { runRulesForTarget } from "./rules"
 
 type ImportFileInput = {

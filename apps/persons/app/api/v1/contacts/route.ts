@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { db } from "@/lib/db"
 import { authorizeApiRequest, unauthorized } from "@/lib/api-auth"
-import { createPerson } from "@/server/domain/people"
+import { createPerson } from "@/server/domain/persons"
 import { formatPerson } from "@/server/domain/dto"
 import { created, handleRouteError } from "@/server/api/respond"
 

@@ -4,7 +4,7 @@ import { handleRouteError } from "@/server/api/respond"
 import { requireAccess } from "@/server/domain/access"
 import { badRequest } from "@/server/api/errors"
 import { auditAction } from "@/server/domain/audit"
-import { revalidatePeopleCache } from "@/server/domain/people"
+import { revalidatePersonsCache } from "@/server/domain/persons"
 
 export async function DELETE(req: NextRequest) {
   try {
@@ -17,7 +17,7 @@ export async function DELETE(req: NextRequest) {
     })
 
     await auditAction({ actor: actor.actor, action: "person.delete", targetType: "person", targetId: `workspace:${actor.workspaceId}` })
-    revalidatePeopleCache(actor.workspaceId)
+    revalidatePersonsCache(actor.workspaceId)
     return NextResponse.json({ deleted: count })
   } catch (error) {
     return handleRouteError(error)

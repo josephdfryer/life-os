@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation"
 
 export default function LegacyContactsPage() {
-  redirect("/people")
+  redirect("/persons")
 }

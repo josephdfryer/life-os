@@ -44,7 +44,7 @@ type PageData = {
   hasMore:  boolean
 }
 
-export default function PeopleClient({ initialData }: { initialData: PageData | null }) {
+export default function PersonsClient({ initialData }: { initialData: PageData | null }) {
   const [data, setData]               = useState<PageData>(initialData ?? { persons: [], total: 0, hasMore: false })
   const [search, setSearch]           = useState("")
   const [sort, setSort]               = useState<SortKey>("name")
@@ -265,7 +265,7 @@ export default function PeopleClient({ initialData }: { initialData: PageData | 
       {/* Header */}
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "24px" }}>
         <h1 style={{ fontFamily: "var(--font-display)", fontSize: "28px", fontWeight: 400, letterSpacing: "-0.02em", color: "var(--ink)", margin: 0 }}>
-          People
+          Persons
           {!loading && (
             <span style={{ fontFamily: "var(--font-body)", fontSize: "14px", fontWeight: 400, color: filtersActive ? "var(--cognac)" : "var(--ink-4)", marginLeft: "10px" }}>
               {total.toLocaleString()}
@@ -277,10 +277,10 @@ export default function PeopleClient({ initialData }: { initialData: PageData | 
           <a href="/api/persons/export" download style={{ padding: "9px 16px", background: "transparent", color: "var(--ink-3)", border: "1px solid var(--border)", borderRadius: "var(--radius-pill)", fontFamily: "inherit", fontSize: "13px", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: "5px" }} title="Download full backup as JSON">
             Backup
           </a>
-          <Link href="/people/clean" style={{ padding: "9px 16px", background: "transparent", color: "var(--ink-3)", border: "1px solid var(--border)", borderRadius: "var(--radius-pill)", fontFamily: "inherit", fontSize: "13px", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: "5px" }}>
+          <Link href="/persons/clean" style={{ padding: "9px 16px", background: "transparent", color: "var(--ink-3)", border: "1px solid var(--border)", borderRadius: "var(--radius-pill)", fontFamily: "inherit", fontSize: "13px", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: "5px" }}>
             Data cleaning
           </Link>
-          <Link href="/people/merge" style={{ padding: "9px 16px", background: "transparent", color: "var(--ink-3)", border: "1px solid var(--border)", borderRadius: "var(--radius-pill)", fontFamily: "inherit", fontSize: "13px", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: "5px" }}>
+          <Link href="/persons/merge" style={{ padding: "9px 16px", background: "transparent", color: "var(--ink-3)", border: "1px solid var(--border)", borderRadius: "var(--radius-pill)", fontFamily: "inherit", fontSize: "13px", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: "5px" }}>
             Dedupe
           </Link>
           {selectMode ? (

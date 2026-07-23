@@ -129,8 +129,8 @@ export default async function TodayPage() {
           <div style={{ fontSize: "12px", color: "var(--ink-3)", marginBottom: "20px" }}>
             Add your first person to get started.
           </div>
-          <a href="/people" style={{ display: "inline-block", padding: "9px 20px", background: "var(--accent)", color: "#fff", borderRadius: "7px", textDecoration: "none", fontSize: "12px", fontWeight: 500 }}>
-            Go to People →
+          <a href="/persons" style={{ display: "inline-block", padding: "9px 20px", background: "var(--accent)", color: "#fff", borderRadius: "7px", textDecoration: "none", fontSize: "12px", fontWeight: 500 }}>
+            Go to Persons →
           </a>
         </div>
       )}

@@ -48,7 +48,7 @@ export function GmailTab(props: Props) {
       <div style={{ display: "grid", gap: "8px" }}>{(props.trace?.messages ?? []).map(message => <article key={message.id} style={cardStyle}>
         <div style={{ display: "flex", justifyContent: "space-between" }}><strong>{message.subject || message.stagedItem?.summary || "Gmail message"}</strong><Pill text={message.status} /></div>
         <div style={helpStyle}>{formatDate(message.lastSeenAt ?? message.updatedAt)} · {parties("From", message.from)} · {parties("To", message.to)}</div>
-        <div style={{ display: "flex", gap: "6px", flexWrap: "wrap", marginTop: "7px" }}>{message.linkedPeople.filter(item => item.person).map(item => <a key={item.id} href={`/people/${item.person!.id}`} style={personLinkStyle}>{item.person!.name}</a>)}{message.stagedItem && <a href="/inbox" style={personLinkStyle}>Inbox: {message.stagedItem.candidatePerson?.name ?? "review"}</a>}</div>
+        <div style={{ display: "flex", gap: "6px", flexWrap: "wrap", marginTop: "7px" }}>{message.linkedPeople.filter(item => item.person).map(item => <a key={item.id} href={`/persons/${item.person!.id}`} style={personLinkStyle}>{item.person!.name}</a>)}{message.stagedItem && <a href="/inbox" style={personLinkStyle}>Inbox: {message.stagedItem.candidatePerson?.name ?? "review"}</a>}</div>
         {message.snippet && <p style={helpStyle}>{message.snippet}</p>}
       </article>)}</div>
     </Panel></div>

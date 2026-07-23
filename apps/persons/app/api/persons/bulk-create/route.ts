@@ -5,7 +5,7 @@ import { handleRouteError } from "@/server/api/respond"
 import { optionalString, optionalStringArray, requiredString } from "@/server/api/errors"
 import { jsonList } from "@/server/domain/dto"
 import { normalizeBirthday } from "@/lib/birthday"
-import { revalidatePeopleCache } from "@/server/domain/people"
+import { revalidatePersonsCache } from "@/server/domain/persons"
 import { bulkCreatePeopleContract } from "@life-os/contracts"
 import { parseJsonBody } from "@/server/api/contracts"
 
@@ -59,7 +59,7 @@ export async function POST(req: NextRequest) {
     })
 
     const result = await db.person.createMany({ data: rows })
-    revalidatePeopleCache(actor.workspaceId)
+    revalidatePersonsCache(actor.workspaceId)
     return NextResponse.json({ created: result.count })
   } catch (error) {
     return handleRouteError(error)

@@ -797,7 +797,7 @@ function ExpandedDetail({
                   {[selectedPerson.title, selectedPerson.company, selectedPerson.emails[0]].filter(Boolean).join(" · ")}
                 </div>
               </div>
-              <Link href={`/people/${selectedPerson.id}`} style={{ fontSize: "11px", color: "var(--accent)", textDecoration: "none", flexShrink: 0 }}>
+              <Link href={`/persons/${selectedPerson.id}`} style={{ fontSize: "11px", color: "var(--accent)", textDecoration: "none", flexShrink: 0 }}>
                 Open
               </Link>
             </div>

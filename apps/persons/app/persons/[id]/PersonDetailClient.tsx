@@ -54,7 +54,7 @@ export default function PersonDetailClient({ id, initialData }: { id: string; in
   async function handleDelete() {
     if (!confirm(`Delete ${person?.first} ${person?.last}? This cannot be undone.`)) return
     await fetch(`/api/persons/${id}`, { method: "DELETE" })
-    router.push("/people")
+    router.push("/persons")
   }
 
   async function handleMarkPlanDone(planId: string) {
@@ -90,7 +90,7 @@ export default function PersonDetailClient({ id, initialData }: { id: string; in
   return (
     <div style={{ maxWidth: "720px", margin: "0 auto", padding: "32px 24px" }}>
 
-      <BackLink label="All People" href="/people" component={Link} style={{ marginBottom: "20px" }} />
+      <BackLink label="All Persons" href="/persons" component={Link} style={{ marginBottom: "20px" }} />
 
       {/* ── Header card ─────────────────────────────────────────── */}
       <Card style={{ borderRadius: "14px", marginBottom: "20px", overflow: "hidden" }}>

@@ -4,7 +4,7 @@ import { centsToDollars } from "@life-os/db"
 import { parseTags } from "@/lib/utils"
 import { enrichWithAttention } from "@/lib/attention"
 import type { Interaction } from "@/types"
-import { createPerson } from "@/server/domain/people"
+import { createPerson } from "@/server/domain/persons"
 import { created, handleRouteError } from "@/server/api/respond"
 import { requireAccess } from "@/server/domain/access"
 

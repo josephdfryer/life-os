@@ -1011,7 +1011,7 @@ function GmailTraceOutcome({ message }: { message: GmailTrace["messages"][number
         {message.linkedPeople.map(item => item.person ? (
           <a
             key={`${item.id}-${item.person.id}`}
-            href={`/people/${item.person.id}`}
+            href={`/persons/${item.person.id}`}
             style={{ border: "1px solid #88a06a", color: "#526b37", borderRadius: "999px", padding: "3px 8px", fontSize: "10px", textDecoration: "none", background: "#f3f8ee" }}
           >
             {item.person.name}
@@ -1032,7 +1032,7 @@ function GmailTraceOutcome({ message }: { message: GmailTrace["messages"][number
   }
 
   if (message.status === "skipped") {
-    return <div style={{ fontSize: "11px", color: "var(--ink-4)" }}>Skipped because no existing Person matched and Known People only was selected.</div>
+    return <div style={{ fontSize: "11px", color: "var(--ink-4)" }}>Skipped because no existing Person matched and Known Persons only was selected.</div>
   }
 
   if (message.status === "deleted") {
@@ -1144,7 +1144,7 @@ function formatSyncRun(metadata: Record<string, unknown> | null) {
   const fetched = Number(metadata.fetched ?? 0)
   const batches = Number(metadata.batches ?? 0)
   const incremental = metadata.incremental ? "incremental" : "backfill"
-  return `${createdEvents} events created, ${updatedEvents} updated, ${createdInteractions} People interactions · ${fetched} fetched in ${batches} batches · ${incremental}`
+  return `${createdEvents} events created, ${updatedEvents} updated, ${createdInteractions} Person interactions · ${fetched} fetched in ${batches} batches · ${incremental}`
 }
 
 function formatGmailSyncRun(metadata: Record<string, unknown> | null) {

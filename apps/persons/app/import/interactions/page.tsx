@@ -52,7 +52,7 @@ export default function ImportInteractionsPage() {
     if (!incoming.length) return
     const firstFile = incoming[0]
     if (firstFile.name.endsWith(".vcf")) {
-      router.push("/import/people")
+      router.push("/import/persons")
       return
     }
     setFiles(incoming)
@@ -485,7 +485,7 @@ export default function ImportInteractionsPage() {
               {results.length} people and their interactions have been added.
             </p>
             <div style={{ display: "flex", gap: "10px", justifyContent: "center" }}>
-              <button onClick={() => router.push("/people")} style={{ padding: "10px 24px", background: "var(--accent)", color: "#fff", border: "none", borderRadius: "7px", cursor: "pointer", fontFamily: "inherit", fontSize: "12px", fontWeight: 500 }}>
+              <button onClick={() => router.push("/persons")} style={{ padding: "10px 24px", background: "var(--accent)", color: "#fff", border: "none", borderRadius: "7px", cursor: "pointer", fontFamily: "inherit", fontSize: "12px", fontWeight: 500 }}>
                 View People
               </button>
               <button

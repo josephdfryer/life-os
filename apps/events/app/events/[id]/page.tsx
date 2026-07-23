@@ -295,7 +295,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
                   <span style={{ fontSize: "13px", fontWeight: 500 }}>
                     {interaction.person ? (
                       <a
-                        href={`${personsUrl}/people/${interaction.person.id}`}
+                        href={`${personsUrl}/persons/${interaction.person.id}`}
                         style={{ color: "var(--ink)", textDecoration: "none" }}
                       >
                         {personName(interaction.person.first, interaction.person.last)}

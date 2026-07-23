@@ -2,11 +2,11 @@ import Link from "next/link"
 
 const importModes = [
   {
-    href: "/import/people",
-    title: "People",
+    href: "/import/persons",
+    title: "Persons",
     count: "vCard / CSV",
-    summary: "Bring in people records, review duplicates, fill missing fields, and choose what gets saved.",
-    action: "Import People",
+    summary: "Bring in person records, review duplicates, fill missing fields, and choose what gets saved.",
+    action: "Import Persons",
   },
   {
     href: "/import/interactions",

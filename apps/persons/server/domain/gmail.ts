@@ -293,7 +293,7 @@ export async function importGmailContactsPreview(actor: AccessActor) {
     throw badRequest("Reconnect Gmail to allow importing Google contacts", {
       reconnectRequired: true,
       missingScope: GOOGLE_CONTACTS_READONLY_SCOPE,
-      reconnectUrl: "/api/gmail/google/connect?returnTo=/import/people",
+      reconnectUrl: "/api/gmail/google/connect?returnTo=/import/persons",
     })
   }
 

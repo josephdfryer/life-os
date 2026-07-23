@@ -103,7 +103,7 @@ export function ContactReviewCard({
                 {isDuplicate ? "Duplicate" : "Possible match"}:
               </span>
               {" "}
-              <a href={`/people/${contact.matchResult!.personId}`} target="_blank" rel="noreferrer"
+              <a href={`/persons/${contact.matchResult!.personId}`} target="_blank" rel="noreferrer"
                 style={{ color: isDuplicate ? "#7c3aed" : "#ea580c", textDecoration: "underline", cursor: "pointer" }}>
                 {contact.matchResult!.personName}
               </a>

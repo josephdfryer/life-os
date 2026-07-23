@@ -20,7 +20,7 @@ export default function BirthdayCard({ person, isToday, tz = "UTC" }: Props) {
     : `In ${days} days`
 
   return (
-    <Link href={`/people/${person.id}`} style={{ textDecoration: "none" }}>
+    <Link href={`/persons/${person.id}`} style={{ textDecoration: "none" }}>
       <div style={{
         display: "flex",
         alignItems: "center",

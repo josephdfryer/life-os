@@ -2,8 +2,8 @@ import assert from "node:assert/strict"
 import test from "node:test"
 import type { ParsedContact } from "../lib/vcard"
 import type { Person } from "../types"
-import { DUPLICATE_THRESHOLD, computeFillableFields, findMatch, getStatus, guessNameFromEmail, jaroWinkler, sortByStatus, type ReviewContact } from "../app/import/people/matching"
-import { keepOnly, setActionAt, setSelectedAt, skipAt } from "../app/import/people/review-transitions"
+import { DUPLICATE_THRESHOLD, computeFillableFields, findMatch, getStatus, guessNameFromEmail, jaroWinkler, sortByStatus, type ReviewContact } from "../app/import/persons/matching"
+import { keepOnly, setActionAt, setSelectedAt, skipAt } from "../app/import/persons/review-transitions"
 
 const person = (patch: Partial<Person> = {}) => ({ id: "person-1", first: "Joseph", last: "Fryer", emails: ["joseph@example.com"], phones: ["+1 555 123 4567"], company: "Life OS", title: null, headline: null, birthday: null, location: null, linkedin: null, twitter: null, website: null, facebook: null, instagram: null, notes: null, ...patch }) as Person
 const contact = (patch: Partial<ParsedContact> = {}) => ({ first: "Joseph", last: "Fryer", email: null, phone: null, company: null, title: null, headline: null, birthday: null, location: null, linkedin: null, twitter: null, website: null, facebook: null, instagram: null, notes: null, ...patch }) as ParsedContact

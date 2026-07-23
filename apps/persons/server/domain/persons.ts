@@ -6,7 +6,7 @@ import { auditAction, type DomainActor } from "./audit"
 import { formatPerson, jsonList } from "./dto"
 import { normalizeBirthday } from "@/lib/birthday"
 
-export function revalidatePeopleCache(_workspaceId: string) {
+export function revalidatePersonsCache(_workspaceId: string) {
   revalidatePath("/people")
 }
 
@@ -73,7 +73,7 @@ export async function createPerson(input: PersonInput, actor?: DomainActor) {
   })
 
   await auditAction({ actor, action: "person.create", targetType: "person", targetId: person.id })
-  revalidatePeopleCache(workspaceId)
+  revalidatePersonsCache(workspaceId)
   return formatPerson(person)
 }
 
@@ -113,7 +113,7 @@ export async function updatePerson(id: string, input: PersonInput, actor?: Domai
 
   const person = await db.person.update({ where: { id }, data: patch })
   await auditAction({ actor, action: "person.update", targetType: "person", targetId: id, metadata: { fields: Object.keys(patch) } })
-  revalidatePeopleCache(workspaceId)
+  revalidatePersonsCache(workspaceId)
   return formatPerson(person)
 }
 
@@ -123,7 +123,7 @@ export async function deletePerson(id: string, actor?: DomainActor) {
   if (!existing) throw notFound("Person not found", { id })
   await db.person.delete({ where: { id } })
   await auditAction({ actor, action: "person.delete", targetType: "person", targetId: id })
-  revalidatePeopleCache(workspaceId)
+  revalidatePersonsCache(workspaceId)
 }
 
 function contactList(arrayValue: unknown, singleValue: unknown) {

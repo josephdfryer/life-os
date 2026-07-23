@@ -26,7 +26,7 @@ export default function PersonCard({ person }: Props) {
   const hasEverContacted = person.lastInteractionDate !== null
 
   return (
-    <Link href={`/people/${person.id}`} style={{ textDecoration: "none", display: "block" }}>
+    <Link href={`/persons/${person.id}`} style={{ textDecoration: "none", display: "block" }}>
       <div style={{
         background: "var(--surface)",
         border: "1px solid transparent",

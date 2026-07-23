@@ -4,7 +4,7 @@ import { authorizeApiRequest, unauthorized } from "@/lib/api-auth"
 import { parseTags } from "@/lib/utils"
 import { parseStoredRecord } from "@/lib/utils"
 import { formatPerson } from "@/server/domain/dto"
-import { deletePerson, updatePerson } from "@/server/domain/people"
+import { deletePerson, updatePerson } from "@/server/domain/persons"
 import { handleRouteError, noContent } from "@/server/api/respond"
 
 type Params = { params: Promise<{ id: string }> }
