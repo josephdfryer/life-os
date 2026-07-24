@@ -4,6 +4,7 @@ import "./globals.css"
 import Header from "@/components/layout/Header"
 import Providers from "./providers"
 import TimezoneDetector from "@/components/TimezoneDetector"
+import { LifeOSBar } from "@life-os/ui"
 
 const inter = Inter({
   subsets: ["latin"],
@@ -34,6 +35,7 @@ export default function RootLayout({
       <body style={{ height: "100%", display: "flex", flexDirection: "column" }}>
         <Providers>
           <TimezoneDetector />
+          <LifeOSBar current="persons" />
           <Header />
           <main style={{ flex: 1, overflowY: "auto" }}>
             {children}

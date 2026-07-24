@@ -1,5 +1,6 @@
 import { Inter, Newsreader } from "next/font/google"
 import "./globals.css"
+import { LifeOSBar } from "@life-os/ui"
 
 const inter = Inter({
   subsets: ["latin"],
@@ -20,7 +21,10 @@ export const metadata = { title: "Life OS Assistant" }
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${inter.variable} ${newsreader.variable}`}>
-      <body>{children}</body>
+      <body>
+        <LifeOSBar current="assistant" />
+        {children}
+      </body>
     </html>
   )
 }

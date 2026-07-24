@@ -3,6 +3,7 @@ import { Inter, Newsreader } from "next/font/google"
 import "./globals.css"
 import Header from "@/components/layout/Header"
 import Providers from "./providers"
+import { LifeOSBar } from "@life-os/ui"
 
 const inter = Inter({
   subsets: ["latin"],
@@ -28,6 +29,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className={`${inter.variable} ${newsreader.variable}`} style={{ height: "100%" }}>
       <body style={{ height: "100%", display: "flex", flexDirection: "column" }}>
         <Providers>
+          <LifeOSBar current="events" />
           <Header />
           <main style={{ flex: 1, overflowY: "auto" }}>{children}</main>
         </Providers>

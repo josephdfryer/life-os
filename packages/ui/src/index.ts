@@ -72,5 +72,8 @@ export type { ToastProps, ToastVariant } from './Toast';
 export { TopNav }       from './TopNav';
 export type { TopNavProps, NavLink } from './TopNav';
 
+export { LifeOSBar, LIFE_OS_APPS } from './LifeOSBar';
+export type { LifeOSBarProps, LifeOSAppKey, LifeOSAppEntry } from './LifeOSBar';
+
 export { BackLink }     from './BackLink';
 export type { BackLinkProps } from './BackLink';
