@@ -38,15 +38,22 @@ export async function requireStuffAccess() {
   if (!email) return null
 
   const member = await db.workspaceMember.findFirst({
-    where: { user: { email }, status: "active" },
+    where: { user: { email }, status: "active", workspace: { status: "active" } },
     select: {
       workspaceId: true,
       user: { select: { id: true, personId: true, name: true, email: true } },
     },
   })
 
+  // Fail closed. An authenticated user who is not an active member of an active
+  // workspace gets no access, rather than silently defaulting into the shared
+  // "default-workspace" — that default is a cross-tenant data leak the moment
+  // there is more than one user. Workspace provisioning for a brand-new user is
+  // handled by the Persons/Home access bootstrap, not here.
+  if (!member) return null
+
   return {
-    workspaceId: member?.workspaceId ?? "default-workspace",
-    user: member?.user ?? { id: "", personId: null, name: session.user?.name ?? null, email },
+    workspaceId: member.workspaceId,
+    user: member.user,
   }
 }
