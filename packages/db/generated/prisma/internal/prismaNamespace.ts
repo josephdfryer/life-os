@@ -419,6 +419,8 @@ export const ModelName = {
   Assembly: 'Assembly',
   ItemInteraction: 'ItemInteraction',
   ImportedFile: 'ImportedFile',
+  AiProviderCredential: 'AiProviderCredential',
+  AiAnalysisRun: 'AiAnalysisRun',
   Group: 'Group',
   PersonGroup: 'PersonGroup',
   GroupGroup: 'GroupGroup',
@@ -444,7 +446,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "workspace" | "workspaceMember" | "approvedEmail" | "person" | "user" | "role" | "permission" | "userRole" | "rolePermission" | "apiKey" | "apiKeyScope" | "auditLog" | "calendarConnection" | "calendarEventLink" | "gmailConnection" | "gmailMessageLink" | "eraConnection" | "eraAccountLink" | "eraTransactionLink" | "rule" | "ruleRun" | "stagedInteraction" | "event" | "interaction" | "interactionParticipant" | "plan" | "planExpectedPerson" | "place" | "importJob" | "importStagedVisit" | "placeNote" | "item" | "assembly" | "itemInteraction" | "importedFile" | "group" | "personGroup" | "groupGroup" | "placeGroup" | "note" | "theorySnapshot" | "theorySnapshotSource" | "stateDefinition" | "state" | "assistantMessage"
+    modelProps: "workspace" | "workspaceMember" | "approvedEmail" | "person" | "user" | "role" | "permission" | "userRole" | "rolePermission" | "apiKey" | "apiKeyScope" | "auditLog" | "calendarConnection" | "calendarEventLink" | "gmailConnection" | "gmailMessageLink" | "eraConnection" | "eraAccountLink" | "eraTransactionLink" | "rule" | "ruleRun" | "stagedInteraction" | "event" | "interaction" | "interactionParticipant" | "plan" | "planExpectedPerson" | "place" | "importJob" | "importStagedVisit" | "placeNote" | "item" | "assembly" | "itemInteraction" | "importedFile" | "aiProviderCredential" | "aiAnalysisRun" | "group" | "personGroup" | "groupGroup" | "placeGroup" | "note" | "theorySnapshot" | "theorySnapshotSource" | "stateDefinition" | "state" | "assistantMessage"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -3038,6 +3040,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    AiProviderCredential: {
+      payload: Prisma.$AiProviderCredentialPayload<ExtArgs>
+      fields: Prisma.AiProviderCredentialFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.AiProviderCredentialFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiProviderCredentialPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.AiProviderCredentialFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiProviderCredentialPayload>
+        }
+        findFirst: {
+          args: Prisma.AiProviderCredentialFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiProviderCredentialPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.AiProviderCredentialFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiProviderCredentialPayload>
+        }
+        findMany: {
+          args: Prisma.AiProviderCredentialFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiProviderCredentialPayload>[]
+        }
+        create: {
+          args: Prisma.AiProviderCredentialCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiProviderCredentialPayload>
+        }
+        createMany: {
+          args: Prisma.AiProviderCredentialCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.AiProviderCredentialCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiProviderCredentialPayload>[]
+        }
+        delete: {
+          args: Prisma.AiProviderCredentialDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiProviderCredentialPayload>
+        }
+        update: {
+          args: Prisma.AiProviderCredentialUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiProviderCredentialPayload>
+        }
+        deleteMany: {
+          args: Prisma.AiProviderCredentialDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.AiProviderCredentialUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.AiProviderCredentialUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiProviderCredentialPayload>[]
+        }
+        upsert: {
+          args: Prisma.AiProviderCredentialUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiProviderCredentialPayload>
+        }
+        aggregate: {
+          args: Prisma.AiProviderCredentialAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAiProviderCredential>
+        }
+        groupBy: {
+          args: Prisma.AiProviderCredentialGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AiProviderCredentialGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.AiProviderCredentialCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AiProviderCredentialCountAggregateOutputType> | number
+        }
+      }
+    }
+    AiAnalysisRun: {
+      payload: Prisma.$AiAnalysisRunPayload<ExtArgs>
+      fields: Prisma.AiAnalysisRunFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.AiAnalysisRunFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiAnalysisRunPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.AiAnalysisRunFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiAnalysisRunPayload>
+        }
+        findFirst: {
+          args: Prisma.AiAnalysisRunFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiAnalysisRunPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.AiAnalysisRunFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiAnalysisRunPayload>
+        }
+        findMany: {
+          args: Prisma.AiAnalysisRunFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiAnalysisRunPayload>[]
+        }
+        create: {
+          args: Prisma.AiAnalysisRunCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiAnalysisRunPayload>
+        }
+        createMany: {
+          args: Prisma.AiAnalysisRunCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.AiAnalysisRunCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiAnalysisRunPayload>[]
+        }
+        delete: {
+          args: Prisma.AiAnalysisRunDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiAnalysisRunPayload>
+        }
+        update: {
+          args: Prisma.AiAnalysisRunUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiAnalysisRunPayload>
+        }
+        deleteMany: {
+          args: Prisma.AiAnalysisRunDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.AiAnalysisRunUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.AiAnalysisRunUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiAnalysisRunPayload>[]
+        }
+        upsert: {
+          args: Prisma.AiAnalysisRunUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiAnalysisRunPayload>
+        }
+        aggregate: {
+          args: Prisma.AiAnalysisRunAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAiAnalysisRun>
+        }
+        groupBy: {
+          args: Prisma.AiAnalysisRunGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AiAnalysisRunGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.AiAnalysisRunCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AiAnalysisRunCountAggregateOutputType> | number
+        }
+      }
+    }
     Group: {
       payload: Prisma.$GroupPayload<ExtArgs>
       fields: Prisma.GroupFieldRefs
@@ -4373,6 +4523,8 @@ export const ItemScalarFieldEnum = {
   warrantyDetails: 'warrantyDetails',
   placeId: 'placeId',
   ownedById: 'ownedById',
+  primaryImageFileId: 'primaryImageFileId',
+  attributes: 'attributes',
   tags: 'tags',
   notes: 'notes',
   color: 'color',
@@ -4414,10 +4566,52 @@ export const ImportedFileScalarFieldEnum = {
   format: 'format',
   filePath: 'filePath',
   sizeBytes: 'sizeBytes',
-  content: 'content'
+  content: 'content',
+  storageProvider: 'storageProvider',
+  storageKey: 'storageKey',
+  mimeType: 'mimeType',
+  checksum: 'checksum',
+  capturedAt: 'capturedAt'
 } as const
 
 export type ImportedFileScalarFieldEnum = (typeof ImportedFileScalarFieldEnum)[keyof typeof ImportedFileScalarFieldEnum]
+
+
+export const AiProviderCredentialScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  provider: 'provider',
+  label: 'label',
+  apiKeyEncrypted: 'apiKeyEncrypted',
+  modelId: 'modelId',
+  status: 'status',
+  lastUsedAt: 'lastUsedAt'
+} as const
+
+export type AiProviderCredentialScalarFieldEnum = (typeof AiProviderCredentialScalarFieldEnum)[keyof typeof AiProviderCredentialScalarFieldEnum]
+
+
+export const AiAnalysisRunScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  createdAt: 'createdAt',
+  completedAt: 'completedAt',
+  credentialId: 'credentialId',
+  sourceFileId: 'sourceFileId',
+  provider: 'provider',
+  modelId: 'modelId',
+  status: 'status',
+  promptVersion: 'promptVersion',
+  output: 'output',
+  error: 'error',
+  inputTokens: 'inputTokens',
+  outputTokens: 'outputTokens',
+  estimatedCost: 'estimatedCost'
+} as const
+
+export type AiAnalysisRunScalarFieldEnum = (typeof AiAnalysisRunScalarFieldEnum)[keyof typeof AiAnalysisRunScalarFieldEnum]
 
 
 export const GroupScalarFieldEnum = {
@@ -4845,6 +5039,8 @@ export type GlobalOmitConfig = {
   assembly?: Prisma.AssemblyOmit
   itemInteraction?: Prisma.ItemInteractionOmit
   importedFile?: Prisma.ImportedFileOmit
+  aiProviderCredential?: Prisma.AiProviderCredentialOmit
+  aiAnalysisRun?: Prisma.AiAnalysisRunOmit
   group?: Prisma.GroupOmit
   personGroup?: Prisma.PersonGroupOmit
   groupGroup?: Prisma.GroupGroupOmit

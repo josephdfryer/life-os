@@ -217,6 +217,16 @@ export type ItemInteraction = Prisma.ItemInteractionModel
  */
 export type ImportedFile = Prisma.ImportedFileModel
 /**
+ * Model AiProviderCredential
+ * 
+ */
+export type AiProviderCredential = Prisma.AiProviderCredentialModel
+/**
+ * Model AiAnalysisRun
+ * 
+ */
+export type AiAnalysisRun = Prisma.AiAnalysisRunModel
+/**
  * Model Group
  * 
  */

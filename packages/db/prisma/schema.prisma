@@ -47,6 +47,8 @@ model Workspace {
   groups         Group[]
   items          Item[]
   importedFiles  ImportedFile[]
+  aiProviderCredentials AiProviderCredential[]
+  aiAnalysisRuns AiAnalysisRun[]
   stagedItems    StagedInteraction[]
   rules          Rule[]
   ruleRuns       RuleRun[]
@@ -907,6 +909,15 @@ model Item {
   ownedById        String?
   ownedBy          Person?          @relation(fields: [ownedById], references: [id])
 
+  // Optional representative media. The bytes remain outside the graph; this
+  // points to the storage-neutral ImportedFile provenance record.
+  primaryImageFileId String?
+  primaryImageFile   ImportedFile?  @relation("ItemPrimaryImage", fields: [primaryImageFileId], references: [id], onDelete: SetNull)
+
+  // Domain-specific, user-correctable attributes encoded as JSON. Keeping
+  // wardrobe details here avoids turning garment taxonomy into primitives.
+  attributes       String?
+
   // Assembly tree
   assembledInto    Assembly[]       @relation("ChildItem")   // this item is inside something
   components       Assembly[]       @relation("ParentItem")  // things currently inside this item
@@ -923,6 +934,7 @@ model Item {
   @@index([assetId])
   @@index([placeId])
   @@index([ownedById])
+  @@index([primaryImageFileId])
   @@index([createdAt])
   @@index([workspaceId])
 }
@@ -987,10 +999,65 @@ model ImportedFile {
   filePath     String
   sizeBytes    Int
   content      String?
+  storageProvider String      @default("local")
+  storageKey      String?
+  mimeType        String?
+  checksum        String?
+  capturedAt      DateTime?
   interactions Interaction[]
   notes        Note[]
+  primaryForItems Item[]      @relation("ItemPrimaryImage")
+  aiAnalysisRuns AiAnalysisRun[]
 
   @@index([workspaceId, createdAt])
+  @@index([workspaceId, checksum])
+}
+
+// ─────────────────────────────────────────────
+// SUPPORT: AI provider credentials and auditable analysis
+// These are operational records, not Life OS primitives.
+// ─────────────────────────────────────────────
+
+model AiProviderCredential {
+  id              String    @id @default(cuid())
+  workspaceId     String
+  workspace       Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  provider        String
+  label           String?
+  apiKeyEncrypted String
+  modelId         String
+  status          String    @default("active")
+  lastUsedAt      DateTime?
+  analysisRuns    AiAnalysisRun[]
+
+  @@unique([workspaceId, provider])
+  @@index([workspaceId, status])
+}
+
+model AiAnalysisRun {
+  id              String                @id @default(cuid())
+  workspaceId     String
+  workspace       Workspace             @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  createdAt       DateTime              @default(now())
+  completedAt     DateTime?
+  credentialId    String?
+  credential      AiProviderCredential? @relation(fields: [credentialId], references: [id], onDelete: SetNull)
+  sourceFileId    String
+  sourceFile      ImportedFile          @relation(fields: [sourceFileId], references: [id], onDelete: Cascade)
+  provider        String
+  modelId         String
+  status          String
+  promptVersion   String
+  output          String?
+  error           String?
+  inputTokens     Int?
+  outputTokens    Int?
+  estimatedCost   Float?
+
+  @@index([workspaceId, createdAt])
+  @@index([sourceFileId])
 }
 
 // ─────────────────────────────────────────────

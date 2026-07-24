@@ -12,7 +12,8 @@
     "build": "prisma generate",
     "generate": "prisma generate",
     "migrate:dev": "prisma migrate dev",
-    "migrate:deploy": "prisma migrate deploy"
+    "migrate:deploy": "prisma migrate deploy",
+    "migrate:turso:wardrobe": "tsx turso-migrate-wardrobe.ts"
   },
   "dependencies": {
     "@libsql/client": "^0.17.2",

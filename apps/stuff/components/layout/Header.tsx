@@ -35,6 +35,7 @@ export default function Header() {
 
       <nav style={{ display: "flex", gap: "4px", alignItems: "center" }}>
         <NavLink href="/items"   label="Items"   active={pathname === "/items" || pathname.startsWith("/items/")} />
+        <NavLink href="/wardrobe" label="Wardrobe" active={pathname === "/wardrobe" || pathname.startsWith("/wardrobe/")} />
       </nav>
 
       {session?.user && (

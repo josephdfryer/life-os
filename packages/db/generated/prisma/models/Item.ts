@@ -57,6 +57,8 @@ export type ItemMinAggregateOutputType = {
   warrantyDetails: string | null
   placeId: string | null
   ownedById: string | null
+  primaryImageFileId: string | null
+  attributes: string | null
   tags: string | null
   notes: string | null
   color: string | null
@@ -84,6 +86,8 @@ export type ItemMaxAggregateOutputType = {
   warrantyDetails: string | null
   placeId: string | null
   ownedById: string | null
+  primaryImageFileId: string | null
+  attributes: string | null
   tags: string | null
   notes: string | null
   color: string | null
@@ -111,6 +115,8 @@ export type ItemCountAggregateOutputType = {
   warrantyDetails: number
   placeId: number
   ownedById: number
+  primaryImageFileId: number
+  attributes: number
   tags: number
   notes: number
   color: number
@@ -150,6 +156,8 @@ export type ItemMinAggregateInputType = {
   warrantyDetails?: true
   placeId?: true
   ownedById?: true
+  primaryImageFileId?: true
+  attributes?: true
   tags?: true
   notes?: true
   color?: true
@@ -177,6 +185,8 @@ export type ItemMaxAggregateInputType = {
   warrantyDetails?: true
   placeId?: true
   ownedById?: true
+  primaryImageFileId?: true
+  attributes?: true
   tags?: true
   notes?: true
   color?: true
@@ -204,6 +214,8 @@ export type ItemCountAggregateInputType = {
   warrantyDetails?: true
   placeId?: true
   ownedById?: true
+  primaryImageFileId?: true
+  attributes?: true
   tags?: true
   notes?: true
   color?: true
@@ -318,6 +330,8 @@ export type ItemGroupByOutputType = {
   warrantyDetails: string | null
   placeId: string | null
   ownedById: string | null
+  primaryImageFileId: string | null
+  attributes: string | null
   tags: string | null
   notes: string | null
   color: string | null
@@ -368,6 +382,8 @@ export type ItemWhereInput = {
   warrantyDetails?: Prisma.StringNullableFilter<"Item"> | string | null
   placeId?: Prisma.StringNullableFilter<"Item"> | string | null
   ownedById?: Prisma.StringNullableFilter<"Item"> | string | null
+  primaryImageFileId?: Prisma.StringNullableFilter<"Item"> | string | null
+  attributes?: Prisma.StringNullableFilter<"Item"> | string | null
   tags?: Prisma.StringNullableFilter<"Item"> | string | null
   notes?: Prisma.StringNullableFilter<"Item"> | string | null
   color?: Prisma.StringNullableFilter<"Item"> | string | null
@@ -375,6 +391,7 @@ export type ItemWhereInput = {
   workspace?: Prisma.XOR<Prisma.WorkspaceScalarRelationFilter, Prisma.WorkspaceWhereInput>
   place?: Prisma.XOR<Prisma.PlaceNullableScalarRelationFilter, Prisma.PlaceWhereInput> | null
   ownedBy?: Prisma.XOR<Prisma.PersonNullableScalarRelationFilter, Prisma.PersonWhereInput> | null
+  primaryImageFile?: Prisma.XOR<Prisma.ImportedFileNullableScalarRelationFilter, Prisma.ImportedFileWhereInput> | null
   assembledInto?: Prisma.AssemblyListRelationFilter
   components?: Prisma.AssemblyListRelationFilter
   itemInteractions?: Prisma.ItemInteractionListRelationFilter
@@ -401,6 +418,8 @@ export type ItemOrderByWithRelationInput = {
   warrantyDetails?: Prisma.SortOrderInput | Prisma.SortOrder
   placeId?: Prisma.SortOrderInput | Prisma.SortOrder
   ownedById?: Prisma.SortOrderInput | Prisma.SortOrder
+  primaryImageFileId?: Prisma.SortOrderInput | Prisma.SortOrder
+  attributes?: Prisma.SortOrderInput | Prisma.SortOrder
   tags?: Prisma.SortOrderInput | Prisma.SortOrder
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
   color?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -408,6 +427,7 @@ export type ItemOrderByWithRelationInput = {
   workspace?: Prisma.WorkspaceOrderByWithRelationInput
   place?: Prisma.PlaceOrderByWithRelationInput
   ownedBy?: Prisma.PersonOrderByWithRelationInput
+  primaryImageFile?: Prisma.ImportedFileOrderByWithRelationInput
   assembledInto?: Prisma.AssemblyOrderByRelationAggregateInput
   components?: Prisma.AssemblyOrderByRelationAggregateInput
   itemInteractions?: Prisma.ItemInteractionOrderByRelationAggregateInput
@@ -437,6 +457,8 @@ export type ItemWhereUniqueInput = Prisma.AtLeast<{
   warrantyDetails?: Prisma.StringNullableFilter<"Item"> | string | null
   placeId?: Prisma.StringNullableFilter<"Item"> | string | null
   ownedById?: Prisma.StringNullableFilter<"Item"> | string | null
+  primaryImageFileId?: Prisma.StringNullableFilter<"Item"> | string | null
+  attributes?: Prisma.StringNullableFilter<"Item"> | string | null
   tags?: Prisma.StringNullableFilter<"Item"> | string | null
   notes?: Prisma.StringNullableFilter<"Item"> | string | null
   color?: Prisma.StringNullableFilter<"Item"> | string | null
@@ -444,6 +466,7 @@ export type ItemWhereUniqueInput = Prisma.AtLeast<{
   workspace?: Prisma.XOR<Prisma.WorkspaceScalarRelationFilter, Prisma.WorkspaceWhereInput>
   place?: Prisma.XOR<Prisma.PlaceNullableScalarRelationFilter, Prisma.PlaceWhereInput> | null
   ownedBy?: Prisma.XOR<Prisma.PersonNullableScalarRelationFilter, Prisma.PersonWhereInput> | null
+  primaryImageFile?: Prisma.XOR<Prisma.ImportedFileNullableScalarRelationFilter, Prisma.ImportedFileWhereInput> | null
   assembledInto?: Prisma.AssemblyListRelationFilter
   components?: Prisma.AssemblyListRelationFilter
   itemInteractions?: Prisma.ItemInteractionListRelationFilter
@@ -470,6 +493,8 @@ export type ItemOrderByWithAggregationInput = {
   warrantyDetails?: Prisma.SortOrderInput | Prisma.SortOrder
   placeId?: Prisma.SortOrderInput | Prisma.SortOrder
   ownedById?: Prisma.SortOrderInput | Prisma.SortOrder
+  primaryImageFileId?: Prisma.SortOrderInput | Prisma.SortOrder
+  attributes?: Prisma.SortOrderInput | Prisma.SortOrder
   tags?: Prisma.SortOrderInput | Prisma.SortOrder
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
   color?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -505,6 +530,8 @@ export type ItemScalarWhereWithAggregatesInput = {
   warrantyDetails?: Prisma.StringNullableWithAggregatesFilter<"Item"> | string | null
   placeId?: Prisma.StringNullableWithAggregatesFilter<"Item"> | string | null
   ownedById?: Prisma.StringNullableWithAggregatesFilter<"Item"> | string | null
+  primaryImageFileId?: Prisma.StringNullableWithAggregatesFilter<"Item"> | string | null
+  attributes?: Prisma.StringNullableWithAggregatesFilter<"Item"> | string | null
   tags?: Prisma.StringNullableWithAggregatesFilter<"Item"> | string | null
   notes?: Prisma.StringNullableWithAggregatesFilter<"Item"> | string | null
   color?: Prisma.StringNullableWithAggregatesFilter<"Item"> | string | null
@@ -529,6 +556,7 @@ export type ItemCreateInput = {
   warrantyExpires?: Date | string | null
   lifetimeWarranty?: boolean
   warrantyDetails?: string | null
+  attributes?: string | null
   tags?: string | null
   notes?: string | null
   color?: string | null
@@ -536,6 +564,7 @@ export type ItemCreateInput = {
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutItemsInput
   place?: Prisma.PlaceCreateNestedOneWithoutItemsInput
   ownedBy?: Prisma.PersonCreateNestedOneWithoutOwnedItemsInput
+  primaryImageFile?: Prisma.ImportedFileCreateNestedOneWithoutPrimaryForItemsInput
   assembledInto?: Prisma.AssemblyCreateNestedManyWithoutChildItemInput
   components?: Prisma.AssemblyCreateNestedManyWithoutParentItemInput
   itemInteractions?: Prisma.ItemInteractionCreateNestedManyWithoutItemInput
@@ -562,6 +591,8 @@ export type ItemUncheckedCreateInput = {
   warrantyDetails?: string | null
   placeId?: string | null
   ownedById?: string | null
+  primaryImageFileId?: string | null
+  attributes?: string | null
   tags?: string | null
   notes?: string | null
   color?: string | null
@@ -589,6 +620,7 @@ export type ItemUpdateInput = {
   warrantyExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lifetimeWarranty?: Prisma.BoolFieldUpdateOperationsInput | boolean
   warrantyDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attributes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tags?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -596,6 +628,7 @@ export type ItemUpdateInput = {
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutItemsNestedInput
   place?: Prisma.PlaceUpdateOneWithoutItemsNestedInput
   ownedBy?: Prisma.PersonUpdateOneWithoutOwnedItemsNestedInput
+  primaryImageFile?: Prisma.ImportedFileUpdateOneWithoutPrimaryForItemsNestedInput
   assembledInto?: Prisma.AssemblyUpdateManyWithoutChildItemNestedInput
   components?: Prisma.AssemblyUpdateManyWithoutParentItemNestedInput
   itemInteractions?: Prisma.ItemInteractionUpdateManyWithoutItemNestedInput
@@ -622,6 +655,8 @@ export type ItemUncheckedUpdateInput = {
   warrantyDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   placeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ownedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  primaryImageFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attributes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tags?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -652,6 +687,8 @@ export type ItemCreateManyInput = {
   warrantyDetails?: string | null
   placeId?: string | null
   ownedById?: string | null
+  primaryImageFileId?: string | null
+  attributes?: string | null
   tags?: string | null
   notes?: string | null
   color?: string | null
@@ -676,6 +713,7 @@ export type ItemUpdateManyMutationInput = {
   warrantyExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lifetimeWarranty?: Prisma.BoolFieldUpdateOperationsInput | boolean
   warrantyDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attributes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tags?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -703,6 +741,8 @@ export type ItemUncheckedUpdateManyInput = {
   warrantyDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   placeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ownedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  primaryImageFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attributes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tags?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -740,6 +780,8 @@ export type ItemCountOrderByAggregateInput = {
   warrantyDetails?: Prisma.SortOrder
   placeId?: Prisma.SortOrder
   ownedById?: Prisma.SortOrder
+  primaryImageFileId?: Prisma.SortOrder
+  attributes?: Prisma.SortOrder
   tags?: Prisma.SortOrder
   notes?: Prisma.SortOrder
   color?: Prisma.SortOrder
@@ -772,6 +814,8 @@ export type ItemMaxOrderByAggregateInput = {
   warrantyDetails?: Prisma.SortOrder
   placeId?: Prisma.SortOrder
   ownedById?: Prisma.SortOrder
+  primaryImageFileId?: Prisma.SortOrder
+  attributes?: Prisma.SortOrder
   tags?: Prisma.SortOrder
   notes?: Prisma.SortOrder
   color?: Prisma.SortOrder
@@ -799,6 +843,8 @@ export type ItemMinOrderByAggregateInput = {
   warrantyDetails?: Prisma.SortOrder
   placeId?: Prisma.SortOrder
   ownedById?: Prisma.SortOrder
+  primaryImageFileId?: Prisma.SortOrder
+  attributes?: Prisma.SortOrder
   tags?: Prisma.SortOrder
   notes?: Prisma.SortOrder
   color?: Prisma.SortOrder
@@ -983,6 +1029,48 @@ export type ItemUpdateOneRequiredWithoutItemInteractionsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ItemUpdateToOneWithWhereWithoutItemInteractionsInput, Prisma.ItemUpdateWithoutItemInteractionsInput>, Prisma.ItemUncheckedUpdateWithoutItemInteractionsInput>
 }
 
+export type ItemCreateNestedManyWithoutPrimaryImageFileInput = {
+  create?: Prisma.XOR<Prisma.ItemCreateWithoutPrimaryImageFileInput, Prisma.ItemUncheckedCreateWithoutPrimaryImageFileInput> | Prisma.ItemCreateWithoutPrimaryImageFileInput[] | Prisma.ItemUncheckedCreateWithoutPrimaryImageFileInput[]
+  connectOrCreate?: Prisma.ItemCreateOrConnectWithoutPrimaryImageFileInput | Prisma.ItemCreateOrConnectWithoutPrimaryImageFileInput[]
+  createMany?: Prisma.ItemCreateManyPrimaryImageFileInputEnvelope
+  connect?: Prisma.ItemWhereUniqueInput | Prisma.ItemWhereUniqueInput[]
+}
+
+export type ItemUncheckedCreateNestedManyWithoutPrimaryImageFileInput = {
+  create?: Prisma.XOR<Prisma.ItemCreateWithoutPrimaryImageFileInput, Prisma.ItemUncheckedCreateWithoutPrimaryImageFileInput> | Prisma.ItemCreateWithoutPrimaryImageFileInput[] | Prisma.ItemUncheckedCreateWithoutPrimaryImageFileInput[]
+  connectOrCreate?: Prisma.ItemCreateOrConnectWithoutPrimaryImageFileInput | Prisma.ItemCreateOrConnectWithoutPrimaryImageFileInput[]
+  createMany?: Prisma.ItemCreateManyPrimaryImageFileInputEnvelope
+  connect?: Prisma.ItemWhereUniqueInput | Prisma.ItemWhereUniqueInput[]
+}
+
+export type ItemUpdateManyWithoutPrimaryImageFileNestedInput = {
+  create?: Prisma.XOR<Prisma.ItemCreateWithoutPrimaryImageFileInput, Prisma.ItemUncheckedCreateWithoutPrimaryImageFileInput> | Prisma.ItemCreateWithoutPrimaryImageFileInput[] | Prisma.ItemUncheckedCreateWithoutPrimaryImageFileInput[]
+  connectOrCreate?: Prisma.ItemCreateOrConnectWithoutPrimaryImageFileInput | Prisma.ItemCreateOrConnectWithoutPrimaryImageFileInput[]
+  upsert?: Prisma.ItemUpsertWithWhereUniqueWithoutPrimaryImageFileInput | Prisma.ItemUpsertWithWhereUniqueWithoutPrimaryImageFileInput[]
+  createMany?: Prisma.ItemCreateManyPrimaryImageFileInputEnvelope
+  set?: Prisma.ItemWhereUniqueInput | Prisma.ItemWhereUniqueInput[]
+  disconnect?: Prisma.ItemWhereUniqueInput | Prisma.ItemWhereUniqueInput[]
+  delete?: Prisma.ItemWhereUniqueInput | Prisma.ItemWhereUniqueInput[]
+  connect?: Prisma.ItemWhereUniqueInput | Prisma.ItemWhereUniqueInput[]
+  update?: Prisma.ItemUpdateWithWhereUniqueWithoutPrimaryImageFileInput | Prisma.ItemUpdateWithWhereUniqueWithoutPrimaryImageFileInput[]
+  updateMany?: Prisma.ItemUpdateManyWithWhereWithoutPrimaryImageFileInput | Prisma.ItemUpdateManyWithWhereWithoutPrimaryImageFileInput[]
+  deleteMany?: Prisma.ItemScalarWhereInput | Prisma.ItemScalarWhereInput[]
+}
+
+export type ItemUncheckedUpdateManyWithoutPrimaryImageFileNestedInput = {
+  create?: Prisma.XOR<Prisma.ItemCreateWithoutPrimaryImageFileInput, Prisma.ItemUncheckedCreateWithoutPrimaryImageFileInput> | Prisma.ItemCreateWithoutPrimaryImageFileInput[] | Prisma.ItemUncheckedCreateWithoutPrimaryImageFileInput[]
+  connectOrCreate?: Prisma.ItemCreateOrConnectWithoutPrimaryImageFileInput | Prisma.ItemCreateOrConnectWithoutPrimaryImageFileInput[]
+  upsert?: Prisma.ItemUpsertWithWhereUniqueWithoutPrimaryImageFileInput | Prisma.ItemUpsertWithWhereUniqueWithoutPrimaryImageFileInput[]
+  createMany?: Prisma.ItemCreateManyPrimaryImageFileInputEnvelope
+  set?: Prisma.ItemWhereUniqueInput | Prisma.ItemWhereUniqueInput[]
+  disconnect?: Prisma.ItemWhereUniqueInput | Prisma.ItemWhereUniqueInput[]
+  delete?: Prisma.ItemWhereUniqueInput | Prisma.ItemWhereUniqueInput[]
+  connect?: Prisma.ItemWhereUniqueInput | Prisma.ItemWhereUniqueInput[]
+  update?: Prisma.ItemUpdateWithWhereUniqueWithoutPrimaryImageFileInput | Prisma.ItemUpdateWithWhereUniqueWithoutPrimaryImageFileInput[]
+  updateMany?: Prisma.ItemUpdateManyWithWhereWithoutPrimaryImageFileInput | Prisma.ItemUpdateManyWithWhereWithoutPrimaryImageFileInput[]
+  deleteMany?: Prisma.ItemScalarWhereInput | Prisma.ItemScalarWhereInput[]
+}
+
 export type ItemCreateWithoutWorkspaceInput = {
   id?: string
   createdAt?: Date | string
@@ -1001,12 +1089,14 @@ export type ItemCreateWithoutWorkspaceInput = {
   warrantyExpires?: Date | string | null
   lifetimeWarranty?: boolean
   warrantyDetails?: string | null
+  attributes?: string | null
   tags?: string | null
   notes?: string | null
   color?: string | null
   colorSoft?: string | null
   place?: Prisma.PlaceCreateNestedOneWithoutItemsInput
   ownedBy?: Prisma.PersonCreateNestedOneWithoutOwnedItemsInput
+  primaryImageFile?: Prisma.ImportedFileCreateNestedOneWithoutPrimaryForItemsInput
   assembledInto?: Prisma.AssemblyCreateNestedManyWithoutChildItemInput
   components?: Prisma.AssemblyCreateNestedManyWithoutParentItemInput
   itemInteractions?: Prisma.ItemInteractionCreateNestedManyWithoutItemInput
@@ -1032,6 +1122,8 @@ export type ItemUncheckedCreateWithoutWorkspaceInput = {
   warrantyDetails?: string | null
   placeId?: string | null
   ownedById?: string | null
+  primaryImageFileId?: string | null
+  attributes?: string | null
   tags?: string | null
   notes?: string | null
   color?: string | null
@@ -1090,6 +1182,8 @@ export type ItemScalarWhereInput = {
   warrantyDetails?: Prisma.StringNullableFilter<"Item"> | string | null
   placeId?: Prisma.StringNullableFilter<"Item"> | string | null
   ownedById?: Prisma.StringNullableFilter<"Item"> | string | null
+  primaryImageFileId?: Prisma.StringNullableFilter<"Item"> | string | null
+  attributes?: Prisma.StringNullableFilter<"Item"> | string | null
   tags?: Prisma.StringNullableFilter<"Item"> | string | null
   notes?: Prisma.StringNullableFilter<"Item"> | string | null
   color?: Prisma.StringNullableFilter<"Item"> | string | null
@@ -1114,12 +1208,14 @@ export type ItemCreateWithoutOwnedByInput = {
   warrantyExpires?: Date | string | null
   lifetimeWarranty?: boolean
   warrantyDetails?: string | null
+  attributes?: string | null
   tags?: string | null
   notes?: string | null
   color?: string | null
   colorSoft?: string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutItemsInput
   place?: Prisma.PlaceCreateNestedOneWithoutItemsInput
+  primaryImageFile?: Prisma.ImportedFileCreateNestedOneWithoutPrimaryForItemsInput
   assembledInto?: Prisma.AssemblyCreateNestedManyWithoutChildItemInput
   components?: Prisma.AssemblyCreateNestedManyWithoutParentItemInput
   itemInteractions?: Prisma.ItemInteractionCreateNestedManyWithoutItemInput
@@ -1145,6 +1241,8 @@ export type ItemUncheckedCreateWithoutOwnedByInput = {
   lifetimeWarranty?: boolean
   warrantyDetails?: string | null
   placeId?: string | null
+  primaryImageFileId?: string | null
+  attributes?: string | null
   tags?: string | null
   notes?: string | null
   color?: string | null
@@ -1197,12 +1295,14 @@ export type ItemCreateWithoutPlaceInput = {
   warrantyExpires?: Date | string | null
   lifetimeWarranty?: boolean
   warrantyDetails?: string | null
+  attributes?: string | null
   tags?: string | null
   notes?: string | null
   color?: string | null
   colorSoft?: string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutItemsInput
   ownedBy?: Prisma.PersonCreateNestedOneWithoutOwnedItemsInput
+  primaryImageFile?: Prisma.ImportedFileCreateNestedOneWithoutPrimaryForItemsInput
   assembledInto?: Prisma.AssemblyCreateNestedManyWithoutChildItemInput
   components?: Prisma.AssemblyCreateNestedManyWithoutParentItemInput
   itemInteractions?: Prisma.ItemInteractionCreateNestedManyWithoutItemInput
@@ -1228,6 +1328,8 @@ export type ItemUncheckedCreateWithoutPlaceInput = {
   lifetimeWarranty?: boolean
   warrantyDetails?: string | null
   ownedById?: string | null
+  primaryImageFileId?: string | null
+  attributes?: string | null
   tags?: string | null
   notes?: string | null
   color?: string | null
@@ -1280,6 +1382,7 @@ export type ItemCreateWithoutAssembledIntoInput = {
   warrantyExpires?: Date | string | null
   lifetimeWarranty?: boolean
   warrantyDetails?: string | null
+  attributes?: string | null
   tags?: string | null
   notes?: string | null
   color?: string | null
@@ -1287,6 +1390,7 @@ export type ItemCreateWithoutAssembledIntoInput = {
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutItemsInput
   place?: Prisma.PlaceCreateNestedOneWithoutItemsInput
   ownedBy?: Prisma.PersonCreateNestedOneWithoutOwnedItemsInput
+  primaryImageFile?: Prisma.ImportedFileCreateNestedOneWithoutPrimaryForItemsInput
   components?: Prisma.AssemblyCreateNestedManyWithoutParentItemInput
   itemInteractions?: Prisma.ItemInteractionCreateNestedManyWithoutItemInput
 }
@@ -1312,6 +1416,8 @@ export type ItemUncheckedCreateWithoutAssembledIntoInput = {
   warrantyDetails?: string | null
   placeId?: string | null
   ownedById?: string | null
+  primaryImageFileId?: string | null
+  attributes?: string | null
   tags?: string | null
   notes?: string | null
   color?: string | null
@@ -1343,6 +1449,7 @@ export type ItemCreateWithoutComponentsInput = {
   warrantyExpires?: Date | string | null
   lifetimeWarranty?: boolean
   warrantyDetails?: string | null
+  attributes?: string | null
   tags?: string | null
   notes?: string | null
   color?: string | null
@@ -1350,6 +1457,7 @@ export type ItemCreateWithoutComponentsInput = {
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutItemsInput
   place?: Prisma.PlaceCreateNestedOneWithoutItemsInput
   ownedBy?: Prisma.PersonCreateNestedOneWithoutOwnedItemsInput
+  primaryImageFile?: Prisma.ImportedFileCreateNestedOneWithoutPrimaryForItemsInput
   assembledInto?: Prisma.AssemblyCreateNestedManyWithoutChildItemInput
   itemInteractions?: Prisma.ItemInteractionCreateNestedManyWithoutItemInput
 }
@@ -1375,6 +1483,8 @@ export type ItemUncheckedCreateWithoutComponentsInput = {
   warrantyDetails?: string | null
   placeId?: string | null
   ownedById?: string | null
+  primaryImageFileId?: string | null
+  attributes?: string | null
   tags?: string | null
   notes?: string | null
   color?: string | null
@@ -1417,6 +1527,7 @@ export type ItemUpdateWithoutAssembledIntoInput = {
   warrantyExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lifetimeWarranty?: Prisma.BoolFieldUpdateOperationsInput | boolean
   warrantyDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attributes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tags?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1424,6 +1535,7 @@ export type ItemUpdateWithoutAssembledIntoInput = {
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutItemsNestedInput
   place?: Prisma.PlaceUpdateOneWithoutItemsNestedInput
   ownedBy?: Prisma.PersonUpdateOneWithoutOwnedItemsNestedInput
+  primaryImageFile?: Prisma.ImportedFileUpdateOneWithoutPrimaryForItemsNestedInput
   components?: Prisma.AssemblyUpdateManyWithoutParentItemNestedInput
   itemInteractions?: Prisma.ItemInteractionUpdateManyWithoutItemNestedInput
 }
@@ -1449,6 +1561,8 @@ export type ItemUncheckedUpdateWithoutAssembledIntoInput = {
   warrantyDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   placeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ownedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  primaryImageFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attributes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tags?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1486,6 +1600,7 @@ export type ItemUpdateWithoutComponentsInput = {
   warrantyExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lifetimeWarranty?: Prisma.BoolFieldUpdateOperationsInput | boolean
   warrantyDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attributes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tags?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1493,6 +1608,7 @@ export type ItemUpdateWithoutComponentsInput = {
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutItemsNestedInput
   place?: Prisma.PlaceUpdateOneWithoutItemsNestedInput
   ownedBy?: Prisma.PersonUpdateOneWithoutOwnedItemsNestedInput
+  primaryImageFile?: Prisma.ImportedFileUpdateOneWithoutPrimaryForItemsNestedInput
   assembledInto?: Prisma.AssemblyUpdateManyWithoutChildItemNestedInput
   itemInteractions?: Prisma.ItemInteractionUpdateManyWithoutItemNestedInput
 }
@@ -1518,6 +1634,8 @@ export type ItemUncheckedUpdateWithoutComponentsInput = {
   warrantyDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   placeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ownedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  primaryImageFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attributes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tags?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1544,6 +1662,7 @@ export type ItemCreateWithoutItemInteractionsInput = {
   warrantyExpires?: Date | string | null
   lifetimeWarranty?: boolean
   warrantyDetails?: string | null
+  attributes?: string | null
   tags?: string | null
   notes?: string | null
   color?: string | null
@@ -1551,6 +1670,7 @@ export type ItemCreateWithoutItemInteractionsInput = {
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutItemsInput
   place?: Prisma.PlaceCreateNestedOneWithoutItemsInput
   ownedBy?: Prisma.PersonCreateNestedOneWithoutOwnedItemsInput
+  primaryImageFile?: Prisma.ImportedFileCreateNestedOneWithoutPrimaryForItemsInput
   assembledInto?: Prisma.AssemblyCreateNestedManyWithoutChildItemInput
   components?: Prisma.AssemblyCreateNestedManyWithoutParentItemInput
 }
@@ -1576,6 +1696,8 @@ export type ItemUncheckedCreateWithoutItemInteractionsInput = {
   warrantyDetails?: string | null
   placeId?: string | null
   ownedById?: string | null
+  primaryImageFileId?: string | null
+  attributes?: string | null
   tags?: string | null
   notes?: string | null
   color?: string | null
@@ -1618,6 +1740,7 @@ export type ItemUpdateWithoutItemInteractionsInput = {
   warrantyExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lifetimeWarranty?: Prisma.BoolFieldUpdateOperationsInput | boolean
   warrantyDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attributes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tags?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1625,6 +1748,7 @@ export type ItemUpdateWithoutItemInteractionsInput = {
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutItemsNestedInput
   place?: Prisma.PlaceUpdateOneWithoutItemsNestedInput
   ownedBy?: Prisma.PersonUpdateOneWithoutOwnedItemsNestedInput
+  primaryImageFile?: Prisma.ImportedFileUpdateOneWithoutPrimaryForItemsNestedInput
   assembledInto?: Prisma.AssemblyUpdateManyWithoutChildItemNestedInput
   components?: Prisma.AssemblyUpdateManyWithoutParentItemNestedInput
 }
@@ -1650,12 +1774,101 @@ export type ItemUncheckedUpdateWithoutItemInteractionsInput = {
   warrantyDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   placeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ownedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  primaryImageFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attributes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tags?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assembledInto?: Prisma.AssemblyUncheckedUpdateManyWithoutChildItemNestedInput
   components?: Prisma.AssemblyUncheckedUpdateManyWithoutParentItemNestedInput
+}
+
+export type ItemCreateWithoutPrimaryImageFileInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  name: string
+  description?: string | null
+  category?: string | null
+  make?: string | null
+  model?: string | null
+  serialNumber?: string | null
+  assetId: string
+  quantity?: number
+  purchaseDate?: Date | string | null
+  purchasePrice?: number | null
+  purchaseFrom?: string | null
+  warrantyExpires?: Date | string | null
+  lifetimeWarranty?: boolean
+  warrantyDetails?: string | null
+  attributes?: string | null
+  tags?: string | null
+  notes?: string | null
+  color?: string | null
+  colorSoft?: string | null
+  workspace?: Prisma.WorkspaceCreateNestedOneWithoutItemsInput
+  place?: Prisma.PlaceCreateNestedOneWithoutItemsInput
+  ownedBy?: Prisma.PersonCreateNestedOneWithoutOwnedItemsInput
+  assembledInto?: Prisma.AssemblyCreateNestedManyWithoutChildItemInput
+  components?: Prisma.AssemblyCreateNestedManyWithoutParentItemInput
+  itemInteractions?: Prisma.ItemInteractionCreateNestedManyWithoutItemInput
+}
+
+export type ItemUncheckedCreateWithoutPrimaryImageFileInput = {
+  id?: string
+  workspaceId?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  name: string
+  description?: string | null
+  category?: string | null
+  make?: string | null
+  model?: string | null
+  serialNumber?: string | null
+  assetId: string
+  quantity?: number
+  purchaseDate?: Date | string | null
+  purchasePrice?: number | null
+  purchaseFrom?: string | null
+  warrantyExpires?: Date | string | null
+  lifetimeWarranty?: boolean
+  warrantyDetails?: string | null
+  placeId?: string | null
+  ownedById?: string | null
+  attributes?: string | null
+  tags?: string | null
+  notes?: string | null
+  color?: string | null
+  colorSoft?: string | null
+  assembledInto?: Prisma.AssemblyUncheckedCreateNestedManyWithoutChildItemInput
+  components?: Prisma.AssemblyUncheckedCreateNestedManyWithoutParentItemInput
+  itemInteractions?: Prisma.ItemInteractionUncheckedCreateNestedManyWithoutItemInput
+}
+
+export type ItemCreateOrConnectWithoutPrimaryImageFileInput = {
+  where: Prisma.ItemWhereUniqueInput
+  create: Prisma.XOR<Prisma.ItemCreateWithoutPrimaryImageFileInput, Prisma.ItemUncheckedCreateWithoutPrimaryImageFileInput>
+}
+
+export type ItemCreateManyPrimaryImageFileInputEnvelope = {
+  data: Prisma.ItemCreateManyPrimaryImageFileInput | Prisma.ItemCreateManyPrimaryImageFileInput[]
+}
+
+export type ItemUpsertWithWhereUniqueWithoutPrimaryImageFileInput = {
+  where: Prisma.ItemWhereUniqueInput
+  update: Prisma.XOR<Prisma.ItemUpdateWithoutPrimaryImageFileInput, Prisma.ItemUncheckedUpdateWithoutPrimaryImageFileInput>
+  create: Prisma.XOR<Prisma.ItemCreateWithoutPrimaryImageFileInput, Prisma.ItemUncheckedCreateWithoutPrimaryImageFileInput>
+}
+
+export type ItemUpdateWithWhereUniqueWithoutPrimaryImageFileInput = {
+  where: Prisma.ItemWhereUniqueInput
+  data: Prisma.XOR<Prisma.ItemUpdateWithoutPrimaryImageFileInput, Prisma.ItemUncheckedUpdateWithoutPrimaryImageFileInput>
+}
+
+export type ItemUpdateManyWithWhereWithoutPrimaryImageFileInput = {
+  where: Prisma.ItemScalarWhereInput
+  data: Prisma.XOR<Prisma.ItemUpdateManyMutationInput, Prisma.ItemUncheckedUpdateManyWithoutPrimaryImageFileInput>
 }
 
 export type ItemCreateManyWorkspaceInput = {
@@ -1678,6 +1891,8 @@ export type ItemCreateManyWorkspaceInput = {
   warrantyDetails?: string | null
   placeId?: string | null
   ownedById?: string | null
+  primaryImageFileId?: string | null
+  attributes?: string | null
   tags?: string | null
   notes?: string | null
   color?: string | null
@@ -1702,12 +1917,14 @@ export type ItemUpdateWithoutWorkspaceInput = {
   warrantyExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lifetimeWarranty?: Prisma.BoolFieldUpdateOperationsInput | boolean
   warrantyDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attributes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tags?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   place?: Prisma.PlaceUpdateOneWithoutItemsNestedInput
   ownedBy?: Prisma.PersonUpdateOneWithoutOwnedItemsNestedInput
+  primaryImageFile?: Prisma.ImportedFileUpdateOneWithoutPrimaryForItemsNestedInput
   assembledInto?: Prisma.AssemblyUpdateManyWithoutChildItemNestedInput
   components?: Prisma.AssemblyUpdateManyWithoutParentItemNestedInput
   itemInteractions?: Prisma.ItemInteractionUpdateManyWithoutItemNestedInput
@@ -1733,6 +1950,8 @@ export type ItemUncheckedUpdateWithoutWorkspaceInput = {
   warrantyDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   placeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ownedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  primaryImageFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attributes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tags?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1762,6 +1981,8 @@ export type ItemUncheckedUpdateManyWithoutWorkspaceInput = {
   warrantyDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   placeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ownedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  primaryImageFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attributes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tags?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1788,6 +2009,8 @@ export type ItemCreateManyOwnedByInput = {
   lifetimeWarranty?: boolean
   warrantyDetails?: string | null
   placeId?: string | null
+  primaryImageFileId?: string | null
+  attributes?: string | null
   tags?: string | null
   notes?: string | null
   color?: string | null
@@ -1812,12 +2035,14 @@ export type ItemUpdateWithoutOwnedByInput = {
   warrantyExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lifetimeWarranty?: Prisma.BoolFieldUpdateOperationsInput | boolean
   warrantyDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attributes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tags?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutItemsNestedInput
   place?: Prisma.PlaceUpdateOneWithoutItemsNestedInput
+  primaryImageFile?: Prisma.ImportedFileUpdateOneWithoutPrimaryForItemsNestedInput
   assembledInto?: Prisma.AssemblyUpdateManyWithoutChildItemNestedInput
   components?: Prisma.AssemblyUpdateManyWithoutParentItemNestedInput
   itemInteractions?: Prisma.ItemInteractionUpdateManyWithoutItemNestedInput
@@ -1843,6 +2068,8 @@ export type ItemUncheckedUpdateWithoutOwnedByInput = {
   lifetimeWarranty?: Prisma.BoolFieldUpdateOperationsInput | boolean
   warrantyDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   placeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  primaryImageFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attributes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tags?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1872,6 +2099,8 @@ export type ItemUncheckedUpdateManyWithoutOwnedByInput = {
   lifetimeWarranty?: Prisma.BoolFieldUpdateOperationsInput | boolean
   warrantyDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   placeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  primaryImageFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attributes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tags?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1898,6 +2127,8 @@ export type ItemCreateManyPlaceInput = {
   lifetimeWarranty?: boolean
   warrantyDetails?: string | null
   ownedById?: string | null
+  primaryImageFileId?: string | null
+  attributes?: string | null
   tags?: string | null
   notes?: string | null
   color?: string | null
@@ -1922,12 +2153,14 @@ export type ItemUpdateWithoutPlaceInput = {
   warrantyExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lifetimeWarranty?: Prisma.BoolFieldUpdateOperationsInput | boolean
   warrantyDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attributes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tags?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutItemsNestedInput
   ownedBy?: Prisma.PersonUpdateOneWithoutOwnedItemsNestedInput
+  primaryImageFile?: Prisma.ImportedFileUpdateOneWithoutPrimaryForItemsNestedInput
   assembledInto?: Prisma.AssemblyUpdateManyWithoutChildItemNestedInput
   components?: Prisma.AssemblyUpdateManyWithoutParentItemNestedInput
   itemInteractions?: Prisma.ItemInteractionUpdateManyWithoutItemNestedInput
@@ -1953,6 +2186,8 @@ export type ItemUncheckedUpdateWithoutPlaceInput = {
   lifetimeWarranty?: Prisma.BoolFieldUpdateOperationsInput | boolean
   warrantyDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ownedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  primaryImageFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attributes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tags?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1982,6 +2217,126 @@ export type ItemUncheckedUpdateManyWithoutPlaceInput = {
   lifetimeWarranty?: Prisma.BoolFieldUpdateOperationsInput | boolean
   warrantyDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ownedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  primaryImageFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attributes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tags?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+}
+
+export type ItemCreateManyPrimaryImageFileInput = {
+  id?: string
+  workspaceId?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  name: string
+  description?: string | null
+  category?: string | null
+  make?: string | null
+  model?: string | null
+  serialNumber?: string | null
+  assetId: string
+  quantity?: number
+  purchaseDate?: Date | string | null
+  purchasePrice?: number | null
+  purchaseFrom?: string | null
+  warrantyExpires?: Date | string | null
+  lifetimeWarranty?: boolean
+  warrantyDetails?: string | null
+  placeId?: string | null
+  ownedById?: string | null
+  attributes?: string | null
+  tags?: string | null
+  notes?: string | null
+  color?: string | null
+  colorSoft?: string | null
+}
+
+export type ItemUpdateWithoutPrimaryImageFileInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  make?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  model?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  serialNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assetId?: Prisma.StringFieldUpdateOperationsInput | string
+  quantity?: Prisma.FloatFieldUpdateOperationsInput | number
+  purchaseDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  purchasePrice?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  purchaseFrom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  warrantyExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lifetimeWarranty?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  warrantyDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attributes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tags?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutItemsNestedInput
+  place?: Prisma.PlaceUpdateOneWithoutItemsNestedInput
+  ownedBy?: Prisma.PersonUpdateOneWithoutOwnedItemsNestedInput
+  assembledInto?: Prisma.AssemblyUpdateManyWithoutChildItemNestedInput
+  components?: Prisma.AssemblyUpdateManyWithoutParentItemNestedInput
+  itemInteractions?: Prisma.ItemInteractionUpdateManyWithoutItemNestedInput
+}
+
+export type ItemUncheckedUpdateWithoutPrimaryImageFileInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  make?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  model?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  serialNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assetId?: Prisma.StringFieldUpdateOperationsInput | string
+  quantity?: Prisma.FloatFieldUpdateOperationsInput | number
+  purchaseDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  purchasePrice?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  purchaseFrom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  warrantyExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lifetimeWarranty?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  warrantyDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  placeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ownedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attributes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tags?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assembledInto?: Prisma.AssemblyUncheckedUpdateManyWithoutChildItemNestedInput
+  components?: Prisma.AssemblyUncheckedUpdateManyWithoutParentItemNestedInput
+  itemInteractions?: Prisma.ItemInteractionUncheckedUpdateManyWithoutItemNestedInput
+}
+
+export type ItemUncheckedUpdateManyWithoutPrimaryImageFileInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  make?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  model?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  serialNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assetId?: Prisma.StringFieldUpdateOperationsInput | string
+  quantity?: Prisma.FloatFieldUpdateOperationsInput | number
+  purchaseDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  purchasePrice?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  purchaseFrom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  warrantyExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lifetimeWarranty?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  warrantyDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  placeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ownedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attributes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tags?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2058,6 +2413,8 @@ export type ItemSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   warrantyDetails?: boolean
   placeId?: boolean
   ownedById?: boolean
+  primaryImageFileId?: boolean
+  attributes?: boolean
   tags?: boolean
   notes?: boolean
   color?: boolean
@@ -2065,6 +2422,7 @@ export type ItemSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   place?: boolean | Prisma.Item$placeArgs<ExtArgs>
   ownedBy?: boolean | Prisma.Item$ownedByArgs<ExtArgs>
+  primaryImageFile?: boolean | Prisma.Item$primaryImageFileArgs<ExtArgs>
   assembledInto?: boolean | Prisma.Item$assembledIntoArgs<ExtArgs>
   components?: boolean | Prisma.Item$componentsArgs<ExtArgs>
   itemInteractions?: boolean | Prisma.Item$itemInteractionsArgs<ExtArgs>
@@ -2092,6 +2450,8 @@ export type ItemSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   warrantyDetails?: boolean
   placeId?: boolean
   ownedById?: boolean
+  primaryImageFileId?: boolean
+  attributes?: boolean
   tags?: boolean
   notes?: boolean
   color?: boolean
@@ -2099,6 +2459,7 @@ export type ItemSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   place?: boolean | Prisma.Item$placeArgs<ExtArgs>
   ownedBy?: boolean | Prisma.Item$ownedByArgs<ExtArgs>
+  primaryImageFile?: boolean | Prisma.Item$primaryImageFileArgs<ExtArgs>
 }, ExtArgs["result"]["item"]>
 
 export type ItemSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -2122,6 +2483,8 @@ export type ItemSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   warrantyDetails?: boolean
   placeId?: boolean
   ownedById?: boolean
+  primaryImageFileId?: boolean
+  attributes?: boolean
   tags?: boolean
   notes?: boolean
   color?: boolean
@@ -2129,6 +2492,7 @@ export type ItemSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   place?: boolean | Prisma.Item$placeArgs<ExtArgs>
   ownedBy?: boolean | Prisma.Item$ownedByArgs<ExtArgs>
+  primaryImageFile?: boolean | Prisma.Item$primaryImageFileArgs<ExtArgs>
 }, ExtArgs["result"]["item"]>
 
 export type ItemSelectScalar = {
@@ -2152,17 +2516,20 @@ export type ItemSelectScalar = {
   warrantyDetails?: boolean
   placeId?: boolean
   ownedById?: boolean
+  primaryImageFileId?: boolean
+  attributes?: boolean
   tags?: boolean
   notes?: boolean
   color?: boolean
   colorSoft?: boolean
 }
 
-export type ItemOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "workspaceId" | "createdAt" | "updatedAt" | "name" | "description" | "category" | "make" | "model" | "serialNumber" | "assetId" | "quantity" | "purchaseDate" | "purchasePrice" | "purchaseFrom" | "warrantyExpires" | "lifetimeWarranty" | "warrantyDetails" | "placeId" | "ownedById" | "tags" | "notes" | "color" | "colorSoft", ExtArgs["result"]["item"]>
+export type ItemOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "workspaceId" | "createdAt" | "updatedAt" | "name" | "description" | "category" | "make" | "model" | "serialNumber" | "assetId" | "quantity" | "purchaseDate" | "purchasePrice" | "purchaseFrom" | "warrantyExpires" | "lifetimeWarranty" | "warrantyDetails" | "placeId" | "ownedById" | "primaryImageFileId" | "attributes" | "tags" | "notes" | "color" | "colorSoft", ExtArgs["result"]["item"]>
 export type ItemInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   place?: boolean | Prisma.Item$placeArgs<ExtArgs>
   ownedBy?: boolean | Prisma.Item$ownedByArgs<ExtArgs>
+  primaryImageFile?: boolean | Prisma.Item$primaryImageFileArgs<ExtArgs>
   assembledInto?: boolean | Prisma.Item$assembledIntoArgs<ExtArgs>
   components?: boolean | Prisma.Item$componentsArgs<ExtArgs>
   itemInteractions?: boolean | Prisma.Item$itemInteractionsArgs<ExtArgs>
@@ -2172,11 +2539,13 @@ export type ItemIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   place?: boolean | Prisma.Item$placeArgs<ExtArgs>
   ownedBy?: boolean | Prisma.Item$ownedByArgs<ExtArgs>
+  primaryImageFile?: boolean | Prisma.Item$primaryImageFileArgs<ExtArgs>
 }
 export type ItemIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   place?: boolean | Prisma.Item$placeArgs<ExtArgs>
   ownedBy?: boolean | Prisma.Item$ownedByArgs<ExtArgs>
+  primaryImageFile?: boolean | Prisma.Item$primaryImageFileArgs<ExtArgs>
 }
 
 export type $ItemPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2185,6 +2554,7 @@ export type $ItemPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     workspace: Prisma.$WorkspacePayload<ExtArgs>
     place: Prisma.$PlacePayload<ExtArgs> | null
     ownedBy: Prisma.$PersonPayload<ExtArgs> | null
+    primaryImageFile: Prisma.$ImportedFilePayload<ExtArgs> | null
     assembledInto: Prisma.$AssemblyPayload<ExtArgs>[]
     components: Prisma.$AssemblyPayload<ExtArgs>[]
     itemInteractions: Prisma.$ItemInteractionPayload<ExtArgs>[]
@@ -2210,6 +2580,8 @@ export type $ItemPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     warrantyDetails: string | null
     placeId: string | null
     ownedById: string | null
+    primaryImageFileId: string | null
+    attributes: string | null
     tags: string | null
     notes: string | null
     color: string | null
@@ -2611,6 +2983,7 @@ export interface Prisma__ItemClient<T, Null = never, ExtArgs extends runtime.Typ
   workspace<T extends Prisma.WorkspaceDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WorkspaceDefaultArgs<ExtArgs>>): Prisma.Prisma__WorkspaceClient<runtime.Types.Result.GetResult<Prisma.$WorkspacePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   place<T extends Prisma.Item$placeArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Item$placeArgs<ExtArgs>>): Prisma.Prisma__PlaceClient<runtime.Types.Result.GetResult<Prisma.$PlacePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   ownedBy<T extends Prisma.Item$ownedByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Item$ownedByArgs<ExtArgs>>): Prisma.Prisma__PersonClient<runtime.Types.Result.GetResult<Prisma.$PersonPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  primaryImageFile<T extends Prisma.Item$primaryImageFileArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Item$primaryImageFileArgs<ExtArgs>>): Prisma.Prisma__ImportedFileClient<runtime.Types.Result.GetResult<Prisma.$ImportedFilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   assembledInto<T extends Prisma.Item$assembledIntoArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Item$assembledIntoArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AssemblyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   components<T extends Prisma.Item$componentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Item$componentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AssemblyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   itemInteractions<T extends Prisma.Item$itemInteractionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Item$itemInteractionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ItemInteractionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -2663,6 +3036,8 @@ export interface ItemFieldRefs {
   readonly warrantyDetails: Prisma.FieldRef<"Item", 'String'>
   readonly placeId: Prisma.FieldRef<"Item", 'String'>
   readonly ownedById: Prisma.FieldRef<"Item", 'String'>
+  readonly primaryImageFileId: Prisma.FieldRef<"Item", 'String'>
+  readonly attributes: Prisma.FieldRef<"Item", 'String'>
   readonly tags: Prisma.FieldRef<"Item", 'String'>
   readonly notes: Prisma.FieldRef<"Item", 'String'>
   readonly color: Prisma.FieldRef<"Item", 'String'>
@@ -3101,6 +3476,25 @@ export type Item$ownedByArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
    */
   include?: Prisma.PersonInclude<ExtArgs> | null
   where?: Prisma.PersonWhereInput
+}
+
+/**
+ * Item.primaryImageFile
+ */
+export type Item$primaryImageFileArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ImportedFile
+   */
+  select?: Prisma.ImportedFileSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ImportedFile
+   */
+  omit?: Prisma.ImportedFileOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ImportedFileInclude<ExtArgs> | null
+  where?: Prisma.ImportedFileWhereInput
 }
 
 /**

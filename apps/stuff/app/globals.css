@@ -63,3 +63,507 @@ body {
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
+
+.wardrobe-page {
+  width: min(100%, 1180px);
+  margin: 0 auto;
+  padding: 44px 24px 72px;
+}
+
+.wardrobe-hero {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 32px;
+  margin-bottom: 36px;
+}
+
+.eyebrow {
+  color: var(--ink-4);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.wardrobe-hero h1 {
+  margin: 8px 0;
+  font-family: var(--font-display);
+  font-size: clamp(32px, 5vw, 54px);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -0.035em;
+}
+
+.wardrobe-hero p {
+  max-width: 620px;
+  margin: 0;
+  color: var(--ink-3);
+}
+
+.wardrobe-stat {
+  min-width: 112px;
+  text-align: right;
+}
+
+.wardrobe-stat strong {
+  display: block;
+  color: var(--cognac);
+  font-family: var(--font-display);
+  font-size: 40px;
+  font-weight: 400;
+  line-height: 1;
+}
+
+.wardrobe-stat span,
+.panel-meta {
+  color: var(--ink-4);
+  font-size: 12px;
+}
+
+.wardrobe-notice {
+  margin-bottom: 22px;
+  padding: 12px 16px;
+  border: 1px solid color-mix(in srgb, var(--success) 30%, var(--border));
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--success) 8%, var(--surface));
+  color: var(--ink-2);
+  font-size: 13px;
+}
+
+.wardrobe-notice.is-error {
+  border-color: color-mix(in srgb, var(--attention) 40%, var(--border));
+  background: var(--attention-soft);
+}
+
+.wardrobe-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  gap: 24px;
+  align-items: start;
+}
+
+.wardrobe-layout main {
+  display: grid;
+  gap: 20px;
+}
+
+.wardrobe-layout aside {
+  display: grid;
+  gap: 20px;
+  position: sticky;
+  top: 76px;
+}
+
+.wardrobe-panel,
+.recent-card {
+  padding: 24px;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+}
+
+.panel-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.panel-heading > div {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.panel-heading h2,
+.ai-card h2 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 21px;
+  font-weight: 400;
+}
+
+.step-number {
+  color: var(--cognac);
+  font-size: 11px;
+}
+
+.photo-drop {
+  display: grid;
+  min-height: 250px;
+  overflow: hidden;
+  place-items: center;
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface-2);
+  cursor: pointer;
+  text-align: center;
+}
+
+.photo-drop:hover {
+  border-color: var(--cognac);
+}
+
+.photo-drop input {
+  display: none;
+}
+
+.photo-drop strong,
+.photo-drop small {
+  display: block;
+}
+
+.photo-drop strong {
+  margin-bottom: 6px;
+  color: var(--ink-2);
+  font-weight: 500;
+}
+
+.photo-drop small {
+  color: var(--ink-4);
+}
+
+.photo-drop.has-photo {
+  background: var(--petrol);
+}
+
+.photo-drop img {
+  width: 100%;
+  max-height: 520px;
+  object-fit: contain;
+}
+
+.capture-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-top: 14px;
+  color: var(--ink-3);
+  font-size: 12px;
+}
+
+.primary-button,
+.dark-button {
+  border: 0;
+  border-radius: var(--radius-pill);
+  padding: 10px 18px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.primary-button {
+  background: var(--cognac);
+  color: white;
+}
+
+.primary-button:hover {
+  background: var(--cognac-deep);
+}
+
+.primary-button:disabled,
+.dark-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.48;
+}
+
+.quiet-callout,
+.empty-wardrobe {
+  margin-top: 14px;
+  padding: 12px 14px;
+  border-radius: var(--radius);
+  background: var(--camel-soft);
+  color: var(--ink-3);
+  font-size: 12px;
+}
+
+.proposal-list {
+  display: grid;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.proposal-card {
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface-2);
+}
+
+.proposal-topline {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  color: var(--ink-4);
+  font-size: 11px;
+}
+
+.text-button {
+  border: 0;
+  background: transparent;
+  color: var(--cognac);
+  cursor: pointer;
+  font: inherit;
+}
+
+.field-grid,
+.wear-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.field-grid label,
+.wear-form label,
+.ai-card label {
+  display: grid;
+  gap: 5px;
+}
+
+.field-grid label span,
+.wear-form label span,
+.ai-card label span {
+  color: var(--ink-3);
+  font-size: 11px;
+}
+
+.field-grid input,
+.wear-form input,
+.wear-form select,
+.ai-card input {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--ink);
+  padding: 9px 11px;
+  font: inherit;
+  font-size: 13px;
+}
+
+.wear-form {
+  margin-bottom: 18px;
+}
+
+.wide-field {
+  grid-column: 1 / -1;
+}
+
+.garment-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.garment-card {
+  display: grid;
+  grid-template-columns: 58px minmax(0, 1fr) 22px;
+  align-items: center;
+  gap: 12px;
+  padding: 8px;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--ink);
+  cursor: pointer;
+  text-align: left;
+}
+
+.garment-card:hover,
+.garment-card.is-selected {
+  border-color: var(--cognac);
+  box-shadow: var(--shadow-sm);
+}
+
+.garment-card.is-selected {
+  background: var(--cognac-soft);
+}
+
+.garment-image {
+  display: grid;
+  width: 58px;
+  height: 68px;
+  overflow: hidden;
+  place-items: center;
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+  color: var(--cognac);
+  font-family: var(--font-display);
+  font-size: 24px;
+}
+
+.garment-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.garment-copy {
+  display: grid;
+  min-width: 0;
+  gap: 4px;
+}
+
+.garment-copy strong {
+  overflow: hidden;
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 400;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.garment-copy span,
+.selection-mark {
+  color: var(--ink-4);
+  font-size: 11px;
+}
+
+.selection-mark {
+  color: var(--cognac);
+  font-size: 16px;
+}
+
+.ai-card {
+  padding: 24px;
+  border-radius: var(--radius-lg);
+  background: var(--petrol);
+  box-shadow: var(--shadow-lg);
+  color: var(--surface);
+}
+
+.ai-card .eyebrow {
+  color: color-mix(in srgb, var(--surface) 52%, transparent);
+}
+
+.ai-card h2 {
+  margin: 8px 0;
+  color: var(--surface);
+}
+
+.ai-card p {
+  margin: 0 0 18px;
+  color: color-mix(in srgb, var(--surface) 66%, transparent);
+  font-size: 12px;
+}
+
+.ai-card label {
+  margin-bottom: 12px;
+}
+
+.ai-card label span,
+.ai-card small {
+  color: color-mix(in srgb, var(--surface) 54%, transparent);
+}
+
+.ai-card input {
+  border-color: color-mix(in srgb, var(--surface) 18%, transparent);
+  background: color-mix(in srgb, var(--surface) 8%, transparent);
+  color: var(--surface);
+}
+
+.dark-button {
+  width: 100%;
+  margin: 4px 0 10px;
+  background: var(--cognac);
+  color: white;
+}
+
+.ai-card small {
+  display: block;
+  font-size: 10px;
+  text-align: center;
+}
+
+.recent-card .eyebrow {
+  margin-bottom: 12px;
+}
+
+.recent-wear {
+  display: flex;
+  gap: 10px;
+  padding: 10px 0;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.recent-wear img {
+  width: 42px;
+  height: 50px;
+  border-radius: var(--radius-sm);
+  object-fit: cover;
+}
+
+.recent-wear div {
+  display: grid;
+  min-width: 0;
+  align-content: center;
+  gap: 3px;
+}
+
+.recent-wear strong {
+  overflow: hidden;
+  font-size: 12px;
+  font-weight: 500;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.recent-wear span,
+.muted {
+  color: var(--ink-4);
+  font-size: 10px;
+}
+
+@media (max-width: 880px) {
+  .wardrobe-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .wardrobe-layout aside {
+    position: static;
+    grid-row: 1;
+  }
+}
+
+@media (max-width: 620px) {
+  .wardrobe-page {
+    padding: 28px 18px 56px;
+  }
+
+  .wardrobe-hero {
+    align-items: flex-start;
+  }
+
+  .wardrobe-stat {
+    display: none;
+  }
+
+  .wardrobe-panel,
+  .recent-card,
+  .ai-card {
+    padding: 18px;
+  }
+
+  .garment-grid,
+  .field-grid,
+  .wear-form {
+    grid-template-columns: 1fr;
+  }
+
+  .wide-field {
+    grid-column: auto;
+  }
+
+  .panel-meta {
+    display: none;
+  }
+
+  .capture-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+}

@@ -86,6 +86,8 @@ export const ModelName = {
   Assembly: 'Assembly',
   ItemInteraction: 'ItemInteraction',
   ImportedFile: 'ImportedFile',
+  AiProviderCredential: 'AiProviderCredential',
+  AiAnalysisRun: 'AiAnalysisRun',
   Group: 'Group',
   PersonGroup: 'PersonGroup',
   GroupGroup: 'GroupGroup',
@@ -670,6 +672,8 @@ export const ItemScalarFieldEnum = {
   warrantyDetails: 'warrantyDetails',
   placeId: 'placeId',
   ownedById: 'ownedById',
+  primaryImageFileId: 'primaryImageFileId',
+  attributes: 'attributes',
   tags: 'tags',
   notes: 'notes',
   color: 'color',
@@ -711,10 +715,52 @@ export const ImportedFileScalarFieldEnum = {
   format: 'format',
   filePath: 'filePath',
   sizeBytes: 'sizeBytes',
-  content: 'content'
+  content: 'content',
+  storageProvider: 'storageProvider',
+  storageKey: 'storageKey',
+  mimeType: 'mimeType',
+  checksum: 'checksum',
+  capturedAt: 'capturedAt'
 } as const
 
 export type ImportedFileScalarFieldEnum = (typeof ImportedFileScalarFieldEnum)[keyof typeof ImportedFileScalarFieldEnum]
+
+
+export const AiProviderCredentialScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  provider: 'provider',
+  label: 'label',
+  apiKeyEncrypted: 'apiKeyEncrypted',
+  modelId: 'modelId',
+  status: 'status',
+  lastUsedAt: 'lastUsedAt'
+} as const
+
+export type AiProviderCredentialScalarFieldEnum = (typeof AiProviderCredentialScalarFieldEnum)[keyof typeof AiProviderCredentialScalarFieldEnum]
+
+
+export const AiAnalysisRunScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  createdAt: 'createdAt',
+  completedAt: 'completedAt',
+  credentialId: 'credentialId',
+  sourceFileId: 'sourceFileId',
+  provider: 'provider',
+  modelId: 'modelId',
+  status: 'status',
+  promptVersion: 'promptVersion',
+  output: 'output',
+  error: 'error',
+  inputTokens: 'inputTokens',
+  outputTokens: 'outputTokens',
+  estimatedCost: 'estimatedCost'
+} as const
+
+export type AiAnalysisRunScalarFieldEnum = (typeof AiAnalysisRunScalarFieldEnum)[keyof typeof AiAnalysisRunScalarFieldEnum]
 
 
 export const GroupScalarFieldEnum = {

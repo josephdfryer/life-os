@@ -1,9 +1,9 @@
 import { auth } from "@/auth"
 import { NextResponse } from "next/server"
+import { localReviewEnabled } from "@/lib/local-review"
 
 export default auth((req) => {
-  // DEV_BYPASS=true skips auth entirely — for local development without OAuth credentials
-  if (process.env.DEV_BYPASS === "true") return NextResponse.next()
+  if (localReviewEnabled()) return NextResponse.next()
 
   if (req.auth) return NextResponse.next()
 
