@@ -272,6 +272,7 @@ export type EventWhereInput = {
   calendarLinks?: Prisma.CalendarEventLinkListRelationFilter
   groupTags?: Prisma.GroupListRelationFilter
   placeNotes?: Prisma.PlaceNoteListRelationFilter
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineListRelationFilter
 }
 
 export type EventOrderByWithRelationInput = {
@@ -300,6 +301,7 @@ export type EventOrderByWithRelationInput = {
   calendarLinks?: Prisma.CalendarEventLinkOrderByRelationAggregateInput
   groupTags?: Prisma.GroupOrderByRelationAggregateInput
   placeNotes?: Prisma.PlaceNoteOrderByRelationAggregateInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineOrderByRelationAggregateInput
 }
 
 export type EventWhereUniqueInput = Prisma.AtLeast<{
@@ -331,6 +333,7 @@ export type EventWhereUniqueInput = Prisma.AtLeast<{
   calendarLinks?: Prisma.CalendarEventLinkListRelationFilter
   groupTags?: Prisma.GroupListRelationFilter
   placeNotes?: Prisma.PlaceNoteListRelationFilter
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineListRelationFilter
 }, "id">
 
 export type EventOrderByWithAggregationInput = {
@@ -396,6 +399,7 @@ export type EventCreateInput = {
   calendarLinks?: Prisma.CalendarEventLinkCreateNestedManyWithoutEventInput
   groupTags?: Prisma.GroupCreateNestedManyWithoutTaggedEventsInput
   placeNotes?: Prisma.PlaceNoteCreateNestedManyWithoutEventInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutEventInput
 }
 
 export type EventUncheckedCreateInput = {
@@ -419,6 +423,7 @@ export type EventUncheckedCreateInput = {
   calendarLinks?: Prisma.CalendarEventLinkUncheckedCreateNestedManyWithoutEventInput
   groupTags?: Prisma.GroupUncheckedCreateNestedManyWithoutTaggedEventsInput
   placeNotes?: Prisma.PlaceNoteUncheckedCreateNestedManyWithoutEventInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutEventInput
 }
 
 export type EventUpdateInput = {
@@ -442,6 +447,7 @@ export type EventUpdateInput = {
   calendarLinks?: Prisma.CalendarEventLinkUpdateManyWithoutEventNestedInput
   groupTags?: Prisma.GroupUpdateManyWithoutTaggedEventsNestedInput
   placeNotes?: Prisma.PlaceNoteUpdateManyWithoutEventNestedInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutEventNestedInput
 }
 
 export type EventUncheckedUpdateInput = {
@@ -465,6 +471,7 @@ export type EventUncheckedUpdateInput = {
   calendarLinks?: Prisma.CalendarEventLinkUncheckedUpdateManyWithoutEventNestedInput
   groupTags?: Prisma.GroupUncheckedUpdateManyWithoutTaggedEventsNestedInput
   placeNotes?: Prisma.PlaceNoteUncheckedUpdateManyWithoutEventNestedInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutEventNestedInput
 }
 
 export type EventCreateManyInput = {
@@ -583,6 +590,11 @@ export type EventMinOrderByAggregateInput = {
   sourcePlanId?: Prisma.SortOrder
   parentEventId?: Prisma.SortOrder
   sourceNoteId?: Prisma.SortOrder
+}
+
+export type EventScalarRelationFilter = {
+  is?: Prisma.EventWhereInput
+  isNot?: Prisma.EventWhereInput
 }
 
 export type EventCreateNestedManyWithoutWorkspaceInput = {
@@ -855,6 +867,20 @@ export type EventUncheckedUpdateManyWithoutGroupTagsNestedInput = {
   deleteMany?: Prisma.EventScalarWhereInput | Prisma.EventScalarWhereInput[]
 }
 
+export type EventCreateNestedOneWithoutPurchaseReceiptLinesInput = {
+  create?: Prisma.XOR<Prisma.EventCreateWithoutPurchaseReceiptLinesInput, Prisma.EventUncheckedCreateWithoutPurchaseReceiptLinesInput>
+  connectOrCreate?: Prisma.EventCreateOrConnectWithoutPurchaseReceiptLinesInput
+  connect?: Prisma.EventWhereUniqueInput
+}
+
+export type EventUpdateOneRequiredWithoutPurchaseReceiptLinesNestedInput = {
+  create?: Prisma.XOR<Prisma.EventCreateWithoutPurchaseReceiptLinesInput, Prisma.EventUncheckedCreateWithoutPurchaseReceiptLinesInput>
+  connectOrCreate?: Prisma.EventCreateOrConnectWithoutPurchaseReceiptLinesInput
+  upsert?: Prisma.EventUpsertWithoutPurchaseReceiptLinesInput
+  connect?: Prisma.EventWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.EventUpdateToOneWithWhereWithoutPurchaseReceiptLinesInput, Prisma.EventUpdateWithoutPurchaseReceiptLinesInput>, Prisma.EventUncheckedUpdateWithoutPurchaseReceiptLinesInput>
+}
+
 export type EventCreateNestedManyWithoutSourceNoteInput = {
   create?: Prisma.XOR<Prisma.EventCreateWithoutSourceNoteInput, Prisma.EventUncheckedCreateWithoutSourceNoteInput> | Prisma.EventCreateWithoutSourceNoteInput[] | Prisma.EventUncheckedCreateWithoutSourceNoteInput[]
   connectOrCreate?: Prisma.EventCreateOrConnectWithoutSourceNoteInput | Prisma.EventCreateOrConnectWithoutSourceNoteInput[]
@@ -917,6 +943,7 @@ export type EventCreateWithoutWorkspaceInput = {
   calendarLinks?: Prisma.CalendarEventLinkCreateNestedManyWithoutEventInput
   groupTags?: Prisma.GroupCreateNestedManyWithoutTaggedEventsInput
   placeNotes?: Prisma.PlaceNoteCreateNestedManyWithoutEventInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutEventInput
 }
 
 export type EventUncheckedCreateWithoutWorkspaceInput = {
@@ -939,6 +966,7 @@ export type EventUncheckedCreateWithoutWorkspaceInput = {
   calendarLinks?: Prisma.CalendarEventLinkUncheckedCreateNestedManyWithoutEventInput
   groupTags?: Prisma.GroupUncheckedCreateNestedManyWithoutTaggedEventsInput
   placeNotes?: Prisma.PlaceNoteUncheckedCreateNestedManyWithoutEventInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutEventInput
 }
 
 export type EventCreateOrConnectWithoutWorkspaceInput = {
@@ -1007,6 +1035,7 @@ export type EventCreateWithoutCalendarLinksInput = {
   interactions?: Prisma.InteractionCreateNestedManyWithoutEventInput
   groupTags?: Prisma.GroupCreateNestedManyWithoutTaggedEventsInput
   placeNotes?: Prisma.PlaceNoteCreateNestedManyWithoutEventInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutEventInput
 }
 
 export type EventUncheckedCreateWithoutCalendarLinksInput = {
@@ -1029,6 +1058,7 @@ export type EventUncheckedCreateWithoutCalendarLinksInput = {
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutEventInput
   groupTags?: Prisma.GroupUncheckedCreateNestedManyWithoutTaggedEventsInput
   placeNotes?: Prisma.PlaceNoteUncheckedCreateNestedManyWithoutEventInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutEventInput
 }
 
 export type EventCreateOrConnectWithoutCalendarLinksInput = {
@@ -1067,6 +1097,7 @@ export type EventUpdateWithoutCalendarLinksInput = {
   interactions?: Prisma.InteractionUpdateManyWithoutEventNestedInput
   groupTags?: Prisma.GroupUpdateManyWithoutTaggedEventsNestedInput
   placeNotes?: Prisma.PlaceNoteUpdateManyWithoutEventNestedInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutEventNestedInput
 }
 
 export type EventUncheckedUpdateWithoutCalendarLinksInput = {
@@ -1089,6 +1120,7 @@ export type EventUncheckedUpdateWithoutCalendarLinksInput = {
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutEventNestedInput
   groupTags?: Prisma.GroupUncheckedUpdateManyWithoutTaggedEventsNestedInput
   placeNotes?: Prisma.PlaceNoteUncheckedUpdateManyWithoutEventNestedInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutEventNestedInput
 }
 
 export type EventCreateWithoutChildEventsInput = {
@@ -1111,6 +1143,7 @@ export type EventCreateWithoutChildEventsInput = {
   calendarLinks?: Prisma.CalendarEventLinkCreateNestedManyWithoutEventInput
   groupTags?: Prisma.GroupCreateNestedManyWithoutTaggedEventsInput
   placeNotes?: Prisma.PlaceNoteCreateNestedManyWithoutEventInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutEventInput
 }
 
 export type EventUncheckedCreateWithoutChildEventsInput = {
@@ -1133,6 +1166,7 @@ export type EventUncheckedCreateWithoutChildEventsInput = {
   calendarLinks?: Prisma.CalendarEventLinkUncheckedCreateNestedManyWithoutEventInput
   groupTags?: Prisma.GroupUncheckedCreateNestedManyWithoutTaggedEventsInput
   placeNotes?: Prisma.PlaceNoteUncheckedCreateNestedManyWithoutEventInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutEventInput
 }
 
 export type EventCreateOrConnectWithoutChildEventsInput = {
@@ -1160,6 +1194,7 @@ export type EventCreateWithoutParentEventInput = {
   calendarLinks?: Prisma.CalendarEventLinkCreateNestedManyWithoutEventInput
   groupTags?: Prisma.GroupCreateNestedManyWithoutTaggedEventsInput
   placeNotes?: Prisma.PlaceNoteCreateNestedManyWithoutEventInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutEventInput
 }
 
 export type EventUncheckedCreateWithoutParentEventInput = {
@@ -1182,6 +1217,7 @@ export type EventUncheckedCreateWithoutParentEventInput = {
   calendarLinks?: Prisma.CalendarEventLinkUncheckedCreateNestedManyWithoutEventInput
   groupTags?: Prisma.GroupUncheckedCreateNestedManyWithoutTaggedEventsInput
   placeNotes?: Prisma.PlaceNoteUncheckedCreateNestedManyWithoutEventInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutEventInput
 }
 
 export type EventCreateOrConnectWithoutParentEventInput = {
@@ -1224,6 +1260,7 @@ export type EventUpdateWithoutChildEventsInput = {
   calendarLinks?: Prisma.CalendarEventLinkUpdateManyWithoutEventNestedInput
   groupTags?: Prisma.GroupUpdateManyWithoutTaggedEventsNestedInput
   placeNotes?: Prisma.PlaceNoteUpdateManyWithoutEventNestedInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutEventNestedInput
 }
 
 export type EventUncheckedUpdateWithoutChildEventsInput = {
@@ -1246,6 +1283,7 @@ export type EventUncheckedUpdateWithoutChildEventsInput = {
   calendarLinks?: Prisma.CalendarEventLinkUncheckedUpdateManyWithoutEventNestedInput
   groupTags?: Prisma.GroupUncheckedUpdateManyWithoutTaggedEventsNestedInput
   placeNotes?: Prisma.PlaceNoteUncheckedUpdateManyWithoutEventNestedInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutEventNestedInput
 }
 
 export type EventUpsertWithWhereUniqueWithoutParentEventInput = {
@@ -1284,6 +1322,7 @@ export type EventCreateWithoutInteractionsInput = {
   calendarLinks?: Prisma.CalendarEventLinkCreateNestedManyWithoutEventInput
   groupTags?: Prisma.GroupCreateNestedManyWithoutTaggedEventsInput
   placeNotes?: Prisma.PlaceNoteCreateNestedManyWithoutEventInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutEventInput
 }
 
 export type EventUncheckedCreateWithoutInteractionsInput = {
@@ -1306,6 +1345,7 @@ export type EventUncheckedCreateWithoutInteractionsInput = {
   calendarLinks?: Prisma.CalendarEventLinkUncheckedCreateNestedManyWithoutEventInput
   groupTags?: Prisma.GroupUncheckedCreateNestedManyWithoutTaggedEventsInput
   placeNotes?: Prisma.PlaceNoteUncheckedCreateNestedManyWithoutEventInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutEventInput
 }
 
 export type EventCreateOrConnectWithoutInteractionsInput = {
@@ -1344,6 +1384,7 @@ export type EventUpdateWithoutInteractionsInput = {
   calendarLinks?: Prisma.CalendarEventLinkUpdateManyWithoutEventNestedInput
   groupTags?: Prisma.GroupUpdateManyWithoutTaggedEventsNestedInput
   placeNotes?: Prisma.PlaceNoteUpdateManyWithoutEventNestedInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutEventNestedInput
 }
 
 export type EventUncheckedUpdateWithoutInteractionsInput = {
@@ -1366,6 +1407,7 @@ export type EventUncheckedUpdateWithoutInteractionsInput = {
   calendarLinks?: Prisma.CalendarEventLinkUncheckedUpdateManyWithoutEventNestedInput
   groupTags?: Prisma.GroupUncheckedUpdateManyWithoutTaggedEventsNestedInput
   placeNotes?: Prisma.PlaceNoteUncheckedUpdateManyWithoutEventNestedInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutEventNestedInput
 }
 
 export type EventCreateWithoutSourcePlanInput = {
@@ -1388,6 +1430,7 @@ export type EventCreateWithoutSourcePlanInput = {
   calendarLinks?: Prisma.CalendarEventLinkCreateNestedManyWithoutEventInput
   groupTags?: Prisma.GroupCreateNestedManyWithoutTaggedEventsInput
   placeNotes?: Prisma.PlaceNoteCreateNestedManyWithoutEventInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutEventInput
 }
 
 export type EventUncheckedCreateWithoutSourcePlanInput = {
@@ -1410,6 +1453,7 @@ export type EventUncheckedCreateWithoutSourcePlanInput = {
   calendarLinks?: Prisma.CalendarEventLinkUncheckedCreateNestedManyWithoutEventInput
   groupTags?: Prisma.GroupUncheckedCreateNestedManyWithoutTaggedEventsInput
   placeNotes?: Prisma.PlaceNoteUncheckedCreateNestedManyWithoutEventInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutEventInput
 }
 
 export type EventCreateOrConnectWithoutSourcePlanInput = {
@@ -1457,6 +1501,7 @@ export type EventCreateWithoutPlaceInput = {
   calendarLinks?: Prisma.CalendarEventLinkCreateNestedManyWithoutEventInput
   groupTags?: Prisma.GroupCreateNestedManyWithoutTaggedEventsInput
   placeNotes?: Prisma.PlaceNoteCreateNestedManyWithoutEventInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutEventInput
 }
 
 export type EventUncheckedCreateWithoutPlaceInput = {
@@ -1479,6 +1524,7 @@ export type EventUncheckedCreateWithoutPlaceInput = {
   calendarLinks?: Prisma.CalendarEventLinkUncheckedCreateNestedManyWithoutEventInput
   groupTags?: Prisma.GroupUncheckedCreateNestedManyWithoutTaggedEventsInput
   placeNotes?: Prisma.PlaceNoteUncheckedCreateNestedManyWithoutEventInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutEventInput
 }
 
 export type EventCreateOrConnectWithoutPlaceInput = {
@@ -1526,6 +1572,7 @@ export type EventCreateWithoutPlaceNotesInput = {
   interactions?: Prisma.InteractionCreateNestedManyWithoutEventInput
   calendarLinks?: Prisma.CalendarEventLinkCreateNestedManyWithoutEventInput
   groupTags?: Prisma.GroupCreateNestedManyWithoutTaggedEventsInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutEventInput
 }
 
 export type EventUncheckedCreateWithoutPlaceNotesInput = {
@@ -1548,6 +1595,7 @@ export type EventUncheckedCreateWithoutPlaceNotesInput = {
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutEventInput
   calendarLinks?: Prisma.CalendarEventLinkUncheckedCreateNestedManyWithoutEventInput
   groupTags?: Prisma.GroupUncheckedCreateNestedManyWithoutTaggedEventsInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutEventInput
 }
 
 export type EventCreateOrConnectWithoutPlaceNotesInput = {
@@ -1586,6 +1634,7 @@ export type EventUpdateWithoutPlaceNotesInput = {
   interactions?: Prisma.InteractionUpdateManyWithoutEventNestedInput
   calendarLinks?: Prisma.CalendarEventLinkUpdateManyWithoutEventNestedInput
   groupTags?: Prisma.GroupUpdateManyWithoutTaggedEventsNestedInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutEventNestedInput
 }
 
 export type EventUncheckedUpdateWithoutPlaceNotesInput = {
@@ -1608,6 +1657,7 @@ export type EventUncheckedUpdateWithoutPlaceNotesInput = {
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutEventNestedInput
   calendarLinks?: Prisma.CalendarEventLinkUncheckedUpdateManyWithoutEventNestedInput
   groupTags?: Prisma.GroupUncheckedUpdateManyWithoutTaggedEventsNestedInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutEventNestedInput
 }
 
 export type EventCreateWithoutGroupTagsInput = {
@@ -1630,6 +1680,7 @@ export type EventCreateWithoutGroupTagsInput = {
   interactions?: Prisma.InteractionCreateNestedManyWithoutEventInput
   calendarLinks?: Prisma.CalendarEventLinkCreateNestedManyWithoutEventInput
   placeNotes?: Prisma.PlaceNoteCreateNestedManyWithoutEventInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutEventInput
 }
 
 export type EventUncheckedCreateWithoutGroupTagsInput = {
@@ -1652,6 +1703,7 @@ export type EventUncheckedCreateWithoutGroupTagsInput = {
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutEventInput
   calendarLinks?: Prisma.CalendarEventLinkUncheckedCreateNestedManyWithoutEventInput
   placeNotes?: Prisma.PlaceNoteUncheckedCreateNestedManyWithoutEventInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutEventInput
 }
 
 export type EventCreateOrConnectWithoutGroupTagsInput = {
@@ -1675,6 +1727,114 @@ export type EventUpdateManyWithWhereWithoutGroupTagsInput = {
   data: Prisma.XOR<Prisma.EventUpdateManyMutationInput, Prisma.EventUncheckedUpdateManyWithoutGroupTagsInput>
 }
 
+export type EventCreateWithoutPurchaseReceiptLinesInput = {
+  id?: string
+  createdAt?: Date | string
+  name: string
+  type: string
+  start: Date | string
+  end?: Date | string | null
+  timestamp: Date | string
+  notes?: string | null
+  transcript?: string | null
+  metadata?: string | null
+  workspace?: Prisma.WorkspaceCreateNestedOneWithoutEventsInput
+  place?: Prisma.PlaceCreateNestedOneWithoutEventsInput
+  sourcePlan?: Prisma.PlanCreateNestedOneWithoutFulfilledByInput
+  parentEvent?: Prisma.EventCreateNestedOneWithoutChildEventsInput
+  childEvents?: Prisma.EventCreateNestedManyWithoutParentEventInput
+  sourceNote?: Prisma.NoteCreateNestedOneWithoutEventsInput
+  interactions?: Prisma.InteractionCreateNestedManyWithoutEventInput
+  calendarLinks?: Prisma.CalendarEventLinkCreateNestedManyWithoutEventInput
+  groupTags?: Prisma.GroupCreateNestedManyWithoutTaggedEventsInput
+  placeNotes?: Prisma.PlaceNoteCreateNestedManyWithoutEventInput
+}
+
+export type EventUncheckedCreateWithoutPurchaseReceiptLinesInput = {
+  id?: string
+  workspaceId?: string
+  createdAt?: Date | string
+  name: string
+  type: string
+  start: Date | string
+  end?: Date | string | null
+  timestamp: Date | string
+  placeId?: string | null
+  notes?: string | null
+  transcript?: string | null
+  metadata?: string | null
+  sourcePlanId?: string | null
+  parentEventId?: string | null
+  sourceNoteId?: string | null
+  childEvents?: Prisma.EventUncheckedCreateNestedManyWithoutParentEventInput
+  interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutEventInput
+  calendarLinks?: Prisma.CalendarEventLinkUncheckedCreateNestedManyWithoutEventInput
+  groupTags?: Prisma.GroupUncheckedCreateNestedManyWithoutTaggedEventsInput
+  placeNotes?: Prisma.PlaceNoteUncheckedCreateNestedManyWithoutEventInput
+}
+
+export type EventCreateOrConnectWithoutPurchaseReceiptLinesInput = {
+  where: Prisma.EventWhereUniqueInput
+  create: Prisma.XOR<Prisma.EventCreateWithoutPurchaseReceiptLinesInput, Prisma.EventUncheckedCreateWithoutPurchaseReceiptLinesInput>
+}
+
+export type EventUpsertWithoutPurchaseReceiptLinesInput = {
+  update: Prisma.XOR<Prisma.EventUpdateWithoutPurchaseReceiptLinesInput, Prisma.EventUncheckedUpdateWithoutPurchaseReceiptLinesInput>
+  create: Prisma.XOR<Prisma.EventCreateWithoutPurchaseReceiptLinesInput, Prisma.EventUncheckedCreateWithoutPurchaseReceiptLinesInput>
+  where?: Prisma.EventWhereInput
+}
+
+export type EventUpdateToOneWithWhereWithoutPurchaseReceiptLinesInput = {
+  where?: Prisma.EventWhereInput
+  data: Prisma.XOR<Prisma.EventUpdateWithoutPurchaseReceiptLinesInput, Prisma.EventUncheckedUpdateWithoutPurchaseReceiptLinesInput>
+}
+
+export type EventUpdateWithoutPurchaseReceiptLinesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  start?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  end?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  transcript?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutEventsNestedInput
+  place?: Prisma.PlaceUpdateOneWithoutEventsNestedInput
+  sourcePlan?: Prisma.PlanUpdateOneWithoutFulfilledByNestedInput
+  parentEvent?: Prisma.EventUpdateOneWithoutChildEventsNestedInput
+  childEvents?: Prisma.EventUpdateManyWithoutParentEventNestedInput
+  sourceNote?: Prisma.NoteUpdateOneWithoutEventsNestedInput
+  interactions?: Prisma.InteractionUpdateManyWithoutEventNestedInput
+  calendarLinks?: Prisma.CalendarEventLinkUpdateManyWithoutEventNestedInput
+  groupTags?: Prisma.GroupUpdateManyWithoutTaggedEventsNestedInput
+  placeNotes?: Prisma.PlaceNoteUpdateManyWithoutEventNestedInput
+}
+
+export type EventUncheckedUpdateWithoutPurchaseReceiptLinesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  start?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  end?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  placeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  transcript?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourcePlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  childEvents?: Prisma.EventUncheckedUpdateManyWithoutParentEventNestedInput
+  interactions?: Prisma.InteractionUncheckedUpdateManyWithoutEventNestedInput
+  calendarLinks?: Prisma.CalendarEventLinkUncheckedUpdateManyWithoutEventNestedInput
+  groupTags?: Prisma.GroupUncheckedUpdateManyWithoutTaggedEventsNestedInput
+  placeNotes?: Prisma.PlaceNoteUncheckedUpdateManyWithoutEventNestedInput
+}
+
 export type EventCreateWithoutSourceNoteInput = {
   id?: string
   createdAt?: Date | string
@@ -1695,6 +1855,7 @@ export type EventCreateWithoutSourceNoteInput = {
   calendarLinks?: Prisma.CalendarEventLinkCreateNestedManyWithoutEventInput
   groupTags?: Prisma.GroupCreateNestedManyWithoutTaggedEventsInput
   placeNotes?: Prisma.PlaceNoteCreateNestedManyWithoutEventInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutEventInput
 }
 
 export type EventUncheckedCreateWithoutSourceNoteInput = {
@@ -1717,6 +1878,7 @@ export type EventUncheckedCreateWithoutSourceNoteInput = {
   calendarLinks?: Prisma.CalendarEventLinkUncheckedCreateNestedManyWithoutEventInput
   groupTags?: Prisma.GroupUncheckedCreateNestedManyWithoutTaggedEventsInput
   placeNotes?: Prisma.PlaceNoteUncheckedCreateNestedManyWithoutEventInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutEventInput
 }
 
 export type EventCreateOrConnectWithoutSourceNoteInput = {
@@ -1781,6 +1943,7 @@ export type EventUpdateWithoutWorkspaceInput = {
   calendarLinks?: Prisma.CalendarEventLinkUpdateManyWithoutEventNestedInput
   groupTags?: Prisma.GroupUpdateManyWithoutTaggedEventsNestedInput
   placeNotes?: Prisma.PlaceNoteUpdateManyWithoutEventNestedInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutEventNestedInput
 }
 
 export type EventUncheckedUpdateWithoutWorkspaceInput = {
@@ -1803,6 +1966,7 @@ export type EventUncheckedUpdateWithoutWorkspaceInput = {
   calendarLinks?: Prisma.CalendarEventLinkUncheckedUpdateManyWithoutEventNestedInput
   groupTags?: Prisma.GroupUncheckedUpdateManyWithoutTaggedEventsNestedInput
   placeNotes?: Prisma.PlaceNoteUncheckedUpdateManyWithoutEventNestedInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutEventNestedInput
 }
 
 export type EventUncheckedUpdateManyWithoutWorkspaceInput = {
@@ -1859,6 +2023,7 @@ export type EventUpdateWithoutParentEventInput = {
   calendarLinks?: Prisma.CalendarEventLinkUpdateManyWithoutEventNestedInput
   groupTags?: Prisma.GroupUpdateManyWithoutTaggedEventsNestedInput
   placeNotes?: Prisma.PlaceNoteUpdateManyWithoutEventNestedInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutEventNestedInput
 }
 
 export type EventUncheckedUpdateWithoutParentEventInput = {
@@ -1881,6 +2046,7 @@ export type EventUncheckedUpdateWithoutParentEventInput = {
   calendarLinks?: Prisma.CalendarEventLinkUncheckedUpdateManyWithoutEventNestedInput
   groupTags?: Prisma.GroupUncheckedUpdateManyWithoutTaggedEventsNestedInput
   placeNotes?: Prisma.PlaceNoteUncheckedUpdateManyWithoutEventNestedInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutEventNestedInput
 }
 
 export type EventUncheckedUpdateManyWithoutParentEventInput = {
@@ -1937,6 +2103,7 @@ export type EventUpdateWithoutSourcePlanInput = {
   calendarLinks?: Prisma.CalendarEventLinkUpdateManyWithoutEventNestedInput
   groupTags?: Prisma.GroupUpdateManyWithoutTaggedEventsNestedInput
   placeNotes?: Prisma.PlaceNoteUpdateManyWithoutEventNestedInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutEventNestedInput
 }
 
 export type EventUncheckedUpdateWithoutSourcePlanInput = {
@@ -1959,6 +2126,7 @@ export type EventUncheckedUpdateWithoutSourcePlanInput = {
   calendarLinks?: Prisma.CalendarEventLinkUncheckedUpdateManyWithoutEventNestedInput
   groupTags?: Prisma.GroupUncheckedUpdateManyWithoutTaggedEventsNestedInput
   placeNotes?: Prisma.PlaceNoteUncheckedUpdateManyWithoutEventNestedInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutEventNestedInput
 }
 
 export type EventUncheckedUpdateManyWithoutSourcePlanInput = {
@@ -2015,6 +2183,7 @@ export type EventUpdateWithoutPlaceInput = {
   calendarLinks?: Prisma.CalendarEventLinkUpdateManyWithoutEventNestedInput
   groupTags?: Prisma.GroupUpdateManyWithoutTaggedEventsNestedInput
   placeNotes?: Prisma.PlaceNoteUpdateManyWithoutEventNestedInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutEventNestedInput
 }
 
 export type EventUncheckedUpdateWithoutPlaceInput = {
@@ -2037,6 +2206,7 @@ export type EventUncheckedUpdateWithoutPlaceInput = {
   calendarLinks?: Prisma.CalendarEventLinkUncheckedUpdateManyWithoutEventNestedInput
   groupTags?: Prisma.GroupUncheckedUpdateManyWithoutTaggedEventsNestedInput
   placeNotes?: Prisma.PlaceNoteUncheckedUpdateManyWithoutEventNestedInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutEventNestedInput
 }
 
 export type EventUncheckedUpdateManyWithoutPlaceInput = {
@@ -2076,6 +2246,7 @@ export type EventUpdateWithoutGroupTagsInput = {
   interactions?: Prisma.InteractionUpdateManyWithoutEventNestedInput
   calendarLinks?: Prisma.CalendarEventLinkUpdateManyWithoutEventNestedInput
   placeNotes?: Prisma.PlaceNoteUpdateManyWithoutEventNestedInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutEventNestedInput
 }
 
 export type EventUncheckedUpdateWithoutGroupTagsInput = {
@@ -2098,6 +2269,7 @@ export type EventUncheckedUpdateWithoutGroupTagsInput = {
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutEventNestedInput
   calendarLinks?: Prisma.CalendarEventLinkUncheckedUpdateManyWithoutEventNestedInput
   placeNotes?: Prisma.PlaceNoteUncheckedUpdateManyWithoutEventNestedInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutEventNestedInput
 }
 
 export type EventUncheckedUpdateManyWithoutGroupTagsInput = {
@@ -2155,6 +2327,7 @@ export type EventUpdateWithoutSourceNoteInput = {
   calendarLinks?: Prisma.CalendarEventLinkUpdateManyWithoutEventNestedInput
   groupTags?: Prisma.GroupUpdateManyWithoutTaggedEventsNestedInput
   placeNotes?: Prisma.PlaceNoteUpdateManyWithoutEventNestedInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutEventNestedInput
 }
 
 export type EventUncheckedUpdateWithoutSourceNoteInput = {
@@ -2177,6 +2350,7 @@ export type EventUncheckedUpdateWithoutSourceNoteInput = {
   calendarLinks?: Prisma.CalendarEventLinkUncheckedUpdateManyWithoutEventNestedInput
   groupTags?: Prisma.GroupUncheckedUpdateManyWithoutTaggedEventsNestedInput
   placeNotes?: Prisma.PlaceNoteUncheckedUpdateManyWithoutEventNestedInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutEventNestedInput
 }
 
 export type EventUncheckedUpdateManyWithoutSourceNoteInput = {
@@ -2207,6 +2381,7 @@ export type EventCountOutputType = {
   calendarLinks: number
   groupTags: number
   placeNotes: number
+  purchaseReceiptLines: number
 }
 
 export type EventCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2215,6 +2390,7 @@ export type EventCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.
   calendarLinks?: boolean | EventCountOutputTypeCountCalendarLinksArgs
   groupTags?: boolean | EventCountOutputTypeCountGroupTagsArgs
   placeNotes?: boolean | EventCountOutputTypeCountPlaceNotesArgs
+  purchaseReceiptLines?: boolean | EventCountOutputTypeCountPurchaseReceiptLinesArgs
 }
 
 /**
@@ -2262,6 +2438,13 @@ export type EventCountOutputTypeCountPlaceNotesArgs<ExtArgs extends runtime.Type
   where?: Prisma.PlaceNoteWhereInput
 }
 
+/**
+ * EventCountOutputType without action
+ */
+export type EventCountOutputTypeCountPurchaseReceiptLinesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PurchaseReceiptLineWhereInput
+}
+
 
 export type EventSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -2289,6 +2472,7 @@ export type EventSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   calendarLinks?: boolean | Prisma.Event$calendarLinksArgs<ExtArgs>
   groupTags?: boolean | Prisma.Event$groupTagsArgs<ExtArgs>
   placeNotes?: boolean | Prisma.Event$placeNotesArgs<ExtArgs>
+  purchaseReceiptLines?: boolean | Prisma.Event$purchaseReceiptLinesArgs<ExtArgs>
   _count?: boolean | Prisma.EventCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["event"]>
 
@@ -2368,6 +2552,7 @@ export type EventInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   calendarLinks?: boolean | Prisma.Event$calendarLinksArgs<ExtArgs>
   groupTags?: boolean | Prisma.Event$groupTagsArgs<ExtArgs>
   placeNotes?: boolean | Prisma.Event$placeNotesArgs<ExtArgs>
+  purchaseReceiptLines?: boolean | Prisma.Event$purchaseReceiptLinesArgs<ExtArgs>
   _count?: boolean | Prisma.EventCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type EventIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2398,6 +2583,7 @@ export type $EventPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     calendarLinks: Prisma.$CalendarEventLinkPayload<ExtArgs>[]
     groupTags: Prisma.$GroupPayload<ExtArgs>[]
     placeNotes: Prisma.$PlaceNotePayload<ExtArgs>[]
+    purchaseReceiptLines: Prisma.$PurchaseReceiptLinePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2819,6 +3005,7 @@ export interface Prisma__EventClient<T, Null = never, ExtArgs extends runtime.Ty
   calendarLinks<T extends Prisma.Event$calendarLinksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Event$calendarLinksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CalendarEventLinkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   groupTags<T extends Prisma.Event$groupTagsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Event$groupTagsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$GroupPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   placeNotes<T extends Prisma.Event$placeNotesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Event$placeNotesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PlaceNotePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  purchaseReceiptLines<T extends Prisma.Event$purchaseReceiptLinesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Event$purchaseReceiptLinesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PurchaseReceiptLinePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3455,6 +3642,30 @@ export type Event$placeNotesArgs<ExtArgs extends runtime.Types.Extensions.Intern
   take?: number
   skip?: number
   distinct?: Prisma.PlaceNoteScalarFieldEnum | Prisma.PlaceNoteScalarFieldEnum[]
+}
+
+/**
+ * Event.purchaseReceiptLines
+ */
+export type Event$purchaseReceiptLinesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PurchaseReceiptLine
+   */
+  select?: Prisma.PurchaseReceiptLineSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PurchaseReceiptLine
+   */
+  omit?: Prisma.PurchaseReceiptLineOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PurchaseReceiptLineInclude<ExtArgs> | null
+  where?: Prisma.PurchaseReceiptLineWhereInput
+  orderBy?: Prisma.PurchaseReceiptLineOrderByWithRelationInput | Prisma.PurchaseReceiptLineOrderByWithRelationInput[]
+  cursor?: Prisma.PurchaseReceiptLineWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PurchaseReceiptLineScalarFieldEnum | Prisma.PurchaseReceiptLineScalarFieldEnum[]
 }
 
 /**

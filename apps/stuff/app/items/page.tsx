@@ -1,25 +1,17 @@
 import { redirect } from 'next/navigation'
-import { auth } from '@/auth'
 import { db } from '@/lib/db'
+import { requireStuffAccess } from '@/lib/access'
 
 export const dynamic = 'force-dynamic'
-
-async function getWorkspaceId(email: string): Promise<string> {
-  const member = await db.workspaceMember.findFirst({
-    where: { user: { email }, status: 'active' },
-    select: { workspaceId: true },
-  })
-  return member?.workspaceId ?? 'default-workspace'
-}
 
 export default async function ItemsPage({
   searchParams,
 }: {
   searchParams: Promise<{ search?: string }>
 }) {
-  const session = await auth()
-  if (!session?.user?.email) redirect('/login')
-  const workspaceId = await getWorkspaceId(session.user.email)
+  const access = await requireStuffAccess()
+  if (!access) redirect('/login')
+  const workspaceId = access.workspaceId
   const { search } = await searchParams
 
   const items = await db.item.findMany({

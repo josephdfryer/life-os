@@ -49,6 +49,8 @@ export type ItemMinAggregateOutputType = {
   serialNumber: string | null
   assetId: string | null
   quantity: number | null
+  definitionId: string | null
+  lotId: string | null
   purchaseDate: Date | null
   purchasePrice: number | null
   purchaseFrom: string | null
@@ -78,6 +80,8 @@ export type ItemMaxAggregateOutputType = {
   serialNumber: string | null
   assetId: string | null
   quantity: number | null
+  definitionId: string | null
+  lotId: string | null
   purchaseDate: Date | null
   purchasePrice: number | null
   purchaseFrom: string | null
@@ -107,6 +111,8 @@ export type ItemCountAggregateOutputType = {
   serialNumber: number
   assetId: number
   quantity: number
+  definitionId: number
+  lotId: number
   purchaseDate: number
   purchasePrice: number
   purchaseFrom: number
@@ -148,6 +154,8 @@ export type ItemMinAggregateInputType = {
   serialNumber?: true
   assetId?: true
   quantity?: true
+  definitionId?: true
+  lotId?: true
   purchaseDate?: true
   purchasePrice?: true
   purchaseFrom?: true
@@ -177,6 +185,8 @@ export type ItemMaxAggregateInputType = {
   serialNumber?: true
   assetId?: true
   quantity?: true
+  definitionId?: true
+  lotId?: true
   purchaseDate?: true
   purchasePrice?: true
   purchaseFrom?: true
@@ -206,6 +216,8 @@ export type ItemCountAggregateInputType = {
   serialNumber?: true
   assetId?: true
   quantity?: true
+  definitionId?: true
+  lotId?: true
   purchaseDate?: true
   purchasePrice?: true
   purchaseFrom?: true
@@ -322,6 +334,8 @@ export type ItemGroupByOutputType = {
   serialNumber: string | null
   assetId: string
   quantity: number
+  definitionId: string | null
+  lotId: string | null
   purchaseDate: Date | null
   purchasePrice: number | null
   purchaseFrom: string | null
@@ -374,6 +388,8 @@ export type ItemWhereInput = {
   serialNumber?: Prisma.StringNullableFilter<"Item"> | string | null
   assetId?: Prisma.StringFilter<"Item"> | string
   quantity?: Prisma.FloatFilter<"Item"> | number
+  definitionId?: Prisma.StringNullableFilter<"Item"> | string | null
+  lotId?: Prisma.StringNullableFilter<"Item"> | string | null
   purchaseDate?: Prisma.DateTimeNullableFilter<"Item"> | Date | string | null
   purchasePrice?: Prisma.IntNullableFilter<"Item"> | number | null
   purchaseFrom?: Prisma.StringNullableFilter<"Item"> | string | null
@@ -389,12 +405,15 @@ export type ItemWhereInput = {
   color?: Prisma.StringNullableFilter<"Item"> | string | null
   colorSoft?: Prisma.StringNullableFilter<"Item"> | string | null
   workspace?: Prisma.XOR<Prisma.WorkspaceScalarRelationFilter, Prisma.WorkspaceWhereInput>
+  definition?: Prisma.XOR<Prisma.ItemDefinitionNullableScalarRelationFilter, Prisma.ItemDefinitionWhereInput> | null
+  lot?: Prisma.XOR<Prisma.InventoryLotNullableScalarRelationFilter, Prisma.InventoryLotWhereInput> | null
   place?: Prisma.XOR<Prisma.PlaceNullableScalarRelationFilter, Prisma.PlaceWhereInput> | null
   ownedBy?: Prisma.XOR<Prisma.PersonNullableScalarRelationFilter, Prisma.PersonWhereInput> | null
   primaryImageFile?: Prisma.XOR<Prisma.ImportedFileNullableScalarRelationFilter, Prisma.ImportedFileWhereInput> | null
   assembledInto?: Prisma.AssemblyListRelationFilter
   components?: Prisma.AssemblyListRelationFilter
   itemInteractions?: Prisma.ItemInteractionListRelationFilter
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineListRelationFilter
 }
 
 export type ItemOrderByWithRelationInput = {
@@ -410,6 +429,8 @@ export type ItemOrderByWithRelationInput = {
   serialNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   assetId?: Prisma.SortOrder
   quantity?: Prisma.SortOrder
+  definitionId?: Prisma.SortOrderInput | Prisma.SortOrder
+  lotId?: Prisma.SortOrderInput | Prisma.SortOrder
   purchaseDate?: Prisma.SortOrderInput | Prisma.SortOrder
   purchasePrice?: Prisma.SortOrderInput | Prisma.SortOrder
   purchaseFrom?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -425,17 +446,21 @@ export type ItemOrderByWithRelationInput = {
   color?: Prisma.SortOrderInput | Prisma.SortOrder
   colorSoft?: Prisma.SortOrderInput | Prisma.SortOrder
   workspace?: Prisma.WorkspaceOrderByWithRelationInput
+  definition?: Prisma.ItemDefinitionOrderByWithRelationInput
+  lot?: Prisma.InventoryLotOrderByWithRelationInput
   place?: Prisma.PlaceOrderByWithRelationInput
   ownedBy?: Prisma.PersonOrderByWithRelationInput
   primaryImageFile?: Prisma.ImportedFileOrderByWithRelationInput
   assembledInto?: Prisma.AssemblyOrderByRelationAggregateInput
   components?: Prisma.AssemblyOrderByRelationAggregateInput
   itemInteractions?: Prisma.ItemInteractionOrderByRelationAggregateInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineOrderByRelationAggregateInput
 }
 
 export type ItemWhereUniqueInput = Prisma.AtLeast<{
   id?: string
   assetId?: string
+  workspaceId_definitionId_serialNumber?: Prisma.ItemWorkspaceIdDefinitionIdSerialNumberCompoundUniqueInput
   AND?: Prisma.ItemWhereInput | Prisma.ItemWhereInput[]
   OR?: Prisma.ItemWhereInput[]
   NOT?: Prisma.ItemWhereInput | Prisma.ItemWhereInput[]
@@ -449,6 +474,8 @@ export type ItemWhereUniqueInput = Prisma.AtLeast<{
   model?: Prisma.StringNullableFilter<"Item"> | string | null
   serialNumber?: Prisma.StringNullableFilter<"Item"> | string | null
   quantity?: Prisma.FloatFilter<"Item"> | number
+  definitionId?: Prisma.StringNullableFilter<"Item"> | string | null
+  lotId?: Prisma.StringNullableFilter<"Item"> | string | null
   purchaseDate?: Prisma.DateTimeNullableFilter<"Item"> | Date | string | null
   purchasePrice?: Prisma.IntNullableFilter<"Item"> | number | null
   purchaseFrom?: Prisma.StringNullableFilter<"Item"> | string | null
@@ -464,13 +491,16 @@ export type ItemWhereUniqueInput = Prisma.AtLeast<{
   color?: Prisma.StringNullableFilter<"Item"> | string | null
   colorSoft?: Prisma.StringNullableFilter<"Item"> | string | null
   workspace?: Prisma.XOR<Prisma.WorkspaceScalarRelationFilter, Prisma.WorkspaceWhereInput>
+  definition?: Prisma.XOR<Prisma.ItemDefinitionNullableScalarRelationFilter, Prisma.ItemDefinitionWhereInput> | null
+  lot?: Prisma.XOR<Prisma.InventoryLotNullableScalarRelationFilter, Prisma.InventoryLotWhereInput> | null
   place?: Prisma.XOR<Prisma.PlaceNullableScalarRelationFilter, Prisma.PlaceWhereInput> | null
   ownedBy?: Prisma.XOR<Prisma.PersonNullableScalarRelationFilter, Prisma.PersonWhereInput> | null
   primaryImageFile?: Prisma.XOR<Prisma.ImportedFileNullableScalarRelationFilter, Prisma.ImportedFileWhereInput> | null
   assembledInto?: Prisma.AssemblyListRelationFilter
   components?: Prisma.AssemblyListRelationFilter
   itemInteractions?: Prisma.ItemInteractionListRelationFilter
-}, "id" | "assetId">
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineListRelationFilter
+}, "id" | "assetId" | "workspaceId_definitionId_serialNumber">
 
 export type ItemOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -485,6 +515,8 @@ export type ItemOrderByWithAggregationInput = {
   serialNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   assetId?: Prisma.SortOrder
   quantity?: Prisma.SortOrder
+  definitionId?: Prisma.SortOrderInput | Prisma.SortOrder
+  lotId?: Prisma.SortOrderInput | Prisma.SortOrder
   purchaseDate?: Prisma.SortOrderInput | Prisma.SortOrder
   purchasePrice?: Prisma.SortOrderInput | Prisma.SortOrder
   purchaseFrom?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -522,6 +554,8 @@ export type ItemScalarWhereWithAggregatesInput = {
   serialNumber?: Prisma.StringNullableWithAggregatesFilter<"Item"> | string | null
   assetId?: Prisma.StringWithAggregatesFilter<"Item"> | string
   quantity?: Prisma.FloatWithAggregatesFilter<"Item"> | number
+  definitionId?: Prisma.StringNullableWithAggregatesFilter<"Item"> | string | null
+  lotId?: Prisma.StringNullableWithAggregatesFilter<"Item"> | string | null
   purchaseDate?: Prisma.DateTimeNullableWithAggregatesFilter<"Item"> | Date | string | null
   purchasePrice?: Prisma.IntNullableWithAggregatesFilter<"Item"> | number | null
   purchaseFrom?: Prisma.StringNullableWithAggregatesFilter<"Item"> | string | null
@@ -562,12 +596,15 @@ export type ItemCreateInput = {
   color?: string | null
   colorSoft?: string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutItemsInput
+  definition?: Prisma.ItemDefinitionCreateNestedOneWithoutItemsInput
+  lot?: Prisma.InventoryLotCreateNestedOneWithoutItemsInput
   place?: Prisma.PlaceCreateNestedOneWithoutItemsInput
   ownedBy?: Prisma.PersonCreateNestedOneWithoutOwnedItemsInput
   primaryImageFile?: Prisma.ImportedFileCreateNestedOneWithoutPrimaryForItemsInput
   assembledInto?: Prisma.AssemblyCreateNestedManyWithoutChildItemInput
   components?: Prisma.AssemblyCreateNestedManyWithoutParentItemInput
   itemInteractions?: Prisma.ItemInteractionCreateNestedManyWithoutItemInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutItemInput
 }
 
 export type ItemUncheckedCreateInput = {
@@ -583,6 +620,8 @@ export type ItemUncheckedCreateInput = {
   serialNumber?: string | null
   assetId: string
   quantity?: number
+  definitionId?: string | null
+  lotId?: string | null
   purchaseDate?: Date | string | null
   purchasePrice?: number | null
   purchaseFrom?: string | null
@@ -600,6 +639,7 @@ export type ItemUncheckedCreateInput = {
   assembledInto?: Prisma.AssemblyUncheckedCreateNestedManyWithoutChildItemInput
   components?: Prisma.AssemblyUncheckedCreateNestedManyWithoutParentItemInput
   itemInteractions?: Prisma.ItemInteractionUncheckedCreateNestedManyWithoutItemInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutItemInput
 }
 
 export type ItemUpdateInput = {
@@ -626,12 +666,15 @@ export type ItemUpdateInput = {
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutItemsNestedInput
+  definition?: Prisma.ItemDefinitionUpdateOneWithoutItemsNestedInput
+  lot?: Prisma.InventoryLotUpdateOneWithoutItemsNestedInput
   place?: Prisma.PlaceUpdateOneWithoutItemsNestedInput
   ownedBy?: Prisma.PersonUpdateOneWithoutOwnedItemsNestedInput
   primaryImageFile?: Prisma.ImportedFileUpdateOneWithoutPrimaryForItemsNestedInput
   assembledInto?: Prisma.AssemblyUpdateManyWithoutChildItemNestedInput
   components?: Prisma.AssemblyUpdateManyWithoutParentItemNestedInput
   itemInteractions?: Prisma.ItemInteractionUpdateManyWithoutItemNestedInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutItemNestedInput
 }
 
 export type ItemUncheckedUpdateInput = {
@@ -647,6 +690,8 @@ export type ItemUncheckedUpdateInput = {
   serialNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assetId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
+  definitionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lotId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   purchaseDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   purchasePrice?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   purchaseFrom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -664,6 +709,7 @@ export type ItemUncheckedUpdateInput = {
   assembledInto?: Prisma.AssemblyUncheckedUpdateManyWithoutChildItemNestedInput
   components?: Prisma.AssemblyUncheckedUpdateManyWithoutParentItemNestedInput
   itemInteractions?: Prisma.ItemInteractionUncheckedUpdateManyWithoutItemNestedInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutItemNestedInput
 }
 
 export type ItemCreateManyInput = {
@@ -679,6 +725,8 @@ export type ItemCreateManyInput = {
   serialNumber?: string | null
   assetId: string
   quantity?: number
+  definitionId?: string | null
+  lotId?: string | null
   purchaseDate?: Date | string | null
   purchasePrice?: number | null
   purchaseFrom?: string | null
@@ -733,6 +781,8 @@ export type ItemUncheckedUpdateManyInput = {
   serialNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assetId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
+  definitionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lotId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   purchaseDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   purchasePrice?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   purchaseFrom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -759,6 +809,12 @@ export type ItemOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
+export type ItemWorkspaceIdDefinitionIdSerialNumberCompoundUniqueInput = {
+  workspaceId: string
+  definitionId: string
+  serialNumber: string
+}
+
 export type ItemCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   workspaceId?: Prisma.SortOrder
@@ -772,6 +828,8 @@ export type ItemCountOrderByAggregateInput = {
   serialNumber?: Prisma.SortOrder
   assetId?: Prisma.SortOrder
   quantity?: Prisma.SortOrder
+  definitionId?: Prisma.SortOrder
+  lotId?: Prisma.SortOrder
   purchaseDate?: Prisma.SortOrder
   purchasePrice?: Prisma.SortOrder
   purchaseFrom?: Prisma.SortOrder
@@ -806,6 +864,8 @@ export type ItemMaxOrderByAggregateInput = {
   serialNumber?: Prisma.SortOrder
   assetId?: Prisma.SortOrder
   quantity?: Prisma.SortOrder
+  definitionId?: Prisma.SortOrder
+  lotId?: Prisma.SortOrder
   purchaseDate?: Prisma.SortOrder
   purchasePrice?: Prisma.SortOrder
   purchaseFrom?: Prisma.SortOrder
@@ -835,6 +895,8 @@ export type ItemMinOrderByAggregateInput = {
   serialNumber?: Prisma.SortOrder
   assetId?: Prisma.SortOrder
   quantity?: Prisma.SortOrder
+  definitionId?: Prisma.SortOrder
+  lotId?: Prisma.SortOrder
   purchaseDate?: Prisma.SortOrder
   purchasePrice?: Prisma.SortOrder
   purchaseFrom?: Prisma.SortOrder
@@ -987,6 +1049,90 @@ export type ItemUncheckedUpdateManyWithoutPlaceNestedInput = {
   deleteMany?: Prisma.ItemScalarWhereInput | Prisma.ItemScalarWhereInput[]
 }
 
+export type ItemCreateNestedManyWithoutDefinitionInput = {
+  create?: Prisma.XOR<Prisma.ItemCreateWithoutDefinitionInput, Prisma.ItemUncheckedCreateWithoutDefinitionInput> | Prisma.ItemCreateWithoutDefinitionInput[] | Prisma.ItemUncheckedCreateWithoutDefinitionInput[]
+  connectOrCreate?: Prisma.ItemCreateOrConnectWithoutDefinitionInput | Prisma.ItemCreateOrConnectWithoutDefinitionInput[]
+  createMany?: Prisma.ItemCreateManyDefinitionInputEnvelope
+  connect?: Prisma.ItemWhereUniqueInput | Prisma.ItemWhereUniqueInput[]
+}
+
+export type ItemUncheckedCreateNestedManyWithoutDefinitionInput = {
+  create?: Prisma.XOR<Prisma.ItemCreateWithoutDefinitionInput, Prisma.ItemUncheckedCreateWithoutDefinitionInput> | Prisma.ItemCreateWithoutDefinitionInput[] | Prisma.ItemUncheckedCreateWithoutDefinitionInput[]
+  connectOrCreate?: Prisma.ItemCreateOrConnectWithoutDefinitionInput | Prisma.ItemCreateOrConnectWithoutDefinitionInput[]
+  createMany?: Prisma.ItemCreateManyDefinitionInputEnvelope
+  connect?: Prisma.ItemWhereUniqueInput | Prisma.ItemWhereUniqueInput[]
+}
+
+export type ItemUpdateManyWithoutDefinitionNestedInput = {
+  create?: Prisma.XOR<Prisma.ItemCreateWithoutDefinitionInput, Prisma.ItemUncheckedCreateWithoutDefinitionInput> | Prisma.ItemCreateWithoutDefinitionInput[] | Prisma.ItemUncheckedCreateWithoutDefinitionInput[]
+  connectOrCreate?: Prisma.ItemCreateOrConnectWithoutDefinitionInput | Prisma.ItemCreateOrConnectWithoutDefinitionInput[]
+  upsert?: Prisma.ItemUpsertWithWhereUniqueWithoutDefinitionInput | Prisma.ItemUpsertWithWhereUniqueWithoutDefinitionInput[]
+  createMany?: Prisma.ItemCreateManyDefinitionInputEnvelope
+  set?: Prisma.ItemWhereUniqueInput | Prisma.ItemWhereUniqueInput[]
+  disconnect?: Prisma.ItemWhereUniqueInput | Prisma.ItemWhereUniqueInput[]
+  delete?: Prisma.ItemWhereUniqueInput | Prisma.ItemWhereUniqueInput[]
+  connect?: Prisma.ItemWhereUniqueInput | Prisma.ItemWhereUniqueInput[]
+  update?: Prisma.ItemUpdateWithWhereUniqueWithoutDefinitionInput | Prisma.ItemUpdateWithWhereUniqueWithoutDefinitionInput[]
+  updateMany?: Prisma.ItemUpdateManyWithWhereWithoutDefinitionInput | Prisma.ItemUpdateManyWithWhereWithoutDefinitionInput[]
+  deleteMany?: Prisma.ItemScalarWhereInput | Prisma.ItemScalarWhereInput[]
+}
+
+export type ItemUncheckedUpdateManyWithoutDefinitionNestedInput = {
+  create?: Prisma.XOR<Prisma.ItemCreateWithoutDefinitionInput, Prisma.ItemUncheckedCreateWithoutDefinitionInput> | Prisma.ItemCreateWithoutDefinitionInput[] | Prisma.ItemUncheckedCreateWithoutDefinitionInput[]
+  connectOrCreate?: Prisma.ItemCreateOrConnectWithoutDefinitionInput | Prisma.ItemCreateOrConnectWithoutDefinitionInput[]
+  upsert?: Prisma.ItemUpsertWithWhereUniqueWithoutDefinitionInput | Prisma.ItemUpsertWithWhereUniqueWithoutDefinitionInput[]
+  createMany?: Prisma.ItemCreateManyDefinitionInputEnvelope
+  set?: Prisma.ItemWhereUniqueInput | Prisma.ItemWhereUniqueInput[]
+  disconnect?: Prisma.ItemWhereUniqueInput | Prisma.ItemWhereUniqueInput[]
+  delete?: Prisma.ItemWhereUniqueInput | Prisma.ItemWhereUniqueInput[]
+  connect?: Prisma.ItemWhereUniqueInput | Prisma.ItemWhereUniqueInput[]
+  update?: Prisma.ItemUpdateWithWhereUniqueWithoutDefinitionInput | Prisma.ItemUpdateWithWhereUniqueWithoutDefinitionInput[]
+  updateMany?: Prisma.ItemUpdateManyWithWhereWithoutDefinitionInput | Prisma.ItemUpdateManyWithWhereWithoutDefinitionInput[]
+  deleteMany?: Prisma.ItemScalarWhereInput | Prisma.ItemScalarWhereInput[]
+}
+
+export type ItemCreateNestedManyWithoutLotInput = {
+  create?: Prisma.XOR<Prisma.ItemCreateWithoutLotInput, Prisma.ItemUncheckedCreateWithoutLotInput> | Prisma.ItemCreateWithoutLotInput[] | Prisma.ItemUncheckedCreateWithoutLotInput[]
+  connectOrCreate?: Prisma.ItemCreateOrConnectWithoutLotInput | Prisma.ItemCreateOrConnectWithoutLotInput[]
+  createMany?: Prisma.ItemCreateManyLotInputEnvelope
+  connect?: Prisma.ItemWhereUniqueInput | Prisma.ItemWhereUniqueInput[]
+}
+
+export type ItemUncheckedCreateNestedManyWithoutLotInput = {
+  create?: Prisma.XOR<Prisma.ItemCreateWithoutLotInput, Prisma.ItemUncheckedCreateWithoutLotInput> | Prisma.ItemCreateWithoutLotInput[] | Prisma.ItemUncheckedCreateWithoutLotInput[]
+  connectOrCreate?: Prisma.ItemCreateOrConnectWithoutLotInput | Prisma.ItemCreateOrConnectWithoutLotInput[]
+  createMany?: Prisma.ItemCreateManyLotInputEnvelope
+  connect?: Prisma.ItemWhereUniqueInput | Prisma.ItemWhereUniqueInput[]
+}
+
+export type ItemUpdateManyWithoutLotNestedInput = {
+  create?: Prisma.XOR<Prisma.ItemCreateWithoutLotInput, Prisma.ItemUncheckedCreateWithoutLotInput> | Prisma.ItemCreateWithoutLotInput[] | Prisma.ItemUncheckedCreateWithoutLotInput[]
+  connectOrCreate?: Prisma.ItemCreateOrConnectWithoutLotInput | Prisma.ItemCreateOrConnectWithoutLotInput[]
+  upsert?: Prisma.ItemUpsertWithWhereUniqueWithoutLotInput | Prisma.ItemUpsertWithWhereUniqueWithoutLotInput[]
+  createMany?: Prisma.ItemCreateManyLotInputEnvelope
+  set?: Prisma.ItemWhereUniqueInput | Prisma.ItemWhereUniqueInput[]
+  disconnect?: Prisma.ItemWhereUniqueInput | Prisma.ItemWhereUniqueInput[]
+  delete?: Prisma.ItemWhereUniqueInput | Prisma.ItemWhereUniqueInput[]
+  connect?: Prisma.ItemWhereUniqueInput | Prisma.ItemWhereUniqueInput[]
+  update?: Prisma.ItemUpdateWithWhereUniqueWithoutLotInput | Prisma.ItemUpdateWithWhereUniqueWithoutLotInput[]
+  updateMany?: Prisma.ItemUpdateManyWithWhereWithoutLotInput | Prisma.ItemUpdateManyWithWhereWithoutLotInput[]
+  deleteMany?: Prisma.ItemScalarWhereInput | Prisma.ItemScalarWhereInput[]
+}
+
+export type ItemUncheckedUpdateManyWithoutLotNestedInput = {
+  create?: Prisma.XOR<Prisma.ItemCreateWithoutLotInput, Prisma.ItemUncheckedCreateWithoutLotInput> | Prisma.ItemCreateWithoutLotInput[] | Prisma.ItemUncheckedCreateWithoutLotInput[]
+  connectOrCreate?: Prisma.ItemCreateOrConnectWithoutLotInput | Prisma.ItemCreateOrConnectWithoutLotInput[]
+  upsert?: Prisma.ItemUpsertWithWhereUniqueWithoutLotInput | Prisma.ItemUpsertWithWhereUniqueWithoutLotInput[]
+  createMany?: Prisma.ItemCreateManyLotInputEnvelope
+  set?: Prisma.ItemWhereUniqueInput | Prisma.ItemWhereUniqueInput[]
+  disconnect?: Prisma.ItemWhereUniqueInput | Prisma.ItemWhereUniqueInput[]
+  delete?: Prisma.ItemWhereUniqueInput | Prisma.ItemWhereUniqueInput[]
+  connect?: Prisma.ItemWhereUniqueInput | Prisma.ItemWhereUniqueInput[]
+  update?: Prisma.ItemUpdateWithWhereUniqueWithoutLotInput | Prisma.ItemUpdateWithWhereUniqueWithoutLotInput[]
+  updateMany?: Prisma.ItemUpdateManyWithWhereWithoutLotInput | Prisma.ItemUpdateManyWithWhereWithoutLotInput[]
+  deleteMany?: Prisma.ItemScalarWhereInput | Prisma.ItemScalarWhereInput[]
+}
+
 export type ItemCreateNestedOneWithoutAssembledIntoInput = {
   create?: Prisma.XOR<Prisma.ItemCreateWithoutAssembledIntoInput, Prisma.ItemUncheckedCreateWithoutAssembledIntoInput>
   connectOrCreate?: Prisma.ItemCreateOrConnectWithoutAssembledIntoInput
@@ -1071,6 +1217,20 @@ export type ItemUncheckedUpdateManyWithoutPrimaryImageFileNestedInput = {
   deleteMany?: Prisma.ItemScalarWhereInput | Prisma.ItemScalarWhereInput[]
 }
 
+export type ItemCreateNestedOneWithoutPurchaseReceiptLinesInput = {
+  create?: Prisma.XOR<Prisma.ItemCreateWithoutPurchaseReceiptLinesInput, Prisma.ItemUncheckedCreateWithoutPurchaseReceiptLinesInput>
+  connectOrCreate?: Prisma.ItemCreateOrConnectWithoutPurchaseReceiptLinesInput
+  connect?: Prisma.ItemWhereUniqueInput
+}
+
+export type ItemUpdateOneRequiredWithoutPurchaseReceiptLinesNestedInput = {
+  create?: Prisma.XOR<Prisma.ItemCreateWithoutPurchaseReceiptLinesInput, Prisma.ItemUncheckedCreateWithoutPurchaseReceiptLinesInput>
+  connectOrCreate?: Prisma.ItemCreateOrConnectWithoutPurchaseReceiptLinesInput
+  upsert?: Prisma.ItemUpsertWithoutPurchaseReceiptLinesInput
+  connect?: Prisma.ItemWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ItemUpdateToOneWithWhereWithoutPurchaseReceiptLinesInput, Prisma.ItemUpdateWithoutPurchaseReceiptLinesInput>, Prisma.ItemUncheckedUpdateWithoutPurchaseReceiptLinesInput>
+}
+
 export type ItemCreateWithoutWorkspaceInput = {
   id?: string
   createdAt?: Date | string
@@ -1094,12 +1254,15 @@ export type ItemCreateWithoutWorkspaceInput = {
   notes?: string | null
   color?: string | null
   colorSoft?: string | null
+  definition?: Prisma.ItemDefinitionCreateNestedOneWithoutItemsInput
+  lot?: Prisma.InventoryLotCreateNestedOneWithoutItemsInput
   place?: Prisma.PlaceCreateNestedOneWithoutItemsInput
   ownedBy?: Prisma.PersonCreateNestedOneWithoutOwnedItemsInput
   primaryImageFile?: Prisma.ImportedFileCreateNestedOneWithoutPrimaryForItemsInput
   assembledInto?: Prisma.AssemblyCreateNestedManyWithoutChildItemInput
   components?: Prisma.AssemblyCreateNestedManyWithoutParentItemInput
   itemInteractions?: Prisma.ItemInteractionCreateNestedManyWithoutItemInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutItemInput
 }
 
 export type ItemUncheckedCreateWithoutWorkspaceInput = {
@@ -1114,6 +1277,8 @@ export type ItemUncheckedCreateWithoutWorkspaceInput = {
   serialNumber?: string | null
   assetId: string
   quantity?: number
+  definitionId?: string | null
+  lotId?: string | null
   purchaseDate?: Date | string | null
   purchasePrice?: number | null
   purchaseFrom?: string | null
@@ -1131,6 +1296,7 @@ export type ItemUncheckedCreateWithoutWorkspaceInput = {
   assembledInto?: Prisma.AssemblyUncheckedCreateNestedManyWithoutChildItemInput
   components?: Prisma.AssemblyUncheckedCreateNestedManyWithoutParentItemInput
   itemInteractions?: Prisma.ItemInteractionUncheckedCreateNestedManyWithoutItemInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutItemInput
 }
 
 export type ItemCreateOrConnectWithoutWorkspaceInput = {
@@ -1174,6 +1340,8 @@ export type ItemScalarWhereInput = {
   serialNumber?: Prisma.StringNullableFilter<"Item"> | string | null
   assetId?: Prisma.StringFilter<"Item"> | string
   quantity?: Prisma.FloatFilter<"Item"> | number
+  definitionId?: Prisma.StringNullableFilter<"Item"> | string | null
+  lotId?: Prisma.StringNullableFilter<"Item"> | string | null
   purchaseDate?: Prisma.DateTimeNullableFilter<"Item"> | Date | string | null
   purchasePrice?: Prisma.IntNullableFilter<"Item"> | number | null
   purchaseFrom?: Prisma.StringNullableFilter<"Item"> | string | null
@@ -1214,11 +1382,14 @@ export type ItemCreateWithoutOwnedByInput = {
   color?: string | null
   colorSoft?: string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutItemsInput
+  definition?: Prisma.ItemDefinitionCreateNestedOneWithoutItemsInput
+  lot?: Prisma.InventoryLotCreateNestedOneWithoutItemsInput
   place?: Prisma.PlaceCreateNestedOneWithoutItemsInput
   primaryImageFile?: Prisma.ImportedFileCreateNestedOneWithoutPrimaryForItemsInput
   assembledInto?: Prisma.AssemblyCreateNestedManyWithoutChildItemInput
   components?: Prisma.AssemblyCreateNestedManyWithoutParentItemInput
   itemInteractions?: Prisma.ItemInteractionCreateNestedManyWithoutItemInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutItemInput
 }
 
 export type ItemUncheckedCreateWithoutOwnedByInput = {
@@ -1234,6 +1405,8 @@ export type ItemUncheckedCreateWithoutOwnedByInput = {
   serialNumber?: string | null
   assetId: string
   quantity?: number
+  definitionId?: string | null
+  lotId?: string | null
   purchaseDate?: Date | string | null
   purchasePrice?: number | null
   purchaseFrom?: string | null
@@ -1250,6 +1423,7 @@ export type ItemUncheckedCreateWithoutOwnedByInput = {
   assembledInto?: Prisma.AssemblyUncheckedCreateNestedManyWithoutChildItemInput
   components?: Prisma.AssemblyUncheckedCreateNestedManyWithoutParentItemInput
   itemInteractions?: Prisma.ItemInteractionUncheckedCreateNestedManyWithoutItemInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutItemInput
 }
 
 export type ItemCreateOrConnectWithoutOwnedByInput = {
@@ -1301,11 +1475,14 @@ export type ItemCreateWithoutPlaceInput = {
   color?: string | null
   colorSoft?: string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutItemsInput
+  definition?: Prisma.ItemDefinitionCreateNestedOneWithoutItemsInput
+  lot?: Prisma.InventoryLotCreateNestedOneWithoutItemsInput
   ownedBy?: Prisma.PersonCreateNestedOneWithoutOwnedItemsInput
   primaryImageFile?: Prisma.ImportedFileCreateNestedOneWithoutPrimaryForItemsInput
   assembledInto?: Prisma.AssemblyCreateNestedManyWithoutChildItemInput
   components?: Prisma.AssemblyCreateNestedManyWithoutParentItemInput
   itemInteractions?: Prisma.ItemInteractionCreateNestedManyWithoutItemInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutItemInput
 }
 
 export type ItemUncheckedCreateWithoutPlaceInput = {
@@ -1321,6 +1498,8 @@ export type ItemUncheckedCreateWithoutPlaceInput = {
   serialNumber?: string | null
   assetId: string
   quantity?: number
+  definitionId?: string | null
+  lotId?: string | null
   purchaseDate?: Date | string | null
   purchasePrice?: number | null
   purchaseFrom?: string | null
@@ -1337,6 +1516,7 @@ export type ItemUncheckedCreateWithoutPlaceInput = {
   assembledInto?: Prisma.AssemblyUncheckedCreateNestedManyWithoutChildItemInput
   components?: Prisma.AssemblyUncheckedCreateNestedManyWithoutParentItemInput
   itemInteractions?: Prisma.ItemInteractionUncheckedCreateNestedManyWithoutItemInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutItemInput
 }
 
 export type ItemCreateOrConnectWithoutPlaceInput = {
@@ -1364,6 +1544,192 @@ export type ItemUpdateManyWithWhereWithoutPlaceInput = {
   data: Prisma.XOR<Prisma.ItemUpdateManyMutationInput, Prisma.ItemUncheckedUpdateManyWithoutPlaceInput>
 }
 
+export type ItemCreateWithoutDefinitionInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  name: string
+  description?: string | null
+  category?: string | null
+  make?: string | null
+  model?: string | null
+  serialNumber?: string | null
+  assetId: string
+  quantity?: number
+  purchaseDate?: Date | string | null
+  purchasePrice?: number | null
+  purchaseFrom?: string | null
+  warrantyExpires?: Date | string | null
+  lifetimeWarranty?: boolean
+  warrantyDetails?: string | null
+  attributes?: string | null
+  tags?: string | null
+  notes?: string | null
+  color?: string | null
+  colorSoft?: string | null
+  workspace?: Prisma.WorkspaceCreateNestedOneWithoutItemsInput
+  lot?: Prisma.InventoryLotCreateNestedOneWithoutItemsInput
+  place?: Prisma.PlaceCreateNestedOneWithoutItemsInput
+  ownedBy?: Prisma.PersonCreateNestedOneWithoutOwnedItemsInput
+  primaryImageFile?: Prisma.ImportedFileCreateNestedOneWithoutPrimaryForItemsInput
+  assembledInto?: Prisma.AssemblyCreateNestedManyWithoutChildItemInput
+  components?: Prisma.AssemblyCreateNestedManyWithoutParentItemInput
+  itemInteractions?: Prisma.ItemInteractionCreateNestedManyWithoutItemInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutItemInput
+}
+
+export type ItemUncheckedCreateWithoutDefinitionInput = {
+  id?: string
+  workspaceId?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  name: string
+  description?: string | null
+  category?: string | null
+  make?: string | null
+  model?: string | null
+  serialNumber?: string | null
+  assetId: string
+  quantity?: number
+  lotId?: string | null
+  purchaseDate?: Date | string | null
+  purchasePrice?: number | null
+  purchaseFrom?: string | null
+  warrantyExpires?: Date | string | null
+  lifetimeWarranty?: boolean
+  warrantyDetails?: string | null
+  placeId?: string | null
+  ownedById?: string | null
+  primaryImageFileId?: string | null
+  attributes?: string | null
+  tags?: string | null
+  notes?: string | null
+  color?: string | null
+  colorSoft?: string | null
+  assembledInto?: Prisma.AssemblyUncheckedCreateNestedManyWithoutChildItemInput
+  components?: Prisma.AssemblyUncheckedCreateNestedManyWithoutParentItemInput
+  itemInteractions?: Prisma.ItemInteractionUncheckedCreateNestedManyWithoutItemInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutItemInput
+}
+
+export type ItemCreateOrConnectWithoutDefinitionInput = {
+  where: Prisma.ItemWhereUniqueInput
+  create: Prisma.XOR<Prisma.ItemCreateWithoutDefinitionInput, Prisma.ItemUncheckedCreateWithoutDefinitionInput>
+}
+
+export type ItemCreateManyDefinitionInputEnvelope = {
+  data: Prisma.ItemCreateManyDefinitionInput | Prisma.ItemCreateManyDefinitionInput[]
+}
+
+export type ItemUpsertWithWhereUniqueWithoutDefinitionInput = {
+  where: Prisma.ItemWhereUniqueInput
+  update: Prisma.XOR<Prisma.ItemUpdateWithoutDefinitionInput, Prisma.ItemUncheckedUpdateWithoutDefinitionInput>
+  create: Prisma.XOR<Prisma.ItemCreateWithoutDefinitionInput, Prisma.ItemUncheckedCreateWithoutDefinitionInput>
+}
+
+export type ItemUpdateWithWhereUniqueWithoutDefinitionInput = {
+  where: Prisma.ItemWhereUniqueInput
+  data: Prisma.XOR<Prisma.ItemUpdateWithoutDefinitionInput, Prisma.ItemUncheckedUpdateWithoutDefinitionInput>
+}
+
+export type ItemUpdateManyWithWhereWithoutDefinitionInput = {
+  where: Prisma.ItemScalarWhereInput
+  data: Prisma.XOR<Prisma.ItemUpdateManyMutationInput, Prisma.ItemUncheckedUpdateManyWithoutDefinitionInput>
+}
+
+export type ItemCreateWithoutLotInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  name: string
+  description?: string | null
+  category?: string | null
+  make?: string | null
+  model?: string | null
+  serialNumber?: string | null
+  assetId: string
+  quantity?: number
+  purchaseDate?: Date | string | null
+  purchasePrice?: number | null
+  purchaseFrom?: string | null
+  warrantyExpires?: Date | string | null
+  lifetimeWarranty?: boolean
+  warrantyDetails?: string | null
+  attributes?: string | null
+  tags?: string | null
+  notes?: string | null
+  color?: string | null
+  colorSoft?: string | null
+  workspace?: Prisma.WorkspaceCreateNestedOneWithoutItemsInput
+  definition?: Prisma.ItemDefinitionCreateNestedOneWithoutItemsInput
+  place?: Prisma.PlaceCreateNestedOneWithoutItemsInput
+  ownedBy?: Prisma.PersonCreateNestedOneWithoutOwnedItemsInput
+  primaryImageFile?: Prisma.ImportedFileCreateNestedOneWithoutPrimaryForItemsInput
+  assembledInto?: Prisma.AssemblyCreateNestedManyWithoutChildItemInput
+  components?: Prisma.AssemblyCreateNestedManyWithoutParentItemInput
+  itemInteractions?: Prisma.ItemInteractionCreateNestedManyWithoutItemInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutItemInput
+}
+
+export type ItemUncheckedCreateWithoutLotInput = {
+  id?: string
+  workspaceId?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  name: string
+  description?: string | null
+  category?: string | null
+  make?: string | null
+  model?: string | null
+  serialNumber?: string | null
+  assetId: string
+  quantity?: number
+  definitionId?: string | null
+  purchaseDate?: Date | string | null
+  purchasePrice?: number | null
+  purchaseFrom?: string | null
+  warrantyExpires?: Date | string | null
+  lifetimeWarranty?: boolean
+  warrantyDetails?: string | null
+  placeId?: string | null
+  ownedById?: string | null
+  primaryImageFileId?: string | null
+  attributes?: string | null
+  tags?: string | null
+  notes?: string | null
+  color?: string | null
+  colorSoft?: string | null
+  assembledInto?: Prisma.AssemblyUncheckedCreateNestedManyWithoutChildItemInput
+  components?: Prisma.AssemblyUncheckedCreateNestedManyWithoutParentItemInput
+  itemInteractions?: Prisma.ItemInteractionUncheckedCreateNestedManyWithoutItemInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutItemInput
+}
+
+export type ItemCreateOrConnectWithoutLotInput = {
+  where: Prisma.ItemWhereUniqueInput
+  create: Prisma.XOR<Prisma.ItemCreateWithoutLotInput, Prisma.ItemUncheckedCreateWithoutLotInput>
+}
+
+export type ItemCreateManyLotInputEnvelope = {
+  data: Prisma.ItemCreateManyLotInput | Prisma.ItemCreateManyLotInput[]
+}
+
+export type ItemUpsertWithWhereUniqueWithoutLotInput = {
+  where: Prisma.ItemWhereUniqueInput
+  update: Prisma.XOR<Prisma.ItemUpdateWithoutLotInput, Prisma.ItemUncheckedUpdateWithoutLotInput>
+  create: Prisma.XOR<Prisma.ItemCreateWithoutLotInput, Prisma.ItemUncheckedCreateWithoutLotInput>
+}
+
+export type ItemUpdateWithWhereUniqueWithoutLotInput = {
+  where: Prisma.ItemWhereUniqueInput
+  data: Prisma.XOR<Prisma.ItemUpdateWithoutLotInput, Prisma.ItemUncheckedUpdateWithoutLotInput>
+}
+
+export type ItemUpdateManyWithWhereWithoutLotInput = {
+  where: Prisma.ItemScalarWhereInput
+  data: Prisma.XOR<Prisma.ItemUpdateManyMutationInput, Prisma.ItemUncheckedUpdateManyWithoutLotInput>
+}
+
 export type ItemCreateWithoutAssembledIntoInput = {
   id?: string
   createdAt?: Date | string
@@ -1388,11 +1754,14 @@ export type ItemCreateWithoutAssembledIntoInput = {
   color?: string | null
   colorSoft?: string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutItemsInput
+  definition?: Prisma.ItemDefinitionCreateNestedOneWithoutItemsInput
+  lot?: Prisma.InventoryLotCreateNestedOneWithoutItemsInput
   place?: Prisma.PlaceCreateNestedOneWithoutItemsInput
   ownedBy?: Prisma.PersonCreateNestedOneWithoutOwnedItemsInput
   primaryImageFile?: Prisma.ImportedFileCreateNestedOneWithoutPrimaryForItemsInput
   components?: Prisma.AssemblyCreateNestedManyWithoutParentItemInput
   itemInteractions?: Prisma.ItemInteractionCreateNestedManyWithoutItemInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutItemInput
 }
 
 export type ItemUncheckedCreateWithoutAssembledIntoInput = {
@@ -1408,6 +1777,8 @@ export type ItemUncheckedCreateWithoutAssembledIntoInput = {
   serialNumber?: string | null
   assetId: string
   quantity?: number
+  definitionId?: string | null
+  lotId?: string | null
   purchaseDate?: Date | string | null
   purchasePrice?: number | null
   purchaseFrom?: string | null
@@ -1424,6 +1795,7 @@ export type ItemUncheckedCreateWithoutAssembledIntoInput = {
   colorSoft?: string | null
   components?: Prisma.AssemblyUncheckedCreateNestedManyWithoutParentItemInput
   itemInteractions?: Prisma.ItemInteractionUncheckedCreateNestedManyWithoutItemInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutItemInput
 }
 
 export type ItemCreateOrConnectWithoutAssembledIntoInput = {
@@ -1455,11 +1827,14 @@ export type ItemCreateWithoutComponentsInput = {
   color?: string | null
   colorSoft?: string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutItemsInput
+  definition?: Prisma.ItemDefinitionCreateNestedOneWithoutItemsInput
+  lot?: Prisma.InventoryLotCreateNestedOneWithoutItemsInput
   place?: Prisma.PlaceCreateNestedOneWithoutItemsInput
   ownedBy?: Prisma.PersonCreateNestedOneWithoutOwnedItemsInput
   primaryImageFile?: Prisma.ImportedFileCreateNestedOneWithoutPrimaryForItemsInput
   assembledInto?: Prisma.AssemblyCreateNestedManyWithoutChildItemInput
   itemInteractions?: Prisma.ItemInteractionCreateNestedManyWithoutItemInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutItemInput
 }
 
 export type ItemUncheckedCreateWithoutComponentsInput = {
@@ -1475,6 +1850,8 @@ export type ItemUncheckedCreateWithoutComponentsInput = {
   serialNumber?: string | null
   assetId: string
   quantity?: number
+  definitionId?: string | null
+  lotId?: string | null
   purchaseDate?: Date | string | null
   purchasePrice?: number | null
   purchaseFrom?: string | null
@@ -1491,6 +1868,7 @@ export type ItemUncheckedCreateWithoutComponentsInput = {
   colorSoft?: string | null
   assembledInto?: Prisma.AssemblyUncheckedCreateNestedManyWithoutChildItemInput
   itemInteractions?: Prisma.ItemInteractionUncheckedCreateNestedManyWithoutItemInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutItemInput
 }
 
 export type ItemCreateOrConnectWithoutComponentsInput = {
@@ -1533,11 +1911,14 @@ export type ItemUpdateWithoutAssembledIntoInput = {
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutItemsNestedInput
+  definition?: Prisma.ItemDefinitionUpdateOneWithoutItemsNestedInput
+  lot?: Prisma.InventoryLotUpdateOneWithoutItemsNestedInput
   place?: Prisma.PlaceUpdateOneWithoutItemsNestedInput
   ownedBy?: Prisma.PersonUpdateOneWithoutOwnedItemsNestedInput
   primaryImageFile?: Prisma.ImportedFileUpdateOneWithoutPrimaryForItemsNestedInput
   components?: Prisma.AssemblyUpdateManyWithoutParentItemNestedInput
   itemInteractions?: Prisma.ItemInteractionUpdateManyWithoutItemNestedInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutItemNestedInput
 }
 
 export type ItemUncheckedUpdateWithoutAssembledIntoInput = {
@@ -1553,6 +1934,8 @@ export type ItemUncheckedUpdateWithoutAssembledIntoInput = {
   serialNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assetId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
+  definitionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lotId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   purchaseDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   purchasePrice?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   purchaseFrom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1569,6 +1952,7 @@ export type ItemUncheckedUpdateWithoutAssembledIntoInput = {
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   components?: Prisma.AssemblyUncheckedUpdateManyWithoutParentItemNestedInput
   itemInteractions?: Prisma.ItemInteractionUncheckedUpdateManyWithoutItemNestedInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutItemNestedInput
 }
 
 export type ItemUpsertWithoutComponentsInput = {
@@ -1606,11 +1990,14 @@ export type ItemUpdateWithoutComponentsInput = {
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutItemsNestedInput
+  definition?: Prisma.ItemDefinitionUpdateOneWithoutItemsNestedInput
+  lot?: Prisma.InventoryLotUpdateOneWithoutItemsNestedInput
   place?: Prisma.PlaceUpdateOneWithoutItemsNestedInput
   ownedBy?: Prisma.PersonUpdateOneWithoutOwnedItemsNestedInput
   primaryImageFile?: Prisma.ImportedFileUpdateOneWithoutPrimaryForItemsNestedInput
   assembledInto?: Prisma.AssemblyUpdateManyWithoutChildItemNestedInput
   itemInteractions?: Prisma.ItemInteractionUpdateManyWithoutItemNestedInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutItemNestedInput
 }
 
 export type ItemUncheckedUpdateWithoutComponentsInput = {
@@ -1626,6 +2013,8 @@ export type ItemUncheckedUpdateWithoutComponentsInput = {
   serialNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assetId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
+  definitionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lotId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   purchaseDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   purchasePrice?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   purchaseFrom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1642,6 +2031,7 @@ export type ItemUncheckedUpdateWithoutComponentsInput = {
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assembledInto?: Prisma.AssemblyUncheckedUpdateManyWithoutChildItemNestedInput
   itemInteractions?: Prisma.ItemInteractionUncheckedUpdateManyWithoutItemNestedInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutItemNestedInput
 }
 
 export type ItemCreateWithoutItemInteractionsInput = {
@@ -1668,11 +2058,14 @@ export type ItemCreateWithoutItemInteractionsInput = {
   color?: string | null
   colorSoft?: string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutItemsInput
+  definition?: Prisma.ItemDefinitionCreateNestedOneWithoutItemsInput
+  lot?: Prisma.InventoryLotCreateNestedOneWithoutItemsInput
   place?: Prisma.PlaceCreateNestedOneWithoutItemsInput
   ownedBy?: Prisma.PersonCreateNestedOneWithoutOwnedItemsInput
   primaryImageFile?: Prisma.ImportedFileCreateNestedOneWithoutPrimaryForItemsInput
   assembledInto?: Prisma.AssemblyCreateNestedManyWithoutChildItemInput
   components?: Prisma.AssemblyCreateNestedManyWithoutParentItemInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutItemInput
 }
 
 export type ItemUncheckedCreateWithoutItemInteractionsInput = {
@@ -1688,6 +2081,8 @@ export type ItemUncheckedCreateWithoutItemInteractionsInput = {
   serialNumber?: string | null
   assetId: string
   quantity?: number
+  definitionId?: string | null
+  lotId?: string | null
   purchaseDate?: Date | string | null
   purchasePrice?: number | null
   purchaseFrom?: string | null
@@ -1704,6 +2099,7 @@ export type ItemUncheckedCreateWithoutItemInteractionsInput = {
   colorSoft?: string | null
   assembledInto?: Prisma.AssemblyUncheckedCreateNestedManyWithoutChildItemInput
   components?: Prisma.AssemblyUncheckedCreateNestedManyWithoutParentItemInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutItemInput
 }
 
 export type ItemCreateOrConnectWithoutItemInteractionsInput = {
@@ -1746,11 +2142,14 @@ export type ItemUpdateWithoutItemInteractionsInput = {
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutItemsNestedInput
+  definition?: Prisma.ItemDefinitionUpdateOneWithoutItemsNestedInput
+  lot?: Prisma.InventoryLotUpdateOneWithoutItemsNestedInput
   place?: Prisma.PlaceUpdateOneWithoutItemsNestedInput
   ownedBy?: Prisma.PersonUpdateOneWithoutOwnedItemsNestedInput
   primaryImageFile?: Prisma.ImportedFileUpdateOneWithoutPrimaryForItemsNestedInput
   assembledInto?: Prisma.AssemblyUpdateManyWithoutChildItemNestedInput
   components?: Prisma.AssemblyUpdateManyWithoutParentItemNestedInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutItemNestedInput
 }
 
 export type ItemUncheckedUpdateWithoutItemInteractionsInput = {
@@ -1766,6 +2165,8 @@ export type ItemUncheckedUpdateWithoutItemInteractionsInput = {
   serialNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assetId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
+  definitionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lotId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   purchaseDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   purchasePrice?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   purchaseFrom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1782,6 +2183,7 @@ export type ItemUncheckedUpdateWithoutItemInteractionsInput = {
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assembledInto?: Prisma.AssemblyUncheckedUpdateManyWithoutChildItemNestedInput
   components?: Prisma.AssemblyUncheckedUpdateManyWithoutParentItemNestedInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutItemNestedInput
 }
 
 export type ItemCreateWithoutPrimaryImageFileInput = {
@@ -1808,11 +2210,14 @@ export type ItemCreateWithoutPrimaryImageFileInput = {
   color?: string | null
   colorSoft?: string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutItemsInput
+  definition?: Prisma.ItemDefinitionCreateNestedOneWithoutItemsInput
+  lot?: Prisma.InventoryLotCreateNestedOneWithoutItemsInput
   place?: Prisma.PlaceCreateNestedOneWithoutItemsInput
   ownedBy?: Prisma.PersonCreateNestedOneWithoutOwnedItemsInput
   assembledInto?: Prisma.AssemblyCreateNestedManyWithoutChildItemInput
   components?: Prisma.AssemblyCreateNestedManyWithoutParentItemInput
   itemInteractions?: Prisma.ItemInteractionCreateNestedManyWithoutItemInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutItemInput
 }
 
 export type ItemUncheckedCreateWithoutPrimaryImageFileInput = {
@@ -1828,6 +2233,8 @@ export type ItemUncheckedCreateWithoutPrimaryImageFileInput = {
   serialNumber?: string | null
   assetId: string
   quantity?: number
+  definitionId?: string | null
+  lotId?: string | null
   purchaseDate?: Date | string | null
   purchasePrice?: number | null
   purchaseFrom?: string | null
@@ -1844,6 +2251,7 @@ export type ItemUncheckedCreateWithoutPrimaryImageFileInput = {
   assembledInto?: Prisma.AssemblyUncheckedCreateNestedManyWithoutChildItemInput
   components?: Prisma.AssemblyUncheckedCreateNestedManyWithoutParentItemInput
   itemInteractions?: Prisma.ItemInteractionUncheckedCreateNestedManyWithoutItemInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutItemInput
 }
 
 export type ItemCreateOrConnectWithoutPrimaryImageFileInput = {
@@ -1871,6 +2279,158 @@ export type ItemUpdateManyWithWhereWithoutPrimaryImageFileInput = {
   data: Prisma.XOR<Prisma.ItemUpdateManyMutationInput, Prisma.ItemUncheckedUpdateManyWithoutPrimaryImageFileInput>
 }
 
+export type ItemCreateWithoutPurchaseReceiptLinesInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  name: string
+  description?: string | null
+  category?: string | null
+  make?: string | null
+  model?: string | null
+  serialNumber?: string | null
+  assetId: string
+  quantity?: number
+  purchaseDate?: Date | string | null
+  purchasePrice?: number | null
+  purchaseFrom?: string | null
+  warrantyExpires?: Date | string | null
+  lifetimeWarranty?: boolean
+  warrantyDetails?: string | null
+  attributes?: string | null
+  tags?: string | null
+  notes?: string | null
+  color?: string | null
+  colorSoft?: string | null
+  workspace?: Prisma.WorkspaceCreateNestedOneWithoutItemsInput
+  definition?: Prisma.ItemDefinitionCreateNestedOneWithoutItemsInput
+  lot?: Prisma.InventoryLotCreateNestedOneWithoutItemsInput
+  place?: Prisma.PlaceCreateNestedOneWithoutItemsInput
+  ownedBy?: Prisma.PersonCreateNestedOneWithoutOwnedItemsInput
+  primaryImageFile?: Prisma.ImportedFileCreateNestedOneWithoutPrimaryForItemsInput
+  assembledInto?: Prisma.AssemblyCreateNestedManyWithoutChildItemInput
+  components?: Prisma.AssemblyCreateNestedManyWithoutParentItemInput
+  itemInteractions?: Prisma.ItemInteractionCreateNestedManyWithoutItemInput
+}
+
+export type ItemUncheckedCreateWithoutPurchaseReceiptLinesInput = {
+  id?: string
+  workspaceId?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  name: string
+  description?: string | null
+  category?: string | null
+  make?: string | null
+  model?: string | null
+  serialNumber?: string | null
+  assetId: string
+  quantity?: number
+  definitionId?: string | null
+  lotId?: string | null
+  purchaseDate?: Date | string | null
+  purchasePrice?: number | null
+  purchaseFrom?: string | null
+  warrantyExpires?: Date | string | null
+  lifetimeWarranty?: boolean
+  warrantyDetails?: string | null
+  placeId?: string | null
+  ownedById?: string | null
+  primaryImageFileId?: string | null
+  attributes?: string | null
+  tags?: string | null
+  notes?: string | null
+  color?: string | null
+  colorSoft?: string | null
+  assembledInto?: Prisma.AssemblyUncheckedCreateNestedManyWithoutChildItemInput
+  components?: Prisma.AssemblyUncheckedCreateNestedManyWithoutParentItemInput
+  itemInteractions?: Prisma.ItemInteractionUncheckedCreateNestedManyWithoutItemInput
+}
+
+export type ItemCreateOrConnectWithoutPurchaseReceiptLinesInput = {
+  where: Prisma.ItemWhereUniqueInput
+  create: Prisma.XOR<Prisma.ItemCreateWithoutPurchaseReceiptLinesInput, Prisma.ItemUncheckedCreateWithoutPurchaseReceiptLinesInput>
+}
+
+export type ItemUpsertWithoutPurchaseReceiptLinesInput = {
+  update: Prisma.XOR<Prisma.ItemUpdateWithoutPurchaseReceiptLinesInput, Prisma.ItemUncheckedUpdateWithoutPurchaseReceiptLinesInput>
+  create: Prisma.XOR<Prisma.ItemCreateWithoutPurchaseReceiptLinesInput, Prisma.ItemUncheckedCreateWithoutPurchaseReceiptLinesInput>
+  where?: Prisma.ItemWhereInput
+}
+
+export type ItemUpdateToOneWithWhereWithoutPurchaseReceiptLinesInput = {
+  where?: Prisma.ItemWhereInput
+  data: Prisma.XOR<Prisma.ItemUpdateWithoutPurchaseReceiptLinesInput, Prisma.ItemUncheckedUpdateWithoutPurchaseReceiptLinesInput>
+}
+
+export type ItemUpdateWithoutPurchaseReceiptLinesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  make?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  model?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  serialNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assetId?: Prisma.StringFieldUpdateOperationsInput | string
+  quantity?: Prisma.FloatFieldUpdateOperationsInput | number
+  purchaseDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  purchasePrice?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  purchaseFrom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  warrantyExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lifetimeWarranty?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  warrantyDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attributes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tags?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutItemsNestedInput
+  definition?: Prisma.ItemDefinitionUpdateOneWithoutItemsNestedInput
+  lot?: Prisma.InventoryLotUpdateOneWithoutItemsNestedInput
+  place?: Prisma.PlaceUpdateOneWithoutItemsNestedInput
+  ownedBy?: Prisma.PersonUpdateOneWithoutOwnedItemsNestedInput
+  primaryImageFile?: Prisma.ImportedFileUpdateOneWithoutPrimaryForItemsNestedInput
+  assembledInto?: Prisma.AssemblyUpdateManyWithoutChildItemNestedInput
+  components?: Prisma.AssemblyUpdateManyWithoutParentItemNestedInput
+  itemInteractions?: Prisma.ItemInteractionUpdateManyWithoutItemNestedInput
+}
+
+export type ItemUncheckedUpdateWithoutPurchaseReceiptLinesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  make?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  model?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  serialNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assetId?: Prisma.StringFieldUpdateOperationsInput | string
+  quantity?: Prisma.FloatFieldUpdateOperationsInput | number
+  definitionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lotId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  purchaseDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  purchasePrice?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  purchaseFrom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  warrantyExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lifetimeWarranty?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  warrantyDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  placeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ownedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  primaryImageFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attributes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tags?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assembledInto?: Prisma.AssemblyUncheckedUpdateManyWithoutChildItemNestedInput
+  components?: Prisma.AssemblyUncheckedUpdateManyWithoutParentItemNestedInput
+  itemInteractions?: Prisma.ItemInteractionUncheckedUpdateManyWithoutItemNestedInput
+}
+
 export type ItemCreateManyWorkspaceInput = {
   id?: string
   createdAt?: Date | string
@@ -1883,6 +2443,8 @@ export type ItemCreateManyWorkspaceInput = {
   serialNumber?: string | null
   assetId: string
   quantity?: number
+  definitionId?: string | null
+  lotId?: string | null
   purchaseDate?: Date | string | null
   purchasePrice?: number | null
   purchaseFrom?: string | null
@@ -1922,12 +2484,15 @@ export type ItemUpdateWithoutWorkspaceInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  definition?: Prisma.ItemDefinitionUpdateOneWithoutItemsNestedInput
+  lot?: Prisma.InventoryLotUpdateOneWithoutItemsNestedInput
   place?: Prisma.PlaceUpdateOneWithoutItemsNestedInput
   ownedBy?: Prisma.PersonUpdateOneWithoutOwnedItemsNestedInput
   primaryImageFile?: Prisma.ImportedFileUpdateOneWithoutPrimaryForItemsNestedInput
   assembledInto?: Prisma.AssemblyUpdateManyWithoutChildItemNestedInput
   components?: Prisma.AssemblyUpdateManyWithoutParentItemNestedInput
   itemInteractions?: Prisma.ItemInteractionUpdateManyWithoutItemNestedInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutItemNestedInput
 }
 
 export type ItemUncheckedUpdateWithoutWorkspaceInput = {
@@ -1942,6 +2507,8 @@ export type ItemUncheckedUpdateWithoutWorkspaceInput = {
   serialNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assetId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
+  definitionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lotId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   purchaseDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   purchasePrice?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   purchaseFrom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1959,6 +2526,7 @@ export type ItemUncheckedUpdateWithoutWorkspaceInput = {
   assembledInto?: Prisma.AssemblyUncheckedUpdateManyWithoutChildItemNestedInput
   components?: Prisma.AssemblyUncheckedUpdateManyWithoutParentItemNestedInput
   itemInteractions?: Prisma.ItemInteractionUncheckedUpdateManyWithoutItemNestedInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutItemNestedInput
 }
 
 export type ItemUncheckedUpdateManyWithoutWorkspaceInput = {
@@ -1973,6 +2541,8 @@ export type ItemUncheckedUpdateManyWithoutWorkspaceInput = {
   serialNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assetId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
+  definitionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lotId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   purchaseDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   purchasePrice?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   purchaseFrom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2002,6 +2572,8 @@ export type ItemCreateManyOwnedByInput = {
   serialNumber?: string | null
   assetId: string
   quantity?: number
+  definitionId?: string | null
+  lotId?: string | null
   purchaseDate?: Date | string | null
   purchasePrice?: number | null
   purchaseFrom?: string | null
@@ -2041,11 +2613,14 @@ export type ItemUpdateWithoutOwnedByInput = {
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutItemsNestedInput
+  definition?: Prisma.ItemDefinitionUpdateOneWithoutItemsNestedInput
+  lot?: Prisma.InventoryLotUpdateOneWithoutItemsNestedInput
   place?: Prisma.PlaceUpdateOneWithoutItemsNestedInput
   primaryImageFile?: Prisma.ImportedFileUpdateOneWithoutPrimaryForItemsNestedInput
   assembledInto?: Prisma.AssemblyUpdateManyWithoutChildItemNestedInput
   components?: Prisma.AssemblyUpdateManyWithoutParentItemNestedInput
   itemInteractions?: Prisma.ItemInteractionUpdateManyWithoutItemNestedInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutItemNestedInput
 }
 
 export type ItemUncheckedUpdateWithoutOwnedByInput = {
@@ -2061,6 +2636,8 @@ export type ItemUncheckedUpdateWithoutOwnedByInput = {
   serialNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assetId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
+  definitionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lotId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   purchaseDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   purchasePrice?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   purchaseFrom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2077,6 +2654,7 @@ export type ItemUncheckedUpdateWithoutOwnedByInput = {
   assembledInto?: Prisma.AssemblyUncheckedUpdateManyWithoutChildItemNestedInput
   components?: Prisma.AssemblyUncheckedUpdateManyWithoutParentItemNestedInput
   itemInteractions?: Prisma.ItemInteractionUncheckedUpdateManyWithoutItemNestedInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutItemNestedInput
 }
 
 export type ItemUncheckedUpdateManyWithoutOwnedByInput = {
@@ -2092,6 +2670,8 @@ export type ItemUncheckedUpdateManyWithoutOwnedByInput = {
   serialNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assetId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
+  definitionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lotId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   purchaseDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   purchasePrice?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   purchaseFrom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2120,6 +2700,8 @@ export type ItemCreateManyPlaceInput = {
   serialNumber?: string | null
   assetId: string
   quantity?: number
+  definitionId?: string | null
+  lotId?: string | null
   purchaseDate?: Date | string | null
   purchasePrice?: number | null
   purchaseFrom?: string | null
@@ -2159,11 +2741,14 @@ export type ItemUpdateWithoutPlaceInput = {
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutItemsNestedInput
+  definition?: Prisma.ItemDefinitionUpdateOneWithoutItemsNestedInput
+  lot?: Prisma.InventoryLotUpdateOneWithoutItemsNestedInput
   ownedBy?: Prisma.PersonUpdateOneWithoutOwnedItemsNestedInput
   primaryImageFile?: Prisma.ImportedFileUpdateOneWithoutPrimaryForItemsNestedInput
   assembledInto?: Prisma.AssemblyUpdateManyWithoutChildItemNestedInput
   components?: Prisma.AssemblyUpdateManyWithoutParentItemNestedInput
   itemInteractions?: Prisma.ItemInteractionUpdateManyWithoutItemNestedInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutItemNestedInput
 }
 
 export type ItemUncheckedUpdateWithoutPlaceInput = {
@@ -2179,6 +2764,8 @@ export type ItemUncheckedUpdateWithoutPlaceInput = {
   serialNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assetId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
+  definitionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lotId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   purchaseDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   purchasePrice?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   purchaseFrom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2195,11 +2782,71 @@ export type ItemUncheckedUpdateWithoutPlaceInput = {
   assembledInto?: Prisma.AssemblyUncheckedUpdateManyWithoutChildItemNestedInput
   components?: Prisma.AssemblyUncheckedUpdateManyWithoutParentItemNestedInput
   itemInteractions?: Prisma.ItemInteractionUncheckedUpdateManyWithoutItemNestedInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutItemNestedInput
 }
 
 export type ItemUncheckedUpdateManyWithoutPlaceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  make?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  model?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  serialNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assetId?: Prisma.StringFieldUpdateOperationsInput | string
+  quantity?: Prisma.FloatFieldUpdateOperationsInput | number
+  definitionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lotId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  purchaseDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  purchasePrice?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  purchaseFrom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  warrantyExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lifetimeWarranty?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  warrantyDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ownedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  primaryImageFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attributes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tags?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+}
+
+export type ItemCreateManyDefinitionInput = {
+  id?: string
+  workspaceId?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  name: string
+  description?: string | null
+  category?: string | null
+  make?: string | null
+  model?: string | null
+  serialNumber?: string | null
+  assetId: string
+  quantity?: number
+  lotId?: string | null
+  purchaseDate?: Date | string | null
+  purchasePrice?: number | null
+  purchaseFrom?: string | null
+  warrantyExpires?: Date | string | null
+  lifetimeWarranty?: boolean
+  warrantyDetails?: string | null
+  placeId?: string | null
+  ownedById?: string | null
+  primaryImageFileId?: string | null
+  attributes?: string | null
+  tags?: string | null
+  notes?: string | null
+  color?: string | null
+  colorSoft?: string | null
+}
+
+export type ItemUpdateWithoutDefinitionInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2216,6 +2863,205 @@ export type ItemUncheckedUpdateManyWithoutPlaceInput = {
   warrantyExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lifetimeWarranty?: Prisma.BoolFieldUpdateOperationsInput | boolean
   warrantyDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attributes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tags?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutItemsNestedInput
+  lot?: Prisma.InventoryLotUpdateOneWithoutItemsNestedInput
+  place?: Prisma.PlaceUpdateOneWithoutItemsNestedInput
+  ownedBy?: Prisma.PersonUpdateOneWithoutOwnedItemsNestedInput
+  primaryImageFile?: Prisma.ImportedFileUpdateOneWithoutPrimaryForItemsNestedInput
+  assembledInto?: Prisma.AssemblyUpdateManyWithoutChildItemNestedInput
+  components?: Prisma.AssemblyUpdateManyWithoutParentItemNestedInput
+  itemInteractions?: Prisma.ItemInteractionUpdateManyWithoutItemNestedInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutItemNestedInput
+}
+
+export type ItemUncheckedUpdateWithoutDefinitionInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  make?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  model?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  serialNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assetId?: Prisma.StringFieldUpdateOperationsInput | string
+  quantity?: Prisma.FloatFieldUpdateOperationsInput | number
+  lotId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  purchaseDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  purchasePrice?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  purchaseFrom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  warrantyExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lifetimeWarranty?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  warrantyDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  placeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ownedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  primaryImageFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attributes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tags?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assembledInto?: Prisma.AssemblyUncheckedUpdateManyWithoutChildItemNestedInput
+  components?: Prisma.AssemblyUncheckedUpdateManyWithoutParentItemNestedInput
+  itemInteractions?: Prisma.ItemInteractionUncheckedUpdateManyWithoutItemNestedInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutItemNestedInput
+}
+
+export type ItemUncheckedUpdateManyWithoutDefinitionInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  make?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  model?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  serialNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assetId?: Prisma.StringFieldUpdateOperationsInput | string
+  quantity?: Prisma.FloatFieldUpdateOperationsInput | number
+  lotId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  purchaseDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  purchasePrice?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  purchaseFrom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  warrantyExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lifetimeWarranty?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  warrantyDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  placeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ownedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  primaryImageFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attributes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tags?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+}
+
+export type ItemCreateManyLotInput = {
+  id?: string
+  workspaceId?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  name: string
+  description?: string | null
+  category?: string | null
+  make?: string | null
+  model?: string | null
+  serialNumber?: string | null
+  assetId: string
+  quantity?: number
+  definitionId?: string | null
+  purchaseDate?: Date | string | null
+  purchasePrice?: number | null
+  purchaseFrom?: string | null
+  warrantyExpires?: Date | string | null
+  lifetimeWarranty?: boolean
+  warrantyDetails?: string | null
+  placeId?: string | null
+  ownedById?: string | null
+  primaryImageFileId?: string | null
+  attributes?: string | null
+  tags?: string | null
+  notes?: string | null
+  color?: string | null
+  colorSoft?: string | null
+}
+
+export type ItemUpdateWithoutLotInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  make?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  model?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  serialNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assetId?: Prisma.StringFieldUpdateOperationsInput | string
+  quantity?: Prisma.FloatFieldUpdateOperationsInput | number
+  purchaseDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  purchasePrice?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  purchaseFrom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  warrantyExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lifetimeWarranty?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  warrantyDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attributes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tags?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutItemsNestedInput
+  definition?: Prisma.ItemDefinitionUpdateOneWithoutItemsNestedInput
+  place?: Prisma.PlaceUpdateOneWithoutItemsNestedInput
+  ownedBy?: Prisma.PersonUpdateOneWithoutOwnedItemsNestedInput
+  primaryImageFile?: Prisma.ImportedFileUpdateOneWithoutPrimaryForItemsNestedInput
+  assembledInto?: Prisma.AssemblyUpdateManyWithoutChildItemNestedInput
+  components?: Prisma.AssemblyUpdateManyWithoutParentItemNestedInput
+  itemInteractions?: Prisma.ItemInteractionUpdateManyWithoutItemNestedInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutItemNestedInput
+}
+
+export type ItemUncheckedUpdateWithoutLotInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  make?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  model?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  serialNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assetId?: Prisma.StringFieldUpdateOperationsInput | string
+  quantity?: Prisma.FloatFieldUpdateOperationsInput | number
+  definitionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  purchaseDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  purchasePrice?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  purchaseFrom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  warrantyExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lifetimeWarranty?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  warrantyDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  placeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ownedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  primaryImageFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attributes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tags?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assembledInto?: Prisma.AssemblyUncheckedUpdateManyWithoutChildItemNestedInput
+  components?: Prisma.AssemblyUncheckedUpdateManyWithoutParentItemNestedInput
+  itemInteractions?: Prisma.ItemInteractionUncheckedUpdateManyWithoutItemNestedInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutItemNestedInput
+}
+
+export type ItemUncheckedUpdateManyWithoutLotInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  make?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  model?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  serialNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assetId?: Prisma.StringFieldUpdateOperationsInput | string
+  quantity?: Prisma.FloatFieldUpdateOperationsInput | number
+  definitionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  purchaseDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  purchasePrice?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  purchaseFrom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  warrantyExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lifetimeWarranty?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  warrantyDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  placeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ownedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   primaryImageFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   attributes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2238,6 +3084,8 @@ export type ItemCreateManyPrimaryImageFileInput = {
   serialNumber?: string | null
   assetId: string
   quantity?: number
+  definitionId?: string | null
+  lotId?: string | null
   purchaseDate?: Date | string | null
   purchasePrice?: number | null
   purchaseFrom?: string | null
@@ -2277,11 +3125,14 @@ export type ItemUpdateWithoutPrimaryImageFileInput = {
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutItemsNestedInput
+  definition?: Prisma.ItemDefinitionUpdateOneWithoutItemsNestedInput
+  lot?: Prisma.InventoryLotUpdateOneWithoutItemsNestedInput
   place?: Prisma.PlaceUpdateOneWithoutItemsNestedInput
   ownedBy?: Prisma.PersonUpdateOneWithoutOwnedItemsNestedInput
   assembledInto?: Prisma.AssemblyUpdateManyWithoutChildItemNestedInput
   components?: Prisma.AssemblyUpdateManyWithoutParentItemNestedInput
   itemInteractions?: Prisma.ItemInteractionUpdateManyWithoutItemNestedInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutItemNestedInput
 }
 
 export type ItemUncheckedUpdateWithoutPrimaryImageFileInput = {
@@ -2297,6 +3148,8 @@ export type ItemUncheckedUpdateWithoutPrimaryImageFileInput = {
   serialNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assetId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
+  definitionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lotId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   purchaseDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   purchasePrice?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   purchaseFrom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2313,6 +3166,7 @@ export type ItemUncheckedUpdateWithoutPrimaryImageFileInput = {
   assembledInto?: Prisma.AssemblyUncheckedUpdateManyWithoutChildItemNestedInput
   components?: Prisma.AssemblyUncheckedUpdateManyWithoutParentItemNestedInput
   itemInteractions?: Prisma.ItemInteractionUncheckedUpdateManyWithoutItemNestedInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutItemNestedInput
 }
 
 export type ItemUncheckedUpdateManyWithoutPrimaryImageFileInput = {
@@ -2328,6 +3182,8 @@ export type ItemUncheckedUpdateManyWithoutPrimaryImageFileInput = {
   serialNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assetId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
+  definitionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lotId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   purchaseDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   purchasePrice?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   purchaseFrom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2352,12 +3208,14 @@ export type ItemCountOutputType = {
   assembledInto: number
   components: number
   itemInteractions: number
+  purchaseReceiptLines: number
 }
 
 export type ItemCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   assembledInto?: boolean | ItemCountOutputTypeCountAssembledIntoArgs
   components?: boolean | ItemCountOutputTypeCountComponentsArgs
   itemInteractions?: boolean | ItemCountOutputTypeCountItemInteractionsArgs
+  purchaseReceiptLines?: boolean | ItemCountOutputTypeCountPurchaseReceiptLinesArgs
 }
 
 /**
@@ -2391,6 +3249,13 @@ export type ItemCountOutputTypeCountItemInteractionsArgs<ExtArgs extends runtime
   where?: Prisma.ItemInteractionWhereInput
 }
 
+/**
+ * ItemCountOutputType without action
+ */
+export type ItemCountOutputTypeCountPurchaseReceiptLinesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PurchaseReceiptLineWhereInput
+}
+
 
 export type ItemSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -2405,6 +3270,8 @@ export type ItemSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   serialNumber?: boolean
   assetId?: boolean
   quantity?: boolean
+  definitionId?: boolean
+  lotId?: boolean
   purchaseDate?: boolean
   purchasePrice?: boolean
   purchaseFrom?: boolean
@@ -2420,12 +3287,15 @@ export type ItemSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   color?: boolean
   colorSoft?: boolean
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
+  definition?: boolean | Prisma.Item$definitionArgs<ExtArgs>
+  lot?: boolean | Prisma.Item$lotArgs<ExtArgs>
   place?: boolean | Prisma.Item$placeArgs<ExtArgs>
   ownedBy?: boolean | Prisma.Item$ownedByArgs<ExtArgs>
   primaryImageFile?: boolean | Prisma.Item$primaryImageFileArgs<ExtArgs>
   assembledInto?: boolean | Prisma.Item$assembledIntoArgs<ExtArgs>
   components?: boolean | Prisma.Item$componentsArgs<ExtArgs>
   itemInteractions?: boolean | Prisma.Item$itemInteractionsArgs<ExtArgs>
+  purchaseReceiptLines?: boolean | Prisma.Item$purchaseReceiptLinesArgs<ExtArgs>
   _count?: boolean | Prisma.ItemCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["item"]>
 
@@ -2442,6 +3312,8 @@ export type ItemSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   serialNumber?: boolean
   assetId?: boolean
   quantity?: boolean
+  definitionId?: boolean
+  lotId?: boolean
   purchaseDate?: boolean
   purchasePrice?: boolean
   purchaseFrom?: boolean
@@ -2457,6 +3329,8 @@ export type ItemSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   color?: boolean
   colorSoft?: boolean
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
+  definition?: boolean | Prisma.Item$definitionArgs<ExtArgs>
+  lot?: boolean | Prisma.Item$lotArgs<ExtArgs>
   place?: boolean | Prisma.Item$placeArgs<ExtArgs>
   ownedBy?: boolean | Prisma.Item$ownedByArgs<ExtArgs>
   primaryImageFile?: boolean | Prisma.Item$primaryImageFileArgs<ExtArgs>
@@ -2475,6 +3349,8 @@ export type ItemSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   serialNumber?: boolean
   assetId?: boolean
   quantity?: boolean
+  definitionId?: boolean
+  lotId?: boolean
   purchaseDate?: boolean
   purchasePrice?: boolean
   purchaseFrom?: boolean
@@ -2490,6 +3366,8 @@ export type ItemSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   color?: boolean
   colorSoft?: boolean
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
+  definition?: boolean | Prisma.Item$definitionArgs<ExtArgs>
+  lot?: boolean | Prisma.Item$lotArgs<ExtArgs>
   place?: boolean | Prisma.Item$placeArgs<ExtArgs>
   ownedBy?: boolean | Prisma.Item$ownedByArgs<ExtArgs>
   primaryImageFile?: boolean | Prisma.Item$primaryImageFileArgs<ExtArgs>
@@ -2508,6 +3386,8 @@ export type ItemSelectScalar = {
   serialNumber?: boolean
   assetId?: boolean
   quantity?: boolean
+  definitionId?: boolean
+  lotId?: boolean
   purchaseDate?: boolean
   purchasePrice?: boolean
   purchaseFrom?: boolean
@@ -2524,25 +3404,32 @@ export type ItemSelectScalar = {
   colorSoft?: boolean
 }
 
-export type ItemOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "workspaceId" | "createdAt" | "updatedAt" | "name" | "description" | "category" | "make" | "model" | "serialNumber" | "assetId" | "quantity" | "purchaseDate" | "purchasePrice" | "purchaseFrom" | "warrantyExpires" | "lifetimeWarranty" | "warrantyDetails" | "placeId" | "ownedById" | "primaryImageFileId" | "attributes" | "tags" | "notes" | "color" | "colorSoft", ExtArgs["result"]["item"]>
+export type ItemOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "workspaceId" | "createdAt" | "updatedAt" | "name" | "description" | "category" | "make" | "model" | "serialNumber" | "assetId" | "quantity" | "definitionId" | "lotId" | "purchaseDate" | "purchasePrice" | "purchaseFrom" | "warrantyExpires" | "lifetimeWarranty" | "warrantyDetails" | "placeId" | "ownedById" | "primaryImageFileId" | "attributes" | "tags" | "notes" | "color" | "colorSoft", ExtArgs["result"]["item"]>
 export type ItemInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
+  definition?: boolean | Prisma.Item$definitionArgs<ExtArgs>
+  lot?: boolean | Prisma.Item$lotArgs<ExtArgs>
   place?: boolean | Prisma.Item$placeArgs<ExtArgs>
   ownedBy?: boolean | Prisma.Item$ownedByArgs<ExtArgs>
   primaryImageFile?: boolean | Prisma.Item$primaryImageFileArgs<ExtArgs>
   assembledInto?: boolean | Prisma.Item$assembledIntoArgs<ExtArgs>
   components?: boolean | Prisma.Item$componentsArgs<ExtArgs>
   itemInteractions?: boolean | Prisma.Item$itemInteractionsArgs<ExtArgs>
+  purchaseReceiptLines?: boolean | Prisma.Item$purchaseReceiptLinesArgs<ExtArgs>
   _count?: boolean | Prisma.ItemCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ItemIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
+  definition?: boolean | Prisma.Item$definitionArgs<ExtArgs>
+  lot?: boolean | Prisma.Item$lotArgs<ExtArgs>
   place?: boolean | Prisma.Item$placeArgs<ExtArgs>
   ownedBy?: boolean | Prisma.Item$ownedByArgs<ExtArgs>
   primaryImageFile?: boolean | Prisma.Item$primaryImageFileArgs<ExtArgs>
 }
 export type ItemIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
+  definition?: boolean | Prisma.Item$definitionArgs<ExtArgs>
+  lot?: boolean | Prisma.Item$lotArgs<ExtArgs>
   place?: boolean | Prisma.Item$placeArgs<ExtArgs>
   ownedBy?: boolean | Prisma.Item$ownedByArgs<ExtArgs>
   primaryImageFile?: boolean | Prisma.Item$primaryImageFileArgs<ExtArgs>
@@ -2552,12 +3439,15 @@ export type $ItemPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   name: "Item"
   objects: {
     workspace: Prisma.$WorkspacePayload<ExtArgs>
+    definition: Prisma.$ItemDefinitionPayload<ExtArgs> | null
+    lot: Prisma.$InventoryLotPayload<ExtArgs> | null
     place: Prisma.$PlacePayload<ExtArgs> | null
     ownedBy: Prisma.$PersonPayload<ExtArgs> | null
     primaryImageFile: Prisma.$ImportedFilePayload<ExtArgs> | null
     assembledInto: Prisma.$AssemblyPayload<ExtArgs>[]
     components: Prisma.$AssemblyPayload<ExtArgs>[]
     itemInteractions: Prisma.$ItemInteractionPayload<ExtArgs>[]
+    purchaseReceiptLines: Prisma.$PurchaseReceiptLinePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2572,6 +3462,8 @@ export type $ItemPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     serialNumber: string | null
     assetId: string
     quantity: number
+    definitionId: string | null
+    lotId: string | null
     purchaseDate: Date | null
     purchasePrice: number | null
     purchaseFrom: string | null
@@ -2981,12 +3873,15 @@ readonly fields: ItemFieldRefs;
 export interface Prisma__ItemClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   workspace<T extends Prisma.WorkspaceDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WorkspaceDefaultArgs<ExtArgs>>): Prisma.Prisma__WorkspaceClient<runtime.Types.Result.GetResult<Prisma.$WorkspacePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  definition<T extends Prisma.Item$definitionArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Item$definitionArgs<ExtArgs>>): Prisma.Prisma__ItemDefinitionClient<runtime.Types.Result.GetResult<Prisma.$ItemDefinitionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  lot<T extends Prisma.Item$lotArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Item$lotArgs<ExtArgs>>): Prisma.Prisma__InventoryLotClient<runtime.Types.Result.GetResult<Prisma.$InventoryLotPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   place<T extends Prisma.Item$placeArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Item$placeArgs<ExtArgs>>): Prisma.Prisma__PlaceClient<runtime.Types.Result.GetResult<Prisma.$PlacePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   ownedBy<T extends Prisma.Item$ownedByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Item$ownedByArgs<ExtArgs>>): Prisma.Prisma__PersonClient<runtime.Types.Result.GetResult<Prisma.$PersonPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   primaryImageFile<T extends Prisma.Item$primaryImageFileArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Item$primaryImageFileArgs<ExtArgs>>): Prisma.Prisma__ImportedFileClient<runtime.Types.Result.GetResult<Prisma.$ImportedFilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   assembledInto<T extends Prisma.Item$assembledIntoArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Item$assembledIntoArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AssemblyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   components<T extends Prisma.Item$componentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Item$componentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AssemblyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   itemInteractions<T extends Prisma.Item$itemInteractionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Item$itemInteractionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ItemInteractionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  purchaseReceiptLines<T extends Prisma.Item$purchaseReceiptLinesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Item$purchaseReceiptLinesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PurchaseReceiptLinePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3028,6 +3923,8 @@ export interface ItemFieldRefs {
   readonly serialNumber: Prisma.FieldRef<"Item", 'String'>
   readonly assetId: Prisma.FieldRef<"Item", 'String'>
   readonly quantity: Prisma.FieldRef<"Item", 'Float'>
+  readonly definitionId: Prisma.FieldRef<"Item", 'String'>
+  readonly lotId: Prisma.FieldRef<"Item", 'String'>
   readonly purchaseDate: Prisma.FieldRef<"Item", 'DateTime'>
   readonly purchasePrice: Prisma.FieldRef<"Item", 'Int'>
   readonly purchaseFrom: Prisma.FieldRef<"Item", 'String'>
@@ -3441,6 +4338,44 @@ export type ItemDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Internal
 }
 
 /**
+ * Item.definition
+ */
+export type Item$definitionArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ItemDefinition
+   */
+  select?: Prisma.ItemDefinitionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ItemDefinition
+   */
+  omit?: Prisma.ItemDefinitionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ItemDefinitionInclude<ExtArgs> | null
+  where?: Prisma.ItemDefinitionWhereInput
+}
+
+/**
+ * Item.lot
+ */
+export type Item$lotArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the InventoryLot
+   */
+  select?: Prisma.InventoryLotSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the InventoryLot
+   */
+  omit?: Prisma.InventoryLotOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.InventoryLotInclude<ExtArgs> | null
+  where?: Prisma.InventoryLotWhereInput
+}
+
+/**
  * Item.place
  */
 export type Item$placeArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -3567,6 +4502,30 @@ export type Item$itemInteractionsArgs<ExtArgs extends runtime.Types.Extensions.I
   take?: number
   skip?: number
   distinct?: Prisma.ItemInteractionScalarFieldEnum | Prisma.ItemInteractionScalarFieldEnum[]
+}
+
+/**
+ * Item.purchaseReceiptLines
+ */
+export type Item$purchaseReceiptLinesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PurchaseReceiptLine
+   */
+  select?: Prisma.PurchaseReceiptLineSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PurchaseReceiptLine
+   */
+  omit?: Prisma.PurchaseReceiptLineOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PurchaseReceiptLineInclude<ExtArgs> | null
+  where?: Prisma.PurchaseReceiptLineWhereInput
+  orderBy?: Prisma.PurchaseReceiptLineOrderByWithRelationInput | Prisma.PurchaseReceiptLineOrderByWithRelationInput[]
+  cursor?: Prisma.PurchaseReceiptLineWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PurchaseReceiptLineScalarFieldEnum | Prisma.PurchaseReceiptLineScalarFieldEnum[]
 }
 
 /**

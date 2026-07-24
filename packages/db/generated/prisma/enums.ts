@@ -49,6 +49,15 @@ export const StagedVisitStatus = {
 export type StagedVisitStatus = (typeof StagedVisitStatus)[keyof typeof StagedVisitStatus]
 
 
+export const InventoryTrackingMode = {
+  untracked: 'untracked',
+  lot: 'lot',
+  serial: 'serial'
+} as const
+
+export type InventoryTrackingMode = (typeof InventoryTrackingMode)[keyof typeof InventoryTrackingMode]
+
+
 export const GroupType = {
   family: 'family',
   employer: 'employer',

@@ -46,6 +46,11 @@ model Workspace {
   theorySnapshots TheorySnapshot[]
   groups         Group[]
   items          Item[]
+  itemDefinitions ItemDefinition[]
+  inventoryLots   InventoryLot[]
+  supplierProfiles SupplierProfile[]
+  purchaseOrders   PurchaseOrder[]
+  purchaseReceiptLines PurchaseReceiptLine[]
   importedFiles  ImportedFile[]
   aiProviderCredentials AiProviderCredential[]
   aiAnalysisRuns AiAnalysisRun[]
@@ -617,6 +622,7 @@ model Event {
   calendarLinks CalendarEventLink[]
   groupTags     Group[]             @relation("EventGroupTags")
   placeNotes    PlaceNote[]
+  purchaseReceiptLines PurchaseReceiptLine[]
 
   @@index([workspaceId, start])
   @@index([workspaceId, timestamp])
@@ -731,6 +737,7 @@ model Plan {
   // Provenance — the Note this Plan was derived from, if any
   sourceNoteId       String?
   sourceNote         Note?     @relation(fields: [sourceNoteId], references: [id], onDelete: SetNull)
+  purchaseOrder      PurchaseOrder?
 
   @@index([workspaceId, createdAt])
   @@index([workspaceId, personId])
@@ -778,6 +785,7 @@ model Place {
   notes         PlaceNote[]
   groupAffiliations PlaceGroup[]
   importStagedVisits ImportStagedVisit[]
+  purchaseOrderLines PurchaseOrderLine[]
 
   @@index([parentPlaceId])
   @@index([workspaceId])
@@ -890,6 +898,16 @@ model Item {
   assetId          String           @unique
   quantity         Float            @default(1)
 
+  // Optional stock definition. This is catalog/type metadata, not a primitive:
+  // the Item remains the actual physical holding at a Place.
+  definitionId     String?
+  definition       ItemDefinition?  @relation(fields: [definitionId], references: [id], onDelete: SetNull)
+
+  // Optional shared batch/lot. Serialized Items do not use a lot unless the
+  // physical product genuinely has both manufacturer lot and serial identity.
+  lotId            String?
+  lot              InventoryLot?    @relation(fields: [lotId], references: [id], onDelete: SetNull)
+
   // Acquisition
   purchaseDate     DateTime?
   // Integer minor units (cents), not Float — avoids floating-point drift in money.
@@ -923,6 +941,7 @@ model Item {
   components       Assembly[]       @relation("ParentItem")  // things currently inside this item
 
   itemInteractions ItemInteraction[]
+  purchaseReceiptLines PurchaseReceiptLine[]
 
   tags             String?
   notes            String?
@@ -937,6 +956,63 @@ model Item {
   @@index([primaryImageFileId])
   @@index([createdAt])
   @@index([workspaceId])
+  @@index([definitionId])
+  @@index([lotId])
+  @@unique([workspaceId, definitionId, serialNumber])
+}
+
+enum InventoryTrackingMode {
+  untracked
+  lot
+  serial
+}
+
+// SUPPORT: reusable catalog/type information for physical Items.
+model ItemDefinition {
+  id                   String                @id @default(cuid())
+  workspaceId          String
+  workspace            Workspace             @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  createdAt            DateTime               @default(now())
+  updatedAt            DateTime               @updatedAt
+  name                 String
+  sku                  String?
+  category             String?
+  description          String?
+  unit                 String                 @default("each")
+  trackingMode         InventoryTrackingMode  @default(untracked)
+  reorderPoint         Float?
+  targetStock          Float?
+  defaultShelfLifeDays Int?
+  active               Boolean                @default(true)
+  items                Item[]
+  lots                 InventoryLot[]
+  purchaseOrderLines   PurchaseOrderLine[]
+
+  @@unique([workspaceId, sku])
+  @@index([workspaceId, name])
+  @@index([workspaceId, active])
+}
+
+// SUPPORT: manufacturer or receiving batch shared by one or more Item holdings.
+model InventoryLot {
+  id             String         @id @default(cuid())
+  workspaceId    String
+  workspace      Workspace      @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  definitionId   String
+  definition     ItemDefinition @relation(fields: [definitionId], references: [id], onDelete: Cascade)
+  lotCode        String
+  manufacturedAt DateTime?
+  receivedAt     DateTime?
+  expiresAt      DateTime?
+  notes          String?
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  items          Item[]
+  purchaseReceiptLines PurchaseReceiptLine[]
+
+  @@unique([workspaceId, definitionId, lotCode])
+  @@index([workspaceId, expiresAt])
+  @@index([definitionId])
 }
 
 // ─────────────────────────────────────────────
@@ -981,6 +1057,10 @@ model ItemInteraction {
   interactionId String
   interaction   Interaction @relation(fields: [interactionId], references: [id], onDelete: Cascade)
   role          String?     // "subject", "target", "context" — optional semantic hint
+  // Ledger metadata. Item.quantity is the current projection; adjustment
+  // Interactions retain the delta and resulting balance.
+  quantityDelta Float?
+  quantityAfter Float?
 
   @@id([itemId, interactionId])
 }
@@ -1103,9 +1183,96 @@ model Group {
   // Provenance — the Note this Group was derived from, if any
   sourceNoteId      String?
   sourceNote        Note?         @relation(fields: [sourceNoteId], references: [id], onDelete: SetNull)
+  supplierProfile   SupplierProfile?
 
   @@index([workspaceId])
   @@index([workspaceId, groupType])
+}
+
+// SUPPORT: purchasing-specific details for a supplier Group.
+model SupplierProfile {
+  id             String    @id @default(cuid())
+  workspaceId    String
+  workspace      Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  groupId        String    @unique
+  group          Group     @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  supplierCode   String?
+  email          String?
+  phone          String?
+  website        String?
+  paymentTerms   String?
+  active         Boolean   @default(true)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  purchaseOrders PurchaseOrder[]
+
+  @@unique([workspaceId, supplierCode])
+  @@index([workspaceId, active])
+}
+
+// SUPPORT: operational purchasing fields extending the canonical Plan.
+model PurchaseOrder {
+  id              String             @id @default(cuid())
+  workspaceId     String
+  workspace       Workspace          @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  planId          String             @unique
+  plan            Plan               @relation(fields: [planId], references: [id], onDelete: Cascade)
+  supplierId      String
+  supplier        SupplierProfile    @relation(fields: [supplierId], references: [id])
+  orderNumber     String
+  currency        String             @default("USD")
+  orderedAt       DateTime
+  expectedAt      DateTime?
+  notes           String?
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+  lines           PurchaseOrderLine[]
+
+  @@unique([workspaceId, orderNumber])
+  @@index([workspaceId, orderedAt])
+  @@index([supplierId])
+}
+
+model PurchaseOrderLine {
+  id                 String                @id @default(cuid())
+  purchaseOrderId    String
+  purchaseOrder      PurchaseOrder         @relation(fields: [purchaseOrderId], references: [id], onDelete: Cascade)
+  definitionId       String
+  definition         ItemDefinition        @relation(fields: [definitionId], references: [id])
+  descriptionSnapshot String
+  skuSnapshot        String?
+  orderedQuantity    Float
+  unitCost           Int?
+  destinationPlaceId String?
+  destinationPlace   Place?                @relation(fields: [destinationPlaceId], references: [id], onDelete: SetNull)
+  createdAt          DateTime              @default(now())
+  receiptLines       PurchaseReceiptLine[]
+
+  @@index([purchaseOrderId])
+  @@index([definitionId])
+  @@index([destinationPlaceId])
+}
+
+// SUPPORT: exact order-line-to-Item quantity accepted during a receiving Event.
+model PurchaseReceiptLine {
+  id            String            @id @default(cuid())
+  workspaceId   String
+  workspace     Workspace         @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  eventId       String
+  event         Event             @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  orderLineId   String
+  orderLine     PurchaseOrderLine @relation(fields: [orderLineId], references: [id])
+  itemId        String
+  item          Item              @relation(fields: [itemId], references: [id])
+  lotId         String?
+  lot           InventoryLot?     @relation(fields: [lotId], references: [id], onDelete: SetNull)
+  quantity      Float
+  createdAt     DateTime          @default(now())
+
+  @@index([workspaceId, createdAt])
+  @@index([eventId])
+  @@index([orderLineId])
+  @@index([itemId])
 }
 
 model PersonGroup {

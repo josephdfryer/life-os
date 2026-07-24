@@ -202,6 +202,16 @@ export type PlaceNote = Prisma.PlaceNoteModel
  */
 export type Item = Prisma.ItemModel
 /**
+ * Model ItemDefinition
+ * 
+ */
+export type ItemDefinition = Prisma.ItemDefinitionModel
+/**
+ * Model InventoryLot
+ * 
+ */
+export type InventoryLot = Prisma.InventoryLotModel
+/**
  * Model Assembly
  * 
  */
@@ -231,6 +241,26 @@ export type AiAnalysisRun = Prisma.AiAnalysisRunModel
  * 
  */
 export type Group = Prisma.GroupModel
+/**
+ * Model SupplierProfile
+ * 
+ */
+export type SupplierProfile = Prisma.SupplierProfileModel
+/**
+ * Model PurchaseOrder
+ * 
+ */
+export type PurchaseOrder = Prisma.PurchaseOrderModel
+/**
+ * Model PurchaseOrderLine
+ * 
+ */
+export type PurchaseOrderLine = Prisma.PurchaseOrderLineModel
+/**
+ * Model PurchaseReceiptLine
+ * 
+ */
+export type PurchaseReceiptLine = Prisma.PurchaseReceiptLineModel
 /**
  * Model PersonGroup
  * 

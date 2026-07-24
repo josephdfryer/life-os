@@ -1,16 +1,11 @@
 import { notFound, redirect } from 'next/navigation'
-import { auth } from '@/auth'
 import { db } from '@/lib/db'
+import { requireStuffAccess } from '@/lib/access'
+import { getEffectiveLocation } from '@/lib/inventory'
+import MoveItem from './move-item'
+import StockControl from './stock-control'
 
 export const dynamic = 'force-dynamic'
-
-async function getWorkspaceId(email: string): Promise<string> {
-  const member = await db.workspaceMember.findFirst({
-    where: { user: { email }, status: 'active' },
-    select: { workspaceId: true },
-  })
-  return member?.workspaceId ?? 'default-workspace'
-}
 
 function formatDate(d: Date | null | undefined) {
   if (!d) return '—'
@@ -27,14 +22,15 @@ export default async function ItemDetailPage({
 }: {
   params: Promise<{ id: string }>
 }) {
-  const session = await auth()
-  if (!session?.user?.email) redirect('/login')
-  const workspaceId = await getWorkspaceId(session.user.email)
+  const access = await requireStuffAccess()
+  if (!access) redirect('/login')
+  const workspaceId = access.workspaceId
   const { id } = await params
 
-  const item = await db.item.findFirst({
-    where: { id, workspaceId },
-    include: {
+  const [item, places, definitions] = await Promise.all([
+    db.item.findFirst({
+      where: { id, workspaceId },
+      include: {
       place: { select: { name: true } },
       ownedBy: { select: { first: true, last: true } },
       assembledInto: {
@@ -50,17 +46,47 @@ export default async function ItemDetailPage({
           interaction: {
             select: {
               id: true,
+              type: true,
               timestamp: true,
               summary: true,
+              place: { select: { name: true } },
               person: { select: { first: true, last: true } },
             },
           },
         },
       },
-    },
-  })
+      definition: {
+        select: { id: true, name: true, sku: true, unit: true, trackingMode: true },
+      },
+      lot: {
+        select: { id: true, lotCode: true, expiresAt: true },
+      },
+      },
+    }),
+    db.place.findMany({
+      where: { workspaceId },
+      select: { id: true, name: true },
+      orderBy: { name: 'asc' },
+    }),
+    db.itemDefinition.findMany({
+      where: { workspaceId, active: true },
+      select: {
+        id: true,
+        name: true,
+        sku: true,
+        unit: true,
+        trackingMode: true,
+        lots: {
+          select: { id: true, lotCode: true, expiresAt: true },
+          orderBy: { lotCode: 'asc' },
+        },
+      },
+      orderBy: { name: 'asc' },
+    }),
+  ])
 
   if (!item) notFound()
+  const effectiveLocation = await getEffectiveLocation(db, workspaceId, item.id)
 
   // Sort in JS — safe for libSQL
   const interactions = item.itemInteractions
@@ -155,12 +181,51 @@ export default async function ItemDetailPage({
         {item.tags && (
           <div style={row}><span style={keyStyle}>Tags</span><span style={valStyle}>{item.tags}</span></div>
         )}
-        {item.place && (
-          <div style={row}><span style={keyStyle}>Location</span><span style={valStyle}>{item.place.name}</span></div>
+        {effectiveLocation.place && (
+          <div style={row}>
+            <span style={keyStyle}>Location</span>
+            <span style={valStyle}>
+              {effectiveLocation.place.name}
+              {effectiveLocation.inheritedThrough.length > 0 ? ` · inherited through ${effectiveLocation.inheritedThrough.map(parent => parent.name).join(' → ')}` : ''}
+            </span>
+          </div>
         )}
         {item.ownedBy && (
           <div style={row}><span style={keyStyle}>Owned by</span><span style={valStyle}>{item.ownedBy.first} {item.ownedBy.last ?? ''}</span></div>
         )}
+      </div>
+
+      <div style={{ marginBottom: '48px' }}>
+        <div style={sectionLabel}>Inventory</div>
+        <div style={{ display: 'flex', gap: '8px', marginBottom: '14px' }}>
+          <a href={`/inventory/labels?kind=item&id=${item.id}`} style={{ color: 'var(--cognac)', fontSize: '12px', textDecoration: 'none' }}>
+            Print QR label
+          </a>
+          <span style={{ color: 'var(--ink-4)' }}>·</span>
+          <a href="/inventory" style={{ color: 'var(--cognac)', fontSize: '12px', textDecoration: 'none' }}>
+            Open inventory
+          </a>
+        </div>
+        <MoveItem
+          itemId={item.id}
+          currentPlaceId={item.placeId}
+          places={places}
+          disabledReason={item.assembledInto.length > 0
+            ? `This item inherits its location from ${item.assembledInto[0].parentItem.name}. Move the containing item instead.`
+            : undefined}
+        />
+      </div>
+
+      <div style={{ marginBottom: '48px' }}>
+        <div style={sectionLabel}>Stock</div>
+        <StockControl
+          itemId={item.id}
+          quantity={item.quantity}
+          definitionId={item.definitionId}
+          lotId={item.lotId}
+          serialNumber={item.serialNumber}
+          definitions={definitions}
+        />
       </div>
 
       {/* Acquisition */}
@@ -265,9 +330,13 @@ export default async function ItemDetailPage({
               >
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '4px' }}>
                   <span style={{ fontSize: '11px', color: 'var(--ink-3)' }}>
-                    {interaction.person
+                    {interaction.type === 'item_moved'
+                      ? `Movement${interaction.place ? ` · ${interaction.place.name}` : ''}`
+                      : interaction.type === 'inventory_verified'
+                        ? `Verification${interaction.place ? ` · ${interaction.place.name}` : ''}`
+                        : interaction.person
                       ? `${interaction.person.first} ${interaction.person.last ?? ''}`.trim()
-                      : '—'}
+                      : interaction.type}
                   </span>
                   <span style={{ fontFamily: 'var(--font-body)', fontSize: '11px', color: 'var(--ink-4)' }}>
                     {formatDate(interaction.timestamp)}

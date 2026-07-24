@@ -1,23 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/auth'
 import { db } from '@/lib/db'
 import { centsToDollars, dollarsToCents } from '@life-os/db'
-
-async function getWorkspaceId(email: string): Promise<string> {
-  const member = await db.workspaceMember.findFirst({
-    where: { user: { email }, status: 'active' },
-    select: { workspaceId: true },
-  })
-  return member?.workspaceId ?? 'default-workspace'
-}
+import { requireStuffAccess } from '@/lib/access'
 
 export async function PATCH(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const session = await auth()
-  if (!session?.user?.email) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  const workspaceId = await getWorkspaceId(session.user.email)
+  const access = await requireStuffAccess()
+  if (!access) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  const workspaceId = access.workspaceId
   const { id } = await params
 
   const existing = await db.item.findFirst({ where: { id, workspaceId } })
@@ -40,19 +32,15 @@ export async function PATCH(
     if (key in body) updates[key] = body[key]
   }
 
-  // placeId/ownedById are foreign keys into other tenants' data if left
-  // unchecked — verify the referenced Place/Person actually belongs to this
-  // workspace before allowing the link.
+  // Location changes are commands, not generic field edits: they must update
+  // Item.placeId and append an item_moved Interaction atomically.
   if ('placeId' in body) {
-    const placeId = body.placeId
-    if (placeId == null || placeId === '') {
-      updates.placeId = null
-    } else {
-      const place = await db.place.findFirst({ where: { id: placeId as string, workspaceId }, select: { id: true } })
-      if (!place) return NextResponse.json({ error: 'Place not found' }, { status: 400 })
-      updates.placeId = place.id
-    }
+    return NextResponse.json(
+      { error: 'Use POST /api/inventory/move to change an item location' },
+      { status: 409 },
+    )
   }
+  // ownedById is a foreign key into other tenants' data if left unchecked.
   if ('ownedById' in body) {
     const ownedById = body.ownedById
     if (ownedById == null || ownedById === '') {
@@ -65,7 +53,12 @@ export async function PATCH(
   }
 
   if ('lifetimeWarranty' in body) updates.lifetimeWarranty = Boolean(body.lifetimeWarranty)
-  if ('quantity' in body) updates.quantity = Number(body.quantity)
+  if ('quantity' in body) {
+    return NextResponse.json(
+      { error: 'Use the inventory stock adjustment command to change quantity' },
+      { status: 409 },
+    )
+  }
   if ('purchasePrice' in body) {
     updates.purchasePrice = body.purchasePrice != null && body.purchasePrice !== ''
       ? dollarsToCents(body.purchasePrice)
@@ -88,9 +81,9 @@ export async function DELETE(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const session = await auth()
-  if (!session?.user?.email) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  const workspaceId = await getWorkspaceId(session.user.email)
+  const access = await requireStuffAccess()
+  if (!access) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  const workspaceId = access.workspaceId
   const { id } = await params
 
   const existing = await db.item.findFirst({ where: { id, workspaceId } })

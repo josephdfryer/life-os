@@ -20,46 +20,80 @@ export type ItemInteractionModel = runtime.Types.Result.DefaultSelection<Prisma.
 
 export type AggregateItemInteraction = {
   _count: ItemInteractionCountAggregateOutputType | null
+  _avg: ItemInteractionAvgAggregateOutputType | null
+  _sum: ItemInteractionSumAggregateOutputType | null
   _min: ItemInteractionMinAggregateOutputType | null
   _max: ItemInteractionMaxAggregateOutputType | null
+}
+
+export type ItemInteractionAvgAggregateOutputType = {
+  quantityDelta: number | null
+  quantityAfter: number | null
+}
+
+export type ItemInteractionSumAggregateOutputType = {
+  quantityDelta: number | null
+  quantityAfter: number | null
 }
 
 export type ItemInteractionMinAggregateOutputType = {
   itemId: string | null
   interactionId: string | null
   role: string | null
+  quantityDelta: number | null
+  quantityAfter: number | null
 }
 
 export type ItemInteractionMaxAggregateOutputType = {
   itemId: string | null
   interactionId: string | null
   role: string | null
+  quantityDelta: number | null
+  quantityAfter: number | null
 }
 
 export type ItemInteractionCountAggregateOutputType = {
   itemId: number
   interactionId: number
   role: number
+  quantityDelta: number
+  quantityAfter: number
   _all: number
 }
 
+
+export type ItemInteractionAvgAggregateInputType = {
+  quantityDelta?: true
+  quantityAfter?: true
+}
+
+export type ItemInteractionSumAggregateInputType = {
+  quantityDelta?: true
+  quantityAfter?: true
+}
 
 export type ItemInteractionMinAggregateInputType = {
   itemId?: true
   interactionId?: true
   role?: true
+  quantityDelta?: true
+  quantityAfter?: true
 }
 
 export type ItemInteractionMaxAggregateInputType = {
   itemId?: true
   interactionId?: true
   role?: true
+  quantityDelta?: true
+  quantityAfter?: true
 }
 
 export type ItemInteractionCountAggregateInputType = {
   itemId?: true
   interactionId?: true
   role?: true
+  quantityDelta?: true
+  quantityAfter?: true
   _all?: true
 }
 
@@ -101,6 +135,18 @@ export type ItemInteractionAggregateArgs<ExtArgs extends runtime.Types.Extension
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: ItemInteractionAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: ItemInteractionSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: ItemInteractionMinAggregateInputType
@@ -131,6 +177,8 @@ export type ItemInteractionGroupByArgs<ExtArgs extends runtime.Types.Extensions.
   take?: number
   skip?: number
   _count?: ItemInteractionCountAggregateInputType | true
+  _avg?: ItemInteractionAvgAggregateInputType
+  _sum?: ItemInteractionSumAggregateInputType
   _min?: ItemInteractionMinAggregateInputType
   _max?: ItemInteractionMaxAggregateInputType
 }
@@ -139,7 +187,11 @@ export type ItemInteractionGroupByOutputType = {
   itemId: string
   interactionId: string
   role: string | null
+  quantityDelta: number | null
+  quantityAfter: number | null
   _count: ItemInteractionCountAggregateOutputType | null
+  _avg: ItemInteractionAvgAggregateOutputType | null
+  _sum: ItemInteractionSumAggregateOutputType | null
   _min: ItemInteractionMinAggregateOutputType | null
   _max: ItemInteractionMaxAggregateOutputType | null
 }
@@ -166,6 +218,8 @@ export type ItemInteractionWhereInput = {
   itemId?: Prisma.StringFilter<"ItemInteraction"> | string
   interactionId?: Prisma.StringFilter<"ItemInteraction"> | string
   role?: Prisma.StringNullableFilter<"ItemInteraction"> | string | null
+  quantityDelta?: Prisma.FloatNullableFilter<"ItemInteraction"> | number | null
+  quantityAfter?: Prisma.FloatNullableFilter<"ItemInteraction"> | number | null
   item?: Prisma.XOR<Prisma.ItemScalarRelationFilter, Prisma.ItemWhereInput>
   interaction?: Prisma.XOR<Prisma.InteractionScalarRelationFilter, Prisma.InteractionWhereInput>
 }
@@ -174,6 +228,8 @@ export type ItemInteractionOrderByWithRelationInput = {
   itemId?: Prisma.SortOrder
   interactionId?: Prisma.SortOrder
   role?: Prisma.SortOrderInput | Prisma.SortOrder
+  quantityDelta?: Prisma.SortOrderInput | Prisma.SortOrder
+  quantityAfter?: Prisma.SortOrderInput | Prisma.SortOrder
   item?: Prisma.ItemOrderByWithRelationInput
   interaction?: Prisma.InteractionOrderByWithRelationInput
 }
@@ -186,6 +242,8 @@ export type ItemInteractionWhereUniqueInput = Prisma.AtLeast<{
   itemId?: Prisma.StringFilter<"ItemInteraction"> | string
   interactionId?: Prisma.StringFilter<"ItemInteraction"> | string
   role?: Prisma.StringNullableFilter<"ItemInteraction"> | string | null
+  quantityDelta?: Prisma.FloatNullableFilter<"ItemInteraction"> | number | null
+  quantityAfter?: Prisma.FloatNullableFilter<"ItemInteraction"> | number | null
   item?: Prisma.XOR<Prisma.ItemScalarRelationFilter, Prisma.ItemWhereInput>
   interaction?: Prisma.XOR<Prisma.InteractionScalarRelationFilter, Prisma.InteractionWhereInput>
 }, "itemId_interactionId">
@@ -194,9 +252,13 @@ export type ItemInteractionOrderByWithAggregationInput = {
   itemId?: Prisma.SortOrder
   interactionId?: Prisma.SortOrder
   role?: Prisma.SortOrderInput | Prisma.SortOrder
+  quantityDelta?: Prisma.SortOrderInput | Prisma.SortOrder
+  quantityAfter?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.ItemInteractionCountOrderByAggregateInput
+  _avg?: Prisma.ItemInteractionAvgOrderByAggregateInput
   _max?: Prisma.ItemInteractionMaxOrderByAggregateInput
   _min?: Prisma.ItemInteractionMinOrderByAggregateInput
+  _sum?: Prisma.ItemInteractionSumOrderByAggregateInput
 }
 
 export type ItemInteractionScalarWhereWithAggregatesInput = {
@@ -206,10 +268,14 @@ export type ItemInteractionScalarWhereWithAggregatesInput = {
   itemId?: Prisma.StringWithAggregatesFilter<"ItemInteraction"> | string
   interactionId?: Prisma.StringWithAggregatesFilter<"ItemInteraction"> | string
   role?: Prisma.StringNullableWithAggregatesFilter<"ItemInteraction"> | string | null
+  quantityDelta?: Prisma.FloatNullableWithAggregatesFilter<"ItemInteraction"> | number | null
+  quantityAfter?: Prisma.FloatNullableWithAggregatesFilter<"ItemInteraction"> | number | null
 }
 
 export type ItemInteractionCreateInput = {
   role?: string | null
+  quantityDelta?: number | null
+  quantityAfter?: number | null
   item: Prisma.ItemCreateNestedOneWithoutItemInteractionsInput
   interaction: Prisma.InteractionCreateNestedOneWithoutItemInteractionsInput
 }
@@ -218,10 +284,14 @@ export type ItemInteractionUncheckedCreateInput = {
   itemId: string
   interactionId: string
   role?: string | null
+  quantityDelta?: number | null
+  quantityAfter?: number | null
 }
 
 export type ItemInteractionUpdateInput = {
   role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  quantityDelta?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  quantityAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   item?: Prisma.ItemUpdateOneRequiredWithoutItemInteractionsNestedInput
   interaction?: Prisma.InteractionUpdateOneRequiredWithoutItemInteractionsNestedInput
 }
@@ -230,22 +300,30 @@ export type ItemInteractionUncheckedUpdateInput = {
   itemId?: Prisma.StringFieldUpdateOperationsInput | string
   interactionId?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  quantityDelta?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  quantityAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
 }
 
 export type ItemInteractionCreateManyInput = {
   itemId: string
   interactionId: string
   role?: string | null
+  quantityDelta?: number | null
+  quantityAfter?: number | null
 }
 
 export type ItemInteractionUpdateManyMutationInput = {
   role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  quantityDelta?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  quantityAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
 }
 
 export type ItemInteractionUncheckedUpdateManyInput = {
   itemId?: Prisma.StringFieldUpdateOperationsInput | string
   interactionId?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  quantityDelta?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  quantityAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
 }
 
 export type ItemInteractionListRelationFilter = {
@@ -267,18 +345,34 @@ export type ItemInteractionCountOrderByAggregateInput = {
   itemId?: Prisma.SortOrder
   interactionId?: Prisma.SortOrder
   role?: Prisma.SortOrder
+  quantityDelta?: Prisma.SortOrder
+  quantityAfter?: Prisma.SortOrder
+}
+
+export type ItemInteractionAvgOrderByAggregateInput = {
+  quantityDelta?: Prisma.SortOrder
+  quantityAfter?: Prisma.SortOrder
 }
 
 export type ItemInteractionMaxOrderByAggregateInput = {
   itemId?: Prisma.SortOrder
   interactionId?: Prisma.SortOrder
   role?: Prisma.SortOrder
+  quantityDelta?: Prisma.SortOrder
+  quantityAfter?: Prisma.SortOrder
 }
 
 export type ItemInteractionMinOrderByAggregateInput = {
   itemId?: Prisma.SortOrder
   interactionId?: Prisma.SortOrder
   role?: Prisma.SortOrder
+  quantityDelta?: Prisma.SortOrder
+  quantityAfter?: Prisma.SortOrder
+}
+
+export type ItemInteractionSumOrderByAggregateInput = {
+  quantityDelta?: Prisma.SortOrder
+  quantityAfter?: Prisma.SortOrder
 }
 
 export type ItemInteractionCreateNestedManyWithoutInteractionInput = {
@@ -367,12 +461,16 @@ export type ItemInteractionUncheckedUpdateManyWithoutItemNestedInput = {
 
 export type ItemInteractionCreateWithoutInteractionInput = {
   role?: string | null
+  quantityDelta?: number | null
+  quantityAfter?: number | null
   item: Prisma.ItemCreateNestedOneWithoutItemInteractionsInput
 }
 
 export type ItemInteractionUncheckedCreateWithoutInteractionInput = {
   itemId: string
   role?: string | null
+  quantityDelta?: number | null
+  quantityAfter?: number | null
 }
 
 export type ItemInteractionCreateOrConnectWithoutInteractionInput = {
@@ -407,16 +505,22 @@ export type ItemInteractionScalarWhereInput = {
   itemId?: Prisma.StringFilter<"ItemInteraction"> | string
   interactionId?: Prisma.StringFilter<"ItemInteraction"> | string
   role?: Prisma.StringNullableFilter<"ItemInteraction"> | string | null
+  quantityDelta?: Prisma.FloatNullableFilter<"ItemInteraction"> | number | null
+  quantityAfter?: Prisma.FloatNullableFilter<"ItemInteraction"> | number | null
 }
 
 export type ItemInteractionCreateWithoutItemInput = {
   role?: string | null
+  quantityDelta?: number | null
+  quantityAfter?: number | null
   interaction: Prisma.InteractionCreateNestedOneWithoutItemInteractionsInput
 }
 
 export type ItemInteractionUncheckedCreateWithoutItemInput = {
   interactionId: string
   role?: string | null
+  quantityDelta?: number | null
+  quantityAfter?: number | null
 }
 
 export type ItemInteractionCreateOrConnectWithoutItemInput = {
@@ -447,41 +551,57 @@ export type ItemInteractionUpdateManyWithWhereWithoutItemInput = {
 export type ItemInteractionCreateManyInteractionInput = {
   itemId: string
   role?: string | null
+  quantityDelta?: number | null
+  quantityAfter?: number | null
 }
 
 export type ItemInteractionUpdateWithoutInteractionInput = {
   role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  quantityDelta?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  quantityAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   item?: Prisma.ItemUpdateOneRequiredWithoutItemInteractionsNestedInput
 }
 
 export type ItemInteractionUncheckedUpdateWithoutInteractionInput = {
   itemId?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  quantityDelta?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  quantityAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
 }
 
 export type ItemInteractionUncheckedUpdateManyWithoutInteractionInput = {
   itemId?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  quantityDelta?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  quantityAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
 }
 
 export type ItemInteractionCreateManyItemInput = {
   interactionId: string
   role?: string | null
+  quantityDelta?: number | null
+  quantityAfter?: number | null
 }
 
 export type ItemInteractionUpdateWithoutItemInput = {
   role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  quantityDelta?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  quantityAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   interaction?: Prisma.InteractionUpdateOneRequiredWithoutItemInteractionsNestedInput
 }
 
 export type ItemInteractionUncheckedUpdateWithoutItemInput = {
   interactionId?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  quantityDelta?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  quantityAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
 }
 
 export type ItemInteractionUncheckedUpdateManyWithoutItemInput = {
   interactionId?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  quantityDelta?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  quantityAfter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
 }
 
 
@@ -490,6 +610,8 @@ export type ItemInteractionSelect<ExtArgs extends runtime.Types.Extensions.Inter
   itemId?: boolean
   interactionId?: boolean
   role?: boolean
+  quantityDelta?: boolean
+  quantityAfter?: boolean
   item?: boolean | Prisma.ItemDefaultArgs<ExtArgs>
   interaction?: boolean | Prisma.InteractionDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["itemInteraction"]>
@@ -498,6 +620,8 @@ export type ItemInteractionSelectCreateManyAndReturn<ExtArgs extends runtime.Typ
   itemId?: boolean
   interactionId?: boolean
   role?: boolean
+  quantityDelta?: boolean
+  quantityAfter?: boolean
   item?: boolean | Prisma.ItemDefaultArgs<ExtArgs>
   interaction?: boolean | Prisma.InteractionDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["itemInteraction"]>
@@ -506,6 +630,8 @@ export type ItemInteractionSelectUpdateManyAndReturn<ExtArgs extends runtime.Typ
   itemId?: boolean
   interactionId?: boolean
   role?: boolean
+  quantityDelta?: boolean
+  quantityAfter?: boolean
   item?: boolean | Prisma.ItemDefaultArgs<ExtArgs>
   interaction?: boolean | Prisma.InteractionDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["itemInteraction"]>
@@ -514,9 +640,11 @@ export type ItemInteractionSelectScalar = {
   itemId?: boolean
   interactionId?: boolean
   role?: boolean
+  quantityDelta?: boolean
+  quantityAfter?: boolean
 }
 
-export type ItemInteractionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"itemId" | "interactionId" | "role", ExtArgs["result"]["itemInteraction"]>
+export type ItemInteractionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"itemId" | "interactionId" | "role" | "quantityDelta" | "quantityAfter", ExtArgs["result"]["itemInteraction"]>
 export type ItemInteractionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   item?: boolean | Prisma.ItemDefaultArgs<ExtArgs>
   interaction?: boolean | Prisma.InteractionDefaultArgs<ExtArgs>
@@ -540,6 +668,8 @@ export type $ItemInteractionPayload<ExtArgs extends runtime.Types.Extensions.Int
     itemId: string
     interactionId: string
     role: string | null
+    quantityDelta: number | null
+    quantityAfter: number | null
   }, ExtArgs["result"]["itemInteraction"]>
   composites: {}
 }
@@ -968,6 +1098,8 @@ export interface ItemInteractionFieldRefs {
   readonly itemId: Prisma.FieldRef<"ItemInteraction", 'String'>
   readonly interactionId: Prisma.FieldRef<"ItemInteraction", 'String'>
   readonly role: Prisma.FieldRef<"ItemInteraction", 'String'>
+  readonly quantityDelta: Prisma.FieldRef<"ItemInteraction", 'Float'>
+  readonly quantityAfter: Prisma.FieldRef<"ItemInteraction", 'Float'>
 }
     
 

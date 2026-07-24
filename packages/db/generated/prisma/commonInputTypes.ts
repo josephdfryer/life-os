@@ -402,6 +402,23 @@ export type EnumStagedVisitStatusWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedEnumStagedVisitStatusFilter<$PrismaModel>
 }
 
+export type EnumInventoryTrackingModeFilter<$PrismaModel = never> = {
+  equals?: $Enums.InventoryTrackingMode | Prisma.EnumInventoryTrackingModeFieldRefInput<$PrismaModel>
+  in?: $Enums.InventoryTrackingMode[]
+  notIn?: $Enums.InventoryTrackingMode[]
+  not?: Prisma.NestedEnumInventoryTrackingModeFilter<$PrismaModel> | $Enums.InventoryTrackingMode
+}
+
+export type EnumInventoryTrackingModeWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.InventoryTrackingMode | Prisma.EnumInventoryTrackingModeFieldRefInput<$PrismaModel>
+  in?: $Enums.InventoryTrackingMode[]
+  notIn?: $Enums.InventoryTrackingMode[]
+  not?: Prisma.NestedEnumInventoryTrackingModeWithAggregatesFilter<$PrismaModel> | $Enums.InventoryTrackingMode
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumInventoryTrackingModeFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumInventoryTrackingModeFilter<$PrismaModel>
+}
+
 export type EnumGroupTypeFilter<$PrismaModel = never> = {
   equals?: $Enums.GroupType | Prisma.EnumGroupTypeFieldRefInput<$PrismaModel>
   in?: $Enums.GroupType[]
@@ -773,6 +790,23 @@ export type NestedEnumStagedVisitStatusWithAggregatesFilter<$PrismaModel = never
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumStagedVisitStatusFilter<$PrismaModel>
   _max?: Prisma.NestedEnumStagedVisitStatusFilter<$PrismaModel>
+}
+
+export type NestedEnumInventoryTrackingModeFilter<$PrismaModel = never> = {
+  equals?: $Enums.InventoryTrackingMode | Prisma.EnumInventoryTrackingModeFieldRefInput<$PrismaModel>
+  in?: $Enums.InventoryTrackingMode[]
+  notIn?: $Enums.InventoryTrackingMode[]
+  not?: Prisma.NestedEnumInventoryTrackingModeFilter<$PrismaModel> | $Enums.InventoryTrackingMode
+}
+
+export type NestedEnumInventoryTrackingModeWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.InventoryTrackingMode | Prisma.EnumInventoryTrackingModeFieldRefInput<$PrismaModel>
+  in?: $Enums.InventoryTrackingMode[]
+  notIn?: $Enums.InventoryTrackingMode[]
+  not?: Prisma.NestedEnumInventoryTrackingModeWithAggregatesFilter<$PrismaModel> | $Enums.InventoryTrackingMode
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumInventoryTrackingModeFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumInventoryTrackingModeFilter<$PrismaModel>
 }
 
 export type NestedEnumGroupTypeFilter<$PrismaModel = never> = {

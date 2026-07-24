@@ -5,6 +5,8 @@ import { extname, join } from "node:path"
 
 const MAX_IMAGE_BYTES = 15 * 1024 * 1024
 const ALLOWED_IMAGE_TYPES = new Set(["image/jpeg", "image/png", "image/webp", "image/heic", "image/heif"])
+const MAX_RECEIPT_BYTES = 20 * 1024 * 1024
+const ALLOWED_RECEIPT_TYPES = new Set([...ALLOWED_IMAGE_TYPES, "application/pdf"])
 
 export function mediaRoot() {
   return process.env.LIFE_OS_MEDIA_DIR
@@ -26,6 +28,24 @@ export async function storeWardrobeImage(file: File, workspaceId: string) {
     if (error.code !== "EEXIST") throw error
   })
 
+  return { checksum, storageKey, filePath, sizeBytes: bytes.byteLength, mimeType: file.type }
+}
+
+export async function storeProcurementDocument(file: File, workspaceId: string) {
+  if (!ALLOWED_RECEIPT_TYPES.has(file.type)) throw new Error("Use a PDF, JPEG, PNG, WebP, HEIC, or HEIF receipt.")
+  if (file.size <= 0 || file.size > MAX_RECEIPT_BYTES) throw new Error("Receipt must be between 1 byte and 20 MB.")
+
+  const bytes = Buffer.from(await file.arrayBuffer())
+  const checksum = createHash("sha256").update(bytes).digest("hex")
+  const extension = file.type === "application/pdf" ? ".pdf" : safeExtension(file.name, file.type)
+  const storageKey = join("inventory", "receipts", workspaceId, checksum.slice(0, 2), `${checksum}${extension}`)
+  const directory = join(mediaRoot(), "inventory", "receipts", workspaceId, checksum.slice(0, 2))
+  const filePath = join(mediaRoot(), storageKey)
+
+  await mkdir(directory, { recursive: true })
+  await writeFile(filePath, bytes, { flag: "wx" }).catch((error: NodeJS.ErrnoException) => {
+    if (error.code !== "EEXIST") throw error
+  })
   return { checksum, storageKey, filePath, sizeBytes: bytes.byteLength, mimeType: file.type }
 }
 

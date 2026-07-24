@@ -83,12 +83,18 @@ export const ModelName = {
   ImportStagedVisit: 'ImportStagedVisit',
   PlaceNote: 'PlaceNote',
   Item: 'Item',
+  ItemDefinition: 'ItemDefinition',
+  InventoryLot: 'InventoryLot',
   Assembly: 'Assembly',
   ItemInteraction: 'ItemInteraction',
   ImportedFile: 'ImportedFile',
   AiProviderCredential: 'AiProviderCredential',
   AiAnalysisRun: 'AiAnalysisRun',
   Group: 'Group',
+  SupplierProfile: 'SupplierProfile',
+  PurchaseOrder: 'PurchaseOrder',
+  PurchaseOrderLine: 'PurchaseOrderLine',
+  PurchaseReceiptLine: 'PurchaseReceiptLine',
   PersonGroup: 'PersonGroup',
   GroupGroup: 'GroupGroup',
   PlaceGroup: 'PlaceGroup',
@@ -664,6 +670,8 @@ export const ItemScalarFieldEnum = {
   serialNumber: 'serialNumber',
   assetId: 'assetId',
   quantity: 'quantity',
+  definitionId: 'definitionId',
+  lotId: 'lotId',
   purchaseDate: 'purchaseDate',
   purchasePrice: 'purchasePrice',
   purchaseFrom: 'purchaseFrom',
@@ -681,6 +689,42 @@ export const ItemScalarFieldEnum = {
 } as const
 
 export type ItemScalarFieldEnum = (typeof ItemScalarFieldEnum)[keyof typeof ItemScalarFieldEnum]
+
+
+export const ItemDefinitionScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  name: 'name',
+  sku: 'sku',
+  category: 'category',
+  description: 'description',
+  unit: 'unit',
+  trackingMode: 'trackingMode',
+  reorderPoint: 'reorderPoint',
+  targetStock: 'targetStock',
+  defaultShelfLifeDays: 'defaultShelfLifeDays',
+  active: 'active'
+} as const
+
+export type ItemDefinitionScalarFieldEnum = (typeof ItemDefinitionScalarFieldEnum)[keyof typeof ItemDefinitionScalarFieldEnum]
+
+
+export const InventoryLotScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  definitionId: 'definitionId',
+  lotCode: 'lotCode',
+  manufacturedAt: 'manufacturedAt',
+  receivedAt: 'receivedAt',
+  expiresAt: 'expiresAt',
+  notes: 'notes',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type InventoryLotScalarFieldEnum = (typeof InventoryLotScalarFieldEnum)[keyof typeof InventoryLotScalarFieldEnum]
 
 
 export const AssemblyScalarFieldEnum = {
@@ -701,7 +745,9 @@ export type AssemblyScalarFieldEnum = (typeof AssemblyScalarFieldEnum)[keyof typ
 export const ItemInteractionScalarFieldEnum = {
   itemId: 'itemId',
   interactionId: 'interactionId',
-  role: 'role'
+  role: 'role',
+  quantityDelta: 'quantityDelta',
+  quantityAfter: 'quantityAfter'
 } as const
 
 export type ItemInteractionScalarFieldEnum = (typeof ItemInteractionScalarFieldEnum)[keyof typeof ItemInteractionScalarFieldEnum]
@@ -775,6 +821,69 @@ export const GroupScalarFieldEnum = {
 } as const
 
 export type GroupScalarFieldEnum = (typeof GroupScalarFieldEnum)[keyof typeof GroupScalarFieldEnum]
+
+
+export const SupplierProfileScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  groupId: 'groupId',
+  supplierCode: 'supplierCode',
+  email: 'email',
+  phone: 'phone',
+  website: 'website',
+  paymentTerms: 'paymentTerms',
+  active: 'active',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SupplierProfileScalarFieldEnum = (typeof SupplierProfileScalarFieldEnum)[keyof typeof SupplierProfileScalarFieldEnum]
+
+
+export const PurchaseOrderScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  planId: 'planId',
+  supplierId: 'supplierId',
+  orderNumber: 'orderNumber',
+  currency: 'currency',
+  orderedAt: 'orderedAt',
+  expectedAt: 'expectedAt',
+  notes: 'notes',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PurchaseOrderScalarFieldEnum = (typeof PurchaseOrderScalarFieldEnum)[keyof typeof PurchaseOrderScalarFieldEnum]
+
+
+export const PurchaseOrderLineScalarFieldEnum = {
+  id: 'id',
+  purchaseOrderId: 'purchaseOrderId',
+  definitionId: 'definitionId',
+  descriptionSnapshot: 'descriptionSnapshot',
+  skuSnapshot: 'skuSnapshot',
+  orderedQuantity: 'orderedQuantity',
+  unitCost: 'unitCost',
+  destinationPlaceId: 'destinationPlaceId',
+  createdAt: 'createdAt'
+} as const
+
+export type PurchaseOrderLineScalarFieldEnum = (typeof PurchaseOrderLineScalarFieldEnum)[keyof typeof PurchaseOrderLineScalarFieldEnum]
+
+
+export const PurchaseReceiptLineScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  eventId: 'eventId',
+  orderLineId: 'orderLineId',
+  itemId: 'itemId',
+  lotId: 'lotId',
+  quantity: 'quantity',
+  createdAt: 'createdAt'
+} as const
+
+export type PurchaseReceiptLineScalarFieldEnum = (typeof PurchaseReceiptLineScalarFieldEnum)[keyof typeof PurchaseReceiptLineScalarFieldEnum]
 
 
 export const PersonGroupScalarFieldEnum = {
