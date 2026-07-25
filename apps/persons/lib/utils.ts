@@ -35,15 +35,44 @@ export function parseTags(raw: string | string[] | null | undefined): string[] {
     )
   }
   if (raw.trim().startsWith("[")) {
-    return decodeStoredJson(raw, storedStringList, "stored string list", [])
-      .flatMap(item => item.split(" ::: ").map(s => s.trim()).filter(Boolean))
+    try {
+      return decodeStoredJson(raw, storedStringList, "stored string list", [])
+        .flatMap(item => item.split(" ::: ").map(s => s.trim()).filter(Boolean))
+    } catch {
+      // Legacy/corrupt value (e.g. an array containing objects). A display
+      // helper must never 500 a whole page over one malformed field — salvage
+      // any string elements and drop the rest.
+      try {
+        const parsed: unknown = JSON.parse(raw)
+        if (Array.isArray(parsed)) {
+          return parsed
+            .filter((item): item is string => typeof item === "string")
+            .flatMap(item => item.split(" ::: ").map(s => s.trim()).filter(Boolean))
+        }
+      } catch {
+        // fall through to legacy string handling
+      }
+      return []
+    }
   }
   // Raw legacy string (not JSON at all).
   return raw.split(" ::: ").map(s => s.trim()).filter(Boolean)
 }
 
 export function parseJsonArray(raw: string | null | undefined): string[] {
-  return decodeStoredJson(raw, storedStringList, "stored string list", [])
+  try {
+    return decodeStoredJson(raw, storedStringList, "stored string list", [])
+  } catch {
+    // Display helper — salvage string elements from a malformed value rather
+    // than throwing and 500-ing the page.
+    try {
+      const parsed: unknown = JSON.parse(raw ?? "")
+      if (Array.isArray(parsed)) return parsed.filter((item): item is string => typeof item === "string")
+    } catch {
+      // ignore
+    }
+    return []
+  }
 }
 
 export function parseStoredRecord(raw: string | null | undefined, field = "stored metadata") {
