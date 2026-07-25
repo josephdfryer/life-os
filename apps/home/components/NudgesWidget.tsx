@@ -52,7 +52,7 @@ export default async function NudgesWidget({ workspaceId, personsUrl }: Props) {
                 </div>
               </div>
               <a
-                href={`${personsUrl}/people/${signal.personId}`}
+                href={`${personsUrl}/persons/${signal.personId}`}
                 style={{
                   flexShrink: 0,
                   fontSize: '12px',

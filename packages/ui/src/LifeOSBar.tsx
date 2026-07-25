@@ -25,7 +25,7 @@ export interface LifeOSAppEntry {
 // LIFE_OS_APP_URLS in packages/auth.
 export const LIFE_OS_APPS: LifeOSAppEntry[] = [
   { key: 'home',      label: 'Home',      url: 'https://home.lacollecteur.com',      dot: '#8a7a66', blurb: 'Your daily overview' },
-  { key: 'persons',   label: 'Persons',   url: 'https://people.lacollecteur.com',    dot: '#b5835a', blurb: 'People & relationships' },
+  { key: 'persons',   label: 'Persons',   url: 'https://persons.lacollecteur.com',   dot: '#b5835a', blurb: 'People & relationships' },
   { key: 'events',    label: 'Events',    url: 'https://events.lacollecteur.com',    dot: '#6a8caf', blurb: 'Calendar & plans' },
   { key: 'places',    label: 'Places',    url: 'https://places.lacollecteur.com',    dot: '#6f9a7b', blurb: 'Your map of memory' },
   { key: 'stuff',     label: 'Stuff',     url: 'https://stuff.lacollecteur.com',     dot: '#a98a5c', blurb: 'Everything you own' },

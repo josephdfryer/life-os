@@ -7,7 +7,7 @@ export const LIFE_OS_COOKIE_DOMAIN = `.${LIFE_OS_ROOT_DOMAIN}`
 
 export const LIFE_OS_APP_URLS = {
   home: `https://home.${LIFE_OS_ROOT_DOMAIN}`,
-  persons: `https://people.${LIFE_OS_ROOT_DOMAIN}`,
+  persons: `https://persons.${LIFE_OS_ROOT_DOMAIN}`,
   places: `https://places.${LIFE_OS_ROOT_DOMAIN}`,
   stuff: `https://stuff.${LIFE_OS_ROOT_DOMAIN}`,
   events: `https://events.${LIFE_OS_ROOT_DOMAIN}`,

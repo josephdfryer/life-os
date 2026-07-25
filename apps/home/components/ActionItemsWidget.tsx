@@ -89,7 +89,7 @@ export default async function ActionItemsWidget({ workspaceId, personsUrl }: Pro
               <div style={{ fontSize: '12px', color: 'var(--ink-3)', marginTop: '4px' }}>
                 {row.personName ? (
                   <a
-                    href={`${personsUrl}/people/${row.personId}`}
+                    href={`${personsUrl}/persons/${row.personId}`}
                     style={{ color: 'var(--camel)', textDecoration: 'none' }}
                   >
                     {row.personName}
