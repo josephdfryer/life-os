@@ -675,6 +675,7 @@ async function processCalendarBatch(input: {
   let cancelled = 0
   let fetched = 0
 
+  const toUpsert: GoogleCalendarEvent[] = []
   for (const item of input.items) {
     if (!item.id) continue
     fetched += 1
@@ -682,14 +683,25 @@ async function processCalendarBatch(input: {
       cancelled += await markCancelled(input.connectionId, input.workspaceId, input.calendarId, item.id)
       continue
     }
-    const result = await upsertCalendarEvent({
+    toUpsert.push(item)
+  }
+
+  // Each upsert is several sequential round-trips to a remote (Turso) DB, so
+  // processing a batch one event at a time is latency-bound and can blow past the
+  // function timeout on a busy calendar. Events in a batch are independent
+  // (distinct externalEventId), so run the batch concurrently — the per-event
+  // round-trips overlap instead of summing.
+  const results = await Promise.all(
+    toUpsert.map(item => upsertCalendarEvent({
       actor: input.actor,
       workspaceId: input.workspaceId,
       connectionId: input.connectionId,
       calendarId: input.calendarId,
       item,
       peopleByEmail: input.peopleByEmail,
-    })
+    })),
+  )
+  for (const result of results) {
     if (result.createdEvent) createdEvents += 1
     else updatedEvents += 1
     createdInteractions += result.createdInteractions
