@@ -1,3 +1,17 @@
+// Event types that are historical/log records, not scheduled calendar events.
+// The Event table is a shared graph across Life OS: Places/Persons import Google
+// Maps location history as "visit"/"visited_place", and communications land as
+// "message"/"message_thread"/"email". None of these belong on a scheduled
+// calendar view — they're timeline material. Keep this list as the single source
+// of truth for "what the calendar hides."
+export const NON_CALENDAR_EVENT_TYPES = [
+  "message",
+  "message_thread",
+  "email",
+  "visit",
+  "visited_place",
+] as const
+
 export type EventListView = "today" | "upcoming" | "past" | "all"
 
 export function parseEventListView(value: string | undefined): EventListView {

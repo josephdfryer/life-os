@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { auth } from "@/auth"
 import { db } from "@/lib/db"
 import { getWorkspaceId } from "@/lib/workspace"
+import { NON_CALENDAR_EVENT_TYPES } from "@/lib/events"
 
 export async function GET(req: NextRequest) {
   const session = await auth()
@@ -25,7 +26,7 @@ export async function GET(req: NextRequest) {
     where: {
       workspaceId,
       start: { gte: start, lte: end },
-      type: { notIn: ["message", "message_thread", "email"] },
+      type: { notIn: [...NON_CALENDAR_EVENT_TYPES] },
     },
     include: {
       place: { select: { name: true } },
