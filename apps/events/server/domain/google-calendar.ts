@@ -19,8 +19,13 @@ const MAX_BACKFILL_DAYS = 3650
 // window so it always finishes fast and can establish a syncToken — after which
 // incremental sync (change-only) keeps everything current regardless of window.
 const DEFAULT_FORWARD_DAYS = 365
-const CRON_BACKFILL_DAYS = 14
-const CRON_FORWARD_DAYS = 60
+// The cron re-scans this window every run (Google won't issue an incremental
+// syncToken for a time-bounded query, so each run is a fresh windowed scan). It
+// must be small enough to finish inside the function timeout given remote-DB
+// write latency. A tight near-term window every 30 min keeps the upcoming week
+// fresh; full-history backfill stays the manual Sync button's job.
+const CRON_BACKFILL_DAYS = 1
+const CRON_FORWARD_DAYS = 7
 const GOOGLE_PAGE_SIZE = 100
 const DB_BATCH_SIZE = 25
 
