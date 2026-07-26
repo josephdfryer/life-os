@@ -491,6 +491,11 @@ type SyncConnection = {
   expiresAt: Date | null
 }
 
+// Per-connection sync only needs the workspace and an audit actor — not a full
+// AccessActor. Narrowing to this lets the cron path drive the exact same sync
+// with a system actor and no user session. AccessActor structurally satisfies it.
+type SyncActor = { workspaceId: string; actor: DomainActor }
+
 export async function syncGoogleCalendar(actor: AccessActor, options: SyncOptions = {}) {
   const connections = await db.calendarConnection.findMany({
     where: { workspaceId: actor.workspaceId, provider: "google", status: "active" },
@@ -529,8 +534,48 @@ export async function syncGoogleCalendar(actor: AccessActor, options: SyncOption
   }
 }
 
+// Session-less sync for the auto-sync cron: refreshes every active Google
+// Calendar connection across all workspaces using stored (encrypted) tokens.
+// A per-calendar failure is captured in its SyncStats.error and never aborts the
+// rest — one revoked account can't stall everyone's sync.
+export async function syncAllGoogleCalendars(options: SyncOptions = {}) {
+  const connections = await db.calendarConnection.findMany({
+    where: { provider: "google", status: "active" },
+    orderBy: [{ workspaceId: "asc" }, { calendarSummary: "asc" }],
+  })
+
+  const byWorkspace = new Map<string, typeof connections>()
+  for (const connection of connections) {
+    const list = byWorkspace.get(connection.workspaceId) ?? []
+    list.push(connection)
+    byWorkspace.set(connection.workspaceId, list)
+  }
+
+  const backfillDays = normalizeBackfillDays(options.backfillDays)
+  const results: Array<{ workspaceId: string; calendars: SyncStats[] }> = []
+
+  for (const [workspaceId, workspaceConnections] of byWorkspace) {
+    const actor: SyncActor = {
+      workspaceId,
+      actor: { type: "system", id: "calendar-cron", label: "Calendar auto-sync", workspaceId },
+    }
+    const peopleByEmail = await peopleEmailIndex(workspaceId)
+    const calendars: SyncStats[] = []
+    for (const connection of workspaceConnections) {
+      calendars.push(await syncGoogleCalendarConnection(actor, connection, peopleByEmail, backfillDays))
+    }
+    results.push({ workspaceId, calendars })
+  }
+
+  return {
+    workspaces: results.length,
+    connections: connections.length,
+    results,
+  }
+}
+
 async function syncGoogleCalendarConnection(
-  actor: AccessActor,
+  actor: SyncActor,
   connection: SyncConnection,
   peopleByEmail: Map<string, { id: string; first: string; last: string }>,
   backfillDays: number,

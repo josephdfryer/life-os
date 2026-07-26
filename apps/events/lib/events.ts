@@ -1,15 +1,19 @@
-// Event types that are historical/log records, not scheduled calendar events.
-// The Event table is a shared graph across Life OS: Places/Persons import Google
-// Maps location history as "visit"/"visited_place", and communications land as
-// "message"/"message_thread"/"email". None of these belong on a scheduled
-// calendar view — they're timeline material. Keep this list as the single source
-// of truth for "what the calendar hides."
-export const NON_CALENDAR_EVENT_TYPES = [
-  "message",
-  "message_thread",
-  "email",
-  "visit",
-  "visited_place",
+// The Event table is a shared Life OS graph: Places/Persons import Google Maps
+// location history ("visit"/"visited_place"), communications land as
+// "message"/"email", Stuff writes "stocktake"/"purchase_received", etc. Only
+// genuinely *scheduled* events belong on the calendar. This allowlist is the
+// single source of truth for "what the calendar shows" — Google-synced events
+// (always type "calendar") plus the types a person can schedule by hand in the
+// events/new form. Everything else stays in the timeline. Add a type here only
+// when it is something a user schedules onto a calendar.
+export const CALENDAR_EVENT_TYPES = [
+  "calendar", // Google Calendar sync
+  "meeting",
+  "call",
+  "dinner",
+  "trip",
+  "milestone",
+  "other",
 ] as const
 
 export type EventListView = "today" | "upcoming" | "past" | "all"
