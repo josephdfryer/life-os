@@ -13,6 +13,14 @@ const CALENDAR_SCOPE = "https://www.googleapis.com/auth/calendar.readonly"
 const SOURCE = "google-calendar"
 const DEFAULT_BACKFILL_DAYS = 180
 const MAX_BACKFILL_DAYS = 3650
+// How far ahead a full (non-incremental) sync pulls. singleEvents=true expands
+// recurring meetings into instances, so this window is the dominant cost of a
+// first sync. Manual sync keeps a wide horizon; the auto-sync cron uses a tight
+// window so it always finishes fast and can establish a syncToken — after which
+// incremental sync (change-only) keeps everything current regardless of window.
+const DEFAULT_FORWARD_DAYS = 365
+const CRON_BACKFILL_DAYS = 14
+const CRON_FORWARD_DAYS = 60
 const GOOGLE_PAGE_SIZE = 100
 const DB_BATCH_SIZE = 25
 
@@ -551,7 +559,10 @@ export async function syncAllGoogleCalendars(options: SyncOptions = {}) {
     byWorkspace.set(connection.workspaceId, list)
   }
 
-  const backfillDays = normalizeBackfillDays(options.backfillDays)
+  // Tight window: the cron catches recent/near-future changes fast. Once a
+  // connection has synced once (syncToken saved), later runs are incremental and
+  // the window no longer applies. Full-history backfill stays the manual Sync.
+  const backfillDays = options.backfillDays != null ? normalizeBackfillDays(options.backfillDays) : CRON_BACKFILL_DAYS
   const results: Array<{ workspaceId: string; calendars: SyncStats[] }> = []
 
   for (const [workspaceId, workspaceConnections] of byWorkspace) {
@@ -562,7 +573,7 @@ export async function syncAllGoogleCalendars(options: SyncOptions = {}) {
     const peopleByEmail = await peopleEmailIndex(workspaceId)
     const calendars: SyncStats[] = []
     for (const connection of workspaceConnections) {
-      calendars.push(await syncGoogleCalendarConnection(actor, connection, peopleByEmail, backfillDays))
+      calendars.push(await syncGoogleCalendarConnection(actor, connection, peopleByEmail, backfillDays, CRON_FORWARD_DAYS))
     }
     results.push({ workspaceId, calendars })
   }
@@ -579,6 +590,7 @@ async function syncGoogleCalendarConnection(
   connection: SyncConnection,
   peopleByEmail: Map<string, { id: string; first: string; last: string }>,
   backfillDays: number,
+  forwardDays: number = DEFAULT_FORWARD_DAYS,
 ) {
   const syncToken = decryptNullable(connection.syncTokenEncrypted)
   const stats: SyncStats = {
@@ -604,6 +616,7 @@ async function syncGoogleCalendarConnection(
       calendarId: connection.calendarId,
       syncToken,
       backfillDays,
+      forwardDays,
       onBatch: async items => {
         stats.batches += 1
         const result = await processCalendarBatch({
@@ -879,6 +892,7 @@ async function syncEventPages(
     calendarId: string
     syncToken: string | null
     backfillDays: number
+    forwardDays: number
     onBatch: (items: GoogleCalendarEvent[]) => Promise<void>
   }
 ) {
@@ -900,7 +914,7 @@ async function syncEventPages(
       usedSyncToken = false
       const now = Date.now()
       params.set("timeMin", new Date(now - input.backfillDays * 24 * 60 * 60 * 1000).toISOString())
-      params.set("timeMax", new Date(now + 365 * 24 * 60 * 60 * 1000).toISOString())
+      params.set("timeMax", new Date(now + input.forwardDays * 24 * 60 * 60 * 1000).toISOString())
       params.set("orderBy", "startTime")
     }
 
