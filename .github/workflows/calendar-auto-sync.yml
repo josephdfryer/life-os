@@ -1,0 +1,27 @@
+name: Calendar auto-sync
+
+# Keeps Google Calendar events fresh by pinging the events app's cron endpoint.
+# Vercel Hobby caps native crons at once/day, so we drive it from GitHub Actions
+# instead. The endpoint is idempotent (incremental sync via stored tokens), so
+# occasional GitHub Actions scheduling drift is harmless.
+on:
+  schedule:
+    - cron: "*/30 * * * *" # every 30 minutes (UTC); GitHub may delay under load
+  workflow_dispatch: {} # allow manual runs from the Actions tab
+
+concurrency:
+  group: calendar-auto-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger calendar sync
+        run: |
+          code=$(curl -sS -o /tmp/body -w "%{http_code}" \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            "https://events.lacollecteur.com/api/cron/calendar-sync")
+          echo "HTTP $code"
+          cat /tmp/body
+          test "$code" = "200"
