@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { db } from "@/lib/db"
 import { accessErrorResponse, requireWorkspaceAccess } from "@/lib/access"
+import { captureNote, CaptureValidationError } from "@life-os/domain"
 
 export const dynamic = "force-dynamic"
 
@@ -76,18 +77,23 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "timestamp is invalid" }, { status: 400 })
     }
 
-    const note = await db.note.create({
-      data: {
-        workspaceId: access.workspaceId,
-        timestamp,
-        type,
-        content,
-        metadata: payload?.metadata ? JSON.stringify(payload.metadata) : null,
-      },
+    const { note } = await captureNote({
+      workspaceId: access.workspaceId,
+      timestamp,
+      type,
+      content,
+      source: "theory",
+      idempotencyKey: typeof payload?.idempotencyKey === "string" ? payload.idempotencyKey : null,
+      metadata: payload?.metadata && typeof payload.metadata === "object" && !Array.isArray(payload.metadata)
+        ? payload.metadata
+        : null,
     })
 
     return NextResponse.json(note, { status: 201 })
   } catch (error) {
+    if (error instanceof CaptureValidationError) {
+      return NextResponse.json({ error: error.message }, { status: 400 })
+    }
     const { error: message, status } = accessErrorResponse(error)
     return NextResponse.json({ error: message }, { status })
   }

@@ -101,6 +101,7 @@ test("places map and profile derive stats from events, interactions, groups, pho
       name: "Saturday coffee",
       type: "coffee",
       start: new Date("2026-04-18T17:00:00Z"),
+      end: new Date("2026-04-18T18:15:00Z"),
       timestamp: new Date("2026-04-18T17:00:00Z"),
       groupTags: { connect: [{ id: group.id }] },
     },
@@ -127,6 +128,14 @@ test("places map and profile derive stats from events, interactions, groups, pho
   const qinInteraction = await db.interaction.findFirstOrThrow({ where: { personId: qin.id, eventId: event.id } })
   await db.itemInteraction.create({ data: { itemId: photo.id, interactionId: qinInteraction.id, role: "context" } })
   await createPlaceNote(place.id, workspace.id, "Great window seat.", { eventId: event.id })
+  await db.plan.create({
+    data: {
+      workspaceId: workspace.id,
+      placeId: place.id,
+      text: "Return for a quiet writing morning",
+      scheduledStart: new Date("2026-08-01T16:00:00Z"),
+    },
+  })
   await db.placeNote.create({
     data: {
       placeId: place.id,
@@ -143,20 +152,43 @@ test("places map and profile derive stats from events, interactions, groups, pho
   assert.equal(map[0].stats.personCount, 2)
   assert.equal(map[0].stats.groupCount, 2)
   assert.equal(map[0].stats.noteCount, 1)
+  assert.equal(map[0].stats.planCount, 1)
   assert.equal(map[0].stats.totalSpend, 18.25)
   assert.equal(map[0].financialGroup?.name, "Blue Bottle Coffee")
-  assert.equal(map[0].weight, 30)
+  assert.equal(map[0].weight, 36)
 
   const profile = await getPlaceProfile(place.id, workspace.id)
   assert.equal(profile.stats.visitCount, 1)
   assert.equal(profile.stats.personCount, 2)
   assert.equal(profile.stats.totalSpend, 18.25)
   assert.equal(profile.timeline[0].eventId, event.id)
+  assert.equal(profile.timeline[0].endedAt, "2026-04-18T18:15:00.000Z")
   assert.equal(profile.timeline[0].photoCount, 1)
+  assert.equal(profile.timeline[0].photos[0].name, "Coffee photo.jpg")
   assert.equal(profile.timeline[0].notePreview, "Great window seat.")
   assert.deepEqual(profile.people.map(person => person.name).sort(), ["Maya Fryer", "Qin Li"])
   assert.equal(profile.groups.affiliated[0].name, "Blue Bottle Coffee")
   assert.equal(profile.groups.activity[0].name, "Fryer Family")
+  assert.equal(profile.plans[0].title, "Return for a quiet writing morning")
+})
+
+test("place meaning is explicitly authored, validated, and workspace scoped", async () => {
+  const { db, places } = await setup()
+  const workspace = await db.workspace.create({
+    data: { id: "meaning-workspace", name: "Meaning Workspace", slug: "meaning-workspace" },
+  })
+  const place = await db.place.create({
+    data: { workspaceId: workspace.id, name: "The Overlook" },
+  })
+
+  const updated = await places.updatePlaceMeaning(place.id, workspace.id, "Where I decided to move west.")
+  assert.equal(updated.meaning, "Where I decided to move west.")
+  await assert.rejects(
+    () => places.updatePlaceMeaning(place.id, "other-workspace", "Should not save"),
+    /Place not found/,
+  )
+  const cleared = await places.updatePlaceMeaning(place.id, workspace.id, "   ")
+  assert.equal(cleared.meaning, null)
 })
 
 test("place note CRUD creates, updates, and deletes notes in the selected workspace", async () => {
@@ -218,6 +250,27 @@ test("places map layer data includes unresolved AI enrichment and interaction ov
       summary: "Caught up after the meeting.",
     },
   })
+  const otherWorkspace = await db.workspace.create({
+    data: { id: "map-layers-other-workspace", name: "Other Map Layers", slug: "other-map-layers" },
+  })
+  const otherPlace = await db.place.create({
+    data: {
+      workspaceId: otherWorkspace.id,
+      name: "Private merchant",
+      googlePlaceId: "other-private-merchant",
+      coordinates: JSON.stringify({ latitude: 37.79, longitude: -122.42 }),
+    },
+  })
+  await db.interaction.create({
+    data: {
+      workspaceId: otherWorkspace.id,
+      placeId: otherPlace.id,
+      type: "financial",
+      timestamp: new Date("2026-05-01T18:00:00Z"),
+      amount: 9900,
+      summary: "Other workspace purchase",
+    },
+  })
   const job = await db.importJob.create({
     data: { workspaceId: workspace.id, status: "done", format: "timeline_records", filename: "layers.json", totalRows: 1, stagedRows: 1 },
   })
@@ -244,7 +297,7 @@ test("places map layer data includes unresolved AI enrichment and interaction ov
   assert.equal(layers.unresolvedVisits[0].aiEnrichment?.placeName, "Likely Market Cafe")
   assert.equal(layers.interactions.length, 1)
   assert.equal(layers.interactions[0].placeId, place.id)
-  assert.equal(layers.interactions[0].people[0].name, "Jonny Appleseed")
+  assert.equal(layers.interactions[0].interactionCount, 1)
   assert.deepEqual(layers.finance, [])
   assert.deepEqual(layers.photos, [])
 })
@@ -310,6 +363,14 @@ test("google maps legacy import auto-creates confident visits and stages ambiguo
   const staged = await mapsImport.listStagedVisits(job.id, workspace.id)
   assert.equal(staged.total, 1)
   assert.equal(staged.items[0].placeName, "Maybe Park")
+  const preview = await mapsImport.bulkUpdateStagedVisits(job.id, workspace.id, {
+    action: "accept",
+    minConfidence: staged.items[0].confidence,
+    dryRun: true,
+  })
+  assert.deepEqual(preview, { matched: 1, updated: 0, dryRun: true })
+  const afterPreview = await mapsImport.listStagedVisits(job.id, workspace.id, { status: "pending" })
+  assert.equal(afterPreview.total, 1)
 })
 
 test("google location-history flat timeline records parse visits and ignore movement paths", async () => {
@@ -396,4 +457,109 @@ test("staged google maps visit can be accepted into a place event", async () => 
   assert.equal(accepted.status, "accepted")
   assert.ok(accepted.resolvedPlaceId)
   assert.ok(accepted.resolvedEventId)
+})
+
+test("staged visit can merge into an exact workspace Place without duplicates", async () => {
+  const { db } = await setup()
+  const mapsImport = await import("../server/domain/import")
+  const workspace = await db.workspace.create({
+    data: { id: "maps-merge-workspace", name: "Maps Merge", slug: "maps-merge" },
+  })
+  const target = await db.place.create({
+    data: {
+      workspaceId: workspace.id,
+      name: "Existing Cafe",
+      coordinates: JSON.stringify({ latitude: 37.77, longitude: -122.42 }),
+    },
+  })
+  const job = await db.importJob.create({
+    data: { workspaceId: workspace.id, status: "done", format: "legacy_takeout", filename: "merge.json", totalRows: 1, stagedRows: 1 },
+  })
+  const visit = await db.importStagedVisit.create({
+    data: {
+      importJobId: job.id,
+      workspaceId: workspace.id,
+      rawData: { source: "test" },
+      placeName: "Ambiguous Cafe",
+      latitude: 37.7701,
+      longitude: -122.4201,
+      startedAt: new Date("2024-07-03T15:00:00Z"),
+      endedAt: new Date("2024-07-03T16:00:00Z"),
+      confidence: 61,
+    },
+  })
+
+  const first = await mapsImport.resolveStagedVisit(job.id, visit.id, workspace.id, { targetPlaceId: target.id })
+  assert.equal(first.placeId, target.id)
+  assert.equal(first.accepted, true)
+  assert.equal(await db.place.count({ where: { workspaceId: workspace.id } }), 1)
+  assert.equal(await db.event.count({ where: { workspaceId: workspace.id, placeId: target.id } }), 1)
+  const resolved = await db.importStagedVisit.findUniqueOrThrow({ where: { id: visit.id } })
+  const event = await db.event.findUniqueOrThrow({ where: { id: resolved.resolvedEventId! } })
+  assert.equal(resolved.resolvedPlaceId, target.id)
+  assert.equal(JSON.parse(event.metadata ?? "{}").source, "google_maps")
+
+  const second = await mapsImport.resolveStagedVisit(job.id, visit.id, workspace.id, { targetPlaceId: target.id })
+  assert.equal(second.skipped, true)
+  assert.equal(await db.event.count({ where: { workspaceId: workspace.id, placeId: target.id } }), 1)
+})
+
+test("staged visit can create a named Place through a validated override", async () => {
+  const { db } = await setup()
+  const mapsImport = await import("../server/domain/import")
+  const workspace = await db.workspace.create({
+    data: { id: "maps-create-workspace", name: "Maps Create", slug: "maps-create" },
+  })
+  const job = await db.importJob.create({
+    data: { workspaceId: workspace.id, status: "done", format: "legacy_takeout", filename: "create.json", totalRows: 1, stagedRows: 1 },
+  })
+  const visit = await db.importStagedVisit.create({
+    data: {
+      importJobId: job.id,
+      workspaceId: workspace.id,
+      rawData: { source: "test" },
+      latitude: 34.1,
+      longitude: -118.2,
+      startedAt: new Date("2024-08-03T15:00:00Z"),
+      confidence: 58,
+    },
+  })
+
+  const result = await mapsImport.resolveStagedVisit(job.id, visit.id, workspace.id, {
+    placeOverride: {
+      placeName: "Joseph's Trailhead",
+      placeAddress: "Trail Road",
+      placeType: "trailhead",
+    },
+  })
+  const place = await db.place.findFirstOrThrow({ where: { id: result.placeId!, workspaceId: workspace.id } })
+  assert.equal(place.name, "Joseph's Trailhead")
+  assert.equal(place.address, "Trail Road")
+  assert.equal(place.type, "trailhead")
+})
+
+test("a rejected staged visit can be restored to the pending review queue", async () => {
+  const { db } = await setup()
+  const mapsImport = await import("../server/domain/import")
+  const workspace = await db.workspace.create({
+    data: { id: "maps-restore-workspace", name: "Maps Restore", slug: "maps-restore" },
+  })
+  const job = await db.importJob.create({
+    data: { workspaceId: workspace.id, status: "done", format: "legacy_takeout", filename: "restore.json", totalRows: 1, stagedRows: 1 },
+  })
+  const visit = await db.importStagedVisit.create({
+    data: {
+      importJobId: job.id,
+      workspaceId: workspace.id,
+      rawData: { source: "test" },
+      placeName: "Restore Cafe",
+      startedAt: new Date("2024-09-03T15:00:00Z"),
+      confidence: 41,
+    },
+  })
+
+  const rejected = await mapsImport.updateStagedVisit(job.id, visit.id, workspace.id, "reject")
+  assert.equal(rejected.status, "rejected")
+  const restored = await mapsImport.updateStagedVisit(job.id, visit.id, workspace.id, "restore")
+  assert.equal(restored.status, "pending")
 })

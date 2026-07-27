@@ -21,6 +21,7 @@ type CalendarEvent = {
   start: string
   end: string | null
   place?: { name: string } | null
+  href?: string | null
 }
 
 type Props = {
@@ -183,7 +184,9 @@ export default function CalendarView({ initialMode, initialDate }: Props) {
                   return (
                     <a
                       key={event.id}
-                      href={`/events/${event.id}`}
+                      href={event.href ?? "#"}
+                      aria-disabled={!event.href}
+                      onClick={event.href ? undefined : event => event.preventDefault()}
                       style={{
                         display: "block",
                         textDecoration: "none",

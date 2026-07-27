@@ -57,10 +57,13 @@ export type AuditAction =
   | "place.note.update"
   | "place.note.delete"
   | "place.favorite.toggle"
+  | "place.meaning.update"
   | "places.import.create"
   | "places.import.finish"
   | "places.import.visit.accept"
+  | "places.import.visit.merge"
   | "places.import.visit.reject"
+  | "places.import.visit.restore"
   | "places.import.visit.reject_bulk"
 
 type AuditInput = {

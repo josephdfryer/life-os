@@ -6,12 +6,14 @@
     "dev": "next dev --port 3003",
     "build": "next build",
     "start": "next start",
+    "test": "tsx --test tests/*.test.ts",
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
     "@life-os/alignment": "*",
     "@life-os/auth": "*",
     "@life-os/db": "*",
+    "@life-os/domain": "*",
     "@life-os/ui": "*",
     "next": "16.2.10",
     "next-auth": "^5.0.0-beta.30",
@@ -24,6 +26,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "tailwindcss": "^4",
+    "tsx": "^4.22.4",
     "typescript": "^5"
   }
 }

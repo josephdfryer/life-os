@@ -17,6 +17,10 @@ export default async function PlacesPage() {
     if (error instanceof AppError && error.status === 401) {
       redirect("/login?callbackUrl=%2Fplaces")
     }
-    return <PlacesClient places={[]} layers={{ unresolvedVisits: [], interactions: [], finance: [], photos: [] }} />
+    console.error("[places page] failed to load", error)
+    const message = error instanceof AppError && error.status === 403
+      ? "You do not have permission to view Places in this workspace."
+      : "Places could not be loaded. Your data is unchanged; try again in a moment."
+    return <PlacesClient places={[]} layers={{ unresolvedVisits: [], interactions: [], finance: [], photos: [] }} errorMessage={message} />
   }
 }

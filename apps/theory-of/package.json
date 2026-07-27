@@ -12,6 +12,7 @@
   "dependencies": {
     "@life-os/auth": "*",
     "@life-os/db": "*",
+    "@life-os/domain": "*",
     "@life-os/theory": "*",
     "@life-os/ui": "*",
     "next": "16.2.10",

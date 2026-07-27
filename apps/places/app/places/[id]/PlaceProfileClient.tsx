@@ -1,9 +1,11 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Link from "next/link"
+import { useSearchParams } from "next/navigation"
 import { BackLink, Button, Card, EmptyState } from "@life-os/ui"
 import { formatCurrency, formatDate as formatLocalDate, formatInteger, formatMonthYear } from "@/lib/format"
+import { PlaceMemoryTimeline } from "@/components/profile/PlaceMemoryTimeline"
 
 type PlaceNote = {
   id: string
@@ -21,6 +23,7 @@ type PlaceProfile = {
     name: string
     type: string | null
     address: string | null
+    coordinates?: string | null
     meaning: string | null
     favorite: boolean
   }
@@ -39,9 +42,12 @@ type PlaceProfile = {
     eventId: string
     title: string
     startedAt: string
+    endedAt?: string
+    gapSincePreviousVisitDays?: number
     people: { id: string; name: string }[]
     groups: { id: string; name: string; associationType: "explicit_tag" | "inferred" | "place_affiliation" }[]
     photoCount: number
+    photos: { id: string; name: string }[]
     spendAmount?: number
     notePreview?: string
   }[]
@@ -55,17 +61,50 @@ type PlaceProfile = {
   plans: { planId: string; title: string; plannedDate?: string }[]
 }
 
-export default function PlaceProfileClient({ initialProfile }: { initialProfile: PlaceProfile | null }) {
+type ProfileNavigation = {
+  position: number
+  total: number
+  previous: { name: string; href: string } | null
+  next: { name: string; href: string } | null
+} | null
+
+export default function PlaceProfileClient({
+  initialProfile,
+  navigation,
+  appUrls,
+}: {
+  initialProfile: PlaceProfile | null
+  navigation: ProfileNavigation
+  appUrls: { persons: string; events: string }
+}) {
+  const searchParams = useSearchParams()
+  const returnQuery = searchParams.get("from")
+  const backHref = returnQuery ? `/places?${returnQuery}` : "/places"
   const [profile, setProfile] = useState(initialProfile)
   const [noteBody, setNoteBody] = useState("")
+  const [noteEventId, setNoteEventId] = useState("")
+  const [meaningDraft, setMeaningDraft] = useState(initialProfile?.place.meaning ?? "")
   const [editingNoteId, setEditingNoteId] = useState<string | null>(null)
   const [editingBody, setEditingBody] = useState("")
   const [saving, setSaving] = useState(false)
+  const [mutationError, setMutationError] = useState<string | null>(null)
+  const [mutationSuccess, setMutationSuccess] = useState<string | null>(null)
+  const meaningDirty = meaningDraft !== (profile?.place.meaning ?? "")
+  const hasUnsavedDraft = Boolean(noteBody.trim() || editingNoteId || meaningDirty)
+
+  useEffect(() => {
+    const warnUnsaved = (event: BeforeUnloadEvent) => {
+      if (!hasUnsavedDraft) return
+      event.preventDefault()
+    }
+    window.addEventListener("beforeunload", warnUnsaved)
+    return () => window.removeEventListener("beforeunload", warnUnsaved)
+  }, [hasUnsavedDraft])
 
   if (!profile) {
     return (
       <div style={{ maxWidth: "760px", margin: "0 auto", padding: "32px 24px" }}>
-        <BackLink label="All Places" href="/places" component={Link} style={{ marginBottom: "20px" }} />
+        <BackLink label="All Places" href={backHref} component={Link} style={{ marginBottom: "20px" }} />
         <div style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "10px" }}>
           <EmptyState icon="?" title="Place not found" subtitle="This place may have been deleted." />
         </div>
@@ -73,112 +112,171 @@ export default function PlaceProfileClient({ initialProfile }: { initialProfile:
     )
   }
 
-  async function reload() {
-    if (!profile) return
-    const res = await fetch(`/api/places/${profile.place.id}/profile`)
-    if (res.ok) setProfile(await res.json())
-  }
-
   async function toggleFavorite() {
     if (!profile) return
+    setMutationError(null)
+    setMutationSuccess(null)
     const res = await fetch(`/api/places/${profile.place.id}/favorite`, { method: "POST" })
     if (res.ok) {
       const place = await res.json()
       setProfile({ ...profile, place: { ...profile.place, favorite: place.favorite } })
+      setMutationSuccess(place.favorite ? "Added to favorites." : "Removed from favorites.")
+    } else {
+      setMutationError("Favorite could not be updated. Try again.")
     }
   }
 
   async function addNote() {
     if (!profile || !noteBody.trim()) return
     setSaving(true)
-    await fetch(`/api/places/${profile.place.id}/notes`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ body: noteBody }),
-    })
-    setNoteBody("")
-    await reload()
-    setSaving(false)
+    setMutationError(null)
+    setMutationSuccess(null)
+    try {
+      const response = await fetch(`/api/places/${profile.place.id}/notes`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ body: noteBody, eventId: noteEventId || undefined }),
+      })
+      if (!response.ok) throw new Error("note create failed")
+      const note = await response.json() as PlaceNote
+      const notes = [note, ...profile.notes]
+      setProfile({
+        ...profile,
+        notes,
+        stats: { ...profile.stats, noteCount: profile.stats.noteCount + 1 },
+        timeline: timelineWithNotePreviews(profile.timeline, notes),
+      })
+      setNoteBody("")
+      setNoteEventId("")
+      setMutationSuccess(noteEventId ? "Visit note saved." : "Place note saved.")
+    } catch {
+      setMutationError("Your note was not saved. The draft is still here so you can try again.")
+    } finally {
+      setSaving(false)
+    }
   }
 
   async function saveNote(noteId: string) {
     if (!profile || !editingBody.trim()) return
     setSaving(true)
-    await fetch(`/api/places/${profile.place.id}/notes/${noteId}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ body: editingBody }),
-    })
-    setEditingNoteId(null)
-    setEditingBody("")
-    await reload()
-    setSaving(false)
+    setMutationError(null)
+    setMutationSuccess(null)
+    try {
+      const response = await fetch(`/api/places/${profile.place.id}/notes/${noteId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ body: editingBody }),
+      })
+      if (!response.ok) throw new Error("note update failed")
+      const updated = await response.json() as PlaceNote
+      const notes = profile.notes.map(note => note.id === noteId ? updated : note)
+      setProfile({
+        ...profile,
+        notes,
+        timeline: timelineWithNotePreviews(profile.timeline, notes),
+      })
+      setEditingNoteId(null)
+      setEditingBody("")
+      setMutationSuccess("Note updated.")
+    } catch {
+      setMutationError("Your changes were not saved. The draft is still here so you can try again.")
+    } finally {
+      setSaving(false)
+    }
   }
 
   async function deleteNote(noteId: string) {
     if (!profile || !confirm("Delete this place note?")) return
     setSaving(true)
-    await fetch(`/api/places/${profile.place.id}/notes/${noteId}`, { method: "DELETE" })
-    await reload()
-    setSaving(false)
+    setMutationError(null)
+    setMutationSuccess(null)
+    try {
+      const response = await fetch(`/api/places/${profile.place.id}/notes/${noteId}`, { method: "DELETE" })
+      if (!response.ok) throw new Error("note delete failed")
+      const remainingNotes = profile.notes.filter(note => note.id !== noteId)
+      setProfile({
+        ...profile,
+        notes: remainingNotes,
+        stats: { ...profile.stats, noteCount: Math.max(0, profile.stats.noteCount - 1) },
+        timeline: timelineWithNotePreviews(profile.timeline, remainingNotes),
+      })
+      setMutationSuccess("Note deleted.")
+    } catch {
+      setMutationError("The note could not be deleted. Try again.")
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  async function saveMeaning() {
+    if (!profile || !meaningDirty || meaningDraft.trim().length > 2_000) return
+    setSaving(true)
+    setMutationError(null)
+    setMutationSuccess(null)
+    try {
+      const response = await fetch(`/api/places/${profile.place.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ meaning: meaningDraft }),
+      })
+      if (!response.ok) throw new Error("meaning update failed")
+      const place = await response.json()
+      setProfile({ ...profile, place: { ...profile.place, meaning: place.meaning } })
+      setMeaningDraft(place.meaning ?? "")
+      setMutationSuccess(place.meaning ? "Why this place matters was saved." : "Authored meaning removed.")
+    } catch {
+      setMutationError("Your meaning was not saved. The draft is still here so you can try again.")
+    } finally {
+      setSaving(false)
+    }
   }
 
   const summary = deterministicSummary(profile)
   const memorySignal = primaryMemorySignal(profile)
+  const mapTile = placeMapTile(profile.place.coordinates)
+  const cadence = visitCadence(profile.timeline)
 
   return (
     <div style={{ maxWidth: "1040px", margin: "0 auto", padding: "32px 24px 48px" }}>
-      <BackLink label="All Places" href="/places" component={Link} style={{ marginBottom: "20px" }} />
+      <BackLink label="All Places" href={backHref} component={Link} style={{ marginBottom: "20px" }} />
+      {navigation ? <ProfileNavigationBar navigation={navigation} /> : null}
 
-      <header style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "10px", overflow: "hidden", marginBottom: "18px" }}>
-        <div style={{ minHeight: "230px", background: "linear-gradient(135deg, #ded7ca 0%, #b8c4bd 58%, #9ea99f 100%)", position: "relative" }}>
-          <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(26,24,20,0.05), rgba(26,24,20,0.32))" }} />
-          <div style={{ position: "absolute", left: "24px", right: "72px", bottom: "22px", color: "#fff", textShadow: "0 1px 16px rgba(0,0,0,0.32)" }}>
-            <div style={{ fontSize: "11px", opacity: 0.82, marginBottom: "6px" }}>
-              {[profile.place.type, formatDate(profile.stats.lastVisitAt) !== "None" ? `last visit ${formatDate(profile.stats.lastVisitAt)}` : ""].filter(Boolean).join(" · ") || "place profile"}
-            </div>
-            <h1 style={{ fontFamily: "var(--font-display)", fontSize: "38px", lineHeight: 1.05, margin: 0, fontWeight: 600 }}>{profile.place.name}</h1>
-            <div style={{ fontSize: "12px", marginTop: "9px", opacity: 0.9 }}>
-              {profile.place.address || "No address yet"}
-            </div>
+      <header className="place-memory-header">
+        <div className="place-memory-identity">
+          <div className="place-memory-kicker">
+            {[profile.place.type, profile.stats.visitCount ? `${profile.stats.visitCount} ${profile.stats.visitCount === 1 ? "visit" : "visits"}` : ""].filter(Boolean).join(" · ") || "Place memory"}
           </div>
+          <h1>{profile.place.name}</h1>
+          <p>{profile.place.address || "No address yet"}</p>
+          <div className="place-memory-signal">{memorySignal}</div>
           <button
             onClick={toggleFavorite}
             aria-label="Toggle favorite"
+            aria-pressed={profile.place.favorite}
             title="Toggle favorite"
-            style={{
-              position: "absolute",
-              top: "16px",
-              right: "16px",
-              width: "34px",
-              height: "34px",
-              borderRadius: "50%",
-              border: "1px solid rgba(255,255,255,0.7)",
-              background: profile.place.favorite ? "var(--accent)" : "rgba(255,255,255,0.75)",
-              color: profile.place.favorite ? "#fff" : "var(--ink)",
-              cursor: "pointer",
-              fontSize: "16px",
-            }}
+            className="place-favorite-button"
           >
-            ★
+            {profile.place.favorite ? "★ Favorited" : "☆ Add to favorites"}
           </button>
         </div>
-        <div style={{ padding: "20px 22px" }}>
-          <div style={{ display: "flex", justifyContent: "space-between", gap: "18px", alignItems: "flex-start", flexWrap: "wrap" }}>
-            <p style={{ maxWidth: "560px", margin: 0, color: "var(--ink-2)", fontSize: "13px", lineHeight: 1.75 }}>
-              {memorySignal}
-            </p>
-            <div style={{ display: "flex", gap: "18px", flexWrap: "wrap" }}>
-              <HeaderStat label="First visit" value={formatDate(profile.stats.firstVisitAt)} />
-              <HeaderStat label="Last visit" value={formatDate(profile.stats.lastVisitAt)} />
-            </div>
-          </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(120px, 1fr))", gap: "10px", marginTop: "18px" }}>
-            <Metric label="Visits" value={profile.stats.visitCount} />
-            <Metric label="Photos" value={profile.stats.photoCount} />
-            <Metric label="People" value={profile.stats.personCount} />
-            <Metric label="Groups" value={profile.stats.groupCount} />
-          </div>
+        <div className="place-memory-location">
+          {mapTile ? (
+            <>
+              <img src={mapTile.src} alt="" width={256} height={256} />
+              <a href={mapTile.href} target="_blank" rel="noreferrer">© OpenStreetMap contributors ↗</a>
+            </>
+          ) : (
+            <div className="place-memory-location-empty">No coordinates yet</div>
+          )}
+        </div>
+        <div className="place-memory-stats">
+          <HeaderStat label="First visit" value={formatDate(profile.stats.firstVisitAt)} />
+          <HeaderStat label="Last visit" value={formatDate(profile.stats.lastVisitAt)} />
+          <Metric label="Visits" value={profile.stats.visitCount} />
+          {cadence ? <HeaderStat label="Cadence" value={cadence.shortLabel} /> : null}
+          {profile.stats.personCount ? <Metric label="People" value={profile.stats.personCount} /> : null}
+          {profile.stats.photoCount ? <Metric label="Photos" value={profile.stats.photoCount} /> : null}
+          {profile.stats.groupCount ? <Metric label="Groups" value={profile.stats.groupCount} /> : null}
         </div>
       </header>
 
@@ -189,37 +287,30 @@ export default function PlaceProfileClient({ initialProfile }: { initialProfile:
               {summary.map(line => (
                 <p key={line} style={{ margin: 0, color: "var(--ink-2)", fontSize: "13px", lineHeight: 1.7 }}>{line}</p>
               ))}
+              {cadence ? <p className="place-cadence-narrative">{cadence.narrative}</p> : null}
             </div>
           </Card>
 
-          <Card title="Memory thread" style={{ borderRadius: "10px", overflow: "hidden" }}>
-            {profile.timeline.length === 0 ? (
-              <EmptyState icon="○" title="No events connected to this place yet." subtitle="Visits will appear here once Events are linked to this Place." />
-            ) : (
-              <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-                {profile.timeline.map(item => (
-                  <div key={item.eventId} style={{ display: "grid", gridTemplateColumns: "78px minmax(0, 1fr)", gap: "12px", alignItems: "start" }}>
-                    <div style={{ fontSize: "10px", color: "var(--ink-4)", paddingTop: "12px", textAlign: "right" }}>{formatDate(item.startedAt)}</div>
-                    <div style={{ padding: "13px 14px", border: "1px solid var(--border)", borderRadius: "8px", background: "var(--bg)" }}>
-                      <div style={{ fontSize: "13px", color: "var(--ink)", fontWeight: 600 }}>{item.title}</div>
-                      <MetaLine parts={[
-                        item.people.map(p => p.name).join(", "),
-                        item.groups.map(g => `${g.name}${g.associationType === "inferred" ? " inferred" : ""}`).join(", "),
-                        item.photoCount ? `${item.photoCount} photos` : "",
-                        item.spendAmount ? money(item.spendAmount) : "",
-                      ]} />
-                      {item.notePreview && <p style={{ margin: "8px 0 0", color: "var(--ink-3)", fontSize: "11px", lineHeight: 1.6 }}>{item.notePreview}</p>}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
+          <Card title="Why this place matters" style={{ borderRadius: "10px", overflow: "hidden" }}>
+            <p className="place-authored-label">Written by you — never generated</p>
+            <textarea
+              value={meaningDraft}
+              maxLength={2000}
+              onChange={event => setMeaningDraft(event.target.value)}
+              placeholder="What makes this place meaningful in your life?"
+              className="place-meaning-input"
+            />
+            <div className="place-meaning-actions">
+              <span>{meaningDraft.length.toLocaleString()} / 2,000</span>
+              {meaningDirty ? <button type="button" onClick={() => setMeaningDraft(profile.place.meaning ?? "")}>Discard</button> : null}
+              <Button onClick={saveMeaning} loading={saving} disabled={!meaningDirty}>Save meaning</Button>
+            </div>
           </Card>
 
-          <Card title="Photos" style={{ borderRadius: "10px", overflow: "hidden" }}>
-            {profile.photos.length === 0 ? (
-              <EmptyState icon="□" title="No photos connected to this place yet." subtitle="Media-like Items attached to Interactions at this Place will appear here." />
-            ) : (
+          <PlaceMemoryTimeline timeline={profile.timeline} appUrls={appUrls} />
+
+          {profile.photos.length ? (
+            <Card title="Photos" style={{ borderRadius: "10px", overflow: "hidden" }}>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(130px, 1fr))", gap: "10px" }}>
                 {profile.photos.map(photo => (
                   <div key={`${photo.eventId}-${photo.itemId}`} style={{ border: "1px solid var(--border)", borderRadius: "8px", overflow: "hidden", background: "var(--bg)" }}>
@@ -231,11 +322,20 @@ export default function PlaceProfileClient({ initialProfile }: { initialProfile:
                   </div>
                 ))}
               </div>
-            )}
-          </Card>
+            </Card>
+          ) : null}
 
           <Card title="Notes" style={{ borderRadius: "10px", overflow: "hidden" }}>
-            <div style={{ display: "flex", gap: "8px", alignItems: "flex-start", marginBottom: "14px" }}>
+            {mutationError ? <div className="place-mutation-error" role="alert">{mutationError}</div> : null}
+            {mutationSuccess ? <div className="place-mutation-success" role="status">{mutationSuccess}</div> : null}
+            <div className="place-note-composer">
+              <label>
+                <span>Attach to</span>
+                <select value={noteEventId} onChange={event => setNoteEventId(event.target.value)}>
+                  <option value="">The Place generally</option>
+                  {profile.timeline.map(event => <option key={event.eventId} value={event.eventId}>{event.title} · {formatDate(event.startedAt)}</option>)}
+                </select>
+              </label>
               <textarea
                 value={noteBody}
                 onChange={event => setNoteBody(event.target.value)}
@@ -265,6 +365,7 @@ export default function PlaceProfileClient({ initialProfile }: { initialProfile:
                     ) : (
                       <>
                         <p style={{ margin: 0, whiteSpace: "pre-wrap", color: "var(--ink-2)", fontSize: "12px", lineHeight: 1.7 }}>{note.body}</p>
+                        {note.eventId ? <a className="place-note-event-link" href={`${appUrls.events}/events/${note.eventId}`}>Attached to {profile.timeline.find(event => event.eventId === note.eventId)?.title ?? "visit"} ↗</a> : null}
                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "8px" }}>
                           <span style={{ fontSize: "10px", color: "var(--ink-4)" }}>{formatDate(note.createdAt)}</span>
                           <span style={{ display: "flex", gap: "6px" }}>
@@ -282,44 +383,37 @@ export default function PlaceProfileClient({ initialProfile }: { initialProfile:
         </main>
 
         <aside style={{ display: "flex", flexDirection: "column", gap: "18px" }}>
-          <Card title="People here" style={{ borderRadius: "10px", overflow: "hidden" }}>
-            {profile.people.length === 0 ? (
-              <EmptyState icon="○" title="No people connected to this place yet." subtitle="People appear after Interactions link them to Events at this Place." />
-            ) : (
+          {profile.people.length ? (
+            <Card title="People here" style={{ borderRadius: "10px", overflow: "hidden" }}>
               <SummaryList items={profile.people.map(person => ({
                 key: person.personId,
                 title: person.name,
                 detail: `${person.sharedEventCount} shared ${person.sharedEventCount === 1 ? "visit" : "visits"} · ${formatDate(person.lastSharedEventAt)}`,
+                href: `${appUrls.persons}/persons/${person.personId}`,
               }))} />
-            )}
-          </Card>
+            </Card>
+          ) : null}
 
-          <Card title="Groups here" style={{ borderRadius: "10px", overflow: "hidden" }}>
-            {profile.groups.affiliated.length === 0 && profile.groups.activity.length === 0 ? (
-              <EmptyState icon="◎" title="No groups connected to this place yet." subtitle="Affiliations and event activity groups will be separated here." />
-            ) : (
+          {profile.groups.affiliated.length || profile.groups.activity.length ? (
+            <Card title="Groups here" style={{ borderRadius: "10px", overflow: "hidden" }}>
               <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
                 <GroupBlock title="Affiliated" items={profile.groups.affiliated.map(group => ({ key: group.groupId, title: group.name, detail: labelize(group.relationshipType ?? group.groupType) }))} />
                 <GroupBlock title="Activity" items={profile.groups.activity.map(group => ({ key: group.groupId, title: group.name, detail: `${group.eventCount ?? 0} ${group.eventCount === 1 ? "event" : "events"}` }))} />
               </div>
-            )}
-          </Card>
+            </Card>
+          ) : null}
 
-          <Card title="Spending" style={{ borderRadius: "10px", overflow: "hidden" }}>
-            {profile.stats.totalSpend ? (
+          {profile.stats.totalSpend ? (
+            <Card title="Spending" style={{ borderRadius: "10px", overflow: "hidden" }}>
               <div style={{ fontFamily: "var(--font-display)", fontSize: "24px", color: "var(--ink)" }}>{money(profile.stats.totalSpend)}</div>
-            ) : (
-              <EmptyState icon="$" title="Connect Era Finance to see spending at this place." subtitle="Recorded Interaction amounts at this Place will be summed here." style={{ padding: "22px 12px" }} />
-            )}
-          </Card>
+            </Card>
+          ) : null}
 
-          <Card title="Plans" style={{ borderRadius: "10px", overflow: "hidden" }}>
-            {profile.plans.length === 0 ? (
-              <EmptyState icon="◇" title="No plans connected to this place yet." subtitle="Place-linked Plans will appear here once that graph edge exists." />
-            ) : (
+          {profile.plans.length ? (
+            <Card title="Plans" style={{ borderRadius: "10px", overflow: "hidden" }}>
               <SummaryList items={profile.plans.map(plan => ({ key: plan.planId, title: plan.title, detail: formatDate(plan.plannedDate) }))} />
-            )}
-          </Card>
+            </Card>
+          ) : null}
         </aside>
       </div>
     </div>
@@ -344,18 +438,14 @@ function Metric({ label, value }: { label: string; value: number }) {
   )
 }
 
-function MetaLine({ parts }: { parts: string[] }) {
-  const visible = parts.filter(Boolean)
-  if (!visible.length) return null
-  return <div style={{ fontSize: "10px", color: "var(--ink-4)", marginTop: "5px" }}>{visible.join(" · ")}</div>
-}
-
-function SummaryList({ items }: { items: { key: string; title: string; detail: string }[] }) {
+function SummaryList({ items }: { items: { key: string; title: string; detail: string; href?: string }[] }) {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
       {items.map(item => (
         <div key={item.key} style={{ padding: "9px 10px", border: "1px solid var(--border)", borderRadius: "8px", background: "var(--bg)" }}>
-          <div style={{ fontSize: "12px", color: "var(--ink)" }}>{item.title}</div>
+          {item.href
+            ? <a href={item.href} className="place-summary-link">{item.title}</a>
+            : <div style={{ fontSize: "12px", color: "var(--ink)" }}>{item.title}</div>}
           <div style={{ fontSize: "10px", color: "var(--ink-4)", marginTop: "2px" }}>{item.detail}</div>
         </div>
       ))}
@@ -382,18 +472,12 @@ function deterministicSummary(profile: PlaceProfile) {
   }
   if (profile.people[0] && profile.people[0].sharedEventCount > 0) {
     lines.push(`Most shared visits were with ${profile.people[0].name}.`)
-  } else {
-    lines.push("No people have shared visits here yet.")
   }
   if (profile.stats.photoCount > 0) {
     lines.push(`${profile.stats.photoCount} ${profile.stats.photoCount === 1 ? "photo is" : "photos are"} connected to this place.`)
-  } else {
-    lines.push("No photos are connected to this place yet.")
   }
   if (profile.stats.groupCount > 0) {
     lines.push(`${profile.stats.groupCount} ${profile.stats.groupCount === 1 ? "group is" : "groups are"} connected through affiliations or event activity.`)
-  } else {
-    lines.push("No groups are connected to this place yet.")
   }
   if (profile.stats.lastVisitAt) {
     lines.push(`Last visit: ${formatDate(profile.stats.lastVisitAt)}.`)
@@ -402,6 +486,9 @@ function deterministicSummary(profile: PlaceProfile) {
 }
 
 function primaryMemorySignal(profile: PlaceProfile) {
+  if (profile.place.meaning) {
+    return profile.place.meaning
+  }
   if (profile.notes[0]?.body) {
     return profile.notes[0].body
   }
@@ -411,6 +498,54 @@ function primaryMemorySignal(profile: PlaceProfile) {
     return `Latest connected event: ${latest.title}${people} on ${formatDate(latest.startedAt)}.`
   }
   return "This page will come alive as Events, Interactions, photos, groups, notes, and spending connect to this Place."
+}
+
+function ProfileNavigationBar({ navigation }: { navigation: NonNullable<ProfileNavigation> }) {
+  return (
+    <nav className="place-profile-navigation" aria-label="Places in current results">
+      {navigation.previous
+        ? <Link href={navigation.previous.href} aria-label={`Previous Place: ${navigation.previous.name}`}>← {navigation.previous.name}</Link>
+        : <span />}
+      <span>{navigation.position} of {navigation.total}</span>
+      {navigation.next
+        ? <Link href={navigation.next.href} aria-label={`Next Place: ${navigation.next.name}`}>{navigation.next.name} →</Link>
+        : <span />}
+    </nav>
+  )
+}
+
+function visitCadence(timeline: PlaceProfile["timeline"]) {
+  if (timeline.length < 2) return null
+  const times = timeline
+    .map(event => new Date(event.startedAt).getTime())
+    .filter(Number.isFinite)
+    .toSorted((a, b) => a - b)
+  if (times.length < 2) return null
+  const spanDays = Math.max(1, Math.round((times[times.length - 1] - times[0]) / 86_400_000))
+  const averageGapDays = Math.max(1, Math.round(spanDays / (times.length - 1)))
+  const shortLabel = averageGapDays < 14
+    ? `Every ${averageGapDays} days`
+    : averageGapDays < 60
+      ? `Every ${Math.round(averageGapDays / 7)} weeks`
+      : `Every ${Math.round(averageGapDays / 30)} months`
+  return {
+    shortLabel,
+    narrative: `${times.length} connected visits span ${spanLabel(spanDays)}, averaging about ${shortLabel.toLocaleLowerCase()}.`,
+  }
+}
+
+function spanLabel(days: number) {
+  if (days < 14) return `${days} days`
+  if (days < 60) return `${Math.round(days / 7)} weeks`
+  if (days < 730) return `${Math.round(days / 30)} months`
+  return `${(days / 365).toFixed(1)} years`
+}
+
+function timelineWithNotePreviews(timeline: PlaceProfile["timeline"], notes: PlaceNote[]) {
+  return timeline.map(event => ({
+    ...event,
+    notePreview: notes.find(note => note.eventId === event.eventId)?.body.slice(0, 140),
+  }))
 }
 
 function formatDate(value?: string) {
@@ -428,6 +563,27 @@ function money(value: number) {
 
 function labelize(value: string) {
   return value.replaceAll("_", " ")
+}
+
+function placeMapTile(value?: string | null) {
+  if (!value) return null
+  try {
+    const coordinates = JSON.parse(value) as { lat?: number; lng?: number; latitude?: number; longitude?: number }
+    const latitude = coordinates.latitude ?? coordinates.lat
+    const longitude = coordinates.longitude ?? coordinates.lng
+    if (typeof latitude !== "number" || typeof longitude !== "number") return null
+    const zoom = 15
+    const scale = 2 ** zoom
+    const x = Math.floor((longitude + 180) / 360 * scale)
+    const latitudeRadians = latitude * Math.PI / 180
+    const y = Math.floor((1 - Math.asinh(Math.tan(latitudeRadians)) / Math.PI) / 2 * scale)
+    return {
+      src: `https://tile.openstreetmap.org/${zoom}/${x}/${y}.png`,
+      href: `https://www.openstreetmap.org/?mlat=${latitude}&mlon=${longitude}#map=${zoom}/${latitude}/${longitude}`,
+    }
+  } catch {
+    return null
+  }
 }
 
 const noteButtonStyle = {

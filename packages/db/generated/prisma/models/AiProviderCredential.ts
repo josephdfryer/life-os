@@ -224,6 +224,7 @@ export type AiProviderCredentialWhereInput = {
   lastUsedAt?: Prisma.DateTimeNullableFilter<"AiProviderCredential"> | Date | string | null
   workspace?: Prisma.XOR<Prisma.WorkspaceScalarRelationFilter, Prisma.WorkspaceWhereInput>
   analysisRuns?: Prisma.AiAnalysisRunListRelationFilter
+  noteAnalysisRuns?: Prisma.NoteAnalysisRunListRelationFilter
 }
 
 export type AiProviderCredentialOrderByWithRelationInput = {
@@ -239,6 +240,7 @@ export type AiProviderCredentialOrderByWithRelationInput = {
   lastUsedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   workspace?: Prisma.WorkspaceOrderByWithRelationInput
   analysisRuns?: Prisma.AiAnalysisRunOrderByRelationAggregateInput
+  noteAnalysisRuns?: Prisma.NoteAnalysisRunOrderByRelationAggregateInput
 }
 
 export type AiProviderCredentialWhereUniqueInput = Prisma.AtLeast<{
@@ -258,6 +260,7 @@ export type AiProviderCredentialWhereUniqueInput = Prisma.AtLeast<{
   lastUsedAt?: Prisma.DateTimeNullableFilter<"AiProviderCredential"> | Date | string | null
   workspace?: Prisma.XOR<Prisma.WorkspaceScalarRelationFilter, Prisma.WorkspaceWhereInput>
   analysisRuns?: Prisma.AiAnalysisRunListRelationFilter
+  noteAnalysisRuns?: Prisma.NoteAnalysisRunListRelationFilter
 }, "id" | "workspaceId_provider">
 
 export type AiProviderCredentialOrderByWithAggregationInput = {
@@ -304,6 +307,7 @@ export type AiProviderCredentialCreateInput = {
   lastUsedAt?: Date | string | null
   workspace: Prisma.WorkspaceCreateNestedOneWithoutAiProviderCredentialsInput
   analysisRuns?: Prisma.AiAnalysisRunCreateNestedManyWithoutCredentialInput
+  noteAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutCredentialInput
 }
 
 export type AiProviderCredentialUncheckedCreateInput = {
@@ -318,6 +322,7 @@ export type AiProviderCredentialUncheckedCreateInput = {
   status?: string
   lastUsedAt?: Date | string | null
   analysisRuns?: Prisma.AiAnalysisRunUncheckedCreateNestedManyWithoutCredentialInput
+  noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutCredentialInput
 }
 
 export type AiProviderCredentialUpdateInput = {
@@ -332,6 +337,7 @@ export type AiProviderCredentialUpdateInput = {
   lastUsedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutAiProviderCredentialsNestedInput
   analysisRuns?: Prisma.AiAnalysisRunUpdateManyWithoutCredentialNestedInput
+  noteAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutCredentialNestedInput
 }
 
 export type AiProviderCredentialUncheckedUpdateInput = {
@@ -346,6 +352,7 @@ export type AiProviderCredentialUncheckedUpdateInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   lastUsedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   analysisRuns?: Prisma.AiAnalysisRunUncheckedUpdateManyWithoutCredentialNestedInput
+  noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutCredentialNestedInput
 }
 
 export type AiProviderCredentialCreateManyInput = {
@@ -503,6 +510,22 @@ export type AiProviderCredentialUpdateOneWithoutAnalysisRunsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.AiProviderCredentialUpdateToOneWithWhereWithoutAnalysisRunsInput, Prisma.AiProviderCredentialUpdateWithoutAnalysisRunsInput>, Prisma.AiProviderCredentialUncheckedUpdateWithoutAnalysisRunsInput>
 }
 
+export type AiProviderCredentialCreateNestedOneWithoutNoteAnalysisRunsInput = {
+  create?: Prisma.XOR<Prisma.AiProviderCredentialCreateWithoutNoteAnalysisRunsInput, Prisma.AiProviderCredentialUncheckedCreateWithoutNoteAnalysisRunsInput>
+  connectOrCreate?: Prisma.AiProviderCredentialCreateOrConnectWithoutNoteAnalysisRunsInput
+  connect?: Prisma.AiProviderCredentialWhereUniqueInput
+}
+
+export type AiProviderCredentialUpdateOneWithoutNoteAnalysisRunsNestedInput = {
+  create?: Prisma.XOR<Prisma.AiProviderCredentialCreateWithoutNoteAnalysisRunsInput, Prisma.AiProviderCredentialUncheckedCreateWithoutNoteAnalysisRunsInput>
+  connectOrCreate?: Prisma.AiProviderCredentialCreateOrConnectWithoutNoteAnalysisRunsInput
+  upsert?: Prisma.AiProviderCredentialUpsertWithoutNoteAnalysisRunsInput
+  disconnect?: Prisma.AiProviderCredentialWhereInput | boolean
+  delete?: Prisma.AiProviderCredentialWhereInput | boolean
+  connect?: Prisma.AiProviderCredentialWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.AiProviderCredentialUpdateToOneWithWhereWithoutNoteAnalysisRunsInput, Prisma.AiProviderCredentialUpdateWithoutNoteAnalysisRunsInput>, Prisma.AiProviderCredentialUncheckedUpdateWithoutNoteAnalysisRunsInput>
+}
+
 export type AiProviderCredentialCreateWithoutWorkspaceInput = {
   id?: string
   createdAt?: Date | string
@@ -514,6 +537,7 @@ export type AiProviderCredentialCreateWithoutWorkspaceInput = {
   status?: string
   lastUsedAt?: Date | string | null
   analysisRuns?: Prisma.AiAnalysisRunCreateNestedManyWithoutCredentialInput
+  noteAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutCredentialInput
 }
 
 export type AiProviderCredentialUncheckedCreateWithoutWorkspaceInput = {
@@ -527,6 +551,7 @@ export type AiProviderCredentialUncheckedCreateWithoutWorkspaceInput = {
   status?: string
   lastUsedAt?: Date | string | null
   analysisRuns?: Prisma.AiAnalysisRunUncheckedCreateNestedManyWithoutCredentialInput
+  noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutCredentialInput
 }
 
 export type AiProviderCredentialCreateOrConnectWithoutWorkspaceInput = {
@@ -581,6 +606,7 @@ export type AiProviderCredentialCreateWithoutAnalysisRunsInput = {
   status?: string
   lastUsedAt?: Date | string | null
   workspace: Prisma.WorkspaceCreateNestedOneWithoutAiProviderCredentialsInput
+  noteAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutCredentialInput
 }
 
 export type AiProviderCredentialUncheckedCreateWithoutAnalysisRunsInput = {
@@ -594,6 +620,7 @@ export type AiProviderCredentialUncheckedCreateWithoutAnalysisRunsInput = {
   modelId: string
   status?: string
   lastUsedAt?: Date | string | null
+  noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutCredentialInput
 }
 
 export type AiProviderCredentialCreateOrConnectWithoutAnalysisRunsInput = {
@@ -623,6 +650,7 @@ export type AiProviderCredentialUpdateWithoutAnalysisRunsInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   lastUsedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutAiProviderCredentialsNestedInput
+  noteAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutCredentialNestedInput
 }
 
 export type AiProviderCredentialUncheckedUpdateWithoutAnalysisRunsInput = {
@@ -636,6 +664,79 @@ export type AiProviderCredentialUncheckedUpdateWithoutAnalysisRunsInput = {
   modelId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   lastUsedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutCredentialNestedInput
+}
+
+export type AiProviderCredentialCreateWithoutNoteAnalysisRunsInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  provider: string
+  label?: string | null
+  apiKeyEncrypted: string
+  modelId: string
+  status?: string
+  lastUsedAt?: Date | string | null
+  workspace: Prisma.WorkspaceCreateNestedOneWithoutAiProviderCredentialsInput
+  analysisRuns?: Prisma.AiAnalysisRunCreateNestedManyWithoutCredentialInput
+}
+
+export type AiProviderCredentialUncheckedCreateWithoutNoteAnalysisRunsInput = {
+  id?: string
+  workspaceId: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  provider: string
+  label?: string | null
+  apiKeyEncrypted: string
+  modelId: string
+  status?: string
+  lastUsedAt?: Date | string | null
+  analysisRuns?: Prisma.AiAnalysisRunUncheckedCreateNestedManyWithoutCredentialInput
+}
+
+export type AiProviderCredentialCreateOrConnectWithoutNoteAnalysisRunsInput = {
+  where: Prisma.AiProviderCredentialWhereUniqueInput
+  create: Prisma.XOR<Prisma.AiProviderCredentialCreateWithoutNoteAnalysisRunsInput, Prisma.AiProviderCredentialUncheckedCreateWithoutNoteAnalysisRunsInput>
+}
+
+export type AiProviderCredentialUpsertWithoutNoteAnalysisRunsInput = {
+  update: Prisma.XOR<Prisma.AiProviderCredentialUpdateWithoutNoteAnalysisRunsInput, Prisma.AiProviderCredentialUncheckedUpdateWithoutNoteAnalysisRunsInput>
+  create: Prisma.XOR<Prisma.AiProviderCredentialCreateWithoutNoteAnalysisRunsInput, Prisma.AiProviderCredentialUncheckedCreateWithoutNoteAnalysisRunsInput>
+  where?: Prisma.AiProviderCredentialWhereInput
+}
+
+export type AiProviderCredentialUpdateToOneWithWhereWithoutNoteAnalysisRunsInput = {
+  where?: Prisma.AiProviderCredentialWhereInput
+  data: Prisma.XOR<Prisma.AiProviderCredentialUpdateWithoutNoteAnalysisRunsInput, Prisma.AiProviderCredentialUncheckedUpdateWithoutNoteAnalysisRunsInput>
+}
+
+export type AiProviderCredentialUpdateWithoutNoteAnalysisRunsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  provider?: Prisma.StringFieldUpdateOperationsInput | string
+  label?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  apiKeyEncrypted?: Prisma.StringFieldUpdateOperationsInput | string
+  modelId?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  lastUsedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutAiProviderCredentialsNestedInput
+  analysisRuns?: Prisma.AiAnalysisRunUpdateManyWithoutCredentialNestedInput
+}
+
+export type AiProviderCredentialUncheckedUpdateWithoutNoteAnalysisRunsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  provider?: Prisma.StringFieldUpdateOperationsInput | string
+  label?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  apiKeyEncrypted?: Prisma.StringFieldUpdateOperationsInput | string
+  modelId?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  lastUsedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  analysisRuns?: Prisma.AiAnalysisRunUncheckedUpdateManyWithoutCredentialNestedInput
 }
 
 export type AiProviderCredentialCreateManyWorkspaceInput = {
@@ -661,6 +762,7 @@ export type AiProviderCredentialUpdateWithoutWorkspaceInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   lastUsedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   analysisRuns?: Prisma.AiAnalysisRunUpdateManyWithoutCredentialNestedInput
+  noteAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutCredentialNestedInput
 }
 
 export type AiProviderCredentialUncheckedUpdateWithoutWorkspaceInput = {
@@ -674,6 +776,7 @@ export type AiProviderCredentialUncheckedUpdateWithoutWorkspaceInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   lastUsedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   analysisRuns?: Prisma.AiAnalysisRunUncheckedUpdateManyWithoutCredentialNestedInput
+  noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutCredentialNestedInput
 }
 
 export type AiProviderCredentialUncheckedUpdateManyWithoutWorkspaceInput = {
@@ -695,10 +798,12 @@ export type AiProviderCredentialUncheckedUpdateManyWithoutWorkspaceInput = {
 
 export type AiProviderCredentialCountOutputType = {
   analysisRuns: number
+  noteAnalysisRuns: number
 }
 
 export type AiProviderCredentialCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   analysisRuns?: boolean | AiProviderCredentialCountOutputTypeCountAnalysisRunsArgs
+  noteAnalysisRuns?: boolean | AiProviderCredentialCountOutputTypeCountNoteAnalysisRunsArgs
 }
 
 /**
@@ -718,6 +823,13 @@ export type AiProviderCredentialCountOutputTypeCountAnalysisRunsArgs<ExtArgs ext
   where?: Prisma.AiAnalysisRunWhereInput
 }
 
+/**
+ * AiProviderCredentialCountOutputType without action
+ */
+export type AiProviderCredentialCountOutputTypeCountNoteAnalysisRunsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.NoteAnalysisRunWhereInput
+}
+
 
 export type AiProviderCredentialSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -732,6 +844,7 @@ export type AiProviderCredentialSelect<ExtArgs extends runtime.Types.Extensions.
   lastUsedAt?: boolean
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   analysisRuns?: boolean | Prisma.AiProviderCredential$analysisRunsArgs<ExtArgs>
+  noteAnalysisRuns?: boolean | Prisma.AiProviderCredential$noteAnalysisRunsArgs<ExtArgs>
   _count?: boolean | Prisma.AiProviderCredentialCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["aiProviderCredential"]>
 
@@ -780,6 +893,7 @@ export type AiProviderCredentialOmit<ExtArgs extends runtime.Types.Extensions.In
 export type AiProviderCredentialInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   analysisRuns?: boolean | Prisma.AiProviderCredential$analysisRunsArgs<ExtArgs>
+  noteAnalysisRuns?: boolean | Prisma.AiProviderCredential$noteAnalysisRunsArgs<ExtArgs>
   _count?: boolean | Prisma.AiProviderCredentialCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type AiProviderCredentialIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -794,6 +908,7 @@ export type $AiProviderCredentialPayload<ExtArgs extends runtime.Types.Extension
   objects: {
     workspace: Prisma.$WorkspacePayload<ExtArgs>
     analysisRuns: Prisma.$AiAnalysisRunPayload<ExtArgs>[]
+    noteAnalysisRuns: Prisma.$NoteAnalysisRunPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1202,6 +1317,7 @@ export interface Prisma__AiProviderCredentialClient<T, Null = never, ExtArgs ext
   readonly [Symbol.toStringTag]: "PrismaPromise"
   workspace<T extends Prisma.WorkspaceDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WorkspaceDefaultArgs<ExtArgs>>): Prisma.Prisma__WorkspaceClient<runtime.Types.Result.GetResult<Prisma.$WorkspacePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   analysisRuns<T extends Prisma.AiProviderCredential$analysisRunsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AiProviderCredential$analysisRunsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AiAnalysisRunPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  noteAnalysisRuns<T extends Prisma.AiProviderCredential$noteAnalysisRunsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AiProviderCredential$noteAnalysisRunsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NoteAnalysisRunPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1661,6 +1777,30 @@ export type AiProviderCredential$analysisRunsArgs<ExtArgs extends runtime.Types.
   take?: number
   skip?: number
   distinct?: Prisma.AiAnalysisRunScalarFieldEnum | Prisma.AiAnalysisRunScalarFieldEnum[]
+}
+
+/**
+ * AiProviderCredential.noteAnalysisRuns
+ */
+export type AiProviderCredential$noteAnalysisRunsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the NoteAnalysisRun
+   */
+  select?: Prisma.NoteAnalysisRunSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the NoteAnalysisRun
+   */
+  omit?: Prisma.NoteAnalysisRunOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.NoteAnalysisRunInclude<ExtArgs> | null
+  where?: Prisma.NoteAnalysisRunWhereInput
+  orderBy?: Prisma.NoteAnalysisRunOrderByWithRelationInput | Prisma.NoteAnalysisRunOrderByWithRelationInput[]
+  cursor?: Prisma.NoteAnalysisRunWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.NoteAnalysisRunScalarFieldEnum | Prisma.NoteAnalysisRunScalarFieldEnum[]
 }
 
 /**

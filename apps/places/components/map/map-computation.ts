@@ -15,7 +15,7 @@ type CoordinateSource = { id: string; latitude?: number; longitude?: number }
 type PlottedCoordinate<T> = { item: T; x: number; y: number }
 type Tile = { key: string; src: string; left: number; top: number }
 type MapViewport = { tiles: Tile[]; points: PlottedPlace[]; centerLabel: string; tileZoom?: number; topLeft?: { x: number; y: number }; width: number; height: number }
-type PlaceCluster = {
+export type PlaceCluster = {
   id: string
   places: PlaceMapItem[]
   x: number
@@ -57,6 +57,7 @@ export function plotPlaces(places: PlaceMapItem[]): PlottedPlace[] {
 }
 
 export type Camera = { lat: number; lng: number; zoom: number }
+export type MapBounds = { north: number; south: number; east: number; west: number }
 
 const MIN_ZOOM = 3
 const MAX_ZOOM = 19
@@ -74,6 +75,18 @@ export function panCamera(camera: Camera, dxPx: number, dyPx: number): Camera {
   const point = project(camera.lat, camera.lng, tz)
   const next = unproject(point.x + dxPx, point.y + dyPx, tz)
   return { ...next, zoom: camera.zoom }
+}
+
+export function cameraBounds(camera: Camera, width: number, height: number): MapBounds {
+  const center = project(camera.lat, camera.lng, camera.zoom)
+  const northWest = unproject(center.x - width / 2, center.y - height / 2, camera.zoom)
+  const southEast = unproject(center.x + width / 2, center.y + height / 2, camera.zoom)
+  return {
+    north: northWest.lat,
+    west: normalizeLongitude(northWest.lng),
+    south: southEast.lat,
+    east: normalizeLongitude(southEast.lng),
+  }
 }
 
 // Zoom keeping the geographic point under the cursor fixed — the core of
@@ -158,6 +171,10 @@ function unproject(x: number, y: number, zoom: number) {
   return { lat, lng }
 }
 
+function normalizeLongitude(longitude: number) {
+  return ((longitude + 540) % 360) - 180
+}
+
 export function projectCoordinates<T extends CoordinateSource>(items: T[], viewport: MapViewport): Array<PlottedCoordinate<T>> {
   if (viewport.tileZoom === undefined || !viewport.topLeft) {
     return items.map((item, index) => ({ item, x: 96 + (index % 5) * 40, y: viewport.height - 72 }))
@@ -214,10 +231,11 @@ function scale(value: number, min: number, max: number) {
 export function clusterPlaces(points: PlottedPlace[], zoom: number): PlaceCluster[] {
   if (zoom <= 1) return clusterByFinancialGroup(points)
   const radius = clusterRadiusForZoom(zoom)
-  if (radius === 0) return points.map(point => clusterFromPoints([point], "place"))
+  const stablePoints = points.toSorted((a, b) => a.place.id.localeCompare(b.place.id))
+  if (radius === 0) return stablePoints.map(point => clusterFromPoints([point], "place"))
 
   const clusters: PlottedPlace[][] = []
-  for (const point of points) {
+  for (const point of stablePoints) {
     const cluster = clusters.find(items => {
       const center = centerOf(items)
       return distance(center.x, center.y, point.x, point.y) <= radius
@@ -231,6 +249,23 @@ export function clusterPlaces(points: PlottedPlace[], zoom: number): PlaceCluste
   return clusters.map(points => clusterFromPoints(points, points.length === 1 ? "place" : "neighborhood"))
 }
 
+export function visibleClusterLabels(clusters: PlaceCluster[], selectedId?: string | null, minimumDistance = 92) {
+  const accepted: PlaceCluster[] = []
+  const ordered = clusters.toSorted((a, b) => {
+    const aSelected = a.places.some(place => place.id === selectedId) ? 1 : 0
+    const bSelected = b.places.some(place => place.id === selectedId) ? 1 : 0
+    return bSelected - aSelected || b.fallbackWeight - a.fallbackWeight || a.id.localeCompare(b.id)
+  })
+  for (const cluster of ordered) {
+    if (cluster.level !== "place") continue
+    const isSelected = cluster.places.some(place => place.id === selectedId)
+    if (isSelected || accepted.every(item => distance(item.x, item.y, cluster.x, cluster.y) >= minimumDistance)) {
+      accepted.push(cluster)
+    }
+  }
+  return new Set(accepted.map(cluster => cluster.id))
+}
+
 function clusterRadiusForZoom(zoom: number) {
   if (zoom >= 4) return 0
   return Math.max(5, 24 - zoom * 5)
@@ -238,7 +273,7 @@ function clusterRadiusForZoom(zoom: number) {
 
 function clusterByFinancialGroup(points: PlottedPlace[]) {
   const byGroup = new Map<string, PlottedPlace[]>()
-  for (const point of points) {
+  for (const point of points.toSorted((a, b) => a.place.id.localeCompare(b.place.id))) {
     const group = point.place.financialGroup
     const key = group ? `group:${group.id}` : `place:${point.place.id}`
     byGroup.set(key, [...(byGroup.get(key) ?? []), point])
@@ -247,8 +282,9 @@ function clusterByFinancialGroup(points: PlottedPlace[]) {
 }
 
 function clusterFromPoints(points: PlottedPlace[], level: PlaceCluster["level"]): PlaceCluster {
-  const center = centerOf(points)
-  const places = points.map(point => point.place)
+  const stablePoints = points.toSorted((a, b) => a.place.id.localeCompare(b.place.id))
+  const center = centerOf(stablePoints)
+  const places = stablePoints.map(point => point.place)
   const financialGroup = places[0]?.financialGroup
   return {
     id: places.map(place => place.id).join(":"),
@@ -302,5 +338,3 @@ function dominantPlaceType(places: PlaceMapItem[]) {
 function normalizePlaceType(value?: string) {
   return value?.trim().toLowerCase().replaceAll(/\s+/g, "_")
 }
-
-

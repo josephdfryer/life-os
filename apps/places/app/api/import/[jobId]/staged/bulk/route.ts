@@ -16,6 +16,7 @@ export async function POST(request: Request, ctx: RouteContext<"/api/import/[job
       action,
       minConfidence: optionalNumber(body?.minConfidence),
       visitIds: optionalStringArray(body?.visitIds),
+      dryRun: body?.dryRun === true,
     }, actor.actor))
   } catch (error) {
     return handleRouteError(error)

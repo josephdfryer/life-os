@@ -237,6 +237,16 @@ export type AiProviderCredential = Prisma.AiProviderCredentialModel
  */
 export type AiAnalysisRun = Prisma.AiAnalysisRunModel
 /**
+ * Model NoteAnalysisRun
+ * 
+ */
+export type NoteAnalysisRun = Prisma.NoteAnalysisRunModel
+/**
+ * Model NoteSuggestion
+ * 
+ */
+export type NoteSuggestion = Prisma.NoteSuggestionModel
+/**
  * Model Group
  * 
  */

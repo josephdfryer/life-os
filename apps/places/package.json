@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "test": "tsx --test tests/*.test.ts",
+    "benchmark:map": "tsx scripts/benchmark-map.ts",
     "type-check": "tsc --noEmit",
     "location:sync": "tsx scripts/location-sync.ts"
   },

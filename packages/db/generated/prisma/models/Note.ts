@@ -213,6 +213,8 @@ export type NoteWhereInput = {
   interactions?: Prisma.InteractionListRelationFilter
   states?: Prisma.StateListRelationFilter
   groups?: Prisma.GroupListRelationFilter
+  aiAnalysisRuns?: Prisma.NoteAnalysisRunListRelationFilter
+  suggestions?: Prisma.NoteSuggestionListRelationFilter
 }
 
 export type NoteOrderByWithRelationInput = {
@@ -231,6 +233,8 @@ export type NoteOrderByWithRelationInput = {
   interactions?: Prisma.InteractionOrderByRelationAggregateInput
   states?: Prisma.StateOrderByRelationAggregateInput
   groups?: Prisma.GroupOrderByRelationAggregateInput
+  aiAnalysisRuns?: Prisma.NoteAnalysisRunOrderByRelationAggregateInput
+  suggestions?: Prisma.NoteSuggestionOrderByRelationAggregateInput
 }
 
 export type NoteWhereUniqueInput = Prisma.AtLeast<{
@@ -252,6 +256,8 @@ export type NoteWhereUniqueInput = Prisma.AtLeast<{
   interactions?: Prisma.InteractionListRelationFilter
   states?: Prisma.StateListRelationFilter
   groups?: Prisma.GroupListRelationFilter
+  aiAnalysisRuns?: Prisma.NoteAnalysisRunListRelationFilter
+  suggestions?: Prisma.NoteSuggestionListRelationFilter
 }, "id">
 
 export type NoteOrderByWithAggregationInput = {
@@ -296,6 +302,8 @@ export type NoteCreateInput = {
   interactions?: Prisma.InteractionCreateNestedManyWithoutSourceNoteInput
   states?: Prisma.StateCreateNestedManyWithoutSourceNoteInput
   groups?: Prisma.GroupCreateNestedManyWithoutSourceNoteInput
+  aiAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutNoteInput
+  suggestions?: Prisma.NoteSuggestionCreateNestedManyWithoutNoteInput
 }
 
 export type NoteUncheckedCreateInput = {
@@ -312,6 +320,8 @@ export type NoteUncheckedCreateInput = {
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutSourceNoteInput
   states?: Prisma.StateUncheckedCreateNestedManyWithoutSourceNoteInput
   groups?: Prisma.GroupUncheckedCreateNestedManyWithoutSourceNoteInput
+  aiAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutNoteInput
+  suggestions?: Prisma.NoteSuggestionUncheckedCreateNestedManyWithoutNoteInput
 }
 
 export type NoteUpdateInput = {
@@ -328,6 +338,8 @@ export type NoteUpdateInput = {
   interactions?: Prisma.InteractionUpdateManyWithoutSourceNoteNestedInput
   states?: Prisma.StateUpdateManyWithoutSourceNoteNestedInput
   groups?: Prisma.GroupUpdateManyWithoutSourceNoteNestedInput
+  aiAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutNoteNestedInput
+  suggestions?: Prisma.NoteSuggestionUpdateManyWithoutNoteNestedInput
 }
 
 export type NoteUncheckedUpdateInput = {
@@ -344,6 +356,8 @@ export type NoteUncheckedUpdateInput = {
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutSourceNoteNestedInput
   states?: Prisma.StateUncheckedUpdateManyWithoutSourceNoteNestedInput
   groups?: Prisma.GroupUncheckedUpdateManyWithoutSourceNoteNestedInput
+  aiAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutNoteNestedInput
+  suggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutNoteNestedInput
 }
 
 export type NoteCreateManyInput = {
@@ -390,6 +404,11 @@ export type NoteOrderByRelationAggregateInput = {
 export type NoteNullableScalarRelationFilter = {
   is?: Prisma.NoteWhereInput | null
   isNot?: Prisma.NoteWhereInput | null
+}
+
+export type NoteScalarRelationFilter = {
+  is?: Prisma.NoteWhereInput
+  isNot?: Prisma.NoteWhereInput
 }
 
 export type NoteCountOrderByAggregateInput = {
@@ -557,6 +576,34 @@ export type NoteUncheckedUpdateManyWithoutSourceFileNestedInput = {
   deleteMany?: Prisma.NoteScalarWhereInput | Prisma.NoteScalarWhereInput[]
 }
 
+export type NoteCreateNestedOneWithoutAiAnalysisRunsInput = {
+  create?: Prisma.XOR<Prisma.NoteCreateWithoutAiAnalysisRunsInput, Prisma.NoteUncheckedCreateWithoutAiAnalysisRunsInput>
+  connectOrCreate?: Prisma.NoteCreateOrConnectWithoutAiAnalysisRunsInput
+  connect?: Prisma.NoteWhereUniqueInput
+}
+
+export type NoteUpdateOneRequiredWithoutAiAnalysisRunsNestedInput = {
+  create?: Prisma.XOR<Prisma.NoteCreateWithoutAiAnalysisRunsInput, Prisma.NoteUncheckedCreateWithoutAiAnalysisRunsInput>
+  connectOrCreate?: Prisma.NoteCreateOrConnectWithoutAiAnalysisRunsInput
+  upsert?: Prisma.NoteUpsertWithoutAiAnalysisRunsInput
+  connect?: Prisma.NoteWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.NoteUpdateToOneWithWhereWithoutAiAnalysisRunsInput, Prisma.NoteUpdateWithoutAiAnalysisRunsInput>, Prisma.NoteUncheckedUpdateWithoutAiAnalysisRunsInput>
+}
+
+export type NoteCreateNestedOneWithoutSuggestionsInput = {
+  create?: Prisma.XOR<Prisma.NoteCreateWithoutSuggestionsInput, Prisma.NoteUncheckedCreateWithoutSuggestionsInput>
+  connectOrCreate?: Prisma.NoteCreateOrConnectWithoutSuggestionsInput
+  connect?: Prisma.NoteWhereUniqueInput
+}
+
+export type NoteUpdateOneRequiredWithoutSuggestionsNestedInput = {
+  create?: Prisma.XOR<Prisma.NoteCreateWithoutSuggestionsInput, Prisma.NoteUncheckedCreateWithoutSuggestionsInput>
+  connectOrCreate?: Prisma.NoteCreateOrConnectWithoutSuggestionsInput
+  upsert?: Prisma.NoteUpsertWithoutSuggestionsInput
+  connect?: Prisma.NoteWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.NoteUpdateToOneWithWhereWithoutSuggestionsInput, Prisma.NoteUpdateWithoutSuggestionsInput>, Prisma.NoteUncheckedUpdateWithoutSuggestionsInput>
+}
+
 export type NoteCreateNestedOneWithoutGroupsInput = {
   create?: Prisma.XOR<Prisma.NoteCreateWithoutGroupsInput, Prisma.NoteUncheckedCreateWithoutGroupsInput>
   connectOrCreate?: Prisma.NoteCreateOrConnectWithoutGroupsInput
@@ -602,6 +649,8 @@ export type NoteCreateWithoutWorkspaceInput = {
   interactions?: Prisma.InteractionCreateNestedManyWithoutSourceNoteInput
   states?: Prisma.StateCreateNestedManyWithoutSourceNoteInput
   groups?: Prisma.GroupCreateNestedManyWithoutSourceNoteInput
+  aiAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutNoteInput
+  suggestions?: Prisma.NoteSuggestionCreateNestedManyWithoutNoteInput
 }
 
 export type NoteUncheckedCreateWithoutWorkspaceInput = {
@@ -617,6 +666,8 @@ export type NoteUncheckedCreateWithoutWorkspaceInput = {
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutSourceNoteInput
   states?: Prisma.StateUncheckedCreateNestedManyWithoutSourceNoteInput
   groups?: Prisma.GroupUncheckedCreateNestedManyWithoutSourceNoteInput
+  aiAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutNoteInput
+  suggestions?: Prisma.NoteSuggestionUncheckedCreateNestedManyWithoutNoteInput
 }
 
 export type NoteCreateOrConnectWithoutWorkspaceInput = {
@@ -671,6 +722,8 @@ export type NoteCreateWithoutEventsInput = {
   interactions?: Prisma.InteractionCreateNestedManyWithoutSourceNoteInput
   states?: Prisma.StateCreateNestedManyWithoutSourceNoteInput
   groups?: Prisma.GroupCreateNestedManyWithoutSourceNoteInput
+  aiAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutNoteInput
+  suggestions?: Prisma.NoteSuggestionCreateNestedManyWithoutNoteInput
 }
 
 export type NoteUncheckedCreateWithoutEventsInput = {
@@ -686,6 +739,8 @@ export type NoteUncheckedCreateWithoutEventsInput = {
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutSourceNoteInput
   states?: Prisma.StateUncheckedCreateNestedManyWithoutSourceNoteInput
   groups?: Prisma.GroupUncheckedCreateNestedManyWithoutSourceNoteInput
+  aiAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutNoteInput
+  suggestions?: Prisma.NoteSuggestionUncheckedCreateNestedManyWithoutNoteInput
 }
 
 export type NoteCreateOrConnectWithoutEventsInput = {
@@ -717,6 +772,8 @@ export type NoteUpdateWithoutEventsInput = {
   interactions?: Prisma.InteractionUpdateManyWithoutSourceNoteNestedInput
   states?: Prisma.StateUpdateManyWithoutSourceNoteNestedInput
   groups?: Prisma.GroupUpdateManyWithoutSourceNoteNestedInput
+  aiAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutNoteNestedInput
+  suggestions?: Prisma.NoteSuggestionUpdateManyWithoutNoteNestedInput
 }
 
 export type NoteUncheckedUpdateWithoutEventsInput = {
@@ -732,6 +789,8 @@ export type NoteUncheckedUpdateWithoutEventsInput = {
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutSourceNoteNestedInput
   states?: Prisma.StateUncheckedUpdateManyWithoutSourceNoteNestedInput
   groups?: Prisma.GroupUncheckedUpdateManyWithoutSourceNoteNestedInput
+  aiAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutNoteNestedInput
+  suggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutNoteNestedInput
 }
 
 export type NoteCreateWithoutInteractionsInput = {
@@ -747,6 +806,8 @@ export type NoteCreateWithoutInteractionsInput = {
   events?: Prisma.EventCreateNestedManyWithoutSourceNoteInput
   states?: Prisma.StateCreateNestedManyWithoutSourceNoteInput
   groups?: Prisma.GroupCreateNestedManyWithoutSourceNoteInput
+  aiAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutNoteInput
+  suggestions?: Prisma.NoteSuggestionCreateNestedManyWithoutNoteInput
 }
 
 export type NoteUncheckedCreateWithoutInteractionsInput = {
@@ -762,6 +823,8 @@ export type NoteUncheckedCreateWithoutInteractionsInput = {
   events?: Prisma.EventUncheckedCreateNestedManyWithoutSourceNoteInput
   states?: Prisma.StateUncheckedCreateNestedManyWithoutSourceNoteInput
   groups?: Prisma.GroupUncheckedCreateNestedManyWithoutSourceNoteInput
+  aiAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutNoteInput
+  suggestions?: Prisma.NoteSuggestionUncheckedCreateNestedManyWithoutNoteInput
 }
 
 export type NoteCreateOrConnectWithoutInteractionsInput = {
@@ -793,6 +856,8 @@ export type NoteUpdateWithoutInteractionsInput = {
   events?: Prisma.EventUpdateManyWithoutSourceNoteNestedInput
   states?: Prisma.StateUpdateManyWithoutSourceNoteNestedInput
   groups?: Prisma.GroupUpdateManyWithoutSourceNoteNestedInput
+  aiAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutNoteNestedInput
+  suggestions?: Prisma.NoteSuggestionUpdateManyWithoutNoteNestedInput
 }
 
 export type NoteUncheckedUpdateWithoutInteractionsInput = {
@@ -808,6 +873,8 @@ export type NoteUncheckedUpdateWithoutInteractionsInput = {
   events?: Prisma.EventUncheckedUpdateManyWithoutSourceNoteNestedInput
   states?: Prisma.StateUncheckedUpdateManyWithoutSourceNoteNestedInput
   groups?: Prisma.GroupUncheckedUpdateManyWithoutSourceNoteNestedInput
+  aiAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutNoteNestedInput
+  suggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutNoteNestedInput
 }
 
 export type NoteCreateWithoutPlansInput = {
@@ -823,6 +890,8 @@ export type NoteCreateWithoutPlansInput = {
   interactions?: Prisma.InteractionCreateNestedManyWithoutSourceNoteInput
   states?: Prisma.StateCreateNestedManyWithoutSourceNoteInput
   groups?: Prisma.GroupCreateNestedManyWithoutSourceNoteInput
+  aiAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutNoteInput
+  suggestions?: Prisma.NoteSuggestionCreateNestedManyWithoutNoteInput
 }
 
 export type NoteUncheckedCreateWithoutPlansInput = {
@@ -838,6 +907,8 @@ export type NoteUncheckedCreateWithoutPlansInput = {
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutSourceNoteInput
   states?: Prisma.StateUncheckedCreateNestedManyWithoutSourceNoteInput
   groups?: Prisma.GroupUncheckedCreateNestedManyWithoutSourceNoteInput
+  aiAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutNoteInput
+  suggestions?: Prisma.NoteSuggestionUncheckedCreateNestedManyWithoutNoteInput
 }
 
 export type NoteCreateOrConnectWithoutPlansInput = {
@@ -869,6 +940,8 @@ export type NoteUpdateWithoutPlansInput = {
   interactions?: Prisma.InteractionUpdateManyWithoutSourceNoteNestedInput
   states?: Prisma.StateUpdateManyWithoutSourceNoteNestedInput
   groups?: Prisma.GroupUpdateManyWithoutSourceNoteNestedInput
+  aiAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutNoteNestedInput
+  suggestions?: Prisma.NoteSuggestionUpdateManyWithoutNoteNestedInput
 }
 
 export type NoteUncheckedUpdateWithoutPlansInput = {
@@ -884,6 +957,8 @@ export type NoteUncheckedUpdateWithoutPlansInput = {
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutSourceNoteNestedInput
   states?: Prisma.StateUncheckedUpdateManyWithoutSourceNoteNestedInput
   groups?: Prisma.GroupUncheckedUpdateManyWithoutSourceNoteNestedInput
+  aiAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutNoteNestedInput
+  suggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutNoteNestedInput
 }
 
 export type NoteCreateWithoutSourceFileInput = {
@@ -899,6 +974,8 @@ export type NoteCreateWithoutSourceFileInput = {
   interactions?: Prisma.InteractionCreateNestedManyWithoutSourceNoteInput
   states?: Prisma.StateCreateNestedManyWithoutSourceNoteInput
   groups?: Prisma.GroupCreateNestedManyWithoutSourceNoteInput
+  aiAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutNoteInput
+  suggestions?: Prisma.NoteSuggestionCreateNestedManyWithoutNoteInput
 }
 
 export type NoteUncheckedCreateWithoutSourceFileInput = {
@@ -914,6 +991,8 @@ export type NoteUncheckedCreateWithoutSourceFileInput = {
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutSourceNoteInput
   states?: Prisma.StateUncheckedCreateNestedManyWithoutSourceNoteInput
   groups?: Prisma.GroupUncheckedCreateNestedManyWithoutSourceNoteInput
+  aiAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutNoteInput
+  suggestions?: Prisma.NoteSuggestionUncheckedCreateNestedManyWithoutNoteInput
 }
 
 export type NoteCreateOrConnectWithoutSourceFileInput = {
@@ -941,6 +1020,174 @@ export type NoteUpdateManyWithWhereWithoutSourceFileInput = {
   data: Prisma.XOR<Prisma.NoteUpdateManyMutationInput, Prisma.NoteUncheckedUpdateManyWithoutSourceFileInput>
 }
 
+export type NoteCreateWithoutAiAnalysisRunsInput = {
+  id?: string
+  createdAt?: Date | string
+  timestamp: Date | string
+  type: string
+  content: string
+  metadata?: string | null
+  workspace?: Prisma.WorkspaceCreateNestedOneWithoutNotesInput
+  sourceFile?: Prisma.ImportedFileCreateNestedOneWithoutNotesInput
+  plans?: Prisma.PlanCreateNestedManyWithoutSourceNoteInput
+  events?: Prisma.EventCreateNestedManyWithoutSourceNoteInput
+  interactions?: Prisma.InteractionCreateNestedManyWithoutSourceNoteInput
+  states?: Prisma.StateCreateNestedManyWithoutSourceNoteInput
+  groups?: Prisma.GroupCreateNestedManyWithoutSourceNoteInput
+  suggestions?: Prisma.NoteSuggestionCreateNestedManyWithoutNoteInput
+}
+
+export type NoteUncheckedCreateWithoutAiAnalysisRunsInput = {
+  id?: string
+  workspaceId?: string
+  createdAt?: Date | string
+  timestamp: Date | string
+  type: string
+  content: string
+  metadata?: string | null
+  sourceFileId?: string | null
+  plans?: Prisma.PlanUncheckedCreateNestedManyWithoutSourceNoteInput
+  events?: Prisma.EventUncheckedCreateNestedManyWithoutSourceNoteInput
+  interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutSourceNoteInput
+  states?: Prisma.StateUncheckedCreateNestedManyWithoutSourceNoteInput
+  groups?: Prisma.GroupUncheckedCreateNestedManyWithoutSourceNoteInput
+  suggestions?: Prisma.NoteSuggestionUncheckedCreateNestedManyWithoutNoteInput
+}
+
+export type NoteCreateOrConnectWithoutAiAnalysisRunsInput = {
+  where: Prisma.NoteWhereUniqueInput
+  create: Prisma.XOR<Prisma.NoteCreateWithoutAiAnalysisRunsInput, Prisma.NoteUncheckedCreateWithoutAiAnalysisRunsInput>
+}
+
+export type NoteUpsertWithoutAiAnalysisRunsInput = {
+  update: Prisma.XOR<Prisma.NoteUpdateWithoutAiAnalysisRunsInput, Prisma.NoteUncheckedUpdateWithoutAiAnalysisRunsInput>
+  create: Prisma.XOR<Prisma.NoteCreateWithoutAiAnalysisRunsInput, Prisma.NoteUncheckedCreateWithoutAiAnalysisRunsInput>
+  where?: Prisma.NoteWhereInput
+}
+
+export type NoteUpdateToOneWithWhereWithoutAiAnalysisRunsInput = {
+  where?: Prisma.NoteWhereInput
+  data: Prisma.XOR<Prisma.NoteUpdateWithoutAiAnalysisRunsInput, Prisma.NoteUncheckedUpdateWithoutAiAnalysisRunsInput>
+}
+
+export type NoteUpdateWithoutAiAnalysisRunsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutNotesNestedInput
+  sourceFile?: Prisma.ImportedFileUpdateOneWithoutNotesNestedInput
+  plans?: Prisma.PlanUpdateManyWithoutSourceNoteNestedInput
+  events?: Prisma.EventUpdateManyWithoutSourceNoteNestedInput
+  interactions?: Prisma.InteractionUpdateManyWithoutSourceNoteNestedInput
+  states?: Prisma.StateUpdateManyWithoutSourceNoteNestedInput
+  groups?: Prisma.GroupUpdateManyWithoutSourceNoteNestedInput
+  suggestions?: Prisma.NoteSuggestionUpdateManyWithoutNoteNestedInput
+}
+
+export type NoteUncheckedUpdateWithoutAiAnalysisRunsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  plans?: Prisma.PlanUncheckedUpdateManyWithoutSourceNoteNestedInput
+  events?: Prisma.EventUncheckedUpdateManyWithoutSourceNoteNestedInput
+  interactions?: Prisma.InteractionUncheckedUpdateManyWithoutSourceNoteNestedInput
+  states?: Prisma.StateUncheckedUpdateManyWithoutSourceNoteNestedInput
+  groups?: Prisma.GroupUncheckedUpdateManyWithoutSourceNoteNestedInput
+  suggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutNoteNestedInput
+}
+
+export type NoteCreateWithoutSuggestionsInput = {
+  id?: string
+  createdAt?: Date | string
+  timestamp: Date | string
+  type: string
+  content: string
+  metadata?: string | null
+  workspace?: Prisma.WorkspaceCreateNestedOneWithoutNotesInput
+  sourceFile?: Prisma.ImportedFileCreateNestedOneWithoutNotesInput
+  plans?: Prisma.PlanCreateNestedManyWithoutSourceNoteInput
+  events?: Prisma.EventCreateNestedManyWithoutSourceNoteInput
+  interactions?: Prisma.InteractionCreateNestedManyWithoutSourceNoteInput
+  states?: Prisma.StateCreateNestedManyWithoutSourceNoteInput
+  groups?: Prisma.GroupCreateNestedManyWithoutSourceNoteInput
+  aiAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutNoteInput
+}
+
+export type NoteUncheckedCreateWithoutSuggestionsInput = {
+  id?: string
+  workspaceId?: string
+  createdAt?: Date | string
+  timestamp: Date | string
+  type: string
+  content: string
+  metadata?: string | null
+  sourceFileId?: string | null
+  plans?: Prisma.PlanUncheckedCreateNestedManyWithoutSourceNoteInput
+  events?: Prisma.EventUncheckedCreateNestedManyWithoutSourceNoteInput
+  interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutSourceNoteInput
+  states?: Prisma.StateUncheckedCreateNestedManyWithoutSourceNoteInput
+  groups?: Prisma.GroupUncheckedCreateNestedManyWithoutSourceNoteInput
+  aiAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutNoteInput
+}
+
+export type NoteCreateOrConnectWithoutSuggestionsInput = {
+  where: Prisma.NoteWhereUniqueInput
+  create: Prisma.XOR<Prisma.NoteCreateWithoutSuggestionsInput, Prisma.NoteUncheckedCreateWithoutSuggestionsInput>
+}
+
+export type NoteUpsertWithoutSuggestionsInput = {
+  update: Prisma.XOR<Prisma.NoteUpdateWithoutSuggestionsInput, Prisma.NoteUncheckedUpdateWithoutSuggestionsInput>
+  create: Prisma.XOR<Prisma.NoteCreateWithoutSuggestionsInput, Prisma.NoteUncheckedCreateWithoutSuggestionsInput>
+  where?: Prisma.NoteWhereInput
+}
+
+export type NoteUpdateToOneWithWhereWithoutSuggestionsInput = {
+  where?: Prisma.NoteWhereInput
+  data: Prisma.XOR<Prisma.NoteUpdateWithoutSuggestionsInput, Prisma.NoteUncheckedUpdateWithoutSuggestionsInput>
+}
+
+export type NoteUpdateWithoutSuggestionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutNotesNestedInput
+  sourceFile?: Prisma.ImportedFileUpdateOneWithoutNotesNestedInput
+  plans?: Prisma.PlanUpdateManyWithoutSourceNoteNestedInput
+  events?: Prisma.EventUpdateManyWithoutSourceNoteNestedInput
+  interactions?: Prisma.InteractionUpdateManyWithoutSourceNoteNestedInput
+  states?: Prisma.StateUpdateManyWithoutSourceNoteNestedInput
+  groups?: Prisma.GroupUpdateManyWithoutSourceNoteNestedInput
+  aiAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutNoteNestedInput
+}
+
+export type NoteUncheckedUpdateWithoutSuggestionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  plans?: Prisma.PlanUncheckedUpdateManyWithoutSourceNoteNestedInput
+  events?: Prisma.EventUncheckedUpdateManyWithoutSourceNoteNestedInput
+  interactions?: Prisma.InteractionUncheckedUpdateManyWithoutSourceNoteNestedInput
+  states?: Prisma.StateUncheckedUpdateManyWithoutSourceNoteNestedInput
+  groups?: Prisma.GroupUncheckedUpdateManyWithoutSourceNoteNestedInput
+  aiAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutNoteNestedInput
+}
+
 export type NoteCreateWithoutGroupsInput = {
   id?: string
   createdAt?: Date | string
@@ -954,6 +1201,8 @@ export type NoteCreateWithoutGroupsInput = {
   events?: Prisma.EventCreateNestedManyWithoutSourceNoteInput
   interactions?: Prisma.InteractionCreateNestedManyWithoutSourceNoteInput
   states?: Prisma.StateCreateNestedManyWithoutSourceNoteInput
+  aiAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutNoteInput
+  suggestions?: Prisma.NoteSuggestionCreateNestedManyWithoutNoteInput
 }
 
 export type NoteUncheckedCreateWithoutGroupsInput = {
@@ -969,6 +1218,8 @@ export type NoteUncheckedCreateWithoutGroupsInput = {
   events?: Prisma.EventUncheckedCreateNestedManyWithoutSourceNoteInput
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutSourceNoteInput
   states?: Prisma.StateUncheckedCreateNestedManyWithoutSourceNoteInput
+  aiAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutNoteInput
+  suggestions?: Prisma.NoteSuggestionUncheckedCreateNestedManyWithoutNoteInput
 }
 
 export type NoteCreateOrConnectWithoutGroupsInput = {
@@ -1000,6 +1251,8 @@ export type NoteUpdateWithoutGroupsInput = {
   events?: Prisma.EventUpdateManyWithoutSourceNoteNestedInput
   interactions?: Prisma.InteractionUpdateManyWithoutSourceNoteNestedInput
   states?: Prisma.StateUpdateManyWithoutSourceNoteNestedInput
+  aiAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutNoteNestedInput
+  suggestions?: Prisma.NoteSuggestionUpdateManyWithoutNoteNestedInput
 }
 
 export type NoteUncheckedUpdateWithoutGroupsInput = {
@@ -1015,6 +1268,8 @@ export type NoteUncheckedUpdateWithoutGroupsInput = {
   events?: Prisma.EventUncheckedUpdateManyWithoutSourceNoteNestedInput
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutSourceNoteNestedInput
   states?: Prisma.StateUncheckedUpdateManyWithoutSourceNoteNestedInput
+  aiAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutNoteNestedInput
+  suggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutNoteNestedInput
 }
 
 export type NoteCreateWithoutStatesInput = {
@@ -1030,6 +1285,8 @@ export type NoteCreateWithoutStatesInput = {
   events?: Prisma.EventCreateNestedManyWithoutSourceNoteInput
   interactions?: Prisma.InteractionCreateNestedManyWithoutSourceNoteInput
   groups?: Prisma.GroupCreateNestedManyWithoutSourceNoteInput
+  aiAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutNoteInput
+  suggestions?: Prisma.NoteSuggestionCreateNestedManyWithoutNoteInput
 }
 
 export type NoteUncheckedCreateWithoutStatesInput = {
@@ -1045,6 +1302,8 @@ export type NoteUncheckedCreateWithoutStatesInput = {
   events?: Prisma.EventUncheckedCreateNestedManyWithoutSourceNoteInput
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutSourceNoteInput
   groups?: Prisma.GroupUncheckedCreateNestedManyWithoutSourceNoteInput
+  aiAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutNoteInput
+  suggestions?: Prisma.NoteSuggestionUncheckedCreateNestedManyWithoutNoteInput
 }
 
 export type NoteCreateOrConnectWithoutStatesInput = {
@@ -1076,6 +1335,8 @@ export type NoteUpdateWithoutStatesInput = {
   events?: Prisma.EventUpdateManyWithoutSourceNoteNestedInput
   interactions?: Prisma.InteractionUpdateManyWithoutSourceNoteNestedInput
   groups?: Prisma.GroupUpdateManyWithoutSourceNoteNestedInput
+  aiAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutNoteNestedInput
+  suggestions?: Prisma.NoteSuggestionUpdateManyWithoutNoteNestedInput
 }
 
 export type NoteUncheckedUpdateWithoutStatesInput = {
@@ -1091,6 +1352,8 @@ export type NoteUncheckedUpdateWithoutStatesInput = {
   events?: Prisma.EventUncheckedUpdateManyWithoutSourceNoteNestedInput
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutSourceNoteNestedInput
   groups?: Prisma.GroupUncheckedUpdateManyWithoutSourceNoteNestedInput
+  aiAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutNoteNestedInput
+  suggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutNoteNestedInput
 }
 
 export type NoteCreateManyWorkspaceInput = {
@@ -1116,6 +1379,8 @@ export type NoteUpdateWithoutWorkspaceInput = {
   interactions?: Prisma.InteractionUpdateManyWithoutSourceNoteNestedInput
   states?: Prisma.StateUpdateManyWithoutSourceNoteNestedInput
   groups?: Prisma.GroupUpdateManyWithoutSourceNoteNestedInput
+  aiAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutNoteNestedInput
+  suggestions?: Prisma.NoteSuggestionUpdateManyWithoutNoteNestedInput
 }
 
 export type NoteUncheckedUpdateWithoutWorkspaceInput = {
@@ -1131,6 +1396,8 @@ export type NoteUncheckedUpdateWithoutWorkspaceInput = {
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutSourceNoteNestedInput
   states?: Prisma.StateUncheckedUpdateManyWithoutSourceNoteNestedInput
   groups?: Prisma.GroupUncheckedUpdateManyWithoutSourceNoteNestedInput
+  aiAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutNoteNestedInput
+  suggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutNoteNestedInput
 }
 
 export type NoteUncheckedUpdateManyWithoutWorkspaceInput = {
@@ -1166,6 +1433,8 @@ export type NoteUpdateWithoutSourceFileInput = {
   interactions?: Prisma.InteractionUpdateManyWithoutSourceNoteNestedInput
   states?: Prisma.StateUpdateManyWithoutSourceNoteNestedInput
   groups?: Prisma.GroupUpdateManyWithoutSourceNoteNestedInput
+  aiAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutNoteNestedInput
+  suggestions?: Prisma.NoteSuggestionUpdateManyWithoutNoteNestedInput
 }
 
 export type NoteUncheckedUpdateWithoutSourceFileInput = {
@@ -1181,6 +1450,8 @@ export type NoteUncheckedUpdateWithoutSourceFileInput = {
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutSourceNoteNestedInput
   states?: Prisma.StateUncheckedUpdateManyWithoutSourceNoteNestedInput
   groups?: Prisma.GroupUncheckedUpdateManyWithoutSourceNoteNestedInput
+  aiAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutNoteNestedInput
+  suggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutNoteNestedInput
 }
 
 export type NoteUncheckedUpdateManyWithoutSourceFileInput = {
@@ -1204,6 +1475,8 @@ export type NoteCountOutputType = {
   interactions: number
   states: number
   groups: number
+  aiAnalysisRuns: number
+  suggestions: number
 }
 
 export type NoteCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1212,6 +1485,8 @@ export type NoteCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   interactions?: boolean | NoteCountOutputTypeCountInteractionsArgs
   states?: boolean | NoteCountOutputTypeCountStatesArgs
   groups?: boolean | NoteCountOutputTypeCountGroupsArgs
+  aiAnalysisRuns?: boolean | NoteCountOutputTypeCountAiAnalysisRunsArgs
+  suggestions?: boolean | NoteCountOutputTypeCountSuggestionsArgs
 }
 
 /**
@@ -1259,6 +1534,20 @@ export type NoteCountOutputTypeCountGroupsArgs<ExtArgs extends runtime.Types.Ext
   where?: Prisma.GroupWhereInput
 }
 
+/**
+ * NoteCountOutputType without action
+ */
+export type NoteCountOutputTypeCountAiAnalysisRunsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.NoteAnalysisRunWhereInput
+}
+
+/**
+ * NoteCountOutputType without action
+ */
+export type NoteCountOutputTypeCountSuggestionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.NoteSuggestionWhereInput
+}
+
 
 export type NoteSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1276,6 +1565,8 @@ export type NoteSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   interactions?: boolean | Prisma.Note$interactionsArgs<ExtArgs>
   states?: boolean | Prisma.Note$statesArgs<ExtArgs>
   groups?: boolean | Prisma.Note$groupsArgs<ExtArgs>
+  aiAnalysisRuns?: boolean | Prisma.Note$aiAnalysisRunsArgs<ExtArgs>
+  suggestions?: boolean | Prisma.Note$suggestionsArgs<ExtArgs>
   _count?: boolean | Prisma.NoteCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["note"]>
 
@@ -1325,6 +1616,8 @@ export type NoteInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   interactions?: boolean | Prisma.Note$interactionsArgs<ExtArgs>
   states?: boolean | Prisma.Note$statesArgs<ExtArgs>
   groups?: boolean | Prisma.Note$groupsArgs<ExtArgs>
+  aiAnalysisRuns?: boolean | Prisma.Note$aiAnalysisRunsArgs<ExtArgs>
+  suggestions?: boolean | Prisma.Note$suggestionsArgs<ExtArgs>
   _count?: boolean | Prisma.NoteCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type NoteIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1346,6 +1639,8 @@ export type $NotePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     interactions: Prisma.$InteractionPayload<ExtArgs>[]
     states: Prisma.$StatePayload<ExtArgs>[]
     groups: Prisma.$GroupPayload<ExtArgs>[]
+    aiAnalysisRuns: Prisma.$NoteAnalysisRunPayload<ExtArgs>[]
+    suggestions: Prisma.$NoteSuggestionPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1757,6 +2052,8 @@ export interface Prisma__NoteClient<T, Null = never, ExtArgs extends runtime.Typ
   interactions<T extends Prisma.Note$interactionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Note$interactionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InteractionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   states<T extends Prisma.Note$statesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Note$statesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   groups<T extends Prisma.Note$groupsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Note$groupsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$GroupPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  aiAnalysisRuns<T extends Prisma.Note$aiAnalysisRunsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Note$aiAnalysisRunsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NoteAnalysisRunPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  suggestions<T extends Prisma.Note$suggestionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Note$suggestionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NoteSuggestionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2329,6 +2626,54 @@ export type Note$groupsArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
   take?: number
   skip?: number
   distinct?: Prisma.GroupScalarFieldEnum | Prisma.GroupScalarFieldEnum[]
+}
+
+/**
+ * Note.aiAnalysisRuns
+ */
+export type Note$aiAnalysisRunsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the NoteAnalysisRun
+   */
+  select?: Prisma.NoteAnalysisRunSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the NoteAnalysisRun
+   */
+  omit?: Prisma.NoteAnalysisRunOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.NoteAnalysisRunInclude<ExtArgs> | null
+  where?: Prisma.NoteAnalysisRunWhereInput
+  orderBy?: Prisma.NoteAnalysisRunOrderByWithRelationInput | Prisma.NoteAnalysisRunOrderByWithRelationInput[]
+  cursor?: Prisma.NoteAnalysisRunWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.NoteAnalysisRunScalarFieldEnum | Prisma.NoteAnalysisRunScalarFieldEnum[]
+}
+
+/**
+ * Note.suggestions
+ */
+export type Note$suggestionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the NoteSuggestion
+   */
+  select?: Prisma.NoteSuggestionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the NoteSuggestion
+   */
+  omit?: Prisma.NoteSuggestionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.NoteSuggestionInclude<ExtArgs> | null
+  where?: Prisma.NoteSuggestionWhereInput
+  orderBy?: Prisma.NoteSuggestionOrderByWithRelationInput | Prisma.NoteSuggestionOrderByWithRelationInput[]
+  cursor?: Prisma.NoteSuggestionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.NoteSuggestionScalarFieldEnum | Prisma.NoteSuggestionScalarFieldEnum[]
 }
 
 /**

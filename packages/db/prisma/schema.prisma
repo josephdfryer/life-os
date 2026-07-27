@@ -54,6 +54,8 @@ model Workspace {
   importedFiles  ImportedFile[]
   aiProviderCredentials AiProviderCredential[]
   aiAnalysisRuns AiAnalysisRun[]
+  noteAnalysisRuns NoteAnalysisRun[]
+  noteSuggestions NoteSuggestion[]
   stagedItems    StagedInteraction[]
   rules          Rule[]
   ruleRuns       RuleRun[]
@@ -345,6 +347,8 @@ model CalendarEventLink {
   calendarId     String
   externalEventId String
   iCalUID        String?
+  planId         String?
+  plan           Plan?    @relation(fields: [planId], references: [id], onDelete: SetNull)
   eventId        String?
   event          Event?   @relation(fields: [eventId], references: [id], onDelete: SetNull)
   status         String   @default("active")
@@ -352,6 +356,7 @@ model CalendarEventLink {
 
   @@unique([workspaceId, provider, calendarId, externalEventId])
   @@index([connectionId])
+  @@index([planId])
   @@index([eventId])
   @@index([workspaceId, status])
 }
@@ -609,7 +614,7 @@ model Event {
   transcript    String?
   metadata      String?
   // Which prediction (if any) this occurrence fulfilled
-  sourcePlanId  String?
+  sourcePlanId  String?       @unique
   sourcePlan    Plan?         @relation("PlanFulfillment", fields: [sourcePlanId], references: [id], onDelete: SetNull)
   // Containment nesting — bind to the narrowest true event
   parentEventId String?
@@ -731,13 +736,17 @@ model Plan {
   place              Place?    @relation(fields: [placeId], references: [id])
   externalSource     String?
   externalInstanceId String?   @unique
+  // Calendar occurrence review state. Null for non-calendar Plans.
+  reconciliationStatus String?
+  reconciledAt         DateTime?
   expectedPeople     PlanExpectedPerson[]
   // Reverse of Event.sourcePlanId — a fulfilled Plan has exactly one Event here
-  fulfilledBy        Event[]   @relation("PlanFulfillment")
+  fulfilledBy        Event?    @relation("PlanFulfillment")
   // Provenance — the Note this Plan was derived from, if any
   sourceNoteId       String?
   sourceNote         Note?     @relation(fields: [sourceNoteId], references: [id], onDelete: SetNull)
   purchaseOrder      PurchaseOrder?
+  calendarLinks      CalendarEventLink[]
 
   @@index([workspaceId, createdAt])
   @@index([workspaceId, personId])
@@ -1111,6 +1120,7 @@ model AiProviderCredential {
   status          String    @default("active")
   lastUsedAt      DateTime?
   analysisRuns    AiAnalysisRun[]
+  noteAnalysisRuns NoteAnalysisRun[]
 
   @@unique([workspaceId, provider])
   @@index([workspaceId, status])
@@ -1138,6 +1148,57 @@ model AiAnalysisRun {
 
   @@index([workspaceId, createdAt])
   @@index([sourceFileId])
+}
+
+// Operational AI processing for immutable captured Notes. This is not a Life
+// OS primitive: it records paid model usage and review state around proposals.
+model NoteAnalysisRun {
+  id              String                @id @default(cuid())
+  workspaceId     String
+  workspace       Workspace             @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  noteId          String
+  note            Note                  @relation(fields: [noteId], references: [id], onDelete: Cascade)
+  credentialId    String?
+  credential      AiProviderCredential? @relation(fields: [credentialId], references: [id], onDelete: SetNull)
+  createdAt       DateTime              @default(now())
+  completedAt     DateTime?
+  provider        String
+  modelId         String
+  status          String
+  promptVersion   String
+  output          String?
+  error           String?
+  inputTokens     Int?
+  outputTokens    Int?
+  estimatedCost   Float?
+  suggestions     NoteSuggestion[]
+
+  @@index([workspaceId, createdAt])
+  @@index([noteId, createdAt])
+  @@unique([noteId, promptVersion])
+}
+
+model NoteSuggestion {
+  id                 String          @id @default(cuid())
+  workspaceId        String
+  workspace          Workspace       @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  noteId             String
+  note               Note            @relation(fields: [noteId], references: [id], onDelete: Cascade)
+  analysisRunId      String
+  analysisRun        NoteAnalysisRun @relation(fields: [analysisRunId], references: [id], onDelete: Cascade)
+  createdAt          DateTime        @default(now())
+  reviewedAt         DateTime?
+  kind               String
+  status             String          @default("pending")
+  title              String
+  payload            String
+  confidence         Float?
+  acceptedEntityType String?
+  acceptedEntityId   String?
+
+  @@index([workspaceId, status, createdAt])
+  @@index([noteId, status])
+  @@index([analysisRunId])
 }
 
 // ─────────────────────────────────────────────
@@ -1349,6 +1410,8 @@ model Note {
   interactions Interaction[]
   states       State[]
   groups       Group[]
+  aiAnalysisRuns NoteAnalysisRun[]
+  suggestions    NoteSuggestion[]
 
   @@index([workspaceId, timestamp(sort: Desc)])
   @@index([sourceFileId])

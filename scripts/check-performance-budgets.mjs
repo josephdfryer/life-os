@@ -11,8 +11,9 @@ const failures = []
 const clientBudgets = [
   ["apps/persons/app/admin/AdminClient.tsx", 50_000],
   ["apps/persons/app/import/people/page.tsx", 50_000],
-  ["apps/places/app/places/PlacesClient.tsx", 36_000],
-  ["apps/persons/app/people/[id]/PersonDetailClient.tsx", 24_000],
+  ["apps/places/app/places/PlacesClient.tsx", 33_000],
+  ["apps/places/app/places/[id]/PlaceProfileClient.tsx", 30_000],
+  ["apps/persons/app/persons/[id]/PersonDetailClient.tsx", 24_000],
 ]
 
 for (const [file, maxBytes] of clientBudgets) {
@@ -55,7 +56,8 @@ if (checkBuilt) {
   const routeBudgets = [
     ["apps/persons", "server/app/admin/page_client-reference-manifest.js", 180_000],
     ["apps/persons", "server/app/import/people/page_client-reference-manifest.js", 180_000],
-    ["apps/places", "server/app/places/page_client-reference-manifest.js", 750_000],
+    ["apps/places", "server/app/places/page_client-reference-manifest.js", 700_000],
+    ["apps/places", "server/app/places/[id]/page_client-reference-manifest.js", 700_000],
   ]
   for (const [app, manifestPath, maxBytes] of routeBudgets) {
     const manifest = resolve(root, app, ".next", manifestPath)

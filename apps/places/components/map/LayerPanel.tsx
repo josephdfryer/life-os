@@ -2,95 +2,115 @@
 
 import { formatInteger } from "@/lib/format"
 
-export type LayerId = "location" | "finance" | "photos" | "interactions" | "enrichment"
+export type MapViewId = "places" | "density" | "unresolved"
+export type EnrichmentId = "people" | "photos" | "spending"
 
-export type LayerConfig = {
-  id: LayerId
+export type MapViewConfig = {
+  id: MapViewId
   label: string
-  icon: string
-  color: string
   count: number
-  active: boolean
+}
+
+export type EnrichmentConfig = {
+  id: EnrichmentId
+  label: string
+  count: number
+  color: string
 }
 
 export function LayerPanel({
-  layers,
+  views,
+  activeView,
+  enrichments,
+  activeEnrichments,
   collapsed,
-  allActive,
-  onToggle,
-  onReset,
+  onViewChange,
+  onEnrichmentToggle,
   onCollapsedChange,
 }: {
-  layers: LayerConfig[]
+  views: MapViewConfig[]
+  activeView: MapViewId
+  enrichments: EnrichmentConfig[]
+  activeEnrichments: Set<EnrichmentId>
   collapsed: boolean
-  allActive: boolean
-  onToggle: (id: LayerId) => void
-  onReset: () => void
+  onViewChange: (id: MapViewId) => void
+  onEnrichmentToggle: (id: EnrichmentId) => void
   onCollapsedChange: (collapsed: boolean) => void
 }) {
   if (collapsed) {
-    const activeCount = layers.filter(layer => layer.active).length
     return (
       <button
         type="button"
         className="layer-panel layer-panel-collapsed"
-        aria-label="Expand map layers"
-        title="Expand map layers"
+        aria-label="Expand map display controls"
+        title="Expand map display controls"
         onClick={() => onCollapsedChange(false)}
       >
-        <span>Layers</span>
-        <span className="layer-toggle-count">{activeCount}/{layers.length}</span>
+        <span>{views.find(view => view.id === activeView)?.label ?? "Map view"}</span>
+        {activeEnrichments.size ? <span className="layer-toggle-count">+{activeEnrichments.size}</span> : null}
       </button>
     )
   }
 
   return (
-    <div className="layer-panel" aria-label="Map layers">
+    <div className="layer-panel" aria-label="Map display controls">
       <div className="layer-panel-header">
-        <span>Layers</span>
-        <div className="layer-panel-actions">
-          <button
-            type="button"
-            className="layer-panel-action"
-            aria-pressed={allActive}
-            onClick={onReset}
-          >
-            All
-          </button>
-          <button
-            type="button"
-            className="layer-panel-action"
-            aria-label="Collapse map layers"
-            title="Collapse map layers"
-            onClick={() => onCollapsedChange(true)}
-          >
-            −
-          </button>
-        </div>
-      </div>
-      {layers.map(layer => (
+        <span>Map view</span>
         <button
-          key={layer.id}
           type="button"
-          className="layer-toggle"
-          aria-pressed={layer.active}
-          aria-label={`${layer.label} layer`}
-          title={`${layer.label} layer`}
-          onClick={() => onToggle(layer.id)}
-          style={{
-            borderColor: layer.active ? layer.color : "var(--border)",
-            background: layer.active ? "var(--surface)" : "rgba(250, 248, 244, 0.56)",
-            color: layer.active ? "var(--ink)" : "var(--ink-4)",
-            opacity: layer.active ? 1 : 0.58,
-          }}
+          className="layer-panel-action"
+          aria-label="Collapse map display controls"
+          title="Collapse map display controls"
+          onClick={() => onCollapsedChange(true)}
         >
-          <span className="layer-toggle-icon" style={{ background: layer.active ? layer.color : "var(--ink-4)" }}>
-            {layer.icon}
-          </span>
-          <span className="layer-toggle-label">{layer.label}</span>
-          <span className="layer-toggle-count">{formatInteger(layer.count)}</span>
+          −
         </button>
-      ))}
+      </div>
+
+      <div className="layer-panel-group" aria-label="Base map view">
+        {views.map(view => (
+          <button
+            key={view.id}
+            type="button"
+            className="layer-toggle"
+            aria-pressed={activeView === view.id}
+            onClick={() => onViewChange(view.id)}
+          >
+            <span className={`layer-toggle-radio${activeView === view.id ? " is-active" : ""}`} />
+            <span className="layer-toggle-label">{view.label}</span>
+            <span className="layer-toggle-count">{formatInteger(view.count)}</span>
+          </button>
+        ))}
+      </div>
+
+      {enrichments.length ? (
+        <>
+          <div className="layer-panel-subtitle">Show on places</div>
+          <div className="layer-panel-group" aria-label="Place enrichments">
+            {enrichments.map(enrichment => {
+              const active = activeEnrichments.has(enrichment.id)
+              return (
+                <button
+                  key={enrichment.id}
+                  type="button"
+                  className="layer-toggle"
+                  aria-pressed={active}
+                  onClick={() => onEnrichmentToggle(enrichment.id)}
+                >
+                  <span
+                    className={`layer-toggle-check${active ? " is-active" : ""}`}
+                    style={{ "--layer-color": enrichment.color } as React.CSSProperties}
+                  >
+                    {active ? "✓" : ""}
+                  </span>
+                  <span className="layer-toggle-label">{enrichment.label}</span>
+                  <span className="layer-toggle-count">{formatInteger(enrichment.count)}</span>
+                </button>
+              )
+            })}
+          </div>
+        </>
+      ) : null}
     </div>
   )
 }

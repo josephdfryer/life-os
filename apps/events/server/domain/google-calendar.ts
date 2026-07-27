@@ -483,9 +483,8 @@ type SyncOptions = {
 type SyncStats = {
   calendarId: string
   calendarSummary: string | null
-  createdEvents: number
-  updatedEvents: number
-  createdInteractions: number
+  createdPlans: number
+  updatedPlans: number
   cancelled: number
   fetched: number
   batches: number
@@ -527,17 +526,15 @@ export async function syncGoogleCalendar(actor: AccessActor, options: SyncOption
   return {
     calendars,
     totals: calendars.reduce((totals, calendar) => ({
-      createdEvents: totals.createdEvents + calendar.createdEvents,
-      updatedEvents: totals.updatedEvents + calendar.updatedEvents,
-      createdInteractions: totals.createdInteractions + calendar.createdInteractions,
+      createdPlans: totals.createdPlans + calendar.createdPlans,
+      updatedPlans: totals.updatedPlans + calendar.updatedPlans,
       cancelled: totals.cancelled + calendar.cancelled,
       fetched: totals.fetched + calendar.fetched,
       batches: totals.batches + calendar.batches,
       failedCalendars: totals.failedCalendars + (calendar.error ? 1 : 0),
     }), {
-      createdEvents: 0,
-      updatedEvents: 0,
-      createdInteractions: 0,
+      createdPlans: 0,
+      updatedPlans: 0,
       cancelled: 0,
       fetched: 0,
       batches: 0,
@@ -601,9 +598,8 @@ async function syncGoogleCalendarConnection(
   const stats: SyncStats = {
     calendarId: connection.calendarId,
     calendarSummary: connection.calendarSummary,
-    createdEvents: 0,
-    updatedEvents: 0,
-    createdInteractions: 0,
+    createdPlans: 0,
+    updatedPlans: 0,
     cancelled: 0,
     fetched: 0,
     batches: 0,
@@ -632,9 +628,8 @@ async function syncGoogleCalendarConnection(
           items,
           peopleByEmail,
         })
-        stats.createdEvents += result.createdEvents
-        stats.updatedEvents += result.updatedEvents
-        stats.createdInteractions += result.createdInteractions
+        stats.createdPlans += result.createdPlans
+        stats.updatedPlans += result.updatedPlans
         stats.cancelled += result.cancelled
         stats.fetched += result.fetched
       }
@@ -674,9 +669,8 @@ async function processCalendarBatch(input: {
   items: GoogleCalendarEvent[]
   peopleByEmail: Map<string, { id: string; first: string; last: string }>
 }) {
-  let createdEvents = 0
-  let updatedEvents = 0
-  let createdInteractions = 0
+  let createdPlans = 0
+  let updatedPlans = 0
   let cancelled = 0
   let fetched = 0
 
@@ -707,12 +701,11 @@ async function processCalendarBatch(input: {
     })),
   )
   for (const result of results) {
-    if (result.createdEvent) createdEvents += 1
-    else updatedEvents += 1
-    createdInteractions += result.createdInteractions
+    if (result.createdPlan) createdPlans += 1
+    else updatedPlans += 1
   }
 
-  return { createdEvents, updatedEvents, createdInteractions, cancelled, fetched }
+  return { createdPlans, updatedPlans, cancelled, fetched }
 }
 
 async function upsertCalendarEvent(input: {
@@ -724,7 +717,7 @@ async function upsertCalendarEvent(input: {
   peopleByEmail: Map<string, { id: string; first: string; last: string }>
 }) {
   const start = parseGoogleDate(input.item.start)
-  if (!start) return { createdEvent: false, createdInteractions: 0 }
+  if (!start) return { createdPlan: false }
   const end = parseGoogleDate(input.item.end)
   const metadata = googleEventMetadata(input.item, input.calendarId)
   const link = await db.calendarEventLink.findUnique({
@@ -736,39 +729,54 @@ async function upsertCalendarEvent(input: {
         externalEventId: input.item.id,
       },
     },
-    include: { event: true },
+    include: { plan: true },
   })
 
-  let eventId = link?.eventId ?? null
-  let createdEvent = false
-  if (eventId) {
-    await db.event.update({
-      where: { id: eventId },
+  const externalInstanceId = `${SOURCE}:${input.calendarId}:${input.item.id}`
+  let planId = link?.planId ?? null
+  let createdPlan = false
+  if (planId) {
+    await db.plan.update({
+      where: { id: planId },
       data: {
-        name: input.item.summary?.trim() || "Untitled Google Calendar event",
-        type: "calendar",
-        timestamp: start,
-        notes: input.item.description ?? null,
-        metadata: JSON.stringify(metadata),
+        text: input.item.summary?.trim() || "Untitled Google Calendar event",
+        scheduledStart: start,
+        scheduledEnd: end ?? null,
+        successSignals: JSON.stringify(metadata),
       },
     })
   } else {
-    const event = await db.event.create({
+    const existingPlan = await db.plan.findUnique({ where: { externalInstanceId }, select: { id: true } })
+    const plan = existingPlan ?? await db.plan.create({
       data: {
         workspaceId: input.workspaceId,
-        name: input.item.summary?.trim() || "Untitled Google Calendar event",
-        type: "calendar",
-        start,
-        end: end ?? null,
-        timestamp: start,
-        notes: input.item.description ?? null,
-        metadata: JSON.stringify(metadata),
+        text: input.item.summary?.trim() || "Untitled Google Calendar event",
+        scheduledStart: start,
+        scheduledEnd: end ?? null,
+        externalSource: SOURCE,
+        externalInstanceId,
+        reconciliationStatus: link?.eventId ? "happened" : "pending",
+        reconciledAt: link?.eventId ? new Date() : null,
+        status: link?.eventId ? "completed" : "active",
+        successSignals: JSON.stringify(metadata),
       },
       select: { id: true },
     })
-    eventId = event.id
-    createdEvent = true
-    await auditAction({ actor: input.actor, action: "event.create", targetType: "event", targetId: event.id, metadata: { source: SOURCE, externalEventId: input.item.id } })
+    planId = plan.id
+    createdPlan = !existingPlan
+    if (createdPlan) {
+      await auditAction({ actor: input.actor, action: "plan.create", targetType: "plan", targetId: plan.id, metadata: { source: SOURCE, externalEventId: input.item.id } })
+    }
+  }
+
+  // Compatibility bridge: old syncs wrote provider occurrences directly as
+  // Events. Preserve those records and link the new prediction to them rather
+  // than presenting the occurrence for review or creating a duplicate Event.
+  if (link?.eventId) {
+    await db.event.updateMany({
+      where: { id: link.eventId, workspaceId: input.workspaceId, sourcePlanId: null },
+      data: { sourcePlanId: planId },
+    })
   }
 
   await db.calendarEventLink.upsert({
@@ -780,7 +788,7 @@ async function upsertCalendarEvent(input: {
         externalEventId: input.item.id,
       },
     },
-    update: { eventId, iCalUID: input.item.iCalUID ?? null, status: input.item.status ?? "confirmed", lastSeenAt: new Date() },
+    update: { planId, iCalUID: input.item.iCalUID ?? null, status: input.item.status ?? "confirmed", lastSeenAt: new Date() },
     create: {
       workspaceId: input.workspaceId,
       connectionId: input.connectionId,
@@ -788,59 +796,27 @@ async function upsertCalendarEvent(input: {
       calendarId: input.calendarId,
       externalEventId: input.item.id,
       iCalUID: input.item.iCalUID ?? null,
-      eventId,
+      planId,
       status: input.item.status ?? "confirmed",
       lastSeenAt: new Date(),
     },
   })
 
   const matchedPeople = matchedAttendees(input.item, input.peopleByEmail)
-  let createdInteractions = 0
-  for (const person of matchedPeople) {
-    const existing = await db.interaction.findFirst({
-      where: {
-        workspaceId: input.workspaceId,
-        eventId,
-        personId: person.id,
-        type: "calendar",
-        notes: { contains: sourceMarker(input.calendarId, input.item.id) },
-      },
-      select: { id: true },
-    })
-    if (existing) continue
-    const interaction = await db.interaction.create({
-      data: {
-        workspaceId: input.workspaceId,
-        eventId,
-        personId: person.id,
-        type: "calendar",
-        timestamp: start,
-        duration: end ? Math.max(0, Math.round((end.getTime() - start.getTime()) / 60000)) : null,
-        summary: input.item.summary ?? "Google Calendar event",
-        notes: [sourceMarker(input.calendarId, input.item.id), input.item.htmlLink].filter(Boolean).join("\n"),
-        direction: "meeting",
-      },
-      select: { id: true },
-    })
-    createdInteractions += 1
-    await auditAction({
-      actor: input.actor,
-      action: "interaction.create",
-      targetType: "interaction",
-      targetId: interaction.id,
-      metadata: {
-        mode: "calendar-sync",
-        source: SOURCE,
-        calendarId: input.calendarId,
-        externalEventId: input.item.id,
-        eventId,
-        personId: person.id,
-        personName: personName(person),
-      },
-    })
-  }
+  await db.$transaction(async tx => {
+    await tx.planExpectedPerson.deleteMany({ where: { planId } })
+    if (matchedPeople.length) {
+      await tx.planExpectedPerson.createMany({
+        data: matchedPeople.map(person => ({
+          planId: planId!,
+          personId: person.id,
+          workspaceId: input.workspaceId,
+        })),
+      })
+    }
+  })
 
-  return { createdEvent, createdInteractions }
+  return { createdPlan }
 }
 
 async function peopleEmailIndex(workspaceId: string) {
@@ -875,10 +851,16 @@ function matchedAttendees(item: GoogleCalendarEvent, peopleByEmail: Map<string, 
 async function markCancelled(connectionId: string, workspaceId: string, calendarId: string, externalEventId: string) {
   const link = await db.calendarEventLink.findUnique({
     where: { workspaceId_provider_calendarId_externalEventId: { workspaceId, provider: "google", calendarId, externalEventId } },
-    select: { id: true },
+    select: { id: true, planId: true, plan: { select: { fulfilledBy: { select: { id: true } } } } },
   })
   if (!link) return 0
-  await db.calendarEventLink.update({ where: { id: link.id }, data: { connectionId, status: "cancelled", lastSeenAt: new Date() } })
+  await db.$transaction([
+    db.calendarEventLink.update({ where: { id: link.id }, data: { connectionId, status: "cancelled", lastSeenAt: new Date() } }),
+    ...(link.planId && !link.plan?.fulfilledBy ? [db.plan.update({
+      where: { id: link.planId },
+      data: { status: "abandoned", reconciliationStatus: "cancelled", reconciledAt: new Date() },
+    })] : []),
+  ])
   return 1
 }
 

@@ -5,8 +5,14 @@ import { db } from '@life-os/db'
 import { lifeOsAppUrl } from '@life-os/auth'
 import ScheduleWidget from '../components/ScheduleWidget'
 import ActionItemsWidget from '../components/ActionItemsWidget'
-import InboxWidget from '../components/InboxWidget'
 import NudgesWidget from '../components/NudgesWidget'
+import PrepareWidget from '../components/PrepareWidget'
+import QuickCapture from '../components/QuickCapture'
+import ReconciliationWidget from '../components/ReconciliationWidget'
+import BoundedReviewWidget from '../components/BoundedReviewWidget'
+import EveningCheckIn from '../components/EveningCheckIn'
+import WeeklyReview from '../components/WeeklyReview'
+import { greetingForHour } from '@/lib/daily'
 
 export const dynamic = 'force-dynamic'
 
@@ -21,12 +27,16 @@ async function getWorkspaceId(email: string): Promise<string> {
 
 export default async function HomePage() {
   const session = await auth()
-  if (!session?.user?.email) redirect('/login')
+  const localReview = process.env.NODE_ENV !== 'production' && process.env.LIFE_OS_LOCAL_REVIEW === '1'
+  if (!session?.user?.email && !localReview) redirect('/login')
 
-  const workspaceId = await getWorkspaceId(session.user.email)
-  const firstName = session.user.name?.split(' ')[0] ?? 'there'
+  const workspaceId = session?.user?.email
+    ? await getWorkspaceId(session.user.email)
+    : 'default-workspace'
+  const firstName = session?.user?.name?.split(' ')[0] ?? (localReview ? 'Joseph' : 'there')
 
   const today = new Date()
+  const greeting = greetingForHour(today.getHours())
   const dateStr = today.toLocaleDateString('en-US', {
     weekday: 'long',
     month: 'long',
@@ -52,7 +62,7 @@ export default async function HomePage() {
                 margin: 0,
               }}
             >
-              Good morning, {firstName}
+              {greeting}, {firstName}
             </h1>
             <p
               style={{
@@ -68,6 +78,12 @@ export default async function HomePage() {
           <div style={{ fontFamily: 'var(--font-display)', fontSize: '17px', color: 'var(--camel)' }}>Life OS</div>
         </div>
 
+        <QuickCapture />
+
+        <Suspense fallback={<WidgetSkeleton />}>
+          <ReconciliationWidget workspaceId={workspaceId} />
+        </Suspense>
+
         {/* Widgets grid */}
         <div
           style={{
@@ -82,6 +98,9 @@ export default async function HomePage() {
               <ScheduleWidget workspaceId={workspaceId} />
             </Suspense>
             <Suspense fallback={<WidgetSkeleton />}>
+              <PrepareWidget workspaceId={workspaceId} />
+            </Suspense>
+            <Suspense fallback={<WidgetSkeleton />}>
               <ActionItemsWidget workspaceId={workspaceId} personsUrl={personsUrl} />
             </Suspense>
           </div>
@@ -89,13 +108,18 @@ export default async function HomePage() {
           {/* Right column */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
             <Suspense fallback={<WidgetSkeleton />}>
-              <InboxWidget workspaceId={workspaceId} personsUrl={personsUrl} />
+              <BoundedReviewWidget workspaceId={workspaceId} />
             </Suspense>
             <Suspense fallback={<WidgetSkeleton />}>
               <NudgesWidget workspaceId={workspaceId} personsUrl={personsUrl} />
             </Suspense>
           </div>
         </div>
+
+        {today.getHours() >= 17 && <EveningCheckIn />}
+        <Suspense fallback={<WidgetSkeleton />}>
+          <WeeklyReview workspaceId={workspaceId} />
+        </Suspense>
 
         {/* App nav footer */}
         <div

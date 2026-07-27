@@ -306,6 +306,7 @@ export type EventOrderByWithRelationInput = {
 
 export type EventWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  sourcePlanId?: string
   AND?: Prisma.EventWhereInput | Prisma.EventWhereInput[]
   OR?: Prisma.EventWhereInput[]
   NOT?: Prisma.EventWhereInput | Prisma.EventWhereInput[]
@@ -320,7 +321,6 @@ export type EventWhereUniqueInput = Prisma.AtLeast<{
   notes?: Prisma.StringNullableFilter<"Event"> | string | null
   transcript?: Prisma.StringNullableFilter<"Event"> | string | null
   metadata?: Prisma.StringNullableFilter<"Event"> | string | null
-  sourcePlanId?: Prisma.StringNullableFilter<"Event"> | string | null
   parentEventId?: Prisma.StringNullableFilter<"Event"> | string | null
   sourceNoteId?: Prisma.StringNullableFilter<"Event"> | string | null
   workspace?: Prisma.XOR<Prisma.WorkspaceScalarRelationFilter, Prisma.WorkspaceWhereInput>
@@ -334,7 +334,7 @@ export type EventWhereUniqueInput = Prisma.AtLeast<{
   groupTags?: Prisma.GroupListRelationFilter
   placeNotes?: Prisma.PlaceNoteListRelationFilter
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineListRelationFilter
-}, "id">
+}, "id" | "sourcePlanId">
 
 export type EventOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -729,46 +729,36 @@ export type EventUpdateOneWithoutInteractionsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.EventUpdateToOneWithWhereWithoutInteractionsInput, Prisma.EventUpdateWithoutInteractionsInput>, Prisma.EventUncheckedUpdateWithoutInteractionsInput>
 }
 
-export type EventCreateNestedManyWithoutSourcePlanInput = {
-  create?: Prisma.XOR<Prisma.EventCreateWithoutSourcePlanInput, Prisma.EventUncheckedCreateWithoutSourcePlanInput> | Prisma.EventCreateWithoutSourcePlanInput[] | Prisma.EventUncheckedCreateWithoutSourcePlanInput[]
-  connectOrCreate?: Prisma.EventCreateOrConnectWithoutSourcePlanInput | Prisma.EventCreateOrConnectWithoutSourcePlanInput[]
-  createMany?: Prisma.EventCreateManySourcePlanInputEnvelope
-  connect?: Prisma.EventWhereUniqueInput | Prisma.EventWhereUniqueInput[]
+export type EventCreateNestedOneWithoutSourcePlanInput = {
+  create?: Prisma.XOR<Prisma.EventCreateWithoutSourcePlanInput, Prisma.EventUncheckedCreateWithoutSourcePlanInput>
+  connectOrCreate?: Prisma.EventCreateOrConnectWithoutSourcePlanInput
+  connect?: Prisma.EventWhereUniqueInput
 }
 
-export type EventUncheckedCreateNestedManyWithoutSourcePlanInput = {
-  create?: Prisma.XOR<Prisma.EventCreateWithoutSourcePlanInput, Prisma.EventUncheckedCreateWithoutSourcePlanInput> | Prisma.EventCreateWithoutSourcePlanInput[] | Prisma.EventUncheckedCreateWithoutSourcePlanInput[]
-  connectOrCreate?: Prisma.EventCreateOrConnectWithoutSourcePlanInput | Prisma.EventCreateOrConnectWithoutSourcePlanInput[]
-  createMany?: Prisma.EventCreateManySourcePlanInputEnvelope
-  connect?: Prisma.EventWhereUniqueInput | Prisma.EventWhereUniqueInput[]
+export type EventUncheckedCreateNestedOneWithoutSourcePlanInput = {
+  create?: Prisma.XOR<Prisma.EventCreateWithoutSourcePlanInput, Prisma.EventUncheckedCreateWithoutSourcePlanInput>
+  connectOrCreate?: Prisma.EventCreateOrConnectWithoutSourcePlanInput
+  connect?: Prisma.EventWhereUniqueInput
 }
 
-export type EventUpdateManyWithoutSourcePlanNestedInput = {
-  create?: Prisma.XOR<Prisma.EventCreateWithoutSourcePlanInput, Prisma.EventUncheckedCreateWithoutSourcePlanInput> | Prisma.EventCreateWithoutSourcePlanInput[] | Prisma.EventUncheckedCreateWithoutSourcePlanInput[]
-  connectOrCreate?: Prisma.EventCreateOrConnectWithoutSourcePlanInput | Prisma.EventCreateOrConnectWithoutSourcePlanInput[]
-  upsert?: Prisma.EventUpsertWithWhereUniqueWithoutSourcePlanInput | Prisma.EventUpsertWithWhereUniqueWithoutSourcePlanInput[]
-  createMany?: Prisma.EventCreateManySourcePlanInputEnvelope
-  set?: Prisma.EventWhereUniqueInput | Prisma.EventWhereUniqueInput[]
-  disconnect?: Prisma.EventWhereUniqueInput | Prisma.EventWhereUniqueInput[]
-  delete?: Prisma.EventWhereUniqueInput | Prisma.EventWhereUniqueInput[]
-  connect?: Prisma.EventWhereUniqueInput | Prisma.EventWhereUniqueInput[]
-  update?: Prisma.EventUpdateWithWhereUniqueWithoutSourcePlanInput | Prisma.EventUpdateWithWhereUniqueWithoutSourcePlanInput[]
-  updateMany?: Prisma.EventUpdateManyWithWhereWithoutSourcePlanInput | Prisma.EventUpdateManyWithWhereWithoutSourcePlanInput[]
-  deleteMany?: Prisma.EventScalarWhereInput | Prisma.EventScalarWhereInput[]
+export type EventUpdateOneWithoutSourcePlanNestedInput = {
+  create?: Prisma.XOR<Prisma.EventCreateWithoutSourcePlanInput, Prisma.EventUncheckedCreateWithoutSourcePlanInput>
+  connectOrCreate?: Prisma.EventCreateOrConnectWithoutSourcePlanInput
+  upsert?: Prisma.EventUpsertWithoutSourcePlanInput
+  disconnect?: Prisma.EventWhereInput | boolean
+  delete?: Prisma.EventWhereInput | boolean
+  connect?: Prisma.EventWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.EventUpdateToOneWithWhereWithoutSourcePlanInput, Prisma.EventUpdateWithoutSourcePlanInput>, Prisma.EventUncheckedUpdateWithoutSourcePlanInput>
 }
 
-export type EventUncheckedUpdateManyWithoutSourcePlanNestedInput = {
-  create?: Prisma.XOR<Prisma.EventCreateWithoutSourcePlanInput, Prisma.EventUncheckedCreateWithoutSourcePlanInput> | Prisma.EventCreateWithoutSourcePlanInput[] | Prisma.EventUncheckedCreateWithoutSourcePlanInput[]
-  connectOrCreate?: Prisma.EventCreateOrConnectWithoutSourcePlanInput | Prisma.EventCreateOrConnectWithoutSourcePlanInput[]
-  upsert?: Prisma.EventUpsertWithWhereUniqueWithoutSourcePlanInput | Prisma.EventUpsertWithWhereUniqueWithoutSourcePlanInput[]
-  createMany?: Prisma.EventCreateManySourcePlanInputEnvelope
-  set?: Prisma.EventWhereUniqueInput | Prisma.EventWhereUniqueInput[]
-  disconnect?: Prisma.EventWhereUniqueInput | Prisma.EventWhereUniqueInput[]
-  delete?: Prisma.EventWhereUniqueInput | Prisma.EventWhereUniqueInput[]
-  connect?: Prisma.EventWhereUniqueInput | Prisma.EventWhereUniqueInput[]
-  update?: Prisma.EventUpdateWithWhereUniqueWithoutSourcePlanInput | Prisma.EventUpdateWithWhereUniqueWithoutSourcePlanInput[]
-  updateMany?: Prisma.EventUpdateManyWithWhereWithoutSourcePlanInput | Prisma.EventUpdateManyWithWhereWithoutSourcePlanInput[]
-  deleteMany?: Prisma.EventScalarWhereInput | Prisma.EventScalarWhereInput[]
+export type EventUncheckedUpdateOneWithoutSourcePlanNestedInput = {
+  create?: Prisma.XOR<Prisma.EventCreateWithoutSourcePlanInput, Prisma.EventUncheckedCreateWithoutSourcePlanInput>
+  connectOrCreate?: Prisma.EventCreateOrConnectWithoutSourcePlanInput
+  upsert?: Prisma.EventUpsertWithoutSourcePlanInput
+  disconnect?: Prisma.EventWhereInput | boolean
+  delete?: Prisma.EventWhereInput | boolean
+  connect?: Prisma.EventWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.EventUpdateToOneWithWhereWithoutSourcePlanInput, Prisma.EventUpdateWithoutSourcePlanInput>, Prisma.EventUncheckedUpdateWithoutSourcePlanInput>
 }
 
 export type EventCreateNestedManyWithoutPlaceInput = {
@@ -1461,24 +1451,61 @@ export type EventCreateOrConnectWithoutSourcePlanInput = {
   create: Prisma.XOR<Prisma.EventCreateWithoutSourcePlanInput, Prisma.EventUncheckedCreateWithoutSourcePlanInput>
 }
 
-export type EventCreateManySourcePlanInputEnvelope = {
-  data: Prisma.EventCreateManySourcePlanInput | Prisma.EventCreateManySourcePlanInput[]
-}
-
-export type EventUpsertWithWhereUniqueWithoutSourcePlanInput = {
-  where: Prisma.EventWhereUniqueInput
+export type EventUpsertWithoutSourcePlanInput = {
   update: Prisma.XOR<Prisma.EventUpdateWithoutSourcePlanInput, Prisma.EventUncheckedUpdateWithoutSourcePlanInput>
   create: Prisma.XOR<Prisma.EventCreateWithoutSourcePlanInput, Prisma.EventUncheckedCreateWithoutSourcePlanInput>
+  where?: Prisma.EventWhereInput
 }
 
-export type EventUpdateWithWhereUniqueWithoutSourcePlanInput = {
-  where: Prisma.EventWhereUniqueInput
+export type EventUpdateToOneWithWhereWithoutSourcePlanInput = {
+  where?: Prisma.EventWhereInput
   data: Prisma.XOR<Prisma.EventUpdateWithoutSourcePlanInput, Prisma.EventUncheckedUpdateWithoutSourcePlanInput>
 }
 
-export type EventUpdateManyWithWhereWithoutSourcePlanInput = {
-  where: Prisma.EventScalarWhereInput
-  data: Prisma.XOR<Prisma.EventUpdateManyMutationInput, Prisma.EventUncheckedUpdateManyWithoutSourcePlanInput>
+export type EventUpdateWithoutSourcePlanInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  start?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  end?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  transcript?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutEventsNestedInput
+  place?: Prisma.PlaceUpdateOneWithoutEventsNestedInput
+  parentEvent?: Prisma.EventUpdateOneWithoutChildEventsNestedInput
+  childEvents?: Prisma.EventUpdateManyWithoutParentEventNestedInput
+  sourceNote?: Prisma.NoteUpdateOneWithoutEventsNestedInput
+  interactions?: Prisma.InteractionUpdateManyWithoutEventNestedInput
+  calendarLinks?: Prisma.CalendarEventLinkUpdateManyWithoutEventNestedInput
+  groupTags?: Prisma.GroupUpdateManyWithoutTaggedEventsNestedInput
+  placeNotes?: Prisma.PlaceNoteUpdateManyWithoutEventNestedInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutEventNestedInput
+}
+
+export type EventUncheckedUpdateWithoutSourcePlanInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  start?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  end?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  placeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  transcript?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  childEvents?: Prisma.EventUncheckedUpdateManyWithoutParentEventNestedInput
+  interactions?: Prisma.InteractionUncheckedUpdateManyWithoutEventNestedInput
+  calendarLinks?: Prisma.CalendarEventLinkUncheckedUpdateManyWithoutEventNestedInput
+  groupTags?: Prisma.GroupUncheckedUpdateManyWithoutTaggedEventsNestedInput
+  placeNotes?: Prisma.PlaceNoteUncheckedUpdateManyWithoutEventNestedInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutEventNestedInput
 }
 
 export type EventCreateWithoutPlaceInput = {
@@ -2063,86 +2090,6 @@ export type EventUncheckedUpdateManyWithoutParentEventInput = {
   transcript?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourcePlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-}
-
-export type EventCreateManySourcePlanInput = {
-  id?: string
-  workspaceId?: string
-  createdAt?: Date | string
-  name: string
-  type: string
-  start: Date | string
-  end?: Date | string | null
-  timestamp: Date | string
-  placeId?: string | null
-  notes?: string | null
-  transcript?: string | null
-  metadata?: string | null
-  parentEventId?: string | null
-  sourceNoteId?: string | null
-}
-
-export type EventUpdateWithoutSourcePlanInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.StringFieldUpdateOperationsInput | string
-  start?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  end?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  transcript?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutEventsNestedInput
-  place?: Prisma.PlaceUpdateOneWithoutEventsNestedInput
-  parentEvent?: Prisma.EventUpdateOneWithoutChildEventsNestedInput
-  childEvents?: Prisma.EventUpdateManyWithoutParentEventNestedInput
-  sourceNote?: Prisma.NoteUpdateOneWithoutEventsNestedInput
-  interactions?: Prisma.InteractionUpdateManyWithoutEventNestedInput
-  calendarLinks?: Prisma.CalendarEventLinkUpdateManyWithoutEventNestedInput
-  groupTags?: Prisma.GroupUpdateManyWithoutTaggedEventsNestedInput
-  placeNotes?: Prisma.PlaceNoteUpdateManyWithoutEventNestedInput
-  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutEventNestedInput
-}
-
-export type EventUncheckedUpdateWithoutSourcePlanInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.StringFieldUpdateOperationsInput | string
-  start?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  end?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  placeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  transcript?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  parentEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  childEvents?: Prisma.EventUncheckedUpdateManyWithoutParentEventNestedInput
-  interactions?: Prisma.InteractionUncheckedUpdateManyWithoutEventNestedInput
-  calendarLinks?: Prisma.CalendarEventLinkUncheckedUpdateManyWithoutEventNestedInput
-  groupTags?: Prisma.GroupUncheckedUpdateManyWithoutTaggedEventsNestedInput
-  placeNotes?: Prisma.PlaceNoteUncheckedUpdateManyWithoutEventNestedInput
-  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutEventNestedInput
-}
-
-export type EventUncheckedUpdateManyWithoutSourcePlanInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.StringFieldUpdateOperationsInput | string
-  start?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  end?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  placeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  transcript?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  parentEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 

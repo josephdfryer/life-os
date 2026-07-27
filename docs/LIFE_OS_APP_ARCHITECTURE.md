@@ -6,7 +6,7 @@ Life OS is one private data graph with multiple focused apps on top.
 
 ```mermaid
 flowchart TD
-  Home["apps/home\nfront door"] --> Auth["packages/auth\nshared Google sign-in"]
+  Home["apps/home\ndaily front door"] --> Auth["packages/auth\nshared Google sign-in"]
   Persons["apps/persons\nPeople lens"] --> Auth
   Places["apps/places\nPlaces lens"] --> Auth
   Stuff["apps/stuff\nItems lens"] --> Auth
@@ -18,6 +18,10 @@ flowchart TD
   Access --> DB
   Contracts["packages/contracts\nruntime API schemas"] --> Persons
   Contracts --> Events
+  Domain["packages/domain\nshared graph commands"] --> DB
+  Home --> Domain
+  Assistant["apps/assistant\nchat + actions"] --> Domain
+  Theory["apps/theory-of\nnotes + synthesis"] --> Domain
   Persons --> DB
   Places --> DB
   Stuff --> DB
@@ -38,10 +42,93 @@ flowchart TD
 
 ## Current Apps
 
-- `apps/home`: Life OS front door.
+- `apps/home`: Cross-primitive daily front door for orientation, preparation, commitments, review burden, and one prioritized nudge.
 - `apps/persons`: People, interactions, inbox, admin, imports, Gmail, Calendar, iMessage.
 - `apps/places`: Places, place profiles, visits, Google location import review.
 - `apps/stuff`: Items and inventory.
+
+### Home daily read model
+
+Home is the cross-primitive daily doorway, not another primitive owner. Its
+server components read the shared graph in parallel:
+
+```mermaid
+flowchart LR
+  Home["Home daily surface"] --> Today["Today: scheduled calendar context"]
+  Home --> Prepare["Prepare: upcoming people + prior interactions"]
+  Home --> Commitments["Commitments: active Plans + open action items"]
+  Home --> Inbox["Inbox: staged ambiguity count"]
+  Home --> Nudge["One relationship alignment signal"]
+```
+
+Provider-backed future calendar records are currently stored as `Event` by the
+existing Google sync paths. Home labels them **Scheduled** rather than implying
+that they are confirmed history. The planned migration to calendar-backed
+`Plan` records must remain idempotent and must not rewrite historical production
+records automatically; see `docs/DAILY_USE_PLAN.md`.
+
+Home uses explicit Prisma field selections so a read remains compatible while
+additive provenance migrations are pending in a configured database. Local
+review bypass is checked both in `proxy.ts` and the Home page, and is inert in
+production.
+
+### Note-first capture
+
+`@life-os/domain` owns the canonical `captureNote` command. Home's
+`POST /api/capture`, the Assistant `capture_note` tool, and Theory's
+`POST /api/notes` all enter through this command:
+
+```mermaid
+flowchart LR
+  Bar["Life OS bar Capture"] --> HomeCapture["Home quick capture"]
+  HomeCapture --> HomeAPI["POST /api/capture"]
+  AssistantCapture["Assistant capture_note"] --> Command["captureNote command"]
+  TheoryCapture["Theory POST /api/notes"] --> Command
+  HomeAPI --> Command
+  Command --> Note["Immutable Note + source metadata"]
+  Note -->|explicit paid action| Run["NoteAnalysisRun"]
+  Run --> Suggestion["NoteSuggestion review record"]
+  Suggestion -->|accept edited preview| Plan["Plan + sourceNoteId"]
+  Suggestion -->|accept edited preview| Event["Event + sourceNoteId"]
+  Event --> Interaction["approved Person Interactions"]
+  Suggestion -->|dismiss| Nothing["No graph write"]
+```
+
+The command validates and trims input, owns source metadata, and supports an
+idempotency key. Capture does not depend on AI: a Note is durably stored before
+any future entity resolution or graph write is attempted. The Home route
+requires a session and active workspace membership in production; only the
+explicit non-production local-review path resolves `default-workspace`.
+
+Home's structure action reuses the workspace's encrypted Vercel AI Gateway
+credential. The call is never automatic and its model, prompt version, token
+usage, returned cost, output, and failure state are retained in
+`NoteAnalysisRun`. Only explicit Plan or Event proposals are accepted. The user
+can edit title, time, and matched People before approval; `NoteSuggestion`
+retains pending, accepted, or dismissed review state. Accepting twice returns
+the original derived entity instead of creating a duplicate.
+
+### Calendar prediction and confirmation
+
+The Events app owns the canonical Google Calendar sync. Provider occurrences
+are predictions until Joseph confirms what happened:
+
+```mermaid
+flowchart LR
+  Google["Google occurrence"] --> Link["CalendarEventLink"]
+  Link --> Plan["calendar-backed Plan"]
+  Plan --> Expected["expected Person references"]
+  Plan --> HomeReview["Home: max 3 ended Plans"]
+  HomeReview -->|Happened or Changed| Event["one Event.sourcePlanId"]
+  Event --> Actual["actual attendee Interactions"]
+  HomeReview -->|Cancelled or Skip| NoEvent["no Event"]
+```
+
+`externalInstanceId` and `CalendarEventLink.planId` make provider sync
+idempotent. Reschedules update the Plan bounds. Provider cancellation abandons
+the Plan. A unique `Event.sourcePlanId` prevents duplicate confirmation.
+Existing calendar Events are not rewritten or deleted: on a later sync they
+are linked to an already-fulfilled Plan as a compatibility bridge.
 
 ## Next Layer
 

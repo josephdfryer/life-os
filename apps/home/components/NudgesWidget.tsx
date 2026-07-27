@@ -10,7 +10,7 @@ export default async function NudgesWidget({ workspaceId, personsUrl }: Props) {
   // Shared with Persons (Today page) and the assistant — one definition of
   // "overdue" instead of three apps quietly disagreeing with each other.
   const gaps = await getRelationshipGaps(workspaceId)
-  const top = gaps.slice(0, 3)
+  const top = gaps.slice(0, 1)
 
   // Signals are intentionally minimal (kind/severity/subject/detail) so the
   // assistant can consume them as plain text — fetch the display-only summary
@@ -31,7 +31,8 @@ export default async function NudgesWidget({ workspaceId, personsUrl }: Props) {
 
   return (
     <div style={card}>
-      <h2 style={{ ...heading, marginBottom: '24px' }}>Relationship Nudges</h2>
+      <div style={{ color: 'var(--camel)', fontSize: '11px', marginBottom: '3px' }}>One worthwhile nudge</div>
+      <h2 style={{ ...heading, marginBottom: '24px' }}>Who deserves attention?</h2>
 
       {nudges.length === 0 ? (
         <div style={{ padding: '48px 0', textAlign: 'center', color: 'var(--ink-3)' }}>

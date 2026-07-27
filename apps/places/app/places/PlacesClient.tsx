@@ -1,26 +1,41 @@
 "use client"
 
-import { useEffect, useMemo, useRef, useState } from "react"
-import Link from "next/link"
-import { useRouter, useSearchParams } from "next/navigation"
+import { useDeferredValue, useEffect, useMemo, useState } from "react"
+import { useSearchParams } from "next/navigation"
 import { EmptyState } from "@life-os/ui"
-import { LayerPanel, type LayerConfig, type LayerId } from "@/components/map/LayerPanel"
+import {
+  LayerPanel,
+  type EnrichmentConfig,
+  type EnrichmentId,
+  type MapViewConfig,
+  type MapViewId,
+} from "@/components/map/LayerPanel"
 import { PlacePreview, UnresolvedVisitPreview } from "@/components/map/MapDetails"
+import { PlacesToolbar } from "@/components/map/PlacesToolbar"
+import { groupUnresolvedObservations } from "@/components/map/unresolved-groups"
+import { useMapCamera } from "@/components/map/use-map-camera"
+import { measureMapOperation } from "@/components/map/map-performance"
+import {
+  explorerStateFromParams,
+  explorerFacetCounts,
+  filterAndSortPlaces,
+  placeTypes,
+  sparseFilterCounts,
+  updateExplorerParams,
+  type PlacesExplorerState,
+} from "@/components/map/explorer-state"
 import {
   buildCameraViewport,
-  clampCamera,
+  cameraBounds,
   clusterPlaces,
   cssPixel,
-  fitCamera,
   legacyZoomBucket,
   markerSize,
-  panCamera,
   plotPlaces,
   projectCoordinates,
-  zoomCameraAt,
-  type Camera,
+  visibleClusterLabels,
 } from "@/components/map/map-computation"
-import { formatInteger, formatRoundedCurrency } from "@/lib/format"
+import { formatRoundedCurrency } from "@/lib/format"
 
 type PlaceMapItem = {
   id: string
@@ -39,6 +54,7 @@ type PlaceMapItem = {
     noteCount: number
     planCount: number
     totalSpend?: number
+    firstVisitAt?: string
     lastVisitAt?: string
   }
   weight: number
@@ -52,6 +68,7 @@ type PlaceMapItem = {
 
 type UnresolvedVisitMapItem = {
   id: string
+  importJobId: string
   latitude: number
   longitude: number
   placeName?: string
@@ -69,22 +86,12 @@ type UnresolvedVisitMapItem = {
 type InteractionLayerItem = {
   placeId: string
   interactionCount: number
-  latestAt?: string
-  people: Array<{ id: string; name: string }>
-  interactions: Array<{
-    id: string
-    type: string
-    summary?: string
-    timestamp: string
-    personName?: string
-  }>
 }
 
 type FinanceLayerItem = {
   placeId: string
   transactionCount: number
   totalAmount: number
-  transactions: Array<{ merchant: string; amount: number; date: string }>
 }
 
 type PhotoLayerItem = {
@@ -100,7 +107,6 @@ type MapLayerData = {
   photos: PhotoLayerItem[]
 }
 
-type FilterKey = "all" | "favorites" | "photos" | "people" | "notes"
 type PlottedPlace = { place: PlaceMapItem; x: number; y: number }
 type CoordinateSource = { id: string; latitude?: number; longitude?: number }
 type PlottedCoordinate<T> = { item: T; x: number; y: number }
@@ -118,199 +124,113 @@ type PlaceCluster = {
   placeType?: string
 }
 
-const FILTERS: { key: FilterKey; label: string }[] = [
-  { key: "all", label: "All" },
-  { key: "favorites", label: "Favorites" },
-  { key: "photos", label: "Has photos" },
-  { key: "people", label: "Has people" },
-  { key: "notes", label: "Has notes" },
-]
-
-const ALL_LAYER_IDS: LayerId[] = ["location", "finance", "photos", "interactions", "enrichment"]
-
-export default function PlacesClient({ places, layers }: { places: PlaceMapItem[]; layers: MapLayerData }) {
-  const router = useRouter()
+export default function PlacesClient({ places, layers, errorMessage }: { places: PlaceMapItem[]; layers: MapLayerData; errorMessage?: string }) {
   const searchParams = useSearchParams()
-  const [filter, setFilter] = useState<FilterKey>("all")
-  const [selectedId, setSelectedId] = useState<string | null>(places[0]?.id ?? null)
   const [selectedVisitId, setSelectedVisitId] = useState<string | null>(null)
-  // Camera: geographic center + fractional tile zoom (3–19). null = auto-fit.
-  const [camera, setCamera] = useState<Camera | null>(null)
-  const [mapSize, setMapSize] = useState({ width: 820, height: 620 })
-  const mapRef = useRef<HTMLElement>(null)
-  const cameraRef = useRef<Camera | null>(null)
-  cameraRef.current = camera
-  const activeLayerIds = useMemo(() => layersFromParam(searchParams.get("layers")), [searchParams])
+  const [tileLoadFailed, setTileLoadFailed] = useState(false)
+  const explorerState = useMemo(() => explorerStateFromParams(new URLSearchParams(searchParams.toString())), [searchParams])
+  const deferredQuery = useDeferredValue(explorerState.query)
+  const effectiveExplorerState = useMemo(
+    () => ({ ...explorerState, query: deferredQuery }),
+    [explorerState, deferredQuery],
+  )
+  const activeMapView = mapViewFromParam(searchParams.get("mapView"), explorerState.mode)
+  const activeEnrichments = useMemo(() => enrichmentsFromParam(searchParams.get("show")), [searchParams])
   const legendCollapsed = searchParams.get("legend") === "collapsed"
-  const allLayersActive = activeLayerIds.size === ALL_LAYER_IDS.length
-
-  const filtered = useMemo(() => places.filter(place => {
-    if (filter === "favorites") return place.favorite
-    if (filter === "photos") return place.stats.photoCount > 0
-    if (filter === "people") return place.stats.personCount > 0
-    if (filter === "notes") return place.stats.noteCount > 0
-    return true
-  }), [filter, places])
-
-  const selected = filtered.find(place => place.id === selectedId) ?? filtered[0] ?? null
+  const filtered = useMemo(
+    () => filterAndSortPlaces(places, effectiveExplorerState),
+    [effectiveExplorerState, places],
+  )
+  const selected = filtered.find(place => place.id === explorerState.selectedId) ?? null
   const selectedVisit = layers.unresolvedVisits.find(visit => visit.id === selectedVisitId) ?? null
-  const locationActive = activeLayerIds.has("location")
-  const interactionActive = activeLayerIds.has("interactions")
-  const financeActive = activeLayerIds.has("finance")
-  const photosActive = activeLayerIds.has("photos")
-  const enrichmentActive = activeLayerIds.has("enrichment")
-  const viewportSources = locationActive ? [...filtered, ...layers.unresolvedVisits] : filtered
-  const fittedCamera = useMemo(() => fitCamera(viewportSources, mapSize.width, mapSize.height), [viewportSources, mapSize])
-  const activeCamera = camera ?? fittedCamera
+  const peopleActive = activeEnrichments.has("people")
+  const spendingActive = activeEnrichments.has("spending")
+  const photosActive = activeEnrichments.has("photos")
+  const unresolvedActive = activeMapView === "unresolved"
+  const viewportSources = unresolvedActive ? layers.unresolvedVisits : filtered
+  const { mapRef, mapSize, activeCamera, applyCamera, resetCamera } = useMapCamera(viewportSources, searchParams.toString())
   const viewport = useMemo(
-    () => buildCameraViewport(filtered, activeCamera, mapSize.width, mapSize.height),
+    () => measureMapOperation(
+      "viewport",
+      filtered.length,
+      () => buildCameraViewport(filtered, activeCamera, mapSize.width, mapSize.height),
+    ),
     [filtered, activeCamera, mapSize],
   )
   const legacyZoom = legacyZoomBucket(viewport.tileZoom ?? 13)
   const plotted = viewport.points.length ? viewport.points : plotPlaces(filtered)
-  const clusters = useMemo(() => clusterPlaces(plotted, legacyZoom), [plotted, legacyZoom])
-  const unresolvedPoints = useMemo(() => projectCoordinates(layers.unresolvedVisits, viewport), [layers.unresolvedVisits, viewport])
+  const clusters = useMemo(
+    () => measureMapOperation("clustering", plotted.length, () => clusterPlaces(plotted, legacyZoom)),
+    [plotted, legacyZoom],
+  )
+  const visibleLabels = useMemo(
+    () => visibleClusterLabels(clusters, selected?.id),
+    [clusters, selected?.id],
+  )
+  const unresolvedPoints = useMemo(
+    () => measureMapOperation(
+      "coordinate_projection",
+      layers.unresolvedVisits.length,
+      () => projectCoordinates(layers.unresolvedVisits, viewport),
+    ),
+    [layers.unresolvedVisits, viewport],
+  )
   const interactionsByPlace = useMemo(() => new Map(layers.interactions.map(item => [item.placeId, item])), [layers.interactions])
   const financeByPlace = useMemo(() => new Map(layers.finance.map(item => [item.placeId, item])), [layers.finance])
   const photosByPlace = useMemo(() => new Map(layers.photos.map(item => [item.placeId, item])), [layers.photos])
-  const layerConfigs = useMemo<LayerConfig[]>(() => [
-    { id: "location", label: "Location", icon: "L", color: "#3778c2", count: filtered.length + layers.unresolvedVisits.length, active: locationActive },
-    { id: "finance", label: "Finance", icon: "$", color: "#3f8f5f", count: layers.finance.length, active: financeActive },
-    { id: "photos", label: "Photos", icon: "Ph", color: "#7657b7", count: layers.photos.length, active: photosActive },
-    { id: "interactions", label: "Interactions", icon: "In", color: "#d4742f", count: layers.interactions.reduce((sum, item) => sum + item.interactionCount, 0), active: interactionActive },
-    { id: "enrichment", label: "AI enrichment", icon: "AI", color: "#d2a321", count: layers.unresolvedVisits.filter(visit => visit.aiEnrichment).length, active: enrichmentActive },
-  ], [filtered.length, layers, locationActive, financeActive, photosActive, interactionActive, enrichmentActive])
-  const zoomLevelLabel = legacyZoom <= 1 ? "Group spend" : legacyZoom < 4 ? "Neighborhood spend" : "Place spend"
+  const mapViews = useMemo<MapViewConfig[]>(() => [
+    { id: "places", label: "Places", count: filtered.length },
+    { id: "density", label: "Visit density", count: filtered.reduce((sum, place) => sum + place.stats.visitCount, 0) },
+    { id: "unresolved", label: "Needs review", count: layers.unresolvedVisits.length },
+  ], [filtered, layers.unresolvedVisits.length])
+  const enrichmentConfigs = useMemo<EnrichmentConfig[]>(() => [
+    layers.interactions.length
+      ? { id: "people" as const, label: "People", color: "var(--map-people)", count: layers.interactions.reduce((sum, item) => sum + item.interactionCount, 0) }
+      : null,
+    layers.photos.length
+      ? { id: "photos" as const, label: "Photos", color: "var(--map-photos)", count: layers.photos.reduce((sum, item) => sum + item.photoCount, 0) }
+      : null,
+    layers.finance.length
+      ? { id: "spending" as const, label: "Spending", color: "var(--map-spending)", count: layers.finance.reduce((sum, item) => sum + item.transactionCount, 0) }
+      : null,
+  ].filter((item): item is EnrichmentConfig => item !== null), [layers.finance, layers.interactions, layers.photos])
+  const typeOptions = useMemo(() => placeTypes(places), [places])
+  const sparseCounts = useMemo(() => sparseFilterCounts(places), [places])
+  const facetCounts = useMemo(() => explorerFacetCounts(places), [places])
+  const unresolvedGroups = useMemo(
+    () => groupUnresolvedObservations(layers.unresolvedVisits),
+    [layers.unresolvedVisits],
+  )
 
-  // ── Google Maps-style trackpad navigation ────────────────────
-  // two-finger scroll = pan · pinch (ctrl+wheel / gesture events) = zoom to
-  // cursor · click-drag = pan · double-click = zoom in
-  const applyCamera = (updater: (current: Camera) => Camera) => {
-    setCamera(prev => {
-      const current = prev ?? fittedCamera
-      if (!current) return prev
-      return clampCamera(updater(current))
-    })
-  }
-
-  useEffect(() => {
-    const el = mapRef.current
-    if (!el) return
-
-    const observer = new ResizeObserver(entries => {
-      const rect = entries[0]?.contentRect
-      if (rect && rect.width > 0) setMapSize({ width: rect.width, height: Math.max(rect.height, 420) })
-    })
-    observer.observe(el)
-
-    const panBy = (dx: number, dy: number) => {
-      setCamera(prev => {
-        const current = prev ?? cameraRef.current ?? fittedCameraRef.current
-        if (!current) return prev
-        return clampCamera(panCamera(current, dx, dy))
-      })
-    }
-    const zoomAt = (delta: number, clientX: number, clientY: number) => {
-      const rect = el.getBoundingClientRect()
-      setCamera(prev => {
-        const current = prev ?? cameraRef.current ?? fittedCameraRef.current
-        if (!current) return prev
-        return clampCamera(zoomCameraAt(current, delta, clientX - rect.left, clientY - rect.top, rect.width, rect.height))
-      })
-    }
-
-    const onWheel = (event: WheelEvent) => {
-      event.preventDefault()
-      if (event.ctrlKey || event.metaKey) {
-        zoomAt(-event.deltaY * 0.022, event.clientX, event.clientY)
-      } else {
-        panBy(event.deltaX, event.deltaY)
-      }
-    }
-
-    // Safari trackpad pinch
-    let gestureScale = 1
-    const onGestureStart = (event: Event) => { event.preventDefault(); gestureScale = 1 }
-    const onGestureChange = (event: Event) => {
-      event.preventDefault()
-      const e = event as Event & { scale: number; clientX: number; clientY: number }
-      const delta = Math.log2(e.scale / gestureScale)
-      gestureScale = e.scale
-      zoomAt(delta, e.clientX, e.clientY)
-    }
-
-    let dragging = false
-    let lastX = 0
-    let lastY = 0
-    const onPointerDown = (event: PointerEvent) => {
-      if (event.button !== 0) return
-      const target = event.target as HTMLElement
-      if (target.closest("button, input, a")) return
-      dragging = true
-      lastX = event.clientX
-      lastY = event.clientY
-      el.setPointerCapture(event.pointerId)
-      el.style.cursor = "grabbing"
-    }
-    const onPointerMove = (event: PointerEvent) => {
-      if (!dragging) return
-      panBy(lastX - event.clientX, lastY - event.clientY)
-      lastX = event.clientX
-      lastY = event.clientY
-    }
-    const onPointerUp = (event: PointerEvent) => {
-      dragging = false
-      el.style.cursor = "grab"
-      try { el.releasePointerCapture(event.pointerId) } catch { /* released */ }
-    }
-    const onDoubleClick = (event: MouseEvent) => {
-      if ((event.target as HTMLElement).closest("button, input, a")) return
-      event.preventDefault()
-      zoomAt(1, event.clientX, event.clientY)
-    }
-
-    el.style.cursor = "grab"
-    el.style.touchAction = "none"
-    el.addEventListener("wheel", onWheel, { passive: false })
-    el.addEventListener("gesturestart", onGestureStart as EventListener, { passive: false } as AddEventListenerOptions)
-    el.addEventListener("gesturechange", onGestureChange as EventListener, { passive: false } as AddEventListenerOptions)
-    el.addEventListener("pointerdown", onPointerDown)
-    el.addEventListener("pointermove", onPointerMove)
-    el.addEventListener("pointerup", onPointerUp)
-    el.addEventListener("pointercancel", onPointerUp)
-    el.addEventListener("dblclick", onDoubleClick)
-    return () => {
-      observer.disconnect()
-      el.removeEventListener("wheel", onWheel)
-      el.removeEventListener("gesturestart", onGestureStart as EventListener)
-      el.removeEventListener("gesturechange", onGestureChange as EventListener)
-      el.removeEventListener("pointerdown", onPointerDown)
-      el.removeEventListener("pointermove", onPointerMove)
-      el.removeEventListener("pointerup", onPointerUp)
-      el.removeEventListener("pointercancel", onPointerUp)
-      el.removeEventListener("dblclick", onDoubleClick)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  // Latest fitted camera for gesture handlers created once
-  const fittedCameraRef = useRef<Camera | null>(null)
-  fittedCameraRef.current = fittedCamera
-
-  const replaceParams = (nextParams: URLSearchParams) => {
+  const replaceParams = (nextParams: URLSearchParams, history: "push" | "replace" = "replace") => {
     const query = nextParams.toString()
-    router.replace(query ? `?${query}` : "?", { scroll: false })
+    const url = query ? `?${query}` : window.location.pathname
+    if (history === "push") window.history.pushState(null, "", url)
+    else window.history.replaceState(null, "", url)
   }
 
-  const setLayerParam = (ids: Set<LayerId>) => {
-    const params = new URLSearchParams(searchParams.toString())
-    params.set("layers", ALL_LAYER_IDS.filter(layerId => ids.has(layerId)).join(","))
-    replaceParams(params)
+  const updateExplorer = (patch: Partial<PlacesExplorerState>, history: "push" | "replace" = "replace") => {
+    const params = updateExplorerParams(new URLSearchParams(searchParams.toString()), patch)
+    replaceParams(params, history)
   }
 
-  const resetLayers = () => {
+  const setMapView = (view: MapViewId) => {
     const params = new URLSearchParams(searchParams.toString())
-    params.delete("layers")
+    if (view === "places") params.delete("mapView")
+    else params.set("mapView", view)
+    if (view === "unresolved") params.set("mode", "review")
+    else if (explorerState.mode === "review") params.delete("mode")
+    setSelectedVisitId(null)
+    replaceParams(params, "push")
+  }
+
+  const toggleEnrichment = (id: EnrichmentId) => {
+    const params = new URLSearchParams(searchParams.toString())
+    const next = new Set(activeEnrichments)
+    if (next.has(id)) next.delete(id)
+    else next.add(id)
+    if (next.size) params.set("show", [...next].sort().join(","))
+    else params.delete("show")
     replaceParams(params)
   }
 
@@ -321,72 +241,44 @@ export default function PlacesClient({ places, layers }: { places: PlaceMapItem[
     replaceParams(params)
   }
 
-  const toggleLayer = (id: LayerId) => {
-    if (allLayersActive) {
-      setLayerParam(new Set([id]))
-      return
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== "Escape") return
+      if (selectedVisitId) setSelectedVisitId(null)
+      if (explorerState.selectedId) updateExplorer({ selectedId: null })
     }
-
-    const next = new Set(activeLayerIds)
-    if (next.has(id)) next.delete(id)
-    else next.add(id)
-
-    if (next.size === 0 || next.size === ALL_LAYER_IDS.length) {
-      resetLayers()
-      return
-    }
-
-    setLayerParam(next)
-  }
+    window.addEventListener("keydown", onKeyDown)
+    return () => window.removeEventListener("keydown", onKeyDown)
+    // URL state changes intentionally refresh this lightweight handler.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [explorerState.selectedId, selectedVisitId, searchParams])
 
   return (
-    <div style={{ width: "min(100%, 1180px)", margin: "0 auto", padding: "36px 24px 48px" }}>
-      <header style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: "16px", marginBottom: "18px", flexWrap: "wrap" }}>
-        <div>
-          <h1 style={{ fontFamily: "var(--font-display)", fontSize: "28px", fontWeight: 400, letterSpacing: "-0.02em", margin: 0, color: "var(--ink)" }}>Places</h1>
-          <div style={{ color: "var(--ink-3)", fontSize: "12px", marginTop: "4px" }}>
-            {formatInteger(places.length)} {places.length === 1 ? "place" : "places"}
-            {totalSpend(filtered) > 0 && ` · ${money(totalSpend(filtered))} recorded spend`}
-            {` · ${zoomLevelLabel}`}
-          </div>
-        </div>
-        <div style={{ display: "flex", gap: "6px", flexWrap: "wrap", alignItems: "center" }}>
-          {FILTERS.map(item => (
-            <button
-              key={item.key}
-              onClick={() => { setFilter(item.key); setSelectedId(null); setSelectedVisitId(null) }}
-              style={{
-                padding: "6px 13px",
-                borderRadius: "var(--radius-pill)",
-                border: `1px solid ${filter === item.key ? "var(--cognac-soft)" : "var(--border)"}`,
-                background: filter === item.key ? "var(--cognac-soft)" : "transparent",
-                color: filter === item.key ? "var(--cognac-deep)" : "var(--ink-3)",
-                fontFamily: "inherit",
-                fontSize: "13px",
-                cursor: "pointer",
-              }}
-            >
-              {item.label}
-            </button>
-          ))}
-          <Link
-            href="/places/import"
-            style={{
-              padding: "9px 18px",
-              borderRadius: "var(--radius-pill)",
-              border: "1px solid var(--cognac)",
-              background: "var(--cognac)",
-              color: "#fff",
-              fontSize: "13px",
-              textDecoration: "none",
-            }}
-          >
-            Import
-          </Link>
-        </div>
-      </header>
+    <div className="places-explorer">
+      <PlacesToolbar
+        state={explorerState}
+        placeCount={places.length}
+        filteredCount={filtered.length}
+        totalSpend={totalSpend(filtered)}
+        unresolvedCount={layers.unresolvedVisits.length}
+        typeOptions={typeOptions}
+        sparseCounts={sparseCounts}
+        facetCounts={facetCounts}
+        onUpdate={updateExplorer}
+        onReviewToggle={() => setMapView(explorerState.mode === "review" ? "places" : "unresolved")}
+      />
 
-      {places.length === 0 ? (
+      {errorMessage ? (
+        <div className="places-error-state" role="alert">
+          <div>
+            <strong>Places is temporarily unavailable</strong>
+            <span>{errorMessage}</span>
+          </div>
+          <button type="button" onClick={() => window.location.reload()}>Try again</button>
+        </div>
+      ) : null}
+
+      {places.length === 0 && !errorMessage ? (
         <div style={{ background: "var(--surface)", border: "1px solid var(--border-subtle)", borderRadius: "var(--radius)", boxShadow: "var(--shadow-sm)" }}>
           <EmptyState
             icon="◎"
@@ -394,11 +286,26 @@ export default function PlacesClient({ places, layers }: { places: PlaceMapItem[
             subtitle="Import location history or create your first place to start building your private map."
           />
         </div>
-      ) : (
-        <div className="places-map-layout" style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) 320px", gap: "18px", alignItems: "stretch" }}>
+      ) : places.length ? (
+        <div className={`places-map-layout places-view-${explorerState.view}`}>
           <section
             ref={mapRef}
             aria-label="Places map"
+            aria-describedby="places-map-instructions"
+            className="places-map-canvas"
+            tabIndex={0}
+            onKeyDown={event => {
+              if (event.target !== event.currentTarget) return
+              const panStep = event.shiftKey ? 180 : 72
+              if (event.key === "ArrowLeft") applyCamera(current => ({ ...current, lng: current.lng - 360 / (2 ** current.zoom) * panStep / 256 }))
+              else if (event.key === "ArrowRight") applyCamera(current => ({ ...current, lng: current.lng + 360 / (2 ** current.zoom) * panStep / 256 }))
+              else if (event.key === "ArrowUp") applyCamera(current => ({ ...current, lat: current.lat + 180 / (2 ** current.zoom) * panStep / 256 }))
+              else if (event.key === "ArrowDown") applyCamera(current => ({ ...current, lat: current.lat - 180 / (2 ** current.zoom) * panStep / 256 }))
+              else if (event.key === "+" || event.key === "=") applyCamera(current => ({ ...current, zoom: current.zoom + 1 }))
+              else if (event.key === "-") applyCamera(current => ({ ...current, zoom: current.zoom - 1 }))
+              else return
+              event.preventDefault()
+            }}
             style={{
               minHeight: "620px",
               position: "relative",
@@ -409,6 +316,7 @@ export default function PlacesClient({ places, layers }: { places: PlaceMapItem[
               background: "linear-gradient(180deg, #f8f6f0 0%, #ede9df 100%)",
             }}
           >
+            <span id="places-map-instructions" className="places-sr-only">Use arrow keys to pan, plus and minus to zoom, and Shift with an arrow key to pan farther.</span>
             {viewport.tiles.map(tile => (
               <img
                 key={tile.key}
@@ -417,6 +325,10 @@ export default function PlacesClient({ places, layers }: { places: PlaceMapItem[
                 width={256}
                 height={256}
                 draggable={false}
+                onError={event => {
+                  event.currentTarget.style.visibility = "hidden"
+                  setTileLoadFailed(true)
+                }}
                 style={{
                   position: "absolute",
                   left: cssPixel(tile.left),
@@ -427,13 +339,20 @@ export default function PlacesClient({ places, layers }: { places: PlaceMapItem[
                 }}
               />
             ))}
+            {tileLoadFailed ? (
+              <div className="places-tile-warning" role="status">
+                The street map could not fully load. Place markers and results still work.
+              </div>
+            ) : null}
             <div style={{ position: "absolute", inset: 0, background: "rgba(250, 248, 244, 0.1)" }} />
             <LayerPanel
-              layers={layerConfigs}
+              views={mapViews}
+              activeView={activeMapView}
+              enrichments={enrichmentConfigs}
+              activeEnrichments={activeEnrichments}
               collapsed={legendCollapsed}
-              allActive={allLayersActive}
-              onToggle={toggleLayer}
-              onReset={resetLayers}
+              onViewChange={setMapView}
+              onEnrichmentToggle={toggleEnrichment}
               onCollapsedChange={setLegendCollapsed}
             />
             <div style={{
@@ -477,12 +396,24 @@ export default function PlacesClient({ places, layers }: { places: PlaceMapItem[
               <button
                 aria-label="Fit map to places"
                 title="Fit to places"
-                onClick={() => setCamera(null)}
+                onClick={resetCamera}
                 style={{ ...zoomButtonStyle, width: "auto", borderRadius: "12px", padding: "0 9px", fontSize: "11px" }}
               >
                 Fit
               </button>
             </div>
+            {!unresolvedActive && activeCamera ? (
+              <button
+                type="button"
+                className="places-search-area"
+                onClick={() => updateExplorer({
+                  bounds: cameraBounds(activeCamera, mapSize.width, mapSize.height),
+                  selectedId: null,
+                }, "push")}
+              >
+                Search this area
+              </button>
+            ) : null}
             <div style={{
               position: "absolute",
               left: "14px",
@@ -495,14 +426,31 @@ export default function PlacesClient({ places, layers }: { places: PlaceMapItem[
               color: "var(--ink-3)",
               fontSize: "10px",
             }}>
-              {viewport.centerLabel} · OpenStreetMap
+              {viewport.centerLabel} · <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer" style={{ color: "inherit" }}>© OpenStreetMap contributors</a>
             </div>
-            {filtered.length === 0 && (!locationActive || layers.unresolvedVisits.length === 0) ? (
+            {!unresolvedActive && filtered.length === 0 ? (
               <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <EmptyState icon="○" title="No matching places" subtitle="Try a different filter." />
+                <EmptyState
+                  icon="○"
+                  title="No matching places"
+                  subtitle="Clear a filter or try a broader search."
+                  action={(
+                    <button
+                      type="button"
+                      className="places-empty-action"
+                      onClick={() => updateExplorer({ query: "", type: "all", recency: "any", firstVisited: "any", minVisits: 0, bounds: null, selectedId: null })}
+                    >
+                      Clear filters
+                    </button>
+                  )}
+                />
+              </div>
+            ) : unresolvedActive && layers.unresolvedVisits.length === 0 ? (
+              <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <EmptyState icon="✓" title="Nothing needs review" subtitle="All imported visits have been resolved or dismissed." />
               </div>
             ) : (
-              locationActive && clusters.map(cluster => {
+              !unresolvedActive && clusters.map(cluster => {
                 const single = cluster.level === "place" && cluster.places.length === 1 ? cluster.places[0] : null
                 const selectedMarker = single ? selected?.id === single.id : cluster.places.some(place => place.id === selected?.id)
                 const size = markerSize(cluster.totalSpend, cluster.fallbackWeight)
@@ -515,6 +463,7 @@ export default function PlacesClient({ places, layers }: { places: PlaceMapItem[
                   <button
                     key={cluster.id}
                     aria-label={label}
+                    className="place-map-marker"
                     onClick={() => {
                       if (cluster.places.length > 1) {
                         const coords = cluster.places.filter(place => typeof place.latitude === "number" && typeof place.longitude === "number")
@@ -523,8 +472,9 @@ export default function PlacesClient({ places, layers }: { places: PlaceMapItem[
                           const lng = coords.reduce((sum, place) => sum + place.longitude!, 0) / coords.length
                           applyCamera(current => ({ lat, lng, zoom: Math.min(19, current.zoom + 2) }))
                         }
+                        return
                       }
-                      setSelectedId(cluster.places[0]?.id ?? null)
+                      updateExplorer({ selectedId: cluster.places[0]?.id ?? null }, "push")
                       setSelectedVisitId(null)
                     }}
                     style={{
@@ -547,21 +497,23 @@ export default function PlacesClient({ places, layers }: { places: PlaceMapItem[
                     title={`${label}${cluster.totalSpend > 0 ? ` · ${money(cluster.totalSpend)}` : " · no spend yet"}`}
                   >
                     {cluster.level === "group" ? shortGroupLabel(cluster.label) : cluster.level === "neighborhood" ? cluster.places.length : ""}
-                    {interactionActive && interaction ? <PinBadge label={String(interaction.interactionCount)} color="#d4742f" x={size - 8} y={-6} /> : null}
-                    {financeActive && finance ? <PinBadge label="$" color="#3f8f5f" x={-8} y={size - 10} /> : null}
+                    {single && visibleLabels.has(cluster.id) ? <span className="place-marker-label" aria-hidden="true">{single.name}</span> : null}
+                    {peopleActive && interaction ? <PinBadge label={String(interaction.interactionCount)} color="var(--map-people)" x={size - 8} y={-6} /> : null}
+                    {spendingActive && finance ? <PinBadge label="$" color="var(--map-spending)" x={-8} y={size - 10} /> : null}
                     {photosActive && photo ? <PhotoLayerPin item={photo} x={size - 8} y={size - 10} /> : null}
                   </button>
                 )
               })
             )}
-            {locationActive && unresolvedPoints.map(point => (
+            {unresolvedActive && unresolvedPoints.map(point => (
               <button
                 key={point.item.id}
                 type="button"
+                className="place-map-marker unresolved"
                 aria-label="Unresolved visit"
                 onClick={() => {
                   setSelectedVisitId(point.item.id)
-                  setSelectedId(null)
+                  updateExplorer({ selectedId: null })
                 }}
                 style={{
                   position: "absolute",
@@ -582,56 +534,79 @@ export default function PlacesClient({ places, layers }: { places: PlaceMapItem[
                 title={unresolvedVisitTitle(point.item)}
               >
                 ?
-                {enrichmentActive && point.item.aiEnrichment ? (
+                {point.item.aiEnrichment ? (
                   <PinBadge label="" color={enrichmentColor(point.item.aiEnrichment.confidence)} x={15} y={-5} />
                 ) : null}
               </button>
             ))}
+            {selected && !unresolvedActive ? (
+              <aside className="places-selection-drawer" aria-label={`${selected.name} preview`}>
+                <button type="button" className="places-preview-close" aria-label="Close place preview" onClick={() => updateExplorer({ selectedId: null })}>×</button>
+                <PlacePreview place={selected} returnQuery={searchParams.toString()} />
+              </aside>
+            ) : null}
           </section>
 
-          <aside style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+          <aside className="places-results-panel">
             {selectedVisit ? (
               <UnresolvedVisitPreview visit={selectedVisit} />
-            ) : selected ? (
-              <PlacePreview place={selected} />
             ) : (
-              <div style={{ background: "var(--surface)", border: "1px solid var(--border-subtle)", borderRadius: "var(--radius)", boxShadow: "var(--shadow-sm)" }}>
-                <EmptyState icon="◎" title="Select a place" subtitle="Markers open a preview before you jump into the full memory page." />
+              <div className="places-selection-prompt">
+                <EmptyState
+                  icon={unresolvedActive ? "?" : "◎"}
+                  title={unresolvedActive ? "Select a visit to review" : selected ? "Place selected" : "Select a place"}
+                  subtitle={unresolvedActive ? "Choose a pending observation to inspect its source and suggested identity." : selected ? "Its preview is open over the map." : "Markers and results open a preview before you jump into the full memory page."}
+                />
               </div>
             )}
-            <div style={{ display: "flex", flexDirection: "column", gap: "8px", maxHeight: "360px", overflow: "auto" }}>
-              {filtered.slice(0, 250).map(place => (
+            <div className="places-results-list" aria-label={unresolvedActive ? "Visits needing review" : "Place results"}>
+              {unresolvedActive ? unresolvedGroups.map(group => {
+                const visit = group.representative
+                return (
+                <button
+                  key={group.id}
+                  type="button"
+                  className={`place-result-row${selectedVisitId === visit.id ? " is-selected" : ""}`}
+                  onClick={() => {
+                    setSelectedVisitId(visit.id)
+                    updateExplorer({ selectedId: null })
+                    applyCamera(current => ({ ...current, lat: visit.latitude, lng: visit.longitude, zoom: Math.max(current.zoom, 16) }))
+                  }}
+                >
+                  <span className="place-result-name">{group.label}</span>
+                  <span className="place-result-meta">
+                    {group.observations.length > 1 ? `${group.observations.length} nearby visits · ` : ""}
+                    {formatDateLabel(visit.startedAt)} · {Math.round(visit.confidence)}% import confidence
+                  </span>
+                  <span className="place-result-address">{visit.placeAddress ?? "No text address"}</span>
+                </button>
+                )
+              }) : filtered.map(place => (
                 <button
                   key={place.id}
+                  type="button"
+                  className={`place-result-row${selected?.id === place.id ? " is-selected" : ""}`}
                   onClick={() => {
-                    setSelectedId(place.id)
+                    updateExplorer({ selectedId: place.id }, "push")
                     setSelectedVisitId(null)
                     if (typeof place.latitude === "number" && typeof place.longitude === "number") {
                       applyCamera(current => ({ lat: place.latitude!, lng: place.longitude!, zoom: Math.max(current.zoom, 15) }))
                     }
                   }}
-                  style={{
-                    textAlign: "left",
-                    padding: "10px 12px",
-                    border: `1px solid ${selected?.id === place.id ? "var(--cognac-soft)" : "transparent"}`,
-                    borderRadius: "var(--radius)",
-                    boxShadow: "var(--shadow-sm)",
-                    background: selected?.id === place.id ? "var(--cognac-soft)" : "var(--surface)",
-                    color: "var(--ink)",
-                    fontFamily: "inherit",
-                    cursor: "pointer",
-                  }}
                 >
-                  <div style={{ fontFamily: "var(--font-display)", fontSize: "17px", fontWeight: 400 }}>{place.favorite ? "★ " : ""}{place.name}</div>
-                  <div style={{ fontSize: "10px", color: "var(--ink-4)", marginTop: "2px" }}>
-                    {place.stats.visitCount} visits · {place.stats.personCount} people{place.stats.totalSpend ? ` · ${money(place.stats.totalSpend)}` : ""}
-                  </div>
+                  <span className="place-result-name">{place.favorite ? "★ " : ""}{place.name}</span>
+                  <span className="place-result-meta">
+                    {place.stats.visitCount} {place.stats.visitCount === 1 ? "visit" : "visits"}
+                    {place.stats.lastVisitAt ? ` · ${formatDateLabel(place.stats.lastVisitAt)}` : ""}
+                    {place.stats.totalSpend ? ` · ${money(place.stats.totalSpend)}` : ""}
+                  </span>
+                  <span className="place-result-address">{[labelize(place.placeType), place.address].filter(Boolean).join(" · ") || "No address"}</span>
                 </button>
               ))}
             </div>
           </aside>
         </div>
-      )}
+      ) : null}
     </div>
   )
 }
@@ -664,12 +639,7 @@ function PinBadge({ label, color, x, y }: { label: string; color: string; x: num
 function PhotoLayerPin({ item, x, y }: { item: PhotoLayerItem; x: number; y: number }) {
   return (
     <span
-      role="link"
       title={`${item.photoCount} photos`}
-      onClick={event => {
-        event.stopPropagation()
-        window.open(item.googlePhotosDeeplink, "_blank", "noreferrer")
-      }}
       style={{
         position: "absolute",
         left: cssPixel(x),
@@ -678,7 +648,7 @@ function PhotoLayerPin({ item, x, y }: { item: PhotoLayerItem; x: number; y: num
         height: "16px",
         borderRadius: "999px",
         border: "1px solid #fff",
-        background: "#7657b7",
+        background: "var(--map-photos)",
         color: "#fff",
         display: "inline-flex",
         alignItems: "center",
@@ -692,12 +662,15 @@ function PhotoLayerPin({ item, x, y }: { item: PhotoLayerItem; x: number; y: num
   )
 }
 
-function layersFromParam(value: string | null) {
-  if (!value) return new Set<LayerId>(ALL_LAYER_IDS)
-  const requested = value.split(",").map(item => item.trim()).filter((item): item is LayerId =>
-    ALL_LAYER_IDS.includes(item as LayerId)
-  )
-  return new Set<LayerId>(requested.length ? requested : ALL_LAYER_IDS)
+function mapViewFromParam(value: string | null, mode: PlacesExplorerState["mode"]): MapViewId {
+  if (mode === "review") return "unresolved"
+  return value === "density" || value === "unresolved" ? value : "places"
+}
+
+function enrichmentsFromParam(value: string | null) {
+  const allowed: EnrichmentId[] = ["people", "photos", "spending"]
+  if (!value) return new Set<EnrichmentId>()
+  return new Set(value.split(",").filter((item): item is EnrichmentId => allowed.includes(item as EnrichmentId)))
 }
 
 function unresolvedVisitTitle(visit: UnresolvedVisitMapItem) {
@@ -706,9 +679,9 @@ function unresolvedVisitTitle(visit: UnresolvedVisitMapItem) {
 }
 
 function enrichmentColor(confidence: number) {
-  if (confidence >= 0.75) return "#3f8f5f"
-  if (confidence >= 0.45) return "#d2a321"
-  return "#b9475a"
+  if (confidence >= 0.75) return "var(--map-confidence-high)"
+  if (confidence >= 0.45) return "var(--map-confidence-medium)"
+  return "var(--map-confidence-low)"
 }
 
 function totalSpend(places: PlaceMapItem[]) {
@@ -717,6 +690,14 @@ function totalSpend(places: PlaceMapItem[]) {
 
 function money(value: number) {
   return formatRoundedCurrency(value)
+}
+
+function formatDateLabel(value: string) {
+  return new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric", year: "numeric" }).format(new Date(value))
+}
+
+function labelize(value?: string) {
+  return value ? value.replaceAll("_", " ").replace(/\b\w/g, letter => letter.toUpperCase()) : ""
 }
 
 function shortGroupLabel(label: string) {
@@ -728,24 +709,24 @@ function placeTypeColor(placeType?: string) {
   const palette: Record<string, string> = {
     cafe: "var(--cognac)",
     coffee: "var(--cognac)",
-    restaurant: "#b85f35",
-    bar: "#6f5ca8",
-    store: "#3f7f6b",
-    shop: "#3f7f6b",
-    grocery: "#5f8b4c",
-    home: "#4f6f88",
-    office: "#8a6f3d",
-    gym: "#b9475a",
-    hotel: "#7b6a58",
-    airport: "#4f789e",
-    park: "#5f8b4c",
+    restaurant: "var(--map-type-food)",
+    bar: "var(--map-type-nightlife)",
+    store: "var(--map-type-retail)",
+    shop: "var(--map-type-retail)",
+    grocery: "var(--map-type-nature)",
+    home: "var(--map-type-home)",
+    office: "var(--map-type-work)",
+    gym: "var(--map-confidence-low)",
+    hotel: "var(--map-type-lodging)",
+    airport: "var(--map-type-travel)",
+    park: "var(--map-type-nature)",
   }
-  if (!placeType) return "#7b8a84"
+  if (!placeType) return "var(--map-type-default)"
   return palette[placeType] ?? hashColor(placeType)
 }
 
 function hashColor(value: string) {
-  const colors = ["var(--cognac)", "#3f7f6b", "#6f5ca8", "#8a6f3d", "#4f789e", "#b9475a", "#5f8b4c"]
+  const colors = ["var(--cognac)", "var(--map-type-retail)", "var(--map-type-nightlife)", "var(--map-type-work)", "var(--map-type-travel)", "var(--map-confidence-low)", "var(--map-type-nature)"]
   let hash = 0
   for (let i = 0; i < value.length; i++) hash = (hash * 31 + value.charCodeAt(i)) >>> 0
   return colors[hash % colors.length]

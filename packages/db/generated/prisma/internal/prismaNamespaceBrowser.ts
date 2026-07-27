@@ -90,6 +90,8 @@ export const ModelName = {
   ImportedFile: 'ImportedFile',
   AiProviderCredential: 'AiProviderCredential',
   AiAnalysisRun: 'AiAnalysisRun',
+  NoteAnalysisRun: 'NoteAnalysisRun',
+  NoteSuggestion: 'NoteSuggestion',
   Group: 'Group',
   SupplierProfile: 'SupplierProfile',
   PurchaseOrder: 'PurchaseOrder',
@@ -320,6 +322,7 @@ export const CalendarEventLinkScalarFieldEnum = {
   calendarId: 'calendarId',
   externalEventId: 'externalEventId',
   iCalUID: 'iCalUID',
+  planId: 'planId',
   eventId: 'eventId',
   status: 'status',
   lastSeenAt: 'lastSeenAt'
@@ -569,6 +572,8 @@ export const PlanScalarFieldEnum = {
   placeId: 'placeId',
   externalSource: 'externalSource',
   externalInstanceId: 'externalInstanceId',
+  reconciliationStatus: 'reconciliationStatus',
+  reconciledAt: 'reconciledAt',
   sourceNoteId: 'sourceNoteId'
 } as const
 
@@ -807,6 +812,46 @@ export const AiAnalysisRunScalarFieldEnum = {
 } as const
 
 export type AiAnalysisRunScalarFieldEnum = (typeof AiAnalysisRunScalarFieldEnum)[keyof typeof AiAnalysisRunScalarFieldEnum]
+
+
+export const NoteAnalysisRunScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  noteId: 'noteId',
+  credentialId: 'credentialId',
+  createdAt: 'createdAt',
+  completedAt: 'completedAt',
+  provider: 'provider',
+  modelId: 'modelId',
+  status: 'status',
+  promptVersion: 'promptVersion',
+  output: 'output',
+  error: 'error',
+  inputTokens: 'inputTokens',
+  outputTokens: 'outputTokens',
+  estimatedCost: 'estimatedCost'
+} as const
+
+export type NoteAnalysisRunScalarFieldEnum = (typeof NoteAnalysisRunScalarFieldEnum)[keyof typeof NoteAnalysisRunScalarFieldEnum]
+
+
+export const NoteSuggestionScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  noteId: 'noteId',
+  analysisRunId: 'analysisRunId',
+  createdAt: 'createdAt',
+  reviewedAt: 'reviewedAt',
+  kind: 'kind',
+  status: 'status',
+  title: 'title',
+  payload: 'payload',
+  confidence: 'confidence',
+  acceptedEntityType: 'acceptedEntityType',
+  acceptedEntityId: 'acceptedEntityId'
+} as const
+
+export type NoteSuggestionScalarFieldEnum = (typeof NoteSuggestionScalarFieldEnum)[keyof typeof NoteSuggestionScalarFieldEnum]
 
 
 export const GroupScalarFieldEnum = {

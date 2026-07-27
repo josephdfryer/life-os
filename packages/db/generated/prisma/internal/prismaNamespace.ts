@@ -423,6 +423,8 @@ export const ModelName = {
   ImportedFile: 'ImportedFile',
   AiProviderCredential: 'AiProviderCredential',
   AiAnalysisRun: 'AiAnalysisRun',
+  NoteAnalysisRun: 'NoteAnalysisRun',
+  NoteSuggestion: 'NoteSuggestion',
   Group: 'Group',
   SupplierProfile: 'SupplierProfile',
   PurchaseOrder: 'PurchaseOrder',
@@ -452,7 +454,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "workspace" | "workspaceMember" | "approvedEmail" | "person" | "user" | "role" | "permission" | "userRole" | "rolePermission" | "apiKey" | "apiKeyScope" | "auditLog" | "calendarConnection" | "calendarEventLink" | "gmailConnection" | "gmailMessageLink" | "eraConnection" | "eraAccountLink" | "eraTransactionLink" | "rule" | "ruleRun" | "stagedInteraction" | "event" | "interaction" | "interactionParticipant" | "plan" | "planExpectedPerson" | "place" | "importJob" | "importStagedVisit" | "placeNote" | "item" | "itemDefinition" | "inventoryLot" | "assembly" | "itemInteraction" | "importedFile" | "aiProviderCredential" | "aiAnalysisRun" | "group" | "supplierProfile" | "purchaseOrder" | "purchaseOrderLine" | "purchaseReceiptLine" | "personGroup" | "groupGroup" | "placeGroup" | "note" | "theorySnapshot" | "theorySnapshotSource" | "stateDefinition" | "state" | "assistantMessage"
+    modelProps: "workspace" | "workspaceMember" | "approvedEmail" | "person" | "user" | "role" | "permission" | "userRole" | "rolePermission" | "apiKey" | "apiKeyScope" | "auditLog" | "calendarConnection" | "calendarEventLink" | "gmailConnection" | "gmailMessageLink" | "eraConnection" | "eraAccountLink" | "eraTransactionLink" | "rule" | "ruleRun" | "stagedInteraction" | "event" | "interaction" | "interactionParticipant" | "plan" | "planExpectedPerson" | "place" | "importJob" | "importStagedVisit" | "placeNote" | "item" | "itemDefinition" | "inventoryLot" | "assembly" | "itemInteraction" | "importedFile" | "aiProviderCredential" | "aiAnalysisRun" | "noteAnalysisRun" | "noteSuggestion" | "group" | "supplierProfile" | "purchaseOrder" | "purchaseOrderLine" | "purchaseReceiptLine" | "personGroup" | "groupGroup" | "placeGroup" | "note" | "theorySnapshot" | "theorySnapshotSource" | "stateDefinition" | "state" | "assistantMessage"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -3342,6 +3344,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    NoteAnalysisRun: {
+      payload: Prisma.$NoteAnalysisRunPayload<ExtArgs>
+      fields: Prisma.NoteAnalysisRunFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.NoteAnalysisRunFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NoteAnalysisRunPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.NoteAnalysisRunFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NoteAnalysisRunPayload>
+        }
+        findFirst: {
+          args: Prisma.NoteAnalysisRunFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NoteAnalysisRunPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.NoteAnalysisRunFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NoteAnalysisRunPayload>
+        }
+        findMany: {
+          args: Prisma.NoteAnalysisRunFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NoteAnalysisRunPayload>[]
+        }
+        create: {
+          args: Prisma.NoteAnalysisRunCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NoteAnalysisRunPayload>
+        }
+        createMany: {
+          args: Prisma.NoteAnalysisRunCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.NoteAnalysisRunCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NoteAnalysisRunPayload>[]
+        }
+        delete: {
+          args: Prisma.NoteAnalysisRunDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NoteAnalysisRunPayload>
+        }
+        update: {
+          args: Prisma.NoteAnalysisRunUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NoteAnalysisRunPayload>
+        }
+        deleteMany: {
+          args: Prisma.NoteAnalysisRunDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.NoteAnalysisRunUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.NoteAnalysisRunUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NoteAnalysisRunPayload>[]
+        }
+        upsert: {
+          args: Prisma.NoteAnalysisRunUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NoteAnalysisRunPayload>
+        }
+        aggregate: {
+          args: Prisma.NoteAnalysisRunAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateNoteAnalysisRun>
+        }
+        groupBy: {
+          args: Prisma.NoteAnalysisRunGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.NoteAnalysisRunGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.NoteAnalysisRunCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.NoteAnalysisRunCountAggregateOutputType> | number
+        }
+      }
+    }
+    NoteSuggestion: {
+      payload: Prisma.$NoteSuggestionPayload<ExtArgs>
+      fields: Prisma.NoteSuggestionFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.NoteSuggestionFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NoteSuggestionPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.NoteSuggestionFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NoteSuggestionPayload>
+        }
+        findFirst: {
+          args: Prisma.NoteSuggestionFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NoteSuggestionPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.NoteSuggestionFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NoteSuggestionPayload>
+        }
+        findMany: {
+          args: Prisma.NoteSuggestionFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NoteSuggestionPayload>[]
+        }
+        create: {
+          args: Prisma.NoteSuggestionCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NoteSuggestionPayload>
+        }
+        createMany: {
+          args: Prisma.NoteSuggestionCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.NoteSuggestionCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NoteSuggestionPayload>[]
+        }
+        delete: {
+          args: Prisma.NoteSuggestionDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NoteSuggestionPayload>
+        }
+        update: {
+          args: Prisma.NoteSuggestionUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NoteSuggestionPayload>
+        }
+        deleteMany: {
+          args: Prisma.NoteSuggestionDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.NoteSuggestionUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.NoteSuggestionUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NoteSuggestionPayload>[]
+        }
+        upsert: {
+          args: Prisma.NoteSuggestionUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NoteSuggestionPayload>
+        }
+        aggregate: {
+          args: Prisma.NoteSuggestionAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateNoteSuggestion>
+        }
+        groupBy: {
+          args: Prisma.NoteSuggestionGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.NoteSuggestionGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.NoteSuggestionCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.NoteSuggestionCountAggregateOutputType> | number
+        }
+      }
+    }
     Group: {
       payload: Prisma.$GroupPayload<ExtArgs>
       fields: Prisma.GroupFieldRefs
@@ -4615,6 +4765,7 @@ export const CalendarEventLinkScalarFieldEnum = {
   calendarId: 'calendarId',
   externalEventId: 'externalEventId',
   iCalUID: 'iCalUID',
+  planId: 'planId',
   eventId: 'eventId',
   status: 'status',
   lastSeenAt: 'lastSeenAt'
@@ -4864,6 +5015,8 @@ export const PlanScalarFieldEnum = {
   placeId: 'placeId',
   externalSource: 'externalSource',
   externalInstanceId: 'externalInstanceId',
+  reconciliationStatus: 'reconciliationStatus',
+  reconciledAt: 'reconciledAt',
   sourceNoteId: 'sourceNoteId'
 } as const
 
@@ -5102,6 +5255,46 @@ export const AiAnalysisRunScalarFieldEnum = {
 } as const
 
 export type AiAnalysisRunScalarFieldEnum = (typeof AiAnalysisRunScalarFieldEnum)[keyof typeof AiAnalysisRunScalarFieldEnum]
+
+
+export const NoteAnalysisRunScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  noteId: 'noteId',
+  credentialId: 'credentialId',
+  createdAt: 'createdAt',
+  completedAt: 'completedAt',
+  provider: 'provider',
+  modelId: 'modelId',
+  status: 'status',
+  promptVersion: 'promptVersion',
+  output: 'output',
+  error: 'error',
+  inputTokens: 'inputTokens',
+  outputTokens: 'outputTokens',
+  estimatedCost: 'estimatedCost'
+} as const
+
+export type NoteAnalysisRunScalarFieldEnum = (typeof NoteAnalysisRunScalarFieldEnum)[keyof typeof NoteAnalysisRunScalarFieldEnum]
+
+
+export const NoteSuggestionScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  noteId: 'noteId',
+  analysisRunId: 'analysisRunId',
+  createdAt: 'createdAt',
+  reviewedAt: 'reviewedAt',
+  kind: 'kind',
+  status: 'status',
+  title: 'title',
+  payload: 'payload',
+  confidence: 'confidence',
+  acceptedEntityType: 'acceptedEntityType',
+  acceptedEntityId: 'acceptedEntityId'
+} as const
+
+export type NoteSuggestionScalarFieldEnum = (typeof NoteSuggestionScalarFieldEnum)[keyof typeof NoteSuggestionScalarFieldEnum]
 
 
 export const GroupScalarFieldEnum = {
@@ -5603,6 +5796,8 @@ export type GlobalOmitConfig = {
   importedFile?: Prisma.ImportedFileOmit
   aiProviderCredential?: Prisma.AiProviderCredentialOmit
   aiAnalysisRun?: Prisma.AiAnalysisRunOmit
+  noteAnalysisRun?: Prisma.NoteAnalysisRunOmit
+  noteSuggestion?: Prisma.NoteSuggestionOmit
   group?: Prisma.GroupOmit
   supplierProfile?: Prisma.SupplierProfileOmit
   purchaseOrder?: Prisma.PurchaseOrderOmit

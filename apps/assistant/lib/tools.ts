@@ -1,6 +1,7 @@
 import type Anthropic from "@anthropic-ai/sdk"
 import { db } from "@/lib/db"
 import { centsToDollars } from "@life-os/db"
+import { captureNote as createCapturedNote } from "@life-os/domain"
 import { getSpendBreakdown, type SpendBreakdownInput } from "@/lib/finance"
 
 const TZ = "America/Los_Angeles"
@@ -317,18 +318,13 @@ async function getSchedule(workspaceId: string, date?: string) {
 }
 
 async function captureNote(content: string, noteType: string, workspaceId: string) {
-  if (!content.trim()) return "Empty note"
-  const type = ["thought", "observation", "declaration"].includes(noteType) ? noteType : "thought"
-  const note = await db.note.create({
-    data: {
-      workspaceId,
-      timestamp: new Date(),
-      type,
-      content: content.trim(),
-      metadata: JSON.stringify({ source: "assistant" }),
-    },
+  const { note } = await createCapturedNote({
+    workspaceId,
+    content,
+    type: noteType,
+    source: "assistant",
   })
-  return `Captured ${type} (${note.id}). It will flow into synthesis.`
+  return `Captured ${note.type} (${note.id}). It will flow into synthesis.`
 }
 
 async function logInteraction(personId: string, type: string, summary: string, workspaceId: string) {

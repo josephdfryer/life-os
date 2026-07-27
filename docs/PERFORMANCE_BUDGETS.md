@@ -6,10 +6,16 @@ These are regression ceilings, not claims that the current code is fully optimiz
 |---|---:|---:|
 | Persons Admin client | 43,334 | 50,000 |
 | People import client | 43,393 | 50,000 |
-| Places map client | 30,213 | 36,000 |
+| Places map client | 31,456 | 33,000 |
+| Place profile client | 26,787 | 30,000 |
 | Person detail client | 18,575 | 24,000 |
 
-Production route JavaScript baselines on 2026-07-16 were 118,792 bytes for Persons Admin, 113,599 bytes for People import, and 654,568 bytes for Places map. Ceilings include shared chunks referenced by each route: 180 KB, 180 KB, and 750 KB respectively, uncompressed. CI measures these after the production build. Browser transfer sizes should be materially smaller due to compression, but uncompressed bytes are deterministic and catch dependency growth.
+Production route JavaScript baselines include 680,279 bytes for Places map and
+657,909 bytes for the Place profile after the July 27 redesign. Their ceilings
+are now 700 KB each, down from the prior 750 KB Places ceiling. CI measures
+shared chunks referenced by each route after the production build. Browser
+transfer sizes should be materially smaller due to compression, but uncompressed
+bytes are deterministic and catch dependency growth.
 
 The repository currently permits at most 109 Prisma `findMany` calls without an explicit `take` or `cursor`. This is a ratchet over legacy debt: new unbounded reads fail CI. Query endpoints that return user-growing collections should use cursor pagination with a default at or below 100 and an absolute maximum at or below 500. Small, workspace-scoped configuration vocabularies may remain unpaginated when documented.
 

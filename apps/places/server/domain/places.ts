@@ -45,9 +45,11 @@ export type PlaceTimelineItem = {
   title: string
   startedAt: string
   endedAt?: string
+  gapSincePreviousVisitDays?: number
   people: { id: string; name: string }[]
   groups: { id: string; name: string; associationType: "explicit_tag" | "inferred" | "place_affiliation" }[]
   photoCount: number
+  photos: { id: string; name: string }[]
   spendAmount?: number
   notePreview?: string
 }
@@ -102,6 +104,11 @@ export async function getPlacesForMap(workspaceId: string | null | undefined): P
       where: { workspaceId: wsId },
       include: {
         notes: { where: { workspaceId: wsId } },
+        plans: {
+          where: { workspaceId: wsId },
+          select: { id: true, text: true, scheduledStart: true },
+          orderBy: { scheduledStart: "asc" },
+        },
         groupAffiliations: {
           where: { group: { workspaceId: wsId } },
           include: { group: { select: { id: true, name: true, groupType: true } } },
@@ -151,6 +158,7 @@ export async function getPlacesForMap(workspaceId: string | null | undefined): P
         noteCount: derived.stats.noteCount,
         planCount: derived.stats.planCount,
         totalSpend: derived.stats.totalSpend,
+        firstVisitAt: derived.stats.firstVisitAt,
         lastVisitAt: derived.stats.lastVisitAt,
       },
       weight: placeWeight(derived.stats),
@@ -223,6 +231,26 @@ export async function togglePlaceFavorite(placeId: string, workspaceId: string |
   return updated
 }
 
+export async function updatePlaceMeaning(placeId: string, workspaceId: string | null | undefined, meaning: unknown, actor?: DomainActor) {
+  const wsId = workspaceId ?? "default-workspace"
+  await assertPlace(placeId, wsId)
+  if (typeof meaning !== "string") throw badRequest("meaning must be a string")
+  const normalized = meaning.trim()
+  if (normalized.length > 2_000) throw badRequest("meaning must be 2000 characters or fewer")
+  const place = await db.place.update({
+    where: { id: placeId },
+    data: { meaning: normalized || null },
+  })
+  await auditAction({
+    actor,
+    action: "place.meaning.update",
+    targetType: "place",
+    targetId: placeId,
+    metadata: { hasMeaning: Boolean(place.meaning) },
+  })
+  return place
+}
+
 function derivePlaceData(place: NonNullable<PlaceRow>, workspaceGroups: GroupRow[]): PlaceProfile {
   const events = [...place.events].sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime())
   const affiliated = place.groupAffiliations.map(affiliationToSummary)
@@ -238,7 +266,7 @@ function derivePlaceData(place: NonNullable<PlaceRow>, workspaceGroups: GroupRow
     }
   }
 
-  const timeline = events.map(event => {
+  const timeline = events.map((event, index) => {
     const eventPeople = peopleForEvent(event)
     const explicitGroups = event.groupTags.map(group => ({
       id: group.id,
@@ -290,6 +318,10 @@ function derivePlaceData(place: NonNullable<PlaceRow>, workspaceGroups: GroupRow
       eventId: event.id,
       title: event.name || `Visit to ${place.name}`,
       startedAt: event.timestamp.toISOString(),
+      endedAt: event.end?.toISOString(),
+      gapSincePreviousVisitDays: events[index + 1]
+        ? Math.max(0, Math.round((event.timestamp.getTime() - events[index + 1].timestamp.getTime()) / 86_400_000))
+        : undefined,
       people: eventPeople,
       groups: [
         ...explicitGroups.map(group => ({ id: group.id, name: group.name, associationType: group.associationType })),
@@ -297,6 +329,7 @@ function derivePlaceData(place: NonNullable<PlaceRow>, workspaceGroups: GroupRow
         ...placeAffiliationGroups.map(row => ({ id: row.groupId, name: row.group.name, associationType: "place_affiliation" as const })),
       ],
       photoCount: eventPhotos.length,
+      photos: eventPhotos,
       spendAmount: spendAmount || undefined,
       notePreview: eventNotes.get(event.id)?.slice(0, 140),
     } satisfies PlaceTimelineItem
@@ -321,7 +354,7 @@ function derivePlaceData(place: NonNullable<PlaceRow>, workspaceGroups: GroupRow
     personCount: personSummaries.length,
     groupCount: groupIds.size,
     noteCount: place.notes.length,
-    planCount: 0,
+    planCount: place.plans.length,
     firstVisitAt: events.length ? events[events.length - 1].timestamp.toISOString() : undefined,
     lastVisitAt: events[0]?.timestamp.toISOString(),
     totalSpend: events.reduce((sum, event) => sum + sumEventSpend(event), 0),
@@ -338,7 +371,11 @@ function derivePlaceData(place: NonNullable<PlaceRow>, workspaceGroups: GroupRow
     },
     photos,
     notes: place.notes,
-    plans: [],
+    plans: place.plans.map(plan => ({
+      planId: plan.id,
+      title: plan.text,
+      plannedDate: plan.scheduledStart?.toISOString(),
+    })),
   }
 }
 
@@ -347,6 +384,11 @@ function fetchPlaceProfileRow(placeId: string, workspaceId: string) {
     where: { id: placeId, workspaceId },
     include: {
       notes: { where: { workspaceId }, orderBy: { createdAt: "desc" } },
+      plans: {
+        where: { workspaceId },
+        select: { id: true, text: true, scheduledStart: true },
+        orderBy: { scheduledStart: "asc" },
+      },
       groupAffiliations: {
         where: { group: { workspaceId } },
         include: { group: { select: { id: true, name: true, groupType: true } } },

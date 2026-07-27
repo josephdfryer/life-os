@@ -5,7 +5,7 @@ import { badRequest, notFound } from "@/server/api/errors"
 import { auditAction, type DomainActor } from "./audit"
 
 export type MapsImportFormat = "legacy_takeout" | "device_timeline" | "timeline_records" | "unknown"
-export type StagedVisitAction = "accept" | "reject" | "skip"
+export type StagedVisitAction = "accept" | "reject" | "skip" | "restore"
 
 export type RawVisit = {
   raw: unknown
@@ -202,7 +202,7 @@ export async function listStagedVisits(jobId: string, workspaceId: string, opts:
     workspaceId,
     ...(status ? { status } : {}),
   }
-  const [items, total] = await Promise.all([
+  const [items, total, statusGroups] = await Promise.all([
     db.importStagedVisit.findMany({
       where,
       orderBy: [{ confidence: "desc" }, { startedAt: "asc" }],
@@ -210,14 +210,30 @@ export async function listStagedVisits(jobId: string, workspaceId: string, opts:
       take: pageSize,
     }),
     db.importStagedVisit.count({ where }),
+    db.importStagedVisit.groupBy({
+      by: ["status"],
+      where: { importJobId: jobId, workspaceId },
+      _count: { _all: true },
+    }),
   ])
-  return { items, total, page, pageSize, hasMore: page * pageSize < total }
+  const progress = { pending: 0, accepted: 0, rejected: 0, total: 0 }
+  for (const group of statusGroups) {
+    progress[group.status] = group._count._all
+    progress.total += group._count._all
+  }
+  return { items, total, page, pageSize, hasMore: page * pageSize < total, progress }
 }
 
 export async function updateStagedVisit(jobId: string, visitId: string, workspaceId: string, action: StagedVisitAction, actor?: DomainActor) {
   await assertImportJob(jobId, workspaceId)
   const visit = await db.importStagedVisit.findFirst({ where: { id: visitId, importJobId: jobId, workspaceId } })
   if (!visit) throw notFound("Staged visit not found", { visitId })
+  if (action === "restore") {
+    if (visit.status !== "rejected") return visit
+    const restored = await db.importStagedVisit.update({ where: { id: visit.id }, data: { status: "pending" } })
+    await auditAction({ actor, action: "places.import.visit.restore", targetType: "importStagedVisit", targetId: visit.id })
+    return restored
+  }
   if (visit.status !== "pending") return visit
   if (action === "skip") return visit
   if (action === "reject") {
@@ -245,9 +261,19 @@ export async function updateStagedVisit(jobId: string, visitId: string, workspac
 export async function acceptStagedVisitById(
   visitId: string,
   workspaceId: string,
-  opts: { actor?: DomainActor; placeOverride?: Partial<Pick<RawVisit, "placeName" | "placeAddress" | "latitude" | "longitude" | "googlePlaceId" | "placeType">> } = {},
+  opts: {
+    actor?: DomainActor
+    expectedJobId?: string
+    placeOverride?: Partial<Pick<RawVisit, "placeName" | "placeAddress" | "latitude" | "longitude" | "googlePlaceId" | "placeType">>
+  } = {},
 ) {
-  const visit = await db.importStagedVisit.findFirst({ where: { id: visitId, workspaceId } })
+  const visit = await db.importStagedVisit.findFirst({
+    where: {
+      id: visitId,
+      workspaceId,
+      ...(opts.expectedJobId ? { importJobId: opts.expectedJobId } : {}),
+    },
+  })
   if (!visit) throw notFound("Staged visit not found", { visitId })
   if (visit.status !== "pending") return { visit, accepted: false, skipped: true, placeId: visit.resolvedPlaceId, eventId: visit.resolvedEventId }
 
@@ -273,7 +299,60 @@ export async function acceptStagedVisitById(
   return { visit: accepted, accepted: true, skipped, placeId: place.id, eventId: event?.id ?? null }
 }
 
-export async function bulkUpdateStagedVisits(jobId: string, workspaceId: string, input: { action: StagedVisitAction; minConfidence?: number; visitIds?: string[] }, actor?: DomainActor) {
+export async function resolveStagedVisit(
+  jobId: string,
+  visitId: string,
+  workspaceId: string,
+  input: {
+    targetPlaceId?: string
+    placeOverride?: Partial<Pick<RawVisit, "placeName" | "placeAddress" | "latitude" | "longitude" | "googlePlaceId" | "placeType">>
+  },
+  actor?: DomainActor,
+) {
+  await assertImportJob(jobId, workspaceId)
+  if (!input.targetPlaceId) {
+    return acceptStagedVisitById(visitId, workspaceId, {
+      actor,
+      expectedJobId: jobId,
+      placeOverride: input.placeOverride,
+    })
+  }
+
+  const [visit, place] = await Promise.all([
+    db.importStagedVisit.findFirst({ where: { id: visitId, importJobId: jobId, workspaceId } }),
+    db.place.findFirst({ where: { id: input.targetPlaceId, workspaceId } }),
+  ])
+  if (!visit) throw notFound("Staged visit not found", { visitId })
+  if (!place) throw notFound("Target Place not found", { placeId: input.targetPlaceId })
+  if (visit.status !== "pending") {
+    return { visit, accepted: false, skipped: true, placeId: visit.resolvedPlaceId, eventId: visit.resolvedEventId }
+  }
+
+  const rawVisit = stagedVisitToRawVisit(visit)
+  const existingEvent = await findDuplicateEvent(place.id, rawVisit.startedAt, workspaceId)
+  const event = existingEvent ?? await createVisitEvent(place, rawVisit, workspaceId)
+  const accepted = await db.importStagedVisit.update({
+    where: { id: visit.id },
+    data: {
+      status: "accepted",
+      resolvedPlaceId: place.id,
+      resolvedEventId: event.id,
+    },
+  })
+  if (!existingEvent) {
+    await db.importJob.update({ where: { id: jobId }, data: { createdRows: { increment: 1 } } })
+  }
+  await auditAction({
+    actor,
+    action: "places.import.visit.merge",
+    targetType: "importStagedVisit",
+    targetId: visit.id,
+    metadata: { placeId: place.id, eventId: event.id, skipped: Boolean(existingEvent) },
+  })
+  return { visit: accepted, accepted: true, skipped: Boolean(existingEvent), placeId: place.id, eventId: event.id }
+}
+
+export async function bulkUpdateStagedVisits(jobId: string, workspaceId: string, input: { action: StagedVisitAction; minConfidence?: number; visitIds?: string[]; dryRun?: boolean }, actor?: DomainActor) {
   await assertImportJob(jobId, workspaceId)
   if (input.action === "skip") return { updated: 0 }
 
@@ -289,10 +368,14 @@ export async function bulkUpdateStagedVisits(jobId: string, workspaceId: string,
     orderBy: { confidence: "desc" },
   })
 
+  if (input.dryRun) {
+    return { matched: visits.length, updated: 0, dryRun: true }
+  }
+
   if (input.action === "reject") {
     await db.importStagedVisit.updateMany({ where: { id: { in: visits.map(visit => visit.id) } }, data: { status: "rejected" } })
     await auditAction({ actor, action: "places.import.visit.reject_bulk", targetType: "importJob", targetId: jobId, metadata: { count: visits.length } })
-    return { updated: visits.length }
+    return { matched: visits.length, updated: visits.length, dryRun: false }
   }
 
   let updated = 0
@@ -300,7 +383,7 @@ export async function bulkUpdateStagedVisits(jobId: string, workspaceId: string,
     await updateStagedVisit(jobId, visit.id, workspaceId, "accept", actor)
     updated += 1
   }
-  return { updated }
+  return { matched: visits.length, updated, dryRun: false }
 }
 
 export async function processImportJob(jobId: string, workspaceId: string, opts: { parsed?: RawVisit[]; actor?: DomainActor } = {}) {
@@ -555,7 +638,12 @@ async function acceptVisit(visit: RawVisit, workspaceId: string) {
   const existingEvent = await findDuplicateEvent(place.id, visit.startedAt, workspaceId)
   if (existingEvent) return { place, event: existingEvent, skipped: true }
 
-  const event = await db.event.create({
+  const event = await createVisitEvent(place, visit, workspaceId)
+  return { place, event, skipped: false }
+}
+
+async function createVisitEvent(place: { id: string; name: string }, visit: RawVisit, workspaceId: string) {
+  return db.event.create({
     data: {
       workspaceId,
       placeId: place.id,
@@ -574,7 +662,6 @@ async function acceptVisit(visit: RawVisit, workspaceId: string) {
       }),
     },
   })
-  return { place, event, skipped: false }
 }
 
 async function upsertPlace(visit: RawVisit, workspaceId: string) {

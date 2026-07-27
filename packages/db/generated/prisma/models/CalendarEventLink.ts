@@ -34,6 +34,7 @@ export type CalendarEventLinkMinAggregateOutputType = {
   calendarId: string | null
   externalEventId: string | null
   iCalUID: string | null
+  planId: string | null
   eventId: string | null
   status: string | null
   lastSeenAt: Date | null
@@ -49,6 +50,7 @@ export type CalendarEventLinkMaxAggregateOutputType = {
   calendarId: string | null
   externalEventId: string | null
   iCalUID: string | null
+  planId: string | null
   eventId: string | null
   status: string | null
   lastSeenAt: Date | null
@@ -64,6 +66,7 @@ export type CalendarEventLinkCountAggregateOutputType = {
   calendarId: number
   externalEventId: number
   iCalUID: number
+  planId: number
   eventId: number
   status: number
   lastSeenAt: number
@@ -81,6 +84,7 @@ export type CalendarEventLinkMinAggregateInputType = {
   calendarId?: true
   externalEventId?: true
   iCalUID?: true
+  planId?: true
   eventId?: true
   status?: true
   lastSeenAt?: true
@@ -96,6 +100,7 @@ export type CalendarEventLinkMaxAggregateInputType = {
   calendarId?: true
   externalEventId?: true
   iCalUID?: true
+  planId?: true
   eventId?: true
   status?: true
   lastSeenAt?: true
@@ -111,6 +116,7 @@ export type CalendarEventLinkCountAggregateInputType = {
   calendarId?: true
   externalEventId?: true
   iCalUID?: true
+  planId?: true
   eventId?: true
   status?: true
   lastSeenAt?: true
@@ -199,6 +205,7 @@ export type CalendarEventLinkGroupByOutputType = {
   calendarId: string
   externalEventId: string
   iCalUID: string | null
+  planId: string | null
   eventId: string | null
   status: string
   lastSeenAt: Date | null
@@ -235,11 +242,13 @@ export type CalendarEventLinkWhereInput = {
   calendarId?: Prisma.StringFilter<"CalendarEventLink"> | string
   externalEventId?: Prisma.StringFilter<"CalendarEventLink"> | string
   iCalUID?: Prisma.StringNullableFilter<"CalendarEventLink"> | string | null
+  planId?: Prisma.StringNullableFilter<"CalendarEventLink"> | string | null
   eventId?: Prisma.StringNullableFilter<"CalendarEventLink"> | string | null
   status?: Prisma.StringFilter<"CalendarEventLink"> | string
   lastSeenAt?: Prisma.DateTimeNullableFilter<"CalendarEventLink"> | Date | string | null
   workspace?: Prisma.XOR<Prisma.WorkspaceScalarRelationFilter, Prisma.WorkspaceWhereInput>
   connection?: Prisma.XOR<Prisma.CalendarConnectionScalarRelationFilter, Prisma.CalendarConnectionWhereInput>
+  plan?: Prisma.XOR<Prisma.PlanNullableScalarRelationFilter, Prisma.PlanWhereInput> | null
   event?: Prisma.XOR<Prisma.EventNullableScalarRelationFilter, Prisma.EventWhereInput> | null
 }
 
@@ -253,11 +262,13 @@ export type CalendarEventLinkOrderByWithRelationInput = {
   calendarId?: Prisma.SortOrder
   externalEventId?: Prisma.SortOrder
   iCalUID?: Prisma.SortOrderInput | Prisma.SortOrder
+  planId?: Prisma.SortOrderInput | Prisma.SortOrder
   eventId?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   lastSeenAt?: Prisma.SortOrderInput | Prisma.SortOrder
   workspace?: Prisma.WorkspaceOrderByWithRelationInput
   connection?: Prisma.CalendarConnectionOrderByWithRelationInput
+  plan?: Prisma.PlanOrderByWithRelationInput
   event?: Prisma.EventOrderByWithRelationInput
 }
 
@@ -275,11 +286,13 @@ export type CalendarEventLinkWhereUniqueInput = Prisma.AtLeast<{
   calendarId?: Prisma.StringFilter<"CalendarEventLink"> | string
   externalEventId?: Prisma.StringFilter<"CalendarEventLink"> | string
   iCalUID?: Prisma.StringNullableFilter<"CalendarEventLink"> | string | null
+  planId?: Prisma.StringNullableFilter<"CalendarEventLink"> | string | null
   eventId?: Prisma.StringNullableFilter<"CalendarEventLink"> | string | null
   status?: Prisma.StringFilter<"CalendarEventLink"> | string
   lastSeenAt?: Prisma.DateTimeNullableFilter<"CalendarEventLink"> | Date | string | null
   workspace?: Prisma.XOR<Prisma.WorkspaceScalarRelationFilter, Prisma.WorkspaceWhereInput>
   connection?: Prisma.XOR<Prisma.CalendarConnectionScalarRelationFilter, Prisma.CalendarConnectionWhereInput>
+  plan?: Prisma.XOR<Prisma.PlanNullableScalarRelationFilter, Prisma.PlanWhereInput> | null
   event?: Prisma.XOR<Prisma.EventNullableScalarRelationFilter, Prisma.EventWhereInput> | null
 }, "id" | "workspaceId_provider_calendarId_externalEventId">
 
@@ -293,6 +306,7 @@ export type CalendarEventLinkOrderByWithAggregationInput = {
   calendarId?: Prisma.SortOrder
   externalEventId?: Prisma.SortOrder
   iCalUID?: Prisma.SortOrderInput | Prisma.SortOrder
+  planId?: Prisma.SortOrderInput | Prisma.SortOrder
   eventId?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   lastSeenAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -314,6 +328,7 @@ export type CalendarEventLinkScalarWhereWithAggregatesInput = {
   calendarId?: Prisma.StringWithAggregatesFilter<"CalendarEventLink"> | string
   externalEventId?: Prisma.StringWithAggregatesFilter<"CalendarEventLink"> | string
   iCalUID?: Prisma.StringNullableWithAggregatesFilter<"CalendarEventLink"> | string | null
+  planId?: Prisma.StringNullableWithAggregatesFilter<"CalendarEventLink"> | string | null
   eventId?: Prisma.StringNullableWithAggregatesFilter<"CalendarEventLink"> | string | null
   status?: Prisma.StringWithAggregatesFilter<"CalendarEventLink"> | string
   lastSeenAt?: Prisma.DateTimeNullableWithAggregatesFilter<"CalendarEventLink"> | Date | string | null
@@ -331,6 +346,7 @@ export type CalendarEventLinkCreateInput = {
   lastSeenAt?: Date | string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutCalendarEventLinksInput
   connection: Prisma.CalendarConnectionCreateNestedOneWithoutEventLinksInput
+  plan?: Prisma.PlanCreateNestedOneWithoutCalendarLinksInput
   event?: Prisma.EventCreateNestedOneWithoutCalendarLinksInput
 }
 
@@ -344,6 +360,7 @@ export type CalendarEventLinkUncheckedCreateInput = {
   calendarId: string
   externalEventId: string
   iCalUID?: string | null
+  planId?: string | null
   eventId?: string | null
   status?: string
   lastSeenAt?: Date | string | null
@@ -361,6 +378,7 @@ export type CalendarEventLinkUpdateInput = {
   lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutCalendarEventLinksNestedInput
   connection?: Prisma.CalendarConnectionUpdateOneRequiredWithoutEventLinksNestedInput
+  plan?: Prisma.PlanUpdateOneWithoutCalendarLinksNestedInput
   event?: Prisma.EventUpdateOneWithoutCalendarLinksNestedInput
 }
 
@@ -374,6 +392,7 @@ export type CalendarEventLinkUncheckedUpdateInput = {
   calendarId?: Prisma.StringFieldUpdateOperationsInput | string
   externalEventId?: Prisma.StringFieldUpdateOperationsInput | string
   iCalUID?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  planId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   eventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -389,6 +408,7 @@ export type CalendarEventLinkCreateManyInput = {
   calendarId: string
   externalEventId: string
   iCalUID?: string | null
+  planId?: string | null
   eventId?: string | null
   status?: string
   lastSeenAt?: Date | string | null
@@ -416,6 +436,7 @@ export type CalendarEventLinkUncheckedUpdateManyInput = {
   calendarId?: Prisma.StringFieldUpdateOperationsInput | string
   externalEventId?: Prisma.StringFieldUpdateOperationsInput | string
   iCalUID?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  planId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   eventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -448,6 +469,7 @@ export type CalendarEventLinkCountOrderByAggregateInput = {
   calendarId?: Prisma.SortOrder
   externalEventId?: Prisma.SortOrder
   iCalUID?: Prisma.SortOrder
+  planId?: Prisma.SortOrder
   eventId?: Prisma.SortOrder
   status?: Prisma.SortOrder
   lastSeenAt?: Prisma.SortOrder
@@ -463,6 +485,7 @@ export type CalendarEventLinkMaxOrderByAggregateInput = {
   calendarId?: Prisma.SortOrder
   externalEventId?: Prisma.SortOrder
   iCalUID?: Prisma.SortOrder
+  planId?: Prisma.SortOrder
   eventId?: Prisma.SortOrder
   status?: Prisma.SortOrder
   lastSeenAt?: Prisma.SortOrder
@@ -478,6 +501,7 @@ export type CalendarEventLinkMinOrderByAggregateInput = {
   calendarId?: Prisma.SortOrder
   externalEventId?: Prisma.SortOrder
   iCalUID?: Prisma.SortOrder
+  planId?: Prisma.SortOrder
   eventId?: Prisma.SortOrder
   status?: Prisma.SortOrder
   lastSeenAt?: Prisma.SortOrder
@@ -609,6 +633,48 @@ export type CalendarEventLinkUncheckedUpdateManyWithoutEventNestedInput = {
   deleteMany?: Prisma.CalendarEventLinkScalarWhereInput | Prisma.CalendarEventLinkScalarWhereInput[]
 }
 
+export type CalendarEventLinkCreateNestedManyWithoutPlanInput = {
+  create?: Prisma.XOR<Prisma.CalendarEventLinkCreateWithoutPlanInput, Prisma.CalendarEventLinkUncheckedCreateWithoutPlanInput> | Prisma.CalendarEventLinkCreateWithoutPlanInput[] | Prisma.CalendarEventLinkUncheckedCreateWithoutPlanInput[]
+  connectOrCreate?: Prisma.CalendarEventLinkCreateOrConnectWithoutPlanInput | Prisma.CalendarEventLinkCreateOrConnectWithoutPlanInput[]
+  createMany?: Prisma.CalendarEventLinkCreateManyPlanInputEnvelope
+  connect?: Prisma.CalendarEventLinkWhereUniqueInput | Prisma.CalendarEventLinkWhereUniqueInput[]
+}
+
+export type CalendarEventLinkUncheckedCreateNestedManyWithoutPlanInput = {
+  create?: Prisma.XOR<Prisma.CalendarEventLinkCreateWithoutPlanInput, Prisma.CalendarEventLinkUncheckedCreateWithoutPlanInput> | Prisma.CalendarEventLinkCreateWithoutPlanInput[] | Prisma.CalendarEventLinkUncheckedCreateWithoutPlanInput[]
+  connectOrCreate?: Prisma.CalendarEventLinkCreateOrConnectWithoutPlanInput | Prisma.CalendarEventLinkCreateOrConnectWithoutPlanInput[]
+  createMany?: Prisma.CalendarEventLinkCreateManyPlanInputEnvelope
+  connect?: Prisma.CalendarEventLinkWhereUniqueInput | Prisma.CalendarEventLinkWhereUniqueInput[]
+}
+
+export type CalendarEventLinkUpdateManyWithoutPlanNestedInput = {
+  create?: Prisma.XOR<Prisma.CalendarEventLinkCreateWithoutPlanInput, Prisma.CalendarEventLinkUncheckedCreateWithoutPlanInput> | Prisma.CalendarEventLinkCreateWithoutPlanInput[] | Prisma.CalendarEventLinkUncheckedCreateWithoutPlanInput[]
+  connectOrCreate?: Prisma.CalendarEventLinkCreateOrConnectWithoutPlanInput | Prisma.CalendarEventLinkCreateOrConnectWithoutPlanInput[]
+  upsert?: Prisma.CalendarEventLinkUpsertWithWhereUniqueWithoutPlanInput | Prisma.CalendarEventLinkUpsertWithWhereUniqueWithoutPlanInput[]
+  createMany?: Prisma.CalendarEventLinkCreateManyPlanInputEnvelope
+  set?: Prisma.CalendarEventLinkWhereUniqueInput | Prisma.CalendarEventLinkWhereUniqueInput[]
+  disconnect?: Prisma.CalendarEventLinkWhereUniqueInput | Prisma.CalendarEventLinkWhereUniqueInput[]
+  delete?: Prisma.CalendarEventLinkWhereUniqueInput | Prisma.CalendarEventLinkWhereUniqueInput[]
+  connect?: Prisma.CalendarEventLinkWhereUniqueInput | Prisma.CalendarEventLinkWhereUniqueInput[]
+  update?: Prisma.CalendarEventLinkUpdateWithWhereUniqueWithoutPlanInput | Prisma.CalendarEventLinkUpdateWithWhereUniqueWithoutPlanInput[]
+  updateMany?: Prisma.CalendarEventLinkUpdateManyWithWhereWithoutPlanInput | Prisma.CalendarEventLinkUpdateManyWithWhereWithoutPlanInput[]
+  deleteMany?: Prisma.CalendarEventLinkScalarWhereInput | Prisma.CalendarEventLinkScalarWhereInput[]
+}
+
+export type CalendarEventLinkUncheckedUpdateManyWithoutPlanNestedInput = {
+  create?: Prisma.XOR<Prisma.CalendarEventLinkCreateWithoutPlanInput, Prisma.CalendarEventLinkUncheckedCreateWithoutPlanInput> | Prisma.CalendarEventLinkCreateWithoutPlanInput[] | Prisma.CalendarEventLinkUncheckedCreateWithoutPlanInput[]
+  connectOrCreate?: Prisma.CalendarEventLinkCreateOrConnectWithoutPlanInput | Prisma.CalendarEventLinkCreateOrConnectWithoutPlanInput[]
+  upsert?: Prisma.CalendarEventLinkUpsertWithWhereUniqueWithoutPlanInput | Prisma.CalendarEventLinkUpsertWithWhereUniqueWithoutPlanInput[]
+  createMany?: Prisma.CalendarEventLinkCreateManyPlanInputEnvelope
+  set?: Prisma.CalendarEventLinkWhereUniqueInput | Prisma.CalendarEventLinkWhereUniqueInput[]
+  disconnect?: Prisma.CalendarEventLinkWhereUniqueInput | Prisma.CalendarEventLinkWhereUniqueInput[]
+  delete?: Prisma.CalendarEventLinkWhereUniqueInput | Prisma.CalendarEventLinkWhereUniqueInput[]
+  connect?: Prisma.CalendarEventLinkWhereUniqueInput | Prisma.CalendarEventLinkWhereUniqueInput[]
+  update?: Prisma.CalendarEventLinkUpdateWithWhereUniqueWithoutPlanInput | Prisma.CalendarEventLinkUpdateWithWhereUniqueWithoutPlanInput[]
+  updateMany?: Prisma.CalendarEventLinkUpdateManyWithWhereWithoutPlanInput | Prisma.CalendarEventLinkUpdateManyWithWhereWithoutPlanInput[]
+  deleteMany?: Prisma.CalendarEventLinkScalarWhereInput | Prisma.CalendarEventLinkScalarWhereInput[]
+}
+
 export type CalendarEventLinkCreateWithoutWorkspaceInput = {
   id?: string
   createdAt?: Date | string
@@ -620,6 +686,7 @@ export type CalendarEventLinkCreateWithoutWorkspaceInput = {
   status?: string
   lastSeenAt?: Date | string | null
   connection: Prisma.CalendarConnectionCreateNestedOneWithoutEventLinksInput
+  plan?: Prisma.PlanCreateNestedOneWithoutCalendarLinksInput
   event?: Prisma.EventCreateNestedOneWithoutCalendarLinksInput
 }
 
@@ -632,6 +699,7 @@ export type CalendarEventLinkUncheckedCreateWithoutWorkspaceInput = {
   calendarId: string
   externalEventId: string
   iCalUID?: string | null
+  planId?: string | null
   eventId?: string | null
   status?: string
   lastSeenAt?: Date | string | null
@@ -675,6 +743,7 @@ export type CalendarEventLinkScalarWhereInput = {
   calendarId?: Prisma.StringFilter<"CalendarEventLink"> | string
   externalEventId?: Prisma.StringFilter<"CalendarEventLink"> | string
   iCalUID?: Prisma.StringNullableFilter<"CalendarEventLink"> | string | null
+  planId?: Prisma.StringNullableFilter<"CalendarEventLink"> | string | null
   eventId?: Prisma.StringNullableFilter<"CalendarEventLink"> | string | null
   status?: Prisma.StringFilter<"CalendarEventLink"> | string
   lastSeenAt?: Prisma.DateTimeNullableFilter<"CalendarEventLink"> | Date | string | null
@@ -691,6 +760,7 @@ export type CalendarEventLinkCreateWithoutConnectionInput = {
   status?: string
   lastSeenAt?: Date | string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutCalendarEventLinksInput
+  plan?: Prisma.PlanCreateNestedOneWithoutCalendarLinksInput
   event?: Prisma.EventCreateNestedOneWithoutCalendarLinksInput
 }
 
@@ -703,6 +773,7 @@ export type CalendarEventLinkUncheckedCreateWithoutConnectionInput = {
   calendarId: string
   externalEventId: string
   iCalUID?: string | null
+  planId?: string | null
   eventId?: string | null
   status?: string
   lastSeenAt?: Date | string | null
@@ -745,6 +816,7 @@ export type CalendarEventLinkCreateWithoutEventInput = {
   lastSeenAt?: Date | string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutCalendarEventLinksInput
   connection: Prisma.CalendarConnectionCreateNestedOneWithoutEventLinksInput
+  plan?: Prisma.PlanCreateNestedOneWithoutCalendarLinksInput
 }
 
 export type CalendarEventLinkUncheckedCreateWithoutEventInput = {
@@ -757,6 +829,7 @@ export type CalendarEventLinkUncheckedCreateWithoutEventInput = {
   calendarId: string
   externalEventId: string
   iCalUID?: string | null
+  planId?: string | null
   status?: string
   lastSeenAt?: Date | string | null
 }
@@ -786,6 +859,61 @@ export type CalendarEventLinkUpdateManyWithWhereWithoutEventInput = {
   data: Prisma.XOR<Prisma.CalendarEventLinkUpdateManyMutationInput, Prisma.CalendarEventLinkUncheckedUpdateManyWithoutEventInput>
 }
 
+export type CalendarEventLinkCreateWithoutPlanInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  provider?: string
+  calendarId: string
+  externalEventId: string
+  iCalUID?: string | null
+  status?: string
+  lastSeenAt?: Date | string | null
+  workspace?: Prisma.WorkspaceCreateNestedOneWithoutCalendarEventLinksInput
+  connection: Prisma.CalendarConnectionCreateNestedOneWithoutEventLinksInput
+  event?: Prisma.EventCreateNestedOneWithoutCalendarLinksInput
+}
+
+export type CalendarEventLinkUncheckedCreateWithoutPlanInput = {
+  id?: string
+  workspaceId?: string
+  connectionId: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  provider?: string
+  calendarId: string
+  externalEventId: string
+  iCalUID?: string | null
+  eventId?: string | null
+  status?: string
+  lastSeenAt?: Date | string | null
+}
+
+export type CalendarEventLinkCreateOrConnectWithoutPlanInput = {
+  where: Prisma.CalendarEventLinkWhereUniqueInput
+  create: Prisma.XOR<Prisma.CalendarEventLinkCreateWithoutPlanInput, Prisma.CalendarEventLinkUncheckedCreateWithoutPlanInput>
+}
+
+export type CalendarEventLinkCreateManyPlanInputEnvelope = {
+  data: Prisma.CalendarEventLinkCreateManyPlanInput | Prisma.CalendarEventLinkCreateManyPlanInput[]
+}
+
+export type CalendarEventLinkUpsertWithWhereUniqueWithoutPlanInput = {
+  where: Prisma.CalendarEventLinkWhereUniqueInput
+  update: Prisma.XOR<Prisma.CalendarEventLinkUpdateWithoutPlanInput, Prisma.CalendarEventLinkUncheckedUpdateWithoutPlanInput>
+  create: Prisma.XOR<Prisma.CalendarEventLinkCreateWithoutPlanInput, Prisma.CalendarEventLinkUncheckedCreateWithoutPlanInput>
+}
+
+export type CalendarEventLinkUpdateWithWhereUniqueWithoutPlanInput = {
+  where: Prisma.CalendarEventLinkWhereUniqueInput
+  data: Prisma.XOR<Prisma.CalendarEventLinkUpdateWithoutPlanInput, Prisma.CalendarEventLinkUncheckedUpdateWithoutPlanInput>
+}
+
+export type CalendarEventLinkUpdateManyWithWhereWithoutPlanInput = {
+  where: Prisma.CalendarEventLinkScalarWhereInput
+  data: Prisma.XOR<Prisma.CalendarEventLinkUpdateManyMutationInput, Prisma.CalendarEventLinkUncheckedUpdateManyWithoutPlanInput>
+}
+
 export type CalendarEventLinkCreateManyWorkspaceInput = {
   id?: string
   connectionId: string
@@ -795,6 +923,7 @@ export type CalendarEventLinkCreateManyWorkspaceInput = {
   calendarId: string
   externalEventId: string
   iCalUID?: string | null
+  planId?: string | null
   eventId?: string | null
   status?: string
   lastSeenAt?: Date | string | null
@@ -811,6 +940,7 @@ export type CalendarEventLinkUpdateWithoutWorkspaceInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   connection?: Prisma.CalendarConnectionUpdateOneRequiredWithoutEventLinksNestedInput
+  plan?: Prisma.PlanUpdateOneWithoutCalendarLinksNestedInput
   event?: Prisma.EventUpdateOneWithoutCalendarLinksNestedInput
 }
 
@@ -823,6 +953,7 @@ export type CalendarEventLinkUncheckedUpdateWithoutWorkspaceInput = {
   calendarId?: Prisma.StringFieldUpdateOperationsInput | string
   externalEventId?: Prisma.StringFieldUpdateOperationsInput | string
   iCalUID?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  planId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   eventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -837,6 +968,7 @@ export type CalendarEventLinkUncheckedUpdateManyWithoutWorkspaceInput = {
   calendarId?: Prisma.StringFieldUpdateOperationsInput | string
   externalEventId?: Prisma.StringFieldUpdateOperationsInput | string
   iCalUID?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  planId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   eventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -851,6 +983,7 @@ export type CalendarEventLinkCreateManyConnectionInput = {
   calendarId: string
   externalEventId: string
   iCalUID?: string | null
+  planId?: string | null
   eventId?: string | null
   status?: string
   lastSeenAt?: Date | string | null
@@ -867,6 +1000,7 @@ export type CalendarEventLinkUpdateWithoutConnectionInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutCalendarEventLinksNestedInput
+  plan?: Prisma.PlanUpdateOneWithoutCalendarLinksNestedInput
   event?: Prisma.EventUpdateOneWithoutCalendarLinksNestedInput
 }
 
@@ -879,6 +1013,7 @@ export type CalendarEventLinkUncheckedUpdateWithoutConnectionInput = {
   calendarId?: Prisma.StringFieldUpdateOperationsInput | string
   externalEventId?: Prisma.StringFieldUpdateOperationsInput | string
   iCalUID?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  planId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   eventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -893,6 +1028,7 @@ export type CalendarEventLinkUncheckedUpdateManyWithoutConnectionInput = {
   calendarId?: Prisma.StringFieldUpdateOperationsInput | string
   externalEventId?: Prisma.StringFieldUpdateOperationsInput | string
   iCalUID?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  planId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   eventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -908,6 +1044,7 @@ export type CalendarEventLinkCreateManyEventInput = {
   calendarId: string
   externalEventId: string
   iCalUID?: string | null
+  planId?: string | null
   status?: string
   lastSeenAt?: Date | string | null
 }
@@ -924,6 +1061,7 @@ export type CalendarEventLinkUpdateWithoutEventInput = {
   lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutCalendarEventLinksNestedInput
   connection?: Prisma.CalendarConnectionUpdateOneRequiredWithoutEventLinksNestedInput
+  plan?: Prisma.PlanUpdateOneWithoutCalendarLinksNestedInput
 }
 
 export type CalendarEventLinkUncheckedUpdateWithoutEventInput = {
@@ -936,6 +1074,7 @@ export type CalendarEventLinkUncheckedUpdateWithoutEventInput = {
   calendarId?: Prisma.StringFieldUpdateOperationsInput | string
   externalEventId?: Prisma.StringFieldUpdateOperationsInput | string
   iCalUID?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  planId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
@@ -950,6 +1089,67 @@ export type CalendarEventLinkUncheckedUpdateManyWithoutEventInput = {
   calendarId?: Prisma.StringFieldUpdateOperationsInput | string
   externalEventId?: Prisma.StringFieldUpdateOperationsInput | string
   iCalUID?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  planId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+}
+
+export type CalendarEventLinkCreateManyPlanInput = {
+  id?: string
+  workspaceId?: string
+  connectionId: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  provider?: string
+  calendarId: string
+  externalEventId: string
+  iCalUID?: string | null
+  eventId?: string | null
+  status?: string
+  lastSeenAt?: Date | string | null
+}
+
+export type CalendarEventLinkUpdateWithoutPlanInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  provider?: Prisma.StringFieldUpdateOperationsInput | string
+  calendarId?: Prisma.StringFieldUpdateOperationsInput | string
+  externalEventId?: Prisma.StringFieldUpdateOperationsInput | string
+  iCalUID?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutCalendarEventLinksNestedInput
+  connection?: Prisma.CalendarConnectionUpdateOneRequiredWithoutEventLinksNestedInput
+  event?: Prisma.EventUpdateOneWithoutCalendarLinksNestedInput
+}
+
+export type CalendarEventLinkUncheckedUpdateWithoutPlanInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
+  connectionId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  provider?: Prisma.StringFieldUpdateOperationsInput | string
+  calendarId?: Prisma.StringFieldUpdateOperationsInput | string
+  externalEventId?: Prisma.StringFieldUpdateOperationsInput | string
+  iCalUID?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  eventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+}
+
+export type CalendarEventLinkUncheckedUpdateManyWithoutPlanInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
+  connectionId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  provider?: Prisma.StringFieldUpdateOperationsInput | string
+  calendarId?: Prisma.StringFieldUpdateOperationsInput | string
+  externalEventId?: Prisma.StringFieldUpdateOperationsInput | string
+  iCalUID?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  eventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
@@ -966,11 +1166,13 @@ export type CalendarEventLinkSelect<ExtArgs extends runtime.Types.Extensions.Int
   calendarId?: boolean
   externalEventId?: boolean
   iCalUID?: boolean
+  planId?: boolean
   eventId?: boolean
   status?: boolean
   lastSeenAt?: boolean
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   connection?: boolean | Prisma.CalendarConnectionDefaultArgs<ExtArgs>
+  plan?: boolean | Prisma.CalendarEventLink$planArgs<ExtArgs>
   event?: boolean | Prisma.CalendarEventLink$eventArgs<ExtArgs>
 }, ExtArgs["result"]["calendarEventLink"]>
 
@@ -984,11 +1186,13 @@ export type CalendarEventLinkSelectCreateManyAndReturn<ExtArgs extends runtime.T
   calendarId?: boolean
   externalEventId?: boolean
   iCalUID?: boolean
+  planId?: boolean
   eventId?: boolean
   status?: boolean
   lastSeenAt?: boolean
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   connection?: boolean | Prisma.CalendarConnectionDefaultArgs<ExtArgs>
+  plan?: boolean | Prisma.CalendarEventLink$planArgs<ExtArgs>
   event?: boolean | Prisma.CalendarEventLink$eventArgs<ExtArgs>
 }, ExtArgs["result"]["calendarEventLink"]>
 
@@ -1002,11 +1206,13 @@ export type CalendarEventLinkSelectUpdateManyAndReturn<ExtArgs extends runtime.T
   calendarId?: boolean
   externalEventId?: boolean
   iCalUID?: boolean
+  planId?: boolean
   eventId?: boolean
   status?: boolean
   lastSeenAt?: boolean
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   connection?: boolean | Prisma.CalendarConnectionDefaultArgs<ExtArgs>
+  plan?: boolean | Prisma.CalendarEventLink$planArgs<ExtArgs>
   event?: boolean | Prisma.CalendarEventLink$eventArgs<ExtArgs>
 }, ExtArgs["result"]["calendarEventLink"]>
 
@@ -1020,25 +1226,29 @@ export type CalendarEventLinkSelectScalar = {
   calendarId?: boolean
   externalEventId?: boolean
   iCalUID?: boolean
+  planId?: boolean
   eventId?: boolean
   status?: boolean
   lastSeenAt?: boolean
 }
 
-export type CalendarEventLinkOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "workspaceId" | "connectionId" | "createdAt" | "updatedAt" | "provider" | "calendarId" | "externalEventId" | "iCalUID" | "eventId" | "status" | "lastSeenAt", ExtArgs["result"]["calendarEventLink"]>
+export type CalendarEventLinkOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "workspaceId" | "connectionId" | "createdAt" | "updatedAt" | "provider" | "calendarId" | "externalEventId" | "iCalUID" | "planId" | "eventId" | "status" | "lastSeenAt", ExtArgs["result"]["calendarEventLink"]>
 export type CalendarEventLinkInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   connection?: boolean | Prisma.CalendarConnectionDefaultArgs<ExtArgs>
+  plan?: boolean | Prisma.CalendarEventLink$planArgs<ExtArgs>
   event?: boolean | Prisma.CalendarEventLink$eventArgs<ExtArgs>
 }
 export type CalendarEventLinkIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   connection?: boolean | Prisma.CalendarConnectionDefaultArgs<ExtArgs>
+  plan?: boolean | Prisma.CalendarEventLink$planArgs<ExtArgs>
   event?: boolean | Prisma.CalendarEventLink$eventArgs<ExtArgs>
 }
 export type CalendarEventLinkIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   connection?: boolean | Prisma.CalendarConnectionDefaultArgs<ExtArgs>
+  plan?: boolean | Prisma.CalendarEventLink$planArgs<ExtArgs>
   event?: boolean | Prisma.CalendarEventLink$eventArgs<ExtArgs>
 }
 
@@ -1047,6 +1257,7 @@ export type $CalendarEventLinkPayload<ExtArgs extends runtime.Types.Extensions.I
   objects: {
     workspace: Prisma.$WorkspacePayload<ExtArgs>
     connection: Prisma.$CalendarConnectionPayload<ExtArgs>
+    plan: Prisma.$PlanPayload<ExtArgs> | null
     event: Prisma.$EventPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -1059,6 +1270,7 @@ export type $CalendarEventLinkPayload<ExtArgs extends runtime.Types.Extensions.I
     calendarId: string
     externalEventId: string
     iCalUID: string | null
+    planId: string | null
     eventId: string | null
     status: string
     lastSeenAt: Date | null
@@ -1458,6 +1670,7 @@ export interface Prisma__CalendarEventLinkClient<T, Null = never, ExtArgs extend
   readonly [Symbol.toStringTag]: "PrismaPromise"
   workspace<T extends Prisma.WorkspaceDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WorkspaceDefaultArgs<ExtArgs>>): Prisma.Prisma__WorkspaceClient<runtime.Types.Result.GetResult<Prisma.$WorkspacePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   connection<T extends Prisma.CalendarConnectionDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CalendarConnectionDefaultArgs<ExtArgs>>): Prisma.Prisma__CalendarConnectionClient<runtime.Types.Result.GetResult<Prisma.$CalendarConnectionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  plan<T extends Prisma.CalendarEventLink$planArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CalendarEventLink$planArgs<ExtArgs>>): Prisma.Prisma__PlanClient<runtime.Types.Result.GetResult<Prisma.$PlanPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   event<T extends Prisma.CalendarEventLink$eventArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CalendarEventLink$eventArgs<ExtArgs>>): Prisma.Prisma__EventClient<runtime.Types.Result.GetResult<Prisma.$EventPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1497,6 +1710,7 @@ export interface CalendarEventLinkFieldRefs {
   readonly calendarId: Prisma.FieldRef<"CalendarEventLink", 'String'>
   readonly externalEventId: Prisma.FieldRef<"CalendarEventLink", 'String'>
   readonly iCalUID: Prisma.FieldRef<"CalendarEventLink", 'String'>
+  readonly planId: Prisma.FieldRef<"CalendarEventLink", 'String'>
   readonly eventId: Prisma.FieldRef<"CalendarEventLink", 'String'>
   readonly status: Prisma.FieldRef<"CalendarEventLink", 'String'>
   readonly lastSeenAt: Prisma.FieldRef<"CalendarEventLink", 'DateTime'>
@@ -1896,6 +2110,25 @@ export type CalendarEventLinkDeleteManyArgs<ExtArgs extends runtime.Types.Extens
    * Limit how many CalendarEventLinks to delete.
    */
   limit?: number
+}
+
+/**
+ * CalendarEventLink.plan
+ */
+export type CalendarEventLink$planArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Plan
+   */
+  select?: Prisma.PlanSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Plan
+   */
+  omit?: Prisma.PlanOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PlanInclude<ExtArgs> | null
+  where?: Prisma.PlanWhereInput
 }
 
 /**

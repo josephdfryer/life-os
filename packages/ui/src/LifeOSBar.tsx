@@ -74,6 +74,7 @@ export function LifeOSBar({ current, rightSlot, style }: LifeOSBarProps) {
   if (pathname === '/login') return null;
 
   const currentApp = LIFE_OS_APPS.find(a => a.key === current) ?? LIFE_OS_APPS[0];
+  const captureHref = current === 'home' ? '#quick-capture' : `${HOME_URL}/#quick-capture`;
 
   return (
     <div
@@ -199,7 +200,28 @@ export function LifeOSBar({ current, rightSlot, style }: LifeOSBarProps) {
         )}
       </div>
 
-      {rightSlot && <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center' }}>{rightSlot}</div>}
+      <a
+        href={captureHref}
+        aria-label="Quick capture"
+        style={{
+          marginLeft: 'auto',
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: 5,
+          padding: '4px 10px',
+          border: '1px solid var(--border-subtle, var(--border, rgba(0,0,0,0.08)))',
+          borderRadius: 'var(--radius-pill, 999px)',
+          color: 'var(--cognac-deep, var(--accent, #8a5a2f))',
+          fontSize: 12,
+          fontWeight: 500,
+          textDecoration: 'none',
+        }}
+      >
+        <span aria-hidden>＋</span>
+        <span>Capture</span>
+      </a>
+
+      {rightSlot && <div style={{ display: 'flex', alignItems: 'center' }}>{rightSlot}</div>}
     </div>
   );
 }

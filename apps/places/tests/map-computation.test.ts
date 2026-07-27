@@ -2,6 +2,7 @@ import assert from "node:assert/strict"
 import test from "node:test"
 import {
   buildCameraViewport,
+  cameraBounds,
   clampCamera,
   clusterPlaces,
   fitCamera,
@@ -10,6 +11,7 @@ import {
   plotPlaces,
   projectCoordinates,
   zoomCameraAt,
+  visibleClusterLabels,
   type MapPlace,
 } from "../components/map/map-computation"
 
@@ -36,6 +38,9 @@ test("camera controls clamp global bounds and preserve cursor anchoring", () => 
   assert.ok(Math.abs(zoomed.lat - camera.lat) < 1e-10)
   assert.ok(Math.abs(zoomed.lng - camera.lng) < 1e-10)
   assert.equal(zoomed.zoom, 15)
+  const bounds = cameraBounds(camera, 820, 620)
+  assert.ok(bounds.north > camera.lat && bounds.south < camera.lat)
+  assert.ok(bounds.west < camera.lng && bounds.east > camera.lng)
 })
 
 test("clustering groups nearby points and rolls up spend", () => {
@@ -49,6 +54,23 @@ test("clustering groups nearby points and rolls up spend", () => {
   assert.equal(clusters[0].totalSpend, 50)
   assert.equal(clusters[0].label, "2 nearby places")
   assert.ok(markerSize(clusters[0].totalSpend, clusters[0].fallbackWeight) > 16)
+})
+
+test("cluster identity and collision-aware labels are stable across input order", () => {
+  const points = [
+    { place: place("b", 1, 1, 5), x: 100, y: 100 },
+    { place: place("a", 1, 1, 15), x: 104, y: 102 },
+    { place: place("c", 1, 1, 1), x: 300, y: 300 },
+  ]
+  const forward = clusterPlaces(points, 2)
+  const reversed = clusterPlaces(points.toReversed(), 2)
+  assert.deepEqual(forward.map(cluster => cluster.id), reversed.map(cluster => cluster.id))
+
+  const singles = clusterPlaces(points, 4)
+  const labels = visibleClusterLabels(singles, "b", 100)
+  assert.equal(labels.has("b"), true)
+  assert.equal(labels.has("c"), true)
+  assert.equal(labels.has("a"), false)
 })
 
 test("fallback plotting and coordinate overlays remain deterministic without a tile viewport", () => {

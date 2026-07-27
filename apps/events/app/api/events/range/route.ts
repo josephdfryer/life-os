@@ -22,7 +22,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "Invalid start or end" }, { status: 400 })
   }
 
-  const events = await db.event.findMany({
+  const [events, plans] = await Promise.all([db.event.findMany({
     where: {
       workspaceId,
       start: { gte: start, lte: end },
@@ -38,7 +38,30 @@ export async function GET(req: NextRequest) {
     },
     orderBy: { start: "asc" },
     take: 500,
-  })
+  }), db.plan.findMany({
+    where: {
+      workspaceId,
+      externalSource: "google-calendar",
+      scheduledStart: { gte: start, lte: end },
+      status: "active",
+    },
+    include: { place: { select: { name: true } } },
+    orderBy: { scheduledStart: "asc" },
+    take: 500,
+  })])
 
-  return NextResponse.json({ data: events })
+  return NextResponse.json({
+    data: [
+      ...events.map(event => ({ ...event, href: `/events/${event.id}` })),
+      ...plans.map(plan => ({
+        id: `plan-${plan.id}`,
+        name: plan.text,
+        type: "scheduled",
+        start: plan.scheduledStart,
+        end: plan.scheduledEnd,
+        place: plan.place,
+        href: null,
+      })),
+    ].sort((a, b) => new Date(a.start!).getTime() - new Date(b.start!).getTime()),
+  })
 }

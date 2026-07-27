@@ -1,0 +1,17 @@
+{
+  "name": "@life-os/domain",
+  "version": "0.0.1",
+  "private": true,
+  "main": "./index.ts",
+  "types": "./index.ts",
+  "dependencies": {
+    "@life-os/db": "*"
+  },
+  "devDependencies": {
+    "tsx": "^4.22.4"
+  },
+  "scripts": {
+    "test": "tsx --test tests/*.test.ts",
+    "type-check": "tsc --noEmit --moduleResolution bundler --module esnext --target es2022 --strict index.ts capture.ts note-suggestions.ts calendar-reconciliation.ts"
+  }
+}

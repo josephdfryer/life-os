@@ -13,6 +13,7 @@ type PlacePreviewItem = {
 }
 
 type UnresolvedVisitPreviewItem = {
+  importJobId: string
   latitude: number
   longitude: number
   placeAddress?: string
@@ -21,7 +22,7 @@ type UnresolvedVisitPreviewItem = {
   aiEnrichment?: { placeName: string; category: string; confidence: number; reasoning: string }
 }
 
-export function PlacePreview({ place }: { place: PlacePreviewItem }) {
+export function PlacePreview({ place, returnQuery }: { place: PlacePreviewItem; returnQuery?: string }) {
   const coordinateLabel = hasCoordinates(place) ? coordinatesText(place.latitude, place.longitude) : ""
   const googleMapsHref = hasCoordinates(place)
     ? `https://www.google.com/maps/search/?api=1&query=${place.latitude},${place.longitude}`
@@ -49,8 +50,11 @@ export function PlacePreview({ place }: { place: PlacePreviewItem }) {
         <div style={{ fontSize: "11px", color: "var(--ink-4)", marginTop: "12px" }}>
           Last visit: {place.stats.lastVisitAt ? formatDate(place.stats.lastVisitAt) : "Never"}
         </div>
-        <Link href={`/places/${place.id}`} style={{ marginTop: "14px", display: "inline-flex", padding: "8px 14px", background: "var(--accent)", color: "#fff", borderRadius: "7px", textDecoration: "none", fontSize: "11px" }}>
-          Open
+        <Link
+          href={`/places/${place.id}${returnQuery ? `?from=${encodeURIComponent(returnQuery)}` : ""}`}
+          style={{ marginTop: "14px", display: "inline-flex", padding: "9px 16px", background: "var(--cognac)", color: "#fff", borderRadius: "var(--radius-pill)", textDecoration: "none", fontSize: "12px" }}
+        >
+          Open memory
         </Link>
       </div>
     </div>
@@ -79,6 +83,12 @@ export function UnresolvedVisitPreview({ visit }: { visit: UnresolvedVisitPrevie
             <div style={{ fontSize: "11px", color: "var(--ink-2)", marginTop: "8px" }}>{visit.aiEnrichment.reasoning}</div>
           </div>
         ) : <div style={{ marginTop: "14px", fontSize: "11px", color: "var(--ink-4)" }}>No AI enrichment result yet.</div>}
+        <Link
+          href={`/places/import/${visit.importJobId}/review`}
+          style={{ marginTop: "14px", display: "inline-flex", padding: "9px 16px", background: "var(--cognac)", color: "#fff", borderRadius: "var(--radius-pill)", textDecoration: "none", fontSize: "12px" }}
+        >
+          Resolve this visit
+        </Link>
       </div>
     </div>
   )
@@ -106,7 +116,7 @@ function labelize(value?: string) {
 }
 
 function enrichmentColor(confidence: number) {
-  if (confidence >= 0.75) return "#3f8f5f"
-  if (confidence >= 0.45) return "#d2a321"
-  return "#b9475a"
+  if (confidence >= 0.75) return "var(--map-confidence-high)"
+  if (confidence >= 0.45) return "var(--map-confidence-medium)"
+  return "var(--map-confidence-low)"
 }

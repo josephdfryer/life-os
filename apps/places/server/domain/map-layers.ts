@@ -5,7 +5,6 @@ export type FinanceLayerItem = {
   placeId: string
   transactionCount: number
   totalAmount: number
-  transactions: Array<{ merchant: string; amount: number; date: string }>
 }
 
 export type PhotoLayerItem = {
@@ -17,19 +16,11 @@ export type PhotoLayerItem = {
 export type InteractionLayerItem = {
   placeId: string
   interactionCount: number
-  latestAt?: string
-  people: Array<{ id: string; name: string }>
-  interactions: Array<{
-    id: string
-    type: string
-    summary?: string
-    timestamp: string
-    personName?: string
-  }>
 }
 
 export type UnresolvedVisitMapItem = {
   id: string
+  importJobId: string
   latitude: number
   longitude: number
   placeName?: string
@@ -48,7 +39,7 @@ export async function getMapLayerData(workspaceId: string, placeIds: string[]) {
   const [unresolvedVisits, interactions, finance, photos] = await Promise.all([
     getUnresolvedVisitLayerItems(workspaceId),
     getInteractionLayerItems(workspaceId, placeIds),
-    getFinanceLayerItems(),
+    getFinanceLayerItems(workspaceId),
     getPhotoLayerItems(),
   ])
 
@@ -72,6 +63,7 @@ export async function getUnresolvedVisitLayerItems(workspaceId: string): Promise
     if (visit.latitude === null || visit.longitude === null) return []
     return [{
       id: visit.id,
+      importJobId: visit.importJobId,
       latitude: visit.latitude,
       longitude: visit.longitude,
       placeName: visit.placeName ?? undefined,
@@ -94,8 +86,8 @@ export async function getInteractionLayerItems(workspaceId: string, placeIds: st
         { event: { placeId: { in: placeIds } } },
       ],
     },
-    include: {
-      person: { select: { id: true, first: true, last: true } },
+    select: {
+      placeId: true,
       event: { select: { placeId: true } },
     },
     orderBy: { timestamp: "desc" },
@@ -109,32 +101,15 @@ export async function getInteractionLayerItems(workspaceId: string, placeIds: st
     const item = byPlace.get(placeId) ?? {
       placeId,
       interactionCount: 0,
-      latestAt: undefined,
-      people: [],
-      interactions: [],
     }
     item.interactionCount += 1
-    item.latestAt ??= interaction.timestamp.toISOString()
-    const personName = interaction.person ? personDisplayName(interaction.person) : undefined
-    if (interaction.person && !item.people.some(person => person.id === interaction.personId)) {
-      item.people.push({ id: interaction.person.id, name: personName ?? "Unknown" })
-    }
-    if (item.interactions.length < 3) {
-      item.interactions.push({
-        id: interaction.id,
-        type: interaction.type,
-        summary: interaction.summary ?? undefined,
-        timestamp: interaction.timestamp.toISOString(),
-        personName,
-      })
-    }
     byPlace.set(placeId, item)
   }
 
   return [...byPlace.values()]
 }
 
-export async function getFinanceLayerItems(): Promise<FinanceLayerItem[]> {
+export async function getFinanceLayerItems(workspaceId: string): Promise<FinanceLayerItem[]> {
   // Two sources, merged per place:
   //  1. Accepted financial Interactions carrying placeId (canonical graph)
   //  2. Era-staged transactions whose placeMatch resolved a merchant place
@@ -142,34 +117,31 @@ export async function getFinanceLayerItems(): Promise<FinanceLayerItem[]> {
   // Derived on every request — never stored.
   const [interactions, places, staged] = await Promise.all([
     db.interaction.findMany({
-      where: { type: "financial", placeId: { not: null }, amount: { not: null } },
-      select: { placeId: true, amount: true, summary: true, timestamp: true },
+      where: { workspaceId, type: "financial", placeId: { not: null }, amount: { not: null } },
+      select: { placeId: true, amount: true },
     }),
     db.place.findMany({
-      where: { googlePlaceId: { not: null } },
+      where: { workspaceId, googlePlaceId: { not: null } },
       select: { id: true, googlePlaceId: true },
     }),
     db.stagedInteraction.findMany({
-      where: { source: "era", status: "pending" },
-      select: { contactName: true, timestamp: true, metadata: true },
+      where: { workspaceId, source: "era", status: "pending" },
+      select: { metadata: true },
     }),
   ])
 
   const placeIdByGoogleId = new Map(places.map(place => [place.googlePlaceId!, place.id]))
   const byPlace = new Map<string, FinanceLayerItem>()
 
-  const add = (placeId: string, merchant: string, amount: number, date: Date) => {
-    const item = byPlace.get(placeId) ?? { placeId, transactionCount: 0, totalAmount: 0, transactions: [] }
+  const add = (placeId: string, amount: number) => {
+    const item = byPlace.get(placeId) ?? { placeId, transactionCount: 0, totalAmount: 0 }
     item.transactionCount += 1
     item.totalAmount = Math.round((item.totalAmount + amount) * 100) / 100
-    if (item.transactions.length < 12) {
-      item.transactions.push({ merchant, amount, date: date.toISOString().slice(0, 10) })
-    }
     byPlace.set(placeId, item)
   }
 
   for (const interaction of interactions) {
-    add(interaction.placeId!, interaction.summary ?? "transaction", Math.abs(centsToDollars(interaction.amount) ?? 0), interaction.timestamp)
+    add(interaction.placeId!, Math.abs(centsToDollars(interaction.amount) ?? 0))
   }
 
   for (const row of staged) {
@@ -179,7 +151,7 @@ export async function getFinanceLayerItems(): Promise<FinanceLayerItem[]> {
     if (!["auto", "adjudicated"].includes(match.band ?? "")) continue
     const placeId = placeIdByGoogleId.get(match.merchantPlace.googlePlaceId)
     if (!placeId) continue
-    add(placeId, row.contactName ?? match.merchantPlace.name, Number(meta?.amount ?? 0), row.timestamp)
+    add(placeId, Number(meta?.amount ?? 0))
   }
 
   return [...byPlace.values()]
@@ -221,10 +193,6 @@ function parseEnrichment(value: unknown): UnresolvedVisitMapItem["aiEnrichment"]
     confidence: Math.max(0, Math.min(1, confidence)),
     reasoning: typeof value.reasoning === "string" ? value.reasoning : "",
   }
-}
-
-function personDisplayName(person: { first: string | null; last: string | null }) {
-  return [person.first, person.last].filter(Boolean).join(" ").trim() || undefined
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {
