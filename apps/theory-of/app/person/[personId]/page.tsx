@@ -3,6 +3,8 @@ import { db } from "@/lib/db"
 import { getCurrentTheorySnapshot, listTheorySnapshots } from "@life-os/theory"
 import { renderTheoryMarkdown, extractSectionItems } from "@/lib/markdown"
 import { requireWorkspaceAccess } from "@/lib/access"
+import { cookies } from "next/headers"
+import { resolveTimeZone, TZ_COOKIE } from "@life-os/ui"
 import RegenerateButton from "./RegenerateButton"
 import AddTheoryNote from "./AddTheoryNote"
 
@@ -10,6 +12,7 @@ export const dynamic = "force-dynamic"
 
 export default async function TheoryOfPersonPage({ params }: { params: Promise<{ personId: string }> }) {
   const access = await requireWorkspaceAccess()
+  const tz = resolveTimeZone((await cookies()).get(TZ_COOKIE)?.value)
   const { personId } = await params
 
   const person = await db.person.findFirst({
@@ -99,7 +102,7 @@ export default async function TheoryOfPersonPage({ params }: { params: Promise<{
             }}>
               <Stat label="Version" value={`v${current.version}`} />
               <Stat label="Confidence" value={current.confidence == null ? "—" : current.confidence.toFixed(2)} />
-              <Stat label="Synthesized" value={formatDate(current.synthesizedAt)} />
+              <Stat label="Synthesized" value={formatDate(current.synthesizedAt, tz)} />
               <Stat label="Sources" value={String(current.sources.length)} />
             </div>
 
@@ -200,8 +203,8 @@ function countSources(sources: { sourceType: string }[]): { type: string; count:
   return Array.from(map.entries()).map(([type, count]) => ({ type, count }))
 }
 
-function formatDate(d: Date): string {
-  return new Date(d).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })
+function formatDate(d: Date, timeZone?: string): string {
+  return new Date(d).toLocaleDateString("en-US", { timeZone, month: "short", day: "numeric", year: "numeric" })
 }
 
 const backLinkStyle: React.CSSProperties = {

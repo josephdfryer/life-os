@@ -80,7 +80,7 @@ export {
   TZ_COOKIE, LIFE_OS_DEFAULT_TZ, COMMON_TIME_ZONES,
   resolveTimeZone, isValidTimeZone, detectBrowserTimeZone, readTzCookie, writeTzCookie,
 } from './timezone';
-export { TimezoneDetector, TimezonePicker } from './TimezoneControls';
+export { TimezoneDetector, TimezonePicker, useTimeZone } from './TimezoneControls';
 export type { TimezonePickerProps } from './TimezoneControls';
 
 export { BackLink }     from './BackLink';

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { useSearchParams } from "next/navigation"
+import { useTimeZone } from "@life-os/ui"
 
 type CalendarStatus = {
   configured: boolean
@@ -61,6 +62,7 @@ const BACKFILL_OPTIONS = [
 
 export default function CalendarSettingsClient() {
   const searchParams = useSearchParams()
+  const tz = useTimeZone()
   const [status, setStatus] = useState<CalendarStatus | null>(null)
   const [trace, setTrace] = useState<CalendarTrace | null>(null)
   const [backfillDays, setBackfillDays] = useState("180")
@@ -315,7 +317,7 @@ export default function CalendarSettingsClient() {
                 <div style={{ minWidth: 0 }}>
                   <div style={calendarNameStyle}>{connection.calendarSummary ?? connection.calendarId}</div>
                   <div style={calendarMetaStyle}>
-                    {connection.eventCount} linked events · last sync {formatDate(connection.lastSyncedAt)}
+                    {connection.eventCount} linked events · last sync {formatDate(connection.lastSyncedAt, tz)}
                   </div>
                   {connection.lastError && <div style={connectionErrorStyle}>{connection.lastError}</div>}
                 </div>
@@ -350,9 +352,9 @@ export default function CalendarSettingsClient() {
   )
 }
 
-function formatDate(value: string | null) {
+function formatDate(value: string | null, timeZone?: string) {
   if (!value) return "never"
-  return new Date(value).toLocaleString()
+  return new Date(value).toLocaleString("en-US", { timeZone })
 }
 
 function sameSelection(left: string[], right: string[]) {

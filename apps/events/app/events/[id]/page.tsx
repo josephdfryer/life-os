@@ -1,4 +1,6 @@
 import { notFound, redirect } from "next/navigation"
+import { cookies } from "next/headers"
+import { resolveTimeZone, TZ_COOKIE } from "@life-os/ui"
 import { lifeOsAppUrl } from "@life-os/auth"
 import { auth } from "@/auth"
 import { db } from "@/lib/db"
@@ -17,6 +19,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
   const session = await auth()
   if (!session?.user?.email) redirect("/login")
   const workspaceId = await getWorkspaceId(session.user.email)
+  const tz = resolveTimeZone((await cookies()).get(TZ_COOKIE)?.value)
   const { id } = await params
   const personsUrl = lifeOsAppUrl("persons", "http://localhost:3000")
 
@@ -61,8 +64,8 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
         })
       : []
 
-  const tension = computePlanTension(event, event.sourcePlan)
-  const { date, range } = formatEventTime(new Date(event.start), event.end ? new Date(event.end) : null)
+  const tension = computePlanTension(event, event.sourcePlan, tz)
+  const { date, range } = formatEventTime(new Date(event.start), event.end ? new Date(event.end) : null, tz)
   const metadata = parseEventMetadata(event.metadata)
   const htmlLink = typeof metadata?.htmlLink === "string" ? metadata.htmlLink : null
 
@@ -149,7 +152,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
         <div style={{ fontSize: "12px", color: "var(--ink-2)", lineHeight: 1.5 }}>{tension.detail}</div>
         {event.sourcePlan?.scheduledStart && (
           <div style={{ fontSize: "11px", color: "var(--ink-4)", marginTop: "10px" }}>
-            Predicted: {formatWhen(new Date(event.sourcePlan.scheduledStart))} · Actual: {formatWhen(new Date(event.start))}
+            Predicted: {formatWhen(new Date(event.sourcePlan.scheduledStart), tz)} · Actual: {formatWhen(new Date(event.start), tz)}
           </div>
         )}
         {nearbyPlans.length > 0 && (
@@ -159,7 +162,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
               {nearbyPlans.map((plan) => (
                 <li key={plan.id}>
                   {plan.text}
-                  {plan.scheduledStart ? ` · ${formatWhen(new Date(plan.scheduledStart))}` : ""}
+                  {plan.scheduledStart ? ` · ${formatWhen(new Date(plan.scheduledStart), tz)}` : ""}
                 </li>
               ))}
             </ul>
@@ -230,7 +233,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
               >
                 <div style={{ fontSize: "13px", fontWeight: 500 }}>{child.name}</div>
                 <div style={{ fontSize: "11px", color: "var(--ink-4)", marginTop: "4px" }}>
-                  {new Date(child.start).toLocaleString()}
+                  {new Date(child.start).toLocaleString("en-US", { timeZone: tz })}
                 </div>
               </a>
             ))}

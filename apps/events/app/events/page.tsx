@@ -1,4 +1,6 @@
 import { redirect } from "next/navigation"
+import { cookies } from "next/headers"
+import { resolveTimeZone, TZ_COOKIE } from "@life-os/ui"
 import { auth } from "@/auth"
 import { db } from "@/lib/db"
 import { getWorkspaceId } from "@/lib/workspace"
@@ -27,6 +29,7 @@ export default async function EventsPage({
   const session = await auth()
   if (!session?.user?.email) redirect("/login")
   const workspaceId = await getWorkspaceId(session.user.email)
+  const tz = resolveTimeZone((await cookies()).get(TZ_COOKIE)?.value)
   const { view: viewParam, q } = await searchParams
   const view = parseEventListView(viewParam)
   const search = q?.trim()
@@ -188,7 +191,7 @@ export default async function EventsPage({
           </div>
           <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
             {events.map((event) => {
-              const { date, range } = formatEventTime(new Date(event.start), event.end ? new Date(event.end) : null)
+              const { date, range } = formatEventTime(new Date(event.start), event.end ? new Date(event.end) : null, tz)
               const attendees = [
                 ...new Set(
                   event.interactions

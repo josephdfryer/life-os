@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useMemo, useState } from "react"
+import { useTimeZone } from "@life-os/ui"
 import Link from "next/link"
 
 type StagedVisit = {
@@ -18,6 +19,7 @@ type StagedPayload = { items: StagedVisit[]; total: number; hasMore: boolean }
 
 export default function ImportReviewClient({ jobId, initial }: { jobId: string; initial: StagedPayload }) {
   const [payload, setPayload] = useState(initial)
+  const tz = useTimeZone()
   const [index, setIndex] = useState(0)
   const current = payload.items[index] ?? null
 
@@ -87,7 +89,7 @@ export default function ImportReviewClient({ jobId, initial }: { jobId: string; 
               </div>
               <div style={{ color: "var(--accent)", fontWeight: 700 }}>{Math.round(current.confidence)}%</div>
             </div>
-            <div style={{ color: "var(--ink-3)", marginTop: "12px" }}>{new Date(current.startedAt).toLocaleString()} · {duration}</div>
+            <div style={{ color: "var(--ink-3)", marginTop: "12px" }}>{new Date(current.startedAt).toLocaleString("en-US", { timeZone: tz })} · {duration}</div>
             <div style={{ display: "flex", gap: "10px", marginTop: "22px", flexWrap: "wrap" }}>
               <button onClick={() => void act("accept")} style={primaryButton}>Accept <span style={{ opacity: 0.7 }}>(a)</span></button>
               <button onClick={() => void act("reject")} style={secondaryButton}>Reject <span style={{ opacity: 0.7 }}>(r)</span></button>

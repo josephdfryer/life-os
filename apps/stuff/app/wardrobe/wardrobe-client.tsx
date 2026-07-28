@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react"
 import { useRouter } from "next/navigation"
+import { useTimeZone } from "@life-os/ui"
 
 type WardrobeItem = {
   id: string
@@ -50,6 +51,7 @@ type Props = {
 
 export default function WardrobeClient(props: Props) {
   const router = useRouter()
+  const tz = useTimeZone()
   const [items, setItems] = useState(props.initialItems)
   const [selectedIds, setSelectedIds] = useState<string[]>([])
   const [photo, setPhoto] = useState<{ id: string; url: string; filename: string } | null>(null)
@@ -363,7 +365,7 @@ export default function WardrobeClient(props: Props) {
                 )}
                 <div>
                   <strong>{wear.summary ?? wear.items.map((item) => item.name).join(", ")}</strong>
-                  <span>{new Date(wear.timestamp).toLocaleDateString()} · {wear.personName ?? "Unknown wearer"}</span>
+                  <span>{new Date(wear.timestamp).toLocaleDateString("en-US", { timeZone: tz })} · {wear.personName ?? "Unknown wearer"}</span>
                 </div>
               </div>
             ))}

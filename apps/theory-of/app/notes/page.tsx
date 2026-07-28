@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useMemo, useRef, useState } from "react"
+import { useTimeZone } from "@life-os/ui"
 import Link from "next/link"
 
 type NoteRow = {
@@ -31,6 +32,7 @@ const CAPTURE_TYPES = [
 ]
 
 export default function NotesPage() {
+  const tz = useTimeZone()
   const [notes, setNotes] = useState<NoteRow[]>([])
   const [total, setTotal] = useState<number | null>(null)
   const [nextCursor, setNextCursor] = useState<string | null>(null)
@@ -242,7 +244,7 @@ export default function NotesPage() {
       {groups.map(([day, dayNotes]) => (
         <div key={day} style={{ marginBottom: "24px" }}>
           <div style={{ fontSize: "10px", fontWeight: 500, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--ink-4)", margin: "0 0 8px" }}>
-            {formatDay(day)}
+            {formatDay(day, tz)}
           </div>
           <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
             {dayNotes.map(note => (
@@ -273,6 +275,7 @@ function NoteCard({ note, expanded, onToggle, onDelete }: {
   onToggle: () => void
   onDelete: () => void
 }) {
+  const tz = useTimeZone()
   const [detail, setDetail] = useState<NoteDetail | null>(null)
 
   useEffect(() => {
@@ -286,7 +289,7 @@ function NoteCard({ note, expanded, onToggle, onDelete }: {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [expanded])
 
-  const time = new Date(note.timestamp).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" })
+  const time = new Date(note.timestamp).toLocaleTimeString("en-US", { timeZone: tz, hour: "numeric", minute: "2-digit" })
 
   return (
     <div style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "10px", overflow: "hidden" }}>
@@ -384,12 +387,12 @@ function FilterPill({ label, active, onClick }: { label: string; active: boolean
   )
 }
 
-function formatDay(day: string) {
+function formatDay(day: string, timeZone?: string) {
   const date = new Date(day)
   const now = new Date()
   if (date.toDateString() === now.toDateString()) return "Today"
   const yesterday = new Date(now)
   yesterday.setDate(now.getDate() - 1)
   if (date.toDateString() === yesterday.toDateString()) return "Yesterday"
-  return date.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", year: date.getFullYear() === now.getFullYear() ? undefined : "numeric" })
+  return date.toLocaleDateString("en-US", { timeZone, weekday: "long", month: "long", day: "numeric", year: date.getFullYear() === now.getFullYear() ? undefined : "numeric" })
 }

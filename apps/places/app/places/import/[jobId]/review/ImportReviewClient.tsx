@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useMemo, useState } from "react"
+import { useTimeZone } from "@life-os/ui"
 import Link from "next/link"
 
 type StagedVisit = {
@@ -32,6 +33,7 @@ type PlaceCandidate = {
 }
 
 export default function ImportReviewClient({ jobId, initial, places, status }: { jobId: string; initial: StagedPayload; places: PlaceCandidate[]; status: "pending" | "rejected" }) {
+  const tz = useTimeZone()
   const [payload, setPayload] = useState(initial)
   const [index, setIndex] = useState(0)
   const [busy, setBusy] = useState(false)
@@ -194,7 +196,7 @@ export default function ImportReviewClient({ jobId, initial, places, status }: {
               </div>
               <div style={{ color: "var(--accent)", fontWeight: 700 }}>{Math.round(current.confidence)}%</div>
             </div>
-            <div style={{ color: "var(--ink-3)", marginTop: "12px" }}>{new Date(current.startedAt).toLocaleString()} · {duration}</div>
+            <div style={{ color: "var(--ink-3)", marginTop: "12px" }}>{new Date(current.startedAt).toLocaleString("en-US", { timeZone: tz })} · {duration}</div>
             {enrichment ? (
               <div className="places-review-suggestion">
                 <div><span>Suggested identity</span><strong>{enrichment.placeName}</strong></div>

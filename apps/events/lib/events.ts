@@ -41,17 +41,19 @@ export function eventListWindow(view: EventListView, now = new Date()) {
   }
 }
 
-export function formatEventTime(start: Date, end: Date | null) {
+export function formatEventTime(start: Date, end: Date | null, timeZone?: string) {
   const startDate = new Date(start)
   const sameDay = !end || new Date(end).toDateString() === startDate.toDateString()
 
   const date = startDate.toLocaleDateString("en-US", {
+    timeZone,
     weekday: "short",
     month: "short",
     day: "numeric",
   })
 
   const time = startDate.toLocaleTimeString("en-US", {
+    timeZone,
     hour: "numeric",
     minute: "2-digit",
     hour12: true,
@@ -60,6 +62,7 @@ export function formatEventTime(start: Date, end: Date | null) {
   if (!end) return { date, time, range: time }
 
   const endTime = new Date(end).toLocaleTimeString("en-US", {
+    timeZone,
     hour: "numeric",
     minute: "2-digit",
     hour12: true,

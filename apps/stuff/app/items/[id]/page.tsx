@@ -1,4 +1,6 @@
 import { notFound, redirect } from 'next/navigation'
+import { cookies } from 'next/headers'
+import { resolveTimeZone, TZ_COOKIE } from '@life-os/ui'
 import { db } from '@/lib/db'
 import { requireStuffAccess } from '@/lib/access'
 import { getEffectiveLocation } from '@/lib/inventory'
@@ -7,9 +9,9 @@ import StockControl from './stock-control'
 
 export const dynamic = 'force-dynamic'
 
-function formatDate(d: Date | null | undefined) {
+function formatDate(d: Date | null | undefined, timeZone?: string) {
   if (!d) return '—'
-  return new Date(d).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })
+  return new Date(d).toLocaleDateString('en-US', { timeZone, year: 'numeric', month: 'short', day: 'numeric' })
 }
 
 function formatPrice(cents: number | null | undefined) {
@@ -25,6 +27,7 @@ export default async function ItemDetailPage({
   const access = await requireStuffAccess()
   if (!access) redirect('/login')
   const workspaceId = access.workspaceId
+  const tz = resolveTimeZone((await cookies()).get(TZ_COOKIE)?.value)
   const { id } = await params
 
   const [item, places, definitions] = await Promise.all([
@@ -232,7 +235,7 @@ export default async function ItemDetailPage({
       {(item.purchaseDate || item.purchasePrice != null || item.purchaseFrom) && (
         <div style={{ marginBottom: '48px' }}>
           <div style={sectionLabel}>Acquisition</div>
-          {item.purchaseDate && <div style={row}><span style={keyStyle}>Purchased</span><span style={valStyle}>{formatDate(item.purchaseDate)}</span></div>}
+          {item.purchaseDate && <div style={row}><span style={keyStyle}>Purchased</span><span style={valStyle}>{formatDate(item.purchaseDate, tz)}</span></div>}
           {item.purchasePrice != null && <div style={row}><span style={keyStyle}>Price</span><span style={valStyle}>{formatPrice(item.purchasePrice)}</span></div>}
           {item.purchaseFrom && <div style={row}><span style={keyStyle}>From</span><span style={valStyle}>{item.purchaseFrom}</span></div>}
         </div>
@@ -243,7 +246,7 @@ export default async function ItemDetailPage({
         <div style={{ marginBottom: '48px' }}>
           <div style={sectionLabel}>Warranty</div>
           {item.lifetimeWarranty && <div style={row}><span style={keyStyle}>Lifetime</span><span style={valStyle}>Yes</span></div>}
-          {item.warrantyExpires && <div style={row}><span style={keyStyle}>Expires</span><span style={valStyle}>{formatDate(item.warrantyExpires)}</span></div>}
+          {item.warrantyExpires && <div style={row}><span style={keyStyle}>Expires</span><span style={valStyle}>{formatDate(item.warrantyExpires, tz)}</span></div>}
           {item.warrantyDetails && <div style={row}><span style={keyStyle}>Details</span><span style={valStyle}>{item.warrantyDetails}</span></div>}
         </div>
       )}
@@ -339,7 +342,7 @@ export default async function ItemDetailPage({
                       : interaction.type}
                   </span>
                   <span style={{ fontFamily: 'var(--font-body)', fontSize: '11px', color: 'var(--ink-4)' }}>
-                    {formatDate(interaction.timestamp)}
+                    {formatDate(interaction.timestamp, tz)}
                   </span>
                 </div>
                 {interaction.summary && (

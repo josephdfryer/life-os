@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { useTimeZone } from "@life-os/ui"
 
 type Definition = {
   id: string
@@ -225,6 +226,7 @@ function OrderCard({
   onReceived: () => Promise<void>
   onError: (message: string) => void
 }) {
+  const tz = useTimeZone()
   const [quantities, setQuantities] = useState<Record<string, string>>(
     Object.fromEntries(order.lines.map((line) => [line.id, String(Math.max(0, line.orderedQuantity - line.receivedQuantity))])),
   )
@@ -274,7 +276,7 @@ function OrderCard({
       <header>
         <span>
           <strong>{order.orderNumber}</strong>
-          <small>{order.supplierName} · {new Date(order.orderedAt).toLocaleDateString()}</small>
+          <small>{order.supplierName} · {new Date(order.orderedAt).toLocaleDateString("en-US", { timeZone: tz })}</small>
         </span>
         <em className={`order-status is-${order.progress.status}`}>{order.progress.status}</em>
       </header>

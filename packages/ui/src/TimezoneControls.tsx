@@ -3,11 +3,24 @@
 import React, { useEffect, useState } from "react"
 import {
   COMMON_TIME_ZONES,
+  LIFE_OS_DEFAULT_TZ,
   detectBrowserTimeZone,
   isValidTimeZone,
   readTzCookie,
+  resolveTimeZone,
   writeTzCookie,
 } from "./timezone"
+
+// Client-side master timezone. SSR-safe: renders the default on the server and
+// on first client render (so no hydration mismatch), then resolves the shared
+// cookie after mount. Use in client components for display-only date formatting.
+export function useTimeZone(): string {
+  const [tz, setTz] = useState(LIFE_OS_DEFAULT_TZ)
+  useEffect(() => {
+    setTz(resolveTimeZone(readTzCookie()))
+  }, [])
+  return tz
+}
 
 // Silently sets the shared master `tz` cookie from the browser on first visit if
 // it isn't set yet. Mount once in every app's root layout. Never overrides an

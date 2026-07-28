@@ -2,6 +2,7 @@
 
 import Link from "next/link"
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
+import { useTimeZone } from "@life-os/ui"
 import { resolveScannedValue } from "@/lib/inventory-core"
 import ProcurementPanel, { type ProcurementOverview } from "./procurement-panel"
 
@@ -97,6 +98,7 @@ export default function InventoryClient({
   initialOverview: Overview
   initialProcurement: ProcurementOverview
 }) {
+  const tz = useTimeZone()
   const [overview, setOverview] = useState(initialOverview)
   const [tab, setTab] = useState<"overview" | "stock" | "procurement" | "locations" | "scan" | "stocktake">("overview")
   const [notice, setNotice] = useState<string | null>(null)
@@ -444,7 +446,7 @@ export default function InventoryClient({
                 {overview.activeStocktakes.map((event) => (
                   <button key={event.id} type="button" onClick={() => void loadStocktake(event.id)}>
                     <span>{event.name}</span>
-                    <small>{new Date(event.start).toLocaleDateString()}</small>
+                    <small>{new Date(event.start).toLocaleDateString("en-US", { timeZone: tz })}</small>
                   </button>
                 ))}
               </div>

@@ -13,6 +13,7 @@ import {
   type CalendarMode,
 } from "@/lib/calendar"
 import { formatEventTime, formatEventType } from "@/lib/events"
+import { useTimeZone } from "@life-os/ui"
 
 type CalendarEvent = {
   id: string
@@ -31,6 +32,7 @@ type Props = {
 
 export default function CalendarView({ initialMode, initialDate }: Props) {
   const router = useRouter()
+  const tz = useTimeZone()
   const [isPending, startTransition] = useTransition()
   const mode = parseCalendarMode(initialMode)
   const anchor = useMemo(() => parseCalendarDate(initialDate), [initialDate])
@@ -180,7 +182,7 @@ export default function CalendarView({ initialMode, initialDate }: Props) {
               </div>
               <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
                 {dayEvents.slice(0, mode === "month" ? 3 : 8).map((event) => {
-                  const { range: timeRange } = formatEventTime(new Date(event.start), event.end ? new Date(event.end) : null)
+                  const { range: timeRange } = formatEventTime(new Date(event.start), event.end ? new Date(event.end) : null, tz)
                   return (
                     <a
                       key={event.id}

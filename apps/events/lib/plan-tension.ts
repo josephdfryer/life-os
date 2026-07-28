@@ -19,7 +19,7 @@ export type PlanTensionResult = {
   minutesDelta: number | null
 }
 
-export function computePlanTension(event: EventLike, sourcePlan: PlanLike | null): PlanTensionResult {
+export function computePlanTension(event: EventLike, sourcePlan: PlanLike | null, timeZone?: string): PlanTensionResult {
   if (!sourcePlan) {
     return {
       kind: "none",
@@ -56,13 +56,14 @@ export function computePlanTension(event: EventLike, sourcePlan: PlanLike | null
   return {
     kind: "drift",
     headline: "Declared vs actual",
-    detail: `Plan “${sourcePlan.text}” was scheduled for ${formatWhen(sourcePlan.scheduledStart)}, but the event started ${absMinutes} minutes ${direction}.`,
+    detail: `Plan “${sourcePlan.text}” was scheduled for ${formatWhen(sourcePlan.scheduledStart, timeZone)}, but the event started ${absMinutes} minutes ${direction}.`,
     minutesDelta,
   }
 }
 
-export function formatWhen(date: Date) {
+export function formatWhen(date: Date, timeZone?: string) {
   return date.toLocaleString("en-US", {
+    timeZone,
     weekday: "short",
     month: "short",
     day: "numeric",

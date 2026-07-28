@@ -2,9 +2,11 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
+import { useTimeZone } from "@life-os/ui"
 
 export default function ImportUploadClient() {
   const router = useRouter()
+  const tz = useTimeZone()
   const [file, setFile] = useState<File | null>(null)
   const [preview, setPreview] = useState<ImportPreview | null>(null)
   const [busy, setBusy] = useState(false)
@@ -91,7 +93,7 @@ export default function ImportUploadClient() {
           <section style={{ marginTop: "18px", border: "1px solid var(--border)", borderRadius: "16px", padding: "18px", background: "var(--surface)" }}>
             <div style={{ color: "var(--ink-2)", fontSize: "12px" }}>Detected {preview.format.replaceAll("_", " ")}</div>
             <div style={{ fontFamily: "var(--font-display)", fontSize: "28px" }}>Found {preview.totalVisits.toLocaleString()} visits</div>
-            <div style={{ color: "var(--ink-2)", fontSize: "12px" }}>{dateLabel(preview.firstStartedAt)} → {dateLabel(preview.lastStartedAt)}</div>
+            <div style={{ color: "var(--ink-2)", fontSize: "12px" }}>{dateLabel(preview.firstStartedAt, tz)} → {dateLabel(preview.lastStartedAt, tz)}</div>
 
             <div style={{ display: "grid", gridTemplateColumns: "repeat(4, minmax(0, 1fr))", gap: "10px", marginTop: "18px" }}>
               <Metric label="Source records" value={preview.totalRecords.toLocaleString()} />
@@ -162,6 +164,6 @@ function SummaryList({ title, items }: { title: string; items: Array<{ label: st
   )
 }
 
-function dateLabel(value: string | null) {
-  return value ? new Date(value).toLocaleDateString() : "unknown"
+function dateLabel(value: string | null, timeZone?: string) {
+  return value ? new Date(value).toLocaleDateString("en-US", { timeZone }) : "unknown"
 }

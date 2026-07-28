@@ -1,11 +1,14 @@
 import Link from "next/link"
 import { db } from "@/lib/db"
 import { requireWorkspaceAccess } from "@/lib/access"
+import { cookies } from "next/headers"
+import { resolveTimeZone, TZ_COOKIE } from "@life-os/ui"
 
 export const dynamic = "force-dynamic"
 
 export default async function HomePage() {
   const access = await requireWorkspaceAccess()
+  const tz = resolveTimeZone((await cookies()).get(TZ_COOKIE)?.value)
   const people = await db.person.findMany({
     where: { workspaceId: access.workspaceId },
     orderBy: [{ first: "asc" }, { last: "asc" }],
@@ -65,7 +68,7 @@ export default async function HomePage() {
                     id={p.id}
                     name={displayName(p)}
                     headline={p.headline}
-                    meta={`v${snap.version} · confidence ${formatConfidence(snap.confidence)} · ${formatDate(snap.synthesizedAt)}`}
+                    meta={`v${snap.version} · confidence ${formatConfidence(snap.confidence)} · ${formatDate(snap.synthesizedAt, tz)}`}
                     hasTheory
                   />
                 )
@@ -172,6 +175,6 @@ function formatConfidence(c: number | null): string {
   return c == null ? "—" : c.toFixed(2)
 }
 
-function formatDate(d: Date): string {
-  return new Date(d).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })
+function formatDate(d: Date, timeZone?: string): string {
+  return new Date(d).toLocaleDateString("en-US", { timeZone, month: "short", day: "numeric", year: "numeric" })
 }
