@@ -597,12 +597,20 @@ a {
 .dashboard-widget-slot {
   position: relative;
   min-width: 0;
-  transition: opacity 140ms ease, transform 140ms ease;
+  will-change: transform;
 }
 
 .dashboard-widget-slot.is-dragging {
-  opacity: 0.45;
-  transform: scale(0.99);
+  opacity: 0.16;
+}
+
+.dashboard-widget-slot.is-dragging::after {
+  position: absolute;
+  inset: 0;
+  content: "";
+  border: 2px dashed var(--camel);
+  border-radius: var(--radius-lg);
+  pointer-events: none;
 }
 
 .widget-move-controls {
@@ -643,6 +651,11 @@ a {
   color: var(--camel);
   cursor: grab;
   font-size: 16px;
+  touch-action: none;
+}
+
+.widget-move-controls button:first-child:active {
+  cursor: grabbing;
 }
 
 .widget-move-controls button:hover:not(:disabled) {
@@ -653,6 +666,31 @@ a {
 .widget-move-controls button:disabled {
   cursor: default;
   opacity: 0.25;
+}
+
+.widget-drag-outline {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  min-height: 140px;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  color: var(--camel);
+  background: rgba(26, 42, 53, 0.88);
+  border: 2px solid var(--camel);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  cursor: grabbing;
+  font-size: 13px;
+}
+
+.widget-drag-outline span {
+  font-size: 18px;
+}
+
+.widget-drag-outline strong {
+  font-weight: 500;
 }
 
 .reconcile-heading,
