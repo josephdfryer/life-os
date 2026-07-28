@@ -1,6 +1,6 @@
 import { Inter, Newsreader } from "next/font/google"
 import "./globals.css"
-import { LifeOSBar } from "@life-os/ui"
+import { LifeOSBar, TimezoneDetector } from "@life-os/ui"
 
 const inter = Inter({
   subsets: ["latin"],
@@ -22,6 +22,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${inter.variable} ${newsreader.variable}`}>
       <body>
+        <TimezoneDetector />
         <LifeOSBar current="assistant" />
         {children}
       </body>

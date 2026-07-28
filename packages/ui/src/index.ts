@@ -75,5 +75,13 @@ export type { TopNavProps, NavLink } from './TopNav';
 export { LifeOSBar, LIFE_OS_APPS } from './LifeOSBar';
 export type { LifeOSBarProps, LifeOSAppKey, LifeOSAppEntry } from './LifeOSBar';
 
+// Timezone — one master tz across all apps (shared root-domain cookie)
+export {
+  TZ_COOKIE, LIFE_OS_DEFAULT_TZ, COMMON_TIME_ZONES,
+  resolveTimeZone, isValidTimeZone, detectBrowserTimeZone, readTzCookie, writeTzCookie,
+} from './timezone';
+export { TimezoneDetector, TimezonePicker } from './TimezoneControls';
+export type { TimezonePickerProps } from './TimezoneControls';
+
 export { BackLink }     from './BackLink';
 export type { BackLinkProps } from './BackLink';

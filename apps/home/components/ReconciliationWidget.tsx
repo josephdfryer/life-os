@@ -1,21 +1,20 @@
 import { db } from "@life-os/db"
 import ReconciliationCards from "./ReconciliationCards"
+import { reviewDayBounds, HOME_TIME_ZONE } from "@/lib/daily"
 
-export default async function ReconciliationWidget({ workspaceId }: { workspaceId: string }) {
-  const now = new Date()
-  const since = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
+export default async function ReconciliationWidget({ workspaceId, day, tz = HOME_TIME_ZONE }: { workspaceId: string; day: string; tz?: string }) {
+  const { start, end } = reviewDayBounds(day, tz)
   const [plans, places] = await Promise.all([
     db.plan.findMany({
       where: {
         workspaceId,
         externalSource: "google-calendar",
         reconciliationStatus: "pending",
-        scheduledStart: { gte: since, lt: now },
+        scheduledStart: { gte: start, lt: end },
         fulfilledBy: null,
         status: "active",
       },
-      orderBy: { scheduledStart: "desc" },
-      take: 3,
+      orderBy: { scheduledStart: "asc" },
       select: {
         id: true,
         text: true,
@@ -35,7 +34,6 @@ export default async function ReconciliationWidget({ workspaceId }: { workspaceI
     }),
   ])
 
-  if (!plans.length) return null
   return (
     <ReconciliationCards
       plans={plans.map(plan => ({
@@ -50,6 +48,7 @@ export default async function ReconciliationWidget({ workspaceId }: { workspaceI
         })),
       }))}
       places={places}
+      day={day}
     />
   )
 }

@@ -2,7 +2,7 @@ import type { Metadata } from "next"
 import { Inter, Newsreader } from "next/font/google"
 import "./globals.css"
 import Providers from "./providers"
-import { LifeOSBar } from "@life-os/ui"
+import { LifeOSBar, TimezoneDetector } from "@life-os/ui"
 
 const inter = Inter({
   subsets: ["latin"],
@@ -32,6 +32,7 @@ export default function RootLayout({
     <html lang="en" className={`${inter.variable} ${newsreader.variable}`} style={{ height: "100%" }}>
       <body style={{ height: "100%" }}>
         <Providers>
+          <TimezoneDetector />
           <LifeOSBar current="places" />
           {children}
         </Providers>

@@ -5,7 +5,7 @@ import { parseTags, isBirthdayToday, isBirthdayThisWeek, isTimestampToday, daysU
 import { enrichWithAttention } from "@/lib/attention"
 import AttentionCard from "@/components/today/AttentionCard"
 import BirthdayCard from "@/components/today/BirthdayCard"
-import TimezonePicker from "@/components/today/TimezonePicker"
+import { TimezonePicker, resolveTimeZone, TZ_COOKIE } from "@life-os/ui"
 import type { Person } from "@/types"
 import { requireAccess } from "@/server/domain/access"
 
@@ -13,7 +13,7 @@ export const dynamic = "force-dynamic"
 
 export default async function TodayPage() {
   const actor = await requireAccess("people.read")
-  const tz = decodeURIComponent((await cookies()).get("tz")?.value ?? "") || "UTC"
+  const tz = resolveTimeZone((await cookies()).get(TZ_COOKIE)?.value)
   // Only load persons who are relevant to today:
   //   - closeness >= 2 (Friends / Inner Circle) for attention tracking
   //   - OR have a birthday set

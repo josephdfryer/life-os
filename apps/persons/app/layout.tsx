@@ -3,8 +3,7 @@ import { Inter, Newsreader } from "next/font/google"
 import "./globals.css"
 import Header from "@/components/layout/Header"
 import Providers from "./providers"
-import TimezoneDetector from "@/components/TimezoneDetector"
-import { LifeOSBar } from "@life-os/ui"
+import { LifeOSBar, TimezoneDetector } from "@life-os/ui"
 
 const inter = Inter({
   subsets: ["latin"],
