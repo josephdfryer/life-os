@@ -347,7 +347,14 @@ export default function PersonDetailClient({ id, initialData }: { id: string; in
         <EditPersonModal
           person={person}
           onClose={() => setShowEdit(false)}
-          onSaved={() => { setShowEdit(false); load() }}
+          onSaved={(keptId) => {
+            setShowEdit(false)
+            if (keptId && keptId !== id) {
+              router.replace(`/persons/${keptId}`)
+            } else {
+              load()
+            }
+          }}
         />
       )}
       {showLogInteraction && (

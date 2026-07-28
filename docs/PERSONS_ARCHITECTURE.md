@@ -129,7 +129,7 @@ In plain English: the UI does not directly make database decisions. It asks an A
 
 #### Manually merging two People
 
-From a Person's edit dialog, the owner can choose **Merge with another person**, search the workspace's People through the lightweight `GET /api/persons/search` picker endpoint, and select one duplicate. The Person whose dialog is open is always the record that remains. After an explicit confirmation, the UI calls `POST /api/contacts/merge`, which uses the same `mergePersons()` domain command as the deduplication tools.
+From a Person's edit dialog, the owner can choose **Merge with another person**, search the workspace's People through the lightweight `GET /api/persons/search` picker endpoint, and select one duplicate. A second comparison dialog uses `GET /api/persons/merge-preview` to show both records. The owner can swap which Person survives, choose either value field by field, combine both notes, and review the emails, phones, tags, values, Interactions, and Plans that will be combined. Confirmation calls `POST /api/contacts/merge`, using the same field-resolution helpers and `mergePersons()` domain command as the deduplication screen.
 
 The command fills missing profile fields, combines emails, phone numbers, tags, values, and notes, reassigns linked records such as Interactions and Plans, removes the selected duplicate, and writes a `person.merge` audit entry. Both IDs must belong to the current workspace; an ID from another workspace is treated as missing.
 

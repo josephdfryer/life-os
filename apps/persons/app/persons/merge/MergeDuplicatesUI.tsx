@@ -6,76 +6,15 @@ import Link from "next/link"
 import { BackLink, Button, Spinner } from "@life-os/ui"
 import type { Person } from "@/types"
 import type { DupePair } from "@/lib/dedupe"
-
-type Choice = "a" | "b" | "both"
-
-const FIELDS: { key: keyof Person; label: string; multiline?: boolean }[] = [
-  { key: "first",    label: "First name" },
-  { key: "last",     label: "Last name" },
-  { key: "headline", label: "Headline" },
-  { key: "company",  label: "Company" },
-  { key: "location", label: "Location" },
-  { key: "birthday", label: "Birthday" },
-  { key: "closeness",label: "Closeness" },
-  { key: "linkedin",  label: "LinkedIn" },
-  { key: "twitter",   label: "Twitter" },
-  { key: "website",   label: "Website" },
-  { key: "facebook",  label: "Facebook" },
-  { key: "instagram", label: "Instagram" },
-  { key: "notes",    label: "Notes", multiline: true },
-]
+import {
+  buildMergeFields,
+  initialMergeChoices,
+  MERGE_FIELDS,
+  type MergeChoice,
+} from "@/lib/person-merge"
 
 function pairKey(p: DupePair) {
   return `${p.a.id}-${p.b.id}`
-}
-
-function initChoices(a: Person, b: Person): Record<string, Choice> {
-  const out: Record<string, Choice> = {}
-  for (const { key } of FIELDS) {
-    const av = a[key as keyof Person]
-    const bv = b[key as keyof Person]
-    if (key === "notes" && av && bv) {
-      out[key] = "both"
-    } else if (av && !bv) {
-      out[key] = "a"
-    } else if (!av && bv) {
-      out[key] = "b"
-    } else if (key === "closeness") {
-      out[key] = (a.closeness >= b.closeness) ? "a" : "b"
-    } else if (typeof av === "string" && typeof bv === "string") {
-      out[key] = av.length >= bv.length ? "a" : "b"
-    } else {
-      out[key] = "a"
-    }
-  }
-  return out
-}
-
-function buildFields(a: Person, b: Person, choices: Record<string, Choice>) {
-  const fields: Record<string, unknown> = {}
-  for (const { key } of FIELDS) {
-    const av = a[key as keyof Person]
-    const bv = b[key as keyof Person]
-    const c = choices[key] ?? "a"
-    if (key === "notes" && c === "both") {
-      fields[key] = [av, bv].filter(Boolean).join("\n\n---\n\n")
-    } else {
-      fields[key] = c === "a" ? av : bv
-    }
-  }
-  const aTags = Array.isArray(a.tags) ? a.tags : []
-  const bTags = Array.isArray(b.tags) ? b.tags : []
-  fields.tags = [...new Set([...aTags, ...bTags])]
-  const aVals = Array.isArray(a.values) ? a.values : []
-  const bVals = Array.isArray(b.values) ? b.values : []
-  fields.values = [...new Set([...aVals, ...bVals])]
-  const aEmails = Array.isArray(a.emails) ? a.emails : []
-  const bEmails = Array.isArray(b.emails) ? b.emails : []
-  fields.emails = [...new Set([...aEmails, ...bEmails])]
-  const aPhones = Array.isArray(a.phones) ? a.phones : []
-  const bPhones = Array.isArray(b.phones) ? b.phones : []
-  fields.phones = [...new Set([...aPhones, ...bPhones])]
-  return fields
 }
 
 function scoreColor(s: number) {
@@ -100,8 +39,8 @@ export default function MergeDuplicatesUI({ initialPairs }: { initialPairs: Dupe
   const [selectedKey, setSelectedKey] = useState<string | null>(
     initialPairs.length > 0 ? pairKey(initialPairs[0]) : null
   )
-  const [choices, setChoices]     = useState<Record<string, Choice>>(
-    initialPairs.length > 0 ? initChoices(initialPairs[0].a, initialPairs[0].b) : {}
+  const [choices, setChoices]     = useState<Record<string, MergeChoice>>(
+    initialPairs.length > 0 ? initialMergeChoices(initialPairs[0].a, initialPairs[0].b) : {}
   )
   const [search, setSearch]       = useState("")
   const [swapped, setSwapped]     = useState(false)
@@ -120,7 +59,7 @@ export default function MergeDuplicatesUI({ initialPairs }: { initialPairs: Dupe
     setCheckedKeys(new Set())
     const first = initialPairs[0] ?? null
     setSelectedKey(first ? pairKey(first) : null)
-    setChoices(first ? initChoices(first.a, first.b) : {})
+    setChoices(first ? initialMergeChoices(first.a, first.b) : {})
     setSwapped(false)
   }, [initialPairs])
 
@@ -170,13 +109,13 @@ export default function MergeDuplicatesUI({ initialPairs }: { initialPairs: Dupe
   function selectPair(p: DupePair) {
     setSelectedKey(pairKey(p))
     setSwapped(false)
-    setChoices(initChoices(p.a, p.b))
+    setChoices(initialMergeChoices(p.a, p.b))
   }
 
   function swap() {
     setSwapped(s => !s)
     setChoices(prev => {
-      const next: Record<string, Choice> = {}
+      const next: Record<string, MergeChoice> = {}
       for (const [k, v] of Object.entries(prev)) {
         next[k] = v === "a" ? "b" : v === "b" ? "a" : v
       }
@@ -203,7 +142,7 @@ export default function MergeDuplicatesUI({ initialPairs }: { initialPairs: Dupe
     const res = await fetch("/api/contacts/merge", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ keepId: a.id, deleteId: b.id, fields: buildFields(a, b, choices) }),
+      body: JSON.stringify({ keepId: a.id, deleteId: b.id, fields: buildMergeFields(a, b, choices) }),
     })
     if (res.ok) {
       setPairs(prev => prev.filter(p =>
@@ -215,7 +154,7 @@ export default function MergeDuplicatesUI({ initialPairs }: { initialPairs: Dupe
       ) ?? null
       setSelectedKey(next ? pairKey(next) : null)
       setSwapped(false)
-      if (next) setChoices(initChoices(next.a, next.b))
+      if (next) setChoices(initialMergeChoices(next.a, next.b))
     }
     setMerging(false)
   }
@@ -226,7 +165,7 @@ export default function MergeDuplicatesUI({ initialPairs }: { initialPairs: Dupe
     const next = filteredPairs.find(p => pairKey(p) !== selectedKey) ?? null
     setSelectedKey(next ? pairKey(next) : null)
     setSwapped(false)
-    if (next) setChoices(initChoices(next.a, next.b))
+    if (next) setChoices(initialMergeChoices(next.a, next.b))
   }
 
   function toggleFilter(key: FilterKey) {
@@ -241,7 +180,7 @@ export default function MergeDuplicatesUI({ initialPairs }: { initialPairs: Dupe
     const first = base[0] ?? null
     setSelectedKey(first ? pairKey(first) : null)
     setSwapped(false)
-    if (first) setChoices(initChoices(first.a, first.b))
+    if (first) setChoices(initialMergeChoices(first.a, first.b))
   }
 
   function toggleCheck(key: string) {
@@ -288,7 +227,7 @@ export default function MergeDuplicatesUI({ initialPairs }: { initialPairs: Dupe
         const next = remaining[0] ?? null
         setSelectedKey(next ? pairKey(next) : null)
         setSwapped(false)
-        if (next) setChoices(initChoices(next.a, next.b))
+        if (next) setChoices(initialMergeChoices(next.a, next.b))
       }
     } catch (e) {
       console.error("[bulk-merge]", e)
@@ -648,7 +587,7 @@ export default function MergeDuplicatesUI({ initialPairs }: { initialPairs: Dupe
               </div>
 
               <div style={{ maxHeight: "420px", overflowY: "auto" }}>
-                {FIELDS.map(({ key, label, multiline }) => {
+                {MERGE_FIELDS.map(({ key, label, multiline }) => {
                   const av = a[key as keyof Person]
                   const bv = b[key as keyof Person]
                   const aStr = av != null && av !== "" ? String(av) : ""

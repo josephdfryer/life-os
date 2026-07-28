@@ -329,7 +329,7 @@ async function automaticPairPatch(keepId: string, deleteId: string, workspaceId:
 function explicitPatch(fields: Record<string, unknown>) {
   const data: Record<string, unknown> = {}
   const scalars = [
-    "first", "last", "title", "headline", "company",
+    "first", "last", "nickname", "title", "headline", "company",
     "location", "birthday", "closeness", "linkedin", "twitter",
     "website", "facebook", "instagram", "notes", "color", "colorSoft",
   ]

@@ -3,11 +3,12 @@
 import { useEffect, useState } from "react"
 import type { Person } from "@/types"
 import { parseTags } from "@/lib/utils"
+import MergePersonDialog from "./MergePersonDialog"
 
 type Props = {
   person: Person
   onClose: () => void
-  onSaved: () => void
+  onSaved: (keptId?: string) => void
 }
 
 type MergeCandidate = {
@@ -52,7 +53,6 @@ export default function EditPersonModal({ person, onClose, onSaved }: Props) {
   const [mergeResults, setMergeResults] = useState<MergeCandidate[]>([])
   const [mergeCandidate, setMergeCandidate] = useState<MergeCandidate | null>(null)
   const [mergeSearching, setMergeSearching] = useState(false)
-  const [mergeLoading, setMergeLoading] = useState(false)
   const [mergeError, setMergeError] = useState<string | null>(null)
 
   useEffect(() => {
@@ -122,27 +122,6 @@ export default function EditPersonModal({ person, onClose, onSaved }: Props) {
       return
     }
     onSaved()
-  }
-
-  async function handleMerge() {
-    if (!mergeCandidate) return
-    setMergeLoading(true)
-    setMergeError(null)
-    try {
-      const res = await fetch("/api/contacts/merge", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          keepId: person.id,
-          deleteId: mergeCandidate.id,
-        }),
-      })
-      if (!res.ok) throw new Error("Merge failed")
-      onSaved()
-    } catch {
-      setMergeError("Could not merge these people. No records were changed.")
-      setMergeLoading(false)
-    }
   }
 
   return (
@@ -298,23 +277,11 @@ export default function EditPersonModal({ person, onClose, onSaved }: Props) {
                     <button
                       type="button"
                       onClick={() => setMergeCandidate(null)}
-                      disabled={mergeLoading}
                       style={textButtonStyle}
                     >
                       Change
                     </button>
                   </div>
-                  <p style={{ margin: "12px 0", color: "var(--ink-2)", fontSize: "11px", lineHeight: 1.5 }}>
-                    This permanently removes the selected duplicate after moving its information and linked records to {person.first} {person.last}.
-                  </p>
-                  <button
-                    type="button"
-                    onClick={handleMerge}
-                    disabled={mergeLoading}
-                    style={mergeConfirmButtonStyle}
-                  >
-                    {mergeLoading ? "Merging…" : `Merge into ${person.first} ${person.last}`}
-                  </button>
                 </div>
               ) : (
                 <div>
@@ -363,18 +330,26 @@ export default function EditPersonModal({ person, onClose, onSaved }: Props) {
             <button
               type="button"
               onClick={() => setShowMerge(true)}
-              disabled={loading || mergeLoading}
+              disabled={loading}
               style={mergeButtonStyle}
             >
               Merge with another person
             </button>
             <div style={{ display: "flex", gap: "8px" }}>
-              <button type="button" onClick={onClose} disabled={mergeLoading} style={cancelBtnStyle}>Cancel</button>
-              <button type="submit" disabled={loading || mergeLoading} style={submitBtnStyle}>{loading ? "Saving…" : "Save changes"}</button>
+              <button type="button" onClick={onClose} style={cancelBtnStyle}>Cancel</button>
+              <button type="submit" disabled={loading} style={submitBtnStyle}>{loading ? "Saving…" : "Save changes"}</button>
             </div>
           </div>
         </form>
       </div>
+      {mergeCandidate ? (
+        <MergePersonDialog
+          primaryId={person.id}
+          candidateId={mergeCandidate.id}
+          onClose={() => setMergeCandidate(null)}
+          onMerged={keptId => onSaved(keptId)}
+        />
+      ) : null}
     </div>
   )
 }
@@ -569,19 +544,6 @@ const candidateButtonStyle: React.CSSProperties = {
   cursor: "pointer",
   fontFamily: "inherit",
   textAlign: "left",
-}
-
-const mergeConfirmButtonStyle: React.CSSProperties = {
-  width: "100%",
-  padding: "9px 18px",
-  border: "1px solid var(--cognac)",
-  borderRadius: "var(--radius-pill)",
-  background: "var(--cognac)",
-  color: "#fff",
-  cursor: "pointer",
-  fontFamily: "inherit",
-  fontSize: "12px",
-  fontWeight: 500,
 }
 
 const mergeStatusStyle: React.CSSProperties = {
