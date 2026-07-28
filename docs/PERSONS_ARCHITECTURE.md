@@ -127,6 +127,12 @@ sequenceDiagram
 
 In plain English: the UI does not directly make database decisions. It asks an API, the API calls a command, and the command updates the database.
 
+#### Manually merging two People
+
+From a Person's edit dialog, the owner can choose **Merge with another person**, search the workspace's People through the lightweight `GET /api/persons/search` picker endpoint, and select one duplicate. The Person whose dialog is open is always the record that remains. After an explicit confirmation, the UI calls `POST /api/contacts/merge`, which uses the same `mergePersons()` domain command as the deduplication tools.
+
+The command fills missing profile fields, combines emails, phone numbers, tags, values, and notes, reassigns linked records such as Interactions and Plans, removes the selected duplicate, and writes a `person.merge` audit entry. Both IDs must belong to the current workspace; an ID from another workspace is treated as missing.
+
 ### 2. iMessage sync
 
 ```mermaid

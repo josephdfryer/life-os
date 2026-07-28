@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import type { Person } from "@/types"
 import { parseTags } from "@/lib/utils"
 
@@ -8,6 +8,16 @@ type Props = {
   person: Person
   onClose: () => void
   onSaved: () => void
+}
+
+type MergeCandidate = {
+  id: string
+  first: string
+  last: string
+  nickname: string | null
+  company: string | null
+  emails: string[]
+  phones: string[]
 }
 
 export default function EditPersonModal({ person, onClose, onSaved }: Props) {
@@ -37,6 +47,49 @@ export default function EditPersonModal({ person, onClose, onSaved }: Props) {
   )
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [showMerge, setShowMerge] = useState(false)
+  const [mergeQuery, setMergeQuery] = useState("")
+  const [mergeResults, setMergeResults] = useState<MergeCandidate[]>([])
+  const [mergeCandidate, setMergeCandidate] = useState<MergeCandidate | null>(null)
+  const [mergeSearching, setMergeSearching] = useState(false)
+  const [mergeLoading, setMergeLoading] = useState(false)
+  const [mergeError, setMergeError] = useState<string | null>(null)
+
+  useEffect(() => {
+    const query = mergeQuery.trim()
+    if (!showMerge || query.length < 2 || mergeCandidate) {
+      setMergeResults([])
+      setMergeSearching(false)
+      return
+    }
+
+    const controller = new AbortController()
+    const timer = window.setTimeout(async () => {
+      setMergeSearching(true)
+      setMergeError(null)
+      try {
+        const params = new URLSearchParams({
+          q: query,
+          excludeId: person.id,
+        })
+        const res = await fetch(`/api/persons/search?${params}`, { signal: controller.signal })
+        if (!res.ok) throw new Error("Search failed")
+        const data = await res.json() as { persons?: MergeCandidate[] }
+        setMergeResults(data.persons ?? [])
+      } catch (searchError) {
+        if ((searchError as Error).name !== "AbortError") {
+          setMergeError("Could not search people. Please try again.")
+        }
+      } finally {
+        if (!controller.signal.aborted) setMergeSearching(false)
+      }
+    }, 250)
+
+    return () => {
+      window.clearTimeout(timer)
+      controller.abort()
+    }
+  }, [mergeCandidate, mergeQuery, person.id, showMerge])
 
   const set = (k: string, v: string | number) =>
     setForm(f => ({ ...f, [k]: v }))
@@ -69,6 +122,27 @@ export default function EditPersonModal({ person, onClose, onSaved }: Props) {
       return
     }
     onSaved()
+  }
+
+  async function handleMerge() {
+    if (!mergeCandidate) return
+    setMergeLoading(true)
+    setMergeError(null)
+    try {
+      const res = await fetch("/api/contacts/merge", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          keepId: person.id,
+          deleteId: mergeCandidate.id,
+        }),
+      })
+      if (!res.ok) throw new Error("Merge failed")
+      onSaved()
+    } catch {
+      setMergeError("Could not merge these people. No records were changed.")
+      setMergeLoading(false)
+    }
   }
 
   return (
@@ -176,16 +250,141 @@ export default function EditPersonModal({ person, onClose, onSaved }: Props) {
           <Field label="Tags (comma separated)" value={form.tags} onChange={v => set("tags", v)} />
           <Field label="Notes" value={form.notes} onChange={v => set("notes", v)} multiline />
 
+          {showMerge ? (
+            <section
+              aria-labelledby="merge-person-heading"
+              style={{
+                padding: "16px",
+                background: "var(--surface-2)",
+                border: "1px solid var(--border-subtle)",
+                borderRadius: "var(--radius)",
+              }}
+            >
+              <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "16px" }}>
+                <div>
+                  <h3 id="merge-person-heading" style={{ margin: 0, color: "var(--ink)", fontSize: "13px", fontWeight: 500 }}>
+                    Merge with another person
+                  </h3>
+                  <p style={{ margin: "4px 0 12px", color: "var(--ink-3)", fontSize: "11px", lineHeight: 1.5 }}>
+                    {person.first} {person.last} will remain. The other record and its history will be combined into this one.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  aria-label="Close merge search"
+                  onClick={() => {
+                    setShowMerge(false)
+                    setMergeCandidate(null)
+                    setMergeQuery("")
+                    setMergeError(null)
+                  }}
+                  style={iconButtonStyle}
+                >
+                  ×
+                </button>
+              </div>
+
+              {mergeCandidate ? (
+                <div>
+                  <div style={selectedCandidateStyle}>
+                    <div>
+                      <strong style={{ display: "block", color: "var(--ink)", fontFamily: "var(--font-display)", fontSize: "16px", fontWeight: 400 }}>
+                        {mergeCandidate.first} {mergeCandidate.last}
+                      </strong>
+                      <span style={{ color: "var(--ink-3)", fontSize: "11px" }}>
+                        {candidateDetail(mergeCandidate)}
+                      </span>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setMergeCandidate(null)}
+                      disabled={mergeLoading}
+                      style={textButtonStyle}
+                    >
+                      Change
+                    </button>
+                  </div>
+                  <p style={{ margin: "12px 0", color: "var(--ink-2)", fontSize: "11px", lineHeight: 1.5 }}>
+                    This permanently removes the selected duplicate after moving its information and linked records to {person.first} {person.last}.
+                  </p>
+                  <button
+                    type="button"
+                    onClick={handleMerge}
+                    disabled={mergeLoading}
+                    style={mergeConfirmButtonStyle}
+                  >
+                    {mergeLoading ? "Merging…" : `Merge into ${person.first} ${person.last}`}
+                  </button>
+                </div>
+              ) : (
+                <div>
+                  <input
+                    autoFocus
+                    type="search"
+                    value={mergeQuery}
+                    onChange={event => setMergeQuery(event.target.value)}
+                    placeholder="Search by name, email, or company"
+                    aria-label="Search for a person to merge"
+                    style={inputStyle}
+                  />
+                  <div aria-live="polite" style={{ marginTop: "8px" }}>
+                    {mergeSearching ? (
+                      <p style={mergeStatusStyle}>Searching…</p>
+                    ) : mergeQuery.trim().length > 1 && mergeResults.length === 0 && !mergeError ? (
+                      <p style={mergeStatusStyle}>No other people found.</p>
+                    ) : (
+                      mergeResults.map(candidate => (
+                        <button
+                          key={candidate.id}
+                          type="button"
+                          onClick={() => setMergeCandidate(candidate)}
+                          style={candidateButtonStyle}
+                        >
+                          <span style={{ color: "var(--ink)", fontFamily: "var(--font-display)", fontSize: "15px" }}>
+                            {candidate.first} {candidate.last}
+                          </span>
+                          <span style={{ color: "var(--ink-3)", fontSize: "10px" }}>
+                            {candidateDetail(candidate)}
+                          </span>
+                        </button>
+                      ))
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {mergeError && <p role="alert" style={{ color: "var(--attention)", fontSize: "11px", margin: "10px 0 0" }}>{mergeError}</p>}
+            </section>
+          ) : null}
+
           {error && <p style={{ color: "var(--accent)", fontSize: "12px", margin: 0 }}>{error}</p>}
 
-          <div style={{ display: "flex", gap: "8px", justifyContent: "flex-end", marginTop: "4px" }}>
-            <button type="button" onClick={onClose} style={cancelBtnStyle}>Cancel</button>
-            <button type="submit" disabled={loading} style={submitBtnStyle}>{loading ? "Saving…" : "Save Changes"}</button>
+          <div style={{ display: "flex", gap: "12px", alignItems: "center", justifyContent: "space-between", marginTop: "4px" }}>
+            <button
+              type="button"
+              onClick={() => setShowMerge(true)}
+              disabled={loading || mergeLoading}
+              style={mergeButtonStyle}
+            >
+              Merge with another person
+            </button>
+            <div style={{ display: "flex", gap: "8px" }}>
+              <button type="button" onClick={onClose} disabled={mergeLoading} style={cancelBtnStyle}>Cancel</button>
+              <button type="submit" disabled={loading || mergeLoading} style={submitBtnStyle}>{loading ? "Saving…" : "Save changes"}</button>
+            </div>
           </div>
         </form>
       </div>
     </div>
   )
+}
+
+function candidateDetail(candidate: MergeCandidate) {
+  return candidate.nickname
+    || candidate.company
+    || candidate.emails[0]
+    || candidate.phones[0]
+    || "No additional details"
 }
 
 function MultiField({
@@ -313,4 +512,80 @@ const submitBtnStyle: React.CSSProperties = {
   fontFamily: "inherit",
   fontSize: "12px",
   fontWeight: 500,
+}
+
+const mergeButtonStyle: React.CSSProperties = {
+  padding: "8px 0",
+  border: "none",
+  background: "transparent",
+  color: "var(--cognac)",
+  cursor: "pointer",
+  fontFamily: "inherit",
+  fontSize: "11px",
+  textAlign: "left",
+}
+
+const iconButtonStyle: React.CSSProperties = {
+  padding: "0 2px",
+  border: "none",
+  background: "transparent",
+  color: "var(--ink-3)",
+  cursor: "pointer",
+  fontSize: "18px",
+  lineHeight: 1,
+}
+
+const textButtonStyle: React.CSSProperties = {
+  padding: 0,
+  border: "none",
+  background: "transparent",
+  color: "var(--cognac)",
+  cursor: "pointer",
+  fontFamily: "inherit",
+  fontSize: "11px",
+}
+
+const selectedCandidateStyle: React.CSSProperties = {
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "space-between",
+  gap: "12px",
+  padding: "12px",
+  background: "var(--surface)",
+  borderRadius: "var(--radius)",
+  boxShadow: "var(--shadow-sm)",
+}
+
+const candidateButtonStyle: React.CSSProperties = {
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "flex-start",
+  gap: "2px",
+  width: "100%",
+  padding: "10px 12px",
+  border: "none",
+  borderBottom: "1px solid var(--border-subtle)",
+  background: "transparent",
+  cursor: "pointer",
+  fontFamily: "inherit",
+  textAlign: "left",
+}
+
+const mergeConfirmButtonStyle: React.CSSProperties = {
+  width: "100%",
+  padding: "9px 18px",
+  border: "1px solid var(--cognac)",
+  borderRadius: "var(--radius-pill)",
+  background: "var(--cognac)",
+  color: "#fff",
+  cursor: "pointer",
+  fontFamily: "inherit",
+  fontSize: "12px",
+  fontWeight: 500,
+}
+
+const mergeStatusStyle: React.CSSProperties = {
+  margin: "8px 0 0",
+  color: "var(--ink-4)",
+  fontSize: "11px",
 }

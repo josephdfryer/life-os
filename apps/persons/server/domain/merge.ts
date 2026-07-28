@@ -77,7 +77,7 @@ export async function mergePersons(input: PairInput & { fields?: Record<string, 
 
   await db.$transaction(async tx => {
     await applyMerge(tx, input.keepId, input.deleteId, patch, workspaceId)
-  })
+  }, TX_OPTS)
 
   await auditAction({
     actor,
