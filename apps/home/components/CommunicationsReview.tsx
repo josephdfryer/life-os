@@ -1,6 +1,6 @@
 "use client"
 
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 
 type Communication = {
   id: string
@@ -23,14 +23,58 @@ export default function CommunicationsReview({
 }) {
   const [items, setItems] = useState(initialItems)
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
+  const [focusedIndex, setFocusedIndex] = useState(0)
   const [expandedId, setExpandedId] = useState<string | null>(null)
   const [busyId, setBusyId] = useState<string | null>(null)
   const [syncing, setSyncing] = useState(0)
   const [error, setError] = useState("")
   const [notice, setNotice] = useState("")
   const lastCheckedIndex = useRef<number | null>(null)
+  const focusedRowRef = useRef<HTMLElement | null>(null)
 
   const allSelected = items.length > 0 && items.every(item => selectedIds.has(item.id))
+
+  useEffect(() => {
+    function handleShortcut(event: KeyboardEvent) {
+      const target = event.target as HTMLElement
+      if (
+        target.tagName === "INPUT"
+        || target.tagName === "TEXTAREA"
+        || target.tagName === "SELECT"
+        || target.isContentEditable
+      ) return
+      if (items.length === 0) return
+
+      const currentIndex = Math.min(focusedIndex, items.length - 1)
+      const focused = items[currentIndex]
+      if (event.key === "j") {
+        event.preventDefault()
+        setFocusedIndex(index => Math.min(index + 1, items.length - 1))
+      } else if (event.key === "k") {
+        event.preventDefault()
+        setFocusedIndex(index => Math.max(index - 1, 0))
+      } else if (event.key === "x") {
+        event.preventDefault()
+        toggleSelect(focused.id)
+      } else if (event.key === "e") {
+        event.preventDefault()
+        if (selectedIds.size > 0) void dismissSelected()
+        else void resolve(focused.id, "dismiss")
+      } else if (event.key === "Enter") {
+        event.preventDefault()
+        setExpandedId(current => current === focused.id ? null : focused.id)
+      } else if (event.key === "Escape") {
+        setExpandedId(null)
+      }
+    }
+
+    window.addEventListener("keydown", handleShortcut)
+    return () => window.removeEventListener("keydown", handleShortcut)
+  }, [focusedIndex, items, selectedIds])
+
+  useEffect(() => {
+    focusedRowRef.current?.scrollIntoView({ block: "nearest" })
+  }, [focusedIndex])
 
   function toggleSelect(id: string, shiftKey = false) {
     const index = items.findIndex(item => item.id === id)
@@ -140,7 +184,10 @@ export default function CommunicationsReview({
           <div className="quick-capture-eyebrow">Messages & email</div>
           <h2 id="communications-heading">Review communications</h2>
         </div>
-        <span>{items.length} here</span>
+        <div className="communications-heading-meta">
+          <span>j/k move · x select · e dismiss · ⏎ open</span>
+          <span>{items.length} here</span>
+        </div>
       </div>
       {items.length ? (
         <>
@@ -163,25 +210,36 @@ export default function CommunicationsReview({
             {syncing > 0 ? <span className="communications-syncing">syncing…</span> : null}
           </div>
           <div className="communications-list">
-            {items.map(item => {
+            {items.map((item, index) => {
               const expanded = expandedId === item.id
               const checked = selectedIds.has(item.id)
+              const focused = index === Math.min(focusedIndex, items.length - 1)
               const canAccept = Boolean(item.candidatePersonId)
               return (
-                <article key={item.id} className={`communication-card${checked ? " is-selected" : ""}`}>
+                <article
+                  key={item.id}
+                  ref={focused ? focusedRowRef : undefined}
+                  className={`communication-card${checked ? " is-selected" : ""}${focused ? " is-focused" : ""}`}
+                >
                   <div className="communication-row">
                     <input
                       type="checkbox"
                       checked={checked}
                       onChange={() => {}}
-                      onClick={event => toggleSelect(item.id, event.shiftKey)}
+                      onClick={event => {
+                        setFocusedIndex(index)
+                        toggleSelect(item.id, event.shiftKey)
+                      }}
                       aria-label={`Select communication from ${item.contact}`}
                     />
                     <button
                       type="button"
                       className="communication-summary"
                       aria-expanded={expanded}
-                      onClick={() => setExpandedId(current => current === item.id ? null : item.id)}
+                      onClick={() => {
+                        setFocusedIndex(index)
+                        setExpandedId(current => current === item.id ? null : item.id)
+                      }}
                     >
                       <span className={`communication-source source-${item.source}`}>{sourceLabel(item.source)}</span>
                       <span className="communication-person">

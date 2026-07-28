@@ -11,7 +11,6 @@ import NudgesWidget from '../components/NudgesWidget'
 import PrepareWidget from '../components/PrepareWidget'
 import QuickCapture from '../components/QuickCapture'
 import ReconciliationWidget from '../components/ReconciliationWidget'
-import BoundedReviewWidget from '../components/BoundedReviewWidget'
 import EveningCheckIn from '../components/EveningCheckIn'
 import WeeklyReview from '../components/WeeklyReview'
 import CommunicationsReviewWidget from '../components/CommunicationsReviewWidget'
@@ -135,9 +134,6 @@ export default async function HomePage({
 
           {/* Right column */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
-            <Suspense fallback={<WidgetSkeleton />}>
-              <BoundedReviewWidget workspaceId={workspaceId} />
-            </Suspense>
             <Suspense fallback={<WidgetSkeleton />}>
               <NudgesWidget workspaceId={workspaceId} personsUrl={personsUrl} />
             </Suspense>
