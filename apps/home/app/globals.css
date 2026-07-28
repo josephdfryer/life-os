@@ -580,6 +580,81 @@ a {
   margin-top: 18px;
 }
 
+.widget-customize-hint {
+  margin: 0 0 10px;
+  color: var(--ink-4);
+  font-size: 11px;
+  text-align: right;
+}
+
+.dashboard-widget-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 520px), 1fr));
+  gap: 32px;
+  align-items: start;
+}
+
+.dashboard-widget-slot {
+  position: relative;
+  min-width: 0;
+  transition: opacity 140ms ease, transform 140ms ease;
+}
+
+.dashboard-widget-slot.is-dragging {
+  opacity: 0.45;
+  transform: scale(0.99);
+}
+
+.widget-move-controls {
+  position: absolute;
+  z-index: 2;
+  top: 8px;
+  right: 8px;
+  display: flex;
+  gap: 3px;
+  padding: 3px;
+  opacity: 0;
+  background: rgba(26, 42, 53, 0.92);
+  border: 1px solid rgba(196, 165, 116, 0.22);
+  border-radius: var(--radius-pill);
+  transition: opacity 120ms ease;
+}
+
+.dashboard-widget-slot:hover .widget-move-controls,
+.dashboard-widget-slot:focus-within .widget-move-controls {
+  opacity: 1;
+}
+
+.widget-move-controls button {
+  display: grid;
+  width: 26px;
+  height: 26px;
+  place-items: center;
+  padding: 0;
+  color: var(--ink-3);
+  background: transparent;
+  border: 0;
+  border-radius: 50%;
+  cursor: pointer;
+  font: inherit;
+}
+
+.widget-move-controls button:first-child {
+  color: var(--camel);
+  cursor: grab;
+  font-size: 16px;
+}
+
+.widget-move-controls button:hover:not(:disabled) {
+  color: var(--ink);
+  background: rgba(196, 165, 116, 0.14);
+}
+
+.widget-move-controls button:disabled {
+  cursor: default;
+  opacity: 0.25;
+}
+
 .reconcile-heading,
 .reconcile-summary,
 .reconcile-actions {

@@ -1,4 +1,5 @@
 import { db } from "@life-os/db"
+import { groupCommunications } from "@/lib/communication-groups"
 import CommunicationsReview from "./CommunicationsReview"
 
 export default async function CommunicationsReviewWidget({
@@ -16,7 +17,7 @@ export default async function CommunicationsReviewWidget({
       source: { in: ["imessage", "gmail"] },
     },
     orderBy: [{ priority: "asc" }, { timestamp: "desc" }],
-    take: 12,
+    take: 60,
     select: {
       id: true,
       source: true,
@@ -27,27 +28,17 @@ export default async function CommunicationsReviewWidget({
       body: true,
       timestamp: true,
       direction: true,
+      priority: true,
       candidatePersonId: true,
       candidatePerson: { select: { first: true, last: true } },
     },
   })
+  const groups = groupCommunications(rows).slice(0, 12)
 
   return (
     <CommunicationsReview
       personsUrl={personsUrl}
-      initialItems={rows.map(row => ({
-        id: row.id,
-        source: row.source,
-        contact: row.contactName || row.contactEmail || row.contactPhone || "Unknown sender",
-        summary: row.summary || row.body || "No preview available",
-        body: row.body,
-        timestamp: row.timestamp.toISOString(),
-        direction: row.direction,
-        candidatePersonId: row.candidatePersonId,
-        candidatePersonName: row.candidatePerson
-          ? `${row.candidatePerson.first} ${row.candidatePerson.last}`.trim()
-          : null,
-      }))}
+      initialItems={groups}
     />
   )
 }

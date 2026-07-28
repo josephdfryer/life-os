@@ -3,7 +3,7 @@ import { redirect } from 'next/navigation'
 import { cookies } from 'next/headers'
 import { auth } from '../auth'
 import { db } from '@life-os/db'
-import { lifeOsAppUrl } from '@life-os/auth'
+import { LIFE_OS_APP_URLS, lifeOsAppUrl } from '@life-os/auth'
 import { resolveTimeZone, TZ_COOKIE, TimezonePicker } from '@life-os/ui'
 import ScheduleWidget from '../components/ScheduleWidget'
 import ActionItemsWidget from '../components/ActionItemsWidget'
@@ -15,6 +15,7 @@ import EveningCheckIn from '../components/EveningCheckIn'
 import WeeklyReview from '../components/WeeklyReview'
 import CommunicationsReviewWidget from '../components/CommunicationsReviewWidget'
 import DayReviewNavigation from '../components/DayReviewNavigation'
+import CustomizableWidgetGrid from '../components/CustomizableWidgetGrid'
 import { greetingForHour, parseReviewDay } from '@/lib/daily'
 
 export const dynamic = 'force-dynamic'
@@ -59,7 +60,9 @@ export default async function HomePage({
     day: 'numeric',
   })
 
-  const personsUrl = lifeOsAppUrl('persons', 'http://localhost:3000')
+  const personsUrl = process.env.NODE_ENV === 'production'
+    ? LIFE_OS_APP_URLS.persons
+    : lifeOsAppUrl('persons', 'http://localhost:3000')
   const { day: requestedDay } = await searchParams
   const reviewDay = parseReviewDay(requestedDay, today, tz)
 
@@ -111,34 +114,28 @@ export default async function HomePage({
           <CommunicationsReviewWidget workspaceId={workspaceId} personsUrl={personsUrl} />
         </Suspense>
 
-        {/* Widgets grid */}
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 520px), 1fr))',
-            gap: '32px',
-          }}
-        >
-          {/* Left column */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
+        <CustomizableWidgetGrid
+          schedule={
             <Suspense fallback={<WidgetSkeleton />}>
               <ScheduleWidget workspaceId={workspaceId} />
             </Suspense>
+          }
+          prepare={
             <Suspense fallback={<WidgetSkeleton />}>
               <PrepareWidget workspaceId={workspaceId} />
             </Suspense>
+          }
+          commitments={
             <Suspense fallback={<WidgetSkeleton />}>
               <ActionItemsWidget workspaceId={workspaceId} personsUrl={personsUrl} />
             </Suspense>
-          </div>
-
-          {/* Right column */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
+          }
+          nudges={
             <Suspense fallback={<WidgetSkeleton />}>
               <NudgesWidget workspaceId={workspaceId} personsUrl={personsUrl} />
             </Suspense>
-          </div>
-        </div>
+          }
+        />
 
         {hourInTz >= 17 && <EveningCheckIn />}
         <Suspense fallback={<WidgetSkeleton />}>

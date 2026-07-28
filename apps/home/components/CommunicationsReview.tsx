@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react"
 
 type Communication = {
   id: string
+  ids: string[]
   source: string
   contact: string
   summary: string
@@ -12,6 +13,8 @@ type Communication = {
   direction: string | null
   candidatePersonId: string | null
   candidatePersonName: string | null
+  messageCount: number
+  priority: number
 }
 
 export default function CommunicationsReview({
@@ -59,7 +62,7 @@ export default function CommunicationsReview({
       } else if (event.key === "e") {
         event.preventDefault()
         if (selectedIds.size > 0) void dismissSelected()
-        else void resolve(focused.id, "dismiss")
+        else void resolve(focused, "dismiss")
       } else if (event.key === "Enter") {
         event.preventDefault()
         setExpandedId(current => current === focused.id ? null : focused.id)
@@ -115,7 +118,7 @@ export default function CommunicationsReview({
   }
 
   async function dismissSelected() {
-    const ids = items.filter(item => selectedIds.has(item.id)).map(item => item.id)
+    const ids = items.filter(item => selectedIds.has(item.id)).flatMap(item => item.ids)
     if (ids.length === 0) return
 
     const dismissed = items.filter(item => selectedIds.has(item.id))
@@ -150,26 +153,38 @@ export default function CommunicationsReview({
     }
   }
 
-  async function resolve(id: string, action: "accept" | "dismiss") {
+  async function resolve(item: Communication, action: "accept" | "dismiss") {
     if (busyId) return
-    setBusyId(id)
+    setBusyId(item.id)
     setError("")
     setNotice("")
     try {
-      const response = await fetch(`/api/communications/${id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action }),
-      })
-      const body = await response.json().catch(() => null) as { error?: string } | null
-      if (!response.ok) throw new Error(body?.error || "Could not review this communication")
-      setItems(current => current.filter(item => item.id !== id))
+      if (action === "dismiss" && item.ids.length > 1) {
+        const response = await fetch("/api/communications/bulk", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ action, ids: item.ids }),
+        })
+        const body = await response.json().catch(() => null) as { error?: string } | null
+        if (!response.ok) throw new Error(body?.error || "Could not dismiss these communications")
+      } else {
+        for (const id of item.ids) {
+          const response = await fetch(`/api/communications/${id}`, {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ action }),
+          })
+          const body = await response.json().catch(() => null) as { error?: string } | null
+          if (!response.ok) throw new Error(body?.error || "Could not review this communication")
+        }
+      }
+      setItems(current => current.filter(currentItem => currentItem.id !== item.id))
       setSelectedIds(current => {
         const next = new Set(current)
-        next.delete(id)
+        next.delete(item.id)
         return next
       })
-      setExpandedId(current => current === id ? null : current)
+      setExpandedId(current => current === item.id ? null : current)
     } catch (reviewError) {
       setError(reviewError instanceof Error ? reviewError.message : "Could not review this communication")
     } finally {
@@ -259,14 +274,14 @@ export default function CommunicationsReview({
                             type="button"
                             className="capture-submit"
                             disabled={busyId === item.id}
-                            onClick={() => resolve(item.id, "accept")}
+                            onClick={() => resolve(item, "accept")}
                           >
                             Add to {item.candidatePersonName}
                           </button>
                         ) : (
                           <a href={`${personsUrl}/inbox`}>Choose a Person in Persons</a>
                         )}
-                        <button type="button" disabled={busyId === item.id} onClick={() => resolve(item.id, "dismiss")}>
+                        <button type="button" disabled={busyId === item.id} onClick={() => resolve(item, "dismiss")}>
                           Dismiss
                         </button>
                       </div>
