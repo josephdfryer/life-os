@@ -15,23 +15,24 @@ type Plan = {
 export default function ReconciliationCards({
   plans: initialPlans,
   places,
+  day,
 }: {
   plans: Plan[]
   places: Array<{ id: string; name: string }>
+  day: string
 }) {
   const [plans, setPlans] = useState(initialPlans)
-  if (!plans.length) return null
 
   return (
     <section className="reconcile-widget" aria-labelledby="reconcile-heading">
       <div className="reconcile-heading">
         <div>
-          <div className="quick-capture-eyebrow">Recently ended</div>
+          <div className="quick-capture-eyebrow">{formatDay(day)}</div>
           <h2 id="reconcile-heading">Did this happen?</h2>
         </div>
         <span>{plans.length} to review</span>
       </div>
-      <div className="reconcile-list">
+      {plans.length ? <div className="reconcile-list">
         {plans.map(plan => (
           <ReconciliationCard
             key={plan.id}
@@ -40,9 +41,17 @@ export default function ReconciliationCards({
             onResolved={() => setPlans(current => current.filter(item => item.id !== plan.id))}
           />
         ))}
-      </div>
+      </div> : <div className="capture-analysis-status">No calendar Plans need confirmation for this day.</div>}
     </section>
   )
+}
+
+function formatDay(value: string) {
+  return new Date(`${value}T12:00:00`).toLocaleDateString("en-US", {
+    weekday: "long",
+    month: "long",
+    day: "numeric",
+  })
 }
 
 function ReconciliationCard({

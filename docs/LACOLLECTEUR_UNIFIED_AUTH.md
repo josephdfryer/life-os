@@ -16,7 +16,7 @@ Do not switch to database-backed Auth.js sessions for this phase. That path is s
 | App | Vercel project | Custom domain |
 | --- | --- | --- |
 | Home launcher | `life-os-home` | `home.lacollecteur.com` |
-| Persons | `persons` | `people.lacollecteur.com` |
+| Persons | `persons` | `persons.lacollecteur.com` |
 | Places | `life-os-places` | `places.lacollecteur.com` |
 | Stuff | `life-os-stuff` | `stuff.lacollecteur.com` |
 | Events | `life-os-events` | `events.lacollecteur.com` |
@@ -30,7 +30,7 @@ Do not switch to database-backed Auth.js sessions for this phase. That path is s
 Completed in Vercel:
 
 - `home.lacollecteur.com` added to `life-os-home`
-- `people.lacollecteur.com` added to `persons`
+- `persons.lacollecteur.com` added to `persons`
 - `places.lacollecteur.com` added to `life-os-places`
 - `stuff.lacollecteur.com` added to `life-os-stuff`
 - `assistant.lacollecteur.com` added to `life-os-assistant`
@@ -87,7 +87,7 @@ The shared cookie only works if all apps use the same session cookie domain and 
 Set app URLs for the Home launcher. The code now defaults to these values in production, but setting them explicitly in Vercel keeps the deployed environment self-documenting:
 
 ```text
-NEXT_PUBLIC_PERSONS_URL=https://people.lacollecteur.com
+NEXT_PUBLIC_PERSONS_URL=https://persons.lacollecteur.com
 NEXT_PUBLIC_PLACES_URL=https://places.lacollecteur.com
 NEXT_PUBLIC_STUFF_URL=https://stuff.lacollecteur.com
 NEXT_PUBLIC_CONTEXT_URL=https://context.lacollecteur.com
@@ -97,8 +97,8 @@ NEXT_PUBLIC_THEORY_URL=https://context.lacollecteur.com
 For app-specific OAuth helpers in Persons, set the app's own canonical URL:
 
 ```text
-AUTH_URL=https://people.lacollecteur.com
-NEXTAUTH_URL=https://people.lacollecteur.com
+AUTH_URL=https://persons.lacollecteur.com
+NEXTAUTH_URL=https://persons.lacollecteur.com
 ```
 
 For other apps, `trustHost: true` should infer the host from the request. Setting `AUTH_URL` / `NEXTAUTH_URL` per app is still acceptable if a helper needs absolute URLs.
@@ -109,7 +109,7 @@ Add these authorized redirect URIs to the Google OAuth client used by Life OS:
 
 ```text
 https://home.lacollecteur.com/api/auth/callback/google
-https://people.lacollecteur.com/api/auth/callback/google
+https://persons.lacollecteur.com/api/auth/callback/google
 https://places.lacollecteur.com/api/auth/callback/google
 https://stuff.lacollecteur.com/api/auth/callback/google
 https://context.lacollecteur.com/api/auth/callback/google
@@ -130,7 +130,7 @@ vercel domains inspect home.lacollecteur.com
 Repeat for:
 
 ```text
-people.lacollecteur.com      persons
+persons.lacollecteur.com     persons
 places.lacollecteur.com      life-os-places
 stuff.lacollecteur.com       life-os-stuff
 assistant.lacollecteur.com   life-os-assistant
@@ -145,7 +145,7 @@ The root `.vercel/project.json` is currently linked to `persons`. This repo has 
 
    ```bash
    dig +short A home.lacollecteur.com
-   dig +short A people.lacollecteur.com
+   dig +short A persons.lacollecteur.com
    dig +short A places.lacollecteur.com
    dig +short A stuff.lacollecteur.com
    dig +short A context.lacollecteur.com
@@ -161,7 +161,7 @@ The root `.vercel/project.json` is currently linked to `persons`. This repo has 
 
 4. In browser devtools, confirm an `authjs.session-token` cookie exists for `.lacollecteur.com`.
 
-5. Open another app, for example `https://people.lacollecteur.com`, and confirm it renders without another login.
+5. Open another app, for example `https://persons.lacollecteur.com`, and confirm it renders without another login.
 
 6. Sign out and verify other apps require login after reload.
 

@@ -105,7 +105,14 @@ export const ModelName = {
   TheorySnapshotSource: 'TheorySnapshotSource',
   StateDefinition: 'StateDefinition',
   State: 'State',
-  AssistantMessage: 'AssistantMessage'
+  AssistantMessage: 'AssistantMessage',
+  LevelUpProfile: 'LevelUpProfile',
+  LevelUpTestResult: 'LevelUpTestResult',
+  LevelUpCombine: 'LevelUpCombine',
+  LevelUpRatingSnapshot: 'LevelUpRatingSnapshot',
+  LevelUpTrainingSet: 'LevelUpTrainingSet',
+  LevelUpBadgeUnlock: 'LevelUpBadgeUnlock',
+  LevelUpTargetBuild: 'LevelUpTargetBuild'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1051,6 +1058,119 @@ export const AssistantMessageScalarFieldEnum = {
 } as const
 
 export type AssistantMessageScalarFieldEnum = (typeof AssistantMessageScalarFieldEnum)[keyof typeof AssistantMessageScalarFieldEnum]
+
+
+export const LevelUpProfileScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  birthDate: 'birthDate',
+  sex: 'sex',
+  bodyweightKg: 'bodyweightKg',
+  heightCm: 'heightCm',
+  standingReachCm: 'standingReachCm',
+  primaryBuild: 'primaryBuild',
+  coldStartCompletedAt: 'coldStartCompletedAt'
+} as const
+
+export type LevelUpProfileScalarFieldEnum = (typeof LevelUpProfileScalarFieldEnum)[keyof typeof LevelUpProfileScalarFieldEnum]
+
+
+export const LevelUpTestResultScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  createdAt: 'createdAt',
+  measuredAt: 'measuredAt',
+  testKey: 'testKey',
+  value: 'value',
+  bodyweightKg: 'bodyweightKg',
+  populationSource: 'populationSource',
+  source: 'source',
+  protocolFlags: 'protocolFlags',
+  context: 'context',
+  deviceFingerprint: 'deviceFingerprint',
+  combineId: 'combineId'
+} as const
+
+export type LevelUpTestResultScalarFieldEnum = (typeof LevelUpTestResultScalarFieldEnum)[keyof typeof LevelUpTestResultScalarFieldEnum]
+
+
+export const LevelUpCombineScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  createdAt: 'createdAt',
+  startedAt: 'startedAt',
+  completedAt: 'completedAt',
+  label: 'label',
+  notes: 'notes',
+  block: 'block'
+} as const
+
+export type LevelUpCombineScalarFieldEnum = (typeof LevelUpCombineScalarFieldEnum)[keyof typeof LevelUpCombineScalarFieldEnum]
+
+
+export const LevelUpRatingSnapshotScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  createdAt: 'createdAt',
+  computedAt: 'computedAt',
+  combineId: 'combineId',
+  engineVersion: 'engineVersion',
+  ovr: 'ovr',
+  ratings: 'ratings',
+  subRatings: 'subRatings',
+  buildOvrs: 'buildOvrs',
+  badges: 'badges',
+  caps: 'caps'
+} as const
+
+export type LevelUpRatingSnapshotScalarFieldEnum = (typeof LevelUpRatingSnapshotScalarFieldEnum)[keyof typeof LevelUpRatingSnapshotScalarFieldEnum]
+
+
+export const LevelUpTrainingSetScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  createdAt: 'createdAt',
+  performedAt: 'performedAt',
+  sessionId: 'sessionId',
+  exerciseKey: 'exerciseKey',
+  reps: 'reps',
+  loadKg: 'loadKg',
+  bodyweightKg: 'bodyweightKg',
+  rank: 'rank',
+  rankLetter: 'rankLetter',
+  balanceResidual: 'balanceResidual',
+  isPr: 'isPr'
+} as const
+
+export type LevelUpTrainingSetScalarFieldEnum = (typeof LevelUpTrainingSetScalarFieldEnum)[keyof typeof LevelUpTrainingSetScalarFieldEnum]
+
+
+export const LevelUpBadgeUnlockScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  createdAt: 'createdAt',
+  unlockedAt: 'unlockedAt',
+  badgeKey: 'badgeKey',
+  tier: 'tier'
+} as const
+
+export type LevelUpBadgeUnlockScalarFieldEnum = (typeof LevelUpBadgeUnlockScalarFieldEnum)[keyof typeof LevelUpBadgeUnlockScalarFieldEnum]
+
+
+export const LevelUpTargetBuildScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  createdAt: 'createdAt',
+  buildKey: 'buildKey',
+  label: 'label',
+  targets: 'targets',
+  status: 'status',
+  achievedAt: 'achievedAt'
+} as const
+
+export type LevelUpTargetBuildScalarFieldEnum = (typeof LevelUpTargetBuildScalarFieldEnum)[keyof typeof LevelUpTargetBuildScalarFieldEnum]
 
 
 export const SortOrder = {

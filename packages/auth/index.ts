@@ -13,6 +13,7 @@ export const LIFE_OS_APP_URLS = {
   events: `https://events.${LIFE_OS_ROOT_DOMAIN}`,
   context: `https://context.${LIFE_OS_ROOT_DOMAIN}`,
   assistant: `https://assistant.${LIFE_OS_ROOT_DOMAIN}`,
+  levelUp: `https://level-up.${LIFE_OS_ROOT_DOMAIN}`,
 } as const
 
 export type LifeOsApp = keyof typeof LIFE_OS_APP_URLS

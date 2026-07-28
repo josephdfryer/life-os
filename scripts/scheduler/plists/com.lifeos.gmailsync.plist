@@ -9,7 +9,7 @@
   <array>
     <string>/bin/zsh</string>
     <string>-c</string>
-    <string>KEY=$(sed -n 's/^API_KEY="\{0,1\}\([^"]*\)"\{0,1\}$/\1/p' LIFE_OS_ROOT/apps/persons/.env | head -1); curl -fsS -X POST -H "X-Api-Key: $KEY" --max-time 300 https://people.lacollecteur.com/api/v1/gmail/sync</string>
+    <string>KEY=$(sed -n 's/^API_KEY="\{0,1\}\([^"]*\)"\{0,1\}$/\1/p' LIFE_OS_ROOT/apps/persons/.env | head -1); curl -fsS -X POST -H "X-Api-Key: $KEY" --max-time 300 https://persons.lacollecteur.com/api/v1/gmail/sync</string>
   </array>
 
   <key>WorkingDirectory</key>

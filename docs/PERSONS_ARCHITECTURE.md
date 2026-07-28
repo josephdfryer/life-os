@@ -127,6 +127,8 @@ sequenceDiagram
 
 In plain English: the UI does not directly make database decisions. It asks an API, the API calls a command, and the command updates the database.
 
+The Home app also provides a bounded communications-review surface. It reads pending iMessage and Gmail records from the same `StagedInteraction` inbox and mirrors the Persons Inbox selection model: the owner can select one item, shift-select a range, select all, clear the selection, and dismiss the selection as one optimistic bulk action. The owner can also expand a single item, accept a confidently matched communication, or dismiss it without navigating into Persons. Home's workspace-scoped `/api/communications/bulk` route only dismisses still-pending communication records and writes the same inbox audit entry for every item it changes. Accepting preserves the existing source/day aggregation convention for `Interaction` records. Items without a Person match still open the full Persons inbox for identity resolution; Home never invents a Person.
+
 #### Manually merging two People
 
 From a Person's edit dialog, the owner can choose **Merge with another person**, search the workspace's People through the lightweight `GET /api/persons/search` picker endpoint, and select one duplicate. A second comparison dialog uses `GET /api/persons/merge-preview` to show both records. The owner can swap which Person survives, choose either value field by field, combine both notes, and review the emails, phones, tags, values, Interactions, and Plans that will be combined. Confirmation calls `POST /api/contacts/merge`, using the same field-resolution helpers and `mergePersons()` domain command as the deduplication screen.

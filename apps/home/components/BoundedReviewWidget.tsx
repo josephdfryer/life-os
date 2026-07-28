@@ -2,13 +2,7 @@ import { lifeOsAppUrl } from "@life-os/auth"
 import { db } from "@life-os/db"
 
 export default async function BoundedReviewWidget({ workspaceId }: { workspaceId: string }) {
-  const [communications, visits, noteSuggestions] = await Promise.all([
-    db.stagedInteraction.findMany({
-      where: { workspaceId, status: { in: ["pending", "blocked"] }, type: { not: "financial" } },
-      orderBy: [{ priority: "asc" }, { createdAt: "asc" }],
-      take: 5,
-      select: { id: true, source: true, summary: true, contactName: true, matchReason: true },
-    }),
+  const [visits, noteSuggestions] = await Promise.all([
     db.importStagedVisit.findMany({
       where: { workspaceId, status: "pending" },
       orderBy: [{ confidence: "desc" }, { startedAt: "desc" }],
@@ -22,7 +16,6 @@ export default async function BoundedReviewWidget({ workspaceId }: { workspaceId
       select: { id: true, kind: true, title: true, confidence: true },
     }),
   ])
-  const personsUrl = lifeOsAppUrl("persons", "http://localhost:3000")
   const placesUrl = lifeOsAppUrl("places", "http://localhost:3002")
   const rows = [
     ...noteSuggestions.map(item => ({
@@ -33,21 +26,13 @@ export default async function BoundedReviewWidget({ workspaceId }: { workspaceId
       href: "/#quick-capture",
       priority: 0,
     })),
-    ...communications.map(item => ({
-      key: `communication-${item.id}`,
-      label: item.source,
-      title: item.contactName || item.summary || "Unmatched communication",
-      detail: item.matchReason || "Needs a Person match",
-      href: `${personsUrl}/inbox`,
-      priority: 1,
-    })),
     ...visits.map(item => ({
       key: `visit-${item.id}`,
       label: "Place visit",
       title: item.placeName || "Unresolved visit",
       detail: `${item.startedAt.toLocaleDateString()} · ${Math.round(item.confidence * 100)}% confidence`,
       href: `${placesUrl}/places/import/${item.importJobId}/review`,
-      priority: 2,
+      priority: 1,
     })),
   ].sort((a, b) => a.priority - b.priority).slice(0, 5)
 

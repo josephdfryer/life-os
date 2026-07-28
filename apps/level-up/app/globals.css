@@ -1,0 +1,556 @@
+/* ═══════════════════════════════════════════════════════════
+   WARM CONCRETE — the design language of Level Up (spec Part 11)
+
+   Steal 2K's information architecture; reject its visual language entirely.
+   Dark, gridded, no gradients, no rounded corners, one vermillion accent.
+   Cormorant Garamond for display numbers, IBM Plex Mono for labels.
+   A 78 in large Cormorant on #1E1C18 reads like a precision instrument, not a
+   video game — which is the exact credibility the measurement science buys.
+
+   Rules the whole app obeys:
+   • No progress bars, no radial gauges, no color-coded heat.
+   • Numbers and 1px rules only.
+   • Vermillion (#C4522A) is reserved for deltas and locked-cap warnings, so the
+     eye learns vermillion means "something changed or something is gated."
+   • Confidence bands render as a thin grey rule beneath the number.
+   ═══════════════════════════════════════════════════════════ */
+
+:root {
+  --concrete:        #1E1C18;
+  --concrete-raised: #26231F;
+  --concrete-sunk:   #191713;
+  --line:            #35302A;
+  --line-strong:     #4A443B;
+  --ink:             #E9E3D7;
+  --ink-dim:         #A79E8E;
+  --ink-faint:       #6E6659;
+  --vermillion:      #C4522A;
+  --vermillion-dim:  #8f3d20;
+  --gold:            #B8925A;
+
+  --font-display: var(--font-cormorant), "Cormorant Garamond", Georgia, serif;
+  --font-mono: var(--font-plex-mono), "IBM Plex Mono", ui-monospace, monospace;
+  --font-body: var(--font-plex-sans), "IBM Plex Sans", system-ui, sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+  background: var(--concrete);
+  color: var(--ink);
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+a { color: inherit; text-decoration: none; }
+
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--line-strong); }
+
+::selection { background: var(--vermillion); color: #fff; }
+
+:focus-visible { outline: 1px solid var(--vermillion); outline-offset: 2px; }
+
+/* ── Typographic primitives ─────────────────────────────── */
+.mono {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+.mono-faint { color: var(--ink-faint); }
+.display {
+  font-family: var(--font-display);
+  font-weight: 500;
+  line-height: 0.9;
+  font-variant-numeric: lining-nums tabular-nums;
+  letter-spacing: -0.01em;
+}
+.serif { font-family: var(--font-display); }
+
+/* ── Delta + gate accents (the only place vermillion lives) ── */
+.delta-up   { color: var(--vermillion); }
+.delta-down { color: var(--vermillion); }
+.gated      { color: var(--vermillion); }
+
+/* ── Layout scaffold ────────────────────────────────────── */
+.wrap { max-width: 1000px; margin: 0 auto; padding: 0 24px; }
+.rule { border: 0; border-top: 1px solid var(--line); margin: 0; }
+.rule-strong { border-top-color: var(--line-strong); }
+
+/* The gridded panel — a spec sheet for a machine. */
+.panel {
+  border: 1px solid var(--line);
+  background: var(--concrete-raised);
+}
+.panel + .panel { border-top: 0; }
+
+/* ── App chrome ─────────────────────────────────────────── */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 52px;
+  border-bottom: 1px solid var(--line);
+  padding: 0 24px;
+  position: sticky;
+  top: 0;
+  background: color-mix(in srgb, var(--concrete) 92%, transparent);
+  backdrop-filter: blur(6px);
+  z-index: 20;
+}
+.topbar nav { display: flex; gap: 22px; }
+.topbar nav a { color: var(--ink-faint); transition: color 0.15s; }
+.topbar nav a:hover, .topbar nav a.active { color: var(--ink); }
+.topbar nav a.active { position: relative; }
+.topbar nav a.active::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: -18px; height: 1px; background: var(--vermillion);
+}
+
+/* ── Confidence rule (thin grey rule under a number) ──────── */
+.confidence-rule {
+  position: relative;
+  height: 2px;
+  background: var(--line);
+  margin-top: 8px;
+}
+.confidence-rule > span {
+  position: absolute;
+  top: 0;
+  height: 2px;
+  background: var(--ink-faint);
+}
+
+/* ── Buttons (square, quiet) ────────────────────────────── */
+.btn {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink);
+  background: transparent;
+  border: 1px solid var(--line-strong);
+  padding: 10px 16px;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+}
+.btn:hover { border-color: var(--ink-dim); }
+.btn-primary { border-color: var(--vermillion); color: var(--vermillion); }
+.btn-primary:hover { background: var(--vermillion); color: #fff; }
+.btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* ── Inputs ─────────────────────────────────────────────── */
+.field {
+  width: 100%;
+  background: var(--concrete-sunk);
+  border: 1px solid var(--line);
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 14px;
+  padding: 9px 11px;
+}
+.field:focus { outline: none; border-color: var(--ink-dim); }
+select.field { appearance: none; }
+
+/* ── Rank letter chip ───────────────────────────────────── */
+.rank-letter {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+.tabular { font-variant-numeric: tabular-nums; }
+.reveal-row { transition: background 0.2s; }
+
+/* ── Training floor ───────────────────────────────────────
+   A mobile-first capture surface. Still's warmth is translated onto Level
+   Up's dark instrument panel without changing the rating language elsewhere. */
+.train-back-link {
+  padding: 18px 0 0;
+  color: var(--ink-faint);
+  font-size: 12px;
+}
+.workout-shell {
+  width: min(100%, 760px);
+  margin: 0 auto;
+  padding: 16px 0 calc(112px + env(safe-area-inset-bottom));
+}
+.workout-hero {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  align-items: flex-end;
+  padding: 8px 0 24px;
+}
+.workout-hero h1,
+.live-lift-header h2,
+.workout-section-heading h2,
+.rest-copy h3 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  letter-spacing: -0.025em;
+  margin: 0;
+}
+.workout-hero h1 { font-size: clamp(38px, 8vw, 58px); line-height: .95; }
+.workout-hero p {
+  color: var(--ink-dim);
+  margin: 10px 0 0;
+  max-width: 440px;
+  font-size: 13px;
+}
+.eyebrow {
+  color: var(--gold);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+}
+.session-clock { text-align: right; flex: 0 0 auto; }
+.session-clock > span {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 34px;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+.session-clock small { color: var(--ink-faint); font-size: 10px; }
+.exercise-picker {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  margin: 0 -24px 14px;
+  padding: 2px 24px 8px;
+  scroll-snap-type: x proximity;
+}
+.exercise-picker::-webkit-scrollbar { display: none; }
+.exercise-pill {
+  background: var(--concrete-raised);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  color: var(--ink-dim);
+  cursor: pointer;
+  flex: 0 0 154px;
+  min-height: 65px;
+  padding: 11px 13px;
+  scroll-snap-align: start;
+  text-align: left;
+}
+.exercise-pill span,
+.exercise-pill small { display: block; }
+.exercise-pill span { color: var(--ink); font-size: 12px; line-height: 1.25; }
+.exercise-pill small {
+  color: var(--ink-faint);
+  font-family: var(--font-mono);
+  font-size: 8px;
+  margin-top: 5px;
+  text-transform: uppercase;
+}
+.exercise-pill.active {
+  background: color-mix(in srgb, var(--gold) 12%, var(--concrete-raised));
+  border-color: var(--gold);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--gold) 25%, transparent);
+}
+.live-lift-card {
+  background: var(--concrete-raised);
+  border: 1px solid var(--line-strong);
+  border-radius: 16px;
+  box-shadow: 0 18px 55px rgba(0,0,0,.22);
+  overflow: hidden;
+  padding: 20px;
+}
+.live-lift-header,
+.workout-section-heading {
+  align-items: flex-start;
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+}
+.live-lift-header h2 { font-size: 29px; margin-top: 2px; }
+.set-count {
+  background: color-mix(in srgb, var(--gold) 15%, transparent);
+  border: 1px solid color-mix(in srgb, var(--gold) 45%, transparent);
+  border-radius: 999px;
+  color: var(--gold);
+  font-size: 11px;
+  padding: 6px 10px;
+}
+.previous-strip {
+  align-items: center;
+  background: var(--concrete-sunk);
+  border-radius: 9px;
+  color: var(--ink-faint);
+  display: flex;
+  font-size: 11px;
+  justify-content: space-between;
+  margin: 18px 0;
+  padding: 9px 12px;
+}
+.previous-strip strong { color: var(--ink-dim); font-weight: 500; }
+.set-input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.number-control {
+  background: var(--concrete-sunk);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 10px;
+}
+.number-control > label {
+  color: var(--ink-faint);
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 8px;
+  letter-spacing: .13em;
+  margin-bottom: 7px;
+  text-align: center;
+  text-transform: uppercase;
+}
+.number-control > div { display: grid; grid-template-columns: 40px 1fr 40px; align-items: center; }
+.number-control button {
+  align-items: center;
+  background: var(--concrete-raised);
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  color: var(--ink-dim);
+  cursor: pointer;
+  display: flex;
+  font-size: 22px;
+  height: 38px;
+  justify-content: center;
+  width: 38px;
+}
+.number-input { display: flex; align-items: baseline; justify-content: center; gap: 4px; }
+.number-input input {
+  appearance: textfield;
+  background: transparent;
+  border: 0;
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: clamp(32px, 8vw, 44px);
+  line-height: 1;
+  min-width: 0;
+  outline: none;
+  padding: 0;
+  text-align: center;
+  width: 74px;
+}
+.number-input input::-webkit-inner-spin-button { appearance: none; }
+.number-input small { color: var(--ink-faint); font-size: 10px; }
+.workout-details {
+  border-top: 1px solid var(--line);
+  margin-top: 18px;
+  padding-top: 12px;
+}
+.workout-details summary {
+  color: var(--ink-faint);
+  cursor: pointer;
+  font-size: 11px;
+  list-style: none;
+}
+.workout-details summary::-webkit-details-marker { display: none; }
+.workout-details summary::after { content: " +"; }
+.workout-details[open] summary::after { content: " −"; }
+.workout-details label {
+  align-items: center;
+  color: var(--ink-faint);
+  display: flex;
+  font-size: 11px;
+  justify-content: space-between;
+  margin-top: 12px;
+}
+.workout-details input {
+  background: var(--concrete-sunk);
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  color: var(--ink);
+  padding: 6px 8px;
+  text-align: right;
+  width: 70px;
+}
+.rest-options { display: flex; gap: 5px; }
+.rest-options button,
+.rest-actions button {
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--ink-dim);
+  cursor: pointer;
+  font-size: 10px;
+  padding: 5px 9px;
+}
+.rest-options button.active { border-color: var(--gold); color: var(--gold); }
+.workout-error {
+  background: color-mix(in srgb, var(--vermillion) 10%, transparent);
+  border-radius: 8px;
+  color: #df8b70;
+  font-size: 11px;
+  margin-top: 12px;
+  padding: 9px 11px;
+}
+.complete-set-button {
+  align-items: center;
+  background: var(--ink);
+  border: 0;
+  border-radius: 999px;
+  color: var(--concrete);
+  cursor: pointer;
+  display: flex;
+  font-family: var(--font-body);
+  justify-content: space-between;
+  margin-top: 18px;
+  min-height: 58px;
+  padding: 0 20px;
+  width: 100%;
+}
+.complete-set-button span { font-size: 14px; font-weight: 600; }
+.complete-set-button small { opacity: .65; }
+.complete-set-button:disabled { opacity: .55; }
+.rest-card {
+  align-items: center;
+  background: color-mix(in srgb, var(--gold) 7%, var(--concrete-raised));
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  display: grid;
+  gap: 16px;
+  grid-template-columns: 82px 1fr;
+  margin-top: 14px;
+  padding: 15px;
+}
+.rest-card.active { border-color: color-mix(in srgb, var(--gold) 55%, var(--line)); }
+.rest-ring {
+  align-items: center;
+  background: conic-gradient(var(--gold) var(--rest-progress), var(--line) 0);
+  border-radius: 50%;
+  display: flex;
+  height: 76px;
+  justify-content: center;
+  width: 76px;
+}
+.rest-ring > div {
+  align-items: center;
+  background: var(--concrete-raised);
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  height: 66px;
+  justify-content: center;
+  width: 66px;
+}
+.rest-ring strong { font-family: var(--font-display); font-size: 22px; }
+.rest-ring span { color: var(--ink-faint); font-size: 8px; text-transform: uppercase; }
+.rest-copy h3 { font-family: var(--font-body); font-size: 14px; margin: 4px 0 9px; }
+.rest-actions { display: flex; gap: 6px; }
+.workout-log { margin-top: 30px; }
+.workout-section-heading { align-items: center; margin-bottom: 12px; }
+.workout-section-heading h2 { font-size: 28px; }
+.pr-badge,
+.pr-mark {
+  background: color-mix(in srgb, var(--vermillion) 14%, transparent);
+  border-radius: 999px;
+  color: var(--vermillion);
+  font-family: var(--font-mono);
+  font-size: 8px;
+  letter-spacing: .1em;
+  padding: 5px 8px;
+}
+.workout-empty {
+  border: 1px dashed var(--line);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  padding: 22px;
+  text-align: center;
+}
+.workout-empty strong { font-size: 13px; font-weight: 500; }
+.workout-empty span { color: var(--ink-faint); font-size: 11px; margin-top: 4px; }
+.logged-set {
+  align-items: center;
+  border-bottom: 1px solid var(--line);
+  display: grid;
+  gap: 12px;
+  grid-template-columns: 28px 1fr auto;
+  padding: 14px 2px;
+}
+.logged-set-index {
+  align-items: center;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  color: var(--ink-faint);
+  display: flex;
+  font-size: 10px;
+  height: 27px;
+  justify-content: center;
+}
+.logged-set-main { display: flex; flex-direction: column; min-width: 0; }
+.logged-set-main strong { font-size: 12px; font-weight: 500; }
+.logged-set-main span { color: var(--ink-dim); font-size: 11px; }
+.logged-set-main small {
+  color: var(--ink-faint);
+  font-size: 9px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.logged-set-score { align-items: flex-end; display: flex; flex-direction: column; min-width: 58px; }
+.logged-set-score strong { font-family: var(--font-display); font-size: 28px; line-height: .9; }
+.logged-set-score > span:not(.pr-mark) { color: var(--ink-faint); font-size: 8px; text-transform: uppercase; }
+
+@media (max-width: 720px) {
+  .wrap { padding: 0 14px; }
+  .train-back-link { display: none; }
+  .workout-shell { padding-top: 14px; }
+  .workout-hero { align-items: flex-start; padding-top: 0; }
+  .workout-hero p { max-width: 250px; }
+  .session-clock > span { font-size: 28px; }
+  .exercise-picker { margin-left: -14px; margin-right: -14px; padding-left: 14px; padding-right: 14px; }
+  .live-lift-card { border-radius: 14px; margin: 0 -2px; padding: 16px; }
+  .topbar {
+    bottom: 0;
+    height: calc(64px + env(safe-area-inset-bottom));
+    padding: 0 14px env(safe-area-inset-bottom);
+    position: fixed;
+    top: auto;
+    width: 100%;
+  }
+  .topbar > div { width: 100%; }
+  .topbar > div > a,
+  .topbar > a { display: none !important; }
+  .topbar nav {
+    display: flex;
+    gap: 2px;
+    justify-content: space-between;
+    width: 100%;
+  }
+  .topbar nav a {
+    align-items: center;
+    display: flex;
+    font-family: var(--font-body);
+    font-size: 9px;
+    justify-content: center;
+    letter-spacing: 0;
+    min-height: 48px;
+    padding: 0 7px;
+    text-transform: none;
+  }
+  .topbar nav a.active::after { bottom: 2px; left: 8px; right: 8px; }
+}
+
+@media (max-width: 430px) {
+  .workout-hero p { display: none; }
+  .live-lift-header h2 { font-size: 25px; }
+  .set-input-grid { gap: 7px; }
+  .number-control { padding: 8px 5px; }
+  .number-control > div { grid-template-columns: 34px 1fr 34px; }
+  .number-control button { height: 34px; width: 34px; }
+  .number-input input { width: 60px; }
+}

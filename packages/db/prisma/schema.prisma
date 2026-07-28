@@ -72,6 +72,13 @@ model Workspace {
   eraConnections       EraConnection[]
   eraAccountLinks      EraAccountLink[]
   eraTransactionLinks  EraTransactionLink[]
+  levelUpProfile       LevelUpProfile?
+  levelUpTestResults   LevelUpTestResult[]
+  levelUpCombines      LevelUpCombine[]
+  levelUpSnapshots     LevelUpRatingSnapshot[]
+  levelUpTrainingSets  LevelUpTrainingSet[]
+  levelUpBadgeUnlocks  LevelUpBadgeUnlock[]
+  levelUpTargetBuilds  LevelUpTargetBuild[]
 
   @@index([ownerUserId])
   @@index([status])
@@ -1526,4 +1533,150 @@ model AssistantMessage {
   createdAt   DateTime  @default(now())
 
   @@index([workspaceId, from, createdAt])
+}
+
+// ═════════════════════════════════════════════
+// LEVEL UP — a sports-game ratings engine for one real human
+// Module tables (not Life OS primitives). Governing principle:
+// the user interacts with the abstraction (ranks, badges, builds);
+// the engine interacts with the science (protocols, raw measurements,
+// population distributions, confidence). Every rating is falsifiable and
+// traceable to a raw measurement stored here.
+//
+// Ratings themselves are DERIVED (never stored) from LevelUpTestResult by the
+// engine at read time — except LevelUpRatingSnapshot, which is a frozen
+// historical record of "what the engine said on this date" (the career
+// timeline + the combine-verified ceiling). Snapshots are provenance, not a
+// live aggregate.
+// ═════════════════════════════════════════════
+
+model LevelUpProfile {
+  id                   String    @id @default(cuid())
+  workspaceId          String    @unique
+  workspace            Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+  birthDate            DateTime?
+  sex                  String    @default("male") // "male" | "female" — norm selection only
+  bodyweightKg         Float?
+  heightCm             Float?
+  standingReachCm      Float?    // for jump/dunk target builds
+  primaryBuild         String?   // selected archetype key for the headline OVR
+  coldStartCompletedAt DateTime?
+}
+
+// A single raw measurement. Provenance is sacred: nothing derived is stored
+// here, only what was actually measured, how, and under what conditions.
+model LevelUpTestResult {
+  id               String          @id @default(cuid())
+  workspaceId      String
+  workspace        Workspace       @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  createdAt        DateTime        @default(now())
+  measuredAt       DateTime        @default(now())
+  testKey          String          // catalog key, e.g. "vertical_cmj", "vo2max", "grip"
+  value            Float           // raw value in the test's canonical unit
+  bodyweightKg     Float?          // snapshot at time of test (for relative-strength tests)
+  populationSource String          @default("general") // "general" | "trained"
+  source           String          @default("combine")  // combine | training | self_report | wearable
+  protocolFlags    String?         // JSON: { arms, countermovement, ... } — must match history
+  context          String?         // JSON: { shoes, surface, timeOfDay, hoursSlept, daysSinceHard, device }
+  deviceFingerprint String?        // reaction-time hardware identity; comparisons refuse to cross it
+  combineId        String?
+  combine          LevelUpCombine? @relation(fields: [combineId], references: [id], onDelete: SetNull)
+
+  @@index([workspaceId, testKey, measuredAt])
+  @@index([combineId])
+}
+
+// The Human Combine: a testing session, run every 8–12 weeks. Only a completed
+// combine raises an attribute's verified ceiling.
+model LevelUpCombine {
+  id           String                  @id @default(cuid())
+  workspaceId  String
+  workspace    Workspace               @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  createdAt    DateTime                @default(now())
+  startedAt    DateTime                @default(now())
+  completedAt  DateTime?
+  label        String?
+  notes        String?
+  block        String?                 // athletic | strength | engine | movement | full
+  results      LevelUpTestResult[]
+  snapshot     LevelUpRatingSnapshot?
+
+  @@index([workspaceId, completedAt])
+}
+
+// Frozen record of the engine's output at a point in time (career timeline +
+// verified ceiling). ratings/subRatings/buildOvrs/caps/badges are JSON blobs.
+model LevelUpRatingSnapshot {
+  id           String          @id @default(cuid())
+  workspaceId  String
+  workspace    Workspace       @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  createdAt    DateTime        @default(now())
+  computedAt   DateTime        @default(now())
+  combineId    String?         @unique
+  combine      LevelUpCombine? @relation(fields: [combineId], references: [id], onDelete: SetNull)
+  engineVersion String         @default("v2")
+  ovr          Float
+  ratings      String          // JSON: { attributeKey: { rating, lower, upper, cap, confidence } }
+  subRatings   String          // JSON: { subKey: { rating, residualSd? } }
+  buildOvrs    String          // JSON: { buildKey: ovr }
+  badges       String          // JSON: [ { key, tier, progress } ]
+  caps         String          // JSON: { attributeKey: { cap, reason } }
+
+  @@index([workspaceId, computedAt])
+}
+
+// Per-set training evidence (Part 9). Raw inputs stored; RANK + BALANCE cached
+// at log time for the post-set line and history, but always re-derivable.
+model LevelUpTrainingSet {
+  id              String    @id @default(cuid())
+  workspaceId     String
+  workspace       Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  createdAt       DateTime  @default(now())
+  performedAt     DateTime  @default(now())
+  sessionId       String?   // groups sets performed together
+  exerciseKey     String
+  reps            Int
+  loadKg          Float
+  bodyweightKg    Float?
+  rank            Float?    // cached population rating (null when movement isn't well-normed)
+  rankLetter      String?
+  balanceResidual Float?    // cached residual vs anchor-lift prediction, in rating points
+  isPr            Boolean   @default(false)
+
+  @@index([workspaceId, exerciseKey, performedAt])
+  @@index([workspaceId, sessionId])
+}
+
+// Badge unlock events, kept for the career timeline. Current badge state is
+// derived live; this records the first time each tier was earned.
+model LevelUpBadgeUnlock {
+  id          String    @id @default(cuid())
+  workspaceId String
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  createdAt   DateTime  @default(now())
+  unlockedAt  DateTime  @default(now())
+  badgeKey    String
+  tier        String    // bronze | silver | gold | hof
+
+  @@unique([workspaceId, badgeKey, tier])
+  @@index([workspaceId, unlockedAt])
+}
+
+// A chosen target build. targets is a JSON map of attributeKey -> required
+// rating; the engine renders current -> required deltas against it.
+model LevelUpTargetBuild {
+  id          String    @id @default(cuid())
+  workspaceId String
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  createdAt   DateTime  @default(now())
+  buildKey    String
+  label       String
+  targets     String    // JSON: { attributeKey|subKey: requiredRating }
+  status      String    @default("active") // active | achieved | archived
+  achievedAt  DateTime?
+
+  @@unique([workspaceId, buildKey])
+  @@index([workspaceId, status])
 }

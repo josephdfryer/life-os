@@ -10,7 +10,8 @@ export type LifeOSAppKey =
   | 'places'
   | 'stuff'
   | 'context'
-  | 'assistant';
+  | 'assistant'
+  | 'levelUp';
 
 export interface LifeOSAppEntry {
   key: LifeOSAppKey;
@@ -31,6 +32,7 @@ export const LIFE_OS_APPS: LifeOSAppEntry[] = [
   { key: 'stuff',     label: 'Stuff',     url: 'https://stuff.lacollecteur.com',     dot: '#a98a5c', blurb: 'Everything you own' },
   { key: 'context',   label: 'Context',   url: 'https://context.lacollecteur.com',   dot: '#9a7ba0', blurb: 'Theory of a person' },
   { key: 'assistant', label: 'Assistant', url: 'https://assistant.lacollecteur.com', dot: '#c08b6f', blurb: 'Chat & actions' },
+  { key: 'levelUp',   label: 'Level Up',   url: 'https://level-up.lacollecteur.com',  dot: '#c4522a', blurb: 'IRL player ratings' },
 ];
 
 const HOME_URL = LIFE_OS_APPS[0].url;
