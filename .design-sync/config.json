@@ -1,0 +1,9 @@
+{
+  "projectId": "0bcaf558-16f2-42ba-8bb1-7cb302addbd4",
+  "pkg": "@life-os/ui",
+  "globalName": "Still",
+  "shape": "package",
+  "cssEntry": "still-tokens.css",
+  "runtimeFontPrefixes": ["Inter", "Newsreader"],
+  "readmeHeader": ".design-sync/conventions.md"
+}

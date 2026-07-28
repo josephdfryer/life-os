@@ -6,8 +6,7 @@
 
    Preview: docs/ui-preview/still-direction-v2.html
 
-   Import (when an app is migrated):
-     @import "@life-os/ui/still-tokens.css";
+   Import (when an app is migrated): @life-os/ui/still-tokens.css
    ══════════════════════════════════════════════════════════════════ */
 
 :root {
