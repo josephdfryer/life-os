@@ -31,18 +31,27 @@ Repo-specific gotchas for future syncs of the Still design system.
   Declared `runtimeFontPrefixes: ["Inter","Newsreader"]` to suppress FONT_MISSING.
   Previews render in system fallbacks (sans / serif); the serif fallback for
   Newsreader looks on-brand, so this was accepted.
+- **Self-hosting the fonts via `cfg.extraFonts` did NOT work.** With `--node-modules`
+  at the repo root, the package resolves through the workspace symlink
+  (`node_modules/@life-os/ui` → `packages/ui`), and the converter normalizes any
+  `extraFonts` path back to a package-relative form it then can't find (tried repo
+  paths + absolute — all logged `not found — skipped`). To ship real woff2s you'd
+  have to place them INSIDE `packages/ui/` (package-relative resolves) or fork the
+  converter — judged not worth ~700KB of committed woff2 given the fallbacks read
+  on-brand. Downloaded set + @font-face recipe is reproducible from Google Fonts if
+  revisited (Inter 400/500/600/700, Newsreader 400/500/600 + italic 400, latin).
 
 ## Preview authoring
 
+- **All 24 components have authored previews, all graded good.** No floor cards.
 - **Input/Textarea affordances read the CONTROLLED `value`.** The clearable "×"
   and the char counter only appear when you pass `value` + `onChange`, not
-  `defaultValue`. Authored previews for these use controlled value.
-- **11 core components authored** (rich previews, all graded good): Button, Card,
-  Input, Badge, Chip, Avatar, EntityRow, PageHeader, ProgressBar, StatBlock,
-  Textarea.
-- **13 components ship the floor card** (fully importable, authorable on any
-  re-sync): AppShell, BackLink, Divider, EmptyState, LifeOSBar, PetrolCard,
-  SectionHeader, Select, Spinner, StillPage, Toast, ToastStack, TopNav.
+  `defaultValue`. Their previews use controlled value.
+- **Wide/layout components need `cardMode` overrides** (in `cfg.overrides`) or the
+  product grid crops them (`[GRID_OVERFLOW]`): `column` for AppShell, Divider,
+  EmptyState, EntityRow, LifeOSBar, PageHeader, PetrolCard, SectionHeader,
+  StillPage, Textarea, TopNav; `single` (primaryStory "Stacked") for ToastStack
+  (corner-anchored/positioned).
 
 ## Known render warns
 

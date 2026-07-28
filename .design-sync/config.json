@@ -5,5 +5,19 @@
   "shape": "package",
   "cssEntry": "still-tokens.css",
   "runtimeFontPrefixes": ["Inter", "Newsreader"],
-  "readmeHeader": ".design-sync/conventions.md"
+  "readmeHeader": ".design-sync/conventions.md",
+  "overrides": {
+    "AppShell": {"cardMode": "column"},
+    "Divider": {"cardMode": "column"},
+    "EmptyState": {"cardMode": "column"},
+    "EntityRow": {"cardMode": "column"},
+    "LifeOSBar": {"cardMode": "column"},
+    "PageHeader": {"cardMode": "column"},
+    "PetrolCard": {"cardMode": "column"},
+    "SectionHeader": {"cardMode": "column"},
+    "StillPage": {"cardMode": "column"},
+    "Textarea": {"cardMode": "column"},
+    "TopNav": {"cardMode": "column"},
+    "ToastStack": {"cardMode": "single", "primaryStory": "Stacked"}
+  }
 }
