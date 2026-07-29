@@ -29,7 +29,7 @@ export async function POST(request: Request) {
           id,
           workspaceId,
           status: { in: ["pending", "blocked"] },
-          source: { in: ["imessage", "gmail"] },
+          source: { in: ["imessage", "gmail", "whatsapp"] },
           type: { not: "financial" },
         },
         data: { status: "dismissed" },

@@ -305,6 +305,7 @@ export default function CommunicationsReview({
 function sourceLabel(source: string) {
   if (source === "imessage") return "iMessage"
   if (source === "gmail") return "Email"
+  if (source === "whatsapp") return "WhatsApp"
   return source
 }
 

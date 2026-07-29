@@ -14,7 +14,7 @@ export default async function CommunicationsReviewWidget({
       workspaceId,
       status: { in: ["pending", "blocked"] },
       type: { not: "financial" },
-      source: { in: ["imessage", "gmail"] },
+      source: { in: ["imessage", "gmail", "whatsapp"] },
     },
     orderBy: [{ priority: "asc" }, { timestamp: "desc" }],
     take: 60,

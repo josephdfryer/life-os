@@ -49,7 +49,7 @@ export default async function InboxWidget({ workspaceId, personsUrl }: Props) {
       >
         {Object.entries(bySource).map(([source, count]) => (
           <div key={source} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '14px' }}>
-            <span style={{ color: 'var(--ink-3)', textTransform: 'capitalize' }}>{source}</span>
+            <span style={{ color: 'var(--ink-3)' }}>{sourceLabel(source)}</span>
             <span style={{ fontFamily: 'var(--font-body)' }}>{count}</span>
           </div>
         ))}
@@ -79,4 +79,11 @@ const heading: React.CSSProperties = {
   fontSize: '1.4rem',
   fontWeight: 400,
   margin: 0,
+}
+
+function sourceLabel(source: string) {
+  if (source === 'imessage') return 'iMessage'
+  if (source === 'gmail') return 'Email'
+  if (source === 'whatsapp') return 'WhatsApp'
+  return source
 }

@@ -18,7 +18,7 @@ export async function PATCH(request: Request, context: { params: Promise<{ id: s
       id,
       workspaceId,
       status: { in: ["pending", "blocked"] },
-      source: { in: ["imessage", "gmail"] },
+      source: { in: ["imessage", "gmail", "whatsapp"] },
       type: { not: "financial" },
     },
   })
@@ -104,7 +104,7 @@ async function acceptCommunication(
   }
 
   const result = await db.$transaction(async tx => {
-    const event = item.source === "imessage"
+    const event = ["imessage", "whatsapp"].includes(item.source)
       ? null
       : await tx.event.create({
           data: {
