@@ -166,6 +166,33 @@ Group texts are intentionally ignored by default before matching or staging. The
 
 ### 2b. Staging from any external source
 
+### WhatsApp desktop sync
+
+```mermaid
+flowchart TD
+  WhatsApp["WhatsApp Desktop local ChatStorage.sqlite"] --> Watcher["scripts/whatsapp-sync.ts every five minutes"]
+  Watcher --> Watermark["Local watermark: last message ID"]
+  Watermark --> DirectOnly["One-to-one text messages only"]
+  DirectOnly --> Match["Match WhatsApp phone number to a Person"]
+  Match -->|Known| Daily["Append to one daily WhatsApp Interaction"]
+  Match -->|Unknown| Inbox["Stage in the Persons Inbox"]
+```
+
+The WhatsApp watcher reads the desktop app's private SQLite database in
+read-only mode and never changes WhatsApp data. Its first-run
+`--init-watermark` command records the latest message ID, so enabling the
+watcher does not backfill conversation history. Subsequent runs use WhatsApp's
+stanza ID as the durable source identifier, falling back to the local message
+ID, and therefore safely ignore records already imported or staged.
+
+The initial scope is deliberately conservative: one-to-one messages with text.
+Group chats, LID-only identities, media, reactions, edits, and deleted-message
+events advance the watermark but do not enter Persons. Known phone numbers are
+appended to a message Interaction for that Person and day; unknown numbers are
+staged for identity review and never create People automatically. The
+`com.lifeos.whatsappsync` launch agent runs one bounded pass every 300 seconds,
+with state in `~/.life-os/whatsapp-sync-state.json` and logs under `logs/`.
+
 Any external script or automation can push items into the inbox via the API. This is the universal staging path — not limited to iMessage.
 
 ```mermaid

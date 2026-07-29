@@ -21,16 +21,23 @@ const PLIST_NAMES = [
   "com.lifeos.photossync",
   "com.lifeos.documentsync",
   "com.lifeos.notefacts",
+  "com.lifeos.whatsappsync",
 ]
 
 function main() {
   const args = process.argv.slice(2)
   const uninstall = args.includes("--uninstall")
+  const onlyIndex = args.indexOf("--only")
+  const only = onlyIndex >= 0 ? args[onlyIndex + 1] : null
+  if (onlyIndex >= 0 && (!only || !PLIST_NAMES.includes(only))) {
+    throw new Error(`--only must name one configured agent: ${PLIST_NAMES.join(", ")}`)
+  }
+  const selectedNames = only ? [only] : PLIST_NAMES
 
   fs.mkdirSync(LAUNCH_AGENTS_DIR, { recursive: true })
   fs.mkdirSync(path.join(REPO_ROOT, "logs"), { recursive: true })
 
-  for (const name of PLIST_NAMES) {
+  for (const name of selectedNames) {
     const destPath = path.join(LAUNCH_AGENTS_DIR, `${name}.plist`)
 
     if (uninstall) {
@@ -58,7 +65,7 @@ function main() {
   }
 
   if (!uninstall) {
-    console.log(`\n[scheduler] All agents installed.`)
+    console.log(`\n[scheduler] ${only ? `${only} installed.` : "All agents installed."}`)
     console.log(`  Logs: ${REPO_ROOT}/logs/`)
     console.log(`  Run manually: npm run capture:all`)
     console.log(`  Check status: launchctl list | grep lifeos`)

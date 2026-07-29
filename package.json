@@ -10,6 +10,7 @@
     "agent:finish": "node scripts/agent-sync.mjs finish",
     "agent:status": "node scripts/agent-sync.mjs status",
     "imessage:sync": "tsx scripts/imessage-sync.ts",
+    "whatsapp:sync": "tsx scripts/whatsapp-sync.ts",
     "health:sync": "tsx scripts/health-sync.ts",
     "voice-journal:sync": "tsx scripts/voice-journal-sync.ts",
     "photos:sync": "tsx scripts/photos-sync.ts",
