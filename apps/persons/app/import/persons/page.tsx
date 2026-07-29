@@ -10,6 +10,7 @@ import { ContactReviewCard } from "./components/ContactReviewCard"
 import { clearSelection as clearReviewSelection, keepOnly, setActionAt, setSelectedAt, skipAt, skipWhere } from "./review-transitions"
 import type { SpreadsheetImportSummary } from "@/lib/spreadsheet-contacts"
 import { requireSuccessfulImportResponse } from "./import-response"
+import { loadAllExistingPersons } from "./load-existing-persons"
 
 const PAGE_SIZE = 25
 // ── Types ─────────────────────────────────────────────────────────────────────
@@ -17,6 +18,7 @@ const PAGE_SIZE = 25
 type FilterKey     = "all" | "new" | ContactStatus
 
 type Step = "upload" | "review" | "done"
+type MatchingStatus = "loading" | "ready" | "error"
 
 // ── Status helpers ─────────────────────────────────────────────────────────────
 
@@ -71,6 +73,8 @@ export default function ImportContactsPage() {
   const [step, setStep]                     = useState<Step>("upload")
   const [contacts, setContacts]             = useState<ReviewContact[]>([])
   const [existingPersons, setExistingPersons] = useState<Person[]>([])
+  const [matchingStatus, setMatchingStatus]   = useState<MatchingStatus>("loading")
+  const [matchingError, setMatchingError]     = useState<string | null>(null)
   const [dragging, setDragging]             = useState(false)
   const [error, setError]                   = useState<string | null>(null)
   const [loading, setLoading]               = useState(false)
@@ -88,17 +92,34 @@ export default function ImportContactsPage() {
   const inputRef  = useRef<HTMLInputElement>(null)
   const cardRefs  = useRef<(HTMLDivElement | null)[]>([])
 
-  // Load existing persons for matching (lightweight — only needs id/name/email/phone/company)
-  useEffect(() => {
-    fetch("/api/persons?minimal=true")
-      .then(r => r.json())
-      .then(data => setExistingPersons(Array.isArray(data) ? data : data.persons ?? []))
-      .catch(() => {})
+  const loadMatchingPeople = useCallback(async () => {
+    setMatchingStatus("loading")
+    setMatchingError(null)
+    try {
+      const people = await loadAllExistingPersons()
+      setExistingPersons(people)
+      setMatchingStatus("ready")
+    } catch (loadError) {
+      setExistingPersons([])
+      setMatchingStatus("error")
+      setMatchingError(loadError instanceof Error ? loadError.message : "Could not prepare duplicate checking.")
+    }
   }, [])
+
+  // Import cannot start until the complete existing-person set is ready.
+  useEffect(() => {
+    void loadMatchingPeople()
+  }, [loadMatchingPeople])
 
   // ── Parse + Match ──────────────────────────────────────────────────────────
 
   async function processFile(file: File) {
+    if (matchingStatus !== "ready") {
+      setError(matchingStatus === "error"
+        ? "Duplicate checking is unavailable. Retry it before importing."
+        : "Still loading existing people for duplicate checking.")
+      return
+    }
     setError(null)
     setGmailReconnectUrl(null)
     setSpreadsheetSummary(null)
@@ -136,6 +157,12 @@ export default function ImportContactsPage() {
   }
 
   async function importGmailContacts() {
+    if (matchingStatus !== "ready") {
+      setError(matchingStatus === "error"
+        ? "Duplicate checking is unavailable. Retry it before importing."
+        : "Still loading existing people for duplicate checking.")
+      return
+    }
     setError(null)
     setGmailReconnectUrl(null)
     setLoading(true)
@@ -429,6 +456,19 @@ export default function ImportContactsPage() {
       {/* ── Upload ── */}
       {step === "upload" && (
         <>
+          <div style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "10px", padding: "10px 14px", marginBottom: "14px", fontSize: "11px", color: matchingStatus === "error" ? "var(--attention)" : "var(--ink-3)", display: "flex", alignItems: "center", justifyContent: "space-between", gap: "12px" }}>
+            <span>
+              {matchingStatus === "loading" && "Preparing duplicate check across all existing people…"}
+              {matchingStatus === "ready" && `Duplicate check ready · ${existingPersons.length.toLocaleString()} existing people loaded`}
+              {matchingStatus === "error" && (matchingError ?? "Could not prepare duplicate checking.")}
+            </span>
+            {matchingStatus === "error" && (
+              <button onClick={() => void loadMatchingPeople()} style={{ ...ghostBtnStyle, whiteSpace: "nowrap" }}>
+                Retry
+              </button>
+            )}
+          </div>
+
           <div style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "10px", padding: "16px 18px", marginBottom: "14px", fontSize: "12px", color: "var(--ink-2)", lineHeight: 1.7 }}>
             <div style={{ fontFamily: "var(--font-display), serif", fontSize: "14px", fontWeight: 500, color: "var(--ink)", marginBottom: "6px" }}>Import from file</div>
             <ol style={{ margin: 0, paddingLeft: "18px" }}>
@@ -448,21 +488,21 @@ export default function ImportContactsPage() {
             </div>
             <button
               onClick={importGmailContacts}
-              disabled={loading}
-              style={{ padding: "9px 14px", background: "var(--accent)", color: "#fff", border: "none", borderRadius: "7px", cursor: loading ? "wait" : "pointer", fontFamily: "inherit", fontSize: "12px", fontWeight: 500, opacity: loading ? 0.7 : 1, whiteSpace: "nowrap" }}
+              disabled={loading || matchingStatus !== "ready"}
+              style={{ padding: "9px 14px", background: "var(--accent)", color: "#fff", border: "none", borderRadius: "7px", cursor: loading || matchingStatus !== "ready" ? "not-allowed" : "pointer", fontFamily: "inherit", fontSize: "12px", fontWeight: 500, opacity: loading || matchingStatus !== "ready" ? 0.55 : 1, whiteSpace: "nowrap" }}
             >
               Import Gmail Contacts
             </button>
           </div>
 
           <div
-            onDragOver={e => { e.preventDefault(); setDragging(true) }}
+            onDragOver={e => { e.preventDefault(); if (matchingStatus === "ready") setDragging(true) }}
             onDragLeave={() => setDragging(false)}
             onDrop={handleDrop}
-            onClick={() => !loading && inputRef.current?.click()}
-            style={{ border: `2px dashed ${dragging ? "var(--accent)" : "var(--border)"}`, borderRadius: "12px", padding: "48px 24px", textAlign: "center", cursor: loading ? "wait" : "pointer", background: dragging ? "var(--accent-soft)" : "var(--surface)", transition: "all 0.15s" }}
+            onClick={() => !loading && matchingStatus === "ready" && inputRef.current?.click()}
+            style={{ border: `2px dashed ${dragging ? "var(--accent)" : "var(--border)"}`, borderRadius: "12px", padding: "48px 24px", textAlign: "center", cursor: loading ? "wait" : matchingStatus === "ready" ? "pointer" : "not-allowed", background: dragging ? "var(--accent-soft)" : "var(--surface)", transition: "all 0.15s", opacity: matchingStatus === "ready" ? 1 : 0.6 }}
           >
-            <input ref={inputRef} type="file" accept=".vcf,.csv,.xlsx" onChange={handleFileInput} style={{ display: "none" }} />
+            <input ref={inputRef} type="file" accept=".vcf,.csv,.xlsx" disabled={matchingStatus !== "ready"} onChange={handleFileInput} style={{ display: "none" }} />
             {loading ? (
               <>
                 <div style={{ width: "32px", height: "32px", border: "2px solid var(--border)", borderTopColor: "var(--accent)", borderRadius: "50%", animation: "spin 0.8s linear infinite", margin: "0 auto 12px" }} />
@@ -471,7 +511,9 @@ export default function ImportContactsPage() {
             ) : (
               <>
                 <div style={{ fontSize: "28px", marginBottom: "10px", color: "var(--ink-4)" }}>↑</div>
-                <div style={{ color: "var(--ink)", fontSize: "13px", marginBottom: "5px" }}>Drop your people file here</div>
+                <div style={{ color: "var(--ink)", fontSize: "13px", marginBottom: "5px" }}>
+                  {matchingStatus === "ready" ? "Drop your people file here" : "Waiting for duplicate checking"}
+                </div>
                 <div style={{ color: "var(--ink-4)", fontSize: "11px" }}>.xlsx  ·  .vcf  ·  .csv (Google, LinkedIn, generic)</div>
               </>
             )}
