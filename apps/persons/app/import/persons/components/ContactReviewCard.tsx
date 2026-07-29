@@ -164,7 +164,7 @@ export function ContactReviewCard({
 
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px", marginBottom: "10px" }}>
             <Field label="First Name"><input type="text" value={contact.first} onChange={e => onChange({ first: e.target.value })} style={inputStyle} /></Field>
-            <Field label="Last Name"><input type="text" value={contact.last} onChange={e => onChange({ last: e.target.value })} style={inputStyle} /></Field>
+            <Field label="Last Name (optional)"><input type="text" value={contact.last} onChange={e => onChange({ last: e.target.value })} style={inputStyle} /></Field>
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px", marginBottom: "10px" }}>
             <Field label="Title"><input type="text" value={contact.title ?? ""} onChange={e => onChange({ title: e.target.value || null })} placeholder="e.g. Product Designer" style={inputStyle} /></Field>

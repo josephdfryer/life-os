@@ -1,10 +1,11 @@
 import { revalidatePath } from "next/cache"
 import { db } from "@/lib/db"
 import { assignColor } from "@/lib/colors"
-import { badRequest, notFound, optionalString, optionalStringArray, requiredString } from "@/server/api/errors"
+import { badRequest, notFound, optionalString, optionalStringArray } from "@/server/api/errors"
 import { auditAction, type DomainActor } from "./audit"
 import { formatPerson, jsonList } from "./dto"
 import { normalizeBirthday } from "@/lib/birthday"
+import { optionalLastName, requiredFirstName } from "./person-name"
 
 export function revalidatePersonsCache(_workspaceId: string) {
   revalidatePath("/people")
@@ -38,8 +39,8 @@ export type PersonInput = {
 
 export async function createPerson(input: PersonInput, actor?: DomainActor) {
   const workspaceId = actor?.workspaceId ?? "default-workspace"
-  const first = requiredString(input.first, "first")
-  const last = requiredString(input.last, "last")
+  const first = requiredFirstName(input.first)
+  const last = optionalLastName(input.last)
   const count = await db.person.count({ where: { workspaceId } })
   const assigned = assignColor(count)
 
@@ -80,8 +81,8 @@ export async function createPerson(input: PersonInput, actor?: DomainActor) {
 export async function updatePerson(id: string, input: PersonInput, actor?: DomainActor) {
   const workspaceId = actor?.workspaceId ?? "default-workspace"
   const patch: Record<string, unknown> = {}
-  if (input.first !== undefined) patch.first = requiredString(input.first, "first")
-  if (input.last !== undefined) patch.last = requiredString(input.last, "last")
+  if (input.first !== undefined) patch.first = requiredFirstName(input.first)
+  if (input.last !== undefined) patch.last = optionalLastName(input.last)
   if (input.nickname !== undefined) patch.nickname = optionalString(input.nickname)
   if (input.title !== undefined) patch.title = optionalString(input.title)
   if (input.headline !== undefined) patch.headline = optionalString(input.headline)

@@ -312,7 +312,7 @@ export default function InboxPage() {
           <div style={{ display: "flex", gap: "6px", flexWrap: "wrap", marginBottom: "12px" }}>
             <button onClick={() => setSourceFilter(null)} style={filterPillStyle(sourceFilter === null)}>All</button>
             {sources.map(src => (
-              <button key={src} onClick={() => setSourceFilter(src)} style={filterPillStyle(sourceFilter === src)}>{src}</button>
+              <button key={src} onClick={() => setSourceFilter(src)} style={filterPillStyle(sourceFilter === src)}>{sourceLabel(src)}</button>
             ))}
           </div>
         )}
@@ -384,7 +384,6 @@ export default function InboxPage() {
               focused={index === focusedIndex}
               checked={selectedIds.has(item.id)}
               expanded={expandedId === item.id}
-              showSource={sources.length > 1}
               onCheck={shiftKey => toggleSelect(item.id, shiftKey)}
               onOpen={() => { setFocusedIndex(index); setExpandedId(id => id === item.id ? null : item.id) }}
               onDismiss={() => dismissOne(item.id)}
@@ -406,7 +405,7 @@ export default function InboxPage() {
 }
 
 function InboxRow({
-  item, index, focused, checked, expanded, showSource,
+  item, index, focused, checked, expanded,
   onCheck, onOpen, onDismiss, onAccept, onPatch, setError,
 }: {
   item: InboxItem
@@ -414,7 +413,6 @@ function InboxRow({
   focused: boolean
   checked: boolean
   expanded: boolean
-  showSource: boolean
   onCheck: (shiftKey: boolean) => void
   onOpen: () => void
   onDismiss: () => void
@@ -494,9 +492,16 @@ function InboxRow({
             {snippet}
           </span>
 
-          {showSource && (
-            <span style={{ flexShrink: 0, fontSize: "10px", color: "var(--ink-4)" }}>{item.source}</span>
-          )}
+          <span style={{
+            flexShrink: 0,
+            fontSize: "10px",
+            color: "var(--cognac-deep)",
+            background: "var(--cognac-soft)",
+            borderRadius: "var(--radius-pill)",
+            padding: "2px 7px",
+          }}>
+            {sourceLabel(item.source)}
+          </span>
         </div>
 
         {/* Date / hover actions occupy the same slot, Gmail-style */}
@@ -542,6 +547,13 @@ function InboxRow({
       )}
     </div>
   )
+}
+
+function sourceLabel(source: string) {
+  if (source === "imessage") return "iMessage"
+  if (source === "gmail") return "Email"
+  if (source === "whatsapp") return "WhatsApp"
+  return source
 }
 
 function ExpandedDetail({
@@ -619,8 +631,8 @@ function ExpandedDetail({
   }
 
   async function createPerson(acceptAfter: boolean) {
-    if (!newPerson.first.trim() || !newPerson.last.trim()) {
-      setError("Add a first and last name before creating the Person.")
+    if (!newPerson.first.trim()) {
+      setError("Add a first name before creating the Person.")
       return
     }
     setBusy(true)
@@ -715,7 +727,7 @@ function ExpandedDetail({
         <div>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: "8px" }}>
             <span style={{ fontSize: "11px", color: "var(--ink-4)" }}>
-              {item.source} · {item.direction || "message"} · {formatDateTime(item.timestamp)}
+              {sourceLabel(item.source)} · {item.direction || "message"} · {formatDateTime(item.timestamp)}
             </span>
           </div>
           <textarea
@@ -849,7 +861,7 @@ function ExpandedDetail({
             <div style={{ display: "grid", gap: "8px", marginTop: "10px" }}>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px" }}>
                 <SmallField label="First" value={newPerson.first} onChange={v => setNewPerson(p => ({ ...p, first: v }))} />
-                <SmallField label="Last" value={newPerson.last} onChange={v => setNewPerson(p => ({ ...p, last: v }))} />
+                <SmallField label="Last (optional)" value={newPerson.last} onChange={v => setNewPerson(p => ({ ...p, last: v }))} />
               </div>
               <SmallField label="Email" value={newPerson.email} onChange={v => setNewPerson(p => ({ ...p, email: v }))} />
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px" }}>

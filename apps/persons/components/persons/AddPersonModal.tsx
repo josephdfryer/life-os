@@ -32,8 +32,8 @@ export default function AddPersonModal({ onClose, onSaved, totalPersons }: Props
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    if (!form.first.trim() || !form.last.trim()) {
-      setError("First and last name are required.")
+    if (!form.first.trim()) {
+      setError("First name is required.")
       return
     }
     setLoading(true)
@@ -98,7 +98,7 @@ export default function AddPersonModal({ onClose, onSaved, totalPersons }: Props
         <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
             <Field label="First name *" value={form.first} onChange={v => set("first", v)} placeholder="Marcus" />
-            <Field label="Last name *" value={form.last} onChange={v => set("last", v)} placeholder="Chen" />
+            <Field label="Last name (optional)" value={form.last} onChange={v => set("last", v)} placeholder="Chen" />
           </div>
           <Field label="Title" value={form.title} onChange={v => set("title", v)} placeholder="Product Lead" />
           <Field label="Headline" value={form.headline} onChange={v => set("headline", v)} placeholder="Design systems, angel investing, old friend from YC" />
