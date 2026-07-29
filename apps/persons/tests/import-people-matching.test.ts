@@ -36,6 +36,14 @@ test("fillable fields add missing values but never overwrite populated values", 
   assert.deepEqual(fields, { email: "new@example.com", title: "Founder", location: "Los Angeles" })
 })
 
+test("fillable fields append new imported notes without replacing existing notes", () => {
+  const fields = computeFillableFields(
+    contact({ notes: "Imported spreadsheet details" }),
+    person({ notes: "Existing personal context" }),
+  )
+  assert.equal(fields.notes, "Existing personal context\n\nImported spreadsheet details")
+})
+
 test("email local parts provide deterministic review names", () => {
   assert.deepEqual(guessNameFromEmail("jane.doe42@example.com"), { first: "Jane", last: "Doe" })
   assert.equal(guessNameFromEmail("x@example.com"), null)

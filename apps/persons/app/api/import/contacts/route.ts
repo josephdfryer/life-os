@@ -4,10 +4,40 @@ import { parseCSVRows } from "@/lib/csv-contacts"
 import { detectColumnMapping, applyMapping } from "@/lib/contact-normalizer"
 import { requireAccess } from "@/server/domain/access"
 import { handleRouteError } from "@/server/api/respond"
+import { parseSpreadsheetContacts } from "@/lib/spreadsheet-contacts"
+
+const MAX_SPREADSHEET_BYTES = 15 * 1024 * 1024
 
 export async function POST(req: NextRequest) {
   try {
     await requireAccess("people.write")
+    if (req.headers.get("content-type")?.includes("multipart/form-data")) {
+      const form = await req.formData()
+      const file = form.get("file")
+      if (!(file instanceof File)) {
+        return NextResponse.json({ error: "No spreadsheet provided" }, { status: 400 })
+      }
+      if (!file.name.toLowerCase().endsWith(".xlsx")) {
+        return NextResponse.json({ error: "Spreadsheet imports currently support .xlsx files." }, { status: 400 })
+      }
+      if (file.size > MAX_SPREADSHEET_BYTES) {
+        return NextResponse.json({ error: "Spreadsheet is larger than the 15 MB import limit." }, { status: 413 })
+      }
+      const result = await parseSpreadsheetContacts(Buffer.from(await file.arrayBuffer()), file.name)
+      if (!result.contacts.length) {
+        return NextResponse.json(
+          { error: "No people table was found. Include a name column and at least one person row." },
+          { status: 422 },
+        )
+      }
+      return NextResponse.json({
+        contacts: result.contacts,
+        count: result.contacts.length,
+        method: "spreadsheet",
+        summary: result.summary,
+      })
+    }
+
     const body = await req.json()
     const { content, format }: { content: string; format?: string } = body
 

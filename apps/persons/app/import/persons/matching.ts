@@ -53,11 +53,17 @@ export function computeFillableFields(contact: ParsedContact, person: Person): R
     const phone = normalizePhoneForMatch(contact.phone)
     if (phone && !person.phones.some(value => normalizePhoneForMatch(value) === phone)) result.phone = contact.phone.trim()
   }
-  const pairs: [keyof ParsedContact, keyof Person][] = [["title", "title"], ["company", "company"], ["headline", "headline"], ["birthday", "birthday"], ["location", "location"], ["linkedin", "linkedin"], ["twitter", "twitter"], ["website", "website"], ["facebook", "facebook"], ["instagram", "instagram"], ["notes", "notes"]]
+  const pairs: [keyof ParsedContact, keyof Person][] = [["title", "title"], ["company", "company"], ["headline", "headline"], ["birthday", "birthday"], ["location", "location"], ["linkedin", "linkedin"], ["twitter", "twitter"], ["website", "website"], ["facebook", "facebook"], ["instagram", "instagram"]]
   for (const [contactKey, personKey] of pairs) {
     const incoming = (contact[contactKey] as string | null)?.trim()
     const existing = (person[personKey] as string | null)?.trim()
     if (incoming && !existing) result[personKey as string] = incoming
+  }
+  const incomingNotes = contact.notes?.trim()
+  const existingNotes = person.notes?.trim()
+  if (incomingNotes && !existingNotes) result.notes = incomingNotes
+  else if (incomingNotes && existingNotes && !existingNotes.includes(incomingNotes)) {
+    result.notes = `${existingNotes}\n\n${incomingNotes}`
   }
   return result
 }

@@ -186,10 +186,10 @@ The `itemType` field on the staged record tells the inbox what kind of record to
 
 ```mermaid
 flowchart TD
-  ImportHub["/import chooser"] --> PeopleImport["/import/people"]
+  ImportHub["/import chooser"] --> PeopleImport["/import/persons"]
   ImportHub --> InteractionImport["/import/interactions"]
   LegacyConversation["/import/conversations"] --> InteractionImport
-  PeopleFile["vCard or CSV people file"] --> PeopleImport
+  PeopleFile["Spreadsheet, vCard, or CSV people file"] --> PeopleImport
   GoogleContacts["Google Contacts from connected Gmail"] --> PeopleImport
   GmailMail["Gmail Mail sync"] --> InteractionImport
   File["File, transcript, or API-ingested text"] --> InteractionImport
@@ -209,7 +209,7 @@ flowchart TD
   Confirm --> Audit["Write AuditLog"]
 ```
 
-Plain English: import is a bulk way to turn source material into structured People, Events, and Interactions. `/import` is the chooser, `/import/people` handles vCard/CSV people files plus Google Contacts from the connected Gmail account, and `/import/interactions` handles Gmail Mail, transcripts, notes, and message exports. `/import/conversations` remains as a redirect for older links.
+Plain English: import is a bulk way to turn source material into structured People, Events, and Interactions. `/import` is the chooser, `/import/persons` handles arbitrary `.xlsx` people spreadsheets, vCard/CSV people files, and Google Contacts from the connected Gmail account. Spreadsheet import finds person-shaped tables anywhere in a workbook, maps familiar contact columns, and keeps other row-specific fields as editable Notes. The user still reviews every candidate and chooses create, update, or skip before anything is saved. Ambiguous non-person sheets are reported but are not silently turned into Events, Places, or Items. `/import/interactions` handles Gmail Mail, transcripts, notes, and message exports. `/import/conversations` remains as a redirect for older links.
 
 The Google Contacts import does not save records immediately. `/api/import/gmail-contacts` reads the connected Google account through the People API, maps names, emails, phone numbers, organizations, birthdays, addresses, URLs, and notes into the same review shape as a vCard/CSV import, and then the regular People import review decides what to create, update, or skip.
 
@@ -736,7 +736,8 @@ flowchart LR
 - Google Calendar traceability: Admin can inspect recent Calendar sync runs, imported events, Google event IDs, attendees, and linked People.
 - Gmail foundation: Admin can connect Gmail, sync read-only messages into Interactions for matched People, and stage unmatched emails in Inbox.
 - Gmail traceability: Admin can inspect recent Gmail sync runs, message IDs, threads, matched People, staged Inbox records, skipped messages, and deleted markers.
-- Google Contacts import: `/import/people` can pull People candidates from the connected Gmail account's Google Contacts and review them with the same create/update/skip flow as vCard and CSV imports.
+- Google Contacts import: `/import/persons` can pull People candidates from the connected Gmail account's Google Contacts and review them with the same create/update/skip flow as vCard and CSV imports.
+- Spreadsheet people import: `/api/import/contacts` accepts a bounded `.xlsx` upload, scans worksheets for a person table, maps standard contact fields, and preserves otherwise unmapped row values in the candidate's Notes. The same `/import/persons` review flow controls create/update/skip, and matched-person updates append new imported notes rather than overwriting existing notes.
 - Gmail Mail import: `/import/interactions` can launch the same batched Gmail sync from the import area, defaulting to a 30-day Known People only import.
 - Krisp transcript automation: a local scheduled worker archives completed transcripts, maps them to calendar context, splits mixed customer discussions, and writes Team OS meeting records with a private ambiguity queue.
 - Health Auto Export sync: `scripts/health-sync.ts` attaches Apple Health data to a self Person as States (daily metrics) and Notes (daily digests), and workouts as Events — not Interactions, so the relationship-tracking Interaction log stays uncluttered. The Person detail page surfaces this via a Health card (`apps/persons/server/domain/health.ts`).

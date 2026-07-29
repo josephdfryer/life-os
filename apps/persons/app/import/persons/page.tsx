@@ -8,6 +8,7 @@ import { assignColor } from "@/lib/colors"
 import { DUPLICATE_THRESHOLD, computeStats, findMatch, getStatus, guessNameFromEmail, sortByStatus, type ContactAction, type ContactStatus, type ReviewContact } from "./matching"
 import { ContactReviewCard } from "./components/ContactReviewCard"
 import { clearSelection as clearReviewSelection, keepOnly, setActionAt, setSelectedAt, skipAt, skipWhere } from "./review-transitions"
+import type { SpreadsheetImportSummary } from "@/lib/spreadsheet-contacts"
 
 const PAGE_SIZE = 25
 // ── Types ─────────────────────────────────────────────────────────────────────
@@ -82,6 +83,7 @@ export default function ImportContactsPage() {
   const [autoSkipped, setAutoSkipped]       = useState(0)
   const [gmailReconnectUrl, setGmailReconnectUrl] = useState<string | null>(null)
   const [requiredFields, setRequiredFields] = useState<Set<FieldKey>>(new Set())
+  const [spreadsheetSummary, setSpreadsheetSummary] = useState<SpreadsheetImportSummary | null>(null)
   const inputRef  = useRef<HTMLInputElement>(null)
   const cardRefs  = useRef<(HTMLDivElement | null)[]>([])
 
@@ -98,20 +100,32 @@ export default function ImportContactsPage() {
   async function processFile(file: File) {
     setError(null)
     setGmailReconnectUrl(null)
+    setSpreadsheetSummary(null)
     setLoading(true)
-    const isCsv = file.name.endsWith(".csv")
-    setLoadingMsg(isCsv ? "Mapping columns with AI…" : "Parsing people…")
+    const lowerName = file.name.toLowerCase()
+    const isCsv = lowerName.endsWith(".csv")
+    const isSpreadsheet = lowerName.endsWith(".xlsx")
+    setLoadingMsg(isCsv ? "Mapping columns with AI…" : isSpreadsheet ? "Finding people and related details…" : "Parsing people…")
 
     try {
-      const content = await file.text()
-      const res = await fetch("/api/import/contacts", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ content, format: isCsv ? "csv" : "vcf" }),
-      })
+      const res = isSpreadsheet
+        ? await fetch("/api/import/contacts", {
+            method: "POST",
+            body: (() => {
+              const form = new FormData()
+              form.append("file", file)
+              return form
+            })(),
+          })
+        : await fetch("/api/import/contacts", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ content: await file.text(), format: isCsv ? "csv" : "vcf" }),
+          })
       const data = await res.json()
       if (!res.ok) throw new Error(data.error || "Failed to parse file")
 
+      setSpreadsheetSummary(data.summary ?? null)
       processParsedContacts(data.contacts ?? [])
     } catch (e) {
       setError(e instanceof Error ? e.message : "Failed to read file")
@@ -190,9 +204,9 @@ export default function ImportContactsPage() {
 
   function handleDrop(e: React.DragEvent) {
     e.preventDefault(); setDragging(false)
-    const file = Array.from(e.dataTransfer.files).find(f => f.name.endsWith(".vcf") || f.name.endsWith(".csv"))
+    const file = Array.from(e.dataTransfer.files).find(f => /\.(vcf|csv|xlsx)$/i.test(f.name))
     if (file) processFile(file)
-    else setError("Please drop a .vcf or .csv file.")
+    else setError("Please drop a .vcf, .csv, or .xlsx file.")
   }
 
   function handleFileInput(e: React.ChangeEvent<HTMLInputElement>) {
@@ -404,7 +418,7 @@ export default function ImportContactsPage() {
           Import Persons
         </h1>
         <p style={{ color: "var(--ink-3)", fontSize: "12px", margin: 0 }}>
-          Import from a vCard, CSV, or your connected Google account.
+          Import from a spreadsheet, vCard, CSV, or your connected Google account.
         </p>
       </div>
 
@@ -417,7 +431,7 @@ export default function ImportContactsPage() {
               <li>Open your address book app</li>
               <li>Select people (⌘-click to multi-select)</li>
               <li><strong>File → Export → Export vCard…</strong></li>
-              <li>Save the .vcf file, then drop it below — or export a Google/LinkedIn CSV</li>
+              <li>Drop the .vcf below — or use any people spreadsheet with a name column</li>
             </ol>
           </div>
 
@@ -444,7 +458,7 @@ export default function ImportContactsPage() {
             onClick={() => !loading && inputRef.current?.click()}
             style={{ border: `2px dashed ${dragging ? "var(--accent)" : "var(--border)"}`, borderRadius: "12px", padding: "48px 24px", textAlign: "center", cursor: loading ? "wait" : "pointer", background: dragging ? "var(--accent-soft)" : "var(--surface)", transition: "all 0.15s" }}
           >
-            <input ref={inputRef} type="file" accept=".vcf,.csv" onChange={handleFileInput} style={{ display: "none" }} />
+            <input ref={inputRef} type="file" accept=".vcf,.csv,.xlsx" onChange={handleFileInput} style={{ display: "none" }} />
             {loading ? (
               <>
                 <div style={{ width: "32px", height: "32px", border: "2px solid var(--border)", borderTopColor: "var(--accent)", borderRadius: "50%", animation: "spin 0.8s linear infinite", margin: "0 auto 12px" }} />
@@ -454,7 +468,7 @@ export default function ImportContactsPage() {
               <>
                 <div style={{ fontSize: "28px", marginBottom: "10px", color: "var(--ink-4)" }}>↑</div>
                 <div style={{ color: "var(--ink)", fontSize: "13px", marginBottom: "5px" }}>Drop your people file here</div>
-                <div style={{ color: "var(--ink-4)", fontSize: "11px" }}>.vcf  ·  .csv (Google, LinkedIn, generic)</div>
+                <div style={{ color: "var(--ink-4)", fontSize: "11px" }}>.xlsx  ·  .vcf  ·  .csv (Google, LinkedIn, generic)</div>
               </>
             )}
           </div>
@@ -492,6 +506,23 @@ export default function ImportContactsPage() {
           </div>
 
           {/* Auto-skip notice */}
+          {spreadsheetSummary && (
+            <div style={{ marginBottom: "12px", padding: "12px 14px", background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "10px", fontSize: "11px", color: "var(--ink-3)", lineHeight: 1.55 }}>
+              <div style={{ fontFamily: "var(--font-display), serif", fontSize: "14px", color: "var(--ink)", marginBottom: "3px" }}>
+                Spreadsheet understood
+              </div>
+              <div>
+                Found {spreadsheetSummary.peopleTables.reduce((total, table) => total + table.people, 0)} people in{" "}
+                {spreadsheetSummary.peopleTables.map(table => table.sheet).join(", ")}. Row-specific details are included in each person&apos;s editable Notes.
+              </div>
+              {spreadsheetSummary.ignoredSheets.length > 0 && (
+                <div style={{ color: "var(--ink-4)", marginTop: "4px" }}>
+                  Left ambiguous sheet{spreadsheetSummary.ignoredSheets.length === 1 ? "" : "s"} untouched: {spreadsheetSummary.ignoredSheets.join(", ")}.
+                </div>
+              )}
+            </div>
+          )}
+
           {autoSkipped > 0 && (
             <div style={{ marginBottom: "12px", padding: "8px 12px", background: "var(--surface2)", border: "1px solid var(--border)", borderRadius: "7px", fontSize: "11px", color: "var(--ink-3)" }}>
               {autoSkipped} empty row{autoSkipped !== 1 ? "s" : ""} auto-skipped
