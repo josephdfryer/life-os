@@ -6,7 +6,7 @@ import { db } from '@life-os/db'
 import { LIFE_OS_APP_URLS, lifeOsAppUrl } from '@life-os/auth'
 import { resolveTimeZone, TZ_COOKIE, TimezonePicker } from '@life-os/ui'
 import ScheduleWidget from '../components/ScheduleWidget'
-import ActionItemsWidget from '../components/ActionItemsWidget'
+import CommitmentsWidget from '../components/CommitmentsWidget'
 import NudgesWidget from '../components/NudgesWidget'
 import PrepareWidget from '../components/PrepareWidget'
 import QuickCapture from '../components/QuickCapture'
@@ -127,7 +127,7 @@ export default async function HomePage({
           }
           commitments={
             <Suspense fallback={<WidgetSkeleton />}>
-              <ActionItemsWidget workspaceId={workspaceId} personsUrl={personsUrl} />
+              <CommitmentsWidget workspaceId={workspaceId} personsUrl={personsUrl} />
             </Suspense>
           }
           nudges={

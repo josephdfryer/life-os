@@ -20,8 +20,18 @@ export type PlanModel = runtime.Types.Result.DefaultSelection<Prisma.$PlanPayloa
 
 export type AggregatePlan = {
   _count: PlanCountAggregateOutputType | null
+  _avg: PlanAvgAggregateOutputType | null
+  _sum: PlanSumAggregateOutputType | null
   _min: PlanMinAggregateOutputType | null
   _max: PlanMaxAggregateOutputType | null
+}
+
+export type PlanAvgAggregateOutputType = {
+  deferCount: number | null
+}
+
+export type PlanSumAggregateOutputType = {
+  deferCount: number | null
 }
 
 export type PlanMinAggregateOutputType = {
@@ -33,6 +43,9 @@ export type PlanMinAggregateOutputType = {
   timescale: string | null
   successSignals: string | null
   status: $Enums.PlanStatus | null
+  dueOn: Date | null
+  deferCount: number | null
+  completedAt: Date | null
   parentId: string | null
   scheduledStart: Date | null
   scheduledEnd: Date | null
@@ -53,6 +66,9 @@ export type PlanMaxAggregateOutputType = {
   timescale: string | null
   successSignals: string | null
   status: $Enums.PlanStatus | null
+  dueOn: Date | null
+  deferCount: number | null
+  completedAt: Date | null
   parentId: string | null
   scheduledStart: Date | null
   scheduledEnd: Date | null
@@ -73,6 +89,9 @@ export type PlanCountAggregateOutputType = {
   timescale: number
   successSignals: number
   status: number
+  dueOn: number
+  deferCount: number
+  completedAt: number
   parentId: number
   scheduledStart: number
   scheduledEnd: number
@@ -86,6 +105,14 @@ export type PlanCountAggregateOutputType = {
 }
 
 
+export type PlanAvgAggregateInputType = {
+  deferCount?: true
+}
+
+export type PlanSumAggregateInputType = {
+  deferCount?: true
+}
+
 export type PlanMinAggregateInputType = {
   id?: true
   workspaceId?: true
@@ -95,6 +122,9 @@ export type PlanMinAggregateInputType = {
   timescale?: true
   successSignals?: true
   status?: true
+  dueOn?: true
+  deferCount?: true
+  completedAt?: true
   parentId?: true
   scheduledStart?: true
   scheduledEnd?: true
@@ -115,6 +145,9 @@ export type PlanMaxAggregateInputType = {
   timescale?: true
   successSignals?: true
   status?: true
+  dueOn?: true
+  deferCount?: true
+  completedAt?: true
   parentId?: true
   scheduledStart?: true
   scheduledEnd?: true
@@ -135,6 +168,9 @@ export type PlanCountAggregateInputType = {
   timescale?: true
   successSignals?: true
   status?: true
+  dueOn?: true
+  deferCount?: true
+  completedAt?: true
   parentId?: true
   scheduledStart?: true
   scheduledEnd?: true
@@ -185,6 +221,18 @@ export type PlanAggregateArgs<ExtArgs extends runtime.Types.Extensions.InternalA
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: PlanAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: PlanSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: PlanMinAggregateInputType
@@ -215,6 +263,8 @@ export type PlanGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
   take?: number
   skip?: number
   _count?: PlanCountAggregateInputType | true
+  _avg?: PlanAvgAggregateInputType
+  _sum?: PlanSumAggregateInputType
   _min?: PlanMinAggregateInputType
   _max?: PlanMaxAggregateInputType
 }
@@ -228,6 +278,9 @@ export type PlanGroupByOutputType = {
   timescale: string | null
   successSignals: string | null
   status: $Enums.PlanStatus
+  dueOn: Date | null
+  deferCount: number
+  completedAt: Date | null
   parentId: string | null
   scheduledStart: Date | null
   scheduledEnd: Date | null
@@ -238,6 +291,8 @@ export type PlanGroupByOutputType = {
   reconciledAt: Date | null
   sourceNoteId: string | null
   _count: PlanCountAggregateOutputType | null
+  _avg: PlanAvgAggregateOutputType | null
+  _sum: PlanSumAggregateOutputType | null
   _min: PlanMinAggregateOutputType | null
   _max: PlanMaxAggregateOutputType | null
 }
@@ -269,6 +324,9 @@ export type PlanWhereInput = {
   timescale?: Prisma.StringNullableFilter<"Plan"> | string | null
   successSignals?: Prisma.StringNullableFilter<"Plan"> | string | null
   status?: Prisma.EnumPlanStatusFilter<"Plan"> | $Enums.PlanStatus
+  dueOn?: Prisma.DateTimeNullableFilter<"Plan"> | Date | string | null
+  deferCount?: Prisma.IntFilter<"Plan"> | number
+  completedAt?: Prisma.DateTimeNullableFilter<"Plan"> | Date | string | null
   parentId?: Prisma.StringNullableFilter<"Plan"> | string | null
   scheduledStart?: Prisma.DateTimeNullableFilter<"Plan"> | Date | string | null
   scheduledEnd?: Prisma.DateTimeNullableFilter<"Plan"> | Date | string | null
@@ -299,6 +357,9 @@ export type PlanOrderByWithRelationInput = {
   timescale?: Prisma.SortOrderInput | Prisma.SortOrder
   successSignals?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
+  dueOn?: Prisma.SortOrderInput | Prisma.SortOrder
+  deferCount?: Prisma.SortOrder
+  completedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   parentId?: Prisma.SortOrderInput | Prisma.SortOrder
   scheduledStart?: Prisma.SortOrderInput | Prisma.SortOrder
   scheduledEnd?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -333,6 +394,9 @@ export type PlanWhereUniqueInput = Prisma.AtLeast<{
   timescale?: Prisma.StringNullableFilter<"Plan"> | string | null
   successSignals?: Prisma.StringNullableFilter<"Plan"> | string | null
   status?: Prisma.EnumPlanStatusFilter<"Plan"> | $Enums.PlanStatus
+  dueOn?: Prisma.DateTimeNullableFilter<"Plan"> | Date | string | null
+  deferCount?: Prisma.IntFilter<"Plan"> | number
+  completedAt?: Prisma.DateTimeNullableFilter<"Plan"> | Date | string | null
   parentId?: Prisma.StringNullableFilter<"Plan"> | string | null
   scheduledStart?: Prisma.DateTimeNullableFilter<"Plan"> | Date | string | null
   scheduledEnd?: Prisma.DateTimeNullableFilter<"Plan"> | Date | string | null
@@ -362,6 +426,9 @@ export type PlanOrderByWithAggregationInput = {
   timescale?: Prisma.SortOrderInput | Prisma.SortOrder
   successSignals?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
+  dueOn?: Prisma.SortOrderInput | Prisma.SortOrder
+  deferCount?: Prisma.SortOrder
+  completedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   parentId?: Prisma.SortOrderInput | Prisma.SortOrder
   scheduledStart?: Prisma.SortOrderInput | Prisma.SortOrder
   scheduledEnd?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -372,8 +439,10 @@ export type PlanOrderByWithAggregationInput = {
   reconciledAt?: Prisma.SortOrderInput | Prisma.SortOrder
   sourceNoteId?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.PlanCountOrderByAggregateInput
+  _avg?: Prisma.PlanAvgOrderByAggregateInput
   _max?: Prisma.PlanMaxOrderByAggregateInput
   _min?: Prisma.PlanMinOrderByAggregateInput
+  _sum?: Prisma.PlanSumOrderByAggregateInput
 }
 
 export type PlanScalarWhereWithAggregatesInput = {
@@ -388,6 +457,9 @@ export type PlanScalarWhereWithAggregatesInput = {
   timescale?: Prisma.StringNullableWithAggregatesFilter<"Plan"> | string | null
   successSignals?: Prisma.StringNullableWithAggregatesFilter<"Plan"> | string | null
   status?: Prisma.EnumPlanStatusWithAggregatesFilter<"Plan"> | $Enums.PlanStatus
+  dueOn?: Prisma.DateTimeNullableWithAggregatesFilter<"Plan"> | Date | string | null
+  deferCount?: Prisma.IntWithAggregatesFilter<"Plan"> | number
+  completedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Plan"> | Date | string | null
   parentId?: Prisma.StringNullableWithAggregatesFilter<"Plan"> | string | null
   scheduledStart?: Prisma.DateTimeNullableWithAggregatesFilter<"Plan"> | Date | string | null
   scheduledEnd?: Prisma.DateTimeNullableWithAggregatesFilter<"Plan"> | Date | string | null
@@ -406,6 +478,9 @@ export type PlanCreateInput = {
   timescale?: string | null
   successSignals?: string | null
   status?: $Enums.PlanStatus
+  dueOn?: Date | string | null
+  deferCount?: number
+  completedAt?: Date | string | null
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
   externalSource?: string | null
@@ -433,6 +508,9 @@ export type PlanUncheckedCreateInput = {
   timescale?: string | null
   successSignals?: string | null
   status?: $Enums.PlanStatus
+  dueOn?: Date | string | null
+  deferCount?: number
+  completedAt?: Date | string | null
   parentId?: string | null
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
@@ -456,6 +534,9 @@ export type PlanUpdateInput = {
   timescale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   successSignals?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPlanStatusFieldUpdateOperationsInput | $Enums.PlanStatus
+  dueOn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deferCount?: Prisma.IntFieldUpdateOperationsInput | number
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   externalSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -483,6 +564,9 @@ export type PlanUncheckedUpdateInput = {
   timescale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   successSignals?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPlanStatusFieldUpdateOperationsInput | $Enums.PlanStatus
+  dueOn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deferCount?: Prisma.IntFieldUpdateOperationsInput | number
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -508,6 +592,9 @@ export type PlanCreateManyInput = {
   timescale?: string | null
   successSignals?: string | null
   status?: $Enums.PlanStatus
+  dueOn?: Date | string | null
+  deferCount?: number
+  completedAt?: Date | string | null
   parentId?: string | null
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
@@ -526,6 +613,9 @@ export type PlanUpdateManyMutationInput = {
   timescale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   successSignals?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPlanStatusFieldUpdateOperationsInput | $Enums.PlanStatus
+  dueOn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deferCount?: Prisma.IntFieldUpdateOperationsInput | number
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   externalSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -543,6 +633,9 @@ export type PlanUncheckedUpdateManyInput = {
   timescale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   successSignals?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPlanStatusFieldUpdateOperationsInput | $Enums.PlanStatus
+  dueOn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deferCount?: Prisma.IntFieldUpdateOperationsInput | number
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -578,6 +671,9 @@ export type PlanCountOrderByAggregateInput = {
   timescale?: Prisma.SortOrder
   successSignals?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  dueOn?: Prisma.SortOrder
+  deferCount?: Prisma.SortOrder
+  completedAt?: Prisma.SortOrder
   parentId?: Prisma.SortOrder
   scheduledStart?: Prisma.SortOrder
   scheduledEnd?: Prisma.SortOrder
@@ -589,6 +685,10 @@ export type PlanCountOrderByAggregateInput = {
   sourceNoteId?: Prisma.SortOrder
 }
 
+export type PlanAvgOrderByAggregateInput = {
+  deferCount?: Prisma.SortOrder
+}
+
 export type PlanMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   workspaceId?: Prisma.SortOrder
@@ -598,6 +698,9 @@ export type PlanMaxOrderByAggregateInput = {
   timescale?: Prisma.SortOrder
   successSignals?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  dueOn?: Prisma.SortOrder
+  deferCount?: Prisma.SortOrder
+  completedAt?: Prisma.SortOrder
   parentId?: Prisma.SortOrder
   scheduledStart?: Prisma.SortOrder
   scheduledEnd?: Prisma.SortOrder
@@ -618,6 +721,9 @@ export type PlanMinOrderByAggregateInput = {
   timescale?: Prisma.SortOrder
   successSignals?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  dueOn?: Prisma.SortOrder
+  deferCount?: Prisma.SortOrder
+  completedAt?: Prisma.SortOrder
   parentId?: Prisma.SortOrder
   scheduledStart?: Prisma.SortOrder
   scheduledEnd?: Prisma.SortOrder
@@ -627,6 +733,10 @@ export type PlanMinOrderByAggregateInput = {
   reconciliationStatus?: Prisma.SortOrder
   reconciledAt?: Prisma.SortOrder
   sourceNoteId?: Prisma.SortOrder
+}
+
+export type PlanSumOrderByAggregateInput = {
+  deferCount?: Prisma.SortOrder
 }
 
 export type PlanScalarRelationFilter = {
@@ -931,6 +1041,9 @@ export type PlanCreateWithoutWorkspaceInput = {
   timescale?: string | null
   successSignals?: string | null
   status?: $Enums.PlanStatus
+  dueOn?: Date | string | null
+  deferCount?: number
+  completedAt?: Date | string | null
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
   externalSource?: string | null
@@ -956,6 +1069,9 @@ export type PlanUncheckedCreateWithoutWorkspaceInput = {
   timescale?: string | null
   successSignals?: string | null
   status?: $Enums.PlanStatus
+  dueOn?: Date | string | null
+  deferCount?: number
+  completedAt?: Date | string | null
   parentId?: string | null
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
@@ -1009,6 +1125,9 @@ export type PlanScalarWhereInput = {
   timescale?: Prisma.StringNullableFilter<"Plan"> | string | null
   successSignals?: Prisma.StringNullableFilter<"Plan"> | string | null
   status?: Prisma.EnumPlanStatusFilter<"Plan"> | $Enums.PlanStatus
+  dueOn?: Prisma.DateTimeNullableFilter<"Plan"> | Date | string | null
+  deferCount?: Prisma.IntFilter<"Plan"> | number
+  completedAt?: Prisma.DateTimeNullableFilter<"Plan"> | Date | string | null
   parentId?: Prisma.StringNullableFilter<"Plan"> | string | null
   scheduledStart?: Prisma.DateTimeNullableFilter<"Plan"> | Date | string | null
   scheduledEnd?: Prisma.DateTimeNullableFilter<"Plan"> | Date | string | null
@@ -1027,6 +1146,9 @@ export type PlanCreateWithoutPersonInput = {
   timescale?: string | null
   successSignals?: string | null
   status?: $Enums.PlanStatus
+  dueOn?: Date | string | null
+  deferCount?: number
+  completedAt?: Date | string | null
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
   externalSource?: string | null
@@ -1052,6 +1174,9 @@ export type PlanUncheckedCreateWithoutPersonInput = {
   timescale?: string | null
   successSignals?: string | null
   status?: $Enums.PlanStatus
+  dueOn?: Date | string | null
+  deferCount?: number
+  completedAt?: Date | string | null
   parentId?: string | null
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
@@ -1100,6 +1225,9 @@ export type PlanCreateWithoutCalendarLinksInput = {
   timescale?: string | null
   successSignals?: string | null
   status?: $Enums.PlanStatus
+  dueOn?: Date | string | null
+  deferCount?: number
+  completedAt?: Date | string | null
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
   externalSource?: string | null
@@ -1126,6 +1254,9 @@ export type PlanUncheckedCreateWithoutCalendarLinksInput = {
   timescale?: string | null
   successSignals?: string | null
   status?: $Enums.PlanStatus
+  dueOn?: Date | string | null
+  deferCount?: number
+  completedAt?: Date | string | null
   parentId?: string | null
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
@@ -1164,6 +1295,9 @@ export type PlanUpdateWithoutCalendarLinksInput = {
   timescale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   successSignals?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPlanStatusFieldUpdateOperationsInput | $Enums.PlanStatus
+  dueOn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deferCount?: Prisma.IntFieldUpdateOperationsInput | number
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   externalSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1190,6 +1324,9 @@ export type PlanUncheckedUpdateWithoutCalendarLinksInput = {
   timescale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   successSignals?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPlanStatusFieldUpdateOperationsInput | $Enums.PlanStatus
+  dueOn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deferCount?: Prisma.IntFieldUpdateOperationsInput | number
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1212,6 +1349,9 @@ export type PlanCreateWithoutFulfilledByInput = {
   timescale?: string | null
   successSignals?: string | null
   status?: $Enums.PlanStatus
+  dueOn?: Date | string | null
+  deferCount?: number
+  completedAt?: Date | string | null
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
   externalSource?: string | null
@@ -1238,6 +1378,9 @@ export type PlanUncheckedCreateWithoutFulfilledByInput = {
   timescale?: string | null
   successSignals?: string | null
   status?: $Enums.PlanStatus
+  dueOn?: Date | string | null
+  deferCount?: number
+  completedAt?: Date | string | null
   parentId?: string | null
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
@@ -1276,6 +1419,9 @@ export type PlanUpdateWithoutFulfilledByInput = {
   timescale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   successSignals?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPlanStatusFieldUpdateOperationsInput | $Enums.PlanStatus
+  dueOn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deferCount?: Prisma.IntFieldUpdateOperationsInput | number
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   externalSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1302,6 +1448,9 @@ export type PlanUncheckedUpdateWithoutFulfilledByInput = {
   timescale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   successSignals?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPlanStatusFieldUpdateOperationsInput | $Enums.PlanStatus
+  dueOn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deferCount?: Prisma.IntFieldUpdateOperationsInput | number
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1324,6 +1473,9 @@ export type PlanCreateWithoutParentInput = {
   timescale?: string | null
   successSignals?: string | null
   status?: $Enums.PlanStatus
+  dueOn?: Date | string | null
+  deferCount?: number
+  completedAt?: Date | string | null
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
   externalSource?: string | null
@@ -1350,6 +1502,9 @@ export type PlanUncheckedCreateWithoutParentInput = {
   timescale?: string | null
   successSignals?: string | null
   status?: $Enums.PlanStatus
+  dueOn?: Date | string | null
+  deferCount?: number
+  completedAt?: Date | string | null
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
   placeId?: string | null
@@ -1381,6 +1536,9 @@ export type PlanCreateWithoutChildrenInput = {
   timescale?: string | null
   successSignals?: string | null
   status?: $Enums.PlanStatus
+  dueOn?: Date | string | null
+  deferCount?: number
+  completedAt?: Date | string | null
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
   externalSource?: string | null
@@ -1407,6 +1565,9 @@ export type PlanUncheckedCreateWithoutChildrenInput = {
   timescale?: string | null
   successSignals?: string | null
   status?: $Enums.PlanStatus
+  dueOn?: Date | string | null
+  deferCount?: number
+  completedAt?: Date | string | null
   parentId?: string | null
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
@@ -1461,6 +1622,9 @@ export type PlanUpdateWithoutChildrenInput = {
   timescale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   successSignals?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPlanStatusFieldUpdateOperationsInput | $Enums.PlanStatus
+  dueOn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deferCount?: Prisma.IntFieldUpdateOperationsInput | number
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   externalSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1487,6 +1651,9 @@ export type PlanUncheckedUpdateWithoutChildrenInput = {
   timescale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   successSignals?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPlanStatusFieldUpdateOperationsInput | $Enums.PlanStatus
+  dueOn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deferCount?: Prisma.IntFieldUpdateOperationsInput | number
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1509,6 +1676,9 @@ export type PlanCreateWithoutExpectedPeopleInput = {
   timescale?: string | null
   successSignals?: string | null
   status?: $Enums.PlanStatus
+  dueOn?: Date | string | null
+  deferCount?: number
+  completedAt?: Date | string | null
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
   externalSource?: string | null
@@ -1535,6 +1705,9 @@ export type PlanUncheckedCreateWithoutExpectedPeopleInput = {
   timescale?: string | null
   successSignals?: string | null
   status?: $Enums.PlanStatus
+  dueOn?: Date | string | null
+  deferCount?: number
+  completedAt?: Date | string | null
   parentId?: string | null
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
@@ -1573,6 +1746,9 @@ export type PlanUpdateWithoutExpectedPeopleInput = {
   timescale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   successSignals?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPlanStatusFieldUpdateOperationsInput | $Enums.PlanStatus
+  dueOn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deferCount?: Prisma.IntFieldUpdateOperationsInput | number
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   externalSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1599,6 +1775,9 @@ export type PlanUncheckedUpdateWithoutExpectedPeopleInput = {
   timescale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   successSignals?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPlanStatusFieldUpdateOperationsInput | $Enums.PlanStatus
+  dueOn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deferCount?: Prisma.IntFieldUpdateOperationsInput | number
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1621,6 +1800,9 @@ export type PlanCreateWithoutPlaceInput = {
   timescale?: string | null
   successSignals?: string | null
   status?: $Enums.PlanStatus
+  dueOn?: Date | string | null
+  deferCount?: number
+  completedAt?: Date | string | null
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
   externalSource?: string | null
@@ -1647,6 +1829,9 @@ export type PlanUncheckedCreateWithoutPlaceInput = {
   timescale?: string | null
   successSignals?: string | null
   status?: $Enums.PlanStatus
+  dueOn?: Date | string | null
+  deferCount?: number
+  completedAt?: Date | string | null
   parentId?: string | null
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
@@ -1694,6 +1879,9 @@ export type PlanCreateWithoutPurchaseOrderInput = {
   timescale?: string | null
   successSignals?: string | null
   status?: $Enums.PlanStatus
+  dueOn?: Date | string | null
+  deferCount?: number
+  completedAt?: Date | string | null
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
   externalSource?: string | null
@@ -1720,6 +1908,9 @@ export type PlanUncheckedCreateWithoutPurchaseOrderInput = {
   timescale?: string | null
   successSignals?: string | null
   status?: $Enums.PlanStatus
+  dueOn?: Date | string | null
+  deferCount?: number
+  completedAt?: Date | string | null
   parentId?: string | null
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
@@ -1758,6 +1949,9 @@ export type PlanUpdateWithoutPurchaseOrderInput = {
   timescale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   successSignals?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPlanStatusFieldUpdateOperationsInput | $Enums.PlanStatus
+  dueOn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deferCount?: Prisma.IntFieldUpdateOperationsInput | number
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   externalSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1784,6 +1978,9 @@ export type PlanUncheckedUpdateWithoutPurchaseOrderInput = {
   timescale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   successSignals?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPlanStatusFieldUpdateOperationsInput | $Enums.PlanStatus
+  dueOn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deferCount?: Prisma.IntFieldUpdateOperationsInput | number
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1806,6 +2003,9 @@ export type PlanCreateWithoutSourceNoteInput = {
   timescale?: string | null
   successSignals?: string | null
   status?: $Enums.PlanStatus
+  dueOn?: Date | string | null
+  deferCount?: number
+  completedAt?: Date | string | null
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
   externalSource?: string | null
@@ -1832,6 +2032,9 @@ export type PlanUncheckedCreateWithoutSourceNoteInput = {
   timescale?: string | null
   successSignals?: string | null
   status?: $Enums.PlanStatus
+  dueOn?: Date | string | null
+  deferCount?: number
+  completedAt?: Date | string | null
   parentId?: string | null
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
@@ -1880,6 +2083,9 @@ export type PlanCreateManyWorkspaceInput = {
   timescale?: string | null
   successSignals?: string | null
   status?: $Enums.PlanStatus
+  dueOn?: Date | string | null
+  deferCount?: number
+  completedAt?: Date | string | null
   parentId?: string | null
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
@@ -1898,6 +2104,9 @@ export type PlanUpdateWithoutWorkspaceInput = {
   timescale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   successSignals?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPlanStatusFieldUpdateOperationsInput | $Enums.PlanStatus
+  dueOn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deferCount?: Prisma.IntFieldUpdateOperationsInput | number
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   externalSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1923,6 +2132,9 @@ export type PlanUncheckedUpdateWithoutWorkspaceInput = {
   timescale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   successSignals?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPlanStatusFieldUpdateOperationsInput | $Enums.PlanStatus
+  dueOn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deferCount?: Prisma.IntFieldUpdateOperationsInput | number
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1947,6 +2159,9 @@ export type PlanUncheckedUpdateManyWithoutWorkspaceInput = {
   timescale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   successSignals?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPlanStatusFieldUpdateOperationsInput | $Enums.PlanStatus
+  dueOn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deferCount?: Prisma.IntFieldUpdateOperationsInput | number
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1966,6 +2181,9 @@ export type PlanCreateManyPersonInput = {
   timescale?: string | null
   successSignals?: string | null
   status?: $Enums.PlanStatus
+  dueOn?: Date | string | null
+  deferCount?: number
+  completedAt?: Date | string | null
   parentId?: string | null
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
@@ -1984,6 +2202,9 @@ export type PlanUpdateWithoutPersonInput = {
   timescale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   successSignals?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPlanStatusFieldUpdateOperationsInput | $Enums.PlanStatus
+  dueOn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deferCount?: Prisma.IntFieldUpdateOperationsInput | number
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   externalSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2009,6 +2230,9 @@ export type PlanUncheckedUpdateWithoutPersonInput = {
   timescale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   successSignals?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPlanStatusFieldUpdateOperationsInput | $Enums.PlanStatus
+  dueOn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deferCount?: Prisma.IntFieldUpdateOperationsInput | number
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2033,6 +2257,9 @@ export type PlanUncheckedUpdateManyWithoutPersonInput = {
   timescale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   successSignals?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPlanStatusFieldUpdateOperationsInput | $Enums.PlanStatus
+  dueOn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deferCount?: Prisma.IntFieldUpdateOperationsInput | number
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2053,6 +2280,9 @@ export type PlanCreateManyParentInput = {
   timescale?: string | null
   successSignals?: string | null
   status?: $Enums.PlanStatus
+  dueOn?: Date | string | null
+  deferCount?: number
+  completedAt?: Date | string | null
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
   placeId?: string | null
@@ -2070,6 +2300,9 @@ export type PlanUpdateWithoutParentInput = {
   timescale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   successSignals?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPlanStatusFieldUpdateOperationsInput | $Enums.PlanStatus
+  dueOn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deferCount?: Prisma.IntFieldUpdateOperationsInput | number
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   externalSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2096,6 +2329,9 @@ export type PlanUncheckedUpdateWithoutParentInput = {
   timescale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   successSignals?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPlanStatusFieldUpdateOperationsInput | $Enums.PlanStatus
+  dueOn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deferCount?: Prisma.IntFieldUpdateOperationsInput | number
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   placeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2120,6 +2356,9 @@ export type PlanUncheckedUpdateManyWithoutParentInput = {
   timescale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   successSignals?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPlanStatusFieldUpdateOperationsInput | $Enums.PlanStatus
+  dueOn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deferCount?: Prisma.IntFieldUpdateOperationsInput | number
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   placeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2139,6 +2378,9 @@ export type PlanCreateManyPlaceInput = {
   timescale?: string | null
   successSignals?: string | null
   status?: $Enums.PlanStatus
+  dueOn?: Date | string | null
+  deferCount?: number
+  completedAt?: Date | string | null
   parentId?: string | null
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
@@ -2156,6 +2398,9 @@ export type PlanUpdateWithoutPlaceInput = {
   timescale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   successSignals?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPlanStatusFieldUpdateOperationsInput | $Enums.PlanStatus
+  dueOn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deferCount?: Prisma.IntFieldUpdateOperationsInput | number
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   externalSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2182,6 +2427,9 @@ export type PlanUncheckedUpdateWithoutPlaceInput = {
   timescale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   successSignals?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPlanStatusFieldUpdateOperationsInput | $Enums.PlanStatus
+  dueOn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deferCount?: Prisma.IntFieldUpdateOperationsInput | number
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2206,6 +2454,9 @@ export type PlanUncheckedUpdateManyWithoutPlaceInput = {
   timescale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   successSignals?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPlanStatusFieldUpdateOperationsInput | $Enums.PlanStatus
+  dueOn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deferCount?: Prisma.IntFieldUpdateOperationsInput | number
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2225,6 +2476,9 @@ export type PlanCreateManySourceNoteInput = {
   timescale?: string | null
   successSignals?: string | null
   status?: $Enums.PlanStatus
+  dueOn?: Date | string | null
+  deferCount?: number
+  completedAt?: Date | string | null
   parentId?: string | null
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
@@ -2242,6 +2496,9 @@ export type PlanUpdateWithoutSourceNoteInput = {
   timescale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   successSignals?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPlanStatusFieldUpdateOperationsInput | $Enums.PlanStatus
+  dueOn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deferCount?: Prisma.IntFieldUpdateOperationsInput | number
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   externalSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2268,6 +2525,9 @@ export type PlanUncheckedUpdateWithoutSourceNoteInput = {
   timescale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   successSignals?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPlanStatusFieldUpdateOperationsInput | $Enums.PlanStatus
+  dueOn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deferCount?: Prisma.IntFieldUpdateOperationsInput | number
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2292,6 +2552,9 @@ export type PlanUncheckedUpdateManyWithoutSourceNoteInput = {
   timescale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   successSignals?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPlanStatusFieldUpdateOperationsInput | $Enums.PlanStatus
+  dueOn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deferCount?: Prisma.IntFieldUpdateOperationsInput | number
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2360,6 +2623,9 @@ export type PlanSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   timescale?: boolean
   successSignals?: boolean
   status?: boolean
+  dueOn?: boolean
+  deferCount?: boolean
+  completedAt?: boolean
   parentId?: boolean
   scheduledStart?: boolean
   scheduledEnd?: boolean
@@ -2391,6 +2657,9 @@ export type PlanSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   timescale?: boolean
   successSignals?: boolean
   status?: boolean
+  dueOn?: boolean
+  deferCount?: boolean
+  completedAt?: boolean
   parentId?: boolean
   scheduledStart?: boolean
   scheduledEnd?: boolean
@@ -2416,6 +2685,9 @@ export type PlanSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   timescale?: boolean
   successSignals?: boolean
   status?: boolean
+  dueOn?: boolean
+  deferCount?: boolean
+  completedAt?: boolean
   parentId?: boolean
   scheduledStart?: boolean
   scheduledEnd?: boolean
@@ -2441,6 +2713,9 @@ export type PlanSelectScalar = {
   timescale?: boolean
   successSignals?: boolean
   status?: boolean
+  dueOn?: boolean
+  deferCount?: boolean
+  completedAt?: boolean
   parentId?: boolean
   scheduledStart?: boolean
   scheduledEnd?: boolean
@@ -2452,7 +2727,7 @@ export type PlanSelectScalar = {
   sourceNoteId?: boolean
 }
 
-export type PlanOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "workspaceId" | "createdAt" | "personId" | "text" | "timescale" | "successSignals" | "status" | "parentId" | "scheduledStart" | "scheduledEnd" | "placeId" | "externalSource" | "externalInstanceId" | "reconciliationStatus" | "reconciledAt" | "sourceNoteId", ExtArgs["result"]["plan"]>
+export type PlanOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "workspaceId" | "createdAt" | "personId" | "text" | "timescale" | "successSignals" | "status" | "dueOn" | "deferCount" | "completedAt" | "parentId" | "scheduledStart" | "scheduledEnd" | "placeId" | "externalSource" | "externalInstanceId" | "reconciliationStatus" | "reconciledAt" | "sourceNoteId", ExtArgs["result"]["plan"]>
 export type PlanInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   person?: boolean | Prisma.Plan$personArgs<ExtArgs>
@@ -2504,6 +2779,9 @@ export type $PlanPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     timescale: string | null
     successSignals: string | null
     status: $Enums.PlanStatus
+    dueOn: Date | null
+    deferCount: number
+    completedAt: Date | null
     parentId: string | null
     scheduledStart: Date | null
     scheduledEnd: Date | null
@@ -2954,6 +3232,9 @@ export interface PlanFieldRefs {
   readonly timescale: Prisma.FieldRef<"Plan", 'String'>
   readonly successSignals: Prisma.FieldRef<"Plan", 'String'>
   readonly status: Prisma.FieldRef<"Plan", 'PlanStatus'>
+  readonly dueOn: Prisma.FieldRef<"Plan", 'DateTime'>
+  readonly deferCount: Prisma.FieldRef<"Plan", 'Int'>
+  readonly completedAt: Prisma.FieldRef<"Plan", 'DateTime'>
   readonly parentId: Prisma.FieldRef<"Plan", 'String'>
   readonly scheduledStart: Prisma.FieldRef<"Plan", 'DateTime'>
   readonly scheduledEnd: Prisma.FieldRef<"Plan", 'DateTime'>

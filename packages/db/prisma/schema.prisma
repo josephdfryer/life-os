@@ -733,6 +733,13 @@ model Plan {
   timescale      String?
   successSignals String?
   status         PlanStatus @default(active)
+  // Commitment tracking. `dueOn` is the day I declared I would do this — a
+  // promise to myself, not a calendar slot (that is `scheduledStart`). Snoozing
+  // pushes `dueOn` forward and increments `deferCount`; past STALE_DEFER_COUNT
+  // Home stops offering snooze and forces schedule-or-drop.
+  dueOn          DateTime?
+  deferCount     Int        @default(0)
+  completedAt    DateTime?
   parentId       String?
   children       Plan[]   @relation("PlanHierarchy")
   parent         Plan?    @relation("PlanHierarchy", fields: [parentId], references: [id])
@@ -758,6 +765,7 @@ model Plan {
   @@index([workspaceId, createdAt])
   @@index([workspaceId, personId])
   @@index([workspaceId, scheduledStart])
+  @@index([workspaceId, status, dueOn])
   @@index([externalInstanceId])
 }
 
