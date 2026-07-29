@@ -106,7 +106,7 @@ export const bulkDeletePeopleContract = z.object({
 export const bulkCreatePeopleContract = z.object({
   contacts: z.array(z.object({
     first: z.string().trim().min(1).max(200),
-    last: z.string().trim().min(1).max(200),
+    last: z.string().trim().max(200),
     email: z.string().trim().max(512).optional().nullable(),
     emails: stringList.optional(),
     phone: z.string().trim().max(100).optional().nullable(),

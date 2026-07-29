@@ -9,6 +9,7 @@ import { DUPLICATE_THRESHOLD, computeStats, findMatch, getStatus, guessNameFromE
 import { ContactReviewCard } from "./components/ContactReviewCard"
 import { clearSelection as clearReviewSelection, keepOnly, setActionAt, setSelectedAt, skipAt, skipWhere } from "./review-transitions"
 import type { SpreadsheetImportSummary } from "@/lib/spreadsheet-contacts"
+import { requireSuccessfulImportResponse } from "./import-response"
 
 const PAGE_SIZE = 25
 // ── Types ─────────────────────────────────────────────────────────────────────
@@ -269,10 +270,11 @@ export default function ImportContactsPage() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ contacts: contactPayloads }),
         })
-        if (res.ok) {
-          const json = await res.json()
-          created += json.created ?? chunk.length
-        }
+        const json = await requireSuccessfulImportResponse<{ created?: number }>(
+          res,
+          "Could not create these people. No records in this batch were changed.",
+        )
+        created += json.created ?? chunk.length
         done += chunk.length
         setImportProgress({ done, total: toProcess.length })
       }
@@ -290,10 +292,11 @@ export default function ImportContactsPage() {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ updates: updatePayloads }),
           })
-          if (res.ok) {
-            const json = await res.json()
-            updated += json.updated ?? updatePayloads.length
-          }
+          const json = await requireSuccessfulImportResponse<{ updated?: number }>(
+            res,
+            "Could not update these people. No records in this batch were changed.",
+          )
+          updated += json.updated ?? updatePayloads.length
         }
         done += chunk.length
         setImportProgress({ done, total: toProcess.length })
@@ -304,7 +307,8 @@ export default function ImportContactsPage() {
       setImportProgress(null)
       setStep("done")
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Import failed")
+      setImportProgress(null)
+      setError(e instanceof Error ? `Import stopped: ${e.message}` : "Import stopped because saving failed.")
     } finally {
       setSaving(false)
     }

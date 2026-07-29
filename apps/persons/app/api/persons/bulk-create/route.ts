@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
       return {
         workspaceId: actor.workspaceId,
         first: requiredString(contact.first, "first"),
-        last: requiredString(contact.last, "last"),
+        last: optionalString(contact.last) ?? "",
         nickname: optionalString(contact.nickname),
         title: optionalString(contact.title),
         headline: optionalString(contact.headline),
