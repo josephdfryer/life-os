@@ -43,6 +43,7 @@ apps/persons/package-lock.json
 
 # Personal data / runtime outputs (not for version control)
 archive/
+backups/
 briefs/
 capture/
 logs/

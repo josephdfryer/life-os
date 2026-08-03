@@ -1,8 +1,16 @@
 import { db } from "@/lib/db"
-import { centsToDollars } from "@life-os/db"
+
+// Spend queries against the canonical graph.
+//
+// Financial transactions are Interactions (docs/FINANCE_INTERACTION_MODEL_PLAN.md),
+// with amount/category/merchant/actor as real indexed columns. So every number
+// below is a SQL GROUP BY over an index — not a findMany of every row followed by
+// JSON.parse and a reduce in JavaScript, which is what this file used to do while
+// the data was stranded in the StagedInteraction review queue.
 
 const TZ = "America/Los_Angeles"
 const DEFAULT_LIMIT = 10
+const WORKSPACE_FINANCIAL = { type: "financial", direction: "paid" }
 
 export type SpendBreakdownInput = {
   dateExpression?: string
@@ -12,128 +20,27 @@ export type SpendBreakdownInput = {
   category?: string
   placeName?: string
   limit?: number
+  /** Scope to one person's own spending (an owned account). */
+  actorPersonId?: string
+  /** Scope to a household: members' personal spend + joint spend on shared accounts. */
+  groupId?: string
 }
 
-type SpendTransaction = {
-  id: string
-  source: "era_staged" | "interaction"
-  sourceId?: string | null
-  date: string
-  timestamp: Date
-  merchant: string
-  category: string
-  amount: number
-  rawAmount?: number | null
-  placeName?: string | null
-  placeGooglePlaceId?: string | null
-  status?: string | null
-  summary?: string | null
-}
-
-type EraMeta = {
-  amount?: number
-  rawAmount?: number
-  eraCategory?: string
-  transfer?: boolean
-  rawDescription?: string
-  placeMatch?: {
-    band?: string
-    merchantPlace?: {
-      name?: string
-      googlePlaceId?: string | null
-    } | null
-  }
-}
-
-type InteractionMeta = {
-  eraCategory?: string
-  rawAmount?: number
-  transfer?: boolean
-  placeMatch?: EraMeta["placeMatch"]
-}
+type GroupRow = { name: string; total: number; count: number }
 
 export async function getSpendBreakdown(input: SpendBreakdownInput, workspaceId: string) {
   const range = resolveDateRange(input)
   const limit = Math.min(25, Math.max(3, Math.round(input.limit ?? DEFAULT_LIMIT)))
-  const [eraRows, interactionRows, places] = await Promise.all([
-    db.stagedInteraction.findMany({
-      where: {
-        workspaceId,
-        source: "era",
-        timestamp: { gte: range.start, lt: range.end },
-      },
-      select: {
-        id: true,
-        sourceId: true,
-        timestamp: true,
-        contactName: true,
-        summary: true,
-        status: true,
-        interactionId: true,
-        metadata: true,
-      },
-      orderBy: { timestamp: "asc" },
-      take: 2000,
-    }),
-    db.interaction.findMany({
-      where: {
-        workspaceId,
-        type: "financial",
-        timestamp: { gte: range.start, lt: range.end },
-        amount: { not: null },
-      },
-      select: {
-        id: true,
-        timestamp: true,
-        summary: true,
-        amount: true,
-        direction: true,
-        notes: true,
-        place: { select: { name: true, googlePlaceId: true } },
-      },
-      orderBy: { timestamp: "asc" },
-      take: 2000,
-    }),
-    db.place.findMany({
-      where: { workspaceId, googlePlaceId: { not: null } },
-      select: { name: true, googlePlaceId: true },
-    }),
+  const scope = buildScope(input, workspaceId, range)
+
+  const [totals, byCategory, byMerchant, byPlace, largest, sample] = await Promise.all([
+    queryTotals(scope),
+    queryGroup(scope, `COALESCE(NULLIF(i."category", ''), 'uncategorized')`, limit),
+    queryGroup(scope, `COALESCE(NULLIF(i."merchantName", ''), i."summary", 'unknown merchant')`, limit),
+    queryGroup(scope, `pl."name"`, limit, `AND i."placeId" IS NOT NULL`),
+    queryTransactions(scope, limit, `i."amount" DESC`),
+    queryTransactions(scope, limit, `i."timestamp" ASC`),
   ])
-
-  const placeNameByGoogleId = new Map(places.map(place => [place.googlePlaceId!, place.name]))
-  const linkedInteractionIds = new Set(eraRows.map(row => row.interactionId).filter((id): id is string => Boolean(id)))
-  const transactions: SpendTransaction[] = []
-
-  for (const row of eraRows) {
-    const meta = parseJson<EraMeta>(row.metadata)
-    if (!isPaidEraTransaction(meta)) continue
-    const tx = eraTransactionFromRow(row, meta, placeNameByGoogleId)
-    if (matchesFilters(tx, input)) transactions.push(tx)
-  }
-
-  for (const row of interactionRows) {
-    if (linkedInteractionIds.has(row.id)) continue
-    const meta = parseJson<InteractionMeta>(row.notes)
-    if (meta?.transfer) continue
-    if (row.direction && !["paid", "debit", "outflow"].includes(row.direction)) continue
-    const tx = {
-      id: row.id,
-      source: "interaction" as const,
-      date: localDateKey(row.timestamp),
-      timestamp: row.timestamp,
-      merchant: row.summary ?? "transaction",
-      category: meta?.eraCategory ?? "uncategorized",
-      amount: roundMoney(Math.abs(centsToDollars(row.amount) ?? 0)),
-      rawAmount: meta?.rawAmount ?? null,
-      placeName: row.place?.name ?? placeNameFromMatch(meta?.placeMatch, placeNameByGoogleId),
-      placeGooglePlaceId: row.place?.googlePlaceId ?? meta?.placeMatch?.merchantPlace?.googlePlaceId ?? null,
-      summary: row.summary,
-    }
-    if (tx.amount > 0 && matchesFilters(tx, input)) transactions.push(tx)
-  }
-
-  transactions.sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime() || a.id.localeCompare(b.id))
-  const total = roundMoney(transactions.reduce((sum, tx) => sum + tx.amount, 0))
 
   return {
     range: {
@@ -147,100 +54,163 @@ export async function getSpendBreakdown(input: SpendBreakdownInput, workspaceId:
       category: cleanOptional(input.category),
       placeName: cleanOptional(input.placeName),
     },
-    total,
-    transactionCount: transactions.length,
-    byMerchant: topGroups(transactions, tx => tx.merchant, limit),
-    byCategory: topGroups(transactions, tx => tx.category, limit),
-    byPlace: topGroups(transactions.filter(tx => tx.placeName), tx => tx.placeName ?? "Unknown place", limit),
-    largestTransactions: [...transactions]
-      .sort((a, b) => b.amount - a.amount)
-      .slice(0, limit)
-      .map(tx => ({
-        date: tx.date,
-        merchant: tx.merchant,
-        category: tx.category,
-        place: tx.placeName ?? null,
-        amount: tx.amount,
-        id: tx.id,
-        source: tx.source,
-      })),
-    sampleTransactions: transactions.slice(0, limit).map(tx => ({
+    total: totals.total,
+    transactionCount: totals.count,
+    byMerchant,
+    byCategory,
+    byPlace,
+    largestTransactions: largest,
+    sampleTransactions: sample.map(tx => ({
       date: tx.date,
       merchant: tx.merchant,
       category: tx.category,
-      place: tx.placeName ?? null,
+      place: tx.place,
       amount: tx.amount,
     })),
   }
 }
 
-function eraTransactionFromRow(
-  row: {
-    id: string
-    sourceId: string
-    timestamp: Date
-    contactName: string | null
-    summary: string | null
-    status: string
-  },
-  meta: EraMeta | null,
-  placeNameByGoogleId: Map<string, string>,
-): SpendTransaction {
-  return {
+/** Spend grouped by physical Place — only location-resolved transactions. */
+export async function getPlaceSpend(workspaceId: string, placeName?: string, dateExpression?: string) {
+  const range = resolveDateRange({ dateExpression: dateExpression ?? "last 365 days" })
+  const scope = buildScope({ placeName }, workspaceId, range)
+  const rows = await queryGroup(scope, `pl."name"`, 25, `AND i."placeId" IS NOT NULL`)
+  return { range: { label: range.label, startDate: range.startDate, endDate: range.endDate }, places: rows }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Query construction
+//
+// Filters are assembled as a parameterised WHERE clause once and reused by every
+// aggregate, so all six queries above see exactly the same slice of data.
+// ─────────────────────────────────────────────────────────────────────────────
+
+type Scope = { where: string; params: unknown[] }
+
+function buildScope(input: SpendBreakdownInput, workspaceId: string, range: DateRange): Scope {
+  const clauses = [`i."workspaceId" = ?`, `i."type" = ?`, `i."direction" = ?`, `i."timestamp" >= ?`, `i."timestamp" < ?`]
+  // Bind Date objects, NEVER date strings. Timestamps are stored as
+  // "…T07:00:00.000+00:00"; an ISO string ends in "Z", and since '+' sorts
+  // before 'Z' the two compare unequal at the exact range boundary. That
+  // silently dropped every transaction falling on the first instant of a range
+  // (all of them, since Era dates land on local midnight) while leaking the
+  // end-boundary day in. The driver binds a Date in the stored format.
+  const params: unknown[] = [
+    workspaceId,
+    WORKSPACE_FINANCIAL.type,
+    WORKSPACE_FINANCIAL.direction,
+    range.start,
+    range.end,
+  ]
+
+  // Transfers between your own accounts are not spending. `direction = 'paid'`
+  // already excludes them (they carry direction 'transfer'), but be explicit so
+  // a future subtype change cannot silently double-count a card payment.
+  clauses.push(`(i."subtype" IS NULL OR i."subtype" <> 'transfer')`)
+
+  const merchant = cleanOptional(input.merchant)
+  if (merchant) {
+    clauses.push(`(LOWER(COALESCE(i."merchantName", '')) LIKE ? OR LOWER(COALESCE(i."summary", '')) LIKE ?)`)
+    params.push(`%${merchant.toLowerCase()}%`, `%${merchant.toLowerCase()}%`)
+  }
+
+  const category = cleanOptional(input.category)
+  if (category) {
+    clauses.push(`LOWER(COALESCE(i."category", '')) LIKE ?`)
+    params.push(`%${category.toLowerCase()}%`)
+  }
+
+  const place = cleanOptional(input.placeName)
+  if (place) {
+    clauses.push(`LOWER(COALESCE(pl."name", '')) LIKE ?`)
+    params.push(`%${place.toLowerCase()}%`)
+  }
+
+  if (input.actorPersonId) {
+    clauses.push(`i."actorPersonId" = ?`)
+    params.push(input.actorPersonId)
+  }
+
+  // Household scope: a member's own spending, OR joint spending attributed to
+  // the group itself via a participant edge (shared accounts have no single owner).
+  if (input.groupId) {
+    clauses.push(`(
+      EXISTS (SELECT 1 FROM "PersonGroup" pg WHERE pg."personId" = i."actorPersonId" AND pg."groupId" = ?)
+      OR EXISTS (SELECT 1 FROM "InteractionParticipant" ip
+                  WHERE ip."interactionId" = i."id" AND ip."entityType" = 'Group' AND ip."entityId" = ?)
+    )`)
+    params.push(input.groupId, input.groupId)
+  }
+
+  return { where: clauses.join(" AND "), params }
+}
+
+const FROM = `FROM "Interaction" i LEFT JOIN "Place" pl ON pl."id" = i."placeId"`
+
+async function queryTotals(scope: Scope) {
+  const rows = await db.$queryRawUnsafe<{ total: number | null; n: number }[]>(
+    `SELECT SUM(i."amount") AS total, COUNT(*) AS n ${FROM} WHERE ${scope.where}`,
+    ...scope.params,
+  )
+  return { total: centsToDollars(rows[0]?.total), count: Number(rows[0]?.n ?? 0) }
+}
+
+async function queryGroup(scope: Scope, keyExpression: string, limit: number, extra = ""): Promise<GroupRow[]> {
+  // GROUP BY / ORDER BY use ordinals, and the aliases deliberately avoid the
+  // names of any column on the joined tables. `AS name` + `GROUP BY name` binds
+  // to Place."name" rather than the alias, which silently collapsed every
+  // category into a single bucket keyed by whichever row SQLite saw first.
+  const rows = await db.$queryRawUnsafe<{ bucket: string | null; total_cents: number | null; row_count: number }[]>(
+    `SELECT ${keyExpression} AS bucket, SUM(i."amount") AS total_cents, COUNT(*) AS row_count
+       ${FROM}
+      WHERE ${scope.where} ${extra}
+      GROUP BY 1
+      ORDER BY 2 DESC, 3 DESC
+      LIMIT ${limit}`,
+    ...scope.params,
+  )
+  return rows
+    .filter(row => row.bucket)
+    .map(row => ({ name: String(row.bucket), total: centsToDollars(row.total_cents), count: Number(row.row_count) }))
+}
+
+async function queryTransactions(scope: Scope, limit: number, orderBy: string) {
+  const rows = await db.$queryRawUnsafe<{
+    id: string; ts: string; merchant: string | null; category: string | null; place: string | null; amount: number
+  }[]>(
+    // Aliases are qualified/unique for the same shadowing reason as queryGroup.
+    `SELECT i."id" AS id, i."timestamp" AS ts,
+            COALESCE(NULLIF(i."merchantName", ''), i."summary") AS merchant,
+            i."category" AS category, pl."name" AS place, i."amount" AS amount
+       ${FROM}
+      WHERE ${scope.where}
+      ORDER BY ${orderBy}
+      LIMIT ${limit}`,
+    ...scope.params,
+  )
+  return rows.map(row => ({
+    date: localDateKey(new Date(row.ts)),
+    merchant: row.merchant ?? "unknown merchant",
+    category: row.category ?? "uncategorized",
+    place: row.place ?? null,
+    amount: centsToDollars(row.amount),
     id: row.id,
-    source: "era_staged",
-    sourceId: row.sourceId,
-    date: localDateKey(row.timestamp),
-    timestamp: row.timestamp,
-    merchant: row.contactName ?? meta?.rawDescription ?? row.summary ?? "unknown merchant",
-    category: meta?.eraCategory ?? "uncategorized",
-    amount: roundMoney(Math.abs(Number(meta?.amount ?? meta?.rawAmount ?? 0))),
-    rawAmount: typeof meta?.rawAmount === "number" ? meta.rawAmount : null,
-    placeName: placeNameFromMatch(meta?.placeMatch, placeNameByGoogleId),
-    placeGooglePlaceId: meta?.placeMatch?.merchantPlace?.googlePlaceId ?? null,
-    status: row.status,
-    summary: row.summary,
-  }
+    source: "interaction" as const,
+  }))
 }
 
-function isPaidEraTransaction(meta: EraMeta | null) {
-  if (!meta || meta.transfer) return false
-  if (typeof meta.rawAmount === "number") return meta.rawAmount < 0
-  return typeof meta.amount === "number" && meta.amount > 0
+// Money is stored as integer cents; convert only at the presentation boundary.
+function centsToDollars(cents: number | null | undefined) {
+  return Math.round(Number(cents ?? 0)) / 100
 }
 
-function placeNameFromMatch(match: EraMeta["placeMatch"] | undefined, placeNameByGoogleId: Map<string, string>) {
-  if (!match?.merchantPlace || !["auto", "adjudicated"].includes(match.band ?? "")) return null
-  const googlePlaceId = match.merchantPlace.googlePlaceId
-  return (googlePlaceId ? placeNameByGoogleId.get(googlePlaceId) : null) ?? match.merchantPlace.name ?? null
-}
+// ─────────────────────────────────────────────────────────────────────────────
+// Natural-language date ranges (unchanged behaviour — this part was already good)
+// ─────────────────────────────────────────────────────────────────────────────
 
-function matchesFilters(tx: SpendTransaction, input: SpendBreakdownInput) {
-  const merchant = cleanOptional(input.merchant)?.toLowerCase()
-  const category = cleanOptional(input.category)?.toLowerCase()
-  const place = cleanOptional(input.placeName)?.toLowerCase()
-  if (merchant && !tx.merchant.toLowerCase().includes(merchant)) return false
-  if (category && !tx.category.toLowerCase().includes(category)) return false
-  if (place && !(tx.placeName ?? "").toLowerCase().includes(place)) return false
-  return true
-}
+type DateRange = { label: string; startDate: string; endDate: string; start: Date; end: Date }
 
-function topGroups(transactions: SpendTransaction[], keyFor: (tx: SpendTransaction) => string, limit: number) {
-  const groups = new Map<string, { total: number; count: number }>()
-  for (const tx of transactions) {
-    const key = keyFor(tx) || "uncategorized"
-    const current = groups.get(key) ?? { total: 0, count: 0 }
-    current.total = roundMoney(current.total + tx.amount)
-    current.count += 1
-    groups.set(key, current)
-  }
-  return [...groups.entries()]
-    .map(([name, value]) => ({ name, total: value.total, count: value.count }))
-    .sort((a, b) => b.total - a.total || b.count - a.count || a.name.localeCompare(b.name))
-    .slice(0, limit)
-}
-
-function resolveDateRange(input: SpendBreakdownInput) {
+function resolveDateRange(input: SpendBreakdownInput): DateRange {
   if (isDateOnly(input.startDate)) {
     const startDate = input.startDate!
     const endDate = isDateOnly(input.endDate) ? input.endDate! : startDate
@@ -259,9 +229,9 @@ function resolveDateRange(input: SpendBreakdownInput) {
     return rangeFromDates(`${expression}-01`, addMonths(`${expression}-01`, 1), expression)
   }
 
-  const lastDays = expression.match(/^last\s+(\d{1,3})\s+days?$/)
+  const lastDays = expression.match(/^last\s+(\d{1,4})\s+days?$/)
   if (lastDays) {
-    const days = Math.min(365, Math.max(1, Number(lastDays[1])))
+    const days = Math.min(3650, Math.max(1, Number(lastDays[1])))
     return rangeFromDates(addDays(today, -(days - 1)), addDays(today, 1), `last ${days} days`)
   }
 
@@ -280,6 +250,7 @@ function resolveDateRange(input: SpendBreakdownInput) {
     const start = addMonths(thisMonth, -1)
     return rangeFromDates(start, thisMonth, "last month")
   }
+  if (expression === "this year") return rangeFromDates(`${today.slice(0, 4)}-01-01`, addDays(today, 1), "this year")
 
   const month = monthExpression(expression)
   if (month) return rangeFromDates(month, addMonths(month, 1), expression)
@@ -287,7 +258,7 @@ function resolveDateRange(input: SpendBreakdownInput) {
   return rangeFromDates(addDays(today, -29), addDays(today, 1), "last 30 days")
 }
 
-function rangeFromDates(startDate: string, endExclusiveDate: string, label: string) {
+function rangeFromDates(startDate: string, endExclusiveDate: string, label: string): DateRange {
   return {
     label,
     startDate,
@@ -363,17 +334,4 @@ function addMonths(ymd: string, months: number) {
 function cleanOptional(value?: string) {
   const clean = value?.trim()
   return clean ? clean : undefined
-}
-
-function parseJson<T>(value: string | null): T | null {
-  if (!value) return null
-  try {
-    return JSON.parse(value) as T
-  } catch {
-    return null
-  }
-}
-
-function roundMoney(value: number) {
-  return Math.round(value * 100) / 100
 }

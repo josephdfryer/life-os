@@ -155,7 +155,11 @@ model Person {
   instagram    String?
   color        String?
   colorSoft    String?
-  interactions Interaction[]
+  // Interactions where this person is the counterparty (for a transaction, the merchant)
+  interactions Interaction[] @relation("InteractionCounterparty")
+  // Interactions where this person is whose money/action it was (the payer)
+  actorInteractions Interaction[] @relation("InteractionActor")
+  ownedEraAccounts  EraAccountLink[] @relation("EraAccountOwner")
   stagedInteractions StagedInteraction[]
   plans        Plan[]
   expectedInPlans PlanExpectedPerson[]
@@ -473,9 +477,22 @@ model EraAccountLink {
   lastSeenAt       DateTime?
   transactionLinks EraTransactionLink[]
 
+  // ── Ownership: declared once per account, not per transaction ───────────
+  // The authoritative answer to "whose money is this". Interaction.actorPersonId
+  // is derived from here. A sync must never overwrite these three fields.
+  ownerPersonId    String?
+  ownerPerson      Person?       @relation("EraAccountOwner", fields: [ownerPersonId], references: [id], onDelete: SetNull)
+  // Joint accounts attribute to the household rather than falsely to one spouse.
+  householdGroupId String?
+  householdGroup   Group?        @relation("EraAccountHousehold", fields: [householdGroupId], references: [id], onDelete: SetNull)
+  isShared         Boolean       @default(false)
+  interactions     Interaction[]
+
   @@unique([workspaceId, eraAccountId])
   @@index([connectionId])
   @@index([workspaceId, status])
+  @@index([ownerPersonId])
+  @@index([householdGroupId])
 }
 
 model EraTransactionLink {
@@ -651,9 +668,11 @@ model Interaction {
   workspaceId     String            @default("default-workspace")
   workspace       Workspace         @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   createdAt       DateTime          @default(now())
-  // Person is optional — interactions can involve any combination of primaries
+  // The counterparty — who was on the other end. For a financial Interaction
+  // that is the merchant/payee, not the payer (see actorPersonId below).
+  // Optional: interactions can involve any combination of primaries.
   personId        String?
-  person          Person?           @relation(fields: [personId], references: [id], onDelete: Cascade)
+  person          Person?           @relation("InteractionCounterparty", fields: [personId], references: [id], onDelete: Cascade)
   eventId         String?
   event           Event?            @relation(fields: [eventId], references: [id])
   // Context place (where this interaction happened)
@@ -676,6 +695,41 @@ model Interaction {
   // Provenance — the Note this Interaction was derived from, if any
   sourceNoteId    String?
   sourceNote      Note?             @relation(fields: [sourceNoteId], references: [id], onDelete: SetNull)
+
+  // ── Provenance: dedupe anchor at the canonical level ────────────────────
+  // Lets any source write straight to Interaction idempotently, instead of
+  // routing through StagedInteraction and waiting on a human gate.
+  source          String?           // "era" | "manual" | "imessage" | "gmail" | "calendar"
+  sourceId        String?           // Era transaction_id, Gmail message id, etc.
+
+  // ── Money ───────────────────────────────────────────────────────────────
+  // amount (cents) and direction above carry the value and its sign.
+  subtype         String?           // purchase | payment | transfer | refund | income | fee | subscription
+  currency        String            @default("USD")
+  category        String?           // promoted out of metadata JSON — every spend query groups by it
+  merchantName    String?           // cleaned descriptor; true even when no Person node is warranted
+  accountLinkId   String?           // which card/account — the ownership anchor
+  accountLink     EraAccountLink?   @relation(fields: [accountLinkId], references: [id], onDelete: SetNull)
+
+  // ── Whose money moved ───────────────────────────────────────────────────
+  // A CACHE of EraAccountLink.ownerPersonId, which stays authoritative. Kept on
+  // the row because cash/manual interactions have no account to derive from,
+  // and because "all of Qin's spending" should be one indexed scan.
+  // Drift is reported by the reconciler; never hand-edit this on a row that
+  // has an accountLinkId.
+  actorPersonId   String?
+  actorPerson     Person?           @relation("InteractionActor", fields: [actorPersonId], references: [id], onDelete: SetNull)
+
+  // Source fields worth keeping but never queried directly, as JSON.
+  // `notes` is human-written prose — never put structured data there.
+  metadata        String?
+
+  // ── Enrichment state ────────────────────────────────────────────────────
+  // Context (Place, Event, beneficiaries) attaches later via participants.
+  // Bump enrichmentVersion to force the reconciler to revisit a row.
+  enrichmentVersion Int             @default(0)
+  enrichedAt        DateTime?
+
   itemInteractions ItemInteraction[]
   gmailLinks       GmailMessageLink[]
   eraLinks         EraTransactionLink[]
@@ -683,10 +737,19 @@ model Interaction {
   // full participants, not just Person/Event/Place via the direct fields above.
   participants     InteractionParticipant[]
 
+  // NOTE: SQLite treats NULLs as distinct in a unique index, so the many rows
+  // with no source/sourceId do not collide. Sourced rows dedupe exactly.
+  @@unique([workspaceId, source, sourceId])
   @@index([personId, timestamp(sort: Desc)])
   @@index([workspaceId, timestamp(sort: Desc)])
   @@index([timestamp(sort: Desc)])
   @@index([placeId])
+  // Keyset stream: filter on workspace, order by timestamp, tie-break on id.
+  @@index([workspaceId, timestamp(sort: Desc), id])
+  @@index([workspaceId, type, timestamp(sort: Desc)])
+  @@index([workspaceId, actorPersonId, timestamp(sort: Desc)])
+  @@index([workspaceId, category, timestamp(sort: Desc)])
+  @@index([accountLinkId])
 }
 
 // ─────────────────────────────────────────────
@@ -702,12 +765,27 @@ model InteractionParticipant {
   interaction   Interaction @relation(fields: [interactionId], references: [id], onDelete: Cascade)
   entityType    String      // "Person" | "Place" | "Event" | "Group" | "Plan" | "State" | "Note" | "Item"
   entityId      String
-  role          String?     // "subject" | "observer" | "mentioned" etc
+  role          String?     // "subject" | "observer" | "mentioned"; finance: payer | payee | merchant | occasion | location | beneficiary | household
   workspaceId   String
 
+  // ── Late-bound context, with provenance ─────────────────────────────────
+  // These make enrichment safely re-runnable: the reconciler may overwrite only
+  // rows whose band it wrote itself. band = "manual" is immutable to automation.
+  confidence    Float?      // 0–1
+  band          String?     // "auto" | "suggested" | "adjudicated" | "manual"
+  source        String?     // "era" | "timeline-join" | "merchant-map" | "rule" | "manual"
+  evidence      String?     // JSON — what matched and why; the audit trail
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  // Upsert key for the reconciler. Rows written before this migration may have
+  // a null role; SQLite treats those as distinct, so always set a role on write.
+  @@unique([interactionId, entityType, entityId, role])
   @@index([interactionId])
   @@index([entityType, entityId])
   @@index([workspaceId])
+  @@index([entityType, entityId, interactionId])
+  @@index([workspaceId, entityType, entityId])
 }
 
 // ─────────────────────────────────────────────
@@ -1252,6 +1330,8 @@ model Group {
   updatedAt       DateTime  @updatedAt
 
   personMembers     PersonGroup[]
+  // Joint/shared financial accounts belonging to this group (e.g. a household)
+  eraAccounts       EraAccountLink[] @relation("EraAccountHousehold")
   childGroups       GroupGroup[]  @relation("ParentGroup")
   parentGroups      GroupGroup[]  @relation("ChildGroup")
   placeAffiliations PlaceGroup[]

@@ -3,6 +3,19 @@ import { PrismaClient } from "./generated/prisma/client"
 export { Prisma } from "./generated/prisma/client"
 export * from "./generated/prisma/client"
 
+// Attaching context to an Interaction after the fact — the supported way to
+// enrich a record that already landed. See docs/FINANCE_INTERACTION_MODEL_PLAN.md.
+export {
+  attachContext,
+  detachContext,
+  markEnriched,
+  type AttachContextInput,
+  type AttachContextResult,
+  type EnrichmentBand,
+  type EnrichmentEntityType,
+  type EnrichmentRole,
+} from "./src/enrich"
+
 function createClient(): PrismaClient {
   const log = ["error"] as const
 

@@ -414,6 +414,11 @@ async function reassignAndDelete(
   // clause as defense-in-depth, even though callers already verified both
   // persons belong to this workspace before reaching here.
   if (hints?.interactions !== false) await tx.interaction.updateMany({ where: { personId: deleteId, workspaceId }, data: { personId: keepId } })
+  // Financial attribution: who paid, and which accounts they own. Both FKs are
+  // ON DELETE SET NULL, so skipping these would silently drop the loser's
+  // spending history and account ownership instead of failing loudly.
+  await tx.interaction.updateMany({ where: { actorPersonId: deleteId, workspaceId }, data: { actorPersonId: keepId } })
+  await tx.eraAccountLink.updateMany({ where: { ownerPersonId: deleteId, workspaceId }, data: { ownerPersonId: keepId } })
   if (hints?.plans !== false) await tx.plan.updateMany({ where: { personId: deleteId, workspaceId }, data: { personId: keepId } })
   if (hints?.stagedCandidate !== false) await tx.stagedInteraction.updateMany({ where: { candidatePersonId: deleteId, workspaceId }, data: { candidatePersonId: keepId } })
   if (hints?.stagedAccepted !== false) await tx.stagedInteraction.updateMany({ where: { acceptedPersonId: deleteId, workspaceId }, data: { acceptedPersonId: keepId } })

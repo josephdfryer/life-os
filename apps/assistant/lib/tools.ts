@@ -2,7 +2,7 @@ import type Anthropic from "@anthropic-ai/sdk"
 import { db } from "@/lib/db"
 import { centsToDollars } from "@life-os/db"
 import { captureNote as createCapturedNote } from "@life-os/domain"
-import { getSpendBreakdown, type SpendBreakdownInput } from "@/lib/finance"
+import { getSpendBreakdown, getPlaceSpend as placeSpend, type SpendBreakdownInput } from "@/lib/finance"
 
 const TZ = "America/Los_Angeles"
 
@@ -86,6 +86,7 @@ export const TOOLS: Anthropic.Tool[] = [
         merchant: { type: "string", description: "Filter: merchant name contains" },
         category: { type: "string", description: "Filter: category name contains, e.g. Groceries or Dining out" },
         placeName: { type: "string", description: "Filter: matched physical place name contains" },
+        who: { type: "string", description: "Whose spending: a person's name for their own accounts, or 'us'/'family' for the whole household (members' personal spend plus joint accounts). Omit for everything." },
         limit: { type: "number", description: "Number of rows per breakdown, default 10" },
       },
       required: [],
@@ -351,7 +352,46 @@ async function spendBreakdown(input: Record<string, unknown>, workspaceId: strin
     placeName: optionalString(input.placeName),
     limit: typeof input.limit === "number" ? input.limit : undefined,
   }
-  return formatSpendBreakdown(await getSpendBreakdown(query, workspaceId))
+
+  // "whose money" scoping — resolve a name to a person, or to the household.
+  const who = optionalString(input.who)
+  let scopeLabel = ""
+  if (who) {
+    const scope = await resolveSpendScope(who, workspaceId)
+    if (!scope) return `No person or household matching "${who}"`
+    if (scope.kind === "person") query.actorPersonId = scope.id
+    else query.groupId = scope.id
+    scopeLabel = `\nScope: ${scope.label}`
+  }
+
+  return formatSpendBreakdown(await getSpendBreakdown(query, workspaceId)) + scopeLabel
+}
+
+/**
+ * "us"/"we"/"family" resolves to the household Group; a name resolves to that
+ * person. Household scope covers members' personal spend plus joint spend on
+ * shared accounts, which no single actorPersonId can express.
+ */
+async function resolveSpendScope(who: string, workspaceId: string) {
+  const q = who.trim().toLowerCase()
+  if (["us", "we", "our", "ours", "family", "household", "the family"].includes(q)) {
+    const group = await db.group.findFirst({
+      where: { workspaceId, groupType: "family" },
+      select: { id: true, name: true },
+    })
+    return group ? { kind: "group" as const, id: group.id, label: group.name } : null
+  }
+
+  const person = await db.person.findFirst({
+    where: {
+      workspaceId,
+      OR: [{ first: { contains: who } }, { last: { contains: who } }, { nickname: { contains: who } }],
+      // Only people who actually own an account can be a spend actor.
+      ownedEraAccounts: { some: {} },
+    },
+    select: { id: true, first: true, last: true },
+  })
+  return person ? { kind: "person" as const, id: person.id, label: `${person.first} ${person.last}` } : null
 }
 
 type SpendBreakdownResult = Awaited<ReturnType<typeof getSpendBreakdown>>
@@ -404,37 +444,14 @@ function optionalString(value: unknown) {
 }
 
 async function getPlaceSpend(workspaceId: string, placeName?: string) {
-  const [rows, places] = await Promise.all([
-    db.stagedInteraction.findMany({
-      where: { workspaceId, source: "era" },
-      select: { contactName: true, metadata: true },
-    }),
-    db.place.findMany({
-      where: { workspaceId, googlePlaceId: { not: null } },
-      select: { name: true, googlePlaceId: true },
-    }),
-  ])
-  const nameByGoogleId = new Map(places.map(p => [p.googlePlaceId!, p.name]))
-  const byPlace = new Map<string, { total: number; count: number }>()
-  for (const row of rows) {
-    try {
-      const meta = JSON.parse(row.metadata ?? "{}") as { amount?: number; placeMatch?: { band?: string; merchantPlace?: { googlePlaceId?: string | null; name?: string } | null } }
-      const match = meta.placeMatch
-      if (!match?.merchantPlace?.googlePlaceId || !["auto", "adjudicated"].includes(match.band ?? "")) continue
-      const name = nameByGoogleId.get(match.merchantPlace.googlePlaceId) ?? match.merchantPlace.name ?? "unknown"
-      if (placeName && !name.toLowerCase().includes(placeName.toLowerCase())) continue
-      const entry = byPlace.get(name) ?? { total: 0, count: 0 }
-      entry.total += meta.amount ?? 0
-      entry.count += 1
-      byPlace.set(name, entry)
-    } catch { /* skip */ }
-  }
-  if (!byPlace.size) return placeName ? `No place-matched spend for "${placeName}"` : "No place-matched spend yet"
-  return [...byPlace.entries()]
-    .sort((a, b) => b[1].total - a[1].total)
-    .slice(0, 12)
-    .map(([name, v]) => `${name}: $${v.total.toFixed(2)} (${v.count}x)`)
-    .join("\n")
+  // Place links live on Interaction.placeId, attached by the enrichment
+  // reconciler — so this grows on its own as location data arrives.
+  const result = await placeSpend(workspaceId, placeName)
+  if (!result.places.length) return placeName ? `No place-matched spend for "${placeName}"` : "No place-matched spend yet"
+  return [
+    `Spend by place (${result.range.label}):`,
+    ...result.places.map(row => `- ${row.name}: ${currency(row.total)} (${row.count}x)`),
+  ].join("\n")
 }
 
 async function searchNotes(query: string, workspaceId: string) {
