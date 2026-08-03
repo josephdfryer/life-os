@@ -79,6 +79,12 @@ model Workspace {
   levelUpTrainingSets  LevelUpTrainingSet[]
   levelUpBadgeUnlocks  LevelUpBadgeUnlock[]
   levelUpTargetBuilds  LevelUpTargetBuild[]
+  levelUpExercises     LevelUpExercise[]
+  levelUpPrograms      LevelUpProgram[]
+  levelUpProgramDays   LevelUpProgramDay[]
+  levelUpProgramEntries LevelUpProgramEntry[]
+  levelUpSessions      LevelUpSession[]
+  levelUpBodyMetrics   LevelUpBodyMetric[]
 
   @@index([ownerUserId])
   @@index([status])
@@ -1651,6 +1657,12 @@ model LevelUpProfile {
   standingReachCm      Float?    // for jump/dunk target builds
   primaryBuild         String?   // selected archetype key for the headline OVR
   coldStartCompletedAt DateTime?
+  // Display unit for the workout module. Storage is always kg — the engine's
+  // norms are metric — and lb exists only at the picker and the readout.
+  unitPreference       String    @default("lb") // lb | kg
+  // 1.25 lb micro-plates available, which halves the weight wheel's step.
+  microPlates          Boolean   @default(false)
+  activeProgramId      String?
 }
 
 // A single raw measurement. Provenance is sacred: nothing derived is stored
@@ -1724,10 +1736,24 @@ model LevelUpTrainingSet {
   createdAt       DateTime  @default(now())
   performedAt     DateTime  @default(now())
   sessionId       String?   // groups sets performed together
+  session         LevelUpSession? @relation(fields: [sessionId], references: [id], onDelete: SetNull)
   exerciseKey     String
+  // The workspace's own Exercise row. exerciseKey stays the engine-catalog key
+  // (or the exercise's slug) so rating stays keyed to the pure catalog.
+  exerciseId      String?
+  exercise        LevelUpExercise? @relation(fields: [exerciseId], references: [id], onDelete: SetNull)
+  // Position within the prescription — "set 2 of 4". Null for freeform sets.
+  setIndex        Int?
   reps            Int
   loadKg          Float
+  // Timed work (carries, planks). Null for rep-based movements; the two are
+  // never both meaningful on one set.
+  durationSec     Int?
+  // The load was the body itself. loadKg then carries added weight only (0 for
+  // an unweighted set), which keeps every load column in the same unit.
+  isBodyweight    Boolean   @default(false)
   bodyweightKg    Float?
+  rpe             Float?
   rank            Float?    // cached population rating (null when movement isn't well-normed)
   rankLetter      String?
   balanceResidual Float?    // cached residual vs anchor-lift prediction, in rating points
@@ -1735,6 +1761,127 @@ model LevelUpTrainingSet {
 
   @@index([workspaceId, exerciseKey, performedAt])
   @@index([workspaceId, sessionId])
+  @@index([workspaceId, exerciseId, performedAt])
+}
+
+// ─────────────────────────────────────────────
+// THE WORKOUT LAYER
+//
+// The ratings engine sees test protocols; this layer sees a person under a bar.
+// An Exercise is a movement this workspace actually performs — a superset of
+// the engine's EXERCISE_CATALOG, because carries and planks are real training
+// even though no defensible population norm exists for them. `catalogKey` is
+// the join: present when the engine can rate the movement, null when it can't,
+// and the session screen shows Balance-only or nothing accordingly.
+// ─────────────────────────────────────────────
+
+model LevelUpExercise {
+  id             String    @id @default(cuid())
+  workspaceId    String
+  workspace      Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  createdAt      DateTime  @default(now())
+  key            String    // stable slug, unique within the workspace
+  label          String
+  modality       String    @default("load") // load | duration | bodyweight
+  catalogKey     String?   // engine EXERCISE_CATALOG key when a norm exists
+  defaultRestSec Int       @default(90)
+  muscleGroup    String?
+  // Joint load this movement puts at risk, as a JSON array of tags
+  // ("knee", "lumbar"). First-class because the substitution rule reads it.
+  jointLoad      String?
+  // The lighter movement to swap in when the matching joint is flaring.
+  substituteId   String?
+  substitute     LevelUpExercise?  @relation("ExerciseSubstitution", fields: [substituteId], references: [id], onDelete: SetNull)
+  substituteFor  LevelUpExercise[] @relation("ExerciseSubstitution")
+  entries        LevelUpProgramEntry[]
+  sets           LevelUpTrainingSet[]
+
+  @@unique([workspaceId, key])
+  @@index([workspaceId])
+}
+
+model LevelUpProgram {
+  id          String              @id @default(cuid())
+  workspaceId String
+  workspace   Workspace           @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  createdAt   DateTime            @default(now())
+  name        String
+  notes       String?
+  isActive    Boolean             @default(true)
+  days        LevelUpProgramDay[]
+
+  @@index([workspaceId, isActive])
+}
+
+model LevelUpProgramDay {
+  id          String                @id @default(cuid())
+  workspaceId String
+  workspace   Workspace             @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  programId   String
+  program     LevelUpProgram        @relation(fields: [programId], references: [id], onDelete: Cascade)
+  name        String
+  order       Int                   @default(0)
+  entries     LevelUpProgramEntry[]
+  sessions    LevelUpSession[]
+
+  @@index([programId, order])
+  @@index([workspaceId])
+}
+
+model LevelUpProgramEntry {
+  id                String            @id @default(cuid())
+  workspaceId       String
+  workspace         Workspace         @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  programDayId      String
+  programDay        LevelUpProgramDay @relation(fields: [programDayId], references: [id], onDelete: Cascade)
+  exerciseId        String
+  exercise          LevelUpExercise   @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+  targetSets        Int               @default(3)
+  targetReps        Int?
+  targetLoadKg      Float?
+  targetDurationSec Int?
+  restSec           Int?              // overrides the exercise default
+  order             Int               @default(0)
+
+  @@index([programDayId, order])
+  @@index([workspaceId])
+}
+
+// One trip to the gym. Sets hang off it; duration is derived from the
+// timestamps, never stored.
+model LevelUpSession {
+  id           String             @id @default(cuid())
+  workspaceId  String
+  workspace    Workspace          @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  createdAt    DateTime           @default(now())
+  startedAt    DateTime           @default(now())
+  endedAt      DateTime?
+  programDayId String?
+  programDay   LevelUpProgramDay? @relation(fields: [programDayId], references: [id], onDelete: SetNull)
+  // "Knee is cranky today" — recorded on the session, not buried in notes,
+  // because it changes which movements were prescribed and must stay auditable.
+  kneeFlare    Boolean            @default(false)
+  lumbarFlare  Boolean            @default(false)
+  notes        String?
+  sets         LevelUpTrainingSet[]
+
+  @@index([workspaceId, startedAt])
+}
+
+// Body composition, deliberately its own log rather than a field on the set
+// logger. Feeds relative-strength norms in the engine.
+model LevelUpBodyMetric {
+  id          String    @id @default(cuid())
+  workspaceId String
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  createdAt   DateTime  @default(now())
+  measuredAt  DateTime  @default(now())
+  weightKg    Float?
+  bodyFatPct  Float?
+  musclePct   Float?
+  notes       String?
+
+  @@index([workspaceId, measuredAt])
 }
 
 // Badge unlock events, kept for the career timeline. Current badge state is

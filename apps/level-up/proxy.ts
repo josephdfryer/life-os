@@ -12,5 +12,11 @@ export default auth((req) => {
 })
 
 export const config = {
-  matcher: ["/((?!api/auth|login|_next/static|_next/image|favicon.ico).*)"],
+  // The PWA install assets stay public. A manifest is fetched without
+  // credentials by spec, so gating it behind auth silently drops standalone
+  // display and the start URL at Add-to-Home-Screen time — and an app name and
+  // an icon are nothing to protect.
+  matcher: [
+    "/((?!api/auth|login|_next/static|_next/image|favicon.ico|manifest.webmanifest|apple-icon|icon).*)",
+  ],
 }
