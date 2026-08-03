@@ -60,7 +60,7 @@ export async function PATCH(request: Request, context: { params: Promise<{ id: s
       data = { status: "abandoned", dueOn: null }
       break
     case "today":
-      data = { dueOn: dayToDate(dayKey(now, tz), tz) }
+      data = { status: "active", dueOn: dayToDate(dayKey(now, tz), tz) }
       break
     case "snooze":
       data = {
@@ -77,7 +77,7 @@ export async function PATCH(request: Request, context: { params: Promise<{ id: s
       }
       // Scheduling converts the commitment into a calendar-backed prediction:
       // it leaves the commitments list and shows up on Today instead.
-      data = { scheduledStart, dueOn: null }
+      data = { status: "active", scheduledStart, dueOn: null }
       break
     }
   }

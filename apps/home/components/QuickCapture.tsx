@@ -1,8 +1,9 @@
 "use client"
 
 import { FormEvent, useEffect, useRef, useState } from "react"
+import { useRouter } from "next/navigation"
 
-type CaptureType = "thought" | "observation" | "declaration"
+type CaptureType = "action" | "thought" | "observation" | "declaration"
 type CaptureStatus =
   | { kind: "idle" }
   | { kind: "saving" }
@@ -43,6 +44,7 @@ type SpeechRecognitionLike = {
 type SpeechRecognitionConstructor = new () => SpeechRecognitionLike
 
 export default function QuickCapture() {
+  const router = useRouter()
   const [content, setContent] = useState("")
   const [type, setType] = useState<CaptureType>("thought")
   const [status, setStatus] = useState<CaptureStatus>({ kind: "idle" })
@@ -104,13 +106,19 @@ export default function QuickCapture() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ content: value, type, idempotencyKey }),
       })
-      const body = await response.json().catch(() => null) as { id?: string; error?: string } | null
+      const body = await response.json().catch(() => null) as { id?: string; planId?: string; error?: string } | null
       if (!response.ok) throw new Error(body?.error || "Capture could not be saved")
       if (!body?.id) throw new Error("Capture saved without a Note identifier")
       setContent("")
       requestKeyRef.current = null
       setAnalysis({ kind: "idle" })
-      setStatus({ kind: "saved", message: "Saved to your Notes.", noteId: body.id })
+      const capturedAction = type === "action"
+      setStatus({
+        kind: "saved",
+        message: capturedAction ? "Added to your Action Inbox." : "Saved to your Notes.",
+        noteId: body.id,
+      })
+      if (capturedAction) router.refresh()
     } catch (error) {
       setStatus({
         kind: "error",
@@ -192,7 +200,7 @@ export default function QuickCapture() {
             }
           }}
           maxLength={10_000}
-          placeholder="Lunch with Alex was great — follow up about his new company…"
+          placeholder={type === "action" ? "What might you need to do?" : "Lunch with Alex was great — follow up about his new company…"}
           rows={3}
         />
 
@@ -200,6 +208,7 @@ export default function QuickCapture() {
           <div>
           <div className="quick-capture-types" aria-label="Capture type">
             {([
+              ["action", "Action"],
               ["thought", "Thought"],
               ["observation", "Observation"],
               ["declaration", "Declaration"],
@@ -226,7 +235,7 @@ export default function QuickCapture() {
             className="capture-submit"
             disabled={!content.trim() || status.kind === "saving"}
           >
-            {status.kind === "saving" ? "Saving…" : "Save note"}
+            {status.kind === "saving" ? "Saving…" : type === "action" ? "Add action" : "Save note"}
           </button>
         </div>
       </form>
@@ -244,7 +253,7 @@ export default function QuickCapture() {
         {status.kind === "saved" || status.kind === "error" ? status.message : ""}
       </div>
 
-      {status.kind === "saved" && analysis.kind === "idle" && (
+      {status.kind === "saved" && type !== "action" && analysis.kind === "idle" && (
         <div className="capture-structure-prompt">
           <div>
             <strong>Want help organizing it?</strong>

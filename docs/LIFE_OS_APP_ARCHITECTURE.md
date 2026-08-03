@@ -108,6 +108,13 @@ can edit title, time, and matched People before approval; `NoteSuggestion`
 retains pending, accepted, or dismissed review state. Accepting twice returns
 the original derived entity instead of creating a duplicate.
 
+Explicit action capture is the low-ceremony path through this architecture.
+When the user selects **Action**, Home calls the shared `captureAction` command,
+which atomically writes the original Note and a provenance-linked draft Plan.
+It requires no model call or due date. Draft Plans appear in Home's bounded
+Action Inbox; choosing Today or Schedule promotes them to active Plans. This
+keeps capture cheap without treating every remembered possibility as a promise.
+
 ### Calendar prediction and confirmation
 
 The Events app owns the canonical Google Calendar sync. Provider occurrences

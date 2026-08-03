@@ -1,5 +1,6 @@
 import assert from "node:assert/strict"
 import { captureNote } from "../capture"
+import { captureAction } from "../actions"
 import { reviewNoteSuggestion } from "../note-suggestions"
 import { reconcileCalendarPlan } from "../calendar-reconciliation"
 import { db } from "@life-os/db"
@@ -36,6 +37,26 @@ async function main() {
   assert.equal(retry.note.id, first.note.id)
   assert.equal(await db.note.count({ where: { workspaceId } }), 1)
   assert.match(first.note.metadata ?? "", /integration-test/)
+
+  const firstAction = await captureAction({
+    workspaceId,
+    content: "Call the dentist",
+    source: "integration-test",
+    idempotencyKey: "capture_action_integration_12345678",
+  })
+  const retriedAction = await captureAction({
+    workspaceId,
+    content: "Call the dentist",
+    source: "integration-test",
+    idempotencyKey: "capture_action_integration_12345678",
+  })
+  assert.equal(firstAction.created, true)
+  assert.equal(retriedAction.created, false)
+  assert.equal(retriedAction.note.id, firstAction.note.id)
+  assert.equal(retriedAction.plan.id, firstAction.plan.id)
+  assert.equal(firstAction.plan.status, "draft")
+  assert.equal(firstAction.plan.sourceNoteId, firstAction.note.id)
+  assert.equal(await db.plan.count({ where: { workspaceId, text: "Call the dentist" } }), 1)
 
   const person = await db.person.create({
     data: { workspaceId, first: "Rowan", last: "Example" },

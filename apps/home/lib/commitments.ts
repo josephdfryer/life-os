@@ -9,6 +9,7 @@ export const STALE_DEFER_COUNT = 3
 // visible, but the list is not: a bounded batch gets triaged, a full backlog
 // gets scrolled past.
 export const UNCLAIMED_BATCH_SIZE = 5
+export const ACTION_INBOX_BATCH_SIZE = 5
 
 export type CommitmentAction = "done" | "today" | "snooze" | "drop" | "schedule"
 

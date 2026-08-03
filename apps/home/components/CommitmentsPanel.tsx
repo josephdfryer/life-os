@@ -7,6 +7,8 @@ import { STALE_DEFER_COUNT, type Commitment, type CommitmentAction, type Unclaim
 interface Props {
   today: Commitment[]
   parked: Commitment[]
+  actionInbox: Commitment[]
+  actionInboxTotal: number
   unclaimed: UnclaimedItem[]
   unclaimedTotal: number
   clearedThisWeek: number
@@ -17,6 +19,8 @@ interface Props {
 export default function CommitmentsPanel({
   today: initialToday,
   parked: initialParked,
+  actionInbox: initialActionInbox,
+  actionInboxTotal,
   unclaimed: initialUnclaimed,
   unclaimedTotal,
   clearedThisWeek,
@@ -26,6 +30,8 @@ export default function CommitmentsPanel({
   const router = useRouter()
   const [today, setToday] = useState(initialToday)
   const [parked, setParked] = useState(initialParked)
+  const [actionInbox, setActionInbox] = useState(initialActionInbox)
+  const [actionInboxRemaining, setActionInboxRemaining] = useState(actionInboxTotal)
   const [unclaimed, setUnclaimed] = useState(initialUnclaimed)
   const [remaining, setRemaining] = useState(unclaimedTotal)
   const [cleared, setCleared] = useState(clearedThisWeek)
@@ -40,6 +46,8 @@ export default function CommitmentsPanel({
   const serverState = [
     initialToday.map(item => item.id).join(","),
     initialParked.map(item => item.id).join(","),
+    initialActionInbox.map(item => item.id).join(","),
+    actionInboxTotal,
     initialUnclaimed.map(item => item.id).join(","),
     unclaimedTotal,
     clearedThisWeek,
@@ -49,6 +57,8 @@ export default function CommitmentsPanel({
     setLastServerState(serverState)
     setToday(initialToday)
     setParked(initialParked)
+    setActionInbox(initialActionInbox)
+    setActionInboxRemaining(actionInboxTotal)
     setUnclaimed(initialUnclaimed)
     setRemaining(unclaimedTotal)
     setCleared(clearedThisWeek)
@@ -57,6 +67,7 @@ export default function CommitmentsPanel({
   function drop(id: string) {
     setToday(items => items.filter(item => item.id !== id))
     setParked(items => items.filter(item => item.id !== id))
+    setActionInbox(items => items.filter(item => item.id !== id))
   }
 
   async function act(commitment: Commitment, action: CommitmentAction, scheduledStart?: string) {
@@ -73,11 +84,15 @@ export default function CommitmentsPanel({
         setError(body?.error ?? "Could not update that commitment")
         return
       }
+      if (commitment.status === "draft") {
+        setActionInboxRemaining(count => Math.max(0, count - 1))
+      }
       if (action === "today") {
         // Pulling something in moves it between the two lists rather than
         // leaving the widget — it is now this morning's problem.
         const pulled = { ...commitment, dueOn: todayKey }
         setParked(items => items.filter(item => item.id !== commitment.id))
+        setActionInbox(items => items.filter(item => item.id !== commitment.id))
         setToday(items => [...items.filter(item => item.id !== commitment.id), pulled])
       } else {
         drop(commitment.id)
@@ -126,7 +141,7 @@ export default function CommitmentsPanel({
     }
   }
 
-  const nothingAtAll = today.length === 0 && parked.length === 0 && remaining === 0
+  const nothingAtAll = today.length === 0 && parked.length === 0 && actionInboxRemaining === 0 && remaining === 0
 
   return (
     <div style={card}>
@@ -154,8 +169,8 @@ export default function CommitmentsPanel({
 
             {today.length === 0 ? (
               <div style={emptyLine}>
-                {parked.length > 0
-                  ? 'Nothing pulled in for today — pick one from parked below.'
+                {parked.length > 0 || actionInboxRemaining > 0
+                  ? 'Nothing chosen for today — pull in one honest commitment below.'
                   : 'Nothing due today.'}
               </div>
             ) : (
@@ -195,10 +210,46 @@ export default function CommitmentsPanel({
             )}
           </section>
 
+          {actionInboxRemaining > 0 && (
+            <section style={{ marginTop: '24px' }}>
+              <div style={sectionLabel}>
+                <span>Action inbox · {actionInboxRemaining}</span>
+                <span style={{ color: 'var(--ink-3)', textTransform: 'none', letterSpacing: 0 }}>Remembered, not promised</span>
+              </div>
+              {actionInbox.map(action => (
+                <Row
+                  key={action.id}
+                  title={action.text}
+                  meta={action.ageDays > 0 ? `captured ${action.ageDays}d ago` : 'captured today'}
+                  personId={action.personId}
+                  personName={action.personName}
+                  personsUrl={personsUrl}
+                  busy={busyId === action.id}
+                >
+                  <button style={primaryButton} onClick={() => void act(action, 'today')}>Today</button>
+                  {schedulingId === action.id ? (
+                    <ScheduleInput
+                      onCancel={() => setSchedulingId(null)}
+                      onConfirm={value => void act(action, 'schedule', value)}
+                    />
+                  ) : (
+                    <button style={button} onClick={() => setSchedulingId(action.id)}>Schedule</button>
+                  )}
+                  <button style={button} onClick={() => void act(action, 'drop')}>Drop</button>
+                </Row>
+              ))}
+              {actionInboxRemaining > actionInbox.length && (
+                <div style={emptyLine}>
+                  {actionInboxRemaining - actionInbox.length} more safely held. Clear this batch to see the next.
+                </div>
+              )}
+            </section>
+          )}
+
           {parked.length > 0 && (
             <section style={{ marginTop: '24px' }}>
               <button style={toggle} onClick={() => setShowParked(open => !open)}>
-                {showParked ? '▾' : '▸'} Parked · {parked.length}
+                {showParked ? '▾' : '▸'} Later · {parked.length}
               </button>
               {showParked && parked.map(commitment => (
                 <Row
@@ -221,8 +272,8 @@ export default function CommitmentsPanel({
           {remaining > 0 && (
             <section style={{ marginTop: '24px' }}>
               <div style={sectionLabel}>
-                <span>Unclaimed · {remaining}</span>
-                <span style={{ color: 'var(--ink-3)' }}>pulled from conversations</span>
+                <span>From conversations · {remaining}</span>
+                <span style={{ color: 'var(--ink-3)', textTransform: 'none', letterSpacing: 0 }}>Needs a decision</span>
               </div>
               {unclaimed.map(item => (
                 <Row
@@ -384,7 +435,7 @@ const actions: React.CSSProperties = {
 const button: React.CSSProperties = {
   background: 'transparent',
   border: '1px solid rgba(196, 165, 116, 0.3)',
-  borderRadius: '4px',
+  borderRadius: 'var(--radius-pill)',
   color: 'var(--ink-3)',
   cursor: 'pointer',
   fontSize: '11px',
@@ -423,7 +474,7 @@ const staleNote: React.CSSProperties = {
 const dateInput: React.CSSProperties = {
   background: 'transparent',
   border: '1px solid rgba(196, 165, 116, 0.3)',
-  borderRadius: '4px',
+  borderRadius: 'var(--radius)',
   color: 'inherit',
   fontSize: '11px',
   padding: '3px 6px',
@@ -431,7 +482,7 @@ const dateInput: React.CSSProperties = {
 
 const errorBox: React.CSSProperties = {
   border: '1px solid rgba(196, 165, 116, 0.4)',
-  borderRadius: '4px',
+  borderRadius: 'var(--radius)',
   color: 'var(--camel)',
   fontSize: '12px',
   marginBottom: '16px',
