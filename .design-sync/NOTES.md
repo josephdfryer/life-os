@@ -43,7 +43,21 @@ Repo-specific gotchas for future syncs of the Still design system.
 
 ## Preview authoring
 
-- **All 24 components have authored previews, all graded good.** No floor cards.
+- **All 25 synced components have authored previews, all graded good.** No floor
+  cards. Keep it that way — when the package gains a component, author its
+  preview in the same run rather than letting a floor card land.
+- **`TimezoneDetector` is deliberately excluded** via `componentSrcMap:
+  {"TimezoneDetector": null}`. It `return`s `null` (mount-once side effect that
+  seeds the shared `tz` cookie), so it can never have a meaningful preview and a
+  card for it would just read "preview not yet authored". **It is still exported
+  by the bundle** (`window.Still` has 40 exports vs 25 component folders) — the
+  exclusion only removes the picker card and the docs folder, not the import.
+  Don't "fix" this by deleting the componentSrcMap entry.
+- **`TimezonePicker` previews only the resting state.** The input + Save/Cancel
+  state is behind internal `editing` state with no prop to force it, so it isn't
+  a story. Its `CustomLabel` cell doubles as the "detected zone differs" case —
+  the third affordance appears only when `current` ≠ the browser's zone, which
+  is why that cell uses Europe/London.
 - **Input/Textarea affordances read the CONTROLLED `value`.** The clearable "×"
   and the char counter only appear when you pass `value` + `onChange`, not
   `defaultValue`. Their previews use controlled value.
@@ -55,7 +69,24 @@ Repo-specific gotchas for future syncs of the Still design system.
 
 ## Known render warns
 
-- None outstanding — render check is 24/24 clean (0 bad/thin/variantsIdentical).
+- None outstanding — render check is 25/25 clean (0 bad/thin/variantsIdentical).
+
+## Conventions-header drift caught (2026-07-29 re-sync)
+
+The `conventions.md` validation pass found two claims that no longer verified
+against the build. Both were corrected in place:
+
+- **`size` (`sm`/`md`/`lg`) as a global scale** — false. It's per-component:
+  Button `sm`/`md`, Avatar `sm`/`md`/`lg`, Spinner `number`. An agent reading
+  the old text would write `<Button size="lg">`.
+- **`disabled` listed as a common boolean state** — false. `ButtonProps` is a
+  closed interface (no native `button` prop spread), and NO component in the
+  build declares `disabled?: boolean`. `accent`/`large` are real but belong to
+  StatBlock alone.
+
+Lesson for future syncs: the header's per-component prop claims drift as the DS
+evolves. Re-run the enum/prop grep against `components/*/*/*.d.ts` every sync,
+not just the token grep — tokens were 41/41 clean while props had two errors.
 
 ## Re-sync risks (watch-list)
 
@@ -64,5 +95,14 @@ Repo-specific gotchas for future syncs of the Still design system.
   (the apps serve them at runtime, so the bundle intentionally doesn't).
 - **The `still-tokens.css` comment edit** is a real source change; if that file is
   regenerated upstream the bare-`@import` comment could return and re-trip the scan.
-- **13 floor-card components** are the standing offer for incremental authoring —
-  authored `.tsx` + grades carry forward, so a re-sync only needs the new ones.
+- **No floor cards remain** (that line used to say 13; the backlog was cleared in
+  the 2026-07-28 run). A re-sync only needs to author previews for genuinely new
+  exports — authored `.tsx` + grades carry forward, and the 2026-07-29 run
+  confirmed 25/25 `carried forward`, 0 `grade cleared`.
+- **New `packages/ui` exports arrive silently.** `TimezonePicker` and
+  `TimezoneDetector` appeared between the two syncs with nothing flagging them.
+  The driver's `added` partition is the only signal — read it before assuming a
+  re-sync is a no-op.
+- **The conventions header drifts faster than the tokens do.** See the drift
+  section above: tokens were 41/41 clean while two prop-level claims had gone
+  false. Grep the `.d.ts` unions every sync, not just the token names.

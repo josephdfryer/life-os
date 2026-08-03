@@ -6,6 +6,9 @@
   "cssEntry": "still-tokens.css",
   "runtimeFontPrefixes": ["Inter", "Newsreader"],
   "readmeHeader": ".design-sync/conventions.md",
+  "componentSrcMap": {
+    "TimezoneDetector": null
+  },
   "overrides": {
     "AppShell": {"cardMode": "column"},
     "Divider": {"cardMode": "column"},

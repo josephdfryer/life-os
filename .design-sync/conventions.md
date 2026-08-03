@@ -35,10 +35,15 @@ classes or `className`s — Still has none. Use these real token names:
 - **Spacing:** `--space-xs` … `--space-2xl`
 - **Shadow:** `--shadow-sm`, `--shadow`, `--shadow-lg`
 
-Component look is controlled by **props**, not classes. Common axes: `variant`
-(e.g. Button `primary`/`ghost`/`danger`; Badge `default`/`accent`/`success`/
-`warning`/`muted`), `size` (`sm`/`md`/`lg`), and boolean states (`loading`,
-`disabled`, `accent`, `large`).
+Component look is controlled by **props**, not classes. The main axis is
+`variant` (e.g. Button `primary`/`ghost`/`danger`; Badge `default`/`accent`/
+`success`/`warning`/`muted`).
+
+**`size` is per-component, not a global scale** — Button is `sm`/`md` only,
+Avatar is `sm`/`md`/`lg`, Spinner takes a number. There is no `size="lg"` on
+Button. Boolean states are per-component too (`loading` on Button; `accent` and
+`large` on StatBlock); **no component takes a `disabled` prop**. Read the
+component's `<Name>.d.ts` for the exact union before using a size or a state.
 
 ## Where the truth lives
 
