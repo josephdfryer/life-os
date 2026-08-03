@@ -50,6 +50,9 @@ export type LevelUpProfileMinAggregateOutputType = {
   standingReachCm: number | null
   primaryBuild: string | null
   coldStartCompletedAt: Date | null
+  unitPreference: string | null
+  microPlates: boolean | null
+  activeProgramId: string | null
 }
 
 export type LevelUpProfileMaxAggregateOutputType = {
@@ -64,6 +67,9 @@ export type LevelUpProfileMaxAggregateOutputType = {
   standingReachCm: number | null
   primaryBuild: string | null
   coldStartCompletedAt: Date | null
+  unitPreference: string | null
+  microPlates: boolean | null
+  activeProgramId: string | null
 }
 
 export type LevelUpProfileCountAggregateOutputType = {
@@ -78,6 +84,9 @@ export type LevelUpProfileCountAggregateOutputType = {
   standingReachCm: number
   primaryBuild: number
   coldStartCompletedAt: number
+  unitPreference: number
+  microPlates: number
+  activeProgramId: number
   _all: number
 }
 
@@ -106,6 +115,9 @@ export type LevelUpProfileMinAggregateInputType = {
   standingReachCm?: true
   primaryBuild?: true
   coldStartCompletedAt?: true
+  unitPreference?: true
+  microPlates?: true
+  activeProgramId?: true
 }
 
 export type LevelUpProfileMaxAggregateInputType = {
@@ -120,6 +132,9 @@ export type LevelUpProfileMaxAggregateInputType = {
   standingReachCm?: true
   primaryBuild?: true
   coldStartCompletedAt?: true
+  unitPreference?: true
+  microPlates?: true
+  activeProgramId?: true
 }
 
 export type LevelUpProfileCountAggregateInputType = {
@@ -134,6 +149,9 @@ export type LevelUpProfileCountAggregateInputType = {
   standingReachCm?: true
   primaryBuild?: true
   coldStartCompletedAt?: true
+  unitPreference?: true
+  microPlates?: true
+  activeProgramId?: true
   _all?: true
 }
 
@@ -235,6 +253,9 @@ export type LevelUpProfileGroupByOutputType = {
   standingReachCm: number | null
   primaryBuild: string | null
   coldStartCompletedAt: Date | null
+  unitPreference: string
+  microPlates: boolean
+  activeProgramId: string | null
   _count: LevelUpProfileCountAggregateOutputType | null
   _avg: LevelUpProfileAvgAggregateOutputType | null
   _sum: LevelUpProfileSumAggregateOutputType | null
@@ -272,6 +293,9 @@ export type LevelUpProfileWhereInput = {
   standingReachCm?: Prisma.FloatNullableFilter<"LevelUpProfile"> | number | null
   primaryBuild?: Prisma.StringNullableFilter<"LevelUpProfile"> | string | null
   coldStartCompletedAt?: Prisma.DateTimeNullableFilter<"LevelUpProfile"> | Date | string | null
+  unitPreference?: Prisma.StringFilter<"LevelUpProfile"> | string
+  microPlates?: Prisma.BoolFilter<"LevelUpProfile"> | boolean
+  activeProgramId?: Prisma.StringNullableFilter<"LevelUpProfile"> | string | null
   workspace?: Prisma.XOR<Prisma.WorkspaceScalarRelationFilter, Prisma.WorkspaceWhereInput>
 }
 
@@ -287,6 +311,9 @@ export type LevelUpProfileOrderByWithRelationInput = {
   standingReachCm?: Prisma.SortOrderInput | Prisma.SortOrder
   primaryBuild?: Prisma.SortOrderInput | Prisma.SortOrder
   coldStartCompletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  unitPreference?: Prisma.SortOrder
+  microPlates?: Prisma.SortOrder
+  activeProgramId?: Prisma.SortOrderInput | Prisma.SortOrder
   workspace?: Prisma.WorkspaceOrderByWithRelationInput
 }
 
@@ -305,6 +332,9 @@ export type LevelUpProfileWhereUniqueInput = Prisma.AtLeast<{
   standingReachCm?: Prisma.FloatNullableFilter<"LevelUpProfile"> | number | null
   primaryBuild?: Prisma.StringNullableFilter<"LevelUpProfile"> | string | null
   coldStartCompletedAt?: Prisma.DateTimeNullableFilter<"LevelUpProfile"> | Date | string | null
+  unitPreference?: Prisma.StringFilter<"LevelUpProfile"> | string
+  microPlates?: Prisma.BoolFilter<"LevelUpProfile"> | boolean
+  activeProgramId?: Prisma.StringNullableFilter<"LevelUpProfile"> | string | null
   workspace?: Prisma.XOR<Prisma.WorkspaceScalarRelationFilter, Prisma.WorkspaceWhereInput>
 }, "id" | "workspaceId">
 
@@ -320,6 +350,9 @@ export type LevelUpProfileOrderByWithAggregationInput = {
   standingReachCm?: Prisma.SortOrderInput | Prisma.SortOrder
   primaryBuild?: Prisma.SortOrderInput | Prisma.SortOrder
   coldStartCompletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  unitPreference?: Prisma.SortOrder
+  microPlates?: Prisma.SortOrder
+  activeProgramId?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.LevelUpProfileCountOrderByAggregateInput
   _avg?: Prisma.LevelUpProfileAvgOrderByAggregateInput
   _max?: Prisma.LevelUpProfileMaxOrderByAggregateInput
@@ -342,6 +375,9 @@ export type LevelUpProfileScalarWhereWithAggregatesInput = {
   standingReachCm?: Prisma.FloatNullableWithAggregatesFilter<"LevelUpProfile"> | number | null
   primaryBuild?: Prisma.StringNullableWithAggregatesFilter<"LevelUpProfile"> | string | null
   coldStartCompletedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"LevelUpProfile"> | Date | string | null
+  unitPreference?: Prisma.StringWithAggregatesFilter<"LevelUpProfile"> | string
+  microPlates?: Prisma.BoolWithAggregatesFilter<"LevelUpProfile"> | boolean
+  activeProgramId?: Prisma.StringNullableWithAggregatesFilter<"LevelUpProfile"> | string | null
 }
 
 export type LevelUpProfileCreateInput = {
@@ -355,6 +391,9 @@ export type LevelUpProfileCreateInput = {
   standingReachCm?: number | null
   primaryBuild?: string | null
   coldStartCompletedAt?: Date | string | null
+  unitPreference?: string
+  microPlates?: boolean
+  activeProgramId?: string | null
   workspace: Prisma.WorkspaceCreateNestedOneWithoutLevelUpProfileInput
 }
 
@@ -370,6 +409,9 @@ export type LevelUpProfileUncheckedCreateInput = {
   standingReachCm?: number | null
   primaryBuild?: string | null
   coldStartCompletedAt?: Date | string | null
+  unitPreference?: string
+  microPlates?: boolean
+  activeProgramId?: string | null
 }
 
 export type LevelUpProfileUpdateInput = {
@@ -383,6 +425,9 @@ export type LevelUpProfileUpdateInput = {
   standingReachCm?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   primaryBuild?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coldStartCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  unitPreference?: Prisma.StringFieldUpdateOperationsInput | string
+  microPlates?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  activeProgramId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutLevelUpProfileNestedInput
 }
 
@@ -398,6 +443,9 @@ export type LevelUpProfileUncheckedUpdateInput = {
   standingReachCm?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   primaryBuild?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coldStartCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  unitPreference?: Prisma.StringFieldUpdateOperationsInput | string
+  microPlates?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  activeProgramId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type LevelUpProfileCreateManyInput = {
@@ -412,6 +460,9 @@ export type LevelUpProfileCreateManyInput = {
   standingReachCm?: number | null
   primaryBuild?: string | null
   coldStartCompletedAt?: Date | string | null
+  unitPreference?: string
+  microPlates?: boolean
+  activeProgramId?: string | null
 }
 
 export type LevelUpProfileUpdateManyMutationInput = {
@@ -425,6 +476,9 @@ export type LevelUpProfileUpdateManyMutationInput = {
   standingReachCm?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   primaryBuild?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coldStartCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  unitPreference?: Prisma.StringFieldUpdateOperationsInput | string
+  microPlates?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  activeProgramId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type LevelUpProfileUncheckedUpdateManyInput = {
@@ -439,6 +493,9 @@ export type LevelUpProfileUncheckedUpdateManyInput = {
   standingReachCm?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   primaryBuild?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coldStartCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  unitPreference?: Prisma.StringFieldUpdateOperationsInput | string
+  microPlates?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  activeProgramId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type LevelUpProfileNullableScalarRelationFilter = {
@@ -458,6 +515,9 @@ export type LevelUpProfileCountOrderByAggregateInput = {
   standingReachCm?: Prisma.SortOrder
   primaryBuild?: Prisma.SortOrder
   coldStartCompletedAt?: Prisma.SortOrder
+  unitPreference?: Prisma.SortOrder
+  microPlates?: Prisma.SortOrder
+  activeProgramId?: Prisma.SortOrder
 }
 
 export type LevelUpProfileAvgOrderByAggregateInput = {
@@ -478,6 +538,9 @@ export type LevelUpProfileMaxOrderByAggregateInput = {
   standingReachCm?: Prisma.SortOrder
   primaryBuild?: Prisma.SortOrder
   coldStartCompletedAt?: Prisma.SortOrder
+  unitPreference?: Prisma.SortOrder
+  microPlates?: Prisma.SortOrder
+  activeProgramId?: Prisma.SortOrder
 }
 
 export type LevelUpProfileMinOrderByAggregateInput = {
@@ -492,6 +555,9 @@ export type LevelUpProfileMinOrderByAggregateInput = {
   standingReachCm?: Prisma.SortOrder
   primaryBuild?: Prisma.SortOrder
   coldStartCompletedAt?: Prisma.SortOrder
+  unitPreference?: Prisma.SortOrder
+  microPlates?: Prisma.SortOrder
+  activeProgramId?: Prisma.SortOrder
 }
 
 export type LevelUpProfileSumOrderByAggregateInput = {
@@ -543,6 +609,9 @@ export type LevelUpProfileCreateWithoutWorkspaceInput = {
   standingReachCm?: number | null
   primaryBuild?: string | null
   coldStartCompletedAt?: Date | string | null
+  unitPreference?: string
+  microPlates?: boolean
+  activeProgramId?: string | null
 }
 
 export type LevelUpProfileUncheckedCreateWithoutWorkspaceInput = {
@@ -556,6 +625,9 @@ export type LevelUpProfileUncheckedCreateWithoutWorkspaceInput = {
   standingReachCm?: number | null
   primaryBuild?: string | null
   coldStartCompletedAt?: Date | string | null
+  unitPreference?: string
+  microPlates?: boolean
+  activeProgramId?: string | null
 }
 
 export type LevelUpProfileCreateOrConnectWithoutWorkspaceInput = {
@@ -585,6 +657,9 @@ export type LevelUpProfileUpdateWithoutWorkspaceInput = {
   standingReachCm?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   primaryBuild?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coldStartCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  unitPreference?: Prisma.StringFieldUpdateOperationsInput | string
+  microPlates?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  activeProgramId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type LevelUpProfileUncheckedUpdateWithoutWorkspaceInput = {
@@ -598,6 +673,9 @@ export type LevelUpProfileUncheckedUpdateWithoutWorkspaceInput = {
   standingReachCm?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   primaryBuild?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coldStartCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  unitPreference?: Prisma.StringFieldUpdateOperationsInput | string
+  microPlates?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  activeProgramId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
@@ -614,6 +692,9 @@ export type LevelUpProfileSelect<ExtArgs extends runtime.Types.Extensions.Intern
   standingReachCm?: boolean
   primaryBuild?: boolean
   coldStartCompletedAt?: boolean
+  unitPreference?: boolean
+  microPlates?: boolean
+  activeProgramId?: boolean
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["levelUpProfile"]>
 
@@ -629,6 +710,9 @@ export type LevelUpProfileSelectCreateManyAndReturn<ExtArgs extends runtime.Type
   standingReachCm?: boolean
   primaryBuild?: boolean
   coldStartCompletedAt?: boolean
+  unitPreference?: boolean
+  microPlates?: boolean
+  activeProgramId?: boolean
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["levelUpProfile"]>
 
@@ -644,6 +728,9 @@ export type LevelUpProfileSelectUpdateManyAndReturn<ExtArgs extends runtime.Type
   standingReachCm?: boolean
   primaryBuild?: boolean
   coldStartCompletedAt?: boolean
+  unitPreference?: boolean
+  microPlates?: boolean
+  activeProgramId?: boolean
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["levelUpProfile"]>
 
@@ -659,9 +746,12 @@ export type LevelUpProfileSelectScalar = {
   standingReachCm?: boolean
   primaryBuild?: boolean
   coldStartCompletedAt?: boolean
+  unitPreference?: boolean
+  microPlates?: boolean
+  activeProgramId?: boolean
 }
 
-export type LevelUpProfileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "workspaceId" | "createdAt" | "updatedAt" | "birthDate" | "sex" | "bodyweightKg" | "heightCm" | "standingReachCm" | "primaryBuild" | "coldStartCompletedAt", ExtArgs["result"]["levelUpProfile"]>
+export type LevelUpProfileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "workspaceId" | "createdAt" | "updatedAt" | "birthDate" | "sex" | "bodyweightKg" | "heightCm" | "standingReachCm" | "primaryBuild" | "coldStartCompletedAt" | "unitPreference" | "microPlates" | "activeProgramId", ExtArgs["result"]["levelUpProfile"]>
 export type LevelUpProfileInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
 }
@@ -689,6 +779,9 @@ export type $LevelUpProfilePayload<ExtArgs extends runtime.Types.Extensions.Inte
     standingReachCm: number | null
     primaryBuild: string | null
     coldStartCompletedAt: Date | null
+    unitPreference: string
+    microPlates: boolean
+    activeProgramId: string | null
   }, ExtArgs["result"]["levelUpProfile"]>
   composites: {}
 }
@@ -1124,6 +1217,9 @@ export interface LevelUpProfileFieldRefs {
   readonly standingReachCm: Prisma.FieldRef<"LevelUpProfile", 'Float'>
   readonly primaryBuild: Prisma.FieldRef<"LevelUpProfile", 'String'>
   readonly coldStartCompletedAt: Prisma.FieldRef<"LevelUpProfile", 'DateTime'>
+  readonly unitPreference: Prisma.FieldRef<"LevelUpProfile", 'String'>
+  readonly microPlates: Prisma.FieldRef<"LevelUpProfile", 'Boolean'>
+  readonly activeProgramId: Prisma.FieldRef<"LevelUpProfile", 'String'>
 }
     
 

@@ -208,6 +208,7 @@ export type GroupWhereInput = {
   sourceNoteId?: Prisma.StringNullableFilter<"Group"> | string | null
   workspace?: Prisma.XOR<Prisma.WorkspaceScalarRelationFilter, Prisma.WorkspaceWhereInput>
   personMembers?: Prisma.PersonGroupListRelationFilter
+  eraAccounts?: Prisma.EraAccountLinkListRelationFilter
   childGroups?: Prisma.GroupGroupListRelationFilter
   parentGroups?: Prisma.GroupGroupListRelationFilter
   placeAffiliations?: Prisma.PlaceGroupListRelationFilter
@@ -227,6 +228,7 @@ export type GroupOrderByWithRelationInput = {
   sourceNoteId?: Prisma.SortOrderInput | Prisma.SortOrder
   workspace?: Prisma.WorkspaceOrderByWithRelationInput
   personMembers?: Prisma.PersonGroupOrderByRelationAggregateInput
+  eraAccounts?: Prisma.EraAccountLinkOrderByRelationAggregateInput
   childGroups?: Prisma.GroupGroupOrderByRelationAggregateInput
   parentGroups?: Prisma.GroupGroupOrderByRelationAggregateInput
   placeAffiliations?: Prisma.PlaceGroupOrderByRelationAggregateInput
@@ -249,6 +251,7 @@ export type GroupWhereUniqueInput = Prisma.AtLeast<{
   sourceNoteId?: Prisma.StringNullableFilter<"Group"> | string | null
   workspace?: Prisma.XOR<Prisma.WorkspaceScalarRelationFilter, Prisma.WorkspaceWhereInput>
   personMembers?: Prisma.PersonGroupListRelationFilter
+  eraAccounts?: Prisma.EraAccountLinkListRelationFilter
   childGroups?: Prisma.GroupGroupListRelationFilter
   parentGroups?: Prisma.GroupGroupListRelationFilter
   placeAffiliations?: Prisma.PlaceGroupListRelationFilter
@@ -294,6 +297,7 @@ export type GroupCreateInput = {
   updatedAt?: Date | string
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutGroupsInput
   personMembers?: Prisma.PersonGroupCreateNestedManyWithoutGroupInput
+  eraAccounts?: Prisma.EraAccountLinkCreateNestedManyWithoutHouseholdGroupInput
   childGroups?: Prisma.GroupGroupCreateNestedManyWithoutParentInput
   parentGroups?: Prisma.GroupGroupCreateNestedManyWithoutChildInput
   placeAffiliations?: Prisma.PlaceGroupCreateNestedManyWithoutGroupInput
@@ -312,6 +316,7 @@ export type GroupUncheckedCreateInput = {
   updatedAt?: Date | string
   sourceNoteId?: string | null
   personMembers?: Prisma.PersonGroupUncheckedCreateNestedManyWithoutGroupInput
+  eraAccounts?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutHouseholdGroupInput
   childGroups?: Prisma.GroupGroupUncheckedCreateNestedManyWithoutParentInput
   parentGroups?: Prisma.GroupGroupUncheckedCreateNestedManyWithoutChildInput
   placeAffiliations?: Prisma.PlaceGroupUncheckedCreateNestedManyWithoutGroupInput
@@ -328,6 +333,7 @@ export type GroupUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutGroupsNestedInput
   personMembers?: Prisma.PersonGroupUpdateManyWithoutGroupNestedInput
+  eraAccounts?: Prisma.EraAccountLinkUpdateManyWithoutHouseholdGroupNestedInput
   childGroups?: Prisma.GroupGroupUpdateManyWithoutParentNestedInput
   parentGroups?: Prisma.GroupGroupUpdateManyWithoutChildNestedInput
   placeAffiliations?: Prisma.PlaceGroupUpdateManyWithoutGroupNestedInput
@@ -346,6 +352,7 @@ export type GroupUncheckedUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   personMembers?: Prisma.PersonGroupUncheckedUpdateManyWithoutGroupNestedInput
+  eraAccounts?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutHouseholdGroupNestedInput
   childGroups?: Prisma.GroupGroupUncheckedUpdateManyWithoutParentNestedInput
   parentGroups?: Prisma.GroupGroupUncheckedUpdateManyWithoutChildNestedInput
   placeAffiliations?: Prisma.PlaceGroupUncheckedUpdateManyWithoutGroupNestedInput
@@ -392,6 +399,11 @@ export type GroupListRelationFilter = {
 
 export type GroupOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type GroupNullableScalarRelationFilter = {
+  is?: Prisma.GroupWhereInput | null
+  isNot?: Prisma.GroupWhereInput | null
 }
 
 export type GroupCountOrderByAggregateInput = {
@@ -472,6 +484,22 @@ export type GroupUncheckedUpdateManyWithoutWorkspaceNestedInput = {
   update?: Prisma.GroupUpdateWithWhereUniqueWithoutWorkspaceInput | Prisma.GroupUpdateWithWhereUniqueWithoutWorkspaceInput[]
   updateMany?: Prisma.GroupUpdateManyWithWhereWithoutWorkspaceInput | Prisma.GroupUpdateManyWithWhereWithoutWorkspaceInput[]
   deleteMany?: Prisma.GroupScalarWhereInput | Prisma.GroupScalarWhereInput[]
+}
+
+export type GroupCreateNestedOneWithoutEraAccountsInput = {
+  create?: Prisma.XOR<Prisma.GroupCreateWithoutEraAccountsInput, Prisma.GroupUncheckedCreateWithoutEraAccountsInput>
+  connectOrCreate?: Prisma.GroupCreateOrConnectWithoutEraAccountsInput
+  connect?: Prisma.GroupWhereUniqueInput
+}
+
+export type GroupUpdateOneWithoutEraAccountsNestedInput = {
+  create?: Prisma.XOR<Prisma.GroupCreateWithoutEraAccountsInput, Prisma.GroupUncheckedCreateWithoutEraAccountsInput>
+  connectOrCreate?: Prisma.GroupCreateOrConnectWithoutEraAccountsInput
+  upsert?: Prisma.GroupUpsertWithoutEraAccountsInput
+  disconnect?: Prisma.GroupWhereInput | boolean
+  delete?: Prisma.GroupWhereInput | boolean
+  connect?: Prisma.GroupWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.GroupUpdateToOneWithWhereWithoutEraAccountsInput, Prisma.GroupUpdateWithoutEraAccountsInput>, Prisma.GroupUncheckedUpdateWithoutEraAccountsInput>
 }
 
 export type GroupCreateNestedManyWithoutTaggedEventsInput = {
@@ -636,6 +664,7 @@ export type GroupCreateWithoutWorkspaceInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   personMembers?: Prisma.PersonGroupCreateNestedManyWithoutGroupInput
+  eraAccounts?: Prisma.EraAccountLinkCreateNestedManyWithoutHouseholdGroupInput
   childGroups?: Prisma.GroupGroupCreateNestedManyWithoutParentInput
   parentGroups?: Prisma.GroupGroupCreateNestedManyWithoutChildInput
   placeAffiliations?: Prisma.PlaceGroupCreateNestedManyWithoutGroupInput
@@ -653,6 +682,7 @@ export type GroupUncheckedCreateWithoutWorkspaceInput = {
   updatedAt?: Date | string
   sourceNoteId?: string | null
   personMembers?: Prisma.PersonGroupUncheckedCreateNestedManyWithoutGroupInput
+  eraAccounts?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutHouseholdGroupInput
   childGroups?: Prisma.GroupGroupUncheckedCreateNestedManyWithoutParentInput
   parentGroups?: Prisma.GroupGroupUncheckedCreateNestedManyWithoutChildInput
   placeAffiliations?: Prisma.PlaceGroupUncheckedCreateNestedManyWithoutGroupInput
@@ -699,6 +729,90 @@ export type GroupScalarWhereInput = {
   sourceNoteId?: Prisma.StringNullableFilter<"Group"> | string | null
 }
 
+export type GroupCreateWithoutEraAccountsInput = {
+  id?: string
+  name: string
+  groupType: $Enums.GroupType
+  notes?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  workspace?: Prisma.WorkspaceCreateNestedOneWithoutGroupsInput
+  personMembers?: Prisma.PersonGroupCreateNestedManyWithoutGroupInput
+  childGroups?: Prisma.GroupGroupCreateNestedManyWithoutParentInput
+  parentGroups?: Prisma.GroupGroupCreateNestedManyWithoutChildInput
+  placeAffiliations?: Prisma.PlaceGroupCreateNestedManyWithoutGroupInput
+  taggedEvents?: Prisma.EventCreateNestedManyWithoutGroupTagsInput
+  sourceNote?: Prisma.NoteCreateNestedOneWithoutGroupsInput
+  supplierProfile?: Prisma.SupplierProfileCreateNestedOneWithoutGroupInput
+}
+
+export type GroupUncheckedCreateWithoutEraAccountsInput = {
+  id?: string
+  workspaceId?: string
+  name: string
+  groupType: $Enums.GroupType
+  notes?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sourceNoteId?: string | null
+  personMembers?: Prisma.PersonGroupUncheckedCreateNestedManyWithoutGroupInput
+  childGroups?: Prisma.GroupGroupUncheckedCreateNestedManyWithoutParentInput
+  parentGroups?: Prisma.GroupGroupUncheckedCreateNestedManyWithoutChildInput
+  placeAffiliations?: Prisma.PlaceGroupUncheckedCreateNestedManyWithoutGroupInput
+  taggedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutGroupTagsInput
+  supplierProfile?: Prisma.SupplierProfileUncheckedCreateNestedOneWithoutGroupInput
+}
+
+export type GroupCreateOrConnectWithoutEraAccountsInput = {
+  where: Prisma.GroupWhereUniqueInput
+  create: Prisma.XOR<Prisma.GroupCreateWithoutEraAccountsInput, Prisma.GroupUncheckedCreateWithoutEraAccountsInput>
+}
+
+export type GroupUpsertWithoutEraAccountsInput = {
+  update: Prisma.XOR<Prisma.GroupUpdateWithoutEraAccountsInput, Prisma.GroupUncheckedUpdateWithoutEraAccountsInput>
+  create: Prisma.XOR<Prisma.GroupCreateWithoutEraAccountsInput, Prisma.GroupUncheckedCreateWithoutEraAccountsInput>
+  where?: Prisma.GroupWhereInput
+}
+
+export type GroupUpdateToOneWithWhereWithoutEraAccountsInput = {
+  where?: Prisma.GroupWhereInput
+  data: Prisma.XOR<Prisma.GroupUpdateWithoutEraAccountsInput, Prisma.GroupUncheckedUpdateWithoutEraAccountsInput>
+}
+
+export type GroupUpdateWithoutEraAccountsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  groupType?: Prisma.EnumGroupTypeFieldUpdateOperationsInput | $Enums.GroupType
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutGroupsNestedInput
+  personMembers?: Prisma.PersonGroupUpdateManyWithoutGroupNestedInput
+  childGroups?: Prisma.GroupGroupUpdateManyWithoutParentNestedInput
+  parentGroups?: Prisma.GroupGroupUpdateManyWithoutChildNestedInput
+  placeAffiliations?: Prisma.PlaceGroupUpdateManyWithoutGroupNestedInput
+  taggedEvents?: Prisma.EventUpdateManyWithoutGroupTagsNestedInput
+  sourceNote?: Prisma.NoteUpdateOneWithoutGroupsNestedInput
+  supplierProfile?: Prisma.SupplierProfileUpdateOneWithoutGroupNestedInput
+}
+
+export type GroupUncheckedUpdateWithoutEraAccountsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  groupType?: Prisma.EnumGroupTypeFieldUpdateOperationsInput | $Enums.GroupType
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  personMembers?: Prisma.PersonGroupUncheckedUpdateManyWithoutGroupNestedInput
+  childGroups?: Prisma.GroupGroupUncheckedUpdateManyWithoutParentNestedInput
+  parentGroups?: Prisma.GroupGroupUncheckedUpdateManyWithoutChildNestedInput
+  placeAffiliations?: Prisma.PlaceGroupUncheckedUpdateManyWithoutGroupNestedInput
+  taggedEvents?: Prisma.EventUncheckedUpdateManyWithoutGroupTagsNestedInput
+  supplierProfile?: Prisma.SupplierProfileUncheckedUpdateOneWithoutGroupNestedInput
+}
+
 export type GroupCreateWithoutTaggedEventsInput = {
   id?: string
   name: string
@@ -708,6 +822,7 @@ export type GroupCreateWithoutTaggedEventsInput = {
   updatedAt?: Date | string
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutGroupsInput
   personMembers?: Prisma.PersonGroupCreateNestedManyWithoutGroupInput
+  eraAccounts?: Prisma.EraAccountLinkCreateNestedManyWithoutHouseholdGroupInput
   childGroups?: Prisma.GroupGroupCreateNestedManyWithoutParentInput
   parentGroups?: Prisma.GroupGroupCreateNestedManyWithoutChildInput
   placeAffiliations?: Prisma.PlaceGroupCreateNestedManyWithoutGroupInput
@@ -725,6 +840,7 @@ export type GroupUncheckedCreateWithoutTaggedEventsInput = {
   updatedAt?: Date | string
   sourceNoteId?: string | null
   personMembers?: Prisma.PersonGroupUncheckedCreateNestedManyWithoutGroupInput
+  eraAccounts?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutHouseholdGroupInput
   childGroups?: Prisma.GroupGroupUncheckedCreateNestedManyWithoutParentInput
   parentGroups?: Prisma.GroupGroupUncheckedCreateNestedManyWithoutChildInput
   placeAffiliations?: Prisma.PlaceGroupUncheckedCreateNestedManyWithoutGroupInput
@@ -761,6 +877,7 @@ export type GroupCreateWithoutSupplierProfileInput = {
   updatedAt?: Date | string
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutGroupsInput
   personMembers?: Prisma.PersonGroupCreateNestedManyWithoutGroupInput
+  eraAccounts?: Prisma.EraAccountLinkCreateNestedManyWithoutHouseholdGroupInput
   childGroups?: Prisma.GroupGroupCreateNestedManyWithoutParentInput
   parentGroups?: Prisma.GroupGroupCreateNestedManyWithoutChildInput
   placeAffiliations?: Prisma.PlaceGroupCreateNestedManyWithoutGroupInput
@@ -778,6 +895,7 @@ export type GroupUncheckedCreateWithoutSupplierProfileInput = {
   updatedAt?: Date | string
   sourceNoteId?: string | null
   personMembers?: Prisma.PersonGroupUncheckedCreateNestedManyWithoutGroupInput
+  eraAccounts?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutHouseholdGroupInput
   childGroups?: Prisma.GroupGroupUncheckedCreateNestedManyWithoutParentInput
   parentGroups?: Prisma.GroupGroupUncheckedCreateNestedManyWithoutChildInput
   placeAffiliations?: Prisma.PlaceGroupUncheckedCreateNestedManyWithoutGroupInput
@@ -809,6 +927,7 @@ export type GroupUpdateWithoutSupplierProfileInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutGroupsNestedInput
   personMembers?: Prisma.PersonGroupUpdateManyWithoutGroupNestedInput
+  eraAccounts?: Prisma.EraAccountLinkUpdateManyWithoutHouseholdGroupNestedInput
   childGroups?: Prisma.GroupGroupUpdateManyWithoutParentNestedInput
   parentGroups?: Prisma.GroupGroupUpdateManyWithoutChildNestedInput
   placeAffiliations?: Prisma.PlaceGroupUpdateManyWithoutGroupNestedInput
@@ -826,6 +945,7 @@ export type GroupUncheckedUpdateWithoutSupplierProfileInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   personMembers?: Prisma.PersonGroupUncheckedUpdateManyWithoutGroupNestedInput
+  eraAccounts?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutHouseholdGroupNestedInput
   childGroups?: Prisma.GroupGroupUncheckedUpdateManyWithoutParentNestedInput
   parentGroups?: Prisma.GroupGroupUncheckedUpdateManyWithoutChildNestedInput
   placeAffiliations?: Prisma.PlaceGroupUncheckedUpdateManyWithoutGroupNestedInput
@@ -840,6 +960,7 @@ export type GroupCreateWithoutPersonMembersInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutGroupsInput
+  eraAccounts?: Prisma.EraAccountLinkCreateNestedManyWithoutHouseholdGroupInput
   childGroups?: Prisma.GroupGroupCreateNestedManyWithoutParentInput
   parentGroups?: Prisma.GroupGroupCreateNestedManyWithoutChildInput
   placeAffiliations?: Prisma.PlaceGroupCreateNestedManyWithoutGroupInput
@@ -857,6 +978,7 @@ export type GroupUncheckedCreateWithoutPersonMembersInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   sourceNoteId?: string | null
+  eraAccounts?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutHouseholdGroupInput
   childGroups?: Prisma.GroupGroupUncheckedCreateNestedManyWithoutParentInput
   parentGroups?: Prisma.GroupGroupUncheckedCreateNestedManyWithoutChildInput
   placeAffiliations?: Prisma.PlaceGroupUncheckedCreateNestedManyWithoutGroupInput
@@ -888,6 +1010,7 @@ export type GroupUpdateWithoutPersonMembersInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutGroupsNestedInput
+  eraAccounts?: Prisma.EraAccountLinkUpdateManyWithoutHouseholdGroupNestedInput
   childGroups?: Prisma.GroupGroupUpdateManyWithoutParentNestedInput
   parentGroups?: Prisma.GroupGroupUpdateManyWithoutChildNestedInput
   placeAffiliations?: Prisma.PlaceGroupUpdateManyWithoutGroupNestedInput
@@ -905,6 +1028,7 @@ export type GroupUncheckedUpdateWithoutPersonMembersInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  eraAccounts?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutHouseholdGroupNestedInput
   childGroups?: Prisma.GroupGroupUncheckedUpdateManyWithoutParentNestedInput
   parentGroups?: Prisma.GroupGroupUncheckedUpdateManyWithoutChildNestedInput
   placeAffiliations?: Prisma.PlaceGroupUncheckedUpdateManyWithoutGroupNestedInput
@@ -921,6 +1045,7 @@ export type GroupCreateWithoutChildGroupsInput = {
   updatedAt?: Date | string
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutGroupsInput
   personMembers?: Prisma.PersonGroupCreateNestedManyWithoutGroupInput
+  eraAccounts?: Prisma.EraAccountLinkCreateNestedManyWithoutHouseholdGroupInput
   parentGroups?: Prisma.GroupGroupCreateNestedManyWithoutChildInput
   placeAffiliations?: Prisma.PlaceGroupCreateNestedManyWithoutGroupInput
   taggedEvents?: Prisma.EventCreateNestedManyWithoutGroupTagsInput
@@ -938,6 +1063,7 @@ export type GroupUncheckedCreateWithoutChildGroupsInput = {
   updatedAt?: Date | string
   sourceNoteId?: string | null
   personMembers?: Prisma.PersonGroupUncheckedCreateNestedManyWithoutGroupInput
+  eraAccounts?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutHouseholdGroupInput
   parentGroups?: Prisma.GroupGroupUncheckedCreateNestedManyWithoutChildInput
   placeAffiliations?: Prisma.PlaceGroupUncheckedCreateNestedManyWithoutGroupInput
   taggedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutGroupTagsInput
@@ -958,6 +1084,7 @@ export type GroupCreateWithoutParentGroupsInput = {
   updatedAt?: Date | string
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutGroupsInput
   personMembers?: Prisma.PersonGroupCreateNestedManyWithoutGroupInput
+  eraAccounts?: Prisma.EraAccountLinkCreateNestedManyWithoutHouseholdGroupInput
   childGroups?: Prisma.GroupGroupCreateNestedManyWithoutParentInput
   placeAffiliations?: Prisma.PlaceGroupCreateNestedManyWithoutGroupInput
   taggedEvents?: Prisma.EventCreateNestedManyWithoutGroupTagsInput
@@ -975,6 +1102,7 @@ export type GroupUncheckedCreateWithoutParentGroupsInput = {
   updatedAt?: Date | string
   sourceNoteId?: string | null
   personMembers?: Prisma.PersonGroupUncheckedCreateNestedManyWithoutGroupInput
+  eraAccounts?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutHouseholdGroupInput
   childGroups?: Prisma.GroupGroupUncheckedCreateNestedManyWithoutParentInput
   placeAffiliations?: Prisma.PlaceGroupUncheckedCreateNestedManyWithoutGroupInput
   taggedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutGroupTagsInput
@@ -1006,6 +1134,7 @@ export type GroupUpdateWithoutChildGroupsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutGroupsNestedInput
   personMembers?: Prisma.PersonGroupUpdateManyWithoutGroupNestedInput
+  eraAccounts?: Prisma.EraAccountLinkUpdateManyWithoutHouseholdGroupNestedInput
   parentGroups?: Prisma.GroupGroupUpdateManyWithoutChildNestedInput
   placeAffiliations?: Prisma.PlaceGroupUpdateManyWithoutGroupNestedInput
   taggedEvents?: Prisma.EventUpdateManyWithoutGroupTagsNestedInput
@@ -1023,6 +1152,7 @@ export type GroupUncheckedUpdateWithoutChildGroupsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   personMembers?: Prisma.PersonGroupUncheckedUpdateManyWithoutGroupNestedInput
+  eraAccounts?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutHouseholdGroupNestedInput
   parentGroups?: Prisma.GroupGroupUncheckedUpdateManyWithoutChildNestedInput
   placeAffiliations?: Prisma.PlaceGroupUncheckedUpdateManyWithoutGroupNestedInput
   taggedEvents?: Prisma.EventUncheckedUpdateManyWithoutGroupTagsNestedInput
@@ -1049,6 +1179,7 @@ export type GroupUpdateWithoutParentGroupsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutGroupsNestedInput
   personMembers?: Prisma.PersonGroupUpdateManyWithoutGroupNestedInput
+  eraAccounts?: Prisma.EraAccountLinkUpdateManyWithoutHouseholdGroupNestedInput
   childGroups?: Prisma.GroupGroupUpdateManyWithoutParentNestedInput
   placeAffiliations?: Prisma.PlaceGroupUpdateManyWithoutGroupNestedInput
   taggedEvents?: Prisma.EventUpdateManyWithoutGroupTagsNestedInput
@@ -1066,6 +1197,7 @@ export type GroupUncheckedUpdateWithoutParentGroupsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   personMembers?: Prisma.PersonGroupUncheckedUpdateManyWithoutGroupNestedInput
+  eraAccounts?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutHouseholdGroupNestedInput
   childGroups?: Prisma.GroupGroupUncheckedUpdateManyWithoutParentNestedInput
   placeAffiliations?: Prisma.PlaceGroupUncheckedUpdateManyWithoutGroupNestedInput
   taggedEvents?: Prisma.EventUncheckedUpdateManyWithoutGroupTagsNestedInput
@@ -1081,6 +1213,7 @@ export type GroupCreateWithoutPlaceAffiliationsInput = {
   updatedAt?: Date | string
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutGroupsInput
   personMembers?: Prisma.PersonGroupCreateNestedManyWithoutGroupInput
+  eraAccounts?: Prisma.EraAccountLinkCreateNestedManyWithoutHouseholdGroupInput
   childGroups?: Prisma.GroupGroupCreateNestedManyWithoutParentInput
   parentGroups?: Prisma.GroupGroupCreateNestedManyWithoutChildInput
   taggedEvents?: Prisma.EventCreateNestedManyWithoutGroupTagsInput
@@ -1098,6 +1231,7 @@ export type GroupUncheckedCreateWithoutPlaceAffiliationsInput = {
   updatedAt?: Date | string
   sourceNoteId?: string | null
   personMembers?: Prisma.PersonGroupUncheckedCreateNestedManyWithoutGroupInput
+  eraAccounts?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutHouseholdGroupInput
   childGroups?: Prisma.GroupGroupUncheckedCreateNestedManyWithoutParentInput
   parentGroups?: Prisma.GroupGroupUncheckedCreateNestedManyWithoutChildInput
   taggedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutGroupTagsInput
@@ -1129,6 +1263,7 @@ export type GroupUpdateWithoutPlaceAffiliationsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutGroupsNestedInput
   personMembers?: Prisma.PersonGroupUpdateManyWithoutGroupNestedInput
+  eraAccounts?: Prisma.EraAccountLinkUpdateManyWithoutHouseholdGroupNestedInput
   childGroups?: Prisma.GroupGroupUpdateManyWithoutParentNestedInput
   parentGroups?: Prisma.GroupGroupUpdateManyWithoutChildNestedInput
   taggedEvents?: Prisma.EventUpdateManyWithoutGroupTagsNestedInput
@@ -1146,6 +1281,7 @@ export type GroupUncheckedUpdateWithoutPlaceAffiliationsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   personMembers?: Prisma.PersonGroupUncheckedUpdateManyWithoutGroupNestedInput
+  eraAccounts?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutHouseholdGroupNestedInput
   childGroups?: Prisma.GroupGroupUncheckedUpdateManyWithoutParentNestedInput
   parentGroups?: Prisma.GroupGroupUncheckedUpdateManyWithoutChildNestedInput
   taggedEvents?: Prisma.EventUncheckedUpdateManyWithoutGroupTagsNestedInput
@@ -1161,6 +1297,7 @@ export type GroupCreateWithoutSourceNoteInput = {
   updatedAt?: Date | string
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutGroupsInput
   personMembers?: Prisma.PersonGroupCreateNestedManyWithoutGroupInput
+  eraAccounts?: Prisma.EraAccountLinkCreateNestedManyWithoutHouseholdGroupInput
   childGroups?: Prisma.GroupGroupCreateNestedManyWithoutParentInput
   parentGroups?: Prisma.GroupGroupCreateNestedManyWithoutChildInput
   placeAffiliations?: Prisma.PlaceGroupCreateNestedManyWithoutGroupInput
@@ -1177,6 +1314,7 @@ export type GroupUncheckedCreateWithoutSourceNoteInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   personMembers?: Prisma.PersonGroupUncheckedCreateNestedManyWithoutGroupInput
+  eraAccounts?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutHouseholdGroupInput
   childGroups?: Prisma.GroupGroupUncheckedCreateNestedManyWithoutParentInput
   parentGroups?: Prisma.GroupGroupUncheckedCreateNestedManyWithoutChildInput
   placeAffiliations?: Prisma.PlaceGroupUncheckedCreateNestedManyWithoutGroupInput
@@ -1227,6 +1365,7 @@ export type GroupUpdateWithoutWorkspaceInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   personMembers?: Prisma.PersonGroupUpdateManyWithoutGroupNestedInput
+  eraAccounts?: Prisma.EraAccountLinkUpdateManyWithoutHouseholdGroupNestedInput
   childGroups?: Prisma.GroupGroupUpdateManyWithoutParentNestedInput
   parentGroups?: Prisma.GroupGroupUpdateManyWithoutChildNestedInput
   placeAffiliations?: Prisma.PlaceGroupUpdateManyWithoutGroupNestedInput
@@ -1244,6 +1383,7 @@ export type GroupUncheckedUpdateWithoutWorkspaceInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   personMembers?: Prisma.PersonGroupUncheckedUpdateManyWithoutGroupNestedInput
+  eraAccounts?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutHouseholdGroupNestedInput
   childGroups?: Prisma.GroupGroupUncheckedUpdateManyWithoutParentNestedInput
   parentGroups?: Prisma.GroupGroupUncheckedUpdateManyWithoutChildNestedInput
   placeAffiliations?: Prisma.PlaceGroupUncheckedUpdateManyWithoutGroupNestedInput
@@ -1270,6 +1410,7 @@ export type GroupUpdateWithoutTaggedEventsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutGroupsNestedInput
   personMembers?: Prisma.PersonGroupUpdateManyWithoutGroupNestedInput
+  eraAccounts?: Prisma.EraAccountLinkUpdateManyWithoutHouseholdGroupNestedInput
   childGroups?: Prisma.GroupGroupUpdateManyWithoutParentNestedInput
   parentGroups?: Prisma.GroupGroupUpdateManyWithoutChildNestedInput
   placeAffiliations?: Prisma.PlaceGroupUpdateManyWithoutGroupNestedInput
@@ -1287,6 +1428,7 @@ export type GroupUncheckedUpdateWithoutTaggedEventsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   personMembers?: Prisma.PersonGroupUncheckedUpdateManyWithoutGroupNestedInput
+  eraAccounts?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutHouseholdGroupNestedInput
   childGroups?: Prisma.GroupGroupUncheckedUpdateManyWithoutParentNestedInput
   parentGroups?: Prisma.GroupGroupUncheckedUpdateManyWithoutChildNestedInput
   placeAffiliations?: Prisma.PlaceGroupUncheckedUpdateManyWithoutGroupNestedInput
@@ -1323,6 +1465,7 @@ export type GroupUpdateWithoutSourceNoteInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutGroupsNestedInput
   personMembers?: Prisma.PersonGroupUpdateManyWithoutGroupNestedInput
+  eraAccounts?: Prisma.EraAccountLinkUpdateManyWithoutHouseholdGroupNestedInput
   childGroups?: Prisma.GroupGroupUpdateManyWithoutParentNestedInput
   parentGroups?: Prisma.GroupGroupUpdateManyWithoutChildNestedInput
   placeAffiliations?: Prisma.PlaceGroupUpdateManyWithoutGroupNestedInput
@@ -1339,6 +1482,7 @@ export type GroupUncheckedUpdateWithoutSourceNoteInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   personMembers?: Prisma.PersonGroupUncheckedUpdateManyWithoutGroupNestedInput
+  eraAccounts?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutHouseholdGroupNestedInput
   childGroups?: Prisma.GroupGroupUncheckedUpdateManyWithoutParentNestedInput
   parentGroups?: Prisma.GroupGroupUncheckedUpdateManyWithoutChildNestedInput
   placeAffiliations?: Prisma.PlaceGroupUncheckedUpdateManyWithoutGroupNestedInput
@@ -1363,6 +1507,7 @@ export type GroupUncheckedUpdateManyWithoutSourceNoteInput = {
 
 export type GroupCountOutputType = {
   personMembers: number
+  eraAccounts: number
   childGroups: number
   parentGroups: number
   placeAffiliations: number
@@ -1371,6 +1516,7 @@ export type GroupCountOutputType = {
 
 export type GroupCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   personMembers?: boolean | GroupCountOutputTypeCountPersonMembersArgs
+  eraAccounts?: boolean | GroupCountOutputTypeCountEraAccountsArgs
   childGroups?: boolean | GroupCountOutputTypeCountChildGroupsArgs
   parentGroups?: boolean | GroupCountOutputTypeCountParentGroupsArgs
   placeAffiliations?: boolean | GroupCountOutputTypeCountPlaceAffiliationsArgs
@@ -1392,6 +1538,13 @@ export type GroupCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extens
  */
 export type GroupCountOutputTypeCountPersonMembersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.PersonGroupWhereInput
+}
+
+/**
+ * GroupCountOutputType without action
+ */
+export type GroupCountOutputTypeCountEraAccountsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.EraAccountLinkWhereInput
 }
 
 /**
@@ -1434,6 +1587,7 @@ export type GroupSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   sourceNoteId?: boolean
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   personMembers?: boolean | Prisma.Group$personMembersArgs<ExtArgs>
+  eraAccounts?: boolean | Prisma.Group$eraAccountsArgs<ExtArgs>
   childGroups?: boolean | Prisma.Group$childGroupsArgs<ExtArgs>
   parentGroups?: boolean | Prisma.Group$parentGroupsArgs<ExtArgs>
   placeAffiliations?: boolean | Prisma.Group$placeAffiliationsArgs<ExtArgs>
@@ -1484,6 +1638,7 @@ export type GroupOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = ru
 export type GroupInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   personMembers?: boolean | Prisma.Group$personMembersArgs<ExtArgs>
+  eraAccounts?: boolean | Prisma.Group$eraAccountsArgs<ExtArgs>
   childGroups?: boolean | Prisma.Group$childGroupsArgs<ExtArgs>
   parentGroups?: boolean | Prisma.Group$parentGroupsArgs<ExtArgs>
   placeAffiliations?: boolean | Prisma.Group$placeAffiliationsArgs<ExtArgs>
@@ -1506,6 +1661,7 @@ export type $GroupPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   objects: {
     workspace: Prisma.$WorkspacePayload<ExtArgs>
     personMembers: Prisma.$PersonGroupPayload<ExtArgs>[]
+    eraAccounts: Prisma.$EraAccountLinkPayload<ExtArgs>[]
     childGroups: Prisma.$GroupGroupPayload<ExtArgs>[]
     parentGroups: Prisma.$GroupGroupPayload<ExtArgs>[]
     placeAffiliations: Prisma.$PlaceGroupPayload<ExtArgs>[]
@@ -1918,6 +2074,7 @@ export interface Prisma__GroupClient<T, Null = never, ExtArgs extends runtime.Ty
   readonly [Symbol.toStringTag]: "PrismaPromise"
   workspace<T extends Prisma.WorkspaceDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WorkspaceDefaultArgs<ExtArgs>>): Prisma.Prisma__WorkspaceClient<runtime.Types.Result.GetResult<Prisma.$WorkspacePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   personMembers<T extends Prisma.Group$personMembersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Group$personMembersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PersonGroupPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  eraAccounts<T extends Prisma.Group$eraAccountsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Group$eraAccountsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EraAccountLinkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   childGroups<T extends Prisma.Group$childGroupsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Group$childGroupsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$GroupGroupPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   parentGroups<T extends Prisma.Group$parentGroupsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Group$parentGroupsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$GroupGroupPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   placeAffiliations<T extends Prisma.Group$placeAffiliationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Group$placeAffiliationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PlaceGroupPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -2381,6 +2538,30 @@ export type Group$personMembersArgs<ExtArgs extends runtime.Types.Extensions.Int
   take?: number
   skip?: number
   distinct?: Prisma.PersonGroupScalarFieldEnum | Prisma.PersonGroupScalarFieldEnum[]
+}
+
+/**
+ * Group.eraAccounts
+ */
+export type Group$eraAccountsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the EraAccountLink
+   */
+  select?: Prisma.EraAccountLinkSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the EraAccountLink
+   */
+  omit?: Prisma.EraAccountLinkOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.EraAccountLinkInclude<ExtArgs> | null
+  where?: Prisma.EraAccountLinkWhereInput
+  orderBy?: Prisma.EraAccountLinkOrderByWithRelationInput | Prisma.EraAccountLinkOrderByWithRelationInput[]
+  cursor?: Prisma.EraAccountLinkWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.EraAccountLinkScalarFieldEnum | Prisma.EraAccountLinkScalarFieldEnum[]
 }
 
 /**

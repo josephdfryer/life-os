@@ -244,6 +244,12 @@ export type WorkspaceWhereInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetListRelationFilter
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockListRelationFilter
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildListRelationFilter
+  levelUpExercises?: Prisma.LevelUpExerciseListRelationFilter
+  levelUpPrograms?: Prisma.LevelUpProgramListRelationFilter
+  levelUpProgramDays?: Prisma.LevelUpProgramDayListRelationFilter
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryListRelationFilter
+  levelUpSessions?: Prisma.LevelUpSessionListRelationFilter
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricListRelationFilter
 }
 
 export type WorkspaceOrderByWithRelationInput = {
@@ -300,6 +306,12 @@ export type WorkspaceOrderByWithRelationInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetOrderByRelationAggregateInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockOrderByRelationAggregateInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildOrderByRelationAggregateInput
+  levelUpExercises?: Prisma.LevelUpExerciseOrderByRelationAggregateInput
+  levelUpPrograms?: Prisma.LevelUpProgramOrderByRelationAggregateInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayOrderByRelationAggregateInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryOrderByRelationAggregateInput
+  levelUpSessions?: Prisma.LevelUpSessionOrderByRelationAggregateInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricOrderByRelationAggregateInput
 }
 
 export type WorkspaceWhereUniqueInput = Prisma.AtLeast<{
@@ -359,6 +371,12 @@ export type WorkspaceWhereUniqueInput = Prisma.AtLeast<{
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetListRelationFilter
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockListRelationFilter
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildListRelationFilter
+  levelUpExercises?: Prisma.LevelUpExerciseListRelationFilter
+  levelUpPrograms?: Prisma.LevelUpProgramListRelationFilter
+  levelUpProgramDays?: Prisma.LevelUpProgramDayListRelationFilter
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryListRelationFilter
+  levelUpSessions?: Prisma.LevelUpSessionListRelationFilter
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricListRelationFilter
 }, "id" | "slug">
 
 export type WorkspaceOrderByWithAggregationInput = {
@@ -440,6 +458,12 @@ export type WorkspaceCreateInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetCreateNestedManyWithoutWorkspaceInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockCreateNestedManyWithoutWorkspaceInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateInput = {
@@ -495,6 +519,12 @@ export type WorkspaceUncheckedCreateInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUpdateInput = {
@@ -550,6 +580,12 @@ export type WorkspaceUpdateInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUpdateManyWithoutWorkspaceNestedInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUpdateManyWithoutWorkspaceNestedInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateInput = {
@@ -605,6 +641,12 @@ export type WorkspaceUncheckedUpdateInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateManyInput = {
@@ -1346,6 +1388,90 @@ export type WorkspaceUpdateOneRequiredWithoutLevelUpTrainingSetsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.WorkspaceUpdateToOneWithWhereWithoutLevelUpTrainingSetsInput, Prisma.WorkspaceUpdateWithoutLevelUpTrainingSetsInput>, Prisma.WorkspaceUncheckedUpdateWithoutLevelUpTrainingSetsInput>
 }
 
+export type WorkspaceCreateNestedOneWithoutLevelUpExercisesInput = {
+  create?: Prisma.XOR<Prisma.WorkspaceCreateWithoutLevelUpExercisesInput, Prisma.WorkspaceUncheckedCreateWithoutLevelUpExercisesInput>
+  connectOrCreate?: Prisma.WorkspaceCreateOrConnectWithoutLevelUpExercisesInput
+  connect?: Prisma.WorkspaceWhereUniqueInput
+}
+
+export type WorkspaceUpdateOneRequiredWithoutLevelUpExercisesNestedInput = {
+  create?: Prisma.XOR<Prisma.WorkspaceCreateWithoutLevelUpExercisesInput, Prisma.WorkspaceUncheckedCreateWithoutLevelUpExercisesInput>
+  connectOrCreate?: Prisma.WorkspaceCreateOrConnectWithoutLevelUpExercisesInput
+  upsert?: Prisma.WorkspaceUpsertWithoutLevelUpExercisesInput
+  connect?: Prisma.WorkspaceWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.WorkspaceUpdateToOneWithWhereWithoutLevelUpExercisesInput, Prisma.WorkspaceUpdateWithoutLevelUpExercisesInput>, Prisma.WorkspaceUncheckedUpdateWithoutLevelUpExercisesInput>
+}
+
+export type WorkspaceCreateNestedOneWithoutLevelUpProgramsInput = {
+  create?: Prisma.XOR<Prisma.WorkspaceCreateWithoutLevelUpProgramsInput, Prisma.WorkspaceUncheckedCreateWithoutLevelUpProgramsInput>
+  connectOrCreate?: Prisma.WorkspaceCreateOrConnectWithoutLevelUpProgramsInput
+  connect?: Prisma.WorkspaceWhereUniqueInput
+}
+
+export type WorkspaceUpdateOneRequiredWithoutLevelUpProgramsNestedInput = {
+  create?: Prisma.XOR<Prisma.WorkspaceCreateWithoutLevelUpProgramsInput, Prisma.WorkspaceUncheckedCreateWithoutLevelUpProgramsInput>
+  connectOrCreate?: Prisma.WorkspaceCreateOrConnectWithoutLevelUpProgramsInput
+  upsert?: Prisma.WorkspaceUpsertWithoutLevelUpProgramsInput
+  connect?: Prisma.WorkspaceWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.WorkspaceUpdateToOneWithWhereWithoutLevelUpProgramsInput, Prisma.WorkspaceUpdateWithoutLevelUpProgramsInput>, Prisma.WorkspaceUncheckedUpdateWithoutLevelUpProgramsInput>
+}
+
+export type WorkspaceCreateNestedOneWithoutLevelUpProgramDaysInput = {
+  create?: Prisma.XOR<Prisma.WorkspaceCreateWithoutLevelUpProgramDaysInput, Prisma.WorkspaceUncheckedCreateWithoutLevelUpProgramDaysInput>
+  connectOrCreate?: Prisma.WorkspaceCreateOrConnectWithoutLevelUpProgramDaysInput
+  connect?: Prisma.WorkspaceWhereUniqueInput
+}
+
+export type WorkspaceUpdateOneRequiredWithoutLevelUpProgramDaysNestedInput = {
+  create?: Prisma.XOR<Prisma.WorkspaceCreateWithoutLevelUpProgramDaysInput, Prisma.WorkspaceUncheckedCreateWithoutLevelUpProgramDaysInput>
+  connectOrCreate?: Prisma.WorkspaceCreateOrConnectWithoutLevelUpProgramDaysInput
+  upsert?: Prisma.WorkspaceUpsertWithoutLevelUpProgramDaysInput
+  connect?: Prisma.WorkspaceWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.WorkspaceUpdateToOneWithWhereWithoutLevelUpProgramDaysInput, Prisma.WorkspaceUpdateWithoutLevelUpProgramDaysInput>, Prisma.WorkspaceUncheckedUpdateWithoutLevelUpProgramDaysInput>
+}
+
+export type WorkspaceCreateNestedOneWithoutLevelUpProgramEntriesInput = {
+  create?: Prisma.XOR<Prisma.WorkspaceCreateWithoutLevelUpProgramEntriesInput, Prisma.WorkspaceUncheckedCreateWithoutLevelUpProgramEntriesInput>
+  connectOrCreate?: Prisma.WorkspaceCreateOrConnectWithoutLevelUpProgramEntriesInput
+  connect?: Prisma.WorkspaceWhereUniqueInput
+}
+
+export type WorkspaceUpdateOneRequiredWithoutLevelUpProgramEntriesNestedInput = {
+  create?: Prisma.XOR<Prisma.WorkspaceCreateWithoutLevelUpProgramEntriesInput, Prisma.WorkspaceUncheckedCreateWithoutLevelUpProgramEntriesInput>
+  connectOrCreate?: Prisma.WorkspaceCreateOrConnectWithoutLevelUpProgramEntriesInput
+  upsert?: Prisma.WorkspaceUpsertWithoutLevelUpProgramEntriesInput
+  connect?: Prisma.WorkspaceWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.WorkspaceUpdateToOneWithWhereWithoutLevelUpProgramEntriesInput, Prisma.WorkspaceUpdateWithoutLevelUpProgramEntriesInput>, Prisma.WorkspaceUncheckedUpdateWithoutLevelUpProgramEntriesInput>
+}
+
+export type WorkspaceCreateNestedOneWithoutLevelUpSessionsInput = {
+  create?: Prisma.XOR<Prisma.WorkspaceCreateWithoutLevelUpSessionsInput, Prisma.WorkspaceUncheckedCreateWithoutLevelUpSessionsInput>
+  connectOrCreate?: Prisma.WorkspaceCreateOrConnectWithoutLevelUpSessionsInput
+  connect?: Prisma.WorkspaceWhereUniqueInput
+}
+
+export type WorkspaceUpdateOneRequiredWithoutLevelUpSessionsNestedInput = {
+  create?: Prisma.XOR<Prisma.WorkspaceCreateWithoutLevelUpSessionsInput, Prisma.WorkspaceUncheckedCreateWithoutLevelUpSessionsInput>
+  connectOrCreate?: Prisma.WorkspaceCreateOrConnectWithoutLevelUpSessionsInput
+  upsert?: Prisma.WorkspaceUpsertWithoutLevelUpSessionsInput
+  connect?: Prisma.WorkspaceWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.WorkspaceUpdateToOneWithWhereWithoutLevelUpSessionsInput, Prisma.WorkspaceUpdateWithoutLevelUpSessionsInput>, Prisma.WorkspaceUncheckedUpdateWithoutLevelUpSessionsInput>
+}
+
+export type WorkspaceCreateNestedOneWithoutLevelUpBodyMetricsInput = {
+  create?: Prisma.XOR<Prisma.WorkspaceCreateWithoutLevelUpBodyMetricsInput, Prisma.WorkspaceUncheckedCreateWithoutLevelUpBodyMetricsInput>
+  connectOrCreate?: Prisma.WorkspaceCreateOrConnectWithoutLevelUpBodyMetricsInput
+  connect?: Prisma.WorkspaceWhereUniqueInput
+}
+
+export type WorkspaceUpdateOneRequiredWithoutLevelUpBodyMetricsNestedInput = {
+  create?: Prisma.XOR<Prisma.WorkspaceCreateWithoutLevelUpBodyMetricsInput, Prisma.WorkspaceUncheckedCreateWithoutLevelUpBodyMetricsInput>
+  connectOrCreate?: Prisma.WorkspaceCreateOrConnectWithoutLevelUpBodyMetricsInput
+  upsert?: Prisma.WorkspaceUpsertWithoutLevelUpBodyMetricsInput
+  connect?: Prisma.WorkspaceWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.WorkspaceUpdateToOneWithWhereWithoutLevelUpBodyMetricsInput, Prisma.WorkspaceUpdateWithoutLevelUpBodyMetricsInput>, Prisma.WorkspaceUncheckedUpdateWithoutLevelUpBodyMetricsInput>
+}
+
 export type WorkspaceCreateNestedOneWithoutLevelUpBadgeUnlocksInput = {
   create?: Prisma.XOR<Prisma.WorkspaceCreateWithoutLevelUpBadgeUnlocksInput, Prisma.WorkspaceUncheckedCreateWithoutLevelUpBadgeUnlocksInput>
   connectOrCreate?: Prisma.WorkspaceCreateOrConnectWithoutLevelUpBadgeUnlocksInput
@@ -1426,6 +1552,12 @@ export type WorkspaceCreateWithoutMembersInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetCreateNestedManyWithoutWorkspaceInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockCreateNestedManyWithoutWorkspaceInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutMembersInput = {
@@ -1480,6 +1612,12 @@ export type WorkspaceUncheckedCreateWithoutMembersInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutMembersInput = {
@@ -1550,6 +1688,12 @@ export type WorkspaceUpdateWithoutMembersInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUpdateManyWithoutWorkspaceNestedInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUpdateManyWithoutWorkspaceNestedInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutMembersInput = {
@@ -1604,6 +1748,12 @@ export type WorkspaceUncheckedUpdateWithoutMembersInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutApprovedEmailsInput = {
@@ -1658,6 +1808,12 @@ export type WorkspaceCreateWithoutApprovedEmailsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetCreateNestedManyWithoutWorkspaceInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockCreateNestedManyWithoutWorkspaceInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutApprovedEmailsInput = {
@@ -1712,6 +1868,12 @@ export type WorkspaceUncheckedCreateWithoutApprovedEmailsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutApprovedEmailsInput = {
@@ -1782,6 +1944,12 @@ export type WorkspaceUpdateWithoutApprovedEmailsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUpdateManyWithoutWorkspaceNestedInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUpdateManyWithoutWorkspaceNestedInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutApprovedEmailsInput = {
@@ -1836,6 +2004,12 @@ export type WorkspaceUncheckedUpdateWithoutApprovedEmailsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutPersonsInput = {
@@ -1890,6 +2064,12 @@ export type WorkspaceCreateWithoutPersonsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetCreateNestedManyWithoutWorkspaceInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockCreateNestedManyWithoutWorkspaceInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutPersonsInput = {
@@ -1944,6 +2124,12 @@ export type WorkspaceUncheckedCreateWithoutPersonsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutPersonsInput = {
@@ -2014,6 +2200,12 @@ export type WorkspaceUpdateWithoutPersonsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUpdateManyWithoutWorkspaceNestedInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUpdateManyWithoutWorkspaceNestedInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutPersonsInput = {
@@ -2068,6 +2260,12 @@ export type WorkspaceUncheckedUpdateWithoutPersonsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutOwnerUserInput = {
@@ -2122,6 +2320,12 @@ export type WorkspaceCreateWithoutOwnerUserInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetCreateNestedManyWithoutWorkspaceInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockCreateNestedManyWithoutWorkspaceInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutOwnerUserInput = {
@@ -2176,6 +2380,12 @@ export type WorkspaceUncheckedCreateWithoutOwnerUserInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutOwnerUserInput = {
@@ -2268,6 +2478,12 @@ export type WorkspaceCreateWithoutApiKeysInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetCreateNestedManyWithoutWorkspaceInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockCreateNestedManyWithoutWorkspaceInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutApiKeysInput = {
@@ -2322,6 +2538,12 @@ export type WorkspaceUncheckedCreateWithoutApiKeysInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutApiKeysInput = {
@@ -2392,6 +2614,12 @@ export type WorkspaceUpdateWithoutApiKeysInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUpdateManyWithoutWorkspaceNestedInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUpdateManyWithoutWorkspaceNestedInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutApiKeysInput = {
@@ -2446,6 +2674,12 @@ export type WorkspaceUncheckedUpdateWithoutApiKeysInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutAuditLogsInput = {
@@ -2500,6 +2734,12 @@ export type WorkspaceCreateWithoutAuditLogsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetCreateNestedManyWithoutWorkspaceInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockCreateNestedManyWithoutWorkspaceInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutAuditLogsInput = {
@@ -2554,6 +2794,12 @@ export type WorkspaceUncheckedCreateWithoutAuditLogsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutAuditLogsInput = {
@@ -2624,6 +2870,12 @@ export type WorkspaceUpdateWithoutAuditLogsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUpdateManyWithoutWorkspaceNestedInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUpdateManyWithoutWorkspaceNestedInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutAuditLogsInput = {
@@ -2678,6 +2930,12 @@ export type WorkspaceUncheckedUpdateWithoutAuditLogsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutCalendarConnectionsInput = {
@@ -2732,6 +2990,12 @@ export type WorkspaceCreateWithoutCalendarConnectionsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetCreateNestedManyWithoutWorkspaceInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockCreateNestedManyWithoutWorkspaceInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutCalendarConnectionsInput = {
@@ -2786,6 +3050,12 @@ export type WorkspaceUncheckedCreateWithoutCalendarConnectionsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutCalendarConnectionsInput = {
@@ -2856,6 +3126,12 @@ export type WorkspaceUpdateWithoutCalendarConnectionsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUpdateManyWithoutWorkspaceNestedInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUpdateManyWithoutWorkspaceNestedInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutCalendarConnectionsInput = {
@@ -2910,6 +3186,12 @@ export type WorkspaceUncheckedUpdateWithoutCalendarConnectionsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutCalendarEventLinksInput = {
@@ -2964,6 +3246,12 @@ export type WorkspaceCreateWithoutCalendarEventLinksInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetCreateNestedManyWithoutWorkspaceInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockCreateNestedManyWithoutWorkspaceInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutCalendarEventLinksInput = {
@@ -3018,6 +3306,12 @@ export type WorkspaceUncheckedCreateWithoutCalendarEventLinksInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutCalendarEventLinksInput = {
@@ -3088,6 +3382,12 @@ export type WorkspaceUpdateWithoutCalendarEventLinksInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUpdateManyWithoutWorkspaceNestedInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUpdateManyWithoutWorkspaceNestedInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutCalendarEventLinksInput = {
@@ -3142,6 +3442,12 @@ export type WorkspaceUncheckedUpdateWithoutCalendarEventLinksInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutGmailConnectionsInput = {
@@ -3196,6 +3502,12 @@ export type WorkspaceCreateWithoutGmailConnectionsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetCreateNestedManyWithoutWorkspaceInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockCreateNestedManyWithoutWorkspaceInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutGmailConnectionsInput = {
@@ -3250,6 +3562,12 @@ export type WorkspaceUncheckedCreateWithoutGmailConnectionsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutGmailConnectionsInput = {
@@ -3320,6 +3638,12 @@ export type WorkspaceUpdateWithoutGmailConnectionsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUpdateManyWithoutWorkspaceNestedInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUpdateManyWithoutWorkspaceNestedInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutGmailConnectionsInput = {
@@ -3374,6 +3698,12 @@ export type WorkspaceUncheckedUpdateWithoutGmailConnectionsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutGmailMessageLinksInput = {
@@ -3428,6 +3758,12 @@ export type WorkspaceCreateWithoutGmailMessageLinksInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetCreateNestedManyWithoutWorkspaceInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockCreateNestedManyWithoutWorkspaceInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutGmailMessageLinksInput = {
@@ -3482,6 +3818,12 @@ export type WorkspaceUncheckedCreateWithoutGmailMessageLinksInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutGmailMessageLinksInput = {
@@ -3552,6 +3894,12 @@ export type WorkspaceUpdateWithoutGmailMessageLinksInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUpdateManyWithoutWorkspaceNestedInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUpdateManyWithoutWorkspaceNestedInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutGmailMessageLinksInput = {
@@ -3606,6 +3954,12 @@ export type WorkspaceUncheckedUpdateWithoutGmailMessageLinksInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutEraConnectionsInput = {
@@ -3660,6 +4014,12 @@ export type WorkspaceCreateWithoutEraConnectionsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetCreateNestedManyWithoutWorkspaceInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockCreateNestedManyWithoutWorkspaceInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutEraConnectionsInput = {
@@ -3714,6 +4074,12 @@ export type WorkspaceUncheckedCreateWithoutEraConnectionsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutEraConnectionsInput = {
@@ -3784,6 +4150,12 @@ export type WorkspaceUpdateWithoutEraConnectionsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUpdateManyWithoutWorkspaceNestedInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUpdateManyWithoutWorkspaceNestedInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutEraConnectionsInput = {
@@ -3838,6 +4210,12 @@ export type WorkspaceUncheckedUpdateWithoutEraConnectionsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutEraAccountLinksInput = {
@@ -3892,6 +4270,12 @@ export type WorkspaceCreateWithoutEraAccountLinksInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetCreateNestedManyWithoutWorkspaceInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockCreateNestedManyWithoutWorkspaceInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutEraAccountLinksInput = {
@@ -3946,6 +4330,12 @@ export type WorkspaceUncheckedCreateWithoutEraAccountLinksInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutEraAccountLinksInput = {
@@ -4016,6 +4406,12 @@ export type WorkspaceUpdateWithoutEraAccountLinksInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUpdateManyWithoutWorkspaceNestedInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUpdateManyWithoutWorkspaceNestedInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutEraAccountLinksInput = {
@@ -4070,6 +4466,12 @@ export type WorkspaceUncheckedUpdateWithoutEraAccountLinksInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutEraTransactionLinksInput = {
@@ -4124,6 +4526,12 @@ export type WorkspaceCreateWithoutEraTransactionLinksInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetCreateNestedManyWithoutWorkspaceInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockCreateNestedManyWithoutWorkspaceInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutEraTransactionLinksInput = {
@@ -4178,6 +4586,12 @@ export type WorkspaceUncheckedCreateWithoutEraTransactionLinksInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutEraTransactionLinksInput = {
@@ -4248,6 +4662,12 @@ export type WorkspaceUpdateWithoutEraTransactionLinksInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUpdateManyWithoutWorkspaceNestedInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUpdateManyWithoutWorkspaceNestedInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutEraTransactionLinksInput = {
@@ -4302,6 +4722,12 @@ export type WorkspaceUncheckedUpdateWithoutEraTransactionLinksInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutRulesInput = {
@@ -4356,6 +4782,12 @@ export type WorkspaceCreateWithoutRulesInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetCreateNestedManyWithoutWorkspaceInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockCreateNestedManyWithoutWorkspaceInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutRulesInput = {
@@ -4410,6 +4842,12 @@ export type WorkspaceUncheckedCreateWithoutRulesInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutRulesInput = {
@@ -4480,6 +4918,12 @@ export type WorkspaceUpdateWithoutRulesInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUpdateManyWithoutWorkspaceNestedInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUpdateManyWithoutWorkspaceNestedInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutRulesInput = {
@@ -4534,6 +4978,12 @@ export type WorkspaceUncheckedUpdateWithoutRulesInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutRuleRunsInput = {
@@ -4588,6 +5038,12 @@ export type WorkspaceCreateWithoutRuleRunsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetCreateNestedManyWithoutWorkspaceInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockCreateNestedManyWithoutWorkspaceInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutRuleRunsInput = {
@@ -4642,6 +5098,12 @@ export type WorkspaceUncheckedCreateWithoutRuleRunsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutRuleRunsInput = {
@@ -4712,6 +5174,12 @@ export type WorkspaceUpdateWithoutRuleRunsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUpdateManyWithoutWorkspaceNestedInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUpdateManyWithoutWorkspaceNestedInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutRuleRunsInput = {
@@ -4766,6 +5234,12 @@ export type WorkspaceUncheckedUpdateWithoutRuleRunsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutStagedItemsInput = {
@@ -4820,6 +5294,12 @@ export type WorkspaceCreateWithoutStagedItemsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetCreateNestedManyWithoutWorkspaceInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockCreateNestedManyWithoutWorkspaceInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutStagedItemsInput = {
@@ -4874,6 +5354,12 @@ export type WorkspaceUncheckedCreateWithoutStagedItemsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutStagedItemsInput = {
@@ -4944,6 +5430,12 @@ export type WorkspaceUpdateWithoutStagedItemsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUpdateManyWithoutWorkspaceNestedInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUpdateManyWithoutWorkspaceNestedInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutStagedItemsInput = {
@@ -4998,6 +5490,12 @@ export type WorkspaceUncheckedUpdateWithoutStagedItemsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutEventsInput = {
@@ -5052,6 +5550,12 @@ export type WorkspaceCreateWithoutEventsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetCreateNestedManyWithoutWorkspaceInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockCreateNestedManyWithoutWorkspaceInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutEventsInput = {
@@ -5106,6 +5610,12 @@ export type WorkspaceUncheckedCreateWithoutEventsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutEventsInput = {
@@ -5176,6 +5686,12 @@ export type WorkspaceUpdateWithoutEventsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUpdateManyWithoutWorkspaceNestedInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUpdateManyWithoutWorkspaceNestedInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutEventsInput = {
@@ -5230,6 +5746,12 @@ export type WorkspaceUncheckedUpdateWithoutEventsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutInteractionsInput = {
@@ -5284,6 +5806,12 @@ export type WorkspaceCreateWithoutInteractionsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetCreateNestedManyWithoutWorkspaceInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockCreateNestedManyWithoutWorkspaceInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutInteractionsInput = {
@@ -5338,6 +5866,12 @@ export type WorkspaceUncheckedCreateWithoutInteractionsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutInteractionsInput = {
@@ -5408,6 +5942,12 @@ export type WorkspaceUpdateWithoutInteractionsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUpdateManyWithoutWorkspaceNestedInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUpdateManyWithoutWorkspaceNestedInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutInteractionsInput = {
@@ -5462,6 +6002,12 @@ export type WorkspaceUncheckedUpdateWithoutInteractionsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutPlansInput = {
@@ -5516,6 +6062,12 @@ export type WorkspaceCreateWithoutPlansInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetCreateNestedManyWithoutWorkspaceInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockCreateNestedManyWithoutWorkspaceInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutPlansInput = {
@@ -5570,6 +6122,12 @@ export type WorkspaceUncheckedCreateWithoutPlansInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutPlansInput = {
@@ -5640,6 +6198,12 @@ export type WorkspaceUpdateWithoutPlansInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUpdateManyWithoutWorkspaceNestedInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUpdateManyWithoutWorkspaceNestedInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutPlansInput = {
@@ -5694,6 +6258,12 @@ export type WorkspaceUncheckedUpdateWithoutPlansInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutPlanExpectedPersonsInput = {
@@ -5748,6 +6318,12 @@ export type WorkspaceCreateWithoutPlanExpectedPersonsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetCreateNestedManyWithoutWorkspaceInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockCreateNestedManyWithoutWorkspaceInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutPlanExpectedPersonsInput = {
@@ -5802,6 +6378,12 @@ export type WorkspaceUncheckedCreateWithoutPlanExpectedPersonsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutPlanExpectedPersonsInput = {
@@ -5872,6 +6454,12 @@ export type WorkspaceUpdateWithoutPlanExpectedPersonsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUpdateManyWithoutWorkspaceNestedInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUpdateManyWithoutWorkspaceNestedInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutPlanExpectedPersonsInput = {
@@ -5926,6 +6514,12 @@ export type WorkspaceUncheckedUpdateWithoutPlanExpectedPersonsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutPlacesInput = {
@@ -5980,6 +6574,12 @@ export type WorkspaceCreateWithoutPlacesInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetCreateNestedManyWithoutWorkspaceInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockCreateNestedManyWithoutWorkspaceInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutPlacesInput = {
@@ -6034,6 +6634,12 @@ export type WorkspaceUncheckedCreateWithoutPlacesInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutPlacesInput = {
@@ -6104,6 +6710,12 @@ export type WorkspaceUpdateWithoutPlacesInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUpdateManyWithoutWorkspaceNestedInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUpdateManyWithoutWorkspaceNestedInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutPlacesInput = {
@@ -6158,6 +6770,12 @@ export type WorkspaceUncheckedUpdateWithoutPlacesInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutImportJobsInput = {
@@ -6212,6 +6830,12 @@ export type WorkspaceCreateWithoutImportJobsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetCreateNestedManyWithoutWorkspaceInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockCreateNestedManyWithoutWorkspaceInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutImportJobsInput = {
@@ -6266,6 +6890,12 @@ export type WorkspaceUncheckedCreateWithoutImportJobsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutImportJobsInput = {
@@ -6336,6 +6966,12 @@ export type WorkspaceUpdateWithoutImportJobsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUpdateManyWithoutWorkspaceNestedInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUpdateManyWithoutWorkspaceNestedInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutImportJobsInput = {
@@ -6390,6 +7026,12 @@ export type WorkspaceUncheckedUpdateWithoutImportJobsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutImportStagedVisitsInput = {
@@ -6444,6 +7086,12 @@ export type WorkspaceCreateWithoutImportStagedVisitsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetCreateNestedManyWithoutWorkspaceInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockCreateNestedManyWithoutWorkspaceInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutImportStagedVisitsInput = {
@@ -6498,6 +7146,12 @@ export type WorkspaceUncheckedCreateWithoutImportStagedVisitsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutImportStagedVisitsInput = {
@@ -6568,6 +7222,12 @@ export type WorkspaceUpdateWithoutImportStagedVisitsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUpdateManyWithoutWorkspaceNestedInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUpdateManyWithoutWorkspaceNestedInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutImportStagedVisitsInput = {
@@ -6622,6 +7282,12 @@ export type WorkspaceUncheckedUpdateWithoutImportStagedVisitsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutPlaceNotesInput = {
@@ -6676,6 +7342,12 @@ export type WorkspaceCreateWithoutPlaceNotesInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetCreateNestedManyWithoutWorkspaceInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockCreateNestedManyWithoutWorkspaceInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutPlaceNotesInput = {
@@ -6730,6 +7402,12 @@ export type WorkspaceUncheckedCreateWithoutPlaceNotesInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutPlaceNotesInput = {
@@ -6800,6 +7478,12 @@ export type WorkspaceUpdateWithoutPlaceNotesInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUpdateManyWithoutWorkspaceNestedInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUpdateManyWithoutWorkspaceNestedInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutPlaceNotesInput = {
@@ -6854,6 +7538,12 @@ export type WorkspaceUncheckedUpdateWithoutPlaceNotesInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutItemsInput = {
@@ -6908,6 +7598,12 @@ export type WorkspaceCreateWithoutItemsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetCreateNestedManyWithoutWorkspaceInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockCreateNestedManyWithoutWorkspaceInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutItemsInput = {
@@ -6962,6 +7658,12 @@ export type WorkspaceUncheckedCreateWithoutItemsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutItemsInput = {
@@ -7032,6 +7734,12 @@ export type WorkspaceUpdateWithoutItemsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUpdateManyWithoutWorkspaceNestedInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUpdateManyWithoutWorkspaceNestedInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutItemsInput = {
@@ -7086,6 +7794,12 @@ export type WorkspaceUncheckedUpdateWithoutItemsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutItemDefinitionsInput = {
@@ -7140,6 +7854,12 @@ export type WorkspaceCreateWithoutItemDefinitionsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetCreateNestedManyWithoutWorkspaceInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockCreateNestedManyWithoutWorkspaceInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutItemDefinitionsInput = {
@@ -7194,6 +7914,12 @@ export type WorkspaceUncheckedCreateWithoutItemDefinitionsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutItemDefinitionsInput = {
@@ -7264,6 +7990,12 @@ export type WorkspaceUpdateWithoutItemDefinitionsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUpdateManyWithoutWorkspaceNestedInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUpdateManyWithoutWorkspaceNestedInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutItemDefinitionsInput = {
@@ -7318,6 +8050,12 @@ export type WorkspaceUncheckedUpdateWithoutItemDefinitionsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutInventoryLotsInput = {
@@ -7372,6 +8110,12 @@ export type WorkspaceCreateWithoutInventoryLotsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetCreateNestedManyWithoutWorkspaceInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockCreateNestedManyWithoutWorkspaceInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutInventoryLotsInput = {
@@ -7426,6 +8170,12 @@ export type WorkspaceUncheckedCreateWithoutInventoryLotsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutInventoryLotsInput = {
@@ -7496,6 +8246,12 @@ export type WorkspaceUpdateWithoutInventoryLotsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUpdateManyWithoutWorkspaceNestedInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUpdateManyWithoutWorkspaceNestedInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutInventoryLotsInput = {
@@ -7550,6 +8306,12 @@ export type WorkspaceUncheckedUpdateWithoutInventoryLotsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutImportedFilesInput = {
@@ -7604,6 +8366,12 @@ export type WorkspaceCreateWithoutImportedFilesInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetCreateNestedManyWithoutWorkspaceInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockCreateNestedManyWithoutWorkspaceInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutImportedFilesInput = {
@@ -7658,6 +8426,12 @@ export type WorkspaceUncheckedCreateWithoutImportedFilesInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutImportedFilesInput = {
@@ -7728,6 +8502,12 @@ export type WorkspaceUpdateWithoutImportedFilesInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUpdateManyWithoutWorkspaceNestedInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUpdateManyWithoutWorkspaceNestedInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutImportedFilesInput = {
@@ -7782,6 +8562,12 @@ export type WorkspaceUncheckedUpdateWithoutImportedFilesInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutAiProviderCredentialsInput = {
@@ -7836,6 +8622,12 @@ export type WorkspaceCreateWithoutAiProviderCredentialsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetCreateNestedManyWithoutWorkspaceInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockCreateNestedManyWithoutWorkspaceInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutAiProviderCredentialsInput = {
@@ -7890,6 +8682,12 @@ export type WorkspaceUncheckedCreateWithoutAiProviderCredentialsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutAiProviderCredentialsInput = {
@@ -7960,6 +8758,12 @@ export type WorkspaceUpdateWithoutAiProviderCredentialsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUpdateManyWithoutWorkspaceNestedInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUpdateManyWithoutWorkspaceNestedInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutAiProviderCredentialsInput = {
@@ -8014,6 +8818,12 @@ export type WorkspaceUncheckedUpdateWithoutAiProviderCredentialsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutAiAnalysisRunsInput = {
@@ -8068,6 +8878,12 @@ export type WorkspaceCreateWithoutAiAnalysisRunsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetCreateNestedManyWithoutWorkspaceInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockCreateNestedManyWithoutWorkspaceInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutAiAnalysisRunsInput = {
@@ -8122,6 +8938,12 @@ export type WorkspaceUncheckedCreateWithoutAiAnalysisRunsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutAiAnalysisRunsInput = {
@@ -8192,6 +9014,12 @@ export type WorkspaceUpdateWithoutAiAnalysisRunsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUpdateManyWithoutWorkspaceNestedInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUpdateManyWithoutWorkspaceNestedInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutAiAnalysisRunsInput = {
@@ -8246,6 +9074,12 @@ export type WorkspaceUncheckedUpdateWithoutAiAnalysisRunsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutNoteAnalysisRunsInput = {
@@ -8300,6 +9134,12 @@ export type WorkspaceCreateWithoutNoteAnalysisRunsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetCreateNestedManyWithoutWorkspaceInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockCreateNestedManyWithoutWorkspaceInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutNoteAnalysisRunsInput = {
@@ -8354,6 +9194,12 @@ export type WorkspaceUncheckedCreateWithoutNoteAnalysisRunsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutNoteAnalysisRunsInput = {
@@ -8424,6 +9270,12 @@ export type WorkspaceUpdateWithoutNoteAnalysisRunsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUpdateManyWithoutWorkspaceNestedInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUpdateManyWithoutWorkspaceNestedInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutNoteAnalysisRunsInput = {
@@ -8478,6 +9330,12 @@ export type WorkspaceUncheckedUpdateWithoutNoteAnalysisRunsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutNoteSuggestionsInput = {
@@ -8532,6 +9390,12 @@ export type WorkspaceCreateWithoutNoteSuggestionsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetCreateNestedManyWithoutWorkspaceInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockCreateNestedManyWithoutWorkspaceInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutNoteSuggestionsInput = {
@@ -8586,6 +9450,12 @@ export type WorkspaceUncheckedCreateWithoutNoteSuggestionsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutNoteSuggestionsInput = {
@@ -8656,6 +9526,12 @@ export type WorkspaceUpdateWithoutNoteSuggestionsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUpdateManyWithoutWorkspaceNestedInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUpdateManyWithoutWorkspaceNestedInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutNoteSuggestionsInput = {
@@ -8710,6 +9586,12 @@ export type WorkspaceUncheckedUpdateWithoutNoteSuggestionsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutGroupsInput = {
@@ -8764,6 +9646,12 @@ export type WorkspaceCreateWithoutGroupsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetCreateNestedManyWithoutWorkspaceInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockCreateNestedManyWithoutWorkspaceInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutGroupsInput = {
@@ -8818,6 +9706,12 @@ export type WorkspaceUncheckedCreateWithoutGroupsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutGroupsInput = {
@@ -8888,6 +9782,12 @@ export type WorkspaceUpdateWithoutGroupsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUpdateManyWithoutWorkspaceNestedInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUpdateManyWithoutWorkspaceNestedInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutGroupsInput = {
@@ -8942,6 +9842,12 @@ export type WorkspaceUncheckedUpdateWithoutGroupsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutSupplierProfilesInput = {
@@ -8996,6 +9902,12 @@ export type WorkspaceCreateWithoutSupplierProfilesInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetCreateNestedManyWithoutWorkspaceInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockCreateNestedManyWithoutWorkspaceInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutSupplierProfilesInput = {
@@ -9050,6 +9962,12 @@ export type WorkspaceUncheckedCreateWithoutSupplierProfilesInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutSupplierProfilesInput = {
@@ -9120,6 +10038,12 @@ export type WorkspaceUpdateWithoutSupplierProfilesInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUpdateManyWithoutWorkspaceNestedInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUpdateManyWithoutWorkspaceNestedInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutSupplierProfilesInput = {
@@ -9174,6 +10098,12 @@ export type WorkspaceUncheckedUpdateWithoutSupplierProfilesInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutPurchaseOrdersInput = {
@@ -9228,6 +10158,12 @@ export type WorkspaceCreateWithoutPurchaseOrdersInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetCreateNestedManyWithoutWorkspaceInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockCreateNestedManyWithoutWorkspaceInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutPurchaseOrdersInput = {
@@ -9282,6 +10218,12 @@ export type WorkspaceUncheckedCreateWithoutPurchaseOrdersInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutPurchaseOrdersInput = {
@@ -9352,6 +10294,12 @@ export type WorkspaceUpdateWithoutPurchaseOrdersInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUpdateManyWithoutWorkspaceNestedInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUpdateManyWithoutWorkspaceNestedInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutPurchaseOrdersInput = {
@@ -9406,6 +10354,12 @@ export type WorkspaceUncheckedUpdateWithoutPurchaseOrdersInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutPurchaseReceiptLinesInput = {
@@ -9460,6 +10414,12 @@ export type WorkspaceCreateWithoutPurchaseReceiptLinesInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetCreateNestedManyWithoutWorkspaceInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockCreateNestedManyWithoutWorkspaceInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutPurchaseReceiptLinesInput = {
@@ -9514,6 +10474,12 @@ export type WorkspaceUncheckedCreateWithoutPurchaseReceiptLinesInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutPurchaseReceiptLinesInput = {
@@ -9584,6 +10550,12 @@ export type WorkspaceUpdateWithoutPurchaseReceiptLinesInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUpdateManyWithoutWorkspaceNestedInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUpdateManyWithoutWorkspaceNestedInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutPurchaseReceiptLinesInput = {
@@ -9638,6 +10610,12 @@ export type WorkspaceUncheckedUpdateWithoutPurchaseReceiptLinesInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutNotesInput = {
@@ -9692,6 +10670,12 @@ export type WorkspaceCreateWithoutNotesInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetCreateNestedManyWithoutWorkspaceInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockCreateNestedManyWithoutWorkspaceInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutNotesInput = {
@@ -9746,6 +10730,12 @@ export type WorkspaceUncheckedCreateWithoutNotesInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutNotesInput = {
@@ -9816,6 +10806,12 @@ export type WorkspaceUpdateWithoutNotesInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUpdateManyWithoutWorkspaceNestedInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUpdateManyWithoutWorkspaceNestedInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutNotesInput = {
@@ -9870,6 +10866,12 @@ export type WorkspaceUncheckedUpdateWithoutNotesInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutTheorySnapshotsInput = {
@@ -9924,6 +10926,12 @@ export type WorkspaceCreateWithoutTheorySnapshotsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetCreateNestedManyWithoutWorkspaceInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockCreateNestedManyWithoutWorkspaceInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutTheorySnapshotsInput = {
@@ -9978,6 +10986,12 @@ export type WorkspaceUncheckedCreateWithoutTheorySnapshotsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutTheorySnapshotsInput = {
@@ -10048,6 +11062,12 @@ export type WorkspaceUpdateWithoutTheorySnapshotsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUpdateManyWithoutWorkspaceNestedInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUpdateManyWithoutWorkspaceNestedInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutTheorySnapshotsInput = {
@@ -10102,6 +11122,12 @@ export type WorkspaceUncheckedUpdateWithoutTheorySnapshotsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutAssistantMessagesInput = {
@@ -10156,6 +11182,12 @@ export type WorkspaceCreateWithoutAssistantMessagesInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetCreateNestedManyWithoutWorkspaceInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockCreateNestedManyWithoutWorkspaceInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutAssistantMessagesInput = {
@@ -10210,6 +11242,12 @@ export type WorkspaceUncheckedCreateWithoutAssistantMessagesInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutAssistantMessagesInput = {
@@ -10280,6 +11318,12 @@ export type WorkspaceUpdateWithoutAssistantMessagesInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUpdateManyWithoutWorkspaceNestedInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUpdateManyWithoutWorkspaceNestedInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutAssistantMessagesInput = {
@@ -10334,6 +11378,12 @@ export type WorkspaceUncheckedUpdateWithoutAssistantMessagesInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutLevelUpProfileInput = {
@@ -10388,6 +11438,12 @@ export type WorkspaceCreateWithoutLevelUpProfileInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetCreateNestedManyWithoutWorkspaceInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockCreateNestedManyWithoutWorkspaceInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutLevelUpProfileInput = {
@@ -10442,6 +11498,12 @@ export type WorkspaceUncheckedCreateWithoutLevelUpProfileInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutLevelUpProfileInput = {
@@ -10512,6 +11574,12 @@ export type WorkspaceUpdateWithoutLevelUpProfileInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUpdateManyWithoutWorkspaceNestedInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUpdateManyWithoutWorkspaceNestedInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutLevelUpProfileInput = {
@@ -10566,6 +11634,12 @@ export type WorkspaceUncheckedUpdateWithoutLevelUpProfileInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutLevelUpTestResultsInput = {
@@ -10620,6 +11694,12 @@ export type WorkspaceCreateWithoutLevelUpTestResultsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetCreateNestedManyWithoutWorkspaceInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockCreateNestedManyWithoutWorkspaceInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutLevelUpTestResultsInput = {
@@ -10674,6 +11754,12 @@ export type WorkspaceUncheckedCreateWithoutLevelUpTestResultsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutLevelUpTestResultsInput = {
@@ -10744,6 +11830,12 @@ export type WorkspaceUpdateWithoutLevelUpTestResultsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUpdateManyWithoutWorkspaceNestedInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUpdateManyWithoutWorkspaceNestedInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutLevelUpTestResultsInput = {
@@ -10798,6 +11890,12 @@ export type WorkspaceUncheckedUpdateWithoutLevelUpTestResultsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutLevelUpCombinesInput = {
@@ -10852,6 +11950,12 @@ export type WorkspaceCreateWithoutLevelUpCombinesInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetCreateNestedManyWithoutWorkspaceInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockCreateNestedManyWithoutWorkspaceInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutLevelUpCombinesInput = {
@@ -10906,6 +12010,12 @@ export type WorkspaceUncheckedCreateWithoutLevelUpCombinesInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutLevelUpCombinesInput = {
@@ -10976,6 +12086,12 @@ export type WorkspaceUpdateWithoutLevelUpCombinesInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUpdateManyWithoutWorkspaceNestedInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUpdateManyWithoutWorkspaceNestedInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutLevelUpCombinesInput = {
@@ -11030,6 +12146,12 @@ export type WorkspaceUncheckedUpdateWithoutLevelUpCombinesInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutLevelUpSnapshotsInput = {
@@ -11084,6 +12206,12 @@ export type WorkspaceCreateWithoutLevelUpSnapshotsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetCreateNestedManyWithoutWorkspaceInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockCreateNestedManyWithoutWorkspaceInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutLevelUpSnapshotsInput = {
@@ -11138,6 +12266,12 @@ export type WorkspaceUncheckedCreateWithoutLevelUpSnapshotsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutLevelUpSnapshotsInput = {
@@ -11208,6 +12342,12 @@ export type WorkspaceUpdateWithoutLevelUpSnapshotsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUpdateManyWithoutWorkspaceNestedInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUpdateManyWithoutWorkspaceNestedInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutLevelUpSnapshotsInput = {
@@ -11262,6 +12402,12 @@ export type WorkspaceUncheckedUpdateWithoutLevelUpSnapshotsInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutLevelUpTrainingSetsInput = {
@@ -11316,6 +12462,12 @@ export type WorkspaceCreateWithoutLevelUpTrainingSetsInput = {
   levelUpSnapshots?: Prisma.LevelUpRatingSnapshotCreateNestedManyWithoutWorkspaceInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockCreateNestedManyWithoutWorkspaceInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutLevelUpTrainingSetsInput = {
@@ -11370,6 +12522,12 @@ export type WorkspaceUncheckedCreateWithoutLevelUpTrainingSetsInput = {
   levelUpSnapshots?: Prisma.LevelUpRatingSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutLevelUpTrainingSetsInput = {
@@ -11440,6 +12598,12 @@ export type WorkspaceUpdateWithoutLevelUpTrainingSetsInput = {
   levelUpSnapshots?: Prisma.LevelUpRatingSnapshotUpdateManyWithoutWorkspaceNestedInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUpdateManyWithoutWorkspaceNestedInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutLevelUpTrainingSetsInput = {
@@ -11494,6 +12658,1548 @@ export type WorkspaceUncheckedUpdateWithoutLevelUpTrainingSetsInput = {
   levelUpSnapshots?: Prisma.LevelUpRatingSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
+}
+
+export type WorkspaceCreateWithoutLevelUpExercisesInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  name: string
+  slug: string
+  status?: string
+  ownerUser?: Prisma.UserCreateNestedOneWithoutOwnedWorkspacesInput
+  members?: Prisma.WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
+  approvedEmails?: Prisma.ApprovedEmailCreateNestedManyWithoutWorkspaceInput
+  persons?: Prisma.PersonCreateNestedManyWithoutWorkspaceInput
+  events?: Prisma.EventCreateNestedManyWithoutWorkspaceInput
+  interactions?: Prisma.InteractionCreateNestedManyWithoutWorkspaceInput
+  plans?: Prisma.PlanCreateNestedManyWithoutWorkspaceInput
+  places?: Prisma.PlaceCreateNestedManyWithoutWorkspaceInput
+  placeNotes?: Prisma.PlaceNoteCreateNestedManyWithoutWorkspaceInput
+  notes?: Prisma.NoteCreateNestedManyWithoutWorkspaceInput
+  theorySnapshots?: Prisma.TheorySnapshotCreateNestedManyWithoutWorkspaceInput
+  groups?: Prisma.GroupCreateNestedManyWithoutWorkspaceInput
+  items?: Prisma.ItemCreateNestedManyWithoutWorkspaceInput
+  itemDefinitions?: Prisma.ItemDefinitionCreateNestedManyWithoutWorkspaceInput
+  inventoryLots?: Prisma.InventoryLotCreateNestedManyWithoutWorkspaceInput
+  supplierProfiles?: Prisma.SupplierProfileCreateNestedManyWithoutWorkspaceInput
+  purchaseOrders?: Prisma.PurchaseOrderCreateNestedManyWithoutWorkspaceInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutWorkspaceInput
+  importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
+  aiProviderCredentials?: Prisma.AiProviderCredentialCreateNestedManyWithoutWorkspaceInput
+  aiAnalysisRuns?: Prisma.AiAnalysisRunCreateNestedManyWithoutWorkspaceInput
+  noteAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutWorkspaceInput
+  noteSuggestions?: Prisma.NoteSuggestionCreateNestedManyWithoutWorkspaceInput
+  stagedItems?: Prisma.StagedInteractionCreateNestedManyWithoutWorkspaceInput
+  rules?: Prisma.RuleCreateNestedManyWithoutWorkspaceInput
+  ruleRuns?: Prisma.RuleRunCreateNestedManyWithoutWorkspaceInput
+  apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutWorkspaceInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutWorkspaceInput
+  calendarConnections?: Prisma.CalendarConnectionCreateNestedManyWithoutWorkspaceInput
+  calendarEventLinks?: Prisma.CalendarEventLinkCreateNestedManyWithoutWorkspaceInput
+  gmailConnections?: Prisma.GmailConnectionCreateNestedManyWithoutWorkspaceInput
+  gmailMessageLinks?: Prisma.GmailMessageLinkCreateNestedManyWithoutWorkspaceInput
+  importJobs?: Prisma.ImportJobCreateNestedManyWithoutWorkspaceInput
+  importStagedVisits?: Prisma.ImportStagedVisitCreateNestedManyWithoutWorkspaceInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonCreateNestedManyWithoutWorkspaceInput
+  assistantMessages?: Prisma.AssistantMessageCreateNestedManyWithoutWorkspaceInput
+  eraConnections?: Prisma.EraConnectionCreateNestedManyWithoutWorkspaceInput
+  eraAccountLinks?: Prisma.EraAccountLinkCreateNestedManyWithoutWorkspaceInput
+  eraTransactionLinks?: Prisma.EraTransactionLinkCreateNestedManyWithoutWorkspaceInput
+  levelUpProfile?: Prisma.LevelUpProfileCreateNestedOneWithoutWorkspaceInput
+  levelUpTestResults?: Prisma.LevelUpTestResultCreateNestedManyWithoutWorkspaceInput
+  levelUpCombines?: Prisma.LevelUpCombineCreateNestedManyWithoutWorkspaceInput
+  levelUpSnapshots?: Prisma.LevelUpRatingSnapshotCreateNestedManyWithoutWorkspaceInput
+  levelUpTrainingSets?: Prisma.LevelUpTrainingSetCreateNestedManyWithoutWorkspaceInput
+  levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockCreateNestedManyWithoutWorkspaceInput
+  levelUpTargetBuilds?: Prisma.LevelUpTargetBuildCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
+}
+
+export type WorkspaceUncheckedCreateWithoutLevelUpExercisesInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  name: string
+  slug: string
+  status?: string
+  ownerUserId?: string | null
+  members?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
+  approvedEmails?: Prisma.ApprovedEmailUncheckedCreateNestedManyWithoutWorkspaceInput
+  persons?: Prisma.PersonUncheckedCreateNestedManyWithoutWorkspaceInput
+  events?: Prisma.EventUncheckedCreateNestedManyWithoutWorkspaceInput
+  interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutWorkspaceInput
+  plans?: Prisma.PlanUncheckedCreateNestedManyWithoutWorkspaceInput
+  places?: Prisma.PlaceUncheckedCreateNestedManyWithoutWorkspaceInput
+  placeNotes?: Prisma.PlaceNoteUncheckedCreateNestedManyWithoutWorkspaceInput
+  notes?: Prisma.NoteUncheckedCreateNestedManyWithoutWorkspaceInput
+  theorySnapshots?: Prisma.TheorySnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  groups?: Prisma.GroupUncheckedCreateNestedManyWithoutWorkspaceInput
+  items?: Prisma.ItemUncheckedCreateNestedManyWithoutWorkspaceInput
+  itemDefinitions?: Prisma.ItemDefinitionUncheckedCreateNestedManyWithoutWorkspaceInput
+  inventoryLots?: Prisma.InventoryLotUncheckedCreateNestedManyWithoutWorkspaceInput
+  supplierProfiles?: Prisma.SupplierProfileUncheckedCreateNestedManyWithoutWorkspaceInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutWorkspaceInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutWorkspaceInput
+  importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
+  aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedCreateNestedManyWithoutWorkspaceInput
+  aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  noteSuggestions?: Prisma.NoteSuggestionUncheckedCreateNestedManyWithoutWorkspaceInput
+  stagedItems?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutWorkspaceInput
+  rules?: Prisma.RuleUncheckedCreateNestedManyWithoutWorkspaceInput
+  ruleRuns?: Prisma.RuleRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutWorkspaceInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutWorkspaceInput
+  calendarConnections?: Prisma.CalendarConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  calendarEventLinks?: Prisma.CalendarEventLinkUncheckedCreateNestedManyWithoutWorkspaceInput
+  gmailConnections?: Prisma.GmailConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  gmailMessageLinks?: Prisma.GmailMessageLinkUncheckedCreateNestedManyWithoutWorkspaceInput
+  importJobs?: Prisma.ImportJobUncheckedCreateNestedManyWithoutWorkspaceInput
+  importStagedVisits?: Prisma.ImportStagedVisitUncheckedCreateNestedManyWithoutWorkspaceInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUncheckedCreateNestedManyWithoutWorkspaceInput
+  assistantMessages?: Prisma.AssistantMessageUncheckedCreateNestedManyWithoutWorkspaceInput
+  eraConnections?: Prisma.EraConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  eraAccountLinks?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutWorkspaceInput
+  eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProfile?: Prisma.LevelUpProfileUncheckedCreateNestedOneWithoutWorkspaceInput
+  levelUpTestResults?: Prisma.LevelUpTestResultUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpCombines?: Prisma.LevelUpCombineUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpSnapshots?: Prisma.LevelUpRatingSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
+}
+
+export type WorkspaceCreateOrConnectWithoutLevelUpExercisesInput = {
+  where: Prisma.WorkspaceWhereUniqueInput
+  create: Prisma.XOR<Prisma.WorkspaceCreateWithoutLevelUpExercisesInput, Prisma.WorkspaceUncheckedCreateWithoutLevelUpExercisesInput>
+}
+
+export type WorkspaceUpsertWithoutLevelUpExercisesInput = {
+  update: Prisma.XOR<Prisma.WorkspaceUpdateWithoutLevelUpExercisesInput, Prisma.WorkspaceUncheckedUpdateWithoutLevelUpExercisesInput>
+  create: Prisma.XOR<Prisma.WorkspaceCreateWithoutLevelUpExercisesInput, Prisma.WorkspaceUncheckedCreateWithoutLevelUpExercisesInput>
+  where?: Prisma.WorkspaceWhereInput
+}
+
+export type WorkspaceUpdateToOneWithWhereWithoutLevelUpExercisesInput = {
+  where?: Prisma.WorkspaceWhereInput
+  data: Prisma.XOR<Prisma.WorkspaceUpdateWithoutLevelUpExercisesInput, Prisma.WorkspaceUncheckedUpdateWithoutLevelUpExercisesInput>
+}
+
+export type WorkspaceUpdateWithoutLevelUpExercisesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  ownerUser?: Prisma.UserUpdateOneWithoutOwnedWorkspacesNestedInput
+  members?: Prisma.WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
+  approvedEmails?: Prisma.ApprovedEmailUpdateManyWithoutWorkspaceNestedInput
+  persons?: Prisma.PersonUpdateManyWithoutWorkspaceNestedInput
+  events?: Prisma.EventUpdateManyWithoutWorkspaceNestedInput
+  interactions?: Prisma.InteractionUpdateManyWithoutWorkspaceNestedInput
+  plans?: Prisma.PlanUpdateManyWithoutWorkspaceNestedInput
+  places?: Prisma.PlaceUpdateManyWithoutWorkspaceNestedInput
+  placeNotes?: Prisma.PlaceNoteUpdateManyWithoutWorkspaceNestedInput
+  notes?: Prisma.NoteUpdateManyWithoutWorkspaceNestedInput
+  theorySnapshots?: Prisma.TheorySnapshotUpdateManyWithoutWorkspaceNestedInput
+  groups?: Prisma.GroupUpdateManyWithoutWorkspaceNestedInput
+  items?: Prisma.ItemUpdateManyWithoutWorkspaceNestedInput
+  itemDefinitions?: Prisma.ItemDefinitionUpdateManyWithoutWorkspaceNestedInput
+  inventoryLots?: Prisma.InventoryLotUpdateManyWithoutWorkspaceNestedInput
+  supplierProfiles?: Prisma.SupplierProfileUpdateManyWithoutWorkspaceNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUpdateManyWithoutWorkspaceNestedInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutWorkspaceNestedInput
+  importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
+  aiProviderCredentials?: Prisma.AiProviderCredentialUpdateManyWithoutWorkspaceNestedInput
+  aiAnalysisRuns?: Prisma.AiAnalysisRunUpdateManyWithoutWorkspaceNestedInput
+  noteAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutWorkspaceNestedInput
+  noteSuggestions?: Prisma.NoteSuggestionUpdateManyWithoutWorkspaceNestedInput
+  stagedItems?: Prisma.StagedInteractionUpdateManyWithoutWorkspaceNestedInput
+  rules?: Prisma.RuleUpdateManyWithoutWorkspaceNestedInput
+  ruleRuns?: Prisma.RuleRunUpdateManyWithoutWorkspaceNestedInput
+  apiKeys?: Prisma.ApiKeyUpdateManyWithoutWorkspaceNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutWorkspaceNestedInput
+  calendarConnections?: Prisma.CalendarConnectionUpdateManyWithoutWorkspaceNestedInput
+  calendarEventLinks?: Prisma.CalendarEventLinkUpdateManyWithoutWorkspaceNestedInput
+  gmailConnections?: Prisma.GmailConnectionUpdateManyWithoutWorkspaceNestedInput
+  gmailMessageLinks?: Prisma.GmailMessageLinkUpdateManyWithoutWorkspaceNestedInput
+  importJobs?: Prisma.ImportJobUpdateManyWithoutWorkspaceNestedInput
+  importStagedVisits?: Prisma.ImportStagedVisitUpdateManyWithoutWorkspaceNestedInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUpdateManyWithoutWorkspaceNestedInput
+  assistantMessages?: Prisma.AssistantMessageUpdateManyWithoutWorkspaceNestedInput
+  eraConnections?: Prisma.EraConnectionUpdateManyWithoutWorkspaceNestedInput
+  eraAccountLinks?: Prisma.EraAccountLinkUpdateManyWithoutWorkspaceNestedInput
+  eraTransactionLinks?: Prisma.EraTransactionLinkUpdateManyWithoutWorkspaceNestedInput
+  levelUpProfile?: Prisma.LevelUpProfileUpdateOneWithoutWorkspaceNestedInput
+  levelUpTestResults?: Prisma.LevelUpTestResultUpdateManyWithoutWorkspaceNestedInput
+  levelUpCombines?: Prisma.LevelUpCombineUpdateManyWithoutWorkspaceNestedInput
+  levelUpSnapshots?: Prisma.LevelUpRatingSnapshotUpdateManyWithoutWorkspaceNestedInput
+  levelUpTrainingSets?: Prisma.LevelUpTrainingSetUpdateManyWithoutWorkspaceNestedInput
+  levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUpdateManyWithoutWorkspaceNestedInput
+  levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
+}
+
+export type WorkspaceUncheckedUpdateWithoutLevelUpExercisesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  ownerUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  members?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
+  approvedEmails?: Prisma.ApprovedEmailUncheckedUpdateManyWithoutWorkspaceNestedInput
+  persons?: Prisma.PersonUncheckedUpdateManyWithoutWorkspaceNestedInput
+  events?: Prisma.EventUncheckedUpdateManyWithoutWorkspaceNestedInput
+  interactions?: Prisma.InteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  plans?: Prisma.PlanUncheckedUpdateManyWithoutWorkspaceNestedInput
+  places?: Prisma.PlaceUncheckedUpdateManyWithoutWorkspaceNestedInput
+  placeNotes?: Prisma.PlaceNoteUncheckedUpdateManyWithoutWorkspaceNestedInput
+  notes?: Prisma.NoteUncheckedUpdateManyWithoutWorkspaceNestedInput
+  theorySnapshots?: Prisma.TheorySnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  groups?: Prisma.GroupUncheckedUpdateManyWithoutWorkspaceNestedInput
+  items?: Prisma.ItemUncheckedUpdateManyWithoutWorkspaceNestedInput
+  itemDefinitions?: Prisma.ItemDefinitionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  inventoryLots?: Prisma.InventoryLotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  supplierProfiles?: Prisma.SupplierProfileUncheckedUpdateManyWithoutWorkspaceNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutWorkspaceNestedInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutWorkspaceNestedInput
+  importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
+  aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedUpdateManyWithoutWorkspaceNestedInput
+  aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  noteSuggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  stagedItems?: Prisma.StagedInteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  rules?: Prisma.RuleUncheckedUpdateManyWithoutWorkspaceNestedInput
+  ruleRuns?: Prisma.RuleRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutWorkspaceNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutWorkspaceNestedInput
+  calendarConnections?: Prisma.CalendarConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  calendarEventLinks?: Prisma.CalendarEventLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
+  gmailConnections?: Prisma.GmailConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  gmailMessageLinks?: Prisma.GmailMessageLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
+  importJobs?: Prisma.ImportJobUncheckedUpdateManyWithoutWorkspaceNestedInput
+  importStagedVisits?: Prisma.ImportStagedVisitUncheckedUpdateManyWithoutWorkspaceNestedInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUncheckedUpdateManyWithoutWorkspaceNestedInput
+  assistantMessages?: Prisma.AssistantMessageUncheckedUpdateManyWithoutWorkspaceNestedInput
+  eraConnections?: Prisma.EraConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  eraAccountLinks?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
+  eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProfile?: Prisma.LevelUpProfileUncheckedUpdateOneWithoutWorkspaceNestedInput
+  levelUpTestResults?: Prisma.LevelUpTestResultUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpCombines?: Prisma.LevelUpCombineUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpSnapshots?: Prisma.LevelUpRatingSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
+}
+
+export type WorkspaceCreateWithoutLevelUpProgramsInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  name: string
+  slug: string
+  status?: string
+  ownerUser?: Prisma.UserCreateNestedOneWithoutOwnedWorkspacesInput
+  members?: Prisma.WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
+  approvedEmails?: Prisma.ApprovedEmailCreateNestedManyWithoutWorkspaceInput
+  persons?: Prisma.PersonCreateNestedManyWithoutWorkspaceInput
+  events?: Prisma.EventCreateNestedManyWithoutWorkspaceInput
+  interactions?: Prisma.InteractionCreateNestedManyWithoutWorkspaceInput
+  plans?: Prisma.PlanCreateNestedManyWithoutWorkspaceInput
+  places?: Prisma.PlaceCreateNestedManyWithoutWorkspaceInput
+  placeNotes?: Prisma.PlaceNoteCreateNestedManyWithoutWorkspaceInput
+  notes?: Prisma.NoteCreateNestedManyWithoutWorkspaceInput
+  theorySnapshots?: Prisma.TheorySnapshotCreateNestedManyWithoutWorkspaceInput
+  groups?: Prisma.GroupCreateNestedManyWithoutWorkspaceInput
+  items?: Prisma.ItemCreateNestedManyWithoutWorkspaceInput
+  itemDefinitions?: Prisma.ItemDefinitionCreateNestedManyWithoutWorkspaceInput
+  inventoryLots?: Prisma.InventoryLotCreateNestedManyWithoutWorkspaceInput
+  supplierProfiles?: Prisma.SupplierProfileCreateNestedManyWithoutWorkspaceInput
+  purchaseOrders?: Prisma.PurchaseOrderCreateNestedManyWithoutWorkspaceInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutWorkspaceInput
+  importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
+  aiProviderCredentials?: Prisma.AiProviderCredentialCreateNestedManyWithoutWorkspaceInput
+  aiAnalysisRuns?: Prisma.AiAnalysisRunCreateNestedManyWithoutWorkspaceInput
+  noteAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutWorkspaceInput
+  noteSuggestions?: Prisma.NoteSuggestionCreateNestedManyWithoutWorkspaceInput
+  stagedItems?: Prisma.StagedInteractionCreateNestedManyWithoutWorkspaceInput
+  rules?: Prisma.RuleCreateNestedManyWithoutWorkspaceInput
+  ruleRuns?: Prisma.RuleRunCreateNestedManyWithoutWorkspaceInput
+  apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutWorkspaceInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutWorkspaceInput
+  calendarConnections?: Prisma.CalendarConnectionCreateNestedManyWithoutWorkspaceInput
+  calendarEventLinks?: Prisma.CalendarEventLinkCreateNestedManyWithoutWorkspaceInput
+  gmailConnections?: Prisma.GmailConnectionCreateNestedManyWithoutWorkspaceInput
+  gmailMessageLinks?: Prisma.GmailMessageLinkCreateNestedManyWithoutWorkspaceInput
+  importJobs?: Prisma.ImportJobCreateNestedManyWithoutWorkspaceInput
+  importStagedVisits?: Prisma.ImportStagedVisitCreateNestedManyWithoutWorkspaceInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonCreateNestedManyWithoutWorkspaceInput
+  assistantMessages?: Prisma.AssistantMessageCreateNestedManyWithoutWorkspaceInput
+  eraConnections?: Prisma.EraConnectionCreateNestedManyWithoutWorkspaceInput
+  eraAccountLinks?: Prisma.EraAccountLinkCreateNestedManyWithoutWorkspaceInput
+  eraTransactionLinks?: Prisma.EraTransactionLinkCreateNestedManyWithoutWorkspaceInput
+  levelUpProfile?: Prisma.LevelUpProfileCreateNestedOneWithoutWorkspaceInput
+  levelUpTestResults?: Prisma.LevelUpTestResultCreateNestedManyWithoutWorkspaceInput
+  levelUpCombines?: Prisma.LevelUpCombineCreateNestedManyWithoutWorkspaceInput
+  levelUpSnapshots?: Prisma.LevelUpRatingSnapshotCreateNestedManyWithoutWorkspaceInput
+  levelUpTrainingSets?: Prisma.LevelUpTrainingSetCreateNestedManyWithoutWorkspaceInput
+  levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockCreateNestedManyWithoutWorkspaceInput
+  levelUpTargetBuilds?: Prisma.LevelUpTargetBuildCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
+}
+
+export type WorkspaceUncheckedCreateWithoutLevelUpProgramsInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  name: string
+  slug: string
+  status?: string
+  ownerUserId?: string | null
+  members?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
+  approvedEmails?: Prisma.ApprovedEmailUncheckedCreateNestedManyWithoutWorkspaceInput
+  persons?: Prisma.PersonUncheckedCreateNestedManyWithoutWorkspaceInput
+  events?: Prisma.EventUncheckedCreateNestedManyWithoutWorkspaceInput
+  interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutWorkspaceInput
+  plans?: Prisma.PlanUncheckedCreateNestedManyWithoutWorkspaceInput
+  places?: Prisma.PlaceUncheckedCreateNestedManyWithoutWorkspaceInput
+  placeNotes?: Prisma.PlaceNoteUncheckedCreateNestedManyWithoutWorkspaceInput
+  notes?: Prisma.NoteUncheckedCreateNestedManyWithoutWorkspaceInput
+  theorySnapshots?: Prisma.TheorySnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  groups?: Prisma.GroupUncheckedCreateNestedManyWithoutWorkspaceInput
+  items?: Prisma.ItemUncheckedCreateNestedManyWithoutWorkspaceInput
+  itemDefinitions?: Prisma.ItemDefinitionUncheckedCreateNestedManyWithoutWorkspaceInput
+  inventoryLots?: Prisma.InventoryLotUncheckedCreateNestedManyWithoutWorkspaceInput
+  supplierProfiles?: Prisma.SupplierProfileUncheckedCreateNestedManyWithoutWorkspaceInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutWorkspaceInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutWorkspaceInput
+  importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
+  aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedCreateNestedManyWithoutWorkspaceInput
+  aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  noteSuggestions?: Prisma.NoteSuggestionUncheckedCreateNestedManyWithoutWorkspaceInput
+  stagedItems?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutWorkspaceInput
+  rules?: Prisma.RuleUncheckedCreateNestedManyWithoutWorkspaceInput
+  ruleRuns?: Prisma.RuleRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutWorkspaceInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutWorkspaceInput
+  calendarConnections?: Prisma.CalendarConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  calendarEventLinks?: Prisma.CalendarEventLinkUncheckedCreateNestedManyWithoutWorkspaceInput
+  gmailConnections?: Prisma.GmailConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  gmailMessageLinks?: Prisma.GmailMessageLinkUncheckedCreateNestedManyWithoutWorkspaceInput
+  importJobs?: Prisma.ImportJobUncheckedCreateNestedManyWithoutWorkspaceInput
+  importStagedVisits?: Prisma.ImportStagedVisitUncheckedCreateNestedManyWithoutWorkspaceInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUncheckedCreateNestedManyWithoutWorkspaceInput
+  assistantMessages?: Prisma.AssistantMessageUncheckedCreateNestedManyWithoutWorkspaceInput
+  eraConnections?: Prisma.EraConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  eraAccountLinks?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutWorkspaceInput
+  eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProfile?: Prisma.LevelUpProfileUncheckedCreateNestedOneWithoutWorkspaceInput
+  levelUpTestResults?: Prisma.LevelUpTestResultUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpCombines?: Prisma.LevelUpCombineUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpSnapshots?: Prisma.LevelUpRatingSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
+}
+
+export type WorkspaceCreateOrConnectWithoutLevelUpProgramsInput = {
+  where: Prisma.WorkspaceWhereUniqueInput
+  create: Prisma.XOR<Prisma.WorkspaceCreateWithoutLevelUpProgramsInput, Prisma.WorkspaceUncheckedCreateWithoutLevelUpProgramsInput>
+}
+
+export type WorkspaceUpsertWithoutLevelUpProgramsInput = {
+  update: Prisma.XOR<Prisma.WorkspaceUpdateWithoutLevelUpProgramsInput, Prisma.WorkspaceUncheckedUpdateWithoutLevelUpProgramsInput>
+  create: Prisma.XOR<Prisma.WorkspaceCreateWithoutLevelUpProgramsInput, Prisma.WorkspaceUncheckedCreateWithoutLevelUpProgramsInput>
+  where?: Prisma.WorkspaceWhereInput
+}
+
+export type WorkspaceUpdateToOneWithWhereWithoutLevelUpProgramsInput = {
+  where?: Prisma.WorkspaceWhereInput
+  data: Prisma.XOR<Prisma.WorkspaceUpdateWithoutLevelUpProgramsInput, Prisma.WorkspaceUncheckedUpdateWithoutLevelUpProgramsInput>
+}
+
+export type WorkspaceUpdateWithoutLevelUpProgramsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  ownerUser?: Prisma.UserUpdateOneWithoutOwnedWorkspacesNestedInput
+  members?: Prisma.WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
+  approvedEmails?: Prisma.ApprovedEmailUpdateManyWithoutWorkspaceNestedInput
+  persons?: Prisma.PersonUpdateManyWithoutWorkspaceNestedInput
+  events?: Prisma.EventUpdateManyWithoutWorkspaceNestedInput
+  interactions?: Prisma.InteractionUpdateManyWithoutWorkspaceNestedInput
+  plans?: Prisma.PlanUpdateManyWithoutWorkspaceNestedInput
+  places?: Prisma.PlaceUpdateManyWithoutWorkspaceNestedInput
+  placeNotes?: Prisma.PlaceNoteUpdateManyWithoutWorkspaceNestedInput
+  notes?: Prisma.NoteUpdateManyWithoutWorkspaceNestedInput
+  theorySnapshots?: Prisma.TheorySnapshotUpdateManyWithoutWorkspaceNestedInput
+  groups?: Prisma.GroupUpdateManyWithoutWorkspaceNestedInput
+  items?: Prisma.ItemUpdateManyWithoutWorkspaceNestedInput
+  itemDefinitions?: Prisma.ItemDefinitionUpdateManyWithoutWorkspaceNestedInput
+  inventoryLots?: Prisma.InventoryLotUpdateManyWithoutWorkspaceNestedInput
+  supplierProfiles?: Prisma.SupplierProfileUpdateManyWithoutWorkspaceNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUpdateManyWithoutWorkspaceNestedInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutWorkspaceNestedInput
+  importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
+  aiProviderCredentials?: Prisma.AiProviderCredentialUpdateManyWithoutWorkspaceNestedInput
+  aiAnalysisRuns?: Prisma.AiAnalysisRunUpdateManyWithoutWorkspaceNestedInput
+  noteAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutWorkspaceNestedInput
+  noteSuggestions?: Prisma.NoteSuggestionUpdateManyWithoutWorkspaceNestedInput
+  stagedItems?: Prisma.StagedInteractionUpdateManyWithoutWorkspaceNestedInput
+  rules?: Prisma.RuleUpdateManyWithoutWorkspaceNestedInput
+  ruleRuns?: Prisma.RuleRunUpdateManyWithoutWorkspaceNestedInput
+  apiKeys?: Prisma.ApiKeyUpdateManyWithoutWorkspaceNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutWorkspaceNestedInput
+  calendarConnections?: Prisma.CalendarConnectionUpdateManyWithoutWorkspaceNestedInput
+  calendarEventLinks?: Prisma.CalendarEventLinkUpdateManyWithoutWorkspaceNestedInput
+  gmailConnections?: Prisma.GmailConnectionUpdateManyWithoutWorkspaceNestedInput
+  gmailMessageLinks?: Prisma.GmailMessageLinkUpdateManyWithoutWorkspaceNestedInput
+  importJobs?: Prisma.ImportJobUpdateManyWithoutWorkspaceNestedInput
+  importStagedVisits?: Prisma.ImportStagedVisitUpdateManyWithoutWorkspaceNestedInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUpdateManyWithoutWorkspaceNestedInput
+  assistantMessages?: Prisma.AssistantMessageUpdateManyWithoutWorkspaceNestedInput
+  eraConnections?: Prisma.EraConnectionUpdateManyWithoutWorkspaceNestedInput
+  eraAccountLinks?: Prisma.EraAccountLinkUpdateManyWithoutWorkspaceNestedInput
+  eraTransactionLinks?: Prisma.EraTransactionLinkUpdateManyWithoutWorkspaceNestedInput
+  levelUpProfile?: Prisma.LevelUpProfileUpdateOneWithoutWorkspaceNestedInput
+  levelUpTestResults?: Prisma.LevelUpTestResultUpdateManyWithoutWorkspaceNestedInput
+  levelUpCombines?: Prisma.LevelUpCombineUpdateManyWithoutWorkspaceNestedInput
+  levelUpSnapshots?: Prisma.LevelUpRatingSnapshotUpdateManyWithoutWorkspaceNestedInput
+  levelUpTrainingSets?: Prisma.LevelUpTrainingSetUpdateManyWithoutWorkspaceNestedInput
+  levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUpdateManyWithoutWorkspaceNestedInput
+  levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
+}
+
+export type WorkspaceUncheckedUpdateWithoutLevelUpProgramsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  ownerUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  members?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
+  approvedEmails?: Prisma.ApprovedEmailUncheckedUpdateManyWithoutWorkspaceNestedInput
+  persons?: Prisma.PersonUncheckedUpdateManyWithoutWorkspaceNestedInput
+  events?: Prisma.EventUncheckedUpdateManyWithoutWorkspaceNestedInput
+  interactions?: Prisma.InteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  plans?: Prisma.PlanUncheckedUpdateManyWithoutWorkspaceNestedInput
+  places?: Prisma.PlaceUncheckedUpdateManyWithoutWorkspaceNestedInput
+  placeNotes?: Prisma.PlaceNoteUncheckedUpdateManyWithoutWorkspaceNestedInput
+  notes?: Prisma.NoteUncheckedUpdateManyWithoutWorkspaceNestedInput
+  theorySnapshots?: Prisma.TheorySnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  groups?: Prisma.GroupUncheckedUpdateManyWithoutWorkspaceNestedInput
+  items?: Prisma.ItemUncheckedUpdateManyWithoutWorkspaceNestedInput
+  itemDefinitions?: Prisma.ItemDefinitionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  inventoryLots?: Prisma.InventoryLotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  supplierProfiles?: Prisma.SupplierProfileUncheckedUpdateManyWithoutWorkspaceNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutWorkspaceNestedInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutWorkspaceNestedInput
+  importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
+  aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedUpdateManyWithoutWorkspaceNestedInput
+  aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  noteSuggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  stagedItems?: Prisma.StagedInteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  rules?: Prisma.RuleUncheckedUpdateManyWithoutWorkspaceNestedInput
+  ruleRuns?: Prisma.RuleRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutWorkspaceNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutWorkspaceNestedInput
+  calendarConnections?: Prisma.CalendarConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  calendarEventLinks?: Prisma.CalendarEventLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
+  gmailConnections?: Prisma.GmailConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  gmailMessageLinks?: Prisma.GmailMessageLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
+  importJobs?: Prisma.ImportJobUncheckedUpdateManyWithoutWorkspaceNestedInput
+  importStagedVisits?: Prisma.ImportStagedVisitUncheckedUpdateManyWithoutWorkspaceNestedInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUncheckedUpdateManyWithoutWorkspaceNestedInput
+  assistantMessages?: Prisma.AssistantMessageUncheckedUpdateManyWithoutWorkspaceNestedInput
+  eraConnections?: Prisma.EraConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  eraAccountLinks?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
+  eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProfile?: Prisma.LevelUpProfileUncheckedUpdateOneWithoutWorkspaceNestedInput
+  levelUpTestResults?: Prisma.LevelUpTestResultUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpCombines?: Prisma.LevelUpCombineUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpSnapshots?: Prisma.LevelUpRatingSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
+}
+
+export type WorkspaceCreateWithoutLevelUpProgramDaysInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  name: string
+  slug: string
+  status?: string
+  ownerUser?: Prisma.UserCreateNestedOneWithoutOwnedWorkspacesInput
+  members?: Prisma.WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
+  approvedEmails?: Prisma.ApprovedEmailCreateNestedManyWithoutWorkspaceInput
+  persons?: Prisma.PersonCreateNestedManyWithoutWorkspaceInput
+  events?: Prisma.EventCreateNestedManyWithoutWorkspaceInput
+  interactions?: Prisma.InteractionCreateNestedManyWithoutWorkspaceInput
+  plans?: Prisma.PlanCreateNestedManyWithoutWorkspaceInput
+  places?: Prisma.PlaceCreateNestedManyWithoutWorkspaceInput
+  placeNotes?: Prisma.PlaceNoteCreateNestedManyWithoutWorkspaceInput
+  notes?: Prisma.NoteCreateNestedManyWithoutWorkspaceInput
+  theorySnapshots?: Prisma.TheorySnapshotCreateNestedManyWithoutWorkspaceInput
+  groups?: Prisma.GroupCreateNestedManyWithoutWorkspaceInput
+  items?: Prisma.ItemCreateNestedManyWithoutWorkspaceInput
+  itemDefinitions?: Prisma.ItemDefinitionCreateNestedManyWithoutWorkspaceInput
+  inventoryLots?: Prisma.InventoryLotCreateNestedManyWithoutWorkspaceInput
+  supplierProfiles?: Prisma.SupplierProfileCreateNestedManyWithoutWorkspaceInput
+  purchaseOrders?: Prisma.PurchaseOrderCreateNestedManyWithoutWorkspaceInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutWorkspaceInput
+  importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
+  aiProviderCredentials?: Prisma.AiProviderCredentialCreateNestedManyWithoutWorkspaceInput
+  aiAnalysisRuns?: Prisma.AiAnalysisRunCreateNestedManyWithoutWorkspaceInput
+  noteAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutWorkspaceInput
+  noteSuggestions?: Prisma.NoteSuggestionCreateNestedManyWithoutWorkspaceInput
+  stagedItems?: Prisma.StagedInteractionCreateNestedManyWithoutWorkspaceInput
+  rules?: Prisma.RuleCreateNestedManyWithoutWorkspaceInput
+  ruleRuns?: Prisma.RuleRunCreateNestedManyWithoutWorkspaceInput
+  apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutWorkspaceInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutWorkspaceInput
+  calendarConnections?: Prisma.CalendarConnectionCreateNestedManyWithoutWorkspaceInput
+  calendarEventLinks?: Prisma.CalendarEventLinkCreateNestedManyWithoutWorkspaceInput
+  gmailConnections?: Prisma.GmailConnectionCreateNestedManyWithoutWorkspaceInput
+  gmailMessageLinks?: Prisma.GmailMessageLinkCreateNestedManyWithoutWorkspaceInput
+  importJobs?: Prisma.ImportJobCreateNestedManyWithoutWorkspaceInput
+  importStagedVisits?: Prisma.ImportStagedVisitCreateNestedManyWithoutWorkspaceInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonCreateNestedManyWithoutWorkspaceInput
+  assistantMessages?: Prisma.AssistantMessageCreateNestedManyWithoutWorkspaceInput
+  eraConnections?: Prisma.EraConnectionCreateNestedManyWithoutWorkspaceInput
+  eraAccountLinks?: Prisma.EraAccountLinkCreateNestedManyWithoutWorkspaceInput
+  eraTransactionLinks?: Prisma.EraTransactionLinkCreateNestedManyWithoutWorkspaceInput
+  levelUpProfile?: Prisma.LevelUpProfileCreateNestedOneWithoutWorkspaceInput
+  levelUpTestResults?: Prisma.LevelUpTestResultCreateNestedManyWithoutWorkspaceInput
+  levelUpCombines?: Prisma.LevelUpCombineCreateNestedManyWithoutWorkspaceInput
+  levelUpSnapshots?: Prisma.LevelUpRatingSnapshotCreateNestedManyWithoutWorkspaceInput
+  levelUpTrainingSets?: Prisma.LevelUpTrainingSetCreateNestedManyWithoutWorkspaceInput
+  levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockCreateNestedManyWithoutWorkspaceInput
+  levelUpTargetBuilds?: Prisma.LevelUpTargetBuildCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
+}
+
+export type WorkspaceUncheckedCreateWithoutLevelUpProgramDaysInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  name: string
+  slug: string
+  status?: string
+  ownerUserId?: string | null
+  members?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
+  approvedEmails?: Prisma.ApprovedEmailUncheckedCreateNestedManyWithoutWorkspaceInput
+  persons?: Prisma.PersonUncheckedCreateNestedManyWithoutWorkspaceInput
+  events?: Prisma.EventUncheckedCreateNestedManyWithoutWorkspaceInput
+  interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutWorkspaceInput
+  plans?: Prisma.PlanUncheckedCreateNestedManyWithoutWorkspaceInput
+  places?: Prisma.PlaceUncheckedCreateNestedManyWithoutWorkspaceInput
+  placeNotes?: Prisma.PlaceNoteUncheckedCreateNestedManyWithoutWorkspaceInput
+  notes?: Prisma.NoteUncheckedCreateNestedManyWithoutWorkspaceInput
+  theorySnapshots?: Prisma.TheorySnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  groups?: Prisma.GroupUncheckedCreateNestedManyWithoutWorkspaceInput
+  items?: Prisma.ItemUncheckedCreateNestedManyWithoutWorkspaceInput
+  itemDefinitions?: Prisma.ItemDefinitionUncheckedCreateNestedManyWithoutWorkspaceInput
+  inventoryLots?: Prisma.InventoryLotUncheckedCreateNestedManyWithoutWorkspaceInput
+  supplierProfiles?: Prisma.SupplierProfileUncheckedCreateNestedManyWithoutWorkspaceInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutWorkspaceInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutWorkspaceInput
+  importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
+  aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedCreateNestedManyWithoutWorkspaceInput
+  aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  noteSuggestions?: Prisma.NoteSuggestionUncheckedCreateNestedManyWithoutWorkspaceInput
+  stagedItems?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutWorkspaceInput
+  rules?: Prisma.RuleUncheckedCreateNestedManyWithoutWorkspaceInput
+  ruleRuns?: Prisma.RuleRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutWorkspaceInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutWorkspaceInput
+  calendarConnections?: Prisma.CalendarConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  calendarEventLinks?: Prisma.CalendarEventLinkUncheckedCreateNestedManyWithoutWorkspaceInput
+  gmailConnections?: Prisma.GmailConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  gmailMessageLinks?: Prisma.GmailMessageLinkUncheckedCreateNestedManyWithoutWorkspaceInput
+  importJobs?: Prisma.ImportJobUncheckedCreateNestedManyWithoutWorkspaceInput
+  importStagedVisits?: Prisma.ImportStagedVisitUncheckedCreateNestedManyWithoutWorkspaceInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUncheckedCreateNestedManyWithoutWorkspaceInput
+  assistantMessages?: Prisma.AssistantMessageUncheckedCreateNestedManyWithoutWorkspaceInput
+  eraConnections?: Prisma.EraConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  eraAccountLinks?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutWorkspaceInput
+  eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProfile?: Prisma.LevelUpProfileUncheckedCreateNestedOneWithoutWorkspaceInput
+  levelUpTestResults?: Prisma.LevelUpTestResultUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpCombines?: Prisma.LevelUpCombineUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpSnapshots?: Prisma.LevelUpRatingSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
+}
+
+export type WorkspaceCreateOrConnectWithoutLevelUpProgramDaysInput = {
+  where: Prisma.WorkspaceWhereUniqueInput
+  create: Prisma.XOR<Prisma.WorkspaceCreateWithoutLevelUpProgramDaysInput, Prisma.WorkspaceUncheckedCreateWithoutLevelUpProgramDaysInput>
+}
+
+export type WorkspaceUpsertWithoutLevelUpProgramDaysInput = {
+  update: Prisma.XOR<Prisma.WorkspaceUpdateWithoutLevelUpProgramDaysInput, Prisma.WorkspaceUncheckedUpdateWithoutLevelUpProgramDaysInput>
+  create: Prisma.XOR<Prisma.WorkspaceCreateWithoutLevelUpProgramDaysInput, Prisma.WorkspaceUncheckedCreateWithoutLevelUpProgramDaysInput>
+  where?: Prisma.WorkspaceWhereInput
+}
+
+export type WorkspaceUpdateToOneWithWhereWithoutLevelUpProgramDaysInput = {
+  where?: Prisma.WorkspaceWhereInput
+  data: Prisma.XOR<Prisma.WorkspaceUpdateWithoutLevelUpProgramDaysInput, Prisma.WorkspaceUncheckedUpdateWithoutLevelUpProgramDaysInput>
+}
+
+export type WorkspaceUpdateWithoutLevelUpProgramDaysInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  ownerUser?: Prisma.UserUpdateOneWithoutOwnedWorkspacesNestedInput
+  members?: Prisma.WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
+  approvedEmails?: Prisma.ApprovedEmailUpdateManyWithoutWorkspaceNestedInput
+  persons?: Prisma.PersonUpdateManyWithoutWorkspaceNestedInput
+  events?: Prisma.EventUpdateManyWithoutWorkspaceNestedInput
+  interactions?: Prisma.InteractionUpdateManyWithoutWorkspaceNestedInput
+  plans?: Prisma.PlanUpdateManyWithoutWorkspaceNestedInput
+  places?: Prisma.PlaceUpdateManyWithoutWorkspaceNestedInput
+  placeNotes?: Prisma.PlaceNoteUpdateManyWithoutWorkspaceNestedInput
+  notes?: Prisma.NoteUpdateManyWithoutWorkspaceNestedInput
+  theorySnapshots?: Prisma.TheorySnapshotUpdateManyWithoutWorkspaceNestedInput
+  groups?: Prisma.GroupUpdateManyWithoutWorkspaceNestedInput
+  items?: Prisma.ItemUpdateManyWithoutWorkspaceNestedInput
+  itemDefinitions?: Prisma.ItemDefinitionUpdateManyWithoutWorkspaceNestedInput
+  inventoryLots?: Prisma.InventoryLotUpdateManyWithoutWorkspaceNestedInput
+  supplierProfiles?: Prisma.SupplierProfileUpdateManyWithoutWorkspaceNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUpdateManyWithoutWorkspaceNestedInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutWorkspaceNestedInput
+  importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
+  aiProviderCredentials?: Prisma.AiProviderCredentialUpdateManyWithoutWorkspaceNestedInput
+  aiAnalysisRuns?: Prisma.AiAnalysisRunUpdateManyWithoutWorkspaceNestedInput
+  noteAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutWorkspaceNestedInput
+  noteSuggestions?: Prisma.NoteSuggestionUpdateManyWithoutWorkspaceNestedInput
+  stagedItems?: Prisma.StagedInteractionUpdateManyWithoutWorkspaceNestedInput
+  rules?: Prisma.RuleUpdateManyWithoutWorkspaceNestedInput
+  ruleRuns?: Prisma.RuleRunUpdateManyWithoutWorkspaceNestedInput
+  apiKeys?: Prisma.ApiKeyUpdateManyWithoutWorkspaceNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutWorkspaceNestedInput
+  calendarConnections?: Prisma.CalendarConnectionUpdateManyWithoutWorkspaceNestedInput
+  calendarEventLinks?: Prisma.CalendarEventLinkUpdateManyWithoutWorkspaceNestedInput
+  gmailConnections?: Prisma.GmailConnectionUpdateManyWithoutWorkspaceNestedInput
+  gmailMessageLinks?: Prisma.GmailMessageLinkUpdateManyWithoutWorkspaceNestedInput
+  importJobs?: Prisma.ImportJobUpdateManyWithoutWorkspaceNestedInput
+  importStagedVisits?: Prisma.ImportStagedVisitUpdateManyWithoutWorkspaceNestedInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUpdateManyWithoutWorkspaceNestedInput
+  assistantMessages?: Prisma.AssistantMessageUpdateManyWithoutWorkspaceNestedInput
+  eraConnections?: Prisma.EraConnectionUpdateManyWithoutWorkspaceNestedInput
+  eraAccountLinks?: Prisma.EraAccountLinkUpdateManyWithoutWorkspaceNestedInput
+  eraTransactionLinks?: Prisma.EraTransactionLinkUpdateManyWithoutWorkspaceNestedInput
+  levelUpProfile?: Prisma.LevelUpProfileUpdateOneWithoutWorkspaceNestedInput
+  levelUpTestResults?: Prisma.LevelUpTestResultUpdateManyWithoutWorkspaceNestedInput
+  levelUpCombines?: Prisma.LevelUpCombineUpdateManyWithoutWorkspaceNestedInput
+  levelUpSnapshots?: Prisma.LevelUpRatingSnapshotUpdateManyWithoutWorkspaceNestedInput
+  levelUpTrainingSets?: Prisma.LevelUpTrainingSetUpdateManyWithoutWorkspaceNestedInput
+  levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUpdateManyWithoutWorkspaceNestedInput
+  levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
+}
+
+export type WorkspaceUncheckedUpdateWithoutLevelUpProgramDaysInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  ownerUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  members?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
+  approvedEmails?: Prisma.ApprovedEmailUncheckedUpdateManyWithoutWorkspaceNestedInput
+  persons?: Prisma.PersonUncheckedUpdateManyWithoutWorkspaceNestedInput
+  events?: Prisma.EventUncheckedUpdateManyWithoutWorkspaceNestedInput
+  interactions?: Prisma.InteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  plans?: Prisma.PlanUncheckedUpdateManyWithoutWorkspaceNestedInput
+  places?: Prisma.PlaceUncheckedUpdateManyWithoutWorkspaceNestedInput
+  placeNotes?: Prisma.PlaceNoteUncheckedUpdateManyWithoutWorkspaceNestedInput
+  notes?: Prisma.NoteUncheckedUpdateManyWithoutWorkspaceNestedInput
+  theorySnapshots?: Prisma.TheorySnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  groups?: Prisma.GroupUncheckedUpdateManyWithoutWorkspaceNestedInput
+  items?: Prisma.ItemUncheckedUpdateManyWithoutWorkspaceNestedInput
+  itemDefinitions?: Prisma.ItemDefinitionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  inventoryLots?: Prisma.InventoryLotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  supplierProfiles?: Prisma.SupplierProfileUncheckedUpdateManyWithoutWorkspaceNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutWorkspaceNestedInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutWorkspaceNestedInput
+  importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
+  aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedUpdateManyWithoutWorkspaceNestedInput
+  aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  noteSuggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  stagedItems?: Prisma.StagedInteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  rules?: Prisma.RuleUncheckedUpdateManyWithoutWorkspaceNestedInput
+  ruleRuns?: Prisma.RuleRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutWorkspaceNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutWorkspaceNestedInput
+  calendarConnections?: Prisma.CalendarConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  calendarEventLinks?: Prisma.CalendarEventLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
+  gmailConnections?: Prisma.GmailConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  gmailMessageLinks?: Prisma.GmailMessageLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
+  importJobs?: Prisma.ImportJobUncheckedUpdateManyWithoutWorkspaceNestedInput
+  importStagedVisits?: Prisma.ImportStagedVisitUncheckedUpdateManyWithoutWorkspaceNestedInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUncheckedUpdateManyWithoutWorkspaceNestedInput
+  assistantMessages?: Prisma.AssistantMessageUncheckedUpdateManyWithoutWorkspaceNestedInput
+  eraConnections?: Prisma.EraConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  eraAccountLinks?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
+  eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProfile?: Prisma.LevelUpProfileUncheckedUpdateOneWithoutWorkspaceNestedInput
+  levelUpTestResults?: Prisma.LevelUpTestResultUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpCombines?: Prisma.LevelUpCombineUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpSnapshots?: Prisma.LevelUpRatingSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
+}
+
+export type WorkspaceCreateWithoutLevelUpProgramEntriesInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  name: string
+  slug: string
+  status?: string
+  ownerUser?: Prisma.UserCreateNestedOneWithoutOwnedWorkspacesInput
+  members?: Prisma.WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
+  approvedEmails?: Prisma.ApprovedEmailCreateNestedManyWithoutWorkspaceInput
+  persons?: Prisma.PersonCreateNestedManyWithoutWorkspaceInput
+  events?: Prisma.EventCreateNestedManyWithoutWorkspaceInput
+  interactions?: Prisma.InteractionCreateNestedManyWithoutWorkspaceInput
+  plans?: Prisma.PlanCreateNestedManyWithoutWorkspaceInput
+  places?: Prisma.PlaceCreateNestedManyWithoutWorkspaceInput
+  placeNotes?: Prisma.PlaceNoteCreateNestedManyWithoutWorkspaceInput
+  notes?: Prisma.NoteCreateNestedManyWithoutWorkspaceInput
+  theorySnapshots?: Prisma.TheorySnapshotCreateNestedManyWithoutWorkspaceInput
+  groups?: Prisma.GroupCreateNestedManyWithoutWorkspaceInput
+  items?: Prisma.ItemCreateNestedManyWithoutWorkspaceInput
+  itemDefinitions?: Prisma.ItemDefinitionCreateNestedManyWithoutWorkspaceInput
+  inventoryLots?: Prisma.InventoryLotCreateNestedManyWithoutWorkspaceInput
+  supplierProfiles?: Prisma.SupplierProfileCreateNestedManyWithoutWorkspaceInput
+  purchaseOrders?: Prisma.PurchaseOrderCreateNestedManyWithoutWorkspaceInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutWorkspaceInput
+  importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
+  aiProviderCredentials?: Prisma.AiProviderCredentialCreateNestedManyWithoutWorkspaceInput
+  aiAnalysisRuns?: Prisma.AiAnalysisRunCreateNestedManyWithoutWorkspaceInput
+  noteAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutWorkspaceInput
+  noteSuggestions?: Prisma.NoteSuggestionCreateNestedManyWithoutWorkspaceInput
+  stagedItems?: Prisma.StagedInteractionCreateNestedManyWithoutWorkspaceInput
+  rules?: Prisma.RuleCreateNestedManyWithoutWorkspaceInput
+  ruleRuns?: Prisma.RuleRunCreateNestedManyWithoutWorkspaceInput
+  apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutWorkspaceInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutWorkspaceInput
+  calendarConnections?: Prisma.CalendarConnectionCreateNestedManyWithoutWorkspaceInput
+  calendarEventLinks?: Prisma.CalendarEventLinkCreateNestedManyWithoutWorkspaceInput
+  gmailConnections?: Prisma.GmailConnectionCreateNestedManyWithoutWorkspaceInput
+  gmailMessageLinks?: Prisma.GmailMessageLinkCreateNestedManyWithoutWorkspaceInput
+  importJobs?: Prisma.ImportJobCreateNestedManyWithoutWorkspaceInput
+  importStagedVisits?: Prisma.ImportStagedVisitCreateNestedManyWithoutWorkspaceInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonCreateNestedManyWithoutWorkspaceInput
+  assistantMessages?: Prisma.AssistantMessageCreateNestedManyWithoutWorkspaceInput
+  eraConnections?: Prisma.EraConnectionCreateNestedManyWithoutWorkspaceInput
+  eraAccountLinks?: Prisma.EraAccountLinkCreateNestedManyWithoutWorkspaceInput
+  eraTransactionLinks?: Prisma.EraTransactionLinkCreateNestedManyWithoutWorkspaceInput
+  levelUpProfile?: Prisma.LevelUpProfileCreateNestedOneWithoutWorkspaceInput
+  levelUpTestResults?: Prisma.LevelUpTestResultCreateNestedManyWithoutWorkspaceInput
+  levelUpCombines?: Prisma.LevelUpCombineCreateNestedManyWithoutWorkspaceInput
+  levelUpSnapshots?: Prisma.LevelUpRatingSnapshotCreateNestedManyWithoutWorkspaceInput
+  levelUpTrainingSets?: Prisma.LevelUpTrainingSetCreateNestedManyWithoutWorkspaceInput
+  levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockCreateNestedManyWithoutWorkspaceInput
+  levelUpTargetBuilds?: Prisma.LevelUpTargetBuildCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
+}
+
+export type WorkspaceUncheckedCreateWithoutLevelUpProgramEntriesInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  name: string
+  slug: string
+  status?: string
+  ownerUserId?: string | null
+  members?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
+  approvedEmails?: Prisma.ApprovedEmailUncheckedCreateNestedManyWithoutWorkspaceInput
+  persons?: Prisma.PersonUncheckedCreateNestedManyWithoutWorkspaceInput
+  events?: Prisma.EventUncheckedCreateNestedManyWithoutWorkspaceInput
+  interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutWorkspaceInput
+  plans?: Prisma.PlanUncheckedCreateNestedManyWithoutWorkspaceInput
+  places?: Prisma.PlaceUncheckedCreateNestedManyWithoutWorkspaceInput
+  placeNotes?: Prisma.PlaceNoteUncheckedCreateNestedManyWithoutWorkspaceInput
+  notes?: Prisma.NoteUncheckedCreateNestedManyWithoutWorkspaceInput
+  theorySnapshots?: Prisma.TheorySnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  groups?: Prisma.GroupUncheckedCreateNestedManyWithoutWorkspaceInput
+  items?: Prisma.ItemUncheckedCreateNestedManyWithoutWorkspaceInput
+  itemDefinitions?: Prisma.ItemDefinitionUncheckedCreateNestedManyWithoutWorkspaceInput
+  inventoryLots?: Prisma.InventoryLotUncheckedCreateNestedManyWithoutWorkspaceInput
+  supplierProfiles?: Prisma.SupplierProfileUncheckedCreateNestedManyWithoutWorkspaceInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutWorkspaceInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutWorkspaceInput
+  importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
+  aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedCreateNestedManyWithoutWorkspaceInput
+  aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  noteSuggestions?: Prisma.NoteSuggestionUncheckedCreateNestedManyWithoutWorkspaceInput
+  stagedItems?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutWorkspaceInput
+  rules?: Prisma.RuleUncheckedCreateNestedManyWithoutWorkspaceInput
+  ruleRuns?: Prisma.RuleRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutWorkspaceInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutWorkspaceInput
+  calendarConnections?: Prisma.CalendarConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  calendarEventLinks?: Prisma.CalendarEventLinkUncheckedCreateNestedManyWithoutWorkspaceInput
+  gmailConnections?: Prisma.GmailConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  gmailMessageLinks?: Prisma.GmailMessageLinkUncheckedCreateNestedManyWithoutWorkspaceInput
+  importJobs?: Prisma.ImportJobUncheckedCreateNestedManyWithoutWorkspaceInput
+  importStagedVisits?: Prisma.ImportStagedVisitUncheckedCreateNestedManyWithoutWorkspaceInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUncheckedCreateNestedManyWithoutWorkspaceInput
+  assistantMessages?: Prisma.AssistantMessageUncheckedCreateNestedManyWithoutWorkspaceInput
+  eraConnections?: Prisma.EraConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  eraAccountLinks?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutWorkspaceInput
+  eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProfile?: Prisma.LevelUpProfileUncheckedCreateNestedOneWithoutWorkspaceInput
+  levelUpTestResults?: Prisma.LevelUpTestResultUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpCombines?: Prisma.LevelUpCombineUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpSnapshots?: Prisma.LevelUpRatingSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
+}
+
+export type WorkspaceCreateOrConnectWithoutLevelUpProgramEntriesInput = {
+  where: Prisma.WorkspaceWhereUniqueInput
+  create: Prisma.XOR<Prisma.WorkspaceCreateWithoutLevelUpProgramEntriesInput, Prisma.WorkspaceUncheckedCreateWithoutLevelUpProgramEntriesInput>
+}
+
+export type WorkspaceUpsertWithoutLevelUpProgramEntriesInput = {
+  update: Prisma.XOR<Prisma.WorkspaceUpdateWithoutLevelUpProgramEntriesInput, Prisma.WorkspaceUncheckedUpdateWithoutLevelUpProgramEntriesInput>
+  create: Prisma.XOR<Prisma.WorkspaceCreateWithoutLevelUpProgramEntriesInput, Prisma.WorkspaceUncheckedCreateWithoutLevelUpProgramEntriesInput>
+  where?: Prisma.WorkspaceWhereInput
+}
+
+export type WorkspaceUpdateToOneWithWhereWithoutLevelUpProgramEntriesInput = {
+  where?: Prisma.WorkspaceWhereInput
+  data: Prisma.XOR<Prisma.WorkspaceUpdateWithoutLevelUpProgramEntriesInput, Prisma.WorkspaceUncheckedUpdateWithoutLevelUpProgramEntriesInput>
+}
+
+export type WorkspaceUpdateWithoutLevelUpProgramEntriesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  ownerUser?: Prisma.UserUpdateOneWithoutOwnedWorkspacesNestedInput
+  members?: Prisma.WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
+  approvedEmails?: Prisma.ApprovedEmailUpdateManyWithoutWorkspaceNestedInput
+  persons?: Prisma.PersonUpdateManyWithoutWorkspaceNestedInput
+  events?: Prisma.EventUpdateManyWithoutWorkspaceNestedInput
+  interactions?: Prisma.InteractionUpdateManyWithoutWorkspaceNestedInput
+  plans?: Prisma.PlanUpdateManyWithoutWorkspaceNestedInput
+  places?: Prisma.PlaceUpdateManyWithoutWorkspaceNestedInput
+  placeNotes?: Prisma.PlaceNoteUpdateManyWithoutWorkspaceNestedInput
+  notes?: Prisma.NoteUpdateManyWithoutWorkspaceNestedInput
+  theorySnapshots?: Prisma.TheorySnapshotUpdateManyWithoutWorkspaceNestedInput
+  groups?: Prisma.GroupUpdateManyWithoutWorkspaceNestedInput
+  items?: Prisma.ItemUpdateManyWithoutWorkspaceNestedInput
+  itemDefinitions?: Prisma.ItemDefinitionUpdateManyWithoutWorkspaceNestedInput
+  inventoryLots?: Prisma.InventoryLotUpdateManyWithoutWorkspaceNestedInput
+  supplierProfiles?: Prisma.SupplierProfileUpdateManyWithoutWorkspaceNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUpdateManyWithoutWorkspaceNestedInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutWorkspaceNestedInput
+  importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
+  aiProviderCredentials?: Prisma.AiProviderCredentialUpdateManyWithoutWorkspaceNestedInput
+  aiAnalysisRuns?: Prisma.AiAnalysisRunUpdateManyWithoutWorkspaceNestedInput
+  noteAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutWorkspaceNestedInput
+  noteSuggestions?: Prisma.NoteSuggestionUpdateManyWithoutWorkspaceNestedInput
+  stagedItems?: Prisma.StagedInteractionUpdateManyWithoutWorkspaceNestedInput
+  rules?: Prisma.RuleUpdateManyWithoutWorkspaceNestedInput
+  ruleRuns?: Prisma.RuleRunUpdateManyWithoutWorkspaceNestedInput
+  apiKeys?: Prisma.ApiKeyUpdateManyWithoutWorkspaceNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutWorkspaceNestedInput
+  calendarConnections?: Prisma.CalendarConnectionUpdateManyWithoutWorkspaceNestedInput
+  calendarEventLinks?: Prisma.CalendarEventLinkUpdateManyWithoutWorkspaceNestedInput
+  gmailConnections?: Prisma.GmailConnectionUpdateManyWithoutWorkspaceNestedInput
+  gmailMessageLinks?: Prisma.GmailMessageLinkUpdateManyWithoutWorkspaceNestedInput
+  importJobs?: Prisma.ImportJobUpdateManyWithoutWorkspaceNestedInput
+  importStagedVisits?: Prisma.ImportStagedVisitUpdateManyWithoutWorkspaceNestedInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUpdateManyWithoutWorkspaceNestedInput
+  assistantMessages?: Prisma.AssistantMessageUpdateManyWithoutWorkspaceNestedInput
+  eraConnections?: Prisma.EraConnectionUpdateManyWithoutWorkspaceNestedInput
+  eraAccountLinks?: Prisma.EraAccountLinkUpdateManyWithoutWorkspaceNestedInput
+  eraTransactionLinks?: Prisma.EraTransactionLinkUpdateManyWithoutWorkspaceNestedInput
+  levelUpProfile?: Prisma.LevelUpProfileUpdateOneWithoutWorkspaceNestedInput
+  levelUpTestResults?: Prisma.LevelUpTestResultUpdateManyWithoutWorkspaceNestedInput
+  levelUpCombines?: Prisma.LevelUpCombineUpdateManyWithoutWorkspaceNestedInput
+  levelUpSnapshots?: Prisma.LevelUpRatingSnapshotUpdateManyWithoutWorkspaceNestedInput
+  levelUpTrainingSets?: Prisma.LevelUpTrainingSetUpdateManyWithoutWorkspaceNestedInput
+  levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUpdateManyWithoutWorkspaceNestedInput
+  levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
+}
+
+export type WorkspaceUncheckedUpdateWithoutLevelUpProgramEntriesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  ownerUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  members?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
+  approvedEmails?: Prisma.ApprovedEmailUncheckedUpdateManyWithoutWorkspaceNestedInput
+  persons?: Prisma.PersonUncheckedUpdateManyWithoutWorkspaceNestedInput
+  events?: Prisma.EventUncheckedUpdateManyWithoutWorkspaceNestedInput
+  interactions?: Prisma.InteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  plans?: Prisma.PlanUncheckedUpdateManyWithoutWorkspaceNestedInput
+  places?: Prisma.PlaceUncheckedUpdateManyWithoutWorkspaceNestedInput
+  placeNotes?: Prisma.PlaceNoteUncheckedUpdateManyWithoutWorkspaceNestedInput
+  notes?: Prisma.NoteUncheckedUpdateManyWithoutWorkspaceNestedInput
+  theorySnapshots?: Prisma.TheorySnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  groups?: Prisma.GroupUncheckedUpdateManyWithoutWorkspaceNestedInput
+  items?: Prisma.ItemUncheckedUpdateManyWithoutWorkspaceNestedInput
+  itemDefinitions?: Prisma.ItemDefinitionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  inventoryLots?: Prisma.InventoryLotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  supplierProfiles?: Prisma.SupplierProfileUncheckedUpdateManyWithoutWorkspaceNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutWorkspaceNestedInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutWorkspaceNestedInput
+  importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
+  aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedUpdateManyWithoutWorkspaceNestedInput
+  aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  noteSuggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  stagedItems?: Prisma.StagedInteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  rules?: Prisma.RuleUncheckedUpdateManyWithoutWorkspaceNestedInput
+  ruleRuns?: Prisma.RuleRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutWorkspaceNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutWorkspaceNestedInput
+  calendarConnections?: Prisma.CalendarConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  calendarEventLinks?: Prisma.CalendarEventLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
+  gmailConnections?: Prisma.GmailConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  gmailMessageLinks?: Prisma.GmailMessageLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
+  importJobs?: Prisma.ImportJobUncheckedUpdateManyWithoutWorkspaceNestedInput
+  importStagedVisits?: Prisma.ImportStagedVisitUncheckedUpdateManyWithoutWorkspaceNestedInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUncheckedUpdateManyWithoutWorkspaceNestedInput
+  assistantMessages?: Prisma.AssistantMessageUncheckedUpdateManyWithoutWorkspaceNestedInput
+  eraConnections?: Prisma.EraConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  eraAccountLinks?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
+  eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProfile?: Prisma.LevelUpProfileUncheckedUpdateOneWithoutWorkspaceNestedInput
+  levelUpTestResults?: Prisma.LevelUpTestResultUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpCombines?: Prisma.LevelUpCombineUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpSnapshots?: Prisma.LevelUpRatingSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
+}
+
+export type WorkspaceCreateWithoutLevelUpSessionsInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  name: string
+  slug: string
+  status?: string
+  ownerUser?: Prisma.UserCreateNestedOneWithoutOwnedWorkspacesInput
+  members?: Prisma.WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
+  approvedEmails?: Prisma.ApprovedEmailCreateNestedManyWithoutWorkspaceInput
+  persons?: Prisma.PersonCreateNestedManyWithoutWorkspaceInput
+  events?: Prisma.EventCreateNestedManyWithoutWorkspaceInput
+  interactions?: Prisma.InteractionCreateNestedManyWithoutWorkspaceInput
+  plans?: Prisma.PlanCreateNestedManyWithoutWorkspaceInput
+  places?: Prisma.PlaceCreateNestedManyWithoutWorkspaceInput
+  placeNotes?: Prisma.PlaceNoteCreateNestedManyWithoutWorkspaceInput
+  notes?: Prisma.NoteCreateNestedManyWithoutWorkspaceInput
+  theorySnapshots?: Prisma.TheorySnapshotCreateNestedManyWithoutWorkspaceInput
+  groups?: Prisma.GroupCreateNestedManyWithoutWorkspaceInput
+  items?: Prisma.ItemCreateNestedManyWithoutWorkspaceInput
+  itemDefinitions?: Prisma.ItemDefinitionCreateNestedManyWithoutWorkspaceInput
+  inventoryLots?: Prisma.InventoryLotCreateNestedManyWithoutWorkspaceInput
+  supplierProfiles?: Prisma.SupplierProfileCreateNestedManyWithoutWorkspaceInput
+  purchaseOrders?: Prisma.PurchaseOrderCreateNestedManyWithoutWorkspaceInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutWorkspaceInput
+  importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
+  aiProviderCredentials?: Prisma.AiProviderCredentialCreateNestedManyWithoutWorkspaceInput
+  aiAnalysisRuns?: Prisma.AiAnalysisRunCreateNestedManyWithoutWorkspaceInput
+  noteAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutWorkspaceInput
+  noteSuggestions?: Prisma.NoteSuggestionCreateNestedManyWithoutWorkspaceInput
+  stagedItems?: Prisma.StagedInteractionCreateNestedManyWithoutWorkspaceInput
+  rules?: Prisma.RuleCreateNestedManyWithoutWorkspaceInput
+  ruleRuns?: Prisma.RuleRunCreateNestedManyWithoutWorkspaceInput
+  apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutWorkspaceInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutWorkspaceInput
+  calendarConnections?: Prisma.CalendarConnectionCreateNestedManyWithoutWorkspaceInput
+  calendarEventLinks?: Prisma.CalendarEventLinkCreateNestedManyWithoutWorkspaceInput
+  gmailConnections?: Prisma.GmailConnectionCreateNestedManyWithoutWorkspaceInput
+  gmailMessageLinks?: Prisma.GmailMessageLinkCreateNestedManyWithoutWorkspaceInput
+  importJobs?: Prisma.ImportJobCreateNestedManyWithoutWorkspaceInput
+  importStagedVisits?: Prisma.ImportStagedVisitCreateNestedManyWithoutWorkspaceInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonCreateNestedManyWithoutWorkspaceInput
+  assistantMessages?: Prisma.AssistantMessageCreateNestedManyWithoutWorkspaceInput
+  eraConnections?: Prisma.EraConnectionCreateNestedManyWithoutWorkspaceInput
+  eraAccountLinks?: Prisma.EraAccountLinkCreateNestedManyWithoutWorkspaceInput
+  eraTransactionLinks?: Prisma.EraTransactionLinkCreateNestedManyWithoutWorkspaceInput
+  levelUpProfile?: Prisma.LevelUpProfileCreateNestedOneWithoutWorkspaceInput
+  levelUpTestResults?: Prisma.LevelUpTestResultCreateNestedManyWithoutWorkspaceInput
+  levelUpCombines?: Prisma.LevelUpCombineCreateNestedManyWithoutWorkspaceInput
+  levelUpSnapshots?: Prisma.LevelUpRatingSnapshotCreateNestedManyWithoutWorkspaceInput
+  levelUpTrainingSets?: Prisma.LevelUpTrainingSetCreateNestedManyWithoutWorkspaceInput
+  levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockCreateNestedManyWithoutWorkspaceInput
+  levelUpTargetBuilds?: Prisma.LevelUpTargetBuildCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
+}
+
+export type WorkspaceUncheckedCreateWithoutLevelUpSessionsInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  name: string
+  slug: string
+  status?: string
+  ownerUserId?: string | null
+  members?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
+  approvedEmails?: Prisma.ApprovedEmailUncheckedCreateNestedManyWithoutWorkspaceInput
+  persons?: Prisma.PersonUncheckedCreateNestedManyWithoutWorkspaceInput
+  events?: Prisma.EventUncheckedCreateNestedManyWithoutWorkspaceInput
+  interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutWorkspaceInput
+  plans?: Prisma.PlanUncheckedCreateNestedManyWithoutWorkspaceInput
+  places?: Prisma.PlaceUncheckedCreateNestedManyWithoutWorkspaceInput
+  placeNotes?: Prisma.PlaceNoteUncheckedCreateNestedManyWithoutWorkspaceInput
+  notes?: Prisma.NoteUncheckedCreateNestedManyWithoutWorkspaceInput
+  theorySnapshots?: Prisma.TheorySnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  groups?: Prisma.GroupUncheckedCreateNestedManyWithoutWorkspaceInput
+  items?: Prisma.ItemUncheckedCreateNestedManyWithoutWorkspaceInput
+  itemDefinitions?: Prisma.ItemDefinitionUncheckedCreateNestedManyWithoutWorkspaceInput
+  inventoryLots?: Prisma.InventoryLotUncheckedCreateNestedManyWithoutWorkspaceInput
+  supplierProfiles?: Prisma.SupplierProfileUncheckedCreateNestedManyWithoutWorkspaceInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutWorkspaceInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutWorkspaceInput
+  importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
+  aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedCreateNestedManyWithoutWorkspaceInput
+  aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  noteSuggestions?: Prisma.NoteSuggestionUncheckedCreateNestedManyWithoutWorkspaceInput
+  stagedItems?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutWorkspaceInput
+  rules?: Prisma.RuleUncheckedCreateNestedManyWithoutWorkspaceInput
+  ruleRuns?: Prisma.RuleRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutWorkspaceInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutWorkspaceInput
+  calendarConnections?: Prisma.CalendarConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  calendarEventLinks?: Prisma.CalendarEventLinkUncheckedCreateNestedManyWithoutWorkspaceInput
+  gmailConnections?: Prisma.GmailConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  gmailMessageLinks?: Prisma.GmailMessageLinkUncheckedCreateNestedManyWithoutWorkspaceInput
+  importJobs?: Prisma.ImportJobUncheckedCreateNestedManyWithoutWorkspaceInput
+  importStagedVisits?: Prisma.ImportStagedVisitUncheckedCreateNestedManyWithoutWorkspaceInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUncheckedCreateNestedManyWithoutWorkspaceInput
+  assistantMessages?: Prisma.AssistantMessageUncheckedCreateNestedManyWithoutWorkspaceInput
+  eraConnections?: Prisma.EraConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  eraAccountLinks?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutWorkspaceInput
+  eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProfile?: Prisma.LevelUpProfileUncheckedCreateNestedOneWithoutWorkspaceInput
+  levelUpTestResults?: Prisma.LevelUpTestResultUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpCombines?: Prisma.LevelUpCombineUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpSnapshots?: Prisma.LevelUpRatingSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
+}
+
+export type WorkspaceCreateOrConnectWithoutLevelUpSessionsInput = {
+  where: Prisma.WorkspaceWhereUniqueInput
+  create: Prisma.XOR<Prisma.WorkspaceCreateWithoutLevelUpSessionsInput, Prisma.WorkspaceUncheckedCreateWithoutLevelUpSessionsInput>
+}
+
+export type WorkspaceUpsertWithoutLevelUpSessionsInput = {
+  update: Prisma.XOR<Prisma.WorkspaceUpdateWithoutLevelUpSessionsInput, Prisma.WorkspaceUncheckedUpdateWithoutLevelUpSessionsInput>
+  create: Prisma.XOR<Prisma.WorkspaceCreateWithoutLevelUpSessionsInput, Prisma.WorkspaceUncheckedCreateWithoutLevelUpSessionsInput>
+  where?: Prisma.WorkspaceWhereInput
+}
+
+export type WorkspaceUpdateToOneWithWhereWithoutLevelUpSessionsInput = {
+  where?: Prisma.WorkspaceWhereInput
+  data: Prisma.XOR<Prisma.WorkspaceUpdateWithoutLevelUpSessionsInput, Prisma.WorkspaceUncheckedUpdateWithoutLevelUpSessionsInput>
+}
+
+export type WorkspaceUpdateWithoutLevelUpSessionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  ownerUser?: Prisma.UserUpdateOneWithoutOwnedWorkspacesNestedInput
+  members?: Prisma.WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
+  approvedEmails?: Prisma.ApprovedEmailUpdateManyWithoutWorkspaceNestedInput
+  persons?: Prisma.PersonUpdateManyWithoutWorkspaceNestedInput
+  events?: Prisma.EventUpdateManyWithoutWorkspaceNestedInput
+  interactions?: Prisma.InteractionUpdateManyWithoutWorkspaceNestedInput
+  plans?: Prisma.PlanUpdateManyWithoutWorkspaceNestedInput
+  places?: Prisma.PlaceUpdateManyWithoutWorkspaceNestedInput
+  placeNotes?: Prisma.PlaceNoteUpdateManyWithoutWorkspaceNestedInput
+  notes?: Prisma.NoteUpdateManyWithoutWorkspaceNestedInput
+  theorySnapshots?: Prisma.TheorySnapshotUpdateManyWithoutWorkspaceNestedInput
+  groups?: Prisma.GroupUpdateManyWithoutWorkspaceNestedInput
+  items?: Prisma.ItemUpdateManyWithoutWorkspaceNestedInput
+  itemDefinitions?: Prisma.ItemDefinitionUpdateManyWithoutWorkspaceNestedInput
+  inventoryLots?: Prisma.InventoryLotUpdateManyWithoutWorkspaceNestedInput
+  supplierProfiles?: Prisma.SupplierProfileUpdateManyWithoutWorkspaceNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUpdateManyWithoutWorkspaceNestedInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutWorkspaceNestedInput
+  importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
+  aiProviderCredentials?: Prisma.AiProviderCredentialUpdateManyWithoutWorkspaceNestedInput
+  aiAnalysisRuns?: Prisma.AiAnalysisRunUpdateManyWithoutWorkspaceNestedInput
+  noteAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutWorkspaceNestedInput
+  noteSuggestions?: Prisma.NoteSuggestionUpdateManyWithoutWorkspaceNestedInput
+  stagedItems?: Prisma.StagedInteractionUpdateManyWithoutWorkspaceNestedInput
+  rules?: Prisma.RuleUpdateManyWithoutWorkspaceNestedInput
+  ruleRuns?: Prisma.RuleRunUpdateManyWithoutWorkspaceNestedInput
+  apiKeys?: Prisma.ApiKeyUpdateManyWithoutWorkspaceNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutWorkspaceNestedInput
+  calendarConnections?: Prisma.CalendarConnectionUpdateManyWithoutWorkspaceNestedInput
+  calendarEventLinks?: Prisma.CalendarEventLinkUpdateManyWithoutWorkspaceNestedInput
+  gmailConnections?: Prisma.GmailConnectionUpdateManyWithoutWorkspaceNestedInput
+  gmailMessageLinks?: Prisma.GmailMessageLinkUpdateManyWithoutWorkspaceNestedInput
+  importJobs?: Prisma.ImportJobUpdateManyWithoutWorkspaceNestedInput
+  importStagedVisits?: Prisma.ImportStagedVisitUpdateManyWithoutWorkspaceNestedInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUpdateManyWithoutWorkspaceNestedInput
+  assistantMessages?: Prisma.AssistantMessageUpdateManyWithoutWorkspaceNestedInput
+  eraConnections?: Prisma.EraConnectionUpdateManyWithoutWorkspaceNestedInput
+  eraAccountLinks?: Prisma.EraAccountLinkUpdateManyWithoutWorkspaceNestedInput
+  eraTransactionLinks?: Prisma.EraTransactionLinkUpdateManyWithoutWorkspaceNestedInput
+  levelUpProfile?: Prisma.LevelUpProfileUpdateOneWithoutWorkspaceNestedInput
+  levelUpTestResults?: Prisma.LevelUpTestResultUpdateManyWithoutWorkspaceNestedInput
+  levelUpCombines?: Prisma.LevelUpCombineUpdateManyWithoutWorkspaceNestedInput
+  levelUpSnapshots?: Prisma.LevelUpRatingSnapshotUpdateManyWithoutWorkspaceNestedInput
+  levelUpTrainingSets?: Prisma.LevelUpTrainingSetUpdateManyWithoutWorkspaceNestedInput
+  levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUpdateManyWithoutWorkspaceNestedInput
+  levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
+}
+
+export type WorkspaceUncheckedUpdateWithoutLevelUpSessionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  ownerUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  members?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
+  approvedEmails?: Prisma.ApprovedEmailUncheckedUpdateManyWithoutWorkspaceNestedInput
+  persons?: Prisma.PersonUncheckedUpdateManyWithoutWorkspaceNestedInput
+  events?: Prisma.EventUncheckedUpdateManyWithoutWorkspaceNestedInput
+  interactions?: Prisma.InteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  plans?: Prisma.PlanUncheckedUpdateManyWithoutWorkspaceNestedInput
+  places?: Prisma.PlaceUncheckedUpdateManyWithoutWorkspaceNestedInput
+  placeNotes?: Prisma.PlaceNoteUncheckedUpdateManyWithoutWorkspaceNestedInput
+  notes?: Prisma.NoteUncheckedUpdateManyWithoutWorkspaceNestedInput
+  theorySnapshots?: Prisma.TheorySnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  groups?: Prisma.GroupUncheckedUpdateManyWithoutWorkspaceNestedInput
+  items?: Prisma.ItemUncheckedUpdateManyWithoutWorkspaceNestedInput
+  itemDefinitions?: Prisma.ItemDefinitionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  inventoryLots?: Prisma.InventoryLotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  supplierProfiles?: Prisma.SupplierProfileUncheckedUpdateManyWithoutWorkspaceNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutWorkspaceNestedInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutWorkspaceNestedInput
+  importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
+  aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedUpdateManyWithoutWorkspaceNestedInput
+  aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  noteSuggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  stagedItems?: Prisma.StagedInteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  rules?: Prisma.RuleUncheckedUpdateManyWithoutWorkspaceNestedInput
+  ruleRuns?: Prisma.RuleRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutWorkspaceNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutWorkspaceNestedInput
+  calendarConnections?: Prisma.CalendarConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  calendarEventLinks?: Prisma.CalendarEventLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
+  gmailConnections?: Prisma.GmailConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  gmailMessageLinks?: Prisma.GmailMessageLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
+  importJobs?: Prisma.ImportJobUncheckedUpdateManyWithoutWorkspaceNestedInput
+  importStagedVisits?: Prisma.ImportStagedVisitUncheckedUpdateManyWithoutWorkspaceNestedInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUncheckedUpdateManyWithoutWorkspaceNestedInput
+  assistantMessages?: Prisma.AssistantMessageUncheckedUpdateManyWithoutWorkspaceNestedInput
+  eraConnections?: Prisma.EraConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  eraAccountLinks?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
+  eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProfile?: Prisma.LevelUpProfileUncheckedUpdateOneWithoutWorkspaceNestedInput
+  levelUpTestResults?: Prisma.LevelUpTestResultUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpCombines?: Prisma.LevelUpCombineUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpSnapshots?: Prisma.LevelUpRatingSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
+}
+
+export type WorkspaceCreateWithoutLevelUpBodyMetricsInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  name: string
+  slug: string
+  status?: string
+  ownerUser?: Prisma.UserCreateNestedOneWithoutOwnedWorkspacesInput
+  members?: Prisma.WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
+  approvedEmails?: Prisma.ApprovedEmailCreateNestedManyWithoutWorkspaceInput
+  persons?: Prisma.PersonCreateNestedManyWithoutWorkspaceInput
+  events?: Prisma.EventCreateNestedManyWithoutWorkspaceInput
+  interactions?: Prisma.InteractionCreateNestedManyWithoutWorkspaceInput
+  plans?: Prisma.PlanCreateNestedManyWithoutWorkspaceInput
+  places?: Prisma.PlaceCreateNestedManyWithoutWorkspaceInput
+  placeNotes?: Prisma.PlaceNoteCreateNestedManyWithoutWorkspaceInput
+  notes?: Prisma.NoteCreateNestedManyWithoutWorkspaceInput
+  theorySnapshots?: Prisma.TheorySnapshotCreateNestedManyWithoutWorkspaceInput
+  groups?: Prisma.GroupCreateNestedManyWithoutWorkspaceInput
+  items?: Prisma.ItemCreateNestedManyWithoutWorkspaceInput
+  itemDefinitions?: Prisma.ItemDefinitionCreateNestedManyWithoutWorkspaceInput
+  inventoryLots?: Prisma.InventoryLotCreateNestedManyWithoutWorkspaceInput
+  supplierProfiles?: Prisma.SupplierProfileCreateNestedManyWithoutWorkspaceInput
+  purchaseOrders?: Prisma.PurchaseOrderCreateNestedManyWithoutWorkspaceInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutWorkspaceInput
+  importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
+  aiProviderCredentials?: Prisma.AiProviderCredentialCreateNestedManyWithoutWorkspaceInput
+  aiAnalysisRuns?: Prisma.AiAnalysisRunCreateNestedManyWithoutWorkspaceInput
+  noteAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutWorkspaceInput
+  noteSuggestions?: Prisma.NoteSuggestionCreateNestedManyWithoutWorkspaceInput
+  stagedItems?: Prisma.StagedInteractionCreateNestedManyWithoutWorkspaceInput
+  rules?: Prisma.RuleCreateNestedManyWithoutWorkspaceInput
+  ruleRuns?: Prisma.RuleRunCreateNestedManyWithoutWorkspaceInput
+  apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutWorkspaceInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutWorkspaceInput
+  calendarConnections?: Prisma.CalendarConnectionCreateNestedManyWithoutWorkspaceInput
+  calendarEventLinks?: Prisma.CalendarEventLinkCreateNestedManyWithoutWorkspaceInput
+  gmailConnections?: Prisma.GmailConnectionCreateNestedManyWithoutWorkspaceInput
+  gmailMessageLinks?: Prisma.GmailMessageLinkCreateNestedManyWithoutWorkspaceInput
+  importJobs?: Prisma.ImportJobCreateNestedManyWithoutWorkspaceInput
+  importStagedVisits?: Prisma.ImportStagedVisitCreateNestedManyWithoutWorkspaceInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonCreateNestedManyWithoutWorkspaceInput
+  assistantMessages?: Prisma.AssistantMessageCreateNestedManyWithoutWorkspaceInput
+  eraConnections?: Prisma.EraConnectionCreateNestedManyWithoutWorkspaceInput
+  eraAccountLinks?: Prisma.EraAccountLinkCreateNestedManyWithoutWorkspaceInput
+  eraTransactionLinks?: Prisma.EraTransactionLinkCreateNestedManyWithoutWorkspaceInput
+  levelUpProfile?: Prisma.LevelUpProfileCreateNestedOneWithoutWorkspaceInput
+  levelUpTestResults?: Prisma.LevelUpTestResultCreateNestedManyWithoutWorkspaceInput
+  levelUpCombines?: Prisma.LevelUpCombineCreateNestedManyWithoutWorkspaceInput
+  levelUpSnapshots?: Prisma.LevelUpRatingSnapshotCreateNestedManyWithoutWorkspaceInput
+  levelUpTrainingSets?: Prisma.LevelUpTrainingSetCreateNestedManyWithoutWorkspaceInput
+  levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockCreateNestedManyWithoutWorkspaceInput
+  levelUpTargetBuilds?: Prisma.LevelUpTargetBuildCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionCreateNestedManyWithoutWorkspaceInput
+}
+
+export type WorkspaceUncheckedCreateWithoutLevelUpBodyMetricsInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  name: string
+  slug: string
+  status?: string
+  ownerUserId?: string | null
+  members?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
+  approvedEmails?: Prisma.ApprovedEmailUncheckedCreateNestedManyWithoutWorkspaceInput
+  persons?: Prisma.PersonUncheckedCreateNestedManyWithoutWorkspaceInput
+  events?: Prisma.EventUncheckedCreateNestedManyWithoutWorkspaceInput
+  interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutWorkspaceInput
+  plans?: Prisma.PlanUncheckedCreateNestedManyWithoutWorkspaceInput
+  places?: Prisma.PlaceUncheckedCreateNestedManyWithoutWorkspaceInput
+  placeNotes?: Prisma.PlaceNoteUncheckedCreateNestedManyWithoutWorkspaceInput
+  notes?: Prisma.NoteUncheckedCreateNestedManyWithoutWorkspaceInput
+  theorySnapshots?: Prisma.TheorySnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  groups?: Prisma.GroupUncheckedCreateNestedManyWithoutWorkspaceInput
+  items?: Prisma.ItemUncheckedCreateNestedManyWithoutWorkspaceInput
+  itemDefinitions?: Prisma.ItemDefinitionUncheckedCreateNestedManyWithoutWorkspaceInput
+  inventoryLots?: Prisma.InventoryLotUncheckedCreateNestedManyWithoutWorkspaceInput
+  supplierProfiles?: Prisma.SupplierProfileUncheckedCreateNestedManyWithoutWorkspaceInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutWorkspaceInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutWorkspaceInput
+  importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
+  aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedCreateNestedManyWithoutWorkspaceInput
+  aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  noteSuggestions?: Prisma.NoteSuggestionUncheckedCreateNestedManyWithoutWorkspaceInput
+  stagedItems?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutWorkspaceInput
+  rules?: Prisma.RuleUncheckedCreateNestedManyWithoutWorkspaceInput
+  ruleRuns?: Prisma.RuleRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutWorkspaceInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutWorkspaceInput
+  calendarConnections?: Prisma.CalendarConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  calendarEventLinks?: Prisma.CalendarEventLinkUncheckedCreateNestedManyWithoutWorkspaceInput
+  gmailConnections?: Prisma.GmailConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  gmailMessageLinks?: Prisma.GmailMessageLinkUncheckedCreateNestedManyWithoutWorkspaceInput
+  importJobs?: Prisma.ImportJobUncheckedCreateNestedManyWithoutWorkspaceInput
+  importStagedVisits?: Prisma.ImportStagedVisitUncheckedCreateNestedManyWithoutWorkspaceInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUncheckedCreateNestedManyWithoutWorkspaceInput
+  assistantMessages?: Prisma.AssistantMessageUncheckedCreateNestedManyWithoutWorkspaceInput
+  eraConnections?: Prisma.EraConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  eraAccountLinks?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutWorkspaceInput
+  eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProfile?: Prisma.LevelUpProfileUncheckedCreateNestedOneWithoutWorkspaceInput
+  levelUpTestResults?: Prisma.LevelUpTestResultUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpCombines?: Prisma.LevelUpCombineUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpSnapshots?: Prisma.LevelUpRatingSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedCreateNestedManyWithoutWorkspaceInput
+}
+
+export type WorkspaceCreateOrConnectWithoutLevelUpBodyMetricsInput = {
+  where: Prisma.WorkspaceWhereUniqueInput
+  create: Prisma.XOR<Prisma.WorkspaceCreateWithoutLevelUpBodyMetricsInput, Prisma.WorkspaceUncheckedCreateWithoutLevelUpBodyMetricsInput>
+}
+
+export type WorkspaceUpsertWithoutLevelUpBodyMetricsInput = {
+  update: Prisma.XOR<Prisma.WorkspaceUpdateWithoutLevelUpBodyMetricsInput, Prisma.WorkspaceUncheckedUpdateWithoutLevelUpBodyMetricsInput>
+  create: Prisma.XOR<Prisma.WorkspaceCreateWithoutLevelUpBodyMetricsInput, Prisma.WorkspaceUncheckedCreateWithoutLevelUpBodyMetricsInput>
+  where?: Prisma.WorkspaceWhereInput
+}
+
+export type WorkspaceUpdateToOneWithWhereWithoutLevelUpBodyMetricsInput = {
+  where?: Prisma.WorkspaceWhereInput
+  data: Prisma.XOR<Prisma.WorkspaceUpdateWithoutLevelUpBodyMetricsInput, Prisma.WorkspaceUncheckedUpdateWithoutLevelUpBodyMetricsInput>
+}
+
+export type WorkspaceUpdateWithoutLevelUpBodyMetricsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  ownerUser?: Prisma.UserUpdateOneWithoutOwnedWorkspacesNestedInput
+  members?: Prisma.WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
+  approvedEmails?: Prisma.ApprovedEmailUpdateManyWithoutWorkspaceNestedInput
+  persons?: Prisma.PersonUpdateManyWithoutWorkspaceNestedInput
+  events?: Prisma.EventUpdateManyWithoutWorkspaceNestedInput
+  interactions?: Prisma.InteractionUpdateManyWithoutWorkspaceNestedInput
+  plans?: Prisma.PlanUpdateManyWithoutWorkspaceNestedInput
+  places?: Prisma.PlaceUpdateManyWithoutWorkspaceNestedInput
+  placeNotes?: Prisma.PlaceNoteUpdateManyWithoutWorkspaceNestedInput
+  notes?: Prisma.NoteUpdateManyWithoutWorkspaceNestedInput
+  theorySnapshots?: Prisma.TheorySnapshotUpdateManyWithoutWorkspaceNestedInput
+  groups?: Prisma.GroupUpdateManyWithoutWorkspaceNestedInput
+  items?: Prisma.ItemUpdateManyWithoutWorkspaceNestedInput
+  itemDefinitions?: Prisma.ItemDefinitionUpdateManyWithoutWorkspaceNestedInput
+  inventoryLots?: Prisma.InventoryLotUpdateManyWithoutWorkspaceNestedInput
+  supplierProfiles?: Prisma.SupplierProfileUpdateManyWithoutWorkspaceNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUpdateManyWithoutWorkspaceNestedInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutWorkspaceNestedInput
+  importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
+  aiProviderCredentials?: Prisma.AiProviderCredentialUpdateManyWithoutWorkspaceNestedInput
+  aiAnalysisRuns?: Prisma.AiAnalysisRunUpdateManyWithoutWorkspaceNestedInput
+  noteAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutWorkspaceNestedInput
+  noteSuggestions?: Prisma.NoteSuggestionUpdateManyWithoutWorkspaceNestedInput
+  stagedItems?: Prisma.StagedInteractionUpdateManyWithoutWorkspaceNestedInput
+  rules?: Prisma.RuleUpdateManyWithoutWorkspaceNestedInput
+  ruleRuns?: Prisma.RuleRunUpdateManyWithoutWorkspaceNestedInput
+  apiKeys?: Prisma.ApiKeyUpdateManyWithoutWorkspaceNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutWorkspaceNestedInput
+  calendarConnections?: Prisma.CalendarConnectionUpdateManyWithoutWorkspaceNestedInput
+  calendarEventLinks?: Prisma.CalendarEventLinkUpdateManyWithoutWorkspaceNestedInput
+  gmailConnections?: Prisma.GmailConnectionUpdateManyWithoutWorkspaceNestedInput
+  gmailMessageLinks?: Prisma.GmailMessageLinkUpdateManyWithoutWorkspaceNestedInput
+  importJobs?: Prisma.ImportJobUpdateManyWithoutWorkspaceNestedInput
+  importStagedVisits?: Prisma.ImportStagedVisitUpdateManyWithoutWorkspaceNestedInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUpdateManyWithoutWorkspaceNestedInput
+  assistantMessages?: Prisma.AssistantMessageUpdateManyWithoutWorkspaceNestedInput
+  eraConnections?: Prisma.EraConnectionUpdateManyWithoutWorkspaceNestedInput
+  eraAccountLinks?: Prisma.EraAccountLinkUpdateManyWithoutWorkspaceNestedInput
+  eraTransactionLinks?: Prisma.EraTransactionLinkUpdateManyWithoutWorkspaceNestedInput
+  levelUpProfile?: Prisma.LevelUpProfileUpdateOneWithoutWorkspaceNestedInput
+  levelUpTestResults?: Prisma.LevelUpTestResultUpdateManyWithoutWorkspaceNestedInput
+  levelUpCombines?: Prisma.LevelUpCombineUpdateManyWithoutWorkspaceNestedInput
+  levelUpSnapshots?: Prisma.LevelUpRatingSnapshotUpdateManyWithoutWorkspaceNestedInput
+  levelUpTrainingSets?: Prisma.LevelUpTrainingSetUpdateManyWithoutWorkspaceNestedInput
+  levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUpdateManyWithoutWorkspaceNestedInput
+  levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUpdateManyWithoutWorkspaceNestedInput
+}
+
+export type WorkspaceUncheckedUpdateWithoutLevelUpBodyMetricsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  ownerUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  members?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
+  approvedEmails?: Prisma.ApprovedEmailUncheckedUpdateManyWithoutWorkspaceNestedInput
+  persons?: Prisma.PersonUncheckedUpdateManyWithoutWorkspaceNestedInput
+  events?: Prisma.EventUncheckedUpdateManyWithoutWorkspaceNestedInput
+  interactions?: Prisma.InteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  plans?: Prisma.PlanUncheckedUpdateManyWithoutWorkspaceNestedInput
+  places?: Prisma.PlaceUncheckedUpdateManyWithoutWorkspaceNestedInput
+  placeNotes?: Prisma.PlaceNoteUncheckedUpdateManyWithoutWorkspaceNestedInput
+  notes?: Prisma.NoteUncheckedUpdateManyWithoutWorkspaceNestedInput
+  theorySnapshots?: Prisma.TheorySnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  groups?: Prisma.GroupUncheckedUpdateManyWithoutWorkspaceNestedInput
+  items?: Prisma.ItemUncheckedUpdateManyWithoutWorkspaceNestedInput
+  itemDefinitions?: Prisma.ItemDefinitionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  inventoryLots?: Prisma.InventoryLotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  supplierProfiles?: Prisma.SupplierProfileUncheckedUpdateManyWithoutWorkspaceNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutWorkspaceNestedInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutWorkspaceNestedInput
+  importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
+  aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedUpdateManyWithoutWorkspaceNestedInput
+  aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  noteSuggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  stagedItems?: Prisma.StagedInteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  rules?: Prisma.RuleUncheckedUpdateManyWithoutWorkspaceNestedInput
+  ruleRuns?: Prisma.RuleRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutWorkspaceNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutWorkspaceNestedInput
+  calendarConnections?: Prisma.CalendarConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  calendarEventLinks?: Prisma.CalendarEventLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
+  gmailConnections?: Prisma.GmailConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  gmailMessageLinks?: Prisma.GmailMessageLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
+  importJobs?: Prisma.ImportJobUncheckedUpdateManyWithoutWorkspaceNestedInput
+  importStagedVisits?: Prisma.ImportStagedVisitUncheckedUpdateManyWithoutWorkspaceNestedInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUncheckedUpdateManyWithoutWorkspaceNestedInput
+  assistantMessages?: Prisma.AssistantMessageUncheckedUpdateManyWithoutWorkspaceNestedInput
+  eraConnections?: Prisma.EraConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  eraAccountLinks?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
+  eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProfile?: Prisma.LevelUpProfileUncheckedUpdateOneWithoutWorkspaceNestedInput
+  levelUpTestResults?: Prisma.LevelUpTestResultUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpCombines?: Prisma.LevelUpCombineUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpSnapshots?: Prisma.LevelUpRatingSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutLevelUpBadgeUnlocksInput = {
@@ -11548,6 +14254,12 @@ export type WorkspaceCreateWithoutLevelUpBadgeUnlocksInput = {
   levelUpSnapshots?: Prisma.LevelUpRatingSnapshotCreateNestedManyWithoutWorkspaceInput
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetCreateNestedManyWithoutWorkspaceInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutLevelUpBadgeUnlocksInput = {
@@ -11602,6 +14314,12 @@ export type WorkspaceUncheckedCreateWithoutLevelUpBadgeUnlocksInput = {
   levelUpSnapshots?: Prisma.LevelUpRatingSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutLevelUpBadgeUnlocksInput = {
@@ -11672,6 +14390,12 @@ export type WorkspaceUpdateWithoutLevelUpBadgeUnlocksInput = {
   levelUpSnapshots?: Prisma.LevelUpRatingSnapshotUpdateManyWithoutWorkspaceNestedInput
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUpdateManyWithoutWorkspaceNestedInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutLevelUpBadgeUnlocksInput = {
@@ -11726,6 +14450,12 @@ export type WorkspaceUncheckedUpdateWithoutLevelUpBadgeUnlocksInput = {
   levelUpSnapshots?: Prisma.LevelUpRatingSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutLevelUpTargetBuildsInput = {
@@ -11780,6 +14510,12 @@ export type WorkspaceCreateWithoutLevelUpTargetBuildsInput = {
   levelUpSnapshots?: Prisma.LevelUpRatingSnapshotCreateNestedManyWithoutWorkspaceInput
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetCreateNestedManyWithoutWorkspaceInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutLevelUpTargetBuildsInput = {
@@ -11834,6 +14570,12 @@ export type WorkspaceUncheckedCreateWithoutLevelUpTargetBuildsInput = {
   levelUpSnapshots?: Prisma.LevelUpRatingSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutLevelUpTargetBuildsInput = {
@@ -11904,6 +14646,12 @@ export type WorkspaceUpdateWithoutLevelUpTargetBuildsInput = {
   levelUpSnapshots?: Prisma.LevelUpRatingSnapshotUpdateManyWithoutWorkspaceNestedInput
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUpdateManyWithoutWorkspaceNestedInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutLevelUpTargetBuildsInput = {
@@ -11958,6 +14706,12 @@ export type WorkspaceUncheckedUpdateWithoutLevelUpTargetBuildsInput = {
   levelUpSnapshots?: Prisma.LevelUpRatingSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateManyOwnerUserInput = {
@@ -12021,6 +14775,12 @@ export type WorkspaceUpdateWithoutOwnerUserInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUpdateManyWithoutWorkspaceNestedInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUpdateManyWithoutWorkspaceNestedInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutOwnerUserInput = {
@@ -12075,6 +14835,12 @@ export type WorkspaceUncheckedUpdateWithoutOwnerUserInput = {
   levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateManyWithoutOwnerUserInput = {
@@ -12136,6 +14902,12 @@ export type WorkspaceCountOutputType = {
   levelUpTrainingSets: number
   levelUpBadgeUnlocks: number
   levelUpTargetBuilds: number
+  levelUpExercises: number
+  levelUpPrograms: number
+  levelUpProgramDays: number
+  levelUpProgramEntries: number
+  levelUpSessions: number
+  levelUpBodyMetrics: number
 }
 
 export type WorkspaceCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -12183,6 +14955,12 @@ export type WorkspaceCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensi
   levelUpTrainingSets?: boolean | WorkspaceCountOutputTypeCountLevelUpTrainingSetsArgs
   levelUpBadgeUnlocks?: boolean | WorkspaceCountOutputTypeCountLevelUpBadgeUnlocksArgs
   levelUpTargetBuilds?: boolean | WorkspaceCountOutputTypeCountLevelUpTargetBuildsArgs
+  levelUpExercises?: boolean | WorkspaceCountOutputTypeCountLevelUpExercisesArgs
+  levelUpPrograms?: boolean | WorkspaceCountOutputTypeCountLevelUpProgramsArgs
+  levelUpProgramDays?: boolean | WorkspaceCountOutputTypeCountLevelUpProgramDaysArgs
+  levelUpProgramEntries?: boolean | WorkspaceCountOutputTypeCountLevelUpProgramEntriesArgs
+  levelUpSessions?: boolean | WorkspaceCountOutputTypeCountLevelUpSessionsArgs
+  levelUpBodyMetrics?: boolean | WorkspaceCountOutputTypeCountLevelUpBodyMetricsArgs
 }
 
 /**
@@ -12503,6 +15281,48 @@ export type WorkspaceCountOutputTypeCountLevelUpTargetBuildsArgs<ExtArgs extends
   where?: Prisma.LevelUpTargetBuildWhereInput
 }
 
+/**
+ * WorkspaceCountOutputType without action
+ */
+export type WorkspaceCountOutputTypeCountLevelUpExercisesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.LevelUpExerciseWhereInput
+}
+
+/**
+ * WorkspaceCountOutputType without action
+ */
+export type WorkspaceCountOutputTypeCountLevelUpProgramsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.LevelUpProgramWhereInput
+}
+
+/**
+ * WorkspaceCountOutputType without action
+ */
+export type WorkspaceCountOutputTypeCountLevelUpProgramDaysArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.LevelUpProgramDayWhereInput
+}
+
+/**
+ * WorkspaceCountOutputType without action
+ */
+export type WorkspaceCountOutputTypeCountLevelUpProgramEntriesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.LevelUpProgramEntryWhereInput
+}
+
+/**
+ * WorkspaceCountOutputType without action
+ */
+export type WorkspaceCountOutputTypeCountLevelUpSessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.LevelUpSessionWhereInput
+}
+
+/**
+ * WorkspaceCountOutputType without action
+ */
+export type WorkspaceCountOutputTypeCountLevelUpBodyMetricsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.LevelUpBodyMetricWhereInput
+}
+
 
 export type WorkspaceSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -12558,6 +15378,12 @@ export type WorkspaceSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   levelUpTrainingSets?: boolean | Prisma.Workspace$levelUpTrainingSetsArgs<ExtArgs>
   levelUpBadgeUnlocks?: boolean | Prisma.Workspace$levelUpBadgeUnlocksArgs<ExtArgs>
   levelUpTargetBuilds?: boolean | Prisma.Workspace$levelUpTargetBuildsArgs<ExtArgs>
+  levelUpExercises?: boolean | Prisma.Workspace$levelUpExercisesArgs<ExtArgs>
+  levelUpPrograms?: boolean | Prisma.Workspace$levelUpProgramsArgs<ExtArgs>
+  levelUpProgramDays?: boolean | Prisma.Workspace$levelUpProgramDaysArgs<ExtArgs>
+  levelUpProgramEntries?: boolean | Prisma.Workspace$levelUpProgramEntriesArgs<ExtArgs>
+  levelUpSessions?: boolean | Prisma.Workspace$levelUpSessionsArgs<ExtArgs>
+  levelUpBodyMetrics?: boolean | Prisma.Workspace$levelUpBodyMetricsArgs<ExtArgs>
   _count?: boolean | Prisma.WorkspaceCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["workspace"]>
 
@@ -12641,6 +15467,12 @@ export type WorkspaceInclude<ExtArgs extends runtime.Types.Extensions.InternalAr
   levelUpTrainingSets?: boolean | Prisma.Workspace$levelUpTrainingSetsArgs<ExtArgs>
   levelUpBadgeUnlocks?: boolean | Prisma.Workspace$levelUpBadgeUnlocksArgs<ExtArgs>
   levelUpTargetBuilds?: boolean | Prisma.Workspace$levelUpTargetBuildsArgs<ExtArgs>
+  levelUpExercises?: boolean | Prisma.Workspace$levelUpExercisesArgs<ExtArgs>
+  levelUpPrograms?: boolean | Prisma.Workspace$levelUpProgramsArgs<ExtArgs>
+  levelUpProgramDays?: boolean | Prisma.Workspace$levelUpProgramDaysArgs<ExtArgs>
+  levelUpProgramEntries?: boolean | Prisma.Workspace$levelUpProgramEntriesArgs<ExtArgs>
+  levelUpSessions?: boolean | Prisma.Workspace$levelUpSessionsArgs<ExtArgs>
+  levelUpBodyMetrics?: boolean | Prisma.Workspace$levelUpBodyMetricsArgs<ExtArgs>
   _count?: boolean | Prisma.WorkspaceCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type WorkspaceIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -12699,6 +15531,12 @@ export type $WorkspacePayload<ExtArgs extends runtime.Types.Extensions.InternalA
     levelUpTrainingSets: Prisma.$LevelUpTrainingSetPayload<ExtArgs>[]
     levelUpBadgeUnlocks: Prisma.$LevelUpBadgeUnlockPayload<ExtArgs>[]
     levelUpTargetBuilds: Prisma.$LevelUpTargetBuildPayload<ExtArgs>[]
+    levelUpExercises: Prisma.$LevelUpExercisePayload<ExtArgs>[]
+    levelUpPrograms: Prisma.$LevelUpProgramPayload<ExtArgs>[]
+    levelUpProgramDays: Prisma.$LevelUpProgramDayPayload<ExtArgs>[]
+    levelUpProgramEntries: Prisma.$LevelUpProgramEntryPayload<ExtArgs>[]
+    levelUpSessions: Prisma.$LevelUpSessionPayload<ExtArgs>[]
+    levelUpBodyMetrics: Prisma.$LevelUpBodyMetricPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -13148,6 +15986,12 @@ export interface Prisma__WorkspaceClient<T, Null = never, ExtArgs extends runtim
   levelUpTrainingSets<T extends Prisma.Workspace$levelUpTrainingSetsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Workspace$levelUpTrainingSetsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LevelUpTrainingSetPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   levelUpBadgeUnlocks<T extends Prisma.Workspace$levelUpBadgeUnlocksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Workspace$levelUpBadgeUnlocksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LevelUpBadgeUnlockPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   levelUpTargetBuilds<T extends Prisma.Workspace$levelUpTargetBuildsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Workspace$levelUpTargetBuildsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LevelUpTargetBuildPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  levelUpExercises<T extends Prisma.Workspace$levelUpExercisesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Workspace$levelUpExercisesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LevelUpExercisePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  levelUpPrograms<T extends Prisma.Workspace$levelUpProgramsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Workspace$levelUpProgramsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LevelUpProgramPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  levelUpProgramDays<T extends Prisma.Workspace$levelUpProgramDaysArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Workspace$levelUpProgramDaysArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LevelUpProgramDayPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  levelUpProgramEntries<T extends Prisma.Workspace$levelUpProgramEntriesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Workspace$levelUpProgramEntriesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LevelUpProgramEntryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  levelUpSessions<T extends Prisma.Workspace$levelUpSessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Workspace$levelUpSessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LevelUpSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  levelUpBodyMetrics<T extends Prisma.Workspace$levelUpBodyMetricsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Workspace$levelUpBodyMetricsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LevelUpBodyMetricPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -14674,6 +17518,150 @@ export type Workspace$levelUpTargetBuildsArgs<ExtArgs extends runtime.Types.Exte
   take?: number
   skip?: number
   distinct?: Prisma.LevelUpTargetBuildScalarFieldEnum | Prisma.LevelUpTargetBuildScalarFieldEnum[]
+}
+
+/**
+ * Workspace.levelUpExercises
+ */
+export type Workspace$levelUpExercisesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the LevelUpExercise
+   */
+  select?: Prisma.LevelUpExerciseSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the LevelUpExercise
+   */
+  omit?: Prisma.LevelUpExerciseOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.LevelUpExerciseInclude<ExtArgs> | null
+  where?: Prisma.LevelUpExerciseWhereInput
+  orderBy?: Prisma.LevelUpExerciseOrderByWithRelationInput | Prisma.LevelUpExerciseOrderByWithRelationInput[]
+  cursor?: Prisma.LevelUpExerciseWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.LevelUpExerciseScalarFieldEnum | Prisma.LevelUpExerciseScalarFieldEnum[]
+}
+
+/**
+ * Workspace.levelUpPrograms
+ */
+export type Workspace$levelUpProgramsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the LevelUpProgram
+   */
+  select?: Prisma.LevelUpProgramSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the LevelUpProgram
+   */
+  omit?: Prisma.LevelUpProgramOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.LevelUpProgramInclude<ExtArgs> | null
+  where?: Prisma.LevelUpProgramWhereInput
+  orderBy?: Prisma.LevelUpProgramOrderByWithRelationInput | Prisma.LevelUpProgramOrderByWithRelationInput[]
+  cursor?: Prisma.LevelUpProgramWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.LevelUpProgramScalarFieldEnum | Prisma.LevelUpProgramScalarFieldEnum[]
+}
+
+/**
+ * Workspace.levelUpProgramDays
+ */
+export type Workspace$levelUpProgramDaysArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the LevelUpProgramDay
+   */
+  select?: Prisma.LevelUpProgramDaySelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the LevelUpProgramDay
+   */
+  omit?: Prisma.LevelUpProgramDayOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.LevelUpProgramDayInclude<ExtArgs> | null
+  where?: Prisma.LevelUpProgramDayWhereInput
+  orderBy?: Prisma.LevelUpProgramDayOrderByWithRelationInput | Prisma.LevelUpProgramDayOrderByWithRelationInput[]
+  cursor?: Prisma.LevelUpProgramDayWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.LevelUpProgramDayScalarFieldEnum | Prisma.LevelUpProgramDayScalarFieldEnum[]
+}
+
+/**
+ * Workspace.levelUpProgramEntries
+ */
+export type Workspace$levelUpProgramEntriesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the LevelUpProgramEntry
+   */
+  select?: Prisma.LevelUpProgramEntrySelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the LevelUpProgramEntry
+   */
+  omit?: Prisma.LevelUpProgramEntryOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.LevelUpProgramEntryInclude<ExtArgs> | null
+  where?: Prisma.LevelUpProgramEntryWhereInput
+  orderBy?: Prisma.LevelUpProgramEntryOrderByWithRelationInput | Prisma.LevelUpProgramEntryOrderByWithRelationInput[]
+  cursor?: Prisma.LevelUpProgramEntryWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.LevelUpProgramEntryScalarFieldEnum | Prisma.LevelUpProgramEntryScalarFieldEnum[]
+}
+
+/**
+ * Workspace.levelUpSessions
+ */
+export type Workspace$levelUpSessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the LevelUpSession
+   */
+  select?: Prisma.LevelUpSessionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the LevelUpSession
+   */
+  omit?: Prisma.LevelUpSessionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.LevelUpSessionInclude<ExtArgs> | null
+  where?: Prisma.LevelUpSessionWhereInput
+  orderBy?: Prisma.LevelUpSessionOrderByWithRelationInput | Prisma.LevelUpSessionOrderByWithRelationInput[]
+  cursor?: Prisma.LevelUpSessionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.LevelUpSessionScalarFieldEnum | Prisma.LevelUpSessionScalarFieldEnum[]
+}
+
+/**
+ * Workspace.levelUpBodyMetrics
+ */
+export type Workspace$levelUpBodyMetricsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the LevelUpBodyMetric
+   */
+  select?: Prisma.LevelUpBodyMetricSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the LevelUpBodyMetric
+   */
+  omit?: Prisma.LevelUpBodyMetricOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.LevelUpBodyMetricInclude<ExtArgs> | null
+  where?: Prisma.LevelUpBodyMetricWhereInput
+  orderBy?: Prisma.LevelUpBodyMetricOrderByWithRelationInput | Prisma.LevelUpBodyMetricOrderByWithRelationInput[]
+  cursor?: Prisma.LevelUpBodyMetricWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.LevelUpBodyMetricScalarFieldEnum | Prisma.LevelUpBodyMetricScalarFieldEnum[]
 }
 
 /**

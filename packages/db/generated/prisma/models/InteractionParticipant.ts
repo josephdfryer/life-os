@@ -20,8 +20,18 @@ export type InteractionParticipantModel = runtime.Types.Result.DefaultSelection<
 
 export type AggregateInteractionParticipant = {
   _count: InteractionParticipantCountAggregateOutputType | null
+  _avg: InteractionParticipantAvgAggregateOutputType | null
+  _sum: InteractionParticipantSumAggregateOutputType | null
   _min: InteractionParticipantMinAggregateOutputType | null
   _max: InteractionParticipantMaxAggregateOutputType | null
+}
+
+export type InteractionParticipantAvgAggregateOutputType = {
+  confidence: number | null
+}
+
+export type InteractionParticipantSumAggregateOutputType = {
+  confidence: number | null
 }
 
 export type InteractionParticipantMinAggregateOutputType = {
@@ -31,6 +41,12 @@ export type InteractionParticipantMinAggregateOutputType = {
   entityId: string | null
   role: string | null
   workspaceId: string | null
+  confidence: number | null
+  band: string | null
+  source: string | null
+  evidence: string | null
+  createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type InteractionParticipantMaxAggregateOutputType = {
@@ -40,6 +56,12 @@ export type InteractionParticipantMaxAggregateOutputType = {
   entityId: string | null
   role: string | null
   workspaceId: string | null
+  confidence: number | null
+  band: string | null
+  source: string | null
+  evidence: string | null
+  createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type InteractionParticipantCountAggregateOutputType = {
@@ -49,9 +71,23 @@ export type InteractionParticipantCountAggregateOutputType = {
   entityId: number
   role: number
   workspaceId: number
+  confidence: number
+  band: number
+  source: number
+  evidence: number
+  createdAt: number
+  updatedAt: number
   _all: number
 }
 
+
+export type InteractionParticipantAvgAggregateInputType = {
+  confidence?: true
+}
+
+export type InteractionParticipantSumAggregateInputType = {
+  confidence?: true
+}
 
 export type InteractionParticipantMinAggregateInputType = {
   id?: true
@@ -60,6 +96,12 @@ export type InteractionParticipantMinAggregateInputType = {
   entityId?: true
   role?: true
   workspaceId?: true
+  confidence?: true
+  band?: true
+  source?: true
+  evidence?: true
+  createdAt?: true
+  updatedAt?: true
 }
 
 export type InteractionParticipantMaxAggregateInputType = {
@@ -69,6 +111,12 @@ export type InteractionParticipantMaxAggregateInputType = {
   entityId?: true
   role?: true
   workspaceId?: true
+  confidence?: true
+  band?: true
+  source?: true
+  evidence?: true
+  createdAt?: true
+  updatedAt?: true
 }
 
 export type InteractionParticipantCountAggregateInputType = {
@@ -78,6 +126,12 @@ export type InteractionParticipantCountAggregateInputType = {
   entityId?: true
   role?: true
   workspaceId?: true
+  confidence?: true
+  band?: true
+  source?: true
+  evidence?: true
+  createdAt?: true
+  updatedAt?: true
   _all?: true
 }
 
@@ -119,6 +173,18 @@ export type InteractionParticipantAggregateArgs<ExtArgs extends runtime.Types.Ex
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: InteractionParticipantAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: InteractionParticipantSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: InteractionParticipantMinAggregateInputType
@@ -149,6 +215,8 @@ export type InteractionParticipantGroupByArgs<ExtArgs extends runtime.Types.Exte
   take?: number
   skip?: number
   _count?: InteractionParticipantCountAggregateInputType | true
+  _avg?: InteractionParticipantAvgAggregateInputType
+  _sum?: InteractionParticipantSumAggregateInputType
   _min?: InteractionParticipantMinAggregateInputType
   _max?: InteractionParticipantMaxAggregateInputType
 }
@@ -160,7 +228,15 @@ export type InteractionParticipantGroupByOutputType = {
   entityId: string
   role: string | null
   workspaceId: string
+  confidence: number | null
+  band: string | null
+  source: string | null
+  evidence: string | null
+  createdAt: Date
+  updatedAt: Date
   _count: InteractionParticipantCountAggregateOutputType | null
+  _avg: InteractionParticipantAvgAggregateOutputType | null
+  _sum: InteractionParticipantSumAggregateOutputType | null
   _min: InteractionParticipantMinAggregateOutputType | null
   _max: InteractionParticipantMaxAggregateOutputType | null
 }
@@ -190,6 +266,12 @@ export type InteractionParticipantWhereInput = {
   entityId?: Prisma.StringFilter<"InteractionParticipant"> | string
   role?: Prisma.StringNullableFilter<"InteractionParticipant"> | string | null
   workspaceId?: Prisma.StringFilter<"InteractionParticipant"> | string
+  confidence?: Prisma.FloatNullableFilter<"InteractionParticipant"> | number | null
+  band?: Prisma.StringNullableFilter<"InteractionParticipant"> | string | null
+  source?: Prisma.StringNullableFilter<"InteractionParticipant"> | string | null
+  evidence?: Prisma.StringNullableFilter<"InteractionParticipant"> | string | null
+  createdAt?: Prisma.DateTimeFilter<"InteractionParticipant"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"InteractionParticipant"> | Date | string
   interaction?: Prisma.XOR<Prisma.InteractionScalarRelationFilter, Prisma.InteractionWhereInput>
 }
 
@@ -200,11 +282,18 @@ export type InteractionParticipantOrderByWithRelationInput = {
   entityId?: Prisma.SortOrder
   role?: Prisma.SortOrderInput | Prisma.SortOrder
   workspaceId?: Prisma.SortOrder
+  confidence?: Prisma.SortOrderInput | Prisma.SortOrder
+  band?: Prisma.SortOrderInput | Prisma.SortOrder
+  source?: Prisma.SortOrderInput | Prisma.SortOrder
+  evidence?: Prisma.SortOrderInput | Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   interaction?: Prisma.InteractionOrderByWithRelationInput
 }
 
 export type InteractionParticipantWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  interactionId_entityType_entityId_role?: Prisma.InteractionParticipantInteractionIdEntityTypeEntityIdRoleCompoundUniqueInput
   AND?: Prisma.InteractionParticipantWhereInput | Prisma.InteractionParticipantWhereInput[]
   OR?: Prisma.InteractionParticipantWhereInput[]
   NOT?: Prisma.InteractionParticipantWhereInput | Prisma.InteractionParticipantWhereInput[]
@@ -213,8 +302,14 @@ export type InteractionParticipantWhereUniqueInput = Prisma.AtLeast<{
   entityId?: Prisma.StringFilter<"InteractionParticipant"> | string
   role?: Prisma.StringNullableFilter<"InteractionParticipant"> | string | null
   workspaceId?: Prisma.StringFilter<"InteractionParticipant"> | string
+  confidence?: Prisma.FloatNullableFilter<"InteractionParticipant"> | number | null
+  band?: Prisma.StringNullableFilter<"InteractionParticipant"> | string | null
+  source?: Prisma.StringNullableFilter<"InteractionParticipant"> | string | null
+  evidence?: Prisma.StringNullableFilter<"InteractionParticipant"> | string | null
+  createdAt?: Prisma.DateTimeFilter<"InteractionParticipant"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"InteractionParticipant"> | Date | string
   interaction?: Prisma.XOR<Prisma.InteractionScalarRelationFilter, Prisma.InteractionWhereInput>
-}, "id">
+}, "id" | "interactionId_entityType_entityId_role">
 
 export type InteractionParticipantOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -223,9 +318,17 @@ export type InteractionParticipantOrderByWithAggregationInput = {
   entityId?: Prisma.SortOrder
   role?: Prisma.SortOrderInput | Prisma.SortOrder
   workspaceId?: Prisma.SortOrder
+  confidence?: Prisma.SortOrderInput | Prisma.SortOrder
+  band?: Prisma.SortOrderInput | Prisma.SortOrder
+  source?: Prisma.SortOrderInput | Prisma.SortOrder
+  evidence?: Prisma.SortOrderInput | Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   _count?: Prisma.InteractionParticipantCountOrderByAggregateInput
+  _avg?: Prisma.InteractionParticipantAvgOrderByAggregateInput
   _max?: Prisma.InteractionParticipantMaxOrderByAggregateInput
   _min?: Prisma.InteractionParticipantMinOrderByAggregateInput
+  _sum?: Prisma.InteractionParticipantSumOrderByAggregateInput
 }
 
 export type InteractionParticipantScalarWhereWithAggregatesInput = {
@@ -238,6 +341,12 @@ export type InteractionParticipantScalarWhereWithAggregatesInput = {
   entityId?: Prisma.StringWithAggregatesFilter<"InteractionParticipant"> | string
   role?: Prisma.StringNullableWithAggregatesFilter<"InteractionParticipant"> | string | null
   workspaceId?: Prisma.StringWithAggregatesFilter<"InteractionParticipant"> | string
+  confidence?: Prisma.FloatNullableWithAggregatesFilter<"InteractionParticipant"> | number | null
+  band?: Prisma.StringNullableWithAggregatesFilter<"InteractionParticipant"> | string | null
+  source?: Prisma.StringNullableWithAggregatesFilter<"InteractionParticipant"> | string | null
+  evidence?: Prisma.StringNullableWithAggregatesFilter<"InteractionParticipant"> | string | null
+  createdAt?: Prisma.DateTimeWithAggregatesFilter<"InteractionParticipant"> | Date | string
+  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"InteractionParticipant"> | Date | string
 }
 
 export type InteractionParticipantCreateInput = {
@@ -246,6 +355,12 @@ export type InteractionParticipantCreateInput = {
   entityId: string
   role?: string | null
   workspaceId: string
+  confidence?: number | null
+  band?: string | null
+  source?: string | null
+  evidence?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
   interaction: Prisma.InteractionCreateNestedOneWithoutParticipantsInput
 }
 
@@ -256,6 +371,12 @@ export type InteractionParticipantUncheckedCreateInput = {
   entityId: string
   role?: string | null
   workspaceId: string
+  confidence?: number | null
+  band?: string | null
+  source?: string | null
+  evidence?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type InteractionParticipantUpdateInput = {
@@ -264,6 +385,12 @@ export type InteractionParticipantUpdateInput = {
   entityId?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
+  confidence?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  band?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  evidence?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   interaction?: Prisma.InteractionUpdateOneRequiredWithoutParticipantsNestedInput
 }
 
@@ -274,6 +401,12 @@ export type InteractionParticipantUncheckedUpdateInput = {
   entityId?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
+  confidence?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  band?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  evidence?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type InteractionParticipantCreateManyInput = {
@@ -283,6 +416,12 @@ export type InteractionParticipantCreateManyInput = {
   entityId: string
   role?: string | null
   workspaceId: string
+  confidence?: number | null
+  band?: string | null
+  source?: string | null
+  evidence?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type InteractionParticipantUpdateManyMutationInput = {
@@ -291,6 +430,12 @@ export type InteractionParticipantUpdateManyMutationInput = {
   entityId?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
+  confidence?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  band?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  evidence?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type InteractionParticipantUncheckedUpdateManyInput = {
@@ -300,6 +445,12 @@ export type InteractionParticipantUncheckedUpdateManyInput = {
   entityId?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
+  confidence?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  band?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  evidence?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type InteractionParticipantListRelationFilter = {
@@ -312,6 +463,13 @@ export type InteractionParticipantOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
+export type InteractionParticipantInteractionIdEntityTypeEntityIdRoleCompoundUniqueInput = {
+  interactionId: string
+  entityType: string
+  entityId: string
+  role: string
+}
+
 export type InteractionParticipantCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   interactionId?: Prisma.SortOrder
@@ -319,6 +477,16 @@ export type InteractionParticipantCountOrderByAggregateInput = {
   entityId?: Prisma.SortOrder
   role?: Prisma.SortOrder
   workspaceId?: Prisma.SortOrder
+  confidence?: Prisma.SortOrder
+  band?: Prisma.SortOrder
+  source?: Prisma.SortOrder
+  evidence?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
+}
+
+export type InteractionParticipantAvgOrderByAggregateInput = {
+  confidence?: Prisma.SortOrder
 }
 
 export type InteractionParticipantMaxOrderByAggregateInput = {
@@ -328,6 +496,12 @@ export type InteractionParticipantMaxOrderByAggregateInput = {
   entityId?: Prisma.SortOrder
   role?: Prisma.SortOrder
   workspaceId?: Prisma.SortOrder
+  confidence?: Prisma.SortOrder
+  band?: Prisma.SortOrder
+  source?: Prisma.SortOrder
+  evidence?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type InteractionParticipantMinOrderByAggregateInput = {
@@ -337,6 +511,16 @@ export type InteractionParticipantMinOrderByAggregateInput = {
   entityId?: Prisma.SortOrder
   role?: Prisma.SortOrder
   workspaceId?: Prisma.SortOrder
+  confidence?: Prisma.SortOrder
+  band?: Prisma.SortOrder
+  source?: Prisma.SortOrder
+  evidence?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
+}
+
+export type InteractionParticipantSumOrderByAggregateInput = {
+  confidence?: Prisma.SortOrder
 }
 
 export type InteractionParticipantCreateNestedManyWithoutInteractionInput = {
@@ -387,6 +571,12 @@ export type InteractionParticipantCreateWithoutInteractionInput = {
   entityId: string
   role?: string | null
   workspaceId: string
+  confidence?: number | null
+  band?: string | null
+  source?: string | null
+  evidence?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type InteractionParticipantUncheckedCreateWithoutInteractionInput = {
@@ -395,6 +585,12 @@ export type InteractionParticipantUncheckedCreateWithoutInteractionInput = {
   entityId: string
   role?: string | null
   workspaceId: string
+  confidence?: number | null
+  band?: string | null
+  source?: string | null
+  evidence?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type InteractionParticipantCreateOrConnectWithoutInteractionInput = {
@@ -432,6 +628,12 @@ export type InteractionParticipantScalarWhereInput = {
   entityId?: Prisma.StringFilter<"InteractionParticipant"> | string
   role?: Prisma.StringNullableFilter<"InteractionParticipant"> | string | null
   workspaceId?: Prisma.StringFilter<"InteractionParticipant"> | string
+  confidence?: Prisma.FloatNullableFilter<"InteractionParticipant"> | number | null
+  band?: Prisma.StringNullableFilter<"InteractionParticipant"> | string | null
+  source?: Prisma.StringNullableFilter<"InteractionParticipant"> | string | null
+  evidence?: Prisma.StringNullableFilter<"InteractionParticipant"> | string | null
+  createdAt?: Prisma.DateTimeFilter<"InteractionParticipant"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"InteractionParticipant"> | Date | string
 }
 
 export type InteractionParticipantCreateManyInteractionInput = {
@@ -440,6 +642,12 @@ export type InteractionParticipantCreateManyInteractionInput = {
   entityId: string
   role?: string | null
   workspaceId: string
+  confidence?: number | null
+  band?: string | null
+  source?: string | null
+  evidence?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type InteractionParticipantUpdateWithoutInteractionInput = {
@@ -448,6 +656,12 @@ export type InteractionParticipantUpdateWithoutInteractionInput = {
   entityId?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
+  confidence?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  band?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  evidence?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type InteractionParticipantUncheckedUpdateWithoutInteractionInput = {
@@ -456,6 +670,12 @@ export type InteractionParticipantUncheckedUpdateWithoutInteractionInput = {
   entityId?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
+  confidence?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  band?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  evidence?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type InteractionParticipantUncheckedUpdateManyWithoutInteractionInput = {
@@ -464,6 +684,12 @@ export type InteractionParticipantUncheckedUpdateManyWithoutInteractionInput = {
   entityId?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
+  confidence?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  band?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  evidence?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 
@@ -475,6 +701,12 @@ export type InteractionParticipantSelect<ExtArgs extends runtime.Types.Extension
   entityId?: boolean
   role?: boolean
   workspaceId?: boolean
+  confidence?: boolean
+  band?: boolean
+  source?: boolean
+  evidence?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   interaction?: boolean | Prisma.InteractionDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["interactionParticipant"]>
 
@@ -485,6 +717,12 @@ export type InteractionParticipantSelectCreateManyAndReturn<ExtArgs extends runt
   entityId?: boolean
   role?: boolean
   workspaceId?: boolean
+  confidence?: boolean
+  band?: boolean
+  source?: boolean
+  evidence?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   interaction?: boolean | Prisma.InteractionDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["interactionParticipant"]>
 
@@ -495,6 +733,12 @@ export type InteractionParticipantSelectUpdateManyAndReturn<ExtArgs extends runt
   entityId?: boolean
   role?: boolean
   workspaceId?: boolean
+  confidence?: boolean
+  band?: boolean
+  source?: boolean
+  evidence?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   interaction?: boolean | Prisma.InteractionDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["interactionParticipant"]>
 
@@ -505,9 +749,15 @@ export type InteractionParticipantSelectScalar = {
   entityId?: boolean
   role?: boolean
   workspaceId?: boolean
+  confidence?: boolean
+  band?: boolean
+  source?: boolean
+  evidence?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
 }
 
-export type InteractionParticipantOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "interactionId" | "entityType" | "entityId" | "role" | "workspaceId", ExtArgs["result"]["interactionParticipant"]>
+export type InteractionParticipantOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "interactionId" | "entityType" | "entityId" | "role" | "workspaceId" | "confidence" | "band" | "source" | "evidence" | "createdAt" | "updatedAt", ExtArgs["result"]["interactionParticipant"]>
 export type InteractionParticipantInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   interaction?: boolean | Prisma.InteractionDefaultArgs<ExtArgs>
 }
@@ -530,6 +780,12 @@ export type $InteractionParticipantPayload<ExtArgs extends runtime.Types.Extensi
     entityId: string
     role: string | null
     workspaceId: string
+    confidence: number | null
+    band: string | null
+    source: string | null
+    evidence: string | null
+    createdAt: Date
+    updatedAt: Date
   }, ExtArgs["result"]["interactionParticipant"]>
   composites: {}
 }
@@ -960,6 +1216,12 @@ export interface InteractionParticipantFieldRefs {
   readonly entityId: Prisma.FieldRef<"InteractionParticipant", 'String'>
   readonly role: Prisma.FieldRef<"InteractionParticipant", 'String'>
   readonly workspaceId: Prisma.FieldRef<"InteractionParticipant", 'String'>
+  readonly confidence: Prisma.FieldRef<"InteractionParticipant", 'Float'>
+  readonly band: Prisma.FieldRef<"InteractionParticipant", 'String'>
+  readonly source: Prisma.FieldRef<"InteractionParticipant", 'String'>
+  readonly evidence: Prisma.FieldRef<"InteractionParticipant", 'String'>
+  readonly createdAt: Prisma.FieldRef<"InteractionParticipant", 'DateTime'>
+  readonly updatedAt: Prisma.FieldRef<"InteractionParticipant", 'DateTime'>
 }
     
 

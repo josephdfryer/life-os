@@ -444,6 +444,12 @@ export const ModelName = {
   LevelUpCombine: 'LevelUpCombine',
   LevelUpRatingSnapshot: 'LevelUpRatingSnapshot',
   LevelUpTrainingSet: 'LevelUpTrainingSet',
+  LevelUpExercise: 'LevelUpExercise',
+  LevelUpProgram: 'LevelUpProgram',
+  LevelUpProgramDay: 'LevelUpProgramDay',
+  LevelUpProgramEntry: 'LevelUpProgramEntry',
+  LevelUpSession: 'LevelUpSession',
+  LevelUpBodyMetric: 'LevelUpBodyMetric',
   LevelUpBadgeUnlock: 'LevelUpBadgeUnlock',
   LevelUpTargetBuild: 'LevelUpTargetBuild'
 } as const
@@ -461,7 +467,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "workspace" | "workspaceMember" | "approvedEmail" | "person" | "user" | "role" | "permission" | "userRole" | "rolePermission" | "apiKey" | "apiKeyScope" | "auditLog" | "calendarConnection" | "calendarEventLink" | "gmailConnection" | "gmailMessageLink" | "eraConnection" | "eraAccountLink" | "eraTransactionLink" | "rule" | "ruleRun" | "stagedInteraction" | "event" | "interaction" | "interactionParticipant" | "plan" | "planExpectedPerson" | "place" | "importJob" | "importStagedVisit" | "placeNote" | "item" | "itemDefinition" | "inventoryLot" | "assembly" | "itemInteraction" | "importedFile" | "aiProviderCredential" | "aiAnalysisRun" | "noteAnalysisRun" | "noteSuggestion" | "group" | "supplierProfile" | "purchaseOrder" | "purchaseOrderLine" | "purchaseReceiptLine" | "personGroup" | "groupGroup" | "placeGroup" | "note" | "theorySnapshot" | "theorySnapshotSource" | "stateDefinition" | "state" | "assistantMessage" | "levelUpProfile" | "levelUpTestResult" | "levelUpCombine" | "levelUpRatingSnapshot" | "levelUpTrainingSet" | "levelUpBadgeUnlock" | "levelUpTargetBuild"
+    modelProps: "workspace" | "workspaceMember" | "approvedEmail" | "person" | "user" | "role" | "permission" | "userRole" | "rolePermission" | "apiKey" | "apiKeyScope" | "auditLog" | "calendarConnection" | "calendarEventLink" | "gmailConnection" | "gmailMessageLink" | "eraConnection" | "eraAccountLink" | "eraTransactionLink" | "rule" | "ruleRun" | "stagedInteraction" | "event" | "interaction" | "interactionParticipant" | "plan" | "planExpectedPerson" | "place" | "importJob" | "importStagedVisit" | "placeNote" | "item" | "itemDefinition" | "inventoryLot" | "assembly" | "itemInteraction" | "importedFile" | "aiProviderCredential" | "aiAnalysisRun" | "noteAnalysisRun" | "noteSuggestion" | "group" | "supplierProfile" | "purchaseOrder" | "purchaseOrderLine" | "purchaseReceiptLine" | "personGroup" | "groupGroup" | "placeGroup" | "note" | "theorySnapshot" | "theorySnapshotSource" | "stateDefinition" | "state" | "assistantMessage" | "levelUpProfile" | "levelUpTestResult" | "levelUpCombine" | "levelUpRatingSnapshot" | "levelUpTrainingSet" | "levelUpExercise" | "levelUpProgram" | "levelUpProgramDay" | "levelUpProgramEntry" | "levelUpSession" | "levelUpBodyMetric" | "levelUpBadgeUnlock" | "levelUpTargetBuild"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -4905,6 +4911,450 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    LevelUpExercise: {
+      payload: Prisma.$LevelUpExercisePayload<ExtArgs>
+      fields: Prisma.LevelUpExerciseFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.LevelUpExerciseFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LevelUpExercisePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.LevelUpExerciseFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LevelUpExercisePayload>
+        }
+        findFirst: {
+          args: Prisma.LevelUpExerciseFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LevelUpExercisePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.LevelUpExerciseFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LevelUpExercisePayload>
+        }
+        findMany: {
+          args: Prisma.LevelUpExerciseFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LevelUpExercisePayload>[]
+        }
+        create: {
+          args: Prisma.LevelUpExerciseCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LevelUpExercisePayload>
+        }
+        createMany: {
+          args: Prisma.LevelUpExerciseCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.LevelUpExerciseCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LevelUpExercisePayload>[]
+        }
+        delete: {
+          args: Prisma.LevelUpExerciseDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LevelUpExercisePayload>
+        }
+        update: {
+          args: Prisma.LevelUpExerciseUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LevelUpExercisePayload>
+        }
+        deleteMany: {
+          args: Prisma.LevelUpExerciseDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.LevelUpExerciseUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.LevelUpExerciseUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LevelUpExercisePayload>[]
+        }
+        upsert: {
+          args: Prisma.LevelUpExerciseUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LevelUpExercisePayload>
+        }
+        aggregate: {
+          args: Prisma.LevelUpExerciseAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateLevelUpExercise>
+        }
+        groupBy: {
+          args: Prisma.LevelUpExerciseGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LevelUpExerciseGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.LevelUpExerciseCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LevelUpExerciseCountAggregateOutputType> | number
+        }
+      }
+    }
+    LevelUpProgram: {
+      payload: Prisma.$LevelUpProgramPayload<ExtArgs>
+      fields: Prisma.LevelUpProgramFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.LevelUpProgramFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LevelUpProgramPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.LevelUpProgramFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LevelUpProgramPayload>
+        }
+        findFirst: {
+          args: Prisma.LevelUpProgramFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LevelUpProgramPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.LevelUpProgramFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LevelUpProgramPayload>
+        }
+        findMany: {
+          args: Prisma.LevelUpProgramFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LevelUpProgramPayload>[]
+        }
+        create: {
+          args: Prisma.LevelUpProgramCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LevelUpProgramPayload>
+        }
+        createMany: {
+          args: Prisma.LevelUpProgramCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.LevelUpProgramCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LevelUpProgramPayload>[]
+        }
+        delete: {
+          args: Prisma.LevelUpProgramDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LevelUpProgramPayload>
+        }
+        update: {
+          args: Prisma.LevelUpProgramUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LevelUpProgramPayload>
+        }
+        deleteMany: {
+          args: Prisma.LevelUpProgramDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.LevelUpProgramUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.LevelUpProgramUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LevelUpProgramPayload>[]
+        }
+        upsert: {
+          args: Prisma.LevelUpProgramUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LevelUpProgramPayload>
+        }
+        aggregate: {
+          args: Prisma.LevelUpProgramAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateLevelUpProgram>
+        }
+        groupBy: {
+          args: Prisma.LevelUpProgramGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LevelUpProgramGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.LevelUpProgramCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LevelUpProgramCountAggregateOutputType> | number
+        }
+      }
+    }
+    LevelUpProgramDay: {
+      payload: Prisma.$LevelUpProgramDayPayload<ExtArgs>
+      fields: Prisma.LevelUpProgramDayFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.LevelUpProgramDayFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LevelUpProgramDayPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.LevelUpProgramDayFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LevelUpProgramDayPayload>
+        }
+        findFirst: {
+          args: Prisma.LevelUpProgramDayFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LevelUpProgramDayPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.LevelUpProgramDayFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LevelUpProgramDayPayload>
+        }
+        findMany: {
+          args: Prisma.LevelUpProgramDayFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LevelUpProgramDayPayload>[]
+        }
+        create: {
+          args: Prisma.LevelUpProgramDayCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LevelUpProgramDayPayload>
+        }
+        createMany: {
+          args: Prisma.LevelUpProgramDayCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.LevelUpProgramDayCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LevelUpProgramDayPayload>[]
+        }
+        delete: {
+          args: Prisma.LevelUpProgramDayDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LevelUpProgramDayPayload>
+        }
+        update: {
+          args: Prisma.LevelUpProgramDayUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LevelUpProgramDayPayload>
+        }
+        deleteMany: {
+          args: Prisma.LevelUpProgramDayDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.LevelUpProgramDayUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.LevelUpProgramDayUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LevelUpProgramDayPayload>[]
+        }
+        upsert: {
+          args: Prisma.LevelUpProgramDayUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LevelUpProgramDayPayload>
+        }
+        aggregate: {
+          args: Prisma.LevelUpProgramDayAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateLevelUpProgramDay>
+        }
+        groupBy: {
+          args: Prisma.LevelUpProgramDayGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LevelUpProgramDayGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.LevelUpProgramDayCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LevelUpProgramDayCountAggregateOutputType> | number
+        }
+      }
+    }
+    LevelUpProgramEntry: {
+      payload: Prisma.$LevelUpProgramEntryPayload<ExtArgs>
+      fields: Prisma.LevelUpProgramEntryFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.LevelUpProgramEntryFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LevelUpProgramEntryPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.LevelUpProgramEntryFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LevelUpProgramEntryPayload>
+        }
+        findFirst: {
+          args: Prisma.LevelUpProgramEntryFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LevelUpProgramEntryPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.LevelUpProgramEntryFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LevelUpProgramEntryPayload>
+        }
+        findMany: {
+          args: Prisma.LevelUpProgramEntryFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LevelUpProgramEntryPayload>[]
+        }
+        create: {
+          args: Prisma.LevelUpProgramEntryCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LevelUpProgramEntryPayload>
+        }
+        createMany: {
+          args: Prisma.LevelUpProgramEntryCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.LevelUpProgramEntryCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LevelUpProgramEntryPayload>[]
+        }
+        delete: {
+          args: Prisma.LevelUpProgramEntryDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LevelUpProgramEntryPayload>
+        }
+        update: {
+          args: Prisma.LevelUpProgramEntryUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LevelUpProgramEntryPayload>
+        }
+        deleteMany: {
+          args: Prisma.LevelUpProgramEntryDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.LevelUpProgramEntryUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.LevelUpProgramEntryUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LevelUpProgramEntryPayload>[]
+        }
+        upsert: {
+          args: Prisma.LevelUpProgramEntryUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LevelUpProgramEntryPayload>
+        }
+        aggregate: {
+          args: Prisma.LevelUpProgramEntryAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateLevelUpProgramEntry>
+        }
+        groupBy: {
+          args: Prisma.LevelUpProgramEntryGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LevelUpProgramEntryGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.LevelUpProgramEntryCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LevelUpProgramEntryCountAggregateOutputType> | number
+        }
+      }
+    }
+    LevelUpSession: {
+      payload: Prisma.$LevelUpSessionPayload<ExtArgs>
+      fields: Prisma.LevelUpSessionFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.LevelUpSessionFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LevelUpSessionPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.LevelUpSessionFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LevelUpSessionPayload>
+        }
+        findFirst: {
+          args: Prisma.LevelUpSessionFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LevelUpSessionPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.LevelUpSessionFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LevelUpSessionPayload>
+        }
+        findMany: {
+          args: Prisma.LevelUpSessionFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LevelUpSessionPayload>[]
+        }
+        create: {
+          args: Prisma.LevelUpSessionCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LevelUpSessionPayload>
+        }
+        createMany: {
+          args: Prisma.LevelUpSessionCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.LevelUpSessionCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LevelUpSessionPayload>[]
+        }
+        delete: {
+          args: Prisma.LevelUpSessionDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LevelUpSessionPayload>
+        }
+        update: {
+          args: Prisma.LevelUpSessionUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LevelUpSessionPayload>
+        }
+        deleteMany: {
+          args: Prisma.LevelUpSessionDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.LevelUpSessionUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.LevelUpSessionUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LevelUpSessionPayload>[]
+        }
+        upsert: {
+          args: Prisma.LevelUpSessionUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LevelUpSessionPayload>
+        }
+        aggregate: {
+          args: Prisma.LevelUpSessionAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateLevelUpSession>
+        }
+        groupBy: {
+          args: Prisma.LevelUpSessionGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LevelUpSessionGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.LevelUpSessionCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LevelUpSessionCountAggregateOutputType> | number
+        }
+      }
+    }
+    LevelUpBodyMetric: {
+      payload: Prisma.$LevelUpBodyMetricPayload<ExtArgs>
+      fields: Prisma.LevelUpBodyMetricFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.LevelUpBodyMetricFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LevelUpBodyMetricPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.LevelUpBodyMetricFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LevelUpBodyMetricPayload>
+        }
+        findFirst: {
+          args: Prisma.LevelUpBodyMetricFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LevelUpBodyMetricPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.LevelUpBodyMetricFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LevelUpBodyMetricPayload>
+        }
+        findMany: {
+          args: Prisma.LevelUpBodyMetricFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LevelUpBodyMetricPayload>[]
+        }
+        create: {
+          args: Prisma.LevelUpBodyMetricCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LevelUpBodyMetricPayload>
+        }
+        createMany: {
+          args: Prisma.LevelUpBodyMetricCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.LevelUpBodyMetricCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LevelUpBodyMetricPayload>[]
+        }
+        delete: {
+          args: Prisma.LevelUpBodyMetricDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LevelUpBodyMetricPayload>
+        }
+        update: {
+          args: Prisma.LevelUpBodyMetricUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LevelUpBodyMetricPayload>
+        }
+        deleteMany: {
+          args: Prisma.LevelUpBodyMetricDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.LevelUpBodyMetricUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.LevelUpBodyMetricUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LevelUpBodyMetricPayload>[]
+        }
+        upsert: {
+          args: Prisma.LevelUpBodyMetricUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LevelUpBodyMetricPayload>
+        }
+        aggregate: {
+          args: Prisma.LevelUpBodyMetricAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateLevelUpBodyMetric>
+        }
+        groupBy: {
+          args: Prisma.LevelUpBodyMetricGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LevelUpBodyMetricGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.LevelUpBodyMetricCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LevelUpBodyMetricCountAggregateOutputType> | number
+        }
+      }
+    }
     LevelUpBadgeUnlock: {
       payload: Prisma.$LevelUpBadgeUnlockPayload<ExtArgs>
       fields: Prisma.LevelUpBadgeUnlockFieldRefs
@@ -5373,7 +5823,10 @@ export const EraAccountLinkScalarFieldEnum = {
   accountType: 'accountType',
   currency: 'currency',
   status: 'status',
-  lastSeenAt: 'lastSeenAt'
+  lastSeenAt: 'lastSeenAt',
+  ownerPersonId: 'ownerPersonId',
+  householdGroupId: 'householdGroupId',
+  isShared: 'isShared'
 } as const
 
 export type EraAccountLinkScalarFieldEnum = (typeof EraAccountLinkScalarFieldEnum)[keyof typeof EraAccountLinkScalarFieldEnum]
@@ -5507,7 +5960,18 @@ export const InteractionScalarFieldEnum = {
   amount: 'amount',
   direction: 'direction',
   sourceFileId: 'sourceFileId',
-  sourceNoteId: 'sourceNoteId'
+  sourceNoteId: 'sourceNoteId',
+  source: 'source',
+  sourceId: 'sourceId',
+  subtype: 'subtype',
+  currency: 'currency',
+  category: 'category',
+  merchantName: 'merchantName',
+  accountLinkId: 'accountLinkId',
+  actorPersonId: 'actorPersonId',
+  metadata: 'metadata',
+  enrichmentVersion: 'enrichmentVersion',
+  enrichedAt: 'enrichedAt'
 } as const
 
 export type InteractionScalarFieldEnum = (typeof InteractionScalarFieldEnum)[keyof typeof InteractionScalarFieldEnum]
@@ -5519,7 +5983,13 @@ export const InteractionParticipantScalarFieldEnum = {
   entityType: 'entityType',
   entityId: 'entityId',
   role: 'role',
-  workspaceId: 'workspaceId'
+  workspaceId: 'workspaceId',
+  confidence: 'confidence',
+  band: 'band',
+  source: 'source',
+  evidence: 'evidence',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type InteractionParticipantScalarFieldEnum = (typeof InteractionParticipantScalarFieldEnum)[keyof typeof InteractionParticipantScalarFieldEnum]
@@ -6035,7 +6505,10 @@ export const LevelUpProfileScalarFieldEnum = {
   heightCm: 'heightCm',
   standingReachCm: 'standingReachCm',
   primaryBuild: 'primaryBuild',
-  coldStartCompletedAt: 'coldStartCompletedAt'
+  coldStartCompletedAt: 'coldStartCompletedAt',
+  unitPreference: 'unitPreference',
+  microPlates: 'microPlates',
+  activeProgramId: 'activeProgramId'
 } as const
 
 export type LevelUpProfileScalarFieldEnum = (typeof LevelUpProfileScalarFieldEnum)[keyof typeof LevelUpProfileScalarFieldEnum]
@@ -6099,9 +6572,14 @@ export const LevelUpTrainingSetScalarFieldEnum = {
   performedAt: 'performedAt',
   sessionId: 'sessionId',
   exerciseKey: 'exerciseKey',
+  exerciseId: 'exerciseId',
+  setIndex: 'setIndex',
   reps: 'reps',
   loadKg: 'loadKg',
+  durationSec: 'durationSec',
+  isBodyweight: 'isBodyweight',
   bodyweightKg: 'bodyweightKg',
+  rpe: 'rpe',
   rank: 'rank',
   rankLetter: 'rankLetter',
   balanceResidual: 'balanceResidual',
@@ -6109,6 +6587,91 @@ export const LevelUpTrainingSetScalarFieldEnum = {
 } as const
 
 export type LevelUpTrainingSetScalarFieldEnum = (typeof LevelUpTrainingSetScalarFieldEnum)[keyof typeof LevelUpTrainingSetScalarFieldEnum]
+
+
+export const LevelUpExerciseScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  createdAt: 'createdAt',
+  key: 'key',
+  label: 'label',
+  modality: 'modality',
+  catalogKey: 'catalogKey',
+  defaultRestSec: 'defaultRestSec',
+  muscleGroup: 'muscleGroup',
+  jointLoad: 'jointLoad',
+  substituteId: 'substituteId'
+} as const
+
+export type LevelUpExerciseScalarFieldEnum = (typeof LevelUpExerciseScalarFieldEnum)[keyof typeof LevelUpExerciseScalarFieldEnum]
+
+
+export const LevelUpProgramScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  createdAt: 'createdAt',
+  name: 'name',
+  notes: 'notes',
+  isActive: 'isActive'
+} as const
+
+export type LevelUpProgramScalarFieldEnum = (typeof LevelUpProgramScalarFieldEnum)[keyof typeof LevelUpProgramScalarFieldEnum]
+
+
+export const LevelUpProgramDayScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  programId: 'programId',
+  name: 'name',
+  order: 'order'
+} as const
+
+export type LevelUpProgramDayScalarFieldEnum = (typeof LevelUpProgramDayScalarFieldEnum)[keyof typeof LevelUpProgramDayScalarFieldEnum]
+
+
+export const LevelUpProgramEntryScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  programDayId: 'programDayId',
+  exerciseId: 'exerciseId',
+  targetSets: 'targetSets',
+  targetReps: 'targetReps',
+  targetLoadKg: 'targetLoadKg',
+  targetDurationSec: 'targetDurationSec',
+  restSec: 'restSec',
+  order: 'order'
+} as const
+
+export type LevelUpProgramEntryScalarFieldEnum = (typeof LevelUpProgramEntryScalarFieldEnum)[keyof typeof LevelUpProgramEntryScalarFieldEnum]
+
+
+export const LevelUpSessionScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  createdAt: 'createdAt',
+  startedAt: 'startedAt',
+  endedAt: 'endedAt',
+  programDayId: 'programDayId',
+  kneeFlare: 'kneeFlare',
+  lumbarFlare: 'lumbarFlare',
+  notes: 'notes'
+} as const
+
+export type LevelUpSessionScalarFieldEnum = (typeof LevelUpSessionScalarFieldEnum)[keyof typeof LevelUpSessionScalarFieldEnum]
+
+
+export const LevelUpBodyMetricScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  createdAt: 'createdAt',
+  measuredAt: 'measuredAt',
+  weightKg: 'weightKg',
+  bodyFatPct: 'bodyFatPct',
+  musclePct: 'musclePct',
+  notes: 'notes'
+} as const
+
+export type LevelUpBodyMetricScalarFieldEnum = (typeof LevelUpBodyMetricScalarFieldEnum)[keyof typeof LevelUpBodyMetricScalarFieldEnum]
 
 
 export const LevelUpBadgeUnlockScalarFieldEnum = {
@@ -6458,6 +7021,12 @@ export type GlobalOmitConfig = {
   levelUpCombine?: Prisma.LevelUpCombineOmit
   levelUpRatingSnapshot?: Prisma.LevelUpRatingSnapshotOmit
   levelUpTrainingSet?: Prisma.LevelUpTrainingSetOmit
+  levelUpExercise?: Prisma.LevelUpExerciseOmit
+  levelUpProgram?: Prisma.LevelUpProgramOmit
+  levelUpProgramDay?: Prisma.LevelUpProgramDayOmit
+  levelUpProgramEntry?: Prisma.LevelUpProgramEntryOmit
+  levelUpSession?: Prisma.LevelUpSessionOmit
+  levelUpBodyMetric?: Prisma.LevelUpBodyMetricOmit
   levelUpBadgeUnlock?: Prisma.LevelUpBadgeUnlockOmit
   levelUpTargetBuild?: Prisma.LevelUpTargetBuildOmit
 }

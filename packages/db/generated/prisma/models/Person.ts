@@ -386,6 +386,8 @@ export type PersonWhereInput = {
   colorSoft?: Prisma.StringNullableFilter<"Person"> | string | null
   workspace?: Prisma.XOR<Prisma.WorkspaceScalarRelationFilter, Prisma.WorkspaceWhereInput>
   interactions?: Prisma.InteractionListRelationFilter
+  actorInteractions?: Prisma.InteractionListRelationFilter
+  ownedEraAccounts?: Prisma.EraAccountLinkListRelationFilter
   stagedInteractions?: Prisma.StagedInteractionListRelationFilter
   plans?: Prisma.PlanListRelationFilter
   expectedInPlans?: Prisma.PlanExpectedPersonListRelationFilter
@@ -428,6 +430,8 @@ export type PersonOrderByWithRelationInput = {
   colorSoft?: Prisma.SortOrderInput | Prisma.SortOrder
   workspace?: Prisma.WorkspaceOrderByWithRelationInput
   interactions?: Prisma.InteractionOrderByRelationAggregateInput
+  actorInteractions?: Prisma.InteractionOrderByRelationAggregateInput
+  ownedEraAccounts?: Prisma.EraAccountLinkOrderByRelationAggregateInput
   stagedInteractions?: Prisma.StagedInteractionOrderByRelationAggregateInput
   plans?: Prisma.PlanOrderByRelationAggregateInput
   expectedInPlans?: Prisma.PlanExpectedPersonOrderByRelationAggregateInput
@@ -473,6 +477,8 @@ export type PersonWhereUniqueInput = Prisma.AtLeast<{
   colorSoft?: Prisma.StringNullableFilter<"Person"> | string | null
   workspace?: Prisma.XOR<Prisma.WorkspaceScalarRelationFilter, Prisma.WorkspaceWhereInput>
   interactions?: Prisma.InteractionListRelationFilter
+  actorInteractions?: Prisma.InteractionListRelationFilter
+  ownedEraAccounts?: Prisma.EraAccountLinkListRelationFilter
   stagedInteractions?: Prisma.StagedInteractionListRelationFilter
   plans?: Prisma.PlanListRelationFilter
   expectedInPlans?: Prisma.PlanExpectedPersonListRelationFilter
@@ -580,6 +586,8 @@ export type PersonCreateInput = {
   colorSoft?: string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutPersonsInput
   interactions?: Prisma.InteractionCreateNestedManyWithoutPersonInput
+  actorInteractions?: Prisma.InteractionCreateNestedManyWithoutActorPersonInput
+  ownedEraAccounts?: Prisma.EraAccountLinkCreateNestedManyWithoutOwnerPersonInput
   stagedInteractions?: Prisma.StagedInteractionCreateNestedManyWithoutCandidatePersonInput
   plans?: Prisma.PlanCreateNestedManyWithoutPersonInput
   expectedInPlans?: Prisma.PlanExpectedPersonCreateNestedManyWithoutPersonInput
@@ -621,6 +629,8 @@ export type PersonUncheckedCreateInput = {
   color?: string | null
   colorSoft?: string | null
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutPersonInput
+  actorInteractions?: Prisma.InteractionUncheckedCreateNestedManyWithoutActorPersonInput
+  ownedEraAccounts?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutOwnerPersonInput
   stagedInteractions?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutCandidatePersonInput
   plans?: Prisma.PlanUncheckedCreateNestedManyWithoutPersonInput
   expectedInPlans?: Prisma.PlanExpectedPersonUncheckedCreateNestedManyWithoutPersonInput
@@ -662,6 +672,8 @@ export type PersonUpdateInput = {
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutPersonsNestedInput
   interactions?: Prisma.InteractionUpdateManyWithoutPersonNestedInput
+  actorInteractions?: Prisma.InteractionUpdateManyWithoutActorPersonNestedInput
+  ownedEraAccounts?: Prisma.EraAccountLinkUpdateManyWithoutOwnerPersonNestedInput
   stagedInteractions?: Prisma.StagedInteractionUpdateManyWithoutCandidatePersonNestedInput
   plans?: Prisma.PlanUpdateManyWithoutPersonNestedInput
   expectedInPlans?: Prisma.PlanExpectedPersonUpdateManyWithoutPersonNestedInput
@@ -703,6 +715,8 @@ export type PersonUncheckedUpdateInput = {
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutPersonNestedInput
+  actorInteractions?: Prisma.InteractionUncheckedUpdateManyWithoutActorPersonNestedInput
+  ownedEraAccounts?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutOwnerPersonNestedInput
   stagedInteractions?: Prisma.StagedInteractionUncheckedUpdateManyWithoutCandidatePersonNestedInput
   plans?: Prisma.PlanUncheckedUpdateManyWithoutPersonNestedInput
   expectedInPlans?: Prisma.PlanExpectedPersonUncheckedUpdateManyWithoutPersonNestedInput
@@ -1015,6 +1029,22 @@ export type PersonUpdateOneWithoutAuditLogsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.PersonUpdateToOneWithWhereWithoutAuditLogsInput, Prisma.PersonUpdateWithoutAuditLogsInput>, Prisma.PersonUncheckedUpdateWithoutAuditLogsInput>
 }
 
+export type PersonCreateNestedOneWithoutOwnedEraAccountsInput = {
+  create?: Prisma.XOR<Prisma.PersonCreateWithoutOwnedEraAccountsInput, Prisma.PersonUncheckedCreateWithoutOwnedEraAccountsInput>
+  connectOrCreate?: Prisma.PersonCreateOrConnectWithoutOwnedEraAccountsInput
+  connect?: Prisma.PersonWhereUniqueInput
+}
+
+export type PersonUpdateOneWithoutOwnedEraAccountsNestedInput = {
+  create?: Prisma.XOR<Prisma.PersonCreateWithoutOwnedEraAccountsInput, Prisma.PersonUncheckedCreateWithoutOwnedEraAccountsInput>
+  connectOrCreate?: Prisma.PersonCreateOrConnectWithoutOwnedEraAccountsInput
+  upsert?: Prisma.PersonUpsertWithoutOwnedEraAccountsInput
+  disconnect?: Prisma.PersonWhereInput | boolean
+  delete?: Prisma.PersonWhereInput | boolean
+  connect?: Prisma.PersonWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.PersonUpdateToOneWithWhereWithoutOwnedEraAccountsInput, Prisma.PersonUpdateWithoutOwnedEraAccountsInput>, Prisma.PersonUncheckedUpdateWithoutOwnedEraAccountsInput>
+}
+
 export type PersonCreateNestedOneWithoutStagedInteractionsInput = {
   create?: Prisma.XOR<Prisma.PersonCreateWithoutStagedInteractionsInput, Prisma.PersonUncheckedCreateWithoutStagedInteractionsInput>
   connectOrCreate?: Prisma.PersonCreateOrConnectWithoutStagedInteractionsInput
@@ -1037,6 +1067,12 @@ export type PersonCreateNestedOneWithoutInteractionsInput = {
   connect?: Prisma.PersonWhereUniqueInput
 }
 
+export type PersonCreateNestedOneWithoutActorInteractionsInput = {
+  create?: Prisma.XOR<Prisma.PersonCreateWithoutActorInteractionsInput, Prisma.PersonUncheckedCreateWithoutActorInteractionsInput>
+  connectOrCreate?: Prisma.PersonCreateOrConnectWithoutActorInteractionsInput
+  connect?: Prisma.PersonWhereUniqueInput
+}
+
 export type PersonUpdateOneWithoutInteractionsNestedInput = {
   create?: Prisma.XOR<Prisma.PersonCreateWithoutInteractionsInput, Prisma.PersonUncheckedCreateWithoutInteractionsInput>
   connectOrCreate?: Prisma.PersonCreateOrConnectWithoutInteractionsInput
@@ -1045,6 +1081,16 @@ export type PersonUpdateOneWithoutInteractionsNestedInput = {
   delete?: Prisma.PersonWhereInput | boolean
   connect?: Prisma.PersonWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.PersonUpdateToOneWithWhereWithoutInteractionsInput, Prisma.PersonUpdateWithoutInteractionsInput>, Prisma.PersonUncheckedUpdateWithoutInteractionsInput>
+}
+
+export type PersonUpdateOneWithoutActorInteractionsNestedInput = {
+  create?: Prisma.XOR<Prisma.PersonCreateWithoutActorInteractionsInput, Prisma.PersonUncheckedCreateWithoutActorInteractionsInput>
+  connectOrCreate?: Prisma.PersonCreateOrConnectWithoutActorInteractionsInput
+  upsert?: Prisma.PersonUpsertWithoutActorInteractionsInput
+  disconnect?: Prisma.PersonWhereInput | boolean
+  delete?: Prisma.PersonWhereInput | boolean
+  connect?: Prisma.PersonWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.PersonUpdateToOneWithWhereWithoutActorInteractionsInput, Prisma.PersonUpdateWithoutActorInteractionsInput>, Prisma.PersonUncheckedUpdateWithoutActorInteractionsInput>
 }
 
 export type PersonCreateNestedOneWithoutPlansInput = {
@@ -1180,6 +1226,8 @@ export type PersonCreateWithoutWorkspaceInput = {
   color?: string | null
   colorSoft?: string | null
   interactions?: Prisma.InteractionCreateNestedManyWithoutPersonInput
+  actorInteractions?: Prisma.InteractionCreateNestedManyWithoutActorPersonInput
+  ownedEraAccounts?: Prisma.EraAccountLinkCreateNestedManyWithoutOwnerPersonInput
   stagedInteractions?: Prisma.StagedInteractionCreateNestedManyWithoutCandidatePersonInput
   plans?: Prisma.PlanCreateNestedManyWithoutPersonInput
   expectedInPlans?: Prisma.PlanExpectedPersonCreateNestedManyWithoutPersonInput
@@ -1220,6 +1268,8 @@ export type PersonUncheckedCreateWithoutWorkspaceInput = {
   color?: string | null
   colorSoft?: string | null
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutPersonInput
+  actorInteractions?: Prisma.InteractionUncheckedCreateNestedManyWithoutActorPersonInput
+  ownedEraAccounts?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutOwnerPersonInput
   stagedInteractions?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutCandidatePersonInput
   plans?: Prisma.PlanUncheckedCreateNestedManyWithoutPersonInput
   expectedInPlans?: Prisma.PlanExpectedPersonUncheckedCreateNestedManyWithoutPersonInput
@@ -1318,6 +1368,8 @@ export type PersonCreateWithoutUsersInput = {
   colorSoft?: string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutPersonsInput
   interactions?: Prisma.InteractionCreateNestedManyWithoutPersonInput
+  actorInteractions?: Prisma.InteractionCreateNestedManyWithoutActorPersonInput
+  ownedEraAccounts?: Prisma.EraAccountLinkCreateNestedManyWithoutOwnerPersonInput
   stagedInteractions?: Prisma.StagedInteractionCreateNestedManyWithoutCandidatePersonInput
   plans?: Prisma.PlanCreateNestedManyWithoutPersonInput
   expectedInPlans?: Prisma.PlanExpectedPersonCreateNestedManyWithoutPersonInput
@@ -1358,6 +1410,8 @@ export type PersonUncheckedCreateWithoutUsersInput = {
   color?: string | null
   colorSoft?: string | null
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutPersonInput
+  actorInteractions?: Prisma.InteractionUncheckedCreateNestedManyWithoutActorPersonInput
+  ownedEraAccounts?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutOwnerPersonInput
   stagedInteractions?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutCandidatePersonInput
   plans?: Prisma.PlanUncheckedCreateNestedManyWithoutPersonInput
   expectedInPlans?: Prisma.PlanExpectedPersonUncheckedCreateNestedManyWithoutPersonInput
@@ -1414,6 +1468,8 @@ export type PersonUpdateWithoutUsersInput = {
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutPersonsNestedInput
   interactions?: Prisma.InteractionUpdateManyWithoutPersonNestedInput
+  actorInteractions?: Prisma.InteractionUpdateManyWithoutActorPersonNestedInput
+  ownedEraAccounts?: Prisma.EraAccountLinkUpdateManyWithoutOwnerPersonNestedInput
   stagedInteractions?: Prisma.StagedInteractionUpdateManyWithoutCandidatePersonNestedInput
   plans?: Prisma.PlanUpdateManyWithoutPersonNestedInput
   expectedInPlans?: Prisma.PlanExpectedPersonUpdateManyWithoutPersonNestedInput
@@ -1454,6 +1510,8 @@ export type PersonUncheckedUpdateWithoutUsersInput = {
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutPersonNestedInput
+  actorInteractions?: Prisma.InteractionUncheckedUpdateManyWithoutActorPersonNestedInput
+  ownedEraAccounts?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutOwnerPersonNestedInput
   stagedInteractions?: Prisma.StagedInteractionUncheckedUpdateManyWithoutCandidatePersonNestedInput
   plans?: Prisma.PlanUncheckedUpdateManyWithoutPersonNestedInput
   expectedInPlans?: Prisma.PlanExpectedPersonUncheckedUpdateManyWithoutPersonNestedInput
@@ -1494,6 +1552,8 @@ export type PersonCreateWithoutApiKeysInput = {
   colorSoft?: string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutPersonsInput
   interactions?: Prisma.InteractionCreateNestedManyWithoutPersonInput
+  actorInteractions?: Prisma.InteractionCreateNestedManyWithoutActorPersonInput
+  ownedEraAccounts?: Prisma.EraAccountLinkCreateNestedManyWithoutOwnerPersonInput
   stagedInteractions?: Prisma.StagedInteractionCreateNestedManyWithoutCandidatePersonInput
   plans?: Prisma.PlanCreateNestedManyWithoutPersonInput
   expectedInPlans?: Prisma.PlanExpectedPersonCreateNestedManyWithoutPersonInput
@@ -1534,6 +1594,8 @@ export type PersonUncheckedCreateWithoutApiKeysInput = {
   color?: string | null
   colorSoft?: string | null
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutPersonInput
+  actorInteractions?: Prisma.InteractionUncheckedCreateNestedManyWithoutActorPersonInput
+  ownedEraAccounts?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutOwnerPersonInput
   stagedInteractions?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutCandidatePersonInput
   plans?: Prisma.PlanUncheckedCreateNestedManyWithoutPersonInput
   expectedInPlans?: Prisma.PlanExpectedPersonUncheckedCreateNestedManyWithoutPersonInput
@@ -1590,6 +1652,8 @@ export type PersonUpdateWithoutApiKeysInput = {
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutPersonsNestedInput
   interactions?: Prisma.InteractionUpdateManyWithoutPersonNestedInput
+  actorInteractions?: Prisma.InteractionUpdateManyWithoutActorPersonNestedInput
+  ownedEraAccounts?: Prisma.EraAccountLinkUpdateManyWithoutOwnerPersonNestedInput
   stagedInteractions?: Prisma.StagedInteractionUpdateManyWithoutCandidatePersonNestedInput
   plans?: Prisma.PlanUpdateManyWithoutPersonNestedInput
   expectedInPlans?: Prisma.PlanExpectedPersonUpdateManyWithoutPersonNestedInput
@@ -1630,6 +1694,8 @@ export type PersonUncheckedUpdateWithoutApiKeysInput = {
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutPersonNestedInput
+  actorInteractions?: Prisma.InteractionUncheckedUpdateManyWithoutActorPersonNestedInput
+  ownedEraAccounts?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutOwnerPersonNestedInput
   stagedInteractions?: Prisma.StagedInteractionUncheckedUpdateManyWithoutCandidatePersonNestedInput
   plans?: Prisma.PlanUncheckedUpdateManyWithoutPersonNestedInput
   expectedInPlans?: Prisma.PlanExpectedPersonUncheckedUpdateManyWithoutPersonNestedInput
@@ -1670,6 +1736,8 @@ export type PersonCreateWithoutAuditLogsInput = {
   colorSoft?: string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutPersonsInput
   interactions?: Prisma.InteractionCreateNestedManyWithoutPersonInput
+  actorInteractions?: Prisma.InteractionCreateNestedManyWithoutActorPersonInput
+  ownedEraAccounts?: Prisma.EraAccountLinkCreateNestedManyWithoutOwnerPersonInput
   stagedInteractions?: Prisma.StagedInteractionCreateNestedManyWithoutCandidatePersonInput
   plans?: Prisma.PlanCreateNestedManyWithoutPersonInput
   expectedInPlans?: Prisma.PlanExpectedPersonCreateNestedManyWithoutPersonInput
@@ -1710,6 +1778,8 @@ export type PersonUncheckedCreateWithoutAuditLogsInput = {
   color?: string | null
   colorSoft?: string | null
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutPersonInput
+  actorInteractions?: Prisma.InteractionUncheckedCreateNestedManyWithoutActorPersonInput
+  ownedEraAccounts?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutOwnerPersonInput
   stagedInteractions?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutCandidatePersonInput
   plans?: Prisma.PlanUncheckedCreateNestedManyWithoutPersonInput
   expectedInPlans?: Prisma.PlanExpectedPersonUncheckedCreateNestedManyWithoutPersonInput
@@ -1766,6 +1836,8 @@ export type PersonUpdateWithoutAuditLogsInput = {
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutPersonsNestedInput
   interactions?: Prisma.InteractionUpdateManyWithoutPersonNestedInput
+  actorInteractions?: Prisma.InteractionUpdateManyWithoutActorPersonNestedInput
+  ownedEraAccounts?: Prisma.EraAccountLinkUpdateManyWithoutOwnerPersonNestedInput
   stagedInteractions?: Prisma.StagedInteractionUpdateManyWithoutCandidatePersonNestedInput
   plans?: Prisma.PlanUpdateManyWithoutPersonNestedInput
   expectedInPlans?: Prisma.PlanExpectedPersonUpdateManyWithoutPersonNestedInput
@@ -1806,6 +1878,8 @@ export type PersonUncheckedUpdateWithoutAuditLogsInput = {
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutPersonNestedInput
+  actorInteractions?: Prisma.InteractionUncheckedUpdateManyWithoutActorPersonNestedInput
+  ownedEraAccounts?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutOwnerPersonNestedInput
   stagedInteractions?: Prisma.StagedInteractionUncheckedUpdateManyWithoutCandidatePersonNestedInput
   plans?: Prisma.PlanUncheckedUpdateManyWithoutPersonNestedInput
   expectedInPlans?: Prisma.PlanExpectedPersonUncheckedUpdateManyWithoutPersonNestedInput
@@ -1815,6 +1889,190 @@ export type PersonUncheckedUpdateWithoutAuditLogsInput = {
   groupMemberships?: Prisma.PersonGroupUncheckedUpdateManyWithoutPersonNestedInput
   users?: Prisma.UserUncheckedUpdateManyWithoutPersonNestedInput
   apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutOwnerPersonNestedInput
+  theorySnapshots?: Prisma.TheorySnapshotUncheckedUpdateManyWithoutSubjectPersonNestedInput
+}
+
+export type PersonCreateWithoutOwnedEraAccountsInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  first: string
+  last: string
+  nickname?: string | null
+  title?: string | null
+  headline?: string | null
+  emails?: string
+  emailSearch?: string | null
+  phones?: string
+  birthday?: string | null
+  closeness?: number
+  tags?: string
+  values?: string
+  notes?: string | null
+  company?: string | null
+  location?: string | null
+  linkedin?: string | null
+  twitter?: string | null
+  website?: string | null
+  facebook?: string | null
+  instagram?: string | null
+  color?: string | null
+  colorSoft?: string | null
+  workspace?: Prisma.WorkspaceCreateNestedOneWithoutPersonsInput
+  interactions?: Prisma.InteractionCreateNestedManyWithoutPersonInput
+  actorInteractions?: Prisma.InteractionCreateNestedManyWithoutActorPersonInput
+  stagedInteractions?: Prisma.StagedInteractionCreateNestedManyWithoutCandidatePersonInput
+  plans?: Prisma.PlanCreateNestedManyWithoutPersonInput
+  expectedInPlans?: Prisma.PlanExpectedPersonCreateNestedManyWithoutPersonInput
+  ownedItems?: Prisma.ItemCreateNestedManyWithoutOwnedByInput
+  assembledBy?: Prisma.AssemblyCreateNestedManyWithoutAssembledByInput
+  disassembledBy?: Prisma.AssemblyCreateNestedManyWithoutDisassembledByInput
+  groupMemberships?: Prisma.PersonGroupCreateNestedManyWithoutPersonInput
+  users?: Prisma.UserCreateNestedManyWithoutPersonInput
+  apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutOwnerPersonInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutPersonInput
+  theorySnapshots?: Prisma.TheorySnapshotCreateNestedManyWithoutSubjectPersonInput
+}
+
+export type PersonUncheckedCreateWithoutOwnedEraAccountsInput = {
+  id?: string
+  workspaceId?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  first: string
+  last: string
+  nickname?: string | null
+  title?: string | null
+  headline?: string | null
+  emails?: string
+  emailSearch?: string | null
+  phones?: string
+  birthday?: string | null
+  closeness?: number
+  tags?: string
+  values?: string
+  notes?: string | null
+  company?: string | null
+  location?: string | null
+  linkedin?: string | null
+  twitter?: string | null
+  website?: string | null
+  facebook?: string | null
+  instagram?: string | null
+  color?: string | null
+  colorSoft?: string | null
+  interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutPersonInput
+  actorInteractions?: Prisma.InteractionUncheckedCreateNestedManyWithoutActorPersonInput
+  stagedInteractions?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutCandidatePersonInput
+  plans?: Prisma.PlanUncheckedCreateNestedManyWithoutPersonInput
+  expectedInPlans?: Prisma.PlanExpectedPersonUncheckedCreateNestedManyWithoutPersonInput
+  ownedItems?: Prisma.ItemUncheckedCreateNestedManyWithoutOwnedByInput
+  assembledBy?: Prisma.AssemblyUncheckedCreateNestedManyWithoutAssembledByInput
+  disassembledBy?: Prisma.AssemblyUncheckedCreateNestedManyWithoutDisassembledByInput
+  groupMemberships?: Prisma.PersonGroupUncheckedCreateNestedManyWithoutPersonInput
+  users?: Prisma.UserUncheckedCreateNestedManyWithoutPersonInput
+  apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutOwnerPersonInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutPersonInput
+  theorySnapshots?: Prisma.TheorySnapshotUncheckedCreateNestedManyWithoutSubjectPersonInput
+}
+
+export type PersonCreateOrConnectWithoutOwnedEraAccountsInput = {
+  where: Prisma.PersonWhereUniqueInput
+  create: Prisma.XOR<Prisma.PersonCreateWithoutOwnedEraAccountsInput, Prisma.PersonUncheckedCreateWithoutOwnedEraAccountsInput>
+}
+
+export type PersonUpsertWithoutOwnedEraAccountsInput = {
+  update: Prisma.XOR<Prisma.PersonUpdateWithoutOwnedEraAccountsInput, Prisma.PersonUncheckedUpdateWithoutOwnedEraAccountsInput>
+  create: Prisma.XOR<Prisma.PersonCreateWithoutOwnedEraAccountsInput, Prisma.PersonUncheckedCreateWithoutOwnedEraAccountsInput>
+  where?: Prisma.PersonWhereInput
+}
+
+export type PersonUpdateToOneWithWhereWithoutOwnedEraAccountsInput = {
+  where?: Prisma.PersonWhereInput
+  data: Prisma.XOR<Prisma.PersonUpdateWithoutOwnedEraAccountsInput, Prisma.PersonUncheckedUpdateWithoutOwnedEraAccountsInput>
+}
+
+export type PersonUpdateWithoutOwnedEraAccountsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  first?: Prisma.StringFieldUpdateOperationsInput | string
+  last?: Prisma.StringFieldUpdateOperationsInput | string
+  nickname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emails?: Prisma.StringFieldUpdateOperationsInput | string
+  emailSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phones?: Prisma.StringFieldUpdateOperationsInput | string
+  birthday?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  closeness?: Prisma.IntFieldUpdateOperationsInput | number
+  tags?: Prisma.StringFieldUpdateOperationsInput | string
+  values?: Prisma.StringFieldUpdateOperationsInput | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  company?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  linkedin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebook?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutPersonsNestedInput
+  interactions?: Prisma.InteractionUpdateManyWithoutPersonNestedInput
+  actorInteractions?: Prisma.InteractionUpdateManyWithoutActorPersonNestedInput
+  stagedInteractions?: Prisma.StagedInteractionUpdateManyWithoutCandidatePersonNestedInput
+  plans?: Prisma.PlanUpdateManyWithoutPersonNestedInput
+  expectedInPlans?: Prisma.PlanExpectedPersonUpdateManyWithoutPersonNestedInput
+  ownedItems?: Prisma.ItemUpdateManyWithoutOwnedByNestedInput
+  assembledBy?: Prisma.AssemblyUpdateManyWithoutAssembledByNestedInput
+  disassembledBy?: Prisma.AssemblyUpdateManyWithoutDisassembledByNestedInput
+  groupMemberships?: Prisma.PersonGroupUpdateManyWithoutPersonNestedInput
+  users?: Prisma.UserUpdateManyWithoutPersonNestedInput
+  apiKeys?: Prisma.ApiKeyUpdateManyWithoutOwnerPersonNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutPersonNestedInput
+  theorySnapshots?: Prisma.TheorySnapshotUpdateManyWithoutSubjectPersonNestedInput
+}
+
+export type PersonUncheckedUpdateWithoutOwnedEraAccountsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  first?: Prisma.StringFieldUpdateOperationsInput | string
+  last?: Prisma.StringFieldUpdateOperationsInput | string
+  nickname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emails?: Prisma.StringFieldUpdateOperationsInput | string
+  emailSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phones?: Prisma.StringFieldUpdateOperationsInput | string
+  birthday?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  closeness?: Prisma.IntFieldUpdateOperationsInput | number
+  tags?: Prisma.StringFieldUpdateOperationsInput | string
+  values?: Prisma.StringFieldUpdateOperationsInput | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  company?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  linkedin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebook?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  interactions?: Prisma.InteractionUncheckedUpdateManyWithoutPersonNestedInput
+  actorInteractions?: Prisma.InteractionUncheckedUpdateManyWithoutActorPersonNestedInput
+  stagedInteractions?: Prisma.StagedInteractionUncheckedUpdateManyWithoutCandidatePersonNestedInput
+  plans?: Prisma.PlanUncheckedUpdateManyWithoutPersonNestedInput
+  expectedInPlans?: Prisma.PlanExpectedPersonUncheckedUpdateManyWithoutPersonNestedInput
+  ownedItems?: Prisma.ItemUncheckedUpdateManyWithoutOwnedByNestedInput
+  assembledBy?: Prisma.AssemblyUncheckedUpdateManyWithoutAssembledByNestedInput
+  disassembledBy?: Prisma.AssemblyUncheckedUpdateManyWithoutDisassembledByNestedInput
+  groupMemberships?: Prisma.PersonGroupUncheckedUpdateManyWithoutPersonNestedInput
+  users?: Prisma.UserUncheckedUpdateManyWithoutPersonNestedInput
+  apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutOwnerPersonNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutPersonNestedInput
   theorySnapshots?: Prisma.TheorySnapshotUncheckedUpdateManyWithoutSubjectPersonNestedInput
 }
 
@@ -1846,6 +2104,8 @@ export type PersonCreateWithoutStagedInteractionsInput = {
   colorSoft?: string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutPersonsInput
   interactions?: Prisma.InteractionCreateNestedManyWithoutPersonInput
+  actorInteractions?: Prisma.InteractionCreateNestedManyWithoutActorPersonInput
+  ownedEraAccounts?: Prisma.EraAccountLinkCreateNestedManyWithoutOwnerPersonInput
   plans?: Prisma.PlanCreateNestedManyWithoutPersonInput
   expectedInPlans?: Prisma.PlanExpectedPersonCreateNestedManyWithoutPersonInput
   ownedItems?: Prisma.ItemCreateNestedManyWithoutOwnedByInput
@@ -1886,6 +2146,8 @@ export type PersonUncheckedCreateWithoutStagedInteractionsInput = {
   color?: string | null
   colorSoft?: string | null
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutPersonInput
+  actorInteractions?: Prisma.InteractionUncheckedCreateNestedManyWithoutActorPersonInput
+  ownedEraAccounts?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutOwnerPersonInput
   plans?: Prisma.PlanUncheckedCreateNestedManyWithoutPersonInput
   expectedInPlans?: Prisma.PlanExpectedPersonUncheckedCreateNestedManyWithoutPersonInput
   ownedItems?: Prisma.ItemUncheckedCreateNestedManyWithoutOwnedByInput
@@ -1942,6 +2204,8 @@ export type PersonUpdateWithoutStagedInteractionsInput = {
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutPersonsNestedInput
   interactions?: Prisma.InteractionUpdateManyWithoutPersonNestedInput
+  actorInteractions?: Prisma.InteractionUpdateManyWithoutActorPersonNestedInput
+  ownedEraAccounts?: Prisma.EraAccountLinkUpdateManyWithoutOwnerPersonNestedInput
   plans?: Prisma.PlanUpdateManyWithoutPersonNestedInput
   expectedInPlans?: Prisma.PlanExpectedPersonUpdateManyWithoutPersonNestedInput
   ownedItems?: Prisma.ItemUpdateManyWithoutOwnedByNestedInput
@@ -1982,6 +2246,8 @@ export type PersonUncheckedUpdateWithoutStagedInteractionsInput = {
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutPersonNestedInput
+  actorInteractions?: Prisma.InteractionUncheckedUpdateManyWithoutActorPersonNestedInput
+  ownedEraAccounts?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutOwnerPersonNestedInput
   plans?: Prisma.PlanUncheckedUpdateManyWithoutPersonNestedInput
   expectedInPlans?: Prisma.PlanExpectedPersonUncheckedUpdateManyWithoutPersonNestedInput
   ownedItems?: Prisma.ItemUncheckedUpdateManyWithoutOwnedByNestedInput
@@ -2021,6 +2287,8 @@ export type PersonCreateWithoutInteractionsInput = {
   color?: string | null
   colorSoft?: string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutPersonsInput
+  actorInteractions?: Prisma.InteractionCreateNestedManyWithoutActorPersonInput
+  ownedEraAccounts?: Prisma.EraAccountLinkCreateNestedManyWithoutOwnerPersonInput
   stagedInteractions?: Prisma.StagedInteractionCreateNestedManyWithoutCandidatePersonInput
   plans?: Prisma.PlanCreateNestedManyWithoutPersonInput
   expectedInPlans?: Prisma.PlanExpectedPersonCreateNestedManyWithoutPersonInput
@@ -2061,6 +2329,8 @@ export type PersonUncheckedCreateWithoutInteractionsInput = {
   instagram?: string | null
   color?: string | null
   colorSoft?: string | null
+  actorInteractions?: Prisma.InteractionUncheckedCreateNestedManyWithoutActorPersonInput
+  ownedEraAccounts?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutOwnerPersonInput
   stagedInteractions?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutCandidatePersonInput
   plans?: Prisma.PlanUncheckedCreateNestedManyWithoutPersonInput
   expectedInPlans?: Prisma.PlanExpectedPersonUncheckedCreateNestedManyWithoutPersonInput
@@ -2077,6 +2347,95 @@ export type PersonUncheckedCreateWithoutInteractionsInput = {
 export type PersonCreateOrConnectWithoutInteractionsInput = {
   where: Prisma.PersonWhereUniqueInput
   create: Prisma.XOR<Prisma.PersonCreateWithoutInteractionsInput, Prisma.PersonUncheckedCreateWithoutInteractionsInput>
+}
+
+export type PersonCreateWithoutActorInteractionsInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  first: string
+  last: string
+  nickname?: string | null
+  title?: string | null
+  headline?: string | null
+  emails?: string
+  emailSearch?: string | null
+  phones?: string
+  birthday?: string | null
+  closeness?: number
+  tags?: string
+  values?: string
+  notes?: string | null
+  company?: string | null
+  location?: string | null
+  linkedin?: string | null
+  twitter?: string | null
+  website?: string | null
+  facebook?: string | null
+  instagram?: string | null
+  color?: string | null
+  colorSoft?: string | null
+  workspace?: Prisma.WorkspaceCreateNestedOneWithoutPersonsInput
+  interactions?: Prisma.InteractionCreateNestedManyWithoutPersonInput
+  ownedEraAccounts?: Prisma.EraAccountLinkCreateNestedManyWithoutOwnerPersonInput
+  stagedInteractions?: Prisma.StagedInteractionCreateNestedManyWithoutCandidatePersonInput
+  plans?: Prisma.PlanCreateNestedManyWithoutPersonInput
+  expectedInPlans?: Prisma.PlanExpectedPersonCreateNestedManyWithoutPersonInput
+  ownedItems?: Prisma.ItemCreateNestedManyWithoutOwnedByInput
+  assembledBy?: Prisma.AssemblyCreateNestedManyWithoutAssembledByInput
+  disassembledBy?: Prisma.AssemblyCreateNestedManyWithoutDisassembledByInput
+  groupMemberships?: Prisma.PersonGroupCreateNestedManyWithoutPersonInput
+  users?: Prisma.UserCreateNestedManyWithoutPersonInput
+  apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutOwnerPersonInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutPersonInput
+  theorySnapshots?: Prisma.TheorySnapshotCreateNestedManyWithoutSubjectPersonInput
+}
+
+export type PersonUncheckedCreateWithoutActorInteractionsInput = {
+  id?: string
+  workspaceId?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  first: string
+  last: string
+  nickname?: string | null
+  title?: string | null
+  headline?: string | null
+  emails?: string
+  emailSearch?: string | null
+  phones?: string
+  birthday?: string | null
+  closeness?: number
+  tags?: string
+  values?: string
+  notes?: string | null
+  company?: string | null
+  location?: string | null
+  linkedin?: string | null
+  twitter?: string | null
+  website?: string | null
+  facebook?: string | null
+  instagram?: string | null
+  color?: string | null
+  colorSoft?: string | null
+  interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutPersonInput
+  ownedEraAccounts?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutOwnerPersonInput
+  stagedInteractions?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutCandidatePersonInput
+  plans?: Prisma.PlanUncheckedCreateNestedManyWithoutPersonInput
+  expectedInPlans?: Prisma.PlanExpectedPersonUncheckedCreateNestedManyWithoutPersonInput
+  ownedItems?: Prisma.ItemUncheckedCreateNestedManyWithoutOwnedByInput
+  assembledBy?: Prisma.AssemblyUncheckedCreateNestedManyWithoutAssembledByInput
+  disassembledBy?: Prisma.AssemblyUncheckedCreateNestedManyWithoutDisassembledByInput
+  groupMemberships?: Prisma.PersonGroupUncheckedCreateNestedManyWithoutPersonInput
+  users?: Prisma.UserUncheckedCreateNestedManyWithoutPersonInput
+  apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutOwnerPersonInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutPersonInput
+  theorySnapshots?: Prisma.TheorySnapshotUncheckedCreateNestedManyWithoutSubjectPersonInput
+}
+
+export type PersonCreateOrConnectWithoutActorInteractionsInput = {
+  where: Prisma.PersonWhereUniqueInput
+  create: Prisma.XOR<Prisma.PersonCreateWithoutActorInteractionsInput, Prisma.PersonUncheckedCreateWithoutActorInteractionsInput>
 }
 
 export type PersonUpsertWithoutInteractionsInput = {
@@ -2117,6 +2476,8 @@ export type PersonUpdateWithoutInteractionsInput = {
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutPersonsNestedInput
+  actorInteractions?: Prisma.InteractionUpdateManyWithoutActorPersonNestedInput
+  ownedEraAccounts?: Prisma.EraAccountLinkUpdateManyWithoutOwnerPersonNestedInput
   stagedInteractions?: Prisma.StagedInteractionUpdateManyWithoutCandidatePersonNestedInput
   plans?: Prisma.PlanUpdateManyWithoutPersonNestedInput
   expectedInPlans?: Prisma.PlanExpectedPersonUpdateManyWithoutPersonNestedInput
@@ -2157,6 +2518,103 @@ export type PersonUncheckedUpdateWithoutInteractionsInput = {
   instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  actorInteractions?: Prisma.InteractionUncheckedUpdateManyWithoutActorPersonNestedInput
+  ownedEraAccounts?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutOwnerPersonNestedInput
+  stagedInteractions?: Prisma.StagedInteractionUncheckedUpdateManyWithoutCandidatePersonNestedInput
+  plans?: Prisma.PlanUncheckedUpdateManyWithoutPersonNestedInput
+  expectedInPlans?: Prisma.PlanExpectedPersonUncheckedUpdateManyWithoutPersonNestedInput
+  ownedItems?: Prisma.ItemUncheckedUpdateManyWithoutOwnedByNestedInput
+  assembledBy?: Prisma.AssemblyUncheckedUpdateManyWithoutAssembledByNestedInput
+  disassembledBy?: Prisma.AssemblyUncheckedUpdateManyWithoutDisassembledByNestedInput
+  groupMemberships?: Prisma.PersonGroupUncheckedUpdateManyWithoutPersonNestedInput
+  users?: Prisma.UserUncheckedUpdateManyWithoutPersonNestedInput
+  apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutOwnerPersonNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutPersonNestedInput
+  theorySnapshots?: Prisma.TheorySnapshotUncheckedUpdateManyWithoutSubjectPersonNestedInput
+}
+
+export type PersonUpsertWithoutActorInteractionsInput = {
+  update: Prisma.XOR<Prisma.PersonUpdateWithoutActorInteractionsInput, Prisma.PersonUncheckedUpdateWithoutActorInteractionsInput>
+  create: Prisma.XOR<Prisma.PersonCreateWithoutActorInteractionsInput, Prisma.PersonUncheckedCreateWithoutActorInteractionsInput>
+  where?: Prisma.PersonWhereInput
+}
+
+export type PersonUpdateToOneWithWhereWithoutActorInteractionsInput = {
+  where?: Prisma.PersonWhereInput
+  data: Prisma.XOR<Prisma.PersonUpdateWithoutActorInteractionsInput, Prisma.PersonUncheckedUpdateWithoutActorInteractionsInput>
+}
+
+export type PersonUpdateWithoutActorInteractionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  first?: Prisma.StringFieldUpdateOperationsInput | string
+  last?: Prisma.StringFieldUpdateOperationsInput | string
+  nickname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emails?: Prisma.StringFieldUpdateOperationsInput | string
+  emailSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phones?: Prisma.StringFieldUpdateOperationsInput | string
+  birthday?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  closeness?: Prisma.IntFieldUpdateOperationsInput | number
+  tags?: Prisma.StringFieldUpdateOperationsInput | string
+  values?: Prisma.StringFieldUpdateOperationsInput | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  company?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  linkedin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebook?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutPersonsNestedInput
+  interactions?: Prisma.InteractionUpdateManyWithoutPersonNestedInput
+  ownedEraAccounts?: Prisma.EraAccountLinkUpdateManyWithoutOwnerPersonNestedInput
+  stagedInteractions?: Prisma.StagedInteractionUpdateManyWithoutCandidatePersonNestedInput
+  plans?: Prisma.PlanUpdateManyWithoutPersonNestedInput
+  expectedInPlans?: Prisma.PlanExpectedPersonUpdateManyWithoutPersonNestedInput
+  ownedItems?: Prisma.ItemUpdateManyWithoutOwnedByNestedInput
+  assembledBy?: Prisma.AssemblyUpdateManyWithoutAssembledByNestedInput
+  disassembledBy?: Prisma.AssemblyUpdateManyWithoutDisassembledByNestedInput
+  groupMemberships?: Prisma.PersonGroupUpdateManyWithoutPersonNestedInput
+  users?: Prisma.UserUpdateManyWithoutPersonNestedInput
+  apiKeys?: Prisma.ApiKeyUpdateManyWithoutOwnerPersonNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutPersonNestedInput
+  theorySnapshots?: Prisma.TheorySnapshotUpdateManyWithoutSubjectPersonNestedInput
+}
+
+export type PersonUncheckedUpdateWithoutActorInteractionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  first?: Prisma.StringFieldUpdateOperationsInput | string
+  last?: Prisma.StringFieldUpdateOperationsInput | string
+  nickname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emails?: Prisma.StringFieldUpdateOperationsInput | string
+  emailSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phones?: Prisma.StringFieldUpdateOperationsInput | string
+  birthday?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  closeness?: Prisma.IntFieldUpdateOperationsInput | number
+  tags?: Prisma.StringFieldUpdateOperationsInput | string
+  values?: Prisma.StringFieldUpdateOperationsInput | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  company?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  linkedin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebook?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  interactions?: Prisma.InteractionUncheckedUpdateManyWithoutPersonNestedInput
+  ownedEraAccounts?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutOwnerPersonNestedInput
   stagedInteractions?: Prisma.StagedInteractionUncheckedUpdateManyWithoutCandidatePersonNestedInput
   plans?: Prisma.PlanUncheckedUpdateManyWithoutPersonNestedInput
   expectedInPlans?: Prisma.PlanExpectedPersonUncheckedUpdateManyWithoutPersonNestedInput
@@ -2198,6 +2656,8 @@ export type PersonCreateWithoutPlansInput = {
   colorSoft?: string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutPersonsInput
   interactions?: Prisma.InteractionCreateNestedManyWithoutPersonInput
+  actorInteractions?: Prisma.InteractionCreateNestedManyWithoutActorPersonInput
+  ownedEraAccounts?: Prisma.EraAccountLinkCreateNestedManyWithoutOwnerPersonInput
   stagedInteractions?: Prisma.StagedInteractionCreateNestedManyWithoutCandidatePersonInput
   expectedInPlans?: Prisma.PlanExpectedPersonCreateNestedManyWithoutPersonInput
   ownedItems?: Prisma.ItemCreateNestedManyWithoutOwnedByInput
@@ -2238,6 +2698,8 @@ export type PersonUncheckedCreateWithoutPlansInput = {
   color?: string | null
   colorSoft?: string | null
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutPersonInput
+  actorInteractions?: Prisma.InteractionUncheckedCreateNestedManyWithoutActorPersonInput
+  ownedEraAccounts?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutOwnerPersonInput
   stagedInteractions?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutCandidatePersonInput
   expectedInPlans?: Prisma.PlanExpectedPersonUncheckedCreateNestedManyWithoutPersonInput
   ownedItems?: Prisma.ItemUncheckedCreateNestedManyWithoutOwnedByInput
@@ -2294,6 +2756,8 @@ export type PersonUpdateWithoutPlansInput = {
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutPersonsNestedInput
   interactions?: Prisma.InteractionUpdateManyWithoutPersonNestedInput
+  actorInteractions?: Prisma.InteractionUpdateManyWithoutActorPersonNestedInput
+  ownedEraAccounts?: Prisma.EraAccountLinkUpdateManyWithoutOwnerPersonNestedInput
   stagedInteractions?: Prisma.StagedInteractionUpdateManyWithoutCandidatePersonNestedInput
   expectedInPlans?: Prisma.PlanExpectedPersonUpdateManyWithoutPersonNestedInput
   ownedItems?: Prisma.ItemUpdateManyWithoutOwnedByNestedInput
@@ -2334,6 +2798,8 @@ export type PersonUncheckedUpdateWithoutPlansInput = {
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutPersonNestedInput
+  actorInteractions?: Prisma.InteractionUncheckedUpdateManyWithoutActorPersonNestedInput
+  ownedEraAccounts?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutOwnerPersonNestedInput
   stagedInteractions?: Prisma.StagedInteractionUncheckedUpdateManyWithoutCandidatePersonNestedInput
   expectedInPlans?: Prisma.PlanExpectedPersonUncheckedUpdateManyWithoutPersonNestedInput
   ownedItems?: Prisma.ItemUncheckedUpdateManyWithoutOwnedByNestedInput
@@ -2374,6 +2840,8 @@ export type PersonCreateWithoutExpectedInPlansInput = {
   colorSoft?: string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutPersonsInput
   interactions?: Prisma.InteractionCreateNestedManyWithoutPersonInput
+  actorInteractions?: Prisma.InteractionCreateNestedManyWithoutActorPersonInput
+  ownedEraAccounts?: Prisma.EraAccountLinkCreateNestedManyWithoutOwnerPersonInput
   stagedInteractions?: Prisma.StagedInteractionCreateNestedManyWithoutCandidatePersonInput
   plans?: Prisma.PlanCreateNestedManyWithoutPersonInput
   ownedItems?: Prisma.ItemCreateNestedManyWithoutOwnedByInput
@@ -2414,6 +2882,8 @@ export type PersonUncheckedCreateWithoutExpectedInPlansInput = {
   color?: string | null
   colorSoft?: string | null
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutPersonInput
+  actorInteractions?: Prisma.InteractionUncheckedCreateNestedManyWithoutActorPersonInput
+  ownedEraAccounts?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutOwnerPersonInput
   stagedInteractions?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutCandidatePersonInput
   plans?: Prisma.PlanUncheckedCreateNestedManyWithoutPersonInput
   ownedItems?: Prisma.ItemUncheckedCreateNestedManyWithoutOwnedByInput
@@ -2470,6 +2940,8 @@ export type PersonUpdateWithoutExpectedInPlansInput = {
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutPersonsNestedInput
   interactions?: Prisma.InteractionUpdateManyWithoutPersonNestedInput
+  actorInteractions?: Prisma.InteractionUpdateManyWithoutActorPersonNestedInput
+  ownedEraAccounts?: Prisma.EraAccountLinkUpdateManyWithoutOwnerPersonNestedInput
   stagedInteractions?: Prisma.StagedInteractionUpdateManyWithoutCandidatePersonNestedInput
   plans?: Prisma.PlanUpdateManyWithoutPersonNestedInput
   ownedItems?: Prisma.ItemUpdateManyWithoutOwnedByNestedInput
@@ -2510,6 +2982,8 @@ export type PersonUncheckedUpdateWithoutExpectedInPlansInput = {
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutPersonNestedInput
+  actorInteractions?: Prisma.InteractionUncheckedUpdateManyWithoutActorPersonNestedInput
+  ownedEraAccounts?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutOwnerPersonNestedInput
   stagedInteractions?: Prisma.StagedInteractionUncheckedUpdateManyWithoutCandidatePersonNestedInput
   plans?: Prisma.PlanUncheckedUpdateManyWithoutPersonNestedInput
   ownedItems?: Prisma.ItemUncheckedUpdateManyWithoutOwnedByNestedInput
@@ -2550,6 +3024,8 @@ export type PersonCreateWithoutOwnedItemsInput = {
   colorSoft?: string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutPersonsInput
   interactions?: Prisma.InteractionCreateNestedManyWithoutPersonInput
+  actorInteractions?: Prisma.InteractionCreateNestedManyWithoutActorPersonInput
+  ownedEraAccounts?: Prisma.EraAccountLinkCreateNestedManyWithoutOwnerPersonInput
   stagedInteractions?: Prisma.StagedInteractionCreateNestedManyWithoutCandidatePersonInput
   plans?: Prisma.PlanCreateNestedManyWithoutPersonInput
   expectedInPlans?: Prisma.PlanExpectedPersonCreateNestedManyWithoutPersonInput
@@ -2590,6 +3066,8 @@ export type PersonUncheckedCreateWithoutOwnedItemsInput = {
   color?: string | null
   colorSoft?: string | null
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutPersonInput
+  actorInteractions?: Prisma.InteractionUncheckedCreateNestedManyWithoutActorPersonInput
+  ownedEraAccounts?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutOwnerPersonInput
   stagedInteractions?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutCandidatePersonInput
   plans?: Prisma.PlanUncheckedCreateNestedManyWithoutPersonInput
   expectedInPlans?: Prisma.PlanExpectedPersonUncheckedCreateNestedManyWithoutPersonInput
@@ -2646,6 +3124,8 @@ export type PersonUpdateWithoutOwnedItemsInput = {
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutPersonsNestedInput
   interactions?: Prisma.InteractionUpdateManyWithoutPersonNestedInput
+  actorInteractions?: Prisma.InteractionUpdateManyWithoutActorPersonNestedInput
+  ownedEraAccounts?: Prisma.EraAccountLinkUpdateManyWithoutOwnerPersonNestedInput
   stagedInteractions?: Prisma.StagedInteractionUpdateManyWithoutCandidatePersonNestedInput
   plans?: Prisma.PlanUpdateManyWithoutPersonNestedInput
   expectedInPlans?: Prisma.PlanExpectedPersonUpdateManyWithoutPersonNestedInput
@@ -2686,6 +3166,8 @@ export type PersonUncheckedUpdateWithoutOwnedItemsInput = {
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutPersonNestedInput
+  actorInteractions?: Prisma.InteractionUncheckedUpdateManyWithoutActorPersonNestedInput
+  ownedEraAccounts?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutOwnerPersonNestedInput
   stagedInteractions?: Prisma.StagedInteractionUncheckedUpdateManyWithoutCandidatePersonNestedInput
   plans?: Prisma.PlanUncheckedUpdateManyWithoutPersonNestedInput
   expectedInPlans?: Prisma.PlanExpectedPersonUncheckedUpdateManyWithoutPersonNestedInput
@@ -2726,6 +3208,8 @@ export type PersonCreateWithoutAssembledByInput = {
   colorSoft?: string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutPersonsInput
   interactions?: Prisma.InteractionCreateNestedManyWithoutPersonInput
+  actorInteractions?: Prisma.InteractionCreateNestedManyWithoutActorPersonInput
+  ownedEraAccounts?: Prisma.EraAccountLinkCreateNestedManyWithoutOwnerPersonInput
   stagedInteractions?: Prisma.StagedInteractionCreateNestedManyWithoutCandidatePersonInput
   plans?: Prisma.PlanCreateNestedManyWithoutPersonInput
   expectedInPlans?: Prisma.PlanExpectedPersonCreateNestedManyWithoutPersonInput
@@ -2766,6 +3250,8 @@ export type PersonUncheckedCreateWithoutAssembledByInput = {
   color?: string | null
   colorSoft?: string | null
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutPersonInput
+  actorInteractions?: Prisma.InteractionUncheckedCreateNestedManyWithoutActorPersonInput
+  ownedEraAccounts?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutOwnerPersonInput
   stagedInteractions?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutCandidatePersonInput
   plans?: Prisma.PlanUncheckedCreateNestedManyWithoutPersonInput
   expectedInPlans?: Prisma.PlanExpectedPersonUncheckedCreateNestedManyWithoutPersonInput
@@ -2811,6 +3297,8 @@ export type PersonCreateWithoutDisassembledByInput = {
   colorSoft?: string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutPersonsInput
   interactions?: Prisma.InteractionCreateNestedManyWithoutPersonInput
+  actorInteractions?: Prisma.InteractionCreateNestedManyWithoutActorPersonInput
+  ownedEraAccounts?: Prisma.EraAccountLinkCreateNestedManyWithoutOwnerPersonInput
   stagedInteractions?: Prisma.StagedInteractionCreateNestedManyWithoutCandidatePersonInput
   plans?: Prisma.PlanCreateNestedManyWithoutPersonInput
   expectedInPlans?: Prisma.PlanExpectedPersonCreateNestedManyWithoutPersonInput
@@ -2851,6 +3339,8 @@ export type PersonUncheckedCreateWithoutDisassembledByInput = {
   color?: string | null
   colorSoft?: string | null
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutPersonInput
+  actorInteractions?: Prisma.InteractionUncheckedCreateNestedManyWithoutActorPersonInput
+  ownedEraAccounts?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutOwnerPersonInput
   stagedInteractions?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutCandidatePersonInput
   plans?: Prisma.PlanUncheckedCreateNestedManyWithoutPersonInput
   expectedInPlans?: Prisma.PlanExpectedPersonUncheckedCreateNestedManyWithoutPersonInput
@@ -2907,6 +3397,8 @@ export type PersonUpdateWithoutAssembledByInput = {
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutPersonsNestedInput
   interactions?: Prisma.InteractionUpdateManyWithoutPersonNestedInput
+  actorInteractions?: Prisma.InteractionUpdateManyWithoutActorPersonNestedInput
+  ownedEraAccounts?: Prisma.EraAccountLinkUpdateManyWithoutOwnerPersonNestedInput
   stagedInteractions?: Prisma.StagedInteractionUpdateManyWithoutCandidatePersonNestedInput
   plans?: Prisma.PlanUpdateManyWithoutPersonNestedInput
   expectedInPlans?: Prisma.PlanExpectedPersonUpdateManyWithoutPersonNestedInput
@@ -2947,6 +3439,8 @@ export type PersonUncheckedUpdateWithoutAssembledByInput = {
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutPersonNestedInput
+  actorInteractions?: Prisma.InteractionUncheckedUpdateManyWithoutActorPersonNestedInput
+  ownedEraAccounts?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutOwnerPersonNestedInput
   stagedInteractions?: Prisma.StagedInteractionUncheckedUpdateManyWithoutCandidatePersonNestedInput
   plans?: Prisma.PlanUncheckedUpdateManyWithoutPersonNestedInput
   expectedInPlans?: Prisma.PlanExpectedPersonUncheckedUpdateManyWithoutPersonNestedInput
@@ -2998,6 +3492,8 @@ export type PersonUpdateWithoutDisassembledByInput = {
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutPersonsNestedInput
   interactions?: Prisma.InteractionUpdateManyWithoutPersonNestedInput
+  actorInteractions?: Prisma.InteractionUpdateManyWithoutActorPersonNestedInput
+  ownedEraAccounts?: Prisma.EraAccountLinkUpdateManyWithoutOwnerPersonNestedInput
   stagedInteractions?: Prisma.StagedInteractionUpdateManyWithoutCandidatePersonNestedInput
   plans?: Prisma.PlanUpdateManyWithoutPersonNestedInput
   expectedInPlans?: Prisma.PlanExpectedPersonUpdateManyWithoutPersonNestedInput
@@ -3038,6 +3534,8 @@ export type PersonUncheckedUpdateWithoutDisassembledByInput = {
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutPersonNestedInput
+  actorInteractions?: Prisma.InteractionUncheckedUpdateManyWithoutActorPersonNestedInput
+  ownedEraAccounts?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutOwnerPersonNestedInput
   stagedInteractions?: Prisma.StagedInteractionUncheckedUpdateManyWithoutCandidatePersonNestedInput
   plans?: Prisma.PlanUncheckedUpdateManyWithoutPersonNestedInput
   expectedInPlans?: Prisma.PlanExpectedPersonUncheckedUpdateManyWithoutPersonNestedInput
@@ -3078,6 +3576,8 @@ export type PersonCreateWithoutGroupMembershipsInput = {
   colorSoft?: string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutPersonsInput
   interactions?: Prisma.InteractionCreateNestedManyWithoutPersonInput
+  actorInteractions?: Prisma.InteractionCreateNestedManyWithoutActorPersonInput
+  ownedEraAccounts?: Prisma.EraAccountLinkCreateNestedManyWithoutOwnerPersonInput
   stagedInteractions?: Prisma.StagedInteractionCreateNestedManyWithoutCandidatePersonInput
   plans?: Prisma.PlanCreateNestedManyWithoutPersonInput
   expectedInPlans?: Prisma.PlanExpectedPersonCreateNestedManyWithoutPersonInput
@@ -3118,6 +3618,8 @@ export type PersonUncheckedCreateWithoutGroupMembershipsInput = {
   color?: string | null
   colorSoft?: string | null
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutPersonInput
+  actorInteractions?: Prisma.InteractionUncheckedCreateNestedManyWithoutActorPersonInput
+  ownedEraAccounts?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutOwnerPersonInput
   stagedInteractions?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutCandidatePersonInput
   plans?: Prisma.PlanUncheckedCreateNestedManyWithoutPersonInput
   expectedInPlans?: Prisma.PlanExpectedPersonUncheckedCreateNestedManyWithoutPersonInput
@@ -3174,6 +3676,8 @@ export type PersonUpdateWithoutGroupMembershipsInput = {
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutPersonsNestedInput
   interactions?: Prisma.InteractionUpdateManyWithoutPersonNestedInput
+  actorInteractions?: Prisma.InteractionUpdateManyWithoutActorPersonNestedInput
+  ownedEraAccounts?: Prisma.EraAccountLinkUpdateManyWithoutOwnerPersonNestedInput
   stagedInteractions?: Prisma.StagedInteractionUpdateManyWithoutCandidatePersonNestedInput
   plans?: Prisma.PlanUpdateManyWithoutPersonNestedInput
   expectedInPlans?: Prisma.PlanExpectedPersonUpdateManyWithoutPersonNestedInput
@@ -3214,6 +3718,8 @@ export type PersonUncheckedUpdateWithoutGroupMembershipsInput = {
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutPersonNestedInput
+  actorInteractions?: Prisma.InteractionUncheckedUpdateManyWithoutActorPersonNestedInput
+  ownedEraAccounts?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutOwnerPersonNestedInput
   stagedInteractions?: Prisma.StagedInteractionUncheckedUpdateManyWithoutCandidatePersonNestedInput
   plans?: Prisma.PlanUncheckedUpdateManyWithoutPersonNestedInput
   expectedInPlans?: Prisma.PlanExpectedPersonUncheckedUpdateManyWithoutPersonNestedInput
@@ -3254,6 +3760,8 @@ export type PersonCreateWithoutTheorySnapshotsInput = {
   colorSoft?: string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutPersonsInput
   interactions?: Prisma.InteractionCreateNestedManyWithoutPersonInput
+  actorInteractions?: Prisma.InteractionCreateNestedManyWithoutActorPersonInput
+  ownedEraAccounts?: Prisma.EraAccountLinkCreateNestedManyWithoutOwnerPersonInput
   stagedInteractions?: Prisma.StagedInteractionCreateNestedManyWithoutCandidatePersonInput
   plans?: Prisma.PlanCreateNestedManyWithoutPersonInput
   expectedInPlans?: Prisma.PlanExpectedPersonCreateNestedManyWithoutPersonInput
@@ -3294,6 +3802,8 @@ export type PersonUncheckedCreateWithoutTheorySnapshotsInput = {
   color?: string | null
   colorSoft?: string | null
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutPersonInput
+  actorInteractions?: Prisma.InteractionUncheckedCreateNestedManyWithoutActorPersonInput
+  ownedEraAccounts?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutOwnerPersonInput
   stagedInteractions?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutCandidatePersonInput
   plans?: Prisma.PlanUncheckedCreateNestedManyWithoutPersonInput
   expectedInPlans?: Prisma.PlanExpectedPersonUncheckedCreateNestedManyWithoutPersonInput
@@ -3350,6 +3860,8 @@ export type PersonUpdateWithoutTheorySnapshotsInput = {
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutPersonsNestedInput
   interactions?: Prisma.InteractionUpdateManyWithoutPersonNestedInput
+  actorInteractions?: Prisma.InteractionUpdateManyWithoutActorPersonNestedInput
+  ownedEraAccounts?: Prisma.EraAccountLinkUpdateManyWithoutOwnerPersonNestedInput
   stagedInteractions?: Prisma.StagedInteractionUpdateManyWithoutCandidatePersonNestedInput
   plans?: Prisma.PlanUpdateManyWithoutPersonNestedInput
   expectedInPlans?: Prisma.PlanExpectedPersonUpdateManyWithoutPersonNestedInput
@@ -3390,6 +3902,8 @@ export type PersonUncheckedUpdateWithoutTheorySnapshotsInput = {
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutPersonNestedInput
+  actorInteractions?: Prisma.InteractionUncheckedUpdateManyWithoutActorPersonNestedInput
+  ownedEraAccounts?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutOwnerPersonNestedInput
   stagedInteractions?: Prisma.StagedInteractionUncheckedUpdateManyWithoutCandidatePersonNestedInput
   plans?: Prisma.PlanUncheckedUpdateManyWithoutPersonNestedInput
   expectedInPlans?: Prisma.PlanExpectedPersonUncheckedUpdateManyWithoutPersonNestedInput
@@ -3457,6 +3971,8 @@ export type PersonUpdateWithoutWorkspaceInput = {
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   interactions?: Prisma.InteractionUpdateManyWithoutPersonNestedInput
+  actorInteractions?: Prisma.InteractionUpdateManyWithoutActorPersonNestedInput
+  ownedEraAccounts?: Prisma.EraAccountLinkUpdateManyWithoutOwnerPersonNestedInput
   stagedInteractions?: Prisma.StagedInteractionUpdateManyWithoutCandidatePersonNestedInput
   plans?: Prisma.PlanUpdateManyWithoutPersonNestedInput
   expectedInPlans?: Prisma.PlanExpectedPersonUpdateManyWithoutPersonNestedInput
@@ -3497,6 +4013,8 @@ export type PersonUncheckedUpdateWithoutWorkspaceInput = {
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutPersonNestedInput
+  actorInteractions?: Prisma.InteractionUncheckedUpdateManyWithoutActorPersonNestedInput
+  ownedEraAccounts?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutOwnerPersonNestedInput
   stagedInteractions?: Prisma.StagedInteractionUncheckedUpdateManyWithoutCandidatePersonNestedInput
   plans?: Prisma.PlanUncheckedUpdateManyWithoutPersonNestedInput
   expectedInPlans?: Prisma.PlanExpectedPersonUncheckedUpdateManyWithoutPersonNestedInput
@@ -3545,6 +4063,8 @@ export type PersonUncheckedUpdateManyWithoutWorkspaceInput = {
 
 export type PersonCountOutputType = {
   interactions: number
+  actorInteractions: number
+  ownedEraAccounts: number
   stagedInteractions: number
   plans: number
   expectedInPlans: number
@@ -3560,6 +4080,8 @@ export type PersonCountOutputType = {
 
 export type PersonCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   interactions?: boolean | PersonCountOutputTypeCountInteractionsArgs
+  actorInteractions?: boolean | PersonCountOutputTypeCountActorInteractionsArgs
+  ownedEraAccounts?: boolean | PersonCountOutputTypeCountOwnedEraAccountsArgs
   stagedInteractions?: boolean | PersonCountOutputTypeCountStagedInteractionsArgs
   plans?: boolean | PersonCountOutputTypeCountPlansArgs
   expectedInPlans?: boolean | PersonCountOutputTypeCountExpectedInPlansArgs
@@ -3588,6 +4110,20 @@ export type PersonCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Exten
  */
 export type PersonCountOutputTypeCountInteractionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.InteractionWhereInput
+}
+
+/**
+ * PersonCountOutputType without action
+ */
+export type PersonCountOutputTypeCountActorInteractionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.InteractionWhereInput
+}
+
+/**
+ * PersonCountOutputType without action
+ */
+export type PersonCountOutputTypeCountOwnedEraAccountsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.EraAccountLinkWhereInput
 }
 
 /**
@@ -3697,6 +4233,8 @@ export type PersonSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   colorSoft?: boolean
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   interactions?: boolean | Prisma.Person$interactionsArgs<ExtArgs>
+  actorInteractions?: boolean | Prisma.Person$actorInteractionsArgs<ExtArgs>
+  ownedEraAccounts?: boolean | Prisma.Person$ownedEraAccountsArgs<ExtArgs>
   stagedInteractions?: boolean | Prisma.Person$stagedInteractionsArgs<ExtArgs>
   plans?: boolean | Prisma.Person$plansArgs<ExtArgs>
   expectedInPlans?: boolean | Prisma.Person$expectedInPlansArgs<ExtArgs>
@@ -3804,6 +4342,8 @@ export type PersonOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
 export type PersonInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   interactions?: boolean | Prisma.Person$interactionsArgs<ExtArgs>
+  actorInteractions?: boolean | Prisma.Person$actorInteractionsArgs<ExtArgs>
+  ownedEraAccounts?: boolean | Prisma.Person$ownedEraAccountsArgs<ExtArgs>
   stagedInteractions?: boolean | Prisma.Person$stagedInteractionsArgs<ExtArgs>
   plans?: boolean | Prisma.Person$plansArgs<ExtArgs>
   expectedInPlans?: boolean | Prisma.Person$expectedInPlansArgs<ExtArgs>
@@ -3829,6 +4369,8 @@ export type $PersonPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
   objects: {
     workspace: Prisma.$WorkspacePayload<ExtArgs>
     interactions: Prisma.$InteractionPayload<ExtArgs>[]
+    actorInteractions: Prisma.$InteractionPayload<ExtArgs>[]
+    ownedEraAccounts: Prisma.$EraAccountLinkPayload<ExtArgs>[]
     stagedInteractions: Prisma.$StagedInteractionPayload<ExtArgs>[]
     plans: Prisma.$PlanPayload<ExtArgs>[]
     expectedInPlans: Prisma.$PlanExpectedPersonPayload<ExtArgs>[]
@@ -4264,6 +4806,8 @@ export interface Prisma__PersonClient<T, Null = never, ExtArgs extends runtime.T
   readonly [Symbol.toStringTag]: "PrismaPromise"
   workspace<T extends Prisma.WorkspaceDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WorkspaceDefaultArgs<ExtArgs>>): Prisma.Prisma__WorkspaceClient<runtime.Types.Result.GetResult<Prisma.$WorkspacePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   interactions<T extends Prisma.Person$interactionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Person$interactionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InteractionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  actorInteractions<T extends Prisma.Person$actorInteractionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Person$actorInteractionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InteractionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  ownedEraAccounts<T extends Prisma.Person$ownedEraAccountsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Person$ownedEraAccountsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EraAccountLinkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   stagedInteractions<T extends Prisma.Person$stagedInteractionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Person$stagedInteractionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StagedInteractionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   plans<T extends Prisma.Person$plansArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Person$plansArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PlanPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   expectedInPlans<T extends Prisma.Person$expectedInPlansArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Person$expectedInPlansArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PlanExpectedPersonPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -4750,6 +5294,54 @@ export type Person$interactionsArgs<ExtArgs extends runtime.Types.Extensions.Int
   take?: number
   skip?: number
   distinct?: Prisma.InteractionScalarFieldEnum | Prisma.InteractionScalarFieldEnum[]
+}
+
+/**
+ * Person.actorInteractions
+ */
+export type Person$actorInteractionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Interaction
+   */
+  select?: Prisma.InteractionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Interaction
+   */
+  omit?: Prisma.InteractionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.InteractionInclude<ExtArgs> | null
+  where?: Prisma.InteractionWhereInput
+  orderBy?: Prisma.InteractionOrderByWithRelationInput | Prisma.InteractionOrderByWithRelationInput[]
+  cursor?: Prisma.InteractionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.InteractionScalarFieldEnum | Prisma.InteractionScalarFieldEnum[]
+}
+
+/**
+ * Person.ownedEraAccounts
+ */
+export type Person$ownedEraAccountsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the EraAccountLink
+   */
+  select?: Prisma.EraAccountLinkSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the EraAccountLink
+   */
+  omit?: Prisma.EraAccountLinkOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.EraAccountLinkInclude<ExtArgs> | null
+  where?: Prisma.EraAccountLinkWhereInput
+  orderBy?: Prisma.EraAccountLinkOrderByWithRelationInput | Prisma.EraAccountLinkOrderByWithRelationInput[]
+  cursor?: Prisma.EraAccountLinkWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.EraAccountLinkScalarFieldEnum | Prisma.EraAccountLinkScalarFieldEnum[]
 }
 
 /**

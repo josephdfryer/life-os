@@ -37,6 +37,9 @@ export type EraAccountLinkMinAggregateOutputType = {
   currency: string | null
   status: string | null
   lastSeenAt: Date | null
+  ownerPersonId: string | null
+  householdGroupId: string | null
+  isShared: boolean | null
 }
 
 export type EraAccountLinkMaxAggregateOutputType = {
@@ -52,6 +55,9 @@ export type EraAccountLinkMaxAggregateOutputType = {
   currency: string | null
   status: string | null
   lastSeenAt: Date | null
+  ownerPersonId: string | null
+  householdGroupId: string | null
+  isShared: boolean | null
 }
 
 export type EraAccountLinkCountAggregateOutputType = {
@@ -67,6 +73,9 @@ export type EraAccountLinkCountAggregateOutputType = {
   currency: number
   status: number
   lastSeenAt: number
+  ownerPersonId: number
+  householdGroupId: number
+  isShared: number
   _all: number
 }
 
@@ -84,6 +93,9 @@ export type EraAccountLinkMinAggregateInputType = {
   currency?: true
   status?: true
   lastSeenAt?: true
+  ownerPersonId?: true
+  householdGroupId?: true
+  isShared?: true
 }
 
 export type EraAccountLinkMaxAggregateInputType = {
@@ -99,6 +111,9 @@ export type EraAccountLinkMaxAggregateInputType = {
   currency?: true
   status?: true
   lastSeenAt?: true
+  ownerPersonId?: true
+  householdGroupId?: true
+  isShared?: true
 }
 
 export type EraAccountLinkCountAggregateInputType = {
@@ -114,6 +129,9 @@ export type EraAccountLinkCountAggregateInputType = {
   currency?: true
   status?: true
   lastSeenAt?: true
+  ownerPersonId?: true
+  householdGroupId?: true
+  isShared?: true
   _all?: true
 }
 
@@ -202,6 +220,9 @@ export type EraAccountLinkGroupByOutputType = {
   currency: string | null
   status: string
   lastSeenAt: Date | null
+  ownerPersonId: string | null
+  householdGroupId: string | null
+  isShared: boolean
   _count: EraAccountLinkCountAggregateOutputType | null
   _min: EraAccountLinkMinAggregateOutputType | null
   _max: EraAccountLinkMaxAggregateOutputType | null
@@ -238,9 +259,15 @@ export type EraAccountLinkWhereInput = {
   currency?: Prisma.StringNullableFilter<"EraAccountLink"> | string | null
   status?: Prisma.StringFilter<"EraAccountLink"> | string
   lastSeenAt?: Prisma.DateTimeNullableFilter<"EraAccountLink"> | Date | string | null
+  ownerPersonId?: Prisma.StringNullableFilter<"EraAccountLink"> | string | null
+  householdGroupId?: Prisma.StringNullableFilter<"EraAccountLink"> | string | null
+  isShared?: Prisma.BoolFilter<"EraAccountLink"> | boolean
   workspace?: Prisma.XOR<Prisma.WorkspaceScalarRelationFilter, Prisma.WorkspaceWhereInput>
   connection?: Prisma.XOR<Prisma.EraConnectionScalarRelationFilter, Prisma.EraConnectionWhereInput>
   transactionLinks?: Prisma.EraTransactionLinkListRelationFilter
+  ownerPerson?: Prisma.XOR<Prisma.PersonNullableScalarRelationFilter, Prisma.PersonWhereInput> | null
+  householdGroup?: Prisma.XOR<Prisma.GroupNullableScalarRelationFilter, Prisma.GroupWhereInput> | null
+  interactions?: Prisma.InteractionListRelationFilter
 }
 
 export type EraAccountLinkOrderByWithRelationInput = {
@@ -256,9 +283,15 @@ export type EraAccountLinkOrderByWithRelationInput = {
   currency?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   lastSeenAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  ownerPersonId?: Prisma.SortOrderInput | Prisma.SortOrder
+  householdGroupId?: Prisma.SortOrderInput | Prisma.SortOrder
+  isShared?: Prisma.SortOrder
   workspace?: Prisma.WorkspaceOrderByWithRelationInput
   connection?: Prisma.EraConnectionOrderByWithRelationInput
   transactionLinks?: Prisma.EraTransactionLinkOrderByRelationAggregateInput
+  ownerPerson?: Prisma.PersonOrderByWithRelationInput
+  householdGroup?: Prisma.GroupOrderByWithRelationInput
+  interactions?: Prisma.InteractionOrderByRelationAggregateInput
 }
 
 export type EraAccountLinkWhereUniqueInput = Prisma.AtLeast<{
@@ -278,9 +311,15 @@ export type EraAccountLinkWhereUniqueInput = Prisma.AtLeast<{
   currency?: Prisma.StringNullableFilter<"EraAccountLink"> | string | null
   status?: Prisma.StringFilter<"EraAccountLink"> | string
   lastSeenAt?: Prisma.DateTimeNullableFilter<"EraAccountLink"> | Date | string | null
+  ownerPersonId?: Prisma.StringNullableFilter<"EraAccountLink"> | string | null
+  householdGroupId?: Prisma.StringNullableFilter<"EraAccountLink"> | string | null
+  isShared?: Prisma.BoolFilter<"EraAccountLink"> | boolean
   workspace?: Prisma.XOR<Prisma.WorkspaceScalarRelationFilter, Prisma.WorkspaceWhereInput>
   connection?: Prisma.XOR<Prisma.EraConnectionScalarRelationFilter, Prisma.EraConnectionWhereInput>
   transactionLinks?: Prisma.EraTransactionLinkListRelationFilter
+  ownerPerson?: Prisma.XOR<Prisma.PersonNullableScalarRelationFilter, Prisma.PersonWhereInput> | null
+  householdGroup?: Prisma.XOR<Prisma.GroupNullableScalarRelationFilter, Prisma.GroupWhereInput> | null
+  interactions?: Prisma.InteractionListRelationFilter
 }, "id" | "workspaceId_eraAccountId">
 
 export type EraAccountLinkOrderByWithAggregationInput = {
@@ -296,6 +335,9 @@ export type EraAccountLinkOrderByWithAggregationInput = {
   currency?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   lastSeenAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  ownerPersonId?: Prisma.SortOrderInput | Prisma.SortOrder
+  householdGroupId?: Prisma.SortOrderInput | Prisma.SortOrder
+  isShared?: Prisma.SortOrder
   _count?: Prisma.EraAccountLinkCountOrderByAggregateInput
   _max?: Prisma.EraAccountLinkMaxOrderByAggregateInput
   _min?: Prisma.EraAccountLinkMinOrderByAggregateInput
@@ -317,6 +359,9 @@ export type EraAccountLinkScalarWhereWithAggregatesInput = {
   currency?: Prisma.StringNullableWithAggregatesFilter<"EraAccountLink"> | string | null
   status?: Prisma.StringWithAggregatesFilter<"EraAccountLink"> | string
   lastSeenAt?: Prisma.DateTimeNullableWithAggregatesFilter<"EraAccountLink"> | Date | string | null
+  ownerPersonId?: Prisma.StringNullableWithAggregatesFilter<"EraAccountLink"> | string | null
+  householdGroupId?: Prisma.StringNullableWithAggregatesFilter<"EraAccountLink"> | string | null
+  isShared?: Prisma.BoolWithAggregatesFilter<"EraAccountLink"> | boolean
 }
 
 export type EraAccountLinkCreateInput = {
@@ -330,9 +375,13 @@ export type EraAccountLinkCreateInput = {
   currency?: string | null
   status?: string
   lastSeenAt?: Date | string | null
+  isShared?: boolean
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutEraAccountLinksInput
   connection: Prisma.EraConnectionCreateNestedOneWithoutAccountLinksInput
   transactionLinks?: Prisma.EraTransactionLinkCreateNestedManyWithoutAccountLinkInput
+  ownerPerson?: Prisma.PersonCreateNestedOneWithoutOwnedEraAccountsInput
+  householdGroup?: Prisma.GroupCreateNestedOneWithoutEraAccountsInput
+  interactions?: Prisma.InteractionCreateNestedManyWithoutAccountLinkInput
 }
 
 export type EraAccountLinkUncheckedCreateInput = {
@@ -348,7 +397,11 @@ export type EraAccountLinkUncheckedCreateInput = {
   currency?: string | null
   status?: string
   lastSeenAt?: Date | string | null
+  ownerPersonId?: string | null
+  householdGroupId?: string | null
+  isShared?: boolean
   transactionLinks?: Prisma.EraTransactionLinkUncheckedCreateNestedManyWithoutAccountLinkInput
+  interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutAccountLinkInput
 }
 
 export type EraAccountLinkUpdateInput = {
@@ -362,9 +415,13 @@ export type EraAccountLinkUpdateInput = {
   currency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isShared?: Prisma.BoolFieldUpdateOperationsInput | boolean
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutEraAccountLinksNestedInput
   connection?: Prisma.EraConnectionUpdateOneRequiredWithoutAccountLinksNestedInput
   transactionLinks?: Prisma.EraTransactionLinkUpdateManyWithoutAccountLinkNestedInput
+  ownerPerson?: Prisma.PersonUpdateOneWithoutOwnedEraAccountsNestedInput
+  householdGroup?: Prisma.GroupUpdateOneWithoutEraAccountsNestedInput
+  interactions?: Prisma.InteractionUpdateManyWithoutAccountLinkNestedInput
 }
 
 export type EraAccountLinkUncheckedUpdateInput = {
@@ -380,7 +437,11 @@ export type EraAccountLinkUncheckedUpdateInput = {
   currency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ownerPersonId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  householdGroupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isShared?: Prisma.BoolFieldUpdateOperationsInput | boolean
   transactionLinks?: Prisma.EraTransactionLinkUncheckedUpdateManyWithoutAccountLinkNestedInput
+  interactions?: Prisma.InteractionUncheckedUpdateManyWithoutAccountLinkNestedInput
 }
 
 export type EraAccountLinkCreateManyInput = {
@@ -396,6 +457,9 @@ export type EraAccountLinkCreateManyInput = {
   currency?: string | null
   status?: string
   lastSeenAt?: Date | string | null
+  ownerPersonId?: string | null
+  householdGroupId?: string | null
+  isShared?: boolean
 }
 
 export type EraAccountLinkUpdateManyMutationInput = {
@@ -409,6 +473,7 @@ export type EraAccountLinkUpdateManyMutationInput = {
   currency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isShared?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type EraAccountLinkUncheckedUpdateManyInput = {
@@ -424,6 +489,9 @@ export type EraAccountLinkUncheckedUpdateManyInput = {
   currency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ownerPersonId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  householdGroupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isShared?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type EraAccountLinkListRelationFilter = {
@@ -454,6 +522,9 @@ export type EraAccountLinkCountOrderByAggregateInput = {
   currency?: Prisma.SortOrder
   status?: Prisma.SortOrder
   lastSeenAt?: Prisma.SortOrder
+  ownerPersonId?: Prisma.SortOrder
+  householdGroupId?: Prisma.SortOrder
+  isShared?: Prisma.SortOrder
 }
 
 export type EraAccountLinkMaxOrderByAggregateInput = {
@@ -469,6 +540,9 @@ export type EraAccountLinkMaxOrderByAggregateInput = {
   currency?: Prisma.SortOrder
   status?: Prisma.SortOrder
   lastSeenAt?: Prisma.SortOrder
+  ownerPersonId?: Prisma.SortOrder
+  householdGroupId?: Prisma.SortOrder
+  isShared?: Prisma.SortOrder
 }
 
 export type EraAccountLinkMinOrderByAggregateInput = {
@@ -484,6 +558,9 @@ export type EraAccountLinkMinOrderByAggregateInput = {
   currency?: Prisma.SortOrder
   status?: Prisma.SortOrder
   lastSeenAt?: Prisma.SortOrder
+  ownerPersonId?: Prisma.SortOrder
+  householdGroupId?: Prisma.SortOrder
+  isShared?: Prisma.SortOrder
 }
 
 export type EraAccountLinkNullableScalarRelationFilter = {
@@ -533,6 +610,48 @@ export type EraAccountLinkUncheckedUpdateManyWithoutWorkspaceNestedInput = {
   deleteMany?: Prisma.EraAccountLinkScalarWhereInput | Prisma.EraAccountLinkScalarWhereInput[]
 }
 
+export type EraAccountLinkCreateNestedManyWithoutOwnerPersonInput = {
+  create?: Prisma.XOR<Prisma.EraAccountLinkCreateWithoutOwnerPersonInput, Prisma.EraAccountLinkUncheckedCreateWithoutOwnerPersonInput> | Prisma.EraAccountLinkCreateWithoutOwnerPersonInput[] | Prisma.EraAccountLinkUncheckedCreateWithoutOwnerPersonInput[]
+  connectOrCreate?: Prisma.EraAccountLinkCreateOrConnectWithoutOwnerPersonInput | Prisma.EraAccountLinkCreateOrConnectWithoutOwnerPersonInput[]
+  createMany?: Prisma.EraAccountLinkCreateManyOwnerPersonInputEnvelope
+  connect?: Prisma.EraAccountLinkWhereUniqueInput | Prisma.EraAccountLinkWhereUniqueInput[]
+}
+
+export type EraAccountLinkUncheckedCreateNestedManyWithoutOwnerPersonInput = {
+  create?: Prisma.XOR<Prisma.EraAccountLinkCreateWithoutOwnerPersonInput, Prisma.EraAccountLinkUncheckedCreateWithoutOwnerPersonInput> | Prisma.EraAccountLinkCreateWithoutOwnerPersonInput[] | Prisma.EraAccountLinkUncheckedCreateWithoutOwnerPersonInput[]
+  connectOrCreate?: Prisma.EraAccountLinkCreateOrConnectWithoutOwnerPersonInput | Prisma.EraAccountLinkCreateOrConnectWithoutOwnerPersonInput[]
+  createMany?: Prisma.EraAccountLinkCreateManyOwnerPersonInputEnvelope
+  connect?: Prisma.EraAccountLinkWhereUniqueInput | Prisma.EraAccountLinkWhereUniqueInput[]
+}
+
+export type EraAccountLinkUpdateManyWithoutOwnerPersonNestedInput = {
+  create?: Prisma.XOR<Prisma.EraAccountLinkCreateWithoutOwnerPersonInput, Prisma.EraAccountLinkUncheckedCreateWithoutOwnerPersonInput> | Prisma.EraAccountLinkCreateWithoutOwnerPersonInput[] | Prisma.EraAccountLinkUncheckedCreateWithoutOwnerPersonInput[]
+  connectOrCreate?: Prisma.EraAccountLinkCreateOrConnectWithoutOwnerPersonInput | Prisma.EraAccountLinkCreateOrConnectWithoutOwnerPersonInput[]
+  upsert?: Prisma.EraAccountLinkUpsertWithWhereUniqueWithoutOwnerPersonInput | Prisma.EraAccountLinkUpsertWithWhereUniqueWithoutOwnerPersonInput[]
+  createMany?: Prisma.EraAccountLinkCreateManyOwnerPersonInputEnvelope
+  set?: Prisma.EraAccountLinkWhereUniqueInput | Prisma.EraAccountLinkWhereUniqueInput[]
+  disconnect?: Prisma.EraAccountLinkWhereUniqueInput | Prisma.EraAccountLinkWhereUniqueInput[]
+  delete?: Prisma.EraAccountLinkWhereUniqueInput | Prisma.EraAccountLinkWhereUniqueInput[]
+  connect?: Prisma.EraAccountLinkWhereUniqueInput | Prisma.EraAccountLinkWhereUniqueInput[]
+  update?: Prisma.EraAccountLinkUpdateWithWhereUniqueWithoutOwnerPersonInput | Prisma.EraAccountLinkUpdateWithWhereUniqueWithoutOwnerPersonInput[]
+  updateMany?: Prisma.EraAccountLinkUpdateManyWithWhereWithoutOwnerPersonInput | Prisma.EraAccountLinkUpdateManyWithWhereWithoutOwnerPersonInput[]
+  deleteMany?: Prisma.EraAccountLinkScalarWhereInput | Prisma.EraAccountLinkScalarWhereInput[]
+}
+
+export type EraAccountLinkUncheckedUpdateManyWithoutOwnerPersonNestedInput = {
+  create?: Prisma.XOR<Prisma.EraAccountLinkCreateWithoutOwnerPersonInput, Prisma.EraAccountLinkUncheckedCreateWithoutOwnerPersonInput> | Prisma.EraAccountLinkCreateWithoutOwnerPersonInput[] | Prisma.EraAccountLinkUncheckedCreateWithoutOwnerPersonInput[]
+  connectOrCreate?: Prisma.EraAccountLinkCreateOrConnectWithoutOwnerPersonInput | Prisma.EraAccountLinkCreateOrConnectWithoutOwnerPersonInput[]
+  upsert?: Prisma.EraAccountLinkUpsertWithWhereUniqueWithoutOwnerPersonInput | Prisma.EraAccountLinkUpsertWithWhereUniqueWithoutOwnerPersonInput[]
+  createMany?: Prisma.EraAccountLinkCreateManyOwnerPersonInputEnvelope
+  set?: Prisma.EraAccountLinkWhereUniqueInput | Prisma.EraAccountLinkWhereUniqueInput[]
+  disconnect?: Prisma.EraAccountLinkWhereUniqueInput | Prisma.EraAccountLinkWhereUniqueInput[]
+  delete?: Prisma.EraAccountLinkWhereUniqueInput | Prisma.EraAccountLinkWhereUniqueInput[]
+  connect?: Prisma.EraAccountLinkWhereUniqueInput | Prisma.EraAccountLinkWhereUniqueInput[]
+  update?: Prisma.EraAccountLinkUpdateWithWhereUniqueWithoutOwnerPersonInput | Prisma.EraAccountLinkUpdateWithWhereUniqueWithoutOwnerPersonInput[]
+  updateMany?: Prisma.EraAccountLinkUpdateManyWithWhereWithoutOwnerPersonInput | Prisma.EraAccountLinkUpdateManyWithWhereWithoutOwnerPersonInput[]
+  deleteMany?: Prisma.EraAccountLinkScalarWhereInput | Prisma.EraAccountLinkScalarWhereInput[]
+}
+
 export type EraAccountLinkCreateNestedManyWithoutConnectionInput = {
   create?: Prisma.XOR<Prisma.EraAccountLinkCreateWithoutConnectionInput, Prisma.EraAccountLinkUncheckedCreateWithoutConnectionInput> | Prisma.EraAccountLinkCreateWithoutConnectionInput[] | Prisma.EraAccountLinkUncheckedCreateWithoutConnectionInput[]
   connectOrCreate?: Prisma.EraAccountLinkCreateOrConnectWithoutConnectionInput | Prisma.EraAccountLinkCreateOrConnectWithoutConnectionInput[]
@@ -575,6 +694,10 @@ export type EraAccountLinkUncheckedUpdateManyWithoutConnectionNestedInput = {
   deleteMany?: Prisma.EraAccountLinkScalarWhereInput | Prisma.EraAccountLinkScalarWhereInput[]
 }
 
+export type BoolFieldUpdateOperationsInput = {
+  set?: boolean
+}
+
 export type EraAccountLinkCreateNestedOneWithoutTransactionLinksInput = {
   create?: Prisma.XOR<Prisma.EraAccountLinkCreateWithoutTransactionLinksInput, Prisma.EraAccountLinkUncheckedCreateWithoutTransactionLinksInput>
   connectOrCreate?: Prisma.EraAccountLinkCreateOrConnectWithoutTransactionLinksInput
@@ -591,6 +714,64 @@ export type EraAccountLinkUpdateOneWithoutTransactionLinksNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.EraAccountLinkUpdateToOneWithWhereWithoutTransactionLinksInput, Prisma.EraAccountLinkUpdateWithoutTransactionLinksInput>, Prisma.EraAccountLinkUncheckedUpdateWithoutTransactionLinksInput>
 }
 
+export type EraAccountLinkCreateNestedOneWithoutInteractionsInput = {
+  create?: Prisma.XOR<Prisma.EraAccountLinkCreateWithoutInteractionsInput, Prisma.EraAccountLinkUncheckedCreateWithoutInteractionsInput>
+  connectOrCreate?: Prisma.EraAccountLinkCreateOrConnectWithoutInteractionsInput
+  connect?: Prisma.EraAccountLinkWhereUniqueInput
+}
+
+export type EraAccountLinkUpdateOneWithoutInteractionsNestedInput = {
+  create?: Prisma.XOR<Prisma.EraAccountLinkCreateWithoutInteractionsInput, Prisma.EraAccountLinkUncheckedCreateWithoutInteractionsInput>
+  connectOrCreate?: Prisma.EraAccountLinkCreateOrConnectWithoutInteractionsInput
+  upsert?: Prisma.EraAccountLinkUpsertWithoutInteractionsInput
+  disconnect?: Prisma.EraAccountLinkWhereInput | boolean
+  delete?: Prisma.EraAccountLinkWhereInput | boolean
+  connect?: Prisma.EraAccountLinkWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.EraAccountLinkUpdateToOneWithWhereWithoutInteractionsInput, Prisma.EraAccountLinkUpdateWithoutInteractionsInput>, Prisma.EraAccountLinkUncheckedUpdateWithoutInteractionsInput>
+}
+
+export type EraAccountLinkCreateNestedManyWithoutHouseholdGroupInput = {
+  create?: Prisma.XOR<Prisma.EraAccountLinkCreateWithoutHouseholdGroupInput, Prisma.EraAccountLinkUncheckedCreateWithoutHouseholdGroupInput> | Prisma.EraAccountLinkCreateWithoutHouseholdGroupInput[] | Prisma.EraAccountLinkUncheckedCreateWithoutHouseholdGroupInput[]
+  connectOrCreate?: Prisma.EraAccountLinkCreateOrConnectWithoutHouseholdGroupInput | Prisma.EraAccountLinkCreateOrConnectWithoutHouseholdGroupInput[]
+  createMany?: Prisma.EraAccountLinkCreateManyHouseholdGroupInputEnvelope
+  connect?: Prisma.EraAccountLinkWhereUniqueInput | Prisma.EraAccountLinkWhereUniqueInput[]
+}
+
+export type EraAccountLinkUncheckedCreateNestedManyWithoutHouseholdGroupInput = {
+  create?: Prisma.XOR<Prisma.EraAccountLinkCreateWithoutHouseholdGroupInput, Prisma.EraAccountLinkUncheckedCreateWithoutHouseholdGroupInput> | Prisma.EraAccountLinkCreateWithoutHouseholdGroupInput[] | Prisma.EraAccountLinkUncheckedCreateWithoutHouseholdGroupInput[]
+  connectOrCreate?: Prisma.EraAccountLinkCreateOrConnectWithoutHouseholdGroupInput | Prisma.EraAccountLinkCreateOrConnectWithoutHouseholdGroupInput[]
+  createMany?: Prisma.EraAccountLinkCreateManyHouseholdGroupInputEnvelope
+  connect?: Prisma.EraAccountLinkWhereUniqueInput | Prisma.EraAccountLinkWhereUniqueInput[]
+}
+
+export type EraAccountLinkUpdateManyWithoutHouseholdGroupNestedInput = {
+  create?: Prisma.XOR<Prisma.EraAccountLinkCreateWithoutHouseholdGroupInput, Prisma.EraAccountLinkUncheckedCreateWithoutHouseholdGroupInput> | Prisma.EraAccountLinkCreateWithoutHouseholdGroupInput[] | Prisma.EraAccountLinkUncheckedCreateWithoutHouseholdGroupInput[]
+  connectOrCreate?: Prisma.EraAccountLinkCreateOrConnectWithoutHouseholdGroupInput | Prisma.EraAccountLinkCreateOrConnectWithoutHouseholdGroupInput[]
+  upsert?: Prisma.EraAccountLinkUpsertWithWhereUniqueWithoutHouseholdGroupInput | Prisma.EraAccountLinkUpsertWithWhereUniqueWithoutHouseholdGroupInput[]
+  createMany?: Prisma.EraAccountLinkCreateManyHouseholdGroupInputEnvelope
+  set?: Prisma.EraAccountLinkWhereUniqueInput | Prisma.EraAccountLinkWhereUniqueInput[]
+  disconnect?: Prisma.EraAccountLinkWhereUniqueInput | Prisma.EraAccountLinkWhereUniqueInput[]
+  delete?: Prisma.EraAccountLinkWhereUniqueInput | Prisma.EraAccountLinkWhereUniqueInput[]
+  connect?: Prisma.EraAccountLinkWhereUniqueInput | Prisma.EraAccountLinkWhereUniqueInput[]
+  update?: Prisma.EraAccountLinkUpdateWithWhereUniqueWithoutHouseholdGroupInput | Prisma.EraAccountLinkUpdateWithWhereUniqueWithoutHouseholdGroupInput[]
+  updateMany?: Prisma.EraAccountLinkUpdateManyWithWhereWithoutHouseholdGroupInput | Prisma.EraAccountLinkUpdateManyWithWhereWithoutHouseholdGroupInput[]
+  deleteMany?: Prisma.EraAccountLinkScalarWhereInput | Prisma.EraAccountLinkScalarWhereInput[]
+}
+
+export type EraAccountLinkUncheckedUpdateManyWithoutHouseholdGroupNestedInput = {
+  create?: Prisma.XOR<Prisma.EraAccountLinkCreateWithoutHouseholdGroupInput, Prisma.EraAccountLinkUncheckedCreateWithoutHouseholdGroupInput> | Prisma.EraAccountLinkCreateWithoutHouseholdGroupInput[] | Prisma.EraAccountLinkUncheckedCreateWithoutHouseholdGroupInput[]
+  connectOrCreate?: Prisma.EraAccountLinkCreateOrConnectWithoutHouseholdGroupInput | Prisma.EraAccountLinkCreateOrConnectWithoutHouseholdGroupInput[]
+  upsert?: Prisma.EraAccountLinkUpsertWithWhereUniqueWithoutHouseholdGroupInput | Prisma.EraAccountLinkUpsertWithWhereUniqueWithoutHouseholdGroupInput[]
+  createMany?: Prisma.EraAccountLinkCreateManyHouseholdGroupInputEnvelope
+  set?: Prisma.EraAccountLinkWhereUniqueInput | Prisma.EraAccountLinkWhereUniqueInput[]
+  disconnect?: Prisma.EraAccountLinkWhereUniqueInput | Prisma.EraAccountLinkWhereUniqueInput[]
+  delete?: Prisma.EraAccountLinkWhereUniqueInput | Prisma.EraAccountLinkWhereUniqueInput[]
+  connect?: Prisma.EraAccountLinkWhereUniqueInput | Prisma.EraAccountLinkWhereUniqueInput[]
+  update?: Prisma.EraAccountLinkUpdateWithWhereUniqueWithoutHouseholdGroupInput | Prisma.EraAccountLinkUpdateWithWhereUniqueWithoutHouseholdGroupInput[]
+  updateMany?: Prisma.EraAccountLinkUpdateManyWithWhereWithoutHouseholdGroupInput | Prisma.EraAccountLinkUpdateManyWithWhereWithoutHouseholdGroupInput[]
+  deleteMany?: Prisma.EraAccountLinkScalarWhereInput | Prisma.EraAccountLinkScalarWhereInput[]
+}
+
 export type EraAccountLinkCreateWithoutWorkspaceInput = {
   id?: string
   createdAt?: Date | string
@@ -602,8 +783,12 @@ export type EraAccountLinkCreateWithoutWorkspaceInput = {
   currency?: string | null
   status?: string
   lastSeenAt?: Date | string | null
+  isShared?: boolean
   connection: Prisma.EraConnectionCreateNestedOneWithoutAccountLinksInput
   transactionLinks?: Prisma.EraTransactionLinkCreateNestedManyWithoutAccountLinkInput
+  ownerPerson?: Prisma.PersonCreateNestedOneWithoutOwnedEraAccountsInput
+  householdGroup?: Prisma.GroupCreateNestedOneWithoutEraAccountsInput
+  interactions?: Prisma.InteractionCreateNestedManyWithoutAccountLinkInput
 }
 
 export type EraAccountLinkUncheckedCreateWithoutWorkspaceInput = {
@@ -618,7 +803,11 @@ export type EraAccountLinkUncheckedCreateWithoutWorkspaceInput = {
   currency?: string | null
   status?: string
   lastSeenAt?: Date | string | null
+  ownerPersonId?: string | null
+  householdGroupId?: string | null
+  isShared?: boolean
   transactionLinks?: Prisma.EraTransactionLinkUncheckedCreateNestedManyWithoutAccountLinkInput
+  interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutAccountLinkInput
 }
 
 export type EraAccountLinkCreateOrConnectWithoutWorkspaceInput = {
@@ -662,6 +851,72 @@ export type EraAccountLinkScalarWhereInput = {
   currency?: Prisma.StringNullableFilter<"EraAccountLink"> | string | null
   status?: Prisma.StringFilter<"EraAccountLink"> | string
   lastSeenAt?: Prisma.DateTimeNullableFilter<"EraAccountLink"> | Date | string | null
+  ownerPersonId?: Prisma.StringNullableFilter<"EraAccountLink"> | string | null
+  householdGroupId?: Prisma.StringNullableFilter<"EraAccountLink"> | string | null
+  isShared?: Prisma.BoolFilter<"EraAccountLink"> | boolean
+}
+
+export type EraAccountLinkCreateWithoutOwnerPersonInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  eraAccountId: string
+  institution?: string | null
+  accountName?: string | null
+  accountType?: string | null
+  currency?: string | null
+  status?: string
+  lastSeenAt?: Date | string | null
+  isShared?: boolean
+  workspace?: Prisma.WorkspaceCreateNestedOneWithoutEraAccountLinksInput
+  connection: Prisma.EraConnectionCreateNestedOneWithoutAccountLinksInput
+  transactionLinks?: Prisma.EraTransactionLinkCreateNestedManyWithoutAccountLinkInput
+  householdGroup?: Prisma.GroupCreateNestedOneWithoutEraAccountsInput
+  interactions?: Prisma.InteractionCreateNestedManyWithoutAccountLinkInput
+}
+
+export type EraAccountLinkUncheckedCreateWithoutOwnerPersonInput = {
+  id?: string
+  workspaceId?: string
+  connectionId: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  eraAccountId: string
+  institution?: string | null
+  accountName?: string | null
+  accountType?: string | null
+  currency?: string | null
+  status?: string
+  lastSeenAt?: Date | string | null
+  householdGroupId?: string | null
+  isShared?: boolean
+  transactionLinks?: Prisma.EraTransactionLinkUncheckedCreateNestedManyWithoutAccountLinkInput
+  interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutAccountLinkInput
+}
+
+export type EraAccountLinkCreateOrConnectWithoutOwnerPersonInput = {
+  where: Prisma.EraAccountLinkWhereUniqueInput
+  create: Prisma.XOR<Prisma.EraAccountLinkCreateWithoutOwnerPersonInput, Prisma.EraAccountLinkUncheckedCreateWithoutOwnerPersonInput>
+}
+
+export type EraAccountLinkCreateManyOwnerPersonInputEnvelope = {
+  data: Prisma.EraAccountLinkCreateManyOwnerPersonInput | Prisma.EraAccountLinkCreateManyOwnerPersonInput[]
+}
+
+export type EraAccountLinkUpsertWithWhereUniqueWithoutOwnerPersonInput = {
+  where: Prisma.EraAccountLinkWhereUniqueInput
+  update: Prisma.XOR<Prisma.EraAccountLinkUpdateWithoutOwnerPersonInput, Prisma.EraAccountLinkUncheckedUpdateWithoutOwnerPersonInput>
+  create: Prisma.XOR<Prisma.EraAccountLinkCreateWithoutOwnerPersonInput, Prisma.EraAccountLinkUncheckedCreateWithoutOwnerPersonInput>
+}
+
+export type EraAccountLinkUpdateWithWhereUniqueWithoutOwnerPersonInput = {
+  where: Prisma.EraAccountLinkWhereUniqueInput
+  data: Prisma.XOR<Prisma.EraAccountLinkUpdateWithoutOwnerPersonInput, Prisma.EraAccountLinkUncheckedUpdateWithoutOwnerPersonInput>
+}
+
+export type EraAccountLinkUpdateManyWithWhereWithoutOwnerPersonInput = {
+  where: Prisma.EraAccountLinkScalarWhereInput
+  data: Prisma.XOR<Prisma.EraAccountLinkUpdateManyMutationInput, Prisma.EraAccountLinkUncheckedUpdateManyWithoutOwnerPersonInput>
 }
 
 export type EraAccountLinkCreateWithoutConnectionInput = {
@@ -675,8 +930,12 @@ export type EraAccountLinkCreateWithoutConnectionInput = {
   currency?: string | null
   status?: string
   lastSeenAt?: Date | string | null
+  isShared?: boolean
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutEraAccountLinksInput
   transactionLinks?: Prisma.EraTransactionLinkCreateNestedManyWithoutAccountLinkInput
+  ownerPerson?: Prisma.PersonCreateNestedOneWithoutOwnedEraAccountsInput
+  householdGroup?: Prisma.GroupCreateNestedOneWithoutEraAccountsInput
+  interactions?: Prisma.InteractionCreateNestedManyWithoutAccountLinkInput
 }
 
 export type EraAccountLinkUncheckedCreateWithoutConnectionInput = {
@@ -691,7 +950,11 @@ export type EraAccountLinkUncheckedCreateWithoutConnectionInput = {
   currency?: string | null
   status?: string
   lastSeenAt?: Date | string | null
+  ownerPersonId?: string | null
+  householdGroupId?: string | null
+  isShared?: boolean
   transactionLinks?: Prisma.EraTransactionLinkUncheckedCreateNestedManyWithoutAccountLinkInput
+  interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutAccountLinkInput
 }
 
 export type EraAccountLinkCreateOrConnectWithoutConnectionInput = {
@@ -730,8 +993,12 @@ export type EraAccountLinkCreateWithoutTransactionLinksInput = {
   currency?: string | null
   status?: string
   lastSeenAt?: Date | string | null
+  isShared?: boolean
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutEraAccountLinksInput
   connection: Prisma.EraConnectionCreateNestedOneWithoutAccountLinksInput
+  ownerPerson?: Prisma.PersonCreateNestedOneWithoutOwnedEraAccountsInput
+  householdGroup?: Prisma.GroupCreateNestedOneWithoutEraAccountsInput
+  interactions?: Prisma.InteractionCreateNestedManyWithoutAccountLinkInput
 }
 
 export type EraAccountLinkUncheckedCreateWithoutTransactionLinksInput = {
@@ -747,6 +1014,10 @@ export type EraAccountLinkUncheckedCreateWithoutTransactionLinksInput = {
   currency?: string | null
   status?: string
   lastSeenAt?: Date | string | null
+  ownerPersonId?: string | null
+  householdGroupId?: string | null
+  isShared?: boolean
+  interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutAccountLinkInput
 }
 
 export type EraAccountLinkCreateOrConnectWithoutTransactionLinksInput = {
@@ -776,8 +1047,12 @@ export type EraAccountLinkUpdateWithoutTransactionLinksInput = {
   currency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isShared?: Prisma.BoolFieldUpdateOperationsInput | boolean
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutEraAccountLinksNestedInput
   connection?: Prisma.EraConnectionUpdateOneRequiredWithoutAccountLinksNestedInput
+  ownerPerson?: Prisma.PersonUpdateOneWithoutOwnedEraAccountsNestedInput
+  householdGroup?: Prisma.GroupUpdateOneWithoutEraAccountsNestedInput
+  interactions?: Prisma.InteractionUpdateManyWithoutAccountLinkNestedInput
 }
 
 export type EraAccountLinkUncheckedUpdateWithoutTransactionLinksInput = {
@@ -793,6 +1068,165 @@ export type EraAccountLinkUncheckedUpdateWithoutTransactionLinksInput = {
   currency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ownerPersonId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  householdGroupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isShared?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  interactions?: Prisma.InteractionUncheckedUpdateManyWithoutAccountLinkNestedInput
+}
+
+export type EraAccountLinkCreateWithoutInteractionsInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  eraAccountId: string
+  institution?: string | null
+  accountName?: string | null
+  accountType?: string | null
+  currency?: string | null
+  status?: string
+  lastSeenAt?: Date | string | null
+  isShared?: boolean
+  workspace?: Prisma.WorkspaceCreateNestedOneWithoutEraAccountLinksInput
+  connection: Prisma.EraConnectionCreateNestedOneWithoutAccountLinksInput
+  transactionLinks?: Prisma.EraTransactionLinkCreateNestedManyWithoutAccountLinkInput
+  ownerPerson?: Prisma.PersonCreateNestedOneWithoutOwnedEraAccountsInput
+  householdGroup?: Prisma.GroupCreateNestedOneWithoutEraAccountsInput
+}
+
+export type EraAccountLinkUncheckedCreateWithoutInteractionsInput = {
+  id?: string
+  workspaceId?: string
+  connectionId: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  eraAccountId: string
+  institution?: string | null
+  accountName?: string | null
+  accountType?: string | null
+  currency?: string | null
+  status?: string
+  lastSeenAt?: Date | string | null
+  ownerPersonId?: string | null
+  householdGroupId?: string | null
+  isShared?: boolean
+  transactionLinks?: Prisma.EraTransactionLinkUncheckedCreateNestedManyWithoutAccountLinkInput
+}
+
+export type EraAccountLinkCreateOrConnectWithoutInteractionsInput = {
+  where: Prisma.EraAccountLinkWhereUniqueInput
+  create: Prisma.XOR<Prisma.EraAccountLinkCreateWithoutInteractionsInput, Prisma.EraAccountLinkUncheckedCreateWithoutInteractionsInput>
+}
+
+export type EraAccountLinkUpsertWithoutInteractionsInput = {
+  update: Prisma.XOR<Prisma.EraAccountLinkUpdateWithoutInteractionsInput, Prisma.EraAccountLinkUncheckedUpdateWithoutInteractionsInput>
+  create: Prisma.XOR<Prisma.EraAccountLinkCreateWithoutInteractionsInput, Prisma.EraAccountLinkUncheckedCreateWithoutInteractionsInput>
+  where?: Prisma.EraAccountLinkWhereInput
+}
+
+export type EraAccountLinkUpdateToOneWithWhereWithoutInteractionsInput = {
+  where?: Prisma.EraAccountLinkWhereInput
+  data: Prisma.XOR<Prisma.EraAccountLinkUpdateWithoutInteractionsInput, Prisma.EraAccountLinkUncheckedUpdateWithoutInteractionsInput>
+}
+
+export type EraAccountLinkUpdateWithoutInteractionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  eraAccountId?: Prisma.StringFieldUpdateOperationsInput | string
+  institution?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isShared?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutEraAccountLinksNestedInput
+  connection?: Prisma.EraConnectionUpdateOneRequiredWithoutAccountLinksNestedInput
+  transactionLinks?: Prisma.EraTransactionLinkUpdateManyWithoutAccountLinkNestedInput
+  ownerPerson?: Prisma.PersonUpdateOneWithoutOwnedEraAccountsNestedInput
+  householdGroup?: Prisma.GroupUpdateOneWithoutEraAccountsNestedInput
+}
+
+export type EraAccountLinkUncheckedUpdateWithoutInteractionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
+  connectionId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  eraAccountId?: Prisma.StringFieldUpdateOperationsInput | string
+  institution?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ownerPersonId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  householdGroupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isShared?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  transactionLinks?: Prisma.EraTransactionLinkUncheckedUpdateManyWithoutAccountLinkNestedInput
+}
+
+export type EraAccountLinkCreateWithoutHouseholdGroupInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  eraAccountId: string
+  institution?: string | null
+  accountName?: string | null
+  accountType?: string | null
+  currency?: string | null
+  status?: string
+  lastSeenAt?: Date | string | null
+  isShared?: boolean
+  workspace?: Prisma.WorkspaceCreateNestedOneWithoutEraAccountLinksInput
+  connection: Prisma.EraConnectionCreateNestedOneWithoutAccountLinksInput
+  transactionLinks?: Prisma.EraTransactionLinkCreateNestedManyWithoutAccountLinkInput
+  ownerPerson?: Prisma.PersonCreateNestedOneWithoutOwnedEraAccountsInput
+  interactions?: Prisma.InteractionCreateNestedManyWithoutAccountLinkInput
+}
+
+export type EraAccountLinkUncheckedCreateWithoutHouseholdGroupInput = {
+  id?: string
+  workspaceId?: string
+  connectionId: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  eraAccountId: string
+  institution?: string | null
+  accountName?: string | null
+  accountType?: string | null
+  currency?: string | null
+  status?: string
+  lastSeenAt?: Date | string | null
+  ownerPersonId?: string | null
+  isShared?: boolean
+  transactionLinks?: Prisma.EraTransactionLinkUncheckedCreateNestedManyWithoutAccountLinkInput
+  interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutAccountLinkInput
+}
+
+export type EraAccountLinkCreateOrConnectWithoutHouseholdGroupInput = {
+  where: Prisma.EraAccountLinkWhereUniqueInput
+  create: Prisma.XOR<Prisma.EraAccountLinkCreateWithoutHouseholdGroupInput, Prisma.EraAccountLinkUncheckedCreateWithoutHouseholdGroupInput>
+}
+
+export type EraAccountLinkCreateManyHouseholdGroupInputEnvelope = {
+  data: Prisma.EraAccountLinkCreateManyHouseholdGroupInput | Prisma.EraAccountLinkCreateManyHouseholdGroupInput[]
+}
+
+export type EraAccountLinkUpsertWithWhereUniqueWithoutHouseholdGroupInput = {
+  where: Prisma.EraAccountLinkWhereUniqueInput
+  update: Prisma.XOR<Prisma.EraAccountLinkUpdateWithoutHouseholdGroupInput, Prisma.EraAccountLinkUncheckedUpdateWithoutHouseholdGroupInput>
+  create: Prisma.XOR<Prisma.EraAccountLinkCreateWithoutHouseholdGroupInput, Prisma.EraAccountLinkUncheckedCreateWithoutHouseholdGroupInput>
+}
+
+export type EraAccountLinkUpdateWithWhereUniqueWithoutHouseholdGroupInput = {
+  where: Prisma.EraAccountLinkWhereUniqueInput
+  data: Prisma.XOR<Prisma.EraAccountLinkUpdateWithoutHouseholdGroupInput, Prisma.EraAccountLinkUncheckedUpdateWithoutHouseholdGroupInput>
+}
+
+export type EraAccountLinkUpdateManyWithWhereWithoutHouseholdGroupInput = {
+  where: Prisma.EraAccountLinkScalarWhereInput
+  data: Prisma.XOR<Prisma.EraAccountLinkUpdateManyMutationInput, Prisma.EraAccountLinkUncheckedUpdateManyWithoutHouseholdGroupInput>
 }
 
 export type EraAccountLinkCreateManyWorkspaceInput = {
@@ -807,6 +1241,9 @@ export type EraAccountLinkCreateManyWorkspaceInput = {
   currency?: string | null
   status?: string
   lastSeenAt?: Date | string | null
+  ownerPersonId?: string | null
+  householdGroupId?: string | null
+  isShared?: boolean
 }
 
 export type EraAccountLinkUpdateWithoutWorkspaceInput = {
@@ -820,8 +1257,12 @@ export type EraAccountLinkUpdateWithoutWorkspaceInput = {
   currency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isShared?: Prisma.BoolFieldUpdateOperationsInput | boolean
   connection?: Prisma.EraConnectionUpdateOneRequiredWithoutAccountLinksNestedInput
   transactionLinks?: Prisma.EraTransactionLinkUpdateManyWithoutAccountLinkNestedInput
+  ownerPerson?: Prisma.PersonUpdateOneWithoutOwnedEraAccountsNestedInput
+  householdGroup?: Prisma.GroupUpdateOneWithoutEraAccountsNestedInput
+  interactions?: Prisma.InteractionUpdateManyWithoutAccountLinkNestedInput
 }
 
 export type EraAccountLinkUncheckedUpdateWithoutWorkspaceInput = {
@@ -836,7 +1277,11 @@ export type EraAccountLinkUncheckedUpdateWithoutWorkspaceInput = {
   currency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ownerPersonId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  householdGroupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isShared?: Prisma.BoolFieldUpdateOperationsInput | boolean
   transactionLinks?: Prisma.EraTransactionLinkUncheckedUpdateManyWithoutAccountLinkNestedInput
+  interactions?: Prisma.InteractionUncheckedUpdateManyWithoutAccountLinkNestedInput
 }
 
 export type EraAccountLinkUncheckedUpdateManyWithoutWorkspaceInput = {
@@ -851,6 +1296,81 @@ export type EraAccountLinkUncheckedUpdateManyWithoutWorkspaceInput = {
   currency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ownerPersonId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  householdGroupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isShared?: Prisma.BoolFieldUpdateOperationsInput | boolean
+}
+
+export type EraAccountLinkCreateManyOwnerPersonInput = {
+  id?: string
+  workspaceId?: string
+  connectionId: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  eraAccountId: string
+  institution?: string | null
+  accountName?: string | null
+  accountType?: string | null
+  currency?: string | null
+  status?: string
+  lastSeenAt?: Date | string | null
+  householdGroupId?: string | null
+  isShared?: boolean
+}
+
+export type EraAccountLinkUpdateWithoutOwnerPersonInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  eraAccountId?: Prisma.StringFieldUpdateOperationsInput | string
+  institution?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isShared?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutEraAccountLinksNestedInput
+  connection?: Prisma.EraConnectionUpdateOneRequiredWithoutAccountLinksNestedInput
+  transactionLinks?: Prisma.EraTransactionLinkUpdateManyWithoutAccountLinkNestedInput
+  householdGroup?: Prisma.GroupUpdateOneWithoutEraAccountsNestedInput
+  interactions?: Prisma.InteractionUpdateManyWithoutAccountLinkNestedInput
+}
+
+export type EraAccountLinkUncheckedUpdateWithoutOwnerPersonInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
+  connectionId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  eraAccountId?: Prisma.StringFieldUpdateOperationsInput | string
+  institution?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  householdGroupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isShared?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  transactionLinks?: Prisma.EraTransactionLinkUncheckedUpdateManyWithoutAccountLinkNestedInput
+  interactions?: Prisma.InteractionUncheckedUpdateManyWithoutAccountLinkNestedInput
+}
+
+export type EraAccountLinkUncheckedUpdateManyWithoutOwnerPersonInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
+  connectionId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  eraAccountId?: Prisma.StringFieldUpdateOperationsInput | string
+  institution?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  householdGroupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isShared?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type EraAccountLinkCreateManyConnectionInput = {
@@ -865,6 +1385,9 @@ export type EraAccountLinkCreateManyConnectionInput = {
   currency?: string | null
   status?: string
   lastSeenAt?: Date | string | null
+  ownerPersonId?: string | null
+  householdGroupId?: string | null
+  isShared?: boolean
 }
 
 export type EraAccountLinkUpdateWithoutConnectionInput = {
@@ -878,8 +1401,12 @@ export type EraAccountLinkUpdateWithoutConnectionInput = {
   currency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isShared?: Prisma.BoolFieldUpdateOperationsInput | boolean
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutEraAccountLinksNestedInput
   transactionLinks?: Prisma.EraTransactionLinkUpdateManyWithoutAccountLinkNestedInput
+  ownerPerson?: Prisma.PersonUpdateOneWithoutOwnedEraAccountsNestedInput
+  householdGroup?: Prisma.GroupUpdateOneWithoutEraAccountsNestedInput
+  interactions?: Prisma.InteractionUpdateManyWithoutAccountLinkNestedInput
 }
 
 export type EraAccountLinkUncheckedUpdateWithoutConnectionInput = {
@@ -894,7 +1421,11 @@ export type EraAccountLinkUncheckedUpdateWithoutConnectionInput = {
   currency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ownerPersonId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  householdGroupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isShared?: Prisma.BoolFieldUpdateOperationsInput | boolean
   transactionLinks?: Prisma.EraTransactionLinkUncheckedUpdateManyWithoutAccountLinkNestedInput
+  interactions?: Prisma.InteractionUncheckedUpdateManyWithoutAccountLinkNestedInput
 }
 
 export type EraAccountLinkUncheckedUpdateManyWithoutConnectionInput = {
@@ -909,6 +1440,81 @@ export type EraAccountLinkUncheckedUpdateManyWithoutConnectionInput = {
   currency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ownerPersonId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  householdGroupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isShared?: Prisma.BoolFieldUpdateOperationsInput | boolean
+}
+
+export type EraAccountLinkCreateManyHouseholdGroupInput = {
+  id?: string
+  workspaceId?: string
+  connectionId: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  eraAccountId: string
+  institution?: string | null
+  accountName?: string | null
+  accountType?: string | null
+  currency?: string | null
+  status?: string
+  lastSeenAt?: Date | string | null
+  ownerPersonId?: string | null
+  isShared?: boolean
+}
+
+export type EraAccountLinkUpdateWithoutHouseholdGroupInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  eraAccountId?: Prisma.StringFieldUpdateOperationsInput | string
+  institution?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isShared?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutEraAccountLinksNestedInput
+  connection?: Prisma.EraConnectionUpdateOneRequiredWithoutAccountLinksNestedInput
+  transactionLinks?: Prisma.EraTransactionLinkUpdateManyWithoutAccountLinkNestedInput
+  ownerPerson?: Prisma.PersonUpdateOneWithoutOwnedEraAccountsNestedInput
+  interactions?: Prisma.InteractionUpdateManyWithoutAccountLinkNestedInput
+}
+
+export type EraAccountLinkUncheckedUpdateWithoutHouseholdGroupInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
+  connectionId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  eraAccountId?: Prisma.StringFieldUpdateOperationsInput | string
+  institution?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ownerPersonId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isShared?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  transactionLinks?: Prisma.EraTransactionLinkUncheckedUpdateManyWithoutAccountLinkNestedInput
+  interactions?: Prisma.InteractionUncheckedUpdateManyWithoutAccountLinkNestedInput
+}
+
+export type EraAccountLinkUncheckedUpdateManyWithoutHouseholdGroupInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
+  connectionId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  eraAccountId?: Prisma.StringFieldUpdateOperationsInput | string
+  institution?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ownerPersonId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isShared?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 
@@ -918,10 +1524,12 @@ export type EraAccountLinkUncheckedUpdateManyWithoutConnectionInput = {
 
 export type EraAccountLinkCountOutputType = {
   transactionLinks: number
+  interactions: number
 }
 
 export type EraAccountLinkCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   transactionLinks?: boolean | EraAccountLinkCountOutputTypeCountTransactionLinksArgs
+  interactions?: boolean | EraAccountLinkCountOutputTypeCountInteractionsArgs
 }
 
 /**
@@ -941,6 +1549,13 @@ export type EraAccountLinkCountOutputTypeCountTransactionLinksArgs<ExtArgs exten
   where?: Prisma.EraTransactionLinkWhereInput
 }
 
+/**
+ * EraAccountLinkCountOutputType without action
+ */
+export type EraAccountLinkCountOutputTypeCountInteractionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.InteractionWhereInput
+}
+
 
 export type EraAccountLinkSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -955,9 +1570,15 @@ export type EraAccountLinkSelect<ExtArgs extends runtime.Types.Extensions.Intern
   currency?: boolean
   status?: boolean
   lastSeenAt?: boolean
+  ownerPersonId?: boolean
+  householdGroupId?: boolean
+  isShared?: boolean
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   connection?: boolean | Prisma.EraConnectionDefaultArgs<ExtArgs>
   transactionLinks?: boolean | Prisma.EraAccountLink$transactionLinksArgs<ExtArgs>
+  ownerPerson?: boolean | Prisma.EraAccountLink$ownerPersonArgs<ExtArgs>
+  householdGroup?: boolean | Prisma.EraAccountLink$householdGroupArgs<ExtArgs>
+  interactions?: boolean | Prisma.EraAccountLink$interactionsArgs<ExtArgs>
   _count?: boolean | Prisma.EraAccountLinkCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["eraAccountLink"]>
 
@@ -974,8 +1595,13 @@ export type EraAccountLinkSelectCreateManyAndReturn<ExtArgs extends runtime.Type
   currency?: boolean
   status?: boolean
   lastSeenAt?: boolean
+  ownerPersonId?: boolean
+  householdGroupId?: boolean
+  isShared?: boolean
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   connection?: boolean | Prisma.EraConnectionDefaultArgs<ExtArgs>
+  ownerPerson?: boolean | Prisma.EraAccountLink$ownerPersonArgs<ExtArgs>
+  householdGroup?: boolean | Prisma.EraAccountLink$householdGroupArgs<ExtArgs>
 }, ExtArgs["result"]["eraAccountLink"]>
 
 export type EraAccountLinkSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -991,8 +1617,13 @@ export type EraAccountLinkSelectUpdateManyAndReturn<ExtArgs extends runtime.Type
   currency?: boolean
   status?: boolean
   lastSeenAt?: boolean
+  ownerPersonId?: boolean
+  householdGroupId?: boolean
+  isShared?: boolean
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   connection?: boolean | Prisma.EraConnectionDefaultArgs<ExtArgs>
+  ownerPerson?: boolean | Prisma.EraAccountLink$ownerPersonArgs<ExtArgs>
+  householdGroup?: boolean | Prisma.EraAccountLink$householdGroupArgs<ExtArgs>
 }, ExtArgs["result"]["eraAccountLink"]>
 
 export type EraAccountLinkSelectScalar = {
@@ -1008,22 +1639,32 @@ export type EraAccountLinkSelectScalar = {
   currency?: boolean
   status?: boolean
   lastSeenAt?: boolean
+  ownerPersonId?: boolean
+  householdGroupId?: boolean
+  isShared?: boolean
 }
 
-export type EraAccountLinkOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "workspaceId" | "connectionId" | "createdAt" | "updatedAt" | "eraAccountId" | "institution" | "accountName" | "accountType" | "currency" | "status" | "lastSeenAt", ExtArgs["result"]["eraAccountLink"]>
+export type EraAccountLinkOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "workspaceId" | "connectionId" | "createdAt" | "updatedAt" | "eraAccountId" | "institution" | "accountName" | "accountType" | "currency" | "status" | "lastSeenAt" | "ownerPersonId" | "householdGroupId" | "isShared", ExtArgs["result"]["eraAccountLink"]>
 export type EraAccountLinkInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   connection?: boolean | Prisma.EraConnectionDefaultArgs<ExtArgs>
   transactionLinks?: boolean | Prisma.EraAccountLink$transactionLinksArgs<ExtArgs>
+  ownerPerson?: boolean | Prisma.EraAccountLink$ownerPersonArgs<ExtArgs>
+  householdGroup?: boolean | Prisma.EraAccountLink$householdGroupArgs<ExtArgs>
+  interactions?: boolean | Prisma.EraAccountLink$interactionsArgs<ExtArgs>
   _count?: boolean | Prisma.EraAccountLinkCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type EraAccountLinkIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   connection?: boolean | Prisma.EraConnectionDefaultArgs<ExtArgs>
+  ownerPerson?: boolean | Prisma.EraAccountLink$ownerPersonArgs<ExtArgs>
+  householdGroup?: boolean | Prisma.EraAccountLink$householdGroupArgs<ExtArgs>
 }
 export type EraAccountLinkIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   connection?: boolean | Prisma.EraConnectionDefaultArgs<ExtArgs>
+  ownerPerson?: boolean | Prisma.EraAccountLink$ownerPersonArgs<ExtArgs>
+  householdGroup?: boolean | Prisma.EraAccountLink$householdGroupArgs<ExtArgs>
 }
 
 export type $EraAccountLinkPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1032,6 +1673,9 @@ export type $EraAccountLinkPayload<ExtArgs extends runtime.Types.Extensions.Inte
     workspace: Prisma.$WorkspacePayload<ExtArgs>
     connection: Prisma.$EraConnectionPayload<ExtArgs>
     transactionLinks: Prisma.$EraTransactionLinkPayload<ExtArgs>[]
+    ownerPerson: Prisma.$PersonPayload<ExtArgs> | null
+    householdGroup: Prisma.$GroupPayload<ExtArgs> | null
+    interactions: Prisma.$InteractionPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1046,6 +1690,9 @@ export type $EraAccountLinkPayload<ExtArgs extends runtime.Types.Extensions.Inte
     currency: string | null
     status: string
     lastSeenAt: Date | null
+    ownerPersonId: string | null
+    householdGroupId: string | null
+    isShared: boolean
   }, ExtArgs["result"]["eraAccountLink"]>
   composites: {}
 }
@@ -1443,6 +2090,9 @@ export interface Prisma__EraAccountLinkClient<T, Null = never, ExtArgs extends r
   workspace<T extends Prisma.WorkspaceDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WorkspaceDefaultArgs<ExtArgs>>): Prisma.Prisma__WorkspaceClient<runtime.Types.Result.GetResult<Prisma.$WorkspacePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   connection<T extends Prisma.EraConnectionDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EraConnectionDefaultArgs<ExtArgs>>): Prisma.Prisma__EraConnectionClient<runtime.Types.Result.GetResult<Prisma.$EraConnectionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   transactionLinks<T extends Prisma.EraAccountLink$transactionLinksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EraAccountLink$transactionLinksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EraTransactionLinkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  ownerPerson<T extends Prisma.EraAccountLink$ownerPersonArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EraAccountLink$ownerPersonArgs<ExtArgs>>): Prisma.Prisma__PersonClient<runtime.Types.Result.GetResult<Prisma.$PersonPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  householdGroup<T extends Prisma.EraAccountLink$householdGroupArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EraAccountLink$householdGroupArgs<ExtArgs>>): Prisma.Prisma__GroupClient<runtime.Types.Result.GetResult<Prisma.$GroupPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  interactions<T extends Prisma.EraAccountLink$interactionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EraAccountLink$interactionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InteractionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1484,6 +2134,9 @@ export interface EraAccountLinkFieldRefs {
   readonly currency: Prisma.FieldRef<"EraAccountLink", 'String'>
   readonly status: Prisma.FieldRef<"EraAccountLink", 'String'>
   readonly lastSeenAt: Prisma.FieldRef<"EraAccountLink", 'DateTime'>
+  readonly ownerPersonId: Prisma.FieldRef<"EraAccountLink", 'String'>
+  readonly householdGroupId: Prisma.FieldRef<"EraAccountLink", 'String'>
+  readonly isShared: Prisma.FieldRef<"EraAccountLink", 'Boolean'>
 }
     
 
@@ -1904,6 +2557,68 @@ export type EraAccountLink$transactionLinksArgs<ExtArgs extends runtime.Types.Ex
   take?: number
   skip?: number
   distinct?: Prisma.EraTransactionLinkScalarFieldEnum | Prisma.EraTransactionLinkScalarFieldEnum[]
+}
+
+/**
+ * EraAccountLink.ownerPerson
+ */
+export type EraAccountLink$ownerPersonArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Person
+   */
+  select?: Prisma.PersonSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Person
+   */
+  omit?: Prisma.PersonOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PersonInclude<ExtArgs> | null
+  where?: Prisma.PersonWhereInput
+}
+
+/**
+ * EraAccountLink.householdGroup
+ */
+export type EraAccountLink$householdGroupArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Group
+   */
+  select?: Prisma.GroupSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Group
+   */
+  omit?: Prisma.GroupOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.GroupInclude<ExtArgs> | null
+  where?: Prisma.GroupWhereInput
+}
+
+/**
+ * EraAccountLink.interactions
+ */
+export type EraAccountLink$interactionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Interaction
+   */
+  select?: Prisma.InteractionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Interaction
+   */
+  omit?: Prisma.InteractionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.InteractionInclude<ExtArgs> | null
+  where?: Prisma.InteractionWhereInput
+  orderBy?: Prisma.InteractionOrderByWithRelationInput | Prisma.InteractionOrderByWithRelationInput[]
+  cursor?: Prisma.InteractionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.InteractionScalarFieldEnum | Prisma.InteractionScalarFieldEnum[]
 }
 
 /**

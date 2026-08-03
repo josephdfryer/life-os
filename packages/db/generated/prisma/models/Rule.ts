@@ -657,10 +657,6 @@ export type RuleUncheckedUpdateManyWithoutCreatedByUserNestedInput = {
   deleteMany?: Prisma.RuleScalarWhereInput | Prisma.RuleScalarWhereInput[]
 }
 
-export type BoolFieldUpdateOperationsInput = {
-  set?: boolean
-}
-
 export type RuleCreateNestedOneWithoutRunsInput = {
   create?: Prisma.XOR<Prisma.RuleCreateWithoutRunsInput, Prisma.RuleUncheckedCreateWithoutRunsInput>
   connectOrCreate?: Prisma.RuleCreateOrConnectWithoutRunsInput

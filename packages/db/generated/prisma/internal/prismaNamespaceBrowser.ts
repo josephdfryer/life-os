@@ -111,6 +111,12 @@ export const ModelName = {
   LevelUpCombine: 'LevelUpCombine',
   LevelUpRatingSnapshot: 'LevelUpRatingSnapshot',
   LevelUpTrainingSet: 'LevelUpTrainingSet',
+  LevelUpExercise: 'LevelUpExercise',
+  LevelUpProgram: 'LevelUpProgram',
+  LevelUpProgramDay: 'LevelUpProgramDay',
+  LevelUpProgramEntry: 'LevelUpProgramEntry',
+  LevelUpSession: 'LevelUpSession',
+  LevelUpBodyMetric: 'LevelUpBodyMetric',
   LevelUpBadgeUnlock: 'LevelUpBadgeUnlock',
   LevelUpTargetBuild: 'LevelUpTargetBuild'
 } as const
@@ -412,7 +418,10 @@ export const EraAccountLinkScalarFieldEnum = {
   accountType: 'accountType',
   currency: 'currency',
   status: 'status',
-  lastSeenAt: 'lastSeenAt'
+  lastSeenAt: 'lastSeenAt',
+  ownerPersonId: 'ownerPersonId',
+  householdGroupId: 'householdGroupId',
+  isShared: 'isShared'
 } as const
 
 export type EraAccountLinkScalarFieldEnum = (typeof EraAccountLinkScalarFieldEnum)[keyof typeof EraAccountLinkScalarFieldEnum]
@@ -546,7 +555,18 @@ export const InteractionScalarFieldEnum = {
   amount: 'amount',
   direction: 'direction',
   sourceFileId: 'sourceFileId',
-  sourceNoteId: 'sourceNoteId'
+  sourceNoteId: 'sourceNoteId',
+  source: 'source',
+  sourceId: 'sourceId',
+  subtype: 'subtype',
+  currency: 'currency',
+  category: 'category',
+  merchantName: 'merchantName',
+  accountLinkId: 'accountLinkId',
+  actorPersonId: 'actorPersonId',
+  metadata: 'metadata',
+  enrichmentVersion: 'enrichmentVersion',
+  enrichedAt: 'enrichedAt'
 } as const
 
 export type InteractionScalarFieldEnum = (typeof InteractionScalarFieldEnum)[keyof typeof InteractionScalarFieldEnum]
@@ -558,7 +578,13 @@ export const InteractionParticipantScalarFieldEnum = {
   entityType: 'entityType',
   entityId: 'entityId',
   role: 'role',
-  workspaceId: 'workspaceId'
+  workspaceId: 'workspaceId',
+  confidence: 'confidence',
+  band: 'band',
+  source: 'source',
+  evidence: 'evidence',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type InteractionParticipantScalarFieldEnum = (typeof InteractionParticipantScalarFieldEnum)[keyof typeof InteractionParticipantScalarFieldEnum]
@@ -1074,7 +1100,10 @@ export const LevelUpProfileScalarFieldEnum = {
   heightCm: 'heightCm',
   standingReachCm: 'standingReachCm',
   primaryBuild: 'primaryBuild',
-  coldStartCompletedAt: 'coldStartCompletedAt'
+  coldStartCompletedAt: 'coldStartCompletedAt',
+  unitPreference: 'unitPreference',
+  microPlates: 'microPlates',
+  activeProgramId: 'activeProgramId'
 } as const
 
 export type LevelUpProfileScalarFieldEnum = (typeof LevelUpProfileScalarFieldEnum)[keyof typeof LevelUpProfileScalarFieldEnum]
@@ -1138,9 +1167,14 @@ export const LevelUpTrainingSetScalarFieldEnum = {
   performedAt: 'performedAt',
   sessionId: 'sessionId',
   exerciseKey: 'exerciseKey',
+  exerciseId: 'exerciseId',
+  setIndex: 'setIndex',
   reps: 'reps',
   loadKg: 'loadKg',
+  durationSec: 'durationSec',
+  isBodyweight: 'isBodyweight',
   bodyweightKg: 'bodyweightKg',
+  rpe: 'rpe',
   rank: 'rank',
   rankLetter: 'rankLetter',
   balanceResidual: 'balanceResidual',
@@ -1148,6 +1182,91 @@ export const LevelUpTrainingSetScalarFieldEnum = {
 } as const
 
 export type LevelUpTrainingSetScalarFieldEnum = (typeof LevelUpTrainingSetScalarFieldEnum)[keyof typeof LevelUpTrainingSetScalarFieldEnum]
+
+
+export const LevelUpExerciseScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  createdAt: 'createdAt',
+  key: 'key',
+  label: 'label',
+  modality: 'modality',
+  catalogKey: 'catalogKey',
+  defaultRestSec: 'defaultRestSec',
+  muscleGroup: 'muscleGroup',
+  jointLoad: 'jointLoad',
+  substituteId: 'substituteId'
+} as const
+
+export type LevelUpExerciseScalarFieldEnum = (typeof LevelUpExerciseScalarFieldEnum)[keyof typeof LevelUpExerciseScalarFieldEnum]
+
+
+export const LevelUpProgramScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  createdAt: 'createdAt',
+  name: 'name',
+  notes: 'notes',
+  isActive: 'isActive'
+} as const
+
+export type LevelUpProgramScalarFieldEnum = (typeof LevelUpProgramScalarFieldEnum)[keyof typeof LevelUpProgramScalarFieldEnum]
+
+
+export const LevelUpProgramDayScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  programId: 'programId',
+  name: 'name',
+  order: 'order'
+} as const
+
+export type LevelUpProgramDayScalarFieldEnum = (typeof LevelUpProgramDayScalarFieldEnum)[keyof typeof LevelUpProgramDayScalarFieldEnum]
+
+
+export const LevelUpProgramEntryScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  programDayId: 'programDayId',
+  exerciseId: 'exerciseId',
+  targetSets: 'targetSets',
+  targetReps: 'targetReps',
+  targetLoadKg: 'targetLoadKg',
+  targetDurationSec: 'targetDurationSec',
+  restSec: 'restSec',
+  order: 'order'
+} as const
+
+export type LevelUpProgramEntryScalarFieldEnum = (typeof LevelUpProgramEntryScalarFieldEnum)[keyof typeof LevelUpProgramEntryScalarFieldEnum]
+
+
+export const LevelUpSessionScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  createdAt: 'createdAt',
+  startedAt: 'startedAt',
+  endedAt: 'endedAt',
+  programDayId: 'programDayId',
+  kneeFlare: 'kneeFlare',
+  lumbarFlare: 'lumbarFlare',
+  notes: 'notes'
+} as const
+
+export type LevelUpSessionScalarFieldEnum = (typeof LevelUpSessionScalarFieldEnum)[keyof typeof LevelUpSessionScalarFieldEnum]
+
+
+export const LevelUpBodyMetricScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  createdAt: 'createdAt',
+  measuredAt: 'measuredAt',
+  weightKg: 'weightKg',
+  bodyFatPct: 'bodyFatPct',
+  musclePct: 'musclePct',
+  notes: 'notes'
+} as const
+
+export type LevelUpBodyMetricScalarFieldEnum = (typeof LevelUpBodyMetricScalarFieldEnum)[keyof typeof LevelUpBodyMetricScalarFieldEnum]
 
 
 export const LevelUpBadgeUnlockScalarFieldEnum = {

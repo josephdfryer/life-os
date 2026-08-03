@@ -342,6 +342,36 @@ export type LevelUpRatingSnapshot = Prisma.LevelUpRatingSnapshotModel
  */
 export type LevelUpTrainingSet = Prisma.LevelUpTrainingSetModel
 /**
+ * Model LevelUpExercise
+ * 
+ */
+export type LevelUpExercise = Prisma.LevelUpExerciseModel
+/**
+ * Model LevelUpProgram
+ * 
+ */
+export type LevelUpProgram = Prisma.LevelUpProgramModel
+/**
+ * Model LevelUpProgramDay
+ * 
+ */
+export type LevelUpProgramDay = Prisma.LevelUpProgramDayModel
+/**
+ * Model LevelUpProgramEntry
+ * 
+ */
+export type LevelUpProgramEntry = Prisma.LevelUpProgramEntryModel
+/**
+ * Model LevelUpSession
+ * 
+ */
+export type LevelUpSession = Prisma.LevelUpSessionModel
+/**
+ * Model LevelUpBodyMetric
+ * 
+ */
+export type LevelUpBodyMetric = Prisma.LevelUpBodyMetricModel
+/**
  * Model LevelUpBadgeUnlock
  * 
  */
