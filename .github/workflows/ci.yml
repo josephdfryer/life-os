@@ -6,6 +6,33 @@ on:
   pull_request:
 
 jobs:
+  # Fast feedback. The `check` job below installs Prisma, replays migrations and
+  # runs a drill before it ever reaches lint, so a stray unused variable takes
+  # minutes to surface. This job answers the cheap questions in about a minute
+  # and runs in parallel.
+  #
+  # `npm run lint` is three gates chained with &&: eslint, the dependency
+  # boundary check, and the migration integrity check (every turso-migrate
+  # script pairs with a committed migration, and the whole history replays into
+  # an empty database).
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      # The migration check needs better-sqlite3, so a full install rather than
+      # --omit=dev. eslint is not type-aware here, so no Prisma generate needed.
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint, boundaries, and migration integrity
+        run: npm run lint
+
   check:
     runs-on: ubuntu-latest
     env:
