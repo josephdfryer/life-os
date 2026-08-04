@@ -1,11 +1,16 @@
 import { createRequire } from "node:module"
 import { existsSync, readFileSync, readdirSync, unlinkSync } from "node:fs"
+import { tmpdir } from "node:os"
 import { join } from "node:path"
 
 async function main() {
-  const databaseUrl = process.env.DATABASE_URL ?? "file:/private/tmp/life-os-e2e.db"
-  if (!databaseUrl.startsWith("file:/private/tmp/life-os-e2e")) {
-    throw new Error("Refusing to prepare an E2E database outside /private/tmp/life-os-e2e*")
+  // The guard stays — this deletes the file it is pointed at, so it must only
+  // ever point inside the OS temp directory. The prefix is computed rather
+  // than hard-coded, because "/private/tmp" is macOS-only and broke CI.
+  const scratchPrefix = `file:${join(tmpdir(), "life-os-e2e")}`
+  const databaseUrl = process.env.DATABASE_URL ?? `${scratchPrefix}.db`
+  if (!databaseUrl.startsWith(scratchPrefix)) {
+    throw new Error(`Refusing to prepare an E2E database outside ${scratchPrefix}*`)
   }
 
   const dbPath = databaseUrl.slice("file:".length)

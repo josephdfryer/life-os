@@ -1,6 +1,9 @@
 import { defineConfig, devices } from "@playwright/test"
+import { tmpdir } from "node:os"
+import { join } from "node:path"
 
-const databaseUrl = "file:/private/tmp/life-os-e2e.db"
+// Must match scripts/e2e/prepare.ts. Literal "/private/tmp" is macOS-only.
+const databaseUrl = `file:${join(tmpdir(), "life-os-e2e.db")}`
 
 export default defineConfig({
   testDir: "./tests/e2e",

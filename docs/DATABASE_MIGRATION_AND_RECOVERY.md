@@ -30,13 +30,13 @@ incident plan names the exact script, database, backup, and expected effects.
 ## Local proof commands
 
 ```bash
-DATABASE_URL=file:/private/tmp/life-os-clean.db npm run migrate:deploy -w @life-os/db
+DATABASE_URL="file:$(node -p 'require("os").tmpdir()')/life-os-clean.db" npm run migrate:deploy -w @life-os/db
 npm run db:drill
 npm run test
 npm run e2e
 ```
 
-`db:drill` uses only synthetic data under `/private/tmp`. It builds the schema
+`db:drill` uses only synthetic data under the OS temp directory. It builds the schema
 up to a real historical boundary, inserts representative Person, Interaction,
 and Item rows, applies the remaining migrations, verifies money conversion and
 foreign keys, copies a backup, restores it separately, and repeats integrity

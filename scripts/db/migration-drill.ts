@@ -1,13 +1,17 @@
 import { copyFileSync, existsSync, readFileSync, readdirSync, unlinkSync } from "node:fs"
 import { createRequire } from "node:module"
+import { tmpdir } from "node:os"
 import { join } from "node:path"
 
 const require = createRequire(import.meta.url)
 const Database = require("better-sqlite3")
 const root = process.cwd()
-const sourcePath = "/private/tmp/life-os-migration-drill.db"
-const backupPath = "/private/tmp/life-os-migration-drill.backup.db"
-const restoredPath = "/private/tmp/life-os-migration-drill.restored.db"
+// os.tmpdir(), not a literal "/private/tmp": that path exists only on macOS,
+// so the drill threw "Cannot open database because the directory does not
+// exist" on the Linux CI runner.
+const sourcePath = join(tmpdir(), "life-os-migration-drill.db")
+const backupPath = join(tmpdir(), "life-os-migration-drill.backup.db")
+const restoredPath = join(tmpdir(), "life-os-migration-drill.restored.db")
 const migrationsRoot = join(root, "packages/db/prisma/migrations")
 const upgradeStart = "20260714130000_money_as_cents"
 
