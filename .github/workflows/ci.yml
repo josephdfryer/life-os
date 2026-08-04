@@ -37,7 +37,13 @@ jobs:
     runs-on: ubuntu-latest
     env:
       AUTH_SECRET: life-os-ci-only-secret
-      DATABASE_URL: file:${{ runner.temp }}/life-os-ci.db
+      # A literal path, not ${{ runner.temp }}. The `runner` context is only
+      # available to steps; referencing it in job-level `env` is an invalid
+      # context, which GitHub rejects when validating the workflow. The whole
+      # run then fails in 0s with "workflow file issue" and no job ever starts —
+      # which is what had been happening on every push since this env block
+      # was introduced.
+      DATABASE_URL: file:/tmp/life-os-ci.db
       NEXTAUTH_SECRET: life-os-ci-only-secret
     steps:
       - uses: actions/checkout@v4
