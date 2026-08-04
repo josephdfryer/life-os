@@ -33,9 +33,10 @@
     "db:drill": "tsx scripts/db/migration-drill.ts",
     "perf:check": "node scripts/check-performance-budgets.mjs",
     "perf:check:built": "node scripts/check-performance-budgets.mjs --built",
-    "lint": "eslint . --max-warnings=0 && node scripts/check-dependency-boundaries.mjs",
+    "lint": "eslint . --max-warnings=0 && node scripts/check-dependency-boundaries.mjs && node scripts/check-migration-integrity.mjs",
     "test": "tsx --test \"scripts/**/*.test.ts\" && npm run test --workspaces --if-present",
-    "type-check": "tsc --noEmit -p tsconfig.json && turbo run type-check"
+    "type-check": "tsc --noEmit -p tsconfig.json && turbo run type-check",
+    "check:migrations": "node scripts/check-migration-integrity.mjs"
   },
   "packageManager": "npm@11.12.1",
   "overrides": {

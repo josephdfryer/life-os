@@ -25,6 +25,12 @@ export default tseslint.config(
       ".claude/**",
       ".vercel/**",
       "docs/ui-preview/**",
+      // design-sync build output — gitignored, generated, and not ours to lint.
+      // While these were scanned, `npm run lint` exited 1 on 263 pre-existing
+      // errors in vendored bundles, so the repo-invariant checks chained after
+      // eslint with && never ran at all.
+      ".ds-sync/**",
+      "ds-bundle/**",
     ],
   },
   {
