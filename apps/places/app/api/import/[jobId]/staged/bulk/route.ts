@@ -6,7 +6,9 @@ import { bulkUpdateStagedVisits, type StagedVisitAction } from "@/server/domain/
 
 export const dynamic = "force-dynamic"
 
-export async function POST(request: Request, ctx: RouteContext<"/api/import/[jobId]/staged/bulk">) {
+type Params = { params: Promise<{ jobId: string }> }
+
+export async function POST(request: Request, ctx: Params) {
   try {
     const actor = await requireAccess("ingest.write")
     const { jobId } = await ctx.params

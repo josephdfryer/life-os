@@ -5,7 +5,9 @@ import { listStagedVisits } from "@/server/domain/import"
 
 export const dynamic = "force-dynamic"
 
-export async function GET(request: Request, ctx: RouteContext<"/api/import/[jobId]/staged">) {
+type Params = { params: Promise<{ jobId: string }> }
+
+export async function GET(request: Request, ctx: Params) {
   try {
     const actor = await requireAccess("ingest.write")
     const { jobId } = await ctx.params

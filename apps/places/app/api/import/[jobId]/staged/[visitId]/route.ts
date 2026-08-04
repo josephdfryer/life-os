@@ -6,7 +6,9 @@ import { resolveStagedVisit, updateStagedVisit, type StagedVisitAction } from "@
 
 export const dynamic = "force-dynamic"
 
-export async function PATCH(request: Request, ctx: RouteContext<"/api/import/[jobId]/staged/[visitId]">) {
+type Params = { params: Promise<{ jobId: string; visitId: string }> }
+
+export async function PATCH(request: Request, ctx: Params) {
   try {
     const actor = await requireAccess("ingest.write")
     const { jobId, visitId } = await ctx.params
