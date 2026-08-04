@@ -1,17 +1,25 @@
 import { expect, test } from "@playwright/test"
 
 test.describe.serial("Persons critical journeys", () => {
-  test("People create, read, update, and delete through the browser/API boundary", async ({ page, request }) => {
-    await page.goto("/people")
+  test("People create, read, update, and delete through the browser/API boundary", async ({ page, request }, testInfo) => {
+    // Unique per attempt. The test deletes its Person at the end, but a failed
+    // attempt leaves it behind — so a retry matched two elements and failed on
+    // a strict-mode violation instead of on whatever actually broke.
+    const surname = `Person${testInfo.retry || ""}${Date.now().toString().slice(-6)}`
+    const fullName = `E2E ${surname}`
+
+    // "/persons" is canonical; "/people" has been a redirect stub since the
+    // rename in 05c7ce2. Go straight to the real route.
+    await page.goto("/persons")
     await page.getByRole("button", { name: "Add person", exact: true }).click()
     await page.locator('input[placeholder="Marcus"]').fill("E2E")
-    await page.locator('input[placeholder="Chen"]').fill("Person")
+    await page.locator('input[placeholder="Chen"]').fill(surname)
     await page.getByRole("button", { name: "Add Person", exact: true }).click()
-    await expect(page.getByText("E2E Person", { exact: true })).toBeVisible()
+    await expect(page.getByText(fullName, { exact: true })).toBeVisible()
 
-    const link = page.getByRole("link", { name: /E2E Person/ }).first()
+    const link = page.getByRole("link", { name: new RegExp(fullName) }).first()
     const href = await link.getAttribute("href")
-    expect(href).toMatch(/^\/people\//)
+    expect(href).toMatch(/^\/persons\//)
     const id = href!.split("/").pop()!
 
     const update = await request.patch(`/api/persons/${id}`, {
