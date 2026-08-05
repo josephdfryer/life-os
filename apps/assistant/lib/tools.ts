@@ -185,6 +185,63 @@ export const TOOLS: Anthropic.Tool[] = [
       required: [],
     },
   },
+  {
+    // The reason the graph exists: one stream, not one page per person.
+    name: "get_interactions",
+    description: "Joseph's unified interaction stream — every logged thing across his whole life in one continuous list, newest first: calls, meals, meetings, messages, emails, calendar events and financial transactions. Use for 'what have I been doing', 'what happened last week', or any question that spans more than one person. Filter by type, person, place, merchant or date. This is the general feed; use get_spend_breakdown for money totals.",
+    input_schema: {
+      type: "object",
+      properties: {
+        type: { type: "string", description: "Filter: financial | calendar | message | email | call | meeting. Omit for everything." },
+        personName: { type: "string", description: "Filter: only interactions involving this person" },
+        merchant: { type: "string", description: "Filter: merchant or counterparty name contains" },
+        sinceDays: { type: "number", description: "Lookback window in days, default 14" },
+        limit: { type: "number", description: "Max rows, default 25 (max 100)" },
+      },
+      required: [],
+    },
+  },
+  {
+    name: "get_plans",
+    description: "Joseph's declared intentions — goals, commitments and plans, with status and due dates. This is what he SAID he would do, as opposed to what the interaction log shows he did. Use for 'what am I committed to', 'what's overdue', or to check a goal before advising.",
+    input_schema: {
+      type: "object",
+      properties: {
+        status: { type: "string", description: "draft | active | blocked | completed | abandoned. Default active." },
+        personName: { type: "string", description: "Filter: plans tied to this person" },
+        overdueOnly: { type: "boolean", description: "Only plans past their due date" },
+        limit: { type: "number", description: "Default 20" },
+      },
+      required: [],
+    },
+  },
+  {
+    name: "get_states",
+    description: "Point-in-time conditions recorded on people, places or projects — health readings, relationship phases, project status. Each is a timestamped fact, never overwritten, so this shows how something has changed. Use for 'how has my sleep been', 'what's the state of X', or trend questions.",
+    input_schema: {
+      type: "object",
+      properties: {
+        query: { type: "string", description: "Filter: state type or value contains, e.g. sleep, weight, mood" },
+        entityType: { type: "string", description: "Person | Place | Plan | Item" },
+        sinceDays: { type: "number", description: "Lookback window, default 30" },
+        limit: { type: "number", description: "Default 30" },
+      },
+      required: [],
+    },
+  },
+  {
+    name: "search_groups",
+    description: "Collectives in Joseph's graph: his household/family, employers, and every merchant he transacts with (merchants are modelled as companies). Use to find who a group's members are, or to get total spend with a company across all time.",
+    input_schema: {
+      type: "object",
+      properties: {
+        query: { type: "string", description: "Name fragment, e.g. Amazon, Fryer, Uber" },
+        groupType: { type: "string", description: "family | employer | corporation | friend_group | community" },
+        limit: { type: "number", description: "Default 15" },
+      },
+      required: [],
+    },
+  },
 ]
 
 // ── Executors ────────────────────────────────────────────────────
@@ -212,6 +269,10 @@ export async function executeTool(name: string, input: Record<string, unknown>, 
       case "search_events": return await searchEvents(String(input.query ?? ""), Number(input.sinceDays ?? 90), workspaceId)
       case "get_theory": return await getTheory(String(input.personId ?? ""), workspaceId)
       case "get_alignment_signals": return await getAlignmentSignalsTool(workspaceId)
+      case "get_interactions": return await getInteractionStream(input, workspaceId)
+      case "get_plans": return await getPlans(input, workspaceId)
+      case "get_states": return await getStates(input, workspaceId)
+      case "search_groups": return await searchGroups(input, workspaceId)
       default: return `Unknown tool: ${name}`
     }
   } catch (error) {
@@ -653,4 +714,195 @@ function daysAgo(date: Date) {
   if (days === 0) return "today"
   if (days === 1) return "yesterday"
   return `${days}d ago`
+}
+
+// ── The unified stream and the remaining primitives ──────────────
+//
+// Person, Place, Item, Event and Note already had tools. Plan, Group and State
+// had none, and interactions were only reachable one person at a time — which
+// is the exact limitation the graph was built to remove.
+
+async function getInteractionStream(input: Record<string, unknown>, workspaceId: string) {
+  const days = clampNumber(input.sinceDays, 14, 1, 3650)
+  const limit = clampNumber(input.limit, 25, 1, 100)
+  const since = new Date(Date.now() - days * 86_400_000)
+
+  const personName = optionalString(input.personName)
+  const person = personName
+    ? await db.person.findFirst({
+        where: {
+          workspaceId,
+          OR: [{ first: { contains: personName } }, { last: { contains: personName } }, { nickname: { contains: personName } }],
+        },
+        select: { id: true, first: true, last: true },
+      })
+    : null
+  if (personName && !person) return `No person matching "${personName}"`
+
+  const merchant = optionalString(input.merchant)
+  const rows = await db.interaction.findMany({
+    where: {
+      workspaceId,
+      // Bounded at both ends. Calendar entries run years ahead, and ordering by
+      // timestamp desc without an upper bound puts 2027 reservations at the top
+      // of "what have I been doing lately".
+      timestamp: { gte: since, lte: new Date() },
+      ...(optionalString(input.type) ? { type: optionalString(input.type) } : {}),
+      ...(person ? { OR: [{ personId: person.id }, { actorPersonId: person.id }] } : {}),
+      ...(merchant
+        ? { OR: [{ merchantName: { contains: merchant } }, { summary: { contains: merchant } }] }
+        : {}),
+    },
+    orderBy: { timestamp: "desc" },
+    take: limit,
+    select: {
+      timestamp: true, type: true, subtype: true, summary: true, merchantName: true,
+      amount: true, direction: true, category: true,
+      person: { select: { first: true, last: true } },
+      place: { select: { name: true } },
+      event: { select: { name: true } },
+    },
+  })
+  if (!rows.length) return `No interactions in the last ${days} days matching that filter.`
+
+  const scope = [person ? `${person.first} ${person.last}` : "", merchant ? `merchant~"${merchant}"` : ""]
+    .filter(Boolean).join(" · ")
+  return [
+    `Interaction stream — last ${days} days${scope ? ` · ${scope}` : ""} (${rows.length} shown, newest first):`,
+    ...rows.map(row => {
+      const money = row.amount !== null
+        ? ` ${row.direction === "received" ? "+" : "-"}${currency(centsToDollars(row.amount) ?? 0)}`
+        : ""
+      const who = row.person ? ` w/ ${row.person.first} ${row.person.last}` : ""
+      const context = [row.place?.name, row.event?.name, row.category].filter(Boolean).join(" · ")
+      const label = row.merchantName ?? row.summary ?? row.subtype ?? row.type
+      return `- ${localDate(row.timestamp)} [${row.type}]${money} ${label}${who}${context ? ` (${context})` : ""}`
+    }),
+  ].join("\n")
+}
+
+async function getPlans(input: Record<string, unknown>, workspaceId: string) {
+  const limit = clampNumber(input.limit, 20, 1, 100)
+  const status = optionalString(input.status) ?? "active"
+  const personName = optionalString(input.personName)
+  const person = personName
+    ? await db.person.findFirst({
+        where: { workspaceId, OR: [{ first: { contains: personName } }, { last: { contains: personName } }] },
+        select: { id: true },
+      })
+    : null
+
+  const rows = await db.plan.findMany({
+    where: {
+      workspaceId,
+      ...(status === "any" ? {} : { status: status as never }),
+      ...(person ? { personId: person.id } : {}),
+      ...(input.overdueOnly === true ? { dueOn: { lt: new Date() }, completedAt: null } : {}),
+    },
+    orderBy: [{ dueOn: "asc" }, { createdAt: "desc" }],
+    take: limit,
+    select: {
+      text: true, status: true, timescale: true, dueOn: true, completedAt: true,
+      successSignals: true, person: { select: { first: true, last: true } },
+    },
+  })
+  if (!rows.length) return `No ${status} plans${person ? " for that person" : ""}.`
+
+  const now = Date.now()
+  return [
+    `Declared plans (${status}, ${rows.length}):`,
+    ...rows.map(row => {
+      const due = row.dueOn ? ` · due ${localDate(row.dueOn)}${row.dueOn.getTime() < now && !row.completedAt ? " OVERDUE" : ""}` : ""
+      const who = row.person ? ` · ${row.person.first} ${row.person.last}` : ""
+      // successSignals doubles as a provenance blob on calendar-derived plans;
+      // a wall of sync JSON buries the plan text it is attached to.
+      const signal = readableSignal(row.successSignals)
+      return `- ${row.text}${due}${who}${row.timescale ? ` · ${row.timescale}` : ""}${signal}`
+    }),
+  ].join("\n")
+}
+
+async function getStates(input: Record<string, unknown>, workspaceId: string) {
+  const days = clampNumber(input.sinceDays, 30, 1, 3650)
+  const limit = clampNumber(input.limit, 30, 1, 100)
+  const query = optionalString(input.query)
+  const rows = await db.state.findMany({
+    where: {
+      workspaceId,
+      recordedAt: { gte: new Date(Date.now() - days * 86_400_000) },
+      ...(optionalString(input.entityType) ? { entityType: optionalString(input.entityType) } : {}),
+      ...(query
+        ? { definition: { OR: [{ type: { contains: query } }, { value: { contains: query } }] } }
+        : {}),
+    },
+    orderBy: { recordedAt: "desc" },
+    take: limit,
+    select: {
+      recordedAt: true, entityType: true, severity: true, source: true,
+      definition: { select: { type: true, value: true, description: true } },
+    },
+  })
+  if (!rows.length) return `No states recorded in the last ${days} days${query ? ` matching "${query}"` : ""}.`
+
+  return [
+    `Recorded states — last ${days} days (${rows.length}, newest first):`,
+    ...rows.map(row => {
+      const severity = row.severity !== null ? ` (${row.severity})` : ""
+      return `- ${localDate(row.recordedAt)} ${row.definition.type}: ${row.definition.value}${severity} [${row.entityType}]`
+    }),
+  ].join("\n")
+}
+
+async function searchGroups(input: Record<string, unknown>, workspaceId: string) {
+  const limit = clampNumber(input.limit, 15, 1, 50)
+  const query = optionalString(input.query)
+  const groups = await db.group.findMany({
+    where: {
+      workspaceId,
+      ...(query ? { name: { contains: query } } : {}),
+      ...(optionalString(input.groupType) ? { groupType: optionalString(input.groupType) as never } : {}),
+    },
+    take: limit,
+    select: {
+      id: true, name: true, groupType: true,
+      personMembers: { select: { role: true, person: { select: { first: true, last: true } } }, take: 10 },
+    },
+  })
+  if (!groups.length) return `No groups matching "${query ?? "any"}"`
+
+  // Spend with a merchant is the counterparty edge, aggregated.
+  const totals = await db.interactionParticipant.groupBy({
+    by: ["entityId"],
+    where: { workspaceId, entityType: "Group", role: "counterparty", entityId: { in: groups.map(g => g.id) } },
+    _count: true,
+  })
+  const countById = new Map(totals.map(t => [t.entityId, t._count]))
+
+  return [
+    `Groups (${groups.length}):`,
+    ...groups.map(group => {
+      const members = group.personMembers.length
+        ? ` · members: ${group.personMembers.map(m => `${m.person.first} ${m.person.last}${m.role ? ` (${m.role})` : ""}`).join(", ")}`
+        : ""
+      const transactions = countById.get(group.id)
+      return `- ${group.name} [${group.groupType}]${transactions ? ` · ${transactions} transactions` : ""}${members}`
+    }),
+  ].join("\n")
+}
+
+/** Show a success signal only when it is prose a human wrote. */
+function readableSignal(value: string | null) {
+  if (!value) return ""
+  const trimmed = value.trim()
+  if (trimmed.startsWith("{") || trimmed.startsWith("[")) return ""
+  return ` · success: ${trimmed.length > 120 ? `${trimmed.slice(0, 120)}…` : trimmed}`
+}
+
+function clampNumber(value: unknown, fallback: number, min: number, max: number) {
+  const n = typeof value === "number" && Number.isFinite(value) ? Math.round(value) : fallback
+  return Math.min(max, Math.max(min, n))
+}
+
+function localDate(date: Date) {
+  return new Intl.DateTimeFormat("en-CA", { timeZone: TZ, year: "numeric", month: "2-digit", day: "2-digit" }).format(date)
 }
