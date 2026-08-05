@@ -301,7 +301,7 @@ async function appendDailyInteraction(input: {
     select: { id: true, summary: true, notes: true, direction: true },
     orderBy: { timestamp: "asc" },
   })
-  const line = messageLine(input.timestamp, input.direction, snippet(input.body))
+  const line = messageLine(input.timestamp, input.direction, input.body)
 
   if (existing) {
     await db.interaction.update({

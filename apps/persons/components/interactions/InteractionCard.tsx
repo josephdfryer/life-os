@@ -37,6 +37,11 @@ const TYPE_ICONS: Record<string, string> = {
 export default function InteractionCard({ interaction, onDelete }: Props) {
   const actionItems = parseJsonArray(interaction.actionItems as unknown as string)
   const [deleting, setDeleting] = useState(false)
+  const [showFullMessage, setShowFullMessage] = useState(false)
+  const isLongMessage = (interaction.summary?.length ?? 0) > 900
+  const visibleSummary = isLongMessage && !showFullMessage
+    ? `${interaction.summary!.slice(0, 900).trimEnd()}…`
+    : interaction.summary
 
   async function handleDelete() {
     if (!confirm("Delete this interaction? This cannot be undone.")) return
@@ -121,9 +126,18 @@ export default function InteractionCard({ interaction, onDelete }: Props) {
         )}
       </div>
 
-      {interaction.summary && (
+      {visibleSummary && (
         <p style={{ margin: "0 0 6px", fontSize: "12px", color: "var(--ink-2)", lineHeight: 1.5 }}>
-          {interaction.summary}
+          <span style={{ whiteSpace: "pre-wrap" }}>{visibleSummary}</span>
+          {isLongMessage && (
+            <button
+              type="button"
+              onClick={() => setShowFullMessage(current => !current)}
+              style={{ display: "block", marginTop: "6px", padding: 0, border: 0, background: "none", color: "var(--cognac-deep)", font: "inherit", cursor: "pointer" }}
+            >
+              {showFullMessage ? "Show less" : "Read full message"}
+            </button>
+          )}
         </p>
       )}
 

@@ -121,11 +121,19 @@ export default function InboxPage() {
       const res = await fetch("/api/inbox?status=review&limit=50")
       const data = await res.json()
       if (!res.ok) throw new Error(data.error || "Could not load inbox")
-      setItems(data.items ?? [])
+      let loaded = (data.items ?? []) as InboxItem[]
+      const requestedItemId = new URLSearchParams(window.location.search).get("item")
+      if (requestedItemId && !loaded.some(item => item.id === requestedItemId)) {
+        const detailRes = await fetch(`/api/inbox/${encodeURIComponent(requestedItemId)}`)
+        if (detailRes.ok) loaded = [await detailRes.json() as InboxItem, ...loaded]
+      }
+      setItems(loaded)
       setTotal(data.total ?? null)
       setNextCursor(data.nextCursor ?? null)
       setSelectedIds(new Set())
-      setFocusedIndex(0)
+      const requestedIndex = requestedItemId ? loaded.findIndex(item => item.id === requestedItemId) : -1
+      setFocusedIndex(requestedIndex >= 0 ? requestedIndex : 0)
+      if (requestedIndex >= 0) setExpandedId(requestedItemId)
     } catch (e) {
       setError(e instanceof Error ? e.message : "Could not load inbox")
     } finally {

@@ -28,8 +28,29 @@ export default async function PersonDetailPage({ params }: { params: Promise<{ i
       return <PersonDetailClient id={id} initialData={null} />
     }
 
+    const acceptedMessages = await db.stagedInteraction.findMany({
+      where: {
+        workspaceId: actor.workspaceId,
+        acceptedPersonId: person.id,
+        interactionId: { not: null },
+        body: { not: null },
+        source: { in: ["imessage", "gmail", "whatsapp"] },
+      },
+      select: { interactionId: true, timestamp: true, direction: true, body: true },
+      orderBy: { timestamp: "asc" },
+      take: 1000,
+    })
+    const fullMessagesByInteraction = new Map<string, string[]>()
+    for (const message of acceptedMessages) {
+      if (!message.interactionId || !message.body) continue
+      const lines = fullMessagesByInteraction.get(message.interactionId) ?? []
+      lines.push(formatMessage(message.timestamp, message.direction, message.body))
+      fullMessagesByInteraction.set(message.interactionId, lines)
+    }
+
     const interactions: Interaction[] = person.interactions.map((ix: typeof person.interactions[number]) => ({
       ...ix,
+      summary: fullMessagesByInteraction.get(ix.id)?.join("\n\n") ?? ix.summary,
       actionItems: parseTags(ix.actionItems) as unknown as string[],
       event: ix.event
         ? { ...ix.event, metadata: ix.event.metadata ? parseStoredRecord(ix.event.metadata, "Event.metadata") : null }
@@ -63,4 +84,13 @@ export default async function PersonDetailPage({ params }: { params: Promise<{ i
     }
     return <PersonDetailClient id={id} initialData={null} />
   }
+}
+
+function formatMessage(timestamp: Date, direction: string | null, body: string) {
+  const time = new Intl.DateTimeFormat("en-US", {
+    timeZone: "America/Los_Angeles",
+    hour: "numeric",
+    minute: "2-digit",
+  }).format(timestamp)
+  return `[${time}${direction ? ` ${direction}` : ""}] ${body}`
 }

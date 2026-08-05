@@ -188,7 +188,9 @@ export async function appendDailySourceInteraction(input: {
     orderBy: { timestamp: "asc" },
   })
 
-  const line = messageLine(input.timestamp, input.direction, input.summary || input.body || "(no text)")
+  // Preserve the actual communication when the provider supplied it. The AI
+  // summary remains a fallback, not a replacement for the relationship record.
+  const line = messageLine(input.timestamp, input.direction, input.body || input.summary || "(no text)")
   const sourceMarker = normalizeSourceMarker(input.source, input.sourceId)
 
   if (dailyInteraction) {
@@ -212,7 +214,7 @@ export async function appendDailySourceInteraction(input: {
     return { interactionId: interaction.id, created: false, updated: true }
   }
 
-  const event = input.source === "imessage"
+  const event = ["imessage", "gmail", "whatsapp"].includes(input.source)
     ? null
     : await db.event.create({
       data: {

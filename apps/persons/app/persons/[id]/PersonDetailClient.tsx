@@ -86,6 +86,9 @@ export default function PersonDetailClient({ id, initialData }: { id: string; in
     ? person.tags as unknown as string[]
     : parseTags(person.tags as unknown as string)
   const activePlans = person.plans.filter(p => p.status === "active")
+  const communications = person.interactions.filter(ix => ix.type === "message" || ix.type === "email")
+  const calendarEvents = person.interactions.filter(ix => ix.type === "calendar")
+  const relationshipHistory = person.interactions.filter(ix => !["message", "email", "calendar"].includes(ix.type))
 
   return (
     <div style={{ maxWidth: "720px", margin: "0 auto", padding: "32px 24px" }}>
@@ -322,26 +325,49 @@ export default function PersonDetailClient({ id, initialData }: { id: string; in
 
       {/* ── Interaction Log ──────────────────────────────────────── */}
       <Card
-        title={`Interaction Log (${person.interactions.length})`}
+        title={`Communications (${communications.length})`}
         headerAction={
           <Button variant="ghost" size="sm" onClick={() => setShowLogInteraction(true)} style={{ borderRadius: "6px", textTransform: "none", letterSpacing: 0 }}>+ Log</Button>
         }
         style={{ borderRadius: "14px", overflow: "hidden" }}
       >
-        {person.interactions.length === 0 ? (
+        {communications.length === 0 ? (
           <EmptyState
             icon="○"
-            title="No interactions yet"
-            subtitle="Log a call, coffee, or message to start tracking this relationship."
+            title="No communications yet"
+            subtitle="Email, iMessage, and WhatsApp conversations will appear here."
           />
         ) : (
           <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-            {[...person.interactions]
+            {[...communications]
               .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
               .map(ix => <InteractionCard key={ix.id} interaction={ix} onDelete={load} />)}
           </div>
         )}
       </Card>
+
+      {relationshipHistory.length > 0 && (
+        <Card title={`Relationship history (${relationshipHistory.length})`} style={{ borderRadius: "14px", overflow: "hidden", marginTop: "20px" }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+            {[...relationshipHistory].sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()).map(ix => (
+              <InteractionCard key={ix.id} interaction={ix} onDelete={load} />
+            ))}
+          </div>
+        </Card>
+      )}
+
+      {calendarEvents.length > 0 && (
+        <details style={{ marginTop: "20px" }}>
+          <summary style={{ cursor: "pointer", color: "var(--ink-3)", fontSize: "12px" }}>
+            Calendar events ({calendarEvents.length})
+          </summary>
+          <div style={{ display: "flex", flexDirection: "column", gap: "8px", marginTop: "10px" }}>
+            {[...calendarEvents].sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()).map(ix => (
+              <InteractionCard key={ix.id} interaction={ix} onDelete={load} />
+            ))}
+          </div>
+        </details>
+      )}
 
       {showEdit && (
         <EditPersonModal

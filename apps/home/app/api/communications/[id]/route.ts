@@ -8,7 +8,7 @@ export async function PATCH(request: Request, context: { params: Promise<{ id: s
   if (!workspaceId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
 
   const { id } = await context.params
-  const body = await request.json().catch(() => null) as { action?: unknown } | null
+  const body = await request.json().catch(() => null) as { action?: unknown; personId?: unknown } | null
   if (body?.action !== "accept" && body?.action !== "dismiss") {
     return NextResponse.json({ error: "Action must be accept or dismiss" }, { status: 400 })
   }
@@ -41,16 +41,19 @@ export async function PATCH(request: Request, context: { params: Promise<{ id: s
     return NextResponse.json({ status: "dismissed" })
   }
 
-  if (!item.candidatePersonId) {
+  const personId = typeof body.personId === "string" && body.personId.trim()
+    ? body.personId.trim()
+    : item.candidatePersonId
+  if (!personId) {
     return NextResponse.json({ error: "Choose a Person before accepting this communication" }, { status: 400 })
   }
   const person = await db.person.findFirst({
-    where: { id: item.candidatePersonId, workspaceId },
+    where: { id: personId, workspaceId },
     select: { id: true },
   })
   if (!person) return NextResponse.json({ error: "The matched Person no longer exists" }, { status: 404 })
 
-  const result = await acceptCommunication(item, workspaceId)
+  const result = await acceptCommunication({ ...item, candidatePersonId: personId }, workspaceId)
   return NextResponse.json({ status: "accepted", ...result })
 }
 

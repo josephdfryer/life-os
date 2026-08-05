@@ -172,7 +172,7 @@ export default function CommunicationsReview({
           const response = await fetch(`/api/communications/${id}`, {
             method: "PATCH",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ action }),
+            body: JSON.stringify({ action, personId: item.candidatePersonId }),
           })
           const body = await response.json().catch(() => null) as { error?: string } | null
           if (!response.ok) throw new Error(body?.error || "Could not review this communication")
@@ -279,7 +279,7 @@ export default function CommunicationsReview({
                             Add to {item.candidatePersonName}
                           </button>
                         ) : (
-                          <a href={`${personsUrl}/inbox`}>Choose a Person in Persons</a>
+                          <a href={`${personsUrl}/inbox?item=${encodeURIComponent(item.id)}`}>Choose a Person in Persons</a>
                         )}
                         <button type="button" disabled={busyId === item.id} onClick={() => resolve(item, "dismiss")}>
                           Dismiss

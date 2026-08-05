@@ -189,7 +189,7 @@ async function syncOnce(options: Options) {
       personId: personResult.person.id,
       timestamp: appleDateToDate(message.appleDate),
       direction: contact.direction,
-      summary: snippet(body),
+      summary: body,
       sourceId,
       service: message.service ?? message.chatServiceName ?? "iMessage",
     })

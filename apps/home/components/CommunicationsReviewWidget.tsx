@@ -9,7 +9,7 @@ export default async function CommunicationsReviewWidget({
   workspaceId: string
   personsUrl: string
 }) {
-  const rows = await db.stagedInteraction.findMany({
+  const [rows, people] = await Promise.all([db.stagedInteraction.findMany({
     where: {
       workspaceId,
       status: { in: ["pending", "blocked"] },
@@ -32,8 +32,20 @@ export default async function CommunicationsReviewWidget({
       candidatePersonId: true,
       candidatePerson: { select: { first: true, last: true } },
     },
-  })
-  const groups = groupCommunications(rows).slice(0, 12)
+  }), db.person.findMany({
+    where: { workspaceId },
+    select: { id: true, first: true, last: true, emails: true, phones: true },
+    take: 500,
+  })])
+  const groups = groupCommunications(rows.map(row => {
+    if (row.candidatePersonId) return row
+    const match = uniqueExactPersonMatch(row, people)
+    return match ? {
+      ...row,
+      candidatePersonId: match.id,
+      candidatePerson: { first: match.first, last: match.last },
+    } : row
+  })).slice(0, 12)
 
   return (
     <CommunicationsReview
@@ -41,4 +53,41 @@ export default async function CommunicationsReviewWidget({
       initialItems={groups}
     />
   )
+}
+
+function uniqueExactPersonMatch(
+  row: { contactName: string | null; contactEmail: string | null; contactPhone: string | null },
+  people: Array<{ id: string; first: string; last: string; emails: string; phones: string }>,
+) {
+  const email = normalizeEmail(row.contactEmail)
+  const phone = normalizePhone(row.contactPhone)
+  const name = normalizeName(row.contactName)
+  const matches = people.filter(person => {
+    if (email && parseList(person.emails).some(value => normalizeEmail(value) === email)) return true
+    if (phone && parseList(person.phones).some(value => normalizePhone(value) === phone)) return true
+    return Boolean(name && normalizeName(`${person.first} ${person.last}`) === name)
+  })
+  return matches.length === 1 ? matches[0] : null
+}
+
+function parseList(value: string) {
+  try {
+    const parsed = JSON.parse(value)
+    return Array.isArray(parsed) ? parsed.map(String) : []
+  } catch {
+    return []
+  }
+}
+
+function normalizeEmail(value: string | null) {
+  return value?.trim().toLocaleLowerCase() ?? ""
+}
+
+function normalizePhone(value: string | null) {
+  const digits = value?.replace(/\D/g, "") ?? ""
+  return digits.length === 11 && digits.startsWith("1") ? digits.slice(1) : digits
+}
+
+function normalizeName(value: string | null) {
+  return value?.trim().replace(/\s+/g, " ").toLocaleLowerCase() ?? ""
 }
