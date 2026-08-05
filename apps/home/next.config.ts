@@ -2,6 +2,7 @@ import type { NextConfig } from "next"
 import path from "path"
 
 const nextConfig: NextConfig = {
+  cacheComponents: true,
   output: "standalone",
   outputFileTracingRoot: path.resolve(__dirname, "../.."),
   serverExternalPackages: [

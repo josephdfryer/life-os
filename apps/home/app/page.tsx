@@ -1,6 +1,7 @@
 import { Suspense } from 'react'
 import { redirect } from 'next/navigation'
 import { cookies } from 'next/headers'
+import { unstable_cache } from 'next/cache'
 import { auth } from '../auth'
 import { db } from '@life-os/db'
 import { LIFE_OS_APP_URLS, lifeOsAppUrl } from '@life-os/auth'
@@ -18,18 +19,32 @@ import DayReviewNavigation from '../components/DayReviewNavigation'
 import CustomizableWidgetGrid from '../components/CustomizableWidgetGrid'
 import { greetingForHour, parseReviewDay } from '@/lib/daily'
 
-export const dynamic = 'force-dynamic'
-
 async function getWorkspaceId(email: string): Promise<string> {
-  const member = await db.workspaceMember.findFirst({
-    where: { user: { email }, status: 'active' },
-    select: { workspaceId: true },
-    orderBy: { createdAt: 'asc' },
-  })
-  return member?.workspaceId ?? 'default-workspace'
+  return unstable_cache(
+    async () => {
+      const member = await db.workspaceMember.findFirst({
+        where: { user: { email }, status: 'active' },
+        select: { workspaceId: true },
+        orderBy: { createdAt: 'asc' },
+      })
+      return member?.workspaceId ?? 'default-workspace'
+    },
+    [`home-workspace:${email.toLocaleLowerCase()}`],
+    { revalidate: 300 },
+  )()
 }
 
-export default async function HomePage({
+export default function HomePage(props: {
+  searchParams: Promise<{ day?: string }>
+}) {
+  return (
+    <Suspense fallback={<HomePageSkeleton />}>
+      <HomePageContent {...props} />
+    </Suspense>
+  )
+}
+
+async function HomePageContent({
   searchParams,
 }: {
   searchParams: Promise<{ day?: string }>
@@ -181,6 +196,20 @@ export default async function HomePage({
             ))}
           </div>
         </div>
+      </div>
+    </div>
+  )
+}
+
+function HomePageSkeleton() {
+  return (
+    <div className="dashboard-page min-h-screen pb-12">
+      <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '48px 24px 0' }}>
+        <div style={{ marginBottom: '48px' }}>
+          <div style={{ width: '280px', height: '56px', borderRadius: '10px', background: 'rgba(247, 244, 238, 0.08)' }} />
+          <div style={{ width: '180px', height: '18px', borderRadius: '8px', marginTop: '12px', background: 'rgba(247, 244, 238, 0.06)' }} />
+        </div>
+        <WidgetSkeleton />
       </div>
     </div>
   )

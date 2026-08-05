@@ -72,6 +72,15 @@ additive provenance migrations are pending in a configured database. Local
 review bypass is checked both in `proxy.ts` and the Home page, and is inert in
 production.
 
+Home uses Next.js Cache Components as a short-lived read model over the remote
+graph. The personalized session/workspace boundary streams behind a page-level
+Suspense shell, while Today, Prepare, Communications, reconciliation, Nudges,
+and Weekly Review are cached by their workspace and input props for 15–60
+seconds. This keeps the first paint immediate and prevents repeat visits from
+replaying more than twenty remote database reads. Mutating API routes remain
+dynamic; the cache expires within five minutes even if no background refresh
+occurs.
+
 ### Note-first capture
 
 `@life-os/domain` owns the canonical `captureNote` command. Home's

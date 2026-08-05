@@ -1,12 +1,15 @@
 import { lifeOsAppUrl } from '@life-os/auth'
 import { db } from '@life-os/db'
 import { isProviderScheduledEvent } from '@/lib/daily'
+import { cacheLife } from 'next/cache'
 
 interface Props {
   workspaceId: string
 }
 
 export default async function ScheduleWidget({ workspaceId }: Props) {
+  'use cache'
+  cacheLife({ stale: 15, revalidate: 30, expire: 300 })
   const eventsUrl = lifeOsAppUrl('events', 'http://localhost:3006')
   const now = new Date()
   const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0)

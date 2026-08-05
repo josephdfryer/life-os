@@ -1,12 +1,15 @@
 import { lifeOsAppUrl } from '@life-os/auth'
 import { db } from '@life-os/db'
 import { parseActionItems } from '@/lib/daily'
+import { cacheLife } from 'next/cache'
 
 interface Props {
   workspaceId: string
 }
 
 export default async function PrepareWidget({ workspaceId }: Props) {
+  'use cache'
+  cacheLife({ stale: 15, revalidate: 30, expire: 300 })
   const now = new Date()
   const horizon = new Date(now.getTime() + 18 * 60 * 60 * 1000)
   const eventsUrl = lifeOsAppUrl('events', 'http://localhost:3006')

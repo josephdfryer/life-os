@@ -1,7 +1,10 @@
 import { db } from "@life-os/db"
 import WeeklyReviewActions from "./WeeklyReviewActions"
+import { cacheLife } from "next/cache"
 
 export default async function WeeklyReview({ workspaceId }: { workspaceId: string }) {
+  "use cache"
+  cacheLife({ stale: 30, revalidate: 60, expire: 300 })
   const end = new Date()
   const start = new Date(end.getTime() - 7 * 24 * 60 * 60 * 1000)
   const [plans, events, interactions, states, notes] = await Promise.all([

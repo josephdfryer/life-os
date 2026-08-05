@@ -1,4 +1,5 @@
 import { db } from "@life-os/db"
+import { cacheLife } from "next/cache"
 import { groupCommunications } from "@/lib/communication-groups"
 import CommunicationsReview from "./CommunicationsReview"
 
@@ -9,6 +10,8 @@ export default async function CommunicationsReviewWidget({
   workspaceId: string
   personsUrl: string
 }) {
+  "use cache"
+  cacheLife({ stale: 15, revalidate: 30, expire: 300 })
   const [rows, people] = await Promise.all([db.stagedInteraction.findMany({
     where: {
       workspaceId,

@@ -1,8 +1,11 @@
 import { db } from "@life-os/db"
 import ReconciliationCards from "./ReconciliationCards"
 import { reviewDayBounds, HOME_TIME_ZONE } from "@/lib/daily"
+import { cacheLife } from "next/cache"
 
 export default async function ReconciliationWidget({ workspaceId, day, tz = HOME_TIME_ZONE }: { workspaceId: string; day: string; tz?: string }) {
+  "use cache"
+  cacheLife({ stale: 15, revalidate: 30, expire: 300 })
   const { start, end } = reviewDayBounds(day, tz)
   const [plans, places] = await Promise.all([
     db.plan.findMany({

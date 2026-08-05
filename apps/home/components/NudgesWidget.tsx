@@ -1,5 +1,6 @@
 import { db } from '@life-os/db'
 import { getRelationshipGaps } from '@life-os/alignment'
+import { cacheLife } from 'next/cache'
 
 interface Props {
   workspaceId: string
@@ -7,6 +8,8 @@ interface Props {
 }
 
 export default async function NudgesWidget({ workspaceId, personsUrl }: Props) {
+  'use cache'
+  cacheLife({ stale: 30, revalidate: 60, expire: 300 })
   // Shared with Persons (Today page) and the assistant — one definition of
   // "overdue" instead of three apps quietly disagreeing with each other.
   const gaps = await getRelationshipGaps(workspaceId)
