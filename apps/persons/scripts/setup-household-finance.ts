@@ -127,8 +127,13 @@ async function main() {
   console.log(`\nAccounts (${accounts.length}):`)
   for (const account of accounts) {
     const intent = ACCOUNT_OWNERSHIP[account.eraAccountId] ?? DEFAULT_OWNER
+    // A shared card still has an account holder. The Amex Platinum is in
+    // Joseph's name — Era reports scope "Owner" — and Qin also spending on it
+    // does not make it stop being his. So a shared account keeps its owner AND
+    // carries the household link: the spend shows up under him and under the
+    // family, which is the truth. Leaving the owner null orphaned 3,146 rows.
     const data = intent === "shared"
-      ? { ownerPersonId: null, isShared: true, householdGroupId: household?.id ?? null }
+      ? { ownerPersonId: JOSEPH_ID, isShared: true, householdGroupId: household?.id ?? null }
       : { ownerPersonId: JOSEPH_ID, isShared: false, householdGroupId: null }
 
     const label = `${(account.institution ?? "").padEnd(28)} ${account.accountName ?? ""}`.trim()

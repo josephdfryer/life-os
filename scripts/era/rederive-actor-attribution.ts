@@ -60,17 +60,12 @@ async function main() {
               WHERE a."id" = "Interaction"."accountLinkId" AND a."ownerPersonId" IS NOT NULL)`, WORKSPACE_ID)
   console.log(`Attributed to a person: ${updated} row(s)`)
 
-  // A shared account has no single owner — clear any stale personal attribution.
-  const cleared = await db.$executeRawUnsafe(`
-    UPDATE "Interaction"
-       SET "actorPersonId" = NULL
-     WHERE "workspaceId" = ?
-       AND "accountLinkId" IS NOT NULL
-       AND "actorPersonId" IS NOT NULL
-       AND EXISTS (
-             SELECT 1 FROM "EraAccountLink" a
-              WHERE a."id" = "Interaction"."accountLinkId" AND a."isShared" = 1)`, WORKSPACE_ID)
-  if (cleared > 0) console.log(`Cleared personal attribution on shared-account rows: ${cleared}`)
+  // A shared account is NOT unowned. The card is in one person's name and they
+  // are liable for it; a spouse also using it makes the spend joint, not
+  // anonymous. So the owner attribution above applies to shared accounts too,
+  // and the household edge below records the joint half. Clearing the actor
+  // here — as this script used to — left every joint transaction belonging to
+  // nobody, so "my spending" silently omitted the highest-volume card.
 
   // ── Shared accounts: attribute to the household Group ──────────────────
   const shared = await db.interaction.findMany({
