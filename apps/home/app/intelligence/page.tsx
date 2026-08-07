@@ -1,6 +1,9 @@
 import { Suspense } from "react"
 import {
+  getCurrentLifeModelSnapshot,
+  listLifeModelSnapshots,
   synthesizeLifeModel,
+  type LifeModelEvidenceRef,
   type LifeModelClaimInput,
   type LifeModelClaimKind,
 } from "@life-os/intelligence"
@@ -24,10 +27,26 @@ async function IntelligenceContent() {
   const workspaceId = await workspaceForHomeRequest()
   if (!workspaceId) redirect("/login")
 
-  // This computes from existing primitives and does not touch the new A6
-  // snapshot tables. It remains production-safe until that migration lands;
-  // persisted history can layer onto this exact view afterward.
-  const { claims } = await synthesizeLifeModel(workspaceId)
+  const [currentSnapshot, snapshots] = await Promise.all([
+    getCurrentLifeModelSnapshot(workspaceId),
+    listLifeModelSnapshots(workspaceId),
+  ])
+  // A saved snapshot is authoritative. Only compute the live deterministic
+  // preview when no snapshot exists; this also prevents a future model-backed
+  // synthesizer from running on every page view.
+  const liveSynthesis = currentSnapshot ? null : await synthesizeLifeModel(workspaceId)
+  const claims: LifeModelClaimInput[] = currentSnapshot
+    ? currentSnapshot.claims.map(claim => ({
+        kind: claim.kind as LifeModelClaimKind,
+        statement: claim.statement,
+        confidence: claim.confidence,
+        subjectType: claim.subjectType,
+        subjectId: claim.subjectId,
+        windowStart: claim.windowStart,
+        windowEnd: claim.windowEnd,
+        evidence: decodeEvidence(claim.evidence),
+      }))
+    : liveSynthesis?.claims ?? []
   const realClaims = claims
     .filter(claim => !claim.statement.startsWith("Unknown —"))
     .sort((a, b) => claimPriority(b) - claimPriority(a))
@@ -47,12 +66,12 @@ async function IntelligenceContent() {
             <span className="intelligence-reading-mark" aria-hidden>◇</span>
             <p className="still-eyebrow">Current reading</p>
             <h2 id="reading-heading">{readingTitle(realClaims.length)}</h2>
-            <p>{readingSummary(realClaims.length)}</p>
+            <p>{currentSnapshot?.summary || readingSummary(realClaims.length)}</p>
           </div>
           <div className="intelligence-freshness">
             <span>Freshness</span>
-            <strong>Computed now</strong>
-            <small>From current graph records</small>
+            <strong>{currentSnapshot ? `Snapshot v${currentSnapshot.version}` : "Live preview"}</strong>
+            <small>{currentSnapshot ? formatDate(currentSnapshot.synthesizedAt) : "Computed now from current records"}</small>
           </div>
         </section>
 
@@ -80,6 +99,22 @@ async function IntelligenceContent() {
           {realClaims.length === 0
             ? <div className="stream-message">No evidence-backed tensions are visible right now. Observed, inferred, and declared synthesis has not run yet.</div>
             : <div className="intelligence-claim-list">{realClaims.map((claim, index) => <ClaimCard claim={claim} rank={index + 1} key={`${claim.kind}-${claim.subjectId || index}`} />)}</div>}
+        </section>
+
+        <section className="intelligence-section" aria-labelledby="history-heading">
+          <div className="automation-section-heading">
+            <div><p className="still-eyebrow">Versioned memory</p><h2 id="history-heading">Snapshot history</h2></div>
+            <span className="stream-count">{snapshots.length} saved {snapshots.length === 1 ? "reading" : "readings"}</span>
+          </div>
+          {snapshots.length === 0
+            ? <div className="stream-message intelligence-history-empty"><strong>No persisted reading yet.</strong><span>The live preview remains derived from current graph records. The first evidence-backed synthesis will become version 1.</span></div>
+            : <div className="intelligence-history-list">{snapshots.map(snapshot => (
+                <article className={snapshot.status === "current" ? "intelligence-history-current" : undefined} key={snapshot.id}>
+                  <div><span>v{snapshot.version}</span><strong>{snapshot.status}</strong></div>
+                  <p>{snapshot.summary}</p>
+                  <div><time dateTime={snapshot.synthesizedAt.toISOString()}>{formatDate(snapshot.synthesizedAt)}</time><span>{snapshot._count.claims} {snapshot._count.claims === 1 ? "claim" : "claims"}</span><span>{snapshot.modelId || "Deterministic"}</span></div>
+                </article>
+              ))}</div>}
         </section>
 
         <section className="intelligence-section intelligence-boundary" aria-labelledby="boundary-heading">
@@ -153,6 +188,29 @@ function readingSummary(count: number) {
     ? "No evidence-backed tensions are visible in the current records."
     : `${count} evidence-backed ${count === 1 ? "tension is" : "tensions are"} visible between declared and observed.`
   return `${tensions} Observed, inferred, and declared readings are not available yet.`
+}
+
+function decodeEvidence(raw: string | null): LifeModelEvidenceRef[] {
+  if (!raw) return []
+  try {
+    const value: unknown = JSON.parse(raw)
+    if (!Array.isArray(value)) return []
+    return value.flatMap(item => {
+      if (!item || typeof item !== "object") return []
+      const record = item as Record<string, unknown>
+      if (typeof record.sourceType !== "string" || typeof record.sourceId !== "string") return []
+      const detail = record.detail && typeof record.detail === "object" && !Array.isArray(record.detail)
+        ? record.detail as Record<string, unknown>
+        : undefined
+      return [{ sourceType: record.sourceType, sourceId: record.sourceId, detail }]
+    })
+  } catch {
+    return []
+  }
+}
+
+function formatDate(value: Date) {
+  return new Intl.DateTimeFormat("en-US", { dateStyle: "medium", timeStyle: "short" }).format(value)
 }
 
 function humanize(value: string) {

@@ -39,6 +39,7 @@ type RuleRow = {
   conditions: string
   actions: string
   stopProcessing: boolean
+  version: number
   updatedAt: Date
   runs: Array<{
     id: string
@@ -50,6 +51,8 @@ type RuleRow = {
     targetType: string | null
     actionsPlanned: string | null
     actionsApplied: string | null
+    ruleVersion: number
+    causationDepth: number
   }>
 }
 
@@ -65,9 +68,6 @@ async function AutomationContent() {
   const workspaceId = await workspaceForHomeRequest()
   if (!workspaceId) redirect("/login")
 
-  // Keep this read-side surface compatible with production while the A5
-  // migration is pending: deliberately omit Rule.version and the new
-  // RuleRun version/depth columns until the migration has been applied.
   const [rules, ruleCount, runCount, matchedRunCount] = await Promise.all([
     db.rule.findMany({
       where: { workspaceId },
@@ -84,6 +84,7 @@ async function AutomationContent() {
         conditions: true,
         actions: true,
         stopProcessing: true,
+        version: true,
         updatedAt: true,
         runs: {
           orderBy: { createdAt: "desc" },
@@ -98,6 +99,8 @@ async function AutomationContent() {
             targetType: true,
             actionsPlanned: true,
             actionsApplied: true,
+            ruleVersion: true,
+            causationDepth: true,
           },
         },
       },
@@ -192,6 +195,7 @@ function RuleCard({ rule }: { rule: RuleRow }) {
           <div className="automation-rule-title-line">
             <h3>{rule.name}</h3>
             <span className={`automation-status automation-status-${rule.status}`}>{rule.status}</span>
+            <span className="automation-version">Definition v{rule.version}</span>
           </div>
           <p>{rule.description || `Runs when ${humanize(rule.trigger)} occurs.`}</p>
         </div>
@@ -233,7 +237,7 @@ function RuleCard({ rule }: { rule: RuleRow }) {
       <details className="automation-history">
         <summary>
           <span>Run history</span>
-          <span>{lastRun ? `${lastRun.status} · ${formatRelativeDate(lastRun.createdAt)}` : "No runs yet"}</span>
+          <span>{lastRun ? `${lastRun.status} · v${lastRun.ruleVersion} · ${formatRelativeDate(lastRun.createdAt)}` : "No runs yet"}</span>
         </summary>
         {rule.runs.length === 0
           ? <p className="automation-history-empty">This rule has not evaluated an event yet.</p>
@@ -241,6 +245,9 @@ function RuleCard({ rule }: { rule: RuleRow }) {
               <time dateTime={run.createdAt.toISOString()}>{formatDate(run.createdAt)}</time>
               <span className={`automation-run-dot automation-run-${run.status}`} aria-hidden />
               <strong>{run.status}{run.matched ? " · matched" : " · no match"}</strong>
+              <span className={run.ruleVersion !== rule.version ? "automation-version-stale" : undefined}>
+                v{run.ruleVersion}{run.ruleVersion !== rule.version ? ` · current v${rule.version}` : " · current definition"} · depth {run.causationDepth}
+              </span>
               <span>{run.message || run.targetType || `${countStoredActions(run.actionsApplied)} applied of ${countStoredActions(run.actionsPlanned)} planned`}</span>
             </li>)}</ol>}
       </details>

@@ -13,7 +13,7 @@ async function AdminContent({ searchParams }: { searchParams: Promise<{ tab?: st
   const workspaceId = await workspaceForHomeRequest()
   if (!workspaceId) redirect('/login')
   const { tab = 'overview' } = await searchParams
-  const [audit, workspace, calendar, gmail, roles, rules] = await Promise.all([
+  const [audit, workspace, calendar, gmail, roles, rules, systemHealth] = await Promise.all([
     tab === 'audit'
       ? db.auditLog.findMany({
           where: { workspaceId },
@@ -48,8 +48,9 @@ async function AdminContent({ searchParams }: { searchParams: Promise<{ tab?: st
         })
       : Promise.resolve([]),
     tab === 'rules'
-      ? db.rule.findMany({ where: { workspaceId }, orderBy: [{ status: 'asc' }, { priority: 'asc' }], take: 200, select: { id: true, name: true, description: true, trigger: true, status: true, mode: true, priority: true, conditions: true, actions: true, runs: { orderBy: { createdAt: 'desc' }, take: 1, select: { createdAt: true, status: true, matched: true } } } })
+      ? db.rule.findMany({ where: { workspaceId }, orderBy: [{ status: 'asc' }, { priority: 'asc' }], take: 200, select: { id: true, name: true, description: true, trigger: true, status: true, mode: true, priority: true, version: true, conditions: true, actions: true, runs: { orderBy: { createdAt: 'desc' }, take: 1, select: { createdAt: true, status: true, matched: true, ruleVersion: true, causationDepth: true } } } })
       : Promise.resolve([]),
+    tab === 'system' ? loadSystemHealth(workspaceId) : Promise.resolve(null),
   ])
 
   return (
@@ -59,10 +60,10 @@ async function AdminContent({ searchParams }: { searchParams: Promise<{ tab?: st
         <h1 className="stream-heading-title">Admin</h1>
         <p className="stream-intro">System-wide administration is moving into Home, one surface at a time.</p>
         <nav className="admin-tabs" aria-label="Admin tabs">
-          {['overview', 'audit', 'workspace', 'calendar', 'gmail', 'access', 'rules'].map(value => <a key={value} className={tab === value ? 'admin-tab-active' : ''} href={`/admin?tab=${value}`}>{value === 'overview' ? 'Overview' : value === 'audit' ? 'Audit log' : value === 'workspace' ? 'Workspace' : value === 'calendar' ? 'Calendar' : value === 'gmail' ? 'Gmail' : value === 'access' ? 'Access' : 'Rules'}</a>)}
+          {Object.entries(ADMIN_TABS).map(([value, label]) => <a key={value} className={tab === value ? 'admin-tab-active' : ''} href={`/admin?tab=${value}`}>{label}</a>)}
           <a className="admin-tab-legacy" href="https://persons.lacollecteur.com/admin">Legacy Persons admin ↗</a>
         </nav>
-        {tab === 'audit' ? <AuditTable rows={audit} /> : tab === 'workspace' ? <WorkspacePanel workspace={workspace} /> : tab === 'calendar' ? <IntegrationPanel title="Calendar connections" rows={calendar.map(item => ({ ...item, detail: item.calendarSummary || item.calendarId }))} /> : tab === 'gmail' ? <IntegrationPanel title="Gmail connections" rows={gmail.map(item => ({ ...item, detail: item.mailboxId }))} /> : tab === 'access' ? <AccessPanel roles={roles} /> : tab === 'rules' ? <RulesPanel rules={rules} /> : <AdminOverview />}
+        {tab === 'audit' ? <AuditTable rows={audit} /> : tab === 'workspace' ? <WorkspacePanel workspace={workspace} /> : tab === 'calendar' ? <IntegrationPanel title="Calendar connections" rows={calendar.map(item => ({ ...item, detail: item.calendarSummary || item.calendarId }))} /> : tab === 'gmail' ? <IntegrationPanel title="Gmail connections" rows={gmail.map(item => ({ ...item, detail: item.mailboxId }))} /> : tab === 'access' ? <AccessPanel roles={roles} /> : tab === 'rules' ? <RulesPanel rules={rules} /> : tab === 'system' && systemHealth ? <SystemHealthPanel health={systemHealth} /> : <AdminOverview />}
       </div>
     </main>
   )
@@ -112,11 +113,85 @@ function AccessPanel({ roles }: { roles: Array<{ id: string; key: string; name: 
   </section>
 }
 
-function RulesPanel({ rules }: { rules: Array<{ id: string; name: string; description: string | null; trigger: string; status: string; mode: string; priority: number; conditions: string; actions: string; runs: Array<{ createdAt: Date; status: string; matched: boolean }> }> }) {
+function RulesPanel({ rules }: { rules: Array<{ id: string; name: string; description: string | null; trigger: string; status: string; mode: string; priority: number; version: number; conditions: string; actions: string; runs: Array<{ createdAt: Date; status: string; matched: boolean; ruleVersion: number; causationDepth: number }> }> }) {
   return <section aria-labelledby="rules-heading" style={{ marginTop: 28 }}>
     <div className="admin-section-heading"><div><p className="still-eyebrow">Automation</p><h2 id="rules-heading">Rules</h2></div><a className="still-button still-button-secondary" href="/automation">Open full Automation view</a></div>
-    {rules.length === 0 ? <div className="stream-message">No rules configured for this workspace.</div> : <div className="stream-list">{rules.map(rule => <article className="admin-rule-row" key={rule.id}><div><strong>{rule.name}</strong><span>{rule.description || `${rule.trigger} · ${rule.mode}`}</span></div><div><span className={`integration-status integration-status-${rule.status}`}>{rule.status}</span><span>{rule.runs[0] ? `Last run ${rule.runs[0].status}${rule.runs[0].matched ? ' · matched' : ''}` : 'No runs yet'}</span></div></article>)}</div>}
+    {rules.length === 0 ? <div className="stream-message">No rules configured for this workspace.</div> : <div className="stream-list">{rules.map(rule => <article className="admin-rule-row" key={rule.id}><div><strong>{rule.name}</strong><span>{rule.description || `${rule.trigger} · ${rule.mode}`}</span></div><div><span className={`integration-status integration-status-${rule.status}`}>{rule.status} · v{rule.version}</span><span>{rule.runs[0] ? `Last run ${rule.runs[0].status}${rule.runs[0].matched ? ' · matched' : ''} · v${rule.runs[0].ruleVersion} · depth ${rule.runs[0].causationDepth}` : 'No runs yet'}</span></div></article>)}</div>}
   </section>
+}
+
+type SystemHealth = Awaited<ReturnType<typeof loadSystemHealth>>
+
+async function loadSystemHealth(workspaceId: string) {
+  const [eventCount, recentEvents, receiptGroups, oldestPendingReceipt, pendingReviews, failedReviews, failedRuleRuns, calendarIssues, gmailIssues] = await Promise.all([
+    db.graphEvent.count({ where: { workspaceId } }),
+    db.graphEvent.findMany({
+      where: { workspaceId },
+      orderBy: { recordedAt: 'desc' },
+      take: 12,
+      select: {
+        id: true, eventType: true, subjectType: true, subjectId: true, recordedAt: true, sourceConnector: true,
+        receipts: { take: 10, orderBy: { createdAt: 'asc' }, select: { id: true, consumer: true, status: true, attempts: true, lastError: true, nextRetryAt: true, processedAt: true } },
+      },
+    }),
+    db.graphEventReceipt.groupBy({ by: ['status'], where: { event: { workspaceId } }, _count: { _all: true } }),
+    db.graphEventReceipt.findFirst({ where: { event: { workspaceId }, status: { in: ['pending', 'processing', 'failed'] } }, orderBy: { createdAt: 'asc' }, select: { createdAt: true } }),
+    db.reviewItem.count({ where: { workspaceId, status: 'pending' } }),
+    db.reviewItem.count({ where: { workspaceId, status: 'failed' } }),
+    db.ruleRun.count({ where: { workspaceId, status: { in: ['failed', 'error'] } } }),
+    db.calendarConnection.count({ where: { workspaceId, OR: [{ lastError: { not: null } }, { status: { not: 'active' } }] } }),
+    db.gmailConnection.count({ where: { workspaceId, OR: [{ lastError: { not: null } }, { status: { not: 'active' } }] } }),
+  ])
+  const receipts = Object.fromEntries(receiptGroups.map(group => [group.status, group._count._all]))
+  const receiptCount = Object.values(receipts).reduce((sum, count) => sum + count, 0)
+  return {
+    eventCount,
+    recentEvents,
+    receiptCount,
+    receipts,
+    oldestPendingAt: oldestPendingReceipt?.createdAt ?? null,
+    pendingReviews,
+    failedReviews,
+    failedRuleRuns,
+    connectorIssues: calendarIssues + gmailIssues,
+  }
+}
+
+function SystemHealthPanel({ health }: { health: SystemHealth }) {
+  const failedReceipts = health.receipts.failed ?? 0
+  const waitingReceipts = (health.receipts.pending ?? 0) + (health.receipts.processing ?? 0)
+  const state = failedReceipts || health.failedReviews || health.failedRuleRuns || health.connectorIssues
+    ? { label: 'Needs attention', className: 'system-state-attention', detail: 'At least one durable process or connection has reported a failure.' }
+    : health.eventCount === 0
+      ? { label: 'Not yet exercised', className: 'system-state-idle', detail: 'The spine is ready, but no canonical GraphEvents have been published yet.' }
+      : health.receiptCount === 0
+        ? { label: 'No consumer receipts', className: 'system-state-attention', detail: 'Events exist, but no consumer has reported processing them.' }
+        : { label: 'Operational', className: 'system-state-healthy', detail: waitingReceipts ? 'Consumers are working through the durable queue.' : 'Published events have no visible backlog.' }
+
+  return <section className="system-health" aria-labelledby="system-health-heading">
+    <div className={`system-health-state ${state.className}`}>
+      <div><p className="still-eyebrow">Event spine</p><h2 id="system-health-heading">{state.label}</h2><p>{state.detail}</p></div>
+      <div><span>Queue age</span><strong>{health.oldestPendingAt ? formatAge(health.oldestPendingAt) : 'No backlog'}</strong></div>
+    </div>
+    <div className="system-health-metrics" aria-label="System health metrics">
+      <HealthMetric label="GraphEvents" value={health.eventCount} detail={health.recentEvents[0] ? `Latest ${formatAge(health.recentEvents[0].recordedAt)}` : 'Awaiting first event'} />
+      <HealthMetric label="Receipts" value={health.receiptCount} detail={`${health.receipts.done ?? 0} done · ${waitingReceipts} waiting · ${failedReceipts} failed`} attention={failedReceipts > 0} />
+      <HealthMetric label="Inbox" value={health.pendingReviews} detail={`${health.failedReviews} failed review items`} attention={health.failedReviews > 0} />
+      <HealthMetric label="Connections" value={health.connectorIssues} detail="Calendar and Gmail issues" attention={health.connectorIssues > 0} />
+    </div>
+    <div className="admin-section-heading"><div><p className="still-eyebrow">Recent activity</p><h2>Canonical events</h2></div><span className="stream-count">{health.recentEvents.length} shown</span></div>
+    {health.recentEvents.length === 0 ? <div className="stream-message">No GraphEvents recorded. The first shared command that publishes one will appear here with its consumer receipts.</div> : <div className="stream-list">
+      {health.recentEvents.map(event => <article className="system-event-row" key={event.id}>
+        <time dateTime={event.recordedAt.toISOString()}>{formatDate(event.recordedAt)}</time>
+        <div><strong>{event.eventType}</strong><span>{event.subjectType} · {event.sourceConnector || 'canonical command'}</span></div>
+        <div>{event.receipts.length === 0 ? <span className="system-receipt system-receipt-missing">No receipts</span> : event.receipts.map(receipt => <span className={`system-receipt system-receipt-${receipt.status}`} title={receipt.lastError || undefined} key={receipt.id}>{receipt.consumer} · {receipt.status} · {receipt.attempts}</span>)}</div>
+      </article>)}
+    </div>}
+  </section>
+}
+
+function HealthMetric({ label, value, detail, attention = false }: { label: string; value: number; detail: string; attention?: boolean }) {
+  return <div className={attention ? 'system-health-metric system-health-metric-attention' : 'system-health-metric'}><span>{label}</span><strong>{value}</strong><small>{detail}</small></div>
 }
 
 function AuditTable({ rows }: { rows: Array<{ id: string; createdAt: Date; action: string; targetType: string; targetId: string | null; actorLabel: string | null }> }) {
@@ -135,3 +210,24 @@ function AuditTable({ rows }: { rows: Array<{ id: string; createdAt: Date; actio
 function formatDate(value: Date) {
   return new Intl.DateTimeFormat('en-US', { dateStyle: 'medium', timeStyle: 'short' }).format(value)
 }
+
+function formatAge(value: Date) {
+  const elapsed = Math.max(0, Date.now() - value.getTime())
+  const minutes = Math.floor(elapsed / 60_000)
+  if (minutes < 1) return 'just now'
+  if (minutes < 60) return `${minutes}m ago`
+  const hours = Math.floor(minutes / 60)
+  if (hours < 24) return `${hours}h ago`
+  return `${Math.floor(hours / 24)}d ago`
+}
+
+const ADMIN_TABS = {
+  overview: 'Overview',
+  system: 'System Health',
+  audit: 'Audit log',
+  workspace: 'Workspace',
+  calendar: 'Calendar',
+  gmail: 'Gmail',
+  access: 'Access',
+  rules: 'Rules',
+} as const

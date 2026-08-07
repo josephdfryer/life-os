@@ -78,6 +78,92 @@ await db.stagedInteraction.create({
     candidatePersonId: "e2e-keeper",
   },
 })
+await db.rule.create({
+  data: {
+    id: "e2e-rule",
+    workspaceId: "default-workspace",
+    name: "Stage trusted messages",
+    description: "A versioned E2E rule",
+    trigger: "inbox.stage",
+    mode: "dry_run",
+    status: "active",
+    priority: 10,
+    version: 3,
+    conditions: JSON.stringify([{ field: "source", operator: "equals", value: "e2e" }]),
+    actions: JSON.stringify([{ type: "set_field", field: "priority", value: 2 }]),
+    runs: {
+      create: {
+        id: "e2e-rule-run",
+        workspaceId: "default-workspace",
+        ruleVersion: 2,
+        causationDepth: 1,
+        trigger: "inbox.stage",
+        targetType: "stagedInteraction",
+        targetId: "e2e-staged",
+        matched: true,
+        mode: "dry_run",
+        status: "planned",
+        actionsPlanned: JSON.stringify([{ type: "set_field", field: "priority", value: 2 }]),
+      },
+    },
+  },
+})
+await db.lifeModelSnapshot.create({
+  data: {
+    id: "e2e-life-model",
+    workspaceId: "default-workspace",
+    version: 1,
+    summary: "One evidence-backed tension is visible in the test workspace.",
+    status: "current",
+    promptVersion: "e2e-v1",
+    claims: {
+      create: {
+        id: "e2e-life-claim",
+        kind: "tension",
+        statement: "A declared relationship intention has gone quiet.",
+        confidence: 1,
+        subjectType: "Person",
+        subjectId: "e2e-keeper",
+        evidence: JSON.stringify([{ sourceType: "alignment_signal", sourceId: "relationship_gap", detail: { subject: "Merge Keeper", severity: 1.5 } }]),
+      },
+    },
+  },
+})
+await db.graphEvent.create({
+  data: {
+    id: "e2e-graph-event",
+    workspaceId: "default-workspace",
+    occurredAt: new Date("2026-07-15T13:05:00Z"),
+    recordedAt: new Date("2026-07-15T13:05:01Z"),
+    subjectType: "Interaction",
+    subjectId: "e2e-loser-interaction",
+    eventType: "interaction.created",
+    actorType: "system",
+    sourceConnector: "e2e",
+    idempotencyKey: "e2e:interaction.created:e2e-loser-interaction",
+    payload: "{}",
+    receipts: {
+      create: {
+        id: "e2e-graph-receipt",
+        consumer: "automation",
+        status: "failed",
+        attempts: 2,
+        lastError: "E2E consumer failure",
+      },
+    },
+  },
+})
+await db.reviewItem.create({
+  data: {
+    id: "e2e-failed-review",
+    workspaceId: "default-workspace",
+    source: "e2e",
+    sourceId: "e2e-failed-source",
+    itemType: "interaction",
+    proposedCommand: JSON.stringify({ command: "staged_interaction.accept", input: { stagedInteractionId: "e2e-staged" } }),
+    status: "failed",
+  },
+})
 
   await db.$disconnect()
   console.log(`Prepared isolated E2E database at ${dbPath}`)

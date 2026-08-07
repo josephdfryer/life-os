@@ -51,6 +51,16 @@ test.describe('Home control plane', () => {
     await expect(page.getByRole('heading', { name: 'Roles and scopes' })).toBeVisible()
     await page.goto('/admin?tab=rules')
     await expect(page.getByRole('heading', { name: 'Rules' })).toBeVisible()
+    await expect(page.getByText('active · v3')).toBeVisible()
+  })
+
+  test('admin system health exposes spine failures and durable queue state', async ({ page }) => {
+    await page.goto('/admin?tab=system')
+    await expect(page.getByRole('heading', { name: 'Needs attention' })).toBeVisible()
+    await expect(page.getByLabel('System health metrics')).toContainText('GraphEvents')
+    await expect(page.getByLabel('System health metrics')).toContainText('Receipts')
+    await expect(page.getByText('interaction.created', { exact: true })).toBeVisible()
+    await expect(page.getByText('automation · failed · 2')).toBeVisible()
   })
 
   test('automation explains authority, live capabilities, and rule history', async ({ page }) => {
@@ -63,6 +73,10 @@ test.describe('Home control plane', () => {
     await expect(page.getByRole('heading', { name: 'What the system is allowed to do' })).toBeVisible()
     await expect(page.getByRole('heading', { name: 'Live capabilities' })).toBeVisible()
     await expect(page.getByText('inbox.stage', { exact: true })).toBeVisible()
+    const versionedRule = page.locator('article.automation-rule-card').filter({ has: page.getByRole('heading', { name: 'Stage trusted messages' }) })
+    await expect(versionedRule.getByText('Definition v3')).toBeVisible()
+    await versionedRule.getByText('Run history', { exact: true }).click()
+    await expect(versionedRule.getByText('v2 · current v3 · depth 1')).toBeVisible()
   })
 
   test('intelligence labels claims and exposes their evidence boundary', async ({ page }) => {
@@ -73,6 +87,10 @@ test.describe('Home control plane', () => {
     await expect(page.getByText('Declared', { exact: true })).toBeVisible()
     await expect(page.getByRole('heading', { name: 'Tension', exact: true })).toBeVisible()
     await expect(page.getByRole('heading', { name: 'What deserves attention' })).toBeVisible()
+    await expect(page.getByText('Snapshot v1')).toBeVisible()
+    await expect(page.getByText('A declared relationship intention has gone quiet.')).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Snapshot history' })).toBeVisible()
+    await expect(page.getByText('1 saved reading')).toBeVisible()
     await expect(page.getByRole('heading', { name: 'Useful, never unquestionable' })).toBeVisible()
   })
 
