@@ -27,27 +27,28 @@ async function AdminContent({ searchParams }: { searchParams: Promise<{ tab?: st
           where: { id: workspaceId },
           select: {
             id: true, name: true, slug: true, status: true, createdAt: true, updatedAt: true,
-            members: { where: { status: 'active' }, orderBy: { createdAt: 'asc' }, select: { id: true, role: true, user: { select: { name: true, email: true } } } },
+            members: { where: { status: 'active' }, orderBy: { createdAt: 'asc' }, take: 500, select: { id: true, role: true, user: { select: { name: true, email: true } } } },
           },
         })
       : Promise.resolve(null),
     tab === 'calendar'
-      ? db.calendarConnection.findMany({ where: { workspaceId }, orderBy: { accountEmail: 'asc' }, select: { id: true, accountEmail: true, status: true, calendarId: true, calendarSummary: true, lastSyncedAt: true, lastError: true } })
+      ? db.calendarConnection.findMany({ where: { workspaceId }, orderBy: { accountEmail: 'asc' }, take: 100, select: { id: true, accountEmail: true, status: true, calendarId: true, calendarSummary: true, lastSyncedAt: true, lastError: true } })
       : Promise.resolve([]),
     tab === 'gmail'
-      ? db.gmailConnection.findMany({ where: { workspaceId }, orderBy: { accountEmail: 'asc' }, select: { id: true, accountEmail: true, status: true, mailboxId: true, lastSyncedAt: true, lastError: true } })
+      ? db.gmailConnection.findMany({ where: { workspaceId }, orderBy: { accountEmail: 'asc' }, take: 100, select: { id: true, accountEmail: true, status: true, mailboxId: true, lastSyncedAt: true, lastError: true } })
       : Promise.resolve([]),
     tab === 'access'
       ? db.role.findMany({
           orderBy: { key: 'asc' },
+          take: 100,
           select: {
             id: true, key: true, name: true, description: true,
-            permissions: { select: { permission: { select: { scope: true, description: true } } } },
+            permissions: { take: 500, select: { permission: { select: { scope: true, description: true } } } },
           },
         })
       : Promise.resolve([]),
     tab === 'rules'
-      ? db.rule.findMany({ where: { workspaceId }, orderBy: [{ status: 'asc' }, { priority: 'asc' }], select: { id: true, name: true, description: true, trigger: true, status: true, mode: true, priority: true, conditions: true, actions: true, runs: { orderBy: { createdAt: 'desc' }, take: 1, select: { createdAt: true, status: true, matched: true } } } })
+      ? db.rule.findMany({ where: { workspaceId }, orderBy: [{ status: 'asc' }, { priority: 'asc' }], take: 200, select: { id: true, name: true, description: true, trigger: true, status: true, mode: true, priority: true, conditions: true, actions: true, runs: { orderBy: { createdAt: 'desc' }, take: 1, select: { createdAt: true, status: true, matched: true } } } })
       : Promise.resolve([]),
   ])
 
