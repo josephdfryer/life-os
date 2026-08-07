@@ -72,8 +72,10 @@ export type { ToastProps, ToastVariant } from './Toast';
 export { TopNav }       from './TopNav';
 export type { TopNavProps, NavLink } from './TopNav';
 
-export { LifeOSBar, LIFE_OS_APPS } from './LifeOSBar';
-export type { LifeOSBarProps, LifeOSAppKey, LifeOSAppEntry } from './LifeOSBar';
+export { LifeOSBar } from './LifeOSBar';
+export type { LifeOSBarProps } from './LifeOSBar';
+export { LIFE_OS_APPS, LIFE_OS_APP_URLS, LIFE_OS_ROOT_DOMAIN } from './app-registry';
+export type { LifeOSAppKey, LifeOSAppEntry } from './app-registry';
 
 // Timezone — one master tz across all apps (shared root-domain cookie)
 export {

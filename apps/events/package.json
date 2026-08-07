@@ -12,6 +12,7 @@
     "@life-os/access": "*",
     "@life-os/auth": "*",
     "@life-os/db": "*",
+    "@life-os/domain": "*",
     "@life-os/ui": "*",
     "next": "16.2.10",
     "next-auth": "^5.0.0-beta.30",

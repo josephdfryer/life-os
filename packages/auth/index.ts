@@ -1,22 +1,11 @@
 import NextAuth, { type NextAuthConfig } from "next-auth"
 import Google from "next-auth/providers/google"
 import { db } from "@life-os/db"
+import { LIFE_OS_APP_URLS, LIFE_OS_ROOT_DOMAIN, type LifeOSAppKey } from "@life-os/ui/app-registry"
 
-export const LIFE_OS_ROOT_DOMAIN = "lacollecteur.com"
+export { LIFE_OS_APP_URLS, LIFE_OS_ROOT_DOMAIN }
 export const LIFE_OS_COOKIE_DOMAIN = `.${LIFE_OS_ROOT_DOMAIN}`
-
-export const LIFE_OS_APP_URLS = {
-  home: `https://home.${LIFE_OS_ROOT_DOMAIN}`,
-  persons: `https://persons.${LIFE_OS_ROOT_DOMAIN}`,
-  places: `https://places.${LIFE_OS_ROOT_DOMAIN}`,
-  stuff: `https://stuff.${LIFE_OS_ROOT_DOMAIN}`,
-  events: `https://events.${LIFE_OS_ROOT_DOMAIN}`,
-  context: `https://context.${LIFE_OS_ROOT_DOMAIN}`,
-  assistant: `https://assistant.${LIFE_OS_ROOT_DOMAIN}`,
-  levelUp: `https://level-up.${LIFE_OS_ROOT_DOMAIN}`,
-} as const
-
-export type LifeOsApp = keyof typeof LIFE_OS_APP_URLS
+export type LifeOsApp = LifeOSAppKey
 
 type CreateLifeOsAuthOptions = {
   signInPath?: string

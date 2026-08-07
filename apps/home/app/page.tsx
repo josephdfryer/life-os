@@ -5,7 +5,7 @@ import { unstable_cache } from 'next/cache'
 import { auth } from '../auth'
 import { db } from '@life-os/db'
 import { LIFE_OS_APP_URLS, lifeOsAppUrl } from '@life-os/auth'
-import { resolveTimeZone, TZ_COOKIE, TimezonePicker } from '@life-os/ui'
+import { LIFE_OS_APPS, resolveTimeZone, TZ_COOKIE, TimezonePicker } from '@life-os/ui'
 import ScheduleWidget from '../components/ScheduleWidget'
 import CommitmentsWidget from '../components/CommitmentsWidget'
 import NudgesWidget from '../components/NudgesWidget'
@@ -177,21 +177,13 @@ async function HomePageContent({
             Apps
           </div>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px 32px' }}>
-            {[
-              { label: 'Persons', href: personsUrl },
-              { label: 'Events', href: lifeOsAppUrl('events', 'http://localhost:3006') },
-              { label: 'Places', href: lifeOsAppUrl('places', 'http://localhost:3002') },
-              { label: 'Stuff', href: lifeOsAppUrl('stuff', 'http://localhost:3001') },
-              { label: 'Assistant', href: lifeOsAppUrl('assistant', 'http://localhost:3005') },
-              { label: 'Context', href: lifeOsAppUrl('context', 'http://localhost:3004') },
-              { label: 'Level Up', href: lifeOsAppUrl('levelUp', 'http://localhost:3010') },
-            ].map(({ label, href }) => (
+            {LIFE_OS_APPS.filter(app => app.key !== 'home').map(app => (
               <a
-                key={label}
-                href={href}
+                key={app.key}
+                href={app.key === 'persons' ? personsUrl : lifeOsAppUrl(app.key, app.localUrl)}
                 className="dashboard-app-link"
               >
-                {label}
+                {app.label}
               </a>
             ))}
           </div>

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { authorizeApiRequest, unauthorized } from "@/lib/api-auth"
 import { aggregateInteractions, type StreamParams } from "@/server/domain/interaction-stream"
 import { handleRouteError } from "@/server/api/respond"
+import { forwardCanonicalStream } from "../_canonical"
 
 /**
  * "How much / how many", answered by the database instead of by shipping rows.
@@ -18,6 +19,9 @@ import { handleRouteError } from "@/server/api/respond"
  * metric:  sum (default), count, avg, max, min
  */
 export async function GET(req: NextRequest) {
+  const forwarded = await forwardCanonicalStream(req, "/v1/stream/aggregate")
+  if (forwarded) return forwarded
+
   const auth = await authorizeApiRequest(req, "interactions.read")
   if (!auth) return unauthorized()
 

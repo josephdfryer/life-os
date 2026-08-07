@@ -1,5 +1,6 @@
 import { createHmac, randomBytes } from "crypto"
 import { decryptNullable, encryptNullable } from "@life-os/db/crypto"
+import { createReviewItem } from "@life-os/domain"
 import { db } from "@/lib/db"
 import { badRequest, forbidden, notFound } from "@/server/api/errors"
 import { auditAction, type DomainActor } from "./audit"
@@ -801,6 +802,28 @@ async function upsertCalendarEvent(input: {
       lastSeenAt: new Date(),
     },
   })
+
+  if (!link?.eventId) {
+    await createReviewItem({
+      workspaceId: input.workspaceId,
+      source: "calendar_reconciliation",
+      sourceId: planId,
+      itemType: "event",
+      command: "calendar_reconciliation.reconcile",
+      commandInput: { planId, action: "happened" },
+      targetType: "Plan",
+      targetId: planId,
+      evidence: {
+        title: input.item.summary?.trim() || "Untitled Google Calendar event",
+        scheduledStart: start.toISOString(),
+        scheduledEnd: end?.toISOString() ?? null,
+        externalEventId: input.item.id,
+        calendarId: input.calendarId,
+      },
+      riskTier: "review",
+      priority: 2,
+    })
+  }
 
   const matchedPeople = matchedAttendees(input.item, input.peopleByEmail)
   await db.$transaction(async tx => {

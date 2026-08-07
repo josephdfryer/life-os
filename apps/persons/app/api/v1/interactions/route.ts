@@ -3,6 +3,7 @@ import { authorizeApiRequest, unauthorized } from "@/lib/api-auth"
 import { createInteraction } from "@/server/domain/interactions"
 import { streamInteractions, type StreamParams } from "@/server/domain/interaction-stream"
 import { created, handleRouteError } from "@/server/api/respond"
+import { forwardCanonicalStream } from "./_canonical"
 
 /**
  * The continuous interaction stream — everything that has happened, newest
@@ -17,6 +18,9 @@ import { created, handleRouteError } from "@/server/api/respond"
  * usually costs more than the page itself and almost nothing reads it.
  */
 export async function GET(req: NextRequest) {
+  const forwarded = await forwardCanonicalStream(req, "/v1/stream")
+  if (forwarded) return forwarded
+
   const auth = await authorizeApiRequest(req, "interactions.read")
   if (!auth) return unauthorized()
 

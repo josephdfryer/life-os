@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@life-os/db": "*",
+    "@life-os/ui": "*",
     "next-auth": "^5.0.0-beta.30"
   }
 }

@@ -2,40 +2,15 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { usePathname } from 'next/navigation';
-
-export type LifeOSAppKey =
-  | 'home'
-  | 'persons'
-  | 'events'
-  | 'places'
-  | 'stuff'
-  | 'context'
-  | 'assistant'
-  | 'levelUp';
-
-export interface LifeOSAppEntry {
-  key: LifeOSAppKey;
-  label: string;
-  url: string;
-  dot: string;
-  blurb: string;
-}
-
-// Self-contained registry (no server imports) so this stays a pure client
-// component. URLs are the stable production subdomains; keep in sync with
-// LIFE_OS_APP_URLS in packages/auth.
-export const LIFE_OS_APPS: LifeOSAppEntry[] = [
-  { key: 'home',      label: 'Home',      url: 'https://home.lacollecteur.com',      dot: '#8a7a66', blurb: 'Your daily overview' },
-  { key: 'persons',   label: 'Persons',   url: 'https://persons.lacollecteur.com',   dot: '#b5835a', blurb: 'People & relationships' },
-  { key: 'events',    label: 'Events',    url: 'https://events.lacollecteur.com',    dot: '#6a8caf', blurb: 'Calendar & plans' },
-  { key: 'places',    label: 'Places',    url: 'https://places.lacollecteur.com',    dot: '#6f9a7b', blurb: 'Your map of memory' },
-  { key: 'stuff',     label: 'Stuff',     url: 'https://stuff.lacollecteur.com',     dot: '#a98a5c', blurb: 'Everything you own' },
-  { key: 'context',   label: 'Context',   url: 'https://context.lacollecteur.com',   dot: '#9a7ba0', blurb: 'Theory of a person' },
-  { key: 'assistant', label: 'Assistant', url: 'https://assistant.lacollecteur.com', dot: '#c08b6f', blurb: 'Chat & actions' },
-  { key: 'levelUp',   label: 'Level Up',   url: 'https://level-up.lacollecteur.com',  dot: '#c4522a', blurb: 'IRL player ratings' },
-];
+import { LIFE_OS_APPS, type LifeOSAppKey } from './app-registry';
 
 const HOME_URL = LIFE_OS_APPS[0].url;
+const SHELL_NAV = [
+  { label: 'Today', path: '/' },
+  { label: 'Stream', path: '/stream' },
+  { label: 'Inbox', path: '/inbox' },
+  { label: 'Admin', path: '/admin' },
+] as const;
 
 export interface LifeOSBarProps {
   /** Which app is currently rendering the bar. */
@@ -77,6 +52,7 @@ export function LifeOSBar({ current, rightSlot, style }: LifeOSBarProps) {
 
   const currentApp = LIFE_OS_APPS.find(a => a.key === current) ?? LIFE_OS_APPS[0];
   const captureHref = current === 'home' ? '#quick-capture' : `${HOME_URL}/#quick-capture`;
+  const shellHref = (path: string) => current === 'home' ? path : `${HOME_URL}${path}`;
 
   return (
     <div
@@ -201,6 +177,42 @@ export function LifeOSBar({ current, rightSlot, style }: LifeOSBarProps) {
           </div>
         )}
       </div>
+
+      {/* Home control-plane navigation. Satellite apps link back to Home. */}
+      <nav
+        aria-label="Life OS sections"
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 2,
+          overflowX: 'auto',
+          scrollbarWidth: 'none',
+        }}
+      >
+        {SHELL_NAV.map(item => {
+          const active = current === 'home' && (item.path === '/' ? pathname === '/' : pathname.startsWith(item.path));
+          return (
+            <a
+              key={item.path}
+              href={shellHref(item.path)}
+              aria-current={active ? 'page' : undefined}
+              style={{
+                flexShrink: 0,
+                padding: '5px 9px',
+                borderRadius: 'var(--radius-pill, 999px)',
+                background: active ? 'var(--cognac-soft, rgba(181,131,90,0.12))' : 'transparent',
+                color: active ? 'var(--cognac-deep, var(--ink-2, #524a42))' : 'var(--ink-3, #7a7268)',
+                fontSize: 12,
+                fontWeight: active ? 500 : 400,
+                textDecoration: 'none',
+                whiteSpace: 'nowrap',
+              }}
+            >
+              {item.label}
+            </a>
+          );
+        })}
+      </nav>
 
       <a
         href={captureHref}
