@@ -101,6 +101,19 @@ flowchart LR
   Audit --> AuditDB
 ```
 
+**Where "Domain commands" and "Rules engine" actually live has changed.**
+This diagram still describes Persons' request flow accurately, but several
+of the boxes it draws as Persons-internal are now shared packages other
+apps use too: `Rules` is `packages/automation`, and the shared writes
+(`appendDailySourceInteraction`, `acceptStagedInteraction`,
+`createReviewItem`) live in `packages/domain`. `apps/persons/server/domain/`
+keeps thin compatibility shims at the same import paths (`./rules`,
+`./interactions`, `./idempotency`, `./interaction-stream`) so none of
+Persons' own routes needed to change — but a change to shared write/rules
+behavior now needs verifying against every consumer (Persons, Home,
+`scripts/imessage-sync.ts`, `scripts/whatsapp-sync.ts`), not just Persons'
+own test suite.
+
 ## The Main Flows
 
 ### 1. You use the app in the browser
@@ -404,6 +417,56 @@ flowchart TD
 
 Plain English: Inbox is the human filter between automation and your real CRM memory. If an incoming interaction belongs to someone who is not in People yet, the Inbox can create the Person from the staged name, email, or phone and accept the interaction in the same review step.
 
+### 4b. The unified ReviewItem inbox (cross-app)
+
+Persons' `StagedInteraction` queue was one of four separate review queues
+across Life OS — Places had its own (`ImportStagedVisit`, for Google Maps
+Timeline visits), Persons had a second one for note-derived plan/event
+suggestions (`NoteSuggestion`), and Events had a fourth (calendar
+reconciliation, over `Plan` rows). Each had its own accept/dismiss
+implementation, so a human reviewing "what's pending" had no single place to
+look, and the four accept flows could silently disagree about edge cases
+(Home's own communications-accept path had, in fact, already drifted from
+Persons' before this was unified — see `acceptStagedInteraction` below).
+
+`packages/domain/review.ts`'s `ReviewItem` is a dual-written index over all
+four, not a replacement of them — each legacy table is still the system of
+record, `ReviewItem` just gives every source a common shape (`source`,
+`sourceId`, `itemType`, a `proposedCommand` naming exactly what accepting it
+would run, `riskTier`, `status`) so `apps/home`'s Inbox can show one federated
+list instead of four. Resolving a `ReviewItem` (`resolveReviewItem`) looks up
+the registered command for its source and runs it — for
+`staged_interaction.accept` that's `acceptStagedInteraction`, which
+transactionally writes the Interaction, updates the `StagedInteraction`
+row's status, and publishes a `GraphEvent` — then syncs the `ReviewItem`'s own
+status to match. Every sync in both directions is best-effort (matches the
+audit-log write's swallow-and-warn philosophy): a `ReviewItem` failing to
+update never blocks or rolls back the real underlying write.
+
+```mermaid
+flowchart TD
+  Stage["stageRecord() upserts StagedInteraction"] --> CreateRI["createReviewItem() — best-effort"]
+  CreateRI --> ReviewItemDB["ReviewItem (packages/domain)"]
+
+  HomeInbox["apps/home Inbox — federated view"] --> ReviewItemDB
+  PersonsInbox["Persons Inbox — StagedInteraction only"] --> StagedDB["StagedInteraction"]
+
+  Resolve["resolveReviewItem(accept/dismiss)"] --> Dispatch["registered command for this source"]
+  Dispatch --> AcceptCmd["acceptStagedInteraction() (packages/domain)"]
+  AcceptCmd --> InteractionDB["Interaction + GraphEvent, one transaction"]
+  AcceptCmd --> StagedDB
+  Resolve --> ReviewItemDB
+```
+
+`appendDailySourceInteraction`/`acceptStagedInteraction` (both
+`packages/domain/staged-interactions.ts`) are the shared command every
+message-style source now writes through — `scripts/imessage-sync.ts`,
+`scripts/whatsapp-sync.ts`, and `apps/persons/server/domain/inbox.ts`'s
+`stageRecord`/`acceptInboxItem` all call the same function rather than each
+carrying its own day-bucket-append logic. That's a real correctness
+convergence, not just deduplication: the shared version creates
+`InteractionParticipant` rows every independent copy used to skip.
+
 ### 5. Data cleaning view
 
 ```mermaid
@@ -475,6 +538,20 @@ flowchart LR
 ```
 
 Plain English: the headless API is how Persons can become programmable. Anything the UI can do should eventually have an API-shaped path too.
+
+**`apps/api` is now the canonical `/v1` surface**, not Persons — a separate,
+no-UI, API-key-only deployable app (`api.lacollecteur.com`) that's the
+intended long-term home for cross-app resources. It currently serves
+`/v1/stream` + `/v1/stream/aggregate` (moved from Persons'
+`interaction-stream.ts`, unchanged logic) and `/v1/review-items` +
+`/v1/review-items/:id` + `/v1/review-items/bulk-dismiss` (the `ReviewItem`
+inbox described above). Persons' own `/api/v1/interactions` and
+`/api/v1/interactions/aggregate` routes now forward to `apps/api` with
+`Deprecation`/`Link: rel="canonical"` headers rather than running the logic
+locally, kept for backward compatibility. Resources that are still
+genuinely Persons-specific (people, imports, admin, rules CRUD) stay on
+Persons' own `/api/v1/*` — only the resources other apps need to read
+independent of Persons moved.
 
 ## Access Control
 
@@ -548,9 +625,19 @@ The current migration preserves existing data in `default-workspace`. Owner and 
 
 ## Rules Engine
 
+**The engine itself moved.** As of the Central Nervous System control-plane
+work, the rules engine lives in `packages/automation` (shared across every
+Life OS app, not just Persons) — `apps/persons/server/domain/rules.ts` is now
+a thin compatibility shim that translates the shared package's generic
+`RuleError` back into Persons' own `AppError`/HTTP shape, so every existing
+route and caller here works unchanged. `scripts/imessage-sync.ts` used to
+carry its own independent, already-drifted copy of the same evaluate/apply
+logic (missing `gte`/`lte` conditions and the tag actions); it now calls the
+same shared `runRulesForTarget`, same as everything else.
+
 ```mermaid
 flowchart TD
-  Trigger["Something happens"] --> LoadRules["Find active rules for that trigger"]
+  Trigger["Something happens"] --> LoadRules["Find active rules for that trigger (packages/automation)"]
   LoadRules --> Check["Check rule conditions"]
   Check --> Match{"Matched?"}
 
@@ -559,10 +646,10 @@ flowchart TD
 
   Mode -->|suggest| Suggest["Record suggested actions only"]
   Mode -->|dry_run| DryRun["Record what would happen"]
-  Mode -->|auto| Auto["Apply safe staged-inbox changes"]
+  Mode -->|auto| Auto["Apply, but only actions tiered observe/safe_auto"]
   Mode -->|block| Block["Mark staged item blocked when applicable"]
 
-  Suggest --> SaveRun["Save RuleRun"]
+  Suggest --> SaveRun["Save RuleRun (ruleVersion + causationDepth)"]
   DryRun --> SaveRun
   Auto --> SaveRun
   Block --> SaveRun
@@ -572,18 +659,42 @@ flowchart TD
 
 Current triggers include:
 
-- `ingest.message`
+- `ingest.message` (`scripts/imessage-sync.ts`, `scripts/whatsapp-sync.ts`)
 - `import.person`
 - `import.interaction`
 - `interaction.create`
 - `interaction.append`
+- `inbox.stage`
 - `inbox.accept`
 
-Current safe auto-apply target:
+**Versioned, not just logged.** `Rule.version` bumps on every real edit (an
+empty patch doesn't bump it); every `RuleRun` denormalizes the version it
+actually ran under (`RuleRun.ruleVersion`), so a run stays interpretable —
+"what did this rule look like when it fired" — even after the rule is later
+changed. There's no separate version-history table: each run's own
+`actionsPlanned`/`actionsApplied` snapshot is already the full record of what
+happened, so a version number is enough context.
 
-- Inbox staging items only.
+**A causation-depth cap** (`RuleRun.causationDepth`, capped at 5, same
+concept and limit as `GraphEvent.causationDepth`) exists so a rule whose
+action could fire its own trigger can't loop forever — a chain that would
+exceed the cap halts cleanly with zero writes rather than erroring the
+caller. Nothing today actually chains rule-triggered rule runs, so this is a
+guard rail for a capability that doesn't exist yet, not a workaround for one
+that does.
 
-That means rules can safely help triage incoming automation records, without unexpectedly editing your canonical People or Interaction history.
+**Authority is a property of the action, not the rule's mode**
+(`packages/automation/actions.ts`). Every action type declares one of four
+tiers when it registers: `observe` (read-only, always safe), `safe_auto`
+(reversible, applies when the rule's mode says so — `block`, `set_field`/
+`set`/`assign`, `add_tag`, `remove_tag` are the four built-ins, all
+`safe_auto`), `review` (can never auto-apply — the natural next step is a
+`ReviewItem` proposal, though no action uses this tier yet), or `confirm`
+(can never auto-apply, ever, regardless of rule mode — reserved for
+merges/deletes/money/outbound messages). This replaces "safe auto-apply
+target: inbox staging items only" as the actual constraint: it's not the
+*target* that's restricted, it's which *actions* are allowed to run
+automatically at all.
 
 ## Database Memory
 
@@ -625,6 +736,11 @@ erDiagram
   Permission ||--o{ RolePermission : grants
   ApiKey ||--o{ ApiKeyScope : has
   Rule ||--o{ RuleRun : records
+  Workspace ||--o{ GraphEvent : owns
+  GraphEvent ||--o{ GraphEventReceipt : delivers
+  Workspace ||--o{ ReviewItem : owns
+  Workspace ||--o{ LifeModelSnapshot : owns
+  LifeModelSnapshot ||--o{ LifeModelClaim : contains
 ```
 
 Plain English version:
@@ -635,11 +751,15 @@ Plain English version:
 - **Interaction**: a thing that happened with a person.
 - **Event**: a real-world occurrence such as a meeting, call, dinner, trip, or imported calendar event. Message-only imports stay as Interactions and should not create Event nodes.
 - **Plan**: what you want to do next with a person.
-- **StagedInteraction**: universal inbox item waiting for review. Any source can stage a record here. The `itemType` field (`interaction`, `person`, `event`) indicates what kind of record will be created when accepted.
+- **StagedInteraction**: universal inbox item waiting for review. Any source can stage a record here. The `itemType` field (`interaction`, `person`, `event`) indicates what kind of record will be created when accepted. Also dual-written into `ReviewItem` (see "The unified ReviewItem inbox" above) so it shows up in `apps/home`'s federated Inbox, not just Persons'.
 - **ImportedFile**: source material that was uploaded or ingested.
-- **Rule**: an automation decision you configured.
-- **RuleRun**: a receipt showing whether a rule matched.
-- **AuditLog**: a receipt showing who or what changed something.
+- **Rule**: an automation decision you configured. `version` bumps on every real edit.
+- **RuleRun**: a receipt showing whether a rule matched, which `ruleVersion` it ran under, and its `causationDepth` in any rule-triggered-rule chain (always 0 today — nothing chains yet).
+- **AuditLog**: a receipt showing who or what changed something — human-facing, append-only, never queried by automation itself.
+- **GraphEvent**: the append-only event ledger every canonical command publishes to alongside its real write, in the same transaction — "an Interaction was created", "a staged item was accepted". Distinct from the `Event` primitive (a real-world occurrence) and never abbreviated to just "event" in code. Idempotent on `(workspaceId, idempotencyKey)`; `causationDepth` caps a rule/automation chain at 5 hops.
+- **GraphEventReceipt**: tracks which consumers have processed which `GraphEvent`, so a downstream reader (a future worker, a webhook) can pick up exactly once even with at-least-once delivery.
+- **ReviewItem**: the cross-app federated review queue (`packages/domain/review.ts`) — a dual-written index over `StagedInteraction`, `NoteSuggestion`, `ImportStagedVisit`, and calendar reconciliation, not a replacement for any of them. `proposedCommand` names the exact command accepting it would run; `riskTier` is `observe`/`safe_auto`/`review`/`confirm`, same vocabulary as rule actions.
+- **LifeModelSnapshot, LifeModelClaim**: whole-life synthesis (`packages/intelligence`, formerly `packages/theory` — Theory of Person is unchanged, this is the new *workspace-scoped* sibling). Versioned exactly like `TheorySnapshot` (demote-current-then-insert in one transaction). A snapshot holds typed `LifeModelClaim` rows (`observed`/`inferred`/`declared`/`tension`) instead of one markdown blob, each with its own evidence, confidence, and optional time window. `tension` claims are real today, fed from `packages/alignment`'s declared-vs-observed gap detection (deterministic, confidence always 1). `observed`/`inferred`/`declared` stay honestly marked Unknown — no AI synthesis exists yet, same stance Theory of Person's own stub already took.
 - **User, Role, Permission, ApiKey**: access-control system.
 - **Workspace, WorkspaceMember, ApprovedEmail**: tenancy system. These decide who can sign in and which private workspace their People data belongs to.
 - **CalendarConnection, CalendarEventLink**: Google Calendar integration state. Connections store OAuth/sync state; event links make imports repeatable without duplicating Events.
@@ -740,13 +860,15 @@ flowchart LR
   P1["Phase 1: Domain/API foundation"] --> P2["Phase 2: Headless API parity"]
   P2 --> P3["Phase 3: RBAC, audit, rules"]
   P3 --> P4["Phase 4: Universal Inbox"]
-  P4 --> P5["Phase 5: Broader automation engine"]
+  P4 --> P5["Phase 5: Control-plane spine (apps/api, packages/domain+automation+intelligence, ReviewItem, GraphEvent)"]
+  P5 --> P6["Phase 6: AI-backed synthesis + confirm-tier actions"]
 
   P1 --> Done1["Done"]
   P2 --> Done2["Done"]
   P3 --> Done3["Done"]
   P4 --> Done4["Done"]
-  P5 --> Future["Future"]
+  P5 --> Done5["Done"]
+  P6 --> Future["Future"]
 ```
 
 ### Done
@@ -772,15 +894,15 @@ flowchart LR
 - Gmail Mail import: `/import/interactions` can launch the same batched Gmail sync from the import area, defaulting to a 30-day Known People only import.
 - Krisp transcript automation: a local scheduled worker archives completed transcripts, maps them to calendar context, splits mixed customer discussions, and writes Team OS meeting records with a private ambiguity queue.
 - Health Auto Export sync: `scripts/health-sync.ts` attaches Apple Health data to a self Person as States (daily metrics) and Notes (daily digests), and workouts as Events — not Interactions, so the relationship-tracking Interaction log stays uncluttered. The Person detail page surfaces this via a Health card (`apps/persons/server/domain/health.ts`).
+- Control-plane spine: `apps/api` (canonical `/v1`, no UI, API-key-only) and three new shared packages — `packages/domain` (shared write commands: `appendDailySourceInteraction`, `acceptStagedInteraction`, `createReviewItem`, `publishGraphEvent`), `packages/automation` (the rules engine, versioned + causation-capped + authority-tiered), `packages/intelligence` (renamed from `packages/theory`; adds workspace-scoped `LifeModelSnapshot` alongside the existing person-scoped Theory). `GraphEvent` is the new append-only event ledger every shared command publishes to. `ReviewItem` unifies all four review queues into one federated inbox `apps/home` reads. `scripts/imessage-sync.ts` and `scripts/whatsapp-sync.ts` moved off their own hand-rolled day-bucket-append/rules-fork logic onto the shared commands.
+- Home is now the control plane: Stream (a chronological feed over `apps/api`'s `/v1/stream`), the federated Inbox, and Intelligence/Automation surfaces all live in `apps/home`, reading from the shared packages rather than each app maintaining its own copy.
 
 ### Future
 
-The next larger step is the broader automation engine:
-
-- Scheduled jobs and event triggers.
 - Notifications or digests.
-- Safer action approval flows.
-- More rule actions beyond staged inbox fields.
+- Confirm-tier action execution: the authority framework (`observe`/`safe_auto`/`review`/`confirm`) exists in `packages/automation/actions.ts`, but no action is tiered `confirm` yet, and there's no explicit-confirmation-token workflow built to let one safely auto-execute (merges, deletes, outbound messages, money).
+- Review-tier actions: same framework gap — an action tiered `review` currently has nowhere to land (the natural target is a `ReviewItem` proposal, not wired up since nothing needs it yet).
+- AI-backed synthesis: both Theory of Person and the whole-life model (`LifeModelSnapshot`) gather real evidence but honestly stub the actual interpretation — no model call, no prompt, sections marked Unknown rather than invented. `LifeModelSnapshot`'s `tension` claims are the one part that's real today (deterministic, from `packages/alignment`, no AI needed).
 - Multiple `itemType` accept handlers (currently only `interaction` is handled on accept).
 - Inbox filtering by `source` and `itemType` in the UI.
 - Admin UI for approving emails and choosing whether an approved person gets their own workspace or joins an existing one.
