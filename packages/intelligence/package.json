@@ -13,7 +13,7 @@
   },
   "scripts": {
     "test": "tsx --test tests/*.test.ts",
-    "type-check": "tsc --noEmit --moduleResolution bundler --module esnext --target es2022 --strict index.ts src/sources.ts src/synthesize.ts src/snapshots.ts src/types.ts src/life-model.ts"
+    "type-check": "tsc --noEmit --moduleResolution bundler --module esnext --target es2022 --strict index.ts src/sources.ts src/synthesize.ts src/snapshots.ts src/types.ts src/life-model.ts src/evidence.ts src/life-model-snapshots.ts"
   },
   "devDependencies": {
     "tsx": "^4.22.4"

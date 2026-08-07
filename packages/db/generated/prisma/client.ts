@@ -242,6 +242,11 @@ export type AiAnalysisRun = Prisma.AiAnalysisRunModel
  */
 export type NoteAnalysisRun = Prisma.NoteAnalysisRunModel
 /**
+ * Model TheoryAnalysisRun
+ * 
+ */
+export type TheoryAnalysisRun = Prisma.TheoryAnalysisRunModel
+/**
  * Model NoteSuggestion
  * 
  */

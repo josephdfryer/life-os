@@ -55,6 +55,7 @@ model Workspace {
   aiProviderCredentials AiProviderCredential[]
   aiAnalysisRuns AiAnalysisRun[]
   noteAnalysisRuns NoteAnalysisRun[]
+  theoryAnalysisRuns TheoryAnalysisRun[]
   noteSuggestions NoteSuggestion[]
   stagedItems    StagedInteraction[]
   rules          Rule[]
@@ -180,6 +181,7 @@ model Person {
   apiKeys      ApiKey[]
   auditLogs    AuditLog[]
   theorySnapshots TheorySnapshot[]
+  theoryAnalysisRuns TheoryAnalysisRun[]
 
   @@index([workspaceId, last, first])
   @@index([last, first])
@@ -1237,6 +1239,7 @@ model AiProviderCredential {
   lastUsedAt      DateTime?
   analysisRuns    AiAnalysisRun[]
   noteAnalysisRuns NoteAnalysisRun[]
+  theoryAnalysisRuns TheoryAnalysisRun[]
 
   @@unique([workspaceId, provider])
   @@index([workspaceId, status])
@@ -1292,6 +1295,41 @@ model NoteAnalysisRun {
   @@index([workspaceId, createdAt])
   @@index([noteId, createdAt])
   @@unique([noteId, promptVersion])
+}
+
+// Theory of Person's AI-run tracking (packages/intelligence/src/synthesize.ts).
+// Mirrors NoteAnalysisRun's shape, keyed by subjectPersonId instead of noteId.
+// Deliberately NOT unique on (subjectPersonId, promptVersion) the way
+// NoteAnalysisRun is on (noteId, promptVersion) — a Note's content is static,
+// so re-analyzing with the same prompt version can safely reuse a cached
+// result; a person's evidence grows over time, so "regenerate" must always
+// re-run against fresh evidence. The concurrency guard is instead "is there
+// already a running row for this person" (checked in application code), not
+// a DB-level unique constraint.
+model TheoryAnalysisRun {
+  id              String                @id @default(cuid())
+  workspaceId     String                @default("default-workspace")
+  workspace       Workspace             @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  subjectPersonId String
+  subjectPerson   Person                @relation(fields: [subjectPersonId], references: [id], onDelete: Cascade)
+  credentialId    String?
+  credential      AiProviderCredential? @relation(fields: [credentialId], references: [id], onDelete: SetNull)
+  createdAt       DateTime              @default(now())
+  completedAt     DateTime?
+  provider        String
+  modelId         String
+  status          String
+  promptVersion   String
+  snapshotId      String?
+  output          String?
+  error           String?
+  inputTokens     Int?
+  outputTokens    Int?
+  estimatedCost   Float?
+
+  @@index([workspaceId, createdAt])
+  @@index([subjectPersonId, createdAt])
+  @@index([subjectPersonId, status])
 }
 
 model NoteSuggestion {

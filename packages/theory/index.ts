@@ -11,6 +11,7 @@ export {
   listTheorySnapshots,
   getTheorySnapshotById,
   THEORY_STATUS,
+  TheoryError,
 } from "@life-os/intelligence"
 export type {
   TheorySource,

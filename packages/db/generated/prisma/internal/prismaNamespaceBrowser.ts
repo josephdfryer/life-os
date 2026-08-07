@@ -91,6 +91,7 @@ export const ModelName = {
   AiProviderCredential: 'AiProviderCredential',
   AiAnalysisRun: 'AiAnalysisRun',
   NoteAnalysisRun: 'NoteAnalysisRun',
+  TheoryAnalysisRun: 'TheoryAnalysisRun',
   NoteSuggestion: 'NoteSuggestion',
   Group: 'Group',
   SupplierProfile: 'SupplierProfile',
@@ -877,6 +878,28 @@ export const NoteAnalysisRunScalarFieldEnum = {
 } as const
 
 export type NoteAnalysisRunScalarFieldEnum = (typeof NoteAnalysisRunScalarFieldEnum)[keyof typeof NoteAnalysisRunScalarFieldEnum]
+
+
+export const TheoryAnalysisRunScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  subjectPersonId: 'subjectPersonId',
+  credentialId: 'credentialId',
+  createdAt: 'createdAt',
+  completedAt: 'completedAt',
+  provider: 'provider',
+  modelId: 'modelId',
+  status: 'status',
+  promptVersion: 'promptVersion',
+  snapshotId: 'snapshotId',
+  output: 'output',
+  error: 'error',
+  inputTokens: 'inputTokens',
+  outputTokens: 'outputTokens',
+  estimatedCost: 'estimatedCost'
+} as const
+
+export type TheoryAnalysisRunScalarFieldEnum = (typeof TheoryAnalysisRunScalarFieldEnum)[keyof typeof TheoryAnalysisRunScalarFieldEnum]
 
 
 export const NoteSuggestionScalarFieldEnum = {

@@ -8,7 +8,8 @@
 // this package so nothing that already imports it needs to change.
 
 export { getTheorySourcesForPerson } from "./src/sources"
-export { synthesizeTheoryOfPerson, regenerateTheory } from "./src/synthesize"
+export { synthesizeTheoryOfPerson, regenerateTheory, TheoryError, THEORY_PROMPT_VERSION } from "./src/synthesize"
+export { buildEvidenceText } from "./src/evidence"
 export {
   createTheorySnapshot,
   getCurrentTheorySnapshot,

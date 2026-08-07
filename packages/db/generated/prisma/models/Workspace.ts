@@ -220,6 +220,7 @@ export type WorkspaceWhereInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialListRelationFilter
   aiAnalysisRuns?: Prisma.AiAnalysisRunListRelationFilter
   noteAnalysisRuns?: Prisma.NoteAnalysisRunListRelationFilter
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunListRelationFilter
   noteSuggestions?: Prisma.NoteSuggestionListRelationFilter
   stagedItems?: Prisma.StagedInteractionListRelationFilter
   rules?: Prisma.RuleListRelationFilter
@@ -285,6 +286,7 @@ export type WorkspaceOrderByWithRelationInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialOrderByRelationAggregateInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunOrderByRelationAggregateInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunOrderByRelationAggregateInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunOrderByRelationAggregateInput
   noteSuggestions?: Prisma.NoteSuggestionOrderByRelationAggregateInput
   stagedItems?: Prisma.StagedInteractionOrderByRelationAggregateInput
   rules?: Prisma.RuleOrderByRelationAggregateInput
@@ -353,6 +355,7 @@ export type WorkspaceWhereUniqueInput = Prisma.AtLeast<{
   aiProviderCredentials?: Prisma.AiProviderCredentialListRelationFilter
   aiAnalysisRuns?: Prisma.AiAnalysisRunListRelationFilter
   noteAnalysisRuns?: Prisma.NoteAnalysisRunListRelationFilter
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunListRelationFilter
   noteSuggestions?: Prisma.NoteSuggestionListRelationFilter
   stagedItems?: Prisma.StagedInteractionListRelationFilter
   rules?: Prisma.RuleListRelationFilter
@@ -443,6 +446,7 @@ export type WorkspaceCreateInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleCreateNestedManyWithoutWorkspaceInput
@@ -507,6 +511,7 @@ export type WorkspaceUncheckedCreateInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -571,6 +576,7 @@ export type WorkspaceUpdateInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUpdateManyWithoutWorkspaceNestedInput
@@ -635,6 +641,7 @@ export type WorkspaceUncheckedUpdateInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -1227,6 +1234,20 @@ export type WorkspaceUpdateOneRequiredWithoutNoteAnalysisRunsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.WorkspaceUpdateToOneWithWhereWithoutNoteAnalysisRunsInput, Prisma.WorkspaceUpdateWithoutNoteAnalysisRunsInput>, Prisma.WorkspaceUncheckedUpdateWithoutNoteAnalysisRunsInput>
 }
 
+export type WorkspaceCreateNestedOneWithoutTheoryAnalysisRunsInput = {
+  create?: Prisma.XOR<Prisma.WorkspaceCreateWithoutTheoryAnalysisRunsInput, Prisma.WorkspaceUncheckedCreateWithoutTheoryAnalysisRunsInput>
+  connectOrCreate?: Prisma.WorkspaceCreateOrConnectWithoutTheoryAnalysisRunsInput
+  connect?: Prisma.WorkspaceWhereUniqueInput
+}
+
+export type WorkspaceUpdateOneRequiredWithoutTheoryAnalysisRunsNestedInput = {
+  create?: Prisma.XOR<Prisma.WorkspaceCreateWithoutTheoryAnalysisRunsInput, Prisma.WorkspaceUncheckedCreateWithoutTheoryAnalysisRunsInput>
+  connectOrCreate?: Prisma.WorkspaceCreateOrConnectWithoutTheoryAnalysisRunsInput
+  upsert?: Prisma.WorkspaceUpsertWithoutTheoryAnalysisRunsInput
+  connect?: Prisma.WorkspaceWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.WorkspaceUpdateToOneWithWhereWithoutTheoryAnalysisRunsInput, Prisma.WorkspaceUpdateWithoutTheoryAnalysisRunsInput>, Prisma.WorkspaceUncheckedUpdateWithoutTheoryAnalysisRunsInput>
+}
+
 export type WorkspaceCreateNestedOneWithoutNoteSuggestionsInput = {
   create?: Prisma.XOR<Prisma.WorkspaceCreateWithoutNoteSuggestionsInput, Prisma.WorkspaceUncheckedCreateWithoutNoteSuggestionsInput>
   connectOrCreate?: Prisma.WorkspaceCreateOrConnectWithoutNoteSuggestionsInput
@@ -1591,6 +1612,7 @@ export type WorkspaceCreateWithoutMembersInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleCreateNestedManyWithoutWorkspaceInput
@@ -1654,6 +1676,7 @@ export type WorkspaceUncheckedCreateWithoutMembersInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -1733,6 +1756,7 @@ export type WorkspaceUpdateWithoutMembersInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUpdateManyWithoutWorkspaceNestedInput
@@ -1796,6 +1820,7 @@ export type WorkspaceUncheckedUpdateWithoutMembersInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -1859,6 +1884,7 @@ export type WorkspaceCreateWithoutApprovedEmailsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleCreateNestedManyWithoutWorkspaceInput
@@ -1922,6 +1948,7 @@ export type WorkspaceUncheckedCreateWithoutApprovedEmailsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -2001,6 +2028,7 @@ export type WorkspaceUpdateWithoutApprovedEmailsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUpdateManyWithoutWorkspaceNestedInput
@@ -2064,6 +2092,7 @@ export type WorkspaceUncheckedUpdateWithoutApprovedEmailsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -2127,6 +2156,7 @@ export type WorkspaceCreateWithoutPersonsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleCreateNestedManyWithoutWorkspaceInput
@@ -2190,6 +2220,7 @@ export type WorkspaceUncheckedCreateWithoutPersonsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -2269,6 +2300,7 @@ export type WorkspaceUpdateWithoutPersonsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUpdateManyWithoutWorkspaceNestedInput
@@ -2332,6 +2364,7 @@ export type WorkspaceUncheckedUpdateWithoutPersonsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -2395,6 +2428,7 @@ export type WorkspaceCreateWithoutOwnerUserInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleCreateNestedManyWithoutWorkspaceInput
@@ -2458,6 +2492,7 @@ export type WorkspaceUncheckedCreateWithoutOwnerUserInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -2560,6 +2595,7 @@ export type WorkspaceCreateWithoutApiKeysInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleCreateNestedManyWithoutWorkspaceInput
@@ -2623,6 +2659,7 @@ export type WorkspaceUncheckedCreateWithoutApiKeysInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -2702,6 +2739,7 @@ export type WorkspaceUpdateWithoutApiKeysInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUpdateManyWithoutWorkspaceNestedInput
@@ -2765,6 +2803,7 @@ export type WorkspaceUncheckedUpdateWithoutApiKeysInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -2828,6 +2867,7 @@ export type WorkspaceCreateWithoutAuditLogsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleCreateNestedManyWithoutWorkspaceInput
@@ -2891,6 +2931,7 @@ export type WorkspaceUncheckedCreateWithoutAuditLogsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -2970,6 +3011,7 @@ export type WorkspaceUpdateWithoutAuditLogsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUpdateManyWithoutWorkspaceNestedInput
@@ -3033,6 +3075,7 @@ export type WorkspaceUncheckedUpdateWithoutAuditLogsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -3096,6 +3139,7 @@ export type WorkspaceCreateWithoutCalendarConnectionsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleCreateNestedManyWithoutWorkspaceInput
@@ -3159,6 +3203,7 @@ export type WorkspaceUncheckedCreateWithoutCalendarConnectionsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -3238,6 +3283,7 @@ export type WorkspaceUpdateWithoutCalendarConnectionsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUpdateManyWithoutWorkspaceNestedInput
@@ -3301,6 +3347,7 @@ export type WorkspaceUncheckedUpdateWithoutCalendarConnectionsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -3364,6 +3411,7 @@ export type WorkspaceCreateWithoutCalendarEventLinksInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleCreateNestedManyWithoutWorkspaceInput
@@ -3427,6 +3475,7 @@ export type WorkspaceUncheckedCreateWithoutCalendarEventLinksInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -3506,6 +3555,7 @@ export type WorkspaceUpdateWithoutCalendarEventLinksInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUpdateManyWithoutWorkspaceNestedInput
@@ -3569,6 +3619,7 @@ export type WorkspaceUncheckedUpdateWithoutCalendarEventLinksInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -3632,6 +3683,7 @@ export type WorkspaceCreateWithoutGmailConnectionsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleCreateNestedManyWithoutWorkspaceInput
@@ -3695,6 +3747,7 @@ export type WorkspaceUncheckedCreateWithoutGmailConnectionsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -3774,6 +3827,7 @@ export type WorkspaceUpdateWithoutGmailConnectionsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUpdateManyWithoutWorkspaceNestedInput
@@ -3837,6 +3891,7 @@ export type WorkspaceUncheckedUpdateWithoutGmailConnectionsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -3900,6 +3955,7 @@ export type WorkspaceCreateWithoutGmailMessageLinksInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleCreateNestedManyWithoutWorkspaceInput
@@ -3963,6 +4019,7 @@ export type WorkspaceUncheckedCreateWithoutGmailMessageLinksInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -4042,6 +4099,7 @@ export type WorkspaceUpdateWithoutGmailMessageLinksInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUpdateManyWithoutWorkspaceNestedInput
@@ -4105,6 +4163,7 @@ export type WorkspaceUncheckedUpdateWithoutGmailMessageLinksInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -4168,6 +4227,7 @@ export type WorkspaceCreateWithoutEraConnectionsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleCreateNestedManyWithoutWorkspaceInput
@@ -4231,6 +4291,7 @@ export type WorkspaceUncheckedCreateWithoutEraConnectionsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -4310,6 +4371,7 @@ export type WorkspaceUpdateWithoutEraConnectionsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUpdateManyWithoutWorkspaceNestedInput
@@ -4373,6 +4435,7 @@ export type WorkspaceUncheckedUpdateWithoutEraConnectionsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -4436,6 +4499,7 @@ export type WorkspaceCreateWithoutEraAccountLinksInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleCreateNestedManyWithoutWorkspaceInput
@@ -4499,6 +4563,7 @@ export type WorkspaceUncheckedCreateWithoutEraAccountLinksInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -4578,6 +4643,7 @@ export type WorkspaceUpdateWithoutEraAccountLinksInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUpdateManyWithoutWorkspaceNestedInput
@@ -4641,6 +4707,7 @@ export type WorkspaceUncheckedUpdateWithoutEraAccountLinksInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -4704,6 +4771,7 @@ export type WorkspaceCreateWithoutEraTransactionLinksInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleCreateNestedManyWithoutWorkspaceInput
@@ -4767,6 +4835,7 @@ export type WorkspaceUncheckedCreateWithoutEraTransactionLinksInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -4846,6 +4915,7 @@ export type WorkspaceUpdateWithoutEraTransactionLinksInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUpdateManyWithoutWorkspaceNestedInput
@@ -4909,6 +4979,7 @@ export type WorkspaceUncheckedUpdateWithoutEraTransactionLinksInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -4972,6 +5043,7 @@ export type WorkspaceCreateWithoutRulesInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionCreateNestedManyWithoutWorkspaceInput
   ruleRuns?: Prisma.RuleRunCreateNestedManyWithoutWorkspaceInput
@@ -5035,6 +5107,7 @@ export type WorkspaceUncheckedCreateWithoutRulesInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutWorkspaceInput
   ruleRuns?: Prisma.RuleRunUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -5114,6 +5187,7 @@ export type WorkspaceUpdateWithoutRulesInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUpdateManyWithoutWorkspaceNestedInput
   ruleRuns?: Prisma.RuleRunUpdateManyWithoutWorkspaceNestedInput
@@ -5177,6 +5251,7 @@ export type WorkspaceUncheckedUpdateWithoutRulesInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
   ruleRuns?: Prisma.RuleRunUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -5240,6 +5315,7 @@ export type WorkspaceCreateWithoutRuleRunsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleCreateNestedManyWithoutWorkspaceInput
@@ -5303,6 +5379,7 @@ export type WorkspaceUncheckedCreateWithoutRuleRunsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -5382,6 +5459,7 @@ export type WorkspaceUpdateWithoutRuleRunsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUpdateManyWithoutWorkspaceNestedInput
@@ -5445,6 +5523,7 @@ export type WorkspaceUncheckedUpdateWithoutRuleRunsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -5508,6 +5587,7 @@ export type WorkspaceCreateWithoutStagedItemsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleCreateNestedManyWithoutWorkspaceInput
   ruleRuns?: Prisma.RuleRunCreateNestedManyWithoutWorkspaceInput
@@ -5571,6 +5651,7 @@ export type WorkspaceUncheckedCreateWithoutStagedItemsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleUncheckedCreateNestedManyWithoutWorkspaceInput
   ruleRuns?: Prisma.RuleRunUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -5650,6 +5731,7 @@ export type WorkspaceUpdateWithoutStagedItemsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUpdateManyWithoutWorkspaceNestedInput
   ruleRuns?: Prisma.RuleRunUpdateManyWithoutWorkspaceNestedInput
@@ -5713,6 +5795,7 @@ export type WorkspaceUncheckedUpdateWithoutStagedItemsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUncheckedUpdateManyWithoutWorkspaceNestedInput
   ruleRuns?: Prisma.RuleRunUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -5775,6 +5858,7 @@ export type WorkspaceCreateWithoutEventsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleCreateNestedManyWithoutWorkspaceInput
@@ -5838,6 +5922,7 @@ export type WorkspaceUncheckedCreateWithoutEventsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -5917,6 +6002,7 @@ export type WorkspaceUpdateWithoutEventsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUpdateManyWithoutWorkspaceNestedInput
@@ -5980,6 +6066,7 @@ export type WorkspaceUncheckedUpdateWithoutEventsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -6043,6 +6130,7 @@ export type WorkspaceCreateWithoutInteractionsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleCreateNestedManyWithoutWorkspaceInput
@@ -6106,6 +6194,7 @@ export type WorkspaceUncheckedCreateWithoutInteractionsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -6185,6 +6274,7 @@ export type WorkspaceUpdateWithoutInteractionsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUpdateManyWithoutWorkspaceNestedInput
@@ -6248,6 +6338,7 @@ export type WorkspaceUncheckedUpdateWithoutInteractionsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -6311,6 +6402,7 @@ export type WorkspaceCreateWithoutPlansInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleCreateNestedManyWithoutWorkspaceInput
@@ -6374,6 +6466,7 @@ export type WorkspaceUncheckedCreateWithoutPlansInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -6453,6 +6546,7 @@ export type WorkspaceUpdateWithoutPlansInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUpdateManyWithoutWorkspaceNestedInput
@@ -6516,6 +6610,7 @@ export type WorkspaceUncheckedUpdateWithoutPlansInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -6580,6 +6675,7 @@ export type WorkspaceCreateWithoutPlanExpectedPersonsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleCreateNestedManyWithoutWorkspaceInput
@@ -6643,6 +6739,7 @@ export type WorkspaceUncheckedCreateWithoutPlanExpectedPersonsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -6722,6 +6819,7 @@ export type WorkspaceUpdateWithoutPlanExpectedPersonsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUpdateManyWithoutWorkspaceNestedInput
@@ -6785,6 +6883,7 @@ export type WorkspaceUncheckedUpdateWithoutPlanExpectedPersonsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -6847,6 +6946,7 @@ export type WorkspaceCreateWithoutPlacesInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleCreateNestedManyWithoutWorkspaceInput
@@ -6910,6 +7010,7 @@ export type WorkspaceUncheckedCreateWithoutPlacesInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -6989,6 +7090,7 @@ export type WorkspaceUpdateWithoutPlacesInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUpdateManyWithoutWorkspaceNestedInput
@@ -7052,6 +7154,7 @@ export type WorkspaceUncheckedUpdateWithoutPlacesInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -7116,6 +7219,7 @@ export type WorkspaceCreateWithoutImportJobsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleCreateNestedManyWithoutWorkspaceInput
@@ -7179,6 +7283,7 @@ export type WorkspaceUncheckedCreateWithoutImportJobsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -7258,6 +7363,7 @@ export type WorkspaceUpdateWithoutImportJobsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUpdateManyWithoutWorkspaceNestedInput
@@ -7321,6 +7427,7 @@ export type WorkspaceUncheckedUpdateWithoutImportJobsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -7384,6 +7491,7 @@ export type WorkspaceCreateWithoutImportStagedVisitsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleCreateNestedManyWithoutWorkspaceInput
@@ -7447,6 +7555,7 @@ export type WorkspaceUncheckedCreateWithoutImportStagedVisitsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -7526,6 +7635,7 @@ export type WorkspaceUpdateWithoutImportStagedVisitsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUpdateManyWithoutWorkspaceNestedInput
@@ -7589,6 +7699,7 @@ export type WorkspaceUncheckedUpdateWithoutImportStagedVisitsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -7651,6 +7762,7 @@ export type WorkspaceCreateWithoutPlaceNotesInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleCreateNestedManyWithoutWorkspaceInput
@@ -7714,6 +7826,7 @@ export type WorkspaceUncheckedCreateWithoutPlaceNotesInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -7793,6 +7906,7 @@ export type WorkspaceUpdateWithoutPlaceNotesInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUpdateManyWithoutWorkspaceNestedInput
@@ -7856,6 +7970,7 @@ export type WorkspaceUncheckedUpdateWithoutPlaceNotesInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -7919,6 +8034,7 @@ export type WorkspaceCreateWithoutItemsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleCreateNestedManyWithoutWorkspaceInput
@@ -7982,6 +8098,7 @@ export type WorkspaceUncheckedCreateWithoutItemsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -8061,6 +8178,7 @@ export type WorkspaceUpdateWithoutItemsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUpdateManyWithoutWorkspaceNestedInput
@@ -8124,6 +8242,7 @@ export type WorkspaceUncheckedUpdateWithoutItemsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -8187,6 +8306,7 @@ export type WorkspaceCreateWithoutItemDefinitionsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleCreateNestedManyWithoutWorkspaceInput
@@ -8250,6 +8370,7 @@ export type WorkspaceUncheckedCreateWithoutItemDefinitionsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -8329,6 +8450,7 @@ export type WorkspaceUpdateWithoutItemDefinitionsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUpdateManyWithoutWorkspaceNestedInput
@@ -8392,6 +8514,7 @@ export type WorkspaceUncheckedUpdateWithoutItemDefinitionsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -8455,6 +8578,7 @@ export type WorkspaceCreateWithoutInventoryLotsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleCreateNestedManyWithoutWorkspaceInput
@@ -8518,6 +8642,7 @@ export type WorkspaceUncheckedCreateWithoutInventoryLotsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -8597,6 +8722,7 @@ export type WorkspaceUpdateWithoutInventoryLotsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUpdateManyWithoutWorkspaceNestedInput
@@ -8660,6 +8786,7 @@ export type WorkspaceUncheckedUpdateWithoutInventoryLotsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -8723,6 +8850,7 @@ export type WorkspaceCreateWithoutImportedFilesInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleCreateNestedManyWithoutWorkspaceInput
@@ -8786,6 +8914,7 @@ export type WorkspaceUncheckedCreateWithoutImportedFilesInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -8865,6 +8994,7 @@ export type WorkspaceUpdateWithoutImportedFilesInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUpdateManyWithoutWorkspaceNestedInput
@@ -8928,6 +9058,7 @@ export type WorkspaceUncheckedUpdateWithoutImportedFilesInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -8991,6 +9122,7 @@ export type WorkspaceCreateWithoutAiProviderCredentialsInput = {
   importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleCreateNestedManyWithoutWorkspaceInput
@@ -9054,6 +9186,7 @@ export type WorkspaceUncheckedCreateWithoutAiProviderCredentialsInput = {
   importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -9133,6 +9266,7 @@ export type WorkspaceUpdateWithoutAiProviderCredentialsInput = {
   importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUpdateManyWithoutWorkspaceNestedInput
@@ -9196,6 +9330,7 @@ export type WorkspaceUncheckedUpdateWithoutAiProviderCredentialsInput = {
   importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -9259,6 +9394,7 @@ export type WorkspaceCreateWithoutAiAnalysisRunsInput = {
   importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
   aiProviderCredentials?: Prisma.AiProviderCredentialCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleCreateNestedManyWithoutWorkspaceInput
@@ -9322,6 +9458,7 @@ export type WorkspaceUncheckedCreateWithoutAiAnalysisRunsInput = {
   importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -9401,6 +9538,7 @@ export type WorkspaceUpdateWithoutAiAnalysisRunsInput = {
   importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
   aiProviderCredentials?: Prisma.AiProviderCredentialUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUpdateManyWithoutWorkspaceNestedInput
@@ -9464,6 +9602,7 @@ export type WorkspaceUncheckedUpdateWithoutAiAnalysisRunsInput = {
   importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -9527,6 +9666,7 @@ export type WorkspaceCreateWithoutNoteAnalysisRunsInput = {
   importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
   aiProviderCredentials?: Prisma.AiProviderCredentialCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleCreateNestedManyWithoutWorkspaceInput
@@ -9590,6 +9730,7 @@ export type WorkspaceUncheckedCreateWithoutNoteAnalysisRunsInput = {
   importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -9669,6 +9810,7 @@ export type WorkspaceUpdateWithoutNoteAnalysisRunsInput = {
   importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
   aiProviderCredentials?: Prisma.AiProviderCredentialUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUpdateManyWithoutWorkspaceNestedInput
@@ -9732,6 +9874,279 @@ export type WorkspaceUncheckedUpdateWithoutNoteAnalysisRunsInput = {
   importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  noteSuggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  stagedItems?: Prisma.StagedInteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  rules?: Prisma.RuleUncheckedUpdateManyWithoutWorkspaceNestedInput
+  ruleRuns?: Prisma.RuleRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutWorkspaceNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutWorkspaceNestedInput
+  calendarConnections?: Prisma.CalendarConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  calendarEventLinks?: Prisma.CalendarEventLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
+  gmailConnections?: Prisma.GmailConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  gmailMessageLinks?: Prisma.GmailMessageLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
+  importJobs?: Prisma.ImportJobUncheckedUpdateManyWithoutWorkspaceNestedInput
+  importStagedVisits?: Prisma.ImportStagedVisitUncheckedUpdateManyWithoutWorkspaceNestedInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUncheckedUpdateManyWithoutWorkspaceNestedInput
+  assistantMessages?: Prisma.AssistantMessageUncheckedUpdateManyWithoutWorkspaceNestedInput
+  eraConnections?: Prisma.EraConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  eraAccountLinks?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
+  eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProfile?: Prisma.LevelUpProfileUncheckedUpdateOneWithoutWorkspaceNestedInput
+  levelUpTestResults?: Prisma.LevelUpTestResultUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpCombines?: Prisma.LevelUpCombineUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpSnapshots?: Prisma.LevelUpRatingSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
+  graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
+  reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+}
+
+export type WorkspaceCreateWithoutTheoryAnalysisRunsInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  name: string
+  slug: string
+  status?: string
+  ownerUser?: Prisma.UserCreateNestedOneWithoutOwnedWorkspacesInput
+  members?: Prisma.WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
+  approvedEmails?: Prisma.ApprovedEmailCreateNestedManyWithoutWorkspaceInput
+  persons?: Prisma.PersonCreateNestedManyWithoutWorkspaceInput
+  events?: Prisma.EventCreateNestedManyWithoutWorkspaceInput
+  interactions?: Prisma.InteractionCreateNestedManyWithoutWorkspaceInput
+  plans?: Prisma.PlanCreateNestedManyWithoutWorkspaceInput
+  places?: Prisma.PlaceCreateNestedManyWithoutWorkspaceInput
+  placeNotes?: Prisma.PlaceNoteCreateNestedManyWithoutWorkspaceInput
+  notes?: Prisma.NoteCreateNestedManyWithoutWorkspaceInput
+  theorySnapshots?: Prisma.TheorySnapshotCreateNestedManyWithoutWorkspaceInput
+  groups?: Prisma.GroupCreateNestedManyWithoutWorkspaceInput
+  items?: Prisma.ItemCreateNestedManyWithoutWorkspaceInput
+  itemDefinitions?: Prisma.ItemDefinitionCreateNestedManyWithoutWorkspaceInput
+  inventoryLots?: Prisma.InventoryLotCreateNestedManyWithoutWorkspaceInput
+  supplierProfiles?: Prisma.SupplierProfileCreateNestedManyWithoutWorkspaceInput
+  purchaseOrders?: Prisma.PurchaseOrderCreateNestedManyWithoutWorkspaceInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutWorkspaceInput
+  importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
+  aiProviderCredentials?: Prisma.AiProviderCredentialCreateNestedManyWithoutWorkspaceInput
+  aiAnalysisRuns?: Prisma.AiAnalysisRunCreateNestedManyWithoutWorkspaceInput
+  noteAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutWorkspaceInput
+  noteSuggestions?: Prisma.NoteSuggestionCreateNestedManyWithoutWorkspaceInput
+  stagedItems?: Prisma.StagedInteractionCreateNestedManyWithoutWorkspaceInput
+  rules?: Prisma.RuleCreateNestedManyWithoutWorkspaceInput
+  ruleRuns?: Prisma.RuleRunCreateNestedManyWithoutWorkspaceInput
+  apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutWorkspaceInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutWorkspaceInput
+  calendarConnections?: Prisma.CalendarConnectionCreateNestedManyWithoutWorkspaceInput
+  calendarEventLinks?: Prisma.CalendarEventLinkCreateNestedManyWithoutWorkspaceInput
+  gmailConnections?: Prisma.GmailConnectionCreateNestedManyWithoutWorkspaceInput
+  gmailMessageLinks?: Prisma.GmailMessageLinkCreateNestedManyWithoutWorkspaceInput
+  importJobs?: Prisma.ImportJobCreateNestedManyWithoutWorkspaceInput
+  importStagedVisits?: Prisma.ImportStagedVisitCreateNestedManyWithoutWorkspaceInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonCreateNestedManyWithoutWorkspaceInput
+  assistantMessages?: Prisma.AssistantMessageCreateNestedManyWithoutWorkspaceInput
+  eraConnections?: Prisma.EraConnectionCreateNestedManyWithoutWorkspaceInput
+  eraAccountLinks?: Prisma.EraAccountLinkCreateNestedManyWithoutWorkspaceInput
+  eraTransactionLinks?: Prisma.EraTransactionLinkCreateNestedManyWithoutWorkspaceInput
+  levelUpProfile?: Prisma.LevelUpProfileCreateNestedOneWithoutWorkspaceInput
+  levelUpTestResults?: Prisma.LevelUpTestResultCreateNestedManyWithoutWorkspaceInput
+  levelUpCombines?: Prisma.LevelUpCombineCreateNestedManyWithoutWorkspaceInput
+  levelUpSnapshots?: Prisma.LevelUpRatingSnapshotCreateNestedManyWithoutWorkspaceInput
+  levelUpTrainingSets?: Prisma.LevelUpTrainingSetCreateNestedManyWithoutWorkspaceInput
+  levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockCreateNestedManyWithoutWorkspaceInput
+  levelUpTargetBuilds?: Prisma.LevelUpTargetBuildCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
+  graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
+  reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
+}
+
+export type WorkspaceUncheckedCreateWithoutTheoryAnalysisRunsInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  name: string
+  slug: string
+  status?: string
+  ownerUserId?: string | null
+  members?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
+  approvedEmails?: Prisma.ApprovedEmailUncheckedCreateNestedManyWithoutWorkspaceInput
+  persons?: Prisma.PersonUncheckedCreateNestedManyWithoutWorkspaceInput
+  events?: Prisma.EventUncheckedCreateNestedManyWithoutWorkspaceInput
+  interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutWorkspaceInput
+  plans?: Prisma.PlanUncheckedCreateNestedManyWithoutWorkspaceInput
+  places?: Prisma.PlaceUncheckedCreateNestedManyWithoutWorkspaceInput
+  placeNotes?: Prisma.PlaceNoteUncheckedCreateNestedManyWithoutWorkspaceInput
+  notes?: Prisma.NoteUncheckedCreateNestedManyWithoutWorkspaceInput
+  theorySnapshots?: Prisma.TheorySnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  groups?: Prisma.GroupUncheckedCreateNestedManyWithoutWorkspaceInput
+  items?: Prisma.ItemUncheckedCreateNestedManyWithoutWorkspaceInput
+  itemDefinitions?: Prisma.ItemDefinitionUncheckedCreateNestedManyWithoutWorkspaceInput
+  inventoryLots?: Prisma.InventoryLotUncheckedCreateNestedManyWithoutWorkspaceInput
+  supplierProfiles?: Prisma.SupplierProfileUncheckedCreateNestedManyWithoutWorkspaceInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutWorkspaceInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutWorkspaceInput
+  importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
+  aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedCreateNestedManyWithoutWorkspaceInput
+  aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  noteSuggestions?: Prisma.NoteSuggestionUncheckedCreateNestedManyWithoutWorkspaceInput
+  stagedItems?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutWorkspaceInput
+  rules?: Prisma.RuleUncheckedCreateNestedManyWithoutWorkspaceInput
+  ruleRuns?: Prisma.RuleRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutWorkspaceInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutWorkspaceInput
+  calendarConnections?: Prisma.CalendarConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  calendarEventLinks?: Prisma.CalendarEventLinkUncheckedCreateNestedManyWithoutWorkspaceInput
+  gmailConnections?: Prisma.GmailConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  gmailMessageLinks?: Prisma.GmailMessageLinkUncheckedCreateNestedManyWithoutWorkspaceInput
+  importJobs?: Prisma.ImportJobUncheckedCreateNestedManyWithoutWorkspaceInput
+  importStagedVisits?: Prisma.ImportStagedVisitUncheckedCreateNestedManyWithoutWorkspaceInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUncheckedCreateNestedManyWithoutWorkspaceInput
+  assistantMessages?: Prisma.AssistantMessageUncheckedCreateNestedManyWithoutWorkspaceInput
+  eraConnections?: Prisma.EraConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  eraAccountLinks?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutWorkspaceInput
+  eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProfile?: Prisma.LevelUpProfileUncheckedCreateNestedOneWithoutWorkspaceInput
+  levelUpTestResults?: Prisma.LevelUpTestResultUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpCombines?: Prisma.LevelUpCombineUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpSnapshots?: Prisma.LevelUpRatingSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
+  graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
+  reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+}
+
+export type WorkspaceCreateOrConnectWithoutTheoryAnalysisRunsInput = {
+  where: Prisma.WorkspaceWhereUniqueInput
+  create: Prisma.XOR<Prisma.WorkspaceCreateWithoutTheoryAnalysisRunsInput, Prisma.WorkspaceUncheckedCreateWithoutTheoryAnalysisRunsInput>
+}
+
+export type WorkspaceUpsertWithoutTheoryAnalysisRunsInput = {
+  update: Prisma.XOR<Prisma.WorkspaceUpdateWithoutTheoryAnalysisRunsInput, Prisma.WorkspaceUncheckedUpdateWithoutTheoryAnalysisRunsInput>
+  create: Prisma.XOR<Prisma.WorkspaceCreateWithoutTheoryAnalysisRunsInput, Prisma.WorkspaceUncheckedCreateWithoutTheoryAnalysisRunsInput>
+  where?: Prisma.WorkspaceWhereInput
+}
+
+export type WorkspaceUpdateToOneWithWhereWithoutTheoryAnalysisRunsInput = {
+  where?: Prisma.WorkspaceWhereInput
+  data: Prisma.XOR<Prisma.WorkspaceUpdateWithoutTheoryAnalysisRunsInput, Prisma.WorkspaceUncheckedUpdateWithoutTheoryAnalysisRunsInput>
+}
+
+export type WorkspaceUpdateWithoutTheoryAnalysisRunsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  ownerUser?: Prisma.UserUpdateOneWithoutOwnedWorkspacesNestedInput
+  members?: Prisma.WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
+  approvedEmails?: Prisma.ApprovedEmailUpdateManyWithoutWorkspaceNestedInput
+  persons?: Prisma.PersonUpdateManyWithoutWorkspaceNestedInput
+  events?: Prisma.EventUpdateManyWithoutWorkspaceNestedInput
+  interactions?: Prisma.InteractionUpdateManyWithoutWorkspaceNestedInput
+  plans?: Prisma.PlanUpdateManyWithoutWorkspaceNestedInput
+  places?: Prisma.PlaceUpdateManyWithoutWorkspaceNestedInput
+  placeNotes?: Prisma.PlaceNoteUpdateManyWithoutWorkspaceNestedInput
+  notes?: Prisma.NoteUpdateManyWithoutWorkspaceNestedInput
+  theorySnapshots?: Prisma.TheorySnapshotUpdateManyWithoutWorkspaceNestedInput
+  groups?: Prisma.GroupUpdateManyWithoutWorkspaceNestedInput
+  items?: Prisma.ItemUpdateManyWithoutWorkspaceNestedInput
+  itemDefinitions?: Prisma.ItemDefinitionUpdateManyWithoutWorkspaceNestedInput
+  inventoryLots?: Prisma.InventoryLotUpdateManyWithoutWorkspaceNestedInput
+  supplierProfiles?: Prisma.SupplierProfileUpdateManyWithoutWorkspaceNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUpdateManyWithoutWorkspaceNestedInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutWorkspaceNestedInput
+  importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
+  aiProviderCredentials?: Prisma.AiProviderCredentialUpdateManyWithoutWorkspaceNestedInput
+  aiAnalysisRuns?: Prisma.AiAnalysisRunUpdateManyWithoutWorkspaceNestedInput
+  noteAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutWorkspaceNestedInput
+  noteSuggestions?: Prisma.NoteSuggestionUpdateManyWithoutWorkspaceNestedInput
+  stagedItems?: Prisma.StagedInteractionUpdateManyWithoutWorkspaceNestedInput
+  rules?: Prisma.RuleUpdateManyWithoutWorkspaceNestedInput
+  ruleRuns?: Prisma.RuleRunUpdateManyWithoutWorkspaceNestedInput
+  apiKeys?: Prisma.ApiKeyUpdateManyWithoutWorkspaceNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutWorkspaceNestedInput
+  calendarConnections?: Prisma.CalendarConnectionUpdateManyWithoutWorkspaceNestedInput
+  calendarEventLinks?: Prisma.CalendarEventLinkUpdateManyWithoutWorkspaceNestedInput
+  gmailConnections?: Prisma.GmailConnectionUpdateManyWithoutWorkspaceNestedInput
+  gmailMessageLinks?: Prisma.GmailMessageLinkUpdateManyWithoutWorkspaceNestedInput
+  importJobs?: Prisma.ImportJobUpdateManyWithoutWorkspaceNestedInput
+  importStagedVisits?: Prisma.ImportStagedVisitUpdateManyWithoutWorkspaceNestedInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUpdateManyWithoutWorkspaceNestedInput
+  assistantMessages?: Prisma.AssistantMessageUpdateManyWithoutWorkspaceNestedInput
+  eraConnections?: Prisma.EraConnectionUpdateManyWithoutWorkspaceNestedInput
+  eraAccountLinks?: Prisma.EraAccountLinkUpdateManyWithoutWorkspaceNestedInput
+  eraTransactionLinks?: Prisma.EraTransactionLinkUpdateManyWithoutWorkspaceNestedInput
+  levelUpProfile?: Prisma.LevelUpProfileUpdateOneWithoutWorkspaceNestedInput
+  levelUpTestResults?: Prisma.LevelUpTestResultUpdateManyWithoutWorkspaceNestedInput
+  levelUpCombines?: Prisma.LevelUpCombineUpdateManyWithoutWorkspaceNestedInput
+  levelUpSnapshots?: Prisma.LevelUpRatingSnapshotUpdateManyWithoutWorkspaceNestedInput
+  levelUpTrainingSets?: Prisma.LevelUpTrainingSetUpdateManyWithoutWorkspaceNestedInput
+  levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUpdateManyWithoutWorkspaceNestedInput
+  levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
+  graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
+  reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
+}
+
+export type WorkspaceUncheckedUpdateWithoutTheoryAnalysisRunsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  ownerUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  members?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
+  approvedEmails?: Prisma.ApprovedEmailUncheckedUpdateManyWithoutWorkspaceNestedInput
+  persons?: Prisma.PersonUncheckedUpdateManyWithoutWorkspaceNestedInput
+  events?: Prisma.EventUncheckedUpdateManyWithoutWorkspaceNestedInput
+  interactions?: Prisma.InteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  plans?: Prisma.PlanUncheckedUpdateManyWithoutWorkspaceNestedInput
+  places?: Prisma.PlaceUncheckedUpdateManyWithoutWorkspaceNestedInput
+  placeNotes?: Prisma.PlaceNoteUncheckedUpdateManyWithoutWorkspaceNestedInput
+  notes?: Prisma.NoteUncheckedUpdateManyWithoutWorkspaceNestedInput
+  theorySnapshots?: Prisma.TheorySnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  groups?: Prisma.GroupUncheckedUpdateManyWithoutWorkspaceNestedInput
+  items?: Prisma.ItemUncheckedUpdateManyWithoutWorkspaceNestedInput
+  itemDefinitions?: Prisma.ItemDefinitionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  inventoryLots?: Prisma.InventoryLotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  supplierProfiles?: Prisma.SupplierProfileUncheckedUpdateManyWithoutWorkspaceNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutWorkspaceNestedInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutWorkspaceNestedInput
+  importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
+  aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedUpdateManyWithoutWorkspaceNestedInput
+  aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -9796,6 +10211,7 @@ export type WorkspaceCreateWithoutNoteSuggestionsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleCreateNestedManyWithoutWorkspaceInput
   ruleRuns?: Prisma.RuleRunCreateNestedManyWithoutWorkspaceInput
@@ -9859,6 +10275,7 @@ export type WorkspaceUncheckedCreateWithoutNoteSuggestionsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleUncheckedCreateNestedManyWithoutWorkspaceInput
   ruleRuns?: Prisma.RuleRunUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -9938,6 +10355,7 @@ export type WorkspaceUpdateWithoutNoteSuggestionsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUpdateManyWithoutWorkspaceNestedInput
   ruleRuns?: Prisma.RuleRunUpdateManyWithoutWorkspaceNestedInput
@@ -10001,6 +10419,7 @@ export type WorkspaceUncheckedUpdateWithoutNoteSuggestionsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUncheckedUpdateManyWithoutWorkspaceNestedInput
   ruleRuns?: Prisma.RuleRunUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -10063,6 +10482,7 @@ export type WorkspaceCreateWithoutGroupsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleCreateNestedManyWithoutWorkspaceInput
@@ -10126,6 +10546,7 @@ export type WorkspaceUncheckedCreateWithoutGroupsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -10205,6 +10626,7 @@ export type WorkspaceUpdateWithoutGroupsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUpdateManyWithoutWorkspaceNestedInput
@@ -10268,6 +10690,7 @@ export type WorkspaceUncheckedUpdateWithoutGroupsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -10331,6 +10754,7 @@ export type WorkspaceCreateWithoutSupplierProfilesInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleCreateNestedManyWithoutWorkspaceInput
@@ -10394,6 +10818,7 @@ export type WorkspaceUncheckedCreateWithoutSupplierProfilesInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -10473,6 +10898,7 @@ export type WorkspaceUpdateWithoutSupplierProfilesInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUpdateManyWithoutWorkspaceNestedInput
@@ -10536,6 +10962,7 @@ export type WorkspaceUncheckedUpdateWithoutSupplierProfilesInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -10599,6 +11026,7 @@ export type WorkspaceCreateWithoutPurchaseOrdersInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleCreateNestedManyWithoutWorkspaceInput
@@ -10662,6 +11090,7 @@ export type WorkspaceUncheckedCreateWithoutPurchaseOrdersInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -10741,6 +11170,7 @@ export type WorkspaceUpdateWithoutPurchaseOrdersInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUpdateManyWithoutWorkspaceNestedInput
@@ -10804,6 +11234,7 @@ export type WorkspaceUncheckedUpdateWithoutPurchaseOrdersInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -10867,6 +11298,7 @@ export type WorkspaceCreateWithoutPurchaseReceiptLinesInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleCreateNestedManyWithoutWorkspaceInput
@@ -10930,6 +11362,7 @@ export type WorkspaceUncheckedCreateWithoutPurchaseReceiptLinesInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -11009,6 +11442,7 @@ export type WorkspaceUpdateWithoutPurchaseReceiptLinesInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUpdateManyWithoutWorkspaceNestedInput
@@ -11072,6 +11506,7 @@ export type WorkspaceUncheckedUpdateWithoutPurchaseReceiptLinesInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -11135,6 +11570,7 @@ export type WorkspaceCreateWithoutNotesInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleCreateNestedManyWithoutWorkspaceInput
@@ -11198,6 +11634,7 @@ export type WorkspaceUncheckedCreateWithoutNotesInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -11277,6 +11714,7 @@ export type WorkspaceUpdateWithoutNotesInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUpdateManyWithoutWorkspaceNestedInput
@@ -11340,6 +11778,7 @@ export type WorkspaceUncheckedUpdateWithoutNotesInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -11403,6 +11842,7 @@ export type WorkspaceCreateWithoutTheorySnapshotsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleCreateNestedManyWithoutWorkspaceInput
@@ -11466,6 +11906,7 @@ export type WorkspaceUncheckedCreateWithoutTheorySnapshotsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -11545,6 +11986,7 @@ export type WorkspaceUpdateWithoutTheorySnapshotsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUpdateManyWithoutWorkspaceNestedInput
@@ -11608,6 +12050,7 @@ export type WorkspaceUncheckedUpdateWithoutTheorySnapshotsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -11672,6 +12115,7 @@ export type WorkspaceCreateWithoutLifeModelSnapshotsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleCreateNestedManyWithoutWorkspaceInput
@@ -11735,6 +12179,7 @@ export type WorkspaceUncheckedCreateWithoutLifeModelSnapshotsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -11814,6 +12259,7 @@ export type WorkspaceUpdateWithoutLifeModelSnapshotsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUpdateManyWithoutWorkspaceNestedInput
@@ -11877,6 +12323,7 @@ export type WorkspaceUncheckedUpdateWithoutLifeModelSnapshotsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -11940,6 +12387,7 @@ export type WorkspaceCreateWithoutAssistantMessagesInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleCreateNestedManyWithoutWorkspaceInput
@@ -12003,6 +12451,7 @@ export type WorkspaceUncheckedCreateWithoutAssistantMessagesInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -12082,6 +12531,7 @@ export type WorkspaceUpdateWithoutAssistantMessagesInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUpdateManyWithoutWorkspaceNestedInput
@@ -12145,6 +12595,7 @@ export type WorkspaceUncheckedUpdateWithoutAssistantMessagesInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -12208,6 +12659,7 @@ export type WorkspaceCreateWithoutLevelUpProfileInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleCreateNestedManyWithoutWorkspaceInput
@@ -12271,6 +12723,7 @@ export type WorkspaceUncheckedCreateWithoutLevelUpProfileInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -12350,6 +12803,7 @@ export type WorkspaceUpdateWithoutLevelUpProfileInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUpdateManyWithoutWorkspaceNestedInput
@@ -12413,6 +12867,7 @@ export type WorkspaceUncheckedUpdateWithoutLevelUpProfileInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -12476,6 +12931,7 @@ export type WorkspaceCreateWithoutLevelUpTestResultsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleCreateNestedManyWithoutWorkspaceInput
@@ -12539,6 +12995,7 @@ export type WorkspaceUncheckedCreateWithoutLevelUpTestResultsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -12618,6 +13075,7 @@ export type WorkspaceUpdateWithoutLevelUpTestResultsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUpdateManyWithoutWorkspaceNestedInput
@@ -12681,6 +13139,7 @@ export type WorkspaceUncheckedUpdateWithoutLevelUpTestResultsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -12744,6 +13203,7 @@ export type WorkspaceCreateWithoutLevelUpCombinesInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleCreateNestedManyWithoutWorkspaceInput
@@ -12807,6 +13267,7 @@ export type WorkspaceUncheckedCreateWithoutLevelUpCombinesInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -12886,6 +13347,7 @@ export type WorkspaceUpdateWithoutLevelUpCombinesInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUpdateManyWithoutWorkspaceNestedInput
@@ -12949,6 +13411,7 @@ export type WorkspaceUncheckedUpdateWithoutLevelUpCombinesInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -13012,6 +13475,7 @@ export type WorkspaceCreateWithoutLevelUpSnapshotsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleCreateNestedManyWithoutWorkspaceInput
@@ -13075,6 +13539,7 @@ export type WorkspaceUncheckedCreateWithoutLevelUpSnapshotsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -13154,6 +13619,7 @@ export type WorkspaceUpdateWithoutLevelUpSnapshotsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUpdateManyWithoutWorkspaceNestedInput
@@ -13217,6 +13683,7 @@ export type WorkspaceUncheckedUpdateWithoutLevelUpSnapshotsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -13280,6 +13747,7 @@ export type WorkspaceCreateWithoutLevelUpTrainingSetsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleCreateNestedManyWithoutWorkspaceInput
@@ -13343,6 +13811,7 @@ export type WorkspaceUncheckedCreateWithoutLevelUpTrainingSetsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -13422,6 +13891,7 @@ export type WorkspaceUpdateWithoutLevelUpTrainingSetsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUpdateManyWithoutWorkspaceNestedInput
@@ -13485,6 +13955,7 @@ export type WorkspaceUncheckedUpdateWithoutLevelUpTrainingSetsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -13548,6 +14019,7 @@ export type WorkspaceCreateWithoutLevelUpExercisesInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleCreateNestedManyWithoutWorkspaceInput
@@ -13611,6 +14083,7 @@ export type WorkspaceUncheckedCreateWithoutLevelUpExercisesInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -13690,6 +14163,7 @@ export type WorkspaceUpdateWithoutLevelUpExercisesInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUpdateManyWithoutWorkspaceNestedInput
@@ -13753,6 +14227,7 @@ export type WorkspaceUncheckedUpdateWithoutLevelUpExercisesInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -13816,6 +14291,7 @@ export type WorkspaceCreateWithoutLevelUpProgramsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleCreateNestedManyWithoutWorkspaceInput
@@ -13879,6 +14355,7 @@ export type WorkspaceUncheckedCreateWithoutLevelUpProgramsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -13958,6 +14435,7 @@ export type WorkspaceUpdateWithoutLevelUpProgramsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUpdateManyWithoutWorkspaceNestedInput
@@ -14021,6 +14499,7 @@ export type WorkspaceUncheckedUpdateWithoutLevelUpProgramsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -14084,6 +14563,7 @@ export type WorkspaceCreateWithoutLevelUpProgramDaysInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleCreateNestedManyWithoutWorkspaceInput
@@ -14147,6 +14627,7 @@ export type WorkspaceUncheckedCreateWithoutLevelUpProgramDaysInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -14226,6 +14707,7 @@ export type WorkspaceUpdateWithoutLevelUpProgramDaysInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUpdateManyWithoutWorkspaceNestedInput
@@ -14289,6 +14771,7 @@ export type WorkspaceUncheckedUpdateWithoutLevelUpProgramDaysInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -14352,6 +14835,7 @@ export type WorkspaceCreateWithoutLevelUpProgramEntriesInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleCreateNestedManyWithoutWorkspaceInput
@@ -14415,6 +14899,7 @@ export type WorkspaceUncheckedCreateWithoutLevelUpProgramEntriesInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -14494,6 +14979,7 @@ export type WorkspaceUpdateWithoutLevelUpProgramEntriesInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUpdateManyWithoutWorkspaceNestedInput
@@ -14557,6 +15043,7 @@ export type WorkspaceUncheckedUpdateWithoutLevelUpProgramEntriesInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -14620,6 +15107,7 @@ export type WorkspaceCreateWithoutLevelUpSessionsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleCreateNestedManyWithoutWorkspaceInput
@@ -14683,6 +15171,7 @@ export type WorkspaceUncheckedCreateWithoutLevelUpSessionsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -14762,6 +15251,7 @@ export type WorkspaceUpdateWithoutLevelUpSessionsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUpdateManyWithoutWorkspaceNestedInput
@@ -14825,6 +15315,7 @@ export type WorkspaceUncheckedUpdateWithoutLevelUpSessionsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -14888,6 +15379,7 @@ export type WorkspaceCreateWithoutLevelUpBodyMetricsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleCreateNestedManyWithoutWorkspaceInput
@@ -14951,6 +15443,7 @@ export type WorkspaceUncheckedCreateWithoutLevelUpBodyMetricsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -15030,6 +15523,7 @@ export type WorkspaceUpdateWithoutLevelUpBodyMetricsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUpdateManyWithoutWorkspaceNestedInput
@@ -15093,6 +15587,7 @@ export type WorkspaceUncheckedUpdateWithoutLevelUpBodyMetricsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -15156,6 +15651,7 @@ export type WorkspaceCreateWithoutLevelUpBadgeUnlocksInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleCreateNestedManyWithoutWorkspaceInput
@@ -15219,6 +15715,7 @@ export type WorkspaceUncheckedCreateWithoutLevelUpBadgeUnlocksInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -15298,6 +15795,7 @@ export type WorkspaceUpdateWithoutLevelUpBadgeUnlocksInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUpdateManyWithoutWorkspaceNestedInput
@@ -15361,6 +15859,7 @@ export type WorkspaceUncheckedUpdateWithoutLevelUpBadgeUnlocksInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -15424,6 +15923,7 @@ export type WorkspaceCreateWithoutLevelUpTargetBuildsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleCreateNestedManyWithoutWorkspaceInput
@@ -15487,6 +15987,7 @@ export type WorkspaceUncheckedCreateWithoutLevelUpTargetBuildsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -15566,6 +16067,7 @@ export type WorkspaceUpdateWithoutLevelUpTargetBuildsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUpdateManyWithoutWorkspaceNestedInput
@@ -15629,6 +16131,7 @@ export type WorkspaceUncheckedUpdateWithoutLevelUpTargetBuildsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -15692,6 +16195,7 @@ export type WorkspaceCreateWithoutGraphEventsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleCreateNestedManyWithoutWorkspaceInput
@@ -15755,6 +16259,7 @@ export type WorkspaceUncheckedCreateWithoutGraphEventsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -15834,6 +16339,7 @@ export type WorkspaceUpdateWithoutGraphEventsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUpdateManyWithoutWorkspaceNestedInput
@@ -15897,6 +16403,7 @@ export type WorkspaceUncheckedUpdateWithoutGraphEventsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -15960,6 +16467,7 @@ export type WorkspaceCreateWithoutReviewItemsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleCreateNestedManyWithoutWorkspaceInput
@@ -16023,6 +16531,7 @@ export type WorkspaceUncheckedCreateWithoutReviewItemsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedCreateNestedManyWithoutWorkspaceInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedCreateNestedManyWithoutWorkspaceInput
   stagedItems?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutWorkspaceInput
   rules?: Prisma.RuleUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -16102,6 +16611,7 @@ export type WorkspaceUpdateWithoutReviewItemsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUpdateManyWithoutWorkspaceNestedInput
@@ -16165,6 +16675,7 @@ export type WorkspaceUncheckedUpdateWithoutReviewItemsInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -16236,6 +16747,7 @@ export type WorkspaceUpdateWithoutOwnerUserInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUpdateManyWithoutWorkspaceNestedInput
@@ -16299,6 +16811,7 @@ export type WorkspaceUncheckedUpdateWithoutOwnerUserInput = {
   aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedUpdateManyWithoutWorkspaceNestedInput
   aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   noteSuggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutWorkspaceNestedInput
   stagedItems?: Prisma.StagedInteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
   rules?: Prisma.RuleUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -16370,6 +16883,7 @@ export type WorkspaceCountOutputType = {
   aiProviderCredentials: number
   aiAnalysisRuns: number
   noteAnalysisRuns: number
+  theoryAnalysisRuns: number
   noteSuggestions: number
   stagedItems: number
   rules: number
@@ -16426,6 +16940,7 @@ export type WorkspaceCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensi
   aiProviderCredentials?: boolean | WorkspaceCountOutputTypeCountAiProviderCredentialsArgs
   aiAnalysisRuns?: boolean | WorkspaceCountOutputTypeCountAiAnalysisRunsArgs
   noteAnalysisRuns?: boolean | WorkspaceCountOutputTypeCountNoteAnalysisRunsArgs
+  theoryAnalysisRuns?: boolean | WorkspaceCountOutputTypeCountTheoryAnalysisRunsArgs
   noteSuggestions?: boolean | WorkspaceCountOutputTypeCountNoteSuggestionsArgs
   stagedItems?: boolean | WorkspaceCountOutputTypeCountStagedItemsArgs
   rules?: boolean | WorkspaceCountOutputTypeCountRulesArgs
@@ -16615,6 +17130,13 @@ export type WorkspaceCountOutputTypeCountAiAnalysisRunsArgs<ExtArgs extends runt
  */
 export type WorkspaceCountOutputTypeCountNoteAnalysisRunsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.NoteAnalysisRunWhereInput
+}
+
+/**
+ * WorkspaceCountOutputType without action
+ */
+export type WorkspaceCountOutputTypeCountTheoryAnalysisRunsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TheoryAnalysisRunWhereInput
 }
 
 /**
@@ -16872,6 +17394,7 @@ export type WorkspaceSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   aiProviderCredentials?: boolean | Prisma.Workspace$aiProviderCredentialsArgs<ExtArgs>
   aiAnalysisRuns?: boolean | Prisma.Workspace$aiAnalysisRunsArgs<ExtArgs>
   noteAnalysisRuns?: boolean | Prisma.Workspace$noteAnalysisRunsArgs<ExtArgs>
+  theoryAnalysisRuns?: boolean | Prisma.Workspace$theoryAnalysisRunsArgs<ExtArgs>
   noteSuggestions?: boolean | Prisma.Workspace$noteSuggestionsArgs<ExtArgs>
   stagedItems?: boolean | Prisma.Workspace$stagedItemsArgs<ExtArgs>
   rules?: boolean | Prisma.Workspace$rulesArgs<ExtArgs>
@@ -16964,6 +17487,7 @@ export type WorkspaceInclude<ExtArgs extends runtime.Types.Extensions.InternalAr
   aiProviderCredentials?: boolean | Prisma.Workspace$aiProviderCredentialsArgs<ExtArgs>
   aiAnalysisRuns?: boolean | Prisma.Workspace$aiAnalysisRunsArgs<ExtArgs>
   noteAnalysisRuns?: boolean | Prisma.Workspace$noteAnalysisRunsArgs<ExtArgs>
+  theoryAnalysisRuns?: boolean | Prisma.Workspace$theoryAnalysisRunsArgs<ExtArgs>
   noteSuggestions?: boolean | Prisma.Workspace$noteSuggestionsArgs<ExtArgs>
   stagedItems?: boolean | Prisma.Workspace$stagedItemsArgs<ExtArgs>
   rules?: boolean | Prisma.Workspace$rulesArgs<ExtArgs>
@@ -17031,6 +17555,7 @@ export type $WorkspacePayload<ExtArgs extends runtime.Types.Extensions.InternalA
     aiProviderCredentials: Prisma.$AiProviderCredentialPayload<ExtArgs>[]
     aiAnalysisRuns: Prisma.$AiAnalysisRunPayload<ExtArgs>[]
     noteAnalysisRuns: Prisma.$NoteAnalysisRunPayload<ExtArgs>[]
+    theoryAnalysisRuns: Prisma.$TheoryAnalysisRunPayload<ExtArgs>[]
     noteSuggestions: Prisma.$NoteSuggestionPayload<ExtArgs>[]
     stagedItems: Prisma.$StagedInteractionPayload<ExtArgs>[]
     rules: Prisma.$RulePayload<ExtArgs>[]
@@ -17489,6 +18014,7 @@ export interface Prisma__WorkspaceClient<T, Null = never, ExtArgs extends runtim
   aiProviderCredentials<T extends Prisma.Workspace$aiProviderCredentialsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Workspace$aiProviderCredentialsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AiProviderCredentialPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   aiAnalysisRuns<T extends Prisma.Workspace$aiAnalysisRunsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Workspace$aiAnalysisRunsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AiAnalysisRunPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   noteAnalysisRuns<T extends Prisma.Workspace$noteAnalysisRunsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Workspace$noteAnalysisRunsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NoteAnalysisRunPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  theoryAnalysisRuns<T extends Prisma.Workspace$theoryAnalysisRunsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Workspace$theoryAnalysisRunsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TheoryAnalysisRunPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   noteSuggestions<T extends Prisma.Workspace$noteSuggestionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Workspace$noteSuggestionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NoteSuggestionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   stagedItems<T extends Prisma.Workspace$stagedItemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Workspace$stagedItemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StagedInteractionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   rules<T extends Prisma.Workspace$rulesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Workspace$rulesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RulePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -18477,6 +19003,30 @@ export type Workspace$noteAnalysisRunsArgs<ExtArgs extends runtime.Types.Extensi
   take?: number
   skip?: number
   distinct?: Prisma.NoteAnalysisRunScalarFieldEnum | Prisma.NoteAnalysisRunScalarFieldEnum[]
+}
+
+/**
+ * Workspace.theoryAnalysisRuns
+ */
+export type Workspace$theoryAnalysisRunsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the TheoryAnalysisRun
+   */
+  select?: Prisma.TheoryAnalysisRunSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the TheoryAnalysisRun
+   */
+  omit?: Prisma.TheoryAnalysisRunOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TheoryAnalysisRunInclude<ExtArgs> | null
+  where?: Prisma.TheoryAnalysisRunWhereInput
+  orderBy?: Prisma.TheoryAnalysisRunOrderByWithRelationInput | Prisma.TheoryAnalysisRunOrderByWithRelationInput[]
+  cursor?: Prisma.TheoryAnalysisRunWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TheoryAnalysisRunScalarFieldEnum | Prisma.TheoryAnalysisRunScalarFieldEnum[]
 }
 
 /**

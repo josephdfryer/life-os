@@ -424,6 +424,7 @@ export const ModelName = {
   AiProviderCredential: 'AiProviderCredential',
   AiAnalysisRun: 'AiAnalysisRun',
   NoteAnalysisRun: 'NoteAnalysisRun',
+  TheoryAnalysisRun: 'TheoryAnalysisRun',
   NoteSuggestion: 'NoteSuggestion',
   Group: 'Group',
   SupplierProfile: 'SupplierProfile',
@@ -472,7 +473,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "workspace" | "workspaceMember" | "approvedEmail" | "person" | "user" | "role" | "permission" | "userRole" | "rolePermission" | "apiKey" | "apiKeyScope" | "auditLog" | "calendarConnection" | "calendarEventLink" | "gmailConnection" | "gmailMessageLink" | "eraConnection" | "eraAccountLink" | "eraTransactionLink" | "rule" | "ruleRun" | "stagedInteraction" | "event" | "interaction" | "interactionParticipant" | "plan" | "planExpectedPerson" | "place" | "importJob" | "importStagedVisit" | "placeNote" | "item" | "itemDefinition" | "inventoryLot" | "assembly" | "itemInteraction" | "importedFile" | "aiProviderCredential" | "aiAnalysisRun" | "noteAnalysisRun" | "noteSuggestion" | "group" | "supplierProfile" | "purchaseOrder" | "purchaseOrderLine" | "purchaseReceiptLine" | "personGroup" | "groupGroup" | "placeGroup" | "note" | "theorySnapshot" | "theorySnapshotSource" | "lifeModelSnapshot" | "lifeModelClaim" | "stateDefinition" | "state" | "assistantMessage" | "levelUpProfile" | "levelUpTestResult" | "levelUpCombine" | "levelUpRatingSnapshot" | "levelUpTrainingSet" | "levelUpExercise" | "levelUpProgram" | "levelUpProgramDay" | "levelUpProgramEntry" | "levelUpSession" | "levelUpBodyMetric" | "levelUpBadgeUnlock" | "levelUpTargetBuild" | "graphEvent" | "graphEventReceipt" | "reviewItem"
+    modelProps: "workspace" | "workspaceMember" | "approvedEmail" | "person" | "user" | "role" | "permission" | "userRole" | "rolePermission" | "apiKey" | "apiKeyScope" | "auditLog" | "calendarConnection" | "calendarEventLink" | "gmailConnection" | "gmailMessageLink" | "eraConnection" | "eraAccountLink" | "eraTransactionLink" | "rule" | "ruleRun" | "stagedInteraction" | "event" | "interaction" | "interactionParticipant" | "plan" | "planExpectedPerson" | "place" | "importJob" | "importStagedVisit" | "placeNote" | "item" | "itemDefinition" | "inventoryLot" | "assembly" | "itemInteraction" | "importedFile" | "aiProviderCredential" | "aiAnalysisRun" | "noteAnalysisRun" | "theoryAnalysisRun" | "noteSuggestion" | "group" | "supplierProfile" | "purchaseOrder" | "purchaseOrderLine" | "purchaseReceiptLine" | "personGroup" | "groupGroup" | "placeGroup" | "note" | "theorySnapshot" | "theorySnapshotSource" | "lifeModelSnapshot" | "lifeModelClaim" | "stateDefinition" | "state" | "assistantMessage" | "levelUpProfile" | "levelUpTestResult" | "levelUpCombine" | "levelUpRatingSnapshot" | "levelUpTrainingSet" | "levelUpExercise" | "levelUpProgram" | "levelUpProgramDay" | "levelUpProgramEntry" | "levelUpSession" | "levelUpBodyMetric" | "levelUpBadgeUnlock" | "levelUpTargetBuild" | "graphEvent" | "graphEventReceipt" | "reviewItem"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -3433,6 +3434,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.NoteAnalysisRunCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.NoteAnalysisRunCountAggregateOutputType> | number
+        }
+      }
+    }
+    TheoryAnalysisRun: {
+      payload: Prisma.$TheoryAnalysisRunPayload<ExtArgs>
+      fields: Prisma.TheoryAnalysisRunFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.TheoryAnalysisRunFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TheoryAnalysisRunPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.TheoryAnalysisRunFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TheoryAnalysisRunPayload>
+        }
+        findFirst: {
+          args: Prisma.TheoryAnalysisRunFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TheoryAnalysisRunPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.TheoryAnalysisRunFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TheoryAnalysisRunPayload>
+        }
+        findMany: {
+          args: Prisma.TheoryAnalysisRunFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TheoryAnalysisRunPayload>[]
+        }
+        create: {
+          args: Prisma.TheoryAnalysisRunCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TheoryAnalysisRunPayload>
+        }
+        createMany: {
+          args: Prisma.TheoryAnalysisRunCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.TheoryAnalysisRunCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TheoryAnalysisRunPayload>[]
+        }
+        delete: {
+          args: Prisma.TheoryAnalysisRunDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TheoryAnalysisRunPayload>
+        }
+        update: {
+          args: Prisma.TheoryAnalysisRunUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TheoryAnalysisRunPayload>
+        }
+        deleteMany: {
+          args: Prisma.TheoryAnalysisRunDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.TheoryAnalysisRunUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.TheoryAnalysisRunUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TheoryAnalysisRunPayload>[]
+        }
+        upsert: {
+          args: Prisma.TheoryAnalysisRunUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TheoryAnalysisRunPayload>
+        }
+        aggregate: {
+          args: Prisma.TheoryAnalysisRunAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateTheoryAnalysisRun>
+        }
+        groupBy: {
+          args: Prisma.TheoryAnalysisRunGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TheoryAnalysisRunGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.TheoryAnalysisRunCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TheoryAnalysisRunCountAggregateOutputType> | number
         }
       }
     }
@@ -6654,6 +6729,28 @@ export const NoteAnalysisRunScalarFieldEnum = {
 export type NoteAnalysisRunScalarFieldEnum = (typeof NoteAnalysisRunScalarFieldEnum)[keyof typeof NoteAnalysisRunScalarFieldEnum]
 
 
+export const TheoryAnalysisRunScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  subjectPersonId: 'subjectPersonId',
+  credentialId: 'credentialId',
+  createdAt: 'createdAt',
+  completedAt: 'completedAt',
+  provider: 'provider',
+  modelId: 'modelId',
+  status: 'status',
+  promptVersion: 'promptVersion',
+  snapshotId: 'snapshotId',
+  output: 'output',
+  error: 'error',
+  inputTokens: 'inputTokens',
+  outputTokens: 'outputTokens',
+  estimatedCost: 'estimatedCost'
+} as const
+
+export type TheoryAnalysisRunScalarFieldEnum = (typeof TheoryAnalysisRunScalarFieldEnum)[keyof typeof TheoryAnalysisRunScalarFieldEnum]
+
+
 export const NoteSuggestionScalarFieldEnum = {
   id: 'id',
   workspaceId: 'workspaceId',
@@ -7483,6 +7580,7 @@ export type GlobalOmitConfig = {
   aiProviderCredential?: Prisma.AiProviderCredentialOmit
   aiAnalysisRun?: Prisma.AiAnalysisRunOmit
   noteAnalysisRun?: Prisma.NoteAnalysisRunOmit
+  theoryAnalysisRun?: Prisma.TheoryAnalysisRunOmit
   noteSuggestion?: Prisma.NoteSuggestionOmit
   group?: Prisma.GroupOmit
   supplierProfile?: Prisma.SupplierProfileOmit
