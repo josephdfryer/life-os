@@ -7,44 +7,78 @@ export default async function WeeklyReview({ workspaceId }: { workspaceId: strin
   cacheLife({ stale: 30, revalidate: 60, expire: 300 })
   const end = new Date()
   const start = new Date(end.getTime() - 7 * 24 * 60 * 60 * 1000)
-  const [plans, events, interactions, states, notes] = await Promise.all([
+  const stateTypes = ["energy", "mood", "stress"] as const
+  const [planCount, fulfilled, plans, eventCount, events, interactionCount, interactionPeople, stateResults, notes] = await Promise.all([
+    db.plan.count({
+      where: { workspaceId, scheduledStart: { gte: start, lte: end } },
+    }),
+    db.plan.count({
+      where: { workspaceId, scheduledStart: { gte: start, lte: end }, fulfilledBy: { isNot: null } },
+    }),
     db.plan.findMany({
       where: { workspaceId, scheduledStart: { gte: start, lte: end } },
-      select: { id: true, text: true, status: true, scheduledStart: true, fulfilledBy: { select: { id: true } } },
+      select: { id: true, text: true, status: true },
+      orderBy: { scheduledStart: "desc" },
+      take: 8,
     }),
-    db.event.findMany({ where: { workspaceId, start: { gte: start, lte: end } }, select: { id: true, name: true, start: true } }),
-    db.interaction.findMany({
+    db.event.count({ where: { workspaceId, start: { gte: start, lte: end } } }),
+    db.event.findMany({
+      where: { workspaceId, start: { gte: start, lte: end } },
+      select: { id: true, name: true, start: true },
+      orderBy: { start: "desc" },
+      take: 8,
+    }),
+    db.interaction.count({
       where: { workspaceId, timestamp: { gte: start, lte: end } },
-      select: { id: true, emotionalWeight: true, person: { select: { id: true, first: true, last: true } } },
     }),
-    db.state.findMany({
-      where: { workspaceId, recordedAt: { gte: start, lte: end }, entityType: "Person" },
-      select: { id: true, severity: true, definition: { select: { type: true } } },
+    db.interaction.groupBy({
+      by: ["personId"],
+      where: { workspaceId, timestamp: { gte: start, lte: end }, personId: { not: null } },
+      _count: { personId: true },
+      orderBy: { _count: { personId: "desc" } },
+      take: 5,
     }),
+    Promise.all(stateTypes.map(type => db.state.aggregate({
+      where: {
+        workspaceId,
+        recordedAt: { gte: start, lte: end },
+        entityType: "Person",
+        definition: { type },
+      },
+      _avg: { severity: true },
+    }))),
     db.note.count({ where: { workspaceId, timestamp: { gte: start, lte: end } } }),
   ])
-  const fulfilled = plans.filter(plan => plan.fulfilledBy).length
+  const personIds = interactionPeople.flatMap(row => row.personId ? [row.personId] : [])
+  const personRows = personIds.length
+    ? await db.person.findMany({
+        where: { workspaceId, id: { in: personIds } },
+        select: { id: true, first: true, last: true },
+      })
+    : []
+  const personById = new Map(personRows.map(person => [person.id, person]))
   const people = new Map<string, { name: string; count: number }>()
-  for (const interaction of interactions) {
-    if (!interaction.person) continue
-    const current = people.get(interaction.person.id)
-    people.set(interaction.person.id, {
-      name: `${interaction.person.first} ${interaction.person.last}`.trim(),
-      count: (current?.count ?? 0) + 1,
+  for (const row of interactionPeople) {
+    if (!row.personId) continue
+    const person = personById.get(row.personId)
+    if (!person) continue
+    people.set(person.id, {
+      name: `${person.first} ${person.last}`.trim(),
+      count: row._count.personId,
     })
   }
-  const stateAverages = ["energy", "mood", "stress"].flatMap(type => {
-    const values = states.filter(state => state.definition.type === type).flatMap(state => state.severity == null ? [] : [state.severity])
-    return values.length ? [{ type, average: values.reduce((sum, value) => sum + value, 0) / values.length }] : []
+  const stateAverages = stateTypes.flatMap((type, index) => {
+    const average = stateResults[index]._avg.severity
+    return average == null ? [] : [{ type, average }]
   })
   return (
     <section className="weekly-review">
       <div className="quick-capture-eyebrow">Last seven days · derived live</div>
       <h2>Weekly review</h2>
       <div className="weekly-metrics">
-        <Metric value={`${fulfilled}/${plans.length}`} label="scheduled Plans fulfilled" />
-        <Metric value={String(events.length)} label="Events recorded" />
-        <Metric value={String(interactions.length)} label="Interactions" />
+        <Metric value={`${fulfilled}/${planCount}`} label="scheduled Plans fulfilled" />
+        <Metric value={String(eventCount)} label="Events recorded" />
+        <Metric value={String(interactionCount)} label="Interactions" />
         <Metric value={String(notes)} label="Notes captured" />
       </div>
       <div className="weekly-evidence-grid">
@@ -64,8 +98,8 @@ export default async function WeeklyReview({ workspaceId }: { workspaceId: strin
       <details>
         <summary>Evidence</summary>
         <ul>
-          {plans.slice(0, 8).map(plan => <li key={plan.id}>{plan.text} · {plan.status}</li>)}
-          {events.slice(0, 8).map(event => <li key={event.id}><a href={`https://events.lacollecteur.com/events/${event.id}`}>{event.name}</a> · {event.start.toLocaleDateString()}</li>)}
+          {plans.map(plan => <li key={plan.id}>{plan.text} · {plan.status}</li>)}
+          {events.map(event => <li key={event.id}><a href={`https://events.lacollecteur.com/events/${event.id}`}>{event.name}</a> · {event.start.toLocaleDateString()}</li>)}
         </ul>
       </details>
       <WeeklyReviewActions />

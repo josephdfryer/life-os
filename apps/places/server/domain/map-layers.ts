@@ -115,20 +115,36 @@ export async function getFinanceLayerItems(workspaceId: string): Promise<Finance
   //  2. Era-staged transactions whose placeMatch resolved a merchant place
   //     (pre-acceptance signal, joined to Places by googlePlaceId)
   // Derived on every request — never stored.
-  const [interactions, places, staged] = await Promise.all([
-    db.interaction.findMany({
-      where: { workspaceId, type: "financial", placeId: { not: null }, amount: { not: null } },
-      select: { placeId: true, amount: true },
-    }),
-    db.place.findMany({
-      where: { workspaceId, googlePlaceId: { not: null } },
-      select: { id: true, googlePlaceId: true },
-    }),
-    db.stagedInteraction.findMany({
-      where: { workspaceId, source: "era", status: "pending" },
-      select: { metadata: true },
-    }),
+  const [interactions, staged] = await Promise.all([
+    db.$queryRaw<Array<{ placeId: string; transactionCount: bigint | number; totalAmountCents: bigint | number }>>`
+      SELECT
+        "placeId" AS "placeId",
+        COUNT(*) AS "transactionCount",
+        SUM(ABS("amount")) AS "totalAmountCents"
+      FROM "Interaction"
+      WHERE "workspaceId" = ${workspaceId}
+        AND "type" = 'financial'
+        AND "placeId" IS NOT NULL
+        AND "amount" IS NOT NULL
+      GROUP BY "placeId"
+    `,
+    listPendingEraMetadata(workspaceId),
   ])
+
+  const stagedSignals = staged.flatMap(row => {
+    const meta = parseStagedMeta(row.metadata)
+    const match = meta?.placeMatch
+    if (!match?.merchantPlace?.googlePlaceId) return []
+    if (!["auto", "adjudicated"].includes(match.band ?? "")) return []
+    return [{ googlePlaceId: match.merchantPlace.googlePlaceId, amount: Number(meta?.amount ?? 0) }]
+  })
+  const googlePlaceIds = [...new Set(stagedSignals.map(signal => signal.googlePlaceId))]
+  const places = googlePlaceIds.length
+    ? await db.place.findMany({
+        where: { workspaceId, googlePlaceId: { in: googlePlaceIds } },
+        select: { id: true, googlePlaceId: true },
+      })
+    : []
 
   const placeIdByGoogleId = new Map(places.map(place => [place.googlePlaceId!, place.id]))
   const byPlace = new Map<string, FinanceLayerItem>()
@@ -141,20 +157,37 @@ export async function getFinanceLayerItems(workspaceId: string): Promise<Finance
   }
 
   for (const interaction of interactions) {
-    add(interaction.placeId!, Math.abs(centsToDollars(interaction.amount) ?? 0))
+    byPlace.set(interaction.placeId, {
+      placeId: interaction.placeId,
+      transactionCount: Number(interaction.transactionCount),
+      totalAmount: centsToDollars(Number(interaction.totalAmountCents)) ?? 0,
+    })
   }
 
-  for (const row of staged) {
-    const meta = parseStagedMeta(row.metadata)
-    const match = meta?.placeMatch
-    if (!match?.merchantPlace?.googlePlaceId) continue
-    if (!["auto", "adjudicated"].includes(match.band ?? "")) continue
-    const placeId = placeIdByGoogleId.get(match.merchantPlace.googlePlaceId)
+  for (const signal of stagedSignals) {
+    const placeId = placeIdByGoogleId.get(signal.googlePlaceId)
     if (!placeId) continue
-    add(placeId, Number(meta?.amount ?? 0))
+    add(placeId, signal.amount)
   }
 
   return [...byPlace.values()]
+}
+
+async function listPendingEraMetadata(workspaceId: string) {
+  const result: Array<{ id: string; metadata: string | null }> = []
+  let cursor: string | undefined
+  do {
+    const rows = await db.stagedInteraction.findMany({
+      where: { workspaceId, source: "era", status: "pending" },
+      select: { id: true, metadata: true },
+      orderBy: { id: "asc" },
+      take: 500,
+      ...(cursor ? { cursor: { id: cursor }, skip: 1 } : {}),
+    })
+    result.push(...rows)
+    cursor = rows.length === 500 ? rows.at(-1)?.id : undefined
+  } while (cursor)
+  return result
 }
 
 type StagedFinanceMeta = {

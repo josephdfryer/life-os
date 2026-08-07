@@ -6,17 +6,18 @@ interface Props {
 }
 
 export default async function InboxWidget({ workspaceId, personsUrl }: Props) {
-  const pending = await db.stagedInteraction.findMany({
+  const pending = await db.stagedInteraction.groupBy({
+    by: ['source'],
     // Financial staging (era) has its own review surface — not this inbox.
     where: { workspaceId, status: 'pending', type: { not: 'financial' } },
-    select: { source: true },
+    _count: { _all: true },
   })
 
-  const total = pending.length
+  const total = pending.reduce((sum, row) => sum + row._count._all, 0)
   const bySource: Record<string, number> = {}
   for (const p of pending) {
     const src = p.source ?? 'other'
-    bySource[src] = (bySource[src] ?? 0) + 1
+    bySource[src] = p._count._all
   }
 
   return (

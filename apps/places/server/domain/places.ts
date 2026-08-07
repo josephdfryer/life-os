@@ -5,7 +5,7 @@ import { auditAction, type DomainActor } from "./audit"
 
 type PlaceRow = Awaited<ReturnType<typeof fetchPlaceProfileRow>>
 type EventRow = NonNullable<PlaceRow>["events"][number]
-type GroupRow = Awaited<ReturnType<typeof fetchWorkspaceGroups>>[number]
+type GroupRow = Awaited<ReturnType<typeof fetchWorkspaceGroupPage>>[number]
 type PlaceGroupRow = NonNullable<PlaceRow>["groupAffiliations"][number]
 
 export type PlaceMapItem = {
@@ -100,41 +100,7 @@ export type PlaceProfile = {
 export async function getPlacesForMap(workspaceId: string | null | undefined): Promise<PlaceMapItem[]> {
   const wsId = workspaceId ?? "default-workspace"
   const [places, groups] = await Promise.all([
-    db.place.findMany({
-      where: { workspaceId: wsId },
-      include: {
-        notes: { where: { workspaceId: wsId } },
-        plans: {
-          where: { workspaceId: wsId },
-          select: { id: true, text: true, scheduledStart: true },
-          orderBy: { scheduledStart: "asc" },
-        },
-        groupAffiliations: {
-          where: { group: { workspaceId: wsId } },
-          include: { group: { select: { id: true, name: true, groupType: true } } },
-        },
-        events: {
-          where: { workspaceId: wsId },
-          include: {
-            groupTags: { where: { workspaceId: wsId }, select: { id: true, name: true, groupType: true } },
-            interactions: {
-              where: { workspaceId: wsId },
-              include: {
-                person: { select: { id: true, first: true, last: true } },
-                itemInteractions: {
-                  where: { item: { workspaceId: wsId } },
-                  include: {
-                    item: { select: { id: true, name: true, category: true, tags: true } },
-                  },
-                },
-              },
-            },
-          },
-          orderBy: { timestamp: "desc" },
-        },
-      },
-      orderBy: { name: "asc" },
-    }),
+    fetchAllPlacesForMap(wsId),
     fetchWorkspaceGroups(wsId),
   ])
 
@@ -164,6 +130,57 @@ export async function getPlacesForMap(workspaceId: string | null | undefined): P
       weight: placeWeight(derived.stats),
       financialGroup: primaryFinancialGroup(place.groupAffiliations),
     }
+  })
+}
+
+async function fetchAllPlacesForMap(workspaceId: string) {
+  const result: Awaited<ReturnType<typeof fetchPlacesForMapPage>> = []
+  let cursor: string | undefined
+  do {
+    const rows = await fetchPlacesForMapPage(workspaceId, cursor)
+    result.push(...rows)
+    cursor = rows.length === 50 ? rows.at(-1)?.id : undefined
+  } while (cursor)
+  return result
+}
+
+function fetchPlacesForMapPage(workspaceId: string, cursor?: string) {
+  return db.place.findMany({
+    where: { workspaceId },
+    include: {
+      notes: { where: { workspaceId } },
+      plans: {
+        where: { workspaceId },
+        select: { id: true, text: true, scheduledStart: true },
+        orderBy: { scheduledStart: "asc" as const },
+      },
+      groupAffiliations: {
+        where: { group: { workspaceId } },
+        include: { group: { select: { id: true, name: true, groupType: true } } },
+      },
+      events: {
+        where: { workspaceId },
+        include: {
+          groupTags: { where: { workspaceId }, select: { id: true, name: true, groupType: true } },
+          interactions: {
+            where: { workspaceId },
+            include: {
+              person: { select: { id: true, first: true, last: true } },
+              itemInteractions: {
+                where: { item: { workspaceId } },
+                include: {
+                  item: { select: { id: true, name: true, category: true, tags: true } },
+                },
+              },
+            },
+          },
+        },
+        orderBy: { timestamp: "desc" as const },
+      },
+    },
+    orderBy: [{ name: "asc" as const }, { id: "asc" as const }],
+    take: 50,
+    ...(cursor ? { cursor: { id: cursor }, skip: 1 } : {}),
   })
 }
 
@@ -416,7 +433,18 @@ function fetchPlaceProfileRow(placeId: string, workspaceId: string) {
   })
 }
 
-function fetchWorkspaceGroups(workspaceId: string) {
+async function fetchWorkspaceGroups(workspaceId: string) {
+  const result: GroupRow[] = []
+  let cursor: string | undefined
+  do {
+    const rows = await fetchWorkspaceGroupPage(workspaceId, cursor)
+    result.push(...rows)
+    cursor = rows.length === 200 ? rows.at(-1)?.id : undefined
+  } while (cursor)
+  return result
+}
+
+function fetchWorkspaceGroupPage(workspaceId: string, cursor?: string) {
   return db.group.findMany({
     where: { workspaceId },
     include: {
@@ -425,6 +453,9 @@ function fetchWorkspaceGroups(workspaceId: string) {
         select: { personId: true },
       },
     },
+    orderBy: { id: "asc" },
+    take: 200,
+    ...(cursor ? { cursor: { id: cursor }, skip: 1 } : {}),
   })
 }
 

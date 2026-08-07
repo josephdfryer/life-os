@@ -18,6 +18,7 @@ process.env.TURSO_AUTH_TOKEN = ""
 type TestModules = {
   db: typeof import("../lib/db")["db"]
   places: typeof import("../server/domain/places")
+  mapLayers: typeof import("../server/domain/map-layers")
 }
 
 let modulesPromise: Promise<TestModules> | null = null
@@ -26,11 +27,12 @@ async function setup() {
   if (!modulesPromise) {
     modulesPromise = (async () => {
       applyMigrations(dbPath)
-      const [dbModule, places] = await Promise.all([
+      const [dbModule, places, mapLayers] = await Promise.all([
         import("../lib/db"),
         import("../server/domain/places"),
+        import("../server/domain/map-layers"),
       ])
-      return { db: dbModule.db, places }
+      return { db: dbModule.db, places, mapLayers }
     })()
   }
   return modulesPromise
@@ -562,4 +564,61 @@ test("a rejected staged visit can be restored to the pending review queue", asyn
   assert.equal(rejected.status, "rejected")
   const restored = await mapsImport.updateStagedVisit(job.id, visit.id, workspace.id, "restore")
   assert.equal(restored.status, "pending")
+})
+
+test("finance map layers aggregate canonical and adjudicated staged spend without loading every interaction", async () => {
+  const { db, mapLayers } = await setup()
+  const workspace = await db.workspace.create({
+    data: { id: "finance-layer-workspace", name: "Finance Layer", slug: "finance-layer" },
+  })
+  const [cafe, market] = await Promise.all([
+    db.place.create({
+      data: { workspaceId: workspace.id, name: "Cafe", type: "cafe", googlePlaceId: "google-cafe" },
+    }),
+    db.place.create({
+      data: { workspaceId: workspace.id, name: "Market", type: "shop", googlePlaceId: "google-market" },
+    }),
+  ])
+  await db.interaction.createMany({
+    data: [
+      { workspaceId: workspace.id, placeId: cafe.id, type: "financial", timestamp: new Date(), amount: 1_000 },
+      { workspaceId: workspace.id, placeId: cafe.id, type: "financial", timestamp: new Date(), amount: -250 },
+      { workspaceId: workspace.id, placeId: cafe.id, type: "visit", timestamp: new Date(), amount: 9_999 },
+    ],
+  })
+  await db.stagedInteraction.createMany({
+    data: [
+      {
+        workspaceId: workspace.id,
+        source: "era",
+        sourceId: "staged-cafe",
+        status: "pending",
+        timestamp: new Date(),
+        metadata: JSON.stringify({ amount: 12.34, placeMatch: { band: "auto", merchantPlace: { googlePlaceId: "google-cafe" } } }),
+      },
+      {
+        workspaceId: workspace.id,
+        source: "era",
+        sourceId: "staged-market",
+        status: "pending",
+        timestamp: new Date(),
+        metadata: JSON.stringify({ amount: 5, placeMatch: { band: "adjudicated", merchantPlace: { googlePlaceId: "google-market" } } }),
+      },
+      {
+        workspaceId: workspace.id,
+        source: "era",
+        sourceId: "staged-ignored",
+        status: "pending",
+        timestamp: new Date(),
+        metadata: JSON.stringify({ amount: 100, placeMatch: { band: "suggested", merchantPlace: { googlePlaceId: "google-cafe" } } }),
+      },
+    ],
+  })
+
+  const result = (await mapLayers.getFinanceLayerItems(workspace.id)).sort((a, b) => a.placeId.localeCompare(b.placeId))
+  const expected = [
+    { placeId: cafe.id, transactionCount: 3, totalAmount: 24.84 },
+    { placeId: market.id, transactionCount: 1, totalAmount: 5 },
+  ].sort((a, b) => a.placeId.localeCompare(b.placeId))
+  assert.deepEqual(result, expected)
 })

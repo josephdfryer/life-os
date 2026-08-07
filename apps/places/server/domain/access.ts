@@ -265,7 +265,7 @@ export async function accessOverview(actor: AccessActor) {
       include: { permissions: { include: { permission: true } }, _count: { select: { users: true } } },
       orderBy: { name: "asc" },
     }),
-    db.permission.findMany({ orderBy: { scope: "asc" } }),
+    listPermissions(),
     db.apiKey.findMany({
       where: { workspaceId: actor.workspaceId },
       include: { scopes: true, createdByUser: true, ownerPerson: true },
@@ -570,15 +570,42 @@ function hasScope(granted: string[], required: string) {
 
 async function assertKnownScopes(scopes: string[]) {
   if (!scopes.length) return
-  const permissions = await db.permission.findMany({ where: { scope: { in: scopes } }, select: { scope: true } })
+  const permissions = await db.permission.findMany({
+    where: { scope: { in: scopes } },
+    select: { scope: true },
+    take: scopes.length,
+  })
   const known = new Set(permissions.map(permission => permission.scope))
   const unknown = scopes.filter(scope => !known.has(scope))
   if (unknown.length) throw badRequest("Unknown permission scopes", { scopes: unknown })
 }
 
 async function permissionLinks(scopes: string[]) {
-  const permissions = await db.permission.findMany({ where: { scope: { in: scopes } }, select: { id: true } })
+  const permissions = await db.permission.findMany({
+    where: { scope: { in: scopes } },
+    select: { id: true },
+    take: scopes.length,
+  })
   return permissions.map(permission => ({ permissionId: permission.id }))
+}
+
+async function listPermissions() {
+  const result: Awaited<ReturnType<typeof permissionPage>> = []
+  let cursor: string | undefined
+  do {
+    const rows = await permissionPage(cursor)
+    result.push(...rows)
+    cursor = rows.length === 100 ? rows.at(-1)?.id : undefined
+  } while (cursor)
+  return result.sort((a, b) => a.scope.localeCompare(b.scope))
+}
+
+function permissionPage(cursor?: string) {
+  return db.permission.findMany({
+    orderBy: { id: "asc" },
+    take: 100,
+    ...(cursor ? { cursor: { id: cursor }, skip: 1 } : {}),
+  })
 }
 
 function formatRole(role: {

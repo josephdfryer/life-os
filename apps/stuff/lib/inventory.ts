@@ -1,4 +1,4 @@
-import type { Prisma, PrismaClient } from "@life-os/db"
+import { Prisma, type PrismaClient } from "@life-os/db"
 import { createId } from "@paralleldrive/cuid2"
 import {
   createStocktakeSnapshot,
@@ -296,21 +296,18 @@ export async function verifyStocktakeItem(
 export async function getStocktakeDetail(db: Db, workspaceId: string, stocktakeId: string) {
   const event = await requireStocktake(db, workspaceId, stocktakeId)
   const snapshot = parseStocktakeSnapshot(event.metadata)
-  const observations = await db.interaction.findMany({
+  const observations = await db.interactionParticipant.groupBy({
+    by: ["entityId"],
     where: {
       workspaceId,
-      eventId: event.id,
-      type: { in: [INVENTORY_INTERACTION_TYPES.verified, INVENTORY_INTERACTION_TYPES.moved] },
-    },
-    select: {
-      timestamp: true,
-      participants: {
-        where: { entityType: "Item" },
-        select: { entityId: true },
+      entityType: "Item",
+      interaction: {
+        eventId: event.id,
+        type: { in: [INVENTORY_INTERACTION_TYPES.verified, INVENTORY_INTERACTION_TYPES.moved] },
       },
     },
   })
-  const observedIds = observations.flatMap(({ participants }) => participants.map(({ entityId }) => entityId))
+  const observedIds = observations.map(({ entityId }) => entityId)
   const ids = [...new Set([...snapshot.expectedItemIds, ...observedIds])]
   const items = await db.item.findMany({
     where: { workspaceId, id: { in: ids } },
@@ -1054,11 +1051,7 @@ export async function getProcurementOverview(db: Db, workspaceId: string) {
 
 export async function getInventoryOverview(db: Db, workspaceId: string) {
   const [places, items, recentObservations, missingStates, activeStocktakes, definitions, lots] = await Promise.all([
-    db.place.findMany({
-      where: { workspaceId },
-      select: { id: true, name: true, type: true, parentPlaceId: true },
-      orderBy: { name: "asc" },
-    }),
+    listInventoryPlaces(db, workspaceId),
     db.item.findMany({
       where: { workspaceId },
       select: {
@@ -1080,34 +1073,26 @@ export async function getInventoryOverview(db: Db, workspaceId: string) {
       },
       orderBy: { name: "asc" },
     }),
-    db.interaction.findMany({
-      where: {
-        workspaceId,
-        type: { in: [INVENTORY_INTERACTION_TYPES.moved, INVENTORY_INTERACTION_TYPES.verified] },
-      },
-      select: {
-        timestamp: true,
-        participants: {
-          where: { entityType: "Item" },
-          select: { entityId: true },
-        },
-      },
-      orderBy: { timestamp: "desc" },
-    }),
-    db.state.findMany({
+    db.$queryRaw<Array<{ entityId: string; observedAt: Date | string | number | bigint }>>(Prisma.sql`
+      SELECT ip."entityId" AS "entityId", MAX(i."timestamp") AS "observedAt"
+      FROM "InteractionParticipant" ip
+      INNER JOIN "Interaction" i ON i."id" = ip."interactionId"
+      WHERE ip."workspaceId" = ${workspaceId}
+        AND ip."entityType" = 'Item'
+        AND i."workspaceId" = ${workspaceId}
+        AND i."type" IN (${INVENTORY_INTERACTION_TYPES.moved}, ${INVENTORY_INTERACTION_TYPES.verified})
+      GROUP BY ip."entityId"
+    `),
+    db.state.groupBy({
+      by: ["entityId"],
       where: {
         workspaceId,
         entityType: "Item",
         definition: MISSING_STATE,
       },
-      select: { entityId: true, recordedAt: true },
-      orderBy: { recordedAt: "desc" },
+      _max: { recordedAt: true },
     }),
-    db.event.findMany({
-      where: { workspaceId, type: STOCKTAKE_EVENT_TYPE, end: null },
-      select: { id: true, name: true, start: true, placeId: true },
-      orderBy: { start: "desc" },
-    }),
+    listActiveStocktakes(db, workspaceId),
     db.itemDefinition.findMany({
       where: { workspaceId, active: true },
       include: {
@@ -1128,13 +1113,12 @@ export async function getInventoryOverview(db: Db, workspaceId: string) {
 
   const lastObserved = new Map<string, Date>()
   for (const observation of recentObservations) {
-    for (const { entityId } of observation.participants) {
-      if (!lastObserved.has(entityId)) lastObserved.set(entityId, observation.timestamp)
-    }
+    const observedAt = toDate(observation.observedAt)
+    if (observedAt) lastObserved.set(observation.entityId, observedAt)
   }
   const lastMissing = new Map<string, Date>()
   for (const state of missingStates) {
-    if (!lastMissing.has(state.entityId)) lastMissing.set(state.entityId, state.recordedAt)
+    if (state._max.recordedAt) lastMissing.set(state.entityId, state._max.recordedAt)
   }
   const itemById = new Map(items.map((item) => [item.id, item]))
   const resolvePlaceId = (itemId: string) => {
@@ -1235,4 +1219,43 @@ export async function getInventoryOverview(db: Db, workspaceId: string) {
       expiry: expiryStatus(lot.expiresAt),
     })),
   }
+}
+
+export async function listInventoryPlaces(db: Db, workspaceId: string) {
+  const result: Array<{ id: string; name: string; type: string | null; parentPlaceId: string | null }> = []
+  let cursor: string | undefined
+  do {
+    const rows = await db.place.findMany({
+      where: { workspaceId },
+      select: { id: true, name: true, type: true, parentPlaceId: true },
+      orderBy: { id: "asc" },
+      take: 200,
+      ...(cursor ? { cursor: { id: cursor }, skip: 1 } : {}),
+    })
+    result.push(...rows)
+    cursor = rows.length === 200 ? rows.at(-1)?.id : undefined
+  } while (cursor)
+  return result.sort((a, b) => a.name.localeCompare(b.name))
+}
+
+function toDate(value: Date | string | number | bigint): Date | null {
+  const date = value instanceof Date ? value : new Date(typeof value === "bigint" ? Number(value) : value)
+  return Number.isNaN(date.getTime()) ? null : date
+}
+
+async function listActiveStocktakes(db: Db, workspaceId: string) {
+  const result: Array<{ id: string; name: string; start: Date; placeId: string | null }> = []
+  let cursor: string | undefined
+  do {
+    const rows = await db.event.findMany({
+      where: { workspaceId, type: STOCKTAKE_EVENT_TYPE, end: null },
+      select: { id: true, name: true, start: true, placeId: true },
+      orderBy: { id: "asc" },
+      take: 500,
+      ...(cursor ? { cursor: { id: cursor }, skip: 1 } : {}),
+    })
+    result.push(...rows)
+    cursor = rows.length === 500 ? rows.at(-1)?.id : undefined
+  } while (cursor)
+  return result.sort((a, b) => b.start.getTime() - a.start.getTime())
 }

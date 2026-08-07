@@ -843,14 +843,21 @@ async function upsertCalendarEvent(input: {
 }
 
 async function peopleEmailIndex(workspaceId: string) {
-  const rows = await db.person.findMany({
-    where: { workspaceId },
-    select: { id: true, first: true, last: true, emails: true },
-  })
   const byEmail = new Map<string, { id: string; first: string; last: string }>()
-  for (const row of rows) {
-    for (const email of parseJsonList(row.emails)) byEmail.set(email.toLowerCase(), row)
-  }
+  let cursor: string | undefined
+  do {
+    const rows = await db.person.findMany({
+      where: { workspaceId },
+      select: { id: true, first: true, last: true, emails: true },
+      orderBy: { id: "asc" },
+      take: 500,
+      ...(cursor ? { cursor: { id: cursor }, skip: 1 } : {}),
+    })
+    for (const row of rows) {
+      for (const email of parseJsonList(row.emails)) byEmail.set(email.toLowerCase(), row)
+    }
+    cursor = rows.length === 500 ? rows.at(-1)?.id : undefined
+  } while (cursor)
   return byEmail
 }
 

@@ -3,7 +3,7 @@ import { cookies } from 'next/headers'
 import { resolveTimeZone, TZ_COOKIE } from '@life-os/ui'
 import { db } from '@/lib/db'
 import { requireStuffAccess } from '@/lib/access'
-import { getEffectiveLocation } from '@/lib/inventory'
+import { getEffectiveLocation, listInventoryPlaces } from '@/lib/inventory'
 import MoveItem from './move-item'
 import StockControl from './stock-control'
 
@@ -66,11 +66,7 @@ export default async function ItemDetailPage({
       },
       },
     }),
-    db.place.findMany({
-      where: { workspaceId },
-      select: { id: true, name: true },
-      orderBy: { name: 'asc' },
-    }),
+    listInventoryPlaces(db, workspaceId),
     db.itemDefinition.findMany({
       where: { workspaceId, active: true },
       select: {

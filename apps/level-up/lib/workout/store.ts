@@ -82,8 +82,9 @@ export async function ensureSeeded(workspaceId: string) {
     })
   }
   const created = await db.levelUpExercise.findMany({
-    where: { workspaceId },
+    where: { workspaceId, key: { in: SEED_EXERCISES.map(seed => seed.key) } },
     select: { id: true, key: true },
+    take: SEED_EXERCISES.length,
   })
   const idByKey = new Map(created.map(exercise => [exercise.key, exercise.id]))
   for (const seed of SEED_EXERCISES) {
@@ -128,9 +129,22 @@ export async function ensureSeeded(workspaceId: string) {
 }
 
 export async function loadProgramDays(workspaceId: string) {
+  const result: Awaited<ReturnType<typeof loadProgramDayPage>> = []
+  let cursor: string | undefined
+  do {
+    const rows = await loadProgramDayPage(workspaceId, cursor)
+    result.push(...rows)
+    cursor = rows.length === 100 ? rows.at(-1)?.id : undefined
+  } while (cursor)
+  return result.sort((a, b) => a.order - b.order)
+}
+
+function loadProgramDayPage(workspaceId: string, cursor?: string) {
   return db.levelUpProgramDay.findMany({
     where: { workspaceId, program: { isActive: true } },
-    orderBy: { order: "asc" },
+    orderBy: { id: "asc" },
+    take: 100,
+    ...(cursor ? { cursor: { id: cursor }, skip: 1 } : {}),
     select: {
       id: true,
       name: true,
