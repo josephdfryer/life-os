@@ -1,8 +1,19 @@
 import { db } from "@/lib/db"
 import { badRequest, notFound, optionalString } from "@/server/api/errors"
 import { auditAction, type DomainActor } from "./audit"
-import { appendDailySourceInteraction } from "./interactions"
 import { applyRuleRunSuggestions, runRulesForTarget } from "./rules"
+import { acceptStagedInteraction, AcceptStagedInteractionError } from "@life-os/domain"
+
+// packages/domain's acceptStagedInteraction throws a generic, structured error
+// (it cannot know about Persons' AppError/HTTP status shape — that would be an
+// app-internal import from a shared package, which the dependency boundary
+// rule forbids). This is the one place that translates it back into the HTTP
+// error apps/persons/server/api/respond.ts already knows how to render.
+function translateAcceptError(error: unknown): unknown {
+  if (!(error instanceof AcceptStagedInteractionError)) return error
+  if (error.code === "not_found") return notFound(error.message)
+  return badRequest(error.message)
+}
 
 type InboxAction = "accept" | "dismiss" | "update"
 
@@ -134,40 +145,15 @@ export async function stageRecord(input: StageRecordInput, actor?: DomainActor) 
 
 async function completeAccept(id: string, personId: string, actor?: DomainActor) {
   const workspaceId = actor?.workspaceId ?? "default-workspace"
-  const item = await db.stagedInteraction.findFirst({ where: { id, workspaceId } })
-  if (!item) return
-  const person = await db.person.findFirst({ where: { id: personId, workspaceId }, select: { id: true } })
-  if (!person) return
-
-  const result = await appendDailySourceInteraction({
-    personId,
-    source: item.source,
-    sourceId: item.sourceId,
-    type: item.type,
-    timestamp: item.timestamp,
-    summary: item.summary || item.body || "(no text)",
-    body: item.body,
-    direction: item.direction,
-    actor,
-  })
-
-  await db.stagedInteraction.update({
-    where: { id },
-    data: {
-      status: "accepted",
-      acceptedAt: new Date(),
-      acceptedPersonId: personId,
-      interactionId: result.interactionId,
-    },
-  })
-
-  await auditAction({
-    actor,
-    action: "inbox.accept",
-    targetType: "stagedInteraction",
-    targetId: id,
-    metadata: { ...result, autoApproved: true },
-  })
+  try {
+    await acceptStagedInteraction({ id, workspaceId, personId, actor })
+  } catch (error) {
+    // Matches the previous silent-no-op behaviour: this runs after a rule
+    // already auto-approved the item, so a resolution failure here (item
+    // gone, person gone, bad timestamp) shouldn't crash the ingest pipeline.
+    if (error instanceof AcceptStagedInteractionError) return
+    throw error
+  }
 }
 
 export async function applyInboxSuggestions(id: string, ruleRunIds: string[], actor?: DomainActor) {
@@ -270,38 +256,20 @@ async function acceptInboxItem(id: string, body: Record<string, unknown>, actor?
   if (!item) throw notFound("Inbox item not found", { id })
 
   const personId = optionalString(body.personId) ?? item.candidatePersonId
-  if (!personId) throw badRequest("Choose a Person before accepting this item", { field: "personId" })
+  const summary = body.summary === undefined ? undefined : optionalString(body.summary)
+  const direction = body.direction === undefined ? undefined : optionalString(body.direction)
+  const timestamp = body.timestamp !== undefined ? String(body.timestamp) : undefined
 
-  const person = await db.person.findFirst({ where: { id: personId, workspaceId }, select: { id: true } })
-  if (!person) throw notFound("Selected Person does not exist", { personId })
+  let result
+  try {
+    result = await acceptStagedInteraction({ id, workspaceId, personId, summary, direction, timestamp, actor })
+  } catch (error) {
+    throw translateAcceptError(error)
+  }
 
-  const summary = body.summary === undefined ? item.summary : optionalString(body.summary)
-  const timestamp = body.timestamp ? new Date(String(body.timestamp)) : item.timestamp
-  if (Number.isNaN(timestamp.getTime())) throw badRequest("timestamp is invalid", { field: "timestamp" })
-
-  const result = await appendDailySourceInteraction({
-    personId,
-    source: item.source,
-    sourceId: item.sourceId,
-    type: item.type,
-    timestamp,
-    summary: summary || item.body || "(no text)",
-    body: item.body,
-    direction: optionalString(body.direction) ?? item.direction,
-    actor,
-  })
-
-  const updated = await db.stagedInteraction.update({
-    where: { id },
-    data: {
-      status: "accepted",
-      acceptedAt: new Date(),
-      acceptedPersonId: personId,
-      interactionId: result.interactionId,
-      summary: summary || item.summary,
-    },
-  })
-  await auditAction({ actor, action: "inbox.accept", targetType: "stagedInteraction", targetId: id, metadata: result })
+  // acceptStagedInteraction already wrote the "inbox.accept" audit entry —
+  // only the rules trigger is left here, and only for this human-triggered
+  // path (completeAccept, the auto-approval path, never fired it either).
   await runRulesForTarget({
     trigger: "inbox.accept",
     targetType: "stagedInteraction",
@@ -309,19 +277,20 @@ async function acceptInboxItem(id: string, body: Record<string, unknown>, actor?
     payload: {
       stagedInteractionId: id,
       interactionId: result.interactionId,
-      personId,
+      personId: personId ?? item.candidatePersonId,
       source: item.source,
       sourceId: item.sourceId,
       itemType: item.itemType,
       type: item.type,
-      timestamp: timestamp.toISOString(),
+      timestamp: (timestamp ? new Date(timestamp) : item.timestamp).toISOString(),
       summary: summary || item.body || "(no text)",
-      direction: optionalString(body.direction) ?? item.direction,
+      direction: direction ?? item.direction,
       contactName: item.contactName,
       contactEmail: item.contactEmail,
       contactPhone: item.contactPhone,
     },
     actor,
   })
-  return updated
+
+  return db.stagedInteraction.findFirst({ where: { id } })
 }

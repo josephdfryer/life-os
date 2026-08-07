@@ -3,10 +3,7 @@ import { dollarsToCents } from "@life-os/db"
 import { badRequest, notFound, optionalString, optionalStringArray, requiredString } from "@/server/api/errors"
 import { auditAction, type DomainActor } from "./audit"
 import { formatInteraction, jsonList } from "./dto"
-import { appendUniqueLine, findInteractionByExactSource, normalizeSourceMarker } from "./idempotency"
 import { runRulesForTarget } from "./rules"
-
-const DAY_TIME_ZONE = "America/Los_Angeles"
 
 export type InteractionInput = {
   personId?: unknown
@@ -161,143 +158,17 @@ export async function deleteInteraction(id: string, actor?: DomainActor) {
   await auditAction({ actor, action: "interaction.delete", targetType: "interaction", targetId: id })
 }
 
-export async function appendDailySourceInteraction(input: {
-  personId: string
-  source: string
-  sourceId: string
-  type: string
-  timestamp: Date
-  summary: string
-  body?: string | null
-  direction?: string | null
-  actor?: DomainActor
-}) {
-  const workspaceId = input.actor?.workspaceId ?? "default-workspace"
-  const existingSource = await findInteractionByExactSource(input.source, input.sourceId, input.personId, workspaceId)
-  if (existingSource) return { interactionId: existingSource.id, created: false, updated: false }
-
-  const dayMarker = `${input.source}-day:${dayKey(input.timestamp)}`
-  const dailyInteraction = await db.interaction.findFirst({
-    where: {
-      personId: input.personId,
-      workspaceId,
-      type: input.type,
-      notes: { contains: dayMarker },
-    },
-    select: { id: true, summary: true, notes: true, direction: true },
-    orderBy: { timestamp: "asc" },
-  })
-
-  // Preserve the actual communication when the provider supplied it. The AI
-  // summary remains a fallback, not a replacement for the relationship record.
-  const line = messageLine(input.timestamp, input.direction, input.body || input.summary || "(no text)")
-  const sourceMarker = normalizeSourceMarker(input.source, input.sourceId)
-
-  if (dailyInteraction) {
-    const interaction = await db.interaction.update({
-      where: { id: dailyInteraction.id },
-      data: {
-        summary: appendUniqueLine(dailyInteraction.summary, line),
-        notes: appendUniqueLine(dailyInteraction.notes, sourceMarker),
-        direction: dailyInteraction.direction === input.direction ? dailyInteraction.direction : "mixed",
-      },
-      select: { id: true },
-    })
-    await auditAction({ actor: input.actor, action: "interaction.create", targetType: "interaction", targetId: interaction.id, metadata: { mode: "append", source: input.source, sourceId: input.sourceId } })
-    await runRulesForTarget({
-      trigger: "interaction.append",
-      targetType: "interaction",
-      targetId: interaction.id,
-      payload: interactionRulePayload(input, interaction.id, "append"),
-      actor: input.actor,
-    })
-    return { interactionId: interaction.id, created: false, updated: true }
-  }
-
-  const event = ["imessage", "gmail", "whatsapp"].includes(input.source)
-    ? null
-    : await db.event.create({
-      data: {
-        name: `${input.source} ${dayKey(input.timestamp)}`.slice(0, 80),
-        workspaceId,
-        type: input.type,
-        start: input.timestamp,
-        timestamp: input.timestamp,
-        metadata: JSON.stringify({ source: input.source, day: dayKey(input.timestamp) }),
-      },
-    })
-
-  const interaction = await db.interaction.create({
-    data: {
-      personId: input.personId,
-      workspaceId,
-      eventId: event?.id ?? null,
-      type: input.type,
-      timestamp: input.timestamp,
-      summary: line,
-      notes: `${dayMarker}\n${sourceMarker}`,
-      direction: input.direction ?? null,
-    },
-    select: { id: true },
-  })
-  await writeInteractionParticipants(interaction.id, { personId: input.personId, eventId: event?.id ?? null }, workspaceId)
-  await auditAction({ actor: input.actor, action: "interaction.create", targetType: "interaction", targetId: interaction.id, metadata: { mode: "create", source: input.source, sourceId: input.sourceId } })
-  await runRulesForTarget({
-    trigger: "interaction.create",
-    targetType: "interaction",
-    targetId: interaction.id,
-    payload: interactionRulePayload(input, interaction.id, "create"),
-    actor: input.actor,
-  })
-  return { interactionId: interaction.id, created: true, updated: false }
-}
-
-function interactionRulePayload(input: {
-  personId: string
-  source: string
-  sourceId: string
-  type: string
-  timestamp: Date
-  summary: string
-  body?: string | null
-  direction?: string | null
-}, interactionId: string, mode: "create" | "append") {
-  return {
-    interactionId,
-    personId: input.personId,
-    source: input.source,
-    sourceId: input.sourceId,
-    type: input.type,
-    timestamp: input.timestamp.toISOString(),
-    summary: input.summary,
-    body: input.body,
-    direction: input.direction,
-    mode,
-  }
-}
+// Moved to @life-os/domain (packages/domain/staged-interactions.ts) so
+// apps/home can call the exact same write instead of maintaining its own
+// re-implementation — Home's independent copy had already drifted (missing
+// "gmail" from the no-Event source list). The function now also publishes a
+// GraphEvent transactionally with the write it makes; nothing else changed
+// about its behavior or signature, so every existing caller here and in
+// gmail.ts keeps working unmodified.
+export { appendDailySourceInteraction } from "@life-os/domain"
 
 function parseTimestamp(value: unknown) {
   const date = value ? new Date(String(value)) : new Date()
   if (Number.isNaN(date.getTime())) throw badRequest("timestamp is invalid", { field: "timestamp" })
   return date
-}
-
-function dayKey(date: Date) {
-  const parts = new Intl.DateTimeFormat("en-US", {
-    timeZone: DAY_TIME_ZONE,
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  }).formatToParts(date)
-  const get = (type: string) => parts.find(part => part.type === type)?.value ?? ""
-  return `${get("year")}-${get("month")}-${get("day")}`
-}
-
-function messageLine(timestamp: Date, direction: string | null | undefined, summary: string) {
-  const time = new Intl.DateTimeFormat("en-US", {
-    timeZone: DAY_TIME_ZONE,
-    hour: "numeric",
-    minute: "2-digit",
-  }).format(timestamp)
-  return `[${time}${direction ? ` ${direction}` : ""}] ${summary}`
 }
