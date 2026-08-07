@@ -17,6 +17,7 @@
     "jszip": "^3.10.1",
     "@life-os/alignment": "*",
     "@life-os/auth": "*",
+    "@life-os/automation": "*",
     "@life-os/db": "*",
     "@life-os/domain": "*",
     "@life-os/ui": "*",

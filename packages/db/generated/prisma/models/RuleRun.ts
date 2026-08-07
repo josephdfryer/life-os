@@ -20,8 +20,20 @@ export type RuleRunModel = runtime.Types.Result.DefaultSelection<Prisma.$RuleRun
 
 export type AggregateRuleRun = {
   _count: RuleRunCountAggregateOutputType | null
+  _avg: RuleRunAvgAggregateOutputType | null
+  _sum: RuleRunSumAggregateOutputType | null
   _min: RuleRunMinAggregateOutputType | null
   _max: RuleRunMaxAggregateOutputType | null
+}
+
+export type RuleRunAvgAggregateOutputType = {
+  ruleVersion: number | null
+  causationDepth: number | null
+}
+
+export type RuleRunSumAggregateOutputType = {
+  ruleVersion: number | null
+  causationDepth: number | null
 }
 
 export type RuleRunMinAggregateOutputType = {
@@ -29,6 +41,7 @@ export type RuleRunMinAggregateOutputType = {
   workspaceId: string | null
   createdAt: Date | null
   ruleId: string | null
+  ruleVersion: number | null
   trigger: string | null
   targetType: string | null
   targetId: string | null
@@ -39,6 +52,7 @@ export type RuleRunMinAggregateOutputType = {
   actionsPlanned: string | null
   actionsApplied: string | null
   message: string | null
+  causationDepth: number | null
 }
 
 export type RuleRunMaxAggregateOutputType = {
@@ -46,6 +60,7 @@ export type RuleRunMaxAggregateOutputType = {
   workspaceId: string | null
   createdAt: Date | null
   ruleId: string | null
+  ruleVersion: number | null
   trigger: string | null
   targetType: string | null
   targetId: string | null
@@ -56,6 +71,7 @@ export type RuleRunMaxAggregateOutputType = {
   actionsPlanned: string | null
   actionsApplied: string | null
   message: string | null
+  causationDepth: number | null
 }
 
 export type RuleRunCountAggregateOutputType = {
@@ -63,6 +79,7 @@ export type RuleRunCountAggregateOutputType = {
   workspaceId: number
   createdAt: number
   ruleId: number
+  ruleVersion: number
   trigger: number
   targetType: number
   targetId: number
@@ -73,15 +90,27 @@ export type RuleRunCountAggregateOutputType = {
   actionsPlanned: number
   actionsApplied: number
   message: number
+  causationDepth: number
   _all: number
 }
 
+
+export type RuleRunAvgAggregateInputType = {
+  ruleVersion?: true
+  causationDepth?: true
+}
+
+export type RuleRunSumAggregateInputType = {
+  ruleVersion?: true
+  causationDepth?: true
+}
 
 export type RuleRunMinAggregateInputType = {
   id?: true
   workspaceId?: true
   createdAt?: true
   ruleId?: true
+  ruleVersion?: true
   trigger?: true
   targetType?: true
   targetId?: true
@@ -92,6 +121,7 @@ export type RuleRunMinAggregateInputType = {
   actionsPlanned?: true
   actionsApplied?: true
   message?: true
+  causationDepth?: true
 }
 
 export type RuleRunMaxAggregateInputType = {
@@ -99,6 +129,7 @@ export type RuleRunMaxAggregateInputType = {
   workspaceId?: true
   createdAt?: true
   ruleId?: true
+  ruleVersion?: true
   trigger?: true
   targetType?: true
   targetId?: true
@@ -109,6 +140,7 @@ export type RuleRunMaxAggregateInputType = {
   actionsPlanned?: true
   actionsApplied?: true
   message?: true
+  causationDepth?: true
 }
 
 export type RuleRunCountAggregateInputType = {
@@ -116,6 +148,7 @@ export type RuleRunCountAggregateInputType = {
   workspaceId?: true
   createdAt?: true
   ruleId?: true
+  ruleVersion?: true
   trigger?: true
   targetType?: true
   targetId?: true
@@ -126,6 +159,7 @@ export type RuleRunCountAggregateInputType = {
   actionsPlanned?: true
   actionsApplied?: true
   message?: true
+  causationDepth?: true
   _all?: true
 }
 
@@ -167,6 +201,18 @@ export type RuleRunAggregateArgs<ExtArgs extends runtime.Types.Extensions.Intern
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: RuleRunAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: RuleRunSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: RuleRunMinAggregateInputType
@@ -197,6 +243,8 @@ export type RuleRunGroupByArgs<ExtArgs extends runtime.Types.Extensions.Internal
   take?: number
   skip?: number
   _count?: RuleRunCountAggregateInputType | true
+  _avg?: RuleRunAvgAggregateInputType
+  _sum?: RuleRunSumAggregateInputType
   _min?: RuleRunMinAggregateInputType
   _max?: RuleRunMaxAggregateInputType
 }
@@ -206,6 +254,7 @@ export type RuleRunGroupByOutputType = {
   workspaceId: string
   createdAt: Date
   ruleId: string
+  ruleVersion: number
   trigger: string
   targetType: string | null
   targetId: string | null
@@ -216,7 +265,10 @@ export type RuleRunGroupByOutputType = {
   actionsPlanned: string | null
   actionsApplied: string | null
   message: string | null
+  causationDepth: number
   _count: RuleRunCountAggregateOutputType | null
+  _avg: RuleRunAvgAggregateOutputType | null
+  _sum: RuleRunSumAggregateOutputType | null
   _min: RuleRunMinAggregateOutputType | null
   _max: RuleRunMaxAggregateOutputType | null
 }
@@ -244,6 +296,7 @@ export type RuleRunWhereInput = {
   workspaceId?: Prisma.StringFilter<"RuleRun"> | string
   createdAt?: Prisma.DateTimeFilter<"RuleRun"> | Date | string
   ruleId?: Prisma.StringFilter<"RuleRun"> | string
+  ruleVersion?: Prisma.IntFilter<"RuleRun"> | number
   trigger?: Prisma.StringFilter<"RuleRun"> | string
   targetType?: Prisma.StringNullableFilter<"RuleRun"> | string | null
   targetId?: Prisma.StringNullableFilter<"RuleRun"> | string | null
@@ -254,6 +307,7 @@ export type RuleRunWhereInput = {
   actionsPlanned?: Prisma.StringNullableFilter<"RuleRun"> | string | null
   actionsApplied?: Prisma.StringNullableFilter<"RuleRun"> | string | null
   message?: Prisma.StringNullableFilter<"RuleRun"> | string | null
+  causationDepth?: Prisma.IntFilter<"RuleRun"> | number
   workspace?: Prisma.XOR<Prisma.WorkspaceScalarRelationFilter, Prisma.WorkspaceWhereInput>
   rule?: Prisma.XOR<Prisma.RuleScalarRelationFilter, Prisma.RuleWhereInput>
 }
@@ -263,6 +317,7 @@ export type RuleRunOrderByWithRelationInput = {
   workspaceId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   ruleId?: Prisma.SortOrder
+  ruleVersion?: Prisma.SortOrder
   trigger?: Prisma.SortOrder
   targetType?: Prisma.SortOrderInput | Prisma.SortOrder
   targetId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -273,6 +328,7 @@ export type RuleRunOrderByWithRelationInput = {
   actionsPlanned?: Prisma.SortOrderInput | Prisma.SortOrder
   actionsApplied?: Prisma.SortOrderInput | Prisma.SortOrder
   message?: Prisma.SortOrderInput | Prisma.SortOrder
+  causationDepth?: Prisma.SortOrder
   workspace?: Prisma.WorkspaceOrderByWithRelationInput
   rule?: Prisma.RuleOrderByWithRelationInput
 }
@@ -285,6 +341,7 @@ export type RuleRunWhereUniqueInput = Prisma.AtLeast<{
   workspaceId?: Prisma.StringFilter<"RuleRun"> | string
   createdAt?: Prisma.DateTimeFilter<"RuleRun"> | Date | string
   ruleId?: Prisma.StringFilter<"RuleRun"> | string
+  ruleVersion?: Prisma.IntFilter<"RuleRun"> | number
   trigger?: Prisma.StringFilter<"RuleRun"> | string
   targetType?: Prisma.StringNullableFilter<"RuleRun"> | string | null
   targetId?: Prisma.StringNullableFilter<"RuleRun"> | string | null
@@ -295,6 +352,7 @@ export type RuleRunWhereUniqueInput = Prisma.AtLeast<{
   actionsPlanned?: Prisma.StringNullableFilter<"RuleRun"> | string | null
   actionsApplied?: Prisma.StringNullableFilter<"RuleRun"> | string | null
   message?: Prisma.StringNullableFilter<"RuleRun"> | string | null
+  causationDepth?: Prisma.IntFilter<"RuleRun"> | number
   workspace?: Prisma.XOR<Prisma.WorkspaceScalarRelationFilter, Prisma.WorkspaceWhereInput>
   rule?: Prisma.XOR<Prisma.RuleScalarRelationFilter, Prisma.RuleWhereInput>
 }, "id">
@@ -304,6 +362,7 @@ export type RuleRunOrderByWithAggregationInput = {
   workspaceId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   ruleId?: Prisma.SortOrder
+  ruleVersion?: Prisma.SortOrder
   trigger?: Prisma.SortOrder
   targetType?: Prisma.SortOrderInput | Prisma.SortOrder
   targetId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -314,9 +373,12 @@ export type RuleRunOrderByWithAggregationInput = {
   actionsPlanned?: Prisma.SortOrderInput | Prisma.SortOrder
   actionsApplied?: Prisma.SortOrderInput | Prisma.SortOrder
   message?: Prisma.SortOrderInput | Prisma.SortOrder
+  causationDepth?: Prisma.SortOrder
   _count?: Prisma.RuleRunCountOrderByAggregateInput
+  _avg?: Prisma.RuleRunAvgOrderByAggregateInput
   _max?: Prisma.RuleRunMaxOrderByAggregateInput
   _min?: Prisma.RuleRunMinOrderByAggregateInput
+  _sum?: Prisma.RuleRunSumOrderByAggregateInput
 }
 
 export type RuleRunScalarWhereWithAggregatesInput = {
@@ -327,6 +389,7 @@ export type RuleRunScalarWhereWithAggregatesInput = {
   workspaceId?: Prisma.StringWithAggregatesFilter<"RuleRun"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"RuleRun"> | Date | string
   ruleId?: Prisma.StringWithAggregatesFilter<"RuleRun"> | string
+  ruleVersion?: Prisma.IntWithAggregatesFilter<"RuleRun"> | number
   trigger?: Prisma.StringWithAggregatesFilter<"RuleRun"> | string
   targetType?: Prisma.StringNullableWithAggregatesFilter<"RuleRun"> | string | null
   targetId?: Prisma.StringNullableWithAggregatesFilter<"RuleRun"> | string | null
@@ -337,11 +400,13 @@ export type RuleRunScalarWhereWithAggregatesInput = {
   actionsPlanned?: Prisma.StringNullableWithAggregatesFilter<"RuleRun"> | string | null
   actionsApplied?: Prisma.StringNullableWithAggregatesFilter<"RuleRun"> | string | null
   message?: Prisma.StringNullableWithAggregatesFilter<"RuleRun"> | string | null
+  causationDepth?: Prisma.IntWithAggregatesFilter<"RuleRun"> | number
 }
 
 export type RuleRunCreateInput = {
   id?: string
   createdAt?: Date | string
+  ruleVersion?: number
   trigger: string
   targetType?: string | null
   targetId?: string | null
@@ -352,6 +417,7 @@ export type RuleRunCreateInput = {
   actionsPlanned?: string | null
   actionsApplied?: string | null
   message?: string | null
+  causationDepth?: number
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutRuleRunsInput
   rule: Prisma.RuleCreateNestedOneWithoutRunsInput
 }
@@ -361,6 +427,7 @@ export type RuleRunUncheckedCreateInput = {
   workspaceId?: string
   createdAt?: Date | string
   ruleId: string
+  ruleVersion?: number
   trigger: string
   targetType?: string | null
   targetId?: string | null
@@ -371,11 +438,13 @@ export type RuleRunUncheckedCreateInput = {
   actionsPlanned?: string | null
   actionsApplied?: string | null
   message?: string | null
+  causationDepth?: number
 }
 
 export type RuleRunUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  ruleVersion?: Prisma.IntFieldUpdateOperationsInput | number
   trigger?: Prisma.StringFieldUpdateOperationsInput | string
   targetType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   targetId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -386,6 +455,7 @@ export type RuleRunUpdateInput = {
   actionsPlanned?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actionsApplied?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  causationDepth?: Prisma.IntFieldUpdateOperationsInput | number
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutRuleRunsNestedInput
   rule?: Prisma.RuleUpdateOneRequiredWithoutRunsNestedInput
 }
@@ -395,6 +465,7 @@ export type RuleRunUncheckedUpdateInput = {
   workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   ruleId?: Prisma.StringFieldUpdateOperationsInput | string
+  ruleVersion?: Prisma.IntFieldUpdateOperationsInput | number
   trigger?: Prisma.StringFieldUpdateOperationsInput | string
   targetType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   targetId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -405,6 +476,7 @@ export type RuleRunUncheckedUpdateInput = {
   actionsPlanned?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actionsApplied?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  causationDepth?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type RuleRunCreateManyInput = {
@@ -412,6 +484,7 @@ export type RuleRunCreateManyInput = {
   workspaceId?: string
   createdAt?: Date | string
   ruleId: string
+  ruleVersion?: number
   trigger: string
   targetType?: string | null
   targetId?: string | null
@@ -422,11 +495,13 @@ export type RuleRunCreateManyInput = {
   actionsPlanned?: string | null
   actionsApplied?: string | null
   message?: string | null
+  causationDepth?: number
 }
 
 export type RuleRunUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  ruleVersion?: Prisma.IntFieldUpdateOperationsInput | number
   trigger?: Prisma.StringFieldUpdateOperationsInput | string
   targetType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   targetId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -437,6 +512,7 @@ export type RuleRunUpdateManyMutationInput = {
   actionsPlanned?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actionsApplied?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  causationDepth?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type RuleRunUncheckedUpdateManyInput = {
@@ -444,6 +520,7 @@ export type RuleRunUncheckedUpdateManyInput = {
   workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   ruleId?: Prisma.StringFieldUpdateOperationsInput | string
+  ruleVersion?: Prisma.IntFieldUpdateOperationsInput | number
   trigger?: Prisma.StringFieldUpdateOperationsInput | string
   targetType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   targetId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -454,6 +531,7 @@ export type RuleRunUncheckedUpdateManyInput = {
   actionsPlanned?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actionsApplied?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  causationDepth?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type RuleRunListRelationFilter = {
@@ -471,6 +549,7 @@ export type RuleRunCountOrderByAggregateInput = {
   workspaceId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   ruleId?: Prisma.SortOrder
+  ruleVersion?: Prisma.SortOrder
   trigger?: Prisma.SortOrder
   targetType?: Prisma.SortOrder
   targetId?: Prisma.SortOrder
@@ -481,6 +560,12 @@ export type RuleRunCountOrderByAggregateInput = {
   actionsPlanned?: Prisma.SortOrder
   actionsApplied?: Prisma.SortOrder
   message?: Prisma.SortOrder
+  causationDepth?: Prisma.SortOrder
+}
+
+export type RuleRunAvgOrderByAggregateInput = {
+  ruleVersion?: Prisma.SortOrder
+  causationDepth?: Prisma.SortOrder
 }
 
 export type RuleRunMaxOrderByAggregateInput = {
@@ -488,6 +573,7 @@ export type RuleRunMaxOrderByAggregateInput = {
   workspaceId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   ruleId?: Prisma.SortOrder
+  ruleVersion?: Prisma.SortOrder
   trigger?: Prisma.SortOrder
   targetType?: Prisma.SortOrder
   targetId?: Prisma.SortOrder
@@ -498,6 +584,7 @@ export type RuleRunMaxOrderByAggregateInput = {
   actionsPlanned?: Prisma.SortOrder
   actionsApplied?: Prisma.SortOrder
   message?: Prisma.SortOrder
+  causationDepth?: Prisma.SortOrder
 }
 
 export type RuleRunMinOrderByAggregateInput = {
@@ -505,6 +592,7 @@ export type RuleRunMinOrderByAggregateInput = {
   workspaceId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   ruleId?: Prisma.SortOrder
+  ruleVersion?: Prisma.SortOrder
   trigger?: Prisma.SortOrder
   targetType?: Prisma.SortOrder
   targetId?: Prisma.SortOrder
@@ -515,6 +603,12 @@ export type RuleRunMinOrderByAggregateInput = {
   actionsPlanned?: Prisma.SortOrder
   actionsApplied?: Prisma.SortOrder
   message?: Prisma.SortOrder
+  causationDepth?: Prisma.SortOrder
+}
+
+export type RuleRunSumOrderByAggregateInput = {
+  ruleVersion?: Prisma.SortOrder
+  causationDepth?: Prisma.SortOrder
 }
 
 export type RuleRunCreateNestedManyWithoutWorkspaceInput = {
@@ -604,6 +698,7 @@ export type RuleRunUncheckedUpdateManyWithoutRuleNestedInput = {
 export type RuleRunCreateWithoutWorkspaceInput = {
   id?: string
   createdAt?: Date | string
+  ruleVersion?: number
   trigger: string
   targetType?: string | null
   targetId?: string | null
@@ -614,6 +709,7 @@ export type RuleRunCreateWithoutWorkspaceInput = {
   actionsPlanned?: string | null
   actionsApplied?: string | null
   message?: string | null
+  causationDepth?: number
   rule: Prisma.RuleCreateNestedOneWithoutRunsInput
 }
 
@@ -621,6 +717,7 @@ export type RuleRunUncheckedCreateWithoutWorkspaceInput = {
   id?: string
   createdAt?: Date | string
   ruleId: string
+  ruleVersion?: number
   trigger: string
   targetType?: string | null
   targetId?: string | null
@@ -631,6 +728,7 @@ export type RuleRunUncheckedCreateWithoutWorkspaceInput = {
   actionsPlanned?: string | null
   actionsApplied?: string | null
   message?: string | null
+  causationDepth?: number
 }
 
 export type RuleRunCreateOrConnectWithoutWorkspaceInput = {
@@ -666,6 +764,7 @@ export type RuleRunScalarWhereInput = {
   workspaceId?: Prisma.StringFilter<"RuleRun"> | string
   createdAt?: Prisma.DateTimeFilter<"RuleRun"> | Date | string
   ruleId?: Prisma.StringFilter<"RuleRun"> | string
+  ruleVersion?: Prisma.IntFilter<"RuleRun"> | number
   trigger?: Prisma.StringFilter<"RuleRun"> | string
   targetType?: Prisma.StringNullableFilter<"RuleRun"> | string | null
   targetId?: Prisma.StringNullableFilter<"RuleRun"> | string | null
@@ -676,11 +775,13 @@ export type RuleRunScalarWhereInput = {
   actionsPlanned?: Prisma.StringNullableFilter<"RuleRun"> | string | null
   actionsApplied?: Prisma.StringNullableFilter<"RuleRun"> | string | null
   message?: Prisma.StringNullableFilter<"RuleRun"> | string | null
+  causationDepth?: Prisma.IntFilter<"RuleRun"> | number
 }
 
 export type RuleRunCreateWithoutRuleInput = {
   id?: string
   createdAt?: Date | string
+  ruleVersion?: number
   trigger: string
   targetType?: string | null
   targetId?: string | null
@@ -691,6 +792,7 @@ export type RuleRunCreateWithoutRuleInput = {
   actionsPlanned?: string | null
   actionsApplied?: string | null
   message?: string | null
+  causationDepth?: number
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutRuleRunsInput
 }
 
@@ -698,6 +800,7 @@ export type RuleRunUncheckedCreateWithoutRuleInput = {
   id?: string
   workspaceId?: string
   createdAt?: Date | string
+  ruleVersion?: number
   trigger: string
   targetType?: string | null
   targetId?: string | null
@@ -708,6 +811,7 @@ export type RuleRunUncheckedCreateWithoutRuleInput = {
   actionsPlanned?: string | null
   actionsApplied?: string | null
   message?: string | null
+  causationDepth?: number
 }
 
 export type RuleRunCreateOrConnectWithoutRuleInput = {
@@ -739,6 +843,7 @@ export type RuleRunCreateManyWorkspaceInput = {
   id?: string
   createdAt?: Date | string
   ruleId: string
+  ruleVersion?: number
   trigger: string
   targetType?: string | null
   targetId?: string | null
@@ -749,11 +854,13 @@ export type RuleRunCreateManyWorkspaceInput = {
   actionsPlanned?: string | null
   actionsApplied?: string | null
   message?: string | null
+  causationDepth?: number
 }
 
 export type RuleRunUpdateWithoutWorkspaceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  ruleVersion?: Prisma.IntFieldUpdateOperationsInput | number
   trigger?: Prisma.StringFieldUpdateOperationsInput | string
   targetType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   targetId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -764,6 +871,7 @@ export type RuleRunUpdateWithoutWorkspaceInput = {
   actionsPlanned?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actionsApplied?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  causationDepth?: Prisma.IntFieldUpdateOperationsInput | number
   rule?: Prisma.RuleUpdateOneRequiredWithoutRunsNestedInput
 }
 
@@ -771,6 +879,7 @@ export type RuleRunUncheckedUpdateWithoutWorkspaceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   ruleId?: Prisma.StringFieldUpdateOperationsInput | string
+  ruleVersion?: Prisma.IntFieldUpdateOperationsInput | number
   trigger?: Prisma.StringFieldUpdateOperationsInput | string
   targetType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   targetId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -781,12 +890,14 @@ export type RuleRunUncheckedUpdateWithoutWorkspaceInput = {
   actionsPlanned?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actionsApplied?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  causationDepth?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type RuleRunUncheckedUpdateManyWithoutWorkspaceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   ruleId?: Prisma.StringFieldUpdateOperationsInput | string
+  ruleVersion?: Prisma.IntFieldUpdateOperationsInput | number
   trigger?: Prisma.StringFieldUpdateOperationsInput | string
   targetType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   targetId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -797,12 +908,14 @@ export type RuleRunUncheckedUpdateManyWithoutWorkspaceInput = {
   actionsPlanned?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actionsApplied?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  causationDepth?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type RuleRunCreateManyRuleInput = {
   id?: string
   workspaceId?: string
   createdAt?: Date | string
+  ruleVersion?: number
   trigger: string
   targetType?: string | null
   targetId?: string | null
@@ -813,11 +926,13 @@ export type RuleRunCreateManyRuleInput = {
   actionsPlanned?: string | null
   actionsApplied?: string | null
   message?: string | null
+  causationDepth?: number
 }
 
 export type RuleRunUpdateWithoutRuleInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  ruleVersion?: Prisma.IntFieldUpdateOperationsInput | number
   trigger?: Prisma.StringFieldUpdateOperationsInput | string
   targetType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   targetId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -828,6 +943,7 @@ export type RuleRunUpdateWithoutRuleInput = {
   actionsPlanned?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actionsApplied?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  causationDepth?: Prisma.IntFieldUpdateOperationsInput | number
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutRuleRunsNestedInput
 }
 
@@ -835,6 +951,7 @@ export type RuleRunUncheckedUpdateWithoutRuleInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  ruleVersion?: Prisma.IntFieldUpdateOperationsInput | number
   trigger?: Prisma.StringFieldUpdateOperationsInput | string
   targetType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   targetId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -845,12 +962,14 @@ export type RuleRunUncheckedUpdateWithoutRuleInput = {
   actionsPlanned?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actionsApplied?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  causationDepth?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type RuleRunUncheckedUpdateManyWithoutRuleInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  ruleVersion?: Prisma.IntFieldUpdateOperationsInput | number
   trigger?: Prisma.StringFieldUpdateOperationsInput | string
   targetType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   targetId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -861,6 +980,7 @@ export type RuleRunUncheckedUpdateManyWithoutRuleInput = {
   actionsPlanned?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actionsApplied?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  causationDepth?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 
@@ -870,6 +990,7 @@ export type RuleRunSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   workspaceId?: boolean
   createdAt?: boolean
   ruleId?: boolean
+  ruleVersion?: boolean
   trigger?: boolean
   targetType?: boolean
   targetId?: boolean
@@ -880,6 +1001,7 @@ export type RuleRunSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   actionsPlanned?: boolean
   actionsApplied?: boolean
   message?: boolean
+  causationDepth?: boolean
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   rule?: boolean | Prisma.RuleDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["ruleRun"]>
@@ -889,6 +1011,7 @@ export type RuleRunSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   workspaceId?: boolean
   createdAt?: boolean
   ruleId?: boolean
+  ruleVersion?: boolean
   trigger?: boolean
   targetType?: boolean
   targetId?: boolean
@@ -899,6 +1022,7 @@ export type RuleRunSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   actionsPlanned?: boolean
   actionsApplied?: boolean
   message?: boolean
+  causationDepth?: boolean
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   rule?: boolean | Prisma.RuleDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["ruleRun"]>
@@ -908,6 +1032,7 @@ export type RuleRunSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   workspaceId?: boolean
   createdAt?: boolean
   ruleId?: boolean
+  ruleVersion?: boolean
   trigger?: boolean
   targetType?: boolean
   targetId?: boolean
@@ -918,6 +1043,7 @@ export type RuleRunSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   actionsPlanned?: boolean
   actionsApplied?: boolean
   message?: boolean
+  causationDepth?: boolean
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   rule?: boolean | Prisma.RuleDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["ruleRun"]>
@@ -927,6 +1053,7 @@ export type RuleRunSelectScalar = {
   workspaceId?: boolean
   createdAt?: boolean
   ruleId?: boolean
+  ruleVersion?: boolean
   trigger?: boolean
   targetType?: boolean
   targetId?: boolean
@@ -937,9 +1064,10 @@ export type RuleRunSelectScalar = {
   actionsPlanned?: boolean
   actionsApplied?: boolean
   message?: boolean
+  causationDepth?: boolean
 }
 
-export type RuleRunOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "workspaceId" | "createdAt" | "ruleId" | "trigger" | "targetType" | "targetId" | "matched" | "mode" | "status" | "input" | "actionsPlanned" | "actionsApplied" | "message", ExtArgs["result"]["ruleRun"]>
+export type RuleRunOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "workspaceId" | "createdAt" | "ruleId" | "ruleVersion" | "trigger" | "targetType" | "targetId" | "matched" | "mode" | "status" | "input" | "actionsPlanned" | "actionsApplied" | "message" | "causationDepth", ExtArgs["result"]["ruleRun"]>
 export type RuleRunInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   rule?: boolean | Prisma.RuleDefaultArgs<ExtArgs>
@@ -964,6 +1092,7 @@ export type $RuleRunPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     workspaceId: string
     createdAt: Date
     ruleId: string
+    ruleVersion: number
     trigger: string
     targetType: string | null
     targetId: string | null
@@ -974,6 +1103,7 @@ export type $RuleRunPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     actionsPlanned: string | null
     actionsApplied: string | null
     message: string | null
+    causationDepth: number
   }, ExtArgs["result"]["ruleRun"]>
   composites: {}
 }
@@ -1403,6 +1533,7 @@ export interface RuleRunFieldRefs {
   readonly workspaceId: Prisma.FieldRef<"RuleRun", 'String'>
   readonly createdAt: Prisma.FieldRef<"RuleRun", 'DateTime'>
   readonly ruleId: Prisma.FieldRef<"RuleRun", 'String'>
+  readonly ruleVersion: Prisma.FieldRef<"RuleRun", 'Int'>
   readonly trigger: Prisma.FieldRef<"RuleRun", 'String'>
   readonly targetType: Prisma.FieldRef<"RuleRun", 'String'>
   readonly targetId: Prisma.FieldRef<"RuleRun", 'String'>
@@ -1413,6 +1544,7 @@ export interface RuleRunFieldRefs {
   readonly actionsPlanned: Prisma.FieldRef<"RuleRun", 'String'>
   readonly actionsApplied: Prisma.FieldRef<"RuleRun", 'String'>
   readonly message: Prisma.FieldRef<"RuleRun", 'String'>
+  readonly causationDepth: Prisma.FieldRef<"RuleRun", 'Int'>
 }
     
 

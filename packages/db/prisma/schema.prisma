@@ -547,6 +547,14 @@ model Rule {
   conditions      String    @default("[]")
   actions         String    @default("[]")
   stopProcessing  Boolean   @default(false)
+  // Bumped on every edit (packages/automation). Each RuleRun denormalizes the
+  // version active at execution time (RuleRun.ruleVersion) so a run stays
+  // interpretable — "what did this rule look like when it fired" — even
+  // after the rule is later edited. No separate version-history table: the
+  // run rows themselves already carry a full actionsPlanned/actionsApplied
+  // snapshot, so a version number is enough to know whether a given run
+  // reflects the rule's current definition or a past one.
+  version         Int       @default(1)
   createdByUserId String?
   createdByUser   User?     @relation(fields: [createdByUserId], references: [id], onDelete: SetNull)
   runs            RuleRun[]
@@ -563,6 +571,7 @@ model RuleRun {
   createdAt      DateTime @default(now())
   ruleId         String
   rule           Rule     @relation(fields: [ruleId], references: [id], onDelete: Cascade)
+  ruleVersion    Int      @default(1)
   trigger        String
   targetType     String?
   targetId       String?
@@ -573,6 +582,11 @@ model RuleRun {
   actionsPlanned String?
   actionsApplied String?
   message        String?
+  // How many rule-triggered-rule hops preceded this run (0 = fired directly
+  // by an app event, not by another rule's action) — packages/automation's
+  // causation-depth guard, same MAX_CAUSATION_DEPTH concept as
+  // GraphEvent.causationDepth, so a rule chain can't loop forever.
+  causationDepth Int      @default(0)
 
   @@index([ruleId, createdAt])
   @@index([workspaceId, createdAt])

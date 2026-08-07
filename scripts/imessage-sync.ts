@@ -5,6 +5,7 @@ import os from "node:os"
 import path from "node:path"
 import { createRequire } from "node:module"
 import type { PrismaClient } from "@life-os/db"
+import { runRulesForTarget } from "@life-os/automation"
 import { assignColor } from "./lib/colors"
 
 type BetterSqliteDatabase = {
@@ -56,18 +57,6 @@ type ExistingPerson = {
   last: string
   emails: string
   phones: string
-}
-
-type RuleCondition = {
-  field: string
-  operator: "equals" | "not_equals" | "contains" | "in" | "exists" | "not_exists"
-  value?: unknown
-}
-
-type RuleAction = {
-  type: string
-  field?: string
-  value?: unknown
 }
 
 const require = createRequire(import.meta.url)
@@ -518,144 +507,25 @@ async function stageInboxRecord(input: {
   })
 }
 
+// Used to fork the rules engine here (evaluateRule/matchesCondition/
+// applyStagedRuleActions/runStatus, ~140 lines) — an independent copy that
+// had already drifted from apps/persons/server/domain/rules.ts (missing the
+// gte/lte operators and the add_tag/remove_tag actions). Delegates to the
+// shared engine now (Track A5) so this script and every other caller
+// evaluate rules identically. Preserves this script's existing behavior
+// exactly: trigger "ingest.message" (not "inbox.stage" — a separate,
+// pre-existing trigger namespace, left as-is since renaming it would change
+// which rules fire, outside this refactor's scope), and unconditional
+// apply — this script always intends to actually act, unlike a preview.
 async function runRulesForInboxRecord(payload: Record<string, unknown> & { stagedInteractionId: string }) {
-  const rules = await db.rule.findMany({
-    where: { workspaceId: WORKSPACE_ID, trigger: "ingest.message", status: "active" },
-    orderBy: [{ priority: "asc" }, { createdAt: "asc" }],
+  await runRulesForTarget({
+    trigger: "ingest.message",
+    payload,
+    targetType: "stagedInteraction",
+    targetId: payload.stagedInteractionId,
+    actor: { type: "system", workspaceId: WORKSPACE_ID },
+    apply: true,
   })
-
-  for (const rule of rules) {
-    const conditions = parseStoredArray(rule.conditions) as RuleCondition[]
-    const actions = parseStoredArray(rule.actions) as RuleAction[]
-    const result = evaluateRule(conditions, actions, payload)
-    const applied = result.matched && ["auto", "block"].includes(rule.mode)
-      ? await applyStagedRuleActions(payload.stagedInteractionId, actions)
-      : []
-    await db.ruleRun.create({
-      data: {
-        workspaceId: WORKSPACE_ID,
-        ruleId: rule.id,
-        trigger: rule.trigger,
-        targetType: "stagedInteraction",
-        targetId: payload.stagedInteractionId,
-        matched: result.matched,
-        mode: rule.mode,
-        status: runStatus(rule.mode, result.matched, applied.length),
-        input: JSON.stringify(payload),
-        actionsPlanned: JSON.stringify(result.matched ? actions : []),
-        actionsApplied: JSON.stringify(applied),
-        message: result.message,
-      },
-    })
-    if (result.matched && rule.stopProcessing) break
-  }
-}
-
-function evaluateRule(conditions: RuleCondition[], actions: RuleAction[], payload: Record<string, unknown>) {
-  const failures: string[] = []
-  for (const condition of conditions) {
-    if (!matchesCondition(condition, payload)) {
-      failures.push(`${condition.field} ${condition.operator}`)
-    }
-  }
-  const matched = failures.length === 0
-  return {
-    matched,
-    actionsPlanned: matched ? actions : [],
-    message: matched ? "Rule matched" : `No match: ${failures.join(", ")}`,
-  }
-}
-
-function matchesCondition(condition: RuleCondition, payload: Record<string, unknown>) {
-  const actual = getPath(payload, condition.field)
-  switch (condition.operator) {
-    case "equals":
-      return normalize(actual) === normalize(condition.value)
-    case "not_equals":
-      return normalize(actual) !== normalize(condition.value)
-    case "contains":
-      return normalize(actual).includes(normalize(condition.value))
-    case "in":
-      return Array.isArray(condition.value) && condition.value.map(normalize).includes(normalize(actual))
-    case "exists":
-      return actual !== undefined && actual !== null && actual !== ""
-    case "not_exists":
-      return actual === undefined || actual === null || actual === ""
-    default:
-      return false
-  }
-}
-
-async function applyStagedRuleActions(stagedInteractionId: string, actions: RuleAction[]) {
-  const patch: Record<string, unknown> = {}
-  const applied: RuleAction[] = []
-  for (const action of actions) {
-    const type = normalize(action.type)
-    if (type === "block") {
-      patch.status = "blocked"
-      applied.push({ type: action.type, field: "status", value: "blocked" })
-      continue
-    }
-    if (!["set", "set_field", "assign"].includes(type) || !action.field) continue
-    if (!isStagedInteractionField(action.field)) continue
-    patch[action.field] = action.value
-    applied.push(action)
-  }
-
-  if (Object.keys(patch).length) {
-    await db.stagedInteraction.update({
-      where: { id: stagedInteractionId },
-      data: patch,
-    })
-  }
-
-  return applied
-}
-
-function runStatus(mode: string, matched: boolean, appliedCount: number) {
-  if (!matched) return "skipped"
-  if (mode === "dry_run") return "dry_run"
-  if (mode === "suggest") return "suggested"
-  if (mode === "block") return "blocked"
-  if (mode === "auto") return appliedCount > 0 ? "applied" : "planned"
-  return "processed"
-}
-
-function isStagedInteractionField(field: string) {
-  return [
-    "candidatePersonId",
-    "confidence",
-    "matchReason",
-    "status",
-    "summary",
-    "direction",
-    "contactName",
-    "contactEmail",
-    "contactPhone",
-  ].includes(field)
-}
-
-function parseStoredArray(value: string | null) {
-  if (!value) return []
-  try {
-    const parsed = JSON.parse(value)
-    return Array.isArray(parsed) ? parsed : []
-  } catch {
-    return []
-  }
-}
-
-function getPath(payload: Record<string, unknown>, path: string) {
-  return path.split(".").reduce<unknown>((current, segment) => {
-    if (current && typeof current === "object" && segment in current) {
-      return (current as Record<string, unknown>)[segment]
-    }
-    return undefined
-  }, payload)
-}
-
-function normalize(value: unknown) {
-  return String(value ?? "").trim().toLowerCase()
 }
 
 function contactFromMessage(message: MessageRow, identifier: string) {

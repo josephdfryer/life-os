@@ -28,10 +28,12 @@ export type AggregateRule = {
 
 export type RuleAvgAggregateOutputType = {
   priority: number | null
+  version: number | null
 }
 
 export type RuleSumAggregateOutputType = {
   priority: number | null
+  version: number | null
 }
 
 export type RuleMinAggregateOutputType = {
@@ -48,6 +50,7 @@ export type RuleMinAggregateOutputType = {
   conditions: string | null
   actions: string | null
   stopProcessing: boolean | null
+  version: number | null
   createdByUserId: string | null
 }
 
@@ -65,6 +68,7 @@ export type RuleMaxAggregateOutputType = {
   conditions: string | null
   actions: string | null
   stopProcessing: boolean | null
+  version: number | null
   createdByUserId: string | null
 }
 
@@ -82,6 +86,7 @@ export type RuleCountAggregateOutputType = {
   conditions: number
   actions: number
   stopProcessing: number
+  version: number
   createdByUserId: number
   _all: number
 }
@@ -89,10 +94,12 @@ export type RuleCountAggregateOutputType = {
 
 export type RuleAvgAggregateInputType = {
   priority?: true
+  version?: true
 }
 
 export type RuleSumAggregateInputType = {
   priority?: true
+  version?: true
 }
 
 export type RuleMinAggregateInputType = {
@@ -109,6 +116,7 @@ export type RuleMinAggregateInputType = {
   conditions?: true
   actions?: true
   stopProcessing?: true
+  version?: true
   createdByUserId?: true
 }
 
@@ -126,6 +134,7 @@ export type RuleMaxAggregateInputType = {
   conditions?: true
   actions?: true
   stopProcessing?: true
+  version?: true
   createdByUserId?: true
 }
 
@@ -143,6 +152,7 @@ export type RuleCountAggregateInputType = {
   conditions?: true
   actions?: true
   stopProcessing?: true
+  version?: true
   createdByUserId?: true
   _all?: true
 }
@@ -247,6 +257,7 @@ export type RuleGroupByOutputType = {
   conditions: string
   actions: string
   stopProcessing: boolean
+  version: number
   createdByUserId: string | null
   _count: RuleCountAggregateOutputType | null
   _avg: RuleAvgAggregateOutputType | null
@@ -287,6 +298,7 @@ export type RuleWhereInput = {
   conditions?: Prisma.StringFilter<"Rule"> | string
   actions?: Prisma.StringFilter<"Rule"> | string
   stopProcessing?: Prisma.BoolFilter<"Rule"> | boolean
+  version?: Prisma.IntFilter<"Rule"> | number
   createdByUserId?: Prisma.StringNullableFilter<"Rule"> | string | null
   workspace?: Prisma.XOR<Prisma.WorkspaceScalarRelationFilter, Prisma.WorkspaceWhereInput>
   createdByUser?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
@@ -307,6 +319,7 @@ export type RuleOrderByWithRelationInput = {
   conditions?: Prisma.SortOrder
   actions?: Prisma.SortOrder
   stopProcessing?: Prisma.SortOrder
+  version?: Prisma.SortOrder
   createdByUserId?: Prisma.SortOrderInput | Prisma.SortOrder
   workspace?: Prisma.WorkspaceOrderByWithRelationInput
   createdByUser?: Prisma.UserOrderByWithRelationInput
@@ -330,6 +343,7 @@ export type RuleWhereUniqueInput = Prisma.AtLeast<{
   conditions?: Prisma.StringFilter<"Rule"> | string
   actions?: Prisma.StringFilter<"Rule"> | string
   stopProcessing?: Prisma.BoolFilter<"Rule"> | boolean
+  version?: Prisma.IntFilter<"Rule"> | number
   createdByUserId?: Prisma.StringNullableFilter<"Rule"> | string | null
   workspace?: Prisma.XOR<Prisma.WorkspaceScalarRelationFilter, Prisma.WorkspaceWhereInput>
   createdByUser?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
@@ -350,6 +364,7 @@ export type RuleOrderByWithAggregationInput = {
   conditions?: Prisma.SortOrder
   actions?: Prisma.SortOrder
   stopProcessing?: Prisma.SortOrder
+  version?: Prisma.SortOrder
   createdByUserId?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.RuleCountOrderByAggregateInput
   _avg?: Prisma.RuleAvgOrderByAggregateInput
@@ -375,6 +390,7 @@ export type RuleScalarWhereWithAggregatesInput = {
   conditions?: Prisma.StringWithAggregatesFilter<"Rule"> | string
   actions?: Prisma.StringWithAggregatesFilter<"Rule"> | string
   stopProcessing?: Prisma.BoolWithAggregatesFilter<"Rule"> | boolean
+  version?: Prisma.IntWithAggregatesFilter<"Rule"> | number
   createdByUserId?: Prisma.StringNullableWithAggregatesFilter<"Rule"> | string | null
 }
 
@@ -391,6 +407,7 @@ export type RuleCreateInput = {
   conditions?: string
   actions?: string
   stopProcessing?: boolean
+  version?: number
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutRulesInput
   createdByUser?: Prisma.UserCreateNestedOneWithoutRulesInput
   runs?: Prisma.RuleRunCreateNestedManyWithoutRuleInput
@@ -410,6 +427,7 @@ export type RuleUncheckedCreateInput = {
   conditions?: string
   actions?: string
   stopProcessing?: boolean
+  version?: number
   createdByUserId?: string | null
   runs?: Prisma.RuleRunUncheckedCreateNestedManyWithoutRuleInput
 }
@@ -427,6 +445,7 @@ export type RuleUpdateInput = {
   conditions?: Prisma.StringFieldUpdateOperationsInput | string
   actions?: Prisma.StringFieldUpdateOperationsInput | string
   stopProcessing?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutRulesNestedInput
   createdByUser?: Prisma.UserUpdateOneWithoutRulesNestedInput
   runs?: Prisma.RuleRunUpdateManyWithoutRuleNestedInput
@@ -446,6 +465,7 @@ export type RuleUncheckedUpdateInput = {
   conditions?: Prisma.StringFieldUpdateOperationsInput | string
   actions?: Prisma.StringFieldUpdateOperationsInput | string
   stopProcessing?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   createdByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   runs?: Prisma.RuleRunUncheckedUpdateManyWithoutRuleNestedInput
 }
@@ -464,6 +484,7 @@ export type RuleCreateManyInput = {
   conditions?: string
   actions?: string
   stopProcessing?: boolean
+  version?: number
   createdByUserId?: string | null
 }
 
@@ -480,6 +501,7 @@ export type RuleUpdateManyMutationInput = {
   conditions?: Prisma.StringFieldUpdateOperationsInput | string
   actions?: Prisma.StringFieldUpdateOperationsInput | string
   stopProcessing?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type RuleUncheckedUpdateManyInput = {
@@ -496,6 +518,7 @@ export type RuleUncheckedUpdateManyInput = {
   conditions?: Prisma.StringFieldUpdateOperationsInput | string
   actions?: Prisma.StringFieldUpdateOperationsInput | string
   stopProcessing?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   createdByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
@@ -523,11 +546,13 @@ export type RuleCountOrderByAggregateInput = {
   conditions?: Prisma.SortOrder
   actions?: Prisma.SortOrder
   stopProcessing?: Prisma.SortOrder
+  version?: Prisma.SortOrder
   createdByUserId?: Prisma.SortOrder
 }
 
 export type RuleAvgOrderByAggregateInput = {
   priority?: Prisma.SortOrder
+  version?: Prisma.SortOrder
 }
 
 export type RuleMaxOrderByAggregateInput = {
@@ -544,6 +569,7 @@ export type RuleMaxOrderByAggregateInput = {
   conditions?: Prisma.SortOrder
   actions?: Prisma.SortOrder
   stopProcessing?: Prisma.SortOrder
+  version?: Prisma.SortOrder
   createdByUserId?: Prisma.SortOrder
 }
 
@@ -561,11 +587,13 @@ export type RuleMinOrderByAggregateInput = {
   conditions?: Prisma.SortOrder
   actions?: Prisma.SortOrder
   stopProcessing?: Prisma.SortOrder
+  version?: Prisma.SortOrder
   createdByUserId?: Prisma.SortOrder
 }
 
 export type RuleSumOrderByAggregateInput = {
   priority?: Prisma.SortOrder
+  version?: Prisma.SortOrder
 }
 
 export type RuleScalarRelationFilter = {
@@ -684,6 +712,7 @@ export type RuleCreateWithoutWorkspaceInput = {
   conditions?: string
   actions?: string
   stopProcessing?: boolean
+  version?: number
   createdByUser?: Prisma.UserCreateNestedOneWithoutRulesInput
   runs?: Prisma.RuleRunCreateNestedManyWithoutRuleInput
 }
@@ -701,6 +730,7 @@ export type RuleUncheckedCreateWithoutWorkspaceInput = {
   conditions?: string
   actions?: string
   stopProcessing?: boolean
+  version?: number
   createdByUserId?: string | null
   runs?: Prisma.RuleRunUncheckedCreateNestedManyWithoutRuleInput
 }
@@ -747,6 +777,7 @@ export type RuleScalarWhereInput = {
   conditions?: Prisma.StringFilter<"Rule"> | string
   actions?: Prisma.StringFilter<"Rule"> | string
   stopProcessing?: Prisma.BoolFilter<"Rule"> | boolean
+  version?: Prisma.IntFilter<"Rule"> | number
   createdByUserId?: Prisma.StringNullableFilter<"Rule"> | string | null
 }
 
@@ -763,6 +794,7 @@ export type RuleCreateWithoutCreatedByUserInput = {
   conditions?: string
   actions?: string
   stopProcessing?: boolean
+  version?: number
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutRulesInput
   runs?: Prisma.RuleRunCreateNestedManyWithoutRuleInput
 }
@@ -781,6 +813,7 @@ export type RuleUncheckedCreateWithoutCreatedByUserInput = {
   conditions?: string
   actions?: string
   stopProcessing?: boolean
+  version?: number
   runs?: Prisma.RuleRunUncheckedCreateNestedManyWithoutRuleInput
 }
 
@@ -822,6 +855,7 @@ export type RuleCreateWithoutRunsInput = {
   conditions?: string
   actions?: string
   stopProcessing?: boolean
+  version?: number
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutRulesInput
   createdByUser?: Prisma.UserCreateNestedOneWithoutRulesInput
 }
@@ -840,6 +874,7 @@ export type RuleUncheckedCreateWithoutRunsInput = {
   conditions?: string
   actions?: string
   stopProcessing?: boolean
+  version?: number
   createdByUserId?: string | null
 }
 
@@ -872,6 +907,7 @@ export type RuleUpdateWithoutRunsInput = {
   conditions?: Prisma.StringFieldUpdateOperationsInput | string
   actions?: Prisma.StringFieldUpdateOperationsInput | string
   stopProcessing?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutRulesNestedInput
   createdByUser?: Prisma.UserUpdateOneWithoutRulesNestedInput
 }
@@ -890,6 +926,7 @@ export type RuleUncheckedUpdateWithoutRunsInput = {
   conditions?: Prisma.StringFieldUpdateOperationsInput | string
   actions?: Prisma.StringFieldUpdateOperationsInput | string
   stopProcessing?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   createdByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
@@ -906,6 +943,7 @@ export type RuleCreateManyWorkspaceInput = {
   conditions?: string
   actions?: string
   stopProcessing?: boolean
+  version?: number
   createdByUserId?: string | null
 }
 
@@ -922,6 +960,7 @@ export type RuleUpdateWithoutWorkspaceInput = {
   conditions?: Prisma.StringFieldUpdateOperationsInput | string
   actions?: Prisma.StringFieldUpdateOperationsInput | string
   stopProcessing?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   createdByUser?: Prisma.UserUpdateOneWithoutRulesNestedInput
   runs?: Prisma.RuleRunUpdateManyWithoutRuleNestedInput
 }
@@ -939,6 +978,7 @@ export type RuleUncheckedUpdateWithoutWorkspaceInput = {
   conditions?: Prisma.StringFieldUpdateOperationsInput | string
   actions?: Prisma.StringFieldUpdateOperationsInput | string
   stopProcessing?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   createdByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   runs?: Prisma.RuleRunUncheckedUpdateManyWithoutRuleNestedInput
 }
@@ -956,6 +996,7 @@ export type RuleUncheckedUpdateManyWithoutWorkspaceInput = {
   conditions?: Prisma.StringFieldUpdateOperationsInput | string
   actions?: Prisma.StringFieldUpdateOperationsInput | string
   stopProcessing?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   createdByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
@@ -973,6 +1014,7 @@ export type RuleCreateManyCreatedByUserInput = {
   conditions?: string
   actions?: string
   stopProcessing?: boolean
+  version?: number
 }
 
 export type RuleUpdateWithoutCreatedByUserInput = {
@@ -988,6 +1030,7 @@ export type RuleUpdateWithoutCreatedByUserInput = {
   conditions?: Prisma.StringFieldUpdateOperationsInput | string
   actions?: Prisma.StringFieldUpdateOperationsInput | string
   stopProcessing?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutRulesNestedInput
   runs?: Prisma.RuleRunUpdateManyWithoutRuleNestedInput
 }
@@ -1006,6 +1049,7 @@ export type RuleUncheckedUpdateWithoutCreatedByUserInput = {
   conditions?: Prisma.StringFieldUpdateOperationsInput | string
   actions?: Prisma.StringFieldUpdateOperationsInput | string
   stopProcessing?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   runs?: Prisma.RuleRunUncheckedUpdateManyWithoutRuleNestedInput
 }
 
@@ -1023,6 +1067,7 @@ export type RuleUncheckedUpdateManyWithoutCreatedByUserInput = {
   conditions?: Prisma.StringFieldUpdateOperationsInput | string
   actions?: Prisma.StringFieldUpdateOperationsInput | string
   stopProcessing?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 
@@ -1070,6 +1115,7 @@ export type RuleSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   conditions?: boolean
   actions?: boolean
   stopProcessing?: boolean
+  version?: boolean
   createdByUserId?: boolean
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   createdByUser?: boolean | Prisma.Rule$createdByUserArgs<ExtArgs>
@@ -1091,6 +1137,7 @@ export type RuleSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   conditions?: boolean
   actions?: boolean
   stopProcessing?: boolean
+  version?: boolean
   createdByUserId?: boolean
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   createdByUser?: boolean | Prisma.Rule$createdByUserArgs<ExtArgs>
@@ -1110,6 +1157,7 @@ export type RuleSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   conditions?: boolean
   actions?: boolean
   stopProcessing?: boolean
+  version?: boolean
   createdByUserId?: boolean
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   createdByUser?: boolean | Prisma.Rule$createdByUserArgs<ExtArgs>
@@ -1129,10 +1177,11 @@ export type RuleSelectScalar = {
   conditions?: boolean
   actions?: boolean
   stopProcessing?: boolean
+  version?: boolean
   createdByUserId?: boolean
 }
 
-export type RuleOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "workspaceId" | "createdAt" | "updatedAt" | "name" | "description" | "trigger" | "status" | "priority" | "mode" | "conditions" | "actions" | "stopProcessing" | "createdByUserId", ExtArgs["result"]["rule"]>
+export type RuleOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "workspaceId" | "createdAt" | "updatedAt" | "name" | "description" | "trigger" | "status" | "priority" | "mode" | "conditions" | "actions" | "stopProcessing" | "version" | "createdByUserId", ExtArgs["result"]["rule"]>
 export type RuleInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   createdByUser?: boolean | Prisma.Rule$createdByUserArgs<ExtArgs>
@@ -1169,6 +1218,7 @@ export type $RulePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     conditions: string
     actions: string
     stopProcessing: boolean
+    version: number
     createdByUserId: string | null
   }, ExtArgs["result"]["rule"]>
   composites: {}
@@ -1609,6 +1659,7 @@ export interface RuleFieldRefs {
   readonly conditions: Prisma.FieldRef<"Rule", 'String'>
   readonly actions: Prisma.FieldRef<"Rule", 'String'>
   readonly stopProcessing: Prisma.FieldRef<"Rule", 'Boolean'>
+  readonly version: Prisma.FieldRef<"Rule", 'Int'>
   readonly createdByUserId: Prisma.FieldRef<"Rule", 'String'>
 }
     

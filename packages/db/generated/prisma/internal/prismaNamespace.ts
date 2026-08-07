@@ -6088,6 +6088,7 @@ export const RuleScalarFieldEnum = {
   conditions: 'conditions',
   actions: 'actions',
   stopProcessing: 'stopProcessing',
+  version: 'version',
   createdByUserId: 'createdByUserId'
 } as const
 
@@ -6099,6 +6100,7 @@ export const RuleRunScalarFieldEnum = {
   workspaceId: 'workspaceId',
   createdAt: 'createdAt',
   ruleId: 'ruleId',
+  ruleVersion: 'ruleVersion',
   trigger: 'trigger',
   targetType: 'targetType',
   targetId: 'targetId',
@@ -6108,7 +6110,8 @@ export const RuleRunScalarFieldEnum = {
   input: 'input',
   actionsPlanned: 'actionsPlanned',
   actionsApplied: 'actionsApplied',
-  message: 'message'
+  message: 'message',
+  causationDepth: 'causationDepth'
 } as const
 
 export type RuleRunScalarFieldEnum = (typeof RuleRunScalarFieldEnum)[keyof typeof RuleRunScalarFieldEnum]
