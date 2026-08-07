@@ -331,15 +331,20 @@ export async function sumInteractionsByPlace(
     }
   }
 
-  const rows = await db.interaction.findMany({
+  // Aggregated in SQL rather than reduced over a fetched row set — the sum
+  // and count are all this needs, and computing them in the database means
+  // this never has to transfer (or hold in memory) every matching
+  // Interaction just to add up one column.
+  const result = await db.interaction.aggregate({
     where,
-    select: { amount: true, timestamp: true },
+    _sum: { amount: true },
+    _count: true,
   })
 
   return {
     placeId,
-    total: centsToDollars(rows.reduce((sum, r) => sum + (r.amount ?? 0), 0)) ?? 0,
-    count: rows.length,
+    total: centsToDollars(result._sum.amount ?? 0) ?? 0,
+    count: result._count,
   }
 }
 
@@ -378,11 +383,15 @@ export async function sumInteractionsByGroup(
     }
   }
 
-  const rows = await db.interaction.findMany({ where, select: { amount: true } })
+  const result = await db.interaction.aggregate({
+    where,
+    _sum: { amount: true },
+    _count: true,
+  })
   return {
     groupId,
-    total: centsToDollars(rows.reduce((sum, r) => sum + (r.amount ?? 0), 0)) ?? 0,
-    count: rows.length,
+    total: centsToDollars(result._sum.amount ?? 0) ?? 0,
+    count: result._count,
     placeIds,
   }
 }
