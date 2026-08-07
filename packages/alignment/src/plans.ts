@@ -33,6 +33,11 @@ export async function getStalledPlanSignals(workspaceId: string): Promise<Alignm
       personId: true,
       person: { select: { first: true, last: true } },
     },
+    // Same reasoning as getRelationshipGaps: WHERE already bounds this to
+    // active, unscheduled, person-tied Plans, but this now runs on every
+    // Home Intelligence request, so cap it explicitly rather than trust
+    // that stays small forever.
+    take: 500,
   })
   if (!plans.length) return []
 

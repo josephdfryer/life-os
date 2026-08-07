@@ -28,6 +28,12 @@ export async function getRelationshipGaps(workspaceId: string): Promise<Alignmen
       interactions: { orderBy: { timestamp: "desc" }, take: 1, select: { timestamp: true } },
       plans: { where: { status: "active" }, select: { id: true }, take: 1 },
     },
+    // The WHERE clause already restricts this to close/plan-linked people —
+    // a small, bounded set for any real workspace — but Home's Intelligence
+    // page now calls this on every request, not just from a background job,
+    // so an explicit cap protects against that changing quietly as the
+    // graph grows.
+    take: 1_000,
   })
 
   const signals: AlignmentSignal[] = []
