@@ -6,6 +6,7 @@ import path from "node:path"
 import { pathToFileURL } from "node:url"
 import { createRequire } from "node:module"
 import type { PrismaClient } from "@life-os/db"
+import { appendDailySourceInteraction, createReviewItem } from "@life-os/domain"
 
 type BetterSqliteDatabase = {
   pragma(sql: string): unknown
@@ -64,7 +65,6 @@ let normalizePhone: (value: string) => string | null
 const APPLE_EPOCH_MS = Date.UTC(2001, 0, 1)
 const SOURCE = "whatsapp"
 const SOURCE_PREFIX = `${SOURCE}:`
-const DAY_TIME_ZONE = process.env.WHATSAPP_SYNC_DAY_TIME_ZONE ?? "America/Los_Angeles"
 const WORKSPACE_ID = process.env.WHATSAPP_SYNC_WORKSPACE_ID ?? "default-workspace"
 const DEFAULT_DB_PATH = path.join(
   os.homedir(),
@@ -282,6 +282,18 @@ async function hasImportedMessage(sourceId: string) {
   return candidates.some(candidate => sourceMarkers(candidate.notes).includes(marker))
 }
 
+// Delegates to the shared day-bucket-append command (packages/domain/
+// staged-interactions.ts) rather than the hand-rolled version this used to
+// carry — that file's own header names this script and scripts/imessage-
+// sync.ts as the two independent copies it exists to unify (imessage-sync
+// migrated first). Same two real gains as that migration: this now creates
+// InteractionParticipant rows (never did before) and publishes a GraphEvent.
+// The AuditLog write stays — appendDailySourceInteraction only publishes a
+// GraphEvent, not an AuditLog entry (that only happens one level up, inside
+// acceptStagedInteraction), so dropping this would silently remove
+// whatsapp-sync activity from the Admin audit log. One knob dropped:
+// WHATSAPP_SYNC_DAY_TIME_ZONE, a per-script env override nothing else in
+// the system had.
 async function appendDailyInteraction(input: {
   personId: string
   sourceId: string
@@ -289,49 +301,19 @@ async function appendDailyInteraction(input: {
   direction: string
   body: string
 }) {
-  const marker = `${SOURCE_PREFIX}${input.sourceId}`
-  const dayMarker = `${SOURCE}-day:${dayKey(input.timestamp)}`
-  const existing = await db.interaction.findFirst({
-    where: {
-      workspaceId: WORKSPACE_ID,
-      personId: input.personId,
-      type: "message",
-      notes: { contains: dayMarker },
-    },
-    select: { id: true, summary: true, notes: true, direction: true },
-    orderBy: { timestamp: "asc" },
+  const result = await appendDailySourceInteraction({
+    personId: input.personId,
+    source: SOURCE,
+    sourceId: input.sourceId,
+    type: "message",
+    timestamp: input.timestamp,
+    summary: input.body,
+    direction: input.direction,
+    workspaceId: WORKSPACE_ID,
+    actor: { type: "system", workspaceId: WORKSPACE_ID },
   })
-  const line = messageLine(input.timestamp, input.direction, input.body)
-
-  if (existing) {
-    await db.interaction.update({
-      where: { id: existing.id },
-      data: {
-        summary: appendLine(existing.summary, line),
-        notes: appendLine(existing.notes, marker),
-        direction: existing.direction === input.direction ? existing.direction : "mixed",
-      },
-    })
-    await writeAudit("interaction.create", "interaction", existing.id, {
-      mode: "append", source: SOURCE, sourceId: input.sourceId,
-    })
-    return
-  }
-
-  const interaction = await db.interaction.create({
-    data: {
-      workspaceId: WORKSPACE_ID,
-      personId: input.personId,
-      type: "message",
-      timestamp: input.timestamp,
-      summary: line,
-      notes: `${dayMarker}\n${marker}`,
-      direction: input.direction,
-    },
-    select: { id: true },
-  })
-  await writeAudit("interaction.create", "interaction", interaction.id, {
-    mode: "create", source: SOURCE, sourceId: input.sourceId,
+  await writeAudit("interaction.create", "interaction", result.interactionId, {
+    mode: result.created ? "create" : result.updated ? "append" : "skip", source: SOURCE, sourceId: input.sourceId,
   })
 }
 
@@ -381,6 +363,18 @@ async function stageInboxRecord(input: {
   await writeAudit("inbox.stage", "stagedInteraction", staged.id, {
     source: SOURCE, sourceId: input.sourceId, itemType: "interaction",
   })
+  // Best-effort — without this, a WhatsApp message from an unmatched
+  // contact would never appear in the unified Inbox (apps/home), only in
+  // this script's own StagedInteraction rows.
+  await createReviewItem({
+    workspaceId: WORKSPACE_ID,
+    source: "staged_interaction",
+    sourceId: staged.id,
+    itemType: "interaction",
+    command: "staged_interaction.accept",
+    commandInput: { stagedInteractionId: staged.id },
+    riskTier: "review",
+  })
 }
 
 async function writeAudit(
@@ -414,35 +408,8 @@ export function appleDateToDate(value: WhatsAppMessageRow["appleDate"]): Date {
   return new Date(APPLE_EPOCH_MS + raw * 1000)
 }
 
-function dayKey(date: Date) {
-  const parts = new Intl.DateTimeFormat("en-US", {
-    timeZone: DAY_TIME_ZONE,
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  }).formatToParts(date)
-  const get = (type: string) => parts.find(part => part.type === type)?.value ?? ""
-  return `${get("year")}-${get("month")}-${get("day")}`
-}
-
-function messageLine(timestamp: Date, direction: string, summary: string) {
-  const time = new Intl.DateTimeFormat("en-US", {
-    timeZone: DAY_TIME_ZONE,
-    hour: "numeric",
-    minute: "2-digit",
-  }).format(timestamp)
-  return `[${time} ${direction}] ${summary}`
-}
-
 function sourceMarkers(notes: string | null | undefined) {
   return (notes ?? "").split(/\s+/).filter(part => part.startsWith(SOURCE_PREFIX))
-}
-
-function appendLine(existing: string | null | undefined, next: string) {
-  const clean = existing?.trim()
-  if (!clean) return next
-  if (clean.split("\n").includes(next)) return clean
-  return `${clean}\n${next}`
 }
 
 function parseJsonArray(value: string): string[] {

@@ -6,6 +6,7 @@ import path from "node:path"
 import { createRequire } from "node:module"
 import type { PrismaClient } from "@life-os/db"
 import { runRulesForTarget } from "@life-os/automation"
+import { appendDailySourceInteraction, createReviewItem } from "@life-os/domain"
 import { assignColor } from "./lib/colors"
 
 type BetterSqliteDatabase = {
@@ -77,7 +78,6 @@ let phonesMatch: (a: string, b: string) => boolean
 
 const APPLE_EPOCH_MS = Date.UTC(2001, 0, 1)
 const SOURCE_PREFIX = "imessage:"
-const DAY_TIME_ZONE = process.env.IMESSAGE_SYNC_DAY_TIME_ZONE ?? "America/Los_Angeles"
 const WORKSPACE_ID = process.env.IMESSAGE_SYNC_WORKSPACE_ID ?? "default-workspace"
 
 async function main() {
@@ -353,6 +353,17 @@ async function updatePersonContact(existing: ExistingPerson, contact: ReturnType
   return { person, updated }
 }
 
+// Delegates to the shared day-bucket-append command (packages/domain/
+// staged-interactions.ts) rather than the hand-rolled version this used to
+// carry — that file's own header cites this exact script as one of the
+// independent copies it was built to unify. Two real gains from the move,
+// not just deduplication: the shared command creates InteractionParticipant
+// rows (this script's own version never did, so every imessage-sourced
+// Interaction has been missing them), and its append-dedup checks an exact
+// line match rather than a raw substring .includes(). One knob is dropped:
+// IMESSAGE_SYNC_DAY_TIME_ZONE, an env override this script alone supported —
+// nothing else in the system had a per-source timezone override, so this
+// aligns imessage with every other source instead of preserving a one-off.
 async function upsertDailyMessageInteraction(input: {
   personId: string
   timestamp: Date
@@ -361,47 +372,21 @@ async function upsertDailyMessageInteraction(input: {
   sourceId: string
   service: string
 }): Promise<"created" | "updated" | "skipped"> {
-  const sourceMarker = normalizeSourceMarker(input.sourceId)
-  const dayMarker = `imessage-day:${dayKey(input.timestamp)}`
-
-  const duplicate = await findInteractionWithSource(sourceMarker, input.personId)
-  if (duplicate) return "skipped"
-
-  const existing = await db.interaction.findFirst({
-    where: {
-      personId: input.personId,
-      type: "message",
-      notes: { contains: dayMarker },
-    },
-    select: { id: true, eventId: true, summary: true, notes: true, direction: true },
-    orderBy: { timestamp: "asc" },
+  const rawSourceId = input.sourceId.startsWith(SOURCE_PREFIX) ? input.sourceId.slice(SOURCE_PREFIX.length) : input.sourceId
+  const result = await appendDailySourceInteraction({
+    personId: input.personId,
+    source: "imessage",
+    sourceId: rawSourceId,
+    type: "message",
+    timestamp: input.timestamp,
+    summary: input.summary,
+    direction: input.direction,
+    workspaceId: WORKSPACE_ID,
+    actor: { type: "system", workspaceId: WORKSPACE_ID },
   })
-
-  const line = messageLine(input.timestamp, input.direction, input.summary)
-  if (existing) {
-    await db.interaction.update({
-      where: { id: existing.id },
-      data: {
-        summary: appendLine(existing.summary, line),
-        notes: appendLine(existing.notes, sourceMarker),
-        direction: existing.direction === input.direction ? existing.direction : "mixed",
-      },
-    })
-    return "updated"
-  }
-
-  await db.interaction.create({
-    data: {
-      workspaceId: WORKSPACE_ID,
-      personId: input.personId,
-      type: "message",
-      timestamp: input.timestamp,
-      summary: line,
-      notes: `${dayMarker}\n${sourceMarker}`,
-      direction: input.direction,
-    },
-  })
-  return "created"
+  if (result.created) return "created"
+  if (result.updated) return "updated"
+  return "skipped"
 }
 
 async function hasImportedMessage(sourceMarker: string, stagedSourceId: string) {
@@ -488,6 +473,21 @@ async function stageInboxRecord(input: {
       metadata: JSON.stringify(metadata),
     },
     select: { id: true },
+  })
+
+  // Best-effort — apps/persons/server/domain/inbox.ts's stageRecord (the
+  // human-review Inbox's own staging path) does the same for its callers;
+  // without this, an unmatched contact staged here would never appear in
+  // the unified Inbox at all, only in this script's own StagedInteraction
+  // rows.
+  await createReviewItem({
+    workspaceId: WORKSPACE_ID,
+    source: "staged_interaction",
+    sourceId: staged.id,
+    itemType: "interaction",
+    command: "staged_interaction.accept",
+    commandInput: { stagedInteractionId: staged.id },
+    riskTier: "review",
   })
 
   await runRulesForInboxRecord({
@@ -659,35 +659,8 @@ function parseSince(value: string): Date {
   return date
 }
 
-function dayKey(date: Date): string {
-  const parts = new Intl.DateTimeFormat("en-US", {
-    timeZone: DAY_TIME_ZONE,
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  }).formatToParts(date)
-  const get = (type: string) => parts.find(part => part.type === type)?.value ?? ""
-  return `${get("year")}-${get("month")}-${get("day")}`
-}
-
-function messageLine(timestamp: Date, direction: string, summary: string) {
-  const time = new Intl.DateTimeFormat("en-US", {
-    timeZone: DAY_TIME_ZONE,
-    hour: "numeric",
-    minute: "2-digit",
-  }).format(timestamp)
-  return `[${time} ${direction}] ${summary}`
-}
-
 function normalizeSourceMarker(sourceId: string) {
   return sourceId.startsWith(SOURCE_PREFIX) ? sourceId : `${SOURCE_PREFIX}${sourceId}`
-}
-
-function appendLine(existing: string | null | undefined, next: string) {
-  const clean = existing?.trim()
-  if (!clean) return next
-  if (clean.includes(next)) return clean
-  return `${clean}\n${next}`
 }
 
 function readState(statePath: string): State {
