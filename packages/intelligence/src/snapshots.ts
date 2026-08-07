@@ -52,17 +52,24 @@ export async function createTheorySnapshot(
   })
 }
 
-export async function getCurrentTheorySnapshot(personId: string) {
+// workspaceId defaults for backward compatibility with existing callers that
+// pre-date this check (apps/theory-of's page independently verified the
+// Person belongs to the caller's workspace before ever reaching here, so
+// this was masked rather than exploitable there) — but every new caller
+// should pass it explicitly. Without it, any caller that knows a personId
+// could read another workspace's Theory of Person data, since Person ids
+// are globally unique cuids, not scoped by their own shape.
+export async function getCurrentTheorySnapshot(personId: string, workspaceId?: string) {
   return db.theorySnapshot.findFirst({
-    where: { subjectPersonId: personId, status: THEORY_STATUS.current },
+    where: { subjectPersonId: personId, status: THEORY_STATUS.current, ...(workspaceId ? { workspaceId } : {}) },
     orderBy: { version: "desc" },
     include: { sources: { orderBy: { createdAt: "asc" } } },
   })
 }
 
-export async function listTheorySnapshots(personId: string) {
+export async function listTheorySnapshots(personId: string, workspaceId?: string) {
   return db.theorySnapshot.findMany({
-    where: { subjectPersonId: personId },
+    where: { subjectPersonId: personId, ...(workspaceId ? { workspaceId } : {}) },
     orderBy: { version: "desc" },
     select: {
       id: true,
@@ -76,9 +83,9 @@ export async function listTheorySnapshots(personId: string) {
   })
 }
 
-export async function getTheorySnapshotById(snapshotId: string) {
-  return db.theorySnapshot.findUnique({
-    where: { id: snapshotId },
+export async function getTheorySnapshotById(snapshotId: string, workspaceId?: string) {
+  return db.theorySnapshot.findFirst({
+    where: { id: snapshotId, ...(workspaceId ? { workspaceId } : {}) },
     include: { sources: { orderBy: { createdAt: "asc" } } },
   })
 }

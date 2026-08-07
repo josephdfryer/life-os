@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server"
 import { errorEnvelopeContract } from "@life-os/contracts"
 import { InteractionStreamError, AcceptStagedInteractionError, ReviewItemError } from "@life-os/domain"
+import { TheoryError } from "@life-os/intelligence"
 
 // Every error apps/api returns uses one shape — { error: { code, message,
 // details? } } — validated against packages/contracts' errorEnvelopeContract
@@ -32,6 +33,10 @@ export function handleRouteError(error: unknown) {
   }
   if (error instanceof ReviewItemError) {
     return errorResponse(error.code === "not_found" ? 404 : 400, error.code, error.message)
+  }
+  if (error instanceof TheoryError) {
+    const status = error.code === "not_found" ? 404 : error.code === "conflict" ? 409 : error.code === "provider" ? 502 : 400
+    return errorResponse(status, error.code, error.message)
   }
   console.error("[apps/api] unhandled route error", error)
   return errorResponse(500, "internal_error", "Internal server error")

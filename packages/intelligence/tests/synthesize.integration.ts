@@ -2,7 +2,7 @@ import assert from "node:assert/strict"
 import { db } from "@life-os/db"
 import { encrypt } from "@life-os/db/crypto"
 import { synthesizeTheoryOfPerson, regenerateTheory, TheoryError, THEORY_PROMPT_VERSION } from "../src/synthesize"
-import { getCurrentTheorySnapshot } from "../src/snapshots"
+import { getCurrentTheorySnapshot, listTheorySnapshots, getTheorySnapshotById } from "../src/snapshots"
 
 // Run against a real (throwaway, migrated) database with a fixture fetch
 // injected — no real network call, no real API key, no cost. Not part of
@@ -75,15 +75,26 @@ async function main() {
   // ── regenerateTheory persists a real TheorySnapshot — monkey-patch global fetch since regenerateTheory doesn't accept an injected one ──
   const originalFetch = globalThis.fetch
   globalThis.fetch = fixtureFetch()
+  let snapshotId: string
   try {
-    const snapshotId = await regenerateTheory(person.id, workspaceId)
-    const current = await getCurrentTheorySnapshot(person.id)
+    snapshotId = await regenerateTheory(person.id, workspaceId)
+    const current = await getCurrentTheorySnapshot(person.id, workspaceId)
     assert.equal(current?.id, snapshotId)
     assert.equal(current?.confidence, 0.68)
     assert.ok(current?.markdownBody.includes("## Current Best Model"))
   } finally {
     globalThis.fetch = originalFetch
   }
+
+  // ── workspace isolation: a caller in a different workspace must not see this snapshot, even knowing the exact personId/snapshotId ──
+  const otherWorkspaceId = "theory-synthesize-other-workspace"
+  await db.workspace.create({ data: { id: otherWorkspaceId, name: "Other workspace", slug: otherWorkspaceId } })
+  assert.equal(await getCurrentTheorySnapshot(person.id, otherWorkspaceId), null)
+  assert.deepEqual(await listTheorySnapshots(person.id, otherWorkspaceId), [])
+  assert.equal(await getTheorySnapshotById(snapshotId, otherWorkspaceId), null)
+  // Same calls without a workspaceId (legacy callers) still find it — the param is opt-in, not a breaking change.
+  assert.ok(await getCurrentTheorySnapshot(person.id))
+  assert.ok(await getTheorySnapshotById(snapshotId))
 
   // ── concurrency guard: a running row for this person must block a new synthesis ──
   const inFlight = await db.theoryAnalysisRun.create({

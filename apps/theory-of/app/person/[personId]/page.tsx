@@ -32,8 +32,8 @@ export default async function TheoryOfPersonPage({ params }: { params: Promise<{
   }
 
   const name = person.nickname || [person.first, person.last].filter(Boolean).join(" ") || "Unknown"
-  const current = await getCurrentTheorySnapshot(personId)
-  const versions = await listTheorySnapshots(personId)
+  const current = await getCurrentTheorySnapshot(personId, access.workspaceId)
+  const versions = await listTheorySnapshots(personId, access.workspaceId)
 
   const openQuestions = current ? extractSectionItems(current.markdownBody, "Open Questions") : []
   const sourceCounts = current ? countSources(current.sources) : []
