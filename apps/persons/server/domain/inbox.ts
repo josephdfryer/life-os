@@ -2,7 +2,7 @@ import { db } from "@/lib/db"
 import { badRequest, notFound, optionalString } from "@/server/api/errors"
 import { auditAction, type DomainActor } from "./audit"
 import { applyRuleRunSuggestions, runRulesForTarget } from "./rules"
-import { acceptStagedInteraction, AcceptStagedInteractionError } from "@life-os/domain"
+import { acceptStagedInteraction, AcceptStagedInteractionError, createReviewItem, syncReviewItemStatus } from "@life-os/domain"
 
 // packages/domain's acceptStagedInteraction throws a generic, structured error
 // (it cannot know about Persons' AppError/HTTP status shape — that would be an
@@ -102,6 +102,23 @@ export async function stageRecord(input: StageRecordInput, actor?: DomainActor) 
     return { ...staged, status: "dismissed" }
   }
 
+  if (staged.status === "pending") {
+    const candidatePersonId = enriched?.candidatePersonId ?? input.candidatePersonId
+    await createReviewItem({
+      workspaceId,
+      source: "staged_interaction",
+      sourceId: staged.id,
+      itemType,
+      command: "staged_interaction.accept",
+      commandInput: { stagedInteractionId: staged.id },
+      targetType: candidatePersonId ? "Person" : null,
+      targetId: candidatePersonId ?? null,
+      confidence: enriched?.confidence ?? input.confidence ?? null,
+      riskTier: "review",
+      priority: enriched?.priority ?? 3,
+    })
+  }
+
   const ruleResult = await runRulesForTarget({
     trigger: input.trigger ?? "inbox.stage",
     targetType: "stagedInteraction",
@@ -186,6 +203,7 @@ export async function updateInboxItem(id: string, body: Record<string, unknown>,
       data: { status: "dismissed" },
     })
     await auditAction({ actor, action: "inbox.dismiss", targetType: "stagedInteraction", targetId: id })
+    await syncReviewItemStatus({ source: "staged_interaction", sourceId: id, workspaceId, status: "dismissed", actor })
     return updated
   }
 
@@ -223,6 +241,11 @@ export async function bulkUpdateInboxItems(action: "dismiss" | "accept", ids: st
       targetType: "stagedInteraction",
       metadata: { bulk: true, count: result.count },
     })
+    // updateMany doesn't report which ids matched — syncReviewItemStatus only
+    // touches rows still pending, so calling it for the whole batch is safe.
+    for (const id of unique) {
+      await syncReviewItemStatus({ source: "staged_interaction", sourceId: id, workspaceId, status: "dismissed", actor })
+    }
     return { action, processed: result.count, skipped: unique.length - result.count, errors: [] as string[] }
   }
 

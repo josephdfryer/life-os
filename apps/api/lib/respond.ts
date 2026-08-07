@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server"
 import { errorEnvelopeContract } from "@life-os/contracts"
-import { InteractionStreamError, AcceptStagedInteractionError } from "@life-os/domain"
+import { InteractionStreamError, AcceptStagedInteractionError, ReviewItemError } from "@life-os/domain"
 
 // Every error apps/api returns uses one shape — { error: { code, message,
 // details? } } — validated against packages/contracts' errorEnvelopeContract
@@ -28,6 +28,9 @@ export function handleRouteError(error: unknown) {
   // AppError shape.
   if (error instanceof InteractionStreamError) return errorResponse(400, "validation", error.message)
   if (error instanceof AcceptStagedInteractionError) {
+    return errorResponse(error.code === "not_found" ? 404 : 400, error.code, error.message)
+  }
+  if (error instanceof ReviewItemError) {
     return errorResponse(error.code === "not_found" ? 404 : 400, error.code, error.message)
   }
   console.error("[apps/api] unhandled route error", error)

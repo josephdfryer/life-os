@@ -3,6 +3,7 @@ import type { StagedVisitStatus } from "@life-os/db"
 import { db } from "@/lib/db"
 import { badRequest, notFound } from "@/server/api/errors"
 import { auditAction, type DomainActor } from "./audit"
+import { createReviewItem, syncReviewItemStatus, registerReviewCommand, registerReviewDismiss } from "@life-os/domain"
 
 export type MapsImportFormat = "legacy_takeout" | "device_timeline" | "unknown"
 export type StagedVisitAction = "accept" | "reject" | "skip"
@@ -168,6 +169,7 @@ export async function updateStagedVisit(jobId: string, visitId: string, workspac
   if (action === "reject") {
     const rejected = await db.importStagedVisit.update({ where: { id: visit.id }, data: { status: "rejected" } })
     await auditAction({ actor, action: "places.import.visit.reject", targetType: "importStagedVisit", targetId: visit.id })
+    await syncReviewItemStatus({ source: "import_staged_visit", sourceId: visit.id, workspaceId, status: "dismissed", actor })
     return rejected
   }
 
@@ -184,6 +186,15 @@ export async function updateStagedVisit(jobId: string, visitId: string, workspac
     await db.importJob.update({ where: { id: jobId }, data: { createdRows: { increment: 1 } } })
   }
   await auditAction({ actor, action: "places.import.visit.accept", targetType: "importStagedVisit", targetId: visit.id, metadata: { placeId: place.id, eventId: event?.id ?? null, skipped } })
+  await syncReviewItemStatus({
+    source: "import_staged_visit",
+    sourceId: visit.id,
+    workspaceId,
+    status: "accepted",
+    resultType: event ? "Event" : "Place",
+    resultId: event?.id ?? place.id,
+    actor,
+  })
   return accepted
 }
 
@@ -206,6 +217,9 @@ export async function bulkUpdateStagedVisits(jobId: string, workspaceId: string,
   if (input.action === "reject") {
     await db.importStagedVisit.updateMany({ where: { id: { in: visits.map(visit => visit.id) } }, data: { status: "rejected" } })
     await auditAction({ actor, action: "places.import.visit.reject_bulk", targetType: "importJob", targetId: jobId, metadata: { count: visits.length } })
+    for (const visit of visits) {
+      await syncReviewItemStatus({ source: "import_staged_visit", sourceId: visit.id, workspaceId, status: "dismissed", actor })
+    }
     return { updated: visits.length }
   }
 
@@ -389,7 +403,7 @@ async function upsertPlace(visit: RawVisit, workspaceId: string) {
 }
 
 async function stageVisit(jobId: string, workspaceId: string, visit: RawVisit, confidence: number) {
-  await db.importStagedVisit.create({
+  const staged = await db.importStagedVisit.create({
     data: {
       importJobId: jobId,
       workspaceId,
@@ -403,6 +417,18 @@ async function stageVisit(jobId: string, workspaceId: string, visit: RawVisit, c
       endedAt: visit.endedAt,
       confidence,
     },
+    select: { id: true },
+  })
+  await createReviewItem({
+    workspaceId,
+    source: "import_staged_visit",
+    sourceId: staged.id,
+    itemType: "event",
+    command: "import_staged_visit.accept",
+    commandInput: { jobId, visitId: staged.id },
+    targetType: "Place",
+    confidence: Math.max(0, Math.min(1, confidence / 100)),
+    riskTier: "review",
   })
 }
 
@@ -531,3 +557,23 @@ function delay(ms: number) {
 function stagedVisitStatus(value: string | undefined): StagedVisitStatus | null {
   return value === "pending" || value === "accepted" || value === "rejected" ? value : null
 }
+
+// Registered so ReviewItem's generic resolveReviewItem can accept an
+// import_staged_visit from within this app (e.g. a future unified inbox
+// route in apps/persons). Cross-app resolution from apps/api will not find
+// this handler — this module only loads inside apps/persons' own process —
+// so a /v1/review-items resolve call for this source needs to keep going
+// through Persons' own /api/import/[jobId]/staged/[visitId] route, which
+// already calls updateStagedVisit and syncs the ReviewItem alongside it.
+registerReviewCommand("import_staged_visit.accept", async (input, ctx) => {
+  const jobId = input.jobId as string
+  const visitId = input.visitId as string
+  const result = await updateStagedVisit(jobId, visitId, ctx.workspaceId, "accept")
+  return { resultType: result.resolvedEventId ? "Event" : "Place", resultId: result.resolvedEventId ?? result.resolvedPlaceId }
+})
+
+registerReviewDismiss("import_staged_visit", async (visitId, ctx) => {
+  const visit = await db.importStagedVisit.findFirst({ where: { id: visitId, workspaceId: ctx.workspaceId }, select: { importJobId: true } })
+  if (!visit) return
+  await updateStagedVisit(visit.importJobId, visitId, ctx.workspaceId, "reject")
+})

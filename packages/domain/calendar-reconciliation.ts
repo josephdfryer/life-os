@@ -1,3 +1,5 @@
+import { registerReviewCommand } from "./review"
+
 export type CalendarReconciliationAction = "happened" | "changed" | "cancelled" | "skip"
 
 export class CalendarReconciliationError extends Error {
@@ -152,3 +154,26 @@ function parseDate(value: string | undefined, fallback: Date | null, message: st
   }
   return date
 }
+
+// Registered so a ReviewItem for a pending calendar Plan can be resolved
+// through the shared review layer once something creates one — the calendar
+// sync that produces these Plans lives in apps/events (Codex's Track B),
+// which is where the createReviewItem dual-write call at staging time
+// belongs; it isn't wired yet.
+registerReviewCommand("calendar_reconciliation.reconcile", async (input, ctx) => {
+  const result = await reconcileCalendarPlan({
+    workspaceId: ctx.workspaceId,
+    planId: input.planId as string,
+    action: input.action as CalendarReconciliationAction,
+    title: input.title as string | undefined,
+    start: input.start as string | undefined,
+    end: input.end as string | null | undefined,
+    personIds: input.personIds as string[] | undefined,
+    placeId: input.placeId as string | null | undefined,
+    outcome: input.outcome as string | null | undefined,
+    emotionalWeight: input.emotionalWeight as string | null | undefined,
+    followUps: input.followUps as string[] | undefined,
+    note: input.note as string | null | undefined,
+  })
+  return { resultType: result.eventId ? "Event" : result.status, resultId: result.eventId }
+})

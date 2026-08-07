@@ -1,4 +1,5 @@
 import { decrypt } from "@life-os/db/crypto"
+import { createReviewItem, syncReviewItemStatus, registerReviewCommand, registerReviewDismiss } from "./review"
 
 export const NOTE_SUGGESTION_PROMPT_VERSION = "note-structure-v1"
 
@@ -146,8 +147,13 @@ export async function analyzeCapturedNote(workspaceId: string, noteId: string) {
     const suggestions = validateGatewaySuggestions(JSON.parse(content))
     const matched = await matchPeople(workspaceId, suggestions.flatMap(item => item.personNames))
 
-    await db.$transaction(async tx => {
+    const { supersededIds, created } = await db.$transaction(async tx => {
+      // Re-analysis replaces the prior suggestions for this run with fresh
+      // rows (new ids) — the ReviewItems indexing the old ones would
+      // otherwise dangle, so they're marked superseded once the swap lands.
+      const replaced = await tx.noteSuggestion.findMany({ where: { analysisRunId: run.id }, select: { id: true } })
       await tx.noteSuggestion.deleteMany({ where: { analysisRunId: run.id } })
+      const createdRows: Array<{ id: string; kind: NoteSuggestionKind; title: string; confidence: number }> = []
       for (const suggestion of suggestions) {
         const people = suggestion.personNames.flatMap(name => {
           const person = matched.get(normalizeName(name))
@@ -159,7 +165,7 @@ export async function analyzeCapturedNote(workspaceId: string, noteId: string) {
           matchedPeople: uniquePeople(people),
           reason: suggestion.reason,
         }
-        await tx.noteSuggestion.create({
+        const row = await tx.noteSuggestion.create({
           data: {
             workspaceId,
             noteId,
@@ -169,7 +175,9 @@ export async function analyzeCapturedNote(workspaceId: string, noteId: string) {
             payload: JSON.stringify(payloadValue),
             confidence: suggestion.confidence,
           },
+          select: { id: true },
         })
+        createdRows.push({ id: row.id, kind: suggestion.kind, title: suggestion.title.trim(), confidence: suggestion.confidence })
       }
       await tx.noteAnalysisRun.update({
         where: { id: run.id },
@@ -186,7 +194,26 @@ export async function analyzeCapturedNote(workspaceId: string, noteId: string) {
         where: { id: credential.id },
         data: { lastUsedAt: new Date() },
       })
+      return { supersededIds: replaced.map(row => row.id), created: createdRows }
     })
+
+    for (const id of supersededIds) {
+      await syncReviewItemStatus({ source: "note_suggestion", sourceId: id, workspaceId, status: "superseded" })
+    }
+    for (const row of created) {
+      await createReviewItem({
+        workspaceId,
+        source: "note_suggestion",
+        sourceId: row.id,
+        itemType: row.kind === "plan" ? "plan" : "event",
+        command: "note_suggestion.accept",
+        commandInput: { suggestionId: row.id },
+        targetType: row.kind === "plan" ? "Plan" : "Event",
+        confidence: row.confidence,
+        riskTier: "review",
+      })
+    }
+
     return suggestionResponse(db, run.id)
   } catch (error) {
     const message = error instanceof Error ? error.message : "Note analysis failed."
@@ -233,6 +260,7 @@ export async function reviewNoteSuggestion(input: {
       where: { id: suggestion.id },
       data: { status: "dismissed", reviewedAt: new Date() },
     })
+    await syncReviewItemStatus({ source: "note_suggestion", sourceId: suggestion.id, workspaceId: input.workspaceId, status: "dismissed" })
     return { status: "dismissed" as const, entityType: null, entityId: null }
   }
 
@@ -253,7 +281,7 @@ export async function reviewNoteSuggestion(input: {
   const timestamp = proposedTimestamp ? new Date(proposedTimestamp) : suggestion.note.timestamp
   if (Number.isNaN(timestamp.getTime())) throw new NoteSuggestionError("Timestamp is invalid", "validation")
 
-  return db.$transaction(async tx => {
+  const result = await db.$transaction(async tx => {
     if (suggestion.kind === "plan") {
       const plan = await tx.plan.create({
         data: {
@@ -325,6 +353,16 @@ export async function reviewNoteSuggestion(input: {
     })
     return { status: "accepted" as const, entityType: "Event", entityId: event.id }
   })
+
+  await syncReviewItemStatus({
+    source: "note_suggestion",
+    sourceId: suggestion.id,
+    workspaceId: input.workspaceId,
+    status: "accepted",
+    resultType: result.entityType,
+    resultId: result.entityId,
+  })
+  return result
 }
 
 async function suggestionResponse(db: Awaited<typeof import("@life-os/db")>["db"], runId: string) {
@@ -434,3 +472,19 @@ function normalizeName(value: string) {
 function uniquePeople(people: Array<{ id: string; name: string }>) {
   return [...new Map(people.map(person => [person.id, person])).values()]
 }
+
+registerReviewCommand("note_suggestion.accept", async (input, ctx) => {
+  const result = await reviewNoteSuggestion({
+    workspaceId: ctx.workspaceId,
+    suggestionId: input.suggestionId as string,
+    action: "accept",
+    title: input.title as string | undefined,
+    timestamp: input.timestamp as string | null | undefined,
+    personIds: input.personIds as string[] | undefined,
+  })
+  return { resultType: result.entityType ?? "Unknown", resultId: result.entityId }
+})
+
+registerReviewDismiss("note_suggestion", async (sourceId, ctx) => {
+  await reviewNoteSuggestion({ workspaceId: ctx.workspaceId, suggestionId: sourceId, action: "dismiss" })
+})

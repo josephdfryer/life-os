@@ -1,6 +1,7 @@
 import type { Prisma } from "@life-os/db"
 import { publishGraphEvent, type GraphEventActor } from "./events"
 import { writeAuditLog, type AuditActor } from "./audit"
+import { syncReviewItemStatus, registerReviewCommand, registerReviewDismiss } from "./review"
 
 // The shared write behind "a message/email/transaction became a canonical
 // Interaction" — whether that happens because a rule auto-approved a staged
@@ -330,5 +331,39 @@ export async function acceptStagedInteraction(
     metadata: { interactionId: result.interactionId, created: result.created },
   })
 
+  // Best-effort so a ReviewItem exists for this item (whether staged before
+  // or after A4) stays consistent whichever path resolved it — the human
+  // Inbox, the auto-accept rule path, or a future resolveReviewItem call.
+  await syncReviewItemStatus({
+    source: "staged_interaction",
+    sourceId: item.id,
+    workspaceId,
+    status: "accepted",
+    resultType: "Interaction",
+    resultId: result.interactionId,
+    actor: input.actor,
+  })
+
   return { status: "accepted", interactionId: result.interactionId, created: result.created }
 }
+
+registerReviewCommand("staged_interaction.accept", async (input, ctx) => {
+  const result = await acceptStagedInteraction({
+    id: input.stagedInteractionId as string,
+    workspaceId: ctx.workspaceId,
+    personId: input.personId as string | null | undefined,
+    summary: input.summary as string | null | undefined,
+    direction: input.direction as string | null | undefined,
+    timestamp: input.timestamp as string | null | undefined,
+    actor: ctx.actor,
+  })
+  return { resultType: "Interaction", resultId: result.interactionId }
+})
+
+registerReviewDismiss("staged_interaction", async (sourceId, ctx) => {
+  const { db } = await import("@life-os/db")
+  await db.stagedInteraction.updateMany({
+    where: { id: sourceId, workspaceId: ctx.workspaceId, status: { in: ["pending", "blocked"] } },
+    data: { status: "dismissed" },
+  })
+})
