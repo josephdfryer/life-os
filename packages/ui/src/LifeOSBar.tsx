@@ -9,6 +9,8 @@ const SHELL_NAV = [
   { label: 'Today', path: '/' },
   { label: 'Stream', path: '/stream' },
   { label: 'Inbox', path: '/inbox' },
+  { label: 'Intelligence', path: '/intelligence' },
+  { label: 'Automation', path: '/automation' },
   { label: 'Admin', path: '/admin' },
 ] as const;
 

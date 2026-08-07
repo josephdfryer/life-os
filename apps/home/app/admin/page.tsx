@@ -75,8 +75,8 @@ function AdminFallback() {
 function AdminOverview() {
   return <div className="stream-message" style={{ marginTop: 28 }}>
     <strong>Admin migration is in progress.</strong>
-    <p style={{ margin: '8px 0 18px' }}>The audit log, workspace membership, and connection health are now readable here. Access and rules remain in the legacy admin until their shared commands are ready.</p>
-    <a className="still-button still-button-secondary" href="/admin?tab=audit">View audit log</a>
+    <p style={{ margin: '8px 0 18px' }}>The audit log, workspace membership, connection health, and access map are now readable here. Automation has its own control-plane surface with authority and run history.</p>
+    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}><a className="still-button still-button-secondary" href="/admin?tab=audit">View audit log</a><a className="still-button still-button-secondary" href="/automation">Open Automation</a></div>
   </div>
 }
 
@@ -114,7 +114,7 @@ function AccessPanel({ roles }: { roles: Array<{ id: string; key: string; name: 
 
 function RulesPanel({ rules }: { rules: Array<{ id: string; name: string; description: string | null; trigger: string; status: string; mode: string; priority: number; conditions: string; actions: string; runs: Array<{ createdAt: Date; status: string; matched: boolean }> }> }) {
   return <section aria-labelledby="rules-heading" style={{ marginTop: 28 }}>
-    <div className="admin-section-heading"><div><p className="still-eyebrow">Automation</p><h2 id="rules-heading">Rules</h2></div><span className="stream-count">{rules.length} rules</span></div>
+    <div className="admin-section-heading"><div><p className="still-eyebrow">Automation</p><h2 id="rules-heading">Rules</h2></div><a className="still-button still-button-secondary" href="/automation">Open full Automation view</a></div>
     {rules.length === 0 ? <div className="stream-message">No rules configured for this workspace.</div> : <div className="stream-list">{rules.map(rule => <article className="admin-rule-row" key={rule.id}><div><strong>{rule.name}</strong><span>{rule.description || `${rule.trigger} · ${rule.mode}`}</span></div><div><span className={`integration-status integration-status-${rule.status}`}>{rule.status}</span><span>{rule.runs[0] ? `Last run ${rule.runs[0].status}${rule.runs[0].matched ? ' · matched' : ''}` : 'No runs yet'}</span></div></article>)}</div>}
   </section>
 }
