@@ -46,7 +46,8 @@
         "MY_WHATSAPP_NUMBER",
         "LIFE_OS_WORKSPACE_ID",
         "LIFE_OS_API_URL",
-        "PERSONS_API_KEY"
+        "PERSONS_API_KEY",
+        "CRON_SECRET"
       ],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
       "outputs": [".next/**", "!.next/cache/**", "dist/**"]
