@@ -453,6 +453,23 @@ export type EnumPlaceGroupRelationshipTypeWithAggregatesFilter<$PrismaModel = ne
   _max?: Prisma.NestedEnumPlaceGroupRelationshipTypeFilter<$PrismaModel>
 }
 
+export type EnumReviewItemStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.ReviewItemStatus | Prisma.EnumReviewItemStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.ReviewItemStatus[]
+  notIn?: $Enums.ReviewItemStatus[]
+  not?: Prisma.NestedEnumReviewItemStatusFilter<$PrismaModel> | $Enums.ReviewItemStatus
+}
+
+export type EnumReviewItemStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.ReviewItemStatus | Prisma.EnumReviewItemStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.ReviewItemStatus[]
+  notIn?: $Enums.ReviewItemStatus[]
+  not?: Prisma.NestedEnumReviewItemStatusWithAggregatesFilter<$PrismaModel> | $Enums.ReviewItemStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumReviewItemStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumReviewItemStatusFilter<$PrismaModel>
+}
+
 export type NestedStringFilter<$PrismaModel = never> = {
   equals?: string | Prisma.StringFieldRefInput<$PrismaModel>
   in?: string[]
@@ -841,6 +858,23 @@ export type NestedEnumPlaceGroupRelationshipTypeWithAggregatesFilter<$PrismaMode
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumPlaceGroupRelationshipTypeFilter<$PrismaModel>
   _max?: Prisma.NestedEnumPlaceGroupRelationshipTypeFilter<$PrismaModel>
+}
+
+export type NestedEnumReviewItemStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.ReviewItemStatus | Prisma.EnumReviewItemStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.ReviewItemStatus[]
+  notIn?: $Enums.ReviewItemStatus[]
+  not?: Prisma.NestedEnumReviewItemStatusFilter<$PrismaModel> | $Enums.ReviewItemStatus
+}
+
+export type NestedEnumReviewItemStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.ReviewItemStatus | Prisma.EnumReviewItemStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.ReviewItemStatus[]
+  notIn?: $Enums.ReviewItemStatus[]
+  not?: Prisma.NestedEnumReviewItemStatusWithAggregatesFilter<$PrismaModel> | $Enums.ReviewItemStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumReviewItemStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumReviewItemStatusFilter<$PrismaModel>
 }
 
 

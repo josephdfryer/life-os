@@ -118,7 +118,10 @@ export const ModelName = {
   LevelUpSession: 'LevelUpSession',
   LevelUpBodyMetric: 'LevelUpBodyMetric',
   LevelUpBadgeUnlock: 'LevelUpBadgeUnlock',
-  LevelUpTargetBuild: 'LevelUpTargetBuild'
+  LevelUpTargetBuild: 'LevelUpTargetBuild',
+  GraphEvent: 'GraphEvent',
+  GraphEventReceipt: 'GraphEventReceipt',
+  ReviewItem: 'ReviewItem'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1293,6 +1296,70 @@ export const LevelUpTargetBuildScalarFieldEnum = {
 } as const
 
 export type LevelUpTargetBuildScalarFieldEnum = (typeof LevelUpTargetBuildScalarFieldEnum)[keyof typeof LevelUpTargetBuildScalarFieldEnum]
+
+
+export const GraphEventScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  schemaVersion: 'schemaVersion',
+  occurredAt: 'occurredAt',
+  recordedAt: 'recordedAt',
+  subjectType: 'subjectType',
+  subjectId: 'subjectId',
+  eventType: 'eventType',
+  actorType: 'actorType',
+  actorId: 'actorId',
+  sourceConnector: 'sourceConnector',
+  correlationId: 'correlationId',
+  causationId: 'causationId',
+  causationDepth: 'causationDepth',
+  ruleVersionId: 'ruleVersionId',
+  idempotencyKey: 'idempotencyKey',
+  payload: 'payload',
+  provenance: 'provenance'
+} as const
+
+export type GraphEventScalarFieldEnum = (typeof GraphEventScalarFieldEnum)[keyof typeof GraphEventScalarFieldEnum]
+
+
+export const GraphEventReceiptScalarFieldEnum = {
+  id: 'id',
+  eventId: 'eventId',
+  consumer: 'consumer',
+  status: 'status',
+  attempts: 'attempts',
+  lastError: 'lastError',
+  nextRetryAt: 'nextRetryAt',
+  processedAt: 'processedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type GraphEventReceiptScalarFieldEnum = (typeof GraphEventReceiptScalarFieldEnum)[keyof typeof GraphEventReceiptScalarFieldEnum]
+
+
+export const ReviewItemScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  source: 'source',
+  sourceId: 'sourceId',
+  itemType: 'itemType',
+  proposedCommand: 'proposedCommand',
+  targetType: 'targetType',
+  targetId: 'targetId',
+  confidence: 'confidence',
+  evidence: 'evidence',
+  riskTier: 'riskTier',
+  priority: 'priority',
+  status: 'status',
+  resolvedAt: 'resolvedAt',
+  resolvedBy: 'resolvedBy',
+  resultType: 'resultType',
+  resultId: 'resultId'
+} as const
+
+export type ReviewItemScalarFieldEnum = (typeof ReviewItemScalarFieldEnum)[keyof typeof ReviewItemScalarFieldEnum]
 
 
 export const SortOrder = {

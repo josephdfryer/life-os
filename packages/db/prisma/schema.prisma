@@ -85,6 +85,8 @@ model Workspace {
   levelUpProgramEntries LevelUpProgramEntry[]
   levelUpSessions      LevelUpSession[]
   levelUpBodyMetrics   LevelUpBodyMetric[]
+  graphEvents          GraphEvent[]
+  reviewItems          ReviewItem[]
 
   @@index([ownerUserId])
   @@index([status])
@@ -1914,4 +1916,146 @@ model LevelUpTargetBuild {
 
   @@unique([workspaceId, buildKey])
   @@index([workspaceId, status])
+}
+
+// ─────────────────────────────────────────────
+// SUPPORTING: control plane (GraphEvent, ReviewItem)
+//
+// Neither is a life primitive. GraphEvent is an immutable ledger of what
+// canonical commands did to the graph — deliberately distinct from the Event
+// primitive above, which is something that happened in Joseph's life, not a
+// system record. Never abbreviate GraphEvent to "Event" in code; the name
+// collision is exactly the confusion this comment exists to prevent.
+//
+// ReviewItem is supporting workflow state for the universal Inbox — it
+// references a source record and a proposed command; it never duplicates raw
+// content. See docs/adr/0002-graph-event-spine.md.
+// ─────────────────────────────────────────────
+
+// Every canonical domain command writes its record changes and its GraphEvent
+// in ONE transaction. If a command cannot do both atomically, it is not a
+// command yet — see packages/domain.
+//
+// idempotencyKey + the unique constraint below is what lets a command be
+// retried safely: the same logical action produces the same event exactly
+// once. correlationId threads one user-visible operation across multiple
+// events; causationId points at the event (if any) whose processing produced
+// this one, and causationDepth is a hard cap that makes an automation loop
+// mathematically impossible rather than merely unlikely.
+model GraphEvent {
+  id              String    @id @default(cuid())
+  workspaceId     String    @default("default-workspace")
+  workspace       Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  schemaVersion   Int       @default(1)
+  occurredAt      DateTime  @default(now())
+  recordedAt      DateTime  @default(now())
+
+  // Typed reference to what changed. subjectType is one of the eight
+  // primitives, "Interaction", or another supporting model (e.g. "ReviewItem")
+  // — a string, not an enum, matching InteractionParticipant.entityType so the
+  // same reference shape is used everywhere in the graph.
+  subjectType     String
+  subjectId       String
+
+  // "interaction.created" | "plan.completed" | "state.recorded" |
+  // "review.resolved" | ... — a growing, intentionally un-enumerated
+  // vocabulary owned by packages/domain, not the schema.
+  eventType       String
+
+  actorType       String    // "user" | "api_key" | "system" | "rule"
+  actorId         String?
+  sourceConnector String?   // "era" | "gmail" | "imessage" | "manual" | ...
+
+  correlationId   String?
+  causationId     String?
+  causationEvent  GraphEvent?  @relation("EventCausation", fields: [causationId], references: [id], onDelete: SetNull)
+  causedEvents    GraphEvent[] @relation("EventCausation")
+  causationDepth  Int       @default(0)
+  // Set only when this event was produced by an automation rule, so a rule
+  // can never act twice on the same upstream event at the same version.
+  ruleVersionId   String?
+
+  idempotencyKey  String
+  payload         String    // JSON, minimal + typed per eventType
+  provenance      String?   // JSON: refs back to the Note/file/sync run that caused this
+
+  receipts        GraphEventReceipt[]
+
+  @@unique([workspaceId, idempotencyKey])
+  @@index([workspaceId, occurredAt(sort: Desc)])
+  @@index([workspaceId, subjectType, subjectId])
+  @@index([workspaceId, eventType, occurredAt(sort: Desc)])
+  @@index([correlationId])
+  @@index([causationId])
+}
+
+// One row per (event, consumer). Processing is at-least-once; this unique
+// constraint is what makes each consumer's handling of each event exactly-once
+// in effect. A consumer that crashes mid-handling retries from attempts+1,
+// never from zero, and never re-applies a completed effect.
+model GraphEventReceipt {
+  id           String     @id @default(cuid())
+  eventId      String
+  event        GraphEvent @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  consumer     String     // "automation" | "intelligence" | ... — one per subscriber
+  status       String     @default("pending") // pending | processing | done | failed
+  attempts     Int        @default(0)
+  lastError    String?
+  nextRetryAt  DateTime?
+  processedAt  DateTime?
+  createdAt    DateTime   @default(now())
+
+  @@unique([eventId, consumer])
+  @@index([consumer, status, nextRetryAt])
+}
+
+enum ReviewItemStatus {
+  pending
+  accepted
+  edited_accepted
+  dismissed
+  superseded
+  failed
+}
+
+// The universal Inbox. Adapters over StagedInteraction, NoteSuggestion,
+// ImportStagedVisit, and calendar reconciliation index into this table during
+// migration (dual-written); central state becomes authoritative once each
+// adapter is proven. See docs/PERSONS_ARCHITECTURE.md for the four legacy
+// queues this generalizes.
+model ReviewItem {
+  id              String    @id @default(cuid())
+  workspaceId     String    @default("default-workspace")
+  workspace       Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  // Where this came from, so the Inbox can filter/group by source without
+  // duplicating the source record itself.
+  source          String    // "staged_interaction" | "note_suggestion" | "import_staged_visit" | "calendar_reconciliation"
+  sourceId        String    // id in the legacy table this adapts
+  itemType        String    // what accepting this creates: "interaction" | "plan" | "event" | ...
+
+  // The proposed graph command, not yet applied. Structured so acceptance is
+  // "run this command", never "re-derive what to do from the raw content".
+  proposedCommand String    // JSON: { command: string, input: object }
+
+  targetType      String?   // primitive this most likely resolves against, if known
+  targetId        String?
+
+  confidence      Float?
+  evidence        String?   // JSON — audit trail for why this was proposed
+  riskTier        String    @default("review") // observe | safe_auto | review | confirm
+  priority        Int       @default(3)
+
+  status          ReviewItemStatus @default(pending)
+  resolvedAt      DateTime?
+  resolvedBy      String?   // actor id
+  resultType      String?   // entity type actually created/updated on accept
+  resultId        String?
+
+  @@unique([workspaceId, source, sourceId])
+  @@index([workspaceId, status, priority, createdAt])
+  @@index([workspaceId, source, itemType])
+  @@index([workspaceId, targetType, targetId])
 }

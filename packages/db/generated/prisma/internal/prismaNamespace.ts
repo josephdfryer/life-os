@@ -451,7 +451,10 @@ export const ModelName = {
   LevelUpSession: 'LevelUpSession',
   LevelUpBodyMetric: 'LevelUpBodyMetric',
   LevelUpBadgeUnlock: 'LevelUpBadgeUnlock',
-  LevelUpTargetBuild: 'LevelUpTargetBuild'
+  LevelUpTargetBuild: 'LevelUpTargetBuild',
+  GraphEvent: 'GraphEvent',
+  GraphEventReceipt: 'GraphEventReceipt',
+  ReviewItem: 'ReviewItem'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -467,7 +470,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "workspace" | "workspaceMember" | "approvedEmail" | "person" | "user" | "role" | "permission" | "userRole" | "rolePermission" | "apiKey" | "apiKeyScope" | "auditLog" | "calendarConnection" | "calendarEventLink" | "gmailConnection" | "gmailMessageLink" | "eraConnection" | "eraAccountLink" | "eraTransactionLink" | "rule" | "ruleRun" | "stagedInteraction" | "event" | "interaction" | "interactionParticipant" | "plan" | "planExpectedPerson" | "place" | "importJob" | "importStagedVisit" | "placeNote" | "item" | "itemDefinition" | "inventoryLot" | "assembly" | "itemInteraction" | "importedFile" | "aiProviderCredential" | "aiAnalysisRun" | "noteAnalysisRun" | "noteSuggestion" | "group" | "supplierProfile" | "purchaseOrder" | "purchaseOrderLine" | "purchaseReceiptLine" | "personGroup" | "groupGroup" | "placeGroup" | "note" | "theorySnapshot" | "theorySnapshotSource" | "stateDefinition" | "state" | "assistantMessage" | "levelUpProfile" | "levelUpTestResult" | "levelUpCombine" | "levelUpRatingSnapshot" | "levelUpTrainingSet" | "levelUpExercise" | "levelUpProgram" | "levelUpProgramDay" | "levelUpProgramEntry" | "levelUpSession" | "levelUpBodyMetric" | "levelUpBadgeUnlock" | "levelUpTargetBuild"
+    modelProps: "workspace" | "workspaceMember" | "approvedEmail" | "person" | "user" | "role" | "permission" | "userRole" | "rolePermission" | "apiKey" | "apiKeyScope" | "auditLog" | "calendarConnection" | "calendarEventLink" | "gmailConnection" | "gmailMessageLink" | "eraConnection" | "eraAccountLink" | "eraTransactionLink" | "rule" | "ruleRun" | "stagedInteraction" | "event" | "interaction" | "interactionParticipant" | "plan" | "planExpectedPerson" | "place" | "importJob" | "importStagedVisit" | "placeNote" | "item" | "itemDefinition" | "inventoryLot" | "assembly" | "itemInteraction" | "importedFile" | "aiProviderCredential" | "aiAnalysisRun" | "noteAnalysisRun" | "noteSuggestion" | "group" | "supplierProfile" | "purchaseOrder" | "purchaseOrderLine" | "purchaseReceiptLine" | "personGroup" | "groupGroup" | "placeGroup" | "note" | "theorySnapshot" | "theorySnapshotSource" | "stateDefinition" | "state" | "assistantMessage" | "levelUpProfile" | "levelUpTestResult" | "levelUpCombine" | "levelUpRatingSnapshot" | "levelUpTrainingSet" | "levelUpExercise" | "levelUpProgram" | "levelUpProgramDay" | "levelUpProgramEntry" | "levelUpSession" | "levelUpBodyMetric" | "levelUpBadgeUnlock" | "levelUpTargetBuild" | "graphEvent" | "graphEventReceipt" | "reviewItem"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -5503,6 +5506,228 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    GraphEvent: {
+      payload: Prisma.$GraphEventPayload<ExtArgs>
+      fields: Prisma.GraphEventFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.GraphEventFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GraphEventPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.GraphEventFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GraphEventPayload>
+        }
+        findFirst: {
+          args: Prisma.GraphEventFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GraphEventPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.GraphEventFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GraphEventPayload>
+        }
+        findMany: {
+          args: Prisma.GraphEventFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GraphEventPayload>[]
+        }
+        create: {
+          args: Prisma.GraphEventCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GraphEventPayload>
+        }
+        createMany: {
+          args: Prisma.GraphEventCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.GraphEventCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GraphEventPayload>[]
+        }
+        delete: {
+          args: Prisma.GraphEventDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GraphEventPayload>
+        }
+        update: {
+          args: Prisma.GraphEventUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GraphEventPayload>
+        }
+        deleteMany: {
+          args: Prisma.GraphEventDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.GraphEventUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.GraphEventUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GraphEventPayload>[]
+        }
+        upsert: {
+          args: Prisma.GraphEventUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GraphEventPayload>
+        }
+        aggregate: {
+          args: Prisma.GraphEventAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateGraphEvent>
+        }
+        groupBy: {
+          args: Prisma.GraphEventGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.GraphEventGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.GraphEventCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.GraphEventCountAggregateOutputType> | number
+        }
+      }
+    }
+    GraphEventReceipt: {
+      payload: Prisma.$GraphEventReceiptPayload<ExtArgs>
+      fields: Prisma.GraphEventReceiptFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.GraphEventReceiptFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GraphEventReceiptPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.GraphEventReceiptFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GraphEventReceiptPayload>
+        }
+        findFirst: {
+          args: Prisma.GraphEventReceiptFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GraphEventReceiptPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.GraphEventReceiptFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GraphEventReceiptPayload>
+        }
+        findMany: {
+          args: Prisma.GraphEventReceiptFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GraphEventReceiptPayload>[]
+        }
+        create: {
+          args: Prisma.GraphEventReceiptCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GraphEventReceiptPayload>
+        }
+        createMany: {
+          args: Prisma.GraphEventReceiptCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.GraphEventReceiptCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GraphEventReceiptPayload>[]
+        }
+        delete: {
+          args: Prisma.GraphEventReceiptDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GraphEventReceiptPayload>
+        }
+        update: {
+          args: Prisma.GraphEventReceiptUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GraphEventReceiptPayload>
+        }
+        deleteMany: {
+          args: Prisma.GraphEventReceiptDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.GraphEventReceiptUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.GraphEventReceiptUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GraphEventReceiptPayload>[]
+        }
+        upsert: {
+          args: Prisma.GraphEventReceiptUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GraphEventReceiptPayload>
+        }
+        aggregate: {
+          args: Prisma.GraphEventReceiptAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateGraphEventReceipt>
+        }
+        groupBy: {
+          args: Prisma.GraphEventReceiptGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.GraphEventReceiptGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.GraphEventReceiptCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.GraphEventReceiptCountAggregateOutputType> | number
+        }
+      }
+    }
+    ReviewItem: {
+      payload: Prisma.$ReviewItemPayload<ExtArgs>
+      fields: Prisma.ReviewItemFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ReviewItemFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReviewItemPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ReviewItemFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReviewItemPayload>
+        }
+        findFirst: {
+          args: Prisma.ReviewItemFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReviewItemPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ReviewItemFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReviewItemPayload>
+        }
+        findMany: {
+          args: Prisma.ReviewItemFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReviewItemPayload>[]
+        }
+        create: {
+          args: Prisma.ReviewItemCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReviewItemPayload>
+        }
+        createMany: {
+          args: Prisma.ReviewItemCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ReviewItemCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReviewItemPayload>[]
+        }
+        delete: {
+          args: Prisma.ReviewItemDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReviewItemPayload>
+        }
+        update: {
+          args: Prisma.ReviewItemUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReviewItemPayload>
+        }
+        deleteMany: {
+          args: Prisma.ReviewItemDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ReviewItemUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ReviewItemUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReviewItemPayload>[]
+        }
+        upsert: {
+          args: Prisma.ReviewItemUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReviewItemPayload>
+        }
+        aggregate: {
+          args: Prisma.ReviewItemAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateReviewItem>
+        }
+        groupBy: {
+          args: Prisma.ReviewItemGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ReviewItemGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ReviewItemCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ReviewItemCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -6700,6 +6925,70 @@ export const LevelUpTargetBuildScalarFieldEnum = {
 export type LevelUpTargetBuildScalarFieldEnum = (typeof LevelUpTargetBuildScalarFieldEnum)[keyof typeof LevelUpTargetBuildScalarFieldEnum]
 
 
+export const GraphEventScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  schemaVersion: 'schemaVersion',
+  occurredAt: 'occurredAt',
+  recordedAt: 'recordedAt',
+  subjectType: 'subjectType',
+  subjectId: 'subjectId',
+  eventType: 'eventType',
+  actorType: 'actorType',
+  actorId: 'actorId',
+  sourceConnector: 'sourceConnector',
+  correlationId: 'correlationId',
+  causationId: 'causationId',
+  causationDepth: 'causationDepth',
+  ruleVersionId: 'ruleVersionId',
+  idempotencyKey: 'idempotencyKey',
+  payload: 'payload',
+  provenance: 'provenance'
+} as const
+
+export type GraphEventScalarFieldEnum = (typeof GraphEventScalarFieldEnum)[keyof typeof GraphEventScalarFieldEnum]
+
+
+export const GraphEventReceiptScalarFieldEnum = {
+  id: 'id',
+  eventId: 'eventId',
+  consumer: 'consumer',
+  status: 'status',
+  attempts: 'attempts',
+  lastError: 'lastError',
+  nextRetryAt: 'nextRetryAt',
+  processedAt: 'processedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type GraphEventReceiptScalarFieldEnum = (typeof GraphEventReceiptScalarFieldEnum)[keyof typeof GraphEventReceiptScalarFieldEnum]
+
+
+export const ReviewItemScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  source: 'source',
+  sourceId: 'sourceId',
+  itemType: 'itemType',
+  proposedCommand: 'proposedCommand',
+  targetType: 'targetType',
+  targetId: 'targetId',
+  confidence: 'confidence',
+  evidence: 'evidence',
+  riskTier: 'riskTier',
+  priority: 'priority',
+  status: 'status',
+  resolvedAt: 'resolvedAt',
+  resolvedBy: 'resolvedBy',
+  resultType: 'resultType',
+  resultId: 'resultId'
+} as const
+
+export type ReviewItemScalarFieldEnum = (typeof ReviewItemScalarFieldEnum)[keyof typeof ReviewItemScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -6849,6 +7138,13 @@ export type EnumGroupTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$Prisma
  * Reference to a field of type 'PlaceGroupRelationshipType'
  */
 export type EnumPlaceGroupRelationshipTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PlaceGroupRelationshipType'>
+    
+
+
+/**
+ * Reference to a field of type 'ReviewItemStatus'
+ */
+export type EnumReviewItemStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ReviewItemStatus'>
     
 
 /**
@@ -7029,6 +7325,9 @@ export type GlobalOmitConfig = {
   levelUpBodyMetric?: Prisma.LevelUpBodyMetricOmit
   levelUpBadgeUnlock?: Prisma.LevelUpBadgeUnlockOmit
   levelUpTargetBuild?: Prisma.LevelUpTargetBuildOmit
+  graphEvent?: Prisma.GraphEventOmit
+  graphEventReceipt?: Prisma.GraphEventReceiptOmit
+  reviewItem?: Prisma.ReviewItemOmit
 }
 
 /* Types for Logging */

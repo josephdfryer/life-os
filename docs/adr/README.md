@@ -12,3 +12,4 @@ ADRs preserve decisions that affect primitives, package direction, persistence, 
 | ADR | Status | Decision |
 |---|---|---|
 | [0001](0001-modular-monolith.md) | accepted | Keep Life OS a boundary-enforced modular monolith |
+| [0002](0002-graph-event-spine.md) | accepted | Add a GraphEvent ledger as the automation and intelligence spine |

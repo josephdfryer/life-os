@@ -381,3 +381,18 @@ export type LevelUpBadgeUnlock = Prisma.LevelUpBadgeUnlockModel
  * 
  */
 export type LevelUpTargetBuild = Prisma.LevelUpTargetBuildModel
+/**
+ * Model GraphEvent
+ * 
+ */
+export type GraphEvent = Prisma.GraphEventModel
+/**
+ * Model GraphEventReceipt
+ * 
+ */
+export type GraphEventReceipt = Prisma.GraphEventReceiptModel
+/**
+ * Model ReviewItem
+ * 
+ */
+export type ReviewItem = Prisma.ReviewItemModel

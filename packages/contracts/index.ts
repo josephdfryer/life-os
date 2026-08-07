@@ -183,4 +183,161 @@ export function contractIssues(error: z.ZodError): ContractIssue[] {
   }))
 }
 
+// ─────────────────────────────────────────────────────────────────────────
+// Control plane (docs/adr/0002-graph-event-spine.md)
+//
+// Published here BEFORE the apps/api backend exists, so Track B can build UI
+// against real types instead of hand-rolling shapes that get thrown away once
+// the backend lands. Mirrors packages/db/prisma/schema.prisma exactly —
+// GraphEvent, GraphEventReceipt, ReviewItem — and stays in sync with it.
+// ─────────────────────────────────────────────────────────────────────────
+
+// A reference to any of the eight primitives, Interaction, or another
+// supporting model — the same shape used by InteractionParticipant.entityType
+// and GraphEvent.subjectType, so one type describes "what this points at"
+// everywhere in the graph.
+export const entityRefContract = z.object({
+  entityType: z.string().trim().min(1).max(64),
+  entityId: id,
+}).strict()
+export type EntityRef = z.infer<typeof entityRefContract>
+
+// Who did something — a user, an API key, the system, or a rule acting under
+// its own authority. Mirrors DomainActor (packages/access/index.ts) so the two
+// never drift into incompatible shapes.
+export const actorRefContract = z.object({
+  type: z.enum(["user", "api_key", "system", "rule"]),
+  id: z.string().trim().min(1).max(256).nullish(),
+  label: z.string().trim().min(1).max(500).nullish(),
+  workspaceId: z.string().trim().min(1).max(256).nullish(),
+}).strict()
+export type ActorRef = z.infer<typeof actorRefContract>
+
+// A pointer back to the raw thing that justified a claim — the Note, sync run,
+// or file a derived record traces to. "Provenance is sacred" per the
+// manifesto; this is the typed shape that promise takes on the wire.
+export const provenanceRefContract = z.object({
+  noteId: id.nullish(),
+  sourceFileId: id.nullish(),
+  syncRunId: z.string().trim().min(1).max(256).nullish(),
+  detail: record.nullish(),
+}).strict()
+export type ProvenanceRef = z.infer<typeof provenanceRefContract>
+
+// One error shape for every route under apps/api and the Persons /api/v1
+// forwarding routes, so a client writes one error handler, not one per app.
+export const errorEnvelopeContract = z.object({
+  error: z.object({
+    code: z.string().trim().min(1).max(128),
+    message: z.string().trim().min(1).max(2_000),
+    details: z.unknown().optional(),
+  }).strict(),
+}).strict()
+export type ErrorEnvelope = z.infer<typeof errorEnvelopeContract>
+
+// Keyset pagination envelope — never offset. See packages/domain's interaction
+// stream (moving here in Phase A3) for why: OFFSET N makes the database walk
+// and discard N rows before returning anything, so page 100 costs a hundred
+// times page 1, while a cursor on (sort key, id) makes every page an index
+// seek regardless of depth.
+export function cursorPageContract<T extends z.ZodTypeAny>(item: T) {
+  return z.object({
+    data: z.array(item),
+    nextCursor: z.string().nullable(),
+    hasMore: z.boolean(),
+    limit: z.number().int().positive(),
+    total: z.number().int().nonnegative().optional(),
+  }).strict()
+}
+
+// Standard idempotency header contract: a client-supplied key that makes a
+// retried write safe to repeat. Pairs with GraphEvent.idempotencyKey — the
+// same value flows from the HTTP header into the event the command publishes.
+export const idempotencyKeyContract = z.string().trim().min(1).max(256)
+
+export const reviewItemStatusContract = z.enum([
+  "pending", "accepted", "edited_accepted", "dismissed", "superseded", "failed",
+])
+export type ReviewItemStatus = z.infer<typeof reviewItemStatusContract>
+
+export const reviewItemRiskTierContract = z.enum(["observe", "safe_auto", "review", "confirm"])
+export type ReviewItemRiskTier = z.infer<typeof reviewItemRiskTierContract>
+
+// A proposed command, not yet applied. Accepting a ReviewItem means "run this
+// command", never "re-derive what to do from the raw content" — the whole
+// point of storing the command instead of just the evidence.
+export const proposedCommandContract = z.object({
+  command: z.string().trim().min(1).max(256),
+  input: record,
+}).strict()
+
+export const reviewItemContract = z.object({
+  id,
+  workspaceId: id,
+  createdAt: z.union([z.string(), z.date()]),
+  updatedAt: z.union([z.string(), z.date()]),
+  source: z.string().trim().min(1).max(128),
+  sourceId: z.string().trim().min(1).max(256),
+  itemType: z.string().trim().min(1).max(128),
+  proposedCommand: proposedCommandContract,
+  targetType: z.string().trim().min(1).max(64).nullable(),
+  targetId: id.nullable(),
+  confidence: z.number().min(0).max(1).nullable(),
+  evidence: record.nullable(),
+  riskTier: reviewItemRiskTierContract,
+  priority: z.number().int().min(1).max(5),
+  status: reviewItemStatusContract,
+  resolvedAt: z.union([z.string(), z.date()]).nullable(),
+  resolvedBy: z.string().trim().min(1).max(256).nullable(),
+  resultType: z.string().trim().min(1).max(64).nullable(),
+  resultId: id.nullable(),
+}).strict()
+export type ReviewItemDTO = z.infer<typeof reviewItemContract>
+
+// The only three ways to resolve a review item. "edit_and_accept" carries a
+// patch to proposedCommand.input applied before the command runs — the
+// proposal is corrected, not silently trusted or silently thrown away.
+export const reviewItemActionContract = z.discriminatedUnion("action", [
+  z.object({ action: z.literal("accept") }).strict(),
+  z.object({
+    action: z.literal("edit_and_accept"),
+    input: record,
+  }).strict(),
+  z.object({
+    action: z.literal("dismiss"),
+    reason: z.string().trim().min(1).max(2_000).optional(),
+  }).strict(),
+])
+export type ReviewItemAction = z.infer<typeof reviewItemActionContract>
+
+// Batch dismissal is intentionally narrower than single-item review: only
+// same-source, same-itemType groups, and only low-risk tiers — never confirm
+// or review-tier items, which exist precisely because they need individual
+// judgment.
+export const reviewItemBulkDismissContract = z.object({
+  ids: z.array(id).min(1).max(200),
+  reason: z.string().trim().min(1).max(2_000).optional(),
+}).strict()
+
+export const graphEventTypeContract = z.string().trim().min(1).max(128)
+
+export const graphEventContract = z.object({
+  id,
+  workspaceId: id,
+  schemaVersion: z.number().int().positive(),
+  occurredAt: z.union([z.string(), z.date()]),
+  subjectType: z.string().trim().min(1).max(64),
+  subjectId: id,
+  eventType: graphEventTypeContract,
+  actorType: z.enum(["user", "api_key", "system", "rule"]),
+  actorId: z.string().trim().min(1).max(256).nullable(),
+  sourceConnector: z.string().trim().min(1).max(128).nullable(),
+  correlationId: z.string().trim().min(1).max(256).nullable(),
+  causationId: id.nullable(),
+  causationDepth: z.number().int().min(0),
+  payload: record,
+  provenance: provenanceRefContract.nullable(),
+}).strict()
+export type GraphEventDTO = z.infer<typeof graphEventContract>
+
 export { z }

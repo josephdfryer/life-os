@@ -81,3 +81,15 @@ export const PlaceGroupRelationshipType = {
 } as const
 
 export type PlaceGroupRelationshipType = (typeof PlaceGroupRelationshipType)[keyof typeof PlaceGroupRelationshipType]
+
+
+export const ReviewItemStatus = {
+  pending: 'pending',
+  accepted: 'accepted',
+  edited_accepted: 'edited_accepted',
+  dismissed: 'dismissed',
+  superseded: 'superseded',
+  failed: 'failed'
+} as const
+
+export type ReviewItemStatus = (typeof ReviewItemStatus)[keyof typeof ReviewItemStatus]

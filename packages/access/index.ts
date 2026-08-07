@@ -58,6 +58,29 @@ export const DEFAULT_PERMISSIONS = [
   { scope: "settings.manage", description: "Manage application settings" },
   { scope: "rules.manage", description: "Manage rules engine configuration" },
   { scope: "automations.manage", description: "Manage automation definitions" },
+
+  // Control plane (docs/adr/0002-graph-event-spine.md): the unified stream,
+  // universal review inbox, automation run history, intelligence snapshots,
+  // and the raw event ledger. Additive — every existing scope above is
+  // unchanged, and DEFAULT_ROLES below only grants these where a role
+  // already implied the equivalent capability.
+  { scope: "stream.read", description: "Read the unified cross-primitive interaction stream" },
+  { scope: "review.read", description: "Read universal review Inbox items" },
+  { scope: "review.write", description: "Accept, edit, or dismiss review Inbox items" },
+  { scope: "automations.read", description: "Read automation run history and definitions" },
+  { scope: "intelligence.read", description: "Read whole-life intelligence snapshots and insights" },
+  { scope: "intelligence.write", description: "Correct insights and record synthesis feedback" },
+  { scope: "events.read", description: "Read the raw GraphEvent ledger" },
+  { scope: "notes.read", description: "Read notes" },
+  { scope: "notes.write", description: "Create and update notes" },
+  { scope: "plans.read", description: "Read plans" },
+  { scope: "plans.write", description: "Create and update plans" },
+  { scope: "states.read", description: "Read recorded states" },
+  { scope: "states.write", description: "Record states" },
+  { scope: "groups.read", description: "Read groups" },
+  { scope: "groups.write", description: "Create and update groups" },
+  { scope: "items.read", description: "Read items" },
+  { scope: "items.write", description: "Create and update items" },
 ] as const
 
 export const DEFAULT_ROLES = [
@@ -71,6 +94,10 @@ export const DEFAULT_ROLES = [
       "interactions.read", "interactions.write", "inbox.review", "ingest.write", "files.read",
       "audit.read", "apiKeys.manage", "roles.manage", "permissions.manage", "settings.manage",
       "rules.manage", "automations.manage",
+      "stream.read", "review.read", "review.write", "automations.read",
+      "intelligence.read", "intelligence.write", "events.read",
+      "notes.read", "notes.write", "plans.read", "plans.write",
+      "states.read", "states.write", "groups.read", "groups.write", "items.read", "items.write",
     ],
   },
   {
@@ -80,13 +107,20 @@ export const DEFAULT_ROLES = [
     scopes: [
       "people.read", "people.write", "places.read", "places.write",
       "interactions.read", "interactions.write", "inbox.review", "ingest.write", "files.read",
+      "stream.read", "review.read", "review.write", "intelligence.read",
+      "notes.read", "notes.write", "plans.read", "plans.write",
+      "states.read", "states.write", "groups.read", "groups.write", "items.read", "items.write",
     ],
   },
   {
     key: "viewer",
     name: "Viewer",
     description: "Read-only access.",
-    scopes: ["people.read", "places.read", "interactions.read", "files.read"],
+    scopes: [
+      "people.read", "places.read", "interactions.read", "files.read",
+      "stream.read", "review.read", "automations.read", "intelligence.read", "events.read",
+      "notes.read", "plans.read", "states.read", "groups.read", "items.read",
+    ],
   },
   {
     key: "automation",
@@ -95,6 +129,8 @@ export const DEFAULT_ROLES = [
     scopes: [
       "people.read", "places.read", "interactions.read", "interactions.write",
       "inbox.review", "ingest.write", "files.read",
+      "stream.read", "review.read", "review.write", "automations.read", "events.read",
+      "notes.read", "notes.write", "plans.read", "plans.write", "states.read", "states.write",
     ],
   },
 ] as const
