@@ -1,20 +1,21 @@
-// @life-os/theory — derived "Theory of Person" synthesis over the Life OS graph.
-// Theory is app-layer interpretation, never a life primitive. Person is the
-// source entity; the theory is the derived, versioned, auditable interpretation.
+// Renamed to @life-os/intelligence (Track A6) — this package is a thin
+// re-export so apps/theory-of's existing imports keep working unchanged.
+// New code should import @life-os/intelligence directly.
 
-export { getTheorySourcesForPerson } from "./src/sources"
-export { synthesizeTheoryOfPerson, regenerateTheory } from "./src/synthesize"
 export {
+  getTheorySourcesForPerson,
+  synthesizeTheoryOfPerson,
+  regenerateTheory,
   createTheorySnapshot,
   getCurrentTheorySnapshot,
   listTheorySnapshots,
   getTheorySnapshotById,
-} from "./src/snapshots"
-export { THEORY_STATUS } from "./src/types"
+  THEORY_STATUS,
+} from "@life-os/intelligence"
 export type {
   TheorySource,
   TheorySourceType,
   TheorySynthesis,
   TheorySourceBundle,
   TheoryStatus,
-} from "./src/types"
+} from "@life-os/intelligence"

@@ -15,10 +15,16 @@ export async function getTheorySourcesForPerson(
     select: { id: true, first: true, last: true, nickname: true, headline: true },
   })
 
+  // Bounded, newest-first: synthesis reasons over the person's recent history,
+  // not their entire lifetime — an unbounded read here scales with total
+  // interactions ever recorded, not with anything synthesis actually needs,
+  // and was already flagged as not surviving current production volume
+  // (7,356+ interactions) before this cap existed.
   const interactions = await db.interaction.findMany({
     where: { workspaceId, personId },
     select: { id: true, eventId: true, sourceNoteId: true },
     orderBy: { timestamp: "desc" },
+    take: 500,
   })
 
   const plans = await db.plan.findMany({
@@ -28,12 +34,14 @@ export async function getTheorySourcesForPerson(
     },
     select: { id: true, sourceNoteId: true },
     orderBy: { createdAt: "desc" },
+    take: 200,
   })
 
   const states = await db.state.findMany({
     where: { workspaceId, entityType: "person", entityId: personId },
     select: { id: true, sourceNoteId: true },
     orderBy: { recordedAt: "desc" },
+    take: 200,
   })
 
   // Notes about this person: theory observations (and any note) whose metadata
@@ -42,6 +50,7 @@ export async function getTheorySourcesForPerson(
     where: { workspaceId, metadata: { contains: personId } },
     select: { id: true },
     orderBy: { timestamp: "desc" },
+    take: 500,
   })
 
   const eventIds = dedupe(interactions.map(i => i.eventId).filter(isString))

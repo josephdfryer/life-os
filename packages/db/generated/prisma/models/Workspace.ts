@@ -252,6 +252,7 @@ export type WorkspaceWhereInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricListRelationFilter
   graphEvents?: Prisma.GraphEventListRelationFilter
   reviewItems?: Prisma.ReviewItemListRelationFilter
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotListRelationFilter
 }
 
 export type WorkspaceOrderByWithRelationInput = {
@@ -316,6 +317,7 @@ export type WorkspaceOrderByWithRelationInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricOrderByRelationAggregateInput
   graphEvents?: Prisma.GraphEventOrderByRelationAggregateInput
   reviewItems?: Prisma.ReviewItemOrderByRelationAggregateInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotOrderByRelationAggregateInput
 }
 
 export type WorkspaceWhereUniqueInput = Prisma.AtLeast<{
@@ -383,6 +385,7 @@ export type WorkspaceWhereUniqueInput = Prisma.AtLeast<{
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricListRelationFilter
   graphEvents?: Prisma.GraphEventListRelationFilter
   reviewItems?: Prisma.ReviewItemListRelationFilter
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotListRelationFilter
 }, "id" | "slug">
 
 export type WorkspaceOrderByWithAggregationInput = {
@@ -472,6 +475,7 @@ export type WorkspaceCreateInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateInput = {
@@ -535,6 +539,7 @@ export type WorkspaceUncheckedCreateInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUpdateInput = {
@@ -598,6 +603,7 @@ export type WorkspaceUpdateInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateInput = {
@@ -661,6 +667,7 @@ export type WorkspaceUncheckedUpdateInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateManyInput = {
@@ -1318,6 +1325,20 @@ export type WorkspaceUpdateOneRequiredWithoutTheorySnapshotsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.WorkspaceUpdateToOneWithWhereWithoutTheorySnapshotsInput, Prisma.WorkspaceUpdateWithoutTheorySnapshotsInput>, Prisma.WorkspaceUncheckedUpdateWithoutTheorySnapshotsInput>
 }
 
+export type WorkspaceCreateNestedOneWithoutLifeModelSnapshotsInput = {
+  create?: Prisma.XOR<Prisma.WorkspaceCreateWithoutLifeModelSnapshotsInput, Prisma.WorkspaceUncheckedCreateWithoutLifeModelSnapshotsInput>
+  connectOrCreate?: Prisma.WorkspaceCreateOrConnectWithoutLifeModelSnapshotsInput
+  connect?: Prisma.WorkspaceWhereUniqueInput
+}
+
+export type WorkspaceUpdateOneRequiredWithoutLifeModelSnapshotsNestedInput = {
+  create?: Prisma.XOR<Prisma.WorkspaceCreateWithoutLifeModelSnapshotsInput, Prisma.WorkspaceUncheckedCreateWithoutLifeModelSnapshotsInput>
+  connectOrCreate?: Prisma.WorkspaceCreateOrConnectWithoutLifeModelSnapshotsInput
+  upsert?: Prisma.WorkspaceUpsertWithoutLifeModelSnapshotsInput
+  connect?: Prisma.WorkspaceWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.WorkspaceUpdateToOneWithWhereWithoutLifeModelSnapshotsInput, Prisma.WorkspaceUpdateWithoutLifeModelSnapshotsInput>, Prisma.WorkspaceUncheckedUpdateWithoutLifeModelSnapshotsInput>
+}
+
 export type WorkspaceCreateNestedOneWithoutAssistantMessagesInput = {
   create?: Prisma.XOR<Prisma.WorkspaceCreateWithoutAssistantMessagesInput, Prisma.WorkspaceUncheckedCreateWithoutAssistantMessagesInput>
   connectOrCreate?: Prisma.WorkspaceCreateOrConnectWithoutAssistantMessagesInput
@@ -1602,6 +1623,7 @@ export type WorkspaceCreateWithoutMembersInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutMembersInput = {
@@ -1664,6 +1686,7 @@ export type WorkspaceUncheckedCreateWithoutMembersInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutMembersInput = {
@@ -1742,6 +1765,7 @@ export type WorkspaceUpdateWithoutMembersInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutMembersInput = {
@@ -1804,6 +1828,7 @@ export type WorkspaceUncheckedUpdateWithoutMembersInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutApprovedEmailsInput = {
@@ -1866,6 +1891,7 @@ export type WorkspaceCreateWithoutApprovedEmailsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutApprovedEmailsInput = {
@@ -1928,6 +1954,7 @@ export type WorkspaceUncheckedCreateWithoutApprovedEmailsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutApprovedEmailsInput = {
@@ -2006,6 +2033,7 @@ export type WorkspaceUpdateWithoutApprovedEmailsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutApprovedEmailsInput = {
@@ -2068,6 +2096,7 @@ export type WorkspaceUncheckedUpdateWithoutApprovedEmailsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutPersonsInput = {
@@ -2130,6 +2159,7 @@ export type WorkspaceCreateWithoutPersonsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutPersonsInput = {
@@ -2192,6 +2222,7 @@ export type WorkspaceUncheckedCreateWithoutPersonsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutPersonsInput = {
@@ -2270,6 +2301,7 @@ export type WorkspaceUpdateWithoutPersonsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutPersonsInput = {
@@ -2332,6 +2364,7 @@ export type WorkspaceUncheckedUpdateWithoutPersonsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutOwnerUserInput = {
@@ -2394,6 +2427,7 @@ export type WorkspaceCreateWithoutOwnerUserInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutOwnerUserInput = {
@@ -2456,6 +2490,7 @@ export type WorkspaceUncheckedCreateWithoutOwnerUserInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutOwnerUserInput = {
@@ -2556,6 +2591,7 @@ export type WorkspaceCreateWithoutApiKeysInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutApiKeysInput = {
@@ -2618,6 +2654,7 @@ export type WorkspaceUncheckedCreateWithoutApiKeysInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutApiKeysInput = {
@@ -2696,6 +2733,7 @@ export type WorkspaceUpdateWithoutApiKeysInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutApiKeysInput = {
@@ -2758,6 +2796,7 @@ export type WorkspaceUncheckedUpdateWithoutApiKeysInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutAuditLogsInput = {
@@ -2820,6 +2859,7 @@ export type WorkspaceCreateWithoutAuditLogsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutAuditLogsInput = {
@@ -2882,6 +2922,7 @@ export type WorkspaceUncheckedCreateWithoutAuditLogsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutAuditLogsInput = {
@@ -2960,6 +3001,7 @@ export type WorkspaceUpdateWithoutAuditLogsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutAuditLogsInput = {
@@ -3022,6 +3064,7 @@ export type WorkspaceUncheckedUpdateWithoutAuditLogsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutCalendarConnectionsInput = {
@@ -3084,6 +3127,7 @@ export type WorkspaceCreateWithoutCalendarConnectionsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutCalendarConnectionsInput = {
@@ -3146,6 +3190,7 @@ export type WorkspaceUncheckedCreateWithoutCalendarConnectionsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutCalendarConnectionsInput = {
@@ -3224,6 +3269,7 @@ export type WorkspaceUpdateWithoutCalendarConnectionsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutCalendarConnectionsInput = {
@@ -3286,6 +3332,7 @@ export type WorkspaceUncheckedUpdateWithoutCalendarConnectionsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutCalendarEventLinksInput = {
@@ -3348,6 +3395,7 @@ export type WorkspaceCreateWithoutCalendarEventLinksInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutCalendarEventLinksInput = {
@@ -3410,6 +3458,7 @@ export type WorkspaceUncheckedCreateWithoutCalendarEventLinksInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutCalendarEventLinksInput = {
@@ -3488,6 +3537,7 @@ export type WorkspaceUpdateWithoutCalendarEventLinksInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutCalendarEventLinksInput = {
@@ -3550,6 +3600,7 @@ export type WorkspaceUncheckedUpdateWithoutCalendarEventLinksInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutGmailConnectionsInput = {
@@ -3612,6 +3663,7 @@ export type WorkspaceCreateWithoutGmailConnectionsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutGmailConnectionsInput = {
@@ -3674,6 +3726,7 @@ export type WorkspaceUncheckedCreateWithoutGmailConnectionsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutGmailConnectionsInput = {
@@ -3752,6 +3805,7 @@ export type WorkspaceUpdateWithoutGmailConnectionsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutGmailConnectionsInput = {
@@ -3814,6 +3868,7 @@ export type WorkspaceUncheckedUpdateWithoutGmailConnectionsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutGmailMessageLinksInput = {
@@ -3876,6 +3931,7 @@ export type WorkspaceCreateWithoutGmailMessageLinksInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutGmailMessageLinksInput = {
@@ -3938,6 +3994,7 @@ export type WorkspaceUncheckedCreateWithoutGmailMessageLinksInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutGmailMessageLinksInput = {
@@ -4016,6 +4073,7 @@ export type WorkspaceUpdateWithoutGmailMessageLinksInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutGmailMessageLinksInput = {
@@ -4078,6 +4136,7 @@ export type WorkspaceUncheckedUpdateWithoutGmailMessageLinksInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutEraConnectionsInput = {
@@ -4140,6 +4199,7 @@ export type WorkspaceCreateWithoutEraConnectionsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutEraConnectionsInput = {
@@ -4202,6 +4262,7 @@ export type WorkspaceUncheckedCreateWithoutEraConnectionsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutEraConnectionsInput = {
@@ -4280,6 +4341,7 @@ export type WorkspaceUpdateWithoutEraConnectionsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutEraConnectionsInput = {
@@ -4342,6 +4404,7 @@ export type WorkspaceUncheckedUpdateWithoutEraConnectionsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutEraAccountLinksInput = {
@@ -4404,6 +4467,7 @@ export type WorkspaceCreateWithoutEraAccountLinksInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutEraAccountLinksInput = {
@@ -4466,6 +4530,7 @@ export type WorkspaceUncheckedCreateWithoutEraAccountLinksInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutEraAccountLinksInput = {
@@ -4544,6 +4609,7 @@ export type WorkspaceUpdateWithoutEraAccountLinksInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutEraAccountLinksInput = {
@@ -4606,6 +4672,7 @@ export type WorkspaceUncheckedUpdateWithoutEraAccountLinksInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutEraTransactionLinksInput = {
@@ -4668,6 +4735,7 @@ export type WorkspaceCreateWithoutEraTransactionLinksInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutEraTransactionLinksInput = {
@@ -4730,6 +4798,7 @@ export type WorkspaceUncheckedCreateWithoutEraTransactionLinksInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutEraTransactionLinksInput = {
@@ -4808,6 +4877,7 @@ export type WorkspaceUpdateWithoutEraTransactionLinksInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutEraTransactionLinksInput = {
@@ -4870,6 +4940,7 @@ export type WorkspaceUncheckedUpdateWithoutEraTransactionLinksInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutRulesInput = {
@@ -4932,6 +5003,7 @@ export type WorkspaceCreateWithoutRulesInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutRulesInput = {
@@ -4994,6 +5066,7 @@ export type WorkspaceUncheckedCreateWithoutRulesInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutRulesInput = {
@@ -5072,6 +5145,7 @@ export type WorkspaceUpdateWithoutRulesInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutRulesInput = {
@@ -5134,6 +5208,7 @@ export type WorkspaceUncheckedUpdateWithoutRulesInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutRuleRunsInput = {
@@ -5196,6 +5271,7 @@ export type WorkspaceCreateWithoutRuleRunsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutRuleRunsInput = {
@@ -5258,6 +5334,7 @@ export type WorkspaceUncheckedCreateWithoutRuleRunsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutRuleRunsInput = {
@@ -5336,6 +5413,7 @@ export type WorkspaceUpdateWithoutRuleRunsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutRuleRunsInput = {
@@ -5398,6 +5476,7 @@ export type WorkspaceUncheckedUpdateWithoutRuleRunsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutStagedItemsInput = {
@@ -5460,6 +5539,7 @@ export type WorkspaceCreateWithoutStagedItemsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutStagedItemsInput = {
@@ -5522,6 +5602,7 @@ export type WorkspaceUncheckedCreateWithoutStagedItemsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutStagedItemsInput = {
@@ -5600,6 +5681,7 @@ export type WorkspaceUpdateWithoutStagedItemsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutStagedItemsInput = {
@@ -5662,6 +5744,7 @@ export type WorkspaceUncheckedUpdateWithoutStagedItemsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutEventsInput = {
@@ -5724,6 +5807,7 @@ export type WorkspaceCreateWithoutEventsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutEventsInput = {
@@ -5786,6 +5870,7 @@ export type WorkspaceUncheckedCreateWithoutEventsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutEventsInput = {
@@ -5864,6 +5949,7 @@ export type WorkspaceUpdateWithoutEventsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutEventsInput = {
@@ -5926,6 +6012,7 @@ export type WorkspaceUncheckedUpdateWithoutEventsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutInteractionsInput = {
@@ -5988,6 +6075,7 @@ export type WorkspaceCreateWithoutInteractionsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutInteractionsInput = {
@@ -6050,6 +6138,7 @@ export type WorkspaceUncheckedCreateWithoutInteractionsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutInteractionsInput = {
@@ -6128,6 +6217,7 @@ export type WorkspaceUpdateWithoutInteractionsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutInteractionsInput = {
@@ -6190,6 +6280,7 @@ export type WorkspaceUncheckedUpdateWithoutInteractionsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutPlansInput = {
@@ -6252,6 +6343,7 @@ export type WorkspaceCreateWithoutPlansInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutPlansInput = {
@@ -6314,6 +6406,7 @@ export type WorkspaceUncheckedCreateWithoutPlansInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutPlansInput = {
@@ -6392,6 +6485,7 @@ export type WorkspaceUpdateWithoutPlansInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutPlansInput = {
@@ -6454,6 +6548,7 @@ export type WorkspaceUncheckedUpdateWithoutPlansInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutPlanExpectedPersonsInput = {
@@ -6516,6 +6611,7 @@ export type WorkspaceCreateWithoutPlanExpectedPersonsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutPlanExpectedPersonsInput = {
@@ -6578,6 +6674,7 @@ export type WorkspaceUncheckedCreateWithoutPlanExpectedPersonsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutPlanExpectedPersonsInput = {
@@ -6656,6 +6753,7 @@ export type WorkspaceUpdateWithoutPlanExpectedPersonsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutPlanExpectedPersonsInput = {
@@ -6718,6 +6816,7 @@ export type WorkspaceUncheckedUpdateWithoutPlanExpectedPersonsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutPlacesInput = {
@@ -6780,6 +6879,7 @@ export type WorkspaceCreateWithoutPlacesInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutPlacesInput = {
@@ -6842,6 +6942,7 @@ export type WorkspaceUncheckedCreateWithoutPlacesInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutPlacesInput = {
@@ -6920,6 +7021,7 @@ export type WorkspaceUpdateWithoutPlacesInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutPlacesInput = {
@@ -6982,6 +7084,7 @@ export type WorkspaceUncheckedUpdateWithoutPlacesInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutImportJobsInput = {
@@ -7044,6 +7147,7 @@ export type WorkspaceCreateWithoutImportJobsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutImportJobsInput = {
@@ -7106,6 +7210,7 @@ export type WorkspaceUncheckedCreateWithoutImportJobsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutImportJobsInput = {
@@ -7184,6 +7289,7 @@ export type WorkspaceUpdateWithoutImportJobsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutImportJobsInput = {
@@ -7246,6 +7352,7 @@ export type WorkspaceUncheckedUpdateWithoutImportJobsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutImportStagedVisitsInput = {
@@ -7308,6 +7415,7 @@ export type WorkspaceCreateWithoutImportStagedVisitsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutImportStagedVisitsInput = {
@@ -7370,6 +7478,7 @@ export type WorkspaceUncheckedCreateWithoutImportStagedVisitsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutImportStagedVisitsInput = {
@@ -7448,6 +7557,7 @@ export type WorkspaceUpdateWithoutImportStagedVisitsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutImportStagedVisitsInput = {
@@ -7510,6 +7620,7 @@ export type WorkspaceUncheckedUpdateWithoutImportStagedVisitsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutPlaceNotesInput = {
@@ -7572,6 +7683,7 @@ export type WorkspaceCreateWithoutPlaceNotesInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutPlaceNotesInput = {
@@ -7634,6 +7746,7 @@ export type WorkspaceUncheckedCreateWithoutPlaceNotesInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutPlaceNotesInput = {
@@ -7712,6 +7825,7 @@ export type WorkspaceUpdateWithoutPlaceNotesInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutPlaceNotesInput = {
@@ -7774,6 +7888,7 @@ export type WorkspaceUncheckedUpdateWithoutPlaceNotesInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutItemsInput = {
@@ -7836,6 +7951,7 @@ export type WorkspaceCreateWithoutItemsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutItemsInput = {
@@ -7898,6 +8014,7 @@ export type WorkspaceUncheckedCreateWithoutItemsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutItemsInput = {
@@ -7976,6 +8093,7 @@ export type WorkspaceUpdateWithoutItemsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutItemsInput = {
@@ -8038,6 +8156,7 @@ export type WorkspaceUncheckedUpdateWithoutItemsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutItemDefinitionsInput = {
@@ -8100,6 +8219,7 @@ export type WorkspaceCreateWithoutItemDefinitionsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutItemDefinitionsInput = {
@@ -8162,6 +8282,7 @@ export type WorkspaceUncheckedCreateWithoutItemDefinitionsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutItemDefinitionsInput = {
@@ -8240,6 +8361,7 @@ export type WorkspaceUpdateWithoutItemDefinitionsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutItemDefinitionsInput = {
@@ -8302,6 +8424,7 @@ export type WorkspaceUncheckedUpdateWithoutItemDefinitionsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutInventoryLotsInput = {
@@ -8364,6 +8487,7 @@ export type WorkspaceCreateWithoutInventoryLotsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutInventoryLotsInput = {
@@ -8426,6 +8550,7 @@ export type WorkspaceUncheckedCreateWithoutInventoryLotsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutInventoryLotsInput = {
@@ -8504,6 +8629,7 @@ export type WorkspaceUpdateWithoutInventoryLotsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutInventoryLotsInput = {
@@ -8566,6 +8692,7 @@ export type WorkspaceUncheckedUpdateWithoutInventoryLotsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutImportedFilesInput = {
@@ -8628,6 +8755,7 @@ export type WorkspaceCreateWithoutImportedFilesInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutImportedFilesInput = {
@@ -8690,6 +8818,7 @@ export type WorkspaceUncheckedCreateWithoutImportedFilesInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutImportedFilesInput = {
@@ -8768,6 +8897,7 @@ export type WorkspaceUpdateWithoutImportedFilesInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutImportedFilesInput = {
@@ -8830,6 +8960,7 @@ export type WorkspaceUncheckedUpdateWithoutImportedFilesInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutAiProviderCredentialsInput = {
@@ -8892,6 +9023,7 @@ export type WorkspaceCreateWithoutAiProviderCredentialsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutAiProviderCredentialsInput = {
@@ -8954,6 +9086,7 @@ export type WorkspaceUncheckedCreateWithoutAiProviderCredentialsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutAiProviderCredentialsInput = {
@@ -9032,6 +9165,7 @@ export type WorkspaceUpdateWithoutAiProviderCredentialsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutAiProviderCredentialsInput = {
@@ -9094,6 +9228,7 @@ export type WorkspaceUncheckedUpdateWithoutAiProviderCredentialsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutAiAnalysisRunsInput = {
@@ -9156,6 +9291,7 @@ export type WorkspaceCreateWithoutAiAnalysisRunsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutAiAnalysisRunsInput = {
@@ -9218,6 +9354,7 @@ export type WorkspaceUncheckedCreateWithoutAiAnalysisRunsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutAiAnalysisRunsInput = {
@@ -9296,6 +9433,7 @@ export type WorkspaceUpdateWithoutAiAnalysisRunsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutAiAnalysisRunsInput = {
@@ -9358,6 +9496,7 @@ export type WorkspaceUncheckedUpdateWithoutAiAnalysisRunsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutNoteAnalysisRunsInput = {
@@ -9420,6 +9559,7 @@ export type WorkspaceCreateWithoutNoteAnalysisRunsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutNoteAnalysisRunsInput = {
@@ -9482,6 +9622,7 @@ export type WorkspaceUncheckedCreateWithoutNoteAnalysisRunsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutNoteAnalysisRunsInput = {
@@ -9560,6 +9701,7 @@ export type WorkspaceUpdateWithoutNoteAnalysisRunsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutNoteAnalysisRunsInput = {
@@ -9622,6 +9764,7 @@ export type WorkspaceUncheckedUpdateWithoutNoteAnalysisRunsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutNoteSuggestionsInput = {
@@ -9684,6 +9827,7 @@ export type WorkspaceCreateWithoutNoteSuggestionsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutNoteSuggestionsInput = {
@@ -9746,6 +9890,7 @@ export type WorkspaceUncheckedCreateWithoutNoteSuggestionsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutNoteSuggestionsInput = {
@@ -9824,6 +9969,7 @@ export type WorkspaceUpdateWithoutNoteSuggestionsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutNoteSuggestionsInput = {
@@ -9886,6 +10032,7 @@ export type WorkspaceUncheckedUpdateWithoutNoteSuggestionsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutGroupsInput = {
@@ -9948,6 +10095,7 @@ export type WorkspaceCreateWithoutGroupsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutGroupsInput = {
@@ -10010,6 +10158,7 @@ export type WorkspaceUncheckedCreateWithoutGroupsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutGroupsInput = {
@@ -10088,6 +10237,7 @@ export type WorkspaceUpdateWithoutGroupsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutGroupsInput = {
@@ -10150,6 +10300,7 @@ export type WorkspaceUncheckedUpdateWithoutGroupsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutSupplierProfilesInput = {
@@ -10212,6 +10363,7 @@ export type WorkspaceCreateWithoutSupplierProfilesInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutSupplierProfilesInput = {
@@ -10274,6 +10426,7 @@ export type WorkspaceUncheckedCreateWithoutSupplierProfilesInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutSupplierProfilesInput = {
@@ -10352,6 +10505,7 @@ export type WorkspaceUpdateWithoutSupplierProfilesInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutSupplierProfilesInput = {
@@ -10414,6 +10568,7 @@ export type WorkspaceUncheckedUpdateWithoutSupplierProfilesInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutPurchaseOrdersInput = {
@@ -10476,6 +10631,7 @@ export type WorkspaceCreateWithoutPurchaseOrdersInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutPurchaseOrdersInput = {
@@ -10538,6 +10694,7 @@ export type WorkspaceUncheckedCreateWithoutPurchaseOrdersInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutPurchaseOrdersInput = {
@@ -10616,6 +10773,7 @@ export type WorkspaceUpdateWithoutPurchaseOrdersInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutPurchaseOrdersInput = {
@@ -10678,6 +10836,7 @@ export type WorkspaceUncheckedUpdateWithoutPurchaseOrdersInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutPurchaseReceiptLinesInput = {
@@ -10740,6 +10899,7 @@ export type WorkspaceCreateWithoutPurchaseReceiptLinesInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutPurchaseReceiptLinesInput = {
@@ -10802,6 +10962,7 @@ export type WorkspaceUncheckedCreateWithoutPurchaseReceiptLinesInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutPurchaseReceiptLinesInput = {
@@ -10880,6 +11041,7 @@ export type WorkspaceUpdateWithoutPurchaseReceiptLinesInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutPurchaseReceiptLinesInput = {
@@ -10942,6 +11104,7 @@ export type WorkspaceUncheckedUpdateWithoutPurchaseReceiptLinesInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutNotesInput = {
@@ -11004,6 +11167,7 @@ export type WorkspaceCreateWithoutNotesInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutNotesInput = {
@@ -11066,6 +11230,7 @@ export type WorkspaceUncheckedCreateWithoutNotesInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutNotesInput = {
@@ -11144,6 +11309,7 @@ export type WorkspaceUpdateWithoutNotesInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutNotesInput = {
@@ -11206,6 +11372,7 @@ export type WorkspaceUncheckedUpdateWithoutNotesInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutTheorySnapshotsInput = {
@@ -11268,6 +11435,7 @@ export type WorkspaceCreateWithoutTheorySnapshotsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutTheorySnapshotsInput = {
@@ -11330,6 +11498,7 @@ export type WorkspaceUncheckedCreateWithoutTheorySnapshotsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutTheorySnapshotsInput = {
@@ -11408,6 +11577,7 @@ export type WorkspaceUpdateWithoutTheorySnapshotsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutTheorySnapshotsInput = {
@@ -11427,6 +11597,275 @@ export type WorkspaceUncheckedUpdateWithoutTheorySnapshotsInput = {
   places?: Prisma.PlaceUncheckedUpdateManyWithoutWorkspaceNestedInput
   placeNotes?: Prisma.PlaceNoteUncheckedUpdateManyWithoutWorkspaceNestedInput
   notes?: Prisma.NoteUncheckedUpdateManyWithoutWorkspaceNestedInput
+  groups?: Prisma.GroupUncheckedUpdateManyWithoutWorkspaceNestedInput
+  items?: Prisma.ItemUncheckedUpdateManyWithoutWorkspaceNestedInput
+  itemDefinitions?: Prisma.ItemDefinitionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  inventoryLots?: Prisma.InventoryLotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  supplierProfiles?: Prisma.SupplierProfileUncheckedUpdateManyWithoutWorkspaceNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutWorkspaceNestedInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutWorkspaceNestedInput
+  importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
+  aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedUpdateManyWithoutWorkspaceNestedInput
+  aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  noteSuggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  stagedItems?: Prisma.StagedInteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  rules?: Prisma.RuleUncheckedUpdateManyWithoutWorkspaceNestedInput
+  ruleRuns?: Prisma.RuleRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutWorkspaceNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutWorkspaceNestedInput
+  calendarConnections?: Prisma.CalendarConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  calendarEventLinks?: Prisma.CalendarEventLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
+  gmailConnections?: Prisma.GmailConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  gmailMessageLinks?: Prisma.GmailMessageLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
+  importJobs?: Prisma.ImportJobUncheckedUpdateManyWithoutWorkspaceNestedInput
+  importStagedVisits?: Prisma.ImportStagedVisitUncheckedUpdateManyWithoutWorkspaceNestedInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUncheckedUpdateManyWithoutWorkspaceNestedInput
+  assistantMessages?: Prisma.AssistantMessageUncheckedUpdateManyWithoutWorkspaceNestedInput
+  eraConnections?: Prisma.EraConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  eraAccountLinks?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
+  eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProfile?: Prisma.LevelUpProfileUncheckedUpdateOneWithoutWorkspaceNestedInput
+  levelUpTestResults?: Prisma.LevelUpTestResultUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpCombines?: Prisma.LevelUpCombineUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpSnapshots?: Prisma.LevelUpRatingSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
+  graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
+  reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+}
+
+export type WorkspaceCreateWithoutLifeModelSnapshotsInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  name: string
+  slug: string
+  status?: string
+  ownerUser?: Prisma.UserCreateNestedOneWithoutOwnedWorkspacesInput
+  members?: Prisma.WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
+  approvedEmails?: Prisma.ApprovedEmailCreateNestedManyWithoutWorkspaceInput
+  persons?: Prisma.PersonCreateNestedManyWithoutWorkspaceInput
+  events?: Prisma.EventCreateNestedManyWithoutWorkspaceInput
+  interactions?: Prisma.InteractionCreateNestedManyWithoutWorkspaceInput
+  plans?: Prisma.PlanCreateNestedManyWithoutWorkspaceInput
+  places?: Prisma.PlaceCreateNestedManyWithoutWorkspaceInput
+  placeNotes?: Prisma.PlaceNoteCreateNestedManyWithoutWorkspaceInput
+  notes?: Prisma.NoteCreateNestedManyWithoutWorkspaceInput
+  theorySnapshots?: Prisma.TheorySnapshotCreateNestedManyWithoutWorkspaceInput
+  groups?: Prisma.GroupCreateNestedManyWithoutWorkspaceInput
+  items?: Prisma.ItemCreateNestedManyWithoutWorkspaceInput
+  itemDefinitions?: Prisma.ItemDefinitionCreateNestedManyWithoutWorkspaceInput
+  inventoryLots?: Prisma.InventoryLotCreateNestedManyWithoutWorkspaceInput
+  supplierProfiles?: Prisma.SupplierProfileCreateNestedManyWithoutWorkspaceInput
+  purchaseOrders?: Prisma.PurchaseOrderCreateNestedManyWithoutWorkspaceInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutWorkspaceInput
+  importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
+  aiProviderCredentials?: Prisma.AiProviderCredentialCreateNestedManyWithoutWorkspaceInput
+  aiAnalysisRuns?: Prisma.AiAnalysisRunCreateNestedManyWithoutWorkspaceInput
+  noteAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutWorkspaceInput
+  noteSuggestions?: Prisma.NoteSuggestionCreateNestedManyWithoutWorkspaceInput
+  stagedItems?: Prisma.StagedInteractionCreateNestedManyWithoutWorkspaceInput
+  rules?: Prisma.RuleCreateNestedManyWithoutWorkspaceInput
+  ruleRuns?: Prisma.RuleRunCreateNestedManyWithoutWorkspaceInput
+  apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutWorkspaceInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutWorkspaceInput
+  calendarConnections?: Prisma.CalendarConnectionCreateNestedManyWithoutWorkspaceInput
+  calendarEventLinks?: Prisma.CalendarEventLinkCreateNestedManyWithoutWorkspaceInput
+  gmailConnections?: Prisma.GmailConnectionCreateNestedManyWithoutWorkspaceInput
+  gmailMessageLinks?: Prisma.GmailMessageLinkCreateNestedManyWithoutWorkspaceInput
+  importJobs?: Prisma.ImportJobCreateNestedManyWithoutWorkspaceInput
+  importStagedVisits?: Prisma.ImportStagedVisitCreateNestedManyWithoutWorkspaceInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonCreateNestedManyWithoutWorkspaceInput
+  assistantMessages?: Prisma.AssistantMessageCreateNestedManyWithoutWorkspaceInput
+  eraConnections?: Prisma.EraConnectionCreateNestedManyWithoutWorkspaceInput
+  eraAccountLinks?: Prisma.EraAccountLinkCreateNestedManyWithoutWorkspaceInput
+  eraTransactionLinks?: Prisma.EraTransactionLinkCreateNestedManyWithoutWorkspaceInput
+  levelUpProfile?: Prisma.LevelUpProfileCreateNestedOneWithoutWorkspaceInput
+  levelUpTestResults?: Prisma.LevelUpTestResultCreateNestedManyWithoutWorkspaceInput
+  levelUpCombines?: Prisma.LevelUpCombineCreateNestedManyWithoutWorkspaceInput
+  levelUpSnapshots?: Prisma.LevelUpRatingSnapshotCreateNestedManyWithoutWorkspaceInput
+  levelUpTrainingSets?: Prisma.LevelUpTrainingSetCreateNestedManyWithoutWorkspaceInput
+  levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockCreateNestedManyWithoutWorkspaceInput
+  levelUpTargetBuilds?: Prisma.LevelUpTargetBuildCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
+  graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
+  reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
+}
+
+export type WorkspaceUncheckedCreateWithoutLifeModelSnapshotsInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  name: string
+  slug: string
+  status?: string
+  ownerUserId?: string | null
+  members?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
+  approvedEmails?: Prisma.ApprovedEmailUncheckedCreateNestedManyWithoutWorkspaceInput
+  persons?: Prisma.PersonUncheckedCreateNestedManyWithoutWorkspaceInput
+  events?: Prisma.EventUncheckedCreateNestedManyWithoutWorkspaceInput
+  interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutWorkspaceInput
+  plans?: Prisma.PlanUncheckedCreateNestedManyWithoutWorkspaceInput
+  places?: Prisma.PlaceUncheckedCreateNestedManyWithoutWorkspaceInput
+  placeNotes?: Prisma.PlaceNoteUncheckedCreateNestedManyWithoutWorkspaceInput
+  notes?: Prisma.NoteUncheckedCreateNestedManyWithoutWorkspaceInput
+  theorySnapshots?: Prisma.TheorySnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  groups?: Prisma.GroupUncheckedCreateNestedManyWithoutWorkspaceInput
+  items?: Prisma.ItemUncheckedCreateNestedManyWithoutWorkspaceInput
+  itemDefinitions?: Prisma.ItemDefinitionUncheckedCreateNestedManyWithoutWorkspaceInput
+  inventoryLots?: Prisma.InventoryLotUncheckedCreateNestedManyWithoutWorkspaceInput
+  supplierProfiles?: Prisma.SupplierProfileUncheckedCreateNestedManyWithoutWorkspaceInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutWorkspaceInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutWorkspaceInput
+  importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
+  aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedCreateNestedManyWithoutWorkspaceInput
+  aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  noteSuggestions?: Prisma.NoteSuggestionUncheckedCreateNestedManyWithoutWorkspaceInput
+  stagedItems?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutWorkspaceInput
+  rules?: Prisma.RuleUncheckedCreateNestedManyWithoutWorkspaceInput
+  ruleRuns?: Prisma.RuleRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutWorkspaceInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutWorkspaceInput
+  calendarConnections?: Prisma.CalendarConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  calendarEventLinks?: Prisma.CalendarEventLinkUncheckedCreateNestedManyWithoutWorkspaceInput
+  gmailConnections?: Prisma.GmailConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  gmailMessageLinks?: Prisma.GmailMessageLinkUncheckedCreateNestedManyWithoutWorkspaceInput
+  importJobs?: Prisma.ImportJobUncheckedCreateNestedManyWithoutWorkspaceInput
+  importStagedVisits?: Prisma.ImportStagedVisitUncheckedCreateNestedManyWithoutWorkspaceInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUncheckedCreateNestedManyWithoutWorkspaceInput
+  assistantMessages?: Prisma.AssistantMessageUncheckedCreateNestedManyWithoutWorkspaceInput
+  eraConnections?: Prisma.EraConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  eraAccountLinks?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutWorkspaceInput
+  eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProfile?: Prisma.LevelUpProfileUncheckedCreateNestedOneWithoutWorkspaceInput
+  levelUpTestResults?: Prisma.LevelUpTestResultUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpCombines?: Prisma.LevelUpCombineUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpSnapshots?: Prisma.LevelUpRatingSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
+  graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
+  reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
+}
+
+export type WorkspaceCreateOrConnectWithoutLifeModelSnapshotsInput = {
+  where: Prisma.WorkspaceWhereUniqueInput
+  create: Prisma.XOR<Prisma.WorkspaceCreateWithoutLifeModelSnapshotsInput, Prisma.WorkspaceUncheckedCreateWithoutLifeModelSnapshotsInput>
+}
+
+export type WorkspaceUpsertWithoutLifeModelSnapshotsInput = {
+  update: Prisma.XOR<Prisma.WorkspaceUpdateWithoutLifeModelSnapshotsInput, Prisma.WorkspaceUncheckedUpdateWithoutLifeModelSnapshotsInput>
+  create: Prisma.XOR<Prisma.WorkspaceCreateWithoutLifeModelSnapshotsInput, Prisma.WorkspaceUncheckedCreateWithoutLifeModelSnapshotsInput>
+  where?: Prisma.WorkspaceWhereInput
+}
+
+export type WorkspaceUpdateToOneWithWhereWithoutLifeModelSnapshotsInput = {
+  where?: Prisma.WorkspaceWhereInput
+  data: Prisma.XOR<Prisma.WorkspaceUpdateWithoutLifeModelSnapshotsInput, Prisma.WorkspaceUncheckedUpdateWithoutLifeModelSnapshotsInput>
+}
+
+export type WorkspaceUpdateWithoutLifeModelSnapshotsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  ownerUser?: Prisma.UserUpdateOneWithoutOwnedWorkspacesNestedInput
+  members?: Prisma.WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
+  approvedEmails?: Prisma.ApprovedEmailUpdateManyWithoutWorkspaceNestedInput
+  persons?: Prisma.PersonUpdateManyWithoutWorkspaceNestedInput
+  events?: Prisma.EventUpdateManyWithoutWorkspaceNestedInput
+  interactions?: Prisma.InteractionUpdateManyWithoutWorkspaceNestedInput
+  plans?: Prisma.PlanUpdateManyWithoutWorkspaceNestedInput
+  places?: Prisma.PlaceUpdateManyWithoutWorkspaceNestedInput
+  placeNotes?: Prisma.PlaceNoteUpdateManyWithoutWorkspaceNestedInput
+  notes?: Prisma.NoteUpdateManyWithoutWorkspaceNestedInput
+  theorySnapshots?: Prisma.TheorySnapshotUpdateManyWithoutWorkspaceNestedInput
+  groups?: Prisma.GroupUpdateManyWithoutWorkspaceNestedInput
+  items?: Prisma.ItemUpdateManyWithoutWorkspaceNestedInput
+  itemDefinitions?: Prisma.ItemDefinitionUpdateManyWithoutWorkspaceNestedInput
+  inventoryLots?: Prisma.InventoryLotUpdateManyWithoutWorkspaceNestedInput
+  supplierProfiles?: Prisma.SupplierProfileUpdateManyWithoutWorkspaceNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUpdateManyWithoutWorkspaceNestedInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutWorkspaceNestedInput
+  importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
+  aiProviderCredentials?: Prisma.AiProviderCredentialUpdateManyWithoutWorkspaceNestedInput
+  aiAnalysisRuns?: Prisma.AiAnalysisRunUpdateManyWithoutWorkspaceNestedInput
+  noteAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutWorkspaceNestedInput
+  noteSuggestions?: Prisma.NoteSuggestionUpdateManyWithoutWorkspaceNestedInput
+  stagedItems?: Prisma.StagedInteractionUpdateManyWithoutWorkspaceNestedInput
+  rules?: Prisma.RuleUpdateManyWithoutWorkspaceNestedInput
+  ruleRuns?: Prisma.RuleRunUpdateManyWithoutWorkspaceNestedInput
+  apiKeys?: Prisma.ApiKeyUpdateManyWithoutWorkspaceNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutWorkspaceNestedInput
+  calendarConnections?: Prisma.CalendarConnectionUpdateManyWithoutWorkspaceNestedInput
+  calendarEventLinks?: Prisma.CalendarEventLinkUpdateManyWithoutWorkspaceNestedInput
+  gmailConnections?: Prisma.GmailConnectionUpdateManyWithoutWorkspaceNestedInput
+  gmailMessageLinks?: Prisma.GmailMessageLinkUpdateManyWithoutWorkspaceNestedInput
+  importJobs?: Prisma.ImportJobUpdateManyWithoutWorkspaceNestedInput
+  importStagedVisits?: Prisma.ImportStagedVisitUpdateManyWithoutWorkspaceNestedInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUpdateManyWithoutWorkspaceNestedInput
+  assistantMessages?: Prisma.AssistantMessageUpdateManyWithoutWorkspaceNestedInput
+  eraConnections?: Prisma.EraConnectionUpdateManyWithoutWorkspaceNestedInput
+  eraAccountLinks?: Prisma.EraAccountLinkUpdateManyWithoutWorkspaceNestedInput
+  eraTransactionLinks?: Prisma.EraTransactionLinkUpdateManyWithoutWorkspaceNestedInput
+  levelUpProfile?: Prisma.LevelUpProfileUpdateOneWithoutWorkspaceNestedInput
+  levelUpTestResults?: Prisma.LevelUpTestResultUpdateManyWithoutWorkspaceNestedInput
+  levelUpCombines?: Prisma.LevelUpCombineUpdateManyWithoutWorkspaceNestedInput
+  levelUpSnapshots?: Prisma.LevelUpRatingSnapshotUpdateManyWithoutWorkspaceNestedInput
+  levelUpTrainingSets?: Prisma.LevelUpTrainingSetUpdateManyWithoutWorkspaceNestedInput
+  levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUpdateManyWithoutWorkspaceNestedInput
+  levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
+  graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
+  reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
+}
+
+export type WorkspaceUncheckedUpdateWithoutLifeModelSnapshotsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  ownerUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  members?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
+  approvedEmails?: Prisma.ApprovedEmailUncheckedUpdateManyWithoutWorkspaceNestedInput
+  persons?: Prisma.PersonUncheckedUpdateManyWithoutWorkspaceNestedInput
+  events?: Prisma.EventUncheckedUpdateManyWithoutWorkspaceNestedInput
+  interactions?: Prisma.InteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  plans?: Prisma.PlanUncheckedUpdateManyWithoutWorkspaceNestedInput
+  places?: Prisma.PlaceUncheckedUpdateManyWithoutWorkspaceNestedInput
+  placeNotes?: Prisma.PlaceNoteUncheckedUpdateManyWithoutWorkspaceNestedInput
+  notes?: Prisma.NoteUncheckedUpdateManyWithoutWorkspaceNestedInput
+  theorySnapshots?: Prisma.TheorySnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
   groups?: Prisma.GroupUncheckedUpdateManyWithoutWorkspaceNestedInput
   items?: Prisma.ItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   itemDefinitions?: Prisma.ItemDefinitionUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -11532,6 +11971,7 @@ export type WorkspaceCreateWithoutAssistantMessagesInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutAssistantMessagesInput = {
@@ -11594,6 +12034,7 @@ export type WorkspaceUncheckedCreateWithoutAssistantMessagesInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutAssistantMessagesInput = {
@@ -11672,6 +12113,7 @@ export type WorkspaceUpdateWithoutAssistantMessagesInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutAssistantMessagesInput = {
@@ -11734,6 +12176,7 @@ export type WorkspaceUncheckedUpdateWithoutAssistantMessagesInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutLevelUpProfileInput = {
@@ -11796,6 +12239,7 @@ export type WorkspaceCreateWithoutLevelUpProfileInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutLevelUpProfileInput = {
@@ -11858,6 +12302,7 @@ export type WorkspaceUncheckedCreateWithoutLevelUpProfileInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutLevelUpProfileInput = {
@@ -11936,6 +12381,7 @@ export type WorkspaceUpdateWithoutLevelUpProfileInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutLevelUpProfileInput = {
@@ -11998,6 +12444,7 @@ export type WorkspaceUncheckedUpdateWithoutLevelUpProfileInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutLevelUpTestResultsInput = {
@@ -12060,6 +12507,7 @@ export type WorkspaceCreateWithoutLevelUpTestResultsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutLevelUpTestResultsInput = {
@@ -12122,6 +12570,7 @@ export type WorkspaceUncheckedCreateWithoutLevelUpTestResultsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutLevelUpTestResultsInput = {
@@ -12200,6 +12649,7 @@ export type WorkspaceUpdateWithoutLevelUpTestResultsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutLevelUpTestResultsInput = {
@@ -12262,6 +12712,7 @@ export type WorkspaceUncheckedUpdateWithoutLevelUpTestResultsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutLevelUpCombinesInput = {
@@ -12324,6 +12775,7 @@ export type WorkspaceCreateWithoutLevelUpCombinesInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutLevelUpCombinesInput = {
@@ -12386,6 +12838,7 @@ export type WorkspaceUncheckedCreateWithoutLevelUpCombinesInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutLevelUpCombinesInput = {
@@ -12464,6 +12917,7 @@ export type WorkspaceUpdateWithoutLevelUpCombinesInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutLevelUpCombinesInput = {
@@ -12526,6 +12980,7 @@ export type WorkspaceUncheckedUpdateWithoutLevelUpCombinesInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutLevelUpSnapshotsInput = {
@@ -12588,6 +13043,7 @@ export type WorkspaceCreateWithoutLevelUpSnapshotsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutLevelUpSnapshotsInput = {
@@ -12650,6 +13106,7 @@ export type WorkspaceUncheckedCreateWithoutLevelUpSnapshotsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutLevelUpSnapshotsInput = {
@@ -12728,6 +13185,7 @@ export type WorkspaceUpdateWithoutLevelUpSnapshotsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutLevelUpSnapshotsInput = {
@@ -12790,6 +13248,7 @@ export type WorkspaceUncheckedUpdateWithoutLevelUpSnapshotsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutLevelUpTrainingSetsInput = {
@@ -12852,6 +13311,7 @@ export type WorkspaceCreateWithoutLevelUpTrainingSetsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutLevelUpTrainingSetsInput = {
@@ -12914,6 +13374,7 @@ export type WorkspaceUncheckedCreateWithoutLevelUpTrainingSetsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutLevelUpTrainingSetsInput = {
@@ -12992,6 +13453,7 @@ export type WorkspaceUpdateWithoutLevelUpTrainingSetsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutLevelUpTrainingSetsInput = {
@@ -13054,6 +13516,7 @@ export type WorkspaceUncheckedUpdateWithoutLevelUpTrainingSetsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutLevelUpExercisesInput = {
@@ -13116,6 +13579,7 @@ export type WorkspaceCreateWithoutLevelUpExercisesInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutLevelUpExercisesInput = {
@@ -13178,6 +13642,7 @@ export type WorkspaceUncheckedCreateWithoutLevelUpExercisesInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutLevelUpExercisesInput = {
@@ -13256,6 +13721,7 @@ export type WorkspaceUpdateWithoutLevelUpExercisesInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutLevelUpExercisesInput = {
@@ -13318,6 +13784,7 @@ export type WorkspaceUncheckedUpdateWithoutLevelUpExercisesInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutLevelUpProgramsInput = {
@@ -13380,6 +13847,7 @@ export type WorkspaceCreateWithoutLevelUpProgramsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutLevelUpProgramsInput = {
@@ -13442,6 +13910,7 @@ export type WorkspaceUncheckedCreateWithoutLevelUpProgramsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutLevelUpProgramsInput = {
@@ -13520,6 +13989,7 @@ export type WorkspaceUpdateWithoutLevelUpProgramsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutLevelUpProgramsInput = {
@@ -13582,6 +14052,7 @@ export type WorkspaceUncheckedUpdateWithoutLevelUpProgramsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutLevelUpProgramDaysInput = {
@@ -13644,6 +14115,7 @@ export type WorkspaceCreateWithoutLevelUpProgramDaysInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutLevelUpProgramDaysInput = {
@@ -13706,6 +14178,7 @@ export type WorkspaceUncheckedCreateWithoutLevelUpProgramDaysInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutLevelUpProgramDaysInput = {
@@ -13784,6 +14257,7 @@ export type WorkspaceUpdateWithoutLevelUpProgramDaysInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutLevelUpProgramDaysInput = {
@@ -13846,6 +14320,7 @@ export type WorkspaceUncheckedUpdateWithoutLevelUpProgramDaysInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutLevelUpProgramEntriesInput = {
@@ -13908,6 +14383,7 @@ export type WorkspaceCreateWithoutLevelUpProgramEntriesInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutLevelUpProgramEntriesInput = {
@@ -13970,6 +14446,7 @@ export type WorkspaceUncheckedCreateWithoutLevelUpProgramEntriesInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutLevelUpProgramEntriesInput = {
@@ -14048,6 +14525,7 @@ export type WorkspaceUpdateWithoutLevelUpProgramEntriesInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutLevelUpProgramEntriesInput = {
@@ -14110,6 +14588,7 @@ export type WorkspaceUncheckedUpdateWithoutLevelUpProgramEntriesInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutLevelUpSessionsInput = {
@@ -14172,6 +14651,7 @@ export type WorkspaceCreateWithoutLevelUpSessionsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutLevelUpSessionsInput = {
@@ -14234,6 +14714,7 @@ export type WorkspaceUncheckedCreateWithoutLevelUpSessionsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutLevelUpSessionsInput = {
@@ -14312,6 +14793,7 @@ export type WorkspaceUpdateWithoutLevelUpSessionsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutLevelUpSessionsInput = {
@@ -14374,6 +14856,7 @@ export type WorkspaceUncheckedUpdateWithoutLevelUpSessionsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutLevelUpBodyMetricsInput = {
@@ -14436,6 +14919,7 @@ export type WorkspaceCreateWithoutLevelUpBodyMetricsInput = {
   levelUpSessions?: Prisma.LevelUpSessionCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutLevelUpBodyMetricsInput = {
@@ -14498,6 +14982,7 @@ export type WorkspaceUncheckedCreateWithoutLevelUpBodyMetricsInput = {
   levelUpSessions?: Prisma.LevelUpSessionUncheckedCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutLevelUpBodyMetricsInput = {
@@ -14576,6 +15061,7 @@ export type WorkspaceUpdateWithoutLevelUpBodyMetricsInput = {
   levelUpSessions?: Prisma.LevelUpSessionUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutLevelUpBodyMetricsInput = {
@@ -14638,6 +15124,7 @@ export type WorkspaceUncheckedUpdateWithoutLevelUpBodyMetricsInput = {
   levelUpSessions?: Prisma.LevelUpSessionUncheckedUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutLevelUpBadgeUnlocksInput = {
@@ -14700,6 +15187,7 @@ export type WorkspaceCreateWithoutLevelUpBadgeUnlocksInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutLevelUpBadgeUnlocksInput = {
@@ -14762,6 +15250,7 @@ export type WorkspaceUncheckedCreateWithoutLevelUpBadgeUnlocksInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutLevelUpBadgeUnlocksInput = {
@@ -14840,6 +15329,7 @@ export type WorkspaceUpdateWithoutLevelUpBadgeUnlocksInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutLevelUpBadgeUnlocksInput = {
@@ -14902,6 +15392,7 @@ export type WorkspaceUncheckedUpdateWithoutLevelUpBadgeUnlocksInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutLevelUpTargetBuildsInput = {
@@ -14964,6 +15455,7 @@ export type WorkspaceCreateWithoutLevelUpTargetBuildsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutLevelUpTargetBuildsInput = {
@@ -15026,6 +15518,7 @@ export type WorkspaceUncheckedCreateWithoutLevelUpTargetBuildsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutLevelUpTargetBuildsInput = {
@@ -15104,6 +15597,7 @@ export type WorkspaceUpdateWithoutLevelUpTargetBuildsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutLevelUpTargetBuildsInput = {
@@ -15166,6 +15660,7 @@ export type WorkspaceUncheckedUpdateWithoutLevelUpTargetBuildsInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutGraphEventsInput = {
@@ -15228,6 +15723,7 @@ export type WorkspaceCreateWithoutGraphEventsInput = {
   levelUpSessions?: Prisma.LevelUpSessionCreateNestedManyWithoutWorkspaceInput
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutGraphEventsInput = {
@@ -15290,6 +15786,7 @@ export type WorkspaceUncheckedCreateWithoutGraphEventsInput = {
   levelUpSessions?: Prisma.LevelUpSessionUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutGraphEventsInput = {
@@ -15368,6 +15865,7 @@ export type WorkspaceUpdateWithoutGraphEventsInput = {
   levelUpSessions?: Prisma.LevelUpSessionUpdateManyWithoutWorkspaceNestedInput
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutGraphEventsInput = {
@@ -15430,6 +15928,7 @@ export type WorkspaceUncheckedUpdateWithoutGraphEventsInput = {
   levelUpSessions?: Prisma.LevelUpSessionUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutReviewItemsInput = {
@@ -15492,6 +15991,7 @@ export type WorkspaceCreateWithoutReviewItemsInput = {
   levelUpSessions?: Prisma.LevelUpSessionCreateNestedManyWithoutWorkspaceInput
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutReviewItemsInput = {
@@ -15554,6 +16054,7 @@ export type WorkspaceUncheckedCreateWithoutReviewItemsInput = {
   levelUpSessions?: Prisma.LevelUpSessionUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutReviewItemsInput = {
@@ -15632,6 +16133,7 @@ export type WorkspaceUpdateWithoutReviewItemsInput = {
   levelUpSessions?: Prisma.LevelUpSessionUpdateManyWithoutWorkspaceNestedInput
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutReviewItemsInput = {
@@ -15694,6 +16196,7 @@ export type WorkspaceUncheckedUpdateWithoutReviewItemsInput = {
   levelUpSessions?: Prisma.LevelUpSessionUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateManyOwnerUserInput = {
@@ -15765,6 +16268,7 @@ export type WorkspaceUpdateWithoutOwnerUserInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutOwnerUserInput = {
@@ -15827,6 +16331,7 @@ export type WorkspaceUncheckedUpdateWithoutOwnerUserInput = {
   levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateManyWithoutOwnerUserInput = {
@@ -15896,6 +16401,7 @@ export type WorkspaceCountOutputType = {
   levelUpBodyMetrics: number
   graphEvents: number
   reviewItems: number
+  lifeModelSnapshots: number
 }
 
 export type WorkspaceCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -15951,6 +16457,7 @@ export type WorkspaceCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensi
   levelUpBodyMetrics?: boolean | WorkspaceCountOutputTypeCountLevelUpBodyMetricsArgs
   graphEvents?: boolean | WorkspaceCountOutputTypeCountGraphEventsArgs
   reviewItems?: boolean | WorkspaceCountOutputTypeCountReviewItemsArgs
+  lifeModelSnapshots?: boolean | WorkspaceCountOutputTypeCountLifeModelSnapshotsArgs
 }
 
 /**
@@ -16327,6 +16834,13 @@ export type WorkspaceCountOutputTypeCountReviewItemsArgs<ExtArgs extends runtime
   where?: Prisma.ReviewItemWhereInput
 }
 
+/**
+ * WorkspaceCountOutputType without action
+ */
+export type WorkspaceCountOutputTypeCountLifeModelSnapshotsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.LifeModelSnapshotWhereInput
+}
+
 
 export type WorkspaceSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -16390,6 +16904,7 @@ export type WorkspaceSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   levelUpBodyMetrics?: boolean | Prisma.Workspace$levelUpBodyMetricsArgs<ExtArgs>
   graphEvents?: boolean | Prisma.Workspace$graphEventsArgs<ExtArgs>
   reviewItems?: boolean | Prisma.Workspace$reviewItemsArgs<ExtArgs>
+  lifeModelSnapshots?: boolean | Prisma.Workspace$lifeModelSnapshotsArgs<ExtArgs>
   _count?: boolean | Prisma.WorkspaceCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["workspace"]>
 
@@ -16481,6 +16996,7 @@ export type WorkspaceInclude<ExtArgs extends runtime.Types.Extensions.InternalAr
   levelUpBodyMetrics?: boolean | Prisma.Workspace$levelUpBodyMetricsArgs<ExtArgs>
   graphEvents?: boolean | Prisma.Workspace$graphEventsArgs<ExtArgs>
   reviewItems?: boolean | Prisma.Workspace$reviewItemsArgs<ExtArgs>
+  lifeModelSnapshots?: boolean | Prisma.Workspace$lifeModelSnapshotsArgs<ExtArgs>
   _count?: boolean | Prisma.WorkspaceCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type WorkspaceIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -16547,6 +17063,7 @@ export type $WorkspacePayload<ExtArgs extends runtime.Types.Extensions.InternalA
     levelUpBodyMetrics: Prisma.$LevelUpBodyMetricPayload<ExtArgs>[]
     graphEvents: Prisma.$GraphEventPayload<ExtArgs>[]
     reviewItems: Prisma.$ReviewItemPayload<ExtArgs>[]
+    lifeModelSnapshots: Prisma.$LifeModelSnapshotPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -17004,6 +17521,7 @@ export interface Prisma__WorkspaceClient<T, Null = never, ExtArgs extends runtim
   levelUpBodyMetrics<T extends Prisma.Workspace$levelUpBodyMetricsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Workspace$levelUpBodyMetricsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LevelUpBodyMetricPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   graphEvents<T extends Prisma.Workspace$graphEventsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Workspace$graphEventsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$GraphEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   reviewItems<T extends Prisma.Workspace$reviewItemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Workspace$reviewItemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReviewItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  lifeModelSnapshots<T extends Prisma.Workspace$lifeModelSnapshotsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Workspace$lifeModelSnapshotsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LifeModelSnapshotPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -18722,6 +19240,30 @@ export type Workspace$reviewItemsArgs<ExtArgs extends runtime.Types.Extensions.I
   take?: number
   skip?: number
   distinct?: Prisma.ReviewItemScalarFieldEnum | Prisma.ReviewItemScalarFieldEnum[]
+}
+
+/**
+ * Workspace.lifeModelSnapshots
+ */
+export type Workspace$lifeModelSnapshotsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the LifeModelSnapshot
+   */
+  select?: Prisma.LifeModelSnapshotSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the LifeModelSnapshot
+   */
+  omit?: Prisma.LifeModelSnapshotOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.LifeModelSnapshotInclude<ExtArgs> | null
+  where?: Prisma.LifeModelSnapshotWhereInput
+  orderBy?: Prisma.LifeModelSnapshotOrderByWithRelationInput | Prisma.LifeModelSnapshotOrderByWithRelationInput[]
+  cursor?: Prisma.LifeModelSnapshotWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.LifeModelSnapshotScalarFieldEnum | Prisma.LifeModelSnapshotScalarFieldEnum[]
 }
 
 /**

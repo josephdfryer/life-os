@@ -1,0 +1,21 @@
+{
+  "name": "@life-os/intelligence",
+  "version": "0.0.1",
+  "private": true,
+  "main": "./index.ts",
+  "types": "./index.ts",
+  "exports": {
+    ".": "./index.ts"
+  },
+  "dependencies": {
+    "@life-os/alignment": "*",
+    "@life-os/db": "*"
+  },
+  "scripts": {
+    "test": "tsx --test tests/*.test.ts",
+    "type-check": "tsc --noEmit --moduleResolution bundler --module esnext --target es2022 --strict index.ts src/sources.ts src/synthesize.ts src/snapshots.ts src/types.ts src/life-model.ts"
+  },
+  "devDependencies": {
+    "tsx": "^4.22.4"
+  }
+}

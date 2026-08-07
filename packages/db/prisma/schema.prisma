@@ -87,6 +87,7 @@ model Workspace {
   levelUpBodyMetrics   LevelUpBodyMetric[]
   graphEvents          GraphEvent[]
   reviewItems          ReviewItem[]
+  lifeModelSnapshots   LifeModelSnapshot[]
 
   @@index([ownerUserId])
   @@index([status])
@@ -1588,6 +1589,72 @@ model TheorySnapshotSource {
 
   @@index([snapshotId])
   @@index([sourceType, sourceId])
+}
+
+// Whole-life synthesis (packages/intelligence, Track A6) — versioned exactly
+// like TheorySnapshot above (demote-current-then-insert in one transaction),
+// but workspace-scoped rather than person-scoped: TheorySnapshot answers
+// "who is this person", LifeModelSnapshot answers "what's true across the
+// whole graph right now". A snapshot is a container; LifeModelClaim rows are
+// the actual statements, each independently typed, evidenced, and dated —
+// deliberately more granular than TheorySnapshot's single markdownBody, so a
+// claim can be filtered/queried/re-derived on its own.
+model LifeModelSnapshot {
+  id            String    @id @default(cuid())
+  workspaceId   String    @default("default-workspace")
+  workspace     Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  version       Int
+  summary       String
+
+  // current | archived | draft | rejected — same vocabulary as TheorySnapshot.status
+  status        String    @default("current")
+
+  modelId       String?
+  promptVersion String?
+
+  synthesizedAt DateTime  @default(now())
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  claims        LifeModelClaim[]
+
+  @@index([workspaceId, version])
+  @@index([workspaceId, status])
+}
+
+model LifeModelClaim {
+  id           String            @id @default(cuid())
+  snapshotId   String
+  snapshot     LifeModelSnapshot @relation(fields: [snapshotId], references: [id], onDelete: Cascade)
+
+  // observed | inferred | declared | tension
+  kind         String
+  statement    String
+  confidence   Float?
+
+  // The primitive this claim is about, if it's about one specific thing
+  // rather than the whole graph.
+  subjectType  String?
+  subjectId    String?
+
+  // The time range the claim draws on, if bounded — an inferred pattern
+  // might cover the last 90 days; a tension is as of the snapshot's
+  // synthesizedAt and has no window.
+  windowStart  DateTime?
+  windowEnd    DateTime?
+
+  // JSON array of { sourceType, sourceId } — the provenance trail, same
+  // shape as TheorySnapshotSource's sourceType/sourceId pair, just inlined
+  // per-claim instead of a join table (a claim's evidence is small and
+  // claim-specific, unlike a whole snapshot's).
+  evidence     String?
+
+  createdAt    DateTime          @default(now())
+
+  @@index([snapshotId])
+  @@index([kind])
+  @@index([subjectType, subjectId])
 }
 
 // ─────────────────────────────────────────────

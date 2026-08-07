@@ -103,6 +103,8 @@ export const ModelName = {
   Note: 'Note',
   TheorySnapshot: 'TheorySnapshot',
   TheorySnapshotSource: 'TheorySnapshotSource',
+  LifeModelSnapshot: 'LifeModelSnapshot',
+  LifeModelClaim: 'LifeModelClaim',
   StateDefinition: 'StateDefinition',
   State: 'State',
   AssistantMessage: 'AssistantMessage',
@@ -1052,6 +1054,39 @@ export const TheorySnapshotSourceScalarFieldEnum = {
 } as const
 
 export type TheorySnapshotSourceScalarFieldEnum = (typeof TheorySnapshotSourceScalarFieldEnum)[keyof typeof TheorySnapshotSourceScalarFieldEnum]
+
+
+export const LifeModelSnapshotScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  version: 'version',
+  summary: 'summary',
+  status: 'status',
+  modelId: 'modelId',
+  promptVersion: 'promptVersion',
+  synthesizedAt: 'synthesizedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type LifeModelSnapshotScalarFieldEnum = (typeof LifeModelSnapshotScalarFieldEnum)[keyof typeof LifeModelSnapshotScalarFieldEnum]
+
+
+export const LifeModelClaimScalarFieldEnum = {
+  id: 'id',
+  snapshotId: 'snapshotId',
+  kind: 'kind',
+  statement: 'statement',
+  confidence: 'confidence',
+  subjectType: 'subjectType',
+  subjectId: 'subjectId',
+  windowStart: 'windowStart',
+  windowEnd: 'windowEnd',
+  evidence: 'evidence',
+  createdAt: 'createdAt'
+} as const
+
+export type LifeModelClaimScalarFieldEnum = (typeof LifeModelClaimScalarFieldEnum)[keyof typeof LifeModelClaimScalarFieldEnum]
 
 
 export const StateDefinitionScalarFieldEnum = {

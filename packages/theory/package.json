@@ -8,6 +8,6 @@
     ".": "./index.ts"
   },
   "dependencies": {
-    "@life-os/db": "*"
+    "@life-os/intelligence": "*"
   }
 }

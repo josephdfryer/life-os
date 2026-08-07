@@ -57,3 +57,35 @@ export const THEORY_STATUS = {
 } as const
 
 export type TheoryStatus = (typeof THEORY_STATUS)[keyof typeof THEORY_STATUS]
+
+// Whole-life model — derived interpretation across the entire graph, not one
+// person. Same status vocabulary as Theory of Person; reusing THEORY_STATUS
+// rather than declaring a second identical const.
+
+export type LifeModelClaimKind = "observed" | "inferred" | "declared" | "tension"
+
+export type LifeModelEvidenceRef = {
+  sourceType: string
+  sourceId: string
+  detail?: Record<string, unknown>
+}
+
+export type LifeModelClaimInput = {
+  kind: LifeModelClaimKind
+  statement: string
+  confidence: number | null
+  subjectType: string | null
+  subjectId: string | null
+  windowStart?: Date | null
+  windowEnd?: Date | null
+  evidence: LifeModelEvidenceRef[]
+}
+
+// The shape produced by synthesizeLifeModel and consumed by
+// createLifeModelSnapshot.
+export type LifeModelSynthesis = {
+  summary: string
+  claims: LifeModelClaimInput[]
+  modelId?: string
+  promptVersion?: string
+}

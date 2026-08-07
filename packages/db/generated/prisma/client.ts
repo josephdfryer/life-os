@@ -302,6 +302,16 @@ export type TheorySnapshot = Prisma.TheorySnapshotModel
  */
 export type TheorySnapshotSource = Prisma.TheorySnapshotSourceModel
 /**
+ * Model LifeModelSnapshot
+ * 
+ */
+export type LifeModelSnapshot = Prisma.LifeModelSnapshotModel
+/**
+ * Model LifeModelClaim
+ * 
+ */
+export type LifeModelClaim = Prisma.LifeModelClaimModel
+/**
  * Model StateDefinition
  * 
  */

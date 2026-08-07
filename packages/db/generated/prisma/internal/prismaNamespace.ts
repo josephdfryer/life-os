@@ -436,6 +436,8 @@ export const ModelName = {
   Note: 'Note',
   TheorySnapshot: 'TheorySnapshot',
   TheorySnapshotSource: 'TheorySnapshotSource',
+  LifeModelSnapshot: 'LifeModelSnapshot',
+  LifeModelClaim: 'LifeModelClaim',
   StateDefinition: 'StateDefinition',
   State: 'State',
   AssistantMessage: 'AssistantMessage',
@@ -470,7 +472,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "workspace" | "workspaceMember" | "approvedEmail" | "person" | "user" | "role" | "permission" | "userRole" | "rolePermission" | "apiKey" | "apiKeyScope" | "auditLog" | "calendarConnection" | "calendarEventLink" | "gmailConnection" | "gmailMessageLink" | "eraConnection" | "eraAccountLink" | "eraTransactionLink" | "rule" | "ruleRun" | "stagedInteraction" | "event" | "interaction" | "interactionParticipant" | "plan" | "planExpectedPerson" | "place" | "importJob" | "importStagedVisit" | "placeNote" | "item" | "itemDefinition" | "inventoryLot" | "assembly" | "itemInteraction" | "importedFile" | "aiProviderCredential" | "aiAnalysisRun" | "noteAnalysisRun" | "noteSuggestion" | "group" | "supplierProfile" | "purchaseOrder" | "purchaseOrderLine" | "purchaseReceiptLine" | "personGroup" | "groupGroup" | "placeGroup" | "note" | "theorySnapshot" | "theorySnapshotSource" | "stateDefinition" | "state" | "assistantMessage" | "levelUpProfile" | "levelUpTestResult" | "levelUpCombine" | "levelUpRatingSnapshot" | "levelUpTrainingSet" | "levelUpExercise" | "levelUpProgram" | "levelUpProgramDay" | "levelUpProgramEntry" | "levelUpSession" | "levelUpBodyMetric" | "levelUpBadgeUnlock" | "levelUpTargetBuild" | "graphEvent" | "graphEventReceipt" | "reviewItem"
+    modelProps: "workspace" | "workspaceMember" | "approvedEmail" | "person" | "user" | "role" | "permission" | "userRole" | "rolePermission" | "apiKey" | "apiKeyScope" | "auditLog" | "calendarConnection" | "calendarEventLink" | "gmailConnection" | "gmailMessageLink" | "eraConnection" | "eraAccountLink" | "eraTransactionLink" | "rule" | "ruleRun" | "stagedInteraction" | "event" | "interaction" | "interactionParticipant" | "plan" | "planExpectedPerson" | "place" | "importJob" | "importStagedVisit" | "placeNote" | "item" | "itemDefinition" | "inventoryLot" | "assembly" | "itemInteraction" | "importedFile" | "aiProviderCredential" | "aiAnalysisRun" | "noteAnalysisRun" | "noteSuggestion" | "group" | "supplierProfile" | "purchaseOrder" | "purchaseOrderLine" | "purchaseReceiptLine" | "personGroup" | "groupGroup" | "placeGroup" | "note" | "theorySnapshot" | "theorySnapshotSource" | "lifeModelSnapshot" | "lifeModelClaim" | "stateDefinition" | "state" | "assistantMessage" | "levelUpProfile" | "levelUpTestResult" | "levelUpCombine" | "levelUpRatingSnapshot" | "levelUpTrainingSet" | "levelUpExercise" | "levelUpProgram" | "levelUpProgramDay" | "levelUpProgramEntry" | "levelUpSession" | "levelUpBodyMetric" | "levelUpBadgeUnlock" | "levelUpTargetBuild" | "graphEvent" | "graphEventReceipt" | "reviewItem"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -4322,6 +4324,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    LifeModelSnapshot: {
+      payload: Prisma.$LifeModelSnapshotPayload<ExtArgs>
+      fields: Prisma.LifeModelSnapshotFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.LifeModelSnapshotFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LifeModelSnapshotPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.LifeModelSnapshotFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LifeModelSnapshotPayload>
+        }
+        findFirst: {
+          args: Prisma.LifeModelSnapshotFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LifeModelSnapshotPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.LifeModelSnapshotFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LifeModelSnapshotPayload>
+        }
+        findMany: {
+          args: Prisma.LifeModelSnapshotFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LifeModelSnapshotPayload>[]
+        }
+        create: {
+          args: Prisma.LifeModelSnapshotCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LifeModelSnapshotPayload>
+        }
+        createMany: {
+          args: Prisma.LifeModelSnapshotCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.LifeModelSnapshotCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LifeModelSnapshotPayload>[]
+        }
+        delete: {
+          args: Prisma.LifeModelSnapshotDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LifeModelSnapshotPayload>
+        }
+        update: {
+          args: Prisma.LifeModelSnapshotUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LifeModelSnapshotPayload>
+        }
+        deleteMany: {
+          args: Prisma.LifeModelSnapshotDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.LifeModelSnapshotUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.LifeModelSnapshotUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LifeModelSnapshotPayload>[]
+        }
+        upsert: {
+          args: Prisma.LifeModelSnapshotUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LifeModelSnapshotPayload>
+        }
+        aggregate: {
+          args: Prisma.LifeModelSnapshotAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateLifeModelSnapshot>
+        }
+        groupBy: {
+          args: Prisma.LifeModelSnapshotGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LifeModelSnapshotGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.LifeModelSnapshotCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LifeModelSnapshotCountAggregateOutputType> | number
+        }
+      }
+    }
+    LifeModelClaim: {
+      payload: Prisma.$LifeModelClaimPayload<ExtArgs>
+      fields: Prisma.LifeModelClaimFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.LifeModelClaimFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LifeModelClaimPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.LifeModelClaimFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LifeModelClaimPayload>
+        }
+        findFirst: {
+          args: Prisma.LifeModelClaimFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LifeModelClaimPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.LifeModelClaimFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LifeModelClaimPayload>
+        }
+        findMany: {
+          args: Prisma.LifeModelClaimFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LifeModelClaimPayload>[]
+        }
+        create: {
+          args: Prisma.LifeModelClaimCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LifeModelClaimPayload>
+        }
+        createMany: {
+          args: Prisma.LifeModelClaimCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.LifeModelClaimCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LifeModelClaimPayload>[]
+        }
+        delete: {
+          args: Prisma.LifeModelClaimDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LifeModelClaimPayload>
+        }
+        update: {
+          args: Prisma.LifeModelClaimUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LifeModelClaimPayload>
+        }
+        deleteMany: {
+          args: Prisma.LifeModelClaimDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.LifeModelClaimUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.LifeModelClaimUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LifeModelClaimPayload>[]
+        }
+        upsert: {
+          args: Prisma.LifeModelClaimUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LifeModelClaimPayload>
+        }
+        aggregate: {
+          args: Prisma.LifeModelClaimAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateLifeModelClaim>
+        }
+        groupBy: {
+          args: Prisma.LifeModelClaimGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LifeModelClaimGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.LifeModelClaimCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LifeModelClaimCountAggregateOutputType> | number
+        }
+      }
+    }
     StateDefinition: {
       payload: Prisma.$StateDefinitionPayload<ExtArgs>
       fields: Prisma.StateDefinitionFieldRefs
@@ -6681,6 +6831,39 @@ export const TheorySnapshotSourceScalarFieldEnum = {
 export type TheorySnapshotSourceScalarFieldEnum = (typeof TheorySnapshotSourceScalarFieldEnum)[keyof typeof TheorySnapshotSourceScalarFieldEnum]
 
 
+export const LifeModelSnapshotScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  version: 'version',
+  summary: 'summary',
+  status: 'status',
+  modelId: 'modelId',
+  promptVersion: 'promptVersion',
+  synthesizedAt: 'synthesizedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type LifeModelSnapshotScalarFieldEnum = (typeof LifeModelSnapshotScalarFieldEnum)[keyof typeof LifeModelSnapshotScalarFieldEnum]
+
+
+export const LifeModelClaimScalarFieldEnum = {
+  id: 'id',
+  snapshotId: 'snapshotId',
+  kind: 'kind',
+  statement: 'statement',
+  confidence: 'confidence',
+  subjectType: 'subjectType',
+  subjectId: 'subjectId',
+  windowStart: 'windowStart',
+  windowEnd: 'windowEnd',
+  evidence: 'evidence',
+  createdAt: 'createdAt'
+} as const
+
+export type LifeModelClaimScalarFieldEnum = (typeof LifeModelClaimScalarFieldEnum)[keyof typeof LifeModelClaimScalarFieldEnum]
+
+
 export const StateDefinitionScalarFieldEnum = {
   id: 'id',
   workspaceId: 'workspaceId',
@@ -7312,6 +7495,8 @@ export type GlobalOmitConfig = {
   note?: Prisma.NoteOmit
   theorySnapshot?: Prisma.TheorySnapshotOmit
   theorySnapshotSource?: Prisma.TheorySnapshotSourceOmit
+  lifeModelSnapshot?: Prisma.LifeModelSnapshotOmit
+  lifeModelClaim?: Prisma.LifeModelClaimOmit
   stateDefinition?: Prisma.StateDefinitionOmit
   state?: Prisma.StateOmit
   assistantMessage?: Prisma.AssistantMessageOmit
