@@ -380,3 +380,5 @@ function uniqueWorkspaceSlug(email: string) {
   const base = email.toLowerCase().replace(/@/g, "-").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")
   return `${base || "workspace"}-${createHash("sha1").update(email).digest("hex").slice(0, 8)}`
 }
+
+export * from "./api-key"
