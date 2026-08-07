@@ -28,7 +28,7 @@
     "scheduler:uninstall": "tsx scripts/scheduler/setup.ts -- --uninstall",
     "build": "turbo run build",
     "dev": "turbo run dev",
-    "e2e": "playwright test",
+    "e2e": "playwright test && npm run e2e:home",
     "e2e:home": "playwright test --config=playwright.home.config.ts",
     "e2e:prepare": "tsx scripts/e2e/prepare.ts",
     "db:drill": "tsx scripts/db/migration-drill.ts",

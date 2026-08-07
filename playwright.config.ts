@@ -7,6 +7,7 @@ const databaseUrl = `file:${join(tmpdir(), "life-os-e2e.db")}`
 
 export default defineConfig({
   testDir: "./tests/e2e",
+  testIgnore: /home-control-plane\.spec\.ts/,
   fullyParallel: false,
   workers: 1,
   retries: process.env.CI ? 2 : 0,
