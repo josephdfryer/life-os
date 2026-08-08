@@ -15,10 +15,14 @@ export async function GET(req: NextRequest, { params }: Params) {
   const person = await db.person.findFirst({ where: { id, workspaceId: auth.workspaceId } })
   if (!person) return NextResponse.json({ error: "Not found" }, { status: 404 })
 
+  // Bounded to the most recent 500 — a single heavily-imported person (years
+  // of synced iMessage/WhatsApp history) can otherwise return an unbounded,
+  // ever-growing response on every call.
   const interactions = await db.interaction.findMany({
     where: { personId: id, workspaceId: auth.workspaceId },
     include: { event: true, sourceFile: true },
     orderBy: { timestamp: "desc" },
+    take: 500,
   })
 
   return NextResponse.json(interactions.map((ix: typeof interactions[number]) => ({
