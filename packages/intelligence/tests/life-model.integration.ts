@@ -1,5 +1,6 @@
 import assert from "node:assert/strict"
 import { db } from "@life-os/db"
+import { encrypt } from "@life-os/db/crypto"
 import {
   synthesizeLifeModel,
   createLifeModelSnapshot,
@@ -7,6 +8,8 @@ import {
   listLifeModelSnapshots,
   recordLifeModelClaimFeedback,
   LifeModelError,
+  synthesizeLifeModelWithAi,
+  LIFE_MODEL_PROMPT_VERSION,
 } from "../index"
 
 // Run against a real (throwaway, migrated) database — the versioning
@@ -115,6 +118,41 @@ async function main() {
     () => recordLifeModelClaimFeedback({ workspaceId, claimId: "does-not-exist", action: "dismiss", actor: { type: "system" } }),
     (error: unknown) => error instanceof LifeModelError && error.code === "not_found",
   )
+
+  const graphEvents = await db.graphEvent.findMany({
+    where: { workspaceId, subjectType: "LifeModelClaim", subjectId: currentTension!.id },
+    orderBy: { occurredAt: "asc" },
+  })
+  assert.deepEqual(graphEvents.map(event => event.eventType), ["intelligence.claim.dismissed", "intelligence.claim.corrected"])
+
+  // ── AI synthesis: grounded fixture output, run receipt, and snapshot link ──
+  const evidenceNote = await db.note.create({
+    data: { workspaceId, type: "observation", timestamp: new Date(), content: "Weekly long runs have been logged consistently." },
+  })
+  const credential = await db.aiProviderCredential.create({
+    data: { workspaceId, provider: "vercel-ai-gateway", apiKeyEncrypted: encrypt("fixture-key"), modelId: "openai/gpt-5.4-mini", status: "active" },
+  })
+  const fixtureFetch = (async () => new Response(JSON.stringify({
+    choices: [{ message: { content: JSON.stringify({
+      summary: "Training is currently consistent.",
+      claims: [{
+        kind: "observed", statement: "Weekly long runs are being logged consistently.", confidence: 0.86,
+        subjectType: null, subjectId: null, windowStart: null, windowEnd: null,
+        evidence: [{ sourceType: "note", sourceId: evidenceNote.id }],
+      }],
+    }) } }],
+    usage: { prompt_tokens: 900, completion_tokens: 120, cost: 0.0042 },
+  }), { status: 200 })) as unknown as typeof fetch
+
+  const aiSynthesis = await synthesizeLifeModelWithAi(workspaceId, fixtureFetch)
+  assert.equal(aiSynthesis.claims.find(claim => claim.kind === "observed")?.evidence[0]?.sourceId, evidenceNote.id)
+  assert.equal(aiSynthesis.promptVersion, LIFE_MODEL_PROMPT_VERSION)
+  const aiSnapshotId = await createLifeModelSnapshot(workspaceId, aiSynthesis)
+  const analysisRun = await db.lifeModelAnalysisRun.findUniqueOrThrow({ where: { id: aiSynthesis.analysisRunId! } })
+  assert.equal(analysisRun.status, "completed")
+  assert.equal(analysisRun.snapshotId, aiSnapshotId)
+  assert.equal(analysisRun.credentialId, credential.id)
+  assert.equal(analysisRun.estimatedCost, 0.0042)
 
   console.log("All life-model integration assertions passed.")
 }
