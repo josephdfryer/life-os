@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server"
 import { errorEnvelopeContract } from "@life-os/contracts"
 import { InteractionStreamError, AcceptStagedInteractionError, ReviewItemError } from "@life-os/domain"
-import { TheoryError } from "@life-os/intelligence"
+import { LifeModelError, TheoryError } from "@life-os/intelligence"
 import { RuleError } from "@life-os/automation"
 
 // Every error apps/api returns uses one shape — { error: { code, message,
@@ -36,6 +36,10 @@ export function handleRouteError(error: unknown) {
     return errorResponse(error.code === "not_found" ? 404 : 400, error.code, error.message)
   }
   if (error instanceof TheoryError) {
+    const status = error.code === "not_found" ? 404 : error.code === "conflict" ? 409 : error.code === "provider" ? 502 : 400
+    return errorResponse(status, error.code, error.message)
+  }
+  if (error instanceof LifeModelError) {
     const status = error.code === "not_found" ? 404 : error.code === "conflict" ? 409 : error.code === "provider" ? 502 : 400
     return errorResponse(status, error.code, error.message)
   }

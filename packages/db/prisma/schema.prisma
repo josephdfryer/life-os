@@ -56,6 +56,8 @@ model Workspace {
   aiAnalysisRuns AiAnalysisRun[]
   noteAnalysisRuns NoteAnalysisRun[]
   theoryAnalysisRuns TheoryAnalysisRun[]
+  lifeModelAnalysisRuns LifeModelAnalysisRun[]
+  lifeModelClaimFeedback LifeModelClaimFeedback[]
   noteSuggestions NoteSuggestion[]
   stagedItems    StagedInteraction[]
   rules          Rule[]
@@ -1240,6 +1242,7 @@ model AiProviderCredential {
   analysisRuns    AiAnalysisRun[]
   noteAnalysisRuns NoteAnalysisRun[]
   theoryAnalysisRuns TheoryAnalysisRun[]
+  lifeModelAnalysisRuns LifeModelAnalysisRun[]
 
   @@unique([workspaceId, provider])
   @@index([workspaceId, status])
@@ -1330,6 +1333,34 @@ model TheoryAnalysisRun {
   @@index([workspaceId, createdAt])
   @@index([subjectPersonId, createdAt])
   @@index([subjectPersonId, status])
+}
+
+// Whole-life synthesis run receipt. Like TheoryAnalysisRun, this is not
+// unique by prompt version: the workspace evidence changes continuously, so
+// every explicit regenerate command must produce a fresh, auditable reading.
+model LifeModelAnalysisRun {
+  id              String                @id @default(cuid())
+  workspaceId     String                @default("default-workspace")
+  workspace       Workspace             @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  credentialId    String?
+  credential      AiProviderCredential? @relation(fields: [credentialId], references: [id], onDelete: SetNull)
+  snapshotId      String?
+  snapshot        LifeModelSnapshot?    @relation(fields: [snapshotId], references: [id], onDelete: SetNull)
+  createdAt       DateTime              @default(now())
+  completedAt     DateTime?
+  provider        String
+  modelId         String
+  status          String
+  promptVersion   String
+  output          String?
+  error           String?
+  inputTokens     Int?
+  outputTokens    Int?
+  estimatedCost   Float?
+
+  @@index([workspaceId, createdAt])
+  @@index([workspaceId, status])
+  @@index([snapshotId])
 }
 
 model NoteSuggestion {
@@ -1568,6 +1599,7 @@ model Note {
   groups       Group[]
   aiAnalysisRuns NoteAnalysisRun[]
   suggestions    NoteSuggestion[]
+  lifeModelClaimFeedback LifeModelClaimFeedback[]
 
   @@index([workspaceId, timestamp(sort: Desc)])
   @@index([sourceFileId])
@@ -1656,6 +1688,7 @@ model LifeModelSnapshot {
   updatedAt     DateTime  @updatedAt
 
   claims        LifeModelClaim[]
+  analysisRuns  LifeModelAnalysisRun[]
 
   @@index([workspaceId, version])
   @@index([workspaceId, status])
@@ -1689,10 +1722,36 @@ model LifeModelClaim {
   evidence     String?
 
   createdAt    DateTime          @default(now())
+  feedback     LifeModelClaimFeedback[]
 
   @@index([snapshotId])
   @@index([kind])
   @@index([subjectType, subjectId])
+}
+
+// Human judgment about a derived claim. Snapshots and claims remain
+// immutable: dismissal/correction appends this receipt instead of rewriting
+// model output. A correction also creates a Note, so declared truth enters
+// the graph through an existing primitive and can ground later synthesis.
+model LifeModelClaimFeedback {
+  id                   String         @id @default(cuid())
+  workspaceId          String         @default("default-workspace")
+  workspace            Workspace      @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  claimId              String
+  claim                LifeModelClaim @relation(fields: [claimId], references: [id], onDelete: Cascade)
+  action               String
+  replacementStatement String?
+  reason               String?
+  sourceNoteId         String?
+  sourceNote           Note?          @relation(fields: [sourceNoteId], references: [id], onDelete: SetNull)
+  actorType            String
+  actorId              String?
+  actorLabel           String?
+  createdAt            DateTime       @default(now())
+
+  @@index([workspaceId, createdAt])
+  @@index([claimId, createdAt])
+  @@index([sourceNoteId])
 }
 
 // ─────────────────────────────────────────────

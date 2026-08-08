@@ -27,9 +27,21 @@ export type {
   LifeModelEvidenceRef,
   LifeModelClaimInput,
   LifeModelSynthesis,
+  LifeModelFeedbackAction,
+  LifeModelFeedbackActor,
 } from "./src/types"
 
-export { synthesizeLifeModel, regenerateLifeModel } from "./src/life-model"
+export {
+  synthesizeLifeModel,
+  synthesizeLifeModelWithAi,
+  regenerateLifeModel,
+  validateLifeModelResponse,
+  LifeModelError,
+  LIFE_MODEL_PROMPT_VERSION,
+} from "./src/life-model"
+export { buildLifeModelEvidence } from "./src/life-model-evidence"
+export { recordLifeModelClaimFeedback } from "./src/life-model-feedback"
+export type { RecordLifeModelClaimFeedbackInput } from "./src/life-model-feedback"
 export {
   createLifeModelSnapshot,
   getCurrentLifeModelSnapshot,

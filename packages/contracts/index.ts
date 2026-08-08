@@ -169,6 +169,20 @@ export const chatMessageContract = z.object({
   message: z.string().trim().min(1).max(50_000),
 }).strict()
 
+export const lifeModelClaimFeedbackContract = z.object({
+  action: z.enum(["dismiss", "correct"]),
+  replacementStatement: z.string().trim().min(1).max(4_000).optional().nullable(),
+  reason: z.string().trim().min(1).max(2_000).optional().nullable(),
+}).strict().superRefine((value, context) => {
+  if (value.action === "correct" && !value.replacementStatement) {
+    context.addIssue({ code: "custom", path: ["replacementStatement"], message: "A corrected statement is required." })
+  }
+  if (value.action === "dismiss" && value.replacementStatement) {
+    context.addIssue({ code: "custom", path: ["replacementStatement"], message: "Dismissals cannot include a corrected statement." })
+  }
+})
+export type LifeModelClaimFeedbackInput = z.infer<typeof lifeModelClaimFeedbackContract>
+
 export type ContractIssue = {
   path: string
   message: string

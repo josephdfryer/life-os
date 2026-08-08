@@ -88,4 +88,13 @@ export type LifeModelSynthesis = {
   claims: LifeModelClaimInput[]
   modelId?: string
   promptVersion?: string
+  analysisRunId?: string
+}
+
+export type LifeModelFeedbackAction = "dismiss" | "correct"
+
+export type LifeModelFeedbackActor = {
+  type: "user" | "api_key" | "system"
+  id?: string | null
+  label?: string | null
 }

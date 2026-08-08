@@ -49,6 +49,14 @@ export async function createLifeModelSnapshot(
       select: { id: true },
     })
 
+    if (synthesis.analysisRunId) {
+      const linked = await tx.lifeModelAnalysisRun.updateMany({
+        where: { id: synthesis.analysisRunId, workspaceId },
+        data: { snapshotId: snapshot.id },
+      })
+      if (linked.count !== 1) throw new Error("Life-model analysis run was not found in this workspace.")
+    }
+
     return snapshot.id
   })
 }
@@ -58,7 +66,7 @@ export async function getCurrentLifeModelSnapshot(workspaceId: string = DEFAULT_
   return db.lifeModelSnapshot.findFirst({
     where: { workspaceId, status: THEORY_STATUS.current },
     orderBy: { version: "desc" },
-    include: { claims: { orderBy: { createdAt: "asc" } } },
+    include: { claims: { orderBy: { createdAt: "asc" }, include: { feedback: { orderBy: { createdAt: "desc" }, take: 1 } } } },
   })
 }
 
@@ -67,6 +75,7 @@ export async function listLifeModelSnapshots(workspaceId: string = DEFAULT_WORKS
   return db.lifeModelSnapshot.findMany({
     where: { workspaceId },
     orderBy: { version: "desc" },
+    take: 50,
     select: {
       id: true,
       version: true,
@@ -80,10 +89,10 @@ export async function listLifeModelSnapshots(workspaceId: string = DEFAULT_WORKS
   })
 }
 
-export async function getLifeModelSnapshotById(snapshotId: string) {
+export async function getLifeModelSnapshotById(snapshotId: string, workspaceId: string = DEFAULT_WORKSPACE) {
   const { db } = await import("@life-os/db")
-  return db.lifeModelSnapshot.findUnique({
-    where: { id: snapshotId },
-    include: { claims: { orderBy: { createdAt: "asc" } } },
+  return db.lifeModelSnapshot.findFirst({
+    where: { id: snapshotId, workspaceId },
+    include: { claims: { orderBy: { createdAt: "asc" }, include: { feedback: { orderBy: { createdAt: "desc" }, take: 1 } } } },
   })
 }

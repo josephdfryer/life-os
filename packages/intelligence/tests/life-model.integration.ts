@@ -5,6 +5,8 @@ import {
   createLifeModelSnapshot,
   getCurrentLifeModelSnapshot,
   listLifeModelSnapshots,
+  recordLifeModelClaimFeedback,
+  LifeModelError,
 } from "../index"
 
 // Run against a real (throwaway, migrated) database — the versioning
@@ -56,6 +58,11 @@ async function main() {
   const snapshot1After = await db.lifeModelSnapshot.findUniqueOrThrow({ where: { id: id1 } })
   assert.equal(snapshot1After.status, "archived", "creating a new current snapshot must archive the prior one")
 
+  // Claim ids are per-snapshot rows, not stable across regenerations — feedback below must target
+  // a claim on the current (version 2) snapshot, not the now-archived version 1 claim captured above.
+  const currentTension = current2!.claims.find(c => c.kind === "tension" && c.subjectId === person.id)
+  assert.ok(currentTension, "the current snapshot must still carry the person's tension claim")
+
   const list = await listLifeModelSnapshots(workspaceId)
   assert.equal(list.length, 2)
   assert.equal(list[0].version, 2, "listLifeModelSnapshots must order newest-first")
@@ -67,6 +74,47 @@ async function main() {
   const synthesis3 = await synthesizeLifeModel(workspaceId)
   const stillOverdue = synthesis3.claims.some(c => c.kind === "tension" && c.subjectId === person.id)
   assert.equal(stillOverdue, false, "a fresh interaction must clear that person's relationship-gap tension")
+
+  // ── claim feedback: dismiss ──
+  const dismissed = await recordLifeModelClaimFeedback({
+    workspaceId,
+    claimId: currentTension!.id,
+    action: "dismiss",
+    reason: "Already reconnected outside the app",
+    actor: { type: "system", label: "integration-test" },
+  })
+  assert.equal(dismissed.action, "dismiss")
+  assert.equal(dismissed.sourceNoteId, null, "a dismissal must not create a Note — only a correction does")
+
+  const afterDismiss = await getCurrentLifeModelSnapshot(workspaceId)
+  const claimAfterDismiss = afterDismiss!.claims.find(c => c.id === currentTension!.id)
+  assert.equal(claimAfterDismiss!.feedback[0]?.id, dismissed.id, "the snapshot read must surface the latest feedback for its claim")
+
+  // ── claim feedback: correct — must create a Note and link it back ──
+  const corrected = await recordLifeModelClaimFeedback({
+    workspaceId,
+    claimId: currentTension!.id,
+    action: "correct",
+    replacementStatement: "Actually already back in regular contact — the graph is stale here",
+    reason: "Talked yesterday, just not logged yet",
+    actor: { type: "user", id: "u1", label: "joseph" },
+  })
+  assert.ok(corrected.sourceNoteId, "a correction must create and link a Note")
+  const sourceNote = await db.note.findUniqueOrThrow({ where: { id: corrected.sourceNoteId! } })
+  assert.equal(sourceNote.type, "intelligence_correction")
+  assert.equal(sourceNote.content, "Actually already back in regular contact — the graph is stale here")
+
+  // ── claim feedback: validation — correct without a replacement statement must reject ──
+  await assert.rejects(
+    () => recordLifeModelClaimFeedback({ workspaceId, claimId: persistedTension!.id, action: "correct", actor: { type: "system" } }),
+    (error: unknown) => error instanceof LifeModelError && error.code === "validation",
+  )
+
+  // ── claim feedback: not_found — an unknown or cross-workspace claim id must 404, not silently no-op ──
+  await assert.rejects(
+    () => recordLifeModelClaimFeedback({ workspaceId, claimId: "does-not-exist", action: "dismiss", actor: { type: "system" } }),
+    (error: unknown) => error instanceof LifeModelError && error.code === "not_found",
+  )
 
   console.log("All life-model integration assertions passed.")
 }

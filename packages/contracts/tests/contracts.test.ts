@@ -14,6 +14,7 @@ import {
   entityRefContract,
   errorEnvelopeContract,
   graphEventContract,
+  lifeModelClaimFeedbackContract,
   proposedCommandContract,
   reviewItemActionContract,
   reviewItemBulkDismissContract,
@@ -40,6 +41,13 @@ test("bulk delete contract rejects empty and oversized batches", () => {
 test("chat contract trims a valid message and rejects blank input", () => {
   assert.equal(chatMessageContract.parse({ message: "  hello  " }).message, "hello")
   assert.equal(chatMessageContract.safeParse({ message: "   " }).success, false)
+})
+
+test("life-model feedback requires replacement text only for corrections", () => {
+  assert.equal(lifeModelClaimFeedbackContract.safeParse({ action: "dismiss" }).success, true)
+  assert.equal(lifeModelClaimFeedbackContract.safeParse({ action: "correct", replacementStatement: "A more accurate claim." }).success, true)
+  assert.equal(lifeModelClaimFeedbackContract.safeParse({ action: "correct" }).success, false)
+  assert.equal(lifeModelClaimFeedbackContract.safeParse({ action: "dismiss", replacementStatement: "unexpected" }).success, false)
 })
 
 test("import confirmation requires typed results", () => {
