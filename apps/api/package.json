@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@life-os/access": "*",
+    "@life-os/automation": "*",
     "@life-os/contracts": "*",
     "@life-os/db": "*",
     "@life-os/domain": "*",
