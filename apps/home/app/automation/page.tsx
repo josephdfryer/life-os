@@ -14,6 +14,7 @@ import {
 import { db } from "@life-os/db"
 import { workspaceForHomeRequest } from "@/lib/request-access"
 import { redirect } from "next/navigation"
+import { ApplySuggestionControl, NewRuleControl, RuleControls, type EditableRule } from "@/components/AutomationRuleControls"
 
 export const metadata = { title: "Automation · Life OS" }
 
@@ -49,6 +50,7 @@ type RuleRow = {
     mode: string
     message: string | null
     targetType: string | null
+    targetId: string | null
     actionsPlanned: string | null
     actionsApplied: string | null
     ruleVersion: number
@@ -97,6 +99,7 @@ async function AutomationContent() {
             mode: true,
             message: true,
             targetType: true,
+            targetId: true,
             actionsPlanned: true,
             actionsApplied: true,
             ruleVersion: true,
@@ -154,11 +157,11 @@ async function AutomationContent() {
               <p className="still-eyebrow">Workspace rules</p>
               <h2 id="rules-heading">What the system is allowed to do</h2>
             </div>
-            <span className="stream-count">{ruleCount} {ruleCount === 1 ? "rule" : "rules"}</span>
+            <div className="automation-section-tools"><span className="stream-count">{ruleCount} {ruleCount === 1 ? "rule" : "rules"}</span><NewRuleControl triggers={registeredTriggers} actions={registeredActions.map(action => action.type)} /></div>
           </div>
           {rules.length === 0
             ? <div className="stream-message">No automation rules are configured for this workspace.</div>
-            : <div className="automation-rule-list">{rules.map(rule => <RuleCard rule={rule} key={rule.id} />)}</div>}
+            : <div className="automation-rule-list">{rules.map(rule => <RuleCard rule={rule} triggers={registeredTriggers} actions={registeredActions.map(action => action.type)} key={rule.id} />)}</div>}
         </section>
 
         <section className="automation-section" aria-labelledby="registry-heading">
@@ -183,7 +186,7 @@ function Metric({ label, value, detail }: { label: string; value: number; detail
   return <div className="automation-metric"><span>{label}</span><strong>{value}</strong><small>{detail}</small></div>
 }
 
-function RuleCard({ rule }: { rule: RuleRow }) {
+function RuleCard({ rule, triggers, actions: registeredActions }: { rule: RuleRow; triggers: string[]; actions: string[] }) {
   const conditions = decodeConditions(rule.conditions)
   const actions = decodeActions(rule.actions)
   const lastRun = rule.runs[0]
@@ -234,6 +237,8 @@ function RuleCard({ rule }: { rule: RuleRow }) {
         {rule.stopProcessing ? <span className="automation-action-pill">Stops later rules</span> : null}
       </div>
 
+      <RuleControls rule={toEditableRule(rule)} triggers={triggers} actions={registeredActions} />
+
       <details className="automation-history">
         <summary>
           <span>Run history</span>
@@ -249,10 +254,28 @@ function RuleCard({ rule }: { rule: RuleRow }) {
                 v{run.ruleVersion}{run.ruleVersion !== rule.version ? ` · current v${rule.version}` : " · current definition"} · depth {run.causationDepth}
               </span>
               <span>{run.message || run.targetType || `${countStoredActions(run.actionsApplied)} applied of ${countStoredActions(run.actionsPlanned)} planned`}</span>
+              {run.status === "suggested" && run.targetId && countStoredActions(run.actionsPlanned) > 0
+                ? <ApplySuggestionControl runId={run.id} targetId={run.targetId} actionCount={countStoredActions(run.actionsPlanned)} />
+                : null}
             </li>)}</ol>}
       </details>
     </article>
   )
+}
+
+function toEditableRule(rule: RuleRow): EditableRule & { id: string } {
+  return {
+    id: rule.id,
+    name: rule.name,
+    description: rule.description ?? "",
+    trigger: rule.trigger,
+    status: rule.status,
+    mode: rule.mode,
+    priority: rule.priority,
+    conditions: JSON.stringify(decodeConditions(rule.conditions), null, 2),
+    actions: JSON.stringify(decodeActions(rule.actions), null, 2),
+    stopProcessing: rule.stopProcessing,
+  }
 }
 
 function RuleStage({ label, title, detail }: { label: string; title: string; detail: string }) {

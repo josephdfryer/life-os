@@ -210,6 +210,8 @@ a {
 
 .stream-intro { margin: 8px 0 0; color: var(--ink-3); }
 .still-button { display: inline-flex; align-items: center; justify-content: center; min-height: 36px; padding: 8px 16px; border-radius: var(--radius-pill); font: inherit; font-size: 13px; cursor: pointer; }
+.still-button-primary { border: 1px solid var(--cognac); background: var(--cognac); color: #fff; }
+.still-button-primary:hover { border-color: var(--cognac-deep); background: var(--cognac-deep); }
 .still-button-secondary { border: 1px solid var(--border); background: transparent; color: var(--ink-2); }
 .still-button-secondary:hover { background: var(--surface-hover); color: var(--ink); }
 .still-button:disabled { cursor: wait; opacity: 0.6; }
@@ -292,6 +294,10 @@ a {
 .automation-section-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 18px; margin-bottom: 16px; }
 .automation-section-heading h2 { margin: 0; font-family: var(--font-display); font-size: 27px; font-weight: 400; letter-spacing: -.015em; }
 .automation-caption { max-width: 280px; color: var(--ink-3); font-size: 11px; text-align: right; }
+.automation-section-tools { display: flex; align-items: center; gap: 12px; }
+.automation-section-tools .stream-count { margin: 0; }
+.automation-new-rule { position: relative; }
+.automation-new-rule > .automation-editor { position: absolute; z-index: 10; top: calc(100% + 10px); right: 0; width: min(720px, calc(100vw - 48px)); box-shadow: var(--shadow-lg); }
 .automation-authority-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); overflow: hidden; border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--border); }
 .automation-authority-card { position: relative; min-height: 172px; padding: 20px; background: var(--surface); }
 .automation-authority-card h3 { margin: 32px 0 7px; font-family: var(--font-display); font-size: 20px; font-weight: 400; }
@@ -338,6 +344,40 @@ a {
 .automation-run-error, .automation-run-failed { background: var(--attention); }
 .automation-version-stale { color: var(--attention); }
 .automation-history-empty { margin: 0; padding: 16px 22px; border-top: 1px solid var(--border-subtle); color: var(--ink-3); font-size: 12px; }
+.automation-rule-controls { border-top: 1px solid var(--border-subtle); }
+.automation-rule-buttons { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; padding: 13px 22px; background: var(--surface-2); }
+.automation-rule-buttons .still-button { min-height: 31px; padding: 6px 12px; font-size: 11px; }
+.automation-delete-link { margin-left: auto; border: 0; background: transparent; color: var(--attention); font: inherit; font-size: 11px; cursor: pointer; }
+.automation-delete-confirm { display: flex; align-items: center; gap: 8px; margin-left: auto; color: var(--attention); font-size: 10px; }
+.automation-delete-confirm button { padding: 4px 8px; border: 1px solid var(--border); border-radius: var(--radius-pill); background: var(--surface); color: var(--ink-2); font: inherit; font-size: 10px; cursor: pointer; }
+.automation-delete-confirm button:last-child { border-color: var(--attention); color: var(--attention); }
+.automation-editor { padding: 20px 22px; border-top: 1px solid var(--border); background: var(--surface); }
+.automation-new-rule .automation-editor { border: 1px solid var(--border); border-radius: var(--radius-lg); }
+.automation-editor-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.automation-editor label { display: grid; gap: 6px; color: var(--ink-3); font-size: 10px; }
+.automation-editor input, .automation-editor select, .automation-editor textarea { width: 100%; min-width: 0; padding: 9px 11px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface-2); color: var(--ink); font: inherit; font-size: 12px; }
+.automation-editor textarea { resize: vertical; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; line-height: 1.5; }
+.automation-editor input:focus, .automation-editor select:focus, .automation-editor textarea:focus { border-color: var(--cognac); outline: none; box-shadow: 0 0 0 3px var(--cognac-soft); }
+.automation-editor-wide { grid-column: 1 / -1; }
+.automation-editor-check { display: flex !important; align-items: center; align-self: end; grid-template-columns: auto 1fr; padding: 10px 0; }
+.automation-editor-check input { width: auto; }
+.automation-editor-actions { display: flex; gap: 8px; margin-top: 14px; }
+.automation-action-shortcuts { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; margin-top: 12px; color: var(--ink-3); font-size: 10px; }
+.automation-action-shortcuts button { padding: 4px 8px; border: 1px solid var(--border); border-radius: var(--radius-pill); background: transparent; color: var(--ink-2); font: inherit; font-size: 10px; cursor: pointer; }
+.automation-dry-run { display: grid; gap: 12px; }
+.automation-dry-run > div:first-child strong { color: var(--ink-2); font-size: 13px; font-weight: 500; }
+.automation-dry-run > div:first-child p { margin: 4px 0 0; color: var(--ink-3); font-size: 11px; }
+.automation-test-result { display: flex; align-items: center; gap: 10px; padding: 11px 13px; border-radius: var(--radius); background: var(--surface-2); color: var(--ink-3); font-size: 11px; }
+.automation-test-result strong { color: var(--attention); }
+.automation-test-match strong { color: var(--success); }
+.automation-control-feedback { margin: 0; padding: 10px 22px; border-top: 1px solid var(--border-subtle); font-size: 11px; }
+.automation-control-error { color: var(--attention); background: var(--attention-soft); }
+.automation-control-success { color: var(--success); background: var(--surface-2); }
+.automation-apply-suggestion { grid-column: 1 / -1; }
+.automation-apply-suggestion > button, .automation-apply-suggestion > div:first-child button { padding: 4px 9px; border: 1px solid var(--cognac); border-radius: var(--radius-pill); background: transparent; color: var(--cognac-deep); font: inherit; font-size: 10px; cursor: pointer; }
+.automation-apply-suggestion > div:first-child { display: flex; align-items: center; gap: 7px; color: var(--ink-3); font-size: 10px; }
+.automation-apply-suggestion > div:first-child button:last-child { background: var(--cognac); color: #fff; }
+.automation-apply-suggestion .automation-control-feedback { margin-top: 7px; padding: 7px 9px; border: 0; border-radius: var(--radius-sm); }
 .automation-registry-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 .automation-registry { overflow: hidden; border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--surface); }
 .automation-registry h3 { margin: 0; padding: 15px 18px; border-bottom: 1px solid var(--border-subtle); font-family: var(--font-display); font-size: 18px; font-weight: 400; }
@@ -394,6 +434,26 @@ a {
 .intelligence-boundary { display: grid; grid-template-columns: 280px minmax(0, 1fr); gap: 40px; padding: 26px 0 4px; border-top: 1px solid var(--border); }
 .intelligence-boundary h2 { margin: 0; font-family: var(--font-display); font-size: 24px; font-weight: 400; }
 .intelligence-boundary > p { margin: 0; color: var(--ink-3); font-size: 13px; line-height: 1.65; }
+.intelligence-section-intro { max-width: 720px; margin: -4px 0 16px; color: var(--ink-3); font-size: 13px; line-height: 1.6; }
+.theory-regenerator { overflow: hidden; border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--surface); box-shadow: var(--shadow-sm); }
+.theory-regenerator-controls { display: grid; grid-template-columns: minmax(0, 1fr) 190px; gap: 24px; padding: 20px 22px; }
+.theory-regenerator-controls label { display: grid; gap: 7px; color: var(--ink-3); font-size: 11px; }
+.theory-regenerator-controls select { width: 100%; min-height: 42px; padding: 9px 36px 9px 13px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface-2); color: var(--ink); font: inherit; font-size: 13px; }
+.theory-regenerator-controls select:focus { border-color: var(--cognac); outline: none; box-shadow: 0 0 0 3px var(--cognac-soft); }
+.theory-regenerator-status { display: grid; align-content: center; gap: 3px; padding-left: 20px; border-left: 1px solid var(--border-subtle); }
+.theory-regenerator-status span { color: var(--ink-3); font-size: 10px; letter-spacing: .07em; text-transform: uppercase; }
+.theory-regenerator-status strong { font-family: var(--font-display); font-size: 19px; font-weight: 400; }
+.theory-regenerator-status small { color: var(--ink-3); font-size: 10px; }
+.theory-regenerator-actions { display: flex; align-items: center; gap: 14px; padding: 15px 22px; border-top: 1px solid var(--border-subtle); background: var(--surface-2); }
+.theory-regenerator-actions a { color: var(--cognac-deep); font-size: 12px; }
+.theory-regenerator-confirm { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 17px 22px; border-top: 1px solid var(--border-subtle); background: var(--camel-soft); }
+.theory-regenerator-confirm strong { color: var(--ink-2); font-size: 13px; font-weight: 500; }
+.theory-regenerator-confirm p { max-width: 680px; margin: 4px 0 0; color: var(--ink-3); font-size: 11px; line-height: 1.5; }
+.theory-regenerator-confirm > div:last-child { display: flex; flex-shrink: 0; gap: 8px; }
+.theory-regenerator-feedback:empty { display: none; }
+.theory-regenerator-feedback p { margin: 0; padding: 10px 22px; border-top: 1px solid var(--border-subtle); font-size: 11px; }
+.theory-regenerator-error { color: var(--attention); background: var(--attention-soft); }
+.theory-regenerator-success { color: var(--success); background: var(--surface-2); }
 .system-health { margin-top: 28px; }
 .system-health-state { display: grid; grid-template-columns: minmax(0, 1fr) 190px; gap: 28px; padding: 24px 26px; border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--surface); box-shadow: var(--shadow-sm); }
 .system-health-state h2 { margin: 0; font-family: var(--font-display); font-size: 28px; font-weight: 400; }
@@ -447,6 +507,7 @@ a {
   .automation-authority-grid { grid-template-columns: 1fr 1fr; }
   .automation-section-heading { align-items: flex-start; flex-direction: column; }
   .automation-caption { text-align: left; }
+  .automation-section-tools { width: 100%; justify-content: space-between; }
   .automation-rule-header { flex-direction: column; }
   .automation-rule-meta { justify-items: start; }
   .automation-rule-flow { grid-template-columns: 1fr; }
@@ -455,6 +516,7 @@ a {
   .automation-history li time { grid-column: 1 / -1; }
   .automation-history li > span:last-child { grid-column: 2; }
   .automation-registry-grid { grid-template-columns: 1fr; }
+  .automation-delete-confirm { align-items: flex-start; flex-basis: 100%; flex-wrap: wrap; margin-left: 0; }
   .intelligence-reading { grid-template-columns: 1fr; }
   .intelligence-freshness { padding: 18px 0 0; border-top: 1px solid var(--border); border-left: 0; }
   .intelligence-kind-grid { grid-template-columns: 1fr 1fr; }
@@ -462,6 +524,9 @@ a {
   .intelligence-boundary { grid-template-columns: 1fr; gap: 12px; }
   .intelligence-history-list article { grid-template-columns: 1fr; gap: 7px; }
   .intelligence-history-list article > div:last-child { justify-content: flex-start; }
+  .theory-regenerator-controls { grid-template-columns: 1fr; }
+  .theory-regenerator-status { padding: 16px 0 0; border-top: 1px solid var(--border-subtle); border-left: 0; }
+  .theory-regenerator-confirm { align-items: flex-start; flex-direction: column; }
   .system-health-state { grid-template-columns: 1fr; }
   .system-health-state > div:last-child { padding: 16px 0 0; border-top: 1px solid var(--border); border-left: 0; }
   .system-health-metrics { grid-template-columns: 1fr 1fr; }
@@ -471,6 +536,9 @@ a {
 
 @media (max-width: 460px) {
   .automation-summary, .automation-authority-grid { grid-template-columns: 1fr; }
+  .automation-editor-grid { grid-template-columns: 1fr; }
+  .automation-editor-wide { grid-column: auto; }
+  .automation-new-rule > .automation-editor { right: auto; left: 0; width: calc(100vw - 40px); }
   .intelligence-kind-grid { grid-template-columns: 1fr; }
   .intelligence-reading { padding: 22px 20px; }
   .intelligence-reading > div:first-child { padding-left: 0; }

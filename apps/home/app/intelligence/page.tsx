@@ -7,8 +7,10 @@ import {
   type LifeModelClaimInput,
   type LifeModelClaimKind,
 } from "@life-os/intelligence"
+import { db } from "@life-os/db"
 import { workspaceForHomeRequest } from "@/lib/request-access"
 import { redirect } from "next/navigation"
+import { TheoryRegenerator, type TheoryPersonOption } from "@/components/TheoryRegenerator"
 
 export const metadata = { title: "Intelligence · Life OS" }
 
@@ -27,9 +29,26 @@ async function IntelligenceContent() {
   const workspaceId = await workspaceForHomeRequest()
   if (!workspaceId) redirect("/login")
 
-  const [currentSnapshot, snapshots] = await Promise.all([
+  const [currentSnapshot, snapshots, people] = await Promise.all([
     getCurrentLifeModelSnapshot(workspaceId),
     listLifeModelSnapshots(workspaceId),
+    db.person.findMany({
+      where: { workspaceId },
+      orderBy: [{ closeness: "desc" }, { updatedAt: "desc" }, { id: "asc" }],
+      take: 50,
+      select: {
+        id: true,
+        first: true,
+        last: true,
+        nickname: true,
+        theorySnapshots: {
+          where: { workspaceId, status: "current" },
+          orderBy: { version: "desc" },
+          take: 1,
+          select: { version: true, synthesizedAt: true },
+        },
+      },
+    }),
   ])
   // A saved snapshot is authoritative. Only compute the live deterministic
   // preview when no snapshot exists; this also prevents a future model-backed
@@ -117,6 +136,15 @@ async function IntelligenceContent() {
               ))}</div>}
         </section>
 
+        <section className="intelligence-section" aria-labelledby="person-theory-heading">
+          <div className="automation-section-heading">
+            <div><p className="still-eyebrow">Person-level interpretation</p><h2 id="person-theory-heading">Theory of a person</h2></div>
+            <span className="automation-caption">Manual, billed, and versioned</span>
+          </div>
+          <p className="intelligence-section-intro">Choose someone when you want a fresh evidence-backed model of that relationship. Home sends the command through the canonical Life OS API; it never synthesizes passively on page load.</p>
+          <TheoryRegenerator people={people.map(toTheoryPersonOption)} />
+        </section>
+
         <section className="intelligence-section intelligence-boundary" aria-labelledby="boundary-heading">
           <div>
             <p className="still-eyebrow">The boundary</p>
@@ -127,6 +155,22 @@ async function IntelligenceContent() {
       </div>
     </main>
   )
+}
+
+function toTheoryPersonOption(person: {
+  id: string
+  first: string
+  last: string
+  nickname: string | null
+  theorySnapshots: Array<{ version: number; synthesizedAt: Date }>
+}): TheoryPersonOption {
+  const snapshot = person.theorySnapshots[0]
+  return {
+    id: person.id,
+    name: person.nickname || [person.first, person.last].filter(Boolean).join(" ") || "Unnamed person",
+    version: snapshot?.version ?? null,
+    synthesizedAt: snapshot?.synthesizedAt.toISOString() ?? null,
+  }
 }
 
 function ClaimCard({ claim, rank }: { claim: LifeModelClaimInput; rank: number }) {

@@ -553,6 +553,31 @@ genuinely Persons-specific (people, imports, admin, rules CRUD) stay on
 Persons' own `/api/v1/*` — only the resources other apps need to read
 independent of Persons moved.
 
+Theory of Person is also available through the canonical API:
+`GET /v1/theory/:personId`, `GET /v1/theory/:personId/history`, and the
+explicit, billed `POST /v1/theory/:personId/regenerate` command. Home's
+Intelligence page calls that command through its server-only
+`/api/theory/:personId/regenerate` proxy, keeping the API key out of the
+browser. The UI requires a second confirmation before the model call and
+shows the current version for a bounded set of workspace people; synthesis
+never runs during passive page rendering.
+
+Automation is managed through the same canonical surface:
+`/v1/automations/rules` provides workspace-scoped list/create,
+`/v1/automations/rules/:id` provides update/delete, and
+`/v1/automations/rules/:id/test` records an audited dry run without applying
+actions. `/v1/automations/runs` exposes bounded run history, while
+`/v1/automations/runs/apply` is the explicit command for applying held
+suggestions. Home's Automation page proxies only these allowlisted paths,
+defaults new definitions to `draft`, requires confirmation before deleting a
+rule and its run history, and exposes activation, editing, and dry-run controls
+beside the versioned read model.
+
+The Home server-side API key must grant `automations.read`, `rules.manage`,
+and `intelligence.write` in addition to its Stream/Review scopes for these
+controls to work. These remain server-only credentials; none are exposed in
+Home's client bundle.
+
 ## Access Control
 
 Browser auth is shared across Life OS apps. Persons keeps a local `apps/persons/auth.ts`
