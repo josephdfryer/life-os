@@ -420,6 +420,20 @@ a {
 .intelligence-why p { margin: 5px 0 0; color: var(--ink-3); font-size: 12px; line-height: 1.5; }
 .intelligence-claim-footer { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: 16px; color: var(--ink-3); font-size: 10px; }
 .intelligence-claim-footer a { color: var(--cognac-deep); }
+.life-model-regenerator { display: grid; justify-items: start; gap: 8px; margin-top: 16px; }
+.claim-feedback-controls { display: grid; gap: 10px; margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--border-subtle); }
+.claim-feedback-actions { display: flex; gap: 14px; }
+.claim-feedback-actions button { padding: 0; border: 0; background: transparent; color: var(--cognac-deep); font: inherit; font-size: 11px; cursor: pointer; }
+.claim-feedback-actions button:last-child { color: var(--ink-3); }
+.claim-feedback-actions button:disabled { cursor: wait; opacity: .55; }
+.claim-correction-form { display: grid; gap: 9px; }
+.claim-correction-form label { color: var(--ink-2); font-size: 11px; font-weight: 500; }
+.claim-correction-form textarea { width: 100%; resize: vertical; padding: 10px 12px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface-2); color: var(--ink); font: inherit; font-size: 13px; line-height: 1.5; }
+.claim-correction-form > div { display: flex; justify-content: flex-end; gap: 8px; }
+.claim-dismiss-confirm { display: grid; gap: 10px; padding: 12px 14px; border-radius: var(--radius); background: var(--surface-2); }
+.claim-dismiss-confirm p { margin: 0; color: var(--ink-2); font-size: 12px; line-height: 1.5; }
+.claim-dismiss-confirm > div { display: flex; justify-content: flex-end; gap: 8px; }
+.intelligence-corrected-label { margin: -13px 0 18px; color: var(--success); font-size: 11px; }
 .intelligence-history-empty { display: grid; gap: 6px; }
 .intelligence-history-empty strong { color: var(--ink-2); font-weight: 500; }
 .intelligence-history-list { overflow: hidden; border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--surface); box-shadow: var(--shadow-sm); }

@@ -11,6 +11,7 @@ import { db } from "@life-os/db"
 import { workspaceForHomeRequest } from "@/lib/request-access"
 import { redirect } from "next/navigation"
 import { TheoryRegenerator, type TheoryPersonOption } from "@/components/TheoryRegenerator"
+import { ClaimFeedbackControls, LifeModelRegenerator } from "@/components/LifeModelControls"
 
 export const metadata = { title: "Intelligence · Life OS" }
 
@@ -20,6 +21,11 @@ const CLAIM_KINDS: Array<{ kind: LifeModelClaimKind; label: string; description:
   { kind: "declared", label: "Declared", description: "What you have explicitly said matters or should happen." },
   { kind: "tension", label: "Tension", description: "Where declared intentions and observed behavior diverge." },
 ]
+
+type DisplayClaim = LifeModelClaimInput & {
+  id: string | null
+  feedback: { action: string; replacementStatement: string | null } | null
+}
 
 export default function IntelligencePage() {
   return <Suspense fallback={<IntelligenceFallback />}><IntelligenceContent /></Suspense>
@@ -54,20 +60,24 @@ async function IntelligenceContent() {
   // preview when no snapshot exists; this also prevents a future model-backed
   // synthesizer from running on every page view.
   const liveSynthesis = currentSnapshot ? null : await synthesizeLifeModel(workspaceId)
-  const claims: LifeModelClaimInput[] = currentSnapshot
+  const claims: DisplayClaim[] = currentSnapshot
     ? currentSnapshot.claims.map(claim => ({
+        id: claim.id,
         kind: claim.kind as LifeModelClaimKind,
-        statement: claim.statement,
+        statement: claim.feedback[0]?.action === "correct" && claim.feedback[0].replacementStatement
+          ? claim.feedback[0].replacementStatement
+          : claim.statement,
         confidence: claim.confidence,
         subjectType: claim.subjectType,
         subjectId: claim.subjectId,
         windowStart: claim.windowStart,
         windowEnd: claim.windowEnd,
         evidence: decodeEvidence(claim.evidence),
+        feedback: claim.feedback[0] ?? null,
       }))
-    : liveSynthesis?.claims ?? []
+    : (liveSynthesis?.claims ?? []).map(claim => ({ ...claim, id: null, feedback: null }))
   const realClaims = claims
-    .filter(claim => !claim.statement.startsWith("Unknown —"))
+    .filter(claim => !claim.statement.startsWith("Unknown —") && claim.feedback?.action !== "dismiss")
     .sort((a, b) => claimPriority(b) - claimPriority(a))
   const availableKinds = new Set(realClaims.map(claim => claim.kind))
 
@@ -93,6 +103,7 @@ async function IntelligenceContent() {
             <small>{currentSnapshot ? formatDate(currentSnapshot.synthesizedAt) : "Computed now from current records"}</small>
           </div>
         </section>
+        <LifeModelRegenerator hasSnapshot={Boolean(currentSnapshot)} />
 
         <section className="intelligence-section" aria-labelledby="claim-kinds-heading">
           <div className="automation-section-heading">
@@ -150,7 +161,7 @@ async function IntelligenceContent() {
             <p className="still-eyebrow">The boundary</p>
             <h2 id="boundary-heading">Useful, never unquestionable</h2>
           </div>
-          <p>These readings are derived and replaceable. The graph remains the source of truth. Correction and dismissal will become durable feedback once the shared intelligence commands are available.</p>
+          <p>These readings are derived and replaceable. The graph remains the source of truth. Corrections become durable Notes that ground later readings; dismissals are retained as feedback without rewriting history.</p>
         </section>
       </div>
     </main>
@@ -173,7 +184,7 @@ function toTheoryPersonOption(person: {
   }
 }
 
-function ClaimCard({ claim, rank }: { claim: LifeModelClaimInput; rank: number }) {
+function ClaimCard({ claim, rank }: { claim: DisplayClaim; rank: number }) {
   const evidence = claim.evidence
   const severity = claimPriority(claim)
   const confidence = claim.confidence === null ? null : Math.round(claim.confidence * 100)
@@ -191,6 +202,7 @@ function ClaimCard({ claim, rank }: { claim: LifeModelClaimInput; rank: number }
           {severity > 0 ? <span>Priority {severity.toFixed(1)}×</span> : null}
         </div>
         <h3>{claim.statement}</h3>
+        {claim.feedback?.action === "correct" ? <p className="intelligence-corrected-label">Corrected by you</p> : null}
         <div className="intelligence-why">
           <strong>Why this appears</strong>
           <p>{evidence.length ? describeEvidence(evidence[0]) : "No evidence reference was supplied."}</p>
@@ -199,6 +211,7 @@ function ClaimCard({ claim, rank }: { claim: LifeModelClaimInput; rank: number }
           <span>{evidence.length} evidence {evidence.length === 1 ? "reference" : "references"} · computed from current records</span>
           {subjectHref ? <a href={subjectHref}>Open evidence subject ↗</a> : null}
         </div>
+        {claim.id ? <ClaimFeedbackControls key={`${claim.id}:${claim.statement}`} claimId={claim.id} statement={claim.statement} /> : null}
       </div>
     </article>
   )
