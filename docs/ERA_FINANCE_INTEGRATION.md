@@ -369,10 +369,17 @@ The graph enables rich cross-domain queries that Era alone can't answer:
 ### Connection Setup
 
 ```
-User → connects Era via OAuth
-     → EraConnection created (workspaceId, userId, tokens, scope)
+User → stores an Era API key through Home Connections
+     → EraConnection created (workspaceId, userId, encrypted key, scope)
+     → unified Connection mirror created for Home health/status
      → Initial sync triggered
 ```
+
+The current integration uses an encrypted Era API key rather than an OAuth
+redirect. Home's Connections flow and the legacy CLI scripts retain
+`EraConnection` for account/transaction-link foreign keys and transactionally
+dual-write the unified `Connection` mirror. Key rotation, JSON import, and
+watermark advancement therefore update the same health state shown in Home.
 
 ### Initial Sync
 

@@ -13,6 +13,7 @@
 
 import fs from "node:fs"
 import path from "node:path"
+import { mirrorEraConnection } from "./connection-mirror"
 
 const REPO_ROOT = path.resolve(import.meta.dirname, "../..")
 for (const candidate of [path.join(REPO_ROOT, ".env"), path.join(REPO_ROOT, "apps/persons/.env")]) {
@@ -45,14 +46,17 @@ async function main() {
   // worse than no key, because the failure surfaces at sync time instead.
   if (decrypt(ciphertext) !== apiKey) throw new Error("encrypt/decrypt round-trip failed — refusing to store")
 
-  await db.eraConnection.update({
-    where: { id: connection.id },
-    data: {
-      accessTokenEncrypted: ciphertext,
-      scope: "api-key",
-      status: "active",
-      lastError: null,
-    },
+  await db.$transaction(async tx => {
+    const updated = await tx.eraConnection.update({
+      where: { id: connection.id },
+      data: {
+        accessTokenEncrypted: ciphertext,
+        scope: "api-key",
+        status: "active",
+        lastError: null,
+      },
+    })
+    await mirrorEraConnection(tx, updated)
   })
 
   console.log(`Stored encrypted Era API key on EraConnection ${connection.id}`)

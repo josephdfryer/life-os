@@ -14,6 +14,7 @@
 
 import fs from "node:fs"
 import path from "node:path"
+import { mirrorEraConnection } from "./connection-mirror"
 
 const REPO_ROOT = path.resolve(import.meta.dirname, "../..")
 
@@ -68,22 +69,33 @@ async function main() {
   // ── Connection (singleton per workspace/user) ────────────────
   const owner = await db.workspace.findUnique({
     where: { id: WORKSPACE_ID },
-    select: { ownerUserId: true },
+    select: {
+      ownerUserId: true,
+      members: {
+        where: { status: "active" },
+        orderBy: { createdAt: "asc" },
+        take: 1,
+        select: { userId: true },
+      },
+    },
   })
-  const userId = owner?.ownerUserId
-    ?? (await db.user.findFirst({ orderBy: { createdAt: "asc" }, select: { id: true } }))?.id
+  const userId = owner?.ownerUserId ?? owner?.members[0]?.userId
   if (!userId) throw new Error("No user found to own the Era connection")
 
-  const connection = await db.eraConnection.upsert({
-    where: { workspaceId_userId: { workspaceId: WORKSPACE_ID, userId } },
-    update: { lastSyncedAt: new Date(), lastError: null },
-    create: {
-      workspaceId: WORKSPACE_ID,
-      userId,
-      status: "active",
-      scope: "mcp:read (claude.ai session dump)",
-      lastSyncedAt: new Date(),
-    },
+  const connection = await db.$transaction(async tx => {
+    const eraConnection = await tx.eraConnection.upsert({
+      where: { workspaceId_userId: { workspaceId: WORKSPACE_ID, userId } },
+      update: { lastSyncedAt: new Date(), lastError: null },
+      create: {
+        workspaceId: WORKSPACE_ID,
+        userId,
+        status: "active",
+        scope: "mcp:read (claude.ai session dump)",
+        lastSyncedAt: new Date(),
+      },
+    })
+    await mirrorEraConnection(tx, eraConnection)
+    return eraConnection
   })
   console.log(`EraConnection: ${connection.id}`)
 
@@ -203,9 +215,12 @@ async function main() {
   // Watermark: newest transaction date seen
   const newest = transactions.map(t => t.transaction_date).sort().at(-1)
   if (newest) {
-    await db.eraConnection.update({
-      where: { id: connection.id },
-      data: { syncCursor: newest, lastSyncedAt: new Date() },
+    await db.$transaction(async tx => {
+      const updated = await tx.eraConnection.update({
+        where: { id: connection.id },
+        data: { syncCursor: newest, lastSyncedAt: new Date() },
+      })
+      await mirrorEraConnection(tx, updated)
     })
   }
 

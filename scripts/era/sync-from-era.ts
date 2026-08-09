@@ -23,6 +23,7 @@
 import fs from "node:fs"
 import os from "node:os"
 import path from "node:path"
+import { mirrorEraConnection } from "./connection-mirror"
 
 const REPO_ROOT = path.resolve(import.meta.dirname, "../..")
 for (const candidate of [path.join(REPO_ROOT, ".env"), path.join(REPO_ROOT, "apps/persons/.env")]) {
@@ -124,9 +125,12 @@ async function main() {
   // Advance the watermark only after every page landed on disk, so an
   // interrupted run re-fetches rather than skipping a gap.
   if (newestDate) {
-    await db.eraConnection.update({
-      where: { id: connection.id },
-      data: { syncCursor: newestDate, lastSyncedAt: new Date(), lastError: null },
+    await db.$transaction(async tx => {
+      const updated = await tx.eraConnection.update({
+        where: { id: connection.id },
+        data: { syncCursor: newestDate, lastSyncedAt: new Date(), lastError: null },
+      })
+      await mirrorEraConnection(tx, updated)
     })
     console.log(`Watermark advanced to ${newestDate}`)
   }
