@@ -32,9 +32,18 @@ async function main() {
     (error: unknown) => error instanceof EventPrimitiveError && error.code === "validation",
   )
 
-  // ── update: patches a field, publishes a GraphEvent ──
-  const updated = await updateEventPrimitive(created.id, { notes: "Ran long" }, workspaceId)
+  // ── update: keeps the canonical timestamp/start pair aligned and applies end ──
+  const movedTo = new Date("2026-08-02T18:00:00Z")
+  const movedEnd = new Date("2026-08-02T19:30:00Z")
+  const updated = await updateEventPrimitive(created.id, {
+    notes: "Ran long",
+    timestamp: movedTo.toISOString(),
+    end: movedEnd.toISOString(),
+  }, workspaceId)
   assert.equal(updated.notes, "Ran long")
+  assert.equal(updated.timestamp.toISOString(), movedTo.toISOString())
+  assert.equal(updated.start?.toISOString(), movedTo.toISOString())
+  assert.equal(updated.end?.toISOString(), movedEnd.toISOString())
   const updateEvents = await db.graphEvent.findMany({ where: { workspaceId, subjectType: "Event", subjectId: created.id, eventType: "event.update" } })
   assert.equal(updateEvents.length, 1)
 

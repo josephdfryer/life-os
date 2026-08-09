@@ -80,7 +80,12 @@ export async function updateEventPrimitive(id: string, input: EventPrimitiveInpu
   const patch: Record<string, unknown> = {}
   if (input.name !== undefined) patch.name = requiredString(input.name, "name")
   if (input.type !== undefined) patch.type = requiredString(input.type, "type")
-  if (input.timestamp !== undefined) patch.timestamp = parseEventTimestamp(input.timestamp)
+  if (input.timestamp !== undefined) {
+    const timestamp = parseEventTimestamp(input.timestamp)
+    patch.timestamp = timestamp
+    patch.start = timestamp
+  }
+  if (input.end !== undefined) patch.end = input.end ? parseEventTimestamp(input.end) : null
   if (input.placeId !== undefined) patch.placeId = optionalString(input.placeId)
   if (input.notes !== undefined) patch.notes = optionalString(input.notes)
   if (input.transcript !== undefined) patch.transcript = optionalString(input.transcript)
