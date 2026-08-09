@@ -169,12 +169,12 @@ async function main() {
   // ── review-tier actions become a ReviewItem proposal, not a silent drop (Track C) ──
   // None of the built-in actions are review/confirm tier yet, so register a
   // throwaway test-only one to exercise the full pipeline end to end.
-  let testConfirmActionRan = false
+  const confirmedFields: string[] = []
   registerAction({
     type: "test_confirm_action",
     authorityTier: "confirm",
     async execute(action) {
-      testConfirmActionRan = true
+      confirmedFields.push(action.field ?? "unknown")
       return action
     },
   })
@@ -184,7 +184,10 @@ async function main() {
     trigger: "inbox.stage",
     mode: "auto",
     conditions: [{ field: "source", operator: "equals", value: "needs-confirm" }],
-    actions: [{ type: "test_confirm_action" }],
+    actions: [
+      { type: "test_confirm_action", field: "first" },
+      { type: "test_confirm_action", field: "second" },
+    ],
   }, actor)
   const staged4 = await db.stagedInteraction.create({
     data: { workspaceId, source: "needs-confirm", sourceId: "confirm-1", status: "pending", itemType: "interaction", type: "message", timestamp: new Date(), summary: "high stakes" },
@@ -198,13 +201,17 @@ async function main() {
     apply: true, // even with apply=true, a confirm-tier action must never auto-run
   })
   assert.equal(result4.actionsApplied.length, 0, "a confirm-tier action must never appear in actionsApplied")
-  assert.equal(testConfirmActionRan, false, "the confirm-tier action must not have executed yet")
+  assert.deepEqual(confirmedFields, [], "confirm-tier actions must not have executed yet")
 
-  const pendingReview = await db.reviewItem.findMany({ where: { workspaceId, source: "rule", targetId: staged4.id } })
-  assert.equal(pendingReview.length, 1, "a confirm-tier match must create exactly one ReviewItem")
+  const pendingReview = await db.reviewItem.findMany({
+    where: { workspaceId, source: "rule", targetId: staged4.id },
+    orderBy: { sourceId: "asc" },
+  })
+  assert.equal(pendingReview.length, 2, "same-type confirm actions must remain separate ReviewItems")
   assert.equal(pendingReview[0].riskTier, "confirm")
   assert.equal(JSON.parse(pendingReview[0].proposedCommand).command, "automation.apply_action")
-  assert.equal(pendingReview[0].sourceId, `${confirmRule.id}:stagedInteraction:${staged4.id}:test_confirm_action`, "sourceId must be deterministic per rule/target/action")
+  assert.equal(pendingReview[0].sourceId, `${confirmRule.id}:v1:stagedInteraction:${staged4.id}:0:test_confirm_action`)
+  assert.equal(pendingReview[1].sourceId, `${confirmRule.id}:v1:stagedInteraction:${staged4.id}:1:test_confirm_action`)
 
   // re-evaluating the same match must refresh the one item, not create a second
   await runRulesForTarget({
@@ -215,13 +222,41 @@ async function main() {
     actor: actor.actor,
     apply: true,
   })
-  const stillOne = await db.reviewItem.count({ where: { workspaceId, source: "rule", targetId: staged4.id } })
-  assert.equal(stillOne, 1, "re-matching the same rule/target/action must refresh, not duplicate, the pending ReviewItem")
+  const stillTwo = await db.reviewItem.count({ where: { workspaceId, source: "rule", targetId: staged4.id } })
+  assert.equal(stillTwo, 2, "re-matching the same rule definition must refresh, not duplicate, its proposals")
 
-  // accepting the ReviewItem is the human confirmation — the action actually runs now
-  const resolved = await resolveReviewItem({ id: pendingReview[0].id, workspaceId, action: "accept", actor: actor.actor })
-  assert.equal(resolved.status, "accepted")
-  assert.equal(testConfirmActionRan, true, "accepting the ReviewItem must actually run the confirm-tier action")
+  // accepting each ReviewItem is the human confirmation — both actions run independently
+  for (const item of pendingReview) {
+    const resolved = await resolveReviewItem({ id: item.id, workspaceId, action: "accept", actor: actor.actor })
+    assert.equal(resolved.status, "accepted")
+  }
+  assert.deepEqual(confirmedFields, ["first", "second"])
+
+  // ── built-in Plan status action is review-tier and only runs on acceptance ──
+  const plan = await db.plan.create({ data: { workspaceId, text: "A real commitment", status: "active" } })
+  const planRule = await createRule({
+    name: "Propose completing a plan",
+    trigger: "plan.create",
+    mode: "auto",
+    actions: [{ type: "plan_set_status", value: "completed" }],
+  }, actor)
+  const planRun = await runRulesForTarget({
+    trigger: "plan.create",
+    payload: { planId: plan.id, text: plan.text, status: plan.status },
+    targetType: "plan",
+    targetId: plan.id,
+    actor: actor.actor,
+    apply: true,
+  })
+  assert.equal(planRun.actionsApplied.length, 0)
+  assert.equal((await db.plan.findUniqueOrThrow({ where: { id: plan.id } })).status, "active")
+  const planReview = await db.reviewItem.findFirstOrThrow({
+    where: { workspaceId, source: "rule", targetType: "plan", targetId: plan.id },
+  })
+  assert.equal(planReview.riskTier, "review")
+  assert.equal(planReview.sourceId, `${planRule.id}:v1:plan:${plan.id}:0:plan_set_status`)
+  await resolveReviewItem({ id: planReview.id, workspaceId, action: "accept", actor: actor.actor })
+  assert.equal((await db.plan.findUniqueOrThrow({ where: { id: plan.id } })).status, "completed")
 
   // ── error paths ──
   await assert.rejects(

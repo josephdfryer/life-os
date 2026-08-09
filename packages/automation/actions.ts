@@ -159,13 +159,12 @@ registerAction({
   },
 })
 
-// Plan status is the one field worth a dedicated automation action today —
-// e.g. a rule flagging a Plan "abandoned" once its window has passed.
-// Reuses the shared updatePlan command's own status validation rather than
-// re-declaring the allowed values here.
+// Plan status changes alter a canonical commitment. A rule may propose one,
+// but completing, blocking, or abandoning a Plan needs human review before
+// the shared updatePlan command runs.
 registerAction({
   type: "plan_set_status",
-  authorityTier: "safe_auto",
+  authorityTier: "review",
   async execute(action, ctx) {
     if (ctx.targetType !== "plan" || !ctx.targetId || action.value === undefined) return null
     try {

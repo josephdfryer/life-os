@@ -383,7 +383,7 @@ async function applyActions(
   },
 ): Promise<RuleAction[]> {
   const applied: RuleAction[] = []
-  for (const action of actions) {
+  for (const [actionIndex, action] of actions.entries()) {
     const registered = getRegisteredAction(action.type)
     if (!registered) continue // unknown action type — nothing to run, same as the old rules.ts's silent fall-through
 
@@ -391,14 +391,14 @@ async function applyActions(
     // tier actions become a ReviewItem proposal instead of silently
     // vanishing — accepting it re-runs this exact action for real via the
     // "automation.apply_action" command registered in actions.ts. Source id
-    // is deterministic per (rule, target, action type), so re-evaluating the
-    // same match refreshes the one pending proposal instead of piling up
-    // duplicates (createReviewItem's own upsert semantics — see review.ts).
+    // is deterministic per (rule version, target, action position), so
+    // re-evaluating the same definition refreshes its pending proposals while
+    // two actions of the same type remain independently reviewable.
     if (registered.authorityTier !== "observe" && registered.authorityTier !== "safe_auto") {
       await createReviewItem({
         workspaceId: ctx.workspaceId,
         source: "rule",
-        sourceId: `${ctx.ruleId}:${ctx.targetType ?? "none"}:${ctx.targetId ?? "none"}:${action.type}`,
+        sourceId: `${ctx.ruleId}:v${ctx.ruleVersion}:${ctx.targetType ?? "none"}:${ctx.targetId ?? "none"}:${actionIndex}:${action.type}`,
         itemType: ctx.targetType ?? "rule",
         command: "automation.apply_action",
         commandInput: { actionType: action.type, action, targetType: ctx.targetType, targetId: ctx.targetId },
