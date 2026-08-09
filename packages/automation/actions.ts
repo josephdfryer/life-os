@@ -4,6 +4,7 @@ import {
   setInteractionField, InteractionFieldError,
   getPersonTags, setPersonTags,
   updatePlan, PlanError,
+  updateEventPrimitive, EventPrimitiveError,
   type GraphEventActor, type AuditActor,
 } from "@life-os/domain"
 
@@ -171,6 +172,26 @@ registerAction({
       return action
     } catch (error) {
       if (error instanceof PlanError) return null
+      throw error
+    }
+  },
+})
+
+const EVENT_SAFE_FIELDS = new Set(["notes", "transcript"])
+
+// Whitelisted the same way as interaction_set_field — reversible enrichment
+// only. name/type/timestamp/placeId stay human-edited (they're structural,
+// not annotation).
+registerAction({
+  type: "event_set_field",
+  authorityTier: "safe_auto",
+  async execute(action, ctx) {
+    if (ctx.targetType !== "event" || !ctx.targetId || !action.field || !EVENT_SAFE_FIELDS.has(action.field)) return null
+    try {
+      await updateEventPrimitive(ctx.targetId, { [action.field]: action.value }, ctx.workspaceId, ctx.actor)
+      return action
+    } catch (error) {
+      if (error instanceof EventPrimitiveError) return null
       throw error
     }
   },
