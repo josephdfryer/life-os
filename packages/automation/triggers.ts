@@ -89,6 +89,16 @@ registerTrigger("event.update", z.object({
   fields: z.array(z.string()),
 }).passthrough())
 
+registerTrigger("place.note.create", z.object({
+  placeId: z.string(),
+  noteId: z.string(),
+}).passthrough())
+
+registerTrigger("place.favorite.toggle", z.object({
+  placeId: z.string(),
+  favorite: z.boolean(),
+}).passthrough())
+
 registerTrigger("inbox.accept", z.object({
   stagedInteractionId: z.string(),
   interactionId: z.string(),

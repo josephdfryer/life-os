@@ -1,7 +1,65 @@
 import { db } from "@/lib/db"
 import { centsToDollars } from "@life-os/db"
-import { badRequest, notFound, requiredString } from "@/server/api/errors"
-import { auditAction, type DomainActor } from "./audit"
+import { badRequest, notFound } from "@/server/api/errors"
+import type { DomainActor } from "./audit"
+import { runRulesForTarget } from "./rules"
+import {
+  createPlaceNote as sharedCreatePlaceNote,
+  updatePlaceNote as sharedUpdatePlaceNote,
+  deletePlaceNote as sharedDeletePlaceNote,
+  togglePlaceFavorite as sharedTogglePlaceFavorite,
+  PlaceNoteError,
+} from "@life-os/domain"
+
+// Write operations (PlaceNote CRUD, favorite toggle) moved to
+// @life-os/domain/place-notes.ts (Track C, phase C4) — same shim pattern
+// as persons.ts/plans.ts/events.ts. Everything else in this file (map/
+// profile reads, timeline derivation) is unchanged. Fires new
+// place.note.create/place.favorite.toggle triggers (packages/domain never
+// depends on packages/automation).
+function translatePlaceNoteError<T>(promise: Promise<T>): Promise<T> {
+  return promise.catch(error => {
+    if (error instanceof PlaceNoteError) throw error.code === "not_found" ? notFound(error.message) : badRequest(error.message)
+    throw error
+  })
+}
+
+export async function createPlaceNote(
+  placeId: string,
+  workspaceId: string | null | undefined,
+  body: unknown,
+  opts: { eventId?: unknown; actor?: DomainActor } = {},
+) {
+  const note = await translatePlaceNoteError(sharedCreatePlaceNote(placeId, workspaceId, body, opts))
+  await runRulesForTarget({
+    trigger: "place.note.create",
+    targetType: "place",
+    targetId: placeId,
+    payload: { placeId, noteId: note.id },
+    actor: opts.actor,
+  })
+  return note
+}
+
+export function updatePlaceNote(noteId: string, workspaceId: string | null | undefined, body: unknown, actor?: DomainActor) {
+  return translatePlaceNoteError(sharedUpdatePlaceNote(noteId, workspaceId, body, actor))
+}
+
+export function deletePlaceNote(noteId: string, workspaceId: string | null | undefined, actor?: DomainActor) {
+  return translatePlaceNoteError(sharedDeletePlaceNote(noteId, workspaceId, actor))
+}
+
+export async function togglePlaceFavorite(placeId: string, workspaceId: string | null | undefined, actor?: DomainActor) {
+  const updated = await translatePlaceNoteError(sharedTogglePlaceFavorite(placeId, workspaceId, actor))
+  await runRulesForTarget({
+    trigger: "place.favorite.toggle",
+    targetType: "place",
+    targetId: placeId,
+    payload: { placeId, favorite: updated.favorite },
+    actor,
+  })
+  return updated
+}
 
 type PlaceRow = Awaited<ReturnType<typeof fetchPlaceProfileRow>>
 type EventRow = NonNullable<PlaceRow>["events"][number]
@@ -165,60 +223,6 @@ export async function getPlaceProfile(placeId: string, workspaceId: string | nul
   ])
   if (!place) throw notFound("Place not found", { placeId })
   return derivePlaceData(place, groups)
-}
-
-export async function createPlaceNote(
-  placeId: string,
-  workspaceId: string | null | undefined,
-  body: unknown,
-  opts: { eventId?: unknown; actor?: DomainActor } = {},
-) {
-  const wsId = workspaceId ?? "default-workspace"
-  await assertPlace(placeId, wsId)
-  const eventId = typeof opts.eventId === "string" && opts.eventId.trim() ? opts.eventId.trim() : null
-  if (eventId) await assertPlaceEvent(placeId, eventId, wsId)
-
-  const note = await db.placeNote.create({
-    data: {
-      placeId,
-      workspaceId: wsId,
-      body: requiredString(body, "body"),
-      eventId,
-    },
-  })
-  await auditAction({ actor: opts.actor, action: "place.note.create", targetType: "place", targetId: placeId, metadata: { noteId: note.id, eventId } })
-  return note
-}
-
-export async function updatePlaceNote(noteId: string, workspaceId: string | null | undefined, body: unknown, actor?: DomainActor) {
-  const wsId = workspaceId ?? "default-workspace"
-  const note = await db.placeNote.findFirst({ where: { id: noteId, workspaceId: wsId } })
-  if (!note) throw notFound("Place note not found", { noteId })
-  const updated = await db.placeNote.update({
-    where: { id: noteId },
-    data: { body: requiredString(body, "body") },
-  })
-  await auditAction({ actor, action: "place.note.update", targetType: "place", targetId: note.placeId, metadata: { noteId } })
-  return updated
-}
-
-export async function deletePlaceNote(noteId: string, workspaceId: string | null | undefined, actor?: DomainActor) {
-  const wsId = workspaceId ?? "default-workspace"
-  const note = await db.placeNote.findFirst({ where: { id: noteId, workspaceId: wsId } })
-  if (!note) throw notFound("Place note not found", { noteId })
-  await db.placeNote.delete({ where: { id: noteId } })
-  await auditAction({ actor, action: "place.note.delete", targetType: "place", targetId: note.placeId, metadata: { noteId } })
-}
-
-export async function togglePlaceFavorite(placeId: string, workspaceId: string | null | undefined, actor?: DomainActor) {
-  const wsId = workspaceId ?? "default-workspace"
-  const place = await assertPlace(placeId, wsId)
-  const updated = await db.place.update({
-    where: { id: placeId },
-    data: { favorite: !place.favorite },
-  })
-  await auditAction({ actor, action: "place.favorite.toggle", targetType: "place", targetId: placeId, metadata: { favorite: updated.favorite } })
-  return updated
 }
 
 function derivePlaceData(place: NonNullable<PlaceRow>, workspaceGroups: GroupRow[]): PlaceProfile {
@@ -478,17 +482,4 @@ function numberFrom(value: unknown) {
   if (value === null || value === undefined || value === "") return null
   const n = Number(value)
   return Number.isFinite(n) ? n : null
-}
-
-async function assertPlace(placeId: string, workspaceId: string) {
-  const place = await db.place.findFirst({ where: { id: placeId, workspaceId } })
-  if (!place) throw notFound("Place not found", { placeId })
-  return place
-}
-
-async function assertPlaceEvent(placeId: string, eventId: string, workspaceId: string) {
-  const event = await db.event.findFirst({ where: { id: eventId, workspaceId } })
-  if (!event) throw notFound("Event not found", { eventId })
-  if (event.placeId !== placeId) throw badRequest("Event does not belong to this place", { placeId, eventId })
-  return event
 }
