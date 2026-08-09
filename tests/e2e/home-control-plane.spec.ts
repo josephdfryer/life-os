@@ -93,10 +93,11 @@ test.describe('Home control plane', () => {
       'group.update',
       'item.create',
       'item.update',
+      'state.record',
     ]) {
       await expect(page.getByText(trigger, { exact: true })).toBeVisible()
     }
-    for (const action of ['interaction_set_field', 'add_tag', 'plan_set_status', 'event_set_field', 'item_set_field']) {
+    for (const action of ['interaction_set_field', 'add_tag', 'plan_set_status', 'event_set_field', 'item_set_field', 'state_record']) {
       await expect(page.getByText(action, { exact: true })).toBeVisible()
     }
     const versionedRule = page.locator('article.automation-rule-card').filter({ has: page.getByRole('heading', { name: 'Stage trusted messages' }) })

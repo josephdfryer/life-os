@@ -1,6 +1,13 @@
 import { Prisma, type PrismaClient } from "@life-os/db"
 import { createId } from "@paralleldrive/cuid2"
-import { createItemInTransaction, ItemError, updateItemInTransaction } from "@life-os/domain"
+import {
+  createItemInTransaction,
+  ensureStateDefinitionInTransaction,
+  ItemError,
+  recordStateInTransaction,
+  updateItemInTransaction,
+} from "@life-os/domain"
+import { runRulesForTarget } from "@life-os/automation"
 import { fireItemCreateRules, fireItemUpdateRules, type ItemCommandActor } from "./item-commands"
 import {
   createStocktakeSnapshot,
@@ -358,26 +365,35 @@ export async function markItemMissing(
     throw new InventoryError("Only an unobserved stocktake item can be marked missing", 409, "ITEM_OBSERVED")
   }
   await requireItem(db, input.workspaceId, input.itemId)
-  const definition = await db.stateDefinition.upsert({
-    where: {
-      workspaceId_entityType_type_value: {
-        workspaceId: input.workspaceId,
-        ...MISSING_STATE,
-      },
-    },
-    update: {},
-    create: { workspaceId: input.workspaceId, ...MISSING_STATE, description: "Not found during an inventory check" },
-  })
-  return db.state.create({
-    data: {
-      workspaceId: input.workspaceId,
+  const actor = inventoryActor(input.workspaceId)
+  const result = await db.$transaction(async tx => {
+    const definition = await ensureStateDefinitionInTransaction(tx, {
+      ...MISSING_STATE,
+      description: "Not found during an inventory check",
+    }, input.workspaceId)
+    return recordStateInTransaction(tx, {
       entityType: "Item",
       entityId: input.itemId,
       definitionId: definition.id,
       source: `stocktake:${input.stocktakeId}`,
       recordedAt: input.timestamp ?? new Date(),
-    },
+    }, input.workspaceId, actor)
   })
+  await runRulesForTarget({
+    trigger: "state.record",
+    targetType: "state",
+    targetId: result.state.id,
+    payload: {
+      stateId: result.state.id,
+      entityType: result.state.entityType,
+      entityId: result.state.entityId,
+      definitionType: result.definition.type,
+      definitionValue: result.definition.value,
+      severity: result.state.severity,
+    },
+    actor,
+  })
+  return result.state
 }
 
 export async function adjustItemQuantity(

@@ -75,6 +75,10 @@ value: missing
 A later movement or verification supersedes that missing observation in the
 derived current view without deleting history.
 
+The explicit missing write uses `@life-os/domain/states`, so the State row and
+its `state.record` GraphEvent commit together; Stuff fires the State automation
+trigger only after that commit succeeds.
+
 ## Routes
 
 | Surface | Purpose |

@@ -382,6 +382,11 @@ self Person (`--person-id`, or `$HEALTH_SYNC_PERSON_ID`, or a built-in
 default — the script refuses to guess or auto-create this Person). Daily
 metrics (steps, heart rate, sleep, etc.) become **State** rows against that
 Person, one **Note** per day holding the full digest text as provenance.
+State taxonomy upserts and readings now pass through
+`packages/domain/states.ts`; replacing a day's derived readings, Home evening
+check-ins, and Stuff stocktake conditions all use the same workspace-scoped
+command. Each reading publishes `state.record` in its transaction, then its
+calling surface fires the matching automation trigger after commit.
 Workouts become **Event** rows (with matched GPX routes archived as
 `ImportedFile`) — deliberately *not* Interactions. A solo workout isn't a
 relationship touchpoint the way a call or message is, and earlier versions
@@ -809,7 +814,7 @@ Plain English version:
 - **Workspace, WorkspaceMember, ApprovedEmail**: tenancy system. These decide who can sign in and which private workspace their People data belongs to.
 - **CalendarConnection, CalendarEventLink**: Google Calendar integration state. Connections store OAuth/sync state; event links make imports repeatable without duplicating Events.
 - **GmailConnection, GmailMessageLink**: Gmail integration state. Connections store OAuth/history state; message links make email imports repeatable and tie Gmail messages to Interactions or Inbox items.
-- **State, StateDefinition**: a timestamped condition on any entity (currently: health metrics on a self Person). `StateDefinition` is the taxonomy entry (key + unit/description); `State` is one dated reading, optionally tracing back to the Note it was derived from via `sourceNoteId`.
+- **State, StateDefinition**: a timestamped condition on any entity (currently: health metrics and check-ins on a self Person, plus inventory conditions on Items). `StateDefinition` is the taxonomy entry (key + description); `State` is one dated reading, optionally tracing back to the Note it was derived from via `sourceNoteId`. `packages/domain/states.ts` owns taxonomy upsert, recording, and source-Note replacement writes.
 - **Note**: raw captured input — currently the daily digest text the health sync writes per day, with the day's metrics as its `raw` metadata and States as its structured children. Not yet shown generically in the UI; the Person page's Health card is the first place Notes surface.
 
 ## Outputs

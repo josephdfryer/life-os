@@ -121,6 +121,15 @@ registerTrigger("item.update", z.object({
   fields: z.array(z.string()),
 }).passthrough())
 
+registerTrigger("state.record", z.object({
+  stateId: z.string(),
+  entityType: z.string(),
+  entityId: z.string(),
+  definitionType: z.string(),
+  definitionValue: z.string(),
+  severity: z.number().nullable().optional(),
+}).passthrough())
+
 registerTrigger("inbox.accept", z.object({
   stagedInteractionId: z.string(),
   interactionId: z.string(),

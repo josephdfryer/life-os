@@ -14,6 +14,11 @@ import {
   type ParsedExport,
 } from "./health/parse-export.ts"
 import { HEALTH_METRIC_TAXONOMY, dailyRowToMetrics } from "./health/metrics.ts"
+import {
+  ensureStateDefinition,
+  replaceStatesForSourceNoteInTransaction,
+} from "@life-os/domain"
+import { runRulesForTarget } from "@life-os/automation"
 
 const require = createRequire(import.meta.url)
 const dotenv = require("dotenv") as { config(options: { path: string; quiet?: boolean }): void }
@@ -149,25 +154,12 @@ function reportParse(parsed: ParsedExport) {
 async function ensureStateDefinitions(workspaceId: string): Promise<Map<string, string>> {
   const map = new Map<string, string>()
   for (const def of HEALTH_METRIC_TAXONOMY) {
-    const row = await db.stateDefinition.upsert({
-      where: {
-        workspaceId_entityType_type_value: {
-          workspaceId,
-          entityType: WORKSPACE_ENTITY_TYPE,
-          type: STATE_TYPE,
-          value: def.key,
-        },
-      },
-      update: { description: def.description },
-      create: {
-        workspaceId,
-        entityType: WORKSPACE_ENTITY_TYPE,
-        type: STATE_TYPE,
-        value: def.key,
-        description: def.description,
-      },
-      select: { id: true },
-    })
+    const row = await ensureStateDefinition({
+      entityType: WORKSPACE_ENTITY_TYPE,
+      type: STATE_TYPE,
+      value: def.key,
+      description: def.description,
+    }, workspaceId)
     map.set(def.key, row.id)
   }
   return map
@@ -209,25 +201,39 @@ async function syncDailyRow(input: {
       select: { id: true },
     })
 
-  await db.$transaction([
-    db.state.deleteMany({ where: { sourceNoteId: note.id } }),
-    ...metrics.map(metric => {
+  const actor = { type: "system" as const, label: "health-sync", workspaceId }
+  const recorded = await db.$transaction(tx => replaceStatesForSourceNoteInTransaction(
+    tx,
+    note.id,
+    metrics.map(metric => {
       const definitionId = definitionIds.get(metric.key)
       if (!definitionId) throw new Error(`No StateDefinition resolved for metric key "${metric.key}"`)
-      return db.state.create({
-        data: {
-          workspaceId,
-          entityType: WORKSPACE_ENTITY_TYPE,
-          entityId,
-          definitionId,
-          severity: metric.value,
-          source: SOURCE,
-          sourceNoteId: note.id,
-          recordedAt: row.dayDate,
-        },
-      })
+      return {
+        entityType: WORKSPACE_ENTITY_TYPE,
+        entityId,
+        definitionId,
+        severity: metric.value,
+        source: SOURCE,
+        recordedAt: row.dayDate,
+      }
     }),
-  ])
+    workspaceId,
+    actor,
+  ))
+  await Promise.all(recorded.map(({ state, definition }) => runRulesForTarget({
+    trigger: "state.record",
+    targetType: "state",
+    targetId: state.id,
+    payload: {
+      stateId: state.id,
+      entityType: state.entityType,
+      entityId: state.entityId,
+      definitionType: definition.type,
+      definitionValue: definition.value,
+      severity: state.severity,
+    },
+    actor,
+  })))
 
   if (input.verbose) console.log(`[health-sync] ${row.dayKey}: ${metrics.length} metric(s)`)
   return { statesWritten: metrics.length }

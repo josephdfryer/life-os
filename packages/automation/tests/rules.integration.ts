@@ -277,6 +277,38 @@ async function main() {
   assert.equal(itemRun.actionsApplied.length, 1)
   assert.equal((await db.item.findUniqueOrThrow({ where: { id: item.id } })).notes, "Review care instructions")
 
+  const stateRule = await createRule({
+    name: "Propose a condition for new items",
+    trigger: "item.create",
+    mode: "auto",
+    actions: [{
+      type: "state_record",
+      field: "inventory_condition",
+      value: { value: "needs_review", severity: 2, description: "Needs a manual inventory review" },
+    }],
+  }, actor)
+  await runRulesForTarget({
+    trigger: "item.create",
+    payload: { itemId: item.id, name: item.name, assetId: item.assetId },
+    targetType: "item",
+    targetId: item.id,
+    actor: actor.actor,
+    apply: true,
+  })
+  assert.equal(await db.state.count({ where: { workspaceId, entityType: "Item", entityId: item.id } }), 0)
+  const stateReview = await db.reviewItem.findFirstOrThrow({
+    where: { workspaceId, source: "rule", sourceId: { startsWith: `${stateRule.id}:v1:item:${item.id}` } },
+  })
+  assert.equal(stateReview.riskTier, "review")
+  await resolveReviewItem({ id: stateReview.id, workspaceId, action: "accept", actor: actor.actor })
+  const itemState = await db.state.findFirstOrThrow({
+    where: { workspaceId, entityType: "Item", entityId: item.id },
+    include: { definition: true },
+  })
+  assert.equal(itemState.definition.type, "inventory_condition")
+  assert.equal(itemState.definition.value, "needs_review")
+  assert.equal(itemState.severity, 2)
+
   // ── error paths ──
   await assert.rejects(
     () => updateRule("does-not-exist", { priority: 1 }, actor),

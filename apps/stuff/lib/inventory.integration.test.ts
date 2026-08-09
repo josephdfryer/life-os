@@ -128,5 +128,34 @@ test("inventory overview and stocktake detail derive latest item evidence in SQL
   assert.equal(await db.graphEvent.count({
     where: { workspaceId: workspace.id, subjectType: "Item", subjectId: item.id, eventType: "item.quantity.adjust" },
   }), 1)
+
+  const missingItem = await db.item.create({
+    data: { workspaceId: workspace.id, name: "Umbrella", assetId: "PERF-UMBRELLA", placeId: place.id },
+  })
+  const missingStocktake = await db.event.create({
+    data: {
+      workspaceId: workspace.id,
+      name: "Missing-item stocktake",
+      type: core.STOCKTAKE_EVENT_TYPE,
+      start: new Date("2026-08-05T12:00:00Z"),
+      timestamp: new Date("2026-08-05T12:00:00Z"),
+      placeId: place.id,
+      metadata: JSON.stringify(core.createStocktakeSnapshot({
+        placeIds: [place.id],
+        expectedItemIds: [missingItem.id],
+        includeDescendants: false,
+      })),
+    },
+  })
+  const missingState = await inventory.markItemMissing(db, {
+    workspaceId: workspace.id,
+    stocktakeId: missingStocktake.id,
+    itemId: missingItem.id,
+    timestamp: new Date("2026-08-05T13:00:00Z"),
+  })
+  assert.equal(missingState.entityId, missingItem.id)
+  assert.equal(await db.graphEvent.count({
+    where: { workspaceId: workspace.id, subjectType: "State", subjectId: missingState.id, eventType: "state.record" },
+  }), 1)
   await db.$disconnect()
 })

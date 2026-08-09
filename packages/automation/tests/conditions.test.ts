@@ -71,6 +71,7 @@ test("built-in action authority matches the consequence of the write", () => {
     assert.equal(action!.authorityTier, "safe_auto")
   }
   assert.equal(getRegisteredAction("plan_set_status")?.authorityTier, "review")
+  assert.equal(getRegisteredAction("state_record")?.authorityTier, "review")
 })
 
 test("an unregistered action type resolves to nothing, not a crash", () => {

@@ -6,6 +6,7 @@ import {
   updatePlan, PlanError,
   updateEventPrimitive, EventPrimitiveError,
   updateItem, ItemError,
+  ensureStateDefinition, recordState, StateError,
   registerReviewCommand, type ReviewItemActorContext, type ReviewItemCommandResult,
   type GraphEventActor, type AuditActor,
 } from "@life-os/domain"
@@ -210,6 +211,37 @@ registerAction({
       return action
     } catch (error) {
       if (error instanceof ItemError) return null
+      throw error
+    }
+  },
+})
+
+registerAction({
+  type: "state_record",
+  authorityTier: "review",
+  async execute(action, ctx) {
+    if (!ctx.targetType || !ctx.targetId || !action.field || typeof action.value !== "object" || action.value === null) return null
+    const proposal = action.value as Record<string, unknown>
+    const definitionValue = typeof proposal.value === "string" ? proposal.value.trim() : ""
+    if (!definitionValue) return null
+    const entityType = `${ctx.targetType.charAt(0).toUpperCase()}${ctx.targetType.slice(1)}`
+    try {
+      const definition = await ensureStateDefinition({
+        entityType,
+        type: action.field,
+        value: definitionValue,
+        description: typeof proposal.description === "string" ? proposal.description : null,
+      }, ctx.workspaceId)
+      await recordState({
+        entityType,
+        entityId: ctx.targetId,
+        definitionId: definition.id,
+        severity: typeof proposal.severity === "number" ? proposal.severity : null,
+        source: "automation",
+      }, ctx.workspaceId, ctx.actor)
+      return action
+    } catch (error) {
+      if (error instanceof StateError) return null
       throw error
     }
   },
