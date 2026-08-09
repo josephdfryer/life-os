@@ -258,6 +258,25 @@ async function main() {
   await resolveReviewItem({ id: planReview.id, workspaceId, action: "accept", actor: actor.actor })
   assert.equal((await db.plan.findUniqueOrThrow({ where: { id: plan.id } })).status, "completed")
 
+  // ── Item enrichment action updates only a safe descriptive field ──
+  const item = await db.item.create({ data: { workspaceId, name: "Jacket", assetId: "#AUTO-ITEM-1" } })
+  await createRule({
+    name: "Describe new items",
+    trigger: "item.create",
+    mode: "auto",
+    actions: [{ type: "item_set_field", field: "notes", value: "Review care instructions" }],
+  }, actor)
+  const itemRun = await runRulesForTarget({
+    trigger: "item.create",
+    payload: { itemId: item.id, name: item.name, assetId: item.assetId },
+    targetType: "item",
+    targetId: item.id,
+    actor: actor.actor,
+    apply: true,
+  })
+  assert.equal(itemRun.actionsApplied.length, 1)
+  assert.equal((await db.item.findUniqueOrThrow({ where: { id: item.id } })).notes, "Review care instructions")
+
   // ── error paths ──
   await assert.rejects(
     () => updateRule("does-not-exist", { priority: 1 }, actor),

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { centsToDollars, dollarsToCents } from '@life-os/db'
 import { requireStuffAccess } from '@/lib/access'
+import { createItem } from '@/lib/item-commands'
 
 export async function GET(req: NextRequest) {
   const access = await requireStuffAccess()
@@ -56,9 +57,8 @@ export async function POST(req: NextRequest) {
   const count = await db.item.count({ where: { workspaceId } })
   const assetId = `#${catStr}-${String(count + 1).padStart(3, '0')}`
 
-  const item = await db.item.create({
-    data: {
-      workspaceId,
+  const item = await createItem(
+    {
       name: (name as string).trim(),
       assetId,
       ...(category ? { category: category as string } : {}),
@@ -78,7 +78,9 @@ export async function POST(req: NextRequest) {
       lifetimeWarranty: Boolean(lifetimeWarranty),
       ...(warrantyDetails ? { warrantyDetails: warrantyDetails as string } : {}),
     },
-  })
+    workspaceId,
+    { type: 'user', id: access.user.id, workspaceId },
+  )
 
   return NextResponse.json({ ...item, purchasePrice: centsToDollars(item.purchasePrice) }, { status: 201 })
 }

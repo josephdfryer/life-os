@@ -10,8 +10,10 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
+    "@life-os/automation": "*",
     "@life-os/auth": "*",
     "@life-os/db": "*",
+    "@life-os/domain": "*",
     "@life-os/types": "*",
     "@life-os/ui": "*",
     "@paralleldrive/cuid2": "^3.3.0",

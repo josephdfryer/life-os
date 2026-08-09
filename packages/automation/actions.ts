@@ -5,6 +5,7 @@ import {
   getPersonTags, setPersonTags,
   updatePlan, PlanError,
   updateEventPrimitive, EventPrimitiveError,
+  updateItem, ItemError,
   registerReviewCommand, type ReviewItemActorContext, type ReviewItemCommandResult,
   type GraphEventActor, type AuditActor,
 } from "@life-os/domain"
@@ -192,6 +193,23 @@ registerAction({
       return action
     } catch (error) {
       if (error instanceof EventPrimitiveError) return null
+      throw error
+    }
+  },
+})
+
+const ITEM_SAFE_FIELDS = new Set(["description", "notes", "tags", "color", "colorSoft"])
+
+registerAction({
+  type: "item_set_field",
+  authorityTier: "safe_auto",
+  async execute(action, ctx) {
+    if (ctx.targetType !== "item" || !ctx.targetId || !action.field || !ITEM_SAFE_FIELDS.has(action.field)) return null
+    try {
+      await updateItem(ctx.targetId, { [action.field]: action.value }, ctx.workspaceId, ctx.actor)
+      return action
+    } catch (error) {
+      if (error instanceof ItemError) return null
       throw error
     }
   },

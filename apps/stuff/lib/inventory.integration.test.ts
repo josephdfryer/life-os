@@ -107,6 +107,9 @@ test("inventory overview and stocktake detail derive latest item evidence in SQL
     (await db.interaction.findUniqueOrThrow({ where: { id: moved.interactionId } })).type,
     core.INVENTORY_INTERACTION_TYPES.moved,
   )
+  assert.equal(await db.graphEvent.count({
+    where: { workspaceId: workspace.id, subjectType: "Item", subjectId: item.id, eventType: "item.move" },
+  }), 1)
 
   const adjusted = await inventory.adjustItemQuantity(db, {
     workspaceId: workspace.id,
@@ -122,5 +125,8 @@ test("inventory overview and stocktake detail derive latest item evidence in SQL
   })
   assert.equal(quantityEvidence.quantityDelta, 2)
   assert.equal(quantityEvidence.quantityAfter, 3)
+  assert.equal(await db.graphEvent.count({
+    where: { workspaceId: workspace.id, subjectType: "Item", subjectId: item.id, eventType: "item.quantity.adjust" },
+  }), 1)
   await db.$disconnect()
 })

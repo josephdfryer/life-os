@@ -2,6 +2,8 @@ import { NextResponse } from "next/server"
 import { createId } from "@paralleldrive/cuid2"
 import { db } from "@/lib/db"
 import { requireStuffAccess } from "@/lib/access"
+import { createItemInTransaction } from "@life-os/domain"
+import { fireItemCreateRules } from "@/lib/item-commands"
 
 type GarmentInput = {
   name?: string
@@ -32,9 +34,8 @@ export async function POST(request: Request) {
 
   const valid = body.garments.filter((garment) => garment.name?.trim())
   if (valid.length === 0) return NextResponse.json({ error: "Each garment needs a name." }, { status: 400 })
-  const created = await db.$transaction(valid.map((garment) => db.item.create({
-    data: {
-      workspaceId: access.workspaceId,
+  const actor = { type: "user" as const, id: access.user.id, workspaceId: access.workspaceId }
+  const created = await db.$transaction(tx => Promise.all(valid.map((garment) => createItemInTransaction(tx, {
       name: garment.name!.trim(),
       assetId: `#WRD-${createId().slice(-6).toUpperCase()}`,
       category: garment.category?.trim() || "Clothing",
@@ -58,9 +59,9 @@ export async function POST(request: Request) {
         source: "ai_reviewed",
       }),
       ownedById: access.user.personId ?? undefined,
-    },
-    select: { id: true, name: true, assetId: true },
-  })))
+    }, access.workspaceId, { actor }).then(item => ({ id: item.id, name: item.name, assetId: item.assetId })),
+  )))
+  await Promise.all(created.map(item => fireItemCreateRules(item, access.workspaceId, actor)))
 
   return NextResponse.json({ items: created }, { status: 201 })
 }

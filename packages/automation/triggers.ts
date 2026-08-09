@@ -110,6 +110,17 @@ registerTrigger("group.update", z.object({
   fields: z.array(z.string()),
 }).passthrough())
 
+registerTrigger("item.create", z.object({
+  itemId: z.string(),
+  name: z.string(),
+  assetId: z.string(),
+}).passthrough())
+
+registerTrigger("item.update", z.object({
+  itemId: z.string(),
+  fields: z.array(z.string()),
+}).passthrough())
+
 registerTrigger("inbox.accept", z.object({
   stagedInteractionId: z.string(),
   interactionId: z.string(),

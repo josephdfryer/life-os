@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { centsToDollars, dollarsToCents } from '@life-os/db'
 import { requireStuffAccess } from '@/lib/access'
+import { deleteItem, updateItem } from '@/lib/item-commands'
 
 export async function PATCH(
   req: NextRequest,
@@ -71,9 +72,7 @@ export async function PATCH(
     updates.warrantyExpires = body.warrantyExpires ? new Date(body.warrantyExpires as string) : null
   }
 
-  // updateMany (not update) so the workspace filter guards the write itself.
-  await db.item.updateMany({ where: { id, workspaceId }, data: updates })
-  const item = await db.item.findUniqueOrThrow({ where: { id } })
+  const item = await updateItem(id, updates, workspaceId, { type: 'user', id: access.user.id, workspaceId })
   return NextResponse.json({ ...item, purchasePrice: centsToDollars(item.purchasePrice) })
 }
 
@@ -89,6 +88,6 @@ export async function DELETE(
   const existing = await db.item.findFirst({ where: { id, workspaceId } })
   if (!existing) return NextResponse.json({ error: 'Not found' }, { status: 404 })
 
-  await db.item.deleteMany({ where: { id, workspaceId } })
+  await deleteItem(id, workspaceId, { type: 'user', id: access.user.id, workspaceId })
   return new NextResponse(null, { status: 204 })
 }

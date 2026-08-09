@@ -34,6 +34,15 @@ Event: stocktake
 are the immutable history. The inventory move command updates both in one
 database transaction and rejects a stale expected source location.
 
+Canonical Item writes pass through `@life-os/domain/items`. Its transactional
+commands publish the matching `item.create`, `item.update`, `item.move`,
+`item.quantity.adjust`, or `item.delete` GraphEvent in the same commit. Stuff
+retains inventory policy and evidence creation, then fires the registered
+`item.create` or `item.update` automation trigger only after that transaction
+commits. This keeps generic Item APIs, wardrobe import, stock movement, stock
+adjustment, tracking configuration, and purchase receiving on one write path
+without moving inventory-specific rules into the shared primitive package.
+
 An Item inside another Item through an active `Assembly` inherits the
 container's effective Place. It cannot be moved independently until
 disassembled. `Assembly` is not used for shelves, drawers, or rooms; those are

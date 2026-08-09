@@ -1,5 +1,7 @@
 import { Prisma, type PrismaClient } from "@life-os/db"
 import { createId } from "@paralleldrive/cuid2"
+import { createItemInTransaction, ItemError, updateItemInTransaction } from "@life-os/domain"
+import { fireItemCreateRules, fireItemUpdateRules, type ItemCommandActor } from "./item-commands"
 import {
   createStocktakeSnapshot,
   expiryStatus,
@@ -66,6 +68,10 @@ function participant(workspaceId: string, entityType: string, entityId: string, 
   return { workspaceId, entityType, entityId, role }
 }
 
+function inventoryActor(workspaceId: string): ItemCommandActor {
+  return { type: "system", label: "stuff.inventory", workspaceId }
+}
+
 export async function getDescendantPlaceIds(db: Db, workspaceId: string, rootPlaceId: string) {
   await requirePlace(db, workspaceId, rootPlaceId)
   const seen = new Set([rootPlaceId])
@@ -128,7 +134,8 @@ export async function moveItem(
     timestamp?: Date
   },
 ) {
-  return db.$transaction(async (tx) => {
+  const actor = inventoryActor(input.workspaceId)
+  const result = await db.$transaction(async (tx) => {
     const item = await requireItem(tx, input.workspaceId, input.itemId)
     const destination = await requirePlace(tx, input.workspaceId, input.destinationPlaceId)
     if (input.stocktakeId) await requireStocktake(tx, input.workspaceId, input.stocktakeId)
@@ -159,11 +166,15 @@ export async function moveItem(
         : []),
     ]
 
-    const updated = await tx.item.updateMany({
-      where: { id: item.id, workspaceId: input.workspaceId, placeId: input.expectedFromPlaceId },
-      data: { placeId: destination.id },
-    })
-    if (updated.count !== 1) {
+    try {
+      await updateItemInTransaction(tx, item.id, { placeId: destination.id }, input.workspaceId, {
+        actor,
+        expected: { placeId: input.expectedFromPlaceId },
+        eventType: "item.move",
+        payload: { fromPlaceId: item.placeId, toPlaceId: destination.id },
+      })
+    } catch (error) {
+      if (!(error instanceof ItemError) || error.code !== "conflict") throw error
       throw new InventoryError("The item was moved by someone else. Refresh and try again.", 409, "STALE_LOCATION")
     }
 
@@ -185,6 +196,8 @@ export async function moveItem(
 
     return { itemId: item.id, placeId: destination.id, interactionId: interaction.id }
   })
+  await fireItemUpdateRules(result.itemId, ["placeId"], input.workspaceId, actor)
+  return result
 }
 
 export async function startStocktake(
@@ -235,7 +248,8 @@ export async function verifyStocktakeItem(
     timestamp?: Date
   },
 ) {
-  return db.$transaction(async (tx) => {
+  const actor = inventoryActor(input.workspaceId)
+  const result = await db.$transaction(async (tx) => {
     const event = await requireStocktake(tx, input.workspaceId, input.stocktakeId)
     if (event.end) throw new InventoryError("This stocktake is already finished", 409, "STOCKTAKE_FINISHED")
     const item = await requireItem(tx, input.workspaceId, input.itemId)
@@ -377,7 +391,8 @@ export async function adjustItemQuantity(
     timestamp?: Date
   },
 ) {
-  return db.$transaction(async (tx) => {
+  const actor = inventoryActor(input.workspaceId)
+  const result = await db.$transaction(async (tx) => {
     const item = await tx.item.findFirst({
       where: { id: input.itemId, workspaceId: input.workspaceId },
       select: {
@@ -407,11 +422,15 @@ export async function adjustItemQuantity(
       )
     }
 
-    const updated = await tx.item.updateMany({
-      where: { id: item.id, workspaceId: input.workspaceId, quantity: item.quantity },
-      data: { quantity: quantityAfter },
-    })
-    if (updated.count !== 1) {
+    try {
+      await updateItemInTransaction(tx, item.id, { quantity: quantityAfter }, input.workspaceId, {
+        actor,
+        expected: { quantity: item.quantity },
+        eventType: "item.quantity.adjust",
+        payload: { delta: input.delta, quantityAfter, reason },
+      })
+    } catch (error) {
+      if (!(error instanceof ItemError) || error.code !== "conflict") throw error
       throw new InventoryError("Quantity changed elsewhere. Refresh and try again.", 409, "STALE_QUANTITY")
     }
     const timestamp = input.timestamp ?? new Date()
@@ -447,6 +466,8 @@ export async function adjustItemQuantity(
     })
     return { itemId: item.id, quantityAfter, interactionId: interaction.id }
   })
+  await fireItemUpdateRules(result.itemId, ["quantity"], input.workspaceId, actor)
+  return result
 }
 
 export async function configureItemTracking(
@@ -460,11 +481,16 @@ export async function configureItemTracking(
   },
 ) {
   const item = await requireItem(db, input.workspaceId, input.itemId)
+  const actor = inventoryActor(input.workspaceId)
   if (!input.definitionId) {
-    await db.item.updateMany({
-      where: { id: item.id, workspaceId: input.workspaceId },
-      data: { definitionId: null, lotId: null, serialNumber: input.serialNumber },
-    })
+    await db.$transaction(tx => updateItemInTransaction(
+      tx,
+      item.id,
+      { definitionId: null, lotId: null, serialNumber: input.serialNumber },
+      input.workspaceId,
+      { actor },
+    ))
+    await fireItemUpdateRules(item.id, ["definitionId", "lotId", "serialNumber"], input.workspaceId, actor)
     return
   }
   const definition = await db.itemDefinition.findFirst({
@@ -496,13 +522,17 @@ export async function configureItemTracking(
     throw new InventoryError("Lot-tracked Items require a lot", 409, "LOT_REQUIRED")
   }
   try {
-    await db.item.updateMany({
-      where: { id: item.id, workspaceId: input.workspaceId },
-      data: { definitionId: definition.id, lotId, serialNumber },
-    })
+    await db.$transaction(tx => updateItemInTransaction(
+      tx,
+      item.id,
+      { definitionId: definition.id, lotId, serialNumber },
+      input.workspaceId,
+      { actor },
+    ))
   } catch {
     throw new InventoryError("That serial number is already used for this definition", 409, "DUPLICATE_SERIAL")
   }
+  await fireItemUpdateRules(item.id, ["definitionId", "lotId", "serialNumber"], input.workspaceId, actor)
 }
 
 export async function createItemDefinition(
@@ -773,7 +803,12 @@ export async function receivePurchaseOrder(
     throw new InventoryError("Each order line can appear only once per receipt", 400, "DUPLICATE_RECEIPT_LINE")
   }
 
-  return db.$transaction(async (tx) => {
+  const actor = inventoryActor(input.workspaceId)
+  const itemRuleEvents: Array<
+    | { kind: "create"; item: { id: string; name: string; assetId: string } }
+    | { kind: "update"; itemId: string; fields: string[] }
+  > = []
+  const result = await db.$transaction(async (tx) => {
     const order = await tx.purchaseOrder.findFirst({
       where: { id: input.purchaseOrderId, workspaceId: input.workspaceId },
       include: {
@@ -878,9 +913,9 @@ export async function receivePurchaseOrder(
         throw new InventoryError("Existing receiving Item belongs to a different lot", 409, "LOT_MISMATCH")
       }
       if (!item) {
-        item = await tx.item.create({
-          data: {
-            workspaceId: input.workspaceId,
+        item = await createItemInTransaction(
+          tx,
+          {
             name: orderLine.descriptionSnapshot,
             assetId: `#RCV-${createId().slice(-8).toUpperCase()}`,
             category: orderLine.definition.category,
@@ -890,7 +925,10 @@ export async function receivePurchaseOrder(
             lotId,
             serialNumber,
           },
-        })
+          input.workspaceId,
+          { actor },
+        )
+        itemRuleEvents.push({ kind: "create", item: { id: item.id, name: item.name, assetId: item.assetId } })
       }
       let quantityAfter: number
       try {
@@ -906,11 +944,18 @@ export async function receivePurchaseOrder(
           "INVALID_QUANTITY",
         )
       }
-      const updated = await tx.item.updateMany({
-        where: { id: item.id, workspaceId: input.workspaceId, quantity: item.quantity },
-        data: { quantity: quantityAfter },
-      })
-      if (updated.count !== 1) throw new InventoryError("Receiving balance changed elsewhere", 409, "STALE_QUANTITY")
+      try {
+        await updateItemInTransaction(tx, item.id, { quantity: quantityAfter }, input.workspaceId, {
+          actor,
+          expected: { quantity: item.quantity },
+          eventType: "item.quantity.receive",
+          payload: { delta: entry.quantity, quantityAfter, purchaseOrderId: order.id },
+        })
+      } catch (error) {
+        if (!(error instanceof ItemError) || error.code !== "conflict") throw error
+        throw new InventoryError("Receiving balance changed elsewhere", 409, "STALE_QUANTITY")
+      }
+      itemRuleEvents.push({ kind: "update", itemId: item.id, fields: ["quantity"] })
 
       const interaction = await tx.interaction.create({
         data: {
@@ -975,6 +1020,10 @@ export async function receivePurchaseOrder(
     }
     return { eventId: event.id, progress }
   })
+  await Promise.all(itemRuleEvents.map(event => event.kind === "create"
+    ? fireItemCreateRules(event.item, input.workspaceId, actor)
+    : fireItemUpdateRules(event.itemId, event.fields, input.workspaceId, actor)))
+  return result
 }
 
 export async function getProcurementOverview(db: Db, workspaceId: string) {

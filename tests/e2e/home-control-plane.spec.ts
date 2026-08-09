@@ -75,15 +75,28 @@ test.describe('Home control plane', () => {
     await expect(page.getByRole('heading', { name: 'Authority belongs to the action' })).toBeVisible()
     await expect(page.getByText('Observe', { exact: true })).toBeVisible()
     await expect(page.getByText('Safe auto', { exact: true }).first()).toBeVisible()
-    await expect(page.getByText('Review', { exact: true })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Review', exact: true })).toBeVisible()
     await expect(page.getByText('Confirm', { exact: true })).toBeVisible()
     await expect(page.getByRole('heading', { name: 'What the system is allowed to do' })).toBeVisible()
     await expect(page.getByRole('heading', { name: 'Live capabilities' })).toBeVisible()
     await expect(page.getByText('inbox.stage', { exact: true })).toBeVisible()
-    for (const trigger of ['person.create', 'plan.create', 'event.create']) {
+    for (const trigger of [
+      'person.create',
+      'person.update',
+      'plan.create',
+      'plan.update',
+      'event.create',
+      'event.update',
+      'place.note.create',
+      'place.favorite.toggle',
+      'group.create',
+      'group.update',
+      'item.create',
+      'item.update',
+    ]) {
       await expect(page.getByText(trigger, { exact: true })).toBeVisible()
     }
-    for (const action of ['interaction_set_field', 'add_tag', 'plan_set_status', 'event_set_field']) {
+    for (const action of ['interaction_set_field', 'add_tag', 'plan_set_status', 'event_set_field', 'item_set_field']) {
       await expect(page.getByText(action, { exact: true })).toBeVisible()
     }
     const versionedRule = page.locator('article.automation-rule-card').filter({ has: page.getByRole('heading', { name: 'Stage trusted messages' }) })

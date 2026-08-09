@@ -65,7 +65,7 @@ test("replayRule reports planned actions only when matched, and never touches st
 })
 
 test("built-in action authority matches the consequence of the write", () => {
-  for (const type of ["block", "set", "set_field", "assign", "add_tag", "remove_tag", "interaction_set_field", "event_set_field"]) {
+  for (const type of ["block", "set", "set_field", "assign", "add_tag", "remove_tag", "interaction_set_field", "event_set_field", "item_set_field"]) {
     const action = getRegisteredAction(type)
     assert.ok(action, `expected "${type}" to be registered`)
     assert.equal(action!.authorityTier, "safe_auto")
