@@ -4,7 +4,7 @@ import { unauthorizedResponse, handleRouteError, errorResponse } from "@/lib/res
 
 /**
  * Disconnect an integration — marks the Connection mirror row disabled and,
- * best-effort, does the same on its row of truth (sourceTable/sourceId) so
+ * atomically does the same on its row of truth (sourceTable/sourceId) so
  * Calendar/Gmail's own OAuth code and Era's sync scripts see the change too
  * without needing their own separate disconnect endpoint.
  *
@@ -20,15 +20,25 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
     const connection = await db.connection.findFirst({ where: { id, workspaceId: auth.workspaceId } })
     if (!connection) return errorResponse(404, "not_found", "Connection not found")
 
-    await db.connection.update({ where: { id }, data: { status: "disabled" } })
-
-    if (connection.sourceTable === "CalendarConnection" && connection.sourceId) {
-      await db.calendarConnection.update({ where: { id: connection.sourceId }, data: { status: "disabled" } }).catch(() => {})
-    } else if (connection.sourceTable === "GmailConnection" && connection.sourceId) {
-      await db.gmailConnection.update({ where: { id: connection.sourceId }, data: { status: "disabled" } }).catch(() => {})
-    } else if (connection.sourceTable === "EraConnection" && connection.sourceId) {
-      await db.eraConnection.update({ where: { id: connection.sourceId }, data: { status: "disabled" } }).catch(() => {})
-    }
+    await db.$transaction(async tx => {
+      if (connection.sourceTable === "CalendarConnection" && connection.sourceId) {
+        await tx.calendarConnection.updateMany({
+          where: { id: connection.sourceId, workspaceId: auth.workspaceId },
+          data: { status: "disabled" },
+        })
+      } else if (connection.sourceTable === "GmailConnection" && connection.sourceId) {
+        await tx.gmailConnection.updateMany({
+          where: { id: connection.sourceId, workspaceId: auth.workspaceId },
+          data: { status: "disabled" },
+        })
+      } else if (connection.sourceTable === "EraConnection" && connection.sourceId) {
+        await tx.eraConnection.updateMany({
+          where: { id: connection.sourceId, workspaceId: auth.workspaceId },
+          data: { status: "disabled" },
+        })
+      }
+      await tx.connection.update({ where: { id }, data: { status: "disabled" } })
+    })
 
     return NextResponse.json({ status: "disabled" })
   } catch (error) {

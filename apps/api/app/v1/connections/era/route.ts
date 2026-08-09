@@ -2,8 +2,6 @@ import { NextRequest, NextResponse } from "next/server"
 import { authorizeRequest } from "@/lib/auth"
 import { unauthorizedResponse, handleRouteError, errorResponse } from "@/lib/respond"
 
-const WORKSPACE_ID = "default-workspace"
-
 /**
  * Connect (or rotate) Era's API key — the first real web UI for an
  * integration that has been CLI-only (scripts/era/store-api-key.ts) since
@@ -30,13 +28,21 @@ export async function POST(req: NextRequest) {
 
     const { db } = await import("@life-os/db")
     const { encrypt, decrypt } = await import("@life-os/db/crypto")
+    const workspaceId = auth.workspaceId
 
     const workspace = await db.workspace.findUnique({
-      where: { id: WORKSPACE_ID },
-      select: { ownerUserId: true },
+      where: { id: workspaceId },
+      select: {
+        ownerUserId: true,
+        members: {
+          where: { status: "active" },
+          orderBy: { createdAt: "asc" },
+          take: 1,
+          select: { userId: true },
+        },
+      },
     })
-    const userId = workspace?.ownerUserId
-      ?? (await db.user.findFirst({ orderBy: { createdAt: "asc" }, select: { id: true } }))?.id
+    const userId = workspace?.ownerUserId ?? workspace?.members[0]?.userId
     if (!userId) return errorResponse(400, "validation", "No user found to own the Era connection")
 
     const ciphertext = encrypt(apiKey)
@@ -46,10 +52,10 @@ export async function POST(req: NextRequest) {
     if (decrypt(ciphertext) !== apiKey) return errorResponse(502, "internal_error", "Encryption round-trip failed; key not stored")
 
     const eraConnection = await db.eraConnection.upsert({
-      where: { workspaceId_userId: { workspaceId: WORKSPACE_ID, userId } },
+      where: { workspaceId_userId: { workspaceId, userId } },
       update: { accessTokenEncrypted: ciphertext, scope: "api-key", status: "active", lastError: null },
       create: {
-        workspaceId: WORKSPACE_ID,
+        workspaceId,
         userId,
         accessTokenEncrypted: ciphertext,
         scope: "api-key",
@@ -62,7 +68,7 @@ export async function POST(req: NextRequest) {
     // Connection — a nullable accountEmail makes a compound-unique upsert
     // unusable), by looking the mirror up on (sourceTable, sourceId) first.
     const existingMirror = await db.connection.findFirst({
-      where: { workspaceId: WORKSPACE_ID, sourceTable: "EraConnection", sourceId: eraConnection.id },
+      where: { workspaceId, sourceTable: "EraConnection", sourceId: eraConnection.id },
     })
     const mirror = existingMirror
       ? await db.connection.update({
@@ -71,7 +77,7 @@ export async function POST(req: NextRequest) {
         })
       : await db.connection.create({
           data: {
-            workspaceId: WORKSPACE_ID,
+            workspaceId,
             userId,
             kind: "era",
             provider: "era",
