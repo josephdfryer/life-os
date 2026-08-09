@@ -1,4 +1,5 @@
 import { createHmac, randomBytes } from "crypto"
+import type { GmailConnection, Prisma } from "@life-os/db"
 import { decryptNullable, encryptNullable } from "@life-os/db/crypto"
 import { db } from "@/lib/db"
 import { badRequest, forbidden, notFound } from "@/server/api/errors"
@@ -113,6 +114,39 @@ type SyncStats = {
   unmatchedMode: "skip" | "stage"
   importantOnly: boolean
   incomplete: boolean
+}
+
+async function mirrorGmailConnection(tx: Prisma.TransactionClient, connection: GmailConnection) {
+  const existing = await tx.connection.findFirst({
+    where: {
+      workspaceId: connection.workspaceId,
+      sourceTable: "GmailConnection",
+      sourceId: connection.id,
+    },
+    select: { id: true },
+  })
+  const data = {
+    userId: connection.userId,
+    kind: "gmail",
+    provider: connection.provider,
+    status: connection.status,
+    accountEmail: connection.accountEmail,
+    accessTokenEncrypted: connection.accessTokenEncrypted,
+    refreshTokenEncrypted: connection.refreshTokenEncrypted,
+    expiresAt: connection.expiresAt,
+    scope: connection.scope,
+    lastSyncedAt: connection.lastSyncedAt,
+    lastError: connection.lastError,
+    metadata: JSON.stringify({ mailboxId: connection.mailboxId, historyId: connection.historyId }),
+    sourceTable: "GmailConnection",
+    sourceId: connection.id,
+  }
+
+  if (existing) {
+    await tx.connection.update({ where: { id: existing.id }, data })
+  } else {
+    await tx.connection.create({ data: { workspaceId: connection.workspaceId, ...data } })
+  }
 }
 
 export function gmailConfigured() {
@@ -337,36 +371,40 @@ export async function handleGmailCallback(input: { code: string; state: string; 
   const expiresAt = token.expires_in ? new Date(Date.now() + token.expires_in * 1000) : null
   const mailboxId = "me"
 
-  const connection = await db.gmailConnection.upsert({
-    where: {
-      workspaceId_provider_mailboxId: {
-        workspaceId: state.workspaceId,
-        provider: "google",
-        mailboxId,
+  const connection = await db.$transaction(async tx => {
+    const gmailConnection = await tx.gmailConnection.upsert({
+      where: {
+        workspaceId_provider_mailboxId: {
+          workspaceId: state.workspaceId,
+          provider: "google",
+          mailboxId,
+        },
       },
-    },
-    update: {
-      userId: state.userId,
-      status: "active",
-      accountEmail,
-      accessTokenEncrypted: encryptNullable(token.access_token),
-      refreshTokenEncrypted: encryptNullable(token.refresh_token),
-      expiresAt,
-      scope: token.scope ?? GMAIL_SCOPE,
-      lastError: null,
-    },
-    create: {
-      workspaceId: state.workspaceId,
-      userId: state.userId,
-      provider: "google",
-      status: "active",
-      accountEmail,
-      mailboxId,
-      accessTokenEncrypted: encryptNullable(token.access_token),
-      refreshTokenEncrypted: encryptNullable(token.refresh_token),
-      expiresAt,
-      scope: token.scope ?? GMAIL_SCOPE,
-    },
+      update: {
+        userId: state.userId,
+        status: "active",
+        accountEmail,
+        accessTokenEncrypted: encryptNullable(token.access_token),
+        refreshTokenEncrypted: encryptNullable(token.refresh_token),
+        expiresAt,
+        scope: token.scope ?? GMAIL_SCOPE,
+        lastError: null,
+      },
+      create: {
+        workspaceId: state.workspaceId,
+        userId: state.userId,
+        provider: "google",
+        status: "active",
+        accountEmail,
+        mailboxId,
+        accessTokenEncrypted: encryptNullable(token.access_token),
+        refreshTokenEncrypted: encryptNullable(token.refresh_token),
+        expiresAt,
+        scope: token.scope ?? GMAIL_SCOPE,
+      },
+    })
+    await mirrorGmailConnection(tx, gmailConnection)
+    return gmailConnection
   })
 
   await auditAction({
@@ -440,18 +478,21 @@ export async function syncGmail(actor: AccessActor, options: SyncOptions = {}) {
 
     stats.incomplete = Boolean(listed.incomplete)
     const profile = listed.incomplete ? null : await fetchGmailProfile(accessToken)
-    await db.gmailConnection.update({
-      where: { id: connection.id },
-      data: {
-        // Only advance the incremental checkpoint after a complete run —
-        // otherwise unprocessed messages older than the checkpoint would be
-        // skipped forever by history sync.
-        historyId: listed.incomplete
-          ? connection.historyId
-          : listed.historyId ?? profile?.historyId ?? connection.historyId,
-        lastSyncedAt: new Date(),
-        lastError: null,
-      },
+    await db.$transaction(async tx => {
+      const updated = await tx.gmailConnection.update({
+        where: { id: connection.id },
+        data: {
+          // Only advance the incremental checkpoint after a complete run —
+          // otherwise unprocessed messages older than the checkpoint would be
+          // skipped forever by history sync.
+          historyId: listed.incomplete
+            ? connection.historyId
+            : listed.historyId ?? profile?.historyId ?? connection.historyId,
+          lastSyncedAt: new Date(),
+          lastError: null,
+        },
+      })
+      await mirrorGmailConnection(tx, updated)
     })
 
     await auditAction({
@@ -466,7 +507,10 @@ export async function syncGmail(actor: AccessActor, options: SyncOptions = {}) {
     return { ...stats, runId: telemetry.runId }
   } catch (error) {
     const message = error instanceof Error ? error.message : "Gmail sync failed"
-    await db.gmailConnection.update({ where: { id: connection.id }, data: { lastError: message } })
+    await db.$transaction(async tx => {
+      const updated = await tx.gmailConnection.update({ where: { id: connection.id }, data: { lastError: message } })
+      await mirrorGmailConnection(tx, updated)
+    })
     telemetry.finish("failed", stats, error)
     throw error
   }
@@ -812,14 +856,17 @@ async function usableAccessToken(connection: { id: string; accessToken: string |
     throw badRequest("Gmail connection has no refresh token")
   }
   const token = await refreshAccessToken(connection.refreshToken)
-  await db.gmailConnection.update({
-    where: { id: connection.id },
-    data: {
-      accessTokenEncrypted: encryptNullable(token.access_token),
-      expiresAt: token.expires_in ? new Date(Date.now() + token.expires_in * 1000) : null,
-      refreshTokenEncrypted: encryptNullable(token.refresh_token ?? connection.refreshToken),
-      scope: token.scope ?? undefined,
-    },
+  await db.$transaction(async tx => {
+    const updated = await tx.gmailConnection.update({
+      where: { id: connection.id },
+      data: {
+        accessTokenEncrypted: encryptNullable(token.access_token),
+        expiresAt: token.expires_in ? new Date(Date.now() + token.expires_in * 1000) : null,
+        refreshTokenEncrypted: encryptNullable(token.refresh_token ?? connection.refreshToken),
+        scope: token.scope ?? undefined,
+      },
+    })
+    await mirrorGmailConnection(tx, updated)
   })
   return token.access_token
 }

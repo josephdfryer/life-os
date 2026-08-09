@@ -864,7 +864,11 @@ The architecture goal is:
 The old Persons Admin controller and its per-tab components no longer exist.
 Home is the human-facing control plane: `/admin` manages access and credentials,
 `/automation` manages rules, and `/connections` presents Calendar, Gmail, and
-Era account health without exposing encrypted tokens to the browser.
+Era account health without exposing encrypted tokens to the browser. Gmail's
+existing `GmailConnection` remains the row of truth for message-link foreign
+keys, while every OAuth connect, token refresh, successful sync, and failed
+sync transactionally updates its unified `Connection` mirror so Home never
+reports stale account or health state.
 
 People import matching is isolated in `app/import/people/matching.ts`. It is a
 pure, fixture-tested boundary for email and normalized-phone identity, fuzzy
