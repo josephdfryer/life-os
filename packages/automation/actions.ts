@@ -1,6 +1,10 @@
 import type { z } from "@life-os/contracts"
 import { ruleActionContract } from "@life-os/contracts"
-import { setInteractionField, InteractionFieldError, type GraphEventActor, type AuditActor } from "@life-os/domain"
+import {
+  setInteractionField, InteractionFieldError,
+  getPersonTags, setPersonTags,
+  type GraphEventActor, type AuditActor,
+} from "@life-os/domain"
 
 // Authority is a property of the ACTION, not the rule's mode — a "suggest"
 // mode rule and an "auto" mode rule run the exact same action handlers; what
@@ -90,27 +94,24 @@ async function applyPersonTag(action: RuleAction, ctx: ActionContext, mode: "add
   if (!tag) return null
 
   const { db } = await import("@life-os/db")
-  const { decodeStoredJson, storedStringList } = await import("@life-os/contracts")
-
   const staged = await db.stagedInteraction.findFirst({
     where: { id: ctx.targetId, workspaceId: ctx.workspaceId },
     select: { candidatePersonId: true },
   })
   if (!staged?.candidatePersonId) return null
 
-  const person = await db.person.findFirst({
-    where: { id: staged.candidatePersonId, workspaceId: ctx.workspaceId },
-    select: { id: true, tags: true },
-  })
-  if (!person) return null
+  // Read-then-decide (has the tag already? is it even present to remove?)
+  // is automation's judgment call, kept here; the actual write goes through
+  // the shared command (Track C) instead of a raw Prisma update.
+  const tags = await getPersonTags(staged.candidatePersonId, ctx.workspaceId)
+  if (tags === null) return null // no such Person in this workspace
 
-  const tags = decodeStoredJson(person.tags, storedStringList, "Person.tags", [])
   const hasTag = tags.includes(tag)
   if (mode === "add" && hasTag) return null // already tagged, nothing changed
   if (mode === "remove" && !hasTag) return null // tag wasn't present
 
   const next = mode === "add" ? [...tags, tag] : tags.filter(t => t !== tag)
-  await db.person.update({ where: { id: person.id }, data: { tags: JSON.stringify(next) } })
+  await setPersonTags(staged.candidatePersonId, next, ctx.workspaceId, ctx.actor)
   return action
 }
 

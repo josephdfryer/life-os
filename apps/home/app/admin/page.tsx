@@ -2,6 +2,7 @@ import { Suspense } from 'react'
 import { db } from '@life-os/db'
 import { workspaceForHomeRequest } from '@/lib/request-access'
 import { redirect } from 'next/navigation'
+import { AccessControls, ApiKeyControls, ApprovedEmailControls } from './AdminControls'
 
 export const metadata = { title: 'Admin · Life OS' }
 
@@ -13,7 +14,7 @@ async function AdminContent({ searchParams }: { searchParams: Promise<{ tab?: st
   const workspaceId = await workspaceForHomeRequest()
   if (!workspaceId) redirect('/login')
   const { tab = 'overview' } = await searchParams
-  const [audit, workspace, calendar, gmail, roles, rules, systemHealth] = await Promise.all([
+  const [audit, workspace, roles, permissions, apiKeys, approvedEmails, systemHealth] = await Promise.all([
     tab === 'audit'
       ? db.auditLog.findMany({
           where: { workspaceId },
@@ -22,48 +23,57 @@ async function AdminContent({ searchParams }: { searchParams: Promise<{ tab?: st
           select: { id: true, createdAt: true, action: true, targetType: true, targetId: true, actorLabel: true },
         })
       : Promise.resolve([]),
-    tab === 'workspace'
+    tab === 'workspace' || tab === 'access'
       ? db.workspace.findUnique({
           where: { id: workspaceId },
           select: {
             id: true, name: true, slug: true, status: true, createdAt: true, updatedAt: true,
-            members: { where: { status: 'active' }, orderBy: { createdAt: 'asc' }, take: 500, select: { id: true, role: true, user: { select: { name: true, email: true } } } },
+            members: { where: { status: 'active' }, orderBy: { createdAt: 'asc' }, take: 500, select: { id: true, role: true, user: { select: { id: true, name: true, email: true, roles: { take: 100, select: { role: { select: { id: true, name: true } } } } } } } },
           },
         })
       : Promise.resolve(null),
-    tab === 'calendar'
-      ? db.calendarConnection.findMany({ where: { workspaceId }, orderBy: { accountEmail: 'asc' }, take: 100, select: { id: true, accountEmail: true, status: true, calendarId: true, calendarSummary: true, lastSyncedAt: true, lastError: true } })
-      : Promise.resolve([]),
-    tab === 'gmail'
-      ? db.gmailConnection.findMany({ where: { workspaceId }, orderBy: { accountEmail: 'asc' }, take: 100, select: { id: true, accountEmail: true, status: true, mailboxId: true, lastSyncedAt: true, lastError: true } })
-      : Promise.resolve([]),
     tab === 'access'
       ? db.role.findMany({
           orderBy: { key: 'asc' },
           take: 100,
           select: {
             id: true, key: true, name: true, description: true,
-            permissions: { take: 500, select: { permission: { select: { scope: true, description: true } } } },
+            permissions: { take: 500, select: { permission: { select: { id: true, scope: true, description: true } } } },
+            _count: { select: { users: true } },
           },
         })
       : Promise.resolve([]),
-    tab === 'rules'
-      ? db.rule.findMany({ where: { workspaceId }, orderBy: [{ status: 'asc' }, { priority: 'asc' }], take: 200, select: { id: true, name: true, description: true, trigger: true, status: true, mode: true, priority: true, version: true, conditions: true, actions: true, runs: { orderBy: { createdAt: 'desc' }, take: 1, select: { createdAt: true, status: true, matched: true, ruleVersion: true, causationDepth: true } } } })
+    tab === 'access' || tab === 'api-keys'
+      ? db.permission.findMany({ orderBy: { scope: 'asc' }, take: 500, select: { id: true, scope: true, description: true } })
+      : Promise.resolve([]),
+    tab === 'api-keys'
+      ? db.apiKey.findMany({ where: { workspaceId }, orderBy: { createdAt: 'desc' }, take: 200, select: { id: true, name: true, keyPrefix: true, status: true, lastUsedAt: true, scopes: { take: 500, select: { scope: true } } } })
+      : Promise.resolve([]),
+    tab === 'workspace'
+      ? db.approvedEmail.findMany({ where: { workspaceId }, orderBy: { createdAt: 'desc' }, take: 500, select: { id: true, email: true, status: true, createdAt: true } })
       : Promise.resolve([]),
     tab === 'system' ? loadSystemHealth(workspaceId) : Promise.resolve(null),
   ])
+
+  const accessUsers = tab === 'access'
+    ? workspace?.members.map(member => ({ id: member.user.id, email: member.user.email, name: member.user.name, roles: member.user.roles.map(item => item.role) })) ?? []
+    : []
 
   return (
     <main className="stream-page">
       <div className="stream-container">
         <p className="still-eyebrow">The control plane</p>
         <h1 className="stream-heading-title">Admin</h1>
-        <p className="stream-intro">System-wide administration is moving into Home, one surface at a time.</p>
+        <p className="stream-intro">System-wide access, credentials, and audit controls live here.</p>
         <nav className="admin-tabs" aria-label="Admin tabs">
           {Object.entries(ADMIN_TABS).map(([value, label]) => <a key={value} className={tab === value ? 'admin-tab-active' : ''} href={`/admin?tab=${value}`}>{label}</a>)}
-          <a className="admin-tab-legacy" href="https://persons.lacollecteur.com/admin">Legacy Persons admin ↗</a>
         </nav>
-        {tab === 'audit' ? <AuditTable rows={audit} /> : tab === 'workspace' ? <WorkspacePanel workspace={workspace} /> : tab === 'calendar' ? <IntegrationPanel title="Calendar connections" rows={calendar.map(item => ({ ...item, detail: item.calendarSummary || item.calendarId }))} /> : tab === 'gmail' ? <IntegrationPanel title="Gmail connections" rows={gmail.map(item => ({ ...item, detail: item.mailboxId }))} /> : tab === 'access' ? <AccessPanel roles={roles} /> : tab === 'rules' ? <RulesPanel rules={rules} /> : tab === 'system' && systemHealth ? <SystemHealthPanel health={systemHealth} /> : <AdminOverview />}
+        {tab === 'audit' ? <AuditTable rows={audit} />
+          : tab === 'workspace' ? <><WorkspacePanel workspace={workspace} /><ApprovedEmailControls rows={approvedEmails.map(row => ({ ...row, createdAt: row.createdAt.toISOString() }))} /></>
+          : tab === 'access' ? <AccessControls roles={roles.map(role => ({ ...role, permissions: role.permissions.map(item => item.permission), userCount: role._count.users }))} users={accessUsers} permissions={permissions} />
+          : tab === 'api-keys' ? <ApiKeyControls apiKeys={apiKeys.map(key => ({ ...key, lastUsedAt: key.lastUsedAt?.toISOString() ?? null, scopes: key.scopes.map(scope => scope.scope) }))} permissions={permissions} />
+          : tab === 'system' && systemHealth ? <SystemHealthPanel health={systemHealth} />
+          : <AdminOverview />}
       </div>
     </main>
   )
@@ -75,9 +85,9 @@ function AdminFallback() {
 
 function AdminOverview() {
   return <div className="stream-message" style={{ marginTop: 28 }}>
-    <strong>Admin migration is in progress.</strong>
-    <p style={{ margin: '8px 0 18px' }}>The audit log, workspace membership, connection health, and access map are now readable here. Automation has its own control-plane surface with authority and run history.</p>
-    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}><a className="still-button still-button-secondary" href="/admin?tab=audit">View audit log</a><a className="still-button still-button-secondary" href="/automation">Open Automation</a></div>
+    <strong>Home is the administrative control plane.</strong>
+    <p style={{ margin: '8px 0 18px' }}>Manage API keys, access roles, workspace sign-ins, and system history here. Connections and Automation each have a focused Home surface.</p>
+    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}><a className="still-button still-button-secondary" href="/admin?tab=api-keys">Manage API keys</a><a className="still-button still-button-secondary" href="/connections">Open Connections</a><a className="still-button still-button-secondary" href="/automation">Open Automation</a></div>
   </div>
 }
 
@@ -94,29 +104,6 @@ function WorkspacePanel({ workspace }: { workspace: { id: string; name: string; 
     <div className="stream-list admin-members">
       {workspace.members.map(member => <div className="admin-member-row" key={member.id}><div><strong>{member.user.name || member.user.email}</strong><span>{member.user.name ? member.user.email : 'Workspace member'}</span></div><span className="stream-type-badge">{member.role}</span></div>)}
     </div>
-  </section>
-}
-
-function IntegrationPanel({ title, rows }: { title: string; rows: Array<{ id: string; accountEmail: string | null; status: string; detail: string; lastSyncedAt: Date | null; lastError: string | null }> }) {
-  return <section aria-labelledby="integration-heading" style={{ marginTop: 28 }}>
-    <div className="admin-section-heading"><div><p className="still-eyebrow">Connection health</p><h2 id="integration-heading">{title}</h2></div><span className="stream-count">{rows.length} connections</span></div>
-    {rows.length === 0 ? <div className="stream-message">No connections configured.</div> : <div className="stream-list">
-      {rows.map(row => <article className="admin-integration-row" key={row.id}><div><strong>{row.accountEmail || 'Unnamed account'}</strong><span>{row.detail}</span></div><div><span className={`integration-status integration-status-${row.status}`}>{row.status}</span><span>{row.lastError || (row.lastSyncedAt ? `Last synced ${formatDate(row.lastSyncedAt)}` : 'Not synced yet')}</span></div></article>)}
-    </div>}
-  </section>
-}
-
-function AccessPanel({ roles }: { roles: Array<{ id: string; key: string; name: string; description: string | null; permissions: Array<{ permission: { scope: string; description: string | null } }> }> }) {
-  return <section aria-labelledby="access-heading" style={{ marginTop: 28 }}>
-    <div className="admin-section-heading"><div><p className="still-eyebrow">Permission map</p><h2 id="access-heading">Roles and scopes</h2></div><span className="stream-count">{roles.length} roles</span></div>
-    <div className="stream-list">{roles.map(role => <article className="admin-role-row" key={role.id}><div><strong>{role.name}</strong><span>{role.description || role.key}</span></div><div className="admin-scope-list">{role.permissions.map(({ permission }) => <span className="stream-type-badge" title={permission.description || undefined} key={permission.scope}>{permission.scope}</span>)}</div></article>)}</div>
-  </section>
-}
-
-function RulesPanel({ rules }: { rules: Array<{ id: string; name: string; description: string | null; trigger: string; status: string; mode: string; priority: number; version: number; conditions: string; actions: string; runs: Array<{ createdAt: Date; status: string; matched: boolean; ruleVersion: number; causationDepth: number }> }> }) {
-  return <section aria-labelledby="rules-heading" style={{ marginTop: 28 }}>
-    <div className="admin-section-heading"><div><p className="still-eyebrow">Automation</p><h2 id="rules-heading">Rules</h2></div><a className="still-button still-button-secondary" href="/automation">Open full Automation view</a></div>
-    {rules.length === 0 ? <div className="stream-message">No rules configured for this workspace.</div> : <div className="stream-list">{rules.map(rule => <article className="admin-rule-row" key={rule.id}><div><strong>{rule.name}</strong><span>{rule.description || `${rule.trigger} · ${rule.mode}`}</span></div><div><span className={`integration-status integration-status-${rule.status}`}>{rule.status} · v{rule.version}</span><span>{rule.runs[0] ? `Last run ${rule.runs[0].status}${rule.runs[0].matched ? ' · matched' : ''} · v${rule.runs[0].ruleVersion} · depth ${rule.runs[0].causationDepth}` : 'No runs yet'}</span></div></article>)}</div>}
   </section>
 }
 
@@ -223,11 +210,9 @@ function formatAge(value: Date) {
 
 const ADMIN_TABS = {
   overview: 'Overview',
+  'api-keys': 'API keys',
+  access: 'Access',
+  workspace: 'Workspace',
   system: 'System Health',
   audit: 'Audit log',
-  workspace: 'Workspace',
-  calendar: 'Calendar',
-  gmail: 'Gmail',
-  access: 'Access',
-  rules: 'Rules',
 } as const

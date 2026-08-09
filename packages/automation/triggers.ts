@@ -52,6 +52,21 @@ registerTrigger("inbox.stage", z.object({
   metadata: z.record(z.string(), z.unknown()).nullable().optional(),
 }).passthrough())
 
+// Track C: the first primitive triggers beyond the StagedInteraction queue.
+// Fired from apps/persons/server/domain/persons.ts's createPerson/
+// updatePerson shim (packages/domain never depends on packages/automation,
+// so the shared command itself can't fire these — the app-layer shim does).
+registerTrigger("person.create", z.object({
+  personId: z.string(),
+  first: z.string(),
+  last: z.string(),
+}).passthrough())
+
+registerTrigger("person.update", z.object({
+  personId: z.string(),
+  fields: z.array(z.string()),
+}).passthrough())
+
 registerTrigger("inbox.accept", z.object({
   stagedInteractionId: z.string(),
   interactionId: z.string(),

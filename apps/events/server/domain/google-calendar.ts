@@ -329,6 +329,7 @@ export async function handleGoogleCalendarCallback(input: { code: string; state:
       lastError: null,
     },
   })
+  await syncCalendarConnectionMirrors(state.workspaceId)
 
   await auditAction({
     actor: { type: "user", id: state.userId, workspaceId: state.workspaceId },
@@ -405,6 +406,7 @@ export async function saveGoogleCalendarSelection(actor: AccessActor, calendarId
       })
     }),
   ])
+  await syncCalendarConnectionMirrors(actor.workspaceId)
 
   await auditAction({
     actor: actor.actor,
@@ -457,6 +459,13 @@ export async function resetGoogleCalendarImport(actor: AccessActor) {
       : { count: 0 }
 
     await tx.calendarConnection.deleteMany({ where: { workspaceId: actor.workspaceId, provider: "google" } })
+    await tx.connection.deleteMany({
+      where: {
+        workspaceId: actor.workspaceId,
+        sourceTable: "CalendarConnection",
+        sourceId: { in: connections.map(connection => connection.id) },
+      },
+    })
 
     return {
       deletedInteractions: deletedInteractions.count,
@@ -645,6 +654,7 @@ async function syncGoogleCalendarConnection(
         lastError: null,
       },
     })
+    await syncCalendarConnectionMirror(connection.id)
 
     await auditAction({
       actor: actor.actor,
@@ -658,6 +668,7 @@ async function syncGoogleCalendarConnection(
   } catch (error) {
     const message = error instanceof Error ? error.message : "Google Calendar sync failed"
     await db.calendarConnection.update({ where: { id: connection.id }, data: { lastError: message } })
+    await syncCalendarConnectionMirror(connection.id)
     return { ...stats, error: message }
   }
 }
@@ -912,7 +923,76 @@ async function usableAccessToken(connection: { id: string; accessToken: string |
       scope: token.scope ?? undefined,
     },
   })
+  await syncCalendarConnectionMirror(connection.id)
   return token.access_token
+}
+
+async function syncCalendarConnectionMirrors(workspaceId: string) {
+  const connections = await db.calendarConnection.findMany({
+    where: { workspaceId, provider: "google" },
+    select: { id: true },
+  })
+  for (const connection of connections) {
+    await syncCalendarConnectionMirror(connection.id)
+  }
+}
+
+async function syncCalendarConnectionMirror(connectionId: string) {
+  const connection = await db.calendarConnection.findUnique({
+    where: { id: connectionId },
+    select: {
+      id: true,
+      workspaceId: true,
+      userId: true,
+      provider: true,
+      status: true,
+      accountEmail: true,
+      calendarId: true,
+      calendarSummary: true,
+      accessTokenEncrypted: true,
+      refreshTokenEncrypted: true,
+      expiresAt: true,
+      scope: true,
+      lastSyncedAt: true,
+      lastError: true,
+    },
+  })
+  if (!connection) return
+
+  const data = {
+    workspaceId: connection.workspaceId,
+    userId: connection.userId,
+    kind: "calendar",
+    provider: connection.provider,
+    status: connection.status,
+    accountEmail: connection.accountEmail,
+    label: connection.calendarSummary,
+    accessTokenEncrypted: connection.accessTokenEncrypted,
+    refreshTokenEncrypted: connection.refreshTokenEncrypted,
+    expiresAt: connection.expiresAt,
+    scope: connection.scope,
+    lastSyncedAt: connection.lastSyncedAt,
+    lastError: connection.lastError,
+    metadata: JSON.stringify({
+      calendarId: connection.calendarId,
+      calendarSummary: connection.calendarSummary,
+    }),
+    sourceTable: "CalendarConnection",
+    sourceId: connection.id,
+  }
+  const mirror = await db.connection.findFirst({
+    where: {
+      workspaceId: connection.workspaceId,
+      sourceTable: "CalendarConnection",
+      sourceId: connection.id,
+    },
+    select: { id: true },
+  })
+  if (mirror) {
+    await db.connection.update({ where: { id: mirror.id }, data })
+  } else {
+    await db.connection.create({ data })
+  }
 }
 
 async function syncEventPages(

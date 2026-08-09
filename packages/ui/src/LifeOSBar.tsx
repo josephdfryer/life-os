@@ -11,6 +11,7 @@ const SHELL_NAV = [
   { label: 'Inbox', path: '/inbox' },
   { label: 'Intelligence', path: '/intelligence' },
   { label: 'Automation', path: '/automation' },
+  { label: 'Connections', path: '/connections' },
   { label: 'Admin', path: '/admin' },
 ] as const;
 

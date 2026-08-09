@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test'
 
 test.describe('Home control plane', () => {
-  test('shell navigates across Today, Stream, Inbox, Intelligence, Automation, and Admin', async ({ page }) => {
+  test('shell navigates across the Home control-plane surfaces', async ({ page }) => {
     await page.goto('/stream')
     await expect(page.getByRole('heading', { name: 'Stream' })).toBeVisible()
     await expect(page.getByRole('navigation', { name: 'Life OS sections' })).toContainText('Inbox')
@@ -19,6 +19,10 @@ test.describe('Home control plane', () => {
     await expect(page).toHaveURL(/\/automation$/)
     await expect(page.getByRole('heading', { name: 'Automation' })).toBeVisible()
 
+    await page.getByRole('link', { name: 'Connections', exact: true }).click()
+    await expect(page).toHaveURL(/\/connections$/)
+    await expect(page.getByRole('heading', { name: 'Connections' })).toBeVisible()
+
     await page.getByRole('link', { name: 'Admin', exact: true }).click()
     await expect(page).toHaveURL(/\/admin$/)
     await expect(page.getByRole('heading', { name: 'Admin' })).toBeVisible()
@@ -31,27 +35,30 @@ test.describe('Home control plane', () => {
     await expect(page.getByText('Stream unavailable.')).toBeVisible()
   })
 
-  test('admin workspace tab exposes membership without edit controls', async ({ page }) => {
+  test('admin workspace tab owns approved sign-in controls', async ({ page }) => {
     await page.goto('/admin?tab=workspace')
     await expect(page.getByRole('region', { name: 'E2E Life OS' })).toBeVisible()
     await expect(page.getByText('active members')).toBeVisible()
-    await expect(page.getByRole('link', { name: 'Legacy Persons admin ↗' })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Approved emails' })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Approve an email' })).toBeVisible()
+    await expect(page.getByRole('link', { name: /Legacy Persons admin/ })).toHaveCount(0)
   })
 
-  test('admin connection tabs expose health without token fields', async ({ page }) => {
-    await page.goto('/admin?tab=calendar')
-    await expect(page.getByRole('heading', { name: 'Calendar connections' })).toBeVisible()
-    await expect(page.getByText('No connections configured.')).toBeVisible()
-    await page.goto('/admin?tab=gmail')
-    await expect(page.getByRole('heading', { name: 'Gmail connections' })).toBeVisible()
+  test('connections hub exposes every integration without token fields', async ({ page }) => {
+    await page.goto('/connections')
+    await expect(page.getByRole('heading', { name: 'Google Calendar' })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Gmail' })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Era' })).toBeVisible()
+    await expect(page.getByText(/accessToken|refreshToken/i)).toHaveCount(0)
   })
 
-  test('admin exposes read-only access and automation surfaces', async ({ page }) => {
+  test('admin exposes writable access and API-key surfaces', async ({ page }) => {
     await page.goto('/admin?tab=access')
-    await expect(page.getByRole('heading', { name: 'Roles and scopes' })).toBeVisible()
-    await page.goto('/admin?tab=rules')
-    await expect(page.getByRole('heading', { name: 'Rules' })).toBeVisible()
-    await expect(page.getByText('active · v3')).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Roles' })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'New role' })).toBeVisible()
+    await page.goto('/admin?tab=api-keys')
+    await expect(page.getByRole('heading', { name: 'API keys' })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'New API key' })).toBeVisible()
   })
 
   test('admin system health exposes spine failures and durable queue state', async ({ page }) => {

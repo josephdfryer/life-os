@@ -9,7 +9,6 @@ const checkBuilt = process.argv.includes("--built")
 const failures = []
 
 const clientBudgets = [
-  ["apps/persons/app/admin/AdminClient.tsx", 50_000],
   ["apps/persons/app/import/people/page.tsx", 50_000],
   ["apps/places/app/places/PlacesClient.tsx", 33_000],
   ["apps/places/app/places/[id]/PlaceProfileClient.tsx", 30_000],
@@ -54,7 +53,6 @@ if (unboundedFindMany > unboundedQueryBudget) failures.push(`unbounded findMany 
 
 if (checkBuilt) {
   const routeBudgets = [
-    ["apps/persons", "server/app/admin/page_client-reference-manifest.js", 180_000],
     ["apps/persons", "server/app/import/people/page_client-reference-manifest.js", 180_000],
     ["apps/places", "server/app/places/page_client-reference-manifest.js", 700_000],
     ["apps/places", "server/app/places/[id]/page_client-reference-manifest.js", 700_000],

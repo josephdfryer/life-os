@@ -283,6 +283,69 @@ a {
 .admin-role-row > div:first-child span, .admin-rule-row > div:last-child span { color: var(--ink-3); font-size: 12px; }
 .admin-scope-list { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 5px; max-width: 65%; }
 .admin-rule-row > div:last-child { display: grid; justify-items: end; gap: 5px; color: var(--ink-3); font-size: 12px; }
+.admin-controls-grid { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: var(--space-lg); margin-top: 28px; align-items: start; }
+.admin-access-grid { display: grid; grid-template-columns: 240px minmax(300px, 1fr) 300px; gap: var(--space-md); margin-top: 28px; align-items: start; }
+.admin-access-grid > :nth-child(4) { grid-column: 1 / -1; }
+.admin-control-card { padding: 22px 24px; border: 1px solid var(--border-subtle); border-radius: var(--radius); background: var(--surface); box-shadow: var(--shadow-sm); }
+.admin-control-card + .admin-control-card { margin-top: var(--space-md); }
+.admin-control-card-heading { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-md); margin-bottom: var(--space-md); }
+.admin-control-card-heading h2 { margin: 0; font-family: var(--font-display); font-size: 22px; font-weight: 400; }
+.admin-control-card-heading span, .admin-control-help { color: var(--ink-3); font-size: 12px; }
+.admin-control-list { display: grid; }
+.admin-control-row { display: flex; align-items: center; justify-content: space-between; gap: var(--space-md); padding: 14px 0; border-bottom: 1px solid var(--border-subtle); }
+.admin-control-row:last-child { border-bottom: 0; }
+.admin-control-row > div { display: grid; gap: 4px; }
+.admin-control-row > div:last-child { display: flex; align-items: center; justify-content: flex-end; gap: var(--space-sm); }
+.admin-control-row span, .admin-user-access > span { color: var(--ink-3); font-size: 12px; }
+.admin-control-row .still-button, .admin-user-access .still-button { min-height: 31px; padding: 6px 12px; font-size: 11px; }
+.admin-control-field { display: grid; gap: 6px; margin-bottom: 12px; }
+.admin-control-field > span { color: var(--ink-3); font-size: 12px; }
+.admin-control-field input { padding: 10px 14px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); color: var(--ink); font: inherit; font-size: 14px; }
+.admin-control-field input:focus { border-color: var(--cognac); box-shadow: 0 0 0 3px var(--cognac-soft); outline: 0; }
+.admin-scope-picker { display: grid; gap: 8px; max-height: 380px; margin-bottom: var(--space-md); overflow: auto; }
+.admin-scope-picker label { display: flex; align-items: flex-start; gap: 8px; color: var(--ink-3); font-size: 11px; }
+.admin-scope-picker label span { display: grid; gap: 2px; }
+.admin-scope-picker strong { color: var(--ink-2); font-weight: 500; }
+.admin-secret { display: grid; gap: 7px; margin-top: var(--space-md); padding: 14px; border: 1px solid var(--attention); border-radius: var(--radius); background: var(--attention-soft); font-size: 12px; }
+.admin-secret code { overflow-wrap: anywhere; color: var(--ink); }
+.admin-role-picker { display: grid; gap: var(--space-sm); }
+.admin-role-choice { display: grid; gap: 3px; padding: 10px 12px; border: 1px solid var(--border); border-radius: var(--radius); background: transparent; color: var(--ink); font: inherit; text-align: left; cursor: pointer; }
+.admin-role-choice span { color: var(--ink-3); font-size: 11px; }
+.admin-role-choice-active { border-color: var(--cognac); background: var(--cognac-soft); color: var(--cognac-deep); }
+.admin-user-access { display: grid; grid-template-columns: minmax(180px, 1fr) minmax(240px, 2fr) auto; align-items: center; gap: var(--space-sm) var(--space-md); padding: 14px 0; border-bottom: 1px solid var(--border-subtle); }
+.admin-user-access:last-child { border-bottom: 0; }
+.admin-user-access > span { grid-column: 1; }
+.admin-user-access > div { grid-column: 2; grid-row: 1 / span 2; display: flex; flex-wrap: wrap; gap: 6px 12px; }
+.admin-user-access label { display: flex; align-items: center; gap: 5px; color: var(--ink-3); font-size: 11px; }
+.admin-user-access > button { grid-column: 3; grid-row: 1 / span 2; }
+.admin-control-empty { padding: 24px; color: var(--ink-3); text-align: center; }
+.connections-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-md); margin-top: 28px; }
+.connections-wide { grid-column: 1 / -1; display: flex; align-items: center; gap: var(--space-sm); }
+.connections-wide span { flex: 1; }
+.connection-card { display: flex; min-height: 360px; flex-direction: column; padding: 22px 24px; border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); background: var(--surface); box-shadow: var(--shadow-sm); }
+.connection-card-attention { border-color: var(--attention); }
+.connection-card-heading { display: grid; gap: var(--space-md); }
+.connection-card-heading > div { display: flex; align-items: flex-start; gap: 12px; }
+.connection-card-heading h2 { margin: 0; font-family: var(--font-display); font-size: 22px; font-weight: 400; }
+.connection-card-heading p { margin: 4px 0 0; color: var(--ink-3); font-size: 12px; line-height: 1.5; }
+.connection-kind { display: inline-flex; width: 38px; height: 38px; flex: 0 0 38px; align-items: center; justify-content: center; border-radius: 50%; background: var(--cognac-soft); color: var(--cognac-deep); font-weight: 600; }
+.connection-kind-era { background: var(--petrol-soft); color: var(--petrol); }
+.connection-accounts { display: grid; gap: var(--space-sm); margin: var(--space-lg) 0; }
+.connection-account, .connection-account-placeholder { padding: 12px 14px; border-radius: var(--radius); background: var(--surface-2); }
+.connection-account { display: grid; gap: 8px; }
+.connection-account > div { display: flex; justify-content: space-between; gap: var(--space-sm); }
+.connection-account span, .connection-account small, .connection-account-placeholder { color: var(--ink-3); font-size: 11px; }
+.connection-account > div:last-child span { overflow-wrap: anywhere; }
+.connection-text-action { padding: 0; border: 0; color: var(--camel); background: transparent; font: inherit; font-size: 11px; cursor: pointer; }
+.connection-text-action:disabled { cursor: wait; opacity: .55; }
+.connection-action-error { margin: 0 0 var(--space-sm); color: var(--danger); font-size: 12px; }
+.connection-era-form { display: grid; gap: 8px; margin: 0 0 var(--space-md); padding: 14px; border: 1px solid var(--border-subtle); border-radius: var(--radius); background: var(--surface-2); }
+.connection-era-form label { color: var(--ink-2); font-size: 12px; font-weight: 600; }
+.connection-era-form input { width: 100%; padding: 9px 10px; border: 1px solid var(--border); border-radius: var(--radius-sm); color: var(--ink); background: var(--surface); font: inherit; }
+.connection-era-form small { color: var(--ink-4); font-size: 10px; line-height: 1.45; }
+.connection-era-form > div { display: flex; gap: 8px; }
+.connection-card-actions { display: flex; align-items: center; justify-content: space-between; gap: var(--space-sm); margin-top: auto; }
+.connection-card-actions > span { color: var(--ink-4); font-size: 11px; }
 
 .automation-intro { max-width: 720px; line-height: 1.65; }
 .automation-summary { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin-top: 30px; }
@@ -517,6 +580,11 @@ a {
   .admin-role-row, .admin-rule-row { flex-direction: column; gap: 10px; }
   .admin-scope-list { justify-content: flex-start; max-width: none; }
   .admin-rule-row > div:last-child { justify-items: start; }
+  .admin-controls-grid, .admin-access-grid { grid-template-columns: 1fr; }
+  .admin-access-grid > :nth-child(4) { grid-column: auto; }
+  .admin-user-access { grid-template-columns: 1fr; }
+  .admin-user-access > span, .admin-user-access > div, .admin-user-access > button { grid-column: 1; grid-row: auto; }
+  .connections-grid { grid-template-columns: 1fr; }
   .automation-summary { grid-template-columns: 1fr 1fr; }
   .automation-authority-grid { grid-template-columns: 1fr 1fr; }
   .automation-section-heading { align-items: flex-start; flex-direction: column; }

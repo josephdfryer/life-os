@@ -516,7 +516,6 @@ flowchart LR
   AppAPI --> EventsAPI["/api/events"]
   AppAPI --> InboxAPI["/api/inbox"]
   AppAPI --> ImportAPI["/api/import/*"]
-  AppAPI --> AdminAPI["/api/admin/*"]
 ```
 
 ### Headless APIs
@@ -539,6 +538,16 @@ flowchart LR
 
 Plain English: the headless API is how Persons can become programmable. Anything the UI can do should eventually have an API-shaped path too.
 
+Large list endpoints never silently stop at an arbitrary row. `GET /api/events`,
+`GET /api/interactions`, `GET /api/v1/contacts`, and
+`GET /api/v1/contacts/:id/interactions` return the same continuation shape:
+`{ data, nextCursor, hasMore, limit }`. A caller passes `nextCursor` back as
+`?cursor=...`; `?limit=...` is optional and capped at 500. The cursor combines
+the row's date and id, so rows sharing a timestamp are neither skipped nor
+repeated. This keeps each database read bounded while allowing a caller to walk
+the complete dataset. Supporting indexes pair workspace + date + id for the
+People and Event lists; the Interaction stream already has that index.
+
 **`apps/api` is now the canonical `/v1` surface**, not Persons — a separate,
 no-UI, API-key-only deployable app (`api.lacollecteur.com`) that's the
 intended long-term home for cross-app resources. It currently serves
@@ -549,9 +558,16 @@ inbox described above). Persons' own `/api/v1/interactions` and
 `/api/v1/interactions/aggregate` routes now forward to `apps/api` with
 `Deprecation`/`Link: rel="canonical"` headers rather than running the logic
 locally, kept for backward compatibility. Resources that are still
-genuinely Persons-specific (people, imports, admin, rules CRUD) stay on
+genuinely Persons-specific (people and imports) stay on
 Persons' own `/api/v1/*` — only the resources other apps need to read
 independent of Persons moved.
+
+Access administration has moved out of Persons entirely. Home `/admin` owns
+the API-key, role, user-role, approved-email, audit, and system-health UI. Its
+server-only `/api/admin/*` proxy forwards a strict mutation allowlist to
+`apps/api`'s canonical `/v1/access/*` commands. Persons `/admin` is now only a
+redirect to Home, and the duplicate Persons `/api/admin/*` routes and tab
+components have been removed.
 
 Theory of Person is also available through the canonical API:
 `GET /v1/theory/:personId`, `GET /v1/theory/:personId/history`, and the
@@ -586,8 +602,9 @@ The next authorization step is also shared: `packages/access` is the canonical
 session-to-user, workspace-selection, disabled-user, role/scope, and short-lived
 cache policy used by Persons, Places, and Events. Each app supplies its local
 Auth.js session function plus compatible error and audit adapters; app-local
-access modules retain only their existing admin-management surface while that
-larger UI is decomposed.
+access modules are compatibility adapters over the shared package. Admin
+commands live in `packages/access` so `apps/api` can serve them without
+depending on Persons internals.
 Home, Persons, Places, and Stuff can share the same session when deployed on a
 common parent domain and configured with the same `AUTH_SECRET` plus
 `AUTH_COOKIE_DOMAIN` or `LIFE_OS_COOKIE_DOMAIN`.
@@ -844,14 +861,10 @@ The architecture goal is:
 - The database remains clean and traceable.
 - APIs make everything programmable later.
 
-The Admin UI's browser requests are centralized in
-`app/admin/api-client.ts`. It owns JSON request construction and the stable
-error-message boundary for access, rules, audit, Calendar, and Gmail panels;
-typed components under `app/admin/tabs/` own feature presentation. Permissions,
-Calendar, Audit, Workspace access management, API Keys, Roles, Rules, and Gmail
-no longer depend on the full Admin controller component. The controller owns
-orchestration and mutation state; each tab receives a typed view model and
-callbacks and can evolve independently.
+The old Persons Admin controller and its per-tab components no longer exist.
+Home is the human-facing control plane: `/admin` manages access and credentials,
+`/automation` manages rules, and `/connections` presents Calendar, Gmail, and
+Era account health without exposing encrypted tokens to the browser.
 
 People import matching is isolated in `app/import/people/matching.ts`. It is a
 pure, fixture-tested boundary for email and normalized-phone identity, fuzzy
@@ -905,16 +918,14 @@ flowchart LR
 - API keys, roles, permissions, and audit logs exist.
 - Rules can be created, tested, run, and recorded.
 - iMessage, import, interaction, and inbox acceptance paths now trigger rule evaluation.
-- Admin is hidden under the profile menu, and the architecture map is a living document.
+- Persons Admin redirects to Home; Home owns access, credentials, automation, connections, and system history.
 - Full headless API parity: all major resources (people, interactions, events, plans, inbox, imports, rules, dedupe, audit) available under `/api/v1/`.
 - Universal Inbox: `StagedInteraction` now has an `itemType` field; any external source can stage records via `POST /api/v1/inbox` using the `stageRecord()` domain command. Rules fire automatically on staging.
 - Data Cleaning: `/people/clean` highlights People records missing email, phone, names, or broader context, and supports editing or deleting those People from the cleanup view.
 - Inbox create-and-accept: an unmatched staged interaction can create a new Person and attach the interaction in one review action.
 - Workspace tenancy foundation: approved emails can sign in without inheriting Joseph's data, core browser/API paths carry `workspaceId`, existing data is preserved in `default-workspace`, and API keys are scoped to the workspace that created them.
-- Google Calendar foundation: Admin can connect Google Calendar, sync read-only events into Events, and create Interactions for attendees matched to existing People by email.
-- Google Calendar traceability: Admin can inspect recent Calendar sync runs, imported events, Google event IDs, attendees, and linked People.
-- Gmail foundation: Admin can connect Gmail, sync read-only messages into Interactions for matched People, and stage unmatched emails in Inbox.
-- Gmail traceability: Admin can inspect recent Gmail sync runs, message IDs, threads, matched People, staged Inbox records, skipped messages, and deleted markers.
+- Google Calendar foundation: the Connections hub leads to the canonical Events-owned Calendar flow, which syncs read-only events and creates Interactions for attendees matched to existing People by email.
+- Gmail foundation: the Connections hub exposes Gmail health and connect/reconnect entry points; sync remains read-only and stages unmatched mail only when explicitly requested.
 - Google Contacts import: `/import/persons` can pull People candidates from the connected Gmail account's Google Contacts and review them with the same create/update/skip flow as vCard and CSV imports.
 - Spreadsheet people import: `/api/import/contacts` accepts a bounded `.xlsx` upload, scans worksheets for a person table, maps standard contact fields, and preserves otherwise unmapped row values in the candidate's Notes. The same `/import/persons` review flow controls create/update/skip, supports people who use a single name without inventing a surname, and appends new imported notes to matched people rather than overwriting existing notes. Failed create or update requests stop on the review screen and show the API error; they never advance to a false completion state.
 - Import duplicate safety: before file or Google Contacts import is enabled, `/import/persons` loads every page of the workspace's lightweight Persons list in 200-record batches. Matching never runs against a partial list; a failed page disables import and presents a retry action.
@@ -934,6 +945,5 @@ flowchart LR
 - Review-tier actions: same framework gap — an action tiered `review` currently has nowhere to land (the natural target is a `ReviewItem` proposal, not wired up since nothing needs it yet).
 - Multiple `itemType` accept handlers (currently only `interaction` is handled on accept).
 - Inbox filtering by `source` and `itemType` in the UI.
-- Admin UI for approving emails and choosing whether an approved person gets their own workspace or joins an existing one.
 - Background/scheduled Google Calendar sync and optional review queue for unmatched calendar attendees.
 - Background/scheduled Gmail sync.
