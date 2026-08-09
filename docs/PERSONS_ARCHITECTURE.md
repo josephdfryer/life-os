@@ -280,7 +280,7 @@ flowchart TD
   Trace --> Interaction
 ```
 
-Plain English: Google Calendar remains the source of truth, but the Events app now owns synchronization and confirmation. Persons keeps its historical connection/status surfaces for compatibility, while its former write endpoint `/api/calendar/google/sync` returns a permanent ownership response pointing to Events settings. The canonical Events sync creates calendar-backed Plans and expected Person references; only Home confirmation creates Events and attendee Interactions. This prevents two apps from interpreting the same provider occurrence differently.
+Plain English: Google Calendar remains the source of truth, and the Events app exclusively owns connection, synchronization, and confirmation. The duplicate Persons Calendar routes have been removed; Home’s Connections hub leads to Events settings. The canonical Events sync creates calendar-backed Plans and expected Person references; only Home confirmation creates Events and attendee Interactions. This prevents two apps from interpreting the same provider occurrence differently.
 
 To keep first-time imports from hogging resources, the Calendar settings screen asks for a backfill range before syncing. The server processes selected calendars sequentially, fetches each one in restrained pages, and writes events in small batches rather than holding one giant event list in memory. Each calendar keeps its own incremental sync token, error, and last-synced time, so one failing calendar does not hide the status of the others. Once Google gives Life OS an incremental sync token, later syncs ignore the historical backfill range and only ask that calendar for changed events.
 
