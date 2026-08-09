@@ -45,7 +45,7 @@ async function main() {
   assert.equal(favorited.favorite, true)
   const unfavorited = await togglePlaceFavorite(place.id, workspaceId)
   assert.equal(unfavorited.favorite, false)
-  const toggleEvents = await db.graphEvent.findMany({ where: { workspaceId, subjectType: "Place", subjectId: place.id, eventType: "place.favorite_toggle" } })
+  const toggleEvents = await db.graphEvent.findMany({ where: { workspaceId, subjectType: "Place", subjectId: place.id, eventType: "place.favorite.toggle" } })
   assert.equal(toggleEvents.length, 2)
 
   // ── delete: removes the row, then 404s on retry ──

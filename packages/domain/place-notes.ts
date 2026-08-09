@@ -116,7 +116,7 @@ export async function togglePlaceFavorite(placeId: string, workspaceId: string |
       workspaceId: wsId,
       subjectType: "Place",
       subjectId: placeId,
-      eventType: "place.favorite_toggle",
+      eventType: "place.favorite.toggle",
       actor,
       idempotencyKey: `place-favorite-toggle:${placeId}:${Date.now()}`,
       payload: { favorite: toggled.favorite },
