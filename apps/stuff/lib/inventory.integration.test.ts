@@ -40,6 +40,9 @@ test("inventory overview and stocktake detail derive latest item evidence in SQL
   const place = await db.place.create({
     data: { workspaceId: workspace.id, name: "Closet", type: "storage" },
   })
+  const destination = await db.place.create({
+    data: { workspaceId: workspace.id, name: "Hall", type: "storage" },
+  })
   const item = await db.item.create({
     data: { workspaceId: workspace.id, name: "Coat", assetId: "PERF-COAT", placeId: place.id },
   })
@@ -90,5 +93,34 @@ test("inventory overview and stocktake detail derive latest item evidence in SQL
   assert.equal(detail.progress.verifiedExpected[0], item.id)
   assert.equal(detail.progress.missing.length, 0)
   assert.equal(interaction.eventId, stocktake.id)
+
+  const moved = await inventory.moveItem(db, {
+    workspaceId: workspace.id,
+    itemId: item.id,
+    destinationPlaceId: destination.id,
+    expectedFromPlaceId: place.id,
+    timestamp: new Date("2026-08-03T12:00:00Z"),
+  })
+  assert.equal(moved.placeId, destination.id)
+  assert.equal((await db.item.findUniqueOrThrow({ where: { id: item.id } })).placeId, destination.id)
+  assert.equal(
+    (await db.interaction.findUniqueOrThrow({ where: { id: moved.interactionId } })).type,
+    core.INVENTORY_INTERACTION_TYPES.moved,
+  )
+
+  const adjusted = await inventory.adjustItemQuantity(db, {
+    workspaceId: workspace.id,
+    itemId: item.id,
+    delta: 2,
+    reason: "Found two spares",
+    timestamp: new Date("2026-08-04T12:00:00Z"),
+  })
+  assert.equal(adjusted.quantityAfter, 3)
+  assert.equal((await db.item.findUniqueOrThrow({ where: { id: item.id } })).quantity, 3)
+  const quantityEvidence = await db.itemInteraction.findFirstOrThrow({
+    where: { interactionId: adjusted.interactionId, itemId: item.id },
+  })
+  assert.equal(quantityEvidence.quantityDelta, 2)
+  assert.equal(quantityEvidence.quantityAfter, 3)
   await db.$disconnect()
 })
