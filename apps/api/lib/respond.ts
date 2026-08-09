@@ -3,6 +3,7 @@ import { errorEnvelopeContract } from "@life-os/contracts"
 import { InteractionStreamError, AcceptStagedInteractionError, ReviewItemError } from "@life-os/domain"
 import { LifeModelError, TheoryError } from "@life-os/intelligence"
 import { RuleError } from "@life-os/automation"
+import { AccessError } from "@life-os/access"
 
 // Every error apps/api returns uses one shape — { error: { code, message,
 // details? } } — validated against packages/contracts' errorEnvelopeContract
@@ -44,6 +45,9 @@ export function handleRouteError(error: unknown) {
     return errorResponse(status, error.code, error.message)
   }
   if (error instanceof RuleError) {
+    return errorResponse(error.code === "not_found" ? 404 : 400, error.code, error.message)
+  }
+  if (error instanceof AccessError) {
     return errorResponse(error.code === "not_found" ? 404 : 400, error.code, error.message)
   }
   console.error("[apps/api] unhandled route error", error)

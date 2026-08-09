@@ -81,6 +81,10 @@ export const DEFAULT_PERMISSIONS = [
   { scope: "groups.write", description: "Create and update groups" },
   { scope: "items.read", description: "Read items" },
   { scope: "items.write", description: "Create and update items" },
+
+  // Track C (docs/adr/0003-connection-model.md): the unified Connections hub.
+  { scope: "connections.read", description: "Read third-party account connection status (Calendar, Gmail, Era)" },
+  { scope: "connections.manage", description: "Connect, reconnect, or disconnect third-party accounts" },
 ] as const
 
 export const DEFAULT_ROLES = [
@@ -98,6 +102,7 @@ export const DEFAULT_ROLES = [
       "intelligence.read", "intelligence.write", "events.read",
       "notes.read", "notes.write", "plans.read", "plans.write",
       "states.read", "states.write", "groups.read", "groups.write", "items.read", "items.write",
+      "connections.read", "connections.manage",
     ],
   },
   {
@@ -110,6 +115,7 @@ export const DEFAULT_ROLES = [
       "stream.read", "review.read", "review.write", "intelligence.read",
       "notes.read", "notes.write", "plans.read", "plans.write",
       "states.read", "states.write", "groups.read", "groups.write", "items.read", "items.write",
+      "connections.read",
     ],
   },
   {
@@ -120,6 +126,7 @@ export const DEFAULT_ROLES = [
       "people.read", "places.read", "interactions.read", "files.read",
       "stream.read", "review.read", "automations.read", "intelligence.read", "events.read",
       "notes.read", "plans.read", "states.read", "groups.read", "items.read",
+      "connections.read",
     ],
   },
   {
@@ -382,3 +389,4 @@ function uniqueWorkspaceSlug(email: string) {
 }
 
 export * from "./api-key"
+export * from "./admin"

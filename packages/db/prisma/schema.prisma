@@ -75,6 +75,7 @@ model Workspace {
   eraConnections       EraConnection[]
   eraAccountLinks      EraAccountLink[]
   eraTransactionLinks  EraTransactionLink[]
+  connections          Connection[]
   levelUpProfile       LevelUpProfile?
   levelUpTestResults   LevelUpTestResult[]
   levelUpCombines      LevelUpCombine[]
@@ -220,6 +221,7 @@ model User {
   calendarConnections  CalendarConnection[]
   gmailConnections     GmailConnection[]
   eraConnections       EraConnection[]
+  connections          Connection[]
 
   @@index([email])
   @@index([status])
@@ -531,6 +533,64 @@ model EraTransactionLink {
   @@index([interactionId])
   @@index([stagedItemId])
   @@index([workspaceId, status])
+}
+
+// ─────────────────────────────────────────────
+// INTEGRATIONS: unified Connection (Track C) — one shape for every account
+// connection (Calendar, Gmail, Era, future), so a single hub UI/API can list
+// and manage all of them without a per-integration fan-out. See
+// docs/adr/000X-connection-model.md.
+//
+// This is additive, not a cutover: CalendarConnection/GmailConnection's own
+// downstream link tables (CalendarEventLink, GmailMessageLink) still
+// reference *those* tables' ids, since repointing live foreign keys is a
+// separate, riskier migration. For calendar/gmail, this row is a
+// dual-written mirror of the real OAuth state (sourceTable/sourceId point
+// back to the row of truth) kept in sync purely for the unified read. Era
+// has no legacy production data or write path yet, so new Era connections
+// write here directly with sourceTable/sourceId left null — this table is
+// their one and only home from day one.
+// ─────────────────────────────────────────────
+
+model Connection {
+  id          String    @id @default(cuid())
+  workspaceId String    @default("default-workspace")
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  userId      String?
+  user        User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  // "calendar" | "gmail" | "era" — open string, not an enum, matching this
+  // schema's existing convention (Interaction.type, Rule.trigger, etc.) so a
+  // new integration kind never needs a migration to add.
+  kind        String
+  provider    String    @default("google")
+  status      String    @default("active")
+  accountEmail String?
+  label       String?
+  // Ciphertext ("iv:authTag:ciphertext"), see packages/db/src/crypto.ts. Never store plaintext tokens.
+  accessTokenEncrypted  String?
+  refreshTokenEncrypted String?
+  expiresAt   DateTime?
+  scope       String?
+  lastSyncedAt DateTime?
+  lastError   String?
+  // Kind-specific fields that don't earn their own column (calendarId/
+  // calendarSummary/syncToken for calendar, mailboxId/historyId for gmail,
+  // syncCursor for era) — JSON-encoded, not sensitive so stored plaintext.
+  metadata    String?
+  sourceTable String?
+  sourceId    String?
+
+  // No DB-level unique constraint on the business key: accountEmail is
+  // nullable (Era has none) and Prisma's compound-unique WHERE input for a
+  // nullable field can't express "IS NULL", making upsert unusable. The
+  // real invariant this needs — one mirror row per source row — is enforced
+  // at the application layer via a findFirst on (sourceTable, sourceId)
+  // before create, not a DB constraint.
+  @@index([workspaceId, kind, status])
+  @@index([sourceTable, sourceId])
+  @@index([userId])
 }
 
 // ─────────────────────────────────────────────
