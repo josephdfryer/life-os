@@ -65,7 +65,7 @@ test("replayRule reports planned actions only when matched, and never touches st
 })
 
 test("every built-in action is registered at safe_auto tier — none silently escalate to auto-applying review/confirm-worthy changes", () => {
-  for (const type of ["block", "set", "set_field", "assign", "add_tag", "remove_tag"]) {
+  for (const type of ["block", "set", "set_field", "assign", "add_tag", "remove_tag", "interaction_set_field"]) {
     const action = getRegisteredAction(type)
     assert.ok(action, `expected "${type}" to be registered`)
     assert.equal(action!.authorityTier, "safe_auto")

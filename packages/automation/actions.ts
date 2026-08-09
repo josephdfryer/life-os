@@ -1,6 +1,6 @@
 import type { z } from "@life-os/contracts"
 import { ruleActionContract } from "@life-os/contracts"
-import type { GraphEventActor, AuditActor } from "@life-os/domain"
+import { setInteractionField, InteractionFieldError, type GraphEventActor, type AuditActor } from "@life-os/domain"
 
 // Authority is a property of the ACTION, not the rule's mode — a "suggest"
 // mode rule and an "auto" mode rule run the exact same action handlers; what
@@ -124,4 +124,33 @@ registerAction({
   type: "remove_tag",
   authorityTier: "safe_auto",
   execute: (action, ctx) => applyPersonTag(action, ctx, "remove"),
+})
+
+// The first action to target the canonical Interaction directly rather than
+// only StagedInteraction/Person (Track C, generalizing automation beyond the
+// staging queue) — calls the shared packages/domain command instead of a
+// raw Prisma write, per that command's own transactional GraphEvent publish.
+registerAction({
+  type: "interaction_set_field",
+  authorityTier: "safe_auto",
+  async execute(action, ctx) {
+    if (ctx.targetType !== "interaction" || !ctx.targetId || !action.field) return null
+    try {
+      await setInteractionField({
+        id: ctx.targetId,
+        field: action.field,
+        value: action.value,
+        workspaceId: ctx.workspaceId,
+        actor: ctx.actor,
+      })
+      return action
+    } catch (error) {
+      // Matches every other action here: "nothing to do" degrades to null
+      // rather than throwing back into applyActions, which has no
+      // try/catch around action execution — one bad/missing target must
+      // not crash the whole rule run.
+      if (error instanceof InteractionFieldError) return null
+      throw error
+    }
+  },
 })
