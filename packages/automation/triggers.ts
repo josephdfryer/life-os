@@ -99,6 +99,17 @@ registerTrigger("place.favorite.toggle", z.object({
   favorite: z.boolean(),
 }).passthrough())
 
+registerTrigger("group.create", z.object({
+  groupId: z.string(),
+  name: z.string(),
+  groupType: z.string(),
+}).passthrough())
+
+registerTrigger("group.update", z.object({
+  groupId: z.string(),
+  fields: z.array(z.string()),
+}).passthrough())
+
 registerTrigger("inbox.accept", z.object({
   stagedInteractionId: z.string(),
   interactionId: z.string(),

@@ -1,112 +1,90 @@
+import { badRequest, notFound } from "@/server/api/errors"
 import { db } from "@/lib/db"
 import { centsToDollars } from "@life-os/db"
-import { badRequest, notFound } from "@/server/api/errors"
-import { auditAction, type DomainActor } from "./audit"
+import type { DomainActor } from "./audit"
+import { runRulesForTarget } from "./rules"
+import {
+  createGroup as sharedCreateGroup,
+  updateGroup as sharedUpdateGroup,
+  deleteGroup as sharedDeleteGroup,
+  addMember as sharedAddMember,
+  removeMember as sharedRemoveMember,
+  addPlaceAffiliation as sharedAddPlaceAffiliation,
+  removePlaceAffiliation as sharedRemovePlaceAffiliation,
+  addSubgroup as sharedAddSubgroup,
+  GroupError,
+  GROUP_TYPES,
+  PLACE_GROUP_RELATIONSHIP_TYPES,
+  type GroupType,
+  type PlaceGroupRelationshipType,
+} from "@life-os/domain"
 
-// ─── Types ────────────────────────────────────────────────────────────────────
+export { GROUP_TYPES, PLACE_GROUP_RELATIONSHIP_TYPES, type GroupType, type PlaceGroupRelationshipType }
 
-export const GROUP_TYPES = [
-  "family",
-  "employer",
-  "friend_group",
-  "sports_team",
-  "corporation",
-  "community",
-  "other",
-] as const
+// Write operations moved to @life-os/domain/groups.ts (Track C, phase C4)
+// — same shim pattern as persons.ts/plans.ts/events.ts/places.ts. Reads
+// below (getGroup, listGroups, listMembers, sumInteractionsBy*,
+// getGroupEvents) are unchanged. Fires new group.create/group.update
+// triggers (packages/domain never depends on packages/automation).
 
-export const PLACE_GROUP_RELATIONSHIP_TYPES = [
-  "corporate_parent",
-  "employer_location",
-  "home_venue",
-  "residence",
-  "usual_spot",
-  "other",
-] as const
-
-export type GroupType = (typeof GROUP_TYPES)[number]
-export type PlaceGroupRelationshipType = (typeof PLACE_GROUP_RELATIONSHIP_TYPES)[number]
-
-function validGroupType(value: unknown): GroupType {
-  if (!GROUP_TYPES.includes(value as GroupType)) {
-    throw badRequest(`groupType must be one of: ${GROUP_TYPES.join(", ")}`, { field: "groupType" })
-  }
-  return value as GroupType
-}
-
-function validPlaceGroupRelationshipType(value: unknown): PlaceGroupRelationshipType {
-  if (!PLACE_GROUP_RELATIONSHIP_TYPES.includes(value as PlaceGroupRelationshipType)) {
-    throw badRequest(
-      `relationshipType must be one of: ${PLACE_GROUP_RELATIONSHIP_TYPES.join(", ")}`,
-      { field: "relationshipType" },
-    )
-  }
-  return value as PlaceGroupRelationshipType
-}
-
-function optionalDate(value: unknown): Date | null {
-  if (value === undefined || value === null || value === "") return null
-  const d = new Date(String(value))
-  if (Number.isNaN(d.getTime())) throw badRequest("Invalid date", { value })
-  return d
-}
-
-function requiredString(value: unknown, field: string): string {
-  if (typeof value !== "string" || !value.trim()) {
-    throw badRequest(`${field} is required`, { field })
-  }
-  return value.trim()
-}
-
-function optionalString(value: unknown): string | null {
-  return typeof value === "string" ? value.trim() || null : null
-}
-
-// ─── CRUD ─────────────────────────────────────────────────────────────────────
-
-export async function createGroup(
-  input: Record<string, unknown>,
-  actor: DomainActor,
-) {
-  const workspaceId = actor.workspaceId ?? "default-workspace"
-  const group = await db.group.create({
-    data: {
-      workspaceId,
-      name: requiredString(input.name, "name"),
-      groupType: validGroupType(input.groupType),
-      notes: optionalString(input.notes) ?? undefined,
-    },
+function translate<T>(promise: Promise<T>): Promise<T> {
+  return promise.catch(error => {
+    if (error instanceof GroupError) throw error.code === "not_found" ? notFound(error.message) : badRequest(error.message)
+    throw error
   })
-  await auditAction({ actor, action: "group.create", targetType: "group", targetId: group.id })
+}
+
+export async function createGroup(input: Record<string, unknown>, actor: DomainActor) {
+  const workspaceId = actor.workspaceId ?? "default-workspace"
+  const group = await translate(sharedCreateGroup(input, workspaceId, actor))
+  await runRulesForTarget({
+    trigger: "group.create",
+    targetType: "group",
+    targetId: group.id,
+    payload: { groupId: group.id, name: group.name, groupType: group.groupType },
+    actor,
+  })
   return group
 }
 
-export async function updateGroup(
-  id: string,
-  input: Record<string, unknown>,
-  actor: DomainActor,
-) {
+export async function updateGroup(id: string, input: Record<string, unknown>, actor: DomainActor) {
   const workspaceId = actor.workspaceId ?? "default-workspace"
-  const existing = await db.group.findFirst({ where: { id, workspaceId } })
-  if (!existing) throw notFound("Group not found", { id })
-
-  const patch: Record<string, unknown> = {}
-  if (input.name !== undefined) patch.name = requiredString(input.name, "name")
-  if (input.groupType !== undefined) patch.groupType = validGroupType(input.groupType)
-  if (input.notes !== undefined) patch.notes = optionalString(input.notes) ?? undefined
-
-  const group = await db.group.update({ where: { id }, data: patch })
-  await auditAction({ actor, action: "group.update", targetType: "group", targetId: id, metadata: { fields: Object.keys(patch) } })
+  const group = await translate(sharedUpdateGroup(id, input, workspaceId, actor))
+  await runRulesForTarget({
+    trigger: "group.update",
+    targetType: "group",
+    targetId: id,
+    payload: { groupId: id, fields: Object.keys(input) },
+    actor,
+  })
   return group
 }
 
-export async function deleteGroup(id: string, actor: DomainActor) {
-  const workspaceId = actor.workspaceId ?? "default-workspace"
-  const existing = await db.group.findFirst({ where: { id, workspaceId } })
-  if (!existing) throw notFound("Group not found", { id })
-  await db.group.delete({ where: { id } })
-  await auditAction({ actor, action: "group.delete", targetType: "group", targetId: id })
+export function deleteGroup(id: string, actor: DomainActor) {
+  return translate(sharedDeleteGroup(id, actor.workspaceId ?? "default-workspace", actor))
 }
+
+export function addMember(groupId: string, input: Record<string, unknown>, actor: DomainActor) {
+  return translate(sharedAddMember(groupId, input, actor.workspaceId ?? "default-workspace", actor))
+}
+
+export function removeMember(groupId: string, personId: string, actor: DomainActor) {
+  return translate(sharedRemoveMember(groupId, personId, actor.workspaceId ?? "default-workspace", actor))
+}
+
+export function addPlaceAffiliation(groupId: string, input: Record<string, unknown>, actor: DomainActor) {
+  return translate(sharedAddPlaceAffiliation(groupId, input, actor.workspaceId ?? "default-workspace", actor))
+}
+
+export function removePlaceAffiliation(groupId: string, placeId: string, actor: DomainActor) {
+  return translate(sharedRemovePlaceAffiliation(groupId, placeId, actor.workspaceId ?? "default-workspace", actor))
+}
+
+export function addSubgroup(parentGroupId: string, input: Record<string, unknown>, actor: DomainActor) {
+  return translate(sharedAddSubgroup(parentGroupId, input, actor.workspaceId ?? "default-workspace", actor))
+}
+
+// ─── Query: single group with relations ────────────────────────────────────────
 
 export async function getGroup(id: string, workspaceId: string | null | undefined) {
   const wsId = workspaceId ?? "default-workspace"
@@ -170,55 +148,6 @@ export async function listGroups(
   return { groups, total, page, limit, hasMore: (page + 1) * limit < total }
 }
 
-// ─── Membership ───────────────────────────────────────────────────────────────
-
-export async function addMember(
-  groupId: string,
-  input: Record<string, unknown>,
-  actor: DomainActor,
-) {
-  const wsId = actor.workspaceId ?? "default-workspace"
-  const group = await db.group.findFirst({ where: { id: groupId, workspaceId: wsId } })
-  if (!group) throw notFound("Group not found", { groupId })
-
-  const personId = requiredString(input.personId, "personId")
-  const person = await db.person.findFirst({ where: { id: personId, workspaceId: wsId } })
-  if (!person) throw notFound("Person not found", { personId })
-
-  const membership = await db.personGroup.create({
-    data: {
-      personId,
-      groupId,
-      role: optionalString(input.role) ?? undefined,
-      startDate: optionalDate(input.startDate) ?? undefined,
-      endDate: optionalDate(input.endDate) ?? undefined,
-    },
-    include: { person: { select: { id: true, first: true, last: true } } },
-  })
-
-  await auditAction({ actor, action: "group.member.add", targetType: "group", targetId: groupId, metadata: { personId } })
-  return membership
-}
-
-export async function removeMember(groupId: string, personId: string, actor: DomainActor) {
-  const wsId = actor.workspaceId ?? "default-workspace"
-  const group = await db.group.findFirst({ where: { id: groupId, workspaceId: wsId } })
-  if (!group) throw notFound("Group not found", { groupId })
-
-  // Soft-remove: set endDate to now on all active memberships for this person in this group
-  const active = await db.personGroup.findMany({
-    where: { groupId, personId, OR: [{ endDate: null }, { endDate: { gt: new Date() } }] },
-  })
-  if (!active.length) throw notFound("Active membership not found", { groupId, personId })
-
-  await db.personGroup.updateMany({
-    where: { id: { in: active.map(m => m.id) } },
-    data: { endDate: new Date() },
-  })
-
-  await auditAction({ actor, action: "group.member.remove", targetType: "group", targetId: groupId, metadata: { personId } })
-}
-
 export async function listMembers(groupId: string, workspaceId: string | null | undefined, asOf?: Date) {
   const wsId = workspaceId ?? "default-workspace"
   const group = await db.group.findFirst({ where: { id: groupId, workspaceId: wsId } })
@@ -234,79 +163,6 @@ export async function listMembers(groupId: string, workspaceId: string | null | 
     include: { person: { select: { id: true, first: true, last: true, title: true, emails: true } } },
     orderBy: { startDate: "asc" },
   })
-}
-
-// ─── Place affiliation ────────────────────────────────────────────────────────
-
-export async function addPlaceAffiliation(
-  groupId: string,
-  input: Record<string, unknown>,
-  actor: DomainActor,
-) {
-  const wsId = actor.workspaceId ?? "default-workspace"
-  const group = await db.group.findFirst({ where: { id: groupId, workspaceId: wsId } })
-  if (!group) throw notFound("Group not found", { groupId })
-
-  const placeId = requiredString(input.placeId, "placeId")
-  const place = await db.place.findFirst({ where: { id: placeId, workspaceId: wsId } })
-  if (!place) throw notFound("Place not found", { placeId })
-
-  const affiliation = await db.placeGroup.create({
-    data: {
-      placeId,
-      groupId,
-      relationshipType: validPlaceGroupRelationshipType(input.relationshipType),
-      startDate: optionalDate(input.startDate) ?? undefined,
-      endDate: optionalDate(input.endDate) ?? undefined,
-    },
-    include: { place: { select: { id: true, name: true, type: true } } },
-  })
-
-  await auditAction({ actor, action: "group.place.add", targetType: "group", targetId: groupId, metadata: { placeId } })
-  return affiliation
-}
-
-export async function removePlaceAffiliation(groupId: string, placeId: string, actor: DomainActor) {
-  const wsId = actor.workspaceId ?? "default-workspace"
-  const group = await db.group.findFirst({ where: { id: groupId, workspaceId: wsId } })
-  if (!group) throw notFound("Group not found", { groupId })
-
-  const affiliations = await db.placeGroup.findMany({ where: { groupId, placeId } })
-  if (!affiliations.length) throw notFound("Place affiliation not found", { groupId, placeId })
-
-  await db.placeGroup.deleteMany({ where: { id: { in: affiliations.map(a => a.id) } } })
-  await auditAction({ actor, action: "group.place.remove", targetType: "group", targetId: groupId, metadata: { placeId } })
-}
-
-// ─── Group nesting ────────────────────────────────────────────────────────────
-
-export async function addSubgroup(
-  parentGroupId: string,
-  input: Record<string, unknown>,
-  actor: DomainActor,
-) {
-  const wsId = actor.workspaceId ?? "default-workspace"
-  const parent = await db.group.findFirst({ where: { id: parentGroupId, workspaceId: wsId } })
-  if (!parent) throw notFound("Parent group not found", { parentGroupId })
-
-  const childGroupId = requiredString(input.childGroupId, "childGroupId")
-  if (childGroupId === parentGroupId) throw badRequest("A group cannot be a subgroup of itself")
-
-  const child = await db.group.findFirst({ where: { id: childGroupId, workspaceId: wsId } })
-  if (!child) throw notFound("Child group not found", { childGroupId })
-
-  const link = await db.groupGroup.create({
-    data: {
-      parentGroupId,
-      childGroupId,
-      role: optionalString(input.role) ?? undefined,
-      startDate: optionalDate(input.startDate) ?? undefined,
-      endDate: optionalDate(input.endDate) ?? undefined,
-    },
-  })
-
-  await auditAction({ actor, action: "group.subgroup.add", targetType: "group", targetId: parentGroupId, metadata: { childGroupId } })
-  return link
 }
 
 // ─── Query: active members at a point in time ─────────────────────────────────
@@ -331,10 +187,6 @@ export async function sumInteractionsByPlace(
     }
   }
 
-  // Aggregated in SQL rather than reduced over a fetched row set — the sum
-  // and count are all this needs, and computing them in the database means
-  // this never has to transfer (or hold in memory) every matching
-  // Interaction just to add up one column.
   const result = await db.interaction.aggregate({
     where,
     _sum: { amount: true },
@@ -354,7 +206,6 @@ export async function sumInteractionsByGroup(
   dateRange?: { from?: Date; to?: Date },
 ) {
   const wsId = workspaceId ?? "default-workspace"
-  // Find all places affiliated with this group
   const affiliations = await db.placeGroup.findMany({
     where: { groupId },
     select: { placeId: true },
@@ -362,7 +213,6 @@ export async function sumInteractionsByGroup(
   const placeIds = affiliations.map(a => a.placeId)
   if (!placeIds.length) return { groupId, total: 0, count: 0, placeIds: [] }
 
-  // Find all events at those places
   const events = await db.event.findMany({
     where: { workspaceId: wsId, placeId: { in: placeIds } },
     select: { id: true },
@@ -370,7 +220,6 @@ export async function sumInteractionsByGroup(
   const eventIds = events.map(e => e.id)
   if (!eventIds.length) return { groupId, total: 0, count: 0, placeIds }
 
-  // Sum interactions on those events
   const where: Record<string, unknown> = {
     workspaceId: wsId,
     eventId: { in: eventIds },
@@ -402,7 +251,6 @@ export async function sumInteractionsByGroupType(
   dateRange?: { from?: Date; to?: Date },
 ) {
   const wsId = workspaceId ?? "default-workspace"
-  // Find all groups of this type in the workspace
   const groups = await db.group.findMany({
     where: { workspaceId: wsId, groupType },
     select: { id: true },
@@ -430,12 +278,10 @@ export async function getGroupEvents(
   dateRange?: { from?: Date; to?: Date },
 ) {
   const wsId = workspaceId ?? "default-workspace"
-  // Active members right now (use start of dateRange.to as reference if provided)
   const asOf = dateRange?.to ?? new Date()
   const members = await getActiveMembers(groupId, wsId, asOf)
   const memberPersonIds = new Set(members.map(m => m.personId))
 
-  // All events in the date range for this workspace
   const eventWhere: Record<string, unknown> = { workspaceId: wsId }
   if (dateRange?.from || dateRange?.to) {
     eventWhere.timestamp = {
