@@ -83,6 +83,7 @@ test.describe('Home control plane', () => {
     for (const trigger of [
       'person.create',
       'person.update',
+      'interaction.create',
       'plan.create',
       'plan.update',
       'event.create',

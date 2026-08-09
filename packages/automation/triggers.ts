@@ -67,6 +67,19 @@ registerTrigger("person.update", z.object({
   fields: z.array(z.string()),
 }).passthrough())
 
+registerTrigger("interaction.create", z.object({
+  interactionId: z.string(),
+  personId: z.string().nullable().optional(),
+  eventId: z.string().nullable().optional(),
+  type: z.string(),
+  timestamp: z.string(),
+  summary: z.string().nullable().optional(),
+  emotionalWeight: z.string().nullable().optional(),
+  outcome: z.string().nullable().optional(),
+  direction: z.string().nullable().optional(),
+  sourceFileId: z.string().nullable().optional(),
+}).passthrough())
+
 registerTrigger("plan.create", z.object({
   planId: z.string(),
   text: z.string(),
