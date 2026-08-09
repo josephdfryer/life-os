@@ -1,83 +1,55 @@
-import { db } from "@/lib/db"
-import { PlanStatus } from "@life-os/db"
-import { notFound, optionalString, optionalStringArray, badRequest, requiredString } from "@/server/api/errors"
-import { auditAction, type DomainActor } from "./audit"
-import { formatPlan, jsonList } from "./dto"
+import { badRequest, notFound } from "@/server/api/errors"
+import { formatPlan } from "./dto"
+import type { DomainActor } from "./audit"
+import { runRulesForTarget } from "./rules"
+import {
+  createPlan as sharedCreatePlan,
+  updatePlan as sharedUpdatePlan,
+  deletePlan as sharedDeletePlan,
+  PlanError,
+  type PlanInput,
+} from "@life-os/domain"
 
-export type PlanInput = {
-  personId?: unknown
-  text?: unknown
-  timescale?: unknown
-  successSignals?: unknown
-  parentId?: unknown
-  status?: unknown
-}
+export type { PlanInput }
 
-const PLAN_STATUSES = Object.values(PlanStatus)
+// Write operations moved to @life-os/domain/plans.ts (Track C, phase C4) —
+// same shim pattern as persons.ts. Fires the new plan.create/plan.update
+// triggers (packages/domain never depends on packages/automation).
 
-function validPlanStatus(value: unknown): PlanStatus {
-  if (!PLAN_STATUSES.includes(value as PlanStatus)) {
-    throw badRequest(`status must be one of: ${PLAN_STATUSES.join(", ")}`, { field: "status" })
-  }
-  return value as PlanStatus
+function translate<T>(promise: Promise<T>): Promise<T> {
+  return promise.catch(error => {
+    if (error instanceof PlanError) throw error.code === "not_found" ? notFound(error.message) : badRequest(error.message)
+    throw error
+  })
 }
 
 export async function createPlan(input: PlanInput, actor?: DomainActor) {
   const workspaceId = actor?.workspaceId ?? "default-workspace"
-  const personId = optionalString(input.personId)
-  if (personId) {
-    const person = await db.person.findFirst({ where: { id: personId, workspaceId }, select: { id: true } })
-    if (!person) throw notFound("Person not found", { id: personId })
-  }
-
-  const plan = await db.plan.create({
-    data: {
-      workspaceId,
-      personId,
-      text: requiredString(input.text, "text"),
-      timescale: optionalString(input.timescale),
-      successSignals: Array.isArray(input.successSignals)
-        ? jsonList(optionalStringArray(input.successSignals))
-        : null,
-      status: input.status !== undefined ? validPlanStatus(input.status) : PlanStatus.active,
-      parentId: optionalString(input.parentId),
-    },
+  const plan = await translate(sharedCreatePlan(input, workspaceId, actor))
+  await runRulesForTarget({
+    trigger: "plan.create",
+    targetType: "plan",
+    targetId: plan.id,
+    payload: { planId: plan.id, text: plan.text, status: plan.status },
+    actor,
   })
-
-  await auditAction({ actor, action: "plan.create", targetType: "plan", targetId: plan.id })
   return formatPlan(plan)
 }
 
 export async function updatePlan(id: string, input: PlanInput, actor?: DomainActor) {
   const workspaceId = actor?.workspaceId ?? "default-workspace"
-  const existing = await db.plan.findFirst({ where: { id, workspaceId }, select: { id: true } })
-  if (!existing) throw notFound("Plan not found", { id })
-
-  const patch: Record<string, unknown> = {}
-  if (input.status !== undefined) patch.status = validPlanStatus(input.status)
-  if (input.text !== undefined) patch.text = requiredString(input.text, "text")
-  if (input.timescale !== undefined) patch.timescale = optionalString(input.timescale)
-  if (input.successSignals !== undefined) {
-    patch.successSignals = Array.isArray(input.successSignals)
-      ? jsonList(optionalStringArray(input.successSignals))
-      : null
-  }
-  if (input.parentId !== undefined) patch.parentId = optionalString(input.parentId)
-  if (input.personId !== undefined) patch.personId = optionalString(input.personId)
-  if (typeof patch.personId === "string") {
-    const person = await db.person.findFirst({ where: { id: patch.personId, workspaceId }, select: { id: true } })
-    if (!person) throw notFound("Person not found", { id: patch.personId })
-  }
-
-  const plan = await db.plan.update({ where: { id }, data: patch })
-  await auditAction({ actor, action: "plan.update", targetType: "plan", targetId: id, metadata: { fields: Object.keys(patch) } })
+  const plan = await translate(sharedUpdatePlan(id, input, workspaceId, actor))
+  await runRulesForTarget({
+    trigger: "plan.update",
+    targetType: "plan",
+    targetId: id,
+    payload: { planId: id, fields: Object.keys(input) },
+    actor,
+  })
   return formatPlan(plan)
 }
 
 export async function deletePlan(id: string, actor?: DomainActor) {
   const workspaceId = actor?.workspaceId ?? "default-workspace"
-  const existing = await db.plan.findFirst({ where: { id, workspaceId }, select: { id: true } })
-  if (!existing) throw notFound("Plan not found", { id })
-  await db.plan.delete({ where: { id } })
-  await auditAction({ actor, action: "plan.delete", targetType: "plan", targetId: id })
+  await translate(sharedDeletePlan(id, workspaceId, actor))
 }

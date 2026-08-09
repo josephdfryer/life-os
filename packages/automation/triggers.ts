@@ -67,6 +67,17 @@ registerTrigger("person.update", z.object({
   fields: z.array(z.string()),
 }).passthrough())
 
+registerTrigger("plan.create", z.object({
+  planId: z.string(),
+  text: z.string(),
+  status: z.string(),
+}).passthrough())
+
+registerTrigger("plan.update", z.object({
+  planId: z.string(),
+  fields: z.array(z.string()),
+}).passthrough())
+
 registerTrigger("inbox.accept", z.object({
   stagedInteractionId: z.string(),
   interactionId: z.string(),

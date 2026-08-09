@@ -3,6 +3,7 @@ import { ruleActionContract } from "@life-os/contracts"
 import {
   setInteractionField, InteractionFieldError,
   getPersonTags, setPersonTags,
+  updatePlan, PlanError,
   type GraphEventActor, type AuditActor,
 } from "@life-os/domain"
 
@@ -151,6 +152,25 @@ registerAction({
       // try/catch around action execution — one bad/missing target must
       // not crash the whole rule run.
       if (error instanceof InteractionFieldError) return null
+      throw error
+    }
+  },
+})
+
+// Plan status is the one field worth a dedicated automation action today —
+// e.g. a rule flagging a Plan "abandoned" once its window has passed.
+// Reuses the shared updatePlan command's own status validation rather than
+// re-declaring the allowed values here.
+registerAction({
+  type: "plan_set_status",
+  authorityTier: "safe_auto",
+  async execute(action, ctx) {
+    if (ctx.targetType !== "plan" || !ctx.targetId || action.value === undefined) return null
+    try {
+      await updatePlan(ctx.targetId, { status: action.value }, ctx.workspaceId, ctx.actor)
+      return action
+    } catch (error) {
+      if (error instanceof PlanError) return null
       throw error
     }
   },
