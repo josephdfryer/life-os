@@ -4,21 +4,29 @@ import { authorizeApiRequest, unauthorized } from "@/lib/api-auth"
 import { createPerson } from "@/server/domain/persons"
 import { formatPerson } from "@/server/domain/dto"
 import { created, handleRouteError } from "@/server/api/respond"
+import { cursorPage, dateKeysetSeek, parsePageRequest } from "@/server/api/date-keyset"
 
 export async function GET(req: NextRequest) {
   const auth = await authorizeApiRequest(req, "people.read")
   if (!auth) return unauthorized()
 
-  // Bounded to the oldest 2,000 (createdAt asc, unchanged ordering) — this
-  // v1 API surface had no cap at all and scaled with total Person count
-  // (7,300+ and growing) on every call.
-  const persons = await db.person.findMany({
-    where: { workspaceId: auth.workspaceId },
-    orderBy: { createdAt: "asc" },
-    take: 2000,
-  })
+  try {
+    const { searchParams } = new URL(req.url)
+    const { cursor, limit } = parsePageRequest(searchParams, { limit: 200 })
+    const persons = await db.person.findMany({
+      where: {
+        workspaceId: auth.workspaceId,
+        ...(cursor ? { AND: [dateKeysetSeek("createdAt", cursor, "asc")] } : {}),
+      },
+      orderBy: [{ createdAt: "asc" }, { id: "asc" }],
+      take: limit + 1,
+    })
+    const page = cursorPage(persons, limit, person => person.createdAt)
 
-  return NextResponse.json(persons.map(formatPerson))
+    return NextResponse.json({ ...page, data: page.data.map(formatPerson) })
+  } catch (error) {
+    return handleRouteError(error)
+  }
 }
 
 export async function POST(req: NextRequest) {

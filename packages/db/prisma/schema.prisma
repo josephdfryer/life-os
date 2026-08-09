@@ -187,6 +187,7 @@ model Person {
   theoryAnalysisRuns TheoryAnalysisRun[]
 
   @@index([workspaceId, last, first])
+  @@index([workspaceId, createdAt, id])
   @@index([last, first])
   @@index([title])
   @@index([closeness])
@@ -742,6 +743,7 @@ model Event {
 
   @@index([workspaceId, start])
   @@index([workspaceId, timestamp])
+  @@index([workspaceId, timestamp(sort: Desc), id])
   @@index([sourcePlanId])
   @@index([parentEventId])
 }

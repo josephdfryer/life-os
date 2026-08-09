@@ -27,3 +27,24 @@ Critical route targets:
 - Map rendering culls off-screen markers and must keep projection/clustering pure-test coverage.
 
 Run `npm run perf:check` for source and query budgets. After `npm run build`, run `npm run perf:check:built` for route chunk budgets.
+
+## Remaining query-debt classification (2026-08-08)
+
+The current audit reports 133 unbounded `findMany` calls against the historical
+109 ceiling; 87 are reachable from request paths. The count is a triage signal,
+not permission to add arbitrary `take` caps. Every growing read must stay
+complete through one of these treatments:
+
+| Shape | Current examples | Proper treatment |
+|---|---|---|
+| Browsable lists | People data cleaning, merge review, plans | Cursor-paginate the response and migrate the UI to continuation state. |
+| Complete bulk workflows | People export, import analysis, ingest, nickname migration, merge analysis | Process bounded batches until exhausted; export may stream, but must not silently omit rows. |
+| Correctness-required summaries | Group event/financial rollups and Place membership/profile totals | Move counts and sums into SQL aggregates; do not cap the source rows. |
+| Identity lookup | Gmail and Google Calendar build an email index by decoding every Person's JSON email list | Explore a normalized `PersonEmail` support table and backfill/dual-write migration in plan mode; preserve Person as the primitive and treat the table as a query index, not a new primitive. |
+| Selective small reads | Health states for one person, group-place edges for one group | Measure cardinality and document the selective bound before deciding whether pagination adds value. |
+
+The four high-volume list routes fixed in the August 8 pass (`/api/events`,
+`/api/interactions`, `/api/v1/contacts`, and
+`/api/v1/contacts/:id/interactions`) use keyset pagination rather than silent
+caps. Continue ratcheting the global ceiling only after each classified slice
+is implemented and verified.

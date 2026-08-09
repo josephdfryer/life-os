@@ -264,6 +264,14 @@ export function cursorPageContract<T extends z.ZodTypeAny>(item: T) {
   }).strict()
 }
 
+// Common list response for graph entities. Individual routes may expose richer
+// fields, but every paginated row has a stable id and every page advertises how
+// to continue without making clients infer truncation from the row count.
+export const entityCursorPageContract = cursorPageContract(z.object({
+  id,
+}).passthrough())
+export type EntityCursorPage = z.infer<typeof entityCursorPageContract>
+
 // Standard idempotency header contract: a client-supplied key that makes a
 // retried write safe to repeat. Pairs with GraphEvent.idempotencyKey — the
 // same value flows from the HTTP header into the event the command publishes.

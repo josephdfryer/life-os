@@ -11,6 +11,7 @@ import {
   ruleConditionsContract,
   storedStringList,
   cursorPageContract,
+  entityCursorPageContract,
   entityRefContract,
   errorEnvelopeContract,
   graphEventContract,
@@ -72,6 +73,21 @@ test("cursor page contract accepts data + nextCursor and rejects offset-shaped p
   // is usually more expensive than the page itself.
   assert.equal(page.safeParse({ data: [], nextCursor: null, hasMore: false, limit: 25 }).success, true)
   assert.equal(page.safeParse({ data: [], offset: 0, limit: 25 }).success, false)
+})
+
+test("entity cursor pages require stable row ids and explicit continuation state", () => {
+  assert.equal(entityCursorPageContract.safeParse({
+    data: [{ id: "person-1", first: "Ada" }],
+    nextCursor: "cursor-1",
+    hasMore: true,
+    limit: 200,
+  }).success, true)
+  assert.equal(entityCursorPageContract.safeParse({
+    data: [{ first: "Ada" }],
+    nextCursor: null,
+    hasMore: false,
+    limit: 200,
+  }).success, false)
 })
 
 test("proposed command carries a command name and a typed input bag", () => {
