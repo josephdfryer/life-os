@@ -5,6 +5,7 @@ import {
   getPersonTags, setPersonTags,
   updatePlan, PlanError,
   updateEventPrimitive, EventPrimitiveError,
+  registerReviewCommand, type ReviewItemActorContext, type ReviewItemCommandResult,
   type GraphEventActor, type AuditActor,
 } from "@life-os/domain"
 
@@ -195,4 +196,24 @@ registerAction({
       throw error
     }
   },
+})
+
+// The universal handoff for review/confirm-tier actions (rules.ts's
+// applyActions proposes these as a ReviewItem instead of running them
+// automatically — see packages/domain/review.ts). Accepting the ReviewItem
+// calls this, which just re-dispatches to the same action registry every
+// safe_auto action already runs through — accepting IS the human
+// confirmation a review/confirm-tier action was withheld pending.
+registerReviewCommand("automation.apply_action", async (input, ctx: ReviewItemActorContext): Promise<ReviewItemCommandResult> => {
+  const actionType = typeof input.actionType === "string" ? input.actionType : null
+  const targetType = typeof input.targetType === "string" ? input.targetType : null
+  const targetId = typeof input.targetId === "string" ? input.targetId : null
+  const registered = actionType ? getRegisteredAction(actionType) : undefined
+  if (!registered || !targetType || !targetId) {
+    throw new Error(`automation.apply_action: unknown or incomplete proposal (actionType=${actionType}, targetType=${targetType}, targetId=${targetId})`)
+  }
+
+  const action = (input.action ?? { type: actionType }) as RuleAction
+  const result = await registered.execute(action, { workspaceId: ctx.workspaceId, targetType, targetId, actor: ctx.actor })
+  return { resultType: targetType, resultId: result ? targetId : null }
 })

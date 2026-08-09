@@ -8,9 +8,11 @@ import {
   applyRuleRunSuggestions,
   replayRule,
   testRule,
+  registerAction,
   RuleError,
   MAX_CAUSATION_DEPTH,
 } from "../index"
+import { resolveReviewItem } from "@life-os/domain"
 
 // Run against a real (throwaway, migrated) database — versioning, the
 // causation-depth guard, and the safe_auto action executors (which touch
@@ -163,6 +165,63 @@ async function main() {
   const dryRun = await testRule({ ruleId: rule.id, payload: { source: "imessage" } }, actor)
   assert.equal(dryRun.matched, true)
   assert.ok(dryRun.run, "testRule must record a dry_run RuleRun")
+
+  // ── review-tier actions become a ReviewItem proposal, not a silent drop (Track C) ──
+  // None of the built-in actions are review/confirm tier yet, so register a
+  // throwaway test-only one to exercise the full pipeline end to end.
+  let testConfirmActionRan = false
+  registerAction({
+    type: "test_confirm_action",
+    authorityTier: "confirm",
+    async execute(action) {
+      testConfirmActionRan = true
+      return action
+    },
+  })
+
+  const confirmRule = await createRule({
+    name: "Needs confirmation",
+    trigger: "inbox.stage",
+    mode: "auto",
+    conditions: [{ field: "source", operator: "equals", value: "needs-confirm" }],
+    actions: [{ type: "test_confirm_action" }],
+  }, actor)
+  const staged4 = await db.stagedInteraction.create({
+    data: { workspaceId, source: "needs-confirm", sourceId: "confirm-1", status: "pending", itemType: "interaction", type: "message", timestamp: new Date(), summary: "high stakes" },
+  })
+  const result4 = await runRulesForTarget({
+    trigger: "inbox.stage",
+    payload: { source: "needs-confirm", stagedInteractionId: staged4.id },
+    targetType: "stagedInteraction",
+    targetId: staged4.id,
+    actor: actor.actor,
+    apply: true, // even with apply=true, a confirm-tier action must never auto-run
+  })
+  assert.equal(result4.actionsApplied.length, 0, "a confirm-tier action must never appear in actionsApplied")
+  assert.equal(testConfirmActionRan, false, "the confirm-tier action must not have executed yet")
+
+  const pendingReview = await db.reviewItem.findMany({ where: { workspaceId, source: "rule", targetId: staged4.id } })
+  assert.equal(pendingReview.length, 1, "a confirm-tier match must create exactly one ReviewItem")
+  assert.equal(pendingReview[0].riskTier, "confirm")
+  assert.equal(JSON.parse(pendingReview[0].proposedCommand).command, "automation.apply_action")
+  assert.equal(pendingReview[0].sourceId, `${confirmRule.id}:stagedInteraction:${staged4.id}:test_confirm_action`, "sourceId must be deterministic per rule/target/action")
+
+  // re-evaluating the same match must refresh the one item, not create a second
+  await runRulesForTarget({
+    trigger: "inbox.stage",
+    payload: { source: "needs-confirm", stagedInteractionId: staged4.id },
+    targetType: "stagedInteraction",
+    targetId: staged4.id,
+    actor: actor.actor,
+    apply: true,
+  })
+  const stillOne = await db.reviewItem.count({ where: { workspaceId, source: "rule", targetId: staged4.id } })
+  assert.equal(stillOne, 1, "re-matching the same rule/target/action must refresh, not duplicate, the pending ReviewItem")
+
+  // accepting the ReviewItem is the human confirmation — the action actually runs now
+  const resolved = await resolveReviewItem({ id: pendingReview[0].id, workspaceId, action: "accept", actor: actor.actor })
+  assert.equal(resolved.status, "accepted")
+  assert.equal(testConfirmActionRan, true, "accepting the ReviewItem must actually run the confirm-tier action")
 
   // ── error paths ──
   await assert.rejects(

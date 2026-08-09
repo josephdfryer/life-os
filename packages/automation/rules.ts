@@ -6,7 +6,7 @@ import {
   ruleConditionsContract,
 } from "@life-os/contracts"
 import type { AccessActor } from "@life-os/access"
-import { writeAuditLog, type AuditActor, type GraphEventActor } from "@life-os/domain"
+import { writeAuditLog, createReviewItem, type AuditActor, type GraphEventActor } from "@life-os/domain"
 import { evaluateConditions, type RuleCondition } from "./conditions"
 import { getRegisteredAction, type RuleAction } from "./actions"
 import { getTriggerSchema } from "./triggers"
@@ -316,7 +316,14 @@ export async function runRulesForTarget(input: RuleExecutionInput) {
     const ruleMatched = result.matched
     const planned = ruleMatched ? rule.actions : []
     const applied = ruleMatched && input.apply && shouldApply(rule.mode)
-      ? await applyActions(planned, { workspaceId, targetType: input.targetType ?? null, targetId: input.targetId ?? null, actor: input.actor })
+      ? await applyActions(planned, {
+          workspaceId,
+          targetType: input.targetType ?? null,
+          targetId: input.targetId ?? null,
+          actor: input.actor,
+          ruleId: rule.id,
+          ruleVersion: rule.version,
+        })
       : []
     const status = runStatus(rule.mode, ruleMatched, input.apply, applied.length)
 
@@ -366,18 +373,42 @@ export async function runRulesForTarget(input: RuleExecutionInput) {
 
 async function applyActions(
   actions: RuleAction[],
-  ctx: { workspaceId: string; targetType: string | null; targetId: string | null; actor?: GraphEventActor & AuditActor },
+  ctx: {
+    workspaceId: string
+    targetType: string | null
+    targetId: string | null
+    actor?: GraphEventActor & AuditActor
+    ruleId: string
+    ruleVersion: number
+  },
 ): Promise<RuleAction[]> {
   const applied: RuleAction[] = []
   for (const action of actions) {
     const registered = getRegisteredAction(action.type)
     if (!registered) continue // unknown action type — nothing to run, same as the old rules.ts's silent fall-through
-    // Only observe and safe_auto ever execute automatically from here.
-    // review/confirm-tier actions stay "planned" forever until something
-    // resolves them explicitly (review-tier's natural home is a ReviewItem —
-    // not wired to any action yet, since none of today's four actions need
-    // it — see packages/domain/review.ts).
-    if (registered.authorityTier !== "observe" && registered.authorityTier !== "safe_auto") continue
+
+    // Only observe and safe_auto ever execute automatically. review/confirm
+    // tier actions become a ReviewItem proposal instead of silently
+    // vanishing — accepting it re-runs this exact action for real via the
+    // "automation.apply_action" command registered in actions.ts. Source id
+    // is deterministic per (rule, target, action type), so re-evaluating the
+    // same match refreshes the one pending proposal instead of piling up
+    // duplicates (createReviewItem's own upsert semantics — see review.ts).
+    if (registered.authorityTier !== "observe" && registered.authorityTier !== "safe_auto") {
+      await createReviewItem({
+        workspaceId: ctx.workspaceId,
+        source: "rule",
+        sourceId: `${ctx.ruleId}:${ctx.targetType ?? "none"}:${ctx.targetId ?? "none"}:${action.type}`,
+        itemType: ctx.targetType ?? "rule",
+        command: "automation.apply_action",
+        commandInput: { actionType: action.type, action, targetType: ctx.targetType, targetId: ctx.targetId },
+        targetType: ctx.targetType,
+        targetId: ctx.targetId,
+        riskTier: registered.authorityTier,
+      })
+      continue
+    }
+
     const result = await registered.execute(action, ctx)
     if (result) applied.push(result)
   }
@@ -427,7 +458,7 @@ export async function applyRuleRunSuggestions(ruleRunIds: string[], targetId: st
 
   const runs = await db.ruleRun.findMany({
     where: { id: { in: ruleRunIds }, targetId, status: "suggested", workspaceId: actor?.workspaceId ?? "default-workspace" },
-    select: { id: true, actionsPlanned: true },
+    select: { id: true, actionsPlanned: true, ruleId: true, ruleVersion: true },
   })
 
   const allApplied: RuleAction[] = []
@@ -438,7 +469,14 @@ export async function applyRuleRunSuggestions(ruleRunIds: string[], targetId: st
     const planned = decodeStoredJson(run.actionsPlanned, ruleActionsContract, "RuleRun.actionsPlanned", [])
     if (!planned.length) continue
 
-    const applied = await applyActions(planned, { workspaceId, targetType: "stagedInteraction", targetId, actor })
+    const applied = await applyActions(planned, {
+      workspaceId,
+      targetType: "stagedInteraction",
+      targetId,
+      actor,
+      ruleId: run.ruleId,
+      ruleVersion: run.ruleVersion,
+    })
     if (applied.length) {
       await db.ruleRun.update({
         where: { id: run.id },
