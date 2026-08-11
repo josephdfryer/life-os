@@ -17,6 +17,13 @@ type Communication = {
   priority: number
 }
 
+type PersonChoice = {
+  id: string
+  first: string
+  last: string
+  detail: string
+}
+
 export default function CommunicationsReview({
   initialItems,
   personsUrl,
@@ -32,10 +39,40 @@ export default function CommunicationsReview({
   const [syncing, setSyncing] = useState(0)
   const [error, setError] = useState("")
   const [notice, setNotice] = useState("")
+  const [bulkPersonSearch, setBulkPersonSearch] = useState("")
+  const [bulkPersonResults, setBulkPersonResults] = useState<PersonChoice[]>([])
+  const [bulkPerson, setBulkPerson] = useState<PersonChoice | null>(null)
   const lastCheckedIndex = useRef<number | null>(null)
   const focusedRowRef = useRef<HTMLElement | null>(null)
 
   const allSelected = items.length > 0 && items.every(item => selectedIds.has(item.id))
+
+  useEffect(() => {
+    if (selectedIds.size === 0 || !bulkPersonSearch.trim()) {
+      setBulkPersonResults([])
+      if (selectedIds.size === 0) {
+        setBulkPersonSearch("")
+        setBulkPerson(null)
+      }
+      return
+    }
+    const controller = new AbortController()
+    const timer = setTimeout(async () => {
+      try {
+        const response = await fetch(`/api/communications/people?search=${encodeURIComponent(bulkPersonSearch)}`, {
+          signal: controller.signal,
+        })
+        const body = response.ok ? await response.json() as { people?: PersonChoice[] } : null
+        setBulkPersonResults(body?.people ?? [])
+      } catch (searchError) {
+        if (!(searchError instanceof DOMException && searchError.name === "AbortError")) setBulkPersonResults([])
+      }
+    }, 180)
+    return () => {
+      clearTimeout(timer)
+      controller.abort()
+    }
+  }, [bulkPersonSearch, selectedIds.size])
 
   useEffect(() => {
     function handleShortcut(event: KeyboardEvent) {
@@ -153,6 +190,41 @@ export default function CommunicationsReview({
     }
   }
 
+  async function addSelectedToPerson() {
+    if (!bulkPerson || syncing > 0) return
+    const selected = items.filter(item => selectedIds.has(item.id))
+    const ids = selected.flatMap(item => item.ids)
+    if (ids.length === 0) return
+
+    setError("")
+    setNotice("")
+    setSyncing(current => current + 1)
+    try {
+      const response = await fetch("/api/communications/bulk", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "accept", ids, personId: bulkPerson.id }),
+      })
+      const body = await response.json().catch(() => null) as {
+        error?: string
+        processed?: number
+        skipped?: number
+        errors?: string[]
+      } | null
+      if (!response.ok) throw new Error(body?.error || "Could not add selected communications")
+      if (body?.errors?.length) throw new Error(`${body.errors.length} communication(s) could not be added`)
+
+      setItems(current => current.filter(item => !selectedIds.has(item.id)))
+      clearSelection()
+      setExpandedId(current => current && selected.some(item => item.id === current) ? null : current)
+      setNotice(`Added ${body?.processed ?? ids.length} to ${bulkPerson.first} ${bulkPerson.last}${body?.skipped ? ` · ${body.skipped} skipped` : ""}`)
+    } catch (assignError) {
+      setError(assignError instanceof Error ? assignError.message : "Could not add selected communications")
+    } finally {
+      setSyncing(current => current - 1)
+    }
+  }
+
   async function resolve(item: Communication, action: "accept" | "dismiss") {
     if (busyId) return
     setBusyId(item.id)
@@ -219,6 +291,35 @@ export default function CommunicationsReview({
               <>
                 <strong>{selectedIds.size} selected</strong>
                 <button type="button" onClick={dismissSelected}>Dismiss {selectedIds.size}</button>
+                <input
+                  type="search"
+                  value={bulkPersonSearch}
+                  onChange={event => {
+                    setBulkPersonSearch(event.target.value)
+                    setBulkPerson(null)
+                  }}
+                  placeholder="Find one Person…"
+                  aria-label="Search for the Person to receive selected communications"
+                  className="communications-person-search"
+                />
+                {bulkPersonResults.length > 0 ? (
+                  <select
+                    value={bulkPerson?.id ?? ""}
+                    onChange={event => setBulkPerson(bulkPersonResults.find(person => person.id === event.target.value) ?? null)}
+                    aria-label="Person for selected communications"
+                    className="communications-person-select"
+                  >
+                    <option value="">Choose Person…</option>
+                    {bulkPersonResults.map(person => (
+                      <option key={person.id} value={person.id}>{person.first} {person.last}</option>
+                    ))}
+                  </select>
+                ) : null}
+                {bulkPerson ? (
+                  <button type="button" className="communications-assign" disabled={syncing > 0} onClick={() => void addSelectedToPerson()}>
+                    Add {selectedIds.size} to {bulkPerson.first} {bulkPerson.last}
+                  </button>
+                ) : null}
                 <button type="button" onClick={clearSelection}>Clear</button>
               </>
             )}

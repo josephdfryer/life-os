@@ -3,6 +3,7 @@ import { db } from "@/lib/db"
 import { normalizePhoneDigits, phoneNumbersMatch } from "@life-os/db"
 import { auditAction, type DomainActor } from "./audit"
 import type { StageRecordInput } from "./inbox"
+import { findUniqueExactCandidate, normalizePersonName, type InboxPersonCandidate } from "./inbox-person-match"
 
 let client: Anthropic | null = null
 function getClient(): Anthropic | null {
@@ -23,14 +24,7 @@ export type EnrichResult = {
   autoDismissed: boolean
 }
 
-type PersonCandidate = {
-  id: string
-  first: string
-  last: string
-  emails: string
-  phones: string
-  closeness: number | null
-}
+type PersonCandidate = InboxPersonCandidate
 
 type HaikuResponse = {
   personId: string | null
@@ -47,29 +41,29 @@ export async function enrichInboxItem(
   workspaceId: string,
   actor?: DomainActor,
 ): Promise<EnrichResult | null> {
-  if (!process.env.ANTHROPIC_API_KEY) return null
-
   try {
     const candidates = await queryCandidates(input, workspaceId)
-    const raw = await callHaiku(input, candidates)
-    if (!raw) return null
+    const deterministic = findUniqueExactCandidate(input, candidates)
+    const raw = process.env.ANTHROPIC_API_KEY ? await callHaiku(input, candidates) : null
+    if (!raw && !deterministic) return null
 
     const validPersonId =
-      raw.personId && candidates.some(c => c.id === raw.personId) ? raw.personId : null
+      deterministic?.person.id
+      ?? (raw?.personId && candidates.some(c => c.id === raw.personId) ? raw.personId : null)
 
     // Obvious ads/automated notifications aren't from a person at all — no
     // amount of candidate-matching should apply to them. Dismiss immediately
     // rather than leaving them for manual review, but keep it reversible:
     // dismissed items stay visible via ?status=dismissed/all and can be
     // manually reset to pending, same as any other dismiss.
-    const autoDismissed = raw.isAutomatedOrAd === true && !validPersonId
+    const autoDismissed = raw?.isAutomatedOrAd === true && !validPersonId
 
     const result: EnrichResult = {
       candidatePersonId: validPersonId,
-      confidence: Math.max(0, Math.min(100, raw.confidence ?? 0)),
-      matchReason: raw.reason ?? "",
-      summary: raw.summary ?? null,
-      priority: Math.max(1, Math.min(5, raw.priority ?? 3)),
+      confidence: deterministic?.confidence ?? Math.max(0, Math.min(100, raw?.confidence ?? 0)),
+      matchReason: deterministic?.reason ?? raw?.reason ?? "",
+      summary: raw?.summary ?? null,
+      priority: Math.max(1, Math.min(5, raw?.priority ?? 3)),
       autoDismissed,
     }
 
@@ -119,7 +113,23 @@ async function queryCandidates(
 
   const phoneMatches = input.contactPhone ? await queryPhoneCandidates(input.contactPhone, workspaceId) : []
 
-  for (const p of [...emailMatches, ...phoneMatches]) {
+  const contactName = normalizePersonName(input.contactName)
+  const nameTokens = contactName.split(" ").filter(Boolean)
+  const nameMatches = contactName
+    ? (await db.person.findMany({
+        where: {
+          workspaceId,
+          OR: nameTokens.slice(0, 4).flatMap(token => [
+            { first: { contains: token } },
+            { last: { contains: token } },
+          ]),
+        },
+        select: { id: true, first: true, last: true, emails: true, phones: true, closeness: true },
+        take: 20,
+      })).filter(person => normalizePersonName(`${person.first} ${person.last}`) === contactName)
+    : []
+
+  for (const p of [...emailMatches, ...phoneMatches, ...nameMatches]) {
     if (!seen.has(p.id)) {
       seen.add(p.id)
       results.push(p)

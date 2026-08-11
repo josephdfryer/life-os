@@ -140,7 +140,7 @@ sequenceDiagram
 
 In plain English: the UI does not directly make database decisions. It asks an API, the API calls a command, and the command updates the database.
 
-The Home app also provides a bounded communications-review surface. It reads pending iMessage, Gmail, and WhatsApp records from the same `StagedInteraction` inbox and mirrors the Persons Inbox selection model: the owner can select one item, shift-select a range, select all, clear the selection, and dismiss the selection as one optimistic bulk action. Every row in Home and Persons shows a human-readable source label (`iMessage`, `Email`, or `WhatsApp`) even when the current result set contains only one source. It also mirrors the Inbox keyboard loop (`j`/`k` move, `x` selects, `e` dismisses, Enter expands, and Escape closes). For presentation only, Home groups iMessages from the same normalized phone number when their timestamps fall inside one one-hour session; the original staged messages remain separate, auditable records underneath the grouped card. The owner can expand a single item or text session, accept a confidently matched communication, or dismiss it without navigating into Persons. Home's workspace-scoped `/api/communications/bulk` route only dismisses still-pending communication records and writes the same inbox audit entry for every item it changes. Accepting preserves the existing source/day aggregation convention for `Interaction` records while keeping the raw provider body as the displayed message text. Home can conservatively infer a missing candidate when exactly one Person matches the communication's email, normalized phone number, or complete name; ambiguous results still require manual review. Items without a unique Person match open the canonical Persons Inbox with the staged item ID in the URL, and Persons loads and expands that exact record even when it is outside the first inbox page.
+The Home app also provides a bounded communications-review surface. It reads pending iMessage, Gmail, and WhatsApp records from the same `StagedInteraction` inbox and mirrors the Persons Inbox selection model: the owner can select one item, shift-select a range, select all, clear the selection, dismiss the selection, or search for one Person and add the entire selection to that Person. Persons offers the same explicit-Person bulk action in its full Inbox. Every row in Home and Persons shows a human-readable source label (`iMessage`, `Email`, or `WhatsApp`) even when the current result set contains only one source. It also mirrors the Inbox keyboard loop (`j`/`k` move, `x` selects, `e` dismisses, Enter expands, and Escape closes). For presentation only, Home groups iMessages from the same normalized phone number when their timestamps fall inside one one-hour session; the original staged messages remain separate, auditable records underneath the grouped card. The owner can expand a single item or text session, accept a confidently matched communication, or dismiss it without navigating into Persons. Home's workspace-scoped `/api/communications/bulk` route accepts an explicit workspace-owned Person for the whole selection or dismisses still-pending communication records. Accepting preserves the existing source/day aggregation convention for `Interaction` records while keeping the raw provider body as the displayed message text. Home can conservatively infer a missing candidate when exactly one Person matches the communication's email, normalized phone number, or complete name; ambiguous results still require manual review. Items without a unique Person match can still open the canonical Persons Inbox with the staged item ID in the URL, and Persons loads and expands that exact record even when it is outside the first inbox page.
 
 On a Person profile, email, iMessage, and WhatsApp Interactions form the primary **Communications** stream. Non-communication relationship history remains in its own section, while Google Calendar Interactions are kept in a separate collapsed **Calendar events** stream so meeting volume cannot bury the conversation. Communication cards show the full stored text by default; unusually long text is shortened only in the UI and can be expanded inline. Newly accepted or directly matched provider messages store the raw body in the daily Interaction text. For previously accepted staged records, the profile reconstructs the full display text from their retained `StagedInteraction.body` values.
 
@@ -188,7 +188,7 @@ flowchart TD
   WhatsApp["WhatsApp Desktop local ChatStorage.sqlite"] --> Watcher["scripts/whatsapp-sync.ts every five minutes"]
   Watcher --> Watermark["Local watermark: last message ID"]
   Watermark --> DirectOnly["One-to-one text messages only"]
-  DirectOnly --> Match["Match WhatsApp phone number to a Person"]
+  DirectOnly --> Match["Match phone, then unique exact complete name"]
   Match -->|Known| Daily["Append to one daily WhatsApp Interaction"]
   Match -->|Unknown| Inbox["Stage in the Persons Inbox"]
 ```
@@ -202,9 +202,11 @@ ID, and therefore safely ignore records already imported or staged.
 
 The initial scope is deliberately conservative: one-to-one messages with text.
 Group chats, LID-only identities, media, reactions, edits, and deleted-message
-events advance the watermark but do not enter Persons. Known phone numbers are
-appended to a message Interaction for that Person and day; unknown numbers are
-staged for identity review and never create People automatically. The
+events advance the watermark but do not enter Persons. A normalized phone match
+is preferred; when the phone is not stored, one unique exact complete-name
+match (for example, `Qin Fryer`) is also trusted. Ambiguous names remain staged
+for identity review and never create People automatically. Known contacts are
+appended to a message Interaction for that Person and day. The
 `com.lifeos.whatsappsync` launch agent runs one bounded pass every 300 seconds,
 with state in `~/.life-os/whatsapp-sync-state.json` and logs under `logs/`.
 
@@ -420,7 +422,7 @@ flowchart TD
   DailyInteraction --> Audit["Write AuditLog"]
 ```
 
-Plain English: Inbox is the human filter between automation and your real CRM memory. If an incoming interaction belongs to someone who is not in People yet, the Inbox can create the Person from the staged name, email, or phone and accept the interaction in the same review step.
+Plain English: Inbox is the human filter between automation and your real CRM memory. Exact email, normalized phone, and unique complete-name matches are resolved deterministically before AI enrichment. If an incoming interaction belongs to someone who is not in People yet, the Inbox can create the Person from the staged name, email, or phone and accept the interaction in the same review step. When several selected messages all belong to one known Person, Home or Persons can attach and accept the whole selection in one action.
 
 ### 4b. The unified ReviewItem inbox (cross-app)
 

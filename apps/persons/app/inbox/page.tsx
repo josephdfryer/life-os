@@ -63,6 +63,9 @@ export default function InboxPage() {
   const [syncing, setSyncing] = useState(0)
   const [error, setError] = useState<string | null>(null)
   const [notice, setNotice] = useState<string | null>(null)
+  const [bulkPersonSearch, setBulkPersonSearch] = useState("")
+  const [bulkPersonResults, setBulkPersonResults] = useState<PersonRef[]>([])
+  const [bulkPerson, setBulkPerson] = useState<PersonRef | null>(null)
   const [total, setTotal] = useState<number | null>(null)
   const [nextCursor, setNextCursor] = useState<string | null>(null)
   const loadingMore = useRef(false)
@@ -85,6 +88,33 @@ export default function InboxPage() {
     [rows, selectedIds],
   )
   const matchedInSelection = selectedInView.filter(row => row.candidatePersonId).length
+
+  useEffect(() => {
+    if (selectedIds.size === 0 || !bulkPersonSearch.trim()) {
+      setBulkPersonResults([])
+      if (selectedIds.size === 0) {
+        setBulkPersonSearch("")
+        setBulkPerson(null)
+      }
+      return
+    }
+    const controller = new AbortController()
+    const timer = setTimeout(async () => {
+      try {
+        const res = await fetch(`/api/persons?minimal=true&search=${encodeURIComponent(bulkPersonSearch)}&limit=8`, {
+          signal: controller.signal,
+        })
+        const data = res.ok ? await res.json() : {}
+        setBulkPersonResults(data.persons ?? [])
+      } catch (error) {
+        if (!(error instanceof DOMException && error.name === "AbortError")) setBulkPersonResults([])
+      }
+    }, 180)
+    return () => {
+      clearTimeout(timer)
+      controller.abort()
+    }
+  }, [bulkPersonSearch, selectedIds.size])
 
   useEffect(() => { loadItems() }, [])
 
@@ -213,8 +243,8 @@ export default function InboxPage() {
       .finally(() => setSyncing(n => n - 1))
   }
 
-  function bulkAction(action: "dismiss" | "accept") {
-    const targets = action === "accept"
+  function bulkAction(action: "dismiss" | "accept", personId?: string) {
+    const targets = action === "accept" && !personId
       ? selectedInView.filter(row => row.candidatePersonId)
       : selectedInView
     const ids = targets.map(row => row.id)
@@ -226,7 +256,7 @@ export default function InboxPage() {
       const res = await fetch("/api/inbox/bulk", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action, ids }),
+        body: JSON.stringify({ action, ids, personId }),
       })
       const data = await res.json()
       if (!res.ok) throw new Error(data.error?.message || data.error || "Bulk action failed")
@@ -329,6 +359,7 @@ export default function InboxPage() {
         <div style={{
           position: "sticky", top: 0, zIndex: 5,
           display: "flex", alignItems: "center", gap: "14px",
+          flexWrap: "wrap",
           padding: "8px 12px",
           background: "var(--surface)",
           border: "1px solid var(--border)",
@@ -353,6 +384,39 @@ export default function InboxPage() {
               {matchedInSelection > 0 && (
                 <button onClick={() => bulkAction("accept")} style={{ ...toolbarBtnStyle, borderColor: "var(--accent)", color: "var(--accent)", background: "var(--accent-soft)" }}>
                   Accept {matchedInSelection} matched
+                </button>
+              )}
+              <input
+                type="search"
+                value={bulkPersonSearch}
+                onChange={event => {
+                  setBulkPersonSearch(event.target.value)
+                  setBulkPerson(null)
+                }}
+                placeholder="Find one Person…"
+                aria-label="Search for the Person to receive selected inbox items"
+                style={{ ...bulkInputStyle, width: "150px" }}
+              />
+              {bulkPersonResults.length > 0 && (
+                <select
+                  value={bulkPerson?.id ?? ""}
+                  onChange={event => setBulkPerson(bulkPersonResults.find(person => person.id === event.target.value) ?? null)}
+                  aria-label="Person for selected inbox items"
+                  style={{ ...bulkInputStyle, width: "170px" }}
+                >
+                  <option value="">Choose Person…</option>
+                  {bulkPersonResults.map(person => (
+                    <option key={person.id} value={person.id}>{person.first} {person.last}</option>
+                  ))}
+                </select>
+              )}
+              {bulkPerson && (
+                <button
+                  onClick={() => bulkAction("accept", bulkPerson.id)}
+                  disabled={syncing > 0}
+                  style={{ ...toolbarBtnStyle, borderColor: "var(--accent)", color: "var(--accent)", background: "var(--accent-soft)" }}
+                >
+                  Add {selectedInView.length} to {bulkPerson.first} {bulkPerson.last}
                 </button>
               )}
               <button onClick={() => { setSelectedIds(new Set()); lastCheckedIndex.current = null }} style={ghostBtnStyle}>Clear</button>
@@ -914,6 +978,17 @@ const toolbarBtnStyle: React.CSSProperties = {
   fontSize: "11px",
   fontWeight: 600,
   cursor: "pointer",
+}
+
+const bulkInputStyle: React.CSSProperties = {
+  minHeight: "30px",
+  borderRadius: "var(--radius-pill)",
+  border: "1px solid var(--border)",
+  background: "var(--bg)",
+  color: "var(--ink)",
+  padding: "5px 10px",
+  font: "inherit",
+  fontSize: "11px",
 }
 
 const ghostBtnStyle: React.CSSProperties = {

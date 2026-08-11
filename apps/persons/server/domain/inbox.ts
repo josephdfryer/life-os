@@ -225,7 +225,12 @@ export async function updateInboxItem(id: string, body: Record<string, unknown>,
   return acceptInboxItem(item.id, body, actor)
 }
 
-export async function bulkUpdateInboxItems(action: "dismiss" | "accept", ids: string[], actor?: DomainActor) {
+export async function bulkUpdateInboxItems(
+  action: "dismiss" | "accept",
+  ids: string[],
+  actor?: DomainActor,
+  personId?: string,
+) {
   const workspaceId = actor?.workspaceId ?? "default-workspace"
   if (!Array.isArray(ids) || ids.length === 0) throw badRequest("ids required", { field: "ids" })
   const unique = [...new Set(ids)].slice(0, 500)
@@ -249,8 +254,14 @@ export async function bulkUpdateInboxItems(action: "dismiss" | "accept", ids: st
     return { action, processed: result.count, skipped: unique.length - result.count, errors: [] as string[] }
   }
 
-  // Accept: each item needs its candidate person and an interaction write, so
-  // this loops — only items that already have a candidate attached qualify.
+  if (personId) {
+    const person = await db.person.findFirst({ where: { id: personId, workspaceId }, select: { id: true } })
+    if (!person) throw notFound("Person not found", { personId })
+  }
+
+  // Accept: each item needs an interaction write, so this loops. An explicit
+  // Person applies to the whole selection; otherwise each row uses its own
+  // conservative candidate match.
   const items = await db.stagedInteraction.findMany({
     where: { id: { in: unique }, workspaceId, status: { in: ["pending", "blocked"] } },
     select: { id: true, candidatePersonId: true },
@@ -259,12 +270,13 @@ export async function bulkUpdateInboxItems(action: "dismiss" | "accept", ids: st
   let skipped = unique.length - items.length
   const errors: string[] = []
   for (const item of items) {
-    if (!item.candidatePersonId) {
+    const targetPersonId = personId ?? item.candidatePersonId
+    if (!targetPersonId) {
       skipped += 1
       continue
     }
     try {
-      await acceptInboxItem(item.id, {}, actor)
+      await acceptInboxItem(item.id, { personId: targetPersonId }, actor)
       processed += 1
     } catch (error) {
       errors.push(`${item.id}: ${error instanceof Error ? error.message : String(error)}`)

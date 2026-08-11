@@ -38,6 +38,11 @@ type ExistingPerson = {
   phones: string
 }
 
+export type PersonMatchIndexes = {
+  byPhone: Map<string, ExistingPerson>
+  byName: Map<string, ExistingPerson>
+}
+
 type State = {
   lastMessageId: number
   updatedAt: string
@@ -94,7 +99,7 @@ async function main() {
 async function syncOnce(options: Options) {
   const state = readState(options.statePath)
   const messages = readMessages(options.chatDbPath, state.lastMessageId, options.limit)
-  const peopleByPhone = await loadPeopleByPhone()
+  const people = await loadPersonMatchers()
   let imported = 0
   let staged = 0
   let skippedExisting = 0
@@ -112,7 +117,7 @@ async function syncOnce(options: Options) {
 
     const sourceId = stableSourceId(message)
     const timestamp = appleDateToDate(message.appleDate)
-    const person = peopleByPhone.get(contact.phone)
+    const person = matchPersonForContact(contact, people)
 
     if (options.dryRun) {
       console.log(`[dry-run] ${sourceId} ${contact.displayName} ${contact.direction}: ${snippet(body)}`)
@@ -216,19 +221,53 @@ function openWhatsAppDb(chatDbPath: string): BetterSqliteDatabase {
   }
 }
 
-async function loadPeopleByPhone() {
+async function loadPersonMatchers() {
   const persons = await db.person.findMany({
     where: { workspaceId: WORKSPACE_ID },
     select: { id: true, first: true, last: true, phones: true },
   })
+  return buildPersonMatchIndexes(persons, normalizePhone)
+}
+
+export function buildPersonMatchIndexes(
+  persons: ExistingPerson[],
+  normalize: (value: string) => string | null,
+): PersonMatchIndexes {
   const byPhone = new Map<string, ExistingPerson>()
+  const byName = new Map<string, ExistingPerson>()
+  const ambiguousPhones = new Set<string>()
+  const ambiguousNames = new Set<string>()
   for (const person of persons) {
     for (const phone of parseJsonArray(person.phones)) {
-      const normalized = normalizePhone(phone)
-      if (normalized) byPhone.set(normalized, person)
+      const normalized = normalize(phone)
+      if (!normalized || ambiguousPhones.has(normalized)) continue
+      if (byPhone.has(normalized)) {
+        byPhone.delete(normalized)
+        ambiguousPhones.add(normalized)
+      } else {
+        byPhone.set(normalized, person)
+      }
+    }
+
+    const name = normalizeContactName(`${person.first} ${person.last}`)
+    if (!name || ambiguousNames.has(name)) continue
+    if (byName.has(name)) {
+      byName.delete(name)
+      ambiguousNames.add(name)
+    } else {
+      byName.set(name, person)
     }
   }
-  return byPhone
+  return { byPhone, byName }
+}
+
+export function matchPersonForContact(
+  contact: { phone: string; displayName: string },
+  indexes: PersonMatchIndexes,
+) {
+  return indexes.byPhone.get(contact.phone)
+    ?? indexes.byName.get(normalizeContactName(contact.displayName))
+    ?? null
 }
 
 export function contactFromMessage(message: WhatsAppMessageRow) {
@@ -423,6 +462,10 @@ function parseJsonArray(value: string): string[] {
 
 function cleanName(value: string | null | undefined) {
   return value?.replace(/\s+/g, " ").trim() || null
+}
+
+function normalizeContactName(value: string | null | undefined) {
+  return cleanName(value)?.toLocaleLowerCase() ?? ""
 }
 
 function looksLikeIdentifier(value: string) {

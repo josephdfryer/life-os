@@ -51,6 +51,7 @@ await db.person.createMany({
   data: [
     { id: "e2e-keeper", workspaceId: "default-workspace", first: "Merge", last: "Keeper" },
     { id: "e2e-loser", workspaceId: "default-workspace", first: "Merge", last: "Loser" },
+    { id: "e2e-qin", workspaceId: "default-workspace", first: "Qin", last: "Fryer", closeness: 4 },
     { id: "e2e-foreign-person", workspaceId: "e2e-foreign-workspace", first: "Foreign", last: "Person" },
   ],
 })
@@ -76,6 +77,23 @@ await db.stagedInteraction.create({
     timestamp: new Date("2026-07-15T13:00:00Z"),
     summary: "Staged interaction acceptance",
     candidatePersonId: "e2e-keeper",
+  },
+})
+await db.stagedInteraction.create({
+  data: {
+    id: "e2e-whatsapp-qin",
+    workspaceId: "default-workspace",
+    source: "whatsapp",
+    sourceId: "e2e-whatsapp-qin-source",
+    status: "pending",
+    itemType: "interaction",
+    type: "message",
+    timestamp: new Date("2026-07-15T14:00:00Z"),
+    contactName: "Qin Fryer",
+    contactPhone: "19175550000",
+    summary: "A staged WhatsApp message for Qin",
+    body: "A staged WhatsApp message for Qin",
+    direction: "inbound",
   },
 })
 await db.rule.create({

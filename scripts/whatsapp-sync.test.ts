@@ -2,7 +2,9 @@ import assert from "node:assert/strict"
 import { test } from "node:test"
 import {
   appleDateToDate,
+  buildPersonMatchIndexes,
   contactFromMessage,
+  matchPersonForContact,
   phoneFromJid,
   stableSourceId,
   type WhatsAppMessageRow,
@@ -54,3 +56,33 @@ test("converts WhatsApp Core Data timestamps from the Apple epoch", () => {
   assert.equal(appleDateToDate(0).getTime() > 0, true)
   assert.equal(appleDateToDate(60).toISOString(), "2001-01-01T00:01:00.000Z")
 })
+
+test("matches a WhatsApp contact by a unique exact Person name when the phone is not stored", () => {
+  const qin = { id: "qin", first: "Qin", last: "Fryer", phones: "[]" }
+  const indexes = buildPersonMatchIndexes([qin], normalizePhone)
+
+  assert.equal(matchPersonForContact({ phone: "17025550000", displayName: "  QIN   Fryer " }, indexes)?.id, "qin")
+})
+
+test("does not trust an exact name shared by multiple People", () => {
+  const indexes = buildPersonMatchIndexes([
+    { id: "one", first: "Alex", last: "Smith", phones: "[]" },
+    { id: "two", first: "Alex", last: "Smith", phones: "[]" },
+  ], normalizePhone)
+
+  assert.equal(matchPersonForContact({ phone: "17025550000", displayName: "Alex Smith" }, indexes), null)
+})
+
+test("does not trust a phone number shared by multiple People", () => {
+  const indexes = buildPersonMatchIndexes([
+    { id: "one", first: "One", last: "Person", phones: '["+1 702 555 0000"]' },
+    { id: "two", first: "Two", last: "Person", phones: '["+1 702 555 0000"]' },
+  ], normalizePhone)
+
+  assert.equal(matchPersonForContact({ phone: "17025550000", displayName: "Unknown" }, indexes), null)
+})
+
+function normalizePhone(value: string) {
+  const digits = value.replace(/\D/g, "")
+  return digits || null
+}

@@ -129,4 +129,20 @@ test.describe('Home control plane', () => {
     await expect(page.getByLabel('Confidence')).toBeVisible()
     await expect(page.getByLabel('Age')).toBeVisible()
   })
+
+  test('communications selection can be added to one searched Person', async ({ page }) => {
+    await page.goto('/')
+    const communications = page.locator('.communications-review')
+    await communications.getByRole('button', { name: /WhatsApp Qin Fryer/ }).click()
+    await expect(communications.getByRole('button', { name: 'Dismiss' })).toBeVisible()
+    await communications.getByLabel('Select communication from Qin Fryer').click()
+    await communications.getByLabel('Search for the Person to receive selected communications').fill('Qin')
+    const personSelect = communications.getByLabel('Person for selected communications')
+    await expect(personSelect).toBeVisible()
+    await personSelect.selectOption({ label: 'Qin Fryer' })
+    await communications.getByRole('button', { name: 'Add 1 to Qin Fryer' }).click()
+
+    await expect(communications.getByRole('status')).toContainText('Added 1 to Qin Fryer', { timeout: 15_000 })
+    await expect(communications.getByText('A staged WhatsApp message for Qin')).toHaveCount(0)
+  })
 })
