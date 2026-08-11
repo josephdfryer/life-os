@@ -163,6 +163,10 @@ export async function getPlacesForMap(workspaceId: string | null | undefined): P
           where: { group: { workspaceId: wsId } },
           include: { group: { select: { id: true, name: true, groupType: true } } },
         },
+        interactions: {
+          where: { workspaceId: wsId, eventId: null },
+          select: { id: true, amount: true },
+        },
         events: {
           where: { workspaceId: wsId },
           include: {
@@ -326,7 +330,11 @@ function derivePlaceData(place: NonNullable<PlaceRow>, workspaceGroups: GroupRow
     planCount: 0,
     firstVisitAt: events.length ? events[events.length - 1].timestamp.toISOString() : undefined,
     lastVisitAt: events[0]?.timestamp.toISOString(),
-    totalSpend: events.reduce((sum, event) => sum + sumEventSpend(event), 0),
+    // Includes both event-linked spend and spend resolved straight to this
+    // Place with no Event (place.interactions, filtered to eventId: null at
+    // the query level so nothing here double-counts sumEventSpend above).
+    totalSpend: events.reduce((sum, event) => sum + sumEventSpend(event), 0) +
+      (centsToDollars(place.interactions.reduce((sum, ix) => sum + (ix.amount ?? 0), 0)) ?? 0),
   }
 
   return {
@@ -352,6 +360,14 @@ function fetchPlaceProfileRow(placeId: string, workspaceId: string) {
       groupAffiliations: {
         where: { group: { workspaceId } },
         include: { group: { select: { id: true, name: true, groupType: true } } },
+      },
+      // Financial Interactions resolved straight to this Place (e.g. an Era
+      // card transaction matched by merchant/location, never tied to a
+      // calendar Event) — kept separate from `events` below so a bare
+      // transaction is never counted as a "visit," only as spend.
+      interactions: {
+        where: { workspaceId, eventId: null },
+        select: { id: true, amount: true },
       },
       events: {
         where: { workspaceId },
