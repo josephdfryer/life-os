@@ -59,6 +59,7 @@ type PlaceProfile = {
   photos: { itemId: string; name: string; eventId: string; eventTitle: string; occurredAt: string }[]
   notes: PlaceNote[]
   plans: { planId: string; title: string; plannedDate?: string }[]
+  transactions: { id: string; date: string; amount: number; merchantName?: string; eventId?: string }[]
 }
 
 type ProfileNavigation = {
@@ -339,13 +340,13 @@ export default function PlaceProfileClient({
               <textarea
                 value={noteBody}
                 onChange={event => setNoteBody(event.target.value)}
-                placeholder="Add a note to remember why this place matters."
+                placeholder="Jot something about a specific visit or moment here."
                 style={{ flex: 1, minHeight: "82px", resize: "vertical", border: "1px solid var(--border)", borderRadius: "8px", background: "var(--bg)", padding: "10px", color: "var(--ink)", fontFamily: "inherit", fontSize: "12px" }}
               />
               <Button onClick={addNote} loading={saving} disabled={!noteBody.trim()} style={{ borderRadius: "7px", textTransform: "none", letterSpacing: 0 }}>Save</Button>
             </div>
             {profile.notes.length === 0 ? (
-              <EmptyState icon="◇" title="No memories added yet." subtitle="Add a note to remember why this place matters." />
+              <EmptyState icon="◇" title="No notes yet." subtitle="Attach a note to a specific visit, or to the place generally." />
             ) : (
               <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
                 {profile.notes.map(note => (
@@ -397,7 +398,17 @@ export default function PlaceProfileClient({
           {profile.groups.affiliated.length || profile.groups.activity.length ? (
             <Card title="Groups here" style={{ borderRadius: "10px", overflow: "hidden" }}>
               <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-                <GroupBlock title="Affiliated" items={profile.groups.affiliated.map(group => ({ key: group.groupId, title: group.name, detail: labelize(group.relationshipType ?? group.groupType) }))} />
+                <GroupBlock title="Affiliated" items={profile.groups.affiliated.map(group => ({
+                  key: group.groupId,
+                  title: group.name,
+                  // A corporate_parent group's name is the raw bank/processor
+                  // merchant descriptor, not a curated name — it can look
+                  // garbled (truncated storefront names, odd abbreviations).
+                  // Mute it and explain what it actually is instead of
+                  // presenting it like an authored Group name.
+                  detail: group.relationshipType === "corporate_parent" ? "Auto-matched from your bank transactions" : labelize(group.relationshipType ?? group.groupType),
+                  muted: group.relationshipType === "corporate_parent",
+                }))} />
                 <GroupBlock title="Activity" items={profile.groups.activity.map(group => ({ key: group.groupId, title: group.name, detail: `${group.eventCount ?? 0} ${group.eventCount === 1 ? "event" : "events"}` }))} />
               </div>
             </Card>
@@ -405,7 +416,10 @@ export default function PlaceProfileClient({
 
           {profile.stats.totalSpend ? (
             <Card title="Spending" style={{ borderRadius: "10px", overflow: "hidden" }}>
-              <div style={{ fontFamily: "var(--font-display)", fontSize: "24px", color: "var(--ink)" }}>{money(profile.stats.totalSpend)}</div>
+              <div style={{ fontFamily: "var(--font-display)", fontSize: "24px", color: "var(--ink)", paddingBottom: "12px", borderBottom: "1px solid var(--border)" }}>{money(profile.stats.totalSpend)}</div>
+              <div style={{ marginTop: "10px" }}>
+                <TransactionList transactions={profile.transactions} />
+              </div>
             </Card>
           ) : null}
 
@@ -438,14 +452,14 @@ function Metric({ label, value }: { label: string; value: number }) {
   )
 }
 
-function SummaryList({ items }: { items: { key: string; title: string; detail: string; href?: string }[] }) {
+function SummaryList({ items }: { items: { key: string; title: string; detail: string; href?: string; muted?: boolean }[] }) {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
       {items.map(item => (
         <div key={item.key} style={{ padding: "9px 10px", border: "1px solid var(--border)", borderRadius: "8px", background: "var(--bg)" }}>
           {item.href
             ? <a href={item.href} className="place-summary-link">{item.title}</a>
-            : <div style={{ fontSize: "12px", color: "var(--ink)" }}>{item.title}</div>}
+            : <div style={{ fontSize: "12px", color: item.muted ? "var(--ink-3)" : "var(--ink)" }}>{item.title}</div>}
           <div style={{ fontSize: "10px", color: "var(--ink-4)", marginTop: "2px" }}>{item.detail}</div>
         </div>
       ))}
@@ -453,7 +467,23 @@ function SummaryList({ items }: { items: { key: string; title: string; detail: s
   )
 }
 
-function GroupBlock({ title, items }: { title: string; items: { key: string; title: string; detail: string }[] }) {
+function TransactionList({ transactions }: { transactions: { id: string; date: string; amount: number; merchantName?: string }[] }) {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+      {transactions.map(tx => (
+        <div key={tx.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: "10px", padding: "7px 2px", borderBottom: "1px solid var(--border)" }}>
+          <div style={{ minWidth: 0 }}>
+            <div style={{ fontSize: "12px", color: "var(--ink)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{tx.merchantName ?? "Transaction"}</div>
+            <div style={{ fontSize: "10px", color: "var(--ink-4)", marginTop: "1px" }}>{formatDate(tx.date)}</div>
+          </div>
+          <div style={{ fontSize: "12px", color: "var(--ink)", whiteSpace: "nowrap", fontVariantNumeric: "tabular-nums" }}>{money(tx.amount)}</div>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+function GroupBlock({ title, items }: { title: string; items: { key: string; title: string; detail: string; muted?: boolean }[] }) {
   if (!items.length) return null
   return (
     <div>

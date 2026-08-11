@@ -109,6 +109,14 @@ export type PlaceTimelineItem = {
   notePreview?: string
 }
 
+export type PlaceTransaction = {
+  id: string
+  date: string
+  amount: number
+  merchantName?: string
+  eventId?: string
+}
+
 export type PlacePersonSummary = {
   personId: string
   name: string
@@ -150,6 +158,7 @@ export type PlaceProfile = {
   photos: PlacePhotoSummary[]
   notes: NonNullable<PlaceRow>["notes"]
   plans: PlacePlanSummary[]
+  transactions: PlaceTransaction[]
 }
 
 export async function getPlacesForMap(workspaceId: string | null | undefined): Promise<PlaceMapItem[]> {
@@ -165,7 +174,7 @@ export async function getPlacesForMap(workspaceId: string | null | undefined): P
         },
         interactions: {
           where: { workspaceId: wsId, eventId: null },
-          select: { id: true, amount: true },
+          select: { id: true, amount: true, timestamp: true, merchantName: true },
         },
         events: {
           where: { workspaceId: wsId },
@@ -337,6 +346,28 @@ function derivePlaceData(place: NonNullable<PlaceRow>, workspaceGroups: GroupRow
       (centsToDollars(place.interactions.reduce((sum, ix) => sum + (ix.amount ?? 0), 0)) ?? 0),
   }
 
+  const eventTransactions = events.flatMap(event =>
+    event.interactions
+      .filter(ix => ix.amount !== null)
+      .map(ix => ({
+        id: ix.id,
+        date: ix.timestamp.toISOString(),
+        amount: centsToDollars(ix.amount) ?? 0,
+        merchantName: ix.merchantName ?? undefined,
+        eventId: event.id,
+      }))
+  )
+  const unlinkedTransactions = place.interactions
+    .filter(ix => ix.amount !== null)
+    .map(ix => ({
+      id: ix.id,
+      date: ix.timestamp.toISOString(),
+      amount: centsToDollars(ix.amount) ?? 0,
+      merchantName: ix.merchantName ?? undefined,
+    }))
+  const transactions = [...eventTransactions, ...unlinkedTransactions]
+    .sort((a, b) => b.date.localeCompare(a.date))
+
   return {
     place,
     stats,
@@ -349,6 +380,7 @@ function derivePlaceData(place: NonNullable<PlaceRow>, workspaceGroups: GroupRow
     photos,
     notes: place.notes,
     plans: [],
+    transactions,
   }
 }
 
@@ -367,7 +399,7 @@ function fetchPlaceProfileRow(placeId: string, workspaceId: string) {
       // transaction is never counted as a "visit," only as spend.
       interactions: {
         where: { workspaceId, eventId: null },
-        select: { id: true, amount: true },
+        select: { id: true, amount: true, timestamp: true, merchantName: true },
       },
       events: {
         where: { workspaceId },

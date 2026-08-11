@@ -25,7 +25,13 @@ export async function writeExtraction(
   })
   if (existing) return { eventId: existing.id, interactionsCreated: 0, interactionsUpdated: 0, skipped: true }
 
-  const placeId = resolvedPlaceIds[0] ?? null
+  // Only a "meeting" plausibly implies physical presence. A place merely
+  // mentioned in a call/email/message thread ("remember when we went to
+  // Nene") is not a visit — resolvedPlaceIds must never become an Event's
+  // or Interaction's placeId for the other three types, or every text
+  // reference to a place turns into a fabricated "visit" on that Place's
+  // profile (and fabricates shared visits with whoever was in the thread).
+  const placeId = event.type === "meeting" ? (resolvedPlaceIds[0] ?? null) : null
 
   return db.$transaction(async tx => {
     // Provenance: capture the raw item as a Note so every derived node can trace
