@@ -1090,6 +1090,7 @@ body {
 .place-note-composer label {
   display: grid;
   gap: 4px;
+  min-width: 0;
 }
 
 .place-note-composer label span {
@@ -1107,6 +1108,8 @@ body {
   padding: 0 8px;
   color: var(--ink);
   font: 11px var(--font-body);
+  width: 100%;
+  min-width: 0;
 }
 
 .place-note-event-link {
