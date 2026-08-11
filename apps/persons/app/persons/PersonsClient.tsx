@@ -4,7 +4,8 @@ import { useEffect, useState, useCallback, useRef } from "react"
 import Link from "next/link"
 import PersonCard from "@/components/persons/PersonCard"
 import AddPersonModal from "@/components/persons/AddPersonModal"
-import type { PersonWithAttention } from "@/types"
+import type { PersonListPerson } from "@/types"
+import type { PersonListView } from "@/lib/person-list-presentation"
 
 type SortKey = "name" | "closeness" | "recent"
 
@@ -39,7 +40,7 @@ const VALUE_FILTERS: { key: ValueFilterKey; label: string; placeholder: string }
 const LIMIT = 50
 
 type PageData = {
-  persons:  PersonWithAttention[]
+  persons:  PersonListPerson[]
   total:    number
   hasMore:  boolean
 }
@@ -48,6 +49,7 @@ export default function PersonsClient({ initialData }: { initialData: PageData |
   const [data, setData]               = useState<PageData>(initialData ?? { persons: [], total: 0, hasMore: false })
   const [search, setSearch]           = useState("")
   const [sort, setSort]               = useState<SortKey>("name")
+  const [view, setView]               = useState<PersonListView>("all")
   const [requiredFields, setRequiredFields] = useState<Set<FieldKey>>(new Set())
   const [valueFilters, setValueFilters] = useState<Record<ValueFilterKey, string>>({ location: "", title: "", company: "", headline: "" })
   const [showFieldFilters, setShowFieldFilters] = useState(false)
@@ -59,6 +61,7 @@ export default function PersonsClient({ initialData }: { initialData: PageData |
   const sentinelRef                   = useRef<HTMLDivElement | null>(null)
   const loadingMoreRef                = useRef(false)
   const skipFirstFetch                = useRef(!!initialData)
+  const requestVersionRef             = useRef(0)
 
   // Select mode
   const [selectMode, setSelectMode]   = useState(false)
@@ -72,9 +75,13 @@ export default function PersonsClient({ initialData }: { initialData: PageData |
   const [deleteAllError, setDeleteAllError] = useState("")
   const [deleteAllBackedUp, setDeleteAllBackedUp] = useState(false)
 
-  const fetchPage = useCallback(async (p: number, q: string, s: SortKey, fields: Set<FieldKey>, values: Record<ValueFilterKey, string>, reset: boolean) => {
+  const fetchPage = useCallback(async (p: number, q: string, s: SortKey, v: PersonListView, fields: Set<FieldKey>, values: Record<ValueFilterKey, string>, reset: boolean) => {
     if (!reset && loadingMoreRef.current) return
+    const requestVersion = reset ? requestVersionRef.current + 1 : requestVersionRef.current
     if (reset) {
+      requestVersionRef.current = requestVersion
+      loadingMoreRef.current = false
+      setLoadingMore(false)
       setLoading(true)
     } else {
       loadingMoreRef.current = true
@@ -86,6 +93,7 @@ export default function PersonsClient({ initialData }: { initialData: PageData |
         page:    String(p),
         limit:   String(LIMIT),
         sort:    s,
+        view:    v,
         ...(q ? { search: q } : {}),
         ...(fields.size > 0 ? { fields: Array.from(fields).join(",") } : {}),
         ...Object.fromEntries(Object.entries(values).filter(([, v]) => v.trim())),
@@ -93,24 +101,27 @@ export default function PersonsClient({ initialData }: { initialData: PageData |
       const res = await fetch(`/api/persons?${params}`)
       if (!res.ok) return
       const json = await res.json()
+      if (requestVersion !== requestVersionRef.current) return
       setData(prev => ({
         persons:  reset ? json.persons : [...prev.persons, ...json.persons],
         total:    json.total,
         hasMore:  json.hasMore,
       }))
     } finally {
-      if (reset) {
-        setLoading(false)
-      } else {
-        loadingMoreRef.current = false
-        setLoadingMore(false)
+      if (requestVersion === requestVersionRef.current) {
+        if (reset) {
+          setLoading(false)
+        } else {
+          loadingMoreRef.current = false
+          setLoadingMore(false)
+        }
       }
     }
   }, [])
 
   useEffect(() => {
     if (skipFirstFetch.current) { skipFirstFetch.current = false; return }
-    fetchPage(0, "", "name", new Set(), valueFilters, true)
+    fetchPage(0, "", "name", "all", new Set(), valueFilters, true)
   }, [fetchPage])
 
   useEffect(() => {
@@ -124,14 +135,21 @@ export default function PersonsClient({ initialData }: { initialData: PageData |
     if (searchTimer.current) clearTimeout(searchTimer.current)
     searchTimer.current = setTimeout(() => {
       setPage(0)
-      fetchPage(0, q, sort, requiredFields, valueFilters, true)
+      fetchPage(0, q, sort, view, requiredFields, valueFilters, true)
     }, 300)
   }
 
   function handleSort(s: SortKey) {
     setSort(s)
     setPage(0)
-    fetchPage(0, search, s, requiredFields, valueFilters, true)
+    fetchPage(0, search, s, view, requiredFields, valueFilters, true)
+  }
+
+  function handleView(nextView: PersonListView) {
+    setView(nextView)
+    setPage(0)
+    setSelected(new Set())
+    fetchPage(0, search, sort, nextView, requiredFields, valueFilters, true)
   }
 
   function toggleField(key: FieldKey) {
@@ -139,7 +157,7 @@ export default function PersonsClient({ initialData }: { initialData: PageData |
       const next = new Set(prev)
       next.has(key) ? next.delete(key) : next.add(key)
       setPage(0)
-      fetchPage(0, search, sort, next, valueFilters, true)
+      fetchPage(0, search, sort, view, next, valueFilters, true)
       return next
     })
   }
@@ -148,7 +166,7 @@ export default function PersonsClient({ initialData }: { initialData: PageData |
     const next = { ...valueFilters, [key]: value }
     setValueFilters(next)
     setPage(0)
-    fetchPage(0, search, sort, requiredFields, next, true)
+    fetchPage(0, search, sort, view, requiredFields, next, true)
   }
 
   function clearFieldFilters() {
@@ -157,15 +175,15 @@ export default function PersonsClient({ initialData }: { initialData: PageData |
     setRequiredFields(empty)
     setValueFilters(emptyValues)
     setPage(0)
-    fetchPage(0, search, sort, empty, emptyValues, true)
+    fetchPage(0, search, sort, view, empty, emptyValues, true)
   }
 
   const loadMore = useCallback(() => {
     if (loading || loadingMoreRef.current || !data.hasMore) return
     const next = page + 1
     setPage(next)
-    fetchPage(next, search, sort, requiredFields, valueFilters, false)
-  }, [data.hasMore, fetchPage, loading, page, requiredFields, search, sort, valueFilters])
+    fetchPage(next, search, sort, view, requiredFields, valueFilters, false)
+  }, [data.hasMore, fetchPage, loading, page, requiredFields, search, sort, valueFilters, view])
 
   useEffect(() => {
     const sentinel = sentinelRef.current
@@ -185,7 +203,7 @@ export default function PersonsClient({ initialData }: { initialData: PageData |
   function reload() {
     setPage(0)
     setSelected(new Set())
-    fetchPage(0, search, sort, requiredFields, valueFilters, true)
+    fetchPage(0, search, sort, view, requiredFields, valueFilters, true)
   }
 
   function exitSelectMode() {
@@ -256,7 +274,8 @@ export default function PersonsClient({ initialData }: { initialData: PageData |
 
   const { persons, total, hasMore } = data
   const valueFilterCount = Object.values(valueFilters).filter(Boolean).length
-  const filtersActive = requiredFields.size > 0 || valueFilterCount > 0
+  const fieldFiltersActive = requiredFields.size > 0 || valueFilterCount > 0
+  const filtersActive = fieldFiltersActive || view !== "all"
   const allVisibleSelected = persons.length > 0 && selected.size === persons.length
 
   return (
@@ -273,16 +292,7 @@ export default function PersonsClient({ initialData }: { initialData: PageData |
             </span>
           )}
         </h1>
-        <div style={{ display: "flex", gap: "8px" }}>
-          <a href="/api/persons/export" download style={{ padding: "9px 16px", background: "transparent", color: "var(--ink-3)", border: "1px solid var(--border)", borderRadius: "var(--radius-pill)", fontFamily: "inherit", fontSize: "13px", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: "5px" }} title="Download full backup as JSON">
-            Backup
-          </a>
-          <Link href="/persons/clean" style={{ padding: "9px 16px", background: "transparent", color: "var(--ink-3)", border: "1px solid var(--border)", borderRadius: "var(--radius-pill)", fontFamily: "inherit", fontSize: "13px", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: "5px" }}>
-            Data cleaning
-          </Link>
-          <Link href="/persons/merge" style={{ padding: "9px 16px", background: "transparent", color: "var(--ink-3)", border: "1px solid var(--border)", borderRadius: "var(--radius-pill)", fontFamily: "inherit", fontSize: "13px", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: "5px" }}>
-            Dedupe
-          </Link>
+        <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
           {selectMode ? (
             <button
               onClick={exitSelectMode}
@@ -298,6 +308,30 @@ export default function PersonsClient({ initialData }: { initialData: PageData |
               Select
             </button>
           )}
+          <details style={{ position: "relative" }}>
+            <summary style={{ listStyle: "none", padding: "9px 16px", background: "transparent", color: "var(--ink-3)", border: "1px solid var(--border)", borderRadius: "var(--radius-pill)", cursor: "pointer", fontSize: "13px" }}>
+              Manage
+            </summary>
+            <div style={{ position: "absolute", zIndex: 20, top: "calc(100% + 8px)", right: 0, width: "190px", padding: "8px", display: "grid", gap: "3px", background: "var(--surface)", border: "1px solid var(--border-subtle)", borderRadius: "var(--radius)", boxShadow: "var(--shadow-lg)" }}>
+              <a href="/api/persons/export" download style={{ padding: "9px 10px", color: "var(--ink-2)", textDecoration: "none", fontSize: "12px", borderRadius: "var(--radius-sm)" }} title="Download full backup as JSON">
+                Download backup
+              </a>
+              <Link href="/persons/clean" style={{ padding: "9px 10px", color: "var(--ink-2)", textDecoration: "none", fontSize: "12px", borderRadius: "var(--radius-sm)" }}>
+                Data cleaning
+              </Link>
+              <Link href="/persons/merge" style={{ padding: "9px 10px", color: "var(--ink-2)", textDecoration: "none", fontSize: "12px", borderRadius: "var(--radius-sm)" }}>
+                Find duplicates
+              </Link>
+              <div style={{ height: "1px", background: "var(--border-subtle)", margin: "4px 0" }} />
+              <button
+                type="button"
+                onClick={() => { setShowDeleteAll(true); setDeleteAllInput(""); setDeleteAllError(""); setDeleteAllBackedUp(false) }}
+                style={{ padding: "9px 10px", textAlign: "left", background: "transparent", border: 0, color: "var(--attention)", cursor: "pointer", fontFamily: "inherit", fontSize: "12px", borderRadius: "var(--radius-sm)" }}
+              >
+                Delete all people…
+              </button>
+            </div>
+          </details>
           <button
             onClick={() => setShowAdd(true)}
             style={{ padding: "9px 18px", background: "var(--cognac)", color: "#fff", border: "none", borderRadius: "var(--radius-pill)", cursor: "pointer", fontFamily: "inherit", fontSize: "13px", fontWeight: 450 }}
@@ -319,6 +353,26 @@ export default function PersonsClient({ initialData }: { initialData: PageData |
         <span style={{ position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)", color: "var(--ink-4)", fontSize: "13px" }}>⊕</span>
       </div>
 
+      {/* Relationship views */}
+      <nav aria-label="Person list views" style={{ display: "flex", gap: "6px", marginBottom: "12px", overflowX: "auto", paddingBottom: "1px" }}>
+        {([
+          ["all", "All"],
+          ["attention", "Needs attention"],
+          ["active", "Active this month"],
+          ["no-history", "No history"],
+        ] as const).map(([key, label]) => (
+          <button
+            key={key}
+            type="button"
+            aria-pressed={view === key}
+            onClick={() => handleView(key)}
+            style={{ flexShrink: 0, padding: "7px 14px", borderRadius: "var(--radius-pill)", border: `1px solid ${view === key ? "var(--cognac-soft)" : "var(--border)"}`, background: view === key ? "var(--cognac-soft)" : "transparent", color: view === key ? "var(--cognac-deep)" : "var(--ink-3)", fontFamily: "inherit", fontSize: "12px", cursor: "pointer" }}
+          >
+            {label}
+          </button>
+        ))}
+      </nav>
+
       {/* Sort + Filter toggle row */}
       <div style={{ display: "flex", gap: "6px", marginBottom: showFieldFilters ? "10px" : "16px", alignItems: "center", flexWrap: "wrap" }}>
         <span style={{ fontSize: "10px", color: "var(--ink-4)", letterSpacing: "0.06em", textTransform: "uppercase" }}>Sort:</span>
@@ -332,7 +386,7 @@ export default function PersonsClient({ initialData }: { initialData: PageData |
           </button>
         ))}
         <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: "6px" }}>
-          {filtersActive && (
+          {fieldFiltersActive && (
             <button
               onClick={clearFieldFilters}
               style={{ fontSize: "10px", color: "var(--ink-4)", background: "none", border: "none", cursor: "pointer", padding: 0, textDecoration: "underline" }}
@@ -344,19 +398,12 @@ export default function PersonsClient({ initialData }: { initialData: PageData |
             onClick={() => setShowFieldFilters(f => !f)}
             style={{
               padding: "6px 13px", borderRadius: "var(--radius-pill)", fontFamily: "inherit", fontSize: "13px", cursor: "pointer",
-              border: `1px solid ${filtersActive ? "var(--cognac-soft)" : "var(--border)"}`,
-              background: filtersActive ? "var(--cognac-soft)" : "transparent",
-              color: filtersActive ? "var(--cognac-deep)" : "var(--ink-3)",
+              border: `1px solid ${fieldFiltersActive ? "var(--cognac-soft)" : "var(--border)"}`,
+              background: fieldFiltersActive ? "var(--cognac-soft)" : "transparent",
+              color: fieldFiltersActive ? "var(--cognac-deep)" : "var(--ink-3)",
             }}
           >
-            {filtersActive ? `${requiredFields.size + valueFilterCount} filter${requiredFields.size + valueFilterCount === 1 ? "" : "s"}` : "Filters"}
-          </button>
-          <button
-            onClick={() => { setShowDeleteAll(true); setDeleteAllInput(""); setDeleteAllError(""); setDeleteAllBackedUp(false) }}
-            style={{ padding: "6px 13px", borderRadius: "var(--radius-pill)", fontFamily: "inherit", fontSize: "13px", cursor: "pointer", border: "1px solid var(--border)", background: "transparent", color: "var(--ink-4)" }}
-            title="Danger: delete entire database"
-          >
-            Nuke all
+            {fieldFiltersActive ? `${requiredFields.size + valueFilterCount} filter${requiredFields.size + valueFilterCount === 1 ? "" : "s"}` : "Filters"}
           </button>
         </div>
       </div>
@@ -399,7 +446,7 @@ export default function PersonsClient({ initialData }: { initialData: PageData |
               )
             })}
           </div>
-          {filtersActive && (
+          {fieldFiltersActive && (
             <div style={{ marginTop: "8px", fontSize: "10px", color: "var(--ink-4)" }}>
               Showing people with: <span style={{ color: "var(--ink-3)" }}>{[
                 ...VALUE_FILTERS.flatMap(f => valueFilters[f.key] ? [`${f.label}: ${valueFilters[f.key]}`] : []),
@@ -462,13 +509,19 @@ export default function PersonsClient({ initialData }: { initialData: PageData |
         <div style={{ textAlign: "center", padding: "48px", color: "var(--ink-4)", fontSize: "12px" }}>
           {total === 0 && !filtersActive
             ? "No people yet. Add someone to get started."
-            : filtersActive
+            : view === "attention"
+            ? "No relationships need attention right now."
+            : view === "active"
+            ? "No interactions have been recorded this month."
+            : view === "no-history"
+            ? "Everyone here has some interaction history."
+            : fieldFiltersActive
             ? "No people match the selected field filters."
             : "No results for that search."}
         </div>
       ) : (
         <>
-          <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: "7px" }}>
             {persons.map(p => (
               selectMode ? (
                 <SelectablePersonRow
@@ -597,16 +650,20 @@ function SelectablePersonRow({
   selected,
   onToggle,
 }: {
-  person: PersonWithAttention
+  person: PersonListPerson
   selected: boolean
   onToggle: () => void
 }) {
   return (
-    <div
+    <button
+      type="button"
+      aria-pressed={selected}
       onClick={onToggle}
       style={{
+        width: "100%",
         display: "flex",
         alignItems: "center",
+        textAlign: "left",
         gap: "10px",
         background: selected ? "rgba(196,64,64,0.07)" : "var(--surface)",
         border: `1px solid ${selected ? "#c44040" : "var(--border)"}`,
@@ -644,7 +701,7 @@ function SelectablePersonRow({
           </div>
         )}
       </div>
-    </div>
+    </button>
   )
 }
 

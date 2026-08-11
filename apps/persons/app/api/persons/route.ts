@@ -7,6 +7,8 @@ import type { Interaction } from "@/types"
 import { createPerson } from "@/server/domain/persons"
 import { created, handleRouteError } from "@/server/api/respond"
 import { requireAccess } from "@/server/domain/access"
+import { personListViewFilter, type PersonListView } from "@/lib/person-list-presentation"
+import { personListInclude, serializePersonListRow } from "@/server/queries/person-list"
 
 export async function GET(req: NextRequest) {
   const actor = await requireAccess("people.read")
@@ -19,6 +21,10 @@ export async function GET(req: NextRequest) {
     const limit  = Math.min(200, Math.max(1, parseInt(searchParams.get("limit") ?? "50")))
     const search = searchParams.get("search")?.trim() ?? ""
     const sort   = searchParams.get("sort") ?? "name"
+    const requestedView = searchParams.get("view") ?? "all"
+    const view: PersonListView = ["attention", "active", "no-history"].includes(requestedView)
+      ? requestedView as PersonListView
+      : "all"
 
     const fields = searchParams.get("fields")?.split(",").filter(Boolean) ?? []
     const valueFilters = {
@@ -67,6 +73,8 @@ export async function GET(req: NextRequest) {
     if (valueFilters.company)  AND.push({ company:  { contains: valueFilters.company } })
     if (valueFilters.location) AND.push({ location: { contains: valueFilters.location } })
     if (valueFilters.headline) AND.push({ headline: { contains: valueFilters.headline } })
+    const viewFilter = personListViewFilter(view)
+    if (viewFilter) AND.push(viewFilter)
     const where = AND.length ? { workspaceId: actor.workspaceId, AND } : { workspaceId: actor.workspaceId }
 
     const orderBy =
@@ -77,38 +85,13 @@ export async function GET(req: NextRequest) {
     const [rows, total] = await Promise.all([
       db.person.findMany({
         where, orderBy, skip: page * limit, take: limit,
-        include: {
-          interactions: { take: 1, orderBy: { timestamp: "desc" }, select: { timestamp: true } },
-        },
+        include: personListInclude,
       }),
       db.person.count({ where }),
     ])
 
     return NextResponse.json({
-      persons: rows.map((p: typeof rows[number]) => {
-        const lastTs = p.interactions[0]?.timestamp ?? null
-        const lastInteractionDate = lastTs ? new Date(lastTs) : null
-        const daysSinceLast = lastInteractionDate
-          ? Math.floor((Date.now() - lastInteractionDate.getTime()) / 86400000)
-          : null
-        const cadence = p.closeness === 4 ? 10 : p.closeness === 3 ? 21 : p.closeness === 2 ? 90 : 0
-        const attentionScore = p.closeness === 1
-          ? 0
-          : daysSinceLast !== null
-            ? (cadence > 0 ? daysSinceLast / cadence : 0)
-            : 99
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { interactions: _ix, ...rest } = p
-        return {
-          ...rest,
-          tags: parseTags(p.tags), values: parseTags(p.values),
-          emails: parseTags(p.emails), phones: parseTags(p.phones),
-          interactions: [],
-          lastInteractionDate,
-          daysSinceLast,
-          attentionScore,
-        }
-      }),
+      persons: rows.map(serializePersonListRow),
       total,
       page,
       limit,

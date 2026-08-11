@@ -121,6 +121,24 @@ export type PersonWithAttention = Person & {
   health?: PersonHealthSummary | null
 }
 
+export type PersonListPerson = Omit<PersonWithAttention, "createdAt" | "updatedAt" | "lastInteractionDate"> & {
+  createdAt: string
+  updatedAt: string
+  lastInteractionDate: string | null
+  latestInteraction: {
+    id: string
+    type: string
+    source: string | null
+    timestamp: string
+    summary: string | null
+  } | null
+  activePlan: {
+    id: string
+    text: string
+    dueOn: string | null
+  } | null
+}
+
 // Import types
 export type ImportedPerson = {
   name: string

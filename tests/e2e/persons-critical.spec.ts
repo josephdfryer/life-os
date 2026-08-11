@@ -1,6 +1,24 @@
 import { expect, test } from "@playwright/test"
 
 test.describe.serial("Persons critical journeys", () => {
+  test("relationship directory surfaces context and useful server-filtered views", async ({ page }) => {
+    await page.goto("/persons")
+
+    await expect(page.getByRole("navigation", { name: "Person list views" })).toBeVisible()
+    await expect(page.getByRole("button", { name: "Needs attention" })).toBeVisible()
+    await expect(page.getByRole("button", { name: "Active this month" })).toBeVisible()
+    await expect(page.getByRole("button", { name: "No history" })).toBeVisible()
+
+    const historyRow = page.getByRole("link", { name: "Open Merge Loser" })
+    await expect(historyRow).toContainText("Interaction that must survive merge")
+    await expect(historyRow).toContainText("Call")
+
+    await page.getByRole("button", { name: "No history" }).click()
+    await expect(page.getByRole("link", { name: "Open Qin Fryer" })).toContainText("No interaction history")
+    await expect(page.getByRole("link", { name: "Open Qin Fryer" })).toContainText("First touch due")
+    await expect(historyRow).toHaveCount(0)
+  })
+
   test("People create, read, update, and delete through the browser/API boundary", async ({ page, request }, testInfo) => {
     // Unique per attempt. The test deletes its Person at the end, but a failed
     // attempt leaves it behind — so a retry matched two elements and failed on
