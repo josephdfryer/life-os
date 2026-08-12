@@ -21,7 +21,7 @@
  */
 
 import Anthropic from "@anthropic-ai/sdk"
-import type { ParsedContact } from "./vcard"
+import { contactIdentifiers, type ParsedContact } from "./vcard"
 import { normalizeBirthday } from "./birthday"
 
 // ── Types ────────────────────────────────────────────────────────────────────
@@ -137,8 +137,7 @@ export function applyMapping(
         title,
         headline:  title && company ? `${title} at ${company}` : title ?? company ?? null,
         company,
-        email:     get(row, mapping.email),
-        phone:     get(row, mapping.phone),
+        ...contactIdentifiers([get(row, mapping.email)], [get(row, mapping.phone)]),
         birthday:  normalizeBirthday(get(row, mapping.birthday)),
         notes:     get(row, mapping.notes),
         location:  get(row, mapping.location),

@@ -1,6 +1,7 @@
 import ExcelJS from "exceljs"
 import { normalizeBirthday } from "./birthday"
-import type { ParsedContact } from "./vcard"
+import { contactIdentifiers, type ParsedContact } from "./vcard"
+import { dedupeEmails, dedupePhones, normalizeEmailForMatch, normalizePhoneForMatch } from "./contact-values"
 
 const MAX_ROWS_PER_SHEET = 5_000
 const MAX_COLUMNS = 100
@@ -193,8 +194,7 @@ function parsePeopleTable(
       title,
       headline: title && company ? `${title} at ${company}` : title || company,
       company,
-      email: fieldValue("email") || null,
-      phone: fieldValue("phone") || null,
+      ...contactIdentifiers([fieldValue("email")], [fieldValue("phone")]),
       birthday: normalizeBirthday(fieldValue("birthday") || null),
       notes: noteSections.join("\n\n"),
       location: fieldValue("location") || null,
@@ -227,20 +227,34 @@ function collectSheetContext(sheet: ExcelJS.Worksheet, headerRow: number): strin
 
 function mergeExactDuplicates(contacts: ParsedContact[]): ParsedContact[] {
   const found = new Map<string, ParsedContact>()
+  // Any shared identifier collapses the rows, not just the primary one, and
+  // the survivor keeps the union of both rows' addresses and numbers.
+  const keysFor = (contact: ParsedContact) => {
+    const keys = [
+      ...contact.emails.map(normalizeEmailForMatch),
+      ...contact.phones.map(normalizePhoneForMatch),
+    ].filter((key): key is string => Boolean(key))
+    return keys.length ? keys : [`name:${`${contact.first} ${contact.last}`.toLowerCase().trim()}`]
+  }
+
   for (const contact of contacts) {
-    const key = contact.email?.toLowerCase().trim()
-      || contact.phone?.replace(/\D/g, "")
-      || `${contact.first} ${contact.last}`.toLowerCase().trim()
-    const existing = found.get(key)
+    const keys = keysFor(contact)
+    const existing = keys.map(key => found.get(key)).find(Boolean)
     if (!existing) {
-      found.set(key, contact)
+      const merged = { ...contact }
+      for (const key of keys) found.set(key, merged)
       continue
     }
     if (contact.notes && !existing.notes?.includes(contact.notes)) {
       existing.notes = [existing.notes, contact.notes].filter(Boolean).join("\n\n")
     }
+    existing.emails = dedupeEmails([...existing.emails, ...contact.emails])
+    existing.phones = dedupePhones([...existing.phones, ...contact.phones])
+    existing.email = existing.emails[0] ?? existing.email
+    existing.phone = existing.phones[0] ?? existing.phone
+    for (const key of keysFor(existing)) if (!found.has(key)) found.set(key, existing)
   }
-  return Array.from(found.values())
+  return Array.from(new Set(found.values()))
 }
 
 function splitName(value: string): { first: string; last: string } {

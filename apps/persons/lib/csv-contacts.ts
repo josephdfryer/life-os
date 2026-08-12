@@ -1,4 +1,4 @@
-import type { ParsedContact } from "./vcard"
+import { contactIdentifiers, type ParsedContact } from "./vcard"
 import { normalizeBirthday } from "./birthday"
 
 export type CsvFlavor = "google" | "linkedin" | "generic" | "unknown"
@@ -42,21 +42,24 @@ export function parseCsvContacts(raw: string): ParsedContact[] | null {
 
 function parseGoogleRow(header: string[], row: string[]): ParsedContact {
   const get = (key: string) => col(header, row, key)
-  const getPrefix = (prefix: string) => colPrefix(header, row, prefix)
 
   const first = get("given name") || ""
   const last = get("family name") || ""
   const fn = get("name") || `${first} ${last}`.trim()
   const org = get("organization 1 - name") || get("organization name") || get("company") || null
   const title = get("organization 1 - title") || get("title") || get("job title") || null
-  const email = colNumberedValue(header, row, "e-mail")
-             || colNumberedValue(header, row, "email")
-             || getPrefix("email address")
-             || null
-  const phone = colNumberedValue(header, row, "phone")
-             || colNumberedValue(header, row, "mobile")
-             || getPrefix("mobile phone")
-             || null
+  const identifiers = contactIdentifiers(
+    [
+      ...colNumberedValues(header, row, "e-mail"),
+      ...colNumberedValues(header, row, "email"),
+      ...colPrefixAll(header, row, "email address"),
+    ],
+    [
+      ...colNumberedValues(header, row, "phone"),
+      ...colNumberedValues(header, row, "mobile"),
+      ...colPrefixAll(header, row, "mobile phone"),
+    ],
+  )
   const birthday = normalizeBirthday(get("birthday"))
   const notes = get("notes") || null
 
@@ -67,8 +70,7 @@ function parseGoogleRow(header: string[], row: string[]): ParsedContact {
     title,
     headline: title && org ? `${title} at ${org}` : title || org,
     company: org,
-    email,
-    phone,
+    ...identifiers,
     birthday,
     notes,
     location: null,
@@ -100,8 +102,7 @@ function parseLinkedInRow(header: string[], row: string[]): ParsedContact {
     title: position,
     headline: position && company ? `${position} at ${company}` : position || company,
     company,
-    email,
-    phone: null,
+    ...contactIdentifiers([email], []),
     birthday: null,
     notes: null,
     location: null,
@@ -117,7 +118,6 @@ function parseLinkedInRow(header: string[], row: string[]): ParsedContact {
 
 function parseGenericRow(header: string[], row: string[]): ParsedContact {
   const get = (key: string) => col(header, row, key)
-  const getPrefix = (prefix: string) => colPrefix(header, row, prefix)
 
   let first = get("first name") || get("first") || ""
   let last = get("last name") || get("last") || get("surname") || ""
@@ -131,8 +131,14 @@ function parseGenericRow(header: string[], row: string[]): ParsedContact {
 
   const org = get("company") || get("organization") || get("employer") || null
   const title = get("title") || get("job title") || get("position") || get("role") || null
-  const email = getPrefix("email") || get("e-mail") || null
-  const phone = getPrefix("phone") || getPrefix("mobile") || getPrefix("cell") || null
+  const identifiers = contactIdentifiers(
+    [...colPrefixAll(header, row, "email"), ...splitMultiValue(get("e-mail"))],
+    [
+      ...colPrefixAll(header, row, "phone"),
+      ...colPrefixAll(header, row, "mobile"),
+      ...colPrefixAll(header, row, "cell"),
+    ],
+  )
   const birthday = normalizeBirthday(get("birthday") || get("date of birth") || get("dob"))
   const notes = get("notes") || get("note") || get("description") || null
   const location = get("city") || get("location") || get("address") || null
@@ -149,8 +155,7 @@ function parseGenericRow(header: string[], row: string[]): ParsedContact {
     title,
     headline: title && org ? `${title} at ${org}` : title || org,
     company: org,
-    email,
-    phone,
+    ...identifiers,
     birthday,
     notes,
     location,
@@ -170,25 +175,39 @@ function col(header: string[], row: string[], key: string): string | null {
   return row[idx]?.trim() || null
 }
 
-function colPrefix(header: string[], row: string[], prefix: string): string | null {
-  const idx = header.findIndex(h => h.toLowerCase().trim().startsWith(prefix.toLowerCase()))
-  if (idx === -1) return null
-  return row[idx]?.trim() || null
+/**
+ * Google packs repeated values into a single cell separated by " ::: ".
+ * Splitting it is the difference between one usable address and three.
+ */
+function splitMultiValue(value: string | null | undefined): string[] {
+  if (!value) return []
+  return value.split(/\s*:::\s*/).map(part => part.trim()).filter(Boolean)
 }
 
 /**
  * For Google-style "Field N - Type / Field N - Value" column pairs.
- * Scans up to 10 numbered slots and returns the first non-empty Value.
- * e.g. colNumberedValue(h, r, "e-mail") finds "E-mail 1 - Value", "E-mail 2 - Value", …
+ * Returns every non-empty Value across all numbered slots, in order.
+ * e.g. colNumberedValues(h, r, "e-mail") finds "E-mail 1 - Value", "E-mail 2 - Value", …
  */
-function colNumberedValue(header: string[], row: string[], prefix: string): string | null {
+function colNumberedValues(header: string[], row: string[], prefix: string): string[] {
   const p = prefix.toLowerCase()
+  const values: string[] = []
   for (let n = 1; n <= 10; n++) {
     const key = `${p} ${n} - value`
     const idx = header.findIndex(h => h.toLowerCase().trim() === key)
-    if (idx !== -1 && row[idx]?.trim()) return row[idx].trim()
+    if (idx !== -1) values.push(...splitMultiValue(row[idx]))
   }
-  return null
+  return values
+}
+
+/** Every column whose header starts with `prefix`, not just the first. */
+function colPrefixAll(header: string[], row: string[], prefix: string): string[] {
+  const p = prefix.toLowerCase()
+  const values: string[] = []
+  header.forEach((name, idx) => {
+    if (name.toLowerCase().trim().startsWith(p)) values.push(...splitMultiValue(row[idx]))
+  })
+  return values
 }
 
 /**

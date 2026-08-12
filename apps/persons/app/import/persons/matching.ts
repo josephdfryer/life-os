@@ -1,4 +1,5 @@
 import type { ParsedContact } from "@/lib/vcard"
+import { normalizeEmailForMatch, normalizePhoneForMatch, sharesAny } from "@/lib/contact-values"
 import type { Person } from "@/types"
 
 export const DUPLICATE_THRESHOLD = 0.85
@@ -11,10 +12,21 @@ export type ContactStatus = "ready" | "review" | "error" | "duplicate" | "possib
 export type QualityStats = { total: number; needsReview: number; guessedName: number; noEmail: number; noPhone: number; noCompany: number; duplicates: number; possibles: number }
 
 export function normalizeMatchText(value: string) { return value.toLowerCase().trim().replace(/[^a-z0-9 ]/g, "") }
-export function normalizePhoneForMatch(value: string) {
-  let digits = value.replace(/\D/g, "").replace(/^00/, "")
-  if (digits.length === 11 && digits.startsWith("1")) digits = digits.slice(1)
-  return digits.length >= 7 ? digits : null
+
+// Identifier normalization lives in lib/contact-values so importers, matching,
+// and dedupe all compare on exactly the same keys.
+export { normalizeEmailForMatch, normalizePhoneForMatch } from "@/lib/contact-values"
+
+/**
+ * A contact's identifiers, tolerating the pre-multi-value shape. These objects
+ * cross a network boundary (the import preview API), so a payload carrying only
+ * the primary must still match rather than silently scoring zero.
+ */
+function contactEmails(contact: ParsedContact): string[] {
+  return contact.emails?.length ? contact.emails : (contact.email ? [contact.email] : [])
+}
+function contactPhones(contact: ParsedContact): string[] {
+  return contact.phones?.length ? contact.phones : (contact.phone ? [contact.phone] : [])
 }
 
 export function jaro(s1: string, s2: string): number {
@@ -48,11 +60,21 @@ export function jaroWinkler(a: string, b: string): number {
 
 export function computeFillableFields(contact: ParsedContact, person: Person): Record<string, string> {
   const result: Record<string, string> = {}
-  if (contact.email?.trim() && !person.emails.some(email => email.toLowerCase() === contact.email!.toLowerCase().trim())) result.email = contact.email.trim()
-  if (contact.phone?.trim()) {
-    const phone = normalizePhoneForMatch(contact.phone)
-    if (phone && !person.phones.some(value => normalizePhoneForMatch(value) === phone)) result.phone = contact.phone.trim()
-  }
+  // Offer the first identifier the person is genuinely missing — including a
+  // secondary address, which is often the one worth adding.
+  const knownEmails = new Set(person.emails.map(normalizeEmailForMatch).filter(Boolean))
+  const newEmail = contactEmails(contact).find(email => {
+    const key = normalizeEmailForMatch(email)
+    return key ? !knownEmails.has(key) : false
+  })
+  if (newEmail) result.email = newEmail.trim()
+
+  const knownPhones = new Set(person.phones.map(normalizePhoneForMatch).filter(Boolean))
+  const newPhone = contactPhones(contact).find(phone => {
+    const key = normalizePhoneForMatch(phone)
+    return key ? !knownPhones.has(key) : false
+  })
+  if (newPhone) result.phone = newPhone.trim()
   const pairs: [keyof ParsedContact, keyof Person][] = [["title", "title"], ["company", "company"], ["headline", "headline"], ["birthday", "birthday"], ["location", "location"], ["linkedin", "linkedin"], ["twitter", "twitter"], ["website", "website"], ["facebook", "facebook"], ["instagram", "instagram"]]
   for (const [contactKey, personKey] of pairs) {
     const incoming = (contact[contactKey] as string | null)?.trim()
@@ -70,11 +92,13 @@ export function computeFillableFields(contact: ParsedContact, person: Person): R
 
 export function findMatch(contact: ParsedContact, persons: Person[]): MatchResult | null {
   let best: { score: number; reason: string; person: Person } | null = null
+  // A shared identifier anywhere in either record is a match — the primary
+  // address is no more authoritative than a secondary one.
+  const emails = contactEmails(contact)
+  const phones = contactPhones(contact)
   for (const person of persons) {
-    const email = contact.email?.toLowerCase().trim()
-    if (email && person.emails.some(value => value.toLowerCase().trim() === email)) { best = { score: 1, reason: "Same email address", person }; continue }
-    const phone = normalizePhoneForMatch(contact.phone ?? "")
-    if (phone && person.phones.some(value => normalizePhoneForMatch(value) === phone)) { if (!best || best.score < 0.97) best = { score: 0.97, reason: "Same phone number", person }; continue }
+    if (sharesAny(emails, person.emails, normalizeEmailForMatch)) { if (!best || best.score < 1) best = { score: 1, reason: "Same email address", person }; continue }
+    if (sharesAny(phones, person.phones, normalizePhoneForMatch)) { if (!best || best.score < 0.97) best = { score: 0.97, reason: "Same phone number", person }; continue }
     const contactName = normalizeMatchText(`${contact.first ?? ""} ${contact.last ?? ""}`)
     const personName = normalizeMatchText(`${person.first} ${person.last}`)
     if (!contactName || !personName) continue

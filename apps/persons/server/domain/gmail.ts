@@ -2,6 +2,7 @@ import { createHmac, randomBytes } from "crypto"
 import type { GmailConnection, Prisma } from "@life-os/db"
 import { decryptNullable, encryptNullable } from "@life-os/db/crypto"
 import { db } from "@/lib/db"
+import { contactIdentifiers, type ParsedContact } from "@/lib/vcard"
 import { badRequest, forbidden, notFound } from "@/server/api/errors"
 import { auditAction, type DomainActor } from "./audit"
 import type { AccessActor } from "./access"
@@ -18,7 +19,10 @@ const GMAIL_BASE = "https://gmail.googleapis.com/gmail/v1"
 const GOOGLE_PEOPLE_BASE = "https://people.googleapis.com/v1"
 const GMAIL_READONLY_SCOPE = "https://www.googleapis.com/auth/gmail.readonly"
 const GOOGLE_CONTACTS_READONLY_SCOPE = "https://www.googleapis.com/auth/contacts.readonly"
-const GMAIL_SCOPE = `${GMAIL_READONLY_SCOPE} ${GOOGLE_CONTACTS_READONLY_SCOPE}`
+// Google's auto-saved "other contacts". Additive: connections granted before
+// this scope existed keep working, and simply gain the extra source on reconnect.
+const GOOGLE_OTHER_CONTACTS_READONLY_SCOPE = "https://www.googleapis.com/auth/contacts.other.readonly"
+const GMAIL_SCOPE = `${GMAIL_READONLY_SCOPE} ${GOOGLE_CONTACTS_READONLY_SCOPE} ${GOOGLE_OTHER_CONTACTS_READONLY_SCOPE}`
 const SOURCE = "gmail"
 const DEFAULT_BACKFILL_DAYS = 30
 // Stop fetching new messages after this long and report the run as
@@ -49,17 +53,33 @@ type GmailProfile = {
 type GooglePeopleResponse = {
   connections?: GooglePerson[]
   nextPageToken?: string
+  nextSyncToken?: string
 }
 
+type GoogleOtherContactsResponse = {
+  otherContacts?: GooglePerson[]
+  nextPageToken?: string
+}
+
+type GoogleContactGroupsResponse = {
+  contactGroups?: { resourceName?: string; name?: string; formattedName?: string }[]
+  nextPageToken?: string
+}
+
+type GoogleFieldMetadata = { primary?: boolean }
+
 type GooglePerson = {
+  resourceName?: string
+  etag?: string
   names?: { displayName?: string; givenName?: string; familyName?: string }[]
-  emailAddresses?: { value?: string }[]
-  phoneNumbers?: { value?: string }[]
+  emailAddresses?: { value?: string; metadata?: GoogleFieldMetadata }[]
+  phoneNumbers?: { value?: string; metadata?: GoogleFieldMetadata }[]
   organizations?: { name?: string; title?: string }[]
   birthdays?: { date?: GoogleBirthdayDate }[]
   addresses?: { formattedValue?: string; city?: string; region?: string; country?: string }[]
   urls?: { value?: string }[]
   biographies?: { value?: string }[]
+  memberships?: { contactGroupMembership?: { contactGroupResourceName?: string } }[]
 }
 
 type GoogleBirthdayDate = { year?: number; month?: number; day?: number }
@@ -337,7 +357,7 @@ export async function importGmailContactsPreview(actor: AccessActor) {
     refreshToken: decryptNullable(connection.refreshTokenEncrypted),
     expiresAt: connection.expiresAt,
   })
-  const contacts = await fetchGoogleContacts(accessToken)
+  const contacts = await fetchGoogleContacts(accessToken, connection.scope)
   return { contacts, count: contacts.length, method: "google-contacts", accountEmail: connection.accountEmail }
 }
 
@@ -913,10 +933,73 @@ async function refreshAccessToken(refreshToken: string) {
 
 const gmailFetch = googleFetch
 
-async function fetchGoogleContacts(accessToken: string) {
+/**
+ * Map a Google contact-group resourceName to its display name, so imported
+ * contacts carry the user's own labels rather than opaque identifiers.
+ * Failures are non-fatal — labels are enrichment, not the point of the import.
+ */
+async function fetchGoogleContactGroups(accessToken: string): Promise<Map<string, string>> {
+  const groups = new Map<string, string>()
+  let pageToken: string | null = null
+  try {
+    do {
+      const params = new URLSearchParams({ pageSize: "200" })
+      if (pageToken) params.set("pageToken", pageToken)
+      const res = await gmailFetch(`${GOOGLE_PEOPLE_BASE}/contactGroups?${params}`, accessToken)
+      if (!res.ok) return groups
+      const data = await res.json() as GoogleContactGroupsResponse
+      for (const group of data.contactGroups ?? []) {
+        const label = cleanNullable(group.formattedName) ?? cleanNullable(group.name)
+        if (group.resourceName && label) groups.set(group.resourceName, label)
+      }
+      pageToken = data.nextPageToken ?? null
+    } while (pageToken)
+  } catch {
+    // Labels are optional enrichment; never fail the import over them.
+  }
+  return groups
+}
+
+/**
+ * Google's "other contacts" — addresses auto-saved from mail that were never
+ * added to the address book. A large source of real people.
+ *
+ * Requires `contacts.other.readonly`, which older connections were not granted.
+ * Missing scope returns an empty list rather than an error, so an existing
+ * connection keeps working and simply improves after a reconnect.
+ */
+async function fetchGoogleOtherContacts(accessToken: string, scope: string | null | undefined) {
+  if (!hasGoogleOtherContactsScope(scope)) return []
   const contacts: ReturnType<typeof googlePersonToParsedContact>[] = []
   let pageToken: string | null = null
-  const personFields = "names,emailAddresses,phoneNumbers,organizations,birthdays,addresses,urls,biographies"
+  // otherContacts.list supports only this narrow readMask.
+  const readMask = "names,emailAddresses,phoneNumbers,metadata"
+
+  try {
+    do {
+      const params = new URLSearchParams({ pageSize: "1000", readMask })
+      if (pageToken) params.set("pageToken", pageToken)
+      const res = await gmailFetch(`${GOOGLE_PEOPLE_BASE}/otherContacts?${params}`, accessToken)
+      if (!res.ok) return contacts
+      const data = await res.json() as GoogleOtherContactsResponse
+      for (const person of data.otherContacts ?? []) {
+        const contact = googlePersonToParsedContact(person)
+        if (contact.emails.length || contact.phones.length) contacts.push(contact)
+      }
+      pageToken = data.nextPageToken ?? null
+    } while (pageToken)
+  } catch {
+    // Same reasoning as groups: additive source, never fatal.
+  }
+  return contacts
+}
+
+async function fetchGoogleContacts(accessToken: string, scope?: string | null) {
+  const contacts: ReturnType<typeof googlePersonToParsedContact>[] = []
+  let pageToken: string | null = null
+  const personFields = "names,emailAddresses,phoneNumbers,organizations,birthdays,addresses,urls,biographies,memberships"
+
+  const groupNames = await fetchGoogleContactGroups(accessToken)
 
   do {
     const params = new URLSearchParams({
@@ -929,20 +1012,41 @@ async function fetchGoogleContacts(accessToken: string) {
     if (!res.ok) throw new Error(`Google contacts request failed (${res.status})`)
     const data = await res.json() as GooglePeopleResponse
     for (const person of data.connections ?? []) {
-      const contact = googlePersonToParsedContact(person)
+      const contact = googlePersonToParsedContact(person, groupNames)
       if (contact.first || contact.last || contact.email || contact.phone) contacts.push(contact)
     }
     pageToken = data.nextPageToken ?? null
   } while (pageToken)
 
+  // Auto-saved addresses come last so a real address-book entry wins the
+  // primary slot when the review step merges them.
+  const seen = new Set(contacts.map(contact => contact.sourceId).filter(Boolean))
+  for (const other of await fetchGoogleOtherContacts(accessToken, scope)) {
+    if (other.sourceId && seen.has(other.sourceId)) continue
+    contacts.push(other)
+  }
+
   return contacts
 }
 
-function googlePersonToParsedContact(person: GooglePerson) {
+function googlePersonToParsedContact(person: GooglePerson, groupNames?: Map<string, string>) {
   const name = person.names?.[0]
   const organization = person.organizations?.[0]
-  const email = cleanNullable(person.emailAddresses?.find(item => item.value)?.value)
-  const phone = cleanNullable(person.phoneNumbers?.find(item => item.value)?.value)
+  // Primary-flagged values sort first; every other address and number is kept,
+  // because the secondary ones are the strongest dedupe evidence available.
+  const byPrimaryFirst = <T extends { value?: string; metadata?: GoogleFieldMetadata }>(items: T[] | undefined) => [
+    ...(items ?? []).filter(item => item.metadata?.primary),
+    ...(items ?? []).filter(item => !item.metadata?.primary),
+  ].map(item => cleanNullable(item.value))
+
+  const identifiers = contactIdentifiers(
+    byPrimaryFirst(person.emailAddresses),
+    byPrimaryFirst(person.phoneNumbers),
+  )
+  const groups = (person.memberships ?? [])
+    .map(membership => membership.contactGroupMembership?.contactGroupResourceName)
+    .map(resourceName => (resourceName ? groupNames?.get(resourceName) : null))
+    .filter((label): label is string => Boolean(label))
   const fullName = cleanNullable(name?.displayName)
     ?? [name?.givenName, name?.familyName].map(value => value?.trim()).filter(Boolean).join(" ")
   const title = cleanNullable(organization?.title)
@@ -953,7 +1057,12 @@ function googlePersonToParsedContact(person: GooglePerson) {
     const lower = url.toLowerCase()
     return lower.includes("twitter.com") || lower.includes("x.com")
   }) ?? null
-  const website = urls.find(url => url !== linkedin && url !== twitter) ?? null
+  const facebook = urls.find(url => {
+    const lower = url.toLowerCase()
+    return lower.includes("facebook.com") || lower.includes("fb.com")
+  }) ?? null
+  const instagram = urls.find(url => url.toLowerCase().includes("instagram.com")) ?? null
+  const website = urls.find(url => url !== linkedin && url !== twitter && url !== facebook && url !== instagram) ?? null
   const address = person.addresses?.[0]
   const structuredLocation = [address?.city, address?.region, address?.country].map(value => value?.trim()).filter(Boolean).join(", ")
   const location = cleanNullable(address?.formattedValue) ?? cleanNullable(structuredLocation)
@@ -965,15 +1074,19 @@ function googlePersonToParsedContact(person: GooglePerson) {
     title,
     headline: title && company ? `${title} at ${company}` : title ?? company,
     company,
-    email,
-    phone,
+    ...identifiers,
     birthday: googleBirthday(person.birthdays?.[0]?.date),
     notes: cleanNullable(person.biographies?.[0]?.value),
     location,
     linkedin,
     twitter,
     website,
-  }
+    facebook,
+    instagram,
+    sourceId: cleanNullable(person.resourceName),
+    sourceEtag: cleanNullable(person.etag),
+    groups,
+  } satisfies ParsedContact
 }
 
 function signState(state: OAuthState) {
@@ -1028,6 +1141,10 @@ function normalizeBackfillDays(value: number | null | undefined) {
 
 function hasGoogleContactsScope(scope: string | null | undefined) {
   return (scope ?? "").split(/\s+/).includes(GOOGLE_CONTACTS_READONLY_SCOPE)
+}
+
+function hasGoogleOtherContactsScope(scope: string | null | undefined) {
+  return (scope ?? "").split(/\s+/).includes(GOOGLE_OTHER_CONTACTS_READONLY_SCOPE)
 }
 
 function cleanNullable(value: string | null | undefined) {
