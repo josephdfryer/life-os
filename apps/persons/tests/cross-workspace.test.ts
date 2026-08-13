@@ -19,6 +19,7 @@ type TestModules = {
   db: typeof import("../lib/db")["db"]
   merge: typeof import("../server/domain/merge")
   fileStorage: typeof import("../lib/file-storage")
+  importAnalysis: typeof import("../server/domain/import-analysis")
 }
 
 let modulesPromise: Promise<TestModules> | null = null
@@ -27,12 +28,13 @@ async function setup() {
   if (!modulesPromise) {
     modulesPromise = (async () => {
       applyMigrations(dbPath)
-      const [dbModule, merge, fileStorage] = await Promise.all([
+      const [dbModule, merge, fileStorage, importAnalysis] = await Promise.all([
         import("../lib/db"),
         import("../server/domain/merge"),
         import("../lib/file-storage"),
+        import("../server/domain/import-analysis"),
       ])
-      return { db: dbModule.db, merge, fileStorage }
+      return { db: dbModule.db, merge, fileStorage, importAnalysis }
     })()
   }
   return modulesPromise
@@ -51,6 +53,28 @@ test("stored files require and enforce an explicit workspace", async () => {
     format: "txt",
   })
   assert.equal(await fileStorage.getFileContent(file.id, "ws-files-b"), null)
+})
+
+test("import analysis resolves each workspace's own owner name, never another's", async () => {
+  const { db, importAnalysis } = await setup()
+  await makeWorkspace(db, "ws-owner-a")
+  await makeWorkspace(db, "ws-owner-b")
+
+  const ownerPersonA = await makePerson(db, "ws-owner-a", "Ada", "Lovelace")
+  const ownerUserA = await db.user.create({ data: { email: "ada@example.test", personId: ownerPersonA.id } })
+  await db.workspace.update({ where: { id: "ws-owner-a" }, data: { ownerUserId: ownerUserA.id } })
+
+  const ownerPersonB = await makePerson(db, "ws-owner-b", "Byron", "King")
+  const ownerUserB = await db.user.create({ data: { email: "byron@example.test", personId: ownerPersonB.id } })
+  await db.workspace.update({ where: { id: "ws-owner-b" }, data: { ownerUserId: ownerUserB.id } })
+
+  assert.equal(await importAnalysis.resolveWorkspaceOwnerName("ws-owner-a"), "Ada Lovelace")
+  assert.equal(await importAnalysis.resolveWorkspaceOwnerName("ws-owner-b"), "Byron King")
+
+  // A workspace with no owner/membership resolved yet must not silently
+  // borrow another workspace's name — it falls back to a generic label.
+  await makeWorkspace(db, "ws-owner-none")
+  assert.equal(await importAnalysis.resolveWorkspaceOwnerName("ws-owner-none"), "the workspace owner")
 })
 
 // The committed migration history has a handful of corrective migrations
