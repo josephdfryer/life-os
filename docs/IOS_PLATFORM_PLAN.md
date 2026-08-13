@@ -517,34 +517,42 @@ M5's backend half can run in parallel with M2–M4 — it is server work with no
 dependency, and it is the long pole for anything saleable.
 
 Implementation note (2026-08-12): M2's backend slice is complete. M5 now has
-canonical People, Interaction, Plan, Rule, audit-log, and stored-file verticals in `apps/api`: `/v1/people`,
-`/v1/people/:id`, `/v1/plans`, `/v1/plans/:id`, `/v1/rules`, `/v1/rules/:id`,
-`/v1/rules/:id/test`, `/v1/interactions`, `/v1/interactions/:id`,
-`/v1/audit-log`, and `/v1/files/:id`, with shared
-request/response contracts where a JSON wire shape exists, keyset pagination,
-and cross-workspace read and mutation isolation tests. Audit-log reads use an
-`(createdAt, id)` cursor and bounded filters. The central file route serves only
-database-backed content; it does not attempt to read a legacy path on the API
-host. Plan
-parent references are workspace-validated at the shared command boundary.
-Interaction writes likewise validate Person, Event, and source-file references
-inside the caller's workspace, and atomically create the backing Event,
-participant edges, Interaction, and GraphEvent.
+canonical People, Interaction, Plan, Rule, Event, audit-log, and stored-file
+verticals in `apps/api`: `/v1/people`, `/v1/people/:id`, `/v1/plans`,
+`/v1/plans/:id`, `/v1/rules`, `/v1/rules/:id`, `/v1/rules/:id/test`,
+`/v1/interactions`, `/v1/interactions/:id`, `/v1/events`, `/v1/events/:id`,
+`/v1/audit-log`, and `/v1/files/:id`, with shared request/response contracts
+where a JSON wire shape exists, keyset pagination, and cross-workspace read
+and mutation isolation tests. Audit-log reads use an `(createdAt, id)`
+cursor and bounded filters. The central file route serves only
+database-backed content; it does not attempt to read a legacy path on the
+API host. Plan parent references are workspace-validated at the shared
+command boundary. Interaction writes likewise validate Person, Event, and
+source-file references inside the caller's workspace, and atomically create
+the backing Event, participant edges, Interaction, and GraphEvent.
+
 Rules reuses the existing `rules.manage` scope rather than introducing a
-read/write split not backed by the seeded permission catalog. Contacts and
-Inbox are decided as permanent app-local surfaces, not a queued forwarding
-slice — see docs/PERSONS_ARCHITECTURE.md for why (different consumption
-pattern for Contacts; Inbox's presentation enrichment has no place in a
-cross-primitive canonical resource, and both already read the same
-underlying data as their canonical counterparts). Dedupe, merge, and
+read/write split not backed by the seeded permission catalog. The Event
+*primitive* (a calendar/meeting occurrence — `packages/domain/event-primitive.ts`,
+already extracted in an earlier Track C phase) needed new scopes instead:
+the existing `events.read` was already seeded for the GraphEvent ledger
+before the primitive had a canonical API, and renaming it would silently
+revoke ledger access from anyone already granted it. Added
+`life-events.read`/`life-events.write` instead, leaving `events.read`
+untouched, and granted the new pair everywhere a role already had
+equivalent primitive access (admin, editor, viewer, automation).
+
+Contacts and Inbox are decided as permanent app-local surfaces, not a queued
+forwarding slice — see docs/PERSONS_ARCHITECTURE.md for why (different
+consumption pattern for Contacts; Inbox's presentation enrichment has no
+place in a cross-primitive canonical resource, and both already read the
+same underlying data as their canonical counterparts). Dedupe, merge, and
 people-merge stay app-local and destructive — not moved. Gmail sync,
-imports, and ingest remain unmoved because they're Anthropic/Google
-integrations hardcoded to a single owner (ingest's system prompt names
-Joseph Fryer directly); moving them means genuinely rebuilding the
-personalization, not relocating a route. Event-primitive migration also
-needs an explicit access-scope decision first: today's `events.read` names
-the raw GraphEvent ledger, not the Event primitive, and there is no
-corresponding `events.write` scope.
+imports, and ingest are now workspace-personalized (each workspace's own
+owner name is resolved and substituted into the AI analysis prompt, no
+longer hardcoded to Joseph Fryer) but still live in `apps/persons`; moving
+them to `apps/api` remains a separate step from fixing their multi-tenant
+correctness.
 
 ---
 

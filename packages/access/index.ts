@@ -73,6 +73,13 @@ export const DEFAULT_PERMISSIONS = [
   { scope: "intelligence.read", description: "Read whole-life intelligence snapshots and insights" },
   { scope: "intelligence.write", description: "Correct insights and record synthesis feedback" },
   { scope: "events.read", description: "Read the raw GraphEvent ledger" },
+  // "events.read" was already seeded for the GraphEvent ledger above before
+  // the Event *primitive* (a calendar/meeting occurrence — see
+  // packages/domain/event-primitive.ts) got a canonical API. Renaming the
+  // existing scope would silently revoke ledger access from anyone already
+  // granted it; these are new, distinctly named scopes instead.
+  { scope: "life-events.read", description: "Read Event primitive records (calendar/meeting occurrences)" },
+  { scope: "life-events.write", description: "Create and update Event primitive records" },
   { scope: "notes.read", description: "Read notes" },
   { scope: "notes.write", description: "Create and update notes" },
   { scope: "plans.read", description: "Read plans" },
@@ -106,6 +113,7 @@ export const DEFAULT_ROLES = [
       "intelligence.read", "intelligence.write", "events.read",
       "notes.read", "notes.write", "plans.read", "plans.write",
       "states.read", "states.write", "groups.read", "groups.write", "items.read", "items.write",
+      "life-events.read", "life-events.write",
       "connections.read", "connections.manage",
       "devices.read", "devices.manage",
     ],
@@ -120,6 +128,7 @@ export const DEFAULT_ROLES = [
       "stream.read", "review.read", "review.write", "intelligence.read",
       "notes.read", "notes.write", "plans.read", "plans.write",
       "states.read", "states.write", "groups.read", "groups.write", "items.read", "items.write",
+      "life-events.read", "life-events.write",
       "connections.read",
       "devices.read",
     ],
@@ -132,6 +141,7 @@ export const DEFAULT_ROLES = [
       "people.read", "places.read", "interactions.read", "files.read",
       "stream.read", "review.read", "automations.read", "intelligence.read", "events.read",
       "notes.read", "plans.read", "states.read", "groups.read", "items.read",
+      "life-events.read",
       "connections.read",
       "devices.read",
     ],
@@ -145,6 +155,7 @@ export const DEFAULT_ROLES = [
       "inbox.review", "ingest.write", "files.read",
       "stream.read", "review.read", "review.write", "automations.read", "events.read",
       "notes.read", "notes.write", "plans.read", "plans.write", "states.read", "states.write",
+      "life-events.read", "life-events.write",
     ],
   },
 ] as const

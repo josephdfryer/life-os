@@ -503,6 +503,52 @@ export type PlanResource = z.infer<typeof planResourceContract>
 export const plansPageContract = cursorPageContract(planResourceContract)
 export type PlansPage = z.infer<typeof plansPageContract>
 
+// apps/api's canonical /v1/events — the Event *primitive* (a calendar/
+// meeting occurrence), not the GraphEvent ledger. See
+// packages/domain/event-primitive.ts for why the domain module isn't named
+// events.ts, and packages/access's life-events.read/write scopes for why
+// this resource doesn't reuse the already-seeded events.read scope.
+const eventFieldsContract = z.object({
+  name: z.string().trim().min(1).max(500),
+  type: z.string().trim().min(1).max(200),
+  timestamp: z.iso.datetime().optional(),
+  end: z.iso.datetime().nullable().optional(),
+  placeId: id.nullable().optional(),
+  notes: z.string().trim().max(20_000).nullable().optional(),
+  transcript: z.string().trim().max(200_000).nullable().optional(),
+  metadata: record.nullable().optional(),
+}).strict()
+
+export const eventCreateContract = eventFieldsContract
+export type EventCreateInput = z.infer<typeof eventCreateContract>
+
+export const eventUpdateContract = eventFieldsContract.partial().refine(
+  value => Object.keys(value).length > 0,
+  { message: "At least one field is required." },
+)
+export type EventUpdateInput = z.infer<typeof eventUpdateContract>
+
+export const eventResourceContract = z.object({
+  id,
+  createdAt: z.iso.datetime(),
+  name: z.string(),
+  type: z.string(),
+  start: z.iso.datetime(),
+  end: z.iso.datetime().nullable(),
+  timestamp: z.iso.datetime(),
+  placeId: id.nullable(),
+  notes: z.string().nullable(),
+  transcript: z.string().nullable(),
+  metadata: z.unknown().nullable(),
+  sourcePlanId: id.nullable(),
+  parentEventId: id.nullable(),
+  sourceNoteId: id.nullable(),
+}).strict()
+export type EventResource = z.infer<typeof eventResourceContract>
+
+export const eventsPageContract = cursorPageContract(eventResourceContract)
+export type EventsPage = z.infer<typeof eventsPageContract>
+
 export const auditLogResourceContract = z.object({
   id,
   createdAt: z.iso.datetime(),

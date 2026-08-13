@@ -560,8 +560,9 @@ People and Event lists; the Interaction stream already has that index.
 **`apps/api` is now the canonical `/v1` surface**, not Persons — a separate,
 no-UI, API-key-only deployable app (`api.lacollecteur.com`) that's the
 intended long-term home for cross-app resources. Its first M5 verticals are
-`/v1/people` + `/v1/people/:id`, `/v1/plans` + `/v1/plans/:id`, and
-`/v1/rules` + `/v1/rules/:id` + `/v1/rules/:id/test`. It also owns bounded
+`/v1/people` + `/v1/people/:id`, `/v1/plans` + `/v1/plans/:id`,
+`/v1/rules` + `/v1/rules/:id` + `/v1/rules/:id/test`, and
+`/v1/events` + `/v1/events/:id`. It also owns bounded
 `GET /v1/audit-log` reads and database-backed `GET /v1/files/:id` downloads.
 `/v1/interactions` + `/v1/interactions/:id` provide canonical Interaction
 listing, creation, detail, update, and deletion; `/v1/stream` remains the
@@ -569,8 +570,15 @@ descriptive name for the same bounded, filterable list read.
 Scoped API keys can page, search, create, read, update, or delete supported
 resources only inside their own workspace. The JSON wire shapes come from
 `@life-os/contracts`, and list reads use compound keyset cursors instead of
-offsets: `(date, id)` for People and Plans, and `(createdAt, id)` for audit
-rows. Audit filtering supports action, actor type, target type, and target id.
+offsets: `(date, id)` for People and Plans, `(timestamp, id)` for Events, and
+`(createdAt, id)` for audit rows. Audit filtering supports action, actor
+type, target type, and target id. Events uses new `life-events.read`/
+`life-events.write` scopes rather than the existing `events.read` — that
+scope already means "read the raw GraphEvent ledger" (a different, earlier
+concept; see `packages/domain/event-primitive.ts`'s own header comment for
+why the module isn't named `events.ts`), and renaming a seeded, possibly
+already-granted scope out from under existing role assignments was judged
+riskier than a new, clearly-named pair.
 The People profile
 response deliberately excludes internal search and workspace-ownership fields;
 a client loads the person's timeline separately from
