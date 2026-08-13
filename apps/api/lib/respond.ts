@@ -4,6 +4,7 @@ import { InteractionStreamError, AcceptStagedInteractionError, ReviewItemError, 
 import { LifeModelError, TheoryError } from "@life-os/intelligence"
 import { RuleError } from "@life-os/automation"
 import { AccessError } from "@life-os/access"
+import { WorkoutCommandError } from "@life-os/level-up"
 
 // Every error apps/api returns uses one shape — { error: { code, message,
 // details? } } — validated against packages/contracts' errorEnvelopeContract
@@ -52,6 +53,9 @@ export function handleRouteError(error: unknown) {
   }
   if (error instanceof AccessError) {
     return errorResponse(error.code === "not_found" ? 404 : 400, error.code, error.message)
+  }
+  if (error instanceof WorkoutCommandError) {
+    return errorResponse(error.code === "not_found" ? 404 : 409, error.code, error.message)
   }
   console.error("[apps/api] unhandled route error", error)
   return errorResponse(500, "internal_error", "Internal server error")

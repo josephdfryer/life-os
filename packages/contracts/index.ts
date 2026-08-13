@@ -285,7 +285,7 @@ export const deviceSourceContract = z.enum([
   "imessage", "whatsapp", "call_history", "healthkit", "location",
   "photos", "voice_journal", "documents",
 ])
-export const deviceScopeContract = z.enum(["device.ingest", "device.heartbeat", "device.self"])
+export const deviceScopeContract = z.enum(["device.ingest", "device.heartbeat", "device.self", "workout.read", "workout.write"])
 
 const healthMetricContract = z.object({
   key: z.string().trim().min(1).max(128),
@@ -409,6 +409,108 @@ export const deviceExchangeContract = z.object({
 
 export const deviceRefreshContract = z.object({
   refreshToken: z.string().trim().min(1).max(512),
+}).strict()
+
+// Level Up workout device protocol. Web server actions and native device
+// routes call identical @life-os/level-up commands — these contracts
+// validate the wire shape both directions.
+// See docs/LEVEL_UP_ADAPTIVE_WORKOUT_PLAN.md "Public interfaces and persistence".
+
+export const workoutPreparedExerciseContract = z.object({
+  id, key: z.string(), label: z.string(), modality: z.string(), catalogKey: z.string().nullable(),
+  defaultRestSec: z.number().int().nonnegative(), jointLoad: z.array(z.string()),
+}).strict()
+
+export const workoutPreparedEntryContract = z.object({
+  entryId: id,
+  order: z.number().int(),
+  exercise: workoutPreparedExerciseContract,
+  substitutedFor: z.string().nullable(),
+  targetSets: z.number().int(),
+  targetReps: z.number().int().nullable(),
+  targetLoadKg: z.number().nullable(),
+  targetDurationSec: z.number().int().nullable(),
+  restSec: z.number().int(),
+  lastLoadKg: z.number().nullable(),
+  lastReps: z.number().int().nullable(),
+  lastDurationSec: z.number().int().nullable(),
+  lastIsBodyweight: z.boolean(),
+}).strict()
+
+export const workoutReadinessBandContract = z.enum(["full", "adjust", "recover"])
+
+export const workoutReadinessSnapshotContract = z.object({
+  localDay: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  engineVersion: z.string(),
+  ruleSetVersion: z.string(),
+  inputs: record,
+  formSignal: record.nullable(),
+  band: workoutReadinessBandContract,
+  originalPrescriptionHash: z.string().nullable().optional(),
+  suggestedPrescriptionHash: z.string().nullable().optional(),
+  reasonCodes: z.array(z.string()).optional(),
+}).strict()
+
+export const workoutTodayBundleContract = z.object({
+  programDayId: id,
+  dayName: z.string(),
+  entries: z.array(workoutPreparedEntryContract),
+  profile: z.object({
+    bodyweightKg: z.number().nullable(),
+    unit: z.enum(["kg", "lb"]),
+    microPlates: z.boolean(),
+  }).strict(),
+  readiness: workoutReadinessSnapshotContract,
+}).strict()
+
+export const workoutStartSessionContract = z.object({
+  programDayId: id.nullable(),
+  kneeFlare: z.boolean(),
+  lumbarFlare: z.boolean(),
+  sourceId: idempotencyKeyContract.optional(),
+}).strict()
+
+export const workoutSessionResultContract = z.object({
+  id,
+  startedAt: z.string().datetime({ offset: true }),
+  duplicate: z.boolean(),
+}).strict()
+
+export const workoutCompleteSessionContract = z.object({
+  sessionId: id,
+  sessionRpe: z.number().min(0).max(10).nullable().optional(),
+}).strict()
+
+export const workoutLogSetContract = z.object({
+  sessionId: id,
+  exerciseId: id,
+  exerciseKey: z.string().trim().min(1).max(200),
+  catalogKey: z.string().trim().min(1).max(200).nullable(),
+  setIndex: z.number().int().nonnegative().max(1000),
+  reps: z.number().int().nonnegative().max(1000),
+  loadKg: z.number().min(0).max(2000),
+  durationSec: z.number().int().nonnegative().max(604_800).nullable(),
+  isBodyweight: z.boolean(),
+  bodyweightKg: z.number().min(0).max(500).nullable(),
+  sourceId: idempotencyKeyContract.optional(),
+}).strict()
+
+export const workoutLoggedSetContract = z.object({
+  id,
+  rank: z.number().nullable(),
+  rankLetter: z.string().nullable(),
+  balance: z.number().nullable(),
+  balanceLabel: z.string().nullable(),
+  suppressedRankReason: z.string().nullable(),
+  isPr: z.boolean(),
+  e1rm: z.number().nullable(),
+  duplicate: z.boolean(),
+}).strict()
+
+export const workoutBodyMetricContract = z.object({
+  weightKg: z.number().min(0).max(500).nullable(),
+  bodyFatPct: z.number().min(0).max(100).nullable(),
+  musclePct: z.number().min(0).max(100).nullable(),
 }).strict()
 
 export const reviewItemStatusContract = z.enum([
