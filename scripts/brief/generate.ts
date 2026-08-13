@@ -18,58 +18,15 @@ let db: PrismaClient
 
 async function main() {
   db = (await import("@life-os/db")).db
+  const { getDailySummary } = await import("@life-os/domain")
   const targetDate = parseTargetDate(process.argv[2])
   const dateStr = toLocalDateStr(targetDate)
 
   const since = startOfDay(targetDate)
   const until = endOfDay(targetDate)
 
-  const [events, interactions, actionItems, upcomingPlans] = await Promise.all([
-    db.event.findMany({
-      where: { workspaceId: WORKSPACE_ID, timestamp: { gte: since, lte: until } },
-      select: {
-        id: true, name: true, type: true, timestamp: true, notes: true,
-        interactions: {
-          select: {
-            id: true, personId: true, type: true, emotionalWeight: true, outcome: true, actionItems: true,
-            person: { select: { id: true, first: true, last: true } },
-          },
-        },
-        place: { select: { name: true } },
-      },
-      orderBy: { timestamp: "asc" },
-    }),
-    db.interaction.findMany({
-      where: {
-        workspaceId: WORKSPACE_ID,
-        timestamp: { gte: since, lte: until },
-        eventId: null,
-      },
-      select: {
-        id: true, type: true, timestamp: true, summary: true, direction: true, actionItems: true,
-        person: { select: { id: true, first: true, last: true } },
-      },
-      orderBy: { timestamp: "asc" },
-      take: 100,
-    }),
-    db.interaction.findMany({
-      where: {
-        workspaceId: WORKSPACE_ID,
-        actionItems: { not: null },
-        timestamp: { gte: since, lte: until },
-      },
-      select: { actionItems: true, person: { select: { first: true, last: true } } },
-    }),
-    db.plan.findMany({
-      where: { workspaceId: WORKSPACE_ID, status: "active" },
-      select: {
-        id: true, text: true, timescale: true,
-        person: { select: { first: true, last: true } },
-      },
-      orderBy: { createdAt: "desc" },
-      take: 10,
-    }),
-  ])
+  const { events, interactions, myActionItems: actionItems, activePlans: upcomingPlans } =
+    await getDailySummary(WORKSPACE_ID, since, until)
 
   const lines: string[] = []
 
@@ -131,10 +88,9 @@ async function main() {
   }
 
   // My action items from the day
-  const myActionItems = actionItems.flatMap(i => safeJsonArray<ActionItem>(i.actionItems))
-  if (myActionItems.length > 0) {
+  if (actionItems.length > 0) {
     lines.push("## My Action Items")
-    for (const ai of myActionItems) {
+    for (const ai of actionItems) {
       lines.push(`- [ ] ${ai.description}${ai.deadline ? ` _(by ${ai.deadline})_` : ""}`)
     }
     lines.push("")

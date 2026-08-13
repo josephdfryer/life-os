@@ -22,6 +22,7 @@ let db: PrismaClient
 
 async function main() {
   db = (await import("@life-os/db")).db
+  const { completeActionItemByText, createPlan, appendPersonNote, findPersonByName } = await import("@life-os/domain")
   const briefPath = parseBriefPath(process.argv[2])
 
   if (!fs.existsSync(briefPath)) {
@@ -42,8 +43,8 @@ async function main() {
     if (/^\[x\]\s+/i.test(trimmed)) {
       const description = trimmed.replace(/^\[x\]\s+/i, "").replace(/\s*_\(by.*?\)_\s*$/, "").trim()
       if (description) {
-        await markActionItemComplete(description)
-        completed++
+        const result = await completeActionItemByText(description, WORKSPACE_ID)
+        if (result.updated > 0) completed++
       }
       continue
     }
@@ -53,7 +54,8 @@ async function main() {
     if (followUpMatch) {
       const personName = followUpMatch[1].trim()
       const planText = followUpMatch[2].trim()
-      await createPlan(planText, personName)
+      const person = await findPersonByName(personName, WORKSPACE_ID)
+      await createPlan({ text: planText, personId: person?.id }, WORKSPACE_ID)
       plansCreated++
       continue
     }
@@ -63,92 +65,16 @@ async function main() {
     if (noteMatch) {
       const personName = noteMatch[1].trim()
       const noteText = noteMatch[2].trim()
-      await appendPersonNote(personName, noteText)
-      notesAdded++
+      const person = await findPersonByName(personName, WORKSPACE_ID)
+      if (person) {
+        await appendPersonNote(person.id, noteText, WORKSPACE_ID)
+        notesAdded++
+      }
       continue
     }
   }
 
   console.log(`[brief:execute] completed=${completed} plansCreated=${plansCreated} notesAdded=${notesAdded}`)
-}
-
-async function markActionItemComplete(description: string) {
-  const interactions = await db.interaction.findMany({
-    where: {
-      workspaceId: WORKSPACE_ID,
-      actionItems: { contains: description.slice(0, 50) },
-    },
-    select: { id: true, actionItems: true },
-    take: 5,
-  })
-
-  for (const interaction of interactions) {
-    const items = safeJsonArray<{ description: string; completed?: boolean }>(interaction.actionItems)
-    const updated = items.map(item =>
-      item.description.toLowerCase().includes(description.toLowerCase().slice(0, 40))
-        ? { ...item, completed: true }
-        : item
-    )
-    await db.interaction.update({
-      where: { id: interaction.id },
-      data: { actionItems: JSON.stringify(updated) },
-    })
-  }
-}
-
-async function createPlan(planText: string, personName: string) {
-  const personId = await resolvePersonId(personName)
-  await db.plan.create({
-    data: {
-      workspaceId: WORKSPACE_ID,
-      text: planText,
-      personId,
-      status: "active",
-    },
-  })
-}
-
-async function appendPersonNote(personName: string, noteText: string) {
-  const personId = await resolvePersonId(personName)
-  if (!personId) return
-
-  const person = await db.person.findUnique({
-    where: { id: personId },
-    select: { notes: true },
-  })
-  if (!person) return
-
-  const existing = person.notes?.trim() ?? ""
-  const dated = `[${new Date().toISOString().slice(0, 10)}] ${noteText}`
-  await db.person.update({
-    where: { id: personId },
-    data: { notes: existing ? `${existing}\n${dated}` : dated },
-  })
-}
-
-async function resolvePersonId(name: string): Promise<string | null> {
-  const [first, ...rest] = name.trim().split(/\s+/)
-  const last = rest.join(" ")
-  const persons = await db.person.findMany({
-    where: {
-      workspaceId: WORKSPACE_ID,
-      first: { equals: first },
-      ...(last ? { last: { equals: last } } : {}),
-    },
-    select: { id: true },
-    take: 1,
-  })
-  return persons[0]?.id ?? null
-}
-
-function safeJsonArray<T>(value: string | null | undefined): T[] {
-  if (!value) return []
-  try {
-    const parsed = JSON.parse(value)
-    return Array.isArray(parsed) ? (parsed as T[]) : []
-  } catch {
-    return []
-  }
 }
 
 function parseBriefPath(arg?: string): string {
