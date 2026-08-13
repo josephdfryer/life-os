@@ -13,6 +13,7 @@ import PrepareWidget from '../components/PrepareWidget'
 import QuickCapture from '../components/QuickCapture'
 import ReconciliationWidget from '../components/ReconciliationWidget'
 import CapacityBriefWidget from '../components/CapacityBriefWidget'
+import OutcomeQuestionWidget from '../components/OutcomeQuestionWidget'
 import CheckIn from '../components/CheckIn'
 import WeeklyReview from '../components/WeeklyReview'
 import CommunicationsReviewWidget from '../components/CommunicationsReviewWidget'
@@ -159,7 +160,14 @@ async function HomePageContent({
           }
         />
 
-        {hourInTz >= 17 && <CheckIn slot="evening" />}
+        {hourInTz >= 17 && (
+          <>
+            <CheckIn slot="evening" />
+            <Suspense fallback={null}>
+              <OutcomeQuestionWidget workspaceId={workspaceId} tz={tz} />
+            </Suspense>
+          </>
+        )}
         <Suspense fallback={<WidgetSkeleton />}>
           <WeeklyReview workspaceId={workspaceId} />
         </Suspense>

@@ -64,6 +64,12 @@ export {
   AdaptiveDayError,
   type RecordAdaptiveOutcomeInput,
 } from "./src/adaptive-day-brief"
+export {
+  matchPassiveOutcomes,
+  getPendingOutcomeQuestion,
+  type PassiveMatchResult,
+  type PendingOutcomeQuestion,
+} from "./src/adaptive-day-outcomes"
 export { zonedTimeToUtc, localDayString, localHour, addDays, roundUpToQuarterHour, formatSlot } from "./src/adaptive-day-time"
 export type {
   CapacityBand,
