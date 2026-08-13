@@ -12,6 +12,7 @@ import {
   MERGE_FIELDS,
   type MergeChoice,
 } from "@/lib/person-merge"
+import AutoMergePanel from "./AutoMergePanel"
 
 function pairKey(p: DupePair) {
   return `${p.a.id}-${p.b.id}`
@@ -282,6 +283,8 @@ export default function MergeDuplicatesUI({ initialPairs }: { initialPairs: Dupe
           ⚡ Auto-dedupe
         </Button>
       </div>
+
+      <AutoMergePanel />
 
       {/* Stats strip */}
       {pairs.length > 0 && (
