@@ -614,7 +614,10 @@ locally, kept for backward compatibility. Persons' existing People, Plan, and
 Interaction mutation/detail routes also remain live during M5; they do not
 forward yet because their legacy
 offset/total envelopes and wider response rows are not wire-compatible with the
-new bounded contracts. Imports and the remaining Persons resources will move in
+new bounded contracts. Persons' legacy audit-log route does forward when the
+central API is configured, but first adapts the canonical cursor page back to
+the historical nested `data.logs` envelope and relation-id fields. Imports and
+the remaining Persons resources will move in
 later bounded slices rather than one high-risk route rewrite. The Event
 primitive is also deliberately waiting on scope vocabulary: `events.read`
 currently authorizes the raw GraphEvent ledger, not life Event records, and no
