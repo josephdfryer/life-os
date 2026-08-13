@@ -6,6 +6,22 @@ Supersedes the app-topology portions of `docs/COMPANION_ARCHITECTURE.md` and
 `docs/LEVEL_UP_ADAPTIVE_WORKOUT_PLAN.md`. The engineering content of both documents
 survives; only the framing of what the iOS binary *is* changes.
 
+**One section of this plan has been superseded.** [ADR 0004](adr/0004-customer-life-vault.md)
+replaces the "Backend model: one backend, strict subset API" decision in §7 with a customer-owned
+local Life Vault, staged behind proof gates. `docs/LIFE_OS_ECOSYSTEM_STRATEGY.md` explains the
+product reasoning; the ADR is what governs.
+
+Scope of that supersession, precisely:
+
+- **Superseded:** where a *customer's* graph lives, and the assumption that customers reach it
+  through `apps/api` over the shared cloud database (§7, first three paragraphs).
+- **Still current:** everything else in §7, including all five real blockers for a saleable
+  Persons and the Mesh competitive read. None of them are affected by the storage change.
+- **Still current:** §1's two-product-line split and the feature-package topology. The Life Vault
+  changes what `LifeOSKit` talks to, not whether screens live in Swift packages.
+- **Unchanged:** Joseph's personal Life OS stays on the cloud-backed Turso graph while the vault
+  is built and proven. Every section describing the personal line remains accurate.
+
 ---
 
 ## 1. Product topology
@@ -421,6 +437,13 @@ for no present benefit.
 
 Not now, but these constrain choices made now.
 
+> **Superseded — backend model only.** The three paragraphs immediately below were the accepted
+> answer until 2026-08-12. [ADR 0004](adr/0004-customer-life-vault.md) replaces them: a customer's
+> graph lives in a local encrypted Life Vault, not in the shared cloud database, and customers do
+> not reach it through `apps/api`. They are kept here because the reasoning is still the honest
+> case *for* the shared-database option, which ADR 0004 preserves as its fallback if the vault
+> fails a proof gate. The rest of §7, starting at "Real blockers," is current and unaffected.
+
 **Backend model: one backend, strict subset API.** `apps/api` serves both audiences.
 Customer workspaces see a deliberately narrow `/v1` surface. Life OS-only
 capabilities — iMessage ingest, synthesis, life-model, theory, admin, automations —
@@ -512,6 +535,11 @@ dependency, and it is the long pole for anything saleable.
 
 ## 11. Related documents
 
+- `docs/adr/0004-customer-life-vault.md` — **the governing decision** for where customer
+  data lives. Supersedes §7's backend model; status `proposed`, staged behind proof gates.
+- `docs/LIFE_OS_ECOSYSTEM_STRATEGY.md` — the product reasoning behind ADR 0004: ecosystem
+  framing, customer-owned Life Vault, Apple sync, company data boundary, the two AI
+  paths, and third-party data obligations. Explanatory; the ADR is what governs.
 - `docs/LEVEL_UP_ADAPTIVE_WORKOUT_PLAN.md` — readiness science, Oura/HealthKit/FoodNoms
   detail, test plan, rollout gates. Still authoritative for all of it.
 - `docs/COMPANION_ARCHITECTURE.md` — device trust, ingestion protocol, privacy
