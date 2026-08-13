@@ -206,3 +206,58 @@ test("mergePersons succeeds and reassigns records within the same workspace", as
   const reassigned = await db.interaction.findFirst({ where: { personId: keeper.id } })
   assert.ok(reassigned, "interaction should be reassigned to the keeper")
 })
+
+test("undoMerge recreates the deleted person, reverses reassignment, and cannot be replayed", async () => {
+  const { db, merge } = await setup()
+  await makeWorkspace(db, "ws-undo-1")
+  const keeper = await makePerson(db, "ws-undo-1", "Keep")
+  const loser = await makePerson(db, "ws-undo-1", "Lose", "Original")
+  await db.person.update({ where: { id: loser.id }, data: { title: "Original Title", closeness: 3 } })
+  const interaction = await db.interaction.create({
+    data: { workspaceId: "ws-undo-1", personId: loser.id, type: "call", timestamp: new Date() },
+  })
+
+  await merge.mergePersons({ keepId: keeper.id, deleteId: loser.id }, "ws-undo-1")
+  assert.equal(await db.person.findUnique({ where: { id: loser.id } }), null)
+
+  const recent = await merge.listRecentMerges("ws-undo-1")
+  const entry = recent.find(e => e.pending.some(p => p.deleteId === loser.id))
+  assert.ok(entry, "the merge should appear in the recent-merges list with undo data")
+
+  const { restoredId } = await merge.undoMerge(entry!.auditLogId, loser.id, "ws-undo-1")
+  assert.equal(restoredId, loser.id)
+
+  const restored = await db.person.findUnique({ where: { id: loser.id } })
+  assert.ok(restored, "the deleted person should be recreated with the same id")
+  assert.equal(restored?.first, "Lose")
+  assert.equal(restored?.title, "Original Title")
+  assert.equal(restored?.closeness, 3)
+
+  const movedBack = await db.interaction.findUnique({ where: { id: interaction.id } })
+  assert.equal(movedBack?.personId, loser.id, "the reassigned interaction should move back to the restored person")
+
+  // The snapshot is consumed on undo — replaying the same undo must fail
+  // rather than silently succeed a second time.
+  await assert.rejects(() => merge.undoMerge(entry!.auditLogId, loser.id, "ws-undo-1"))
+
+  const recentAfterUndo = await merge.listRecentMerges("ws-undo-1")
+  assert.ok(
+    !recentAfterUndo.some(e => e.auditLogId === entry!.auditLogId && e.pending.some(p => p.deleteId === loser.id)),
+    "an undone person should no longer be offered for undo",
+  )
+})
+
+test("undoMerge rejects a merge record from another workspace", async () => {
+  const { db, merge } = await setup()
+  await makeWorkspace(db, "ws-undo-a")
+  await makeWorkspace(db, "ws-undo-b")
+  const keeper = await makePerson(db, "ws-undo-a", "Keep")
+  const loser = await makePerson(db, "ws-undo-a", "Lose")
+  await merge.mergePersons({ keepId: keeper.id, deleteId: loser.id }, "ws-undo-a")
+
+  const recent = await merge.listRecentMerges("ws-undo-a")
+  const entry = recent.find(e => e.pending.some(p => p.deleteId === loser.id))
+  assert.ok(entry)
+
+  await assert.rejects(() => merge.undoMerge(entry!.auditLogId, loser.id, "ws-undo-b"))
+})

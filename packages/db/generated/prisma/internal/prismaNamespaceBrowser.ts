@@ -156,7 +156,8 @@ export const WorkspaceScalarFieldEnum = {
   name: 'name',
   slug: 'slug',
   status: 'status',
-  ownerUserId: 'ownerUserId'
+  ownerUserId: 'ownerUserId',
+  autoMergeEnabled: 'autoMergeEnabled'
 } as const
 
 export type WorkspaceScalarFieldEnum = (typeof WorkspaceScalarFieldEnum)[keyof typeof WorkspaceScalarFieldEnum]

@@ -32,6 +32,7 @@ export type WorkspaceMinAggregateOutputType = {
   slug: string | null
   status: string | null
   ownerUserId: string | null
+  autoMergeEnabled: boolean | null
 }
 
 export type WorkspaceMaxAggregateOutputType = {
@@ -42,6 +43,7 @@ export type WorkspaceMaxAggregateOutputType = {
   slug: string | null
   status: string | null
   ownerUserId: string | null
+  autoMergeEnabled: boolean | null
 }
 
 export type WorkspaceCountAggregateOutputType = {
@@ -52,6 +54,7 @@ export type WorkspaceCountAggregateOutputType = {
   slug: number
   status: number
   ownerUserId: number
+  autoMergeEnabled: number
   _all: number
 }
 
@@ -64,6 +67,7 @@ export type WorkspaceMinAggregateInputType = {
   slug?: true
   status?: true
   ownerUserId?: true
+  autoMergeEnabled?: true
 }
 
 export type WorkspaceMaxAggregateInputType = {
@@ -74,6 +78,7 @@ export type WorkspaceMaxAggregateInputType = {
   slug?: true
   status?: true
   ownerUserId?: true
+  autoMergeEnabled?: true
 }
 
 export type WorkspaceCountAggregateInputType = {
@@ -84,6 +89,7 @@ export type WorkspaceCountAggregateInputType = {
   slug?: true
   status?: true
   ownerUserId?: true
+  autoMergeEnabled?: true
   _all?: true
 }
 
@@ -167,6 +173,7 @@ export type WorkspaceGroupByOutputType = {
   slug: string
   status: string
   ownerUserId: string | null
+  autoMergeEnabled: boolean
   _count: WorkspaceCountAggregateOutputType | null
   _min: WorkspaceMinAggregateOutputType | null
   _max: WorkspaceMaxAggregateOutputType | null
@@ -198,6 +205,7 @@ export type WorkspaceWhereInput = {
   slug?: Prisma.StringFilter<"Workspace"> | string
   status?: Prisma.StringFilter<"Workspace"> | string
   ownerUserId?: Prisma.StringNullableFilter<"Workspace"> | string | null
+  autoMergeEnabled?: Prisma.BoolFilter<"Workspace"> | boolean
   ownerUser?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   members?: Prisma.WorkspaceMemberListRelationFilter
   approvedEmails?: Prisma.ApprovedEmailListRelationFilter
@@ -271,6 +279,7 @@ export type WorkspaceOrderByWithRelationInput = {
   slug?: Prisma.SortOrder
   status?: Prisma.SortOrder
   ownerUserId?: Prisma.SortOrderInput | Prisma.SortOrder
+  autoMergeEnabled?: Prisma.SortOrder
   ownerUser?: Prisma.UserOrderByWithRelationInput
   members?: Prisma.WorkspaceMemberOrderByRelationAggregateInput
   approvedEmails?: Prisma.ApprovedEmailOrderByRelationAggregateInput
@@ -347,6 +356,7 @@ export type WorkspaceWhereUniqueInput = Prisma.AtLeast<{
   name?: Prisma.StringFilter<"Workspace"> | string
   status?: Prisma.StringFilter<"Workspace"> | string
   ownerUserId?: Prisma.StringNullableFilter<"Workspace"> | string | null
+  autoMergeEnabled?: Prisma.BoolFilter<"Workspace"> | boolean
   ownerUser?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   members?: Prisma.WorkspaceMemberListRelationFilter
   approvedEmails?: Prisma.ApprovedEmailListRelationFilter
@@ -420,6 +430,7 @@ export type WorkspaceOrderByWithAggregationInput = {
   slug?: Prisma.SortOrder
   status?: Prisma.SortOrder
   ownerUserId?: Prisma.SortOrderInput | Prisma.SortOrder
+  autoMergeEnabled?: Prisma.SortOrder
   _count?: Prisma.WorkspaceCountOrderByAggregateInput
   _max?: Prisma.WorkspaceMaxOrderByAggregateInput
   _min?: Prisma.WorkspaceMinOrderByAggregateInput
@@ -436,6 +447,7 @@ export type WorkspaceScalarWhereWithAggregatesInput = {
   slug?: Prisma.StringWithAggregatesFilter<"Workspace"> | string
   status?: Prisma.StringWithAggregatesFilter<"Workspace"> | string
   ownerUserId?: Prisma.StringNullableWithAggregatesFilter<"Workspace"> | string | null
+  autoMergeEnabled?: Prisma.BoolWithAggregatesFilter<"Workspace"> | boolean
 }
 
 export type WorkspaceCreateInput = {
@@ -445,6 +457,7 @@ export type WorkspaceCreateInput = {
   name: string
   slug: string
   status?: string
+  autoMergeEnabled?: boolean
   ownerUser?: Prisma.UserCreateNestedOneWithoutOwnedWorkspacesInput
   members?: Prisma.WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailCreateNestedManyWithoutWorkspaceInput
@@ -518,6 +531,7 @@ export type WorkspaceUncheckedCreateInput = {
   slug: string
   status?: string
   ownerUserId?: string | null
+  autoMergeEnabled?: boolean
   members?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedCreateNestedManyWithoutWorkspaceInput
   persons?: Prisma.PersonUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -589,6 +603,7 @@ export type WorkspaceUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ownerUser?: Prisma.UserUpdateOneWithoutOwnedWorkspacesNestedInput
   members?: Prisma.WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUpdateManyWithoutWorkspaceNestedInput
@@ -662,6 +677,7 @@ export type WorkspaceUncheckedUpdateInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   ownerUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   members?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedUpdateManyWithoutWorkspaceNestedInput
   persons?: Prisma.PersonUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -734,6 +750,7 @@ export type WorkspaceCreateManyInput = {
   slug: string
   status?: string
   ownerUserId?: string | null
+  autoMergeEnabled?: boolean
 }
 
 export type WorkspaceUpdateManyMutationInput = {
@@ -743,6 +760,7 @@ export type WorkspaceUpdateManyMutationInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type WorkspaceUncheckedUpdateManyInput = {
@@ -753,6 +771,7 @@ export type WorkspaceUncheckedUpdateManyInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   ownerUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type WorkspaceCountOrderByAggregateInput = {
@@ -763,6 +782,7 @@ export type WorkspaceCountOrderByAggregateInput = {
   slug?: Prisma.SortOrder
   status?: Prisma.SortOrder
   ownerUserId?: Prisma.SortOrder
+  autoMergeEnabled?: Prisma.SortOrder
 }
 
 export type WorkspaceMaxOrderByAggregateInput = {
@@ -773,6 +793,7 @@ export type WorkspaceMaxOrderByAggregateInput = {
   slug?: Prisma.SortOrder
   status?: Prisma.SortOrder
   ownerUserId?: Prisma.SortOrder
+  autoMergeEnabled?: Prisma.SortOrder
 }
 
 export type WorkspaceMinOrderByAggregateInput = {
@@ -783,6 +804,7 @@ export type WorkspaceMinOrderByAggregateInput = {
   slug?: Prisma.SortOrder
   status?: Prisma.SortOrder
   ownerUserId?: Prisma.SortOrder
+  autoMergeEnabled?: Prisma.SortOrder
 }
 
 export type WorkspaceScalarRelationFilter = {
@@ -811,6 +833,10 @@ export type StringFieldUpdateOperationsInput = {
 
 export type DateTimeFieldUpdateOperationsInput = {
   set?: Date | string
+}
+
+export type BoolFieldUpdateOperationsInput = {
+  set?: boolean
 }
 
 export type NullableStringFieldUpdateOperationsInput = {
@@ -1738,6 +1764,7 @@ export type WorkspaceCreateWithoutMembersInput = {
   name: string
   slug: string
   status?: string
+  autoMergeEnabled?: boolean
   ownerUser?: Prisma.UserCreateNestedOneWithoutOwnedWorkspacesInput
   approvedEmails?: Prisma.ApprovedEmailCreateNestedManyWithoutWorkspaceInput
   persons?: Prisma.PersonCreateNestedManyWithoutWorkspaceInput
@@ -1810,6 +1837,7 @@ export type WorkspaceUncheckedCreateWithoutMembersInput = {
   slug: string
   status?: string
   ownerUserId?: string | null
+  autoMergeEnabled?: boolean
   approvedEmails?: Prisma.ApprovedEmailUncheckedCreateNestedManyWithoutWorkspaceInput
   persons?: Prisma.PersonUncheckedCreateNestedManyWithoutWorkspaceInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -1896,6 +1924,7 @@ export type WorkspaceUpdateWithoutMembersInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ownerUser?: Prisma.UserUpdateOneWithoutOwnedWorkspacesNestedInput
   approvedEmails?: Prisma.ApprovedEmailUpdateManyWithoutWorkspaceNestedInput
   persons?: Prisma.PersonUpdateManyWithoutWorkspaceNestedInput
@@ -1968,6 +1997,7 @@ export type WorkspaceUncheckedUpdateWithoutMembersInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   ownerUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   approvedEmails?: Prisma.ApprovedEmailUncheckedUpdateManyWithoutWorkspaceNestedInput
   persons?: Prisma.PersonUncheckedUpdateManyWithoutWorkspaceNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -2038,6 +2068,7 @@ export type WorkspaceCreateWithoutApprovedEmailsInput = {
   name: string
   slug: string
   status?: string
+  autoMergeEnabled?: boolean
   ownerUser?: Prisma.UserCreateNestedOneWithoutOwnedWorkspacesInput
   members?: Prisma.WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
   persons?: Prisma.PersonCreateNestedManyWithoutWorkspaceInput
@@ -2110,6 +2141,7 @@ export type WorkspaceUncheckedCreateWithoutApprovedEmailsInput = {
   slug: string
   status?: string
   ownerUserId?: string | null
+  autoMergeEnabled?: boolean
   members?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
   persons?: Prisma.PersonUncheckedCreateNestedManyWithoutWorkspaceInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -2196,6 +2228,7 @@ export type WorkspaceUpdateWithoutApprovedEmailsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ownerUser?: Prisma.UserUpdateOneWithoutOwnedWorkspacesNestedInput
   members?: Prisma.WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
   persons?: Prisma.PersonUpdateManyWithoutWorkspaceNestedInput
@@ -2268,6 +2301,7 @@ export type WorkspaceUncheckedUpdateWithoutApprovedEmailsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   ownerUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   members?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
   persons?: Prisma.PersonUncheckedUpdateManyWithoutWorkspaceNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -2338,6 +2372,7 @@ export type WorkspaceCreateWithoutPersonsInput = {
   name: string
   slug: string
   status?: string
+  autoMergeEnabled?: boolean
   ownerUser?: Prisma.UserCreateNestedOneWithoutOwnedWorkspacesInput
   members?: Prisma.WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailCreateNestedManyWithoutWorkspaceInput
@@ -2410,6 +2445,7 @@ export type WorkspaceUncheckedCreateWithoutPersonsInput = {
   slug: string
   status?: string
   ownerUserId?: string | null
+  autoMergeEnabled?: boolean
   members?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedCreateNestedManyWithoutWorkspaceInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -2496,6 +2532,7 @@ export type WorkspaceUpdateWithoutPersonsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ownerUser?: Prisma.UserUpdateOneWithoutOwnedWorkspacesNestedInput
   members?: Prisma.WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUpdateManyWithoutWorkspaceNestedInput
@@ -2568,6 +2605,7 @@ export type WorkspaceUncheckedUpdateWithoutPersonsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   ownerUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   members?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedUpdateManyWithoutWorkspaceNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -2638,6 +2676,7 @@ export type WorkspaceCreateWithoutOwnerUserInput = {
   name: string
   slug: string
   status?: string
+  autoMergeEnabled?: boolean
   members?: Prisma.WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailCreateNestedManyWithoutWorkspaceInput
   persons?: Prisma.PersonCreateNestedManyWithoutWorkspaceInput
@@ -2709,6 +2748,7 @@ export type WorkspaceUncheckedCreateWithoutOwnerUserInput = {
   name: string
   slug: string
   status?: string
+  autoMergeEnabled?: boolean
   members?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedCreateNestedManyWithoutWorkspaceInput
   persons?: Prisma.PersonUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -2809,6 +2849,7 @@ export type WorkspaceScalarWhereInput = {
   slug?: Prisma.StringFilter<"Workspace"> | string
   status?: Prisma.StringFilter<"Workspace"> | string
   ownerUserId?: Prisma.StringNullableFilter<"Workspace"> | string | null
+  autoMergeEnabled?: Prisma.BoolFilter<"Workspace"> | boolean
 }
 
 export type WorkspaceCreateWithoutDevicesInput = {
@@ -2818,6 +2859,7 @@ export type WorkspaceCreateWithoutDevicesInput = {
   name: string
   slug: string
   status?: string
+  autoMergeEnabled?: boolean
   ownerUser?: Prisma.UserCreateNestedOneWithoutOwnedWorkspacesInput
   members?: Prisma.WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailCreateNestedManyWithoutWorkspaceInput
@@ -2890,6 +2932,7 @@ export type WorkspaceUncheckedCreateWithoutDevicesInput = {
   slug: string
   status?: string
   ownerUserId?: string | null
+  autoMergeEnabled?: boolean
   members?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedCreateNestedManyWithoutWorkspaceInput
   persons?: Prisma.PersonUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -2976,6 +3019,7 @@ export type WorkspaceUpdateWithoutDevicesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ownerUser?: Prisma.UserUpdateOneWithoutOwnedWorkspacesNestedInput
   members?: Prisma.WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUpdateManyWithoutWorkspaceNestedInput
@@ -3048,6 +3092,7 @@ export type WorkspaceUncheckedUpdateWithoutDevicesInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   ownerUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   members?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedUpdateManyWithoutWorkspaceNestedInput
   persons?: Prisma.PersonUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -3118,6 +3163,7 @@ export type WorkspaceCreateWithoutDeviceAuthorizationsInput = {
   name: string
   slug: string
   status?: string
+  autoMergeEnabled?: boolean
   ownerUser?: Prisma.UserCreateNestedOneWithoutOwnedWorkspacesInput
   members?: Prisma.WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailCreateNestedManyWithoutWorkspaceInput
@@ -3190,6 +3236,7 @@ export type WorkspaceUncheckedCreateWithoutDeviceAuthorizationsInput = {
   slug: string
   status?: string
   ownerUserId?: string | null
+  autoMergeEnabled?: boolean
   members?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedCreateNestedManyWithoutWorkspaceInput
   persons?: Prisma.PersonUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -3276,6 +3323,7 @@ export type WorkspaceUpdateWithoutDeviceAuthorizationsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ownerUser?: Prisma.UserUpdateOneWithoutOwnedWorkspacesNestedInput
   members?: Prisma.WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUpdateManyWithoutWorkspaceNestedInput
@@ -3348,6 +3396,7 @@ export type WorkspaceUncheckedUpdateWithoutDeviceAuthorizationsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   ownerUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   members?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedUpdateManyWithoutWorkspaceNestedInput
   persons?: Prisma.PersonUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -3418,6 +3467,7 @@ export type WorkspaceCreateWithoutDeviceIngestItemsInput = {
   name: string
   slug: string
   status?: string
+  autoMergeEnabled?: boolean
   ownerUser?: Prisma.UserCreateNestedOneWithoutOwnedWorkspacesInput
   members?: Prisma.WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailCreateNestedManyWithoutWorkspaceInput
@@ -3490,6 +3540,7 @@ export type WorkspaceUncheckedCreateWithoutDeviceIngestItemsInput = {
   slug: string
   status?: string
   ownerUserId?: string | null
+  autoMergeEnabled?: boolean
   members?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedCreateNestedManyWithoutWorkspaceInput
   persons?: Prisma.PersonUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -3576,6 +3627,7 @@ export type WorkspaceUpdateWithoutDeviceIngestItemsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ownerUser?: Prisma.UserUpdateOneWithoutOwnedWorkspacesNestedInput
   members?: Prisma.WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUpdateManyWithoutWorkspaceNestedInput
@@ -3648,6 +3700,7 @@ export type WorkspaceUncheckedUpdateWithoutDeviceIngestItemsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   ownerUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   members?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedUpdateManyWithoutWorkspaceNestedInput
   persons?: Prisma.PersonUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -3718,6 +3771,7 @@ export type WorkspaceCreateWithoutApiKeysInput = {
   name: string
   slug: string
   status?: string
+  autoMergeEnabled?: boolean
   ownerUser?: Prisma.UserCreateNestedOneWithoutOwnedWorkspacesInput
   members?: Prisma.WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailCreateNestedManyWithoutWorkspaceInput
@@ -3790,6 +3844,7 @@ export type WorkspaceUncheckedCreateWithoutApiKeysInput = {
   slug: string
   status?: string
   ownerUserId?: string | null
+  autoMergeEnabled?: boolean
   members?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedCreateNestedManyWithoutWorkspaceInput
   persons?: Prisma.PersonUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -3876,6 +3931,7 @@ export type WorkspaceUpdateWithoutApiKeysInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ownerUser?: Prisma.UserUpdateOneWithoutOwnedWorkspacesNestedInput
   members?: Prisma.WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUpdateManyWithoutWorkspaceNestedInput
@@ -3948,6 +4004,7 @@ export type WorkspaceUncheckedUpdateWithoutApiKeysInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   ownerUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   members?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedUpdateManyWithoutWorkspaceNestedInput
   persons?: Prisma.PersonUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -4018,6 +4075,7 @@ export type WorkspaceCreateWithoutAuditLogsInput = {
   name: string
   slug: string
   status?: string
+  autoMergeEnabled?: boolean
   ownerUser?: Prisma.UserCreateNestedOneWithoutOwnedWorkspacesInput
   members?: Prisma.WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailCreateNestedManyWithoutWorkspaceInput
@@ -4090,6 +4148,7 @@ export type WorkspaceUncheckedCreateWithoutAuditLogsInput = {
   slug: string
   status?: string
   ownerUserId?: string | null
+  autoMergeEnabled?: boolean
   members?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedCreateNestedManyWithoutWorkspaceInput
   persons?: Prisma.PersonUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -4176,6 +4235,7 @@ export type WorkspaceUpdateWithoutAuditLogsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ownerUser?: Prisma.UserUpdateOneWithoutOwnedWorkspacesNestedInput
   members?: Prisma.WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUpdateManyWithoutWorkspaceNestedInput
@@ -4248,6 +4308,7 @@ export type WorkspaceUncheckedUpdateWithoutAuditLogsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   ownerUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   members?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedUpdateManyWithoutWorkspaceNestedInput
   persons?: Prisma.PersonUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -4318,6 +4379,7 @@ export type WorkspaceCreateWithoutCalendarConnectionsInput = {
   name: string
   slug: string
   status?: string
+  autoMergeEnabled?: boolean
   ownerUser?: Prisma.UserCreateNestedOneWithoutOwnedWorkspacesInput
   members?: Prisma.WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailCreateNestedManyWithoutWorkspaceInput
@@ -4390,6 +4452,7 @@ export type WorkspaceUncheckedCreateWithoutCalendarConnectionsInput = {
   slug: string
   status?: string
   ownerUserId?: string | null
+  autoMergeEnabled?: boolean
   members?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedCreateNestedManyWithoutWorkspaceInput
   persons?: Prisma.PersonUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -4476,6 +4539,7 @@ export type WorkspaceUpdateWithoutCalendarConnectionsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ownerUser?: Prisma.UserUpdateOneWithoutOwnedWorkspacesNestedInput
   members?: Prisma.WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUpdateManyWithoutWorkspaceNestedInput
@@ -4548,6 +4612,7 @@ export type WorkspaceUncheckedUpdateWithoutCalendarConnectionsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   ownerUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   members?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedUpdateManyWithoutWorkspaceNestedInput
   persons?: Prisma.PersonUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -4618,6 +4683,7 @@ export type WorkspaceCreateWithoutCalendarEventLinksInput = {
   name: string
   slug: string
   status?: string
+  autoMergeEnabled?: boolean
   ownerUser?: Prisma.UserCreateNestedOneWithoutOwnedWorkspacesInput
   members?: Prisma.WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailCreateNestedManyWithoutWorkspaceInput
@@ -4690,6 +4756,7 @@ export type WorkspaceUncheckedCreateWithoutCalendarEventLinksInput = {
   slug: string
   status?: string
   ownerUserId?: string | null
+  autoMergeEnabled?: boolean
   members?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedCreateNestedManyWithoutWorkspaceInput
   persons?: Prisma.PersonUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -4776,6 +4843,7 @@ export type WorkspaceUpdateWithoutCalendarEventLinksInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ownerUser?: Prisma.UserUpdateOneWithoutOwnedWorkspacesNestedInput
   members?: Prisma.WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUpdateManyWithoutWorkspaceNestedInput
@@ -4848,6 +4916,7 @@ export type WorkspaceUncheckedUpdateWithoutCalendarEventLinksInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   ownerUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   members?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedUpdateManyWithoutWorkspaceNestedInput
   persons?: Prisma.PersonUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -4918,6 +4987,7 @@ export type WorkspaceCreateWithoutGmailConnectionsInput = {
   name: string
   slug: string
   status?: string
+  autoMergeEnabled?: boolean
   ownerUser?: Prisma.UserCreateNestedOneWithoutOwnedWorkspacesInput
   members?: Prisma.WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailCreateNestedManyWithoutWorkspaceInput
@@ -4990,6 +5060,7 @@ export type WorkspaceUncheckedCreateWithoutGmailConnectionsInput = {
   slug: string
   status?: string
   ownerUserId?: string | null
+  autoMergeEnabled?: boolean
   members?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedCreateNestedManyWithoutWorkspaceInput
   persons?: Prisma.PersonUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -5076,6 +5147,7 @@ export type WorkspaceUpdateWithoutGmailConnectionsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ownerUser?: Prisma.UserUpdateOneWithoutOwnedWorkspacesNestedInput
   members?: Prisma.WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUpdateManyWithoutWorkspaceNestedInput
@@ -5148,6 +5220,7 @@ export type WorkspaceUncheckedUpdateWithoutGmailConnectionsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   ownerUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   members?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedUpdateManyWithoutWorkspaceNestedInput
   persons?: Prisma.PersonUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -5218,6 +5291,7 @@ export type WorkspaceCreateWithoutGmailMessageLinksInput = {
   name: string
   slug: string
   status?: string
+  autoMergeEnabled?: boolean
   ownerUser?: Prisma.UserCreateNestedOneWithoutOwnedWorkspacesInput
   members?: Prisma.WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailCreateNestedManyWithoutWorkspaceInput
@@ -5290,6 +5364,7 @@ export type WorkspaceUncheckedCreateWithoutGmailMessageLinksInput = {
   slug: string
   status?: string
   ownerUserId?: string | null
+  autoMergeEnabled?: boolean
   members?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedCreateNestedManyWithoutWorkspaceInput
   persons?: Prisma.PersonUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -5376,6 +5451,7 @@ export type WorkspaceUpdateWithoutGmailMessageLinksInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ownerUser?: Prisma.UserUpdateOneWithoutOwnedWorkspacesNestedInput
   members?: Prisma.WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUpdateManyWithoutWorkspaceNestedInput
@@ -5448,6 +5524,7 @@ export type WorkspaceUncheckedUpdateWithoutGmailMessageLinksInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   ownerUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   members?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedUpdateManyWithoutWorkspaceNestedInput
   persons?: Prisma.PersonUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -5518,6 +5595,7 @@ export type WorkspaceCreateWithoutEraConnectionsInput = {
   name: string
   slug: string
   status?: string
+  autoMergeEnabled?: boolean
   ownerUser?: Prisma.UserCreateNestedOneWithoutOwnedWorkspacesInput
   members?: Prisma.WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailCreateNestedManyWithoutWorkspaceInput
@@ -5590,6 +5668,7 @@ export type WorkspaceUncheckedCreateWithoutEraConnectionsInput = {
   slug: string
   status?: string
   ownerUserId?: string | null
+  autoMergeEnabled?: boolean
   members?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedCreateNestedManyWithoutWorkspaceInput
   persons?: Prisma.PersonUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -5676,6 +5755,7 @@ export type WorkspaceUpdateWithoutEraConnectionsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ownerUser?: Prisma.UserUpdateOneWithoutOwnedWorkspacesNestedInput
   members?: Prisma.WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUpdateManyWithoutWorkspaceNestedInput
@@ -5748,6 +5828,7 @@ export type WorkspaceUncheckedUpdateWithoutEraConnectionsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   ownerUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   members?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedUpdateManyWithoutWorkspaceNestedInput
   persons?: Prisma.PersonUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -5818,6 +5899,7 @@ export type WorkspaceCreateWithoutEraAccountLinksInput = {
   name: string
   slug: string
   status?: string
+  autoMergeEnabled?: boolean
   ownerUser?: Prisma.UserCreateNestedOneWithoutOwnedWorkspacesInput
   members?: Prisma.WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailCreateNestedManyWithoutWorkspaceInput
@@ -5890,6 +5972,7 @@ export type WorkspaceUncheckedCreateWithoutEraAccountLinksInput = {
   slug: string
   status?: string
   ownerUserId?: string | null
+  autoMergeEnabled?: boolean
   members?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedCreateNestedManyWithoutWorkspaceInput
   persons?: Prisma.PersonUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -5976,6 +6059,7 @@ export type WorkspaceUpdateWithoutEraAccountLinksInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ownerUser?: Prisma.UserUpdateOneWithoutOwnedWorkspacesNestedInput
   members?: Prisma.WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUpdateManyWithoutWorkspaceNestedInput
@@ -6048,6 +6132,7 @@ export type WorkspaceUncheckedUpdateWithoutEraAccountLinksInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   ownerUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   members?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedUpdateManyWithoutWorkspaceNestedInput
   persons?: Prisma.PersonUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -6118,6 +6203,7 @@ export type WorkspaceCreateWithoutEraTransactionLinksInput = {
   name: string
   slug: string
   status?: string
+  autoMergeEnabled?: boolean
   ownerUser?: Prisma.UserCreateNestedOneWithoutOwnedWorkspacesInput
   members?: Prisma.WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailCreateNestedManyWithoutWorkspaceInput
@@ -6190,6 +6276,7 @@ export type WorkspaceUncheckedCreateWithoutEraTransactionLinksInput = {
   slug: string
   status?: string
   ownerUserId?: string | null
+  autoMergeEnabled?: boolean
   members?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedCreateNestedManyWithoutWorkspaceInput
   persons?: Prisma.PersonUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -6276,6 +6363,7 @@ export type WorkspaceUpdateWithoutEraTransactionLinksInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ownerUser?: Prisma.UserUpdateOneWithoutOwnedWorkspacesNestedInput
   members?: Prisma.WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUpdateManyWithoutWorkspaceNestedInput
@@ -6348,6 +6436,7 @@ export type WorkspaceUncheckedUpdateWithoutEraTransactionLinksInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   ownerUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   members?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedUpdateManyWithoutWorkspaceNestedInput
   persons?: Prisma.PersonUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -6418,6 +6507,7 @@ export type WorkspaceCreateWithoutConnectionsInput = {
   name: string
   slug: string
   status?: string
+  autoMergeEnabled?: boolean
   ownerUser?: Prisma.UserCreateNestedOneWithoutOwnedWorkspacesInput
   members?: Prisma.WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailCreateNestedManyWithoutWorkspaceInput
@@ -6490,6 +6580,7 @@ export type WorkspaceUncheckedCreateWithoutConnectionsInput = {
   slug: string
   status?: string
   ownerUserId?: string | null
+  autoMergeEnabled?: boolean
   members?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedCreateNestedManyWithoutWorkspaceInput
   persons?: Prisma.PersonUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -6576,6 +6667,7 @@ export type WorkspaceUpdateWithoutConnectionsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ownerUser?: Prisma.UserUpdateOneWithoutOwnedWorkspacesNestedInput
   members?: Prisma.WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUpdateManyWithoutWorkspaceNestedInput
@@ -6648,6 +6740,7 @@ export type WorkspaceUncheckedUpdateWithoutConnectionsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   ownerUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   members?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedUpdateManyWithoutWorkspaceNestedInput
   persons?: Prisma.PersonUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -6718,6 +6811,7 @@ export type WorkspaceCreateWithoutRulesInput = {
   name: string
   slug: string
   status?: string
+  autoMergeEnabled?: boolean
   ownerUser?: Prisma.UserCreateNestedOneWithoutOwnedWorkspacesInput
   members?: Prisma.WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailCreateNestedManyWithoutWorkspaceInput
@@ -6790,6 +6884,7 @@ export type WorkspaceUncheckedCreateWithoutRulesInput = {
   slug: string
   status?: string
   ownerUserId?: string | null
+  autoMergeEnabled?: boolean
   members?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedCreateNestedManyWithoutWorkspaceInput
   persons?: Prisma.PersonUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -6876,6 +6971,7 @@ export type WorkspaceUpdateWithoutRulesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ownerUser?: Prisma.UserUpdateOneWithoutOwnedWorkspacesNestedInput
   members?: Prisma.WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUpdateManyWithoutWorkspaceNestedInput
@@ -6948,6 +7044,7 @@ export type WorkspaceUncheckedUpdateWithoutRulesInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   ownerUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   members?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedUpdateManyWithoutWorkspaceNestedInput
   persons?: Prisma.PersonUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -7018,6 +7115,7 @@ export type WorkspaceCreateWithoutRuleRunsInput = {
   name: string
   slug: string
   status?: string
+  autoMergeEnabled?: boolean
   ownerUser?: Prisma.UserCreateNestedOneWithoutOwnedWorkspacesInput
   members?: Prisma.WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailCreateNestedManyWithoutWorkspaceInput
@@ -7090,6 +7188,7 @@ export type WorkspaceUncheckedCreateWithoutRuleRunsInput = {
   slug: string
   status?: string
   ownerUserId?: string | null
+  autoMergeEnabled?: boolean
   members?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedCreateNestedManyWithoutWorkspaceInput
   persons?: Prisma.PersonUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -7176,6 +7275,7 @@ export type WorkspaceUpdateWithoutRuleRunsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ownerUser?: Prisma.UserUpdateOneWithoutOwnedWorkspacesNestedInput
   members?: Prisma.WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUpdateManyWithoutWorkspaceNestedInput
@@ -7248,6 +7348,7 @@ export type WorkspaceUncheckedUpdateWithoutRuleRunsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   ownerUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   members?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedUpdateManyWithoutWorkspaceNestedInput
   persons?: Prisma.PersonUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -7318,6 +7419,7 @@ export type WorkspaceCreateWithoutStagedItemsInput = {
   name: string
   slug: string
   status?: string
+  autoMergeEnabled?: boolean
   ownerUser?: Prisma.UserCreateNestedOneWithoutOwnedWorkspacesInput
   members?: Prisma.WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailCreateNestedManyWithoutWorkspaceInput
@@ -7390,6 +7492,7 @@ export type WorkspaceUncheckedCreateWithoutStagedItemsInput = {
   slug: string
   status?: string
   ownerUserId?: string | null
+  autoMergeEnabled?: boolean
   members?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedCreateNestedManyWithoutWorkspaceInput
   persons?: Prisma.PersonUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -7476,6 +7579,7 @@ export type WorkspaceUpdateWithoutStagedItemsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ownerUser?: Prisma.UserUpdateOneWithoutOwnedWorkspacesNestedInput
   members?: Prisma.WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUpdateManyWithoutWorkspaceNestedInput
@@ -7548,6 +7652,7 @@ export type WorkspaceUncheckedUpdateWithoutStagedItemsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   ownerUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   members?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedUpdateManyWithoutWorkspaceNestedInput
   persons?: Prisma.PersonUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -7618,6 +7723,7 @@ export type WorkspaceCreateWithoutEventsInput = {
   name: string
   slug: string
   status?: string
+  autoMergeEnabled?: boolean
   ownerUser?: Prisma.UserCreateNestedOneWithoutOwnedWorkspacesInput
   members?: Prisma.WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailCreateNestedManyWithoutWorkspaceInput
@@ -7690,6 +7796,7 @@ export type WorkspaceUncheckedCreateWithoutEventsInput = {
   slug: string
   status?: string
   ownerUserId?: string | null
+  autoMergeEnabled?: boolean
   members?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedCreateNestedManyWithoutWorkspaceInput
   persons?: Prisma.PersonUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -7776,6 +7883,7 @@ export type WorkspaceUpdateWithoutEventsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ownerUser?: Prisma.UserUpdateOneWithoutOwnedWorkspacesNestedInput
   members?: Prisma.WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUpdateManyWithoutWorkspaceNestedInput
@@ -7848,6 +7956,7 @@ export type WorkspaceUncheckedUpdateWithoutEventsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   ownerUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   members?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedUpdateManyWithoutWorkspaceNestedInput
   persons?: Prisma.PersonUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -7918,6 +8027,7 @@ export type WorkspaceCreateWithoutInteractionsInput = {
   name: string
   slug: string
   status?: string
+  autoMergeEnabled?: boolean
   ownerUser?: Prisma.UserCreateNestedOneWithoutOwnedWorkspacesInput
   members?: Prisma.WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailCreateNestedManyWithoutWorkspaceInput
@@ -7990,6 +8100,7 @@ export type WorkspaceUncheckedCreateWithoutInteractionsInput = {
   slug: string
   status?: string
   ownerUserId?: string | null
+  autoMergeEnabled?: boolean
   members?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedCreateNestedManyWithoutWorkspaceInput
   persons?: Prisma.PersonUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -8076,6 +8187,7 @@ export type WorkspaceUpdateWithoutInteractionsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ownerUser?: Prisma.UserUpdateOneWithoutOwnedWorkspacesNestedInput
   members?: Prisma.WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUpdateManyWithoutWorkspaceNestedInput
@@ -8148,6 +8260,7 @@ export type WorkspaceUncheckedUpdateWithoutInteractionsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   ownerUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   members?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedUpdateManyWithoutWorkspaceNestedInput
   persons?: Prisma.PersonUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -8218,6 +8331,7 @@ export type WorkspaceCreateWithoutPlansInput = {
   name: string
   slug: string
   status?: string
+  autoMergeEnabled?: boolean
   ownerUser?: Prisma.UserCreateNestedOneWithoutOwnedWorkspacesInput
   members?: Prisma.WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailCreateNestedManyWithoutWorkspaceInput
@@ -8290,6 +8404,7 @@ export type WorkspaceUncheckedCreateWithoutPlansInput = {
   slug: string
   status?: string
   ownerUserId?: string | null
+  autoMergeEnabled?: boolean
   members?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedCreateNestedManyWithoutWorkspaceInput
   persons?: Prisma.PersonUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -8376,6 +8491,7 @@ export type WorkspaceUpdateWithoutPlansInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ownerUser?: Prisma.UserUpdateOneWithoutOwnedWorkspacesNestedInput
   members?: Prisma.WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUpdateManyWithoutWorkspaceNestedInput
@@ -8448,6 +8564,7 @@ export type WorkspaceUncheckedUpdateWithoutPlansInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   ownerUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   members?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedUpdateManyWithoutWorkspaceNestedInput
   persons?: Prisma.PersonUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -8518,6 +8635,7 @@ export type WorkspaceCreateWithoutPlanExpectedPersonsInput = {
   name: string
   slug: string
   status?: string
+  autoMergeEnabled?: boolean
   ownerUser?: Prisma.UserCreateNestedOneWithoutOwnedWorkspacesInput
   members?: Prisma.WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailCreateNestedManyWithoutWorkspaceInput
@@ -8590,6 +8708,7 @@ export type WorkspaceUncheckedCreateWithoutPlanExpectedPersonsInput = {
   slug: string
   status?: string
   ownerUserId?: string | null
+  autoMergeEnabled?: boolean
   members?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedCreateNestedManyWithoutWorkspaceInput
   persons?: Prisma.PersonUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -8676,6 +8795,7 @@ export type WorkspaceUpdateWithoutPlanExpectedPersonsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ownerUser?: Prisma.UserUpdateOneWithoutOwnedWorkspacesNestedInput
   members?: Prisma.WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUpdateManyWithoutWorkspaceNestedInput
@@ -8748,6 +8868,7 @@ export type WorkspaceUncheckedUpdateWithoutPlanExpectedPersonsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   ownerUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   members?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedUpdateManyWithoutWorkspaceNestedInput
   persons?: Prisma.PersonUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -8818,6 +8939,7 @@ export type WorkspaceCreateWithoutPlacesInput = {
   name: string
   slug: string
   status?: string
+  autoMergeEnabled?: boolean
   ownerUser?: Prisma.UserCreateNestedOneWithoutOwnedWorkspacesInput
   members?: Prisma.WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailCreateNestedManyWithoutWorkspaceInput
@@ -8890,6 +9012,7 @@ export type WorkspaceUncheckedCreateWithoutPlacesInput = {
   slug: string
   status?: string
   ownerUserId?: string | null
+  autoMergeEnabled?: boolean
   members?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedCreateNestedManyWithoutWorkspaceInput
   persons?: Prisma.PersonUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -8976,6 +9099,7 @@ export type WorkspaceUpdateWithoutPlacesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ownerUser?: Prisma.UserUpdateOneWithoutOwnedWorkspacesNestedInput
   members?: Prisma.WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUpdateManyWithoutWorkspaceNestedInput
@@ -9048,6 +9172,7 @@ export type WorkspaceUncheckedUpdateWithoutPlacesInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   ownerUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   members?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedUpdateManyWithoutWorkspaceNestedInput
   persons?: Prisma.PersonUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -9118,6 +9243,7 @@ export type WorkspaceCreateWithoutImportJobsInput = {
   name: string
   slug: string
   status?: string
+  autoMergeEnabled?: boolean
   ownerUser?: Prisma.UserCreateNestedOneWithoutOwnedWorkspacesInput
   members?: Prisma.WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailCreateNestedManyWithoutWorkspaceInput
@@ -9190,6 +9316,7 @@ export type WorkspaceUncheckedCreateWithoutImportJobsInput = {
   slug: string
   status?: string
   ownerUserId?: string | null
+  autoMergeEnabled?: boolean
   members?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedCreateNestedManyWithoutWorkspaceInput
   persons?: Prisma.PersonUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -9276,6 +9403,7 @@ export type WorkspaceUpdateWithoutImportJobsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ownerUser?: Prisma.UserUpdateOneWithoutOwnedWorkspacesNestedInput
   members?: Prisma.WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUpdateManyWithoutWorkspaceNestedInput
@@ -9348,6 +9476,7 @@ export type WorkspaceUncheckedUpdateWithoutImportJobsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   ownerUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   members?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedUpdateManyWithoutWorkspaceNestedInput
   persons?: Prisma.PersonUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -9418,6 +9547,7 @@ export type WorkspaceCreateWithoutImportStagedVisitsInput = {
   name: string
   slug: string
   status?: string
+  autoMergeEnabled?: boolean
   ownerUser?: Prisma.UserCreateNestedOneWithoutOwnedWorkspacesInput
   members?: Prisma.WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailCreateNestedManyWithoutWorkspaceInput
@@ -9490,6 +9620,7 @@ export type WorkspaceUncheckedCreateWithoutImportStagedVisitsInput = {
   slug: string
   status?: string
   ownerUserId?: string | null
+  autoMergeEnabled?: boolean
   members?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedCreateNestedManyWithoutWorkspaceInput
   persons?: Prisma.PersonUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -9576,6 +9707,7 @@ export type WorkspaceUpdateWithoutImportStagedVisitsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ownerUser?: Prisma.UserUpdateOneWithoutOwnedWorkspacesNestedInput
   members?: Prisma.WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUpdateManyWithoutWorkspaceNestedInput
@@ -9648,6 +9780,7 @@ export type WorkspaceUncheckedUpdateWithoutImportStagedVisitsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   ownerUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   members?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedUpdateManyWithoutWorkspaceNestedInput
   persons?: Prisma.PersonUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -9718,6 +9851,7 @@ export type WorkspaceCreateWithoutPlaceNotesInput = {
   name: string
   slug: string
   status?: string
+  autoMergeEnabled?: boolean
   ownerUser?: Prisma.UserCreateNestedOneWithoutOwnedWorkspacesInput
   members?: Prisma.WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailCreateNestedManyWithoutWorkspaceInput
@@ -9790,6 +9924,7 @@ export type WorkspaceUncheckedCreateWithoutPlaceNotesInput = {
   slug: string
   status?: string
   ownerUserId?: string | null
+  autoMergeEnabled?: boolean
   members?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedCreateNestedManyWithoutWorkspaceInput
   persons?: Prisma.PersonUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -9876,6 +10011,7 @@ export type WorkspaceUpdateWithoutPlaceNotesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ownerUser?: Prisma.UserUpdateOneWithoutOwnedWorkspacesNestedInput
   members?: Prisma.WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUpdateManyWithoutWorkspaceNestedInput
@@ -9948,6 +10084,7 @@ export type WorkspaceUncheckedUpdateWithoutPlaceNotesInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   ownerUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   members?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedUpdateManyWithoutWorkspaceNestedInput
   persons?: Prisma.PersonUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -10018,6 +10155,7 @@ export type WorkspaceCreateWithoutItemsInput = {
   name: string
   slug: string
   status?: string
+  autoMergeEnabled?: boolean
   ownerUser?: Prisma.UserCreateNestedOneWithoutOwnedWorkspacesInput
   members?: Prisma.WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailCreateNestedManyWithoutWorkspaceInput
@@ -10090,6 +10228,7 @@ export type WorkspaceUncheckedCreateWithoutItemsInput = {
   slug: string
   status?: string
   ownerUserId?: string | null
+  autoMergeEnabled?: boolean
   members?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedCreateNestedManyWithoutWorkspaceInput
   persons?: Prisma.PersonUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -10176,6 +10315,7 @@ export type WorkspaceUpdateWithoutItemsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ownerUser?: Prisma.UserUpdateOneWithoutOwnedWorkspacesNestedInput
   members?: Prisma.WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUpdateManyWithoutWorkspaceNestedInput
@@ -10248,6 +10388,7 @@ export type WorkspaceUncheckedUpdateWithoutItemsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   ownerUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   members?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedUpdateManyWithoutWorkspaceNestedInput
   persons?: Prisma.PersonUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -10318,6 +10459,7 @@ export type WorkspaceCreateWithoutItemDefinitionsInput = {
   name: string
   slug: string
   status?: string
+  autoMergeEnabled?: boolean
   ownerUser?: Prisma.UserCreateNestedOneWithoutOwnedWorkspacesInput
   members?: Prisma.WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailCreateNestedManyWithoutWorkspaceInput
@@ -10390,6 +10532,7 @@ export type WorkspaceUncheckedCreateWithoutItemDefinitionsInput = {
   slug: string
   status?: string
   ownerUserId?: string | null
+  autoMergeEnabled?: boolean
   members?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedCreateNestedManyWithoutWorkspaceInput
   persons?: Prisma.PersonUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -10476,6 +10619,7 @@ export type WorkspaceUpdateWithoutItemDefinitionsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ownerUser?: Prisma.UserUpdateOneWithoutOwnedWorkspacesNestedInput
   members?: Prisma.WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUpdateManyWithoutWorkspaceNestedInput
@@ -10548,6 +10692,7 @@ export type WorkspaceUncheckedUpdateWithoutItemDefinitionsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   ownerUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   members?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedUpdateManyWithoutWorkspaceNestedInput
   persons?: Prisma.PersonUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -10618,6 +10763,7 @@ export type WorkspaceCreateWithoutInventoryLotsInput = {
   name: string
   slug: string
   status?: string
+  autoMergeEnabled?: boolean
   ownerUser?: Prisma.UserCreateNestedOneWithoutOwnedWorkspacesInput
   members?: Prisma.WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailCreateNestedManyWithoutWorkspaceInput
@@ -10690,6 +10836,7 @@ export type WorkspaceUncheckedCreateWithoutInventoryLotsInput = {
   slug: string
   status?: string
   ownerUserId?: string | null
+  autoMergeEnabled?: boolean
   members?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedCreateNestedManyWithoutWorkspaceInput
   persons?: Prisma.PersonUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -10776,6 +10923,7 @@ export type WorkspaceUpdateWithoutInventoryLotsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ownerUser?: Prisma.UserUpdateOneWithoutOwnedWorkspacesNestedInput
   members?: Prisma.WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUpdateManyWithoutWorkspaceNestedInput
@@ -10848,6 +10996,7 @@ export type WorkspaceUncheckedUpdateWithoutInventoryLotsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   ownerUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   members?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedUpdateManyWithoutWorkspaceNestedInput
   persons?: Prisma.PersonUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -10918,6 +11067,7 @@ export type WorkspaceCreateWithoutImportedFilesInput = {
   name: string
   slug: string
   status?: string
+  autoMergeEnabled?: boolean
   ownerUser?: Prisma.UserCreateNestedOneWithoutOwnedWorkspacesInput
   members?: Prisma.WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailCreateNestedManyWithoutWorkspaceInput
@@ -10990,6 +11140,7 @@ export type WorkspaceUncheckedCreateWithoutImportedFilesInput = {
   slug: string
   status?: string
   ownerUserId?: string | null
+  autoMergeEnabled?: boolean
   members?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedCreateNestedManyWithoutWorkspaceInput
   persons?: Prisma.PersonUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -11076,6 +11227,7 @@ export type WorkspaceUpdateWithoutImportedFilesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ownerUser?: Prisma.UserUpdateOneWithoutOwnedWorkspacesNestedInput
   members?: Prisma.WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUpdateManyWithoutWorkspaceNestedInput
@@ -11148,6 +11300,7 @@ export type WorkspaceUncheckedUpdateWithoutImportedFilesInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   ownerUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   members?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedUpdateManyWithoutWorkspaceNestedInput
   persons?: Prisma.PersonUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -11218,6 +11371,7 @@ export type WorkspaceCreateWithoutAiProviderCredentialsInput = {
   name: string
   slug: string
   status?: string
+  autoMergeEnabled?: boolean
   ownerUser?: Prisma.UserCreateNestedOneWithoutOwnedWorkspacesInput
   members?: Prisma.WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailCreateNestedManyWithoutWorkspaceInput
@@ -11290,6 +11444,7 @@ export type WorkspaceUncheckedCreateWithoutAiProviderCredentialsInput = {
   slug: string
   status?: string
   ownerUserId?: string | null
+  autoMergeEnabled?: boolean
   members?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedCreateNestedManyWithoutWorkspaceInput
   persons?: Prisma.PersonUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -11376,6 +11531,7 @@ export type WorkspaceUpdateWithoutAiProviderCredentialsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ownerUser?: Prisma.UserUpdateOneWithoutOwnedWorkspacesNestedInput
   members?: Prisma.WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUpdateManyWithoutWorkspaceNestedInput
@@ -11448,6 +11604,7 @@ export type WorkspaceUncheckedUpdateWithoutAiProviderCredentialsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   ownerUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   members?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedUpdateManyWithoutWorkspaceNestedInput
   persons?: Prisma.PersonUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -11518,6 +11675,7 @@ export type WorkspaceCreateWithoutAiAnalysisRunsInput = {
   name: string
   slug: string
   status?: string
+  autoMergeEnabled?: boolean
   ownerUser?: Prisma.UserCreateNestedOneWithoutOwnedWorkspacesInput
   members?: Prisma.WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailCreateNestedManyWithoutWorkspaceInput
@@ -11590,6 +11748,7 @@ export type WorkspaceUncheckedCreateWithoutAiAnalysisRunsInput = {
   slug: string
   status?: string
   ownerUserId?: string | null
+  autoMergeEnabled?: boolean
   members?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedCreateNestedManyWithoutWorkspaceInput
   persons?: Prisma.PersonUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -11676,6 +11835,7 @@ export type WorkspaceUpdateWithoutAiAnalysisRunsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ownerUser?: Prisma.UserUpdateOneWithoutOwnedWorkspacesNestedInput
   members?: Prisma.WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUpdateManyWithoutWorkspaceNestedInput
@@ -11748,6 +11908,7 @@ export type WorkspaceUncheckedUpdateWithoutAiAnalysisRunsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   ownerUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   members?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedUpdateManyWithoutWorkspaceNestedInput
   persons?: Prisma.PersonUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -11818,6 +11979,7 @@ export type WorkspaceCreateWithoutNoteAnalysisRunsInput = {
   name: string
   slug: string
   status?: string
+  autoMergeEnabled?: boolean
   ownerUser?: Prisma.UserCreateNestedOneWithoutOwnedWorkspacesInput
   members?: Prisma.WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailCreateNestedManyWithoutWorkspaceInput
@@ -11890,6 +12052,7 @@ export type WorkspaceUncheckedCreateWithoutNoteAnalysisRunsInput = {
   slug: string
   status?: string
   ownerUserId?: string | null
+  autoMergeEnabled?: boolean
   members?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedCreateNestedManyWithoutWorkspaceInput
   persons?: Prisma.PersonUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -11976,6 +12139,7 @@ export type WorkspaceUpdateWithoutNoteAnalysisRunsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ownerUser?: Prisma.UserUpdateOneWithoutOwnedWorkspacesNestedInput
   members?: Prisma.WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUpdateManyWithoutWorkspaceNestedInput
@@ -12048,6 +12212,7 @@ export type WorkspaceUncheckedUpdateWithoutNoteAnalysisRunsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   ownerUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   members?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedUpdateManyWithoutWorkspaceNestedInput
   persons?: Prisma.PersonUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -12118,6 +12283,7 @@ export type WorkspaceCreateWithoutTheoryAnalysisRunsInput = {
   name: string
   slug: string
   status?: string
+  autoMergeEnabled?: boolean
   ownerUser?: Prisma.UserCreateNestedOneWithoutOwnedWorkspacesInput
   members?: Prisma.WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailCreateNestedManyWithoutWorkspaceInput
@@ -12190,6 +12356,7 @@ export type WorkspaceUncheckedCreateWithoutTheoryAnalysisRunsInput = {
   slug: string
   status?: string
   ownerUserId?: string | null
+  autoMergeEnabled?: boolean
   members?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedCreateNestedManyWithoutWorkspaceInput
   persons?: Prisma.PersonUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -12276,6 +12443,7 @@ export type WorkspaceUpdateWithoutTheoryAnalysisRunsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ownerUser?: Prisma.UserUpdateOneWithoutOwnedWorkspacesNestedInput
   members?: Prisma.WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUpdateManyWithoutWorkspaceNestedInput
@@ -12348,6 +12516,7 @@ export type WorkspaceUncheckedUpdateWithoutTheoryAnalysisRunsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   ownerUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   members?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedUpdateManyWithoutWorkspaceNestedInput
   persons?: Prisma.PersonUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -12418,6 +12587,7 @@ export type WorkspaceCreateWithoutLifeModelAnalysisRunsInput = {
   name: string
   slug: string
   status?: string
+  autoMergeEnabled?: boolean
   ownerUser?: Prisma.UserCreateNestedOneWithoutOwnedWorkspacesInput
   members?: Prisma.WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailCreateNestedManyWithoutWorkspaceInput
@@ -12490,6 +12660,7 @@ export type WorkspaceUncheckedCreateWithoutLifeModelAnalysisRunsInput = {
   slug: string
   status?: string
   ownerUserId?: string | null
+  autoMergeEnabled?: boolean
   members?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedCreateNestedManyWithoutWorkspaceInput
   persons?: Prisma.PersonUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -12576,6 +12747,7 @@ export type WorkspaceUpdateWithoutLifeModelAnalysisRunsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ownerUser?: Prisma.UserUpdateOneWithoutOwnedWorkspacesNestedInput
   members?: Prisma.WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUpdateManyWithoutWorkspaceNestedInput
@@ -12648,6 +12820,7 @@ export type WorkspaceUncheckedUpdateWithoutLifeModelAnalysisRunsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   ownerUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   members?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedUpdateManyWithoutWorkspaceNestedInput
   persons?: Prisma.PersonUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -12718,6 +12891,7 @@ export type WorkspaceCreateWithoutNoteSuggestionsInput = {
   name: string
   slug: string
   status?: string
+  autoMergeEnabled?: boolean
   ownerUser?: Prisma.UserCreateNestedOneWithoutOwnedWorkspacesInput
   members?: Prisma.WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailCreateNestedManyWithoutWorkspaceInput
@@ -12790,6 +12964,7 @@ export type WorkspaceUncheckedCreateWithoutNoteSuggestionsInput = {
   slug: string
   status?: string
   ownerUserId?: string | null
+  autoMergeEnabled?: boolean
   members?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedCreateNestedManyWithoutWorkspaceInput
   persons?: Prisma.PersonUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -12876,6 +13051,7 @@ export type WorkspaceUpdateWithoutNoteSuggestionsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ownerUser?: Prisma.UserUpdateOneWithoutOwnedWorkspacesNestedInput
   members?: Prisma.WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUpdateManyWithoutWorkspaceNestedInput
@@ -12948,6 +13124,7 @@ export type WorkspaceUncheckedUpdateWithoutNoteSuggestionsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   ownerUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   members?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedUpdateManyWithoutWorkspaceNestedInput
   persons?: Prisma.PersonUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -13018,6 +13195,7 @@ export type WorkspaceCreateWithoutGroupsInput = {
   name: string
   slug: string
   status?: string
+  autoMergeEnabled?: boolean
   ownerUser?: Prisma.UserCreateNestedOneWithoutOwnedWorkspacesInput
   members?: Prisma.WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailCreateNestedManyWithoutWorkspaceInput
@@ -13090,6 +13268,7 @@ export type WorkspaceUncheckedCreateWithoutGroupsInput = {
   slug: string
   status?: string
   ownerUserId?: string | null
+  autoMergeEnabled?: boolean
   members?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedCreateNestedManyWithoutWorkspaceInput
   persons?: Prisma.PersonUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -13176,6 +13355,7 @@ export type WorkspaceUpdateWithoutGroupsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ownerUser?: Prisma.UserUpdateOneWithoutOwnedWorkspacesNestedInput
   members?: Prisma.WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUpdateManyWithoutWorkspaceNestedInput
@@ -13248,6 +13428,7 @@ export type WorkspaceUncheckedUpdateWithoutGroupsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   ownerUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   members?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedUpdateManyWithoutWorkspaceNestedInput
   persons?: Prisma.PersonUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -13318,6 +13499,7 @@ export type WorkspaceCreateWithoutSupplierProfilesInput = {
   name: string
   slug: string
   status?: string
+  autoMergeEnabled?: boolean
   ownerUser?: Prisma.UserCreateNestedOneWithoutOwnedWorkspacesInput
   members?: Prisma.WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailCreateNestedManyWithoutWorkspaceInput
@@ -13390,6 +13572,7 @@ export type WorkspaceUncheckedCreateWithoutSupplierProfilesInput = {
   slug: string
   status?: string
   ownerUserId?: string | null
+  autoMergeEnabled?: boolean
   members?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedCreateNestedManyWithoutWorkspaceInput
   persons?: Prisma.PersonUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -13476,6 +13659,7 @@ export type WorkspaceUpdateWithoutSupplierProfilesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ownerUser?: Prisma.UserUpdateOneWithoutOwnedWorkspacesNestedInput
   members?: Prisma.WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUpdateManyWithoutWorkspaceNestedInput
@@ -13548,6 +13732,7 @@ export type WorkspaceUncheckedUpdateWithoutSupplierProfilesInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   ownerUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   members?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedUpdateManyWithoutWorkspaceNestedInput
   persons?: Prisma.PersonUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -13618,6 +13803,7 @@ export type WorkspaceCreateWithoutPurchaseOrdersInput = {
   name: string
   slug: string
   status?: string
+  autoMergeEnabled?: boolean
   ownerUser?: Prisma.UserCreateNestedOneWithoutOwnedWorkspacesInput
   members?: Prisma.WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailCreateNestedManyWithoutWorkspaceInput
@@ -13690,6 +13876,7 @@ export type WorkspaceUncheckedCreateWithoutPurchaseOrdersInput = {
   slug: string
   status?: string
   ownerUserId?: string | null
+  autoMergeEnabled?: boolean
   members?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedCreateNestedManyWithoutWorkspaceInput
   persons?: Prisma.PersonUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -13776,6 +13963,7 @@ export type WorkspaceUpdateWithoutPurchaseOrdersInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ownerUser?: Prisma.UserUpdateOneWithoutOwnedWorkspacesNestedInput
   members?: Prisma.WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUpdateManyWithoutWorkspaceNestedInput
@@ -13848,6 +14036,7 @@ export type WorkspaceUncheckedUpdateWithoutPurchaseOrdersInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   ownerUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   members?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedUpdateManyWithoutWorkspaceNestedInput
   persons?: Prisma.PersonUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -13918,6 +14107,7 @@ export type WorkspaceCreateWithoutPurchaseReceiptLinesInput = {
   name: string
   slug: string
   status?: string
+  autoMergeEnabled?: boolean
   ownerUser?: Prisma.UserCreateNestedOneWithoutOwnedWorkspacesInput
   members?: Prisma.WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailCreateNestedManyWithoutWorkspaceInput
@@ -13990,6 +14180,7 @@ export type WorkspaceUncheckedCreateWithoutPurchaseReceiptLinesInput = {
   slug: string
   status?: string
   ownerUserId?: string | null
+  autoMergeEnabled?: boolean
   members?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedCreateNestedManyWithoutWorkspaceInput
   persons?: Prisma.PersonUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -14076,6 +14267,7 @@ export type WorkspaceUpdateWithoutPurchaseReceiptLinesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ownerUser?: Prisma.UserUpdateOneWithoutOwnedWorkspacesNestedInput
   members?: Prisma.WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUpdateManyWithoutWorkspaceNestedInput
@@ -14148,6 +14340,7 @@ export type WorkspaceUncheckedUpdateWithoutPurchaseReceiptLinesInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   ownerUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   members?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedUpdateManyWithoutWorkspaceNestedInput
   persons?: Prisma.PersonUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -14218,6 +14411,7 @@ export type WorkspaceCreateWithoutNotesInput = {
   name: string
   slug: string
   status?: string
+  autoMergeEnabled?: boolean
   ownerUser?: Prisma.UserCreateNestedOneWithoutOwnedWorkspacesInput
   members?: Prisma.WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailCreateNestedManyWithoutWorkspaceInput
@@ -14290,6 +14484,7 @@ export type WorkspaceUncheckedCreateWithoutNotesInput = {
   slug: string
   status?: string
   ownerUserId?: string | null
+  autoMergeEnabled?: boolean
   members?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedCreateNestedManyWithoutWorkspaceInput
   persons?: Prisma.PersonUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -14376,6 +14571,7 @@ export type WorkspaceUpdateWithoutNotesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ownerUser?: Prisma.UserUpdateOneWithoutOwnedWorkspacesNestedInput
   members?: Prisma.WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUpdateManyWithoutWorkspaceNestedInput
@@ -14448,6 +14644,7 @@ export type WorkspaceUncheckedUpdateWithoutNotesInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   ownerUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   members?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedUpdateManyWithoutWorkspaceNestedInput
   persons?: Prisma.PersonUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -14518,6 +14715,7 @@ export type WorkspaceCreateWithoutTheorySnapshotsInput = {
   name: string
   slug: string
   status?: string
+  autoMergeEnabled?: boolean
   ownerUser?: Prisma.UserCreateNestedOneWithoutOwnedWorkspacesInput
   members?: Prisma.WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailCreateNestedManyWithoutWorkspaceInput
@@ -14590,6 +14788,7 @@ export type WorkspaceUncheckedCreateWithoutTheorySnapshotsInput = {
   slug: string
   status?: string
   ownerUserId?: string | null
+  autoMergeEnabled?: boolean
   members?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedCreateNestedManyWithoutWorkspaceInput
   persons?: Prisma.PersonUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -14676,6 +14875,7 @@ export type WorkspaceUpdateWithoutTheorySnapshotsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ownerUser?: Prisma.UserUpdateOneWithoutOwnedWorkspacesNestedInput
   members?: Prisma.WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUpdateManyWithoutWorkspaceNestedInput
@@ -14748,6 +14948,7 @@ export type WorkspaceUncheckedUpdateWithoutTheorySnapshotsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   ownerUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   members?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedUpdateManyWithoutWorkspaceNestedInput
   persons?: Prisma.PersonUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -14818,6 +15019,7 @@ export type WorkspaceCreateWithoutLifeModelSnapshotsInput = {
   name: string
   slug: string
   status?: string
+  autoMergeEnabled?: boolean
   ownerUser?: Prisma.UserCreateNestedOneWithoutOwnedWorkspacesInput
   members?: Prisma.WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailCreateNestedManyWithoutWorkspaceInput
@@ -14890,6 +15092,7 @@ export type WorkspaceUncheckedCreateWithoutLifeModelSnapshotsInput = {
   slug: string
   status?: string
   ownerUserId?: string | null
+  autoMergeEnabled?: boolean
   members?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedCreateNestedManyWithoutWorkspaceInput
   persons?: Prisma.PersonUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -14976,6 +15179,7 @@ export type WorkspaceUpdateWithoutLifeModelSnapshotsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ownerUser?: Prisma.UserUpdateOneWithoutOwnedWorkspacesNestedInput
   members?: Prisma.WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUpdateManyWithoutWorkspaceNestedInput
@@ -15048,6 +15252,7 @@ export type WorkspaceUncheckedUpdateWithoutLifeModelSnapshotsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   ownerUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   members?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedUpdateManyWithoutWorkspaceNestedInput
   persons?: Prisma.PersonUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -15118,6 +15323,7 @@ export type WorkspaceCreateWithoutLifeModelClaimFeedbackInput = {
   name: string
   slug: string
   status?: string
+  autoMergeEnabled?: boolean
   ownerUser?: Prisma.UserCreateNestedOneWithoutOwnedWorkspacesInput
   members?: Prisma.WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailCreateNestedManyWithoutWorkspaceInput
@@ -15190,6 +15396,7 @@ export type WorkspaceUncheckedCreateWithoutLifeModelClaimFeedbackInput = {
   slug: string
   status?: string
   ownerUserId?: string | null
+  autoMergeEnabled?: boolean
   members?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedCreateNestedManyWithoutWorkspaceInput
   persons?: Prisma.PersonUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -15276,6 +15483,7 @@ export type WorkspaceUpdateWithoutLifeModelClaimFeedbackInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ownerUser?: Prisma.UserUpdateOneWithoutOwnedWorkspacesNestedInput
   members?: Prisma.WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUpdateManyWithoutWorkspaceNestedInput
@@ -15348,6 +15556,7 @@ export type WorkspaceUncheckedUpdateWithoutLifeModelClaimFeedbackInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   ownerUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   members?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedUpdateManyWithoutWorkspaceNestedInput
   persons?: Prisma.PersonUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -15418,6 +15627,7 @@ export type WorkspaceCreateWithoutAssistantMessagesInput = {
   name: string
   slug: string
   status?: string
+  autoMergeEnabled?: boolean
   ownerUser?: Prisma.UserCreateNestedOneWithoutOwnedWorkspacesInput
   members?: Prisma.WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailCreateNestedManyWithoutWorkspaceInput
@@ -15490,6 +15700,7 @@ export type WorkspaceUncheckedCreateWithoutAssistantMessagesInput = {
   slug: string
   status?: string
   ownerUserId?: string | null
+  autoMergeEnabled?: boolean
   members?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedCreateNestedManyWithoutWorkspaceInput
   persons?: Prisma.PersonUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -15576,6 +15787,7 @@ export type WorkspaceUpdateWithoutAssistantMessagesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ownerUser?: Prisma.UserUpdateOneWithoutOwnedWorkspacesNestedInput
   members?: Prisma.WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUpdateManyWithoutWorkspaceNestedInput
@@ -15648,6 +15860,7 @@ export type WorkspaceUncheckedUpdateWithoutAssistantMessagesInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   ownerUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   members?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedUpdateManyWithoutWorkspaceNestedInput
   persons?: Prisma.PersonUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -15718,6 +15931,7 @@ export type WorkspaceCreateWithoutLevelUpProfileInput = {
   name: string
   slug: string
   status?: string
+  autoMergeEnabled?: boolean
   ownerUser?: Prisma.UserCreateNestedOneWithoutOwnedWorkspacesInput
   members?: Prisma.WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailCreateNestedManyWithoutWorkspaceInput
@@ -15790,6 +16004,7 @@ export type WorkspaceUncheckedCreateWithoutLevelUpProfileInput = {
   slug: string
   status?: string
   ownerUserId?: string | null
+  autoMergeEnabled?: boolean
   members?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedCreateNestedManyWithoutWorkspaceInput
   persons?: Prisma.PersonUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -15876,6 +16091,7 @@ export type WorkspaceUpdateWithoutLevelUpProfileInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ownerUser?: Prisma.UserUpdateOneWithoutOwnedWorkspacesNestedInput
   members?: Prisma.WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUpdateManyWithoutWorkspaceNestedInput
@@ -15948,6 +16164,7 @@ export type WorkspaceUncheckedUpdateWithoutLevelUpProfileInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   ownerUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   members?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedUpdateManyWithoutWorkspaceNestedInput
   persons?: Prisma.PersonUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -16018,6 +16235,7 @@ export type WorkspaceCreateWithoutLevelUpTestResultsInput = {
   name: string
   slug: string
   status?: string
+  autoMergeEnabled?: boolean
   ownerUser?: Prisma.UserCreateNestedOneWithoutOwnedWorkspacesInput
   members?: Prisma.WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailCreateNestedManyWithoutWorkspaceInput
@@ -16090,6 +16308,7 @@ export type WorkspaceUncheckedCreateWithoutLevelUpTestResultsInput = {
   slug: string
   status?: string
   ownerUserId?: string | null
+  autoMergeEnabled?: boolean
   members?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedCreateNestedManyWithoutWorkspaceInput
   persons?: Prisma.PersonUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -16176,6 +16395,7 @@ export type WorkspaceUpdateWithoutLevelUpTestResultsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ownerUser?: Prisma.UserUpdateOneWithoutOwnedWorkspacesNestedInput
   members?: Prisma.WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUpdateManyWithoutWorkspaceNestedInput
@@ -16248,6 +16468,7 @@ export type WorkspaceUncheckedUpdateWithoutLevelUpTestResultsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   ownerUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   members?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedUpdateManyWithoutWorkspaceNestedInput
   persons?: Prisma.PersonUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -16318,6 +16539,7 @@ export type WorkspaceCreateWithoutLevelUpCombinesInput = {
   name: string
   slug: string
   status?: string
+  autoMergeEnabled?: boolean
   ownerUser?: Prisma.UserCreateNestedOneWithoutOwnedWorkspacesInput
   members?: Prisma.WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailCreateNestedManyWithoutWorkspaceInput
@@ -16390,6 +16612,7 @@ export type WorkspaceUncheckedCreateWithoutLevelUpCombinesInput = {
   slug: string
   status?: string
   ownerUserId?: string | null
+  autoMergeEnabled?: boolean
   members?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedCreateNestedManyWithoutWorkspaceInput
   persons?: Prisma.PersonUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -16476,6 +16699,7 @@ export type WorkspaceUpdateWithoutLevelUpCombinesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ownerUser?: Prisma.UserUpdateOneWithoutOwnedWorkspacesNestedInput
   members?: Prisma.WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUpdateManyWithoutWorkspaceNestedInput
@@ -16548,6 +16772,7 @@ export type WorkspaceUncheckedUpdateWithoutLevelUpCombinesInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   ownerUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   members?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedUpdateManyWithoutWorkspaceNestedInput
   persons?: Prisma.PersonUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -16618,6 +16843,7 @@ export type WorkspaceCreateWithoutLevelUpSnapshotsInput = {
   name: string
   slug: string
   status?: string
+  autoMergeEnabled?: boolean
   ownerUser?: Prisma.UserCreateNestedOneWithoutOwnedWorkspacesInput
   members?: Prisma.WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailCreateNestedManyWithoutWorkspaceInput
@@ -16690,6 +16916,7 @@ export type WorkspaceUncheckedCreateWithoutLevelUpSnapshotsInput = {
   slug: string
   status?: string
   ownerUserId?: string | null
+  autoMergeEnabled?: boolean
   members?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedCreateNestedManyWithoutWorkspaceInput
   persons?: Prisma.PersonUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -16776,6 +17003,7 @@ export type WorkspaceUpdateWithoutLevelUpSnapshotsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ownerUser?: Prisma.UserUpdateOneWithoutOwnedWorkspacesNestedInput
   members?: Prisma.WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUpdateManyWithoutWorkspaceNestedInput
@@ -16848,6 +17076,7 @@ export type WorkspaceUncheckedUpdateWithoutLevelUpSnapshotsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   ownerUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   members?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedUpdateManyWithoutWorkspaceNestedInput
   persons?: Prisma.PersonUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -16918,6 +17147,7 @@ export type WorkspaceCreateWithoutLevelUpTrainingSetsInput = {
   name: string
   slug: string
   status?: string
+  autoMergeEnabled?: boolean
   ownerUser?: Prisma.UserCreateNestedOneWithoutOwnedWorkspacesInput
   members?: Prisma.WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailCreateNestedManyWithoutWorkspaceInput
@@ -16990,6 +17220,7 @@ export type WorkspaceUncheckedCreateWithoutLevelUpTrainingSetsInput = {
   slug: string
   status?: string
   ownerUserId?: string | null
+  autoMergeEnabled?: boolean
   members?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedCreateNestedManyWithoutWorkspaceInput
   persons?: Prisma.PersonUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -17076,6 +17307,7 @@ export type WorkspaceUpdateWithoutLevelUpTrainingSetsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ownerUser?: Prisma.UserUpdateOneWithoutOwnedWorkspacesNestedInput
   members?: Prisma.WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUpdateManyWithoutWorkspaceNestedInput
@@ -17148,6 +17380,7 @@ export type WorkspaceUncheckedUpdateWithoutLevelUpTrainingSetsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   ownerUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   members?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedUpdateManyWithoutWorkspaceNestedInput
   persons?: Prisma.PersonUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -17218,6 +17451,7 @@ export type WorkspaceCreateWithoutLevelUpExercisesInput = {
   name: string
   slug: string
   status?: string
+  autoMergeEnabled?: boolean
   ownerUser?: Prisma.UserCreateNestedOneWithoutOwnedWorkspacesInput
   members?: Prisma.WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailCreateNestedManyWithoutWorkspaceInput
@@ -17290,6 +17524,7 @@ export type WorkspaceUncheckedCreateWithoutLevelUpExercisesInput = {
   slug: string
   status?: string
   ownerUserId?: string | null
+  autoMergeEnabled?: boolean
   members?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedCreateNestedManyWithoutWorkspaceInput
   persons?: Prisma.PersonUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -17376,6 +17611,7 @@ export type WorkspaceUpdateWithoutLevelUpExercisesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ownerUser?: Prisma.UserUpdateOneWithoutOwnedWorkspacesNestedInput
   members?: Prisma.WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUpdateManyWithoutWorkspaceNestedInput
@@ -17448,6 +17684,7 @@ export type WorkspaceUncheckedUpdateWithoutLevelUpExercisesInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   ownerUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   members?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedUpdateManyWithoutWorkspaceNestedInput
   persons?: Prisma.PersonUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -17518,6 +17755,7 @@ export type WorkspaceCreateWithoutLevelUpProgramsInput = {
   name: string
   slug: string
   status?: string
+  autoMergeEnabled?: boolean
   ownerUser?: Prisma.UserCreateNestedOneWithoutOwnedWorkspacesInput
   members?: Prisma.WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailCreateNestedManyWithoutWorkspaceInput
@@ -17590,6 +17828,7 @@ export type WorkspaceUncheckedCreateWithoutLevelUpProgramsInput = {
   slug: string
   status?: string
   ownerUserId?: string | null
+  autoMergeEnabled?: boolean
   members?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedCreateNestedManyWithoutWorkspaceInput
   persons?: Prisma.PersonUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -17676,6 +17915,7 @@ export type WorkspaceUpdateWithoutLevelUpProgramsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ownerUser?: Prisma.UserUpdateOneWithoutOwnedWorkspacesNestedInput
   members?: Prisma.WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUpdateManyWithoutWorkspaceNestedInput
@@ -17748,6 +17988,7 @@ export type WorkspaceUncheckedUpdateWithoutLevelUpProgramsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   ownerUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   members?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedUpdateManyWithoutWorkspaceNestedInput
   persons?: Prisma.PersonUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -17818,6 +18059,7 @@ export type WorkspaceCreateWithoutLevelUpProgramDaysInput = {
   name: string
   slug: string
   status?: string
+  autoMergeEnabled?: boolean
   ownerUser?: Prisma.UserCreateNestedOneWithoutOwnedWorkspacesInput
   members?: Prisma.WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailCreateNestedManyWithoutWorkspaceInput
@@ -17890,6 +18132,7 @@ export type WorkspaceUncheckedCreateWithoutLevelUpProgramDaysInput = {
   slug: string
   status?: string
   ownerUserId?: string | null
+  autoMergeEnabled?: boolean
   members?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedCreateNestedManyWithoutWorkspaceInput
   persons?: Prisma.PersonUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -17976,6 +18219,7 @@ export type WorkspaceUpdateWithoutLevelUpProgramDaysInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ownerUser?: Prisma.UserUpdateOneWithoutOwnedWorkspacesNestedInput
   members?: Prisma.WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUpdateManyWithoutWorkspaceNestedInput
@@ -18048,6 +18292,7 @@ export type WorkspaceUncheckedUpdateWithoutLevelUpProgramDaysInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   ownerUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   members?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedUpdateManyWithoutWorkspaceNestedInput
   persons?: Prisma.PersonUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -18118,6 +18363,7 @@ export type WorkspaceCreateWithoutLevelUpProgramEntriesInput = {
   name: string
   slug: string
   status?: string
+  autoMergeEnabled?: boolean
   ownerUser?: Prisma.UserCreateNestedOneWithoutOwnedWorkspacesInput
   members?: Prisma.WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailCreateNestedManyWithoutWorkspaceInput
@@ -18190,6 +18436,7 @@ export type WorkspaceUncheckedCreateWithoutLevelUpProgramEntriesInput = {
   slug: string
   status?: string
   ownerUserId?: string | null
+  autoMergeEnabled?: boolean
   members?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedCreateNestedManyWithoutWorkspaceInput
   persons?: Prisma.PersonUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -18276,6 +18523,7 @@ export type WorkspaceUpdateWithoutLevelUpProgramEntriesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ownerUser?: Prisma.UserUpdateOneWithoutOwnedWorkspacesNestedInput
   members?: Prisma.WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUpdateManyWithoutWorkspaceNestedInput
@@ -18348,6 +18596,7 @@ export type WorkspaceUncheckedUpdateWithoutLevelUpProgramEntriesInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   ownerUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   members?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedUpdateManyWithoutWorkspaceNestedInput
   persons?: Prisma.PersonUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -18418,6 +18667,7 @@ export type WorkspaceCreateWithoutLevelUpSessionsInput = {
   name: string
   slug: string
   status?: string
+  autoMergeEnabled?: boolean
   ownerUser?: Prisma.UserCreateNestedOneWithoutOwnedWorkspacesInput
   members?: Prisma.WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailCreateNestedManyWithoutWorkspaceInput
@@ -18490,6 +18740,7 @@ export type WorkspaceUncheckedCreateWithoutLevelUpSessionsInput = {
   slug: string
   status?: string
   ownerUserId?: string | null
+  autoMergeEnabled?: boolean
   members?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedCreateNestedManyWithoutWorkspaceInput
   persons?: Prisma.PersonUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -18576,6 +18827,7 @@ export type WorkspaceUpdateWithoutLevelUpSessionsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ownerUser?: Prisma.UserUpdateOneWithoutOwnedWorkspacesNestedInput
   members?: Prisma.WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUpdateManyWithoutWorkspaceNestedInput
@@ -18648,6 +18900,7 @@ export type WorkspaceUncheckedUpdateWithoutLevelUpSessionsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   ownerUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   members?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedUpdateManyWithoutWorkspaceNestedInput
   persons?: Prisma.PersonUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -18718,6 +18971,7 @@ export type WorkspaceCreateWithoutLevelUpBodyMetricsInput = {
   name: string
   slug: string
   status?: string
+  autoMergeEnabled?: boolean
   ownerUser?: Prisma.UserCreateNestedOneWithoutOwnedWorkspacesInput
   members?: Prisma.WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailCreateNestedManyWithoutWorkspaceInput
@@ -18790,6 +19044,7 @@ export type WorkspaceUncheckedCreateWithoutLevelUpBodyMetricsInput = {
   slug: string
   status?: string
   ownerUserId?: string | null
+  autoMergeEnabled?: boolean
   members?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedCreateNestedManyWithoutWorkspaceInput
   persons?: Prisma.PersonUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -18876,6 +19131,7 @@ export type WorkspaceUpdateWithoutLevelUpBodyMetricsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ownerUser?: Prisma.UserUpdateOneWithoutOwnedWorkspacesNestedInput
   members?: Prisma.WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUpdateManyWithoutWorkspaceNestedInput
@@ -18948,6 +19204,7 @@ export type WorkspaceUncheckedUpdateWithoutLevelUpBodyMetricsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   ownerUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   members?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedUpdateManyWithoutWorkspaceNestedInput
   persons?: Prisma.PersonUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -19018,6 +19275,7 @@ export type WorkspaceCreateWithoutLevelUpReadinessSnapshotsInput = {
   name: string
   slug: string
   status?: string
+  autoMergeEnabled?: boolean
   ownerUser?: Prisma.UserCreateNestedOneWithoutOwnedWorkspacesInput
   members?: Prisma.WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailCreateNestedManyWithoutWorkspaceInput
@@ -19090,6 +19348,7 @@ export type WorkspaceUncheckedCreateWithoutLevelUpReadinessSnapshotsInput = {
   slug: string
   status?: string
   ownerUserId?: string | null
+  autoMergeEnabled?: boolean
   members?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedCreateNestedManyWithoutWorkspaceInput
   persons?: Prisma.PersonUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -19176,6 +19435,7 @@ export type WorkspaceUpdateWithoutLevelUpReadinessSnapshotsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ownerUser?: Prisma.UserUpdateOneWithoutOwnedWorkspacesNestedInput
   members?: Prisma.WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUpdateManyWithoutWorkspaceNestedInput
@@ -19248,6 +19508,7 @@ export type WorkspaceUncheckedUpdateWithoutLevelUpReadinessSnapshotsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   ownerUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   members?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedUpdateManyWithoutWorkspaceNestedInput
   persons?: Prisma.PersonUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -19318,6 +19579,7 @@ export type WorkspaceCreateWithoutLevelUpBadgeUnlocksInput = {
   name: string
   slug: string
   status?: string
+  autoMergeEnabled?: boolean
   ownerUser?: Prisma.UserCreateNestedOneWithoutOwnedWorkspacesInput
   members?: Prisma.WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailCreateNestedManyWithoutWorkspaceInput
@@ -19390,6 +19652,7 @@ export type WorkspaceUncheckedCreateWithoutLevelUpBadgeUnlocksInput = {
   slug: string
   status?: string
   ownerUserId?: string | null
+  autoMergeEnabled?: boolean
   members?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedCreateNestedManyWithoutWorkspaceInput
   persons?: Prisma.PersonUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -19476,6 +19739,7 @@ export type WorkspaceUpdateWithoutLevelUpBadgeUnlocksInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ownerUser?: Prisma.UserUpdateOneWithoutOwnedWorkspacesNestedInput
   members?: Prisma.WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUpdateManyWithoutWorkspaceNestedInput
@@ -19548,6 +19812,7 @@ export type WorkspaceUncheckedUpdateWithoutLevelUpBadgeUnlocksInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   ownerUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   members?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedUpdateManyWithoutWorkspaceNestedInput
   persons?: Prisma.PersonUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -19618,6 +19883,7 @@ export type WorkspaceCreateWithoutLevelUpTargetBuildsInput = {
   name: string
   slug: string
   status?: string
+  autoMergeEnabled?: boolean
   ownerUser?: Prisma.UserCreateNestedOneWithoutOwnedWorkspacesInput
   members?: Prisma.WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailCreateNestedManyWithoutWorkspaceInput
@@ -19690,6 +19956,7 @@ export type WorkspaceUncheckedCreateWithoutLevelUpTargetBuildsInput = {
   slug: string
   status?: string
   ownerUserId?: string | null
+  autoMergeEnabled?: boolean
   members?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedCreateNestedManyWithoutWorkspaceInput
   persons?: Prisma.PersonUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -19776,6 +20043,7 @@ export type WorkspaceUpdateWithoutLevelUpTargetBuildsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ownerUser?: Prisma.UserUpdateOneWithoutOwnedWorkspacesNestedInput
   members?: Prisma.WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUpdateManyWithoutWorkspaceNestedInput
@@ -19848,6 +20116,7 @@ export type WorkspaceUncheckedUpdateWithoutLevelUpTargetBuildsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   ownerUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   members?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedUpdateManyWithoutWorkspaceNestedInput
   persons?: Prisma.PersonUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -19918,6 +20187,7 @@ export type WorkspaceCreateWithoutGraphEventsInput = {
   name: string
   slug: string
   status?: string
+  autoMergeEnabled?: boolean
   ownerUser?: Prisma.UserCreateNestedOneWithoutOwnedWorkspacesInput
   members?: Prisma.WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailCreateNestedManyWithoutWorkspaceInput
@@ -19990,6 +20260,7 @@ export type WorkspaceUncheckedCreateWithoutGraphEventsInput = {
   slug: string
   status?: string
   ownerUserId?: string | null
+  autoMergeEnabled?: boolean
   members?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedCreateNestedManyWithoutWorkspaceInput
   persons?: Prisma.PersonUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -20076,6 +20347,7 @@ export type WorkspaceUpdateWithoutGraphEventsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ownerUser?: Prisma.UserUpdateOneWithoutOwnedWorkspacesNestedInput
   members?: Prisma.WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUpdateManyWithoutWorkspaceNestedInput
@@ -20148,6 +20420,7 @@ export type WorkspaceUncheckedUpdateWithoutGraphEventsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   ownerUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   members?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedUpdateManyWithoutWorkspaceNestedInput
   persons?: Prisma.PersonUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -20218,6 +20491,7 @@ export type WorkspaceCreateWithoutReviewItemsInput = {
   name: string
   slug: string
   status?: string
+  autoMergeEnabled?: boolean
   ownerUser?: Prisma.UserCreateNestedOneWithoutOwnedWorkspacesInput
   members?: Prisma.WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailCreateNestedManyWithoutWorkspaceInput
@@ -20290,6 +20564,7 @@ export type WorkspaceUncheckedCreateWithoutReviewItemsInput = {
   slug: string
   status?: string
   ownerUserId?: string | null
+  autoMergeEnabled?: boolean
   members?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedCreateNestedManyWithoutWorkspaceInput
   persons?: Prisma.PersonUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -20376,6 +20651,7 @@ export type WorkspaceUpdateWithoutReviewItemsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ownerUser?: Prisma.UserUpdateOneWithoutOwnedWorkspacesNestedInput
   members?: Prisma.WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUpdateManyWithoutWorkspaceNestedInput
@@ -20448,6 +20724,7 @@ export type WorkspaceUncheckedUpdateWithoutReviewItemsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   ownerUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   members?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedUpdateManyWithoutWorkspaceNestedInput
   persons?: Prisma.PersonUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -20518,6 +20795,7 @@ export type WorkspaceCreateManyOwnerUserInput = {
   name: string
   slug: string
   status?: string
+  autoMergeEnabled?: boolean
 }
 
 export type WorkspaceUpdateWithoutOwnerUserInput = {
@@ -20527,6 +20805,7 @@ export type WorkspaceUpdateWithoutOwnerUserInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   members?: Prisma.WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUpdateManyWithoutWorkspaceNestedInput
   persons?: Prisma.PersonUpdateManyWithoutWorkspaceNestedInput
@@ -20598,6 +20877,7 @@ export type WorkspaceUncheckedUpdateWithoutOwnerUserInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   members?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
   approvedEmails?: Prisma.ApprovedEmailUncheckedUpdateManyWithoutWorkspaceNestedInput
   persons?: Prisma.PersonUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -20669,6 +20949,7 @@ export type WorkspaceUncheckedUpdateManyWithoutOwnerUserInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 
@@ -21250,6 +21531,7 @@ export type WorkspaceSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   slug?: boolean
   status?: boolean
   ownerUserId?: boolean
+  autoMergeEnabled?: boolean
   ownerUser?: boolean | Prisma.Workspace$ownerUserArgs<ExtArgs>
   members?: boolean | Prisma.Workspace$membersArgs<ExtArgs>
   approvedEmails?: boolean | Prisma.Workspace$approvedEmailsArgs<ExtArgs>
@@ -21324,6 +21606,7 @@ export type WorkspaceSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ext
   slug?: boolean
   status?: boolean
   ownerUserId?: boolean
+  autoMergeEnabled?: boolean
   ownerUser?: boolean | Prisma.Workspace$ownerUserArgs<ExtArgs>
 }, ExtArgs["result"]["workspace"]>
 
@@ -21335,6 +21618,7 @@ export type WorkspaceSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ext
   slug?: boolean
   status?: boolean
   ownerUserId?: boolean
+  autoMergeEnabled?: boolean
   ownerUser?: boolean | Prisma.Workspace$ownerUserArgs<ExtArgs>
 }, ExtArgs["result"]["workspace"]>
 
@@ -21346,9 +21630,10 @@ export type WorkspaceSelectScalar = {
   slug?: boolean
   status?: boolean
   ownerUserId?: boolean
+  autoMergeEnabled?: boolean
 }
 
-export type WorkspaceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "name" | "slug" | "status" | "ownerUserId", ExtArgs["result"]["workspace"]>
+export type WorkspaceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "name" | "slug" | "status" | "ownerUserId" | "autoMergeEnabled", ExtArgs["result"]["workspace"]>
 export type WorkspaceInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   ownerUser?: boolean | Prisma.Workspace$ownerUserArgs<ExtArgs>
   members?: boolean | Prisma.Workspace$membersArgs<ExtArgs>
@@ -21497,6 +21782,7 @@ export type $WorkspacePayload<ExtArgs extends runtime.Types.Extensions.InternalA
     slug: string
     status: string
     ownerUserId: string | null
+    autoMergeEnabled: boolean
   }, ExtArgs["result"]["workspace"]>
   composites: {}
 }
@@ -21990,6 +22276,7 @@ export interface WorkspaceFieldRefs {
   readonly slug: Prisma.FieldRef<"Workspace", 'String'>
   readonly status: Prisma.FieldRef<"Workspace", 'String'>
   readonly ownerUserId: Prisma.FieldRef<"Workspace", 'String'>
+  readonly autoMergeEnabled: Prisma.FieldRef<"Workspace", 'Boolean'>
 }
     
 

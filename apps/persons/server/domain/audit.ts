@@ -13,6 +13,7 @@ export type AuditAction =
   | "person.delete"
   | "person.merge"
   | "person.dedupe"
+  | "person.merge_undo"
   | "access.seed"
   | "apiKey.create"
   | "apiKey.update"
@@ -76,7 +77,7 @@ export async function auditAction(input: AuditInput) {
   const actorId = actor.id ?? null
 
   try {
-    await db.auditLog.create({
+    return await db.auditLog.create({
       data: {
         action: input.action,
         targetType: input.targetType,
@@ -94,8 +95,10 @@ export async function auditAction(input: AuditInput) {
           : null,
         metadata: input.metadata ? JSON.stringify(input.metadata) : null,
       },
+      select: { id: true },
     })
   } catch (error) {
     console.warn("[audit] failed to write AuditLog", error)
+    return null
   }
 }

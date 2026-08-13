@@ -34,6 +34,10 @@ model Workspace {
   status         String              @default("active")
   ownerUserId    String?
   ownerUser      User?               @relation("WorkspaceOwner", fields: [ownerUserId], references: [id], onDelete: SetNull)
+  // Off by default: unlike the always-available manual dedupe queue,
+  // automatic merging deletes rows without a review step, so it stays
+  // opt-in. See apps/persons/server/domain/merge.ts's autoDedupePersons.
+  autoMergeEnabled Boolean           @default(false)
   members        WorkspaceMember[]
   approvedEmails ApprovedEmail[]
   persons        Person[]

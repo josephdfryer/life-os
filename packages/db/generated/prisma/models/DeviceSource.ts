@@ -541,10 +541,6 @@ export type DeviceSourceUncheckedUpdateManyWithoutDeviceNestedInput = {
   deleteMany?: Prisma.DeviceSourceScalarWhereInput | Prisma.DeviceSourceScalarWhereInput[]
 }
 
-export type BoolFieldUpdateOperationsInput = {
-  set?: boolean
-}
-
 export type DeviceSourceCreateWithoutDeviceInput = {
   id?: string
   createdAt?: Date | string

@@ -29,7 +29,7 @@ type MergePerson = {
   tags: string
   values: string
   closeness: number
-  _count: { interactions: number; plans?: number }
+  _count: { interactions: number; plans?: number; users?: number }
 }
 
 export type PairResult = {
@@ -67,7 +67,10 @@ const mergeSelect = {
   tags: true,
   values: true,
   closeness: true,
-  _count: { select: { interactions: true, plans: true } },
+  // users > 0 means this Person is someone's login identity — automatic
+  // merging must never pick them as the loser (User.personId is onDelete
+  // SetNull, so it wouldn't error, it would silently orphan the login).
+  _count: { select: { interactions: true, plans: true, users: true } },
 } as const
 
 export async function mergePersons(input: PairInput & { fields?: Record<string, unknown> }, workspaceId: string, actor?: DomainActor) {
@@ -75,16 +78,14 @@ export async function mergePersons(input: PairInput & { fields?: Record<string, 
   await assertPersonsInWorkspace(workspaceId, [input.keepId, input.deleteId])
   const patch = input.fields ? explicitPatch(input.fields) : await automaticPairPatch(input.keepId, input.deleteId, workspaceId)
 
-  await db.$transaction(async tx => {
-    await applyMerge(tx, input.keepId, input.deleteId, patch, workspaceId)
-  }, TX_OPTS)
+  const snapshot = await db.$transaction(tx => applyMerge(tx, input.keepId, input.deleteId, patch, workspaceId), TX_OPTS)
 
   await auditAction({
-    actor,
+    actor: { ...actor, workspaceId, type: actor?.type ?? "system" },
     action: "person.merge",
     targetType: "person",
     targetId: input.keepId,
-    metadata: { deletedIds: [input.deleteId], mode: "pair" },
+    metadata: { deletedIds: [input.deleteId], mode: "pair", snapshots: snapshot ? { [input.deleteId]: snapshot } : {} },
   })
 
   return { ok: true, keptId: input.keepId }
@@ -99,24 +100,24 @@ export async function mergePersonPairs(pairs: PairInput[], workspaceId: string, 
   const persons = await db.person.findMany({ where: { id: { in: ids }, workspaceId }, select: mergeSelect })
   const byId = new Map(persons.map(person => [person.id, person as MergePerson]))
   const deletedIds: string[] = []
+  const snapshots: Record<string, MergeSnapshot> = {}
 
   for (const pair of pairs) {
     const keeper = byId.get(pair.keepId)
     const loser = byId.get(pair.deleteId)
     if (!keeper || !loser) continue
     const patch = automaticPatch(keeper, loser)
-    await db.$transaction(async tx => {
-      await applyMerge(tx, pair.keepId, pair.deleteId, patch, workspaceId)
-    }, TX_OPTS)
+    const snapshot = await db.$transaction(tx => applyMerge(tx, pair.keepId, pair.deleteId, patch, workspaceId), TX_OPTS)
+    if (snapshot) snapshots[pair.deleteId] = snapshot
     Object.assign(keeper, patch)
     deletedIds.push(pair.deleteId)
   }
 
   await auditAction({
-    actor,
+    actor: { ...actor, workspaceId, type: actor?.type ?? "system" },
     action: "person.merge",
     targetType: "person",
-    metadata: { deletedIds, mode: "batch" },
+    metadata: { deletedIds, mode: "batch", snapshots },
   })
   return { merged: deletedIds.length, deletedIds }
 }
@@ -131,6 +132,7 @@ export async function mergePersonClusters(pairs: ClusterPairInput[], workspaceId
   const persons = await db.person.findMany({ where: { id: { in: ids }, workspaceId }, select: mergeSelect })
   const byId = new Map(persons.map(person => [person.id, person as MergePerson]))
   const deletedIds: string[] = []
+  const snapshots: Record<string, MergeSnapshot> = {}
 
   for (const component of components) {
     const members = component.map(id => byId.get(id)).filter((person): person is MergePerson => Boolean(person))
@@ -142,17 +144,18 @@ export async function mergePersonClusters(pairs: ClusterPairInput[], workspaceId
         await tx.person.updateMany({ where: { id: keeper.id, workspaceId }, data: patch })
       }
       for (const loser of losers) {
-        await reassignAndDelete(tx, keeper.id, loser.id, workspaceId)
+        const snapshot = await reassignAndDelete(tx, keeper.id, loser.id, workspaceId)
+        if (snapshot) snapshots[loser.id] = snapshot
       }
     }, TX_OPTS)
     deletedIds.push(...losers.map(loser => loser.id))
   }
 
   await auditAction({
-    actor,
+    actor: { ...actor, workspaceId, type: actor?.type ?? "system" },
     action: "person.merge",
     targetType: "person",
-    metadata: { deletedIds, mode: "cluster" },
+    metadata: { deletedIds, mode: "cluster", snapshots },
   })
   return { merged: deletedIds.length, deletedIds }
 }
@@ -172,15 +175,15 @@ export async function mergeSameEmailPersons(workspaceId: string, actor?: DomainA
 
   const deleted = new Set<string>()
   const deletedIds: string[] = []
+  const snapshots: Record<string, MergeSnapshot> = {}
   for (const bucket of byEmail.values()) {
     if (bucket.length < 2) continue
     const [keeper, ...losers] = sortByKeepPreference(bucket)
     for (const loser of losers) {
       if (deleted.has(loser.id) || deleted.has(keeper.id)) continue
       const patch = automaticPatch(keeper, loser)
-      await db.$transaction(async tx => {
-        await applyMerge(tx, keeper.id, loser.id, patch, workspaceId)
-      }, TX_OPTS)
+      const snapshot = await db.$transaction(tx => applyMerge(tx, keeper.id, loser.id, patch, workspaceId), TX_OPTS)
+      if (snapshot) snapshots[loser.id] = snapshot
       Object.assign(keeper, patch)
       deleted.add(loser.id)
       deletedIds.push(loser.id)
@@ -188,10 +191,10 @@ export async function mergeSameEmailPersons(workspaceId: string, actor?: DomainA
   }
 
   await auditAction({
-    actor,
+    actor: { ...actor, workspaceId, type: actor?.type ?? "system" },
     action: "person.merge",
     targetType: "person",
-    metadata: { deletedIds, mode: "same-email" },
+    metadata: { deletedIds, mode: "same-email", snapshots },
   })
   return { merged: deletedIds.length, deletedIds }
 }
@@ -212,6 +215,7 @@ export async function autoDedupePersons(workspaceId: string, actor?: DomainActor
   const refs = await loserRefSets(toMerge.map(pair => pair.deleteId), workspaceId)
   const results: PairResult[] = []
   const failures: { pair: PairResult; error: string }[] = []
+  const snapshots: Record<string, MergeSnapshot> = {}
   let remaining = 0
 
   for (let index = 0; index < toMerge.length; index++) {
@@ -225,11 +229,11 @@ export async function autoDedupePersons(workspaceId: string, actor?: DomainActor
     if (!keeper || !loser) continue
     const patch = automaticPatch(keeper, loser)
     try {
-      await db.$transaction(async tx => {
+      const snapshot = await db.$transaction(async tx => {
         if (Object.keys(patch).length > 0) {
           await tx.person.updateMany({ where: { id: pair.keepId, workspaceId }, data: patch })
         }
-        await reassignAndDelete(tx, pair.keepId, pair.deleteId, workspaceId, {
+        return reassignAndDelete(tx, pair.keepId, pair.deleteId, workspaceId, {
           interactions: loser._count.interactions > 0,
           plans: (loser._count.plans ?? 0) > 0,
           stagedCandidate: refs.stagedCandidate.has(pair.deleteId),
@@ -238,6 +242,7 @@ export async function autoDedupePersons(workspaceId: string, actor?: DomainActor
           audits: refs.audits.has(pair.deleteId),
         })
       }, TX_OPTS)
+      if (snapshot) snapshots[pair.deleteId] = snapshot
       // Keep the cached keeper in sync so later merges into the same keeper
       // build on already-merged emails/phones/tags instead of stale data.
       Object.assign(keeper, patch)
@@ -250,13 +255,13 @@ export async function autoDedupePersons(workspaceId: string, actor?: DomainActor
     }
   }
 
-  await auditAction({
-    actor,
+  const auditEntry = await auditAction({
+    actor: { ...actor, workspaceId, type: actor?.type ?? "system" },
     action: "person.dedupe",
     targetType: "person",
-    metadata: { merged: results.length, failed: failures.length, remaining, deletedIds: results.map(result => result.deleteId) },
+    metadata: { merged: results.length, failed: failures.length, remaining, deletedIds: results.map(result => result.deleteId), snapshots },
   })
-  return { merged: results.length, results, failed: failures.length, failures, remaining }
+  return { merged: results.length, results, failed: failures.length, failures, remaining, auditLogId: auditEntry?.id ?? null }
 }
 
 // One bulk lookup per referencing table so each merge can skip reassignment
@@ -282,6 +287,116 @@ async function loserRefSets(ids: string[], workspaceId: string) {
     stagedAccepted: new Set(stagedAccepted.map(row => row.acceptedPersonId).filter(Boolean) as string[]),
     apiKeys: new Set(apiKeys.map(row => row.ownerPersonId).filter(Boolean) as string[]),
     audits: new Set(audits.map(row => row.personId).filter(Boolean) as string[]),
+  }
+}
+
+export type RecentMergeEntry = {
+  auditLogId: string
+  createdAt: Date
+  mode: string
+  actorLabel: string | null
+  pending: { deleteId: string; name: string }[]
+}
+
+// Lists merges (manual or automatic) that still have undo data available —
+// i.e. haven't already been undone — newest first, for a "recent merges,
+// with an undo button" surface. Reconstructs each pending entry's display
+// name from its own snapshot, so this works even for a person who no longer
+// exists anywhere else in the graph.
+export async function listRecentMerges(workspaceId: string, limit = 20): Promise<RecentMergeEntry[]> {
+  const rows = await db.auditLog.findMany({
+    where: { workspaceId, action: { in: ["person.merge", "person.dedupe"] } },
+    orderBy: { createdAt: "desc" },
+    take: limit,
+    select: { id: true, createdAt: true, actorLabel: true, metadata: true },
+  })
+  return rows
+    .map(row => {
+      const metadata = parseMergeMetadata(row.metadata)
+      const pending = Object.entries(metadata.snapshots ?? {}).map(([deleteId, snapshot]) => ({
+        deleteId,
+        name: `${(snapshot.person.first as string | undefined) ?? ""} ${(snapshot.person.last as string | undefined) ?? ""}`.trim() || "Unknown",
+      }))
+      return { auditLogId: row.id, createdAt: row.createdAt, mode: metadata.mode ?? "dedupe", actorLabel: row.actorLabel, pending }
+    })
+    .filter(entry => entry.pending.length > 0)
+}
+
+// Reverses one merged-away person from a specific audit entry: recreates
+// their Person row (same id, so anything not captured in the snapshot's
+// reassignment lists — a reference reassignAndDelete doesn't yet cover —
+// still resolves correctly) and moves back exactly the interactions, plans,
+// staged items, api keys, and audit rows this merge actually reassigned.
+export async function undoMerge(auditLogId: string, deleteId: string, workspaceId: string, actor?: DomainActor) {
+  const entry = await db.auditLog.findFirst({
+    where: { id: auditLogId, workspaceId, action: { in: ["person.merge", "person.dedupe"] } },
+  })
+  if (!entry) throw notFound("Merge record not found", { auditLogId })
+
+  const metadata = parseMergeMetadata(entry.metadata)
+  const snapshot = metadata.snapshots?.[deleteId]
+  if (!snapshot) throw notFound("No undo data recorded for this merge, or it was already undone", { auditLogId, deleteId })
+
+  const restoredId = snapshot.person.id as string
+  const alreadyExists = await db.person.findUnique({ where: { id: restoredId }, select: { id: true } })
+  if (alreadyExists) throw badRequest("A person with this id already exists — cannot undo", { restoredId })
+
+  await db.$transaction(async tx => {
+    const { id, createdAt, updatedAt, workspaceId: snapshotWorkspaceId, ...rest } = snapshot.person
+    // The snapshot is a full Person row captured verbatim before deletion —
+    // known-complete by construction, but its type is a generic
+    // Record<string, unknown> (it round-tripped through JSON in AuditLog.metadata),
+    // so Prisma's input type can't verify that statically.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    await (tx as any).person.create({
+      data: {
+        id: id as string,
+        workspaceId: (snapshotWorkspaceId as string) ?? workspaceId,
+        createdAt: new Date(createdAt as string),
+        updatedAt: new Date(updatedAt as string),
+        ...rest,
+      },
+    })
+
+    const { interactionIds, actorInteractionIds, eraAccountLinkIds, planIds, stagedCandidateIds, stagedAcceptedIds, apiKeyIds, auditLogIds } = snapshot.reassigned
+    if (interactionIds.length) await tx.interaction.updateMany({ where: { id: { in: interactionIds } }, data: { personId: restoredId } })
+    if (actorInteractionIds.length) await tx.interaction.updateMany({ where: { id: { in: actorInteractionIds } }, data: { actorPersonId: restoredId } })
+    if (eraAccountLinkIds.length) await tx.eraAccountLink.updateMany({ where: { id: { in: eraAccountLinkIds } }, data: { ownerPersonId: restoredId } })
+    if (planIds.length) await tx.plan.updateMany({ where: { id: { in: planIds } }, data: { personId: restoredId } })
+    if (stagedCandidateIds.length) await tx.stagedInteraction.updateMany({ where: { id: { in: stagedCandidateIds } }, data: { candidatePersonId: restoredId } })
+    if (stagedAcceptedIds.length) await tx.stagedInteraction.updateMany({ where: { id: { in: stagedAcceptedIds } }, data: { acceptedPersonId: restoredId } })
+    if (apiKeyIds.length) await tx.apiKey.updateMany({ where: { id: { in: apiKeyIds } }, data: { ownerPersonId: restoredId } })
+    if (auditLogIds.length) await tx.auditLog.updateMany({ where: { id: { in: auditLogIds } }, data: { personId: restoredId } })
+  }, TX_OPTS)
+
+  // Remove this person from the entry's pending-undo set so a repeat call
+  // (or the recent-merges list) doesn't offer to undo it a second time.
+  const remainingSnapshots = { ...metadata.snapshots }
+  delete remainingSnapshots[deleteId]
+  await db.auditLog.update({
+    where: { id: auditLogId },
+    data: { metadata: JSON.stringify({ ...metadata, snapshots: remainingSnapshots }) },
+  })
+
+  await auditAction({
+    actor: { ...actor, workspaceId, type: actor?.type ?? "system" },
+    action: "person.merge_undo",
+    targetType: "person",
+    targetId: restoredId,
+    metadata: { auditLogId, restoredId },
+  })
+
+  return { restoredId }
+}
+
+type MergeMetadata = { mode?: string; snapshots?: Record<string, MergeSnapshot> }
+
+function parseMergeMetadata(raw: string | null): MergeMetadata {
+  if (!raw) return {}
+  try {
+    return JSON.parse(raw) as MergeMetadata
+  } catch {
+    return {}
   }
 }
 
@@ -384,13 +499,13 @@ async function applyMerge(
   deleteId: string,
   patch: Record<string, unknown>,
   workspaceId: string,
-) {
+): Promise<MergeSnapshot | null> {
   if (Object.keys(patch).length > 0) {
     // updateMany (not update) so the workspace filter is enforced even if
     // keepId somehow slipped through an earlier check unscoped.
     await tx.person.updateMany({ where: { id: keepId, workspaceId }, data: patch })
   }
-  await reassignAndDelete(tx, keepId, deleteId, workspaceId)
+  return reassignAndDelete(tx, keepId, deleteId, workspaceId)
 }
 
 type ReassignHints = {
@@ -402,6 +517,29 @@ type ReassignHints = {
   audits?: boolean
 }
 
+// Everything undoMerge needs to reverse one merge: the loser's complete row
+// (deleted, so it has to be recreated from this) and exactly which rows were
+// reassigned to the keeper (so undo moves back only those, not everything
+// the keeper owns today).
+export type MergeSnapshot = {
+  person: Record<string, unknown>
+  reassigned: {
+    interactionIds: string[]
+    actorInteractionIds: string[]
+    eraAccountLinkIds: string[]
+    planIds: string[]
+    stagedCandidateIds: string[]
+    stagedAcceptedIds: string[]
+    apiKeyIds: string[]
+    auditLogIds: string[]
+  }
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function idsOf(query: Promise<{ id: string }[]>): Promise<string[]> {
+  return (await query).map(row => row.id)
+}
+
 async function reassignAndDelete(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   tx: any,
@@ -409,26 +547,66 @@ async function reassignAndDelete(
   deleteId: string,
   workspaceId: string,
   hints?: ReassignHints,
-) {
-  // Every reassignment and the final delete carry workspaceId in their WHERE
-  // clause as defense-in-depth, even though callers already verified both
-  // persons belong to this workspace before reaching here.
-  if (hints?.interactions !== false) await tx.interaction.updateMany({ where: { personId: deleteId, workspaceId }, data: { personId: keepId } })
-  // Financial attribution: who paid, and which accounts they own. Both FKs are
-  // ON DELETE SET NULL, so skipping these would silently drop the loser's
-  // spending history and account ownership instead of failing loudly.
-  await tx.interaction.updateMany({ where: { actorPersonId: deleteId, workspaceId }, data: { actorPersonId: keepId } })
-  await tx.eraAccountLink.updateMany({ where: { ownerPersonId: deleteId, workspaceId }, data: { ownerPersonId: keepId } })
-  if (hints?.plans !== false) await tx.plan.updateMany({ where: { personId: deleteId, workspaceId }, data: { personId: keepId } })
-  if (hints?.stagedCandidate !== false) await tx.stagedInteraction.updateMany({ where: { candidatePersonId: deleteId, workspaceId }, data: { candidatePersonId: keepId } })
-  if (hints?.stagedAccepted !== false) await tx.stagedInteraction.updateMany({ where: { acceptedPersonId: deleteId, workspaceId }, data: { acceptedPersonId: keepId } })
-  if (hints?.apiKeys !== false) await tx.apiKey.updateMany({ where: { ownerPersonId: deleteId, workspaceId }, data: { ownerPersonId: keepId } })
-  if (hints?.audits !== false) await tx.auditLog.updateMany({ where: { personId: deleteId, workspaceId }, data: { personId: keepId } })
+): Promise<MergeSnapshot | null> {
+  const person = await tx.person.findFirst({ where: { id: deleteId, workspaceId } })
+  if (!person) return null
+
+  // One read per reference type to know exactly what's about to move — the
+  // snapshot undoMerge needs — followed by the same condition-based
+  // updateMany the direct approach already used. Every reassignment and the
+  // final delete carry workspaceId in their WHERE clause as defense-in-depth,
+  // even though callers already verified both persons belong to this
+  // workspace before reaching here.
+  const interactionIds = hints?.interactions !== false
+    ? await idsOf(tx.interaction.findMany({ where: { personId: deleteId, workspaceId }, select: { id: true } }))
+    : []
+  if (interactionIds.length) await tx.interaction.updateMany({ where: { personId: deleteId, workspaceId }, data: { personId: keepId } })
+
+  // Financial attribution: who paid, and which accounts they own. Both FKs
+  // are ON DELETE SET NULL, so skipping these would silently drop the
+  // loser's spending history and account ownership instead of failing loudly.
+  const actorInteractionIds = await idsOf(tx.interaction.findMany({ where: { actorPersonId: deleteId, workspaceId }, select: { id: true } }))
+  if (actorInteractionIds.length) await tx.interaction.updateMany({ where: { actorPersonId: deleteId, workspaceId }, data: { actorPersonId: keepId } })
+
+  const eraAccountLinkIds = await idsOf(tx.eraAccountLink.findMany({ where: { ownerPersonId: deleteId, workspaceId }, select: { id: true } }))
+  if (eraAccountLinkIds.length) await tx.eraAccountLink.updateMany({ where: { ownerPersonId: deleteId, workspaceId }, data: { ownerPersonId: keepId } })
+
+  const planIds = hints?.plans !== false
+    ? await idsOf(tx.plan.findMany({ where: { personId: deleteId, workspaceId }, select: { id: true } }))
+    : []
+  if (planIds.length) await tx.plan.updateMany({ where: { personId: deleteId, workspaceId }, data: { personId: keepId } })
+
+  const stagedCandidateIds = hints?.stagedCandidate !== false
+    ? await idsOf(tx.stagedInteraction.findMany({ where: { candidatePersonId: deleteId, workspaceId }, select: { id: true } }))
+    : []
+  if (stagedCandidateIds.length) await tx.stagedInteraction.updateMany({ where: { candidatePersonId: deleteId, workspaceId }, data: { candidatePersonId: keepId } })
+
+  const stagedAcceptedIds = hints?.stagedAccepted !== false
+    ? await idsOf(tx.stagedInteraction.findMany({ where: { acceptedPersonId: deleteId, workspaceId }, select: { id: true } }))
+    : []
+  if (stagedAcceptedIds.length) await tx.stagedInteraction.updateMany({ where: { acceptedPersonId: deleteId, workspaceId }, data: { acceptedPersonId: keepId } })
+
+  const apiKeyIds = hints?.apiKeys !== false
+    ? await idsOf(tx.apiKey.findMany({ where: { ownerPersonId: deleteId, workspaceId }, select: { id: true } }))
+    : []
+  if (apiKeyIds.length) await tx.apiKey.updateMany({ where: { ownerPersonId: deleteId, workspaceId }, data: { ownerPersonId: keepId } })
+
+  const auditLogIds = hints?.audits !== false
+    ? await idsOf(tx.auditLog.findMany({ where: { personId: deleteId, workspaceId }, select: { id: true } }))
+    : []
+  if (auditLogIds.length) await tx.auditLog.updateMany({ where: { personId: deleteId, workspaceId }, data: { personId: keepId } })
+
   await tx.person.deleteMany({ where: { id: deleteId, workspaceId } })
+
+  return {
+    person,
+    reassigned: { interactionIds, actorInteractionIds, eraAccountLinkIds, planIds, stagedCandidateIds, stagedAcceptedIds, apiKeyIds, auditLogIds },
+  }
 }
 
 function sortByKeepPreference(persons: MergePerson[]) {
   return [...persons].sort((a, b) =>
+    Number(isProtected(b)) - Number(isProtected(a)) ||
     b._count.interactions - a._count.interactions ||
     a.createdAt.getTime() - b.createdAt.getTime()
   )
@@ -475,7 +653,7 @@ function findAutoMergePairs(all: MergePerson[]) {
   for (const bucket of byEmail.values()) {
     const [keeper, ...losers] = sortByKeepPreference(bucket)
     for (const loser of losers) {
-      if (deleted.has(keeper.id) || deleted.has(loser.id)) continue
+      if (deleted.has(keeper.id) || deleted.has(loser.id) || isProtected(loser)) continue
       toMerge.push(pairResult(keeper, loser, 1, "Same email address"))
       deleted.add(loser.id)
     }
@@ -492,7 +670,7 @@ function findAutoMergePairs(all: MergePerson[]) {
   for (const bucket of byPhone.values()) {
     const [keeper, ...losers] = sortByKeepPreference(bucket)
     for (const loser of losers) {
-      if (deleted.has(keeper.id) || deleted.has(loser.id)) continue
+      if (deleted.has(keeper.id) || deleted.has(loser.id) || isProtected(loser)) continue
       toMerge.push(pairResult(keeper, loser, 0.97, "Same phone number"))
       deleted.add(loser.id)
     }
@@ -519,6 +697,9 @@ function findAutoMergePairs(all: MergePerson[]) {
         if (deleted.has(bucket[j].id)) continue
         const scored = scoreMinimal(bucket[i], bucket[j])
         if (!scored || scored.score < AUTO_THRESHOLD) continue
+        // Two login-linked people scoring as duplicates is a case for a
+        // human, not automation — leave both alone.
+        if (isProtected(bucket[i]) && isProtected(bucket[j])) continue
         const [keeper, loser] = pickKeeper(bucket[i], bucket[j])
         toMerge.push(pairResult(keeper, loser, scored.score, scored.reason))
         deleted.add(loser.id)
@@ -564,7 +745,19 @@ function scoreMinimal(a: MergePerson, b: MergePerson) {
   return null
 }
 
+// A Person with a linked login (workspace owner or a team member's own
+// identity) must never be automatically deleted — User.personId is onDelete
+// SetNull, so a merge wouldn't error, it would silently orphan the login.
+// Manual merges (mergePersonPairs/mergePersonClusters) are a deliberate,
+// reviewed human choice and are not restricted by this.
+function isProtected(person: MergePerson): boolean {
+  return (person._count.users ?? 0) > 0
+}
+
 function pickKeeper(a: MergePerson, b: MergePerson): [MergePerson, MergePerson] {
+  if (isProtected(a) !== isProtected(b)) {
+    return isProtected(a) ? [a, b] : [b, a]
+  }
   if (a._count.interactions !== b._count.interactions) {
     return a._count.interactions > b._count.interactions ? [a, b] : [b, a]
   }

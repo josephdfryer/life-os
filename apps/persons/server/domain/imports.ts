@@ -7,6 +7,7 @@ import { createEvent, parseTimestamp } from "./events"
 import { createInteraction } from "./interactions"
 import { createPerson } from "./persons"
 import { runRulesForTarget } from "./rules"
+import { autoDedupePersons } from "./merge"
 
 type ImportFileInput = {
   name: string
@@ -115,6 +116,17 @@ export async function confirmImport(results: ImportedPerson[], workspaceId: stri
       interactions: created.reduce((sum, person) => sum + person.interactionCount, 0),
     },
   })
+
+  // Import is exactly when duplicate contacts get introduced — run the
+  // workspace's auto-merge sweep right after, if it's opted in. Never lets
+  // a slow or failing dedupe pass fail the import itself; it already has
+  // its own time budget and partial-progress handling for large workspaces.
+  const workspace = await db.workspace.findUnique({ where: { id: workspaceId }, select: { autoMergeEnabled: true } })
+  if (workspace?.autoMergeEnabled) {
+    await autoDedupePersons(workspaceId, actor).catch(error => {
+      console.error("[import] auto-merge sweep failed", error)
+    })
+  }
 
   return { importedFileId, created }
 }
