@@ -1,20 +1,17 @@
 import { NextRequest, NextResponse } from "next/server"
-import { ensureStateDefinition, replaceStatesForSourceNoteInTransaction } from "@life-os/domain"
-import { runRulesForTarget } from "@life-os/automation"
 import { authorizeRequest } from "@/lib/auth"
 import { unauthorizedResponse, handleRouteError, errorResponse } from "@/lib/respond"
+import { ensureHealthMetricDefinitions, recordHealthDailyDigestInTransaction, fireHealthDailyRules } from "@/lib/health-daily"
 
 /**
  * Ingests Health Auto Export's REST API automation payload as a live trigger
- * for the SAME pipeline scripts/health-sync.ts drives from a manually
- * exported zip: same StateDefinition taxonomy (entityType "Person", type
- * "health_metric", curated keys — see HEALTH_METRIC_DESCRIPTIONS below,
- * mirrored from scripts/health/metrics.ts's HEALTH_METRIC_TAXONOMY), same
- * one-Note-per-day digest with sourceMarker "health-auto-export:day:<key>"
- * (replaceStatesForSourceNoteInTransaction makes a re-sync of the same day
- * idempotent — delete+recreate that day's States), and the same
- * runRulesForTarget firing per recorded State. Two ingestion paths (manual
- * zip vs. this live webhook), one data shape — do not let them drift.
+ * for the same write path scripts/health-sync.ts drives from a manually
+ * exported zip and apps/api/lib/device-ingest.ts drives from the native
+ * Companion: recordHealthDailyDigestInTransaction in @/lib/health-daily —
+ * same StateDefinition taxonomy, same one-Note-per-day digest keyed by a
+ * sourceMarker (a re-sync of the same day replaces rather than duplicates),
+ * same rule dispatch per recorded State. Three ingestion paths, one data
+ * shape — do not let them drift.
  *
  * REST metric "name" values are mapped to taxonomy keys via
  * REST_METRIC_KEY_MAP below. Names Health Auto Export sends that aren't in
@@ -26,45 +23,7 @@ import { unauthorizedResponse, handleRouteError, errorResponse } from "@/lib/res
  *   { "data": { "metrics": [{ "name": "step_count", "data": [{ "date": "2026-08-10 00:00:00 -0700", "qty": 8203 }] }] } }
  */
 
-const WORKSPACE_ENTITY_TYPE = "Person"
-const STATE_TYPE = "health_metric"
 const SOURCE = "health-auto-export"
-
-// Mirrors scripts/health/metrics.ts's HEALTH_METRIC_TAXONOMY descriptions —
-// keep the two in sync if either changes.
-const HEALTH_METRIC_DESCRIPTIONS: Record<string, string> = {
-  active_energy: "kcal",
-  resting_energy: "kcal",
-  apple_exercise_time: "min",
-  apple_stand_hours: "count (hours meeting stand goal)",
-  apple_stand_time: "min",
-  step_count: "count",
-  flights_climbed: "count",
-  physical_effort: "kcal/hr·kg",
-  walking_running_distance: "mi",
-  time_in_daylight: "min",
-  heart_rate_min: "bpm",
-  heart_rate_max: "bpm",
-  heart_rate_avg: "bpm",
-  resting_heart_rate: "bpm",
-  heart_rate_variability: "ms",
-  walking_heart_rate_avg: "bpm",
-  respiratory_rate: "breaths/min",
-  blood_oxygen_saturation: "%",
-  sleep_total_hours: "hr",
-  sleep_in_bed_hours: "hr",
-  sleep_core_hours: "hr",
-  sleep_deep_hours: "hr",
-  sleep_rem_hours: "hr",
-  sleep_awake_hours: "hr",
-  walking_speed: "mi/hr",
-  walking_step_length: "in",
-  walking_asymmetry_pct: "%",
-  walking_double_support_pct: "%",
-  stair_speed_up: "ft/s",
-  stair_speed_down: "ft/s",
-  environmental_audio_exposure: "dBASPL",
-}
 
 // Health Auto Export REST metric name -> taxonomy key, for metrics that
 // report a plain `qty`. Best-effort against the app's published naming
@@ -170,91 +129,38 @@ export async function POST(req: NextRequest) {
 
     if (unmapped.size) console.log("[health/samples] unmapped metric names:", [...unmapped].join(", "))
 
-    const definitionIds = new Map<string, string>()
-    for (const key of new Set([...byDay.values()].flatMap(b => b.samples.map(s => s.key)))) {
-      const definition = await ensureStateDefinition(
-        { entityType: WORKSPACE_ENTITY_TYPE, type: STATE_TYPE, value: key, description: HEALTH_METRIC_DESCRIPTIONS[key] ?? null },
-        workspaceId,
-      )
-      definitionIds.set(key, definition.id)
-    }
-
     const actor = { type: "system" as const, label: "health-sync", workspaceId }
     let daysProcessed = 0
     let statesWritten = 0
 
-    for (const [dayKey, { dayDate, samples }] of byDay) {
-      // Latest value per key wins if this payload somehow carries more than one point for the same day.
-      const byKey = new Map<string, number>()
-      for (const sample of samples) byKey.set(sample.key, sample.value)
+    // Resolve every StateDefinition once, up front, outside any transaction —
+    // ensureStateDefinition opens its own, and nesting one inside another
+    // deadlocks the single sqlite connection this app runs against locally.
+    const definitions = await ensureHealthMetricDefinitions(workspaceId, [...byDay.values()].flatMap(bucket => bucket.samples.map(sample => sample.key)))
 
-      const sourceMarker = `${SOURCE}:day:${dayKey}`
-      const digest = [...byKey.entries()].map(([key, value]) => `${key}=${value}`).join(" ")
-      const content = `Health Auto Export daily digest for ${dayKey}: ${digest || "(no populated metrics)"}`
-      const metadataJson = JSON.stringify({ sourceMarker, zipFilename: "rest-api-live-sync", raw: Object.fromEntries(byKey) })
-
-      const existingNote = await findNoteByMarker(db, workspaceId, sourceMarker)
-      const note = existingNote
-        ? await db.note.update({ where: { id: existingNote.id }, data: { content, metadata: metadataJson }, select: { id: true } })
-        : await db.note.create({ data: { workspaceId, type: "import", timestamp: dayDate, content, metadata: metadataJson }, select: { id: true } })
-
-      const recorded = await db.$transaction(
-        tx => replaceStatesForSourceNoteInTransaction(
-          tx,
-          note.id,
-          [...byKey.entries()].map(([key, value]) => {
-            const definitionId = definitionIds.get(key)
-            if (!definitionId) throw new Error(`No StateDefinition resolved for metric key "${key}"`)
-            return { entityType: WORKSPACE_ENTITY_TYPE, entityId: personId, definitionId, severity: value, source: SOURCE, recordedAt: dayDate }
-          }),
-          workspaceId,
+    for (const [dayKey, { samples }] of byDay) {
+      const { states } = await db.$transaction(
+        tx => recordHealthDailyDigestInTransaction(tx, definitions, {
+          workspaceId, personId, day: dayKey, samples,
+          source: SOURCE, marker: `${SOURCE}:day:${dayKey}`, contentLabel: "Health Auto Export daily digest",
+          metadataExtra: { zipFilename: "rest-api-live-sync" },
           actor,
-        ),
+        }),
         // Default 5s interactive-transaction timeout isn't enough for ~30
         // sequential State+GraphEvent writes over Turso's network round-trip
         // per query — a "All Selected" daily digest was timing out mid-write.
         { maxWait: 10_000, timeout: 30_000 },
       )
-      await Promise.all(recorded.map(({ state, definition }) => runRulesForTarget({
-        trigger: "state.record",
-        targetType: "state",
-        targetId: state.id,
-        payload: {
-          stateId: state.id,
-          entityType: state.entityType,
-          entityId: state.entityId,
-          definitionType: definition.type,
-          definitionValue: definition.value,
-          severity: state.severity,
-        },
-        actor,
-      })))
+      await fireHealthDailyRules(states, actor)
 
       daysProcessed++
-      statesWritten += recorded.length
+      statesWritten += states.length
     }
 
     return NextResponse.json({ daysProcessed, statesWritten, unmapped: [...unmapped] })
   } catch (error) {
     return handleRouteError(error)
   }
-}
-
-type DbClient = typeof import("@life-os/db")["db"]
-
-async function findNoteByMarker(db: DbClient, workspaceId: string, marker: string) {
-  const candidates = await db.note.findMany({
-    where: { workspaceId, type: "import", metadata: { contains: marker } },
-    select: { id: true, metadata: true },
-    take: 10,
-  })
-  return candidates.find(candidate => {
-    try {
-      return JSON.parse(candidate.metadata ?? "{}").sourceMarker === marker
-    } catch {
-      return false
-    }
-  }) ?? null
 }
 
 // Health Auto Export sends "YYYY-MM-DD HH:mm:ss ±HHMM" (space before the

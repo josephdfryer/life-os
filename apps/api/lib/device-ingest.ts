@@ -1,8 +1,8 @@
 import { createHash } from "node:crypto"
 import type { DeviceIngestItemInput } from "@life-os/contracts"
 import { db } from "@life-os/db"
-import { createReviewItem, ensureStateDefinition, publishGraphEvent, replaceStatesForSourceNoteInTransaction } from "@life-os/domain"
-import { runRulesForTarget } from "@life-os/automation"
+import { createReviewItem, publishGraphEvent } from "@life-os/domain"
+import { HEALTH_METRIC_TAXONOMY, ensureHealthMetricDefinitions, recordHealthDailyDigestInTransaction, fireHealthDailyRules } from "./health-daily"
 
 export type DeviceIngestResult = {
   sourceId: string
@@ -10,17 +10,6 @@ export type DeviceIngestResult = {
   resultType: string | null
   resultId: string | null
   errorCode: string | null
-}
-
-const HEALTH_METRICS: Record<string, string> = {
-  active_energy: "kcal", resting_energy: "kcal", apple_exercise_time: "min", apple_stand_hours: "count",
-  apple_stand_time: "min", step_count: "count", flights_climbed: "count", physical_effort: "kcal/hr·kg",
-  walking_running_distance: "mi", time_in_daylight: "min", heart_rate_min: "bpm", heart_rate_max: "bpm",
-  heart_rate_avg: "bpm", resting_heart_rate: "bpm", heart_rate_variability: "ms", walking_heart_rate_avg: "bpm",
-  respiratory_rate: "breaths/min", blood_oxygen_saturation: "%", sleep_total_hours: "hr", sleep_in_bed_hours: "hr",
-  sleep_core_hours: "hr", sleep_deep_hours: "hr", sleep_rem_hours: "hr", sleep_awake_hours: "hr",
-  walking_speed: "mi/hr", walking_step_length: "in", walking_asymmetry_pct: "%", walking_double_support_pct: "%",
-  stair_speed_up: "ft/s", stair_speed_down: "ft/s", environmental_audio_exposure: "dBASPL",
 }
 
 export async function ingestDeviceItem(item: DeviceIngestItemInput, workspaceId: string): Promise<DeviceIngestResult> {
@@ -63,35 +52,25 @@ type ItemFor<T extends RecordType> = Omit<DeviceIngestItemInput, "record"> & { r
 async function ingestHealthDaily(item: ItemFor<"health.daily">, workspaceId: string, payloadHash: string): Promise<DeviceIngestResult> {
   const personId = await workspaceOwnerPersonId(workspaceId)
   if (!personId) return rejected(item.sourceId, "owner_person_missing")
-  const unknown = item.record.metrics.find(metric => !(metric.key in HEALTH_METRICS))
+  const unknown = item.record.metrics.find(metric => !(metric.key in HEALTH_METRIC_TAXONOMY))
   if (unknown) return rejected(item.sourceId, "unsupported_health_metric")
 
-  const definitions = new Map<string, string>()
-  for (const metric of item.record.metrics) {
-    if (definitions.has(metric.key)) continue
-    const definition = await ensureStateDefinition({ entityType: "Person", type: "health_metric", value: metric.key, description: HEALTH_METRICS[metric.key] }, workspaceId)
-    definitions.set(metric.key, definition.id)
-  }
-  const dayDate = new Date(`${item.record.day}T00:00:00.000Z`)
   const marker = `healthkit:${item.deviceId}:day:${item.record.day}`
   const actor = { type: "system" as const, id: item.deviceId, label: "life-os-companion" }
-  const recorded = await db.$transaction(async tx => {
-    const existingNotes = await tx.note.findMany({ where: { workspaceId, type: "import", metadata: { contains: marker } }, take: 10 })
-    const existingNote = existingNotes.find(note => parseMetadata(note.metadata).sourceMarker === marker)
-    const metadata = JSON.stringify({ sourceMarker: marker, source: "healthkit", deviceId: item.deviceId, metrics: Object.fromEntries(item.record.metrics.map(metric => [metric.key, metric.value])) })
-    const content = `HealthKit daily digest for ${item.record.day}: ${item.record.metrics.map(metric => `${metric.key}=${metric.value}`).join(" ")}`
-    const note = existingNote
-      ? await tx.note.update({ where: { id: existingNote.id }, data: { content, metadata }, select: { id: true } })
-      : await tx.note.create({ data: { workspaceId, type: "import", timestamp: dayDate, content, metadata }, select: { id: true } })
-    const states = await replaceStatesForSourceNoteInTransaction(tx, note.id, item.record.metrics.map(metric => ({
-      entityType: "Person", entityId: personId, definitionId: definitions.get(metric.key)!, severity: metric.value,
-      source: "healthkit", recordedAt: dayDate,
-    })), workspaceId, actor)
-    await tx.deviceIngestItem.create({ data: receiptData(item, workspaceId, payloadHash, "State", note.id) })
-    return states
+  const definitions = await ensureHealthMetricDefinitions(workspaceId, item.record.metrics.map(metric => metric.key))
+  const { noteId, states } = await db.$transaction(async tx => {
+    const result = await recordHealthDailyDigestInTransaction(tx, definitions, {
+      workspaceId, personId, day: item.record.day,
+      samples: item.record.metrics.map(metric => ({ key: metric.key, value: metric.value })),
+      source: "healthkit", marker, contentLabel: "HealthKit daily digest",
+      metadataExtra: { source: "healthkit", deviceId: item.deviceId },
+      actor,
+    })
+    await tx.deviceIngestItem.create({ data: receiptData(item, workspaceId, payloadHash, "State", result.noteId) })
+    return result
   })
-  await fireStateRules(recorded, actor).catch(error => console.warn("[device/ingest] state rule dispatch failed", { sourceId: item.sourceId, error }))
-  return accepted(item.sourceId, "State", recorded[0]?.state.id ?? null)
+  await fireHealthDailyRules(states, actor).catch(error => console.warn("[device/ingest] state rule dispatch failed", { sourceId: item.sourceId, error }))
+  return accepted(item.sourceId, "State", states[0]?.state.id ?? null)
 }
 
 async function ingestWorkout(item: ItemFor<"health.workout">, workspaceId: string, payloadHash: string): Promise<DeviceIngestResult> {
@@ -171,12 +150,7 @@ async function workspaceOwnerPersonId(workspaceId: string) {
   return userId ? (await db.user.findUnique({ where: { id: userId }, select: { personId: true } }))?.personId ?? null : null
 }
 
-async function fireStateRules(recorded: Awaited<ReturnType<typeof replaceStatesForSourceNoteInTransaction>>, actor: { type: "system"; id: string; label: string }) {
-  await Promise.all(recorded.map(({ state, definition }) => runRulesForTarget({ trigger: "state.record", targetType: "state", targetId: state.id, payload: { stateId: state.id, entityType: state.entityType, entityId: state.entityId, definitionType: definition.type, definitionValue: definition.value, severity: state.severity }, actor })))
-}
-
 function hashPayload(value: unknown) { return createHash("sha256").update(JSON.stringify(value)).digest("hex") }
-function parseMetadata(value: string | null) { try { return JSON.parse(value ?? "{}") as Record<string, unknown> } catch { return {} } }
 function accuracyConfidence(meters: number) { return Math.max(0.1, Math.min(1, 1 - meters / 1_000)) }
 function accepted(sourceId: string, resultType: string, resultId: string | null): DeviceIngestResult { return { sourceId, status: "accepted", resultType, resultId, errorCode: null } }
 function rejected(sourceId: string, errorCode: string): DeviceIngestResult { return { sourceId, status: "rejected", resultType: null, resultId: null, errorCode } }
