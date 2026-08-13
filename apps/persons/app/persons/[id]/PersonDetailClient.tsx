@@ -9,6 +9,7 @@ import {
 } from "@life-os/ui"
 import InteractionCard from "@/components/interactions/InteractionCard"
 import EditPersonModal from "@/components/persons/EditPersonModal"
+import PublicProfilePanel from "@/components/persons/PublicProfilePanel"
 import LogInteractionModal from "@/components/interactions/LogInteractionModal"
 import AddPlanModal from "@/components/plans/AddPlanModal"
 import {
@@ -199,6 +200,8 @@ export default function PersonDetailClient({ id, initialData }: { id: string; in
           </div>
         )}
       </Card>
+
+      <PublicProfilePanel personId={person.id} />
 
       {/* ── Health ──────────────────────────────────────────────── */}
       {person.health && (

@@ -176,6 +176,14 @@ model Person {
   instagram    String?
   color        String?
   colorSoft    String?
+  // A shareable, unauthenticated "digital business card" page at
+  // /profile/[publicSlug]. Off by default — a person only becomes visible
+  // outside the workspace once someone explicitly toggles it on for that
+  // specific record. Only identity/professional fields are ever exposed on
+  // that page (see apps/persons/app/profile/[slug]/page.tsx) — never emails,
+  // phones, notes, or birthday.
+  publicProfileEnabled Boolean @default(false)
+  publicSlug   String?       @unique
   // Interactions where this person is the counterparty (for a transaction, the merchant)
   interactions Interaction[] @relation("InteractionCounterparty")
   // Interactions where this person is whose money/action it was (the payer)

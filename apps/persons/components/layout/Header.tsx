@@ -34,7 +34,7 @@ export default function Header() {
     return () => document.removeEventListener("mousedown", handle)
   }, [])
 
-  if (pathname === "/login") return null
+  if (pathname === "/login" || pathname?.startsWith("/profile/")) return null
 
   return (
     <header style={{

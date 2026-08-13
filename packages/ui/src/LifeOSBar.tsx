@@ -50,8 +50,9 @@ export function LifeOSBar({ current, rightSlot, style }: LifeOSBarProps) {
     };
   }, []);
 
-  // Auth entry point — never show OS chrome there.
-  if (pathname === '/login') return null;
+  // Auth entry point, and public shareable profile pages viewed by people
+  // outside Life OS entirely — never show internal OS chrome there.
+  if (pathname === '/login' || pathname?.startsWith('/profile/')) return null;
 
   const currentApp = LIFE_OS_APPS.find(a => a.key === current) ?? LIFE_OS_APPS[0];
   const captureHref = current === 'home' ? '#quick-capture' : `${HOME_URL}/#quick-capture`;

@@ -6743,7 +6743,9 @@ export const PersonScalarFieldEnum = {
   facebook: 'facebook',
   instagram: 'instagram',
   color: 'color',
-  colorSoft: 'colorSoft'
+  colorSoft: 'colorSoft',
+  publicProfileEnabled: 'publicProfileEnabled',
+  publicSlug: 'publicSlug'
 } as const
 
 export type PersonScalarFieldEnum = (typeof PersonScalarFieldEnum)[keyof typeof PersonScalarFieldEnum]

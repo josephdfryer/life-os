@@ -29,6 +29,8 @@ function person(overrides: Partial<Person>): Person {
     instagram: null,
     color: null,
     colorSoft: null,
+    publicProfileEnabled: false,
+    publicSlug: null,
     ...overrides,
   }
 }

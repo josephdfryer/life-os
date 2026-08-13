@@ -61,6 +61,8 @@ export type PersonMinAggregateOutputType = {
   instagram: string | null
   color: string | null
   colorSoft: string | null
+  publicProfileEnabled: boolean | null
+  publicSlug: string | null
 }
 
 export type PersonMaxAggregateOutputType = {
@@ -90,6 +92,8 @@ export type PersonMaxAggregateOutputType = {
   instagram: string | null
   color: string | null
   colorSoft: string | null
+  publicProfileEnabled: boolean | null
+  publicSlug: string | null
 }
 
 export type PersonCountAggregateOutputType = {
@@ -119,6 +123,8 @@ export type PersonCountAggregateOutputType = {
   instagram: number
   color: number
   colorSoft: number
+  publicProfileEnabled: number
+  publicSlug: number
   _all: number
 }
 
@@ -158,6 +164,8 @@ export type PersonMinAggregateInputType = {
   instagram?: true
   color?: true
   colorSoft?: true
+  publicProfileEnabled?: true
+  publicSlug?: true
 }
 
 export type PersonMaxAggregateInputType = {
@@ -187,6 +195,8 @@ export type PersonMaxAggregateInputType = {
   instagram?: true
   color?: true
   colorSoft?: true
+  publicProfileEnabled?: true
+  publicSlug?: true
 }
 
 export type PersonCountAggregateInputType = {
@@ -216,6 +226,8 @@ export type PersonCountAggregateInputType = {
   instagram?: true
   color?: true
   colorSoft?: true
+  publicProfileEnabled?: true
+  publicSlug?: true
   _all?: true
 }
 
@@ -332,6 +344,8 @@ export type PersonGroupByOutputType = {
   instagram: string | null
   color: string | null
   colorSoft: string | null
+  publicProfileEnabled: boolean
+  publicSlug: string | null
   _count: PersonCountAggregateOutputType | null
   _avg: PersonAvgAggregateOutputType | null
   _sum: PersonSumAggregateOutputType | null
@@ -384,6 +398,8 @@ export type PersonWhereInput = {
   instagram?: Prisma.StringNullableFilter<"Person"> | string | null
   color?: Prisma.StringNullableFilter<"Person"> | string | null
   colorSoft?: Prisma.StringNullableFilter<"Person"> | string | null
+  publicProfileEnabled?: Prisma.BoolFilter<"Person"> | boolean
+  publicSlug?: Prisma.StringNullableFilter<"Person"> | string | null
   workspace?: Prisma.XOR<Prisma.WorkspaceScalarRelationFilter, Prisma.WorkspaceWhereInput>
   interactions?: Prisma.InteractionListRelationFilter
   actorInteractions?: Prisma.InteractionListRelationFilter
@@ -429,6 +445,8 @@ export type PersonOrderByWithRelationInput = {
   instagram?: Prisma.SortOrderInput | Prisma.SortOrder
   color?: Prisma.SortOrderInput | Prisma.SortOrder
   colorSoft?: Prisma.SortOrderInput | Prisma.SortOrder
+  publicProfileEnabled?: Prisma.SortOrder
+  publicSlug?: Prisma.SortOrderInput | Prisma.SortOrder
   workspace?: Prisma.WorkspaceOrderByWithRelationInput
   interactions?: Prisma.InteractionOrderByRelationAggregateInput
   actorInteractions?: Prisma.InteractionOrderByRelationAggregateInput
@@ -449,6 +467,7 @@ export type PersonOrderByWithRelationInput = {
 
 export type PersonWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  publicSlug?: string
   AND?: Prisma.PersonWhereInput | Prisma.PersonWhereInput[]
   OR?: Prisma.PersonWhereInput[]
   NOT?: Prisma.PersonWhereInput | Prisma.PersonWhereInput[]
@@ -477,6 +496,7 @@ export type PersonWhereUniqueInput = Prisma.AtLeast<{
   instagram?: Prisma.StringNullableFilter<"Person"> | string | null
   color?: Prisma.StringNullableFilter<"Person"> | string | null
   colorSoft?: Prisma.StringNullableFilter<"Person"> | string | null
+  publicProfileEnabled?: Prisma.BoolFilter<"Person"> | boolean
   workspace?: Prisma.XOR<Prisma.WorkspaceScalarRelationFilter, Prisma.WorkspaceWhereInput>
   interactions?: Prisma.InteractionListRelationFilter
   actorInteractions?: Prisma.InteractionListRelationFilter
@@ -493,7 +513,7 @@ export type PersonWhereUniqueInput = Prisma.AtLeast<{
   auditLogs?: Prisma.AuditLogListRelationFilter
   theorySnapshots?: Prisma.TheorySnapshotListRelationFilter
   theoryAnalysisRuns?: Prisma.TheoryAnalysisRunListRelationFilter
-}, "id">
+}, "id" | "publicSlug">
 
 export type PersonOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -522,6 +542,8 @@ export type PersonOrderByWithAggregationInput = {
   instagram?: Prisma.SortOrderInput | Prisma.SortOrder
   color?: Prisma.SortOrderInput | Prisma.SortOrder
   colorSoft?: Prisma.SortOrderInput | Prisma.SortOrder
+  publicProfileEnabled?: Prisma.SortOrder
+  publicSlug?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.PersonCountOrderByAggregateInput
   _avg?: Prisma.PersonAvgOrderByAggregateInput
   _max?: Prisma.PersonMaxOrderByAggregateInput
@@ -559,6 +581,8 @@ export type PersonScalarWhereWithAggregatesInput = {
   instagram?: Prisma.StringNullableWithAggregatesFilter<"Person"> | string | null
   color?: Prisma.StringNullableWithAggregatesFilter<"Person"> | string | null
   colorSoft?: Prisma.StringNullableWithAggregatesFilter<"Person"> | string | null
+  publicProfileEnabled?: Prisma.BoolWithAggregatesFilter<"Person"> | boolean
+  publicSlug?: Prisma.StringNullableWithAggregatesFilter<"Person"> | string | null
 }
 
 export type PersonCreateInput = {
@@ -587,6 +611,8 @@ export type PersonCreateInput = {
   instagram?: string | null
   color?: string | null
   colorSoft?: string | null
+  publicProfileEnabled?: boolean
+  publicSlug?: string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutPersonsInput
   interactions?: Prisma.InteractionCreateNestedManyWithoutPersonInput
   actorInteractions?: Prisma.InteractionCreateNestedManyWithoutActorPersonInput
@@ -632,6 +658,8 @@ export type PersonUncheckedCreateInput = {
   instagram?: string | null
   color?: string | null
   colorSoft?: string | null
+  publicProfileEnabled?: boolean
+  publicSlug?: string | null
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutPersonInput
   actorInteractions?: Prisma.InteractionUncheckedCreateNestedManyWithoutActorPersonInput
   ownedEraAccounts?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutOwnerPersonInput
@@ -675,6 +703,8 @@ export type PersonUpdateInput = {
   instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicProfileEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  publicSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutPersonsNestedInput
   interactions?: Prisma.InteractionUpdateManyWithoutPersonNestedInput
   actorInteractions?: Prisma.InteractionUpdateManyWithoutActorPersonNestedInput
@@ -720,6 +750,8 @@ export type PersonUncheckedUpdateInput = {
   instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicProfileEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  publicSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutPersonNestedInput
   actorInteractions?: Prisma.InteractionUncheckedUpdateManyWithoutActorPersonNestedInput
   ownedEraAccounts?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutOwnerPersonNestedInput
@@ -764,6 +796,8 @@ export type PersonCreateManyInput = {
   instagram?: string | null
   color?: string | null
   colorSoft?: string | null
+  publicProfileEnabled?: boolean
+  publicSlug?: string | null
 }
 
 export type PersonUpdateManyMutationInput = {
@@ -792,6 +826,8 @@ export type PersonUpdateManyMutationInput = {
   instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicProfileEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  publicSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type PersonUncheckedUpdateManyInput = {
@@ -821,6 +857,8 @@ export type PersonUncheckedUpdateManyInput = {
   instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicProfileEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  publicSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type PersonListRelationFilter = {
@@ -860,6 +898,8 @@ export type PersonCountOrderByAggregateInput = {
   instagram?: Prisma.SortOrder
   color?: Prisma.SortOrder
   colorSoft?: Prisma.SortOrder
+  publicProfileEnabled?: Prisma.SortOrder
+  publicSlug?: Prisma.SortOrder
 }
 
 export type PersonAvgOrderByAggregateInput = {
@@ -893,6 +933,8 @@ export type PersonMaxOrderByAggregateInput = {
   instagram?: Prisma.SortOrder
   color?: Prisma.SortOrder
   colorSoft?: Prisma.SortOrder
+  publicProfileEnabled?: Prisma.SortOrder
+  publicSlug?: Prisma.SortOrder
 }
 
 export type PersonMinOrderByAggregateInput = {
@@ -922,6 +964,8 @@ export type PersonMinOrderByAggregateInput = {
   instagram?: Prisma.SortOrder
   color?: Prisma.SortOrder
   colorSoft?: Prisma.SortOrder
+  publicProfileEnabled?: Prisma.SortOrder
+  publicSlug?: Prisma.SortOrder
 }
 
 export type PersonSumOrderByAggregateInput = {
@@ -1246,6 +1290,8 @@ export type PersonCreateWithoutWorkspaceInput = {
   instagram?: string | null
   color?: string | null
   colorSoft?: string | null
+  publicProfileEnabled?: boolean
+  publicSlug?: string | null
   interactions?: Prisma.InteractionCreateNestedManyWithoutPersonInput
   actorInteractions?: Prisma.InteractionCreateNestedManyWithoutActorPersonInput
   ownedEraAccounts?: Prisma.EraAccountLinkCreateNestedManyWithoutOwnerPersonInput
@@ -1289,6 +1335,8 @@ export type PersonUncheckedCreateWithoutWorkspaceInput = {
   instagram?: string | null
   color?: string | null
   colorSoft?: string | null
+  publicProfileEnabled?: boolean
+  publicSlug?: string | null
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutPersonInput
   actorInteractions?: Prisma.InteractionUncheckedCreateNestedManyWithoutActorPersonInput
   ownedEraAccounts?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutOwnerPersonInput
@@ -1361,6 +1409,8 @@ export type PersonScalarWhereInput = {
   instagram?: Prisma.StringNullableFilter<"Person"> | string | null
   color?: Prisma.StringNullableFilter<"Person"> | string | null
   colorSoft?: Prisma.StringNullableFilter<"Person"> | string | null
+  publicProfileEnabled?: Prisma.BoolFilter<"Person"> | boolean
+  publicSlug?: Prisma.StringNullableFilter<"Person"> | string | null
 }
 
 export type PersonCreateWithoutUsersInput = {
@@ -1389,6 +1439,8 @@ export type PersonCreateWithoutUsersInput = {
   instagram?: string | null
   color?: string | null
   colorSoft?: string | null
+  publicProfileEnabled?: boolean
+  publicSlug?: string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutPersonsInput
   interactions?: Prisma.InteractionCreateNestedManyWithoutPersonInput
   actorInteractions?: Prisma.InteractionCreateNestedManyWithoutActorPersonInput
@@ -1433,6 +1485,8 @@ export type PersonUncheckedCreateWithoutUsersInput = {
   instagram?: string | null
   color?: string | null
   colorSoft?: string | null
+  publicProfileEnabled?: boolean
+  publicSlug?: string | null
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutPersonInput
   actorInteractions?: Prisma.InteractionUncheckedCreateNestedManyWithoutActorPersonInput
   ownedEraAccounts?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutOwnerPersonInput
@@ -1491,6 +1545,8 @@ export type PersonUpdateWithoutUsersInput = {
   instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicProfileEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  publicSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutPersonsNestedInput
   interactions?: Prisma.InteractionUpdateManyWithoutPersonNestedInput
   actorInteractions?: Prisma.InteractionUpdateManyWithoutActorPersonNestedInput
@@ -1535,6 +1591,8 @@ export type PersonUncheckedUpdateWithoutUsersInput = {
   instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicProfileEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  publicSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutPersonNestedInput
   actorInteractions?: Prisma.InteractionUncheckedUpdateManyWithoutActorPersonNestedInput
   ownedEraAccounts?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutOwnerPersonNestedInput
@@ -1577,6 +1635,8 @@ export type PersonCreateWithoutApiKeysInput = {
   instagram?: string | null
   color?: string | null
   colorSoft?: string | null
+  publicProfileEnabled?: boolean
+  publicSlug?: string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutPersonsInput
   interactions?: Prisma.InteractionCreateNestedManyWithoutPersonInput
   actorInteractions?: Prisma.InteractionCreateNestedManyWithoutActorPersonInput
@@ -1621,6 +1681,8 @@ export type PersonUncheckedCreateWithoutApiKeysInput = {
   instagram?: string | null
   color?: string | null
   colorSoft?: string | null
+  publicProfileEnabled?: boolean
+  publicSlug?: string | null
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutPersonInput
   actorInteractions?: Prisma.InteractionUncheckedCreateNestedManyWithoutActorPersonInput
   ownedEraAccounts?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutOwnerPersonInput
@@ -1679,6 +1741,8 @@ export type PersonUpdateWithoutApiKeysInput = {
   instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicProfileEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  publicSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutPersonsNestedInput
   interactions?: Prisma.InteractionUpdateManyWithoutPersonNestedInput
   actorInteractions?: Prisma.InteractionUpdateManyWithoutActorPersonNestedInput
@@ -1723,6 +1787,8 @@ export type PersonUncheckedUpdateWithoutApiKeysInput = {
   instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicProfileEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  publicSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutPersonNestedInput
   actorInteractions?: Prisma.InteractionUncheckedUpdateManyWithoutActorPersonNestedInput
   ownedEraAccounts?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutOwnerPersonNestedInput
@@ -1765,6 +1831,8 @@ export type PersonCreateWithoutAuditLogsInput = {
   instagram?: string | null
   color?: string | null
   colorSoft?: string | null
+  publicProfileEnabled?: boolean
+  publicSlug?: string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutPersonsInput
   interactions?: Prisma.InteractionCreateNestedManyWithoutPersonInput
   actorInteractions?: Prisma.InteractionCreateNestedManyWithoutActorPersonInput
@@ -1809,6 +1877,8 @@ export type PersonUncheckedCreateWithoutAuditLogsInput = {
   instagram?: string | null
   color?: string | null
   colorSoft?: string | null
+  publicProfileEnabled?: boolean
+  publicSlug?: string | null
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutPersonInput
   actorInteractions?: Prisma.InteractionUncheckedCreateNestedManyWithoutActorPersonInput
   ownedEraAccounts?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutOwnerPersonInput
@@ -1867,6 +1937,8 @@ export type PersonUpdateWithoutAuditLogsInput = {
   instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicProfileEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  publicSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutPersonsNestedInput
   interactions?: Prisma.InteractionUpdateManyWithoutPersonNestedInput
   actorInteractions?: Prisma.InteractionUpdateManyWithoutActorPersonNestedInput
@@ -1911,6 +1983,8 @@ export type PersonUncheckedUpdateWithoutAuditLogsInput = {
   instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicProfileEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  publicSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutPersonNestedInput
   actorInteractions?: Prisma.InteractionUncheckedUpdateManyWithoutActorPersonNestedInput
   ownedEraAccounts?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutOwnerPersonNestedInput
@@ -1953,6 +2027,8 @@ export type PersonCreateWithoutOwnedEraAccountsInput = {
   instagram?: string | null
   color?: string | null
   colorSoft?: string | null
+  publicProfileEnabled?: boolean
+  publicSlug?: string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutPersonsInput
   interactions?: Prisma.InteractionCreateNestedManyWithoutPersonInput
   actorInteractions?: Prisma.InteractionCreateNestedManyWithoutActorPersonInput
@@ -1997,6 +2073,8 @@ export type PersonUncheckedCreateWithoutOwnedEraAccountsInput = {
   instagram?: string | null
   color?: string | null
   colorSoft?: string | null
+  publicProfileEnabled?: boolean
+  publicSlug?: string | null
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutPersonInput
   actorInteractions?: Prisma.InteractionUncheckedCreateNestedManyWithoutActorPersonInput
   stagedInteractions?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutCandidatePersonInput
@@ -2055,6 +2133,8 @@ export type PersonUpdateWithoutOwnedEraAccountsInput = {
   instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicProfileEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  publicSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutPersonsNestedInput
   interactions?: Prisma.InteractionUpdateManyWithoutPersonNestedInput
   actorInteractions?: Prisma.InteractionUpdateManyWithoutActorPersonNestedInput
@@ -2099,6 +2179,8 @@ export type PersonUncheckedUpdateWithoutOwnedEraAccountsInput = {
   instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicProfileEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  publicSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutPersonNestedInput
   actorInteractions?: Prisma.InteractionUncheckedUpdateManyWithoutActorPersonNestedInput
   stagedInteractions?: Prisma.StagedInteractionUncheckedUpdateManyWithoutCandidatePersonNestedInput
@@ -2141,6 +2223,8 @@ export type PersonCreateWithoutStagedInteractionsInput = {
   instagram?: string | null
   color?: string | null
   colorSoft?: string | null
+  publicProfileEnabled?: boolean
+  publicSlug?: string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutPersonsInput
   interactions?: Prisma.InteractionCreateNestedManyWithoutPersonInput
   actorInteractions?: Prisma.InteractionCreateNestedManyWithoutActorPersonInput
@@ -2185,6 +2269,8 @@ export type PersonUncheckedCreateWithoutStagedInteractionsInput = {
   instagram?: string | null
   color?: string | null
   colorSoft?: string | null
+  publicProfileEnabled?: boolean
+  publicSlug?: string | null
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutPersonInput
   actorInteractions?: Prisma.InteractionUncheckedCreateNestedManyWithoutActorPersonInput
   ownedEraAccounts?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutOwnerPersonInput
@@ -2243,6 +2329,8 @@ export type PersonUpdateWithoutStagedInteractionsInput = {
   instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicProfileEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  publicSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutPersonsNestedInput
   interactions?: Prisma.InteractionUpdateManyWithoutPersonNestedInput
   actorInteractions?: Prisma.InteractionUpdateManyWithoutActorPersonNestedInput
@@ -2287,6 +2375,8 @@ export type PersonUncheckedUpdateWithoutStagedInteractionsInput = {
   instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicProfileEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  publicSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutPersonNestedInput
   actorInteractions?: Prisma.InteractionUncheckedUpdateManyWithoutActorPersonNestedInput
   ownedEraAccounts?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutOwnerPersonNestedInput
@@ -2329,6 +2419,8 @@ export type PersonCreateWithoutInteractionsInput = {
   instagram?: string | null
   color?: string | null
   colorSoft?: string | null
+  publicProfileEnabled?: boolean
+  publicSlug?: string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutPersonsInput
   actorInteractions?: Prisma.InteractionCreateNestedManyWithoutActorPersonInput
   ownedEraAccounts?: Prisma.EraAccountLinkCreateNestedManyWithoutOwnerPersonInput
@@ -2373,6 +2465,8 @@ export type PersonUncheckedCreateWithoutInteractionsInput = {
   instagram?: string | null
   color?: string | null
   colorSoft?: string | null
+  publicProfileEnabled?: boolean
+  publicSlug?: string | null
   actorInteractions?: Prisma.InteractionUncheckedCreateNestedManyWithoutActorPersonInput
   ownedEraAccounts?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutOwnerPersonInput
   stagedInteractions?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutCandidatePersonInput
@@ -2420,6 +2514,8 @@ export type PersonCreateWithoutActorInteractionsInput = {
   instagram?: string | null
   color?: string | null
   colorSoft?: string | null
+  publicProfileEnabled?: boolean
+  publicSlug?: string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutPersonsInput
   interactions?: Prisma.InteractionCreateNestedManyWithoutPersonInput
   ownedEraAccounts?: Prisma.EraAccountLinkCreateNestedManyWithoutOwnerPersonInput
@@ -2464,6 +2560,8 @@ export type PersonUncheckedCreateWithoutActorInteractionsInput = {
   instagram?: string | null
   color?: string | null
   colorSoft?: string | null
+  publicProfileEnabled?: boolean
+  publicSlug?: string | null
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutPersonInput
   ownedEraAccounts?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutOwnerPersonInput
   stagedInteractions?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutCandidatePersonInput
@@ -2522,6 +2620,8 @@ export type PersonUpdateWithoutInteractionsInput = {
   instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicProfileEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  publicSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutPersonsNestedInput
   actorInteractions?: Prisma.InteractionUpdateManyWithoutActorPersonNestedInput
   ownedEraAccounts?: Prisma.EraAccountLinkUpdateManyWithoutOwnerPersonNestedInput
@@ -2566,6 +2666,8 @@ export type PersonUncheckedUpdateWithoutInteractionsInput = {
   instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicProfileEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  publicSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actorInteractions?: Prisma.InteractionUncheckedUpdateManyWithoutActorPersonNestedInput
   ownedEraAccounts?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutOwnerPersonNestedInput
   stagedInteractions?: Prisma.StagedInteractionUncheckedUpdateManyWithoutCandidatePersonNestedInput
@@ -2619,6 +2721,8 @@ export type PersonUpdateWithoutActorInteractionsInput = {
   instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicProfileEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  publicSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutPersonsNestedInput
   interactions?: Prisma.InteractionUpdateManyWithoutPersonNestedInput
   ownedEraAccounts?: Prisma.EraAccountLinkUpdateManyWithoutOwnerPersonNestedInput
@@ -2663,6 +2767,8 @@ export type PersonUncheckedUpdateWithoutActorInteractionsInput = {
   instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicProfileEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  publicSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutPersonNestedInput
   ownedEraAccounts?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutOwnerPersonNestedInput
   stagedInteractions?: Prisma.StagedInteractionUncheckedUpdateManyWithoutCandidatePersonNestedInput
@@ -2705,6 +2811,8 @@ export type PersonCreateWithoutPlansInput = {
   instagram?: string | null
   color?: string | null
   colorSoft?: string | null
+  publicProfileEnabled?: boolean
+  publicSlug?: string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutPersonsInput
   interactions?: Prisma.InteractionCreateNestedManyWithoutPersonInput
   actorInteractions?: Prisma.InteractionCreateNestedManyWithoutActorPersonInput
@@ -2749,6 +2857,8 @@ export type PersonUncheckedCreateWithoutPlansInput = {
   instagram?: string | null
   color?: string | null
   colorSoft?: string | null
+  publicProfileEnabled?: boolean
+  publicSlug?: string | null
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutPersonInput
   actorInteractions?: Prisma.InteractionUncheckedCreateNestedManyWithoutActorPersonInput
   ownedEraAccounts?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutOwnerPersonInput
@@ -2807,6 +2917,8 @@ export type PersonUpdateWithoutPlansInput = {
   instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicProfileEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  publicSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutPersonsNestedInput
   interactions?: Prisma.InteractionUpdateManyWithoutPersonNestedInput
   actorInteractions?: Prisma.InteractionUpdateManyWithoutActorPersonNestedInput
@@ -2851,6 +2963,8 @@ export type PersonUncheckedUpdateWithoutPlansInput = {
   instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicProfileEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  publicSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutPersonNestedInput
   actorInteractions?: Prisma.InteractionUncheckedUpdateManyWithoutActorPersonNestedInput
   ownedEraAccounts?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutOwnerPersonNestedInput
@@ -2893,6 +3007,8 @@ export type PersonCreateWithoutExpectedInPlansInput = {
   instagram?: string | null
   color?: string | null
   colorSoft?: string | null
+  publicProfileEnabled?: boolean
+  publicSlug?: string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutPersonsInput
   interactions?: Prisma.InteractionCreateNestedManyWithoutPersonInput
   actorInteractions?: Prisma.InteractionCreateNestedManyWithoutActorPersonInput
@@ -2937,6 +3053,8 @@ export type PersonUncheckedCreateWithoutExpectedInPlansInput = {
   instagram?: string | null
   color?: string | null
   colorSoft?: string | null
+  publicProfileEnabled?: boolean
+  publicSlug?: string | null
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutPersonInput
   actorInteractions?: Prisma.InteractionUncheckedCreateNestedManyWithoutActorPersonInput
   ownedEraAccounts?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutOwnerPersonInput
@@ -2995,6 +3113,8 @@ export type PersonUpdateWithoutExpectedInPlansInput = {
   instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicProfileEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  publicSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutPersonsNestedInput
   interactions?: Prisma.InteractionUpdateManyWithoutPersonNestedInput
   actorInteractions?: Prisma.InteractionUpdateManyWithoutActorPersonNestedInput
@@ -3039,6 +3159,8 @@ export type PersonUncheckedUpdateWithoutExpectedInPlansInput = {
   instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicProfileEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  publicSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutPersonNestedInput
   actorInteractions?: Prisma.InteractionUncheckedUpdateManyWithoutActorPersonNestedInput
   ownedEraAccounts?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutOwnerPersonNestedInput
@@ -3081,6 +3203,8 @@ export type PersonCreateWithoutOwnedItemsInput = {
   instagram?: string | null
   color?: string | null
   colorSoft?: string | null
+  publicProfileEnabled?: boolean
+  publicSlug?: string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutPersonsInput
   interactions?: Prisma.InteractionCreateNestedManyWithoutPersonInput
   actorInteractions?: Prisma.InteractionCreateNestedManyWithoutActorPersonInput
@@ -3125,6 +3249,8 @@ export type PersonUncheckedCreateWithoutOwnedItemsInput = {
   instagram?: string | null
   color?: string | null
   colorSoft?: string | null
+  publicProfileEnabled?: boolean
+  publicSlug?: string | null
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutPersonInput
   actorInteractions?: Prisma.InteractionUncheckedCreateNestedManyWithoutActorPersonInput
   ownedEraAccounts?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutOwnerPersonInput
@@ -3183,6 +3309,8 @@ export type PersonUpdateWithoutOwnedItemsInput = {
   instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicProfileEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  publicSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutPersonsNestedInput
   interactions?: Prisma.InteractionUpdateManyWithoutPersonNestedInput
   actorInteractions?: Prisma.InteractionUpdateManyWithoutActorPersonNestedInput
@@ -3227,6 +3355,8 @@ export type PersonUncheckedUpdateWithoutOwnedItemsInput = {
   instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicProfileEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  publicSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutPersonNestedInput
   actorInteractions?: Prisma.InteractionUncheckedUpdateManyWithoutActorPersonNestedInput
   ownedEraAccounts?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutOwnerPersonNestedInput
@@ -3269,6 +3399,8 @@ export type PersonCreateWithoutAssembledByInput = {
   instagram?: string | null
   color?: string | null
   colorSoft?: string | null
+  publicProfileEnabled?: boolean
+  publicSlug?: string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutPersonsInput
   interactions?: Prisma.InteractionCreateNestedManyWithoutPersonInput
   actorInteractions?: Prisma.InteractionCreateNestedManyWithoutActorPersonInput
@@ -3313,6 +3445,8 @@ export type PersonUncheckedCreateWithoutAssembledByInput = {
   instagram?: string | null
   color?: string | null
   colorSoft?: string | null
+  publicProfileEnabled?: boolean
+  publicSlug?: string | null
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutPersonInput
   actorInteractions?: Prisma.InteractionUncheckedCreateNestedManyWithoutActorPersonInput
   ownedEraAccounts?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutOwnerPersonInput
@@ -3360,6 +3494,8 @@ export type PersonCreateWithoutDisassembledByInput = {
   instagram?: string | null
   color?: string | null
   colorSoft?: string | null
+  publicProfileEnabled?: boolean
+  publicSlug?: string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutPersonsInput
   interactions?: Prisma.InteractionCreateNestedManyWithoutPersonInput
   actorInteractions?: Prisma.InteractionCreateNestedManyWithoutActorPersonInput
@@ -3404,6 +3540,8 @@ export type PersonUncheckedCreateWithoutDisassembledByInput = {
   instagram?: string | null
   color?: string | null
   colorSoft?: string | null
+  publicProfileEnabled?: boolean
+  publicSlug?: string | null
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutPersonInput
   actorInteractions?: Prisma.InteractionUncheckedCreateNestedManyWithoutActorPersonInput
   ownedEraAccounts?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutOwnerPersonInput
@@ -3462,6 +3600,8 @@ export type PersonUpdateWithoutAssembledByInput = {
   instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicProfileEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  publicSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutPersonsNestedInput
   interactions?: Prisma.InteractionUpdateManyWithoutPersonNestedInput
   actorInteractions?: Prisma.InteractionUpdateManyWithoutActorPersonNestedInput
@@ -3506,6 +3646,8 @@ export type PersonUncheckedUpdateWithoutAssembledByInput = {
   instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicProfileEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  publicSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutPersonNestedInput
   actorInteractions?: Prisma.InteractionUncheckedUpdateManyWithoutActorPersonNestedInput
   ownedEraAccounts?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutOwnerPersonNestedInput
@@ -3559,6 +3701,8 @@ export type PersonUpdateWithoutDisassembledByInput = {
   instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicProfileEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  publicSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutPersonsNestedInput
   interactions?: Prisma.InteractionUpdateManyWithoutPersonNestedInput
   actorInteractions?: Prisma.InteractionUpdateManyWithoutActorPersonNestedInput
@@ -3603,6 +3747,8 @@ export type PersonUncheckedUpdateWithoutDisassembledByInput = {
   instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicProfileEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  publicSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutPersonNestedInput
   actorInteractions?: Prisma.InteractionUncheckedUpdateManyWithoutActorPersonNestedInput
   ownedEraAccounts?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutOwnerPersonNestedInput
@@ -3645,6 +3791,8 @@ export type PersonCreateWithoutTheoryAnalysisRunsInput = {
   instagram?: string | null
   color?: string | null
   colorSoft?: string | null
+  publicProfileEnabled?: boolean
+  publicSlug?: string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutPersonsInput
   interactions?: Prisma.InteractionCreateNestedManyWithoutPersonInput
   actorInteractions?: Prisma.InteractionCreateNestedManyWithoutActorPersonInput
@@ -3689,6 +3837,8 @@ export type PersonUncheckedCreateWithoutTheoryAnalysisRunsInput = {
   instagram?: string | null
   color?: string | null
   colorSoft?: string | null
+  publicProfileEnabled?: boolean
+  publicSlug?: string | null
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutPersonInput
   actorInteractions?: Prisma.InteractionUncheckedCreateNestedManyWithoutActorPersonInput
   ownedEraAccounts?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutOwnerPersonInput
@@ -3747,6 +3897,8 @@ export type PersonUpdateWithoutTheoryAnalysisRunsInput = {
   instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicProfileEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  publicSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutPersonsNestedInput
   interactions?: Prisma.InteractionUpdateManyWithoutPersonNestedInput
   actorInteractions?: Prisma.InteractionUpdateManyWithoutActorPersonNestedInput
@@ -3791,6 +3943,8 @@ export type PersonUncheckedUpdateWithoutTheoryAnalysisRunsInput = {
   instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicProfileEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  publicSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutPersonNestedInput
   actorInteractions?: Prisma.InteractionUncheckedUpdateManyWithoutActorPersonNestedInput
   ownedEraAccounts?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutOwnerPersonNestedInput
@@ -3833,6 +3987,8 @@ export type PersonCreateWithoutGroupMembershipsInput = {
   instagram?: string | null
   color?: string | null
   colorSoft?: string | null
+  publicProfileEnabled?: boolean
+  publicSlug?: string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutPersonsInput
   interactions?: Prisma.InteractionCreateNestedManyWithoutPersonInput
   actorInteractions?: Prisma.InteractionCreateNestedManyWithoutActorPersonInput
@@ -3877,6 +4033,8 @@ export type PersonUncheckedCreateWithoutGroupMembershipsInput = {
   instagram?: string | null
   color?: string | null
   colorSoft?: string | null
+  publicProfileEnabled?: boolean
+  publicSlug?: string | null
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutPersonInput
   actorInteractions?: Prisma.InteractionUncheckedCreateNestedManyWithoutActorPersonInput
   ownedEraAccounts?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutOwnerPersonInput
@@ -3935,6 +4093,8 @@ export type PersonUpdateWithoutGroupMembershipsInput = {
   instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicProfileEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  publicSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutPersonsNestedInput
   interactions?: Prisma.InteractionUpdateManyWithoutPersonNestedInput
   actorInteractions?: Prisma.InteractionUpdateManyWithoutActorPersonNestedInput
@@ -3979,6 +4139,8 @@ export type PersonUncheckedUpdateWithoutGroupMembershipsInput = {
   instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicProfileEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  publicSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutPersonNestedInput
   actorInteractions?: Prisma.InteractionUncheckedUpdateManyWithoutActorPersonNestedInput
   ownedEraAccounts?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutOwnerPersonNestedInput
@@ -4021,6 +4183,8 @@ export type PersonCreateWithoutTheorySnapshotsInput = {
   instagram?: string | null
   color?: string | null
   colorSoft?: string | null
+  publicProfileEnabled?: boolean
+  publicSlug?: string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutPersonsInput
   interactions?: Prisma.InteractionCreateNestedManyWithoutPersonInput
   actorInteractions?: Prisma.InteractionCreateNestedManyWithoutActorPersonInput
@@ -4065,6 +4229,8 @@ export type PersonUncheckedCreateWithoutTheorySnapshotsInput = {
   instagram?: string | null
   color?: string | null
   colorSoft?: string | null
+  publicProfileEnabled?: boolean
+  publicSlug?: string | null
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutPersonInput
   actorInteractions?: Prisma.InteractionUncheckedCreateNestedManyWithoutActorPersonInput
   ownedEraAccounts?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutOwnerPersonInput
@@ -4123,6 +4289,8 @@ export type PersonUpdateWithoutTheorySnapshotsInput = {
   instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicProfileEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  publicSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutPersonsNestedInput
   interactions?: Prisma.InteractionUpdateManyWithoutPersonNestedInput
   actorInteractions?: Prisma.InteractionUpdateManyWithoutActorPersonNestedInput
@@ -4167,6 +4335,8 @@ export type PersonUncheckedUpdateWithoutTheorySnapshotsInput = {
   instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicProfileEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  publicSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutPersonNestedInput
   actorInteractions?: Prisma.InteractionUncheckedUpdateManyWithoutActorPersonNestedInput
   ownedEraAccounts?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutOwnerPersonNestedInput
@@ -4209,6 +4379,8 @@ export type PersonCreateManyWorkspaceInput = {
   instagram?: string | null
   color?: string | null
   colorSoft?: string | null
+  publicProfileEnabled?: boolean
+  publicSlug?: string | null
 }
 
 export type PersonUpdateWithoutWorkspaceInput = {
@@ -4237,6 +4409,8 @@ export type PersonUpdateWithoutWorkspaceInput = {
   instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicProfileEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  publicSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   interactions?: Prisma.InteractionUpdateManyWithoutPersonNestedInput
   actorInteractions?: Prisma.InteractionUpdateManyWithoutActorPersonNestedInput
   ownedEraAccounts?: Prisma.EraAccountLinkUpdateManyWithoutOwnerPersonNestedInput
@@ -4280,6 +4454,8 @@ export type PersonUncheckedUpdateWithoutWorkspaceInput = {
   instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicProfileEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  publicSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutPersonNestedInput
   actorInteractions?: Prisma.InteractionUncheckedUpdateManyWithoutActorPersonNestedInput
   ownedEraAccounts?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutOwnerPersonNestedInput
@@ -4323,6 +4499,8 @@ export type PersonUncheckedUpdateManyWithoutWorkspaceInput = {
   instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicProfileEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  publicSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
@@ -4509,6 +4687,8 @@ export type PersonSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   instagram?: boolean
   color?: boolean
   colorSoft?: boolean
+  publicProfileEnabled?: boolean
+  publicSlug?: boolean
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   interactions?: boolean | Prisma.Person$interactionsArgs<ExtArgs>
   actorInteractions?: boolean | Prisma.Person$actorInteractionsArgs<ExtArgs>
@@ -4555,6 +4735,8 @@ export type PersonSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   instagram?: boolean
   color?: boolean
   colorSoft?: boolean
+  publicProfileEnabled?: boolean
+  publicSlug?: boolean
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["person"]>
 
@@ -4585,6 +4767,8 @@ export type PersonSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   instagram?: boolean
   color?: boolean
   colorSoft?: boolean
+  publicProfileEnabled?: boolean
+  publicSlug?: boolean
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["person"]>
 
@@ -4615,9 +4799,11 @@ export type PersonSelectScalar = {
   instagram?: boolean
   color?: boolean
   colorSoft?: boolean
+  publicProfileEnabled?: boolean
+  publicSlug?: boolean
 }
 
-export type PersonOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "workspaceId" | "createdAt" | "updatedAt" | "first" | "last" | "nickname" | "title" | "headline" | "emails" | "emailSearch" | "phones" | "birthday" | "closeness" | "tags" | "values" | "notes" | "company" | "location" | "linkedin" | "twitter" | "website" | "facebook" | "instagram" | "color" | "colorSoft", ExtArgs["result"]["person"]>
+export type PersonOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "workspaceId" | "createdAt" | "updatedAt" | "first" | "last" | "nickname" | "title" | "headline" | "emails" | "emailSearch" | "phones" | "birthday" | "closeness" | "tags" | "values" | "notes" | "company" | "location" | "linkedin" | "twitter" | "website" | "facebook" | "instagram" | "color" | "colorSoft" | "publicProfileEnabled" | "publicSlug", ExtArgs["result"]["person"]>
 export type PersonInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   interactions?: boolean | Prisma.Person$interactionsArgs<ExtArgs>
@@ -4691,6 +4877,8 @@ export type $PersonPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     instagram: string | null
     color: string | null
     colorSoft: string | null
+    publicProfileEnabled: boolean
+    publicSlug: string | null
   }, ExtArgs["result"]["person"]>
   composites: {}
 }
@@ -5156,6 +5344,8 @@ export interface PersonFieldRefs {
   readonly instagram: Prisma.FieldRef<"Person", 'String'>
   readonly color: Prisma.FieldRef<"Person", 'String'>
   readonly colorSoft: Prisma.FieldRef<"Person", 'String'>
+  readonly publicProfileEnabled: Prisma.FieldRef<"Person", 'Boolean'>
+  readonly publicSlug: Prisma.FieldRef<"Person", 'String'>
 }
     
 

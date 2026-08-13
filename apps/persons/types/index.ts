@@ -23,6 +23,8 @@ export type Person = {
   instagram: string | null
   color: string | null
   colorSoft: string | null
+  publicProfileEnabled: boolean
+  publicSlug: string | null
 }
 
 export type PersonWithInteractions = Person & {
