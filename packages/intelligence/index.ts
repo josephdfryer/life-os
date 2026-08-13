@@ -50,8 +50,19 @@ export {
 } from "./src/life-model-snapshots"
 
 export { computeCapacityBand } from "./src/adaptive-day-capacity"
-export { findCandidateSlot, CANDIDATE_START_HOUR, CANDIDATE_END_HOUR, BUFFER_MINUTES, MAX_DAYS_AHEAD } from "./src/adaptive-day-scheduling"
+export { findCandidateSlot, longestFreeWindowMinutes, CANDIDATE_START_HOUR, CANDIDATE_END_HOUR, BUFFER_MINUTES, MAX_DAYS_AHEAD } from "./src/adaptive-day-scheduling"
 export { generateAdaptiveDayBrief, ADAPTIVE_DAY_RULES_VERSION } from "./src/adaptive-day-engine"
+export {
+  getOrGenerateTodaysBrief,
+  refreshTodaysBrief,
+  listAdaptiveDayBriefs,
+  acceptAdaptiveIntervention,
+  editAndAcceptAdaptiveIntervention,
+  dismissAdaptiveIntervention,
+  recordAdaptiveInterventionOutcome,
+  AdaptiveDayError,
+  type RecordAdaptiveOutcomeInput,
+} from "./src/adaptive-day-brief"
 export { zonedTimeToUtc, localDayString, localHour, addDays, roundUpToQuarterHour, formatSlot } from "./src/adaptive-day-time"
 export type {
   CapacityBand,

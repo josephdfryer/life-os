@@ -2000,7 +2000,14 @@ model AdaptiveDayBrief {
 
   interventions AdaptiveIntervention[]
 
-  @@unique([workspaceId, day, rulesVersion])
+  // Not unique: uniqueness of "current" is enforced at the application
+  // layer (generateAndPersistBrief always supersedes the prior current
+  // brief for a day before creating a new one, even when rulesVersion is
+  // unchanged — a refresh doesn't bump the rules version). A DB-level
+  // unique constraint on (workspaceId, day, rulesVersion) would incorrectly
+  // reject that: status isn't part of the key, so a superseded row still
+  // occupies it.
+  @@index([workspaceId, day, rulesVersion])
   @@index([workspaceId, day, status])
 }
 

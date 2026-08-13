@@ -50,3 +50,21 @@ export function findCandidateSlot(
   }
   return null
 }
+
+// The longest uninterrupted gap among a day's fixed blocks, within
+// [windowStart, windowEnd] — feeds the capacity engine's "four fixed blocks
+// leave no uninterrupted 90-minute window" rule. Deliberately uses raw block
+// times, not buffered ones: the 15-minute buffer is a scheduling-safety
+// margin for placing something new, not part of how constrained the day
+// itself is.
+export function longestFreeWindowMinutes(blocks: FixedBlock[], windowStart: Date, windowEnd: Date): number {
+  const sorted = [...blocks].sort((a, b) => a.start.getTime() - b.start.getTime())
+  let cursor = windowStart
+  let longestMs = 0
+  for (const block of sorted) {
+    longestMs = Math.max(longestMs, block.start.getTime() - cursor.getTime())
+    if (block.end.getTime() > cursor.getTime()) cursor = block.end
+  }
+  longestMs = Math.max(longestMs, windowEnd.getTime() - cursor.getTime())
+  return Math.max(0, Math.round(longestMs / 60_000))
+}

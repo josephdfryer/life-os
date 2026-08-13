@@ -1,7 +1,7 @@
 import test from "node:test"
 import assert from "node:assert/strict"
 import { computeCapacityBand } from "../src/adaptive-day-capacity"
-import { findCandidateSlot, BUFFER_MINUTES } from "../src/adaptive-day-scheduling"
+import { findCandidateSlot, longestFreeWindowMinutes, BUFFER_MINUTES } from "../src/adaptive-day-scheduling"
 import { generateAdaptiveDayBrief, ADAPTIVE_DAY_RULES_VERSION } from "../src/adaptive-day-engine"
 import { zonedTimeToUtc, localDayString, addDays, roundUpToQuarterHour } from "../src/adaptive-day-time"
 import type { CapacityBandInput, AdaptiveDayEngineInput } from "../src/adaptive-day-types"
@@ -187,6 +187,32 @@ test("scheduling: returns null rather than a forced slot when all 4 candidate da
 
 test("scheduling: buffer constant is 15 minutes, matching docs/ADAPTIVE_DAY_PLAN.md", () => {
   assert.equal(BUFFER_MINUTES, 15)
+})
+
+// ── longestFreeWindowMinutes ─────────────────────────────────────────────
+
+test("longestFreeWindowMinutes: an empty day's longest window is the whole window", () => {
+  const start = zonedTimeToUtc("2026-06-01", 8, 0, TZ)
+  const end = zonedTimeToUtc("2026-06-01", 20, 0, TZ)
+  assert.equal(longestFreeWindowMinutes([], start, end), 12 * 60)
+})
+
+test("longestFreeWindowMinutes: finds the largest gap among several blocks, unbuffered", () => {
+  const start = zonedTimeToUtc("2026-06-01", 8, 0, TZ)
+  const end = zonedTimeToUtc("2026-06-01", 20, 0, TZ)
+  const blocks = [
+    { start: zonedTimeToUtc("2026-06-01", 9, 0, TZ), end: zonedTimeToUtc("2026-06-01", 9, 30, TZ) },
+    { start: zonedTimeToUtc("2026-06-01", 12, 0, TZ), end: zonedTimeToUtc("2026-06-01", 12, 30, TZ) },
+    { start: zonedTimeToUtc("2026-06-01", 12, 45, TZ), end: zonedTimeToUtc("2026-06-01", 13, 0, TZ) },
+  ]
+  // Largest gap is 13:00-20:00 = 420 minutes, bigger than the 9:30-12:00 gap.
+  assert.equal(longestFreeWindowMinutes(blocks, start, end), 420)
+})
+
+test("longestFreeWindowMinutes: a fully booked day returns 0", () => {
+  const start = zonedTimeToUtc("2026-06-01", 8, 0, TZ)
+  const end = zonedTimeToUtc("2026-06-01", 20, 0, TZ)
+  assert.equal(longestFreeWindowMinutes([{ start, end }], start, end), 0)
 })
 
 // ── generateAdaptiveDayBrief ─────────────────────────────────────────────

@@ -261,7 +261,6 @@ export type AdaptiveDayBriefOrderByWithRelationInput = {
 
 export type AdaptiveDayBriefWhereUniqueInput = Prisma.AtLeast<{
   id?: string
-  workspaceId_day_rulesVersion?: Prisma.AdaptiveDayBriefWorkspaceIdDayRulesVersionCompoundUniqueInput
   AND?: Prisma.AdaptiveDayBriefWhereInput | Prisma.AdaptiveDayBriefWhereInput[]
   OR?: Prisma.AdaptiveDayBriefWhereInput[]
   NOT?: Prisma.AdaptiveDayBriefWhereInput | Prisma.AdaptiveDayBriefWhereInput[]
@@ -278,7 +277,7 @@ export type AdaptiveDayBriefWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"AdaptiveDayBrief"> | Date | string
   workspace?: Prisma.XOR<Prisma.WorkspaceScalarRelationFilter, Prisma.WorkspaceWhereInput>
   interventions?: Prisma.AdaptiveInterventionListRelationFilter
-}, "id" | "workspaceId_day_rulesVersion">
+}, "id">
 
 export type AdaptiveDayBriefOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -432,12 +431,6 @@ export type AdaptiveDayBriefListRelationFilter = {
 
 export type AdaptiveDayBriefOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
-}
-
-export type AdaptiveDayBriefWorkspaceIdDayRulesVersionCompoundUniqueInput = {
-  workspaceId: string
-  day: string
-  rulesVersion: string
 }
 
 export type AdaptiveDayBriefCountOrderByAggregateInput = {

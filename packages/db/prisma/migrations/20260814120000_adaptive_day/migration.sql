@@ -14,7 +14,7 @@ CREATE TABLE "AdaptiveDayBrief" (
     CONSTRAINT "AdaptiveDayBrief_workspaceId_fkey" FOREIGN KEY ("workspaceId") REFERENCES "Workspace" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-CREATE UNIQUE INDEX "AdaptiveDayBrief_workspaceId_day_rulesVersion_key" ON "AdaptiveDayBrief"("workspaceId", "day", "rulesVersion");
+CREATE INDEX "AdaptiveDayBrief_workspaceId_day_rulesVersion_idx" ON "AdaptiveDayBrief"("workspaceId", "day", "rulesVersion");
 CREATE INDEX "AdaptiveDayBrief_workspaceId_day_status_idx" ON "AdaptiveDayBrief"("workspaceId", "day", "status");
 
 CREATE TABLE "AdaptiveIntervention" (
