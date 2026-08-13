@@ -25,6 +25,7 @@ export type Person = {
   colorSoft: string | null
   publicProfileEnabled: boolean
   publicSlug: string | null
+  source: string | null
 }
 
 export type PersonWithInteractions = Person & {

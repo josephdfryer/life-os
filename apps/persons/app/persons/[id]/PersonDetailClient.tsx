@@ -16,6 +16,7 @@ import {
   relativeTime, closenessLabel, parseTags, parseJsonArray, formatBirthday,
 } from "@/lib/utils"
 import { enrichWithAttention } from "@/lib/attention"
+import { personSourceBadge } from "@/lib/person-list-presentation"
 import type { Person, Interaction, Plan, PersonHealthSummary } from "@/types"
 
 type FullPerson = Person & {
@@ -115,8 +116,28 @@ export default function PersonDetailClient({ id, initialData }: { id: string; in
               fontWeight: 600,
               margin: "0 0 2px",
               color: "var(--ink)",
+              display: "flex",
+              alignItems: "center",
+              gap: "8px",
             }}>
               {person.first} {person.last}
+              {(() => {
+                const badge = personSourceBadge(person.source)
+                return badge ? (
+                  <span
+                    title={badge.label}
+                    aria-label={badge.label}
+                    style={{
+                      display: "inline-flex", alignItems: "center", justifyContent: "center",
+                      width: "20px", height: "20px", borderRadius: "50%",
+                      background: "var(--surface2)", color: "var(--ink-4)",
+                      fontSize: "11px", flexShrink: 0,
+                    }}
+                  >
+                    {badge.icon}
+                  </span>
+                ) : null
+              })()}
             </h1>
             {person.nickname && (
               <div style={{ fontSize: "11px", color: "var(--ink-4)", marginBottom: "4px" }}>

@@ -55,6 +55,7 @@ export async function POST(req: NextRequest) {
         instagram: optionalString(contact.instagram),
         color: optionalString(contact.color),
         colorSoft: optionalString(contact.colorSoft),
+        source: optionalString(contact.source),
       }
     })
 

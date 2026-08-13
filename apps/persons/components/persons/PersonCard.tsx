@@ -4,6 +4,7 @@ import { closenessLabel, relativeTime } from "@/lib/utils"
 import {
   interactionSourceLabel,
   personContext,
+  personSourceBadge,
   relationshipStatus,
 } from "@/lib/person-list-presentation"
 import type { PersonListPerson } from "@/types"
@@ -21,6 +22,7 @@ export default function PersonCard({ person }: Props) {
     ? `${interactionSourceLabel(latest.source, latest.type)} · ${relativeTime(latest.timestamp)}`
     : "No interaction history"
   const firstTag = person.tags[0]
+  const sourceBadge = personSourceBadge(person.source)
 
   return (
     <Link
@@ -38,6 +40,7 @@ export default function PersonCard({ person }: Props) {
       <div className={styles.identity}>
         <div className={styles.nameLine}>
           <span className={styles.name}>{person.first} {person.last}</span>
+          {sourceBadge ? <span className={styles.sourceBadge} title={sourceBadge.label} aria-label={sourceBadge.label}>{sourceBadge.icon}</span> : null}
           <span className={styles.closeness}>{closenessLabel(person.closeness)}</span>
           {firstTag ? <span className={styles.tag}>{firstTag}</span> : null}
         </div>

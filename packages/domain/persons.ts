@@ -59,6 +59,18 @@ export type PersonInput = {
   instagram?: unknown
   color?: unknown
   colorSoft?: unknown
+  // Provenance for the badge PersonCard shows. Callers with a more specific
+  // origin than the actor type conveys (an interaction-driven auto-create,
+  // a contacts-file import) pass this explicitly; everyone else gets a
+  // reasonable default derived from who's creating the record, below.
+  source?: unknown
+}
+
+function defaultSource(actor?: GraphEventActor) {
+  if (actor?.type === "api_key") return "api"
+  if (actor?.type === "system") return "system"
+  if (actor?.type === "rule") return "automation"
+  return "manual"
 }
 
 export async function createPerson(input: PersonInput, workspaceId = "default-workspace", actor?: GraphEventActor & AuditActor) {
@@ -95,6 +107,7 @@ export async function createPerson(input: PersonInput, workspaceId = "default-wo
         instagram: optionalString(input.instagram),
         color: typeof input.color === "string" && input.color ? input.color : assigned.color,
         colorSoft: typeof input.colorSoft === "string" && input.colorSoft ? input.colorSoft : assigned.colorSoft,
+        source: optionalString(input.source) ?? defaultSource(actor),
       },
     })
 

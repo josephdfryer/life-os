@@ -184,6 +184,11 @@ model Person {
   // phones, notes, or birthday.
   publicProfileEnabled Boolean @default(false)
   publicSlug   String?       @unique
+  // How this record came to exist — "manual" | "api" | "system" | "rule" |
+  // "interaction_import" | "vcard" | "csv" | "spreadsheet" | "gmail_contacts",
+  // or null for rows created before this column existed. Purely a display
+  // signal (PersonCard's provenance badge); never used for access control.
+  source       String?
   // Interactions where this person is the counterparty (for a transaction, the merchant)
   interactions Interaction[] @relation("InteractionCounterparty")
   // Interactions where this person is whose money/action it was (the payer)

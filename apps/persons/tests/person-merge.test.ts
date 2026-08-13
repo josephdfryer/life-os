@@ -31,6 +31,7 @@ function person(overrides: Partial<Person>): Person {
     colorSoft: null,
     publicProfileEnabled: false,
     publicSlug: null,
+    source: null,
     ...overrides,
   }
 }

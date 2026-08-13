@@ -155,6 +155,7 @@ async function resolveImportedPerson(result: ImportedPerson, workspaceId: string
     closeness: result.guessedCloseness ?? 2,
     tags: result.guessedTags ?? [],
     values: [],
+    source: "interaction_import",
   }, actor) as { id: string }
 
   return { personId: person.id, action: "created" as const }

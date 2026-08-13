@@ -191,6 +191,9 @@ export const bulkCreatePeopleContract = z.object({
     emails: stringList.optional(),
     phone: z.string().trim().max(100).optional().nullable(),
     phones: stringList.optional(),
+    // Provenance for PersonCard's source badge — "vcard" | "csv" |
+    // "spreadsheet" | "gmail_contacts", set by the caller per import batch.
+    source: z.string().trim().max(40).optional().nullable(),
   }).passthrough()).min(1).max(500),
 }).strict()
 

@@ -102,6 +102,26 @@ export function personContext(person: Pick<PersonListPerson, "latestInteraction"
   return "No context yet · Add details"
 }
 
+// How the Person record itself came to exist (set once at creation — see
+// packages/domain/persons.ts). Skips "manual" and unknown/legacy rows: a
+// badge is only interesting when it tells you something, and "someone typed
+// this in" is the default, not a fact worth a badge.
+const SOURCE_BADGES: Record<string, { icon: string; label: string }> = {
+  vcard:              { icon: "◈", label: "vCard import" },
+  csv:                { icon: "▤", label: "CSV import" },
+  spreadsheet:        { icon: "▤", label: "Spreadsheet import" },
+  gmail_contacts:     { icon: "✉", label: "Gmail contacts" },
+  interaction_import: { icon: "◔", label: "Found in an import" },
+  api:                { icon: "⌁", label: "Added via API" },
+  automation:         { icon: "⚙", label: "Added by automation" },
+  system:             { icon: "◌", label: "System-created" },
+}
+
+export function personSourceBadge(source: string | null | undefined): { icon: string; label: string } | null {
+  if (!source) return null
+  return SOURCE_BADGES[source] ?? null
+}
+
 export function interactionSourceLabel(source: string | null | undefined, type: string | null | undefined): string {
   const value = (source || type || "interaction").toLowerCase()
   if (value === "whatsapp") return "WhatsApp"

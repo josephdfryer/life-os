@@ -89,6 +89,7 @@ export default function ImportContactsPage() {
   const [gmailReconnectUrl, setGmailReconnectUrl] = useState<string | null>(null)
   const [requiredFields, setRequiredFields] = useState<Set<FieldKey>>(new Set())
   const [spreadsheetSummary, setSpreadsheetSummary] = useState<SpreadsheetImportSummary | null>(null)
+  const [importMethod, setImportMethod]     = useState<string | null>(null)
   const inputRef  = useRef<HTMLInputElement>(null)
   const cardRefs  = useRef<(HTMLDivElement | null)[]>([])
 
@@ -148,6 +149,7 @@ export default function ImportContactsPage() {
       if (!res.ok) throw new Error(data.error || "Failed to parse file")
 
       setSpreadsheetSummary(data.summary ?? null)
+      setImportMethod(data.method === "claude" ? "csv" : data.method ?? null)
       processParsedContacts(data.contacts ?? [])
     } catch (e) {
       setError(e instanceof Error ? e.message : "Failed to read file")
@@ -178,6 +180,7 @@ export default function ImportContactsPage() {
         }
         throw new Error(data.error?.message || data.error || "Could not import Gmail contacts")
       }
+      setImportMethod("gmail_contacts")
       processParsedContacts(data.contacts ?? [])
     } catch (e) {
       setError(e instanceof Error ? e.message : "Could not import Gmail contacts")
@@ -288,7 +291,7 @@ export default function ImportContactsPage() {
             values: [], notes: c.notes ?? null, location: c.location ?? null,
             linkedin: c.linkedin ?? null, twitter: c.twitter ?? null, website: c.website ?? null,
             facebook: c.facebook ?? null, instagram: c.instagram ?? null,
-            color, colorSoft,
+            color, colorSoft, source: importMethod,
           }
         })
 
