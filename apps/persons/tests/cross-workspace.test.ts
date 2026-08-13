@@ -18,6 +18,7 @@ process.env.TURSO_AUTH_TOKEN = ""
 type TestModules = {
   db: typeof import("../lib/db")["db"]
   merge: typeof import("../server/domain/merge")
+  fileStorage: typeof import("../lib/file-storage")
 }
 
 let modulesPromise: Promise<TestModules> | null = null
@@ -26,15 +27,31 @@ async function setup() {
   if (!modulesPromise) {
     modulesPromise = (async () => {
       applyMigrations(dbPath)
-      const [dbModule, merge] = await Promise.all([
+      const [dbModule, merge, fileStorage] = await Promise.all([
         import("../lib/db"),
         import("../server/domain/merge"),
+        import("../lib/file-storage"),
       ])
-      return { db: dbModule.db, merge }
+      return { db: dbModule.db, merge, fileStorage }
     })()
   }
   return modulesPromise
 }
+
+test("stored files require and enforce an explicit workspace", async () => {
+  const { db, fileStorage } = await setup()
+  await makeWorkspace(db, "ws-files-a")
+  await makeWorkspace(db, "ws-files-b")
+
+  const file = await fileStorage.storeFile("empty.txt", "txt", "", "ws-files-a")
+  assert.equal(file.workspaceId, "ws-files-a")
+  assert.deepEqual(await fileStorage.getFileContent(file.id, "ws-files-a"), {
+    filename: "empty.txt",
+    content: "",
+    format: "txt",
+  })
+  assert.equal(await fileStorage.getFileContent(file.id, "ws-files-b"), null)
+})
 
 // The committed migration history has a handful of corrective migrations
 // that re-create tables/columns already created by earlier ones (see

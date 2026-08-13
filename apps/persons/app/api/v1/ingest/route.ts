@@ -52,7 +52,7 @@ export async function POST(req: NextRequest) {
     const analysisResult = await analyzeWithClaude(content, filename, source, existingPersons)
 
     // Store the file
-    const fileRecord = await storeFile(filename, source ?? "api", content)
+    const fileRecord = await storeFile(filename, source ?? "api", content, auth.workspaceId)
 
     const { created } = await confirmImport(toImportedPersons(analysisResult), auth.workspaceId, {
       importedFileId: fileRecord.id,

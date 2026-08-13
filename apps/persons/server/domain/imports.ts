@@ -36,7 +36,7 @@ export async function confirmImport(results: ImportedPerson[], workspaceId: stri
 
   let importedFileId = options.importedFileId ?? null
   if (!importedFileId && options.fileData) {
-    const importedFile = await storeFile(options.fileData.name, options.fileData.format, options.fileData.content)
+    const importedFile = await storeFile(options.fileData.name, options.fileData.format, options.fileData.content, workspaceId)
     importedFileId = importedFile.id
   }
 

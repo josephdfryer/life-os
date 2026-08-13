@@ -6,12 +6,13 @@ import { createId } from "@paralleldrive/cuid2"
  * everywhere without external object storage.
  * filePath is kept for backward compatibility with older records.
  */
-export async function storeFile(filename: string, format: string, content: string) {
+export async function storeFile(filename: string, format: string, content: string, workspaceId: string) {
   const fileId = createId()
 
   return db.importedFile.create({
     data: {
       id: fileId,
+      workspaceId,
       filename,
       format,
       filePath: `db:${fileId}`,          // sentinel — content lives in DB
@@ -30,7 +31,7 @@ export async function getFileContent(id: string, workspaceId: string): Promise<{
   if (!file) return null
 
   // New style: content stored in DB
-  if (file.content) {
+  if (file.content !== null) {
     return { filename: file.filename, content: file.content, format: file.format }
   }
 

@@ -563,6 +563,9 @@ intended long-term home for cross-app resources. Its first M5 verticals are
 `/v1/people` + `/v1/people/:id`, `/v1/plans` + `/v1/plans/:id`, and
 `/v1/rules` + `/v1/rules/:id` + `/v1/rules/:id/test`. It also owns bounded
 `GET /v1/audit-log` reads and database-backed `GET /v1/files/:id` downloads.
+`/v1/interactions` + `/v1/interactions/:id` provide canonical Interaction
+listing, creation, detail, update, and deletion; `/v1/stream` remains the
+descriptive name for the same bounded, filterable list read.
 Scoped API keys can page, search, create, read, update, or delete supported
 resources only inside their own workspace. The JSON wire shapes come from
 `@life-os/contracts`, and list reads use compound keyset cursors instead of
@@ -587,7 +590,19 @@ content stored in the database. Machine-local legacy file paths are intentionall
 not portable to the central API host. Persons keeps its old file route for
 backward compatibility and local-path fallback, but that helper now requires the
 authenticated workspace id and scopes its database lookup accordingly; a valid
-file id from another workspace is treated as missing.
+file id from another workspace is treated as missing. New imported files also
+require an explicit workspace at the storage boundary; neither the import
+command nor `/api/v1/ingest` can silently place a tenant's file in the default
+workspace.
+
+Manual Interaction writes now live in `packages/domain/interactions.ts`, with
+Persons retaining only its error/DTO and automation adapter. Creation validates
+the referenced Person, existing Event, and source file against the caller's
+workspace before writing. When no Event is supplied, the backing Event,
+Interaction, typed participant edges, and GraphEvent are committed together;
+a failure cannot leave an orphan Event behind. The central API exposes exact
+integer `amountCents`, while the legacy Persons adapter continues translating
+its historical dollar-valued `amount` field.
 
 The central API also serves `/v1/stream` + `/v1/stream/aggregate` (moved from Persons'
 `interaction-stream.ts`, unchanged logic) and `/v1/review-items` +
@@ -595,8 +610,9 @@ The central API also serves `/v1/stream` + `/v1/stream/aggregate` (moved from Pe
 inbox described above). Persons' own `/api/v1/interactions` and
 `/api/v1/interactions/aggregate` routes now forward to `apps/api` with
 `Deprecation`/`Link: rel="canonical"` headers rather than running the logic
-locally, kept for backward compatibility. Persons' existing People and Plan
-routes also remain live during M5; they do not forward yet because their legacy
+locally, kept for backward compatibility. Persons' existing People, Plan, and
+Interaction mutation/detail routes also remain live during M5; they do not
+forward yet because their legacy
 offset/total envelopes and wider response rows are not wire-compatible with the
 new bounded contracts. Imports and the remaining Persons resources will move in
 later bounded slices rather than one high-risk route rewrite. The Event

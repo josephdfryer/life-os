@@ -517,15 +517,19 @@ M5's backend half can run in parallel with M2–M4 — it is server work with no
 dependency, and it is the long pole for anything saleable.
 
 Implementation note (2026-08-12): M2's backend slice is complete. M5 now has
-canonical People, Plan, Rule, audit-log, and stored-file verticals in `apps/api`: `/v1/people`,
+canonical People, Interaction, Plan, Rule, audit-log, and stored-file verticals in `apps/api`: `/v1/people`,
 `/v1/people/:id`, `/v1/plans`, `/v1/plans/:id`, `/v1/rules`, `/v1/rules/:id`,
-`/v1/rules/:id/test`, `/v1/audit-log`, and `/v1/files/:id`, with shared
+`/v1/rules/:id/test`, `/v1/interactions`, `/v1/interactions/:id`,
+`/v1/audit-log`, and `/v1/files/:id`, with shared
 request/response contracts where a JSON wire shape exists, keyset pagination,
 and cross-workspace read and mutation isolation tests. Audit-log reads use an
 `(createdAt, id)` cursor and bounded filters. The central file route serves only
 database-backed content; it does not attempt to read a legacy path on the API
 host. Plan
 parent references are workspace-validated at the shared command boundary.
+Interaction writes likewise validate Person, Event, and source-file references
+inside the caller's workspace, and atomically create the backing Event,
+participant edges, Interaction, and GraphEvent.
 Rules reuses the existing `rules.manage` scope rather than introducing a
 read/write split not backed by the seeded permission catalog. The legacy
 Persons routes remain in place while the remaining resources (contacts,

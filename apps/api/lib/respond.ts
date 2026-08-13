@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server"
 import { errorEnvelopeContract } from "@life-os/contracts"
-import { InteractionStreamError, AcceptStagedInteractionError, PersonError, PlanError, ReviewItemError, StateError } from "@life-os/domain"
+import { InteractionError, InteractionStreamError, AcceptStagedInteractionError, PersonError, PlanError, ReviewItemError, StateError } from "@life-os/domain"
 import { LifeModelError, TheoryError } from "@life-os/intelligence"
 import { RuleError } from "@life-os/automation"
 import { AccessError } from "@life-os/access"
@@ -34,6 +34,7 @@ export function handleRouteError(error: unknown) {
   // the same pattern apps/persons/server/domain/inbox.ts uses for its own
   // AppError shape.
   if (error instanceof InteractionStreamError) return errorResponse(400, "validation", error.message)
+  if (error instanceof InteractionError) return errorResponse(error.code === "not_found" ? 404 : 400, error.code, error.message)
   if (error instanceof AcceptStagedInteractionError) {
     return errorResponse(error.code === "not_found" ? 404 : 400, error.code, error.message)
   }

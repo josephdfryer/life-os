@@ -399,6 +399,64 @@ export type PersonResource = z.infer<typeof personResourceContract>
 export const peoplePageContract = cursorPageContract(personResourceContract)
 export type PeoplePage = z.infer<typeof peoplePageContract>
 
+const interactionMutableFieldsContract = z.object({
+  duration: z.number().int().nonnegative().optional().nullable(),
+  summary: nullableText.optional(),
+  notes: nullableText.optional(),
+  emotionalWeight: z.string().trim().max(500).optional().nullable(),
+  outcome: z.string().trim().max(2_000).optional().nullable(),
+  actionItems: z.array(z.string().trim().min(1).max(2_000)).max(500).optional().nullable(),
+  billable: z.boolean().optional(),
+  amountCents: z.number().int().safe().optional().nullable(),
+  direction: z.string().trim().max(100).optional().nullable(),
+}).strict()
+
+export const interactionCreateContract = interactionMutableFieldsContract.extend({
+  personId: id.optional().nullable(),
+  eventId: id.optional().nullable(),
+  sourceFileId: id.optional().nullable(),
+  type: z.string().trim().min(1).max(200),
+  timestamp: z.iso.datetime().optional(),
+}).strict()
+export type InteractionCreateInput = z.infer<typeof interactionCreateContract>
+
+export const interactionUpdateContract = interactionMutableFieldsContract.partial().refine(
+  value => Object.keys(value).length > 0,
+  { message: "At least one field is required." },
+)
+export type InteractionUpdateInput = z.infer<typeof interactionUpdateContract>
+
+export const interactionResourceContract = z.object({
+  id,
+  createdAt: z.iso.datetime(),
+  personId: id.nullable(),
+  eventId: id.nullable(),
+  type: z.string(),
+  timestamp: z.iso.datetime(),
+  duration: z.number().int().nullable(),
+  emotionalWeight: z.string().nullable(),
+  outcome: z.string().nullable(),
+  summary: z.string().nullable(),
+  notes: z.string().nullable(),
+  actionItems: z.array(z.string()),
+  billable: z.boolean(),
+  amountCents: z.number().int().nullable(),
+  direction: z.string().nullable(),
+  sourceFileId: id.nullable(),
+  source: z.string().nullable(),
+  sourceId: z.string().nullable(),
+  subtype: z.string().nullable(),
+  currency: z.string(),
+  category: z.string().nullable(),
+  merchantName: z.string().nullable(),
+  actorPersonId: id.nullable(),
+  sourceNoteId: id.nullable(),
+  metadata: z.unknown().nullable(),
+  event: z.object({ id, name: z.string(), type: z.string() }).strict().nullable(),
+  file: z.object({ id, filename: z.string(), retrieveUrl: z.string() }).strict().nullable(),
+}).strict()
+export type InteractionResource = z.infer<typeof interactionResourceContract>
+
 export const planStatusContract = z.enum(["draft", "active", "blocked", "completed", "abandoned"])
 
 const planFieldsContract = z.object({
