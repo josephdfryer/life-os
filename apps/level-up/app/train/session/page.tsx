@@ -2,7 +2,7 @@ import { redirect } from "next/navigation"
 import { requireLevelUpAccess } from "@/lib/access"
 import { Mono } from "@/components/display"
 import SessionScreen from "@/components/workout/SessionScreen"
-import { loadWorkoutProfile, prepareDay } from "@/lib/workout/store"
+import { loadWorkoutProfile, prepareDay } from "@life-os/level-up"
 
 export const dynamic = "force-dynamic"
 

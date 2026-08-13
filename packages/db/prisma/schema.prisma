@@ -89,6 +89,7 @@ model Workspace {
   levelUpProgramEntries LevelUpProgramEntry[]
   levelUpSessions      LevelUpSession[]
   levelUpBodyMetrics   LevelUpBodyMetric[]
+  levelUpReadinessSnapshots LevelUpReadinessSnapshot[]
   graphEvents          GraphEvent[]
   reviewItems          ReviewItem[]
   lifeModelSnapshots   LifeModelSnapshot[]
@@ -2109,10 +2110,16 @@ model LevelUpTrainingSet {
   rankLetter      String?
   balanceResidual Float?    // cached residual vs anchor-lift prediction, in rating points
   isPr            Boolean   @default(false)
+  // Set when logged by a native device rather than the web app. Paired with
+  // sourceId (a client-generated stable set ID) so replay after a partial
+  // batch failure or a cross-device collision converges instead of duplicating.
+  source          String?
+  sourceId        String?
 
   @@index([workspaceId, exerciseKey, performedAt])
   @@index([workspaceId, sessionId])
   @@index([workspaceId, exerciseId, performedAt])
+  @@unique([workspaceId, source, sourceId])
 }
 
 // ─────────────────────────────────────────────
@@ -2215,8 +2222,20 @@ model LevelUpSession {
   lumbarFlare  Boolean            @default(false)
   notes        String?
   sets         LevelUpTrainingSet[]
+  readinessSnapshot LevelUpReadinessSnapshot?
+  // Set when started by a native device rather than the web app. Paired with
+  // sourceId (a client-generated stable session ID) so replay after a partial
+  // batch failure or a cross-device collision converges instead of duplicating.
+  source       String?
+  sourceId     String?
+  // Session RPE (rate of perceived exertion), recorded at completion.
+  sessionRpe   Float?
+  // The canonical Event this session reconciled to on HealthKit write-back —
+  // one Event per real-world workout, not one per ingestion path.
+  workoutEventId String?
 
   @@index([workspaceId, startedAt])
+  @@unique([workspaceId, source, sourceId])
 }
 
 // Body composition, deliberately its own log rather than a field on the set
@@ -2233,6 +2252,37 @@ model LevelUpBodyMetric {
   notes       String?
 
   @@index([workspaceId, measuredAt])
+}
+
+// What advice was shown when a workout began. Daily readiness itself stays
+// derived, not a mutable Life OS primitive — this snapshot exists only to
+// audit the recommendation, not to become the source of truth for it.
+// See docs/LEVEL_UP_ADAPTIVE_WORKOUT_PLAN.md "Readiness provenance".
+model LevelUpReadinessSnapshot {
+  id           String         @id @default(cuid())
+  workspaceId  String
+  workspace    Workspace      @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  sessionId    String         @unique
+  session      LevelUpSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  createdAt    DateTime       @default(now())
+  snapshotAt   DateTime       @default(now())
+  localDay     String         // YYYY-MM-DD, the athlete's local calendar day
+  engineVersion  String       @default("v1")
+  ruleSetVersion String       @default("v1")
+  // JSON: bounded normalized input values, each with freshness + source —
+  // HRV/RHR deviation, sleep debt, Oura readiness, ACWR, flare flags, etc.
+  // Synthetic-neutral until HealthKit/Oura wiring lands (M3/M4).
+  inputs       String
+  // JSON: Current Form engine output at snapshot time, or null when synthetic.
+  formSignal   String?
+  band         String         @default("full") // full | adjust | recover
+  originalPrescriptionHash  String?
+  suggestedPrescriptionHash String?
+  reasonCodes  String         @default("[]") // JSON array of stable reason codes
+  userChoice   String?        // accepted | overridden | edited
+  overriddenAt DateTime?
+
+  @@index([workspaceId, snapshotAt])
 }
 
 // Badge unlock events, kept for the career timeline. Current badge state is

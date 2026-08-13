@@ -1,5 +1,4 @@
-import { CATALOG_BY_ATTRIBUTE } from "@/lib/engine"
-import { ATTRIBUTE_LABELS, ATTRIBUTE_ORDER } from "@/lib/engine/attributes"
+import { CATALOG_BY_ATTRIBUTE, ATTRIBUTE_LABELS, ATTRIBUTE_ORDER } from "@life-os/level-up"
 
 // Serializable catalog metadata for the combine + cold-start forms. The gate
 // protocol flags are surfaced as toggles so the data-quality requirement reads

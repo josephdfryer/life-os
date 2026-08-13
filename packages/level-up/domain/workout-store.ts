@@ -1,5 +1,6 @@
-import { db } from "@/lib/db"
+import { db } from "@life-os/db"
 import { SEED_EXERCISES, SEED_PROGRAM, type JointTag } from "./seed-program"
+import { neutralReadinessSnapshot } from "./workout-commands"
 
 // ─────────────────────────────────────────────
 // THE WORKOUT READ PATH
@@ -273,5 +274,59 @@ export async function loadWorkoutProfile(workspaceId: string) {
     bodyweightKg: profile?.bodyweightKg ?? null,
     unit: (profile?.unitPreference === "kg" ? "kg" : "lb") as "kg" | "lb",
     microPlates: profile?.microPlates ?? false,
+  }
+}
+
+export type TodayBundle = {
+  programDayId: string
+  dayName: string
+  entries: PreparedEntry[]
+  profile: { bodyweightKg: number | null; unit: "kg" | "lb"; microPlates: boolean }
+  readiness: ReturnType<typeof neutralReadinessSnapshot>
+}
+
+/**
+ * Assembles the versioned session bundle a native client renders: the day's
+ * prescribed work with substitutions and previous-set defaults applied, plus
+ * profile units and a readiness snapshot. Defaults to the next day in
+ * rotation — the day after whichever program day the most recently completed
+ * session used — when the caller doesn't request a specific one. The
+ * readiness snapshot is synthetic-neutral until HealthKit (M3) and Oura (M4)
+ * feed real inputs; see docs/IOS_PLATFORM_PLAN.md section 9.
+ */
+export async function today(
+  workspaceId: string,
+  input: { programDayId?: string | null; flares: Flares },
+): Promise<TodayBundle | null> {
+  await ensureSeeded(workspaceId)
+  const days = await loadProgramDays(workspaceId)
+  if (days.length === 0) return null
+
+  let programDayId = input.programDayId ?? null
+  if (!programDayId) {
+    const lastCompleted = await db.levelUpSession.findFirst({
+      where: { workspaceId, endedAt: { not: null } },
+      orderBy: { endedAt: "desc" },
+      select: { programDayId: true },
+    })
+    const lastIndex = lastCompleted?.programDayId
+      ? days.findIndex(day => day.id === lastCompleted.programDayId)
+      : -1
+    const nextIndex = lastIndex === -1 ? 0 : (lastIndex + 1) % days.length
+    programDayId = days[nextIndex].id
+  }
+
+  const [prepared, profile] = await Promise.all([
+    prepareDay(workspaceId, programDayId, input.flares),
+    loadWorkoutProfile(workspaceId),
+  ])
+  if (!prepared) return null
+
+  return {
+    programDayId,
+    dayName: prepared.dayName,
+    entries: prepared.entries,
+    profile,
+    readiness: neutralReadinessSnapshot(new Date().toISOString().slice(0, 10)),
   }
 }

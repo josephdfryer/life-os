@@ -427,6 +427,11 @@ export type LevelUpSession = Prisma.LevelUpSessionModel
  */
 export type LevelUpBodyMetric = Prisma.LevelUpBodyMetricModel
 /**
+ * Model LevelUpReadinessSnapshot
+ * 
+ */
+export type LevelUpReadinessSnapshot = Prisma.LevelUpReadinessSnapshotModel
+/**
  * Model LevelUpBadgeUnlock
  * 
  */

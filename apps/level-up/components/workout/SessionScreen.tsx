@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { useRouter } from "next/navigation"
 import WheelPicker, { type WheelOption } from "./WheelPicker"
 import { endSession, logSet, type LoggedSet } from "@/lib/workout/actions"
-import type { PreparedEntry } from "@/lib/workout/store"
+import type { PreparedEntry } from "@life-os/level-up"
 import {
   durationWheelValues,
   emptyBar,

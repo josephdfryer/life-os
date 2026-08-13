@@ -1,10 +1,15 @@
 import Link from "next/link"
 import { requireLevelUpAccess } from "@/lib/access"
 import { db } from "@/lib/db"
-import { loadBundle } from "@/lib/store"
-import { BUILDS, TARGET_TEMPLATES, targetDeltas, type BuildKey } from "@/lib/engine"
-import { ATTRIBUTE_LABELS } from "@/lib/engine/attributes"
-import type { AttributeKey } from "@/lib/engine/types"
+import {
+  loadBundle,
+  BUILDS,
+  TARGET_TEMPLATES,
+  targetDeltas,
+  ATTRIBUTE_LABELS,
+  type BuildKey,
+  type AttributeKey,
+} from "@life-os/level-up"
 import { Mono } from "@/components/display"
 import BuildSelector from "@/components/BuildSelector"
 import TargetBuilds, { type TargetView } from "@/components/TargetBuilds"

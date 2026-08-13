@@ -1,7 +1,6 @@
 import Link from "next/link"
 import { requireLevelUpAccess } from "@/lib/access"
-import { loadBundle } from "@/lib/store"
-import { TIER_LABEL, type BadgeTier } from "@/lib/engine/badges"
+import { loadBundle, TIER_LABEL, type BadgeTier } from "@life-os/level-up"
 import { Mono } from "@/components/display"
 
 export const dynamic = "force-dynamic"

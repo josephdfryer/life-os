@@ -2,7 +2,7 @@ import { db } from "@/lib/db"
 import { requireLevelUpAccess } from "@/lib/access"
 import { Mono } from "@/components/display"
 import BodyMetricForm from "@/components/workout/BodyMetricForm"
-import { loadWorkoutProfile } from "@/lib/workout/store"
+import { loadWorkoutProfile } from "@life-os/level-up"
 import { formatLoad, fromKg } from "@/lib/workout/units"
 
 export const dynamic = "force-dynamic"

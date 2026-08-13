@@ -461,6 +461,7 @@ export const ModelName = {
   LevelUpProgramEntry: 'LevelUpProgramEntry',
   LevelUpSession: 'LevelUpSession',
   LevelUpBodyMetric: 'LevelUpBodyMetric',
+  LevelUpReadinessSnapshot: 'LevelUpReadinessSnapshot',
   LevelUpBadgeUnlock: 'LevelUpBadgeUnlock',
   LevelUpTargetBuild: 'LevelUpTargetBuild',
   GraphEvent: 'GraphEvent',
@@ -481,7 +482,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "workspace" | "workspaceMember" | "approvedEmail" | "person" | "user" | "device" | "deviceSource" | "deviceCredential" | "deviceAuthorization" | "deviceIngestItem" | "role" | "permission" | "userRole" | "rolePermission" | "apiKey" | "apiKeyScope" | "auditLog" | "calendarConnection" | "calendarEventLink" | "gmailConnection" | "gmailMessageLink" | "eraConnection" | "eraAccountLink" | "eraTransactionLink" | "connection" | "rule" | "ruleRun" | "stagedInteraction" | "event" | "interaction" | "interactionParticipant" | "plan" | "planExpectedPerson" | "place" | "importJob" | "importStagedVisit" | "placeNote" | "item" | "itemDefinition" | "inventoryLot" | "assembly" | "itemInteraction" | "importedFile" | "aiProviderCredential" | "aiAnalysisRun" | "noteAnalysisRun" | "theoryAnalysisRun" | "lifeModelAnalysisRun" | "noteSuggestion" | "group" | "supplierProfile" | "purchaseOrder" | "purchaseOrderLine" | "purchaseReceiptLine" | "personGroup" | "groupGroup" | "placeGroup" | "note" | "theorySnapshot" | "theorySnapshotSource" | "lifeModelSnapshot" | "lifeModelClaim" | "lifeModelClaimFeedback" | "stateDefinition" | "state" | "assistantMessage" | "levelUpProfile" | "levelUpTestResult" | "levelUpCombine" | "levelUpRatingSnapshot" | "levelUpTrainingSet" | "levelUpExercise" | "levelUpProgram" | "levelUpProgramDay" | "levelUpProgramEntry" | "levelUpSession" | "levelUpBodyMetric" | "levelUpBadgeUnlock" | "levelUpTargetBuild" | "graphEvent" | "graphEventReceipt" | "reviewItem"
+    modelProps: "workspace" | "workspaceMember" | "approvedEmail" | "person" | "user" | "device" | "deviceSource" | "deviceCredential" | "deviceAuthorization" | "deviceIngestItem" | "role" | "permission" | "userRole" | "rolePermission" | "apiKey" | "apiKeyScope" | "auditLog" | "calendarConnection" | "calendarEventLink" | "gmailConnection" | "gmailMessageLink" | "eraConnection" | "eraAccountLink" | "eraTransactionLink" | "connection" | "rule" | "ruleRun" | "stagedInteraction" | "event" | "interaction" | "interactionParticipant" | "plan" | "planExpectedPerson" | "place" | "importJob" | "importStagedVisit" | "placeNote" | "item" | "itemDefinition" | "inventoryLot" | "assembly" | "itemInteraction" | "importedFile" | "aiProviderCredential" | "aiAnalysisRun" | "noteAnalysisRun" | "theoryAnalysisRun" | "lifeModelAnalysisRun" | "noteSuggestion" | "group" | "supplierProfile" | "purchaseOrder" | "purchaseOrderLine" | "purchaseReceiptLine" | "personGroup" | "groupGroup" | "placeGroup" | "note" | "theorySnapshot" | "theorySnapshotSource" | "lifeModelSnapshot" | "lifeModelClaim" | "lifeModelClaimFeedback" | "stateDefinition" | "state" | "assistantMessage" | "levelUpProfile" | "levelUpTestResult" | "levelUpCombine" | "levelUpRatingSnapshot" | "levelUpTrainingSet" | "levelUpExercise" | "levelUpProgram" | "levelUpProgramDay" | "levelUpProgramEntry" | "levelUpSession" | "levelUpBodyMetric" | "levelUpReadinessSnapshot" | "levelUpBadgeUnlock" | "levelUpTargetBuild" | "graphEvent" | "graphEventReceipt" | "reviewItem"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -6183,6 +6184,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    LevelUpReadinessSnapshot: {
+      payload: Prisma.$LevelUpReadinessSnapshotPayload<ExtArgs>
+      fields: Prisma.LevelUpReadinessSnapshotFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.LevelUpReadinessSnapshotFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LevelUpReadinessSnapshotPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.LevelUpReadinessSnapshotFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LevelUpReadinessSnapshotPayload>
+        }
+        findFirst: {
+          args: Prisma.LevelUpReadinessSnapshotFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LevelUpReadinessSnapshotPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.LevelUpReadinessSnapshotFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LevelUpReadinessSnapshotPayload>
+        }
+        findMany: {
+          args: Prisma.LevelUpReadinessSnapshotFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LevelUpReadinessSnapshotPayload>[]
+        }
+        create: {
+          args: Prisma.LevelUpReadinessSnapshotCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LevelUpReadinessSnapshotPayload>
+        }
+        createMany: {
+          args: Prisma.LevelUpReadinessSnapshotCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.LevelUpReadinessSnapshotCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LevelUpReadinessSnapshotPayload>[]
+        }
+        delete: {
+          args: Prisma.LevelUpReadinessSnapshotDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LevelUpReadinessSnapshotPayload>
+        }
+        update: {
+          args: Prisma.LevelUpReadinessSnapshotUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LevelUpReadinessSnapshotPayload>
+        }
+        deleteMany: {
+          args: Prisma.LevelUpReadinessSnapshotDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.LevelUpReadinessSnapshotUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.LevelUpReadinessSnapshotUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LevelUpReadinessSnapshotPayload>[]
+        }
+        upsert: {
+          args: Prisma.LevelUpReadinessSnapshotUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LevelUpReadinessSnapshotPayload>
+        }
+        aggregate: {
+          args: Prisma.LevelUpReadinessSnapshotAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateLevelUpReadinessSnapshot>
+        }
+        groupBy: {
+          args: Prisma.LevelUpReadinessSnapshotGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LevelUpReadinessSnapshotGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.LevelUpReadinessSnapshotCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LevelUpReadinessSnapshotCountAggregateOutputType> | number
+        }
+      }
+    }
     LevelUpBadgeUnlock: {
       payload: Prisma.$LevelUpBadgeUnlockPayload<ExtArgs>
       fields: Prisma.LevelUpBadgeUnlockFieldRefs
@@ -7840,7 +7915,9 @@ export const LevelUpTrainingSetScalarFieldEnum = {
   rank: 'rank',
   rankLetter: 'rankLetter',
   balanceResidual: 'balanceResidual',
-  isPr: 'isPr'
+  isPr: 'isPr',
+  source: 'source',
+  sourceId: 'sourceId'
 } as const
 
 export type LevelUpTrainingSetScalarFieldEnum = (typeof LevelUpTrainingSetScalarFieldEnum)[keyof typeof LevelUpTrainingSetScalarFieldEnum]
@@ -7911,7 +7988,11 @@ export const LevelUpSessionScalarFieldEnum = {
   programDayId: 'programDayId',
   kneeFlare: 'kneeFlare',
   lumbarFlare: 'lumbarFlare',
-  notes: 'notes'
+  notes: 'notes',
+  source: 'source',
+  sourceId: 'sourceId',
+  sessionRpe: 'sessionRpe',
+  workoutEventId: 'workoutEventId'
 } as const
 
 export type LevelUpSessionScalarFieldEnum = (typeof LevelUpSessionScalarFieldEnum)[keyof typeof LevelUpSessionScalarFieldEnum]
@@ -7929,6 +8010,28 @@ export const LevelUpBodyMetricScalarFieldEnum = {
 } as const
 
 export type LevelUpBodyMetricScalarFieldEnum = (typeof LevelUpBodyMetricScalarFieldEnum)[keyof typeof LevelUpBodyMetricScalarFieldEnum]
+
+
+export const LevelUpReadinessSnapshotScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  sessionId: 'sessionId',
+  createdAt: 'createdAt',
+  snapshotAt: 'snapshotAt',
+  localDay: 'localDay',
+  engineVersion: 'engineVersion',
+  ruleSetVersion: 'ruleSetVersion',
+  inputs: 'inputs',
+  formSignal: 'formSignal',
+  band: 'band',
+  originalPrescriptionHash: 'originalPrescriptionHash',
+  suggestedPrescriptionHash: 'suggestedPrescriptionHash',
+  reasonCodes: 'reasonCodes',
+  userChoice: 'userChoice',
+  overriddenAt: 'overriddenAt'
+} as const
+
+export type LevelUpReadinessSnapshotScalarFieldEnum = (typeof LevelUpReadinessSnapshotScalarFieldEnum)[keyof typeof LevelUpReadinessSnapshotScalarFieldEnum]
 
 
 export const LevelUpBadgeUnlockScalarFieldEnum = {
@@ -8366,6 +8469,7 @@ export type GlobalOmitConfig = {
   levelUpProgramEntry?: Prisma.LevelUpProgramEntryOmit
   levelUpSession?: Prisma.LevelUpSessionOmit
   levelUpBodyMetric?: Prisma.LevelUpBodyMetricOmit
+  levelUpReadinessSnapshot?: Prisma.LevelUpReadinessSnapshotOmit
   levelUpBadgeUnlock?: Prisma.LevelUpBadgeUnlockOmit
   levelUpTargetBuild?: Prisma.LevelUpTargetBuildOmit
   graphEvent?: Prisma.GraphEventOmit

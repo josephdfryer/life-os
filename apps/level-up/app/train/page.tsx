@@ -1,7 +1,7 @@
 import { requireLevelUpAccess } from "@/lib/access"
 import { Mono } from "@/components/display"
 import StartSession from "@/components/workout/StartSession"
-import { ensureSeeded, loadProgramDays } from "@/lib/workout/store"
+import { ensureSeeded, loadProgramDays } from "@life-os/level-up"
 
 export const dynamic = "force-dynamic"
 

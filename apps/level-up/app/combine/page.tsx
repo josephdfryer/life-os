@@ -1,6 +1,6 @@
 import Link from "next/link"
 import { requireLevelUpAccess } from "@/lib/access"
-import { loadBundle } from "@/lib/store"
+import { loadBundle } from "@life-os/level-up"
 import { COMBINE_GROUPS } from "@/lib/combine-catalog"
 import { Mono } from "@/components/display"
 import CombineFlow from "@/components/CombineFlow"

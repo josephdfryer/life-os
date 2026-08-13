@@ -3,10 +3,10 @@ import { notFound } from "next/navigation"
 import { db } from "@/lib/db"
 import { requireLevelUpAccess } from "@/lib/access"
 import { Mono } from "@/components/display"
-import { loadWorkoutProfile } from "@/lib/workout/store"
 import ExerciseFigure from "@/components/workout/ExerciseFigure"
 import { ART_CREDIT } from "@/lib/workout/art"
 import {
+  loadWorkoutProfile,
   bestE1RMKg,
   e1rmTrend,
   effectiveLoadKg,
@@ -15,7 +15,7 @@ import {
   totalDurationSec,
   totalVolumeKg,
   type SetRecord,
-} from "@/lib/workout/metrics"
+} from "@life-os/level-up"
 import { formatDuration, formatLoad, fromKg } from "@/lib/workout/units"
 
 // ─────────────────────────────────────────────

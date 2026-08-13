@@ -1,6 +1,6 @@
-import { db } from "@/lib/db"
-import { computeCard, type Card } from "@/lib/engine"
-import type { AttributeKey, Profile, TestResultInput } from "@/lib/engine/types"
+import { db } from "@life-os/db"
+import { computeCard, type Card } from "../engine"
+import type { AttributeKey, Profile, TestResultInput } from "../engine/types"
 
 // ─────────────────────────────────────────────
 // THE STORE — the one place the engine meets the database.

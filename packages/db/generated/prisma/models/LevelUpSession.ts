@@ -20,8 +20,18 @@ export type LevelUpSessionModel = runtime.Types.Result.DefaultSelection<Prisma.$
 
 export type AggregateLevelUpSession = {
   _count: LevelUpSessionCountAggregateOutputType | null
+  _avg: LevelUpSessionAvgAggregateOutputType | null
+  _sum: LevelUpSessionSumAggregateOutputType | null
   _min: LevelUpSessionMinAggregateOutputType | null
   _max: LevelUpSessionMaxAggregateOutputType | null
+}
+
+export type LevelUpSessionAvgAggregateOutputType = {
+  sessionRpe: number | null
+}
+
+export type LevelUpSessionSumAggregateOutputType = {
+  sessionRpe: number | null
 }
 
 export type LevelUpSessionMinAggregateOutputType = {
@@ -34,6 +44,10 @@ export type LevelUpSessionMinAggregateOutputType = {
   kneeFlare: boolean | null
   lumbarFlare: boolean | null
   notes: string | null
+  source: string | null
+  sourceId: string | null
+  sessionRpe: number | null
+  workoutEventId: string | null
 }
 
 export type LevelUpSessionMaxAggregateOutputType = {
@@ -46,6 +60,10 @@ export type LevelUpSessionMaxAggregateOutputType = {
   kneeFlare: boolean | null
   lumbarFlare: boolean | null
   notes: string | null
+  source: string | null
+  sourceId: string | null
+  sessionRpe: number | null
+  workoutEventId: string | null
 }
 
 export type LevelUpSessionCountAggregateOutputType = {
@@ -58,9 +76,21 @@ export type LevelUpSessionCountAggregateOutputType = {
   kneeFlare: number
   lumbarFlare: number
   notes: number
+  source: number
+  sourceId: number
+  sessionRpe: number
+  workoutEventId: number
   _all: number
 }
 
+
+export type LevelUpSessionAvgAggregateInputType = {
+  sessionRpe?: true
+}
+
+export type LevelUpSessionSumAggregateInputType = {
+  sessionRpe?: true
+}
 
 export type LevelUpSessionMinAggregateInputType = {
   id?: true
@@ -72,6 +102,10 @@ export type LevelUpSessionMinAggregateInputType = {
   kneeFlare?: true
   lumbarFlare?: true
   notes?: true
+  source?: true
+  sourceId?: true
+  sessionRpe?: true
+  workoutEventId?: true
 }
 
 export type LevelUpSessionMaxAggregateInputType = {
@@ -84,6 +118,10 @@ export type LevelUpSessionMaxAggregateInputType = {
   kneeFlare?: true
   lumbarFlare?: true
   notes?: true
+  source?: true
+  sourceId?: true
+  sessionRpe?: true
+  workoutEventId?: true
 }
 
 export type LevelUpSessionCountAggregateInputType = {
@@ -96,6 +134,10 @@ export type LevelUpSessionCountAggregateInputType = {
   kneeFlare?: true
   lumbarFlare?: true
   notes?: true
+  source?: true
+  sourceId?: true
+  sessionRpe?: true
+  workoutEventId?: true
   _all?: true
 }
 
@@ -137,6 +179,18 @@ export type LevelUpSessionAggregateArgs<ExtArgs extends runtime.Types.Extensions
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: LevelUpSessionAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: LevelUpSessionSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: LevelUpSessionMinAggregateInputType
@@ -167,6 +221,8 @@ export type LevelUpSessionGroupByArgs<ExtArgs extends runtime.Types.Extensions.I
   take?: number
   skip?: number
   _count?: LevelUpSessionCountAggregateInputType | true
+  _avg?: LevelUpSessionAvgAggregateInputType
+  _sum?: LevelUpSessionSumAggregateInputType
   _min?: LevelUpSessionMinAggregateInputType
   _max?: LevelUpSessionMaxAggregateInputType
 }
@@ -181,7 +237,13 @@ export type LevelUpSessionGroupByOutputType = {
   kneeFlare: boolean
   lumbarFlare: boolean
   notes: string | null
+  source: string | null
+  sourceId: string | null
+  sessionRpe: number | null
+  workoutEventId: string | null
   _count: LevelUpSessionCountAggregateOutputType | null
+  _avg: LevelUpSessionAvgAggregateOutputType | null
+  _sum: LevelUpSessionSumAggregateOutputType | null
   _min: LevelUpSessionMinAggregateOutputType | null
   _max: LevelUpSessionMaxAggregateOutputType | null
 }
@@ -214,9 +276,14 @@ export type LevelUpSessionWhereInput = {
   kneeFlare?: Prisma.BoolFilter<"LevelUpSession"> | boolean
   lumbarFlare?: Prisma.BoolFilter<"LevelUpSession"> | boolean
   notes?: Prisma.StringNullableFilter<"LevelUpSession"> | string | null
+  source?: Prisma.StringNullableFilter<"LevelUpSession"> | string | null
+  sourceId?: Prisma.StringNullableFilter<"LevelUpSession"> | string | null
+  sessionRpe?: Prisma.FloatNullableFilter<"LevelUpSession"> | number | null
+  workoutEventId?: Prisma.StringNullableFilter<"LevelUpSession"> | string | null
   workspace?: Prisma.XOR<Prisma.WorkspaceScalarRelationFilter, Prisma.WorkspaceWhereInput>
   programDay?: Prisma.XOR<Prisma.LevelUpProgramDayNullableScalarRelationFilter, Prisma.LevelUpProgramDayWhereInput> | null
   sets?: Prisma.LevelUpTrainingSetListRelationFilter
+  readinessSnapshot?: Prisma.XOR<Prisma.LevelUpReadinessSnapshotNullableScalarRelationFilter, Prisma.LevelUpReadinessSnapshotWhereInput> | null
 }
 
 export type LevelUpSessionOrderByWithRelationInput = {
@@ -229,13 +296,19 @@ export type LevelUpSessionOrderByWithRelationInput = {
   kneeFlare?: Prisma.SortOrder
   lumbarFlare?: Prisma.SortOrder
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
+  source?: Prisma.SortOrderInput | Prisma.SortOrder
+  sourceId?: Prisma.SortOrderInput | Prisma.SortOrder
+  sessionRpe?: Prisma.SortOrderInput | Prisma.SortOrder
+  workoutEventId?: Prisma.SortOrderInput | Prisma.SortOrder
   workspace?: Prisma.WorkspaceOrderByWithRelationInput
   programDay?: Prisma.LevelUpProgramDayOrderByWithRelationInput
   sets?: Prisma.LevelUpTrainingSetOrderByRelationAggregateInput
+  readinessSnapshot?: Prisma.LevelUpReadinessSnapshotOrderByWithRelationInput
 }
 
 export type LevelUpSessionWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  workspaceId_source_sourceId?: Prisma.LevelUpSessionWorkspaceIdSourceSourceIdCompoundUniqueInput
   AND?: Prisma.LevelUpSessionWhereInput | Prisma.LevelUpSessionWhereInput[]
   OR?: Prisma.LevelUpSessionWhereInput[]
   NOT?: Prisma.LevelUpSessionWhereInput | Prisma.LevelUpSessionWhereInput[]
@@ -247,10 +320,15 @@ export type LevelUpSessionWhereUniqueInput = Prisma.AtLeast<{
   kneeFlare?: Prisma.BoolFilter<"LevelUpSession"> | boolean
   lumbarFlare?: Prisma.BoolFilter<"LevelUpSession"> | boolean
   notes?: Prisma.StringNullableFilter<"LevelUpSession"> | string | null
+  source?: Prisma.StringNullableFilter<"LevelUpSession"> | string | null
+  sourceId?: Prisma.StringNullableFilter<"LevelUpSession"> | string | null
+  sessionRpe?: Prisma.FloatNullableFilter<"LevelUpSession"> | number | null
+  workoutEventId?: Prisma.StringNullableFilter<"LevelUpSession"> | string | null
   workspace?: Prisma.XOR<Prisma.WorkspaceScalarRelationFilter, Prisma.WorkspaceWhereInput>
   programDay?: Prisma.XOR<Prisma.LevelUpProgramDayNullableScalarRelationFilter, Prisma.LevelUpProgramDayWhereInput> | null
   sets?: Prisma.LevelUpTrainingSetListRelationFilter
-}, "id">
+  readinessSnapshot?: Prisma.XOR<Prisma.LevelUpReadinessSnapshotNullableScalarRelationFilter, Prisma.LevelUpReadinessSnapshotWhereInput> | null
+}, "id" | "workspaceId_source_sourceId">
 
 export type LevelUpSessionOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -262,9 +340,15 @@ export type LevelUpSessionOrderByWithAggregationInput = {
   kneeFlare?: Prisma.SortOrder
   lumbarFlare?: Prisma.SortOrder
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
+  source?: Prisma.SortOrderInput | Prisma.SortOrder
+  sourceId?: Prisma.SortOrderInput | Prisma.SortOrder
+  sessionRpe?: Prisma.SortOrderInput | Prisma.SortOrder
+  workoutEventId?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.LevelUpSessionCountOrderByAggregateInput
+  _avg?: Prisma.LevelUpSessionAvgOrderByAggregateInput
   _max?: Prisma.LevelUpSessionMaxOrderByAggregateInput
   _min?: Prisma.LevelUpSessionMinOrderByAggregateInput
+  _sum?: Prisma.LevelUpSessionSumOrderByAggregateInput
 }
 
 export type LevelUpSessionScalarWhereWithAggregatesInput = {
@@ -280,6 +364,10 @@ export type LevelUpSessionScalarWhereWithAggregatesInput = {
   kneeFlare?: Prisma.BoolWithAggregatesFilter<"LevelUpSession"> | boolean
   lumbarFlare?: Prisma.BoolWithAggregatesFilter<"LevelUpSession"> | boolean
   notes?: Prisma.StringNullableWithAggregatesFilter<"LevelUpSession"> | string | null
+  source?: Prisma.StringNullableWithAggregatesFilter<"LevelUpSession"> | string | null
+  sourceId?: Prisma.StringNullableWithAggregatesFilter<"LevelUpSession"> | string | null
+  sessionRpe?: Prisma.FloatNullableWithAggregatesFilter<"LevelUpSession"> | number | null
+  workoutEventId?: Prisma.StringNullableWithAggregatesFilter<"LevelUpSession"> | string | null
 }
 
 export type LevelUpSessionCreateInput = {
@@ -290,9 +378,14 @@ export type LevelUpSessionCreateInput = {
   kneeFlare?: boolean
   lumbarFlare?: boolean
   notes?: string | null
+  source?: string | null
+  sourceId?: string | null
+  sessionRpe?: number | null
+  workoutEventId?: string | null
   workspace: Prisma.WorkspaceCreateNestedOneWithoutLevelUpSessionsInput
   programDay?: Prisma.LevelUpProgramDayCreateNestedOneWithoutSessionsInput
   sets?: Prisma.LevelUpTrainingSetCreateNestedManyWithoutSessionInput
+  readinessSnapshot?: Prisma.LevelUpReadinessSnapshotCreateNestedOneWithoutSessionInput
 }
 
 export type LevelUpSessionUncheckedCreateInput = {
@@ -305,7 +398,12 @@ export type LevelUpSessionUncheckedCreateInput = {
   kneeFlare?: boolean
   lumbarFlare?: boolean
   notes?: string | null
+  source?: string | null
+  sourceId?: string | null
+  sessionRpe?: number | null
+  workoutEventId?: string | null
   sets?: Prisma.LevelUpTrainingSetUncheckedCreateNestedManyWithoutSessionInput
+  readinessSnapshot?: Prisma.LevelUpReadinessSnapshotUncheckedCreateNestedOneWithoutSessionInput
 }
 
 export type LevelUpSessionUpdateInput = {
@@ -316,9 +414,14 @@ export type LevelUpSessionUpdateInput = {
   kneeFlare?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lumbarFlare?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sessionRpe?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  workoutEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutLevelUpSessionsNestedInput
   programDay?: Prisma.LevelUpProgramDayUpdateOneWithoutSessionsNestedInput
   sets?: Prisma.LevelUpTrainingSetUpdateManyWithoutSessionNestedInput
+  readinessSnapshot?: Prisma.LevelUpReadinessSnapshotUpdateOneWithoutSessionNestedInput
 }
 
 export type LevelUpSessionUncheckedUpdateInput = {
@@ -331,7 +434,12 @@ export type LevelUpSessionUncheckedUpdateInput = {
   kneeFlare?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lumbarFlare?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sessionRpe?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  workoutEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sets?: Prisma.LevelUpTrainingSetUncheckedUpdateManyWithoutSessionNestedInput
+  readinessSnapshot?: Prisma.LevelUpReadinessSnapshotUncheckedUpdateOneWithoutSessionNestedInput
 }
 
 export type LevelUpSessionCreateManyInput = {
@@ -344,6 +452,10 @@ export type LevelUpSessionCreateManyInput = {
   kneeFlare?: boolean
   lumbarFlare?: boolean
   notes?: string | null
+  source?: string | null
+  sourceId?: string | null
+  sessionRpe?: number | null
+  workoutEventId?: string | null
 }
 
 export type LevelUpSessionUpdateManyMutationInput = {
@@ -354,6 +466,10 @@ export type LevelUpSessionUpdateManyMutationInput = {
   kneeFlare?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lumbarFlare?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sessionRpe?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  workoutEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type LevelUpSessionUncheckedUpdateManyInput = {
@@ -366,6 +482,10 @@ export type LevelUpSessionUncheckedUpdateManyInput = {
   kneeFlare?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lumbarFlare?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sessionRpe?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  workoutEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type LevelUpSessionListRelationFilter = {
@@ -383,6 +503,12 @@ export type LevelUpSessionNullableScalarRelationFilter = {
   isNot?: Prisma.LevelUpSessionWhereInput | null
 }
 
+export type LevelUpSessionWorkspaceIdSourceSourceIdCompoundUniqueInput = {
+  workspaceId: string
+  source: string
+  sourceId: string
+}
+
 export type LevelUpSessionCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   workspaceId?: Prisma.SortOrder
@@ -393,6 +519,14 @@ export type LevelUpSessionCountOrderByAggregateInput = {
   kneeFlare?: Prisma.SortOrder
   lumbarFlare?: Prisma.SortOrder
   notes?: Prisma.SortOrder
+  source?: Prisma.SortOrder
+  sourceId?: Prisma.SortOrder
+  sessionRpe?: Prisma.SortOrder
+  workoutEventId?: Prisma.SortOrder
+}
+
+export type LevelUpSessionAvgOrderByAggregateInput = {
+  sessionRpe?: Prisma.SortOrder
 }
 
 export type LevelUpSessionMaxOrderByAggregateInput = {
@@ -405,6 +539,10 @@ export type LevelUpSessionMaxOrderByAggregateInput = {
   kneeFlare?: Prisma.SortOrder
   lumbarFlare?: Prisma.SortOrder
   notes?: Prisma.SortOrder
+  source?: Prisma.SortOrder
+  sourceId?: Prisma.SortOrder
+  sessionRpe?: Prisma.SortOrder
+  workoutEventId?: Prisma.SortOrder
 }
 
 export type LevelUpSessionMinOrderByAggregateInput = {
@@ -417,6 +555,19 @@ export type LevelUpSessionMinOrderByAggregateInput = {
   kneeFlare?: Prisma.SortOrder
   lumbarFlare?: Prisma.SortOrder
   notes?: Prisma.SortOrder
+  source?: Prisma.SortOrder
+  sourceId?: Prisma.SortOrder
+  sessionRpe?: Prisma.SortOrder
+  workoutEventId?: Prisma.SortOrder
+}
+
+export type LevelUpSessionSumOrderByAggregateInput = {
+  sessionRpe?: Prisma.SortOrder
+}
+
+export type LevelUpSessionScalarRelationFilter = {
+  is?: Prisma.LevelUpSessionWhereInput
+  isNot?: Prisma.LevelUpSessionWhereInput
 }
 
 export type LevelUpSessionCreateNestedManyWithoutWorkspaceInput = {
@@ -519,6 +670,20 @@ export type LevelUpSessionUncheckedUpdateManyWithoutProgramDayNestedInput = {
   deleteMany?: Prisma.LevelUpSessionScalarWhereInput | Prisma.LevelUpSessionScalarWhereInput[]
 }
 
+export type LevelUpSessionCreateNestedOneWithoutReadinessSnapshotInput = {
+  create?: Prisma.XOR<Prisma.LevelUpSessionCreateWithoutReadinessSnapshotInput, Prisma.LevelUpSessionUncheckedCreateWithoutReadinessSnapshotInput>
+  connectOrCreate?: Prisma.LevelUpSessionCreateOrConnectWithoutReadinessSnapshotInput
+  connect?: Prisma.LevelUpSessionWhereUniqueInput
+}
+
+export type LevelUpSessionUpdateOneRequiredWithoutReadinessSnapshotNestedInput = {
+  create?: Prisma.XOR<Prisma.LevelUpSessionCreateWithoutReadinessSnapshotInput, Prisma.LevelUpSessionUncheckedCreateWithoutReadinessSnapshotInput>
+  connectOrCreate?: Prisma.LevelUpSessionCreateOrConnectWithoutReadinessSnapshotInput
+  upsert?: Prisma.LevelUpSessionUpsertWithoutReadinessSnapshotInput
+  connect?: Prisma.LevelUpSessionWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.LevelUpSessionUpdateToOneWithWhereWithoutReadinessSnapshotInput, Prisma.LevelUpSessionUpdateWithoutReadinessSnapshotInput>, Prisma.LevelUpSessionUncheckedUpdateWithoutReadinessSnapshotInput>
+}
+
 export type LevelUpSessionCreateWithoutWorkspaceInput = {
   id?: string
   createdAt?: Date | string
@@ -527,8 +692,13 @@ export type LevelUpSessionCreateWithoutWorkspaceInput = {
   kneeFlare?: boolean
   lumbarFlare?: boolean
   notes?: string | null
+  source?: string | null
+  sourceId?: string | null
+  sessionRpe?: number | null
+  workoutEventId?: string | null
   programDay?: Prisma.LevelUpProgramDayCreateNestedOneWithoutSessionsInput
   sets?: Prisma.LevelUpTrainingSetCreateNestedManyWithoutSessionInput
+  readinessSnapshot?: Prisma.LevelUpReadinessSnapshotCreateNestedOneWithoutSessionInput
 }
 
 export type LevelUpSessionUncheckedCreateWithoutWorkspaceInput = {
@@ -540,7 +710,12 @@ export type LevelUpSessionUncheckedCreateWithoutWorkspaceInput = {
   kneeFlare?: boolean
   lumbarFlare?: boolean
   notes?: string | null
+  source?: string | null
+  sourceId?: string | null
+  sessionRpe?: number | null
+  workoutEventId?: string | null
   sets?: Prisma.LevelUpTrainingSetUncheckedCreateNestedManyWithoutSessionInput
+  readinessSnapshot?: Prisma.LevelUpReadinessSnapshotUncheckedCreateNestedOneWithoutSessionInput
 }
 
 export type LevelUpSessionCreateOrConnectWithoutWorkspaceInput = {
@@ -581,6 +756,10 @@ export type LevelUpSessionScalarWhereInput = {
   kneeFlare?: Prisma.BoolFilter<"LevelUpSession"> | boolean
   lumbarFlare?: Prisma.BoolFilter<"LevelUpSession"> | boolean
   notes?: Prisma.StringNullableFilter<"LevelUpSession"> | string | null
+  source?: Prisma.StringNullableFilter<"LevelUpSession"> | string | null
+  sourceId?: Prisma.StringNullableFilter<"LevelUpSession"> | string | null
+  sessionRpe?: Prisma.FloatNullableFilter<"LevelUpSession"> | number | null
+  workoutEventId?: Prisma.StringNullableFilter<"LevelUpSession"> | string | null
 }
 
 export type LevelUpSessionCreateWithoutSetsInput = {
@@ -591,8 +770,13 @@ export type LevelUpSessionCreateWithoutSetsInput = {
   kneeFlare?: boolean
   lumbarFlare?: boolean
   notes?: string | null
+  source?: string | null
+  sourceId?: string | null
+  sessionRpe?: number | null
+  workoutEventId?: string | null
   workspace: Prisma.WorkspaceCreateNestedOneWithoutLevelUpSessionsInput
   programDay?: Prisma.LevelUpProgramDayCreateNestedOneWithoutSessionsInput
+  readinessSnapshot?: Prisma.LevelUpReadinessSnapshotCreateNestedOneWithoutSessionInput
 }
 
 export type LevelUpSessionUncheckedCreateWithoutSetsInput = {
@@ -605,6 +789,11 @@ export type LevelUpSessionUncheckedCreateWithoutSetsInput = {
   kneeFlare?: boolean
   lumbarFlare?: boolean
   notes?: string | null
+  source?: string | null
+  sourceId?: string | null
+  sessionRpe?: number | null
+  workoutEventId?: string | null
+  readinessSnapshot?: Prisma.LevelUpReadinessSnapshotUncheckedCreateNestedOneWithoutSessionInput
 }
 
 export type LevelUpSessionCreateOrConnectWithoutSetsInput = {
@@ -631,8 +820,13 @@ export type LevelUpSessionUpdateWithoutSetsInput = {
   kneeFlare?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lumbarFlare?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sessionRpe?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  workoutEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutLevelUpSessionsNestedInput
   programDay?: Prisma.LevelUpProgramDayUpdateOneWithoutSessionsNestedInput
+  readinessSnapshot?: Prisma.LevelUpReadinessSnapshotUpdateOneWithoutSessionNestedInput
 }
 
 export type LevelUpSessionUncheckedUpdateWithoutSetsInput = {
@@ -645,6 +839,11 @@ export type LevelUpSessionUncheckedUpdateWithoutSetsInput = {
   kneeFlare?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lumbarFlare?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sessionRpe?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  workoutEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  readinessSnapshot?: Prisma.LevelUpReadinessSnapshotUncheckedUpdateOneWithoutSessionNestedInput
 }
 
 export type LevelUpSessionCreateWithoutProgramDayInput = {
@@ -655,8 +854,13 @@ export type LevelUpSessionCreateWithoutProgramDayInput = {
   kneeFlare?: boolean
   lumbarFlare?: boolean
   notes?: string | null
+  source?: string | null
+  sourceId?: string | null
+  sessionRpe?: number | null
+  workoutEventId?: string | null
   workspace: Prisma.WorkspaceCreateNestedOneWithoutLevelUpSessionsInput
   sets?: Prisma.LevelUpTrainingSetCreateNestedManyWithoutSessionInput
+  readinessSnapshot?: Prisma.LevelUpReadinessSnapshotCreateNestedOneWithoutSessionInput
 }
 
 export type LevelUpSessionUncheckedCreateWithoutProgramDayInput = {
@@ -668,7 +872,12 @@ export type LevelUpSessionUncheckedCreateWithoutProgramDayInput = {
   kneeFlare?: boolean
   lumbarFlare?: boolean
   notes?: string | null
+  source?: string | null
+  sourceId?: string | null
+  sessionRpe?: number | null
+  workoutEventId?: string | null
   sets?: Prisma.LevelUpTrainingSetUncheckedCreateNestedManyWithoutSessionInput
+  readinessSnapshot?: Prisma.LevelUpReadinessSnapshotUncheckedCreateNestedOneWithoutSessionInput
 }
 
 export type LevelUpSessionCreateOrConnectWithoutProgramDayInput = {
@@ -696,6 +905,90 @@ export type LevelUpSessionUpdateManyWithWhereWithoutProgramDayInput = {
   data: Prisma.XOR<Prisma.LevelUpSessionUpdateManyMutationInput, Prisma.LevelUpSessionUncheckedUpdateManyWithoutProgramDayInput>
 }
 
+export type LevelUpSessionCreateWithoutReadinessSnapshotInput = {
+  id?: string
+  createdAt?: Date | string
+  startedAt?: Date | string
+  endedAt?: Date | string | null
+  kneeFlare?: boolean
+  lumbarFlare?: boolean
+  notes?: string | null
+  source?: string | null
+  sourceId?: string | null
+  sessionRpe?: number | null
+  workoutEventId?: string | null
+  workspace: Prisma.WorkspaceCreateNestedOneWithoutLevelUpSessionsInput
+  programDay?: Prisma.LevelUpProgramDayCreateNestedOneWithoutSessionsInput
+  sets?: Prisma.LevelUpTrainingSetCreateNestedManyWithoutSessionInput
+}
+
+export type LevelUpSessionUncheckedCreateWithoutReadinessSnapshotInput = {
+  id?: string
+  workspaceId: string
+  createdAt?: Date | string
+  startedAt?: Date | string
+  endedAt?: Date | string | null
+  programDayId?: string | null
+  kneeFlare?: boolean
+  lumbarFlare?: boolean
+  notes?: string | null
+  source?: string | null
+  sourceId?: string | null
+  sessionRpe?: number | null
+  workoutEventId?: string | null
+  sets?: Prisma.LevelUpTrainingSetUncheckedCreateNestedManyWithoutSessionInput
+}
+
+export type LevelUpSessionCreateOrConnectWithoutReadinessSnapshotInput = {
+  where: Prisma.LevelUpSessionWhereUniqueInput
+  create: Prisma.XOR<Prisma.LevelUpSessionCreateWithoutReadinessSnapshotInput, Prisma.LevelUpSessionUncheckedCreateWithoutReadinessSnapshotInput>
+}
+
+export type LevelUpSessionUpsertWithoutReadinessSnapshotInput = {
+  update: Prisma.XOR<Prisma.LevelUpSessionUpdateWithoutReadinessSnapshotInput, Prisma.LevelUpSessionUncheckedUpdateWithoutReadinessSnapshotInput>
+  create: Prisma.XOR<Prisma.LevelUpSessionCreateWithoutReadinessSnapshotInput, Prisma.LevelUpSessionUncheckedCreateWithoutReadinessSnapshotInput>
+  where?: Prisma.LevelUpSessionWhereInput
+}
+
+export type LevelUpSessionUpdateToOneWithWhereWithoutReadinessSnapshotInput = {
+  where?: Prisma.LevelUpSessionWhereInput
+  data: Prisma.XOR<Prisma.LevelUpSessionUpdateWithoutReadinessSnapshotInput, Prisma.LevelUpSessionUncheckedUpdateWithoutReadinessSnapshotInput>
+}
+
+export type LevelUpSessionUpdateWithoutReadinessSnapshotInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  startedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  kneeFlare?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  lumbarFlare?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sessionRpe?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  workoutEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutLevelUpSessionsNestedInput
+  programDay?: Prisma.LevelUpProgramDayUpdateOneWithoutSessionsNestedInput
+  sets?: Prisma.LevelUpTrainingSetUpdateManyWithoutSessionNestedInput
+}
+
+export type LevelUpSessionUncheckedUpdateWithoutReadinessSnapshotInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  startedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  programDayId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kneeFlare?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  lumbarFlare?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sessionRpe?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  workoutEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sets?: Prisma.LevelUpTrainingSetUncheckedUpdateManyWithoutSessionNestedInput
+}
+
 export type LevelUpSessionCreateManyWorkspaceInput = {
   id?: string
   createdAt?: Date | string
@@ -705,6 +998,10 @@ export type LevelUpSessionCreateManyWorkspaceInput = {
   kneeFlare?: boolean
   lumbarFlare?: boolean
   notes?: string | null
+  source?: string | null
+  sourceId?: string | null
+  sessionRpe?: number | null
+  workoutEventId?: string | null
 }
 
 export type LevelUpSessionUpdateWithoutWorkspaceInput = {
@@ -715,8 +1012,13 @@ export type LevelUpSessionUpdateWithoutWorkspaceInput = {
   kneeFlare?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lumbarFlare?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sessionRpe?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  workoutEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   programDay?: Prisma.LevelUpProgramDayUpdateOneWithoutSessionsNestedInput
   sets?: Prisma.LevelUpTrainingSetUpdateManyWithoutSessionNestedInput
+  readinessSnapshot?: Prisma.LevelUpReadinessSnapshotUpdateOneWithoutSessionNestedInput
 }
 
 export type LevelUpSessionUncheckedUpdateWithoutWorkspaceInput = {
@@ -728,7 +1030,12 @@ export type LevelUpSessionUncheckedUpdateWithoutWorkspaceInput = {
   kneeFlare?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lumbarFlare?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sessionRpe?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  workoutEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sets?: Prisma.LevelUpTrainingSetUncheckedUpdateManyWithoutSessionNestedInput
+  readinessSnapshot?: Prisma.LevelUpReadinessSnapshotUncheckedUpdateOneWithoutSessionNestedInput
 }
 
 export type LevelUpSessionUncheckedUpdateManyWithoutWorkspaceInput = {
@@ -740,6 +1047,10 @@ export type LevelUpSessionUncheckedUpdateManyWithoutWorkspaceInput = {
   kneeFlare?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lumbarFlare?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sessionRpe?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  workoutEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type LevelUpSessionCreateManyProgramDayInput = {
@@ -751,6 +1062,10 @@ export type LevelUpSessionCreateManyProgramDayInput = {
   kneeFlare?: boolean
   lumbarFlare?: boolean
   notes?: string | null
+  source?: string | null
+  sourceId?: string | null
+  sessionRpe?: number | null
+  workoutEventId?: string | null
 }
 
 export type LevelUpSessionUpdateWithoutProgramDayInput = {
@@ -761,8 +1076,13 @@ export type LevelUpSessionUpdateWithoutProgramDayInput = {
   kneeFlare?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lumbarFlare?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sessionRpe?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  workoutEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutLevelUpSessionsNestedInput
   sets?: Prisma.LevelUpTrainingSetUpdateManyWithoutSessionNestedInput
+  readinessSnapshot?: Prisma.LevelUpReadinessSnapshotUpdateOneWithoutSessionNestedInput
 }
 
 export type LevelUpSessionUncheckedUpdateWithoutProgramDayInput = {
@@ -774,7 +1094,12 @@ export type LevelUpSessionUncheckedUpdateWithoutProgramDayInput = {
   kneeFlare?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lumbarFlare?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sessionRpe?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  workoutEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sets?: Prisma.LevelUpTrainingSetUncheckedUpdateManyWithoutSessionNestedInput
+  readinessSnapshot?: Prisma.LevelUpReadinessSnapshotUncheckedUpdateOneWithoutSessionNestedInput
 }
 
 export type LevelUpSessionUncheckedUpdateManyWithoutProgramDayInput = {
@@ -786,6 +1111,10 @@ export type LevelUpSessionUncheckedUpdateManyWithoutProgramDayInput = {
   kneeFlare?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lumbarFlare?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sessionRpe?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  workoutEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
@@ -829,9 +1158,14 @@ export type LevelUpSessionSelect<ExtArgs extends runtime.Types.Extensions.Intern
   kneeFlare?: boolean
   lumbarFlare?: boolean
   notes?: boolean
+  source?: boolean
+  sourceId?: boolean
+  sessionRpe?: boolean
+  workoutEventId?: boolean
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   programDay?: boolean | Prisma.LevelUpSession$programDayArgs<ExtArgs>
   sets?: boolean | Prisma.LevelUpSession$setsArgs<ExtArgs>
+  readinessSnapshot?: boolean | Prisma.LevelUpSession$readinessSnapshotArgs<ExtArgs>
   _count?: boolean | Prisma.LevelUpSessionCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["levelUpSession"]>
 
@@ -845,6 +1179,10 @@ export type LevelUpSessionSelectCreateManyAndReturn<ExtArgs extends runtime.Type
   kneeFlare?: boolean
   lumbarFlare?: boolean
   notes?: boolean
+  source?: boolean
+  sourceId?: boolean
+  sessionRpe?: boolean
+  workoutEventId?: boolean
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   programDay?: boolean | Prisma.LevelUpSession$programDayArgs<ExtArgs>
 }, ExtArgs["result"]["levelUpSession"]>
@@ -859,6 +1197,10 @@ export type LevelUpSessionSelectUpdateManyAndReturn<ExtArgs extends runtime.Type
   kneeFlare?: boolean
   lumbarFlare?: boolean
   notes?: boolean
+  source?: boolean
+  sourceId?: boolean
+  sessionRpe?: boolean
+  workoutEventId?: boolean
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   programDay?: boolean | Prisma.LevelUpSession$programDayArgs<ExtArgs>
 }, ExtArgs["result"]["levelUpSession"]>
@@ -873,13 +1215,18 @@ export type LevelUpSessionSelectScalar = {
   kneeFlare?: boolean
   lumbarFlare?: boolean
   notes?: boolean
+  source?: boolean
+  sourceId?: boolean
+  sessionRpe?: boolean
+  workoutEventId?: boolean
 }
 
-export type LevelUpSessionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "workspaceId" | "createdAt" | "startedAt" | "endedAt" | "programDayId" | "kneeFlare" | "lumbarFlare" | "notes", ExtArgs["result"]["levelUpSession"]>
+export type LevelUpSessionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "workspaceId" | "createdAt" | "startedAt" | "endedAt" | "programDayId" | "kneeFlare" | "lumbarFlare" | "notes" | "source" | "sourceId" | "sessionRpe" | "workoutEventId", ExtArgs["result"]["levelUpSession"]>
 export type LevelUpSessionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   programDay?: boolean | Prisma.LevelUpSession$programDayArgs<ExtArgs>
   sets?: boolean | Prisma.LevelUpSession$setsArgs<ExtArgs>
+  readinessSnapshot?: boolean | Prisma.LevelUpSession$readinessSnapshotArgs<ExtArgs>
   _count?: boolean | Prisma.LevelUpSessionCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type LevelUpSessionIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -897,6 +1244,7 @@ export type $LevelUpSessionPayload<ExtArgs extends runtime.Types.Extensions.Inte
     workspace: Prisma.$WorkspacePayload<ExtArgs>
     programDay: Prisma.$LevelUpProgramDayPayload<ExtArgs> | null
     sets: Prisma.$LevelUpTrainingSetPayload<ExtArgs>[]
+    readinessSnapshot: Prisma.$LevelUpReadinessSnapshotPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -908,6 +1256,10 @@ export type $LevelUpSessionPayload<ExtArgs extends runtime.Types.Extensions.Inte
     kneeFlare: boolean
     lumbarFlare: boolean
     notes: string | null
+    source: string | null
+    sourceId: string | null
+    sessionRpe: number | null
+    workoutEventId: string | null
   }, ExtArgs["result"]["levelUpSession"]>
   composites: {}
 }
@@ -1305,6 +1657,7 @@ export interface Prisma__LevelUpSessionClient<T, Null = never, ExtArgs extends r
   workspace<T extends Prisma.WorkspaceDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WorkspaceDefaultArgs<ExtArgs>>): Prisma.Prisma__WorkspaceClient<runtime.Types.Result.GetResult<Prisma.$WorkspacePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   programDay<T extends Prisma.LevelUpSession$programDayArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LevelUpSession$programDayArgs<ExtArgs>>): Prisma.Prisma__LevelUpProgramDayClient<runtime.Types.Result.GetResult<Prisma.$LevelUpProgramDayPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   sets<T extends Prisma.LevelUpSession$setsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LevelUpSession$setsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LevelUpTrainingSetPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  readinessSnapshot<T extends Prisma.LevelUpSession$readinessSnapshotArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LevelUpSession$readinessSnapshotArgs<ExtArgs>>): Prisma.Prisma__LevelUpReadinessSnapshotClient<runtime.Types.Result.GetResult<Prisma.$LevelUpReadinessSnapshotPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1343,6 +1696,10 @@ export interface LevelUpSessionFieldRefs {
   readonly kneeFlare: Prisma.FieldRef<"LevelUpSession", 'Boolean'>
   readonly lumbarFlare: Prisma.FieldRef<"LevelUpSession", 'Boolean'>
   readonly notes: Prisma.FieldRef<"LevelUpSession", 'String'>
+  readonly source: Prisma.FieldRef<"LevelUpSession", 'String'>
+  readonly sourceId: Prisma.FieldRef<"LevelUpSession", 'String'>
+  readonly sessionRpe: Prisma.FieldRef<"LevelUpSession", 'Float'>
+  readonly workoutEventId: Prisma.FieldRef<"LevelUpSession", 'String'>
 }
     
 
@@ -1782,6 +2139,25 @@ export type LevelUpSession$setsArgs<ExtArgs extends runtime.Types.Extensions.Int
   take?: number
   skip?: number
   distinct?: Prisma.LevelUpTrainingSetScalarFieldEnum | Prisma.LevelUpTrainingSetScalarFieldEnum[]
+}
+
+/**
+ * LevelUpSession.readinessSnapshot
+ */
+export type LevelUpSession$readinessSnapshotArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the LevelUpReadinessSnapshot
+   */
+  select?: Prisma.LevelUpReadinessSnapshotSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the LevelUpReadinessSnapshot
+   */
+  omit?: Prisma.LevelUpReadinessSnapshotOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.LevelUpReadinessSnapshotInclude<ExtArgs> | null
+  where?: Prisma.LevelUpReadinessSnapshotWhereInput
 }
 
 /**

@@ -67,6 +67,8 @@ export type LevelUpTrainingSetMinAggregateOutputType = {
   rankLetter: string | null
   balanceResidual: number | null
   isPr: boolean | null
+  source: string | null
+  sourceId: string | null
 }
 
 export type LevelUpTrainingSetMaxAggregateOutputType = {
@@ -88,6 +90,8 @@ export type LevelUpTrainingSetMaxAggregateOutputType = {
   rankLetter: string | null
   balanceResidual: number | null
   isPr: boolean | null
+  source: string | null
+  sourceId: string | null
 }
 
 export type LevelUpTrainingSetCountAggregateOutputType = {
@@ -109,6 +113,8 @@ export type LevelUpTrainingSetCountAggregateOutputType = {
   rankLetter: number
   balanceResidual: number
   isPr: number
+  source: number
+  sourceId: number
   _all: number
 }
 
@@ -154,6 +160,8 @@ export type LevelUpTrainingSetMinAggregateInputType = {
   rankLetter?: true
   balanceResidual?: true
   isPr?: true
+  source?: true
+  sourceId?: true
 }
 
 export type LevelUpTrainingSetMaxAggregateInputType = {
@@ -175,6 +183,8 @@ export type LevelUpTrainingSetMaxAggregateInputType = {
   rankLetter?: true
   balanceResidual?: true
   isPr?: true
+  source?: true
+  sourceId?: true
 }
 
 export type LevelUpTrainingSetCountAggregateInputType = {
@@ -196,6 +206,8 @@ export type LevelUpTrainingSetCountAggregateInputType = {
   rankLetter?: true
   balanceResidual?: true
   isPr?: true
+  source?: true
+  sourceId?: true
   _all?: true
 }
 
@@ -304,6 +316,8 @@ export type LevelUpTrainingSetGroupByOutputType = {
   rankLetter: string | null
   balanceResidual: number | null
   isPr: boolean
+  source: string | null
+  sourceId: string | null
   _count: LevelUpTrainingSetCountAggregateOutputType | null
   _avg: LevelUpTrainingSetAvgAggregateOutputType | null
   _sum: LevelUpTrainingSetSumAggregateOutputType | null
@@ -348,6 +362,8 @@ export type LevelUpTrainingSetWhereInput = {
   rankLetter?: Prisma.StringNullableFilter<"LevelUpTrainingSet"> | string | null
   balanceResidual?: Prisma.FloatNullableFilter<"LevelUpTrainingSet"> | number | null
   isPr?: Prisma.BoolFilter<"LevelUpTrainingSet"> | boolean
+  source?: Prisma.StringNullableFilter<"LevelUpTrainingSet"> | string | null
+  sourceId?: Prisma.StringNullableFilter<"LevelUpTrainingSet"> | string | null
   workspace?: Prisma.XOR<Prisma.WorkspaceScalarRelationFilter, Prisma.WorkspaceWhereInput>
   session?: Prisma.XOR<Prisma.LevelUpSessionNullableScalarRelationFilter, Prisma.LevelUpSessionWhereInput> | null
   exercise?: Prisma.XOR<Prisma.LevelUpExerciseNullableScalarRelationFilter, Prisma.LevelUpExerciseWhereInput> | null
@@ -372,6 +388,8 @@ export type LevelUpTrainingSetOrderByWithRelationInput = {
   rankLetter?: Prisma.SortOrderInput | Prisma.SortOrder
   balanceResidual?: Prisma.SortOrderInput | Prisma.SortOrder
   isPr?: Prisma.SortOrder
+  source?: Prisma.SortOrderInput | Prisma.SortOrder
+  sourceId?: Prisma.SortOrderInput | Prisma.SortOrder
   workspace?: Prisma.WorkspaceOrderByWithRelationInput
   session?: Prisma.LevelUpSessionOrderByWithRelationInput
   exercise?: Prisma.LevelUpExerciseOrderByWithRelationInput
@@ -379,6 +397,7 @@ export type LevelUpTrainingSetOrderByWithRelationInput = {
 
 export type LevelUpTrainingSetWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  workspaceId_source_sourceId?: Prisma.LevelUpTrainingSetWorkspaceIdSourceSourceIdCompoundUniqueInput
   AND?: Prisma.LevelUpTrainingSetWhereInput | Prisma.LevelUpTrainingSetWhereInput[]
   OR?: Prisma.LevelUpTrainingSetWhereInput[]
   NOT?: Prisma.LevelUpTrainingSetWhereInput | Prisma.LevelUpTrainingSetWhereInput[]
@@ -399,10 +418,12 @@ export type LevelUpTrainingSetWhereUniqueInput = Prisma.AtLeast<{
   rankLetter?: Prisma.StringNullableFilter<"LevelUpTrainingSet"> | string | null
   balanceResidual?: Prisma.FloatNullableFilter<"LevelUpTrainingSet"> | number | null
   isPr?: Prisma.BoolFilter<"LevelUpTrainingSet"> | boolean
+  source?: Prisma.StringNullableFilter<"LevelUpTrainingSet"> | string | null
+  sourceId?: Prisma.StringNullableFilter<"LevelUpTrainingSet"> | string | null
   workspace?: Prisma.XOR<Prisma.WorkspaceScalarRelationFilter, Prisma.WorkspaceWhereInput>
   session?: Prisma.XOR<Prisma.LevelUpSessionNullableScalarRelationFilter, Prisma.LevelUpSessionWhereInput> | null
   exercise?: Prisma.XOR<Prisma.LevelUpExerciseNullableScalarRelationFilter, Prisma.LevelUpExerciseWhereInput> | null
-}, "id">
+}, "id" | "workspaceId_source_sourceId">
 
 export type LevelUpTrainingSetOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -423,6 +444,8 @@ export type LevelUpTrainingSetOrderByWithAggregationInput = {
   rankLetter?: Prisma.SortOrderInput | Prisma.SortOrder
   balanceResidual?: Prisma.SortOrderInput | Prisma.SortOrder
   isPr?: Prisma.SortOrder
+  source?: Prisma.SortOrderInput | Prisma.SortOrder
+  sourceId?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.LevelUpTrainingSetCountOrderByAggregateInput
   _avg?: Prisma.LevelUpTrainingSetAvgOrderByAggregateInput
   _max?: Prisma.LevelUpTrainingSetMaxOrderByAggregateInput
@@ -452,6 +475,8 @@ export type LevelUpTrainingSetScalarWhereWithAggregatesInput = {
   rankLetter?: Prisma.StringNullableWithAggregatesFilter<"LevelUpTrainingSet"> | string | null
   balanceResidual?: Prisma.FloatNullableWithAggregatesFilter<"LevelUpTrainingSet"> | number | null
   isPr?: Prisma.BoolWithAggregatesFilter<"LevelUpTrainingSet"> | boolean
+  source?: Prisma.StringNullableWithAggregatesFilter<"LevelUpTrainingSet"> | string | null
+  sourceId?: Prisma.StringNullableWithAggregatesFilter<"LevelUpTrainingSet"> | string | null
 }
 
 export type LevelUpTrainingSetCreateInput = {
@@ -470,6 +495,8 @@ export type LevelUpTrainingSetCreateInput = {
   rankLetter?: string | null
   balanceResidual?: number | null
   isPr?: boolean
+  source?: string | null
+  sourceId?: string | null
   workspace: Prisma.WorkspaceCreateNestedOneWithoutLevelUpTrainingSetsInput
   session?: Prisma.LevelUpSessionCreateNestedOneWithoutSetsInput
   exercise?: Prisma.LevelUpExerciseCreateNestedOneWithoutSetsInput
@@ -494,6 +521,8 @@ export type LevelUpTrainingSetUncheckedCreateInput = {
   rankLetter?: string | null
   balanceResidual?: number | null
   isPr?: boolean
+  source?: string | null
+  sourceId?: string | null
 }
 
 export type LevelUpTrainingSetUpdateInput = {
@@ -512,6 +541,8 @@ export type LevelUpTrainingSetUpdateInput = {
   rankLetter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   balanceResidual?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isPr?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutLevelUpTrainingSetsNestedInput
   session?: Prisma.LevelUpSessionUpdateOneWithoutSetsNestedInput
   exercise?: Prisma.LevelUpExerciseUpdateOneWithoutSetsNestedInput
@@ -536,6 +567,8 @@ export type LevelUpTrainingSetUncheckedUpdateInput = {
   rankLetter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   balanceResidual?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isPr?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type LevelUpTrainingSetCreateManyInput = {
@@ -557,6 +590,8 @@ export type LevelUpTrainingSetCreateManyInput = {
   rankLetter?: string | null
   balanceResidual?: number | null
   isPr?: boolean
+  source?: string | null
+  sourceId?: string | null
 }
 
 export type LevelUpTrainingSetUpdateManyMutationInput = {
@@ -575,6 +610,8 @@ export type LevelUpTrainingSetUpdateManyMutationInput = {
   rankLetter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   balanceResidual?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isPr?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type LevelUpTrainingSetUncheckedUpdateManyInput = {
@@ -596,6 +633,8 @@ export type LevelUpTrainingSetUncheckedUpdateManyInput = {
   rankLetter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   balanceResidual?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isPr?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type LevelUpTrainingSetListRelationFilter = {
@@ -606,6 +645,12 @@ export type LevelUpTrainingSetListRelationFilter = {
 
 export type LevelUpTrainingSetOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type LevelUpTrainingSetWorkspaceIdSourceSourceIdCompoundUniqueInput = {
+  workspaceId: string
+  source: string
+  sourceId: string
 }
 
 export type LevelUpTrainingSetCountOrderByAggregateInput = {
@@ -627,6 +672,8 @@ export type LevelUpTrainingSetCountOrderByAggregateInput = {
   rankLetter?: Prisma.SortOrder
   balanceResidual?: Prisma.SortOrder
   isPr?: Prisma.SortOrder
+  source?: Prisma.SortOrder
+  sourceId?: Prisma.SortOrder
 }
 
 export type LevelUpTrainingSetAvgOrderByAggregateInput = {
@@ -659,6 +706,8 @@ export type LevelUpTrainingSetMaxOrderByAggregateInput = {
   rankLetter?: Prisma.SortOrder
   balanceResidual?: Prisma.SortOrder
   isPr?: Prisma.SortOrder
+  source?: Prisma.SortOrder
+  sourceId?: Prisma.SortOrder
 }
 
 export type LevelUpTrainingSetMinOrderByAggregateInput = {
@@ -680,6 +729,8 @@ export type LevelUpTrainingSetMinOrderByAggregateInput = {
   rankLetter?: Prisma.SortOrder
   balanceResidual?: Prisma.SortOrder
   isPr?: Prisma.SortOrder
+  source?: Prisma.SortOrder
+  sourceId?: Prisma.SortOrder
 }
 
 export type LevelUpTrainingSetSumOrderByAggregateInput = {
@@ -835,6 +886,8 @@ export type LevelUpTrainingSetCreateWithoutWorkspaceInput = {
   rankLetter?: string | null
   balanceResidual?: number | null
   isPr?: boolean
+  source?: string | null
+  sourceId?: string | null
   session?: Prisma.LevelUpSessionCreateNestedOneWithoutSetsInput
   exercise?: Prisma.LevelUpExerciseCreateNestedOneWithoutSetsInput
 }
@@ -857,6 +910,8 @@ export type LevelUpTrainingSetUncheckedCreateWithoutWorkspaceInput = {
   rankLetter?: string | null
   balanceResidual?: number | null
   isPr?: boolean
+  source?: string | null
+  sourceId?: string | null
 }
 
 export type LevelUpTrainingSetCreateOrConnectWithoutWorkspaceInput = {
@@ -906,6 +961,8 @@ export type LevelUpTrainingSetScalarWhereInput = {
   rankLetter?: Prisma.StringNullableFilter<"LevelUpTrainingSet"> | string | null
   balanceResidual?: Prisma.FloatNullableFilter<"LevelUpTrainingSet"> | number | null
   isPr?: Prisma.BoolFilter<"LevelUpTrainingSet"> | boolean
+  source?: Prisma.StringNullableFilter<"LevelUpTrainingSet"> | string | null
+  sourceId?: Prisma.StringNullableFilter<"LevelUpTrainingSet"> | string | null
 }
 
 export type LevelUpTrainingSetCreateWithoutExerciseInput = {
@@ -924,6 +981,8 @@ export type LevelUpTrainingSetCreateWithoutExerciseInput = {
   rankLetter?: string | null
   balanceResidual?: number | null
   isPr?: boolean
+  source?: string | null
+  sourceId?: string | null
   workspace: Prisma.WorkspaceCreateNestedOneWithoutLevelUpTrainingSetsInput
   session?: Prisma.LevelUpSessionCreateNestedOneWithoutSetsInput
 }
@@ -946,6 +1005,8 @@ export type LevelUpTrainingSetUncheckedCreateWithoutExerciseInput = {
   rankLetter?: string | null
   balanceResidual?: number | null
   isPr?: boolean
+  source?: string | null
+  sourceId?: string | null
 }
 
 export type LevelUpTrainingSetCreateOrConnectWithoutExerciseInput = {
@@ -989,6 +1050,8 @@ export type LevelUpTrainingSetCreateWithoutSessionInput = {
   rankLetter?: string | null
   balanceResidual?: number | null
   isPr?: boolean
+  source?: string | null
+  sourceId?: string | null
   workspace: Prisma.WorkspaceCreateNestedOneWithoutLevelUpTrainingSetsInput
   exercise?: Prisma.LevelUpExerciseCreateNestedOneWithoutSetsInput
 }
@@ -1011,6 +1074,8 @@ export type LevelUpTrainingSetUncheckedCreateWithoutSessionInput = {
   rankLetter?: string | null
   balanceResidual?: number | null
   isPr?: boolean
+  source?: string | null
+  sourceId?: string | null
 }
 
 export type LevelUpTrainingSetCreateOrConnectWithoutSessionInput = {
@@ -1056,6 +1121,8 @@ export type LevelUpTrainingSetCreateManyWorkspaceInput = {
   rankLetter?: string | null
   balanceResidual?: number | null
   isPr?: boolean
+  source?: string | null
+  sourceId?: string | null
 }
 
 export type LevelUpTrainingSetUpdateWithoutWorkspaceInput = {
@@ -1074,6 +1141,8 @@ export type LevelUpTrainingSetUpdateWithoutWorkspaceInput = {
   rankLetter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   balanceResidual?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isPr?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   session?: Prisma.LevelUpSessionUpdateOneWithoutSetsNestedInput
   exercise?: Prisma.LevelUpExerciseUpdateOneWithoutSetsNestedInput
 }
@@ -1096,6 +1165,8 @@ export type LevelUpTrainingSetUncheckedUpdateWithoutWorkspaceInput = {
   rankLetter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   balanceResidual?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isPr?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type LevelUpTrainingSetUncheckedUpdateManyWithoutWorkspaceInput = {
@@ -1116,6 +1187,8 @@ export type LevelUpTrainingSetUncheckedUpdateManyWithoutWorkspaceInput = {
   rankLetter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   balanceResidual?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isPr?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type LevelUpTrainingSetCreateManyExerciseInput = {
@@ -1136,6 +1209,8 @@ export type LevelUpTrainingSetCreateManyExerciseInput = {
   rankLetter?: string | null
   balanceResidual?: number | null
   isPr?: boolean
+  source?: string | null
+  sourceId?: string | null
 }
 
 export type LevelUpTrainingSetUpdateWithoutExerciseInput = {
@@ -1154,6 +1229,8 @@ export type LevelUpTrainingSetUpdateWithoutExerciseInput = {
   rankLetter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   balanceResidual?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isPr?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutLevelUpTrainingSetsNestedInput
   session?: Prisma.LevelUpSessionUpdateOneWithoutSetsNestedInput
 }
@@ -1176,6 +1253,8 @@ export type LevelUpTrainingSetUncheckedUpdateWithoutExerciseInput = {
   rankLetter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   balanceResidual?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isPr?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type LevelUpTrainingSetUncheckedUpdateManyWithoutExerciseInput = {
@@ -1196,6 +1275,8 @@ export type LevelUpTrainingSetUncheckedUpdateManyWithoutExerciseInput = {
   rankLetter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   balanceResidual?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isPr?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type LevelUpTrainingSetCreateManySessionInput = {
@@ -1216,6 +1297,8 @@ export type LevelUpTrainingSetCreateManySessionInput = {
   rankLetter?: string | null
   balanceResidual?: number | null
   isPr?: boolean
+  source?: string | null
+  sourceId?: string | null
 }
 
 export type LevelUpTrainingSetUpdateWithoutSessionInput = {
@@ -1234,6 +1317,8 @@ export type LevelUpTrainingSetUpdateWithoutSessionInput = {
   rankLetter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   balanceResidual?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isPr?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutLevelUpTrainingSetsNestedInput
   exercise?: Prisma.LevelUpExerciseUpdateOneWithoutSetsNestedInput
 }
@@ -1256,6 +1341,8 @@ export type LevelUpTrainingSetUncheckedUpdateWithoutSessionInput = {
   rankLetter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   balanceResidual?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isPr?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type LevelUpTrainingSetUncheckedUpdateManyWithoutSessionInput = {
@@ -1276,6 +1363,8 @@ export type LevelUpTrainingSetUncheckedUpdateManyWithoutSessionInput = {
   rankLetter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   balanceResidual?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isPr?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
@@ -1299,6 +1388,8 @@ export type LevelUpTrainingSetSelect<ExtArgs extends runtime.Types.Extensions.In
   rankLetter?: boolean
   balanceResidual?: boolean
   isPr?: boolean
+  source?: boolean
+  sourceId?: boolean
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   session?: boolean | Prisma.LevelUpTrainingSet$sessionArgs<ExtArgs>
   exercise?: boolean | Prisma.LevelUpTrainingSet$exerciseArgs<ExtArgs>
@@ -1323,6 +1414,8 @@ export type LevelUpTrainingSetSelectCreateManyAndReturn<ExtArgs extends runtime.
   rankLetter?: boolean
   balanceResidual?: boolean
   isPr?: boolean
+  source?: boolean
+  sourceId?: boolean
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   session?: boolean | Prisma.LevelUpTrainingSet$sessionArgs<ExtArgs>
   exercise?: boolean | Prisma.LevelUpTrainingSet$exerciseArgs<ExtArgs>
@@ -1347,6 +1440,8 @@ export type LevelUpTrainingSetSelectUpdateManyAndReturn<ExtArgs extends runtime.
   rankLetter?: boolean
   balanceResidual?: boolean
   isPr?: boolean
+  source?: boolean
+  sourceId?: boolean
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   session?: boolean | Prisma.LevelUpTrainingSet$sessionArgs<ExtArgs>
   exercise?: boolean | Prisma.LevelUpTrainingSet$exerciseArgs<ExtArgs>
@@ -1371,9 +1466,11 @@ export type LevelUpTrainingSetSelectScalar = {
   rankLetter?: boolean
   balanceResidual?: boolean
   isPr?: boolean
+  source?: boolean
+  sourceId?: boolean
 }
 
-export type LevelUpTrainingSetOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "workspaceId" | "createdAt" | "performedAt" | "sessionId" | "exerciseKey" | "exerciseId" | "setIndex" | "reps" | "loadKg" | "durationSec" | "isBodyweight" | "bodyweightKg" | "rpe" | "rank" | "rankLetter" | "balanceResidual" | "isPr", ExtArgs["result"]["levelUpTrainingSet"]>
+export type LevelUpTrainingSetOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "workspaceId" | "createdAt" | "performedAt" | "sessionId" | "exerciseKey" | "exerciseId" | "setIndex" | "reps" | "loadKg" | "durationSec" | "isBodyweight" | "bodyweightKg" | "rpe" | "rank" | "rankLetter" | "balanceResidual" | "isPr" | "source" | "sourceId", ExtArgs["result"]["levelUpTrainingSet"]>
 export type LevelUpTrainingSetInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   session?: boolean | Prisma.LevelUpTrainingSet$sessionArgs<ExtArgs>
@@ -1416,6 +1513,8 @@ export type $LevelUpTrainingSetPayload<ExtArgs extends runtime.Types.Extensions.
     rankLetter: string | null
     balanceResidual: number | null
     isPr: boolean
+    source: string | null
+    sourceId: string | null
   }, ExtArgs["result"]["levelUpTrainingSet"]>
   composites: {}
 }
@@ -1860,6 +1959,8 @@ export interface LevelUpTrainingSetFieldRefs {
   readonly rankLetter: Prisma.FieldRef<"LevelUpTrainingSet", 'String'>
   readonly balanceResidual: Prisma.FieldRef<"LevelUpTrainingSet", 'Float'>
   readonly isPr: Prisma.FieldRef<"LevelUpTrainingSet", 'Boolean'>
+  readonly source: Prisma.FieldRef<"LevelUpTrainingSet", 'String'>
+  readonly sourceId: Prisma.FieldRef<"LevelUpTrainingSet", 'String'>
 }
     
 

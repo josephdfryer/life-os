@@ -1,12 +1,12 @@
 import assert from "node:assert/strict"
 import { test } from "node:test"
 
-import { populationRating, spliceRating, wmaRating, zScore, rankFor } from "./curve"
-import { rateTest } from "./rate"
-import { getTest } from "./catalog"
-import { computeCard } from "./index"
-import { rateSet } from "./training"
-import type { Profile, TestResultInput } from "./types"
+import { populationRating, spliceRating, wmaRating, zScore, rankFor } from "../engine/curve"
+import { rateTest } from "../engine/rate"
+import { getTest } from "../engine/catalog"
+import { computeCard } from "../engine/index"
+import { rateSet } from "../engine/training"
+import type { Profile, TestResultInput } from "../engine/types"
 
 // The whole point of routing everything through z first is that one curve holds
 // across five unrelated tests with different units and distributions. These

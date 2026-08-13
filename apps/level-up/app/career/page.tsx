@@ -3,7 +3,7 @@ import { requireLevelUpAccess } from "@/lib/access"
 import { cookies } from "next/headers"
 import { resolveTimeZone, TZ_COOKIE } from "@life-os/ui"
 import { db } from "@/lib/db"
-import { TIER_LABEL, type BadgeTier } from "@/lib/engine/badges"
+import { TIER_LABEL, type BadgeTier } from "@life-os/level-up"
 import { Mono, Delta } from "@/components/display"
 
 export const dynamic = "force-dynamic"

@@ -3,11 +3,15 @@
 import { revalidatePath } from "next/cache"
 import { db } from "@/lib/db"
 import { requireLevelUpAccess } from "@/lib/access"
-import { loadBundle } from "@/lib/store"
-import { computeCard, type Card } from "@/lib/engine"
-import { rateSet } from "@/lib/engine/training"
-import { TIER_LABEL, type BadgeTier } from "@/lib/engine/badges"
-import type { AttributeKey } from "@/lib/engine/types"
+import {
+  loadBundle,
+  computeCard,
+  rateSet,
+  TIER_LABEL,
+  type Card,
+  type BadgeTier,
+  type AttributeKey,
+} from "@life-os/level-up"
 
 // ─────────────────────────────────────────────
 // WRITE PATH

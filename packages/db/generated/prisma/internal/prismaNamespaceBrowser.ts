@@ -128,6 +128,7 @@ export const ModelName = {
   LevelUpProgramEntry: 'LevelUpProgramEntry',
   LevelUpSession: 'LevelUpSession',
   LevelUpBodyMetric: 'LevelUpBodyMetric',
+  LevelUpReadinessSnapshot: 'LevelUpReadinessSnapshot',
   LevelUpBadgeUnlock: 'LevelUpBadgeUnlock',
   LevelUpTargetBuild: 'LevelUpTargetBuild',
   GraphEvent: 'GraphEvent',
@@ -1399,7 +1400,9 @@ export const LevelUpTrainingSetScalarFieldEnum = {
   rank: 'rank',
   rankLetter: 'rankLetter',
   balanceResidual: 'balanceResidual',
-  isPr: 'isPr'
+  isPr: 'isPr',
+  source: 'source',
+  sourceId: 'sourceId'
 } as const
 
 export type LevelUpTrainingSetScalarFieldEnum = (typeof LevelUpTrainingSetScalarFieldEnum)[keyof typeof LevelUpTrainingSetScalarFieldEnum]
@@ -1470,7 +1473,11 @@ export const LevelUpSessionScalarFieldEnum = {
   programDayId: 'programDayId',
   kneeFlare: 'kneeFlare',
   lumbarFlare: 'lumbarFlare',
-  notes: 'notes'
+  notes: 'notes',
+  source: 'source',
+  sourceId: 'sourceId',
+  sessionRpe: 'sessionRpe',
+  workoutEventId: 'workoutEventId'
 } as const
 
 export type LevelUpSessionScalarFieldEnum = (typeof LevelUpSessionScalarFieldEnum)[keyof typeof LevelUpSessionScalarFieldEnum]
@@ -1488,6 +1495,28 @@ export const LevelUpBodyMetricScalarFieldEnum = {
 } as const
 
 export type LevelUpBodyMetricScalarFieldEnum = (typeof LevelUpBodyMetricScalarFieldEnum)[keyof typeof LevelUpBodyMetricScalarFieldEnum]
+
+
+export const LevelUpReadinessSnapshotScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  sessionId: 'sessionId',
+  createdAt: 'createdAt',
+  snapshotAt: 'snapshotAt',
+  localDay: 'localDay',
+  engineVersion: 'engineVersion',
+  ruleSetVersion: 'ruleSetVersion',
+  inputs: 'inputs',
+  formSignal: 'formSignal',
+  band: 'band',
+  originalPrescriptionHash: 'originalPrescriptionHash',
+  suggestedPrescriptionHash: 'suggestedPrescriptionHash',
+  reasonCodes: 'reasonCodes',
+  userChoice: 'userChoice',
+  overriddenAt: 'overriddenAt'
+} as const
+
+export type LevelUpReadinessSnapshotScalarFieldEnum = (typeof LevelUpReadinessSnapshotScalarFieldEnum)[keyof typeof LevelUpReadinessSnapshotScalarFieldEnum]
 
 
 export const LevelUpBadgeUnlockScalarFieldEnum = {
