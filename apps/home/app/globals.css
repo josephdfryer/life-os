@@ -1363,7 +1363,7 @@ a {
   font-size: 11px;
 }
 
-.evening-checkin,
+.day-checkin,
 .weekly-review {
   margin-top: 32px;
   padding: 28px 32px;
@@ -1372,7 +1372,7 @@ a {
   border-radius: var(--radius-lg);
 }
 
-.evening-checkin h2,
+.day-checkin h2,
 .weekly-review h2 {
   margin: 4px 0 20px;
   font-family: var(--font-display);

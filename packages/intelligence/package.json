@@ -14,7 +14,7 @@
   },
   "scripts": {
     "test": "tsx --test tests/*.test.ts",
-    "type-check": "tsc --noEmit --moduleResolution bundler --module esnext --target es2022 --strict index.ts src/sources.ts src/synthesize.ts src/snapshots.ts src/types.ts src/life-model.ts src/evidence.ts src/life-model-evidence.ts src/life-model-feedback.ts src/life-model-snapshots.ts"
+    "type-check": "tsc --noEmit --moduleResolution bundler --module esnext --target es2022 --strict index.ts src/sources.ts src/synthesize.ts src/snapshots.ts src/types.ts src/life-model.ts src/evidence.ts src/life-model-evidence.ts src/life-model-feedback.ts src/life-model-snapshots.ts src/adaptive-day-types.ts src/adaptive-day-time.ts src/adaptive-day-capacity.ts src/adaptive-day-scheduling.ts src/adaptive-day-engine.ts"
   },
   "devDependencies": {
     "tsx": "^4.22.4"

@@ -48,3 +48,24 @@ export {
   listLifeModelSnapshots,
   getLifeModelSnapshotById,
 } from "./src/life-model-snapshots"
+
+export { computeCapacityBand } from "./src/adaptive-day-capacity"
+export { findCandidateSlot, CANDIDATE_START_HOUR, CANDIDATE_END_HOUR, BUFFER_MINUTES, MAX_DAYS_AHEAD } from "./src/adaptive-day-scheduling"
+export { generateAdaptiveDayBrief, ADAPTIVE_DAY_RULES_VERSION } from "./src/adaptive-day-engine"
+export { zonedTimeToUtc, localDayString, localHour, addDays, roundUpToQuarterHour, formatSlot } from "./src/adaptive-day-time"
+export type {
+  CapacityBand,
+  CapacityBandInput,
+  CapacityBandResult,
+  FixedBlock,
+  CandidateSlot,
+  InterventionCategory,
+  InterventionRiskTier,
+  ProposedCommand,
+  Intervention,
+  UnscheduledPlanInput,
+  ReschedulablePlanInput,
+  WorkoutInput,
+  AdaptiveDayEngineInput,
+  AdaptiveDayResult,
+} from "./src/adaptive-day-types"

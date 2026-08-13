@@ -16,16 +16,17 @@ export async function POST(request: Request) {
     : await db.user.findFirst({ where: { workspaceMemberships: { some: { workspaceId, role: "owner", status: "active" } } }, select: { id: true, personId: true } })
   if (!owner?.personId) return NextResponse.json({ error: "Connect the workspace owner to a Person before recording personal States." }, { status: 409 })
   const ownerPersonId = owner.personId
-  const body = await request.json().catch(() => null) as { values?: Record<string, unknown>; note?: unknown } | null
+  const body = await request.json().catch(() => null) as { values?: Record<string, unknown>; note?: unknown; slot?: unknown } | null
   if (!body?.values) return NextResponse.json({ error: "Check-in values are required" }, { status: 400 })
   const values = body.values
+  const slot = body.slot === "morning" ? "morning" : "evening"
   const recordedAt = new Date()
   const actor = { type: "user" as const, id: owner.id, workspaceId }
   const recorded = await db.$transaction(async tx => {
     const states: Array<Awaited<ReturnType<typeof recordStateInTransaction>>> = []
     const sourceNote = typeof body.note === "string" && body.note.trim()
       ? await tx.note.create({
-          data: { workspaceId, type: "observation", content: body.note.trim(), timestamp: recordedAt, metadata: JSON.stringify({ source: "evening-check-in" }) },
+          data: { workspaceId, type: "observation", content: body.note.trim(), timestamp: recordedAt, metadata: JSON.stringify({ source: `${slot}-check-in` }) },
           select: { id: true },
         })
       : null
@@ -43,7 +44,7 @@ export async function POST(request: Request) {
         entityId: ownerPersonId,
         definitionId: definition.id,
         severity: value,
-        source: "home-evening-check-in",
+        source: `home-${slot}-check-in`,
         sourceNoteId: sourceNote?.id,
         recordedAt,
       }, workspaceId, actor))

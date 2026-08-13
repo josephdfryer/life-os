@@ -122,6 +122,34 @@ export async function ensureStateDefinition(input: StateDefinitionInput, workspa
   return db.$transaction(tx => ensureStateDefinitionInTransaction(tx, input, workspaceId))
 }
 
+export type LatestState = { severity: number | null; source: string | null; recordedAt: Date }
+
+// One query per type (not a single query over the whole State history) —
+// `types` is a small fixed set (e.g. energy/mood/stress), so this stays
+// O(types), not O(records), regardless of how much State history a
+// long-lived workspace has accumulated.
+export async function getLatestStates(
+  entityType: string,
+  entityId: string,
+  types: readonly string[],
+  workspaceId = "default-workspace",
+): Promise<Record<string, LatestState | undefined>> {
+  const { db } = await import("@life-os/db")
+  const found = await Promise.all(types.map(async type => {
+    const state = await db.state.findFirst({
+      where: { workspaceId, entityType, entityId, definition: { type } },
+      orderBy: { recordedAt: "desc" },
+      select: { severity: true, source: true, recordedAt: true },
+    })
+    return state ? ([type, state] as const) : null
+  }))
+  const result: Record<string, LatestState | undefined> = {}
+  for (const entry of found) {
+    if (entry) result[entry[0]] = entry[1]
+  }
+  return result
+}
+
 export async function recordState(input: RecordStateInput, workspaceId = "default-workspace", actor?: Actor) {
   const { db } = await import("@life-os/db")
   const result = await db.$transaction(tx => recordStateInTransaction(tx, input, workspaceId, actor))

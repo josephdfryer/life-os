@@ -460,6 +460,9 @@ export const ModelName = {
   LifeModelSnapshot: 'LifeModelSnapshot',
   LifeModelClaim: 'LifeModelClaim',
   LifeModelClaimFeedback: 'LifeModelClaimFeedback',
+  AdaptiveDayBrief: 'AdaptiveDayBrief',
+  AdaptiveIntervention: 'AdaptiveIntervention',
+  AdaptiveInterventionOutcome: 'AdaptiveInterventionOutcome',
   StateDefinition: 'StateDefinition',
   State: 'State',
   AssistantMessage: 'AssistantMessage',
@@ -495,7 +498,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "workspace" | "workspaceMember" | "approvedEmail" | "person" | "user" | "device" | "deviceSource" | "deviceCredential" | "deviceAuthorization" | "deviceIngestItem" | "role" | "permission" | "userRole" | "rolePermission" | "apiKey" | "apiKeyScope" | "auditLog" | "calendarConnection" | "calendarEventLink" | "gmailConnection" | "gmailMessageLink" | "eraConnection" | "eraAccountLink" | "eraTransactionLink" | "connection" | "rule" | "ruleRun" | "stagedInteraction" | "event" | "interaction" | "interactionParticipant" | "plan" | "planExpectedPerson" | "place" | "importJob" | "importStagedVisit" | "placeNote" | "item" | "itemDefinition" | "inventoryLot" | "assembly" | "itemInteraction" | "importedFile" | "aiProviderCredential" | "aiAnalysisRun" | "noteAnalysisRun" | "theoryAnalysisRun" | "lifeModelAnalysisRun" | "noteSuggestion" | "group" | "supplierProfile" | "purchaseOrder" | "purchaseOrderLine" | "purchaseReceiptLine" | "personGroup" | "groupGroup" | "placeGroup" | "note" | "theorySnapshot" | "theorySnapshotSource" | "lifeModelSnapshot" | "lifeModelClaim" | "lifeModelClaimFeedback" | "stateDefinition" | "state" | "assistantMessage" | "levelUpProfile" | "levelUpTestResult" | "levelUpCombine" | "levelUpRatingSnapshot" | "levelUpTrainingSet" | "levelUpExercise" | "levelUpProgram" | "levelUpProgramDay" | "levelUpProgramEntry" | "levelUpSession" | "levelUpBodyMetric" | "levelUpReadinessSnapshot" | "levelUpBadgeUnlock" | "levelUpTargetBuild" | "graphEvent" | "graphEventReceipt" | "reviewItem"
+    modelProps: "workspace" | "workspaceMember" | "approvedEmail" | "person" | "user" | "device" | "deviceSource" | "deviceCredential" | "deviceAuthorization" | "deviceIngestItem" | "role" | "permission" | "userRole" | "rolePermission" | "apiKey" | "apiKeyScope" | "auditLog" | "calendarConnection" | "calendarEventLink" | "gmailConnection" | "gmailMessageLink" | "eraConnection" | "eraAccountLink" | "eraTransactionLink" | "connection" | "rule" | "ruleRun" | "stagedInteraction" | "event" | "interaction" | "interactionParticipant" | "plan" | "planExpectedPerson" | "place" | "importJob" | "importStagedVisit" | "placeNote" | "item" | "itemDefinition" | "inventoryLot" | "assembly" | "itemInteraction" | "importedFile" | "aiProviderCredential" | "aiAnalysisRun" | "noteAnalysisRun" | "theoryAnalysisRun" | "lifeModelAnalysisRun" | "noteSuggestion" | "group" | "supplierProfile" | "purchaseOrder" | "purchaseOrderLine" | "purchaseReceiptLine" | "personGroup" | "groupGroup" | "placeGroup" | "note" | "theorySnapshot" | "theorySnapshotSource" | "lifeModelSnapshot" | "lifeModelClaim" | "lifeModelClaimFeedback" | "adaptiveDayBrief" | "adaptiveIntervention" | "adaptiveInterventionOutcome" | "stateDefinition" | "state" | "assistantMessage" | "levelUpProfile" | "levelUpTestResult" | "levelUpCombine" | "levelUpRatingSnapshot" | "levelUpTrainingSet" | "levelUpExercise" | "levelUpProgram" | "levelUpProgramDay" | "levelUpProgramEntry" | "levelUpSession" | "levelUpBodyMetric" | "levelUpReadinessSnapshot" | "levelUpBadgeUnlock" | "levelUpTargetBuild" | "graphEvent" | "graphEventReceipt" | "reviewItem"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -5161,6 +5164,228 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    AdaptiveDayBrief: {
+      payload: Prisma.$AdaptiveDayBriefPayload<ExtArgs>
+      fields: Prisma.AdaptiveDayBriefFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.AdaptiveDayBriefFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdaptiveDayBriefPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.AdaptiveDayBriefFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdaptiveDayBriefPayload>
+        }
+        findFirst: {
+          args: Prisma.AdaptiveDayBriefFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdaptiveDayBriefPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.AdaptiveDayBriefFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdaptiveDayBriefPayload>
+        }
+        findMany: {
+          args: Prisma.AdaptiveDayBriefFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdaptiveDayBriefPayload>[]
+        }
+        create: {
+          args: Prisma.AdaptiveDayBriefCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdaptiveDayBriefPayload>
+        }
+        createMany: {
+          args: Prisma.AdaptiveDayBriefCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.AdaptiveDayBriefCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdaptiveDayBriefPayload>[]
+        }
+        delete: {
+          args: Prisma.AdaptiveDayBriefDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdaptiveDayBriefPayload>
+        }
+        update: {
+          args: Prisma.AdaptiveDayBriefUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdaptiveDayBriefPayload>
+        }
+        deleteMany: {
+          args: Prisma.AdaptiveDayBriefDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.AdaptiveDayBriefUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.AdaptiveDayBriefUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdaptiveDayBriefPayload>[]
+        }
+        upsert: {
+          args: Prisma.AdaptiveDayBriefUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdaptiveDayBriefPayload>
+        }
+        aggregate: {
+          args: Prisma.AdaptiveDayBriefAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAdaptiveDayBrief>
+        }
+        groupBy: {
+          args: Prisma.AdaptiveDayBriefGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AdaptiveDayBriefGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.AdaptiveDayBriefCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AdaptiveDayBriefCountAggregateOutputType> | number
+        }
+      }
+    }
+    AdaptiveIntervention: {
+      payload: Prisma.$AdaptiveInterventionPayload<ExtArgs>
+      fields: Prisma.AdaptiveInterventionFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.AdaptiveInterventionFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdaptiveInterventionPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.AdaptiveInterventionFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdaptiveInterventionPayload>
+        }
+        findFirst: {
+          args: Prisma.AdaptiveInterventionFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdaptiveInterventionPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.AdaptiveInterventionFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdaptiveInterventionPayload>
+        }
+        findMany: {
+          args: Prisma.AdaptiveInterventionFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdaptiveInterventionPayload>[]
+        }
+        create: {
+          args: Prisma.AdaptiveInterventionCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdaptiveInterventionPayload>
+        }
+        createMany: {
+          args: Prisma.AdaptiveInterventionCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.AdaptiveInterventionCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdaptiveInterventionPayload>[]
+        }
+        delete: {
+          args: Prisma.AdaptiveInterventionDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdaptiveInterventionPayload>
+        }
+        update: {
+          args: Prisma.AdaptiveInterventionUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdaptiveInterventionPayload>
+        }
+        deleteMany: {
+          args: Prisma.AdaptiveInterventionDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.AdaptiveInterventionUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.AdaptiveInterventionUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdaptiveInterventionPayload>[]
+        }
+        upsert: {
+          args: Prisma.AdaptiveInterventionUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdaptiveInterventionPayload>
+        }
+        aggregate: {
+          args: Prisma.AdaptiveInterventionAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAdaptiveIntervention>
+        }
+        groupBy: {
+          args: Prisma.AdaptiveInterventionGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AdaptiveInterventionGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.AdaptiveInterventionCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AdaptiveInterventionCountAggregateOutputType> | number
+        }
+      }
+    }
+    AdaptiveInterventionOutcome: {
+      payload: Prisma.$AdaptiveInterventionOutcomePayload<ExtArgs>
+      fields: Prisma.AdaptiveInterventionOutcomeFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.AdaptiveInterventionOutcomeFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdaptiveInterventionOutcomePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.AdaptiveInterventionOutcomeFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdaptiveInterventionOutcomePayload>
+        }
+        findFirst: {
+          args: Prisma.AdaptiveInterventionOutcomeFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdaptiveInterventionOutcomePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.AdaptiveInterventionOutcomeFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdaptiveInterventionOutcomePayload>
+        }
+        findMany: {
+          args: Prisma.AdaptiveInterventionOutcomeFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdaptiveInterventionOutcomePayload>[]
+        }
+        create: {
+          args: Prisma.AdaptiveInterventionOutcomeCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdaptiveInterventionOutcomePayload>
+        }
+        createMany: {
+          args: Prisma.AdaptiveInterventionOutcomeCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.AdaptiveInterventionOutcomeCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdaptiveInterventionOutcomePayload>[]
+        }
+        delete: {
+          args: Prisma.AdaptiveInterventionOutcomeDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdaptiveInterventionOutcomePayload>
+        }
+        update: {
+          args: Prisma.AdaptiveInterventionOutcomeUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdaptiveInterventionOutcomePayload>
+        }
+        deleteMany: {
+          args: Prisma.AdaptiveInterventionOutcomeDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.AdaptiveInterventionOutcomeUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.AdaptiveInterventionOutcomeUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdaptiveInterventionOutcomePayload>[]
+        }
+        upsert: {
+          args: Prisma.AdaptiveInterventionOutcomeUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdaptiveInterventionOutcomePayload>
+        }
+        aggregate: {
+          args: Prisma.AdaptiveInterventionOutcomeAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAdaptiveInterventionOutcome>
+        }
+        groupBy: {
+          args: Prisma.AdaptiveInterventionOutcomeGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AdaptiveInterventionOutcomeGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.AdaptiveInterventionOutcomeCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AdaptiveInterventionOutcomeCountAggregateOutputType> | number
+        }
+      }
+    }
     StateDefinition: {
       payload: Prisma.$StateDefinitionPayload<ExtArgs>
       fields: Prisma.StateDefinitionFieldRefs
@@ -7802,6 +8027,62 @@ export const LifeModelClaimFeedbackScalarFieldEnum = {
 export type LifeModelClaimFeedbackScalarFieldEnum = (typeof LifeModelClaimFeedbackScalarFieldEnum)[keyof typeof LifeModelClaimFeedbackScalarFieldEnum]
 
 
+export const AdaptiveDayBriefScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  day: 'day',
+  timezone: 'timezone',
+  rulesVersion: 'rulesVersion',
+  capacityBand: 'capacityBand',
+  inputSnapshot: 'inputSnapshot',
+  missingSignals: 'missingSignals',
+  generatedAt: 'generatedAt',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AdaptiveDayBriefScalarFieldEnum = (typeof AdaptiveDayBriefScalarFieldEnum)[keyof typeof AdaptiveDayBriefScalarFieldEnum]
+
+
+export const AdaptiveInterventionScalarFieldEnum = {
+  id: 'id',
+  briefId: 'briefId',
+  rank: 'rank',
+  category: 'category',
+  recommendationText: 'recommendationText',
+  reasonCodes: 'reasonCodes',
+  evidence: 'evidence',
+  proposedCommand: 'proposedCommand',
+  riskTier: 'riskTier',
+  status: 'status',
+  reviewItemId: 'reviewItemId',
+  resultType: 'resultType',
+  resultId: 'resultId',
+  createdAt: 'createdAt'
+} as const
+
+export type AdaptiveInterventionScalarFieldEnum = (typeof AdaptiveInterventionScalarFieldEnum)[keyof typeof AdaptiveInterventionScalarFieldEnum]
+
+
+export const AdaptiveInterventionOutcomeScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  interventionId: 'interventionId',
+  source: 'source',
+  outcome: 'outcome',
+  confidence: 'confidence',
+  evidence: 'evidence',
+  note: 'note',
+  actorType: 'actorType',
+  actorId: 'actorId',
+  actorLabel: 'actorLabel',
+  createdAt: 'createdAt'
+} as const
+
+export type AdaptiveInterventionOutcomeScalarFieldEnum = (typeof AdaptiveInterventionOutcomeScalarFieldEnum)[keyof typeof AdaptiveInterventionOutcomeScalarFieldEnum]
+
+
 export const StateDefinitionScalarFieldEnum = {
   id: 'id',
   workspaceId: 'workspaceId',
@@ -8513,6 +8794,9 @@ export type GlobalOmitConfig = {
   lifeModelSnapshot?: Prisma.LifeModelSnapshotOmit
   lifeModelClaim?: Prisma.LifeModelClaimOmit
   lifeModelClaimFeedback?: Prisma.LifeModelClaimFeedbackOmit
+  adaptiveDayBrief?: Prisma.AdaptiveDayBriefOmit
+  adaptiveIntervention?: Prisma.AdaptiveInterventionOmit
+  adaptiveInterventionOutcome?: Prisma.AdaptiveInterventionOutcomeOmit
   stateDefinition?: Prisma.StateDefinitionOmit
   state?: Prisma.StateOmit
   assistantMessage?: Prisma.AssistantMessageOmit

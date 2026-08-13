@@ -266,6 +266,8 @@ export type WorkspaceWhereInput = {
   graphEvents?: Prisma.GraphEventListRelationFilter
   reviewItems?: Prisma.ReviewItemListRelationFilter
   lifeModelSnapshots?: Prisma.LifeModelSnapshotListRelationFilter
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefListRelationFilter
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeListRelationFilter
   devices?: Prisma.DeviceListRelationFilter
   deviceAuthorizations?: Prisma.DeviceAuthorizationListRelationFilter
   deviceIngestItems?: Prisma.DeviceIngestItemListRelationFilter
@@ -340,6 +342,8 @@ export type WorkspaceOrderByWithRelationInput = {
   graphEvents?: Prisma.GraphEventOrderByRelationAggregateInput
   reviewItems?: Prisma.ReviewItemOrderByRelationAggregateInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotOrderByRelationAggregateInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefOrderByRelationAggregateInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeOrderByRelationAggregateInput
   devices?: Prisma.DeviceOrderByRelationAggregateInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationOrderByRelationAggregateInput
   deviceIngestItems?: Prisma.DeviceIngestItemOrderByRelationAggregateInput
@@ -417,6 +421,8 @@ export type WorkspaceWhereUniqueInput = Prisma.AtLeast<{
   graphEvents?: Prisma.GraphEventListRelationFilter
   reviewItems?: Prisma.ReviewItemListRelationFilter
   lifeModelSnapshots?: Prisma.LifeModelSnapshotListRelationFilter
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefListRelationFilter
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeListRelationFilter
   devices?: Prisma.DeviceListRelationFilter
   deviceAuthorizations?: Prisma.DeviceAuthorizationListRelationFilter
   deviceIngestItems?: Prisma.DeviceIngestItemListRelationFilter
@@ -518,6 +524,8 @@ export type WorkspaceCreateInput = {
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemCreateNestedManyWithoutWorkspaceInput
@@ -591,6 +599,8 @@ export type WorkspaceUncheckedCreateInput = {
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -664,6 +674,8 @@ export type WorkspaceUpdateInput = {
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUpdateManyWithoutWorkspaceNestedInput
@@ -737,6 +749,8 @@ export type WorkspaceUncheckedUpdateInput = {
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -1519,6 +1533,34 @@ export type WorkspaceUpdateOneRequiredWithoutLifeModelClaimFeedbackNestedInput =
   update?: Prisma.XOR<Prisma.XOR<Prisma.WorkspaceUpdateToOneWithWhereWithoutLifeModelClaimFeedbackInput, Prisma.WorkspaceUpdateWithoutLifeModelClaimFeedbackInput>, Prisma.WorkspaceUncheckedUpdateWithoutLifeModelClaimFeedbackInput>
 }
 
+export type WorkspaceCreateNestedOneWithoutAdaptiveDayBriefsInput = {
+  create?: Prisma.XOR<Prisma.WorkspaceCreateWithoutAdaptiveDayBriefsInput, Prisma.WorkspaceUncheckedCreateWithoutAdaptiveDayBriefsInput>
+  connectOrCreate?: Prisma.WorkspaceCreateOrConnectWithoutAdaptiveDayBriefsInput
+  connect?: Prisma.WorkspaceWhereUniqueInput
+}
+
+export type WorkspaceUpdateOneRequiredWithoutAdaptiveDayBriefsNestedInput = {
+  create?: Prisma.XOR<Prisma.WorkspaceCreateWithoutAdaptiveDayBriefsInput, Prisma.WorkspaceUncheckedCreateWithoutAdaptiveDayBriefsInput>
+  connectOrCreate?: Prisma.WorkspaceCreateOrConnectWithoutAdaptiveDayBriefsInput
+  upsert?: Prisma.WorkspaceUpsertWithoutAdaptiveDayBriefsInput
+  connect?: Prisma.WorkspaceWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.WorkspaceUpdateToOneWithWhereWithoutAdaptiveDayBriefsInput, Prisma.WorkspaceUpdateWithoutAdaptiveDayBriefsInput>, Prisma.WorkspaceUncheckedUpdateWithoutAdaptiveDayBriefsInput>
+}
+
+export type WorkspaceCreateNestedOneWithoutAdaptiveInterventionOutcomesInput = {
+  create?: Prisma.XOR<Prisma.WorkspaceCreateWithoutAdaptiveInterventionOutcomesInput, Prisma.WorkspaceUncheckedCreateWithoutAdaptiveInterventionOutcomesInput>
+  connectOrCreate?: Prisma.WorkspaceCreateOrConnectWithoutAdaptiveInterventionOutcomesInput
+  connect?: Prisma.WorkspaceWhereUniqueInput
+}
+
+export type WorkspaceUpdateOneRequiredWithoutAdaptiveInterventionOutcomesNestedInput = {
+  create?: Prisma.XOR<Prisma.WorkspaceCreateWithoutAdaptiveInterventionOutcomesInput, Prisma.WorkspaceUncheckedCreateWithoutAdaptiveInterventionOutcomesInput>
+  connectOrCreate?: Prisma.WorkspaceCreateOrConnectWithoutAdaptiveInterventionOutcomesInput
+  upsert?: Prisma.WorkspaceUpsertWithoutAdaptiveInterventionOutcomesInput
+  connect?: Prisma.WorkspaceWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.WorkspaceUpdateToOneWithWhereWithoutAdaptiveInterventionOutcomesInput, Prisma.WorkspaceUpdateWithoutAdaptiveInterventionOutcomesInput>, Prisma.WorkspaceUncheckedUpdateWithoutAdaptiveInterventionOutcomesInput>
+}
+
 export type WorkspaceCreateNestedOneWithoutAssistantMessagesInput = {
   create?: Prisma.XOR<Prisma.WorkspaceCreateWithoutAssistantMessagesInput, Prisma.WorkspaceUncheckedCreateWithoutAssistantMessagesInput>
   connectOrCreate?: Prisma.WorkspaceCreateOrConnectWithoutAssistantMessagesInput
@@ -1824,6 +1866,8 @@ export type WorkspaceCreateWithoutMembersInput = {
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemCreateNestedManyWithoutWorkspaceInput
@@ -1896,6 +1940,8 @@ export type WorkspaceUncheckedCreateWithoutMembersInput = {
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -1984,6 +2030,8 @@ export type WorkspaceUpdateWithoutMembersInput = {
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUpdateManyWithoutWorkspaceNestedInput
@@ -2056,6 +2104,8 @@ export type WorkspaceUncheckedUpdateWithoutMembersInput = {
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -2128,6 +2178,8 @@ export type WorkspaceCreateWithoutApprovedEmailsInput = {
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemCreateNestedManyWithoutWorkspaceInput
@@ -2200,6 +2252,8 @@ export type WorkspaceUncheckedCreateWithoutApprovedEmailsInput = {
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -2288,6 +2342,8 @@ export type WorkspaceUpdateWithoutApprovedEmailsInput = {
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUpdateManyWithoutWorkspaceNestedInput
@@ -2360,6 +2416,8 @@ export type WorkspaceUncheckedUpdateWithoutApprovedEmailsInput = {
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -2432,6 +2490,8 @@ export type WorkspaceCreateWithoutPersonsInput = {
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemCreateNestedManyWithoutWorkspaceInput
@@ -2504,6 +2564,8 @@ export type WorkspaceUncheckedCreateWithoutPersonsInput = {
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -2592,6 +2654,8 @@ export type WorkspaceUpdateWithoutPersonsInput = {
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUpdateManyWithoutWorkspaceNestedInput
@@ -2664,6 +2728,8 @@ export type WorkspaceUncheckedUpdateWithoutPersonsInput = {
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -2736,6 +2802,8 @@ export type WorkspaceCreateWithoutOwnerUserInput = {
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemCreateNestedManyWithoutWorkspaceInput
@@ -2808,6 +2876,8 @@ export type WorkspaceUncheckedCreateWithoutOwnerUserInput = {
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -2920,6 +2990,8 @@ export type WorkspaceCreateWithoutDevicesInput = {
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemCreateNestedManyWithoutWorkspaceInput
 }
@@ -2992,6 +3064,8 @@ export type WorkspaceUncheckedCreateWithoutDevicesInput = {
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedCreateNestedManyWithoutWorkspaceInput
 }
@@ -3080,6 +3154,8 @@ export type WorkspaceUpdateWithoutDevicesInput = {
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUpdateManyWithoutWorkspaceNestedInput
 }
@@ -3152,6 +3228,8 @@ export type WorkspaceUncheckedUpdateWithoutDevicesInput = {
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
@@ -3224,6 +3302,8 @@ export type WorkspaceCreateWithoutDeviceAuthorizationsInput = {
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemCreateNestedManyWithoutWorkspaceInput
 }
@@ -3296,6 +3376,8 @@ export type WorkspaceUncheckedCreateWithoutDeviceAuthorizationsInput = {
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedCreateNestedManyWithoutWorkspaceInput
 }
@@ -3384,6 +3466,8 @@ export type WorkspaceUpdateWithoutDeviceAuthorizationsInput = {
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUpdateManyWithoutWorkspaceNestedInput
 }
@@ -3456,6 +3540,8 @@ export type WorkspaceUncheckedUpdateWithoutDeviceAuthorizationsInput = {
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
@@ -3528,6 +3614,8 @@ export type WorkspaceCreateWithoutDeviceIngestItemsInput = {
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationCreateNestedManyWithoutWorkspaceInput
 }
@@ -3600,6 +3688,8 @@ export type WorkspaceUncheckedCreateWithoutDeviceIngestItemsInput = {
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedCreateNestedManyWithoutWorkspaceInput
 }
@@ -3688,6 +3778,8 @@ export type WorkspaceUpdateWithoutDeviceIngestItemsInput = {
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUpdateManyWithoutWorkspaceNestedInput
 }
@@ -3760,6 +3852,8 @@ export type WorkspaceUncheckedUpdateWithoutDeviceIngestItemsInput = {
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
@@ -3831,6 +3925,8 @@ export type WorkspaceCreateWithoutApiKeysInput = {
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemCreateNestedManyWithoutWorkspaceInput
@@ -3903,6 +3999,8 @@ export type WorkspaceUncheckedCreateWithoutApiKeysInput = {
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -3991,6 +4089,8 @@ export type WorkspaceUpdateWithoutApiKeysInput = {
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUpdateManyWithoutWorkspaceNestedInput
@@ -4063,6 +4163,8 @@ export type WorkspaceUncheckedUpdateWithoutApiKeysInput = {
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -4135,6 +4237,8 @@ export type WorkspaceCreateWithoutAuditLogsInput = {
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemCreateNestedManyWithoutWorkspaceInput
@@ -4207,6 +4311,8 @@ export type WorkspaceUncheckedCreateWithoutAuditLogsInput = {
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -4295,6 +4401,8 @@ export type WorkspaceUpdateWithoutAuditLogsInput = {
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUpdateManyWithoutWorkspaceNestedInput
@@ -4367,6 +4475,8 @@ export type WorkspaceUncheckedUpdateWithoutAuditLogsInput = {
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -4439,6 +4549,8 @@ export type WorkspaceCreateWithoutCalendarConnectionsInput = {
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemCreateNestedManyWithoutWorkspaceInput
@@ -4511,6 +4623,8 @@ export type WorkspaceUncheckedCreateWithoutCalendarConnectionsInput = {
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -4599,6 +4713,8 @@ export type WorkspaceUpdateWithoutCalendarConnectionsInput = {
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUpdateManyWithoutWorkspaceNestedInput
@@ -4671,6 +4787,8 @@ export type WorkspaceUncheckedUpdateWithoutCalendarConnectionsInput = {
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -4743,6 +4861,8 @@ export type WorkspaceCreateWithoutCalendarEventLinksInput = {
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemCreateNestedManyWithoutWorkspaceInput
@@ -4815,6 +4935,8 @@ export type WorkspaceUncheckedCreateWithoutCalendarEventLinksInput = {
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -4903,6 +5025,8 @@ export type WorkspaceUpdateWithoutCalendarEventLinksInput = {
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUpdateManyWithoutWorkspaceNestedInput
@@ -4975,6 +5099,8 @@ export type WorkspaceUncheckedUpdateWithoutCalendarEventLinksInput = {
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -5047,6 +5173,8 @@ export type WorkspaceCreateWithoutGmailConnectionsInput = {
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemCreateNestedManyWithoutWorkspaceInput
@@ -5119,6 +5247,8 @@ export type WorkspaceUncheckedCreateWithoutGmailConnectionsInput = {
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -5207,6 +5337,8 @@ export type WorkspaceUpdateWithoutGmailConnectionsInput = {
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUpdateManyWithoutWorkspaceNestedInput
@@ -5279,6 +5411,8 @@ export type WorkspaceUncheckedUpdateWithoutGmailConnectionsInput = {
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -5351,6 +5485,8 @@ export type WorkspaceCreateWithoutGmailMessageLinksInput = {
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemCreateNestedManyWithoutWorkspaceInput
@@ -5423,6 +5559,8 @@ export type WorkspaceUncheckedCreateWithoutGmailMessageLinksInput = {
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -5511,6 +5649,8 @@ export type WorkspaceUpdateWithoutGmailMessageLinksInput = {
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUpdateManyWithoutWorkspaceNestedInput
@@ -5583,6 +5723,8 @@ export type WorkspaceUncheckedUpdateWithoutGmailMessageLinksInput = {
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -5655,6 +5797,8 @@ export type WorkspaceCreateWithoutEraConnectionsInput = {
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemCreateNestedManyWithoutWorkspaceInput
@@ -5727,6 +5871,8 @@ export type WorkspaceUncheckedCreateWithoutEraConnectionsInput = {
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -5815,6 +5961,8 @@ export type WorkspaceUpdateWithoutEraConnectionsInput = {
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUpdateManyWithoutWorkspaceNestedInput
@@ -5887,6 +6035,8 @@ export type WorkspaceUncheckedUpdateWithoutEraConnectionsInput = {
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -5959,6 +6109,8 @@ export type WorkspaceCreateWithoutEraAccountLinksInput = {
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemCreateNestedManyWithoutWorkspaceInput
@@ -6031,6 +6183,8 @@ export type WorkspaceUncheckedCreateWithoutEraAccountLinksInput = {
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -6119,6 +6273,8 @@ export type WorkspaceUpdateWithoutEraAccountLinksInput = {
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUpdateManyWithoutWorkspaceNestedInput
@@ -6191,6 +6347,8 @@ export type WorkspaceUncheckedUpdateWithoutEraAccountLinksInput = {
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -6263,6 +6421,8 @@ export type WorkspaceCreateWithoutEraTransactionLinksInput = {
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemCreateNestedManyWithoutWorkspaceInput
@@ -6335,6 +6495,8 @@ export type WorkspaceUncheckedCreateWithoutEraTransactionLinksInput = {
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -6423,6 +6585,8 @@ export type WorkspaceUpdateWithoutEraTransactionLinksInput = {
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUpdateManyWithoutWorkspaceNestedInput
@@ -6495,6 +6659,8 @@ export type WorkspaceUncheckedUpdateWithoutEraTransactionLinksInput = {
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -6567,6 +6733,8 @@ export type WorkspaceCreateWithoutConnectionsInput = {
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemCreateNestedManyWithoutWorkspaceInput
@@ -6639,6 +6807,8 @@ export type WorkspaceUncheckedCreateWithoutConnectionsInput = {
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -6727,6 +6897,8 @@ export type WorkspaceUpdateWithoutConnectionsInput = {
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUpdateManyWithoutWorkspaceNestedInput
@@ -6799,6 +6971,8 @@ export type WorkspaceUncheckedUpdateWithoutConnectionsInput = {
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -6871,6 +7045,8 @@ export type WorkspaceCreateWithoutRulesInput = {
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemCreateNestedManyWithoutWorkspaceInput
@@ -6943,6 +7119,8 @@ export type WorkspaceUncheckedCreateWithoutRulesInput = {
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -7031,6 +7209,8 @@ export type WorkspaceUpdateWithoutRulesInput = {
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUpdateManyWithoutWorkspaceNestedInput
@@ -7103,6 +7283,8 @@ export type WorkspaceUncheckedUpdateWithoutRulesInput = {
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -7175,6 +7357,8 @@ export type WorkspaceCreateWithoutRuleRunsInput = {
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemCreateNestedManyWithoutWorkspaceInput
@@ -7247,6 +7431,8 @@ export type WorkspaceUncheckedCreateWithoutRuleRunsInput = {
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -7335,6 +7521,8 @@ export type WorkspaceUpdateWithoutRuleRunsInput = {
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUpdateManyWithoutWorkspaceNestedInput
@@ -7407,6 +7595,8 @@ export type WorkspaceUncheckedUpdateWithoutRuleRunsInput = {
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -7479,6 +7669,8 @@ export type WorkspaceCreateWithoutStagedItemsInput = {
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemCreateNestedManyWithoutWorkspaceInput
@@ -7551,6 +7743,8 @@ export type WorkspaceUncheckedCreateWithoutStagedItemsInput = {
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -7639,6 +7833,8 @@ export type WorkspaceUpdateWithoutStagedItemsInput = {
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUpdateManyWithoutWorkspaceNestedInput
@@ -7711,6 +7907,8 @@ export type WorkspaceUncheckedUpdateWithoutStagedItemsInput = {
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -7783,6 +7981,8 @@ export type WorkspaceCreateWithoutEventsInput = {
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemCreateNestedManyWithoutWorkspaceInput
@@ -7855,6 +8055,8 @@ export type WorkspaceUncheckedCreateWithoutEventsInput = {
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -7943,6 +8145,8 @@ export type WorkspaceUpdateWithoutEventsInput = {
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUpdateManyWithoutWorkspaceNestedInput
@@ -8015,6 +8219,8 @@ export type WorkspaceUncheckedUpdateWithoutEventsInput = {
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -8087,6 +8293,8 @@ export type WorkspaceCreateWithoutInteractionsInput = {
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemCreateNestedManyWithoutWorkspaceInput
@@ -8159,6 +8367,8 @@ export type WorkspaceUncheckedCreateWithoutInteractionsInput = {
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -8247,6 +8457,8 @@ export type WorkspaceUpdateWithoutInteractionsInput = {
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUpdateManyWithoutWorkspaceNestedInput
@@ -8319,6 +8531,8 @@ export type WorkspaceUncheckedUpdateWithoutInteractionsInput = {
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -8391,6 +8605,8 @@ export type WorkspaceCreateWithoutPlansInput = {
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemCreateNestedManyWithoutWorkspaceInput
@@ -8463,6 +8679,8 @@ export type WorkspaceUncheckedCreateWithoutPlansInput = {
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -8551,6 +8769,8 @@ export type WorkspaceUpdateWithoutPlansInput = {
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUpdateManyWithoutWorkspaceNestedInput
@@ -8623,6 +8843,8 @@ export type WorkspaceUncheckedUpdateWithoutPlansInput = {
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -8695,6 +8917,8 @@ export type WorkspaceCreateWithoutPlanExpectedPersonsInput = {
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemCreateNestedManyWithoutWorkspaceInput
@@ -8767,6 +8991,8 @@ export type WorkspaceUncheckedCreateWithoutPlanExpectedPersonsInput = {
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -8855,6 +9081,8 @@ export type WorkspaceUpdateWithoutPlanExpectedPersonsInput = {
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUpdateManyWithoutWorkspaceNestedInput
@@ -8927,6 +9155,8 @@ export type WorkspaceUncheckedUpdateWithoutPlanExpectedPersonsInput = {
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -8999,6 +9229,8 @@ export type WorkspaceCreateWithoutPlacesInput = {
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemCreateNestedManyWithoutWorkspaceInput
@@ -9071,6 +9303,8 @@ export type WorkspaceUncheckedCreateWithoutPlacesInput = {
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -9159,6 +9393,8 @@ export type WorkspaceUpdateWithoutPlacesInput = {
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUpdateManyWithoutWorkspaceNestedInput
@@ -9231,6 +9467,8 @@ export type WorkspaceUncheckedUpdateWithoutPlacesInput = {
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -9303,6 +9541,8 @@ export type WorkspaceCreateWithoutImportJobsInput = {
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemCreateNestedManyWithoutWorkspaceInput
@@ -9375,6 +9615,8 @@ export type WorkspaceUncheckedCreateWithoutImportJobsInput = {
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -9463,6 +9705,8 @@ export type WorkspaceUpdateWithoutImportJobsInput = {
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUpdateManyWithoutWorkspaceNestedInput
@@ -9535,6 +9779,8 @@ export type WorkspaceUncheckedUpdateWithoutImportJobsInput = {
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -9607,6 +9853,8 @@ export type WorkspaceCreateWithoutImportStagedVisitsInput = {
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemCreateNestedManyWithoutWorkspaceInput
@@ -9679,6 +9927,8 @@ export type WorkspaceUncheckedCreateWithoutImportStagedVisitsInput = {
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -9767,6 +10017,8 @@ export type WorkspaceUpdateWithoutImportStagedVisitsInput = {
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUpdateManyWithoutWorkspaceNestedInput
@@ -9839,6 +10091,8 @@ export type WorkspaceUncheckedUpdateWithoutImportStagedVisitsInput = {
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -9911,6 +10165,8 @@ export type WorkspaceCreateWithoutPlaceNotesInput = {
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemCreateNestedManyWithoutWorkspaceInput
@@ -9983,6 +10239,8 @@ export type WorkspaceUncheckedCreateWithoutPlaceNotesInput = {
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -10071,6 +10329,8 @@ export type WorkspaceUpdateWithoutPlaceNotesInput = {
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUpdateManyWithoutWorkspaceNestedInput
@@ -10143,6 +10403,8 @@ export type WorkspaceUncheckedUpdateWithoutPlaceNotesInput = {
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -10215,6 +10477,8 @@ export type WorkspaceCreateWithoutItemsInput = {
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemCreateNestedManyWithoutWorkspaceInput
@@ -10287,6 +10551,8 @@ export type WorkspaceUncheckedCreateWithoutItemsInput = {
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -10375,6 +10641,8 @@ export type WorkspaceUpdateWithoutItemsInput = {
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUpdateManyWithoutWorkspaceNestedInput
@@ -10447,6 +10715,8 @@ export type WorkspaceUncheckedUpdateWithoutItemsInput = {
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -10519,6 +10789,8 @@ export type WorkspaceCreateWithoutItemDefinitionsInput = {
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemCreateNestedManyWithoutWorkspaceInput
@@ -10591,6 +10863,8 @@ export type WorkspaceUncheckedCreateWithoutItemDefinitionsInput = {
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -10679,6 +10953,8 @@ export type WorkspaceUpdateWithoutItemDefinitionsInput = {
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUpdateManyWithoutWorkspaceNestedInput
@@ -10751,6 +11027,8 @@ export type WorkspaceUncheckedUpdateWithoutItemDefinitionsInput = {
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -10823,6 +11101,8 @@ export type WorkspaceCreateWithoutInventoryLotsInput = {
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemCreateNestedManyWithoutWorkspaceInput
@@ -10895,6 +11175,8 @@ export type WorkspaceUncheckedCreateWithoutInventoryLotsInput = {
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -10983,6 +11265,8 @@ export type WorkspaceUpdateWithoutInventoryLotsInput = {
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUpdateManyWithoutWorkspaceNestedInput
@@ -11055,6 +11339,8 @@ export type WorkspaceUncheckedUpdateWithoutInventoryLotsInput = {
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -11127,6 +11413,8 @@ export type WorkspaceCreateWithoutImportedFilesInput = {
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemCreateNestedManyWithoutWorkspaceInput
@@ -11199,6 +11487,8 @@ export type WorkspaceUncheckedCreateWithoutImportedFilesInput = {
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -11287,6 +11577,8 @@ export type WorkspaceUpdateWithoutImportedFilesInput = {
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUpdateManyWithoutWorkspaceNestedInput
@@ -11359,6 +11651,8 @@ export type WorkspaceUncheckedUpdateWithoutImportedFilesInput = {
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -11431,6 +11725,8 @@ export type WorkspaceCreateWithoutAiProviderCredentialsInput = {
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemCreateNestedManyWithoutWorkspaceInput
@@ -11503,6 +11799,8 @@ export type WorkspaceUncheckedCreateWithoutAiProviderCredentialsInput = {
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -11591,6 +11889,8 @@ export type WorkspaceUpdateWithoutAiProviderCredentialsInput = {
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUpdateManyWithoutWorkspaceNestedInput
@@ -11663,6 +11963,8 @@ export type WorkspaceUncheckedUpdateWithoutAiProviderCredentialsInput = {
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -11735,6 +12037,8 @@ export type WorkspaceCreateWithoutAiAnalysisRunsInput = {
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemCreateNestedManyWithoutWorkspaceInput
@@ -11807,6 +12111,8 @@ export type WorkspaceUncheckedCreateWithoutAiAnalysisRunsInput = {
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -11895,6 +12201,8 @@ export type WorkspaceUpdateWithoutAiAnalysisRunsInput = {
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUpdateManyWithoutWorkspaceNestedInput
@@ -11967,6 +12275,8 @@ export type WorkspaceUncheckedUpdateWithoutAiAnalysisRunsInput = {
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -12039,6 +12349,8 @@ export type WorkspaceCreateWithoutNoteAnalysisRunsInput = {
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemCreateNestedManyWithoutWorkspaceInput
@@ -12111,6 +12423,8 @@ export type WorkspaceUncheckedCreateWithoutNoteAnalysisRunsInput = {
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -12199,6 +12513,8 @@ export type WorkspaceUpdateWithoutNoteAnalysisRunsInput = {
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUpdateManyWithoutWorkspaceNestedInput
@@ -12271,6 +12587,8 @@ export type WorkspaceUncheckedUpdateWithoutNoteAnalysisRunsInput = {
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -12343,6 +12661,8 @@ export type WorkspaceCreateWithoutTheoryAnalysisRunsInput = {
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemCreateNestedManyWithoutWorkspaceInput
@@ -12415,6 +12735,8 @@ export type WorkspaceUncheckedCreateWithoutTheoryAnalysisRunsInput = {
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -12503,6 +12825,8 @@ export type WorkspaceUpdateWithoutTheoryAnalysisRunsInput = {
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUpdateManyWithoutWorkspaceNestedInput
@@ -12575,6 +12899,8 @@ export type WorkspaceUncheckedUpdateWithoutTheoryAnalysisRunsInput = {
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -12647,6 +12973,8 @@ export type WorkspaceCreateWithoutLifeModelAnalysisRunsInput = {
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemCreateNestedManyWithoutWorkspaceInput
@@ -12719,6 +13047,8 @@ export type WorkspaceUncheckedCreateWithoutLifeModelAnalysisRunsInput = {
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -12807,6 +13137,8 @@ export type WorkspaceUpdateWithoutLifeModelAnalysisRunsInput = {
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUpdateManyWithoutWorkspaceNestedInput
@@ -12879,6 +13211,8 @@ export type WorkspaceUncheckedUpdateWithoutLifeModelAnalysisRunsInput = {
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -12951,6 +13285,8 @@ export type WorkspaceCreateWithoutNoteSuggestionsInput = {
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemCreateNestedManyWithoutWorkspaceInput
@@ -13023,6 +13359,8 @@ export type WorkspaceUncheckedCreateWithoutNoteSuggestionsInput = {
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -13111,6 +13449,8 @@ export type WorkspaceUpdateWithoutNoteSuggestionsInput = {
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUpdateManyWithoutWorkspaceNestedInput
@@ -13183,6 +13523,8 @@ export type WorkspaceUncheckedUpdateWithoutNoteSuggestionsInput = {
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -13255,6 +13597,8 @@ export type WorkspaceCreateWithoutGroupsInput = {
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemCreateNestedManyWithoutWorkspaceInput
@@ -13327,6 +13671,8 @@ export type WorkspaceUncheckedCreateWithoutGroupsInput = {
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -13415,6 +13761,8 @@ export type WorkspaceUpdateWithoutGroupsInput = {
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUpdateManyWithoutWorkspaceNestedInput
@@ -13487,6 +13835,8 @@ export type WorkspaceUncheckedUpdateWithoutGroupsInput = {
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -13559,6 +13909,8 @@ export type WorkspaceCreateWithoutSupplierProfilesInput = {
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemCreateNestedManyWithoutWorkspaceInput
@@ -13631,6 +13983,8 @@ export type WorkspaceUncheckedCreateWithoutSupplierProfilesInput = {
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -13719,6 +14073,8 @@ export type WorkspaceUpdateWithoutSupplierProfilesInput = {
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUpdateManyWithoutWorkspaceNestedInput
@@ -13791,6 +14147,8 @@ export type WorkspaceUncheckedUpdateWithoutSupplierProfilesInput = {
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -13863,6 +14221,8 @@ export type WorkspaceCreateWithoutPurchaseOrdersInput = {
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemCreateNestedManyWithoutWorkspaceInput
@@ -13935,6 +14295,8 @@ export type WorkspaceUncheckedCreateWithoutPurchaseOrdersInput = {
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -14023,6 +14385,8 @@ export type WorkspaceUpdateWithoutPurchaseOrdersInput = {
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUpdateManyWithoutWorkspaceNestedInput
@@ -14095,6 +14459,8 @@ export type WorkspaceUncheckedUpdateWithoutPurchaseOrdersInput = {
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -14167,6 +14533,8 @@ export type WorkspaceCreateWithoutPurchaseReceiptLinesInput = {
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemCreateNestedManyWithoutWorkspaceInput
@@ -14239,6 +14607,8 @@ export type WorkspaceUncheckedCreateWithoutPurchaseReceiptLinesInput = {
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -14327,6 +14697,8 @@ export type WorkspaceUpdateWithoutPurchaseReceiptLinesInput = {
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUpdateManyWithoutWorkspaceNestedInput
@@ -14399,6 +14771,8 @@ export type WorkspaceUncheckedUpdateWithoutPurchaseReceiptLinesInput = {
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -14471,6 +14845,8 @@ export type WorkspaceCreateWithoutNotesInput = {
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemCreateNestedManyWithoutWorkspaceInput
@@ -14543,6 +14919,8 @@ export type WorkspaceUncheckedCreateWithoutNotesInput = {
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -14631,6 +15009,8 @@ export type WorkspaceUpdateWithoutNotesInput = {
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUpdateManyWithoutWorkspaceNestedInput
@@ -14703,6 +15083,8 @@ export type WorkspaceUncheckedUpdateWithoutNotesInput = {
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -14775,6 +15157,8 @@ export type WorkspaceCreateWithoutTheorySnapshotsInput = {
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemCreateNestedManyWithoutWorkspaceInput
@@ -14847,6 +15231,8 @@ export type WorkspaceUncheckedCreateWithoutTheorySnapshotsInput = {
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -14935,6 +15321,8 @@ export type WorkspaceUpdateWithoutTheorySnapshotsInput = {
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUpdateManyWithoutWorkspaceNestedInput
@@ -15007,6 +15395,8 @@ export type WorkspaceUncheckedUpdateWithoutTheorySnapshotsInput = {
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -15079,6 +15469,8 @@ export type WorkspaceCreateWithoutLifeModelSnapshotsInput = {
   levelUpReadinessSnapshots?: Prisma.LevelUpReadinessSnapshotCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemCreateNestedManyWithoutWorkspaceInput
@@ -15151,6 +15543,8 @@ export type WorkspaceUncheckedCreateWithoutLifeModelSnapshotsInput = {
   levelUpReadinessSnapshots?: Prisma.LevelUpReadinessSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -15239,6 +15633,8 @@ export type WorkspaceUpdateWithoutLifeModelSnapshotsInput = {
   levelUpReadinessSnapshots?: Prisma.LevelUpReadinessSnapshotUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUpdateManyWithoutWorkspaceNestedInput
@@ -15311,6 +15707,8 @@ export type WorkspaceUncheckedUpdateWithoutLifeModelSnapshotsInput = {
   levelUpReadinessSnapshots?: Prisma.LevelUpReadinessSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -15383,6 +15781,8 @@ export type WorkspaceCreateWithoutLifeModelClaimFeedbackInput = {
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemCreateNestedManyWithoutWorkspaceInput
@@ -15455,6 +15855,8 @@ export type WorkspaceUncheckedCreateWithoutLifeModelClaimFeedbackInput = {
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -15543,6 +15945,8 @@ export type WorkspaceUpdateWithoutLifeModelClaimFeedbackInput = {
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUpdateManyWithoutWorkspaceNestedInput
@@ -15615,6 +16019,632 @@ export type WorkspaceUncheckedUpdateWithoutLifeModelClaimFeedbackInput = {
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedUpdateManyWithoutWorkspaceNestedInput
+  devices?: Prisma.DeviceUncheckedUpdateManyWithoutWorkspaceNestedInput
+  deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedUpdateManyWithoutWorkspaceNestedInput
+  deviceIngestItems?: Prisma.DeviceIngestItemUncheckedUpdateManyWithoutWorkspaceNestedInput
+}
+
+export type WorkspaceCreateWithoutAdaptiveDayBriefsInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  name: string
+  slug: string
+  status?: string
+  autoMergeEnabled?: boolean
+  ownerUser?: Prisma.UserCreateNestedOneWithoutOwnedWorkspacesInput
+  members?: Prisma.WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
+  approvedEmails?: Prisma.ApprovedEmailCreateNestedManyWithoutWorkspaceInput
+  persons?: Prisma.PersonCreateNestedManyWithoutWorkspaceInput
+  events?: Prisma.EventCreateNestedManyWithoutWorkspaceInput
+  interactions?: Prisma.InteractionCreateNestedManyWithoutWorkspaceInput
+  plans?: Prisma.PlanCreateNestedManyWithoutWorkspaceInput
+  places?: Prisma.PlaceCreateNestedManyWithoutWorkspaceInput
+  placeNotes?: Prisma.PlaceNoteCreateNestedManyWithoutWorkspaceInput
+  notes?: Prisma.NoteCreateNestedManyWithoutWorkspaceInput
+  theorySnapshots?: Prisma.TheorySnapshotCreateNestedManyWithoutWorkspaceInput
+  groups?: Prisma.GroupCreateNestedManyWithoutWorkspaceInput
+  items?: Prisma.ItemCreateNestedManyWithoutWorkspaceInput
+  itemDefinitions?: Prisma.ItemDefinitionCreateNestedManyWithoutWorkspaceInput
+  inventoryLots?: Prisma.InventoryLotCreateNestedManyWithoutWorkspaceInput
+  supplierProfiles?: Prisma.SupplierProfileCreateNestedManyWithoutWorkspaceInput
+  purchaseOrders?: Prisma.PurchaseOrderCreateNestedManyWithoutWorkspaceInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutWorkspaceInput
+  importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
+  aiProviderCredentials?: Prisma.AiProviderCredentialCreateNestedManyWithoutWorkspaceInput
+  aiAnalysisRuns?: Prisma.AiAnalysisRunCreateNestedManyWithoutWorkspaceInput
+  noteAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunCreateNestedManyWithoutWorkspaceInput
+  lifeModelAnalysisRuns?: Prisma.LifeModelAnalysisRunCreateNestedManyWithoutWorkspaceInput
+  lifeModelClaimFeedback?: Prisma.LifeModelClaimFeedbackCreateNestedManyWithoutWorkspaceInput
+  noteSuggestions?: Prisma.NoteSuggestionCreateNestedManyWithoutWorkspaceInput
+  stagedItems?: Prisma.StagedInteractionCreateNestedManyWithoutWorkspaceInput
+  rules?: Prisma.RuleCreateNestedManyWithoutWorkspaceInput
+  ruleRuns?: Prisma.RuleRunCreateNestedManyWithoutWorkspaceInput
+  apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutWorkspaceInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutWorkspaceInput
+  calendarConnections?: Prisma.CalendarConnectionCreateNestedManyWithoutWorkspaceInput
+  calendarEventLinks?: Prisma.CalendarEventLinkCreateNestedManyWithoutWorkspaceInput
+  gmailConnections?: Prisma.GmailConnectionCreateNestedManyWithoutWorkspaceInput
+  gmailMessageLinks?: Prisma.GmailMessageLinkCreateNestedManyWithoutWorkspaceInput
+  importJobs?: Prisma.ImportJobCreateNestedManyWithoutWorkspaceInput
+  importStagedVisits?: Prisma.ImportStagedVisitCreateNestedManyWithoutWorkspaceInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonCreateNestedManyWithoutWorkspaceInput
+  assistantMessages?: Prisma.AssistantMessageCreateNestedManyWithoutWorkspaceInput
+  eraConnections?: Prisma.EraConnectionCreateNestedManyWithoutWorkspaceInput
+  eraAccountLinks?: Prisma.EraAccountLinkCreateNestedManyWithoutWorkspaceInput
+  eraTransactionLinks?: Prisma.EraTransactionLinkCreateNestedManyWithoutWorkspaceInput
+  connections?: Prisma.ConnectionCreateNestedManyWithoutWorkspaceInput
+  levelUpProfile?: Prisma.LevelUpProfileCreateNestedOneWithoutWorkspaceInput
+  levelUpTestResults?: Prisma.LevelUpTestResultCreateNestedManyWithoutWorkspaceInput
+  levelUpCombines?: Prisma.LevelUpCombineCreateNestedManyWithoutWorkspaceInput
+  levelUpSnapshots?: Prisma.LevelUpRatingSnapshotCreateNestedManyWithoutWorkspaceInput
+  levelUpTrainingSets?: Prisma.LevelUpTrainingSetCreateNestedManyWithoutWorkspaceInput
+  levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockCreateNestedManyWithoutWorkspaceInput
+  levelUpTargetBuilds?: Prisma.LevelUpTargetBuildCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
+  levelUpReadinessSnapshots?: Prisma.LevelUpReadinessSnapshotCreateNestedManyWithoutWorkspaceInput
+  graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
+  reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeCreateNestedManyWithoutWorkspaceInput
+  devices?: Prisma.DeviceCreateNestedManyWithoutWorkspaceInput
+  deviceAuthorizations?: Prisma.DeviceAuthorizationCreateNestedManyWithoutWorkspaceInput
+  deviceIngestItems?: Prisma.DeviceIngestItemCreateNestedManyWithoutWorkspaceInput
+}
+
+export type WorkspaceUncheckedCreateWithoutAdaptiveDayBriefsInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  name: string
+  slug: string
+  status?: string
+  ownerUserId?: string | null
+  autoMergeEnabled?: boolean
+  members?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
+  approvedEmails?: Prisma.ApprovedEmailUncheckedCreateNestedManyWithoutWorkspaceInput
+  persons?: Prisma.PersonUncheckedCreateNestedManyWithoutWorkspaceInput
+  events?: Prisma.EventUncheckedCreateNestedManyWithoutWorkspaceInput
+  interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutWorkspaceInput
+  plans?: Prisma.PlanUncheckedCreateNestedManyWithoutWorkspaceInput
+  places?: Prisma.PlaceUncheckedCreateNestedManyWithoutWorkspaceInput
+  placeNotes?: Prisma.PlaceNoteUncheckedCreateNestedManyWithoutWorkspaceInput
+  notes?: Prisma.NoteUncheckedCreateNestedManyWithoutWorkspaceInput
+  theorySnapshots?: Prisma.TheorySnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  groups?: Prisma.GroupUncheckedCreateNestedManyWithoutWorkspaceInput
+  items?: Prisma.ItemUncheckedCreateNestedManyWithoutWorkspaceInput
+  itemDefinitions?: Prisma.ItemDefinitionUncheckedCreateNestedManyWithoutWorkspaceInput
+  inventoryLots?: Prisma.InventoryLotUncheckedCreateNestedManyWithoutWorkspaceInput
+  supplierProfiles?: Prisma.SupplierProfileUncheckedCreateNestedManyWithoutWorkspaceInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutWorkspaceInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutWorkspaceInput
+  importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
+  aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedCreateNestedManyWithoutWorkspaceInput
+  aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  lifeModelAnalysisRuns?: Prisma.LifeModelAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  lifeModelClaimFeedback?: Prisma.LifeModelClaimFeedbackUncheckedCreateNestedManyWithoutWorkspaceInput
+  noteSuggestions?: Prisma.NoteSuggestionUncheckedCreateNestedManyWithoutWorkspaceInput
+  stagedItems?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutWorkspaceInput
+  rules?: Prisma.RuleUncheckedCreateNestedManyWithoutWorkspaceInput
+  ruleRuns?: Prisma.RuleRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutWorkspaceInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutWorkspaceInput
+  calendarConnections?: Prisma.CalendarConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  calendarEventLinks?: Prisma.CalendarEventLinkUncheckedCreateNestedManyWithoutWorkspaceInput
+  gmailConnections?: Prisma.GmailConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  gmailMessageLinks?: Prisma.GmailMessageLinkUncheckedCreateNestedManyWithoutWorkspaceInput
+  importJobs?: Prisma.ImportJobUncheckedCreateNestedManyWithoutWorkspaceInput
+  importStagedVisits?: Prisma.ImportStagedVisitUncheckedCreateNestedManyWithoutWorkspaceInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUncheckedCreateNestedManyWithoutWorkspaceInput
+  assistantMessages?: Prisma.AssistantMessageUncheckedCreateNestedManyWithoutWorkspaceInput
+  eraConnections?: Prisma.EraConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  eraAccountLinks?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutWorkspaceInput
+  eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedCreateNestedManyWithoutWorkspaceInput
+  connections?: Prisma.ConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProfile?: Prisma.LevelUpProfileUncheckedCreateNestedOneWithoutWorkspaceInput
+  levelUpTestResults?: Prisma.LevelUpTestResultUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpCombines?: Prisma.LevelUpCombineUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpSnapshots?: Prisma.LevelUpRatingSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpReadinessSnapshots?: Prisma.LevelUpReadinessSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
+  reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedCreateNestedManyWithoutWorkspaceInput
+  devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutWorkspaceInput
+  deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedCreateNestedManyWithoutWorkspaceInput
+  deviceIngestItems?: Prisma.DeviceIngestItemUncheckedCreateNestedManyWithoutWorkspaceInput
+}
+
+export type WorkspaceCreateOrConnectWithoutAdaptiveDayBriefsInput = {
+  where: Prisma.WorkspaceWhereUniqueInput
+  create: Prisma.XOR<Prisma.WorkspaceCreateWithoutAdaptiveDayBriefsInput, Prisma.WorkspaceUncheckedCreateWithoutAdaptiveDayBriefsInput>
+}
+
+export type WorkspaceUpsertWithoutAdaptiveDayBriefsInput = {
+  update: Prisma.XOR<Prisma.WorkspaceUpdateWithoutAdaptiveDayBriefsInput, Prisma.WorkspaceUncheckedUpdateWithoutAdaptiveDayBriefsInput>
+  create: Prisma.XOR<Prisma.WorkspaceCreateWithoutAdaptiveDayBriefsInput, Prisma.WorkspaceUncheckedCreateWithoutAdaptiveDayBriefsInput>
+  where?: Prisma.WorkspaceWhereInput
+}
+
+export type WorkspaceUpdateToOneWithWhereWithoutAdaptiveDayBriefsInput = {
+  where?: Prisma.WorkspaceWhereInput
+  data: Prisma.XOR<Prisma.WorkspaceUpdateWithoutAdaptiveDayBriefsInput, Prisma.WorkspaceUncheckedUpdateWithoutAdaptiveDayBriefsInput>
+}
+
+export type WorkspaceUpdateWithoutAdaptiveDayBriefsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  ownerUser?: Prisma.UserUpdateOneWithoutOwnedWorkspacesNestedInput
+  members?: Prisma.WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
+  approvedEmails?: Prisma.ApprovedEmailUpdateManyWithoutWorkspaceNestedInput
+  persons?: Prisma.PersonUpdateManyWithoutWorkspaceNestedInput
+  events?: Prisma.EventUpdateManyWithoutWorkspaceNestedInput
+  interactions?: Prisma.InteractionUpdateManyWithoutWorkspaceNestedInput
+  plans?: Prisma.PlanUpdateManyWithoutWorkspaceNestedInput
+  places?: Prisma.PlaceUpdateManyWithoutWorkspaceNestedInput
+  placeNotes?: Prisma.PlaceNoteUpdateManyWithoutWorkspaceNestedInput
+  notes?: Prisma.NoteUpdateManyWithoutWorkspaceNestedInput
+  theorySnapshots?: Prisma.TheorySnapshotUpdateManyWithoutWorkspaceNestedInput
+  groups?: Prisma.GroupUpdateManyWithoutWorkspaceNestedInput
+  items?: Prisma.ItemUpdateManyWithoutWorkspaceNestedInput
+  itemDefinitions?: Prisma.ItemDefinitionUpdateManyWithoutWorkspaceNestedInput
+  inventoryLots?: Prisma.InventoryLotUpdateManyWithoutWorkspaceNestedInput
+  supplierProfiles?: Prisma.SupplierProfileUpdateManyWithoutWorkspaceNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUpdateManyWithoutWorkspaceNestedInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutWorkspaceNestedInput
+  importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
+  aiProviderCredentials?: Prisma.AiProviderCredentialUpdateManyWithoutWorkspaceNestedInput
+  aiAnalysisRuns?: Prisma.AiAnalysisRunUpdateManyWithoutWorkspaceNestedInput
+  noteAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUpdateManyWithoutWorkspaceNestedInput
+  lifeModelAnalysisRuns?: Prisma.LifeModelAnalysisRunUpdateManyWithoutWorkspaceNestedInput
+  lifeModelClaimFeedback?: Prisma.LifeModelClaimFeedbackUpdateManyWithoutWorkspaceNestedInput
+  noteSuggestions?: Prisma.NoteSuggestionUpdateManyWithoutWorkspaceNestedInput
+  stagedItems?: Prisma.StagedInteractionUpdateManyWithoutWorkspaceNestedInput
+  rules?: Prisma.RuleUpdateManyWithoutWorkspaceNestedInput
+  ruleRuns?: Prisma.RuleRunUpdateManyWithoutWorkspaceNestedInput
+  apiKeys?: Prisma.ApiKeyUpdateManyWithoutWorkspaceNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutWorkspaceNestedInput
+  calendarConnections?: Prisma.CalendarConnectionUpdateManyWithoutWorkspaceNestedInput
+  calendarEventLinks?: Prisma.CalendarEventLinkUpdateManyWithoutWorkspaceNestedInput
+  gmailConnections?: Prisma.GmailConnectionUpdateManyWithoutWorkspaceNestedInput
+  gmailMessageLinks?: Prisma.GmailMessageLinkUpdateManyWithoutWorkspaceNestedInput
+  importJobs?: Prisma.ImportJobUpdateManyWithoutWorkspaceNestedInput
+  importStagedVisits?: Prisma.ImportStagedVisitUpdateManyWithoutWorkspaceNestedInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUpdateManyWithoutWorkspaceNestedInput
+  assistantMessages?: Prisma.AssistantMessageUpdateManyWithoutWorkspaceNestedInput
+  eraConnections?: Prisma.EraConnectionUpdateManyWithoutWorkspaceNestedInput
+  eraAccountLinks?: Prisma.EraAccountLinkUpdateManyWithoutWorkspaceNestedInput
+  eraTransactionLinks?: Prisma.EraTransactionLinkUpdateManyWithoutWorkspaceNestedInput
+  connections?: Prisma.ConnectionUpdateManyWithoutWorkspaceNestedInput
+  levelUpProfile?: Prisma.LevelUpProfileUpdateOneWithoutWorkspaceNestedInput
+  levelUpTestResults?: Prisma.LevelUpTestResultUpdateManyWithoutWorkspaceNestedInput
+  levelUpCombines?: Prisma.LevelUpCombineUpdateManyWithoutWorkspaceNestedInput
+  levelUpSnapshots?: Prisma.LevelUpRatingSnapshotUpdateManyWithoutWorkspaceNestedInput
+  levelUpTrainingSets?: Prisma.LevelUpTrainingSetUpdateManyWithoutWorkspaceNestedInput
+  levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUpdateManyWithoutWorkspaceNestedInput
+  levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
+  levelUpReadinessSnapshots?: Prisma.LevelUpReadinessSnapshotUpdateManyWithoutWorkspaceNestedInput
+  graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
+  reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUpdateManyWithoutWorkspaceNestedInput
+  devices?: Prisma.DeviceUpdateManyWithoutWorkspaceNestedInput
+  deviceAuthorizations?: Prisma.DeviceAuthorizationUpdateManyWithoutWorkspaceNestedInput
+  deviceIngestItems?: Prisma.DeviceIngestItemUpdateManyWithoutWorkspaceNestedInput
+}
+
+export type WorkspaceUncheckedUpdateWithoutAdaptiveDayBriefsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  ownerUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  members?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
+  approvedEmails?: Prisma.ApprovedEmailUncheckedUpdateManyWithoutWorkspaceNestedInput
+  persons?: Prisma.PersonUncheckedUpdateManyWithoutWorkspaceNestedInput
+  events?: Prisma.EventUncheckedUpdateManyWithoutWorkspaceNestedInput
+  interactions?: Prisma.InteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  plans?: Prisma.PlanUncheckedUpdateManyWithoutWorkspaceNestedInput
+  places?: Prisma.PlaceUncheckedUpdateManyWithoutWorkspaceNestedInput
+  placeNotes?: Prisma.PlaceNoteUncheckedUpdateManyWithoutWorkspaceNestedInput
+  notes?: Prisma.NoteUncheckedUpdateManyWithoutWorkspaceNestedInput
+  theorySnapshots?: Prisma.TheorySnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  groups?: Prisma.GroupUncheckedUpdateManyWithoutWorkspaceNestedInput
+  items?: Prisma.ItemUncheckedUpdateManyWithoutWorkspaceNestedInput
+  itemDefinitions?: Prisma.ItemDefinitionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  inventoryLots?: Prisma.InventoryLotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  supplierProfiles?: Prisma.SupplierProfileUncheckedUpdateManyWithoutWorkspaceNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutWorkspaceNestedInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutWorkspaceNestedInput
+  importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
+  aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedUpdateManyWithoutWorkspaceNestedInput
+  aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  lifeModelAnalysisRuns?: Prisma.LifeModelAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  lifeModelClaimFeedback?: Prisma.LifeModelClaimFeedbackUncheckedUpdateManyWithoutWorkspaceNestedInput
+  noteSuggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  stagedItems?: Prisma.StagedInteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  rules?: Prisma.RuleUncheckedUpdateManyWithoutWorkspaceNestedInput
+  ruleRuns?: Prisma.RuleRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutWorkspaceNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutWorkspaceNestedInput
+  calendarConnections?: Prisma.CalendarConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  calendarEventLinks?: Prisma.CalendarEventLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
+  gmailConnections?: Prisma.GmailConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  gmailMessageLinks?: Prisma.GmailMessageLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
+  importJobs?: Prisma.ImportJobUncheckedUpdateManyWithoutWorkspaceNestedInput
+  importStagedVisits?: Prisma.ImportStagedVisitUncheckedUpdateManyWithoutWorkspaceNestedInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUncheckedUpdateManyWithoutWorkspaceNestedInput
+  assistantMessages?: Prisma.AssistantMessageUncheckedUpdateManyWithoutWorkspaceNestedInput
+  eraConnections?: Prisma.EraConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  eraAccountLinks?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
+  eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
+  connections?: Prisma.ConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProfile?: Prisma.LevelUpProfileUncheckedUpdateOneWithoutWorkspaceNestedInput
+  levelUpTestResults?: Prisma.LevelUpTestResultUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpCombines?: Prisma.LevelUpCombineUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpSnapshots?: Prisma.LevelUpRatingSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpReadinessSnapshots?: Prisma.LevelUpReadinessSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
+  reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedUpdateManyWithoutWorkspaceNestedInput
+  devices?: Prisma.DeviceUncheckedUpdateManyWithoutWorkspaceNestedInput
+  deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedUpdateManyWithoutWorkspaceNestedInput
+  deviceIngestItems?: Prisma.DeviceIngestItemUncheckedUpdateManyWithoutWorkspaceNestedInput
+}
+
+export type WorkspaceCreateWithoutAdaptiveInterventionOutcomesInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  name: string
+  slug: string
+  status?: string
+  autoMergeEnabled?: boolean
+  ownerUser?: Prisma.UserCreateNestedOneWithoutOwnedWorkspacesInput
+  members?: Prisma.WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
+  approvedEmails?: Prisma.ApprovedEmailCreateNestedManyWithoutWorkspaceInput
+  persons?: Prisma.PersonCreateNestedManyWithoutWorkspaceInput
+  events?: Prisma.EventCreateNestedManyWithoutWorkspaceInput
+  interactions?: Prisma.InteractionCreateNestedManyWithoutWorkspaceInput
+  plans?: Prisma.PlanCreateNestedManyWithoutWorkspaceInput
+  places?: Prisma.PlaceCreateNestedManyWithoutWorkspaceInput
+  placeNotes?: Prisma.PlaceNoteCreateNestedManyWithoutWorkspaceInput
+  notes?: Prisma.NoteCreateNestedManyWithoutWorkspaceInput
+  theorySnapshots?: Prisma.TheorySnapshotCreateNestedManyWithoutWorkspaceInput
+  groups?: Prisma.GroupCreateNestedManyWithoutWorkspaceInput
+  items?: Prisma.ItemCreateNestedManyWithoutWorkspaceInput
+  itemDefinitions?: Prisma.ItemDefinitionCreateNestedManyWithoutWorkspaceInput
+  inventoryLots?: Prisma.InventoryLotCreateNestedManyWithoutWorkspaceInput
+  supplierProfiles?: Prisma.SupplierProfileCreateNestedManyWithoutWorkspaceInput
+  purchaseOrders?: Prisma.PurchaseOrderCreateNestedManyWithoutWorkspaceInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutWorkspaceInput
+  importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
+  aiProviderCredentials?: Prisma.AiProviderCredentialCreateNestedManyWithoutWorkspaceInput
+  aiAnalysisRuns?: Prisma.AiAnalysisRunCreateNestedManyWithoutWorkspaceInput
+  noteAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunCreateNestedManyWithoutWorkspaceInput
+  lifeModelAnalysisRuns?: Prisma.LifeModelAnalysisRunCreateNestedManyWithoutWorkspaceInput
+  lifeModelClaimFeedback?: Prisma.LifeModelClaimFeedbackCreateNestedManyWithoutWorkspaceInput
+  noteSuggestions?: Prisma.NoteSuggestionCreateNestedManyWithoutWorkspaceInput
+  stagedItems?: Prisma.StagedInteractionCreateNestedManyWithoutWorkspaceInput
+  rules?: Prisma.RuleCreateNestedManyWithoutWorkspaceInput
+  ruleRuns?: Prisma.RuleRunCreateNestedManyWithoutWorkspaceInput
+  apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutWorkspaceInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutWorkspaceInput
+  calendarConnections?: Prisma.CalendarConnectionCreateNestedManyWithoutWorkspaceInput
+  calendarEventLinks?: Prisma.CalendarEventLinkCreateNestedManyWithoutWorkspaceInput
+  gmailConnections?: Prisma.GmailConnectionCreateNestedManyWithoutWorkspaceInput
+  gmailMessageLinks?: Prisma.GmailMessageLinkCreateNestedManyWithoutWorkspaceInput
+  importJobs?: Prisma.ImportJobCreateNestedManyWithoutWorkspaceInput
+  importStagedVisits?: Prisma.ImportStagedVisitCreateNestedManyWithoutWorkspaceInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonCreateNestedManyWithoutWorkspaceInput
+  assistantMessages?: Prisma.AssistantMessageCreateNestedManyWithoutWorkspaceInput
+  eraConnections?: Prisma.EraConnectionCreateNestedManyWithoutWorkspaceInput
+  eraAccountLinks?: Prisma.EraAccountLinkCreateNestedManyWithoutWorkspaceInput
+  eraTransactionLinks?: Prisma.EraTransactionLinkCreateNestedManyWithoutWorkspaceInput
+  connections?: Prisma.ConnectionCreateNestedManyWithoutWorkspaceInput
+  levelUpProfile?: Prisma.LevelUpProfileCreateNestedOneWithoutWorkspaceInput
+  levelUpTestResults?: Prisma.LevelUpTestResultCreateNestedManyWithoutWorkspaceInput
+  levelUpCombines?: Prisma.LevelUpCombineCreateNestedManyWithoutWorkspaceInput
+  levelUpSnapshots?: Prisma.LevelUpRatingSnapshotCreateNestedManyWithoutWorkspaceInput
+  levelUpTrainingSets?: Prisma.LevelUpTrainingSetCreateNestedManyWithoutWorkspaceInput
+  levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockCreateNestedManyWithoutWorkspaceInput
+  levelUpTargetBuilds?: Prisma.LevelUpTargetBuildCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
+  levelUpReadinessSnapshots?: Prisma.LevelUpReadinessSnapshotCreateNestedManyWithoutWorkspaceInput
+  graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
+  reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefCreateNestedManyWithoutWorkspaceInput
+  devices?: Prisma.DeviceCreateNestedManyWithoutWorkspaceInput
+  deviceAuthorizations?: Prisma.DeviceAuthorizationCreateNestedManyWithoutWorkspaceInput
+  deviceIngestItems?: Prisma.DeviceIngestItemCreateNestedManyWithoutWorkspaceInput
+}
+
+export type WorkspaceUncheckedCreateWithoutAdaptiveInterventionOutcomesInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  name: string
+  slug: string
+  status?: string
+  ownerUserId?: string | null
+  autoMergeEnabled?: boolean
+  members?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
+  approvedEmails?: Prisma.ApprovedEmailUncheckedCreateNestedManyWithoutWorkspaceInput
+  persons?: Prisma.PersonUncheckedCreateNestedManyWithoutWorkspaceInput
+  events?: Prisma.EventUncheckedCreateNestedManyWithoutWorkspaceInput
+  interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutWorkspaceInput
+  plans?: Prisma.PlanUncheckedCreateNestedManyWithoutWorkspaceInput
+  places?: Prisma.PlaceUncheckedCreateNestedManyWithoutWorkspaceInput
+  placeNotes?: Prisma.PlaceNoteUncheckedCreateNestedManyWithoutWorkspaceInput
+  notes?: Prisma.NoteUncheckedCreateNestedManyWithoutWorkspaceInput
+  theorySnapshots?: Prisma.TheorySnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  groups?: Prisma.GroupUncheckedCreateNestedManyWithoutWorkspaceInput
+  items?: Prisma.ItemUncheckedCreateNestedManyWithoutWorkspaceInput
+  itemDefinitions?: Prisma.ItemDefinitionUncheckedCreateNestedManyWithoutWorkspaceInput
+  inventoryLots?: Prisma.InventoryLotUncheckedCreateNestedManyWithoutWorkspaceInput
+  supplierProfiles?: Prisma.SupplierProfileUncheckedCreateNestedManyWithoutWorkspaceInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutWorkspaceInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutWorkspaceInput
+  importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
+  aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedCreateNestedManyWithoutWorkspaceInput
+  aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  lifeModelAnalysisRuns?: Prisma.LifeModelAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  lifeModelClaimFeedback?: Prisma.LifeModelClaimFeedbackUncheckedCreateNestedManyWithoutWorkspaceInput
+  noteSuggestions?: Prisma.NoteSuggestionUncheckedCreateNestedManyWithoutWorkspaceInput
+  stagedItems?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutWorkspaceInput
+  rules?: Prisma.RuleUncheckedCreateNestedManyWithoutWorkspaceInput
+  ruleRuns?: Prisma.RuleRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutWorkspaceInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutWorkspaceInput
+  calendarConnections?: Prisma.CalendarConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  calendarEventLinks?: Prisma.CalendarEventLinkUncheckedCreateNestedManyWithoutWorkspaceInput
+  gmailConnections?: Prisma.GmailConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  gmailMessageLinks?: Prisma.GmailMessageLinkUncheckedCreateNestedManyWithoutWorkspaceInput
+  importJobs?: Prisma.ImportJobUncheckedCreateNestedManyWithoutWorkspaceInput
+  importStagedVisits?: Prisma.ImportStagedVisitUncheckedCreateNestedManyWithoutWorkspaceInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUncheckedCreateNestedManyWithoutWorkspaceInput
+  assistantMessages?: Prisma.AssistantMessageUncheckedCreateNestedManyWithoutWorkspaceInput
+  eraConnections?: Prisma.EraConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  eraAccountLinks?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutWorkspaceInput
+  eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedCreateNestedManyWithoutWorkspaceInput
+  connections?: Prisma.ConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProfile?: Prisma.LevelUpProfileUncheckedCreateNestedOneWithoutWorkspaceInput
+  levelUpTestResults?: Prisma.LevelUpTestResultUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpCombines?: Prisma.LevelUpCombineUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpSnapshots?: Prisma.LevelUpRatingSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpReadinessSnapshots?: Prisma.LevelUpReadinessSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
+  reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedCreateNestedManyWithoutWorkspaceInput
+  devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutWorkspaceInput
+  deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedCreateNestedManyWithoutWorkspaceInput
+  deviceIngestItems?: Prisma.DeviceIngestItemUncheckedCreateNestedManyWithoutWorkspaceInput
+}
+
+export type WorkspaceCreateOrConnectWithoutAdaptiveInterventionOutcomesInput = {
+  where: Prisma.WorkspaceWhereUniqueInput
+  create: Prisma.XOR<Prisma.WorkspaceCreateWithoutAdaptiveInterventionOutcomesInput, Prisma.WorkspaceUncheckedCreateWithoutAdaptiveInterventionOutcomesInput>
+}
+
+export type WorkspaceUpsertWithoutAdaptiveInterventionOutcomesInput = {
+  update: Prisma.XOR<Prisma.WorkspaceUpdateWithoutAdaptiveInterventionOutcomesInput, Prisma.WorkspaceUncheckedUpdateWithoutAdaptiveInterventionOutcomesInput>
+  create: Prisma.XOR<Prisma.WorkspaceCreateWithoutAdaptiveInterventionOutcomesInput, Prisma.WorkspaceUncheckedCreateWithoutAdaptiveInterventionOutcomesInput>
+  where?: Prisma.WorkspaceWhereInput
+}
+
+export type WorkspaceUpdateToOneWithWhereWithoutAdaptiveInterventionOutcomesInput = {
+  where?: Prisma.WorkspaceWhereInput
+  data: Prisma.XOR<Prisma.WorkspaceUpdateWithoutAdaptiveInterventionOutcomesInput, Prisma.WorkspaceUncheckedUpdateWithoutAdaptiveInterventionOutcomesInput>
+}
+
+export type WorkspaceUpdateWithoutAdaptiveInterventionOutcomesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  ownerUser?: Prisma.UserUpdateOneWithoutOwnedWorkspacesNestedInput
+  members?: Prisma.WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
+  approvedEmails?: Prisma.ApprovedEmailUpdateManyWithoutWorkspaceNestedInput
+  persons?: Prisma.PersonUpdateManyWithoutWorkspaceNestedInput
+  events?: Prisma.EventUpdateManyWithoutWorkspaceNestedInput
+  interactions?: Prisma.InteractionUpdateManyWithoutWorkspaceNestedInput
+  plans?: Prisma.PlanUpdateManyWithoutWorkspaceNestedInput
+  places?: Prisma.PlaceUpdateManyWithoutWorkspaceNestedInput
+  placeNotes?: Prisma.PlaceNoteUpdateManyWithoutWorkspaceNestedInput
+  notes?: Prisma.NoteUpdateManyWithoutWorkspaceNestedInput
+  theorySnapshots?: Prisma.TheorySnapshotUpdateManyWithoutWorkspaceNestedInput
+  groups?: Prisma.GroupUpdateManyWithoutWorkspaceNestedInput
+  items?: Prisma.ItemUpdateManyWithoutWorkspaceNestedInput
+  itemDefinitions?: Prisma.ItemDefinitionUpdateManyWithoutWorkspaceNestedInput
+  inventoryLots?: Prisma.InventoryLotUpdateManyWithoutWorkspaceNestedInput
+  supplierProfiles?: Prisma.SupplierProfileUpdateManyWithoutWorkspaceNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUpdateManyWithoutWorkspaceNestedInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutWorkspaceNestedInput
+  importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
+  aiProviderCredentials?: Prisma.AiProviderCredentialUpdateManyWithoutWorkspaceNestedInput
+  aiAnalysisRuns?: Prisma.AiAnalysisRunUpdateManyWithoutWorkspaceNestedInput
+  noteAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUpdateManyWithoutWorkspaceNestedInput
+  lifeModelAnalysisRuns?: Prisma.LifeModelAnalysisRunUpdateManyWithoutWorkspaceNestedInput
+  lifeModelClaimFeedback?: Prisma.LifeModelClaimFeedbackUpdateManyWithoutWorkspaceNestedInput
+  noteSuggestions?: Prisma.NoteSuggestionUpdateManyWithoutWorkspaceNestedInput
+  stagedItems?: Prisma.StagedInteractionUpdateManyWithoutWorkspaceNestedInput
+  rules?: Prisma.RuleUpdateManyWithoutWorkspaceNestedInput
+  ruleRuns?: Prisma.RuleRunUpdateManyWithoutWorkspaceNestedInput
+  apiKeys?: Prisma.ApiKeyUpdateManyWithoutWorkspaceNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutWorkspaceNestedInput
+  calendarConnections?: Prisma.CalendarConnectionUpdateManyWithoutWorkspaceNestedInput
+  calendarEventLinks?: Prisma.CalendarEventLinkUpdateManyWithoutWorkspaceNestedInput
+  gmailConnections?: Prisma.GmailConnectionUpdateManyWithoutWorkspaceNestedInput
+  gmailMessageLinks?: Prisma.GmailMessageLinkUpdateManyWithoutWorkspaceNestedInput
+  importJobs?: Prisma.ImportJobUpdateManyWithoutWorkspaceNestedInput
+  importStagedVisits?: Prisma.ImportStagedVisitUpdateManyWithoutWorkspaceNestedInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUpdateManyWithoutWorkspaceNestedInput
+  assistantMessages?: Prisma.AssistantMessageUpdateManyWithoutWorkspaceNestedInput
+  eraConnections?: Prisma.EraConnectionUpdateManyWithoutWorkspaceNestedInput
+  eraAccountLinks?: Prisma.EraAccountLinkUpdateManyWithoutWorkspaceNestedInput
+  eraTransactionLinks?: Prisma.EraTransactionLinkUpdateManyWithoutWorkspaceNestedInput
+  connections?: Prisma.ConnectionUpdateManyWithoutWorkspaceNestedInput
+  levelUpProfile?: Prisma.LevelUpProfileUpdateOneWithoutWorkspaceNestedInput
+  levelUpTestResults?: Prisma.LevelUpTestResultUpdateManyWithoutWorkspaceNestedInput
+  levelUpCombines?: Prisma.LevelUpCombineUpdateManyWithoutWorkspaceNestedInput
+  levelUpSnapshots?: Prisma.LevelUpRatingSnapshotUpdateManyWithoutWorkspaceNestedInput
+  levelUpTrainingSets?: Prisma.LevelUpTrainingSetUpdateManyWithoutWorkspaceNestedInput
+  levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUpdateManyWithoutWorkspaceNestedInput
+  levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
+  levelUpReadinessSnapshots?: Prisma.LevelUpReadinessSnapshotUpdateManyWithoutWorkspaceNestedInput
+  graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
+  reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUpdateManyWithoutWorkspaceNestedInput
+  devices?: Prisma.DeviceUpdateManyWithoutWorkspaceNestedInput
+  deviceAuthorizations?: Prisma.DeviceAuthorizationUpdateManyWithoutWorkspaceNestedInput
+  deviceIngestItems?: Prisma.DeviceIngestItemUpdateManyWithoutWorkspaceNestedInput
+}
+
+export type WorkspaceUncheckedUpdateWithoutAdaptiveInterventionOutcomesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  ownerUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  members?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
+  approvedEmails?: Prisma.ApprovedEmailUncheckedUpdateManyWithoutWorkspaceNestedInput
+  persons?: Prisma.PersonUncheckedUpdateManyWithoutWorkspaceNestedInput
+  events?: Prisma.EventUncheckedUpdateManyWithoutWorkspaceNestedInput
+  interactions?: Prisma.InteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  plans?: Prisma.PlanUncheckedUpdateManyWithoutWorkspaceNestedInput
+  places?: Prisma.PlaceUncheckedUpdateManyWithoutWorkspaceNestedInput
+  placeNotes?: Prisma.PlaceNoteUncheckedUpdateManyWithoutWorkspaceNestedInput
+  notes?: Prisma.NoteUncheckedUpdateManyWithoutWorkspaceNestedInput
+  theorySnapshots?: Prisma.TheorySnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  groups?: Prisma.GroupUncheckedUpdateManyWithoutWorkspaceNestedInput
+  items?: Prisma.ItemUncheckedUpdateManyWithoutWorkspaceNestedInput
+  itemDefinitions?: Prisma.ItemDefinitionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  inventoryLots?: Prisma.InventoryLotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  supplierProfiles?: Prisma.SupplierProfileUncheckedUpdateManyWithoutWorkspaceNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutWorkspaceNestedInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutWorkspaceNestedInput
+  importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
+  aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedUpdateManyWithoutWorkspaceNestedInput
+  aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  lifeModelAnalysisRuns?: Prisma.LifeModelAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  lifeModelClaimFeedback?: Prisma.LifeModelClaimFeedbackUncheckedUpdateManyWithoutWorkspaceNestedInput
+  noteSuggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  stagedItems?: Prisma.StagedInteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  rules?: Prisma.RuleUncheckedUpdateManyWithoutWorkspaceNestedInput
+  ruleRuns?: Prisma.RuleRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutWorkspaceNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutWorkspaceNestedInput
+  calendarConnections?: Prisma.CalendarConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  calendarEventLinks?: Prisma.CalendarEventLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
+  gmailConnections?: Prisma.GmailConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  gmailMessageLinks?: Prisma.GmailMessageLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
+  importJobs?: Prisma.ImportJobUncheckedUpdateManyWithoutWorkspaceNestedInput
+  importStagedVisits?: Prisma.ImportStagedVisitUncheckedUpdateManyWithoutWorkspaceNestedInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUncheckedUpdateManyWithoutWorkspaceNestedInput
+  assistantMessages?: Prisma.AssistantMessageUncheckedUpdateManyWithoutWorkspaceNestedInput
+  eraConnections?: Prisma.EraConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  eraAccountLinks?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
+  eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
+  connections?: Prisma.ConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProfile?: Prisma.LevelUpProfileUncheckedUpdateOneWithoutWorkspaceNestedInput
+  levelUpTestResults?: Prisma.LevelUpTestResultUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpCombines?: Prisma.LevelUpCombineUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpSnapshots?: Prisma.LevelUpRatingSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpReadinessSnapshots?: Prisma.LevelUpReadinessSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
+  reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -15687,6 +16717,8 @@ export type WorkspaceCreateWithoutAssistantMessagesInput = {
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemCreateNestedManyWithoutWorkspaceInput
@@ -15759,6 +16791,8 @@ export type WorkspaceUncheckedCreateWithoutAssistantMessagesInput = {
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -15847,6 +16881,8 @@ export type WorkspaceUpdateWithoutAssistantMessagesInput = {
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUpdateManyWithoutWorkspaceNestedInput
@@ -15919,6 +16955,8 @@ export type WorkspaceUncheckedUpdateWithoutAssistantMessagesInput = {
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -15991,6 +17029,8 @@ export type WorkspaceCreateWithoutLevelUpProfileInput = {
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemCreateNestedManyWithoutWorkspaceInput
@@ -16063,6 +17103,8 @@ export type WorkspaceUncheckedCreateWithoutLevelUpProfileInput = {
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -16151,6 +17193,8 @@ export type WorkspaceUpdateWithoutLevelUpProfileInput = {
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUpdateManyWithoutWorkspaceNestedInput
@@ -16223,6 +17267,8 @@ export type WorkspaceUncheckedUpdateWithoutLevelUpProfileInput = {
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -16295,6 +17341,8 @@ export type WorkspaceCreateWithoutLevelUpTestResultsInput = {
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemCreateNestedManyWithoutWorkspaceInput
@@ -16367,6 +17415,8 @@ export type WorkspaceUncheckedCreateWithoutLevelUpTestResultsInput = {
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -16455,6 +17505,8 @@ export type WorkspaceUpdateWithoutLevelUpTestResultsInput = {
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUpdateManyWithoutWorkspaceNestedInput
@@ -16527,6 +17579,8 @@ export type WorkspaceUncheckedUpdateWithoutLevelUpTestResultsInput = {
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -16599,6 +17653,8 @@ export type WorkspaceCreateWithoutLevelUpCombinesInput = {
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemCreateNestedManyWithoutWorkspaceInput
@@ -16671,6 +17727,8 @@ export type WorkspaceUncheckedCreateWithoutLevelUpCombinesInput = {
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -16759,6 +17817,8 @@ export type WorkspaceUpdateWithoutLevelUpCombinesInput = {
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUpdateManyWithoutWorkspaceNestedInput
@@ -16831,6 +17891,8 @@ export type WorkspaceUncheckedUpdateWithoutLevelUpCombinesInput = {
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -16903,6 +17965,8 @@ export type WorkspaceCreateWithoutLevelUpSnapshotsInput = {
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemCreateNestedManyWithoutWorkspaceInput
@@ -16975,6 +18039,8 @@ export type WorkspaceUncheckedCreateWithoutLevelUpSnapshotsInput = {
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -17063,6 +18129,8 @@ export type WorkspaceUpdateWithoutLevelUpSnapshotsInput = {
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUpdateManyWithoutWorkspaceNestedInput
@@ -17135,6 +18203,8 @@ export type WorkspaceUncheckedUpdateWithoutLevelUpSnapshotsInput = {
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -17207,6 +18277,8 @@ export type WorkspaceCreateWithoutLevelUpTrainingSetsInput = {
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemCreateNestedManyWithoutWorkspaceInput
@@ -17279,6 +18351,8 @@ export type WorkspaceUncheckedCreateWithoutLevelUpTrainingSetsInput = {
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -17367,6 +18441,8 @@ export type WorkspaceUpdateWithoutLevelUpTrainingSetsInput = {
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUpdateManyWithoutWorkspaceNestedInput
@@ -17439,6 +18515,8 @@ export type WorkspaceUncheckedUpdateWithoutLevelUpTrainingSetsInput = {
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -17511,6 +18589,8 @@ export type WorkspaceCreateWithoutLevelUpExercisesInput = {
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemCreateNestedManyWithoutWorkspaceInput
@@ -17583,6 +18663,8 @@ export type WorkspaceUncheckedCreateWithoutLevelUpExercisesInput = {
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -17671,6 +18753,8 @@ export type WorkspaceUpdateWithoutLevelUpExercisesInput = {
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUpdateManyWithoutWorkspaceNestedInput
@@ -17743,6 +18827,8 @@ export type WorkspaceUncheckedUpdateWithoutLevelUpExercisesInput = {
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -17815,6 +18901,8 @@ export type WorkspaceCreateWithoutLevelUpProgramsInput = {
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemCreateNestedManyWithoutWorkspaceInput
@@ -17887,6 +18975,8 @@ export type WorkspaceUncheckedCreateWithoutLevelUpProgramsInput = {
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -17975,6 +19065,8 @@ export type WorkspaceUpdateWithoutLevelUpProgramsInput = {
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUpdateManyWithoutWorkspaceNestedInput
@@ -18047,6 +19139,8 @@ export type WorkspaceUncheckedUpdateWithoutLevelUpProgramsInput = {
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -18119,6 +19213,8 @@ export type WorkspaceCreateWithoutLevelUpProgramDaysInput = {
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemCreateNestedManyWithoutWorkspaceInput
@@ -18191,6 +19287,8 @@ export type WorkspaceUncheckedCreateWithoutLevelUpProgramDaysInput = {
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -18279,6 +19377,8 @@ export type WorkspaceUpdateWithoutLevelUpProgramDaysInput = {
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUpdateManyWithoutWorkspaceNestedInput
@@ -18351,6 +19451,8 @@ export type WorkspaceUncheckedUpdateWithoutLevelUpProgramDaysInput = {
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -18423,6 +19525,8 @@ export type WorkspaceCreateWithoutLevelUpProgramEntriesInput = {
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemCreateNestedManyWithoutWorkspaceInput
@@ -18495,6 +19599,8 @@ export type WorkspaceUncheckedCreateWithoutLevelUpProgramEntriesInput = {
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -18583,6 +19689,8 @@ export type WorkspaceUpdateWithoutLevelUpProgramEntriesInput = {
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUpdateManyWithoutWorkspaceNestedInput
@@ -18655,6 +19763,8 @@ export type WorkspaceUncheckedUpdateWithoutLevelUpProgramEntriesInput = {
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -18727,6 +19837,8 @@ export type WorkspaceCreateWithoutLevelUpSessionsInput = {
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemCreateNestedManyWithoutWorkspaceInput
@@ -18799,6 +19911,8 @@ export type WorkspaceUncheckedCreateWithoutLevelUpSessionsInput = {
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -18887,6 +20001,8 @@ export type WorkspaceUpdateWithoutLevelUpSessionsInput = {
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUpdateManyWithoutWorkspaceNestedInput
@@ -18959,6 +20075,8 @@ export type WorkspaceUncheckedUpdateWithoutLevelUpSessionsInput = {
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -19031,6 +20149,8 @@ export type WorkspaceCreateWithoutLevelUpBodyMetricsInput = {
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemCreateNestedManyWithoutWorkspaceInput
@@ -19103,6 +20223,8 @@ export type WorkspaceUncheckedCreateWithoutLevelUpBodyMetricsInput = {
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -19191,6 +20313,8 @@ export type WorkspaceUpdateWithoutLevelUpBodyMetricsInput = {
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUpdateManyWithoutWorkspaceNestedInput
@@ -19263,6 +20387,8 @@ export type WorkspaceUncheckedUpdateWithoutLevelUpBodyMetricsInput = {
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -19335,6 +20461,8 @@ export type WorkspaceCreateWithoutLevelUpReadinessSnapshotsInput = {
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemCreateNestedManyWithoutWorkspaceInput
@@ -19407,6 +20535,8 @@ export type WorkspaceUncheckedCreateWithoutLevelUpReadinessSnapshotsInput = {
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -19495,6 +20625,8 @@ export type WorkspaceUpdateWithoutLevelUpReadinessSnapshotsInput = {
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUpdateManyWithoutWorkspaceNestedInput
@@ -19567,6 +20699,8 @@ export type WorkspaceUncheckedUpdateWithoutLevelUpReadinessSnapshotsInput = {
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -19639,6 +20773,8 @@ export type WorkspaceCreateWithoutLevelUpBadgeUnlocksInput = {
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemCreateNestedManyWithoutWorkspaceInput
@@ -19711,6 +20847,8 @@ export type WorkspaceUncheckedCreateWithoutLevelUpBadgeUnlocksInput = {
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -19799,6 +20937,8 @@ export type WorkspaceUpdateWithoutLevelUpBadgeUnlocksInput = {
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUpdateManyWithoutWorkspaceNestedInput
@@ -19871,6 +21011,8 @@ export type WorkspaceUncheckedUpdateWithoutLevelUpBadgeUnlocksInput = {
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -19943,6 +21085,8 @@ export type WorkspaceCreateWithoutLevelUpTargetBuildsInput = {
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemCreateNestedManyWithoutWorkspaceInput
@@ -20015,6 +21159,8 @@ export type WorkspaceUncheckedCreateWithoutLevelUpTargetBuildsInput = {
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -20103,6 +21249,8 @@ export type WorkspaceUpdateWithoutLevelUpTargetBuildsInput = {
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUpdateManyWithoutWorkspaceNestedInput
@@ -20175,6 +21323,8 @@ export type WorkspaceUncheckedUpdateWithoutLevelUpTargetBuildsInput = {
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -20247,6 +21397,8 @@ export type WorkspaceCreateWithoutGraphEventsInput = {
   levelUpReadinessSnapshots?: Prisma.LevelUpReadinessSnapshotCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemCreateNestedManyWithoutWorkspaceInput
@@ -20319,6 +21471,8 @@ export type WorkspaceUncheckedCreateWithoutGraphEventsInput = {
   levelUpReadinessSnapshots?: Prisma.LevelUpReadinessSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
   reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -20407,6 +21561,8 @@ export type WorkspaceUpdateWithoutGraphEventsInput = {
   levelUpReadinessSnapshots?: Prisma.LevelUpReadinessSnapshotUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUpdateManyWithoutWorkspaceNestedInput
@@ -20479,6 +21635,8 @@ export type WorkspaceUncheckedUpdateWithoutGraphEventsInput = {
   levelUpReadinessSnapshots?: Prisma.LevelUpReadinessSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -20551,6 +21709,8 @@ export type WorkspaceCreateWithoutReviewItemsInput = {
   levelUpReadinessSnapshots?: Prisma.LevelUpReadinessSnapshotCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemCreateNestedManyWithoutWorkspaceInput
@@ -20623,6 +21783,8 @@ export type WorkspaceUncheckedCreateWithoutReviewItemsInput = {
   levelUpReadinessSnapshots?: Prisma.LevelUpReadinessSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
   graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedCreateNestedManyWithoutWorkspaceInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedCreateNestedManyWithoutWorkspaceInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -20711,6 +21873,8 @@ export type WorkspaceUpdateWithoutReviewItemsInput = {
   levelUpReadinessSnapshots?: Prisma.LevelUpReadinessSnapshotUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUpdateManyWithoutWorkspaceNestedInput
@@ -20783,6 +21947,8 @@ export type WorkspaceUncheckedUpdateWithoutReviewItemsInput = {
   levelUpReadinessSnapshots?: Prisma.LevelUpReadinessSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -20865,6 +22031,8 @@ export type WorkspaceUpdateWithoutOwnerUserInput = {
   graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUpdateManyWithoutWorkspaceNestedInput
@@ -20937,6 +22105,8 @@ export type WorkspaceUncheckedUpdateWithoutOwnerUserInput = {
   graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
   reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedUpdateManyWithoutWorkspaceNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedUpdateManyWithoutWorkspaceNestedInput
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -21016,6 +22186,8 @@ export type WorkspaceCountOutputType = {
   graphEvents: number
   reviewItems: number
   lifeModelSnapshots: number
+  adaptiveDayBriefs: number
+  adaptiveInterventionOutcomes: number
   devices: number
   deviceAuthorizations: number
   deviceIngestItems: number
@@ -21080,6 +22252,8 @@ export type WorkspaceCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensi
   graphEvents?: boolean | WorkspaceCountOutputTypeCountGraphEventsArgs
   reviewItems?: boolean | WorkspaceCountOutputTypeCountReviewItemsArgs
   lifeModelSnapshots?: boolean | WorkspaceCountOutputTypeCountLifeModelSnapshotsArgs
+  adaptiveDayBriefs?: boolean | WorkspaceCountOutputTypeCountAdaptiveDayBriefsArgs
+  adaptiveInterventionOutcomes?: boolean | WorkspaceCountOutputTypeCountAdaptiveInterventionOutcomesArgs
   devices?: boolean | WorkspaceCountOutputTypeCountDevicesArgs
   deviceAuthorizations?: boolean | WorkspaceCountOutputTypeCountDeviceAuthorizationsArgs
   deviceIngestItems?: boolean | WorkspaceCountOutputTypeCountDeviceIngestItemsArgs
@@ -21504,6 +22678,20 @@ export type WorkspaceCountOutputTypeCountLifeModelSnapshotsArgs<ExtArgs extends 
 /**
  * WorkspaceCountOutputType without action
  */
+export type WorkspaceCountOutputTypeCountAdaptiveDayBriefsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AdaptiveDayBriefWhereInput
+}
+
+/**
+ * WorkspaceCountOutputType without action
+ */
+export type WorkspaceCountOutputTypeCountAdaptiveInterventionOutcomesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AdaptiveInterventionOutcomeWhereInput
+}
+
+/**
+ * WorkspaceCountOutputType without action
+ */
 export type WorkspaceCountOutputTypeCountDevicesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.DeviceWhereInput
 }
@@ -21592,6 +22780,8 @@ export type WorkspaceSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   graphEvents?: boolean | Prisma.Workspace$graphEventsArgs<ExtArgs>
   reviewItems?: boolean | Prisma.Workspace$reviewItemsArgs<ExtArgs>
   lifeModelSnapshots?: boolean | Prisma.Workspace$lifeModelSnapshotsArgs<ExtArgs>
+  adaptiveDayBriefs?: boolean | Prisma.Workspace$adaptiveDayBriefsArgs<ExtArgs>
+  adaptiveInterventionOutcomes?: boolean | Prisma.Workspace$adaptiveInterventionOutcomesArgs<ExtArgs>
   devices?: boolean | Prisma.Workspace$devicesArgs<ExtArgs>
   deviceAuthorizations?: boolean | Prisma.Workspace$deviceAuthorizationsArgs<ExtArgs>
   deviceIngestItems?: boolean | Prisma.Workspace$deviceIngestItemsArgs<ExtArgs>
@@ -21695,6 +22885,8 @@ export type WorkspaceInclude<ExtArgs extends runtime.Types.Extensions.InternalAr
   graphEvents?: boolean | Prisma.Workspace$graphEventsArgs<ExtArgs>
   reviewItems?: boolean | Prisma.Workspace$reviewItemsArgs<ExtArgs>
   lifeModelSnapshots?: boolean | Prisma.Workspace$lifeModelSnapshotsArgs<ExtArgs>
+  adaptiveDayBriefs?: boolean | Prisma.Workspace$adaptiveDayBriefsArgs<ExtArgs>
+  adaptiveInterventionOutcomes?: boolean | Prisma.Workspace$adaptiveInterventionOutcomesArgs<ExtArgs>
   devices?: boolean | Prisma.Workspace$devicesArgs<ExtArgs>
   deviceAuthorizations?: boolean | Prisma.Workspace$deviceAuthorizationsArgs<ExtArgs>
   deviceIngestItems?: boolean | Prisma.Workspace$deviceIngestItemsArgs<ExtArgs>
@@ -21770,6 +22962,8 @@ export type $WorkspacePayload<ExtArgs extends runtime.Types.Extensions.InternalA
     graphEvents: Prisma.$GraphEventPayload<ExtArgs>[]
     reviewItems: Prisma.$ReviewItemPayload<ExtArgs>[]
     lifeModelSnapshots: Prisma.$LifeModelSnapshotPayload<ExtArgs>[]
+    adaptiveDayBriefs: Prisma.$AdaptiveDayBriefPayload<ExtArgs>[]
+    adaptiveInterventionOutcomes: Prisma.$AdaptiveInterventionOutcomePayload<ExtArgs>[]
     devices: Prisma.$DevicePayload<ExtArgs>[]
     deviceAuthorizations: Prisma.$DeviceAuthorizationPayload<ExtArgs>[]
     deviceIngestItems: Prisma.$DeviceIngestItemPayload<ExtArgs>[]
@@ -22237,6 +23431,8 @@ export interface Prisma__WorkspaceClient<T, Null = never, ExtArgs extends runtim
   graphEvents<T extends Prisma.Workspace$graphEventsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Workspace$graphEventsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$GraphEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   reviewItems<T extends Prisma.Workspace$reviewItemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Workspace$reviewItemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReviewItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   lifeModelSnapshots<T extends Prisma.Workspace$lifeModelSnapshotsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Workspace$lifeModelSnapshotsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LifeModelSnapshotPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  adaptiveDayBriefs<T extends Prisma.Workspace$adaptiveDayBriefsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Workspace$adaptiveDayBriefsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AdaptiveDayBriefPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  adaptiveInterventionOutcomes<T extends Prisma.Workspace$adaptiveInterventionOutcomesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Workspace$adaptiveInterventionOutcomesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AdaptiveInterventionOutcomePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   devices<T extends Prisma.Workspace$devicesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Workspace$devicesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DevicePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   deviceAuthorizations<T extends Prisma.Workspace$deviceAuthorizationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Workspace$deviceAuthorizationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DeviceAuthorizationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   deviceIngestItems<T extends Prisma.Workspace$deviceIngestItemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Workspace$deviceIngestItemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DeviceIngestItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -24103,6 +25299,54 @@ export type Workspace$lifeModelSnapshotsArgs<ExtArgs extends runtime.Types.Exten
   take?: number
   skip?: number
   distinct?: Prisma.LifeModelSnapshotScalarFieldEnum | Prisma.LifeModelSnapshotScalarFieldEnum[]
+}
+
+/**
+ * Workspace.adaptiveDayBriefs
+ */
+export type Workspace$adaptiveDayBriefsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AdaptiveDayBrief
+   */
+  select?: Prisma.AdaptiveDayBriefSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AdaptiveDayBrief
+   */
+  omit?: Prisma.AdaptiveDayBriefOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AdaptiveDayBriefInclude<ExtArgs> | null
+  where?: Prisma.AdaptiveDayBriefWhereInput
+  orderBy?: Prisma.AdaptiveDayBriefOrderByWithRelationInput | Prisma.AdaptiveDayBriefOrderByWithRelationInput[]
+  cursor?: Prisma.AdaptiveDayBriefWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AdaptiveDayBriefScalarFieldEnum | Prisma.AdaptiveDayBriefScalarFieldEnum[]
+}
+
+/**
+ * Workspace.adaptiveInterventionOutcomes
+ */
+export type Workspace$adaptiveInterventionOutcomesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AdaptiveInterventionOutcome
+   */
+  select?: Prisma.AdaptiveInterventionOutcomeSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AdaptiveInterventionOutcome
+   */
+  omit?: Prisma.AdaptiveInterventionOutcomeOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AdaptiveInterventionOutcomeInclude<ExtArgs> | null
+  where?: Prisma.AdaptiveInterventionOutcomeWhereInput
+  orderBy?: Prisma.AdaptiveInterventionOutcomeOrderByWithRelationInput | Prisma.AdaptiveInterventionOutcomeOrderByWithRelationInput[]
+  cursor?: Prisma.AdaptiveInterventionOutcomeWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AdaptiveInterventionOutcomeScalarFieldEnum | Prisma.AdaptiveInterventionOutcomeScalarFieldEnum[]
 }
 
 /**

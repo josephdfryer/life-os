@@ -97,6 +97,8 @@ model Workspace {
   graphEvents          GraphEvent[]
   reviewItems          ReviewItem[]
   lifeModelSnapshots   LifeModelSnapshot[]
+  adaptiveDayBriefs    AdaptiveDayBrief[]
+  adaptiveInterventionOutcomes AdaptiveInterventionOutcome[]
   devices              Device[]
   deviceAuthorizations DeviceAuthorization[]
   deviceIngestItems    DeviceIngestItem[]
@@ -1941,6 +1943,128 @@ model LifeModelClaimFeedback {
   @@index([workspaceId, createdAt])
   @@index([claimId, createdAt])
   @@index([sourceNoteId])
+}
+
+// ─────────────────────────────────────────────
+// ADAPTIVE DAY: deterministic capacity/schedule/workout recommendations
+// ─────────────────────────────────────────────
+// Same shape as LifeModelSnapshot/LifeModelClaim/LifeModelClaimFeedback
+// above (snapshot -> claims -> feedback), day-keyed instead of
+// version-keyed since a brief is inherently daily, not an ever-growing
+// version chain. See docs/ADAPTIVE_DAY_PLAN.md.
+//
+// AdaptiveIntervention is the source-of-record for one proposed
+// recommendation — ReviewItem (see below) is a dual-written index over it
+// for confirmation, the same relationship ReviewItem already has with
+// StagedInteraction/NoteSuggestion/calendar reconciliation. Accepting an
+// intervention never re-derives the action; it runs the stored
+// proposedCommand through the registered command it names.
+
+model AdaptiveDayBrief {
+  id            String   @id @default(cuid())
+  workspaceId   String   @default("default-workspace")
+  workspace     Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  // Local calendar day this brief is for, e.g. "2026-08-14" — computed in
+  // the workspace's timezone, never the server clock's.
+  day           String
+  timezone      String
+
+  // Deterministic engine version that produced this brief. A rules-version
+  // bump makes the existing "current" brief for a day stale without being a
+  // uniqueness conflict — refresh supersedes it and generates a new one.
+  rulesVersion  String
+
+  // full | adjust | recover — matches LevelUpReadinessSnapshot.band exactly,
+  // so Adaptive Day and Level Up never disagree about what a band means.
+  capacityBand  String
+
+  // Bounded snapshot of the inputs the engine actually read (fixed
+  // commitments, latest energy/mood/stress, Level Up band, workout plan,
+  // health freshness) — kept thin, a pointer/summary, not a second copy of
+  // the primitives themselves.
+  inputSnapshot String
+  // JSON array of input names that were missing or stale when this brief
+  // was generated, e.g. ["levelUpReadiness", "morningCheckIn"]. Drives
+  // Home's "visible missing-data state."
+  missingSignals String  @default("[]")
+
+  generatedAt   DateTime @default(now())
+  // current | superseded — a refresh marks the prior brief for the same day
+  // superseded and creates a new current one; already-accepted interventions
+  // on the superseded brief are untouched.
+  status        String   @default("current")
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  interventions AdaptiveIntervention[]
+
+  @@unique([workspaceId, day, rulesVersion])
+  @@index([workspaceId, day, status])
+}
+
+model AdaptiveIntervention {
+  id                String           @id @default(cuid())
+  briefId           String
+  brief             AdaptiveDayBrief @relation(fields: [briefId], references: [id], onDelete: Cascade)
+
+  rank              Int
+  // plan_schedule | plan_reschedule | workout_adjustment | capacity_guidance
+  category          String
+  recommendationText String
+  // JSON array of short machine-stable reason codes, e.g. ["fixed_commitments_5h", "energy_low"]
+  reasonCodes       String           @default("[]")
+  // JSON — same shape/purpose as ReviewItem.evidence, copied straight into
+  // the dual-written ReviewItem row so "Why this?" has one source.
+  evidence          String?
+
+  // The proposed graph command, not yet applied — null for capacity_guidance,
+  // which has nothing to accept, only acknowledge/dismiss. Same shape as
+  // ReviewItem.proposedCommand: JSON { command: string, input: object }.
+  proposedCommand   String?
+  // observe | safe_auto | review | confirm — same vocabulary as
+  // ReviewItem.riskTier and ActionAuthorityTier.
+  riskTier          String           @default("review")
+
+  // Same status vocabulary as ReviewItemStatus, since this dual-writes one.
+  status            String           @default("pending")
+  reviewItemId      String?          @unique
+  resultType        String?
+  resultId          String?
+
+  createdAt         DateTime         @default(now())
+
+  outcomes          AdaptiveInterventionOutcome[]
+
+  @@index([briefId, rank])
+  @@index([reviewItemId])
+}
+
+model AdaptiveInterventionOutcome {
+  id             String               @id @default(cuid())
+  workspaceId    String               @default("default-workspace")
+  workspace      Workspace            @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  interventionId String
+  intervention   AdaptiveIntervention @relation(fields: [interventionId], references: [id], onDelete: Cascade)
+
+  // passive | user_reported
+  source         String
+  // followed_through | not_followed_through | unknown | helpful | not_helpful | not_sure
+  outcome        String
+  confidence     Float?
+  // JSON — what the passive matcher looked at, or the user-reported context
+  evidence       String?
+  note           String?
+
+  actorType      String?
+  actorId        String?
+  actorLabel     String?
+
+  createdAt      DateTime             @default(now())
+
+  @@index([workspaceId, createdAt])
+  @@index([interventionId, createdAt])
 }
 
 // ─────────────────────────────────────────────

@@ -114,6 +114,9 @@ export const ModelName = {
   LifeModelSnapshot: 'LifeModelSnapshot',
   LifeModelClaim: 'LifeModelClaim',
   LifeModelClaimFeedback: 'LifeModelClaimFeedback',
+  AdaptiveDayBrief: 'AdaptiveDayBrief',
+  AdaptiveIntervention: 'AdaptiveIntervention',
+  AdaptiveInterventionOutcome: 'AdaptiveInterventionOutcome',
   StateDefinition: 'StateDefinition',
   State: 'State',
   AssistantMessage: 'AssistantMessage',
@@ -1272,6 +1275,62 @@ export const LifeModelClaimFeedbackScalarFieldEnum = {
 } as const
 
 export type LifeModelClaimFeedbackScalarFieldEnum = (typeof LifeModelClaimFeedbackScalarFieldEnum)[keyof typeof LifeModelClaimFeedbackScalarFieldEnum]
+
+
+export const AdaptiveDayBriefScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  day: 'day',
+  timezone: 'timezone',
+  rulesVersion: 'rulesVersion',
+  capacityBand: 'capacityBand',
+  inputSnapshot: 'inputSnapshot',
+  missingSignals: 'missingSignals',
+  generatedAt: 'generatedAt',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AdaptiveDayBriefScalarFieldEnum = (typeof AdaptiveDayBriefScalarFieldEnum)[keyof typeof AdaptiveDayBriefScalarFieldEnum]
+
+
+export const AdaptiveInterventionScalarFieldEnum = {
+  id: 'id',
+  briefId: 'briefId',
+  rank: 'rank',
+  category: 'category',
+  recommendationText: 'recommendationText',
+  reasonCodes: 'reasonCodes',
+  evidence: 'evidence',
+  proposedCommand: 'proposedCommand',
+  riskTier: 'riskTier',
+  status: 'status',
+  reviewItemId: 'reviewItemId',
+  resultType: 'resultType',
+  resultId: 'resultId',
+  createdAt: 'createdAt'
+} as const
+
+export type AdaptiveInterventionScalarFieldEnum = (typeof AdaptiveInterventionScalarFieldEnum)[keyof typeof AdaptiveInterventionScalarFieldEnum]
+
+
+export const AdaptiveInterventionOutcomeScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  interventionId: 'interventionId',
+  source: 'source',
+  outcome: 'outcome',
+  confidence: 'confidence',
+  evidence: 'evidence',
+  note: 'note',
+  actorType: 'actorType',
+  actorId: 'actorId',
+  actorLabel: 'actorLabel',
+  createdAt: 'createdAt'
+} as const
+
+export type AdaptiveInterventionOutcomeScalarFieldEnum = (typeof AdaptiveInterventionOutcomeScalarFieldEnum)[keyof typeof AdaptiveInterventionOutcomeScalarFieldEnum]
 
 
 export const StateDefinitionScalarFieldEnum = {

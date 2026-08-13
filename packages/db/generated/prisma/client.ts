@@ -357,6 +357,21 @@ export type LifeModelClaim = Prisma.LifeModelClaimModel
  */
 export type LifeModelClaimFeedback = Prisma.LifeModelClaimFeedbackModel
 /**
+ * Model AdaptiveDayBrief
+ * 
+ */
+export type AdaptiveDayBrief = Prisma.AdaptiveDayBriefModel
+/**
+ * Model AdaptiveIntervention
+ * 
+ */
+export type AdaptiveIntervention = Prisma.AdaptiveInterventionModel
+/**
+ * Model AdaptiveInterventionOutcome
+ * 
+ */
+export type AdaptiveInterventionOutcome = Prisma.AdaptiveInterventionOutcomeModel
+/**
  * Model StateDefinition
  * 
  */

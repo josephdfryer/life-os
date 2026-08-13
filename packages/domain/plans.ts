@@ -119,6 +119,60 @@ export async function updatePlan(id: string, input: PlanInput, workspaceId = "de
   return plan
 }
 
+// Moves a flexible Life OS Plan's calendar-backed slot. Deliberately
+// separate from updatePlan: this is the one write path the Adaptive Day
+// capacity engine's plan.reschedule command uses, and it rejects the four
+// cases a Plan must never be moved out from under — calendar-imported
+// (externalSource), already confirmed as an Event (fulfilledBy), mid
+// calendar-occurrence review (reconciliationStatus), or completed. See
+// docs/ADAPTIVE_DAY_PLAN.md §2.
+export async function reschedulePlan(
+  id: string,
+  input: { scheduledStart: unknown; scheduledEnd?: unknown },
+  workspaceId = "default-workspace",
+  actor?: GraphEventActor & AuditActor,
+) {
+  const { db } = await import("@life-os/db")
+  const existing = await db.plan.findFirst({
+    where: { id, workspaceId },
+    select: { id: true, status: true, externalSource: true, reconciliationStatus: true, fulfilledBy: { select: { id: true } } },
+  })
+  if (!existing) throw new PlanError("Plan not found", "not_found")
+  if (existing.externalSource) throw new PlanError("Calendar-imported Plans cannot be rescheduled here", "validation")
+  if (existing.fulfilledBy) throw new PlanError("This Plan is already confirmed as an Event", "validation")
+  if (existing.reconciliationStatus) throw new PlanError("This Plan is mid calendar-occurrence review", "validation")
+  if (existing.status === PlanStatus.completed) throw new PlanError("Completed Plans cannot be rescheduled", "validation")
+
+  const scheduledStart = requiredDate(input.scheduledStart, "scheduledStart")
+  const scheduledEnd = input.scheduledEnd !== undefined ? requiredDate(input.scheduledEnd, "scheduledEnd") : null
+  if (scheduledEnd && scheduledEnd <= scheduledStart) {
+    throw new PlanError("scheduledEnd must be after scheduledStart", "validation")
+  }
+
+  const plan = await db.$transaction(async tx => {
+    const updated = await tx.plan.update({ where: { id }, data: { scheduledStart, scheduledEnd } })
+    await publishGraphEvent(tx, {
+      workspaceId,
+      subjectType: "Plan",
+      subjectId: id,
+      eventType: "plan.reschedule",
+      actor,
+      idempotencyKey: `plan-reschedule:${id}:${scheduledStart.toISOString()}`,
+      payload: { scheduledStart: scheduledStart.toISOString(), scheduledEnd: scheduledEnd?.toISOString() ?? null },
+    })
+    return updated
+  })
+
+  await writeAuditLog({
+    actor,
+    action: "plan.reschedule",
+    targetType: "plan",
+    targetId: id,
+    metadata: { scheduledStart: scheduledStart.toISOString(), scheduledEnd: scheduledEnd?.toISOString() ?? null },
+  })
+  return plan
+}
+
 export async function deletePlan(id: string, workspaceId = "default-workspace", actor?: GraphEventActor & AuditActor) {
   const { db } = await import("@life-os/db")
   const existing = await db.plan.findFirst({ where: { id, workspaceId }, select: { id: true } })
@@ -143,6 +197,12 @@ export async function deletePlan(id: string, workspaceId = "default-workspace", 
 function requiredString(value: unknown, field: string): string {
   if (typeof value !== "string" || !value.trim()) throw new PlanError(`${field} is required`, "validation")
   return value.trim()
+}
+
+function requiredDate(value: unknown, field: string): Date {
+  const date = value instanceof Date ? value : typeof value === "string" ? new Date(value) : null
+  if (!date || Number.isNaN(date.getTime())) throw new PlanError(`${field} must be a valid date`, "validation")
+  return date
 }
 
 function optionalString(value: unknown): string | null {
