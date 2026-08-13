@@ -445,6 +445,25 @@ export type PlanResource = z.infer<typeof planResourceContract>
 export const plansPageContract = cursorPageContract(planResourceContract)
 export type PlansPage = z.infer<typeof plansPageContract>
 
+export const auditLogResourceContract = z.object({
+  id,
+  createdAt: z.iso.datetime(),
+  action: z.string(),
+  targetType: z.string(),
+  targetId: z.string().nullable(),
+  actorType: z.string(),
+  actorId: z.string().nullable(),
+  actorLabel: z.string().nullable(),
+  metadata: z.unknown().nullable(),
+  user: z.object({ id, email: z.string(), name: z.string().nullable() }).strict().nullable(),
+  apiKey: z.object({ id, name: z.string(), keyPrefix: z.string() }).strict().nullable(),
+  person: z.object({ id, first: z.string(), last: z.string() }).strict().nullable(),
+}).strict()
+export type AuditLogResource = z.infer<typeof auditLogResourceContract>
+
+export const auditLogPageContract = cursorPageContract(auditLogResourceContract)
+export type AuditLogPage = z.infer<typeof auditLogPageContract>
+
 // Keyset pagination envelope — never offset. See packages/domain's interaction
 // stream (moving here in Phase A3) for why: OFFSET N makes the database walk
 // and discard N rows before returning anything, so page 100 costs a hundred

@@ -561,10 +561,14 @@ People and Event lists; the Interaction stream already has that index.
 no-UI, API-key-only deployable app (`api.lacollecteur.com`) that's the
 intended long-term home for cross-app resources. Its first M5 verticals are
 `/v1/people` + `/v1/people/:id`, `/v1/plans` + `/v1/plans/:id`, and
-`/v1/rules` + `/v1/rules/:id` + `/v1/rules/:id/test`: scoped API keys can
-page, search, create, read, update, or delete each resource only inside
-their own workspace. The wire shapes come from `@life-os/contracts`, and list
-reads use `(date, id)` keyset cursors instead of offsets. The People profile
+`/v1/rules` + `/v1/rules/:id` + `/v1/rules/:id/test`. It also owns bounded
+`GET /v1/audit-log` reads and database-backed `GET /v1/files/:id` downloads.
+Scoped API keys can page, search, create, read, update, or delete supported
+resources only inside their own workspace. The JSON wire shapes come from
+`@life-os/contracts`, and list reads use compound keyset cursors instead of
+offsets: `(date, id)` for People and Plans, and `(createdAt, id)` for audit
+rows. Audit filtering supports action, actor type, target type, and target id.
+The People profile
 response deliberately excludes internal search and workspace-ownership fields;
 a client loads the person's timeline separately from
 `/v1/stream?personId=...`, keeping the profile read bounded. Plan writes also
@@ -576,6 +580,14 @@ read/write — that scope is already seeded into `Permission`/`Role` rows by
 for no present benefit. Standing integration tests create two disposable
 workspaces and prove one workspace's key cannot read, mutate, parent,
 person-link, test, or delete records in the other.
+
+The canonical file route requires `files.read`, resolves the `ImportedFile`
+inside the caller's workspace, sanitizes the download filename, and serves only
+content stored in the database. Machine-local legacy file paths are intentionally
+not portable to the central API host. Persons keeps its old file route for
+backward compatibility and local-path fallback, but that helper now requires the
+authenticated workspace id and scopes its database lookup accordingly; a valid
+file id from another workspace is treated as missing.
 
 The central API also serves `/v1/stream` + `/v1/stream/aggregate` (moved from Persons'
 `interaction-stream.ts`, unchanged logic) and `/v1/review-items` +

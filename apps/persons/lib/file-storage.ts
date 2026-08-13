@@ -25,8 +25,8 @@ export async function storeFile(filename: string, format: string, content: strin
  * Retrieve raw file content.
  * Handles both new DB-stored files and legacy local-filesystem files.
  */
-export async function getFileContent(id: string): Promise<{ filename: string; content: string; format: string } | null> {
-  const file = await db.importedFile.findUnique({ where: { id } })
+export async function getFileContent(id: string, workspaceId: string): Promise<{ filename: string; content: string; format: string } | null> {
+  const file = await db.importedFile.findFirst({ where: { id, workspaceId } })
   if (!file) return null
 
   // New style: content stored in DB

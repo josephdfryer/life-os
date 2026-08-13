@@ -5,10 +5,11 @@ import { getFileContent } from "@/lib/file-storage"
 type Params = { params: Promise<{ id: string }> }
 
 export async function GET(req: NextRequest, { params }: Params) {
-  if (!(await authorizeApiRequest(req, "files.read"))) return unauthorized()
+  const auth = await authorizeApiRequest(req, "files.read")
+  if (!auth) return unauthorized()
   const { id } = await params
 
-  const file = await getFileContent(id)
+  const file = await getFileContent(id, auth.workspaceId)
   if (!file) return NextResponse.json({ error: "File not found" }, { status: 404 })
 
   return new NextResponse(file.content, {

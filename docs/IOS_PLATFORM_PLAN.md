@@ -1,6 +1,6 @@
 # Life OS iOS Platform Plan
 
-Status: implementation in progress — M2 backend complete; M5 People and Plans API slices started
+Status: implementation in progress — M2 backend complete; M5 canonical API slices underway
 Date: 2026-08-12
 Supersedes the app-topology portions of `docs/COMPANION_ARCHITECTURE.md` and
 `docs/LEVEL_UP_ADAPTIVE_WORKOUT_PLAN.md`. The engineering content of both documents
@@ -517,15 +517,19 @@ M5's backend half can run in parallel with M2–M4 — it is server work with no
 dependency, and it is the long pole for anything saleable.
 
 Implementation note (2026-08-12): M2's backend slice is complete. M5 now has
-canonical People, Plan, and Rule verticals in `apps/api`: `/v1/people`,
+canonical People, Plan, Rule, audit-log, and stored-file verticals in `apps/api`: `/v1/people`,
 `/v1/people/:id`, `/v1/plans`, `/v1/plans/:id`, `/v1/rules`, `/v1/rules/:id`,
-and `/v1/rules/:id/test`, with shared request/response contracts, keyset
-pagination, and cross-workspace read and mutation isolation tests. Plan
+`/v1/rules/:id/test`, `/v1/audit-log`, and `/v1/files/:id`, with shared
+request/response contracts where a JSON wire shape exists, keyset pagination,
+and cross-workspace read and mutation isolation tests. Audit-log reads use an
+`(createdAt, id)` cursor and bounded filters. The central file route serves only
+database-backed content; it does not attempt to read a legacy path on the API
+host. Plan
 parent references are workspace-validated at the shared command boundary.
 Rules reuses the existing `rules.manage` scope rather than introducing a
 read/write split not backed by the seeded permission catalog. The legacy
 Persons routes remain in place while the remaining resources (contacts,
-dedupe, events, files, gmail, imports, inbox, audit-log) move in bounded
+dedupe, events, gmail, imports, inbox) move in bounded
 slices and response-compatible forwarding is proved. Event-primitive
 migration also needs an explicit access-scope decision first: today's
 `events.read` names the raw GraphEvent ledger, not the Event primitive, and

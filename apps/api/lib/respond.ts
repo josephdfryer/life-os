@@ -7,6 +7,7 @@ import { AccessError } from "@life-os/access"
 import { WorkoutCommandError } from "@life-os/level-up"
 import { PeopleApiError } from "./people"
 import { PlansApiError } from "./plans"
+import { AuditLogApiError } from "./audit-log"
 
 // Every error apps/api returns uses one shape — { error: { code, message,
 // details? } } — validated against packages/contracts' errorEnvelopeContract
@@ -47,6 +48,9 @@ export function handleRouteError(error: unknown) {
   }
   if (error instanceof PlanError || error instanceof PlansApiError) {
     return errorResponse(error.code === "not_found" ? 404 : 400, error.code, error.message)
+  }
+  if (error instanceof AuditLogApiError) {
+    return errorResponse(400, error.code, error.message)
   }
   if (error instanceof TheoryError) {
     const status = error.code === "not_found" ? 404 : error.code === "conflict" ? 409 : error.code === "provider" ? 502 : 400
