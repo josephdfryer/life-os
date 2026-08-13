@@ -66,6 +66,15 @@ export async function refreshTodaysBrief(
   return generateAndPersistBrief(workspaceId, day, timezone, ownerPersonId, actor)
 }
 
+// A specific day's preserved brief, read-only — for viewing a past day via
+// Home's day selector. Never generates; a day with no brief simply returns
+// null (nothing to show, not an error).
+export async function getAdaptiveDayBriefForDay(workspaceId: string, day: string) {
+  const { db } = await import("@life-os/db")
+  const brief = await db.adaptiveDayBrief.findFirst({ where: { workspaceId, day, status: "current" }, include: BRIEF_INCLUDE })
+  return brief ? formatBrief(brief) : null
+}
+
 // Historical days show their preserved brief and outcomes read-only — the
 // "current" brief for a past day is its final, authoritative record (past
 // days are never auto-regenerated; only "today" is).

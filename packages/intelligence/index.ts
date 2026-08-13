@@ -55,6 +55,7 @@ export { generateAdaptiveDayBrief, ADAPTIVE_DAY_RULES_VERSION } from "./src/adap
 export {
   getOrGenerateTodaysBrief,
   refreshTodaysBrief,
+  getAdaptiveDayBriefForDay,
   listAdaptiveDayBriefs,
   acceptAdaptiveIntervention,
   editAndAcceptAdaptiveIntervention,

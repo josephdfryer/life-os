@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server"
 import { db } from "@life-os/db"
 import { workspaceForHomeRequest } from "@/lib/request-access"
-import { auth } from "@/auth"
+import { resolveWorkspaceOwner } from "@/lib/owner"
 import { ensureStateDefinitionInTransaction, recordStateInTransaction } from "@life-os/domain"
 import { runRulesForTarget } from "@life-os/automation"
 
@@ -10,10 +10,7 @@ const TYPES = ["energy", "mood", "stress"] as const
 export async function POST(request: Request) {
   const workspaceId = await workspaceForHomeRequest()
   if (!workspaceId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-  const session = await auth()
-  const owner = session?.user?.email
-    ? await db.user.findUnique({ where: { email: session.user.email }, select: { id: true, personId: true } })
-    : await db.user.findFirst({ where: { workspaceMemberships: { some: { workspaceId, role: "owner", status: "active" } } }, select: { id: true, personId: true } })
+  const owner = await resolveWorkspaceOwner(workspaceId)
   if (!owner?.personId) return NextResponse.json({ error: "Connect the workspace owner to a Person before recording personal States." }, { status: 409 })
   const ownerPersonId = owner.personId
   const body = await request.json().catch(() => null) as { values?: Record<string, unknown>; note?: unknown; slot?: unknown } | null

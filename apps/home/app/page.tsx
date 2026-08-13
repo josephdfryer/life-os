@@ -12,6 +12,7 @@ import NudgesWidget from '../components/NudgesWidget'
 import PrepareWidget from '../components/PrepareWidget'
 import QuickCapture from '../components/QuickCapture'
 import ReconciliationWidget from '../components/ReconciliationWidget'
+import CapacityBriefWidget from '../components/CapacityBriefWidget'
 import CheckIn from '../components/CheckIn'
 import WeeklyReview from '../components/WeeklyReview'
 import CommunicationsReviewWidget from '../components/CommunicationsReviewWidget'
@@ -120,6 +121,10 @@ async function HomePageContent({
         <QuickCapture />
 
         <DayReviewNavigation day={reviewDay} tz={tz} />
+
+        <Suspense fallback={<WidgetSkeleton />}>
+          <CapacityBriefWidget workspaceId={workspaceId} day={reviewDay} tz={tz} />
+        </Suspense>
 
         {hourInTz < 12 && <CheckIn slot="morning" />}
 
