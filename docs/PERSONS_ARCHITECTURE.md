@@ -559,17 +559,33 @@ People and Event lists; the Interaction stream already has that index.
 
 **`apps/api` is now the canonical `/v1` surface**, not Persons — a separate,
 no-UI, API-key-only deployable app (`api.lacollecteur.com`) that's the
-intended long-term home for cross-app resources. It currently serves
-`/v1/stream` + `/v1/stream/aggregate` (moved from Persons'
+intended long-term home for cross-app resources. Its first M5 verticals are
+`/v1/people` + `/v1/people/:id` and `/v1/plans` + `/v1/plans/:id`: scoped API
+keys can page, search, create, read, update, or delete each resource only inside
+their own workspace. The wire shapes come from `@life-os/contracts`, and list
+reads use `(date, id)` keyset cursors instead of offsets. The People profile
+response deliberately excludes internal search and workspace-ownership fields;
+a client loads the person's timeline separately from
+`/v1/stream?personId=...`, keeping the profile read bounded. Plan writes also
+validate both Person and parent-Plan references against the caller's workspace,
+preventing a valid foreign ID from creating a cross-tenant graph edge. Standing
+integration tests create two disposable workspaces and prove one workspace's
+key cannot read, mutate, parent, or person-link records in the other.
+
+The central API also serves `/v1/stream` + `/v1/stream/aggregate` (moved from Persons'
 `interaction-stream.ts`, unchanged logic) and `/v1/review-items` +
 `/v1/review-items/:id` + `/v1/review-items/bulk-dismiss` (the `ReviewItem`
 inbox described above). Persons' own `/api/v1/interactions` and
 `/api/v1/interactions/aggregate` routes now forward to `apps/api` with
 `Deprecation`/`Link: rel="canonical"` headers rather than running the logic
-locally, kept for backward compatibility. Resources that are still
-genuinely Persons-specific (people and imports) stay on
-Persons' own `/api/v1/*` — only the resources other apps need to read
-independent of Persons moved.
+locally, kept for backward compatibility. Persons' existing People and Plan
+routes also remain live during M5; they do not forward yet because their legacy
+offset/total envelopes and wider response rows are not wire-compatible with the
+new bounded contracts. Imports and the remaining Persons resources will move in
+later bounded slices rather than one high-risk route rewrite. The Event
+primitive is also deliberately waiting on scope vocabulary: `events.read`
+currently authorizes the raw GraphEvent ledger, not life Event records, and no
+`events.write` scope exists.
 
 Access administration has moved out of Persons entirely. Home `/admin` owns
 the API-key, role, user-role, approved-email, audit, and system-health UI. Its

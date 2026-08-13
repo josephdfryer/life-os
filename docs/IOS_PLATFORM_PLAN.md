@@ -1,6 +1,6 @@
 # Life OS iOS Platform Plan
 
-Status: planning session output, decisions recorded — implementation not yet started
+Status: implementation in progress — M2 backend complete; M5 People and Plans API slices started
 Date: 2026-08-12
 Supersedes the app-topology portions of `docs/COMPANION_ARCHITECTURE.md` and
 `docs/LEVEL_UP_ADAPTIVE_WORKOUT_PLAN.md`. The engineering content of both documents
@@ -515,6 +515,17 @@ contracts, engine work, `LifeOSKit`, feature packages, and Simulator builds.
 
 M5's backend half can run in parallel with M2–M4 — it is server work with no Apple
 dependency, and it is the long pole for anything saleable.
+
+Implementation note (2026-08-12): M2's backend slice is complete. M5 now has
+canonical People and Plan verticals in `apps/api`: `/v1/people`,
+`/v1/people/:id`, `/v1/plans`, and `/v1/plans/:id`, with shared
+request/response contracts, keyset pagination, and cross-workspace read and
+mutation isolation tests. Plan parent references are workspace-validated at the
+shared command boundary. The legacy Persons routes remain in place while the
+remaining resources move in bounded slices and response-compatible forwarding
+is proved. Event-primitive migration also needs an explicit access-scope
+decision first: today's `events.read` names the raw GraphEvent ledger, not the
+Event primitive, and there is no corresponding `events.write` scope.
 
 ---
 

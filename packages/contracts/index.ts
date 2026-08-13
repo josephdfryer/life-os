@@ -249,6 +249,122 @@ export const errorEnvelopeContract = z.object({
 }).strict()
 export type ErrorEnvelope = z.infer<typeof errorEnvelopeContract>
 
+// Canonical People API contracts. These are intentionally narrower than the
+// Prisma Person row: search-only fields and workspace ownership never become
+// part of the public resource shape. A native client can render a profile from
+// this contract and load its timeline separately from /v1/stream?personId=...
+// without depending on apps/persons internals.
+const nullableText = z.string().max(20_000).nullable()
+const personFieldsContract = z.object({
+  first: z.string().trim().min(1).max(200),
+  last: z.string().trim().max(200).optional().nullable(),
+  nickname: z.string().trim().max(200).optional().nullable(),
+  title: z.string().trim().max(500).optional().nullable(),
+  headline: z.string().trim().max(2_000).optional().nullable(),
+  company: z.string().trim().max(500).optional().nullable(),
+  emails: z.array(z.string().trim().min(1).max(512)).max(500).optional(),
+  phones: z.array(z.string().trim().min(1).max(100)).max(500).optional(),
+  birthday: z.string().trim().max(32).optional().nullable(),
+  closeness: z.number().int().min(1).max(4).optional(),
+  tags: stringList.optional(),
+  values: stringList.optional(),
+  notes: nullableText.optional(),
+  location: z.string().trim().max(2_000).optional().nullable(),
+  linkedin: z.string().trim().max(2_000).optional().nullable(),
+  twitter: z.string().trim().max(2_000).optional().nullable(),
+  website: z.string().trim().max(2_000).optional().nullable(),
+  facebook: z.string().trim().max(2_000).optional().nullable(),
+  instagram: z.string().trim().max(2_000).optional().nullable(),
+  color: z.string().trim().max(64).optional().nullable(),
+  colorSoft: z.string().trim().max(64).optional().nullable(),
+}).strict()
+
+export const personCreateContract = personFieldsContract
+export type PersonCreateInput = z.infer<typeof personCreateContract>
+
+export const personUpdateContract = personFieldsContract.partial().refine(
+  value => Object.keys(value).length > 0,
+  { message: "At least one field is required." },
+)
+export type PersonUpdateInput = z.infer<typeof personUpdateContract>
+
+export const personResourceContract = z.object({
+  id,
+  createdAt: z.iso.datetime(),
+  updatedAt: z.iso.datetime(),
+  first: z.string(),
+  last: z.string(),
+  nickname: z.string().nullable(),
+  title: z.string().nullable(),
+  headline: z.string().nullable(),
+  company: z.string().nullable(),
+  emails: z.array(z.string()),
+  phones: z.array(z.string()),
+  birthday: z.string().nullable(),
+  closeness: z.number().int(),
+  tags: z.array(z.string()),
+  values: z.array(z.string()),
+  notes: z.string().nullable(),
+  location: z.string().nullable(),
+  linkedin: z.string().nullable(),
+  twitter: z.string().nullable(),
+  website: z.string().nullable(),
+  facebook: z.string().nullable(),
+  instagram: z.string().nullable(),
+  color: z.string().nullable(),
+  colorSoft: z.string().nullable(),
+}).strict()
+export type PersonResource = z.infer<typeof personResourceContract>
+
+export const peoplePageContract = cursorPageContract(personResourceContract)
+export type PeoplePage = z.infer<typeof peoplePageContract>
+
+export const planStatusContract = z.enum(["draft", "active", "blocked", "completed", "abandoned"])
+
+const planFieldsContract = z.object({
+  personId: id.optional().nullable(),
+  text: z.string().trim().min(1).max(20_000),
+  timescale: z.string().trim().max(500).optional().nullable(),
+  successSignals: z.array(z.string().trim().min(1).max(2_000)).max(500).optional().nullable(),
+  parentId: id.optional().nullable(),
+  status: planStatusContract.optional(),
+}).strict()
+
+export const planCreateContract = planFieldsContract
+export type PlanCreateInput = z.infer<typeof planCreateContract>
+
+export const planUpdateContract = planFieldsContract.partial().refine(
+  value => Object.keys(value).length > 0,
+  { message: "At least one field is required." },
+)
+export type PlanUpdateInput = z.infer<typeof planUpdateContract>
+
+export const planResourceContract = z.object({
+  id,
+  createdAt: z.iso.datetime(),
+  personId: id.nullable(),
+  text: z.string(),
+  timescale: z.string().nullable(),
+  successSignals: z.array(z.string()),
+  status: planStatusContract,
+  dueOn: z.iso.datetime().nullable(),
+  deferCount: z.number().int().nonnegative(),
+  completedAt: z.iso.datetime().nullable(),
+  parentId: id.nullable(),
+  scheduledStart: z.iso.datetime().nullable(),
+  scheduledEnd: z.iso.datetime().nullable(),
+  placeId: id.nullable(),
+  externalSource: z.string().nullable(),
+  externalInstanceId: z.string().nullable(),
+  reconciliationStatus: z.string().nullable(),
+  reconciledAt: z.iso.datetime().nullable(),
+  sourceNoteId: id.nullable(),
+}).strict()
+export type PlanResource = z.infer<typeof planResourceContract>
+
+export const plansPageContract = cursorPageContract(planResourceContract)
+export type PlansPage = z.infer<typeof plansPageContract>
+
 // Keyset pagination envelope — never offset. See packages/domain's interaction
 // stream (moving here in Phase A3) for why: OFFSET N makes the database walk
 // and discard N rows before returning anything, so page 100 costs a hundred

@@ -12,6 +12,9 @@ const workspaceId = "plans-integration-workspace"
 async function main() {
   await db.workspace.create({ data: { id: workspaceId, name: "Plans integration", slug: workspaceId } })
   const person = await db.person.create({ data: { workspaceId, first: "Integration", last: "Person" } })
+  const foreignWorkspaceId = `${workspaceId}-foreign`
+  await db.workspace.create({ data: { id: foreignWorkspaceId, name: "Plans integration foreign", slug: foreignWorkspaceId } })
+  const foreignParent = await db.plan.create({ data: { workspaceId: foreignWorkspaceId, text: "Foreign parent" } })
 
   // ── create: defaults to active status, links a real Person, publishes a GraphEvent ──
   const created = await createPlan({ personId: person.id, text: "Follow up next week" }, workspaceId, { type: "system" })
@@ -33,12 +36,27 @@ async function main() {
     (error: unknown) => error instanceof PlanError && error.code === "not_found",
   )
 
+  // ── create: a parent Plan must belong to the same workspace ──
+  await assert.rejects(
+    () => createPlan({ text: "Cross-workspace child", parentId: foreignParent.id }, workspaceId),
+    (error: unknown) => error instanceof PlanError && error.code === "not_found",
+  )
+
   // ── update: status transition publishes its own GraphEvent ──
   const updated = await updatePlan(created.id, { status: "completed" }, workspaceId)
   assert.equal(updated.status, "completed")
   const updateEvents = await db.graphEvent.findMany({ where: { workspaceId, subjectType: "Plan", subjectId: created.id, eventType: "plan.update" } })
   assert.equal(updateEvents.length, 1)
   assert.deepEqual(JSON.parse(updateEvents[0].payload).fields, ["status"])
+
+  await assert.rejects(
+    () => updatePlan(created.id, { parentId: foreignParent.id }, workspaceId),
+    (error: unknown) => error instanceof PlanError && error.code === "not_found",
+  )
+  await assert.rejects(
+    () => updatePlan(created.id, { parentId: created.id }, workspaceId),
+    (error: unknown) => error instanceof PlanError && error.code === "validation",
+  )
 
   // ── update: a not-found id 404s ──
   await assert.rejects(
@@ -57,6 +75,8 @@ async function main() {
   )
 
   console.log("All plans integration assertions passed.")
+
+  await db.workspace.delete({ where: { id: foreignWorkspaceId } })
 }
 
 main()

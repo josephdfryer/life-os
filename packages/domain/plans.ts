@@ -37,9 +37,14 @@ export type PlanInput = {
 export async function createPlan(input: PlanInput, workspaceId = "default-workspace", actor?: GraphEventActor & AuditActor) {
   const { db } = await import("@life-os/db")
   const personId = optionalString(input.personId)
+  const parentId = optionalString(input.parentId)
   if (personId) {
     const person = await db.person.findFirst({ where: { id: personId, workspaceId }, select: { id: true } })
     if (!person) throw new PlanError("Person not found", "not_found")
+  }
+  if (parentId) {
+    const parent = await db.plan.findFirst({ where: { id: parentId, workspaceId }, select: { id: true } })
+    if (!parent) throw new PlanError("Parent plan not found", "not_found")
   }
 
   const plan = await db.$transaction(async tx => {
@@ -51,7 +56,7 @@ export async function createPlan(input: PlanInput, workspaceId = "default-worksp
         timescale: optionalString(input.timescale),
         successSignals: Array.isArray(input.successSignals) ? jsonList(optionalStringArray(input.successSignals)) : null,
         status: input.status !== undefined ? validPlanStatus(input.status) : PlanStatus.active,
-        parentId: optionalString(input.parentId),
+        parentId,
       },
     })
 
@@ -89,6 +94,11 @@ export async function updatePlan(id: string, input: PlanInput, workspaceId = "de
   if (typeof patch.personId === "string") {
     const person = await db.person.findFirst({ where: { id: patch.personId, workspaceId }, select: { id: true } })
     if (!person) throw new PlanError("Person not found", "not_found")
+  }
+  if (typeof patch.parentId === "string") {
+    if (patch.parentId === id) throw new PlanError("A plan cannot be its own parent", "validation")
+    const parent = await db.plan.findFirst({ where: { id: patch.parentId, workspaceId }, select: { id: true } })
+    if (!parent) throw new PlanError("Parent plan not found", "not_found")
   }
 
   const plan = await db.$transaction(async tx => {
