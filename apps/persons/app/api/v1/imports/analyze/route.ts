@@ -61,7 +61,8 @@ Respond ONLY with a JSON array, no markdown:
 }
 
 export async function POST(req: NextRequest) {
-  if (!(await authorizeApiRequest(req, "ingest.write"))) return unauthorized()
+  const auth = await authorizeApiRequest(req, "ingest.write")
+  if (!auth) return unauthorized()
 
   try {
     const body = await req.json()
@@ -71,7 +72,12 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "content is required" }, { status: 400 })
     }
 
+    // Scoped to this API key's workspace so Claude never sees (and this
+    // response never leaks) another tenant's contacts — matches
+    // apps/persons/app/api/v1/ingest/route.ts's existing protection, which
+    // this route was missing.
     const existingContacts = await db.person.findMany({
+      where: { workspaceId: auth.workspaceId },
       select: { id: true, first: true, last: true, title: true, headline: true, emails: true, phones: true },
     })
 
