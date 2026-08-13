@@ -277,6 +277,140 @@ export type EntityCursorPage = z.infer<typeof entityCursorPageContract>
 // same value flows from the HTTP header into the event the command publishes.
 export const idempotencyKeyContract = z.string().trim().min(1).max(256)
 
+// Native companion protocol. These records are intentionally normalized and
+// bounded: source database rows, file paths, attachments, audio, raw GPS
+// pings, and granular HealthKit samples are not valid wire payloads.
+export const devicePlatformContract = z.enum(["macos", "ios"])
+export const deviceSourceContract = z.enum([
+  "imessage", "whatsapp", "call_history", "healthkit", "location",
+  "photos", "voice_journal", "documents",
+])
+export const deviceScopeContract = z.enum(["device.ingest", "device.heartbeat", "device.self"])
+
+const healthMetricContract = z.object({
+  key: z.string().trim().min(1).max(128),
+  value: z.number().finite(),
+}).strict()
+
+const deviceRecordContract = z.discriminatedUnion("type", [
+  z.object({
+    type: z.literal("health.daily"),
+    day: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+    metrics: z.array(healthMetricContract).min(1).max(128),
+  }).strict(),
+  z.object({
+    type: z.literal("health.workout"),
+    workoutType: z.string().trim().min(1).max(128),
+    startedAt: z.string().datetime({ offset: true }),
+    endedAt: z.string().datetime({ offset: true }).nullable(),
+    durationSeconds: z.number().nonnegative().max(604_800).nullable(),
+    energyKcal: z.number().nonnegative().max(100_000).nullable(),
+    distanceMeters: z.number().nonnegative().max(10_000_000).nullable(),
+  }).strict(),
+  z.object({
+    type: z.literal("location.visit"),
+    startedAt: z.string().datetime({ offset: true }),
+    endedAt: z.string().datetime({ offset: true }).nullable(),
+    latitude: z.number().min(-90).max(90),
+    longitude: z.number().min(-180).max(180),
+    horizontalAccuracyMeters: z.number().nonnegative().max(100_000),
+    placeName: z.string().trim().min(1).max(500).nullable(),
+  }).strict(),
+  z.object({
+    type: z.literal("communication.message"),
+    channel: z.enum(["imessage", "whatsapp", "call"]),
+    direction: z.enum(["incoming", "outgoing", "missed"]),
+    contactName: z.string().trim().min(1).max(500).nullable(),
+    contactHandle: z.string().trim().min(1).max(500).nullable(),
+    text: z.string().max(50_000).nullable(),
+    durationSeconds: z.number().nonnegative().max(604_800).nullable(),
+  }).strict(),
+  z.object({
+    type: z.literal("document.metadata"),
+    filename: z.string().trim().min(1).max(500),
+    mimeType: z.string().trim().min(1).max(256).nullable(),
+    sizeBytes: z.number().int().nonnegative().max(10_000_000_000),
+    checksum: z.string().trim().min(16).max(256),
+    extractedText: z.string().max(100_000).nullable(),
+  }).strict(),
+  z.object({
+    type: z.literal("photo.metadata"),
+    capturedAt: z.string().datetime({ offset: true }),
+    mediaType: z.enum(["photo", "video"]),
+    favorite: z.boolean(),
+    latitude: z.number().min(-90).max(90).nullable(),
+    longitude: z.number().min(-180).max(180).nullable(),
+    caption: z.string().max(10_000).nullable(),
+  }).strict(),
+  z.object({
+    type: z.literal("voice.transcript"),
+    recordedAt: z.string().datetime({ offset: true }),
+    durationSeconds: z.number().nonnegative().max(604_800).nullable(),
+    transcript: z.string().trim().min(1).max(100_000),
+  }).strict(),
+])
+export { deviceRecordContract }
+export type DeviceRecord = z.infer<typeof deviceRecordContract>
+
+export const deviceIngestItemContract = z.object({
+  deviceId: id,
+  source: deviceSourceContract,
+  sourceId: z.string().trim().min(1).max(512),
+  schemaVersion: z.literal(1),
+  observedAt: z.string().datetime({ offset: true }),
+  record: deviceRecordContract,
+}).strict().superRefine((item, context) => {
+  const expectedSource: Record<DeviceRecord["type"], z.infer<typeof deviceSourceContract>> = {
+    "health.daily": "healthkit", "health.workout": "healthkit", "location.visit": "location",
+    "communication.message": item.record.type === "communication.message" ? ({ imessage: "imessage", whatsapp: "whatsapp", call: "call_history" } as const)[item.record.channel] : "imessage",
+    "document.metadata": "documents", "photo.metadata": "photos", "voice.transcript": "voice_journal",
+  }
+  if (item.source !== expectedSource[item.record.type]) context.addIssue({ code: "custom", path: ["source"], message: "source does not match normalized record type" })
+  if (item.record.type === "health.daily") {
+    const keys = item.record.metrics.map(metric => metric.key)
+    if (new Set(keys).size !== keys.length) context.addIssue({ code: "custom", path: ["record", "metrics"], message: "health metric keys must be unique within a day" })
+  }
+})
+export type DeviceIngestItemInput = z.infer<typeof deviceIngestItemContract>
+
+export const deviceIngestBatchContract = z.object({
+  batchId: z.string().trim().min(1).max(256),
+  schemaVersion: z.literal(1),
+  items: z.array(deviceIngestItemContract).min(1).max(200),
+}).strict()
+export type DeviceIngestBatchInput = z.infer<typeof deviceIngestBatchContract>
+
+export const deviceIngestResultContract = z.object({
+  sourceId: z.string(),
+  status: z.enum(["accepted", "duplicate", "retryable", "rejected"]),
+  resultType: z.string().nullable(),
+  resultId: z.string().nullable(),
+  errorCode: z.string().nullable(),
+}).strict()
+
+export const deviceHeartbeatContract = z.object({
+  appVersion: z.string().trim().min(1).max(64),
+  sources: z.array(z.object({
+    source: deviceSourceContract,
+    enabled: z.boolean(),
+    permissionStatus: z.enum(["unknown", "not_requested", "granted", "limited", "denied", "revoked", "unsupported"]),
+    healthStatus: z.enum(["unknown", "healthy", "paused", "degraded", "error", "unsupported"]),
+    lastSuccessAt: z.string().datetime({ offset: true }).nullable(),
+    lastErrorCode: z.string().regex(/^[a-z0-9][a-z0-9_.-]{0,127}$/).nullable(),
+    schemaVersion: z.literal(1),
+  }).strict()).max(32),
+}).strict()
+
+export const deviceExchangeContract = z.object({
+  code: z.string().trim().min(1).max(512),
+  codeVerifier: z.string().trim().min(43).max(128),
+  deviceId: id,
+}).strict()
+
+export const deviceRefreshContract = z.object({
+  refreshToken: z.string().trim().min(1).max(512),
+}).strict()
+
 export const reviewItemStatusContract = z.enum([
   "pending", "accepted", "edited_accepted", "dismissed", "superseded", "failed",
 ])

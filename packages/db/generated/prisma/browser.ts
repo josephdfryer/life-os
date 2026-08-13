@@ -43,6 +43,31 @@ export type Person = Prisma.PersonModel
  */
 export type User = Prisma.UserModel
 /**
+ * Model Device
+ * 
+ */
+export type Device = Prisma.DeviceModel
+/**
+ * Model DeviceSource
+ * 
+ */
+export type DeviceSource = Prisma.DeviceSourceModel
+/**
+ * Model DeviceCredential
+ * 
+ */
+export type DeviceCredential = Prisma.DeviceCredentialModel
+/**
+ * Model DeviceAuthorization
+ * 
+ */
+export type DeviceAuthorization = Prisma.DeviceAuthorizationModel
+/**
+ * Model DeviceIngestItem
+ * 
+ */
+export type DeviceIngestItem = Prisma.DeviceIngestItemModel
+/**
  * Model Role
  * 
  */

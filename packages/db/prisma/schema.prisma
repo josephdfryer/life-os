@@ -92,6 +92,9 @@ model Workspace {
   graphEvents          GraphEvent[]
   reviewItems          ReviewItem[]
   lifeModelSnapshots   LifeModelSnapshot[]
+  devices              Device[]
+  deviceAuthorizations DeviceAuthorization[]
+  deviceIngestItems    DeviceIngestItem[]
 
   @@index([ownerUserId])
   @@index([status])
@@ -223,9 +226,115 @@ model User {
   gmailConnections     GmailConnection[]
   eraConnections       EraConnection[]
   connections          Connection[]
+  deviceAuthorizations DeviceAuthorization[]
 
   @@index([email])
   @@index([status])
+}
+
+// Device trust and collection records are infrastructure, not Life OS
+// primitives. They describe which owned endpoint supplied normalized facts;
+// raw source databases, files, samples, and GPS pings never belong here.
+model Device {
+  id             String   @id @default(cuid())
+  workspaceId    String
+  workspace      Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  platform       String
+  displayName    String
+  appVersion     String
+  lastSeenAt     DateTime?
+  revokedAt      DateTime?
+  sources        DeviceSource[]
+  credentials    DeviceCredential[]
+  authorizations DeviceAuthorization[]
+  ingestItems    DeviceIngestItem[]
+
+  @@index([workspaceId, createdAt])
+  @@index([workspaceId, revokedAt])
+}
+
+model DeviceSource {
+  id               String   @id @default(cuid())
+  deviceId         String
+  device           Device   @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  source           String
+  enabled          Boolean  @default(false)
+  permissionStatus String   @default("unknown")
+  healthStatus     String   @default("unknown")
+  lastSuccessAt    DateTime?
+  lastErrorCode    String?
+  schemaVersion    Int      @default(1)
+
+  @@unique([deviceId, source])
+  @@index([deviceId, enabled])
+}
+
+model DeviceCredential {
+  id               String   @id @default(cuid())
+  deviceId         String
+  device           Device   @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  refreshTokenHash String   @unique
+  accessTokenHash  String   @unique
+  accessExpiresAt  DateTime
+  refreshExpiresAt DateTime
+  scopes           String
+  lastUsedAt       DateTime?
+  revokedAt        DateTime?
+
+  @@index([deviceId, revokedAt])
+  @@index([accessExpiresAt])
+  @@index([refreshExpiresAt])
+}
+
+model DeviceAuthorization {
+  id            String    @id @default(cuid())
+  workspaceId   String
+  workspace     Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  userId        String
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  deviceId      String
+  device        Device    @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+  createdAt     DateTime  @default(now())
+  codeHash      String    @unique
+  codeChallenge String
+  redirectUri   String
+  expiresAt     DateTime
+  consumedAt    DateTime?
+
+  @@index([workspaceId, createdAt])
+  @@index([deviceId, expiresAt])
+}
+
+// One durable server receipt per stable source record. A client may replay an
+// item indefinitely; the unique key makes the effect exactly-once.
+model DeviceIngestItem {
+  id            String    @id @default(cuid())
+  workspaceId   String
+  workspace     Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  deviceId      String
+  device        Device    @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  source        String
+  sourceId      String
+  recordType    String
+  schemaVersion Int
+  observedAt    DateTime
+  payloadHash   String
+  status        String
+  resultType    String?
+  resultId      String?
+  errorCode     String?
+
+  @@unique([workspaceId, source, sourceId])
+  @@index([deviceId, createdAt])
+  @@index([workspaceId, status, createdAt])
 }
 
 model Role {

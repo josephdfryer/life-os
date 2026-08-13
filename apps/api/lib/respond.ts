@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server"
 import { errorEnvelopeContract } from "@life-os/contracts"
-import { InteractionStreamError, AcceptStagedInteractionError, ReviewItemError } from "@life-os/domain"
+import { InteractionStreamError, AcceptStagedInteractionError, ReviewItemError, StateError } from "@life-os/domain"
 import { LifeModelError, TheoryError } from "@life-os/intelligence"
 import { RuleError } from "@life-os/automation"
 import { AccessError } from "@life-os/access"
@@ -34,6 +34,9 @@ export function handleRouteError(error: unknown) {
     return errorResponse(error.code === "not_found" ? 404 : 400, error.code, error.message)
   }
   if (error instanceof ReviewItemError) {
+    return errorResponse(error.code === "not_found" ? 404 : 400, error.code, error.message)
+  }
+  if (error instanceof StateError) {
     return errorResponse(error.code === "not_found" ? 404 : 400, error.code, error.message)
   }
   if (error instanceof TheoryError) {

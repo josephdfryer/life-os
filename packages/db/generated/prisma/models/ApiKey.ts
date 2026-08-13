@@ -625,10 +625,6 @@ export type ApiKeyUncheckedUpdateManyWithoutCreatedByUserNestedInput = {
   deleteMany?: Prisma.ApiKeyScalarWhereInput | Prisma.ApiKeyScalarWhereInput[]
 }
 
-export type NullableDateTimeFieldUpdateOperationsInput = {
-  set?: Date | string | null
-}
-
 export type ApiKeyCreateNestedOneWithoutScopesInput = {
   create?: Prisma.XOR<Prisma.ApiKeyCreateWithoutScopesInput, Prisma.ApiKeyUncheckedCreateWithoutScopesInput>
   connectOrCreate?: Prisma.ApiKeyCreateOrConnectWithoutScopesInput

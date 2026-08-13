@@ -694,10 +694,6 @@ export type EraAccountLinkUncheckedUpdateManyWithoutConnectionNestedInput = {
   deleteMany?: Prisma.EraAccountLinkScalarWhereInput | Prisma.EraAccountLinkScalarWhereInput[]
 }
 
-export type BoolFieldUpdateOperationsInput = {
-  set?: boolean
-}
-
 export type EraAccountLinkCreateNestedOneWithoutTransactionLinksInput = {
   create?: Prisma.XOR<Prisma.EraAccountLinkCreateWithoutTransactionLinksInput, Prisma.EraAccountLinkUncheckedCreateWithoutTransactionLinksInput>
   connectOrCreate?: Prisma.EraAccountLinkCreateOrConnectWithoutTransactionLinksInput

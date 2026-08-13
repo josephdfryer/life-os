@@ -5,7 +5,8 @@
   "main": "./index.ts",
   "types": "./index.ts",
   "exports": {
-    ".": "./index.ts"
+    ".": "./index.ts",
+    "./device": "./device.ts"
   },
   "scripts": {
     "test": "tsx --test tests/*.test.ts",

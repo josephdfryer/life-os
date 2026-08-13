@@ -56,6 +56,11 @@ export const ModelName = {
   ApprovedEmail: 'ApprovedEmail',
   Person: 'Person',
   User: 'User',
+  Device: 'Device',
+  DeviceSource: 'DeviceSource',
+  DeviceCredential: 'DeviceCredential',
+  DeviceAuthorization: 'DeviceAuthorization',
+  DeviceIngestItem: 'DeviceIngestItem',
   Role: 'Role',
   Permission: 'Permission',
   UserRole: 'UserRole',
@@ -226,6 +231,92 @@ export const UserScalarFieldEnum = {
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+export const DeviceScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  platform: 'platform',
+  displayName: 'displayName',
+  appVersion: 'appVersion',
+  lastSeenAt: 'lastSeenAt',
+  revokedAt: 'revokedAt'
+} as const
+
+export type DeviceScalarFieldEnum = (typeof DeviceScalarFieldEnum)[keyof typeof DeviceScalarFieldEnum]
+
+
+export const DeviceSourceScalarFieldEnum = {
+  id: 'id',
+  deviceId: 'deviceId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  source: 'source',
+  enabled: 'enabled',
+  permissionStatus: 'permissionStatus',
+  healthStatus: 'healthStatus',
+  lastSuccessAt: 'lastSuccessAt',
+  lastErrorCode: 'lastErrorCode',
+  schemaVersion: 'schemaVersion'
+} as const
+
+export type DeviceSourceScalarFieldEnum = (typeof DeviceSourceScalarFieldEnum)[keyof typeof DeviceSourceScalarFieldEnum]
+
+
+export const DeviceCredentialScalarFieldEnum = {
+  id: 'id',
+  deviceId: 'deviceId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  refreshTokenHash: 'refreshTokenHash',
+  accessTokenHash: 'accessTokenHash',
+  accessExpiresAt: 'accessExpiresAt',
+  refreshExpiresAt: 'refreshExpiresAt',
+  scopes: 'scopes',
+  lastUsedAt: 'lastUsedAt',
+  revokedAt: 'revokedAt'
+} as const
+
+export type DeviceCredentialScalarFieldEnum = (typeof DeviceCredentialScalarFieldEnum)[keyof typeof DeviceCredentialScalarFieldEnum]
+
+
+export const DeviceAuthorizationScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  userId: 'userId',
+  deviceId: 'deviceId',
+  createdAt: 'createdAt',
+  codeHash: 'codeHash',
+  codeChallenge: 'codeChallenge',
+  redirectUri: 'redirectUri',
+  expiresAt: 'expiresAt',
+  consumedAt: 'consumedAt'
+} as const
+
+export type DeviceAuthorizationScalarFieldEnum = (typeof DeviceAuthorizationScalarFieldEnum)[keyof typeof DeviceAuthorizationScalarFieldEnum]
+
+
+export const DeviceIngestItemScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  deviceId: 'deviceId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  source: 'source',
+  sourceId: 'sourceId',
+  recordType: 'recordType',
+  schemaVersion: 'schemaVersion',
+  observedAt: 'observedAt',
+  payloadHash: 'payloadHash',
+  status: 'status',
+  resultType: 'resultType',
+  resultId: 'resultId',
+  errorCode: 'errorCode'
+} as const
+
+export type DeviceIngestItemScalarFieldEnum = (typeof DeviceIngestItemScalarFieldEnum)[keyof typeof DeviceIngestItemScalarFieldEnum]
 
 
 export const RoleScalarFieldEnum = {

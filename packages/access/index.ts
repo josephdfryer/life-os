@@ -1,6 +1,8 @@
 import { createHash } from "node:crypto"
 import { db, WorkspaceRole } from "@life-os/db"
 
+export * from "./device"
+
 export type DomainActor = {
   type: "user" | "api_key" | "system"
   id?: string | null
@@ -85,6 +87,8 @@ export const DEFAULT_PERMISSIONS = [
   // Track C (docs/adr/0003-connection-model.md): the unified Connections hub.
   { scope: "connections.read", description: "Read third-party account connection status (Calendar, Gmail, Era)" },
   { scope: "connections.manage", description: "Connect, reconnect, or disconnect third-party accounts" },
+  { scope: "devices.read", description: "Read registered companion devices and connector health" },
+  { scope: "devices.manage", description: "Revoke companion devices" },
 ] as const
 
 export const DEFAULT_ROLES = [
@@ -103,6 +107,7 @@ export const DEFAULT_ROLES = [
       "notes.read", "notes.write", "plans.read", "plans.write",
       "states.read", "states.write", "groups.read", "groups.write", "items.read", "items.write",
       "connections.read", "connections.manage",
+      "devices.read", "devices.manage",
     ],
   },
   {
@@ -116,6 +121,7 @@ export const DEFAULT_ROLES = [
       "notes.read", "notes.write", "plans.read", "plans.write",
       "states.read", "states.write", "groups.read", "groups.write", "items.read", "items.write",
       "connections.read",
+      "devices.read",
     ],
   },
   {
@@ -127,6 +133,7 @@ export const DEFAULT_ROLES = [
       "stream.read", "review.read", "automations.read", "intelligence.read", "events.read",
       "notes.read", "plans.read", "states.read", "groups.read", "items.read",
       "connections.read",
+      "devices.read",
     ],
   },
   {
