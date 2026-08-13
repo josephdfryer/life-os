@@ -531,13 +531,20 @@ Interaction writes likewise validate Person, Event, and source-file references
 inside the caller's workspace, and atomically create the backing Event,
 participant edges, Interaction, and GraphEvent.
 Rules reuses the existing `rules.manage` scope rather than introducing a
-read/write split not backed by the seeded permission catalog. The legacy
-Persons routes remain in place while the remaining resources (contacts,
-dedupe, events, gmail, imports, inbox) move in bounded
-slices and response-compatible forwarding is proved. Event-primitive
-migration also needs an explicit access-scope decision first: today's
-`events.read` names the raw GraphEvent ledger, not the Event primitive, and
-there is no corresponding `events.write` scope.
+read/write split not backed by the seeded permission catalog. Contacts and
+Inbox are decided as permanent app-local surfaces, not a queued forwarding
+slice — see docs/PERSONS_ARCHITECTURE.md for why (different consumption
+pattern for Contacts; Inbox's presentation enrichment has no place in a
+cross-primitive canonical resource, and both already read the same
+underlying data as their canonical counterparts). Dedupe, merge, and
+people-merge stay app-local and destructive — not moved. Gmail sync,
+imports, and ingest remain unmoved because they're Anthropic/Google
+integrations hardcoded to a single owner (ingest's system prompt names
+Joseph Fryer directly); moving them means genuinely rebuilding the
+personalization, not relocating a route. Event-primitive migration also
+needs an explicit access-scope decision first: today's `events.read` names
+the raw GraphEvent ledger, not the Event primitive, and there is no
+corresponding `events.write` scope.
 
 ---
 

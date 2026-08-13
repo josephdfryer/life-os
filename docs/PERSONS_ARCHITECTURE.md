@@ -616,12 +616,45 @@ forward yet because their legacy
 offset/total envelopes and wider response rows are not wire-compatible with the
 new bounded contracts. Persons' legacy audit-log route does forward when the
 central API is configured, but first adapts the canonical cursor page back to
-the historical nested `data.logs` envelope and relation-id fields. Imports and
-the remaining Persons resources will move in
-later bounded slices rather than one high-risk route rewrite. The Event
+the historical nested `data.logs` envelope and relation-id fields. The Event
 primitive is also deliberately waiting on scope vocabulary: `events.read`
 currently authorizes the raw GraphEvent ledger, not life Event records, and no
 `events.write` scope exists.
+
+**Contacts and Inbox are staying app-local permanently — not a queued M5
+slice.** Both were flagged as needing a "compatibility mapping" before they
+could forward; on inspection, forwarding would be the wrong move for either,
+not merely pending work:
+
+- **`/api/v1/contacts/:id`** returns a full person page in one response —
+  profile plus every embedded `Interaction` (with resolved `Event` and
+  `sourceFile`) plus every `Plan` — because it backs a single server-rendered
+  page load. Canonical `/v1/people/:id` deliberately returns only the bounded
+  profile; a client walks the timeline separately through
+  `/v1/stream?personId=...`, which is already paginated and workspace-scoped.
+  These aren't the same resource at two envelopes; they're two different
+  consumption patterns (one big page-load fetch vs. a bounded profile plus a
+  separately paginated timeline), and only the second is appropriate for a
+  native or external client.
+- **`/api/v1/inbox`** and canonical `/v1/review-items` already read from the
+  same underlying proposals — `apps/persons/server/domain/inbox.ts` calls
+  `createReviewItem({ source: "staged_interaction", ... })` the moment a
+  `StagedInteraction` is created, so every inbox item already has a
+  `ReviewItem` row. What Inbox adds beyond that generic row — resolved
+  `candidatePerson` details (name, title, company, parsed emails/phones) and
+  each item's recent `RuleRun` history (rule name, trigger, matched, planned
+  vs. applied actions) — is presentation enrichment for Persons' own triage
+  UI, not part of what a cross-primitive canonical inbox should carry.
+  `listReviewItems` intentionally doesn't carry either.
+
+Both stay as permanent, purpose-built surfaces alongside the canonical bounded
+API rather than being deprecated toward it. Imports, ingest, and Gmail sync
+remain unmoved for a different reason: they are Anthropic/Google integrations
+whose current implementation is personalized to a single owner (`ingest`'s
+system prompt names Joseph Fryer directly, "do NOT create a person entry for
+him"), so moving them to the shared, multi-tenant-facing `apps/api` means
+genuinely rebuilding the personalization — resolving the calling workspace's
+owner Person at request time — not just relocating the route.
 
 Access administration has moved out of Persons entirely. Home `/admin` owns
 the API-key, role, user-role, approved-email, audit, and system-health UI. Its
