@@ -591,6 +591,10 @@ correctness.
   paths, and third-party data obligations. Explanatory; the ADR is what governs.
 - `docs/LEVEL_UP_ADAPTIVE_WORKOUT_PLAN.md` — readiness science, Oura/HealthKit/FoodNoms
   detail, test plan, rollout gates. Still authoritative for all of it.
+- `docs/ADAPTIVE_DAY_PLAN.md` (2026-08-13) — the Home-first Capacity Brief: deterministic
+  recommendation engine over existing Plans/State/Level Up data, routed through the
+  existing ReviewItem confirmation boundary. References this doc's M3/M4 health work
+  rather than restating it, and absorbs `scripts/brief`'s daily-assembly role.
 - `docs/COMPANION_ARCHITECTURE.md` — device trust, ingestion protocol, privacy
   boundary, connector lifecycle. Still authoritative; the "one collector app"
   framing is superseded here.
