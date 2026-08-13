@@ -77,6 +77,10 @@ export default async function TodayPage() {
     .filter(p => p.attentionScore >= 1.0)
     .sort((a, b) => b.attentionScore - a.attentionScore)
 
+  // Today's birthdays count as "needs attention" too — a birthday is a
+  // one-day window, not something that can wait like an overdue check-in.
+  const needsAttentionCount = birthdaysToday.length + overdue.length
+
   const date = new Date().toLocaleDateString("en-US", {
     timeZone: tz, weekday: "long", month: "long", day: "numeric",
   })
@@ -91,10 +95,17 @@ export default async function TodayPage() {
         <TimezonePicker current={tz} />
       </div>
 
-      {birthdaysToday.length > 0 && (
-        <Section title="🎂 Birthdays Today">
+      {needsAttentionCount > 0 ? (
+        <Section title={`Needs Attention (${needsAttentionCount})`}>
           {birthdaysToday.map(p => <BirthdayCard key={p.id} person={p} isToday={true} tz={tz} />)}
+          {overdue.map(p => <AttentionCard key={p.id} person={p} />)}
         </Section>
+      ) : (
+        persons.length > 0 && (
+          <div style={{ padding: "32px", background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "10px", textAlign: "center", color: "var(--ink-3)", fontSize: "13px" }}>
+            You&apos;re all caught up. No one needs attention today.
+          </div>
+        )
       )}
 
       {birthdaysThisWeek.length > 0 && (
@@ -107,18 +118,6 @@ export default async function TodayPage() {
         <Section title="Active Today">
           {activeToday.map(p => <AttentionCard key={p.id} person={p} />)}
         </Section>
-      )}
-
-      {overdue.length > 0 ? (
-        <Section title={`Overdue for Contact (${overdue.length})`}>
-          {overdue.map(p => <AttentionCard key={p.id} person={p} />)}
-        </Section>
-      ) : (
-        persons.length > 0 && (
-          <div style={{ padding: "32px", background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "10px", textAlign: "center", color: "var(--ink-3)", fontSize: "13px" }}>
-            You&apos;re all caught up. No one is overdue for a check-in.
-          </div>
-        )
       )}
 
       {persons.length === 0 && (

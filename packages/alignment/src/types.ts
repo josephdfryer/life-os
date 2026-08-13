@@ -3,7 +3,7 @@
 // graph. Never stored: every signal is computed fresh from the primitives on
 // each call, so it can never drift out of sync with the underlying truth.
 
-export type AlignmentSignalKind = "relationship_gap" | "stalled_plan"
+export type AlignmentSignalKind = "relationship_gap" | "stalled_plan" | "birthday"
 
 export type AlignmentSignal = {
   kind: AlignmentSignalKind

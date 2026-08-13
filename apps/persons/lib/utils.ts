@@ -1,4 +1,3 @@
-import { birthdayMonthDay, normalizeBirthday } from "./birthday"
 import { decodeStoredJson, storedRecord, storedStringList } from "@life-os/contracts"
 
 export function relativeTime(date: Date | string | null): string {
@@ -79,69 +78,20 @@ export function parseStoredRecord(raw: string | null | undefined, field = "store
   return decodeStoredJson(raw, storedRecord, field, {})
 }
 
-export function formatBirthday(birthday: string | null): string | null {
-  const parts = birthdayMonthDay(birthday)
-  if (!parts) return null
-  const months = [
-    "Jan","Feb","Mar","Apr","May","Jun",
-    "Jul","Aug","Sep","Oct","Nov","Dec",
-  ]
-  return `${months[parts.month - 1]} ${parts.day}`
-}
-
-function localDateParts(tz: string): { year: number; month: number; day: number } {
-  const p = new Intl.DateTimeFormat("en-US", {
-    timeZone: tz, year: "numeric", month: "numeric", day: "numeric",
-  }).formatToParts(new Date())
-  return {
-    year:  +p.find(x => x.type === "year")!.value,
-    month: +p.find(x => x.type === "month")!.value,
-    day:   +p.find(x => x.type === "day")!.value,
-  }
-}
+// formatBirthday, daysUntilBirthday, isBirthdayToday, isBirthdayThisWeek, and
+// birthdayTurningAge moved to @life-os/alignment/pure — the birthday-today
+// alignment signal (Home's Nudges widget, Persons' Needs Attention list) and
+// this app's own display logic now share one definition. Re-exported below
+// so every existing import site (`@/lib/utils`) keeps working unmodified.
+export {
+  formatBirthday,
+  daysUntilBirthday,
+  isBirthdayToday,
+  isBirthdayThisWeek,
+  birthdayTurningAge,
+} from "@life-os/alignment/pure"
 
 export function isTimestampToday(timestamp: Date | string, tz = "UTC"): boolean {
   const fmt = new Intl.DateTimeFormat("en-CA", { timeZone: tz })
   return fmt.format(new Date(timestamp)) === fmt.format(new Date())
-}
-
-export function daysUntilBirthday(birthday: string | null, tz = "UTC"): number | null {
-  const parts = birthdayMonthDay(birthday)
-  if (!parts) return null
-  const { year, month, day } = localDateParts(tz)
-  const startOfToday = new Date(year, month - 1, day)
-  let next = new Date(year, parts.month - 1, parts.day)
-  if (next < startOfToday) {
-    next = new Date(year + 1, parts.month - 1, parts.day)
-  }
-  const diff = next.getTime() - startOfToday.getTime()
-  return Math.ceil(diff / (1000 * 60 * 60 * 24))
-}
-
-export function isBirthdayToday(birthday: string | null, tz = "UTC"): boolean {
-  const parts = birthdayMonthDay(birthday)
-  if (!parts) return false
-  const { month, day } = localDateParts(tz)
-  return month === parts.month && day === parts.day
-}
-
-export function isBirthdayThisWeek(birthday: string | null, tz = "UTC"): boolean {
-  if (!birthday) return false
-  const days = daysUntilBirthday(birthday, tz)
-  return days !== null && days > 0 && days <= 7
-}
-
-export function birthdayTurningAge(birthday: string | null, tz = "UTC"): number | null {
-  const normalized = normalizeBirthday(birthday)
-  if (!normalized) return null
-  const fullMatch = normalized.match(/^(\d{4})-(\d{2})-(\d{2})$/)
-  if (!fullMatch) return null
-  const birthYear = Number(fullMatch[1])
-  const parts = birthdayMonthDay(birthday)
-  if (!parts) return null
-  const { year, month, day } = localDateParts(tz)
-  const birthdayThisYear = new Date(year, parts.month - 1, parts.day)
-  const today = new Date(year, month - 1, day)
-  const ageYear = birthdayThisYear >= today ? year : year + 1
-  return ageYear - birthYear
 }

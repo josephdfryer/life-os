@@ -1,5 +1,5 @@
 import { db } from '@life-os/db'
-import { getRelationshipGaps } from '@life-os/alignment'
+import { getRelationshipGaps, getBirthdaySignals } from '@life-os/alignment'
 import { cacheLife } from 'next/cache'
 
 interface Props {
@@ -7,13 +7,29 @@ interface Props {
   personsUrl: string
 }
 
+const MAX_NUDGES = 5
+
 export default async function NudgesWidget({ workspaceId, personsUrl }: Props) {
   'use cache'
   cacheLife({ stale: 30, revalidate: 60, expire: 300 })
   // Shared with Persons (Today page) and the assistant — one definition of
   // "overdue" instead of three apps quietly disagreeing with each other.
-  const gaps = await getRelationshipGaps(workspaceId)
-  const top = gaps.slice(0, 1)
+  // Stalled-plan signals are deliberately excluded here — this widget is
+  // "who deserves attention", the same relationship+birthday scope Persons'
+  // Today page shows, not the broader alignment feed.
+  const [gaps, birthdays] = await Promise.all([
+    getRelationshipGaps(workspaceId),
+    getBirthdaySignals(workspaceId),
+  ])
+  const combined = [...birthdays, ...gaps].sort((a, b) => b.severity - a.severity)
+  // A person can be both "birthday today" and "overdue for contact" at
+  // once — show them once, under whichever signal sorted higher.
+  const seen = new Set<string>()
+  const top = combined.filter(signal => {
+    if (!signal.personId || seen.has(signal.personId)) return !signal.personId
+    seen.add(signal.personId)
+    return true
+  }).slice(0, MAX_NUDGES)
 
   // Signals are intentionally minimal (kind/severity/subject/detail) so the
   // assistant can consume them as plain text — fetch the display-only summary
@@ -32,9 +48,15 @@ export default async function NudgesWidget({ workspaceId, personsUrl }: Props) {
 
   const nudges = top.map((signal, i) => ({ signal, summary: summaries[i]?.summary ?? null }))
 
+  const subtitle = nudges.length === 0
+    ? 'All caught up'
+    : nudges.length === 1
+    ? 'One worthwhile nudge'
+    : `${nudges.length} people need attention`
+
   return (
     <div style={card}>
-      <div style={{ color: 'var(--camel)', fontSize: '11px', marginBottom: '3px' }}>One worthwhile nudge</div>
+      <div style={{ color: 'var(--camel)', fontSize: '11px', marginBottom: '3px' }}>{subtitle}</div>
       <h2 style={{ ...heading, marginBottom: '24px' }}>Who deserves attention?</h2>
 
       {nudges.length === 0 ? (
