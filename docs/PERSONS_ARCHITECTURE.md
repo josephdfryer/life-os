@@ -560,17 +560,22 @@ People and Event lists; the Interaction stream already has that index.
 **`apps/api` is now the canonical `/v1` surface**, not Persons — a separate,
 no-UI, API-key-only deployable app (`api.lacollecteur.com`) that's the
 intended long-term home for cross-app resources. Its first M5 verticals are
-`/v1/people` + `/v1/people/:id` and `/v1/plans` + `/v1/plans/:id`: scoped API
-keys can page, search, create, read, update, or delete each resource only inside
+`/v1/people` + `/v1/people/:id`, `/v1/plans` + `/v1/plans/:id`, and
+`/v1/rules` + `/v1/rules/:id` + `/v1/rules/:id/test`: scoped API keys can
+page, search, create, read, update, or delete each resource only inside
 their own workspace. The wire shapes come from `@life-os/contracts`, and list
 reads use `(date, id)` keyset cursors instead of offsets. The People profile
 response deliberately excludes internal search and workspace-ownership fields;
 a client loads the person's timeline separately from
 `/v1/stream?personId=...`, keeping the profile read bounded. Plan writes also
 validate both Person and parent-Plan references against the caller's workspace,
-preventing a valid foreign ID from creating a cross-tenant graph edge. Standing
-integration tests create two disposable workspaces and prove one workspace's
-key cannot read, mutate, parent, or person-link records in the other.
+preventing a valid foreign ID from creating a cross-tenant graph edge. Rules
+reuses the existing single `rules.manage` scope rather than splitting into
+read/write — that scope is already seeded into `Permission`/`Role` rows by
+`packages/access`, and inventing a split here would mean migrating those rows
+for no present benefit. Standing integration tests create two disposable
+workspaces and prove one workspace's key cannot read, mutate, parent,
+person-link, test, or delete records in the other.
 
 The central API also serves `/v1/stream` + `/v1/stream/aggregate` (moved from Persons'
 `interaction-stream.ts`, unchanged logic) and `/v1/review-items` +

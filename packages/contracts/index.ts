@@ -22,6 +22,86 @@ export const ruleActionContract = z.object({
 export const ruleConditionsContract = z.array(ruleConditionContract).max(100)
 export const ruleActionsContract = z.array(ruleActionContract).max(100)
 
+// apps/api's canonical /v1/rules — wire shapes for packages/automation's
+// rules.ts commands. mode/status stay loose strings rather than an enum: the
+// domain layer itself only validates non-emptiness (requiredString), and a
+// contract stricter than the domain it fronts would reject values the
+// engine already accepts.
+export const ruleInputContract = z.object({
+  name: z.string().trim().min(1).max(200),
+  description: z.string().trim().max(2_000).nullable().optional(),
+  trigger: z.string().trim().min(1).max(200),
+  status: z.string().trim().min(1).max(50).optional(),
+  priority: z.number().int().min(0).max(100_000).optional(),
+  mode: z.string().trim().min(1).max(50).optional(),
+  conditions: ruleConditionsContract.optional(),
+  actions: ruleActionsContract.optional(),
+  stopProcessing: z.boolean().optional(),
+}).strict()
+export const ruleUpdateContract = ruleInputContract.partial()
+
+export const ruleTestInputContract = z.object({
+  ruleId: id.nullable().optional(),
+  rule: ruleInputContract.partial().optional(),
+  payload: record.optional(),
+  targetType: z.string().trim().max(200).nullable().optional(),
+  targetId: z.string().trim().max(256).nullable().optional(),
+}).strict()
+
+export const ruleResourceContract = z.object({
+  id,
+  createdAt: z.string().datetime({ offset: true }),
+  updatedAt: z.string().datetime({ offset: true }),
+  name: z.string(),
+  description: z.string().nullable(),
+  trigger: z.string(),
+  status: z.string(),
+  priority: z.number(),
+  mode: z.string(),
+  conditions: ruleConditionsContract,
+  actions: ruleActionsContract,
+  stopProcessing: z.boolean(),
+  version: z.number().int(),
+  createdByUser: z.object({ id, email: z.string(), name: z.string().nullable() }).strict().nullable(),
+  lastRun: z.object({
+    createdAt: z.string().datetime({ offset: true }),
+    matched: z.boolean(),
+    status: z.string(),
+    message: z.string().nullable(),
+  }).strict().nullable(),
+}).strict()
+export type RuleResource = z.infer<typeof ruleResourceContract>
+
+export const rulesListContract = z.object({
+  rules: z.array(ruleResourceContract),
+  runCount: z.number().int(),
+}).strict()
+
+export const ruleRunResourceContract = z.object({
+  id,
+  ruleId: id,
+  ruleVersion: z.number().int(),
+  trigger: z.string(),
+  targetType: z.string().nullable(),
+  targetId: z.string().nullable(),
+  matched: z.boolean(),
+  mode: z.string(),
+  status: z.string(),
+  input: z.unknown().nullable(),
+  actionsPlanned: z.unknown().nullable(),
+  actionsApplied: z.unknown().nullable(),
+  message: z.string().nullable(),
+  causationDepth: z.number().int(),
+  createdAt: z.string().datetime({ offset: true }),
+}).strict()
+
+export const ruleTestResultContract = z.object({
+  matched: z.boolean(),
+  actionsPlanned: ruleActionsContract,
+  message: z.string(),
+  run: ruleRunResourceContract.nullable(),
+}).strict()
+
 const emailPartyContract = z.object({
   email: z.string().nullable().optional(),
   name: z.string().nullable().optional(),
