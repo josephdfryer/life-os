@@ -481,6 +481,17 @@ duplicate contacts, and limited filtering. Three of those four — dedupe, searc
 filtering — are things the Life OS graph and its existing merge/dedupe commands are
 already built to do better. Worth remembering when the wedge is eventually chosen.
 
+`docs/PERSONS_MESH_PARITY_PLAN.md` (2026-08-13) is a full screenshot-sourced
+feature audit of Mesh for iOS against Persons' actual current state — Home
+feed signal types, the Reconnect cadence system, meeting-lifecycle reminders,
+Daily Brief/Weekly Digest, automatic dedupe, public profile, per-contact
+source badges, and integration granularity — with a gap table and a
+recommended build order. Headline finding: Persons' relationship-cadence
+logic (`apps/persons/lib/person-list-presentation.ts`) already matches or
+exceeds Mesh's Reconnect, it just isn't surfaced proactively (pull via a
+filter view, not push via a feed/notification) — that's the highest-leverage
+item, not new engineering.
+
 ---
 
 ## 8. Apple Developer Program
