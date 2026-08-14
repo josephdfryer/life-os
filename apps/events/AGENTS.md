@@ -20,11 +20,31 @@ Event data lives once on the Event node. Personal layers live on Interaction edg
 - `/events` — timeline (today / upcoming / past / all)
 - `/events/[id]` — event detail + participant interactions
 - `/events/new` — manual event creation
+- `/connections` — provider-neutral Events connections hub
+- `/settings/granola` — encrypted Granola connection, manual sync, and backfill
+- `/settings/calendar` — Google Calendar account, source selection, and sync controls
+- `/groups/[id]/meetings` — deterministic company/group meeting lens
 - `/api/events` — session-authenticated CRUD
+- `/api/granola/{connect,status,sync,disconnect}` — workspace-scoped Granola operations
+- `/api/cron/granola-sync` — `CRON_SECRET`-authenticated daily reconciliation
+
+## Granola
+
+- API credentials live only as encrypted `Connection.accessTokenEncrypted` values (`kind=meetings`, `provider=granola`). Never return or log them.
+- `GranolaNoteLink` is the idempotency/provenance anchor. Provider summary and transcript live once on Event; `Event.notes` remains user-owned.
+- Attendees auto-link only through one exact normalized Person email. Unknown/ambiguous identities stage in `StagedInteraction`/`ReviewItem`; never create People or Groups silently.
+- List Notes and transcript endpoints must follow every cursor. Oversized inline transcripts fall back to the paginated transcript endpoint.
+- Verification: `npm test --workspace=events`, `npm run type-check --workspace=events`, `npm run build --workspace=events`, and root `npm run check:migrations`.
+- Operational detail and secret rotation: `docs/GRANOLA_EVENTS_RUNBOOK.md`.
 
 ## Deploy
 
 Vercel project: `life-os-events` → `events.lacollecteur.com`
+
+Events intentionally uses Next's default traced output on Vercel. Do not add
+`output: "standalone"` to `next.config.ts`: standalone copying is for
+self-hosting and conflicts with Vercel's managed Next build adapter in this
+monorepo (`next-server.js.nft.json` is consumed by the adapter).
 
 ```bash
 cp apps/events/.vercel/project.json .vercel/project.json   # after linking
@@ -41,3 +61,4 @@ Override `GOOGLE_CALENDAR_ACCOUNT_EMAIL` only when the authenticating Google
 account changes; source calendars are selected in the UI.
 
 Set the same shared auth env vars as other apps (`AUTH_SECRET`, `AUTH_COOKIE_DOMAIN`, Turso vars).
+Granola also requires `ENCRYPTION_KEY` and the daily cron requires `CRON_SECRET`.

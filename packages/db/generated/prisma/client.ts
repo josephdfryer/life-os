@@ -24,7 +24,7 @@ export * as $Enums from './enums.ts'
 export * from "./enums.ts"
 /**
  * ## Prisma Client
- * 
+ *
  * Type-safe database client for TypeScript
  * @example
  * ```
@@ -34,7 +34,7 @@ export * from "./enums.ts"
  * // Fetch zero or more Workspaces
  * const workspaces = await prisma.workspace.findMany()
  * ```
- * 
+ *
  * Read more in our [docs](https://pris.ly/d/client).
  */
 export const PrismaClient = $Class.getPrismaClientClass()
@@ -166,6 +166,11 @@ export type EraTransactionLink = Prisma.EraTransactionLinkModel
  * 
  */
 export type Connection = Prisma.ConnectionModel
+/**
+ * Model GranolaNoteLink
+ *
+ */
+export type GranolaNoteLink = Prisma.GranolaNoteLinkModel
 /**
  * Model Rule
  * 

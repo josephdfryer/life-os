@@ -43,6 +43,8 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
         orderBy: { timestamp: "asc" },
       },
       calendarLinks: { select: { externalEventId: true, provider: true } },
+      granolaNoteLinks: { select: { sourceUrl: true, remoteUpdatedAt: true }, take: 1 },
+      groupTags: { select: { id: true, name: true, groupType: true }, orderBy: { name: "asc" } },
     },
   })
 
@@ -68,6 +70,15 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
   const { date, range } = formatEventTime(new Date(event.start), event.end ? new Date(event.end) : null, tz)
   const metadata = parseEventMetadata(event.metadata)
   const htmlLink = typeof metadata?.htmlLink === "string" ? metadata.htmlLink : null
+  const granola = metadata?.granola && typeof metadata.granola === "object"
+    ? metadata.granola as Record<string, unknown>
+    : null
+  const granolaSummary = typeof granola?.summary === "string" ? granola.summary : null
+  const identityResolution = granola?.identityResolution && typeof granola.identityResolution === "object"
+    ? granola.identityResolution as Record<string, unknown>
+    : null
+  const unresolvedCount = typeof identityResolution?.unresolvedCount === "number" ? identityResolution.unresolvedCount : 0
+  const granolaLink = event.granolaNoteLinks[0]
 
   const row: React.CSSProperties = {
     display: "flex",
@@ -198,21 +209,60 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
             </span>
           </div>
         )}
+        {granolaLink?.sourceUrl && (
+          <div style={row}>
+            <span style={keyStyle}>Meeting source</span>
+            <span style={valStyle}>
+              <a href={granolaLink.sourceUrl} target="_blank" rel="noreferrer" style={{ color: "var(--accent)", textDecoration: "none" }}>
+                Open in Granola
+              </a>
+            </span>
+          </div>
+        )}
+        {event.groupTags.length > 0 && (
+          <div style={row}>
+            <span style={keyStyle}>Groups</span>
+            <span style={{ ...valStyle, display: "flex", gap: "8px", flexWrap: "wrap" }}>
+              {event.groupTags.map(group => (
+                <a key={group.id} href={`/groups/${group.id}/meetings`} style={{ color: "var(--accent)", textDecoration: "none" }}>
+                  {group.name}
+                </a>
+              ))}
+            </span>
+          </div>
+        )}
+        {unresolvedCount > 0 && (
+          <div style={row}>
+            <span style={keyStyle}>Identity review</span>
+            <span style={valStyle}>{unresolvedCount} attendee{unresolvedCount === 1 ? "" : "s"} awaiting Person matching</span>
+          </div>
+        )}
         {event.notes && (
           <div style={row}>
             <span style={keyStyle}>Notes</span>
             <span style={{ ...valStyle, whiteSpace: "pre-wrap" }}>{event.notes}</span>
           </div>
         )}
-        {event.transcript && (
-          <div style={row}>
-            <span style={keyStyle}>Transcript</span>
-            <span style={{ ...valStyle, whiteSpace: "pre-wrap", fontSize: "12px", color: "var(--ink-2)" }}>
-              {event.transcript}
-            </span>
-          </div>
-        )}
       </div>
+
+      {granolaSummary && (
+        <div style={{ marginBottom: "40px" }}>
+          <div style={sectionLabel}>Granola summary</div>
+          <div style={{ background: "var(--surface)", border: "1px solid var(--border-subtle)", borderRadius: "14px", padding: "20px", whiteSpace: "pre-wrap", fontSize: "13px", lineHeight: 1.7, color: "var(--ink-2)" }}>
+            {granolaSummary}
+          </div>
+        </div>
+      )}
+
+      {event.transcript && (
+        <div style={{ marginBottom: "40px" }}>
+          <div style={sectionLabel}>Transcript</div>
+          <details style={{ background: "var(--surface)", border: "1px solid var(--border-subtle)", borderRadius: "14px", padding: "16px 18px" }}>
+            <summary style={{ cursor: "pointer", color: "var(--ink-2)", fontSize: "13px" }}>Read full meeting transcript</summary>
+            <div style={{ whiteSpace: "pre-wrap", fontSize: "12px", color: "var(--ink-2)", lineHeight: 1.7, marginTop: "18px" }}>{event.transcript}</div>
+          </details>
+        </div>
+      )}
 
       {event.childEvents.length > 0 && (
         <div style={{ marginBottom: "40px" }}>

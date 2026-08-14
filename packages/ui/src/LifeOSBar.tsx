@@ -20,27 +20,41 @@ export interface LifeOSBarProps {
   current: LifeOSAppKey;
   /** Optional content pinned to the right (e.g. an avatar). */
   rightSlot?: React.ReactNode;
+  /** Signed-in identity shown in the satellite account menu. */
+  account?: {
+    name?: string | null;
+    email?: string | null;
+    image?: string | null;
+  };
+  /** Satellite sign-out action. Supplied by the shared auth client wrapper. */
+  onSignOut?: () => void | Promise<void>;
   style?: React.CSSProperties;
 }
 
 /**
  * LifeOSBar — the shared cross-app chrome strip.
- * Mounts above each app's own header. Gives every Life OS app a one-click
- * link back to Home plus an app switcher to jump anywhere. Hidden on /login.
+ * Mounts above each app's own header. Home exposes the full control plane;
+ * satellite apps collapse those links into one account menu. Hidden on /login.
  *
  *   <LifeOSBar current="persons" />
  */
-export function LifeOSBar({ current, rightSlot, style }: LifeOSBarProps) {
+export function LifeOSBar({ current, rightSlot, account, onSignOut, style }: LifeOSBarProps) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const [accountOpen, setAccountOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+  const accountRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     function onClick(e: MouseEvent) {
       if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+      if (accountRef.current && !accountRef.current.contains(e.target as Node)) setAccountOpen(false);
     }
     function onKey(e: KeyboardEvent) {
-      if (e.key === 'Escape') setOpen(false);
+      if (e.key === 'Escape') {
+        setOpen(false);
+        setAccountOpen(false);
+      }
     }
     document.addEventListener('mousedown', onClick);
     document.addEventListener('keydown', onKey);
@@ -55,6 +69,7 @@ export function LifeOSBar({ current, rightSlot, style }: LifeOSBarProps) {
   if (pathname === '/login' || pathname?.startsWith('/profile/')) return null;
 
   const currentApp = LIFE_OS_APPS.find(a => a.key === current) ?? LIFE_OS_APPS[0];
+  const isHome = current === 'home';
   const captureHref = current === 'home' ? '#quick-capture' : `${HOME_URL}/#quick-capture`;
   const shellHref = (path: string) => current === 'home' ? path : `${HOME_URL}${path}`;
 
@@ -182,64 +197,150 @@ export function LifeOSBar({ current, rightSlot, style }: LifeOSBarProps) {
         )}
       </div>
 
-      {/* Home control-plane navigation. Satellite apps link back to Home. */}
-      <nav
-        aria-label="Life OS sections"
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: 2,
-          overflowX: 'auto',
-          scrollbarWidth: 'none',
-        }}
-      >
-        {SHELL_NAV.map(item => {
-          const active = current === 'home' && (item.path === '/' ? pathname === '/' : pathname.startsWith(item.path));
-          return (
-            <a
-              key={item.path}
-              href={shellHref(item.path)}
-              aria-current={active ? 'page' : undefined}
+      {isHome && (
+        <>
+          <nav
+            aria-label="Life OS sections"
+            style={{ display: 'flex', alignItems: 'center', gap: 2, overflowX: 'auto', scrollbarWidth: 'none' }}
+          >
+            {SHELL_NAV.map(item => {
+              const active = item.path === '/' ? pathname === '/' : pathname.startsWith(item.path);
+              return (
+                <a
+                  key={item.path}
+                  href={shellHref(item.path)}
+                  aria-current={active ? 'page' : undefined}
+                  style={{
+                    flexShrink: 0,
+                    padding: '5px 9px',
+                    borderRadius: 'var(--radius-pill, 999px)',
+                    background: active ? 'var(--cognac-soft, rgba(181,131,90,0.12))' : 'transparent',
+                    color: active ? 'var(--cognac-deep, var(--ink-2, #524a42))' : 'var(--ink-3, #7a7268)',
+                    fontSize: 12,
+                    fontWeight: active ? 500 : 400,
+                    textDecoration: 'none',
+                    whiteSpace: 'nowrap',
+                  }}
+                >
+                  {item.label}
+                </a>
+              );
+            })}
+          </nav>
+
+          <a
+            href={captureHref}
+            aria-label="Quick capture"
+            style={{
+              marginLeft: 'auto',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 5,
+              padding: '4px 10px',
+              border: '1px solid var(--border-subtle, var(--border, rgba(0,0,0,0.08)))',
+              borderRadius: 'var(--radius-pill, 999px)',
+              color: 'var(--cognac-deep, var(--accent, #8a5a2f))',
+              fontSize: 12,
+              fontWeight: 500,
+              textDecoration: 'none',
+            }}
+          >
+            <span aria-hidden>＋</span>
+            <span>Capture</span>
+          </a>
+        </>
+      )}
+
+      {!isHome && (
+        <div ref={accountRef} style={{ marginLeft: 'auto', position: 'relative' }}>
+          <button
+            type="button"
+            aria-label="Open Life OS account menu"
+            aria-haspopup="menu"
+            aria-expanded={accountOpen}
+            onClick={() => setAccountOpen(value => !value)}
+            style={{
+              width: 30,
+              height: 30,
+              borderRadius: '50%',
+              padding: 2,
+              border: accountOpen ? '1px solid var(--cognac, #8f6b4a)' : '1px solid var(--border-subtle, var(--border, rgba(0,0,0,0.08)))',
+              background: 'var(--surface-2, #efe9df)',
+              cursor: 'pointer',
+              display: 'grid',
+              placeItems: 'center',
+              overflow: 'hidden',
+            }}
+          >
+            {account?.image ? (
+              // Plain <img>, not next/image: packages/ui is shared across apps and
+              // must not take a Next runtime dependency. No eslint-disable needed —
+              // @next/next is only registered for apps/** and no-img-element is off.
+              <img src={account.image} alt="" width={24} height={24} style={{ borderRadius: '50%', display: 'block' }} />
+            ) : (
+              <span aria-hidden style={{ fontSize: 11, color: 'var(--ink-3, #7a7268)', fontWeight: 500 }}>
+                {(account?.name?.trim() || account?.email?.trim() || 'You').slice(0, 1).toUpperCase()}
+              </span>
+            )}
+          </button>
+
+          {accountOpen && (
+            <div
+              role="menu"
               style={{
-                flexShrink: 0,
-                padding: '5px 9px',
-                borderRadius: 'var(--radius-pill, 999px)',
-                background: active ? 'var(--cognac-soft, rgba(181,131,90,0.12))' : 'transparent',
-                color: active ? 'var(--cognac-deep, var(--ink-2, #524a42))' : 'var(--ink-3, #7a7268)',
-                fontSize: 12,
-                fontWeight: active ? 500 : 400,
-                textDecoration: 'none',
-                whiteSpace: 'nowrap',
+                position: 'absolute',
+                top: 'calc(100% + 7px)',
+                right: 0,
+                width: 244,
+                background: 'var(--surface, #fff)',
+                border: '1px solid var(--border-subtle, var(--border, rgba(0,0,0,0.08)))',
+                borderRadius: 12,
+                padding: 6,
+                boxShadow: '0 8px 28px rgba(26,24,20,0.14)',
+                zIndex: 100,
               }}
             >
-              {item.label}
-            </a>
-          );
-        })}
-      </nav>
+              {(account?.name || account?.email) && (
+                <div style={{ padding: '7px 9px 8px', borderBottom: '1px solid var(--border-subtle, rgba(0,0,0,0.08))', marginBottom: 5 }}>
+                  {account?.name && <div style={{ fontSize: 12, fontWeight: 500, color: 'var(--ink, #2c2620)' }}>{account.name}</div>}
+                  {account?.email && <div style={{ fontSize: 10, color: 'var(--ink-4, #a69c90)', overflow: 'hidden', textOverflow: 'ellipsis' }}>{account.email}</div>}
+                </div>
+              )}
 
-      <a
-        href={captureHref}
-        aria-label="Quick capture"
-        style={{
-          marginLeft: 'auto',
-          display: 'inline-flex',
-          alignItems: 'center',
-          gap: 5,
-          padding: '4px 10px',
-          border: '1px solid var(--border-subtle, var(--border, rgba(0,0,0,0.08)))',
-          borderRadius: 'var(--radius-pill, 999px)',
-          color: 'var(--cognac-deep, var(--accent, #8a5a2f))',
-          fontSize: 12,
-          fontWeight: 500,
-          textDecoration: 'none',
-        }}
-      >
-        <span aria-hidden>＋</span>
-        <span>Capture</span>
-      </a>
+              {SHELL_NAV.map(item => (
+                <a key={item.path} href={shellHref(item.path)} role="menuitem" onClick={() => setAccountOpen(false)} style={accountLinkStyle}>
+                  {item.label}
+                </a>
+              ))}
+              <a href={captureHref} role="menuitem" onClick={() => setAccountOpen(false)} style={accountLinkStyle}>Capture</a>
+
+              {onSignOut && (
+                <button
+                  type="button"
+                  role="menuitem"
+                  onClick={() => onSignOut()}
+                  style={{ ...accountLinkStyle, width: '100%', border: 'none', borderTop: '1px solid var(--border-subtle, rgba(0,0,0,0.08))', borderRadius: 0, marginTop: 5, paddingTop: 10, cursor: 'pointer', fontFamily: 'inherit' }}
+                >
+                  Sign out
+                </button>
+              )}
+            </div>
+          )}
+        </div>
+      )}
 
       {rightSlot && <div style={{ display: 'flex', alignItems: 'center' }}>{rightSlot}</div>}
     </div>
   );
 }
+
+const accountLinkStyle: React.CSSProperties = {
+  display: 'block',
+  padding: '8px 9px',
+  borderRadius: 7,
+  background: 'transparent',
+  color: 'var(--ink-2, #524a42)',
+  fontSize: 12,
+  textAlign: 'left',
+  textDecoration: 'none',
+};

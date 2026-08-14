@@ -296,6 +296,7 @@ export type ConnectionWhereInput = {
   sourceId?: Prisma.StringNullableFilter<"Connection"> | string | null
   workspace?: Prisma.XOR<Prisma.WorkspaceScalarRelationFilter, Prisma.WorkspaceWhereInput>
   user?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
+  granolaNoteLinks?: Prisma.GranolaNoteLinkListRelationFilter
 }
 
 export type ConnectionOrderByWithRelationInput = {
@@ -320,6 +321,7 @@ export type ConnectionOrderByWithRelationInput = {
   sourceId?: Prisma.SortOrderInput | Prisma.SortOrder
   workspace?: Prisma.WorkspaceOrderByWithRelationInput
   user?: Prisma.UserOrderByWithRelationInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkOrderByRelationAggregateInput
 }
 
 export type ConnectionWhereUniqueInput = Prisma.AtLeast<{
@@ -347,6 +349,7 @@ export type ConnectionWhereUniqueInput = Prisma.AtLeast<{
   sourceId?: Prisma.StringNullableFilter<"Connection"> | string | null
   workspace?: Prisma.XOR<Prisma.WorkspaceScalarRelationFilter, Prisma.WorkspaceWhereInput>
   user?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
+  granolaNoteLinks?: Prisma.GranolaNoteLinkListRelationFilter
 }, "id">
 
 export type ConnectionOrderByWithAggregationInput = {
@@ -419,6 +422,7 @@ export type ConnectionCreateInput = {
   sourceId?: string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutConnectionsInput
   user?: Prisma.UserCreateNestedOneWithoutConnectionsInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutConnectionInput
 }
 
 export type ConnectionUncheckedCreateInput = {
@@ -441,6 +445,7 @@ export type ConnectionUncheckedCreateInput = {
   metadata?: string | null
   sourceTable?: string | null
   sourceId?: string | null
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutConnectionInput
 }
 
 export type ConnectionUpdateInput = {
@@ -463,6 +468,7 @@ export type ConnectionUpdateInput = {
   sourceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutConnectionsNestedInput
   user?: Prisma.UserUpdateOneWithoutConnectionsNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutConnectionNestedInput
 }
 
 export type ConnectionUncheckedUpdateInput = {
@@ -485,6 +491,7 @@ export type ConnectionUncheckedUpdateInput = {
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceTable?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutConnectionNestedInput
 }
 
 export type ConnectionCreateManyInput = {
@@ -627,6 +634,11 @@ export type ConnectionMinOrderByAggregateInput = {
   sourceId?: Prisma.SortOrder
 }
 
+export type ConnectionScalarRelationFilter = {
+  is?: Prisma.ConnectionWhereInput
+  isNot?: Prisma.ConnectionWhereInput
+}
+
 export type ConnectionCreateNestedManyWithoutWorkspaceInput = {
   create?: Prisma.XOR<Prisma.ConnectionCreateWithoutWorkspaceInput, Prisma.ConnectionUncheckedCreateWithoutWorkspaceInput> | Prisma.ConnectionCreateWithoutWorkspaceInput[] | Prisma.ConnectionUncheckedCreateWithoutWorkspaceInput[]
   connectOrCreate?: Prisma.ConnectionCreateOrConnectWithoutWorkspaceInput | Prisma.ConnectionCreateOrConnectWithoutWorkspaceInput[]
@@ -711,6 +723,20 @@ export type ConnectionUncheckedUpdateManyWithoutUserNestedInput = {
   deleteMany?: Prisma.ConnectionScalarWhereInput | Prisma.ConnectionScalarWhereInput[]
 }
 
+export type ConnectionCreateNestedOneWithoutGranolaNoteLinksInput = {
+  create?: Prisma.XOR<Prisma.ConnectionCreateWithoutGranolaNoteLinksInput, Prisma.ConnectionUncheckedCreateWithoutGranolaNoteLinksInput>
+  connectOrCreate?: Prisma.ConnectionCreateOrConnectWithoutGranolaNoteLinksInput
+  connect?: Prisma.ConnectionWhereUniqueInput
+}
+
+export type ConnectionUpdateOneRequiredWithoutGranolaNoteLinksNestedInput = {
+  create?: Prisma.XOR<Prisma.ConnectionCreateWithoutGranolaNoteLinksInput, Prisma.ConnectionUncheckedCreateWithoutGranolaNoteLinksInput>
+  connectOrCreate?: Prisma.ConnectionCreateOrConnectWithoutGranolaNoteLinksInput
+  upsert?: Prisma.ConnectionUpsertWithoutGranolaNoteLinksInput
+  connect?: Prisma.ConnectionWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ConnectionUpdateToOneWithWhereWithoutGranolaNoteLinksInput, Prisma.ConnectionUpdateWithoutGranolaNoteLinksInput>, Prisma.ConnectionUncheckedUpdateWithoutGranolaNoteLinksInput>
+}
+
 export type ConnectionCreateWithoutWorkspaceInput = {
   id?: string
   createdAt?: Date | string
@@ -730,6 +756,7 @@ export type ConnectionCreateWithoutWorkspaceInput = {
   sourceTable?: string | null
   sourceId?: string | null
   user?: Prisma.UserCreateNestedOneWithoutConnectionsInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutConnectionInput
 }
 
 export type ConnectionUncheckedCreateWithoutWorkspaceInput = {
@@ -751,6 +778,7 @@ export type ConnectionUncheckedCreateWithoutWorkspaceInput = {
   metadata?: string | null
   sourceTable?: string | null
   sourceId?: string | null
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutConnectionInput
 }
 
 export type ConnectionCreateOrConnectWithoutWorkspaceInput = {
@@ -822,6 +850,7 @@ export type ConnectionCreateWithoutUserInput = {
   sourceTable?: string | null
   sourceId?: string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutConnectionsInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutConnectionInput
 }
 
 export type ConnectionUncheckedCreateWithoutUserInput = {
@@ -843,6 +872,7 @@ export type ConnectionUncheckedCreateWithoutUserInput = {
   metadata?: string | null
   sourceTable?: string | null
   sourceId?: string | null
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutConnectionInput
 }
 
 export type ConnectionCreateOrConnectWithoutUserInput = {
@@ -868,6 +898,110 @@ export type ConnectionUpdateWithWhereUniqueWithoutUserInput = {
 export type ConnectionUpdateManyWithWhereWithoutUserInput = {
   where: Prisma.ConnectionScalarWhereInput
   data: Prisma.XOR<Prisma.ConnectionUpdateManyMutationInput, Prisma.ConnectionUncheckedUpdateManyWithoutUserInput>
+}
+
+export type ConnectionCreateWithoutGranolaNoteLinksInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  kind: string
+  provider?: string
+  status?: string
+  accountEmail?: string | null
+  label?: string | null
+  accessTokenEncrypted?: string | null
+  refreshTokenEncrypted?: string | null
+  expiresAt?: Date | string | null
+  scope?: string | null
+  lastSyncedAt?: Date | string | null
+  lastError?: string | null
+  metadata?: string | null
+  sourceTable?: string | null
+  sourceId?: string | null
+  workspace?: Prisma.WorkspaceCreateNestedOneWithoutConnectionsInput
+  user?: Prisma.UserCreateNestedOneWithoutConnectionsInput
+}
+
+export type ConnectionUncheckedCreateWithoutGranolaNoteLinksInput = {
+  id?: string
+  workspaceId?: string
+  userId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  kind: string
+  provider?: string
+  status?: string
+  accountEmail?: string | null
+  label?: string | null
+  accessTokenEncrypted?: string | null
+  refreshTokenEncrypted?: string | null
+  expiresAt?: Date | string | null
+  scope?: string | null
+  lastSyncedAt?: Date | string | null
+  lastError?: string | null
+  metadata?: string | null
+  sourceTable?: string | null
+  sourceId?: string | null
+}
+
+export type ConnectionCreateOrConnectWithoutGranolaNoteLinksInput = {
+  where: Prisma.ConnectionWhereUniqueInput
+  create: Prisma.XOR<Prisma.ConnectionCreateWithoutGranolaNoteLinksInput, Prisma.ConnectionUncheckedCreateWithoutGranolaNoteLinksInput>
+}
+
+export type ConnectionUpsertWithoutGranolaNoteLinksInput = {
+  update: Prisma.XOR<Prisma.ConnectionUpdateWithoutGranolaNoteLinksInput, Prisma.ConnectionUncheckedUpdateWithoutGranolaNoteLinksInput>
+  create: Prisma.XOR<Prisma.ConnectionCreateWithoutGranolaNoteLinksInput, Prisma.ConnectionUncheckedCreateWithoutGranolaNoteLinksInput>
+  where?: Prisma.ConnectionWhereInput
+}
+
+export type ConnectionUpdateToOneWithWhereWithoutGranolaNoteLinksInput = {
+  where?: Prisma.ConnectionWhereInput
+  data: Prisma.XOR<Prisma.ConnectionUpdateWithoutGranolaNoteLinksInput, Prisma.ConnectionUncheckedUpdateWithoutGranolaNoteLinksInput>
+}
+
+export type ConnectionUpdateWithoutGranolaNoteLinksInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  kind?: Prisma.StringFieldUpdateOperationsInput | string
+  provider?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  accountEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  label?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accessTokenEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refreshTokenEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scope?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSyncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceTable?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutConnectionsNestedInput
+  user?: Prisma.UserUpdateOneWithoutConnectionsNestedInput
+}
+
+export type ConnectionUncheckedUpdateWithoutGranolaNoteLinksInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  kind?: Prisma.StringFieldUpdateOperationsInput | string
+  provider?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  accountEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  label?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accessTokenEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refreshTokenEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scope?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSyncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceTable?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type ConnectionCreateManyWorkspaceInput = {
@@ -910,6 +1044,7 @@ export type ConnectionUpdateWithoutWorkspaceInput = {
   sourceTable?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   user?: Prisma.UserUpdateOneWithoutConnectionsNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutConnectionNestedInput
 }
 
 export type ConnectionUncheckedUpdateWithoutWorkspaceInput = {
@@ -931,6 +1066,7 @@ export type ConnectionUncheckedUpdateWithoutWorkspaceInput = {
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceTable?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutConnectionNestedInput
 }
 
 export type ConnectionUncheckedUpdateManyWithoutWorkspaceInput = {
@@ -994,6 +1130,7 @@ export type ConnectionUpdateWithoutUserInput = {
   sourceTable?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutConnectionsNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutConnectionNestedInput
 }
 
 export type ConnectionUncheckedUpdateWithoutUserInput = {
@@ -1015,6 +1152,7 @@ export type ConnectionUncheckedUpdateWithoutUserInput = {
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceTable?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutConnectionNestedInput
 }
 
 export type ConnectionUncheckedUpdateManyWithoutUserInput = {
@@ -1039,6 +1177,35 @@ export type ConnectionUncheckedUpdateManyWithoutUserInput = {
 }
 
 
+/**
+ * Count Type ConnectionCountOutputType
+ */
+
+export type ConnectionCountOutputType = {
+  granolaNoteLinks: number
+}
+
+export type ConnectionCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  granolaNoteLinks?: boolean | ConnectionCountOutputTypeCountGranolaNoteLinksArgs
+}
+
+/**
+ * ConnectionCountOutputType without action
+ */
+export type ConnectionCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ConnectionCountOutputType
+   */
+  select?: Prisma.ConnectionCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * ConnectionCountOutputType without action
+ */
+export type ConnectionCountOutputTypeCountGranolaNoteLinksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.GranolaNoteLinkWhereInput
+}
+
 
 export type ConnectionSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1062,6 +1229,8 @@ export type ConnectionSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   sourceId?: boolean
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   user?: boolean | Prisma.Connection$userArgs<ExtArgs>
+  granolaNoteLinks?: boolean | Prisma.Connection$granolaNoteLinksArgs<ExtArgs>
+  _count?: boolean | Prisma.ConnectionCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["connection"]>
 
 export type ConnectionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1138,6 +1307,8 @@ export type ConnectionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs
 export type ConnectionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   user?: boolean | Prisma.Connection$userArgs<ExtArgs>
+  granolaNoteLinks?: boolean | Prisma.Connection$granolaNoteLinksArgs<ExtArgs>
+  _count?: boolean | Prisma.ConnectionCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ConnectionIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
@@ -1153,6 +1324,7 @@ export type $ConnectionPayload<ExtArgs extends runtime.Types.Extensions.Internal
   objects: {
     workspace: Prisma.$WorkspacePayload<ExtArgs>
     user: Prisma.$UserPayload<ExtArgs> | null
+    granolaNoteLinks: Prisma.$GranolaNoteLinkPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1570,6 +1742,7 @@ export interface Prisma__ConnectionClient<T, Null = never, ExtArgs extends runti
   readonly [Symbol.toStringTag]: "PrismaPromise"
   workspace<T extends Prisma.WorkspaceDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WorkspaceDefaultArgs<ExtArgs>>): Prisma.Prisma__WorkspaceClient<runtime.Types.Result.GetResult<Prisma.$WorkspacePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   user<T extends Prisma.Connection$userArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Connection$userArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  granolaNoteLinks<T extends Prisma.Connection$granolaNoteLinksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Connection$granolaNoteLinksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$GranolaNoteLinkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2033,6 +2206,30 @@ export type Connection$userArgs<ExtArgs extends runtime.Types.Extensions.Interna
    */
   include?: Prisma.UserInclude<ExtArgs> | null
   where?: Prisma.UserWhereInput
+}
+
+/**
+ * Connection.granolaNoteLinks
+ */
+export type Connection$granolaNoteLinksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the GranolaNoteLink
+   */
+  select?: Prisma.GranolaNoteLinkSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the GranolaNoteLink
+   */
+  omit?: Prisma.GranolaNoteLinkOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.GranolaNoteLinkInclude<ExtArgs> | null
+  where?: Prisma.GranolaNoteLinkWhereInput
+  orderBy?: Prisma.GranolaNoteLinkOrderByWithRelationInput | Prisma.GranolaNoteLinkOrderByWithRelationInput[]
+  cursor?: Prisma.GranolaNoteLinkWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.GranolaNoteLinkScalarFieldEnum | Prisma.GranolaNoteLinkScalarFieldEnum[]
 }
 
 /**

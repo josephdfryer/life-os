@@ -249,6 +249,7 @@ export type WorkspaceWhereInput = {
   eraAccountLinks?: Prisma.EraAccountLinkListRelationFilter
   eraTransactionLinks?: Prisma.EraTransactionLinkListRelationFilter
   connections?: Prisma.ConnectionListRelationFilter
+  granolaNoteLinks?: Prisma.GranolaNoteLinkListRelationFilter
   levelUpProfile?: Prisma.XOR<Prisma.LevelUpProfileNullableScalarRelationFilter, Prisma.LevelUpProfileWhereInput> | null
   levelUpTestResults?: Prisma.LevelUpTestResultListRelationFilter
   levelUpCombines?: Prisma.LevelUpCombineListRelationFilter
@@ -325,6 +326,7 @@ export type WorkspaceOrderByWithRelationInput = {
   eraAccountLinks?: Prisma.EraAccountLinkOrderByRelationAggregateInput
   eraTransactionLinks?: Prisma.EraTransactionLinkOrderByRelationAggregateInput
   connections?: Prisma.ConnectionOrderByRelationAggregateInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkOrderByRelationAggregateInput
   levelUpProfile?: Prisma.LevelUpProfileOrderByWithRelationInput
   levelUpTestResults?: Prisma.LevelUpTestResultOrderByRelationAggregateInput
   levelUpCombines?: Prisma.LevelUpCombineOrderByRelationAggregateInput
@@ -404,6 +406,7 @@ export type WorkspaceWhereUniqueInput = Prisma.AtLeast<{
   eraAccountLinks?: Prisma.EraAccountLinkListRelationFilter
   eraTransactionLinks?: Prisma.EraTransactionLinkListRelationFilter
   connections?: Prisma.ConnectionListRelationFilter
+  granolaNoteLinks?: Prisma.GranolaNoteLinkListRelationFilter
   levelUpProfile?: Prisma.XOR<Prisma.LevelUpProfileNullableScalarRelationFilter, Prisma.LevelUpProfileWhereInput> | null
   levelUpTestResults?: Prisma.LevelUpTestResultListRelationFilter
   levelUpCombines?: Prisma.LevelUpCombineListRelationFilter
@@ -507,6 +510,7 @@ export type WorkspaceCreateInput = {
   eraAccountLinks?: Prisma.EraAccountLinkCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineCreateNestedManyWithoutWorkspaceInput
@@ -582,6 +586,7 @@ export type WorkspaceUncheckedCreateInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -657,6 +662,7 @@ export type WorkspaceUpdateInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUpdateManyWithoutWorkspaceNestedInput
@@ -732,6 +738,7 @@ export type WorkspaceUncheckedUpdateInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -1125,6 +1132,20 @@ export type WorkspaceUpdateOneRequiredWithoutConnectionsNestedInput = {
   upsert?: Prisma.WorkspaceUpsertWithoutConnectionsInput
   connect?: Prisma.WorkspaceWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.WorkspaceUpdateToOneWithWhereWithoutConnectionsInput, Prisma.WorkspaceUpdateWithoutConnectionsInput>, Prisma.WorkspaceUncheckedUpdateWithoutConnectionsInput>
+}
+
+export type WorkspaceCreateNestedOneWithoutGranolaNoteLinksInput = {
+  create?: Prisma.XOR<Prisma.WorkspaceCreateWithoutGranolaNoteLinksInput, Prisma.WorkspaceUncheckedCreateWithoutGranolaNoteLinksInput>
+  connectOrCreate?: Prisma.WorkspaceCreateOrConnectWithoutGranolaNoteLinksInput
+  connect?: Prisma.WorkspaceWhereUniqueInput
+}
+
+export type WorkspaceUpdateOneRequiredWithoutGranolaNoteLinksNestedInput = {
+  create?: Prisma.XOR<Prisma.WorkspaceCreateWithoutGranolaNoteLinksInput, Prisma.WorkspaceUncheckedCreateWithoutGranolaNoteLinksInput>
+  connectOrCreate?: Prisma.WorkspaceCreateOrConnectWithoutGranolaNoteLinksInput
+  upsert?: Prisma.WorkspaceUpsertWithoutGranolaNoteLinksInput
+  connect?: Prisma.WorkspaceWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.WorkspaceUpdateToOneWithWhereWithoutGranolaNoteLinksInput, Prisma.WorkspaceUpdateWithoutGranolaNoteLinksInput>, Prisma.WorkspaceUncheckedUpdateWithoutGranolaNoteLinksInput>
 }
 
 export type WorkspaceCreateNestedOneWithoutRulesInput = {
@@ -1849,6 +1870,7 @@ export type WorkspaceCreateWithoutMembersInput = {
   eraAccountLinks?: Prisma.EraAccountLinkCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineCreateNestedManyWithoutWorkspaceInput
@@ -1923,6 +1945,7 @@ export type WorkspaceUncheckedCreateWithoutMembersInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -2013,6 +2036,7 @@ export type WorkspaceUpdateWithoutMembersInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUpdateManyWithoutWorkspaceNestedInput
@@ -2087,6 +2111,7 @@ export type WorkspaceUncheckedUpdateWithoutMembersInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -2161,6 +2186,7 @@ export type WorkspaceCreateWithoutApprovedEmailsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineCreateNestedManyWithoutWorkspaceInput
@@ -2235,6 +2261,7 @@ export type WorkspaceUncheckedCreateWithoutApprovedEmailsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -2325,6 +2352,7 @@ export type WorkspaceUpdateWithoutApprovedEmailsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUpdateManyWithoutWorkspaceNestedInput
@@ -2399,6 +2427,7 @@ export type WorkspaceUncheckedUpdateWithoutApprovedEmailsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -2473,6 +2502,7 @@ export type WorkspaceCreateWithoutPersonsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineCreateNestedManyWithoutWorkspaceInput
@@ -2547,6 +2577,7 @@ export type WorkspaceUncheckedCreateWithoutPersonsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -2637,6 +2668,7 @@ export type WorkspaceUpdateWithoutPersonsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUpdateManyWithoutWorkspaceNestedInput
@@ -2711,6 +2743,7 @@ export type WorkspaceUncheckedUpdateWithoutPersonsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -2785,6 +2818,7 @@ export type WorkspaceCreateWithoutOwnerUserInput = {
   eraAccountLinks?: Prisma.EraAccountLinkCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineCreateNestedManyWithoutWorkspaceInput
@@ -2859,6 +2893,7 @@ export type WorkspaceUncheckedCreateWithoutOwnerUserInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -2973,6 +3008,7 @@ export type WorkspaceCreateWithoutDevicesInput = {
   eraAccountLinks?: Prisma.EraAccountLinkCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineCreateNestedManyWithoutWorkspaceInput
@@ -3047,6 +3083,7 @@ export type WorkspaceUncheckedCreateWithoutDevicesInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -3137,6 +3174,7 @@ export type WorkspaceUpdateWithoutDevicesInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUpdateManyWithoutWorkspaceNestedInput
@@ -3211,6 +3249,7 @@ export type WorkspaceUncheckedUpdateWithoutDevicesInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -3285,6 +3324,7 @@ export type WorkspaceCreateWithoutDeviceAuthorizationsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineCreateNestedManyWithoutWorkspaceInput
@@ -3359,6 +3399,7 @@ export type WorkspaceUncheckedCreateWithoutDeviceAuthorizationsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -3449,6 +3490,7 @@ export type WorkspaceUpdateWithoutDeviceAuthorizationsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUpdateManyWithoutWorkspaceNestedInput
@@ -3523,6 +3565,7 @@ export type WorkspaceUncheckedUpdateWithoutDeviceAuthorizationsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -3597,6 +3640,7 @@ export type WorkspaceCreateWithoutDeviceIngestItemsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineCreateNestedManyWithoutWorkspaceInput
@@ -3671,6 +3715,7 @@ export type WorkspaceUncheckedCreateWithoutDeviceIngestItemsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -3761,6 +3806,7 @@ export type WorkspaceUpdateWithoutDeviceIngestItemsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUpdateManyWithoutWorkspaceNestedInput
@@ -3835,6 +3881,7 @@ export type WorkspaceUncheckedUpdateWithoutDeviceIngestItemsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -3908,6 +3955,7 @@ export type WorkspaceCreateWithoutApiKeysInput = {
   eraAccountLinks?: Prisma.EraAccountLinkCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineCreateNestedManyWithoutWorkspaceInput
@@ -3982,6 +4030,7 @@ export type WorkspaceUncheckedCreateWithoutApiKeysInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -4072,6 +4121,7 @@ export type WorkspaceUpdateWithoutApiKeysInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUpdateManyWithoutWorkspaceNestedInput
@@ -4146,6 +4196,7 @@ export type WorkspaceUncheckedUpdateWithoutApiKeysInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -4220,6 +4271,7 @@ export type WorkspaceCreateWithoutAuditLogsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineCreateNestedManyWithoutWorkspaceInput
@@ -4294,6 +4346,7 @@ export type WorkspaceUncheckedCreateWithoutAuditLogsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -4384,6 +4437,7 @@ export type WorkspaceUpdateWithoutAuditLogsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUpdateManyWithoutWorkspaceNestedInput
@@ -4458,6 +4512,7 @@ export type WorkspaceUncheckedUpdateWithoutAuditLogsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -4532,6 +4587,7 @@ export type WorkspaceCreateWithoutCalendarConnectionsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineCreateNestedManyWithoutWorkspaceInput
@@ -4606,6 +4662,7 @@ export type WorkspaceUncheckedCreateWithoutCalendarConnectionsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -4696,6 +4753,7 @@ export type WorkspaceUpdateWithoutCalendarConnectionsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUpdateManyWithoutWorkspaceNestedInput
@@ -4770,6 +4828,7 @@ export type WorkspaceUncheckedUpdateWithoutCalendarConnectionsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -4844,6 +4903,7 @@ export type WorkspaceCreateWithoutCalendarEventLinksInput = {
   eraAccountLinks?: Prisma.EraAccountLinkCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineCreateNestedManyWithoutWorkspaceInput
@@ -4918,6 +4978,7 @@ export type WorkspaceUncheckedCreateWithoutCalendarEventLinksInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -5008,6 +5069,7 @@ export type WorkspaceUpdateWithoutCalendarEventLinksInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUpdateManyWithoutWorkspaceNestedInput
@@ -5082,6 +5144,7 @@ export type WorkspaceUncheckedUpdateWithoutCalendarEventLinksInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -5156,6 +5219,7 @@ export type WorkspaceCreateWithoutGmailConnectionsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineCreateNestedManyWithoutWorkspaceInput
@@ -5230,6 +5294,7 @@ export type WorkspaceUncheckedCreateWithoutGmailConnectionsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -5320,6 +5385,7 @@ export type WorkspaceUpdateWithoutGmailConnectionsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUpdateManyWithoutWorkspaceNestedInput
@@ -5394,6 +5460,7 @@ export type WorkspaceUncheckedUpdateWithoutGmailConnectionsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -5468,6 +5535,7 @@ export type WorkspaceCreateWithoutGmailMessageLinksInput = {
   eraAccountLinks?: Prisma.EraAccountLinkCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineCreateNestedManyWithoutWorkspaceInput
@@ -5542,6 +5610,7 @@ export type WorkspaceUncheckedCreateWithoutGmailMessageLinksInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -5632,6 +5701,7 @@ export type WorkspaceUpdateWithoutGmailMessageLinksInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUpdateManyWithoutWorkspaceNestedInput
@@ -5706,6 +5776,7 @@ export type WorkspaceUncheckedUpdateWithoutGmailMessageLinksInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -5780,6 +5851,7 @@ export type WorkspaceCreateWithoutEraConnectionsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineCreateNestedManyWithoutWorkspaceInput
@@ -5854,6 +5926,7 @@ export type WorkspaceUncheckedCreateWithoutEraConnectionsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -5944,6 +6017,7 @@ export type WorkspaceUpdateWithoutEraConnectionsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUpdateManyWithoutWorkspaceNestedInput
@@ -6018,6 +6092,7 @@ export type WorkspaceUncheckedUpdateWithoutEraConnectionsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -6092,6 +6167,7 @@ export type WorkspaceCreateWithoutEraAccountLinksInput = {
   eraConnections?: Prisma.EraConnectionCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineCreateNestedManyWithoutWorkspaceInput
@@ -6166,6 +6242,7 @@ export type WorkspaceUncheckedCreateWithoutEraAccountLinksInput = {
   eraConnections?: Prisma.EraConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -6256,6 +6333,7 @@ export type WorkspaceUpdateWithoutEraAccountLinksInput = {
   eraConnections?: Prisma.EraConnectionUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUpdateManyWithoutWorkspaceNestedInput
@@ -6330,6 +6408,7 @@ export type WorkspaceUncheckedUpdateWithoutEraAccountLinksInput = {
   eraConnections?: Prisma.EraConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -6404,6 +6483,7 @@ export type WorkspaceCreateWithoutEraTransactionLinksInput = {
   eraConnections?: Prisma.EraConnectionCreateNestedManyWithoutWorkspaceInput
   eraAccountLinks?: Prisma.EraAccountLinkCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineCreateNestedManyWithoutWorkspaceInput
@@ -6478,6 +6558,7 @@ export type WorkspaceUncheckedCreateWithoutEraTransactionLinksInput = {
   eraConnections?: Prisma.EraConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -6568,6 +6649,7 @@ export type WorkspaceUpdateWithoutEraTransactionLinksInput = {
   eraConnections?: Prisma.EraConnectionUpdateManyWithoutWorkspaceNestedInput
   eraAccountLinks?: Prisma.EraAccountLinkUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUpdateManyWithoutWorkspaceNestedInput
@@ -6642,6 +6724,7 @@ export type WorkspaceUncheckedUpdateWithoutEraTransactionLinksInput = {
   eraConnections?: Prisma.EraConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -6716,6 +6799,7 @@ export type WorkspaceCreateWithoutConnectionsInput = {
   eraConnections?: Prisma.EraConnectionCreateNestedManyWithoutWorkspaceInput
   eraAccountLinks?: Prisma.EraAccountLinkCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineCreateNestedManyWithoutWorkspaceInput
@@ -6790,6 +6874,7 @@ export type WorkspaceUncheckedCreateWithoutConnectionsInput = {
   eraConnections?: Prisma.EraConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -6880,6 +6965,7 @@ export type WorkspaceUpdateWithoutConnectionsInput = {
   eraConnections?: Prisma.EraConnectionUpdateManyWithoutWorkspaceNestedInput
   eraAccountLinks?: Prisma.EraAccountLinkUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUpdateManyWithoutWorkspaceNestedInput
@@ -6954,6 +7040,323 @@ export type WorkspaceUncheckedUpdateWithoutConnectionsInput = {
   eraConnections?: Prisma.EraConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProfile?: Prisma.LevelUpProfileUncheckedUpdateOneWithoutWorkspaceNestedInput
+  levelUpTestResults?: Prisma.LevelUpTestResultUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpCombines?: Prisma.LevelUpCombineUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpSnapshots?: Prisma.LevelUpRatingSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpReadinessSnapshots?: Prisma.LevelUpReadinessSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
+  reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedUpdateManyWithoutWorkspaceNestedInput
+  devices?: Prisma.DeviceUncheckedUpdateManyWithoutWorkspaceNestedInput
+  deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedUpdateManyWithoutWorkspaceNestedInput
+  deviceIngestItems?: Prisma.DeviceIngestItemUncheckedUpdateManyWithoutWorkspaceNestedInput
+}
+
+export type WorkspaceCreateWithoutGranolaNoteLinksInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  name: string
+  slug: string
+  status?: string
+  autoMergeEnabled?: boolean
+  ownerUser?: Prisma.UserCreateNestedOneWithoutOwnedWorkspacesInput
+  members?: Prisma.WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
+  approvedEmails?: Prisma.ApprovedEmailCreateNestedManyWithoutWorkspaceInput
+  persons?: Prisma.PersonCreateNestedManyWithoutWorkspaceInput
+  events?: Prisma.EventCreateNestedManyWithoutWorkspaceInput
+  interactions?: Prisma.InteractionCreateNestedManyWithoutWorkspaceInput
+  plans?: Prisma.PlanCreateNestedManyWithoutWorkspaceInput
+  places?: Prisma.PlaceCreateNestedManyWithoutWorkspaceInput
+  placeNotes?: Prisma.PlaceNoteCreateNestedManyWithoutWorkspaceInput
+  notes?: Prisma.NoteCreateNestedManyWithoutWorkspaceInput
+  theorySnapshots?: Prisma.TheorySnapshotCreateNestedManyWithoutWorkspaceInput
+  groups?: Prisma.GroupCreateNestedManyWithoutWorkspaceInput
+  items?: Prisma.ItemCreateNestedManyWithoutWorkspaceInput
+  itemDefinitions?: Prisma.ItemDefinitionCreateNestedManyWithoutWorkspaceInput
+  inventoryLots?: Prisma.InventoryLotCreateNestedManyWithoutWorkspaceInput
+  supplierProfiles?: Prisma.SupplierProfileCreateNestedManyWithoutWorkspaceInput
+  purchaseOrders?: Prisma.PurchaseOrderCreateNestedManyWithoutWorkspaceInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutWorkspaceInput
+  importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
+  aiProviderCredentials?: Prisma.AiProviderCredentialCreateNestedManyWithoutWorkspaceInput
+  aiAnalysisRuns?: Prisma.AiAnalysisRunCreateNestedManyWithoutWorkspaceInput
+  noteAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunCreateNestedManyWithoutWorkspaceInput
+  lifeModelAnalysisRuns?: Prisma.LifeModelAnalysisRunCreateNestedManyWithoutWorkspaceInput
+  lifeModelClaimFeedback?: Prisma.LifeModelClaimFeedbackCreateNestedManyWithoutWorkspaceInput
+  noteSuggestions?: Prisma.NoteSuggestionCreateNestedManyWithoutWorkspaceInput
+  stagedItems?: Prisma.StagedInteractionCreateNestedManyWithoutWorkspaceInput
+  rules?: Prisma.RuleCreateNestedManyWithoutWorkspaceInput
+  ruleRuns?: Prisma.RuleRunCreateNestedManyWithoutWorkspaceInput
+  apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutWorkspaceInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutWorkspaceInput
+  calendarConnections?: Prisma.CalendarConnectionCreateNestedManyWithoutWorkspaceInput
+  calendarEventLinks?: Prisma.CalendarEventLinkCreateNestedManyWithoutWorkspaceInput
+  gmailConnections?: Prisma.GmailConnectionCreateNestedManyWithoutWorkspaceInput
+  gmailMessageLinks?: Prisma.GmailMessageLinkCreateNestedManyWithoutWorkspaceInput
+  importJobs?: Prisma.ImportJobCreateNestedManyWithoutWorkspaceInput
+  importStagedVisits?: Prisma.ImportStagedVisitCreateNestedManyWithoutWorkspaceInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonCreateNestedManyWithoutWorkspaceInput
+  assistantMessages?: Prisma.AssistantMessageCreateNestedManyWithoutWorkspaceInput
+  eraConnections?: Prisma.EraConnectionCreateNestedManyWithoutWorkspaceInput
+  eraAccountLinks?: Prisma.EraAccountLinkCreateNestedManyWithoutWorkspaceInput
+  eraTransactionLinks?: Prisma.EraTransactionLinkCreateNestedManyWithoutWorkspaceInput
+  connections?: Prisma.ConnectionCreateNestedManyWithoutWorkspaceInput
+  levelUpProfile?: Prisma.LevelUpProfileCreateNestedOneWithoutWorkspaceInput
+  levelUpTestResults?: Prisma.LevelUpTestResultCreateNestedManyWithoutWorkspaceInput
+  levelUpCombines?: Prisma.LevelUpCombineCreateNestedManyWithoutWorkspaceInput
+  levelUpSnapshots?: Prisma.LevelUpRatingSnapshotCreateNestedManyWithoutWorkspaceInput
+  levelUpTrainingSets?: Prisma.LevelUpTrainingSetCreateNestedManyWithoutWorkspaceInput
+  levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockCreateNestedManyWithoutWorkspaceInput
+  levelUpTargetBuilds?: Prisma.LevelUpTargetBuildCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
+  levelUpReadinessSnapshots?: Prisma.LevelUpReadinessSnapshotCreateNestedManyWithoutWorkspaceInput
+  graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
+  reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeCreateNestedManyWithoutWorkspaceInput
+  devices?: Prisma.DeviceCreateNestedManyWithoutWorkspaceInput
+  deviceAuthorizations?: Prisma.DeviceAuthorizationCreateNestedManyWithoutWorkspaceInput
+  deviceIngestItems?: Prisma.DeviceIngestItemCreateNestedManyWithoutWorkspaceInput
+}
+
+export type WorkspaceUncheckedCreateWithoutGranolaNoteLinksInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  name: string
+  slug: string
+  status?: string
+  ownerUserId?: string | null
+  autoMergeEnabled?: boolean
+  members?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
+  approvedEmails?: Prisma.ApprovedEmailUncheckedCreateNestedManyWithoutWorkspaceInput
+  persons?: Prisma.PersonUncheckedCreateNestedManyWithoutWorkspaceInput
+  events?: Prisma.EventUncheckedCreateNestedManyWithoutWorkspaceInput
+  interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutWorkspaceInput
+  plans?: Prisma.PlanUncheckedCreateNestedManyWithoutWorkspaceInput
+  places?: Prisma.PlaceUncheckedCreateNestedManyWithoutWorkspaceInput
+  placeNotes?: Prisma.PlaceNoteUncheckedCreateNestedManyWithoutWorkspaceInput
+  notes?: Prisma.NoteUncheckedCreateNestedManyWithoutWorkspaceInput
+  theorySnapshots?: Prisma.TheorySnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  groups?: Prisma.GroupUncheckedCreateNestedManyWithoutWorkspaceInput
+  items?: Prisma.ItemUncheckedCreateNestedManyWithoutWorkspaceInput
+  itemDefinitions?: Prisma.ItemDefinitionUncheckedCreateNestedManyWithoutWorkspaceInput
+  inventoryLots?: Prisma.InventoryLotUncheckedCreateNestedManyWithoutWorkspaceInput
+  supplierProfiles?: Prisma.SupplierProfileUncheckedCreateNestedManyWithoutWorkspaceInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutWorkspaceInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutWorkspaceInput
+  importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
+  aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedCreateNestedManyWithoutWorkspaceInput
+  aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  lifeModelAnalysisRuns?: Prisma.LifeModelAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  lifeModelClaimFeedback?: Prisma.LifeModelClaimFeedbackUncheckedCreateNestedManyWithoutWorkspaceInput
+  noteSuggestions?: Prisma.NoteSuggestionUncheckedCreateNestedManyWithoutWorkspaceInput
+  stagedItems?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutWorkspaceInput
+  rules?: Prisma.RuleUncheckedCreateNestedManyWithoutWorkspaceInput
+  ruleRuns?: Prisma.RuleRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutWorkspaceInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutWorkspaceInput
+  calendarConnections?: Prisma.CalendarConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  calendarEventLinks?: Prisma.CalendarEventLinkUncheckedCreateNestedManyWithoutWorkspaceInput
+  gmailConnections?: Prisma.GmailConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  gmailMessageLinks?: Prisma.GmailMessageLinkUncheckedCreateNestedManyWithoutWorkspaceInput
+  importJobs?: Prisma.ImportJobUncheckedCreateNestedManyWithoutWorkspaceInput
+  importStagedVisits?: Prisma.ImportStagedVisitUncheckedCreateNestedManyWithoutWorkspaceInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUncheckedCreateNestedManyWithoutWorkspaceInput
+  assistantMessages?: Prisma.AssistantMessageUncheckedCreateNestedManyWithoutWorkspaceInput
+  eraConnections?: Prisma.EraConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  eraAccountLinks?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutWorkspaceInput
+  eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedCreateNestedManyWithoutWorkspaceInput
+  connections?: Prisma.ConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProfile?: Prisma.LevelUpProfileUncheckedCreateNestedOneWithoutWorkspaceInput
+  levelUpTestResults?: Prisma.LevelUpTestResultUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpCombines?: Prisma.LevelUpCombineUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpSnapshots?: Prisma.LevelUpRatingSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpReadinessSnapshots?: Prisma.LevelUpReadinessSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
+  reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedCreateNestedManyWithoutWorkspaceInput
+  devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutWorkspaceInput
+  deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedCreateNestedManyWithoutWorkspaceInput
+  deviceIngestItems?: Prisma.DeviceIngestItemUncheckedCreateNestedManyWithoutWorkspaceInput
+}
+
+export type WorkspaceCreateOrConnectWithoutGranolaNoteLinksInput = {
+  where: Prisma.WorkspaceWhereUniqueInput
+  create: Prisma.XOR<Prisma.WorkspaceCreateWithoutGranolaNoteLinksInput, Prisma.WorkspaceUncheckedCreateWithoutGranolaNoteLinksInput>
+}
+
+export type WorkspaceUpsertWithoutGranolaNoteLinksInput = {
+  update: Prisma.XOR<Prisma.WorkspaceUpdateWithoutGranolaNoteLinksInput, Prisma.WorkspaceUncheckedUpdateWithoutGranolaNoteLinksInput>
+  create: Prisma.XOR<Prisma.WorkspaceCreateWithoutGranolaNoteLinksInput, Prisma.WorkspaceUncheckedCreateWithoutGranolaNoteLinksInput>
+  where?: Prisma.WorkspaceWhereInput
+}
+
+export type WorkspaceUpdateToOneWithWhereWithoutGranolaNoteLinksInput = {
+  where?: Prisma.WorkspaceWhereInput
+  data: Prisma.XOR<Prisma.WorkspaceUpdateWithoutGranolaNoteLinksInput, Prisma.WorkspaceUncheckedUpdateWithoutGranolaNoteLinksInput>
+}
+
+export type WorkspaceUpdateWithoutGranolaNoteLinksInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  ownerUser?: Prisma.UserUpdateOneWithoutOwnedWorkspacesNestedInput
+  members?: Prisma.WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
+  approvedEmails?: Prisma.ApprovedEmailUpdateManyWithoutWorkspaceNestedInput
+  persons?: Prisma.PersonUpdateManyWithoutWorkspaceNestedInput
+  events?: Prisma.EventUpdateManyWithoutWorkspaceNestedInput
+  interactions?: Prisma.InteractionUpdateManyWithoutWorkspaceNestedInput
+  plans?: Prisma.PlanUpdateManyWithoutWorkspaceNestedInput
+  places?: Prisma.PlaceUpdateManyWithoutWorkspaceNestedInput
+  placeNotes?: Prisma.PlaceNoteUpdateManyWithoutWorkspaceNestedInput
+  notes?: Prisma.NoteUpdateManyWithoutWorkspaceNestedInput
+  theorySnapshots?: Prisma.TheorySnapshotUpdateManyWithoutWorkspaceNestedInput
+  groups?: Prisma.GroupUpdateManyWithoutWorkspaceNestedInput
+  items?: Prisma.ItemUpdateManyWithoutWorkspaceNestedInput
+  itemDefinitions?: Prisma.ItemDefinitionUpdateManyWithoutWorkspaceNestedInput
+  inventoryLots?: Prisma.InventoryLotUpdateManyWithoutWorkspaceNestedInput
+  supplierProfiles?: Prisma.SupplierProfileUpdateManyWithoutWorkspaceNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUpdateManyWithoutWorkspaceNestedInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutWorkspaceNestedInput
+  importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
+  aiProviderCredentials?: Prisma.AiProviderCredentialUpdateManyWithoutWorkspaceNestedInput
+  aiAnalysisRuns?: Prisma.AiAnalysisRunUpdateManyWithoutWorkspaceNestedInput
+  noteAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUpdateManyWithoutWorkspaceNestedInput
+  lifeModelAnalysisRuns?: Prisma.LifeModelAnalysisRunUpdateManyWithoutWorkspaceNestedInput
+  lifeModelClaimFeedback?: Prisma.LifeModelClaimFeedbackUpdateManyWithoutWorkspaceNestedInput
+  noteSuggestions?: Prisma.NoteSuggestionUpdateManyWithoutWorkspaceNestedInput
+  stagedItems?: Prisma.StagedInteractionUpdateManyWithoutWorkspaceNestedInput
+  rules?: Prisma.RuleUpdateManyWithoutWorkspaceNestedInput
+  ruleRuns?: Prisma.RuleRunUpdateManyWithoutWorkspaceNestedInput
+  apiKeys?: Prisma.ApiKeyUpdateManyWithoutWorkspaceNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutWorkspaceNestedInput
+  calendarConnections?: Prisma.CalendarConnectionUpdateManyWithoutWorkspaceNestedInput
+  calendarEventLinks?: Prisma.CalendarEventLinkUpdateManyWithoutWorkspaceNestedInput
+  gmailConnections?: Prisma.GmailConnectionUpdateManyWithoutWorkspaceNestedInput
+  gmailMessageLinks?: Prisma.GmailMessageLinkUpdateManyWithoutWorkspaceNestedInput
+  importJobs?: Prisma.ImportJobUpdateManyWithoutWorkspaceNestedInput
+  importStagedVisits?: Prisma.ImportStagedVisitUpdateManyWithoutWorkspaceNestedInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUpdateManyWithoutWorkspaceNestedInput
+  assistantMessages?: Prisma.AssistantMessageUpdateManyWithoutWorkspaceNestedInput
+  eraConnections?: Prisma.EraConnectionUpdateManyWithoutWorkspaceNestedInput
+  eraAccountLinks?: Prisma.EraAccountLinkUpdateManyWithoutWorkspaceNestedInput
+  eraTransactionLinks?: Prisma.EraTransactionLinkUpdateManyWithoutWorkspaceNestedInput
+  connections?: Prisma.ConnectionUpdateManyWithoutWorkspaceNestedInput
+  levelUpProfile?: Prisma.LevelUpProfileUpdateOneWithoutWorkspaceNestedInput
+  levelUpTestResults?: Prisma.LevelUpTestResultUpdateManyWithoutWorkspaceNestedInput
+  levelUpCombines?: Prisma.LevelUpCombineUpdateManyWithoutWorkspaceNestedInput
+  levelUpSnapshots?: Prisma.LevelUpRatingSnapshotUpdateManyWithoutWorkspaceNestedInput
+  levelUpTrainingSets?: Prisma.LevelUpTrainingSetUpdateManyWithoutWorkspaceNestedInput
+  levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUpdateManyWithoutWorkspaceNestedInput
+  levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
+  levelUpReadinessSnapshots?: Prisma.LevelUpReadinessSnapshotUpdateManyWithoutWorkspaceNestedInput
+  graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
+  reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUpdateManyWithoutWorkspaceNestedInput
+  devices?: Prisma.DeviceUpdateManyWithoutWorkspaceNestedInput
+  deviceAuthorizations?: Prisma.DeviceAuthorizationUpdateManyWithoutWorkspaceNestedInput
+  deviceIngestItems?: Prisma.DeviceIngestItemUpdateManyWithoutWorkspaceNestedInput
+}
+
+export type WorkspaceUncheckedUpdateWithoutGranolaNoteLinksInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  ownerUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  members?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
+  approvedEmails?: Prisma.ApprovedEmailUncheckedUpdateManyWithoutWorkspaceNestedInput
+  persons?: Prisma.PersonUncheckedUpdateManyWithoutWorkspaceNestedInput
+  events?: Prisma.EventUncheckedUpdateManyWithoutWorkspaceNestedInput
+  interactions?: Prisma.InteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  plans?: Prisma.PlanUncheckedUpdateManyWithoutWorkspaceNestedInput
+  places?: Prisma.PlaceUncheckedUpdateManyWithoutWorkspaceNestedInput
+  placeNotes?: Prisma.PlaceNoteUncheckedUpdateManyWithoutWorkspaceNestedInput
+  notes?: Prisma.NoteUncheckedUpdateManyWithoutWorkspaceNestedInput
+  theorySnapshots?: Prisma.TheorySnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  groups?: Prisma.GroupUncheckedUpdateManyWithoutWorkspaceNestedInput
+  items?: Prisma.ItemUncheckedUpdateManyWithoutWorkspaceNestedInput
+  itemDefinitions?: Prisma.ItemDefinitionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  inventoryLots?: Prisma.InventoryLotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  supplierProfiles?: Prisma.SupplierProfileUncheckedUpdateManyWithoutWorkspaceNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutWorkspaceNestedInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutWorkspaceNestedInput
+  importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
+  aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedUpdateManyWithoutWorkspaceNestedInput
+  aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  lifeModelAnalysisRuns?: Prisma.LifeModelAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  lifeModelClaimFeedback?: Prisma.LifeModelClaimFeedbackUncheckedUpdateManyWithoutWorkspaceNestedInput
+  noteSuggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  stagedItems?: Prisma.StagedInteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  rules?: Prisma.RuleUncheckedUpdateManyWithoutWorkspaceNestedInput
+  ruleRuns?: Prisma.RuleRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutWorkspaceNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutWorkspaceNestedInput
+  calendarConnections?: Prisma.CalendarConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  calendarEventLinks?: Prisma.CalendarEventLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
+  gmailConnections?: Prisma.GmailConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  gmailMessageLinks?: Prisma.GmailMessageLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
+  importJobs?: Prisma.ImportJobUncheckedUpdateManyWithoutWorkspaceNestedInput
+  importStagedVisits?: Prisma.ImportStagedVisitUncheckedUpdateManyWithoutWorkspaceNestedInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUncheckedUpdateManyWithoutWorkspaceNestedInput
+  assistantMessages?: Prisma.AssistantMessageUncheckedUpdateManyWithoutWorkspaceNestedInput
+  eraConnections?: Prisma.EraConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  eraAccountLinks?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
+  eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
+  connections?: Prisma.ConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -7028,6 +7431,7 @@ export type WorkspaceCreateWithoutRulesInput = {
   eraAccountLinks?: Prisma.EraAccountLinkCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineCreateNestedManyWithoutWorkspaceInput
@@ -7102,6 +7506,7 @@ export type WorkspaceUncheckedCreateWithoutRulesInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -7192,6 +7597,7 @@ export type WorkspaceUpdateWithoutRulesInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUpdateManyWithoutWorkspaceNestedInput
@@ -7266,6 +7672,7 @@ export type WorkspaceUncheckedUpdateWithoutRulesInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -7340,6 +7747,7 @@ export type WorkspaceCreateWithoutRuleRunsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineCreateNestedManyWithoutWorkspaceInput
@@ -7414,6 +7822,7 @@ export type WorkspaceUncheckedCreateWithoutRuleRunsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -7504,6 +7913,7 @@ export type WorkspaceUpdateWithoutRuleRunsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUpdateManyWithoutWorkspaceNestedInput
@@ -7578,6 +7988,7 @@ export type WorkspaceUncheckedUpdateWithoutRuleRunsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -7652,6 +8063,7 @@ export type WorkspaceCreateWithoutStagedItemsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineCreateNestedManyWithoutWorkspaceInput
@@ -7726,6 +8138,7 @@ export type WorkspaceUncheckedCreateWithoutStagedItemsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -7816,6 +8229,7 @@ export type WorkspaceUpdateWithoutStagedItemsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUpdateManyWithoutWorkspaceNestedInput
@@ -7890,6 +8304,7 @@ export type WorkspaceUncheckedUpdateWithoutStagedItemsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -7964,6 +8379,7 @@ export type WorkspaceCreateWithoutEventsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineCreateNestedManyWithoutWorkspaceInput
@@ -8038,6 +8454,7 @@ export type WorkspaceUncheckedCreateWithoutEventsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -8128,6 +8545,7 @@ export type WorkspaceUpdateWithoutEventsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUpdateManyWithoutWorkspaceNestedInput
@@ -8202,6 +8620,7 @@ export type WorkspaceUncheckedUpdateWithoutEventsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -8276,6 +8695,7 @@ export type WorkspaceCreateWithoutInteractionsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineCreateNestedManyWithoutWorkspaceInput
@@ -8350,6 +8770,7 @@ export type WorkspaceUncheckedCreateWithoutInteractionsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -8440,6 +8861,7 @@ export type WorkspaceUpdateWithoutInteractionsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUpdateManyWithoutWorkspaceNestedInput
@@ -8514,6 +8936,7 @@ export type WorkspaceUncheckedUpdateWithoutInteractionsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -8588,6 +9011,7 @@ export type WorkspaceCreateWithoutPlansInput = {
   eraAccountLinks?: Prisma.EraAccountLinkCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineCreateNestedManyWithoutWorkspaceInput
@@ -8662,6 +9086,7 @@ export type WorkspaceUncheckedCreateWithoutPlansInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -8752,6 +9177,7 @@ export type WorkspaceUpdateWithoutPlansInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUpdateManyWithoutWorkspaceNestedInput
@@ -8826,6 +9252,7 @@ export type WorkspaceUncheckedUpdateWithoutPlansInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -8900,6 +9327,7 @@ export type WorkspaceCreateWithoutPlanExpectedPersonsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineCreateNestedManyWithoutWorkspaceInput
@@ -8974,6 +9402,7 @@ export type WorkspaceUncheckedCreateWithoutPlanExpectedPersonsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -9064,6 +9493,7 @@ export type WorkspaceUpdateWithoutPlanExpectedPersonsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUpdateManyWithoutWorkspaceNestedInput
@@ -9138,6 +9568,7 @@ export type WorkspaceUncheckedUpdateWithoutPlanExpectedPersonsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -9212,6 +9643,7 @@ export type WorkspaceCreateWithoutPlacesInput = {
   eraAccountLinks?: Prisma.EraAccountLinkCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineCreateNestedManyWithoutWorkspaceInput
@@ -9286,6 +9718,7 @@ export type WorkspaceUncheckedCreateWithoutPlacesInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -9376,6 +9809,7 @@ export type WorkspaceUpdateWithoutPlacesInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUpdateManyWithoutWorkspaceNestedInput
@@ -9450,6 +9884,7 @@ export type WorkspaceUncheckedUpdateWithoutPlacesInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -9524,6 +9959,7 @@ export type WorkspaceCreateWithoutImportJobsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineCreateNestedManyWithoutWorkspaceInput
@@ -9598,6 +10034,7 @@ export type WorkspaceUncheckedCreateWithoutImportJobsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -9688,6 +10125,7 @@ export type WorkspaceUpdateWithoutImportJobsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUpdateManyWithoutWorkspaceNestedInput
@@ -9762,6 +10200,7 @@ export type WorkspaceUncheckedUpdateWithoutImportJobsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -9836,6 +10275,7 @@ export type WorkspaceCreateWithoutImportStagedVisitsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineCreateNestedManyWithoutWorkspaceInput
@@ -9910,6 +10350,7 @@ export type WorkspaceUncheckedCreateWithoutImportStagedVisitsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -10000,6 +10441,7 @@ export type WorkspaceUpdateWithoutImportStagedVisitsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUpdateManyWithoutWorkspaceNestedInput
@@ -10074,6 +10516,7 @@ export type WorkspaceUncheckedUpdateWithoutImportStagedVisitsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -10148,6 +10591,7 @@ export type WorkspaceCreateWithoutPlaceNotesInput = {
   eraAccountLinks?: Prisma.EraAccountLinkCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineCreateNestedManyWithoutWorkspaceInput
@@ -10222,6 +10666,7 @@ export type WorkspaceUncheckedCreateWithoutPlaceNotesInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -10312,6 +10757,7 @@ export type WorkspaceUpdateWithoutPlaceNotesInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUpdateManyWithoutWorkspaceNestedInput
@@ -10386,6 +10832,7 @@ export type WorkspaceUncheckedUpdateWithoutPlaceNotesInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -10460,6 +10907,7 @@ export type WorkspaceCreateWithoutItemsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineCreateNestedManyWithoutWorkspaceInput
@@ -10534,6 +10982,7 @@ export type WorkspaceUncheckedCreateWithoutItemsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -10624,6 +11073,7 @@ export type WorkspaceUpdateWithoutItemsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUpdateManyWithoutWorkspaceNestedInput
@@ -10698,6 +11148,7 @@ export type WorkspaceUncheckedUpdateWithoutItemsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -10772,6 +11223,7 @@ export type WorkspaceCreateWithoutItemDefinitionsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineCreateNestedManyWithoutWorkspaceInput
@@ -10846,6 +11298,7 @@ export type WorkspaceUncheckedCreateWithoutItemDefinitionsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -10936,6 +11389,7 @@ export type WorkspaceUpdateWithoutItemDefinitionsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUpdateManyWithoutWorkspaceNestedInput
@@ -11010,6 +11464,7 @@ export type WorkspaceUncheckedUpdateWithoutItemDefinitionsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -11084,6 +11539,7 @@ export type WorkspaceCreateWithoutInventoryLotsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineCreateNestedManyWithoutWorkspaceInput
@@ -11158,6 +11614,7 @@ export type WorkspaceUncheckedCreateWithoutInventoryLotsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -11248,6 +11705,7 @@ export type WorkspaceUpdateWithoutInventoryLotsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUpdateManyWithoutWorkspaceNestedInput
@@ -11322,6 +11780,7 @@ export type WorkspaceUncheckedUpdateWithoutInventoryLotsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -11396,6 +11855,7 @@ export type WorkspaceCreateWithoutImportedFilesInput = {
   eraAccountLinks?: Prisma.EraAccountLinkCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineCreateNestedManyWithoutWorkspaceInput
@@ -11470,6 +11930,7 @@ export type WorkspaceUncheckedCreateWithoutImportedFilesInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -11560,6 +12021,7 @@ export type WorkspaceUpdateWithoutImportedFilesInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUpdateManyWithoutWorkspaceNestedInput
@@ -11634,6 +12096,7 @@ export type WorkspaceUncheckedUpdateWithoutImportedFilesInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -11708,6 +12171,7 @@ export type WorkspaceCreateWithoutAiProviderCredentialsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineCreateNestedManyWithoutWorkspaceInput
@@ -11782,6 +12246,7 @@ export type WorkspaceUncheckedCreateWithoutAiProviderCredentialsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -11872,6 +12337,7 @@ export type WorkspaceUpdateWithoutAiProviderCredentialsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUpdateManyWithoutWorkspaceNestedInput
@@ -11946,6 +12412,7 @@ export type WorkspaceUncheckedUpdateWithoutAiProviderCredentialsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -12020,6 +12487,7 @@ export type WorkspaceCreateWithoutAiAnalysisRunsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineCreateNestedManyWithoutWorkspaceInput
@@ -12094,6 +12562,7 @@ export type WorkspaceUncheckedCreateWithoutAiAnalysisRunsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -12184,6 +12653,7 @@ export type WorkspaceUpdateWithoutAiAnalysisRunsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUpdateManyWithoutWorkspaceNestedInput
@@ -12258,6 +12728,7 @@ export type WorkspaceUncheckedUpdateWithoutAiAnalysisRunsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -12332,6 +12803,7 @@ export type WorkspaceCreateWithoutNoteAnalysisRunsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineCreateNestedManyWithoutWorkspaceInput
@@ -12406,6 +12878,7 @@ export type WorkspaceUncheckedCreateWithoutNoteAnalysisRunsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -12496,6 +12969,7 @@ export type WorkspaceUpdateWithoutNoteAnalysisRunsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUpdateManyWithoutWorkspaceNestedInput
@@ -12570,6 +13044,7 @@ export type WorkspaceUncheckedUpdateWithoutNoteAnalysisRunsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -12644,6 +13119,7 @@ export type WorkspaceCreateWithoutTheoryAnalysisRunsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineCreateNestedManyWithoutWorkspaceInput
@@ -12718,6 +13194,7 @@ export type WorkspaceUncheckedCreateWithoutTheoryAnalysisRunsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -12808,6 +13285,7 @@ export type WorkspaceUpdateWithoutTheoryAnalysisRunsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUpdateManyWithoutWorkspaceNestedInput
@@ -12882,6 +13360,7 @@ export type WorkspaceUncheckedUpdateWithoutTheoryAnalysisRunsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -12956,6 +13435,7 @@ export type WorkspaceCreateWithoutLifeModelAnalysisRunsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineCreateNestedManyWithoutWorkspaceInput
@@ -13030,6 +13510,7 @@ export type WorkspaceUncheckedCreateWithoutLifeModelAnalysisRunsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -13120,6 +13601,7 @@ export type WorkspaceUpdateWithoutLifeModelAnalysisRunsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUpdateManyWithoutWorkspaceNestedInput
@@ -13194,6 +13676,7 @@ export type WorkspaceUncheckedUpdateWithoutLifeModelAnalysisRunsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -13268,6 +13751,7 @@ export type WorkspaceCreateWithoutNoteSuggestionsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineCreateNestedManyWithoutWorkspaceInput
@@ -13342,6 +13826,7 @@ export type WorkspaceUncheckedCreateWithoutNoteSuggestionsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -13432,6 +13917,7 @@ export type WorkspaceUpdateWithoutNoteSuggestionsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUpdateManyWithoutWorkspaceNestedInput
@@ -13506,6 +13992,7 @@ export type WorkspaceUncheckedUpdateWithoutNoteSuggestionsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -13580,6 +14067,7 @@ export type WorkspaceCreateWithoutGroupsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineCreateNestedManyWithoutWorkspaceInput
@@ -13654,6 +14142,7 @@ export type WorkspaceUncheckedCreateWithoutGroupsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -13744,6 +14233,7 @@ export type WorkspaceUpdateWithoutGroupsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUpdateManyWithoutWorkspaceNestedInput
@@ -13818,6 +14308,7 @@ export type WorkspaceUncheckedUpdateWithoutGroupsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -13892,6 +14383,7 @@ export type WorkspaceCreateWithoutSupplierProfilesInput = {
   eraAccountLinks?: Prisma.EraAccountLinkCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineCreateNestedManyWithoutWorkspaceInput
@@ -13966,6 +14458,7 @@ export type WorkspaceUncheckedCreateWithoutSupplierProfilesInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -14056,6 +14549,7 @@ export type WorkspaceUpdateWithoutSupplierProfilesInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUpdateManyWithoutWorkspaceNestedInput
@@ -14130,6 +14624,7 @@ export type WorkspaceUncheckedUpdateWithoutSupplierProfilesInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -14204,6 +14699,7 @@ export type WorkspaceCreateWithoutPurchaseOrdersInput = {
   eraAccountLinks?: Prisma.EraAccountLinkCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineCreateNestedManyWithoutWorkspaceInput
@@ -14278,6 +14774,7 @@ export type WorkspaceUncheckedCreateWithoutPurchaseOrdersInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -14368,6 +14865,7 @@ export type WorkspaceUpdateWithoutPurchaseOrdersInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUpdateManyWithoutWorkspaceNestedInput
@@ -14442,6 +14940,7 @@ export type WorkspaceUncheckedUpdateWithoutPurchaseOrdersInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -14516,6 +15015,7 @@ export type WorkspaceCreateWithoutPurchaseReceiptLinesInput = {
   eraAccountLinks?: Prisma.EraAccountLinkCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineCreateNestedManyWithoutWorkspaceInput
@@ -14590,6 +15090,7 @@ export type WorkspaceUncheckedCreateWithoutPurchaseReceiptLinesInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -14680,6 +15181,7 @@ export type WorkspaceUpdateWithoutPurchaseReceiptLinesInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUpdateManyWithoutWorkspaceNestedInput
@@ -14754,6 +15256,7 @@ export type WorkspaceUncheckedUpdateWithoutPurchaseReceiptLinesInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -14828,6 +15331,7 @@ export type WorkspaceCreateWithoutNotesInput = {
   eraAccountLinks?: Prisma.EraAccountLinkCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineCreateNestedManyWithoutWorkspaceInput
@@ -14902,6 +15406,7 @@ export type WorkspaceUncheckedCreateWithoutNotesInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -14992,6 +15497,7 @@ export type WorkspaceUpdateWithoutNotesInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUpdateManyWithoutWorkspaceNestedInput
@@ -15066,6 +15572,7 @@ export type WorkspaceUncheckedUpdateWithoutNotesInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -15140,6 +15647,7 @@ export type WorkspaceCreateWithoutTheorySnapshotsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineCreateNestedManyWithoutWorkspaceInput
@@ -15214,6 +15722,7 @@ export type WorkspaceUncheckedCreateWithoutTheorySnapshotsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -15304,6 +15813,7 @@ export type WorkspaceUpdateWithoutTheorySnapshotsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUpdateManyWithoutWorkspaceNestedInput
@@ -15378,6 +15888,7 @@ export type WorkspaceUncheckedUpdateWithoutTheorySnapshotsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -15453,6 +15964,7 @@ export type WorkspaceCreateWithoutLifeModelSnapshotsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineCreateNestedManyWithoutWorkspaceInput
@@ -15527,6 +16039,7 @@ export type WorkspaceUncheckedCreateWithoutLifeModelSnapshotsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -15617,6 +16130,7 @@ export type WorkspaceUpdateWithoutLifeModelSnapshotsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUpdateManyWithoutWorkspaceNestedInput
@@ -15691,6 +16205,7 @@ export type WorkspaceUncheckedUpdateWithoutLifeModelSnapshotsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -15764,6 +16279,7 @@ export type WorkspaceCreateWithoutLifeModelClaimFeedbackInput = {
   eraAccountLinks?: Prisma.EraAccountLinkCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineCreateNestedManyWithoutWorkspaceInput
@@ -15838,6 +16354,7 @@ export type WorkspaceUncheckedCreateWithoutLifeModelClaimFeedbackInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -15928,6 +16445,7 @@ export type WorkspaceUpdateWithoutLifeModelClaimFeedbackInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUpdateManyWithoutWorkspaceNestedInput
@@ -16002,6 +16520,7 @@ export type WorkspaceUncheckedUpdateWithoutLifeModelClaimFeedbackInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -16077,6 +16596,7 @@ export type WorkspaceCreateWithoutAdaptiveDayBriefsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineCreateNestedManyWithoutWorkspaceInput
@@ -16151,6 +16671,7 @@ export type WorkspaceUncheckedCreateWithoutAdaptiveDayBriefsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -16241,6 +16762,7 @@ export type WorkspaceUpdateWithoutAdaptiveDayBriefsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUpdateManyWithoutWorkspaceNestedInput
@@ -16315,6 +16837,7 @@ export type WorkspaceUncheckedUpdateWithoutAdaptiveDayBriefsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -16389,6 +16912,7 @@ export type WorkspaceCreateWithoutAdaptiveInterventionOutcomesInput = {
   eraAccountLinks?: Prisma.EraAccountLinkCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineCreateNestedManyWithoutWorkspaceInput
@@ -16463,6 +16987,7 @@ export type WorkspaceUncheckedCreateWithoutAdaptiveInterventionOutcomesInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -16553,6 +17078,7 @@ export type WorkspaceUpdateWithoutAdaptiveInterventionOutcomesInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUpdateManyWithoutWorkspaceNestedInput
@@ -16627,6 +17153,7 @@ export type WorkspaceUncheckedUpdateWithoutAdaptiveInterventionOutcomesInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -16700,6 +17227,7 @@ export type WorkspaceCreateWithoutAssistantMessagesInput = {
   eraAccountLinks?: Prisma.EraAccountLinkCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineCreateNestedManyWithoutWorkspaceInput
@@ -16774,6 +17302,7 @@ export type WorkspaceUncheckedCreateWithoutAssistantMessagesInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -16864,6 +17393,7 @@ export type WorkspaceUpdateWithoutAssistantMessagesInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUpdateManyWithoutWorkspaceNestedInput
@@ -16938,6 +17468,7 @@ export type WorkspaceUncheckedUpdateWithoutAssistantMessagesInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -17013,6 +17544,7 @@ export type WorkspaceCreateWithoutLevelUpProfileInput = {
   eraAccountLinks?: Prisma.EraAccountLinkCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineCreateNestedManyWithoutWorkspaceInput
   levelUpSnapshots?: Prisma.LevelUpRatingSnapshotCreateNestedManyWithoutWorkspaceInput
@@ -17087,6 +17619,7 @@ export type WorkspaceUncheckedCreateWithoutLevelUpProfileInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpSnapshots?: Prisma.LevelUpRatingSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -17177,6 +17710,7 @@ export type WorkspaceUpdateWithoutLevelUpProfileInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUpdateManyWithoutWorkspaceNestedInput
   levelUpSnapshots?: Prisma.LevelUpRatingSnapshotUpdateManyWithoutWorkspaceNestedInput
@@ -17251,6 +17785,7 @@ export type WorkspaceUncheckedUpdateWithoutLevelUpProfileInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpSnapshots?: Prisma.LevelUpRatingSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -17325,6 +17860,7 @@ export type WorkspaceCreateWithoutLevelUpTestResultsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileCreateNestedOneWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineCreateNestedManyWithoutWorkspaceInput
   levelUpSnapshots?: Prisma.LevelUpRatingSnapshotCreateNestedManyWithoutWorkspaceInput
@@ -17399,6 +17935,7 @@ export type WorkspaceUncheckedCreateWithoutLevelUpTestResultsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedCreateNestedOneWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpSnapshots?: Prisma.LevelUpRatingSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -17489,6 +18026,7 @@ export type WorkspaceUpdateWithoutLevelUpTestResultsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUpdateOneWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUpdateManyWithoutWorkspaceNestedInput
   levelUpSnapshots?: Prisma.LevelUpRatingSnapshotUpdateManyWithoutWorkspaceNestedInput
@@ -17563,6 +18101,7 @@ export type WorkspaceUncheckedUpdateWithoutLevelUpTestResultsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedUpdateOneWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpSnapshots?: Prisma.LevelUpRatingSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -17637,6 +18176,7 @@ export type WorkspaceCreateWithoutLevelUpCombinesInput = {
   eraAccountLinks?: Prisma.EraAccountLinkCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultCreateNestedManyWithoutWorkspaceInput
   levelUpSnapshots?: Prisma.LevelUpRatingSnapshotCreateNestedManyWithoutWorkspaceInput
@@ -17711,6 +18251,7 @@ export type WorkspaceUncheckedCreateWithoutLevelUpCombinesInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpSnapshots?: Prisma.LevelUpRatingSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -17801,6 +18342,7 @@ export type WorkspaceUpdateWithoutLevelUpCombinesInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUpdateManyWithoutWorkspaceNestedInput
   levelUpSnapshots?: Prisma.LevelUpRatingSnapshotUpdateManyWithoutWorkspaceNestedInput
@@ -17875,6 +18417,7 @@ export type WorkspaceUncheckedUpdateWithoutLevelUpCombinesInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpSnapshots?: Prisma.LevelUpRatingSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -17949,6 +18492,7 @@ export type WorkspaceCreateWithoutLevelUpSnapshotsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineCreateNestedManyWithoutWorkspaceInput
@@ -18023,6 +18567,7 @@ export type WorkspaceUncheckedCreateWithoutLevelUpSnapshotsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -18113,6 +18658,7 @@ export type WorkspaceUpdateWithoutLevelUpSnapshotsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUpdateManyWithoutWorkspaceNestedInput
@@ -18187,6 +18733,7 @@ export type WorkspaceUncheckedUpdateWithoutLevelUpSnapshotsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -18261,6 +18808,7 @@ export type WorkspaceCreateWithoutLevelUpTrainingSetsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineCreateNestedManyWithoutWorkspaceInput
@@ -18335,6 +18883,7 @@ export type WorkspaceUncheckedCreateWithoutLevelUpTrainingSetsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -18425,6 +18974,7 @@ export type WorkspaceUpdateWithoutLevelUpTrainingSetsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUpdateManyWithoutWorkspaceNestedInput
@@ -18499,6 +19049,7 @@ export type WorkspaceUncheckedUpdateWithoutLevelUpTrainingSetsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -18573,6 +19124,7 @@ export type WorkspaceCreateWithoutLevelUpExercisesInput = {
   eraAccountLinks?: Prisma.EraAccountLinkCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineCreateNestedManyWithoutWorkspaceInput
@@ -18647,6 +19199,7 @@ export type WorkspaceUncheckedCreateWithoutLevelUpExercisesInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -18737,6 +19290,7 @@ export type WorkspaceUpdateWithoutLevelUpExercisesInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUpdateManyWithoutWorkspaceNestedInput
@@ -18811,6 +19365,7 @@ export type WorkspaceUncheckedUpdateWithoutLevelUpExercisesInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -18885,6 +19440,7 @@ export type WorkspaceCreateWithoutLevelUpProgramsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineCreateNestedManyWithoutWorkspaceInput
@@ -18959,6 +19515,7 @@ export type WorkspaceUncheckedCreateWithoutLevelUpProgramsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -19049,6 +19606,7 @@ export type WorkspaceUpdateWithoutLevelUpProgramsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUpdateManyWithoutWorkspaceNestedInput
@@ -19123,6 +19681,7 @@ export type WorkspaceUncheckedUpdateWithoutLevelUpProgramsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -19197,6 +19756,7 @@ export type WorkspaceCreateWithoutLevelUpProgramDaysInput = {
   eraAccountLinks?: Prisma.EraAccountLinkCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineCreateNestedManyWithoutWorkspaceInput
@@ -19271,6 +19831,7 @@ export type WorkspaceUncheckedCreateWithoutLevelUpProgramDaysInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -19361,6 +19922,7 @@ export type WorkspaceUpdateWithoutLevelUpProgramDaysInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUpdateManyWithoutWorkspaceNestedInput
@@ -19435,6 +19997,7 @@ export type WorkspaceUncheckedUpdateWithoutLevelUpProgramDaysInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -19509,6 +20072,7 @@ export type WorkspaceCreateWithoutLevelUpProgramEntriesInput = {
   eraAccountLinks?: Prisma.EraAccountLinkCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineCreateNestedManyWithoutWorkspaceInput
@@ -19583,6 +20147,7 @@ export type WorkspaceUncheckedCreateWithoutLevelUpProgramEntriesInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -19673,6 +20238,7 @@ export type WorkspaceUpdateWithoutLevelUpProgramEntriesInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUpdateManyWithoutWorkspaceNestedInput
@@ -19747,6 +20313,7 @@ export type WorkspaceUncheckedUpdateWithoutLevelUpProgramEntriesInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -19821,6 +20388,7 @@ export type WorkspaceCreateWithoutLevelUpSessionsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineCreateNestedManyWithoutWorkspaceInput
@@ -19895,6 +20463,7 @@ export type WorkspaceUncheckedCreateWithoutLevelUpSessionsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -19985,6 +20554,7 @@ export type WorkspaceUpdateWithoutLevelUpSessionsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUpdateManyWithoutWorkspaceNestedInput
@@ -20059,6 +20629,7 @@ export type WorkspaceUncheckedUpdateWithoutLevelUpSessionsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -20133,6 +20704,7 @@ export type WorkspaceCreateWithoutLevelUpBodyMetricsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineCreateNestedManyWithoutWorkspaceInput
@@ -20207,6 +20779,7 @@ export type WorkspaceUncheckedCreateWithoutLevelUpBodyMetricsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -20297,6 +20870,7 @@ export type WorkspaceUpdateWithoutLevelUpBodyMetricsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUpdateManyWithoutWorkspaceNestedInput
@@ -20371,6 +20945,7 @@ export type WorkspaceUncheckedUpdateWithoutLevelUpBodyMetricsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -20445,6 +21020,7 @@ export type WorkspaceCreateWithoutLevelUpReadinessSnapshotsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineCreateNestedManyWithoutWorkspaceInput
@@ -20519,6 +21095,7 @@ export type WorkspaceUncheckedCreateWithoutLevelUpReadinessSnapshotsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -20609,6 +21186,7 @@ export type WorkspaceUpdateWithoutLevelUpReadinessSnapshotsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUpdateManyWithoutWorkspaceNestedInput
@@ -20683,6 +21261,7 @@ export type WorkspaceUncheckedUpdateWithoutLevelUpReadinessSnapshotsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -20757,6 +21336,7 @@ export type WorkspaceCreateWithoutLevelUpBadgeUnlocksInput = {
   eraAccountLinks?: Prisma.EraAccountLinkCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineCreateNestedManyWithoutWorkspaceInput
@@ -20831,6 +21411,7 @@ export type WorkspaceUncheckedCreateWithoutLevelUpBadgeUnlocksInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -20921,6 +21502,7 @@ export type WorkspaceUpdateWithoutLevelUpBadgeUnlocksInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUpdateManyWithoutWorkspaceNestedInput
@@ -20995,6 +21577,7 @@ export type WorkspaceUncheckedUpdateWithoutLevelUpBadgeUnlocksInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -21069,6 +21652,7 @@ export type WorkspaceCreateWithoutLevelUpTargetBuildsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineCreateNestedManyWithoutWorkspaceInput
@@ -21143,6 +21727,7 @@ export type WorkspaceUncheckedCreateWithoutLevelUpTargetBuildsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -21233,6 +21818,7 @@ export type WorkspaceUpdateWithoutLevelUpTargetBuildsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUpdateManyWithoutWorkspaceNestedInput
@@ -21307,6 +21893,7 @@ export type WorkspaceUncheckedUpdateWithoutLevelUpTargetBuildsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -21381,6 +21968,7 @@ export type WorkspaceCreateWithoutGraphEventsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineCreateNestedManyWithoutWorkspaceInput
@@ -21455,6 +22043,7 @@ export type WorkspaceUncheckedCreateWithoutGraphEventsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -21545,6 +22134,7 @@ export type WorkspaceUpdateWithoutGraphEventsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUpdateManyWithoutWorkspaceNestedInput
@@ -21619,6 +22209,7 @@ export type WorkspaceUncheckedUpdateWithoutGraphEventsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -21693,6 +22284,7 @@ export type WorkspaceCreateWithoutReviewItemsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineCreateNestedManyWithoutWorkspaceInput
@@ -21767,6 +22359,7 @@ export type WorkspaceUncheckedCreateWithoutReviewItemsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   connections?: Prisma.ConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedCreateNestedOneWithoutWorkspaceInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedCreateNestedManyWithoutWorkspaceInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -21857,6 +22450,7 @@ export type WorkspaceUpdateWithoutReviewItemsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUpdateManyWithoutWorkspaceNestedInput
@@ -21931,6 +22525,7 @@ export type WorkspaceUncheckedUpdateWithoutReviewItemsInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -22014,6 +22609,7 @@ export type WorkspaceUpdateWithoutOwnerUserInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUpdateManyWithoutWorkspaceNestedInput
@@ -22088,6 +22684,7 @@ export type WorkspaceUncheckedUpdateWithoutOwnerUserInput = {
   eraAccountLinks?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   connections?: Prisma.ConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpProfile?: Prisma.LevelUpProfileUncheckedUpdateOneWithoutWorkspaceNestedInput
   levelUpTestResults?: Prisma.LevelUpTestResultUncheckedUpdateManyWithoutWorkspaceNestedInput
   levelUpCombines?: Prisma.LevelUpCombineUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -22170,6 +22767,7 @@ export type WorkspaceCountOutputType = {
   eraAccountLinks: number
   eraTransactionLinks: number
   connections: number
+  granolaNoteLinks: number
   levelUpTestResults: number
   levelUpCombines: number
   levelUpSnapshots: number
@@ -22236,6 +22834,7 @@ export type WorkspaceCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensi
   eraAccountLinks?: boolean | WorkspaceCountOutputTypeCountEraAccountLinksArgs
   eraTransactionLinks?: boolean | WorkspaceCountOutputTypeCountEraTransactionLinksArgs
   connections?: boolean | WorkspaceCountOutputTypeCountConnectionsArgs
+  granolaNoteLinks?: boolean | WorkspaceCountOutputTypeCountGranolaNoteLinksArgs
   levelUpTestResults?: boolean | WorkspaceCountOutputTypeCountLevelUpTestResultsArgs
   levelUpCombines?: boolean | WorkspaceCountOutputTypeCountLevelUpCombinesArgs
   levelUpSnapshots?: boolean | WorkspaceCountOutputTypeCountLevelUpSnapshotsArgs
@@ -22566,6 +23165,13 @@ export type WorkspaceCountOutputTypeCountConnectionsArgs<ExtArgs extends runtime
 /**
  * WorkspaceCountOutputType without action
  */
+export type WorkspaceCountOutputTypeCountGranolaNoteLinksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.GranolaNoteLinkWhereInput
+}
+
+/**
+ * WorkspaceCountOutputType without action
+ */
 export type WorkspaceCountOutputTypeCountLevelUpTestResultsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.LevelUpTestResultWhereInput
 }
@@ -22763,6 +23369,7 @@ export type WorkspaceSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   eraAccountLinks?: boolean | Prisma.Workspace$eraAccountLinksArgs<ExtArgs>
   eraTransactionLinks?: boolean | Prisma.Workspace$eraTransactionLinksArgs<ExtArgs>
   connections?: boolean | Prisma.Workspace$connectionsArgs<ExtArgs>
+  granolaNoteLinks?: boolean | Prisma.Workspace$granolaNoteLinksArgs<ExtArgs>
   levelUpProfile?: boolean | Prisma.Workspace$levelUpProfileArgs<ExtArgs>
   levelUpTestResults?: boolean | Prisma.Workspace$levelUpTestResultsArgs<ExtArgs>
   levelUpCombines?: boolean | Prisma.Workspace$levelUpCombinesArgs<ExtArgs>
@@ -22868,6 +23475,7 @@ export type WorkspaceInclude<ExtArgs extends runtime.Types.Extensions.InternalAr
   eraAccountLinks?: boolean | Prisma.Workspace$eraAccountLinksArgs<ExtArgs>
   eraTransactionLinks?: boolean | Prisma.Workspace$eraTransactionLinksArgs<ExtArgs>
   connections?: boolean | Prisma.Workspace$connectionsArgs<ExtArgs>
+  granolaNoteLinks?: boolean | Prisma.Workspace$granolaNoteLinksArgs<ExtArgs>
   levelUpProfile?: boolean | Prisma.Workspace$levelUpProfileArgs<ExtArgs>
   levelUpTestResults?: boolean | Prisma.Workspace$levelUpTestResultsArgs<ExtArgs>
   levelUpCombines?: boolean | Prisma.Workspace$levelUpCombinesArgs<ExtArgs>
@@ -22945,6 +23553,7 @@ export type $WorkspacePayload<ExtArgs extends runtime.Types.Extensions.InternalA
     eraAccountLinks: Prisma.$EraAccountLinkPayload<ExtArgs>[]
     eraTransactionLinks: Prisma.$EraTransactionLinkPayload<ExtArgs>[]
     connections: Prisma.$ConnectionPayload<ExtArgs>[]
+    granolaNoteLinks: Prisma.$GranolaNoteLinkPayload<ExtArgs>[]
     levelUpProfile: Prisma.$LevelUpProfilePayload<ExtArgs> | null
     levelUpTestResults: Prisma.$LevelUpTestResultPayload<ExtArgs>[]
     levelUpCombines: Prisma.$LevelUpCombinePayload<ExtArgs>[]
@@ -23414,6 +24023,7 @@ export interface Prisma__WorkspaceClient<T, Null = never, ExtArgs extends runtim
   eraAccountLinks<T extends Prisma.Workspace$eraAccountLinksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Workspace$eraAccountLinksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EraAccountLinkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   eraTransactionLinks<T extends Prisma.Workspace$eraTransactionLinksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Workspace$eraTransactionLinksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EraTransactionLinkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   connections<T extends Prisma.Workspace$connectionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Workspace$connectionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ConnectionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  granolaNoteLinks<T extends Prisma.Workspace$granolaNoteLinksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Workspace$granolaNoteLinksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$GranolaNoteLinkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   levelUpProfile<T extends Prisma.Workspace$levelUpProfileArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Workspace$levelUpProfileArgs<ExtArgs>>): Prisma.Prisma__LevelUpProfileClient<runtime.Types.Result.GetResult<Prisma.$LevelUpProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   levelUpTestResults<T extends Prisma.Workspace$levelUpTestResultsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Workspace$levelUpTestResultsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LevelUpTestResultPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   levelUpCombines<T extends Prisma.Workspace$levelUpCombinesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Workspace$levelUpCombinesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LevelUpCombinePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -24896,6 +25506,30 @@ export type Workspace$connectionsArgs<ExtArgs extends runtime.Types.Extensions.I
   take?: number
   skip?: number
   distinct?: Prisma.ConnectionScalarFieldEnum | Prisma.ConnectionScalarFieldEnum[]
+}
+
+/**
+ * Workspace.granolaNoteLinks
+ */
+export type Workspace$granolaNoteLinksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the GranolaNoteLink
+   */
+  select?: Prisma.GranolaNoteLinkSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the GranolaNoteLink
+   */
+  omit?: Prisma.GranolaNoteLinkOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.GranolaNoteLinkInclude<ExtArgs> | null
+  where?: Prisma.GranolaNoteLinkWhereInput
+  orderBy?: Prisma.GranolaNoteLinkOrderByWithRelationInput | Prisma.GranolaNoteLinkOrderByWithRelationInput[]
+  cursor?: Prisma.GranolaNoteLinkWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.GranolaNoteLinkScalarFieldEnum | Prisma.GranolaNoteLinkScalarFieldEnum[]
 }
 
 /**

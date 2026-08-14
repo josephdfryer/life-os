@@ -45,6 +45,11 @@ export async function findInteractionByExactSource(
   personId?: string | null,
   workspaceId = "default-workspace",
 ) {
+  const sourced = await client.interaction.findUnique({
+    where: { workspaceId_source_sourceId: { workspaceId, source, sourceId } },
+    select: { id: true, notes: true },
+  })
+  if (sourced) return sourced
   const marker = normalizeSourceMarker(source, sourceId)
   const candidates = await client.interaction.findMany({
     where: {
@@ -97,6 +102,10 @@ export type AppendDailySourceInteractionInput = {
   summary: string
   body?: string | null
   direction?: string | null
+  // When a source already created the canonical occurrence (for example a
+  // Granola meeting), attach the accepted identity to that Event instead of
+  // inventing a source-day Event.
+  eventId?: string | null
   workspaceId?: string
   actor?: GraphEventActor & AuditActor
 }
@@ -135,6 +144,39 @@ export async function appendDailySourceInteractionTx(
   // Preserve the actual communication when the provider supplied it. The AI
   // summary remains a fallback, not a replacement for the relationship record.
   const line = messageLine(input.timestamp, input.direction, input.body || input.summary || "(no text)")
+
+  if (input.eventId) {
+    const event = await tx.event.findFirst({ where: { id: input.eventId, workspaceId }, select: { id: true } })
+    if (!event) throw new Error("The source Event does not exist in this workspace")
+    const interaction = await tx.interaction.create({
+      data: {
+        personId: input.personId,
+        workspaceId,
+        eventId: event.id,
+        type: input.type,
+        timestamp: input.timestamp,
+        summary: input.summary,
+        notes: sourceMarker,
+        direction: input.direction ?? null,
+        source: input.source,
+        sourceId: input.sourceId,
+      },
+      select: { id: true },
+    })
+    await writeInteractionParticipants(tx, interaction.id, { personId: input.personId, eventId: event.id }, workspaceId)
+    await publishGraphEvent(tx, {
+      workspaceId,
+      subjectType: "Interaction",
+      subjectId: interaction.id,
+      eventType: "interaction.created",
+      actor: input.actor,
+      sourceConnector: input.source,
+      idempotencyKey: `interaction-create:${sourceMarker}`,
+      payload: { interactionId: interaction.id, personId: input.personId, eventId: event.id, source: input.source, sourceId: input.sourceId, mode: "create" },
+      provenance: { source: input.source, sourceId: input.sourceId, eventId: event.id },
+    })
+    return { interactionId: interaction.id, created: true, updated: false }
+  }
 
   const dailyInteraction = await tx.interaction.findFirst({
     where: { personId: input.personId, workspaceId, type: input.type, notes: { contains: dayMarker } },
@@ -279,6 +321,7 @@ export async function acceptStagedInteraction(
   const timestamp = input.timestamp ? new Date(input.timestamp) : item.timestamp
   if (Number.isNaN(timestamp.getTime())) throw new AcceptStagedInteractionError("timestamp is invalid", "validation")
   const direction = input.direction ?? item.direction
+  const sourceMetadata = parseSourceMetadata(item.metadata)
 
   const result = await db.$transaction(async tx => {
     const written = await appendDailySourceInteractionTx(tx, {
@@ -290,6 +333,7 @@ export async function acceptStagedInteraction(
       summary: summary || item.body || "(no text)",
       body: item.body,
       direction,
+      eventId: sourceMetadata.eventId,
       workspaceId,
       actor: input.actor,
     })
@@ -359,6 +403,15 @@ registerReviewCommand("staged_interaction.accept", async (input, ctx) => {
   })
   return { resultType: "Interaction", resultId: result.interactionId }
 })
+
+function parseSourceMetadata(raw: string | null | undefined): { eventId?: string } {
+  try {
+    const parsed = raw ? JSON.parse(raw) as Record<string, unknown> : {}
+    return { eventId: typeof parsed.eventId === "string" ? parsed.eventId : undefined }
+  } catch {
+    return {}
+  }
+}
 
 registerReviewDismiss("staged_interaction", async (sourceId, ctx) => {
   const { db } = await import("@life-os/db")

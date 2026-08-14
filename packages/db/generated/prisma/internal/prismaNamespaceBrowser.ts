@@ -76,6 +76,7 @@ export const ModelName = {
   EraAccountLink: 'EraAccountLink',
   EraTransactionLink: 'EraTransactionLink',
   Connection: 'Connection',
+  GranolaNoteLink: 'GranolaNoteLink',
   Rule: 'Rule',
   RuleRun: 'RuleRun',
   StagedInteraction: 'StagedInteraction',
@@ -575,6 +576,27 @@ export const ConnectionScalarFieldEnum = {
 } as const
 
 export type ConnectionScalarFieldEnum = (typeof ConnectionScalarFieldEnum)[keyof typeof ConnectionScalarFieldEnum]
+
+
+export const GranolaNoteLinkScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  connectionId: 'connectionId',
+  eventId: 'eventId',
+  externalNoteId: 'externalNoteId',
+  sourceUrl: 'sourceUrl',
+  calendarEventId: 'calendarEventId',
+  remoteCreatedAt: 'remoteCreatedAt',
+  remoteUpdatedAt: 'remoteUpdatedAt',
+  contentHash: 'contentHash',
+  status: 'status',
+  lastSyncedAt: 'lastSyncedAt',
+  lastError: 'lastError',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type GranolaNoteLinkScalarFieldEnum = (typeof GranolaNoteLinkScalarFieldEnum)[keyof typeof GranolaNoteLinkScalarFieldEnum]
 
 
 export const RuleScalarFieldEnum = {

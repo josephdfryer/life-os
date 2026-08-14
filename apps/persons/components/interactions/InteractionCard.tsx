@@ -1,7 +1,9 @@
 "use client"
 
 import { useState } from "react"
+import { LIFE_OS_APP_URLS } from "@life-os/ui/app-registry"
 import { relativeTime, parseJsonArray } from "@/lib/utils"
+import { granolaMeetingDetails } from "@/lib/interaction-presentation"
 import type { Interaction } from "@/types"
 
 type Props = {
@@ -38,10 +40,12 @@ export default function InteractionCard({ interaction, onDelete }: Props) {
   const actionItems = parseJsonArray(interaction.actionItems as unknown as string)
   const [deleting, setDeleting] = useState(false)
   const [showFullMessage, setShowFullMessage] = useState(false)
-  const isLongMessage = (interaction.summary?.length ?? 0) > 900
+  const granolaMeeting = granolaMeetingDetails(interaction.event)
+  const displaySummary = granolaMeeting?.summary ?? interaction.summary
+  const isLongMessage = (displaySummary?.length ?? 0) > 900
   const visibleSummary = isLongMessage && !showFullMessage
-    ? `${interaction.summary!.slice(0, 900).trimEnd()}…`
-    : interaction.summary
+    ? `${displaySummary!.slice(0, 900).trimEnd()}…`
+    : displaySummary
 
   async function handleDelete() {
     if (!confirm("Delete this interaction? This cannot be undone.")) return
@@ -126,6 +130,12 @@ export default function InteractionCard({ interaction, onDelete }: Props) {
         )}
       </div>
 
+      {granolaMeeting && (
+        <div style={{ margin: "0 0 7px", fontSize: "13px", fontWeight: 500, color: "var(--ink)" }}>
+          {granolaMeeting.name}
+        </div>
+      )}
+
       {visibleSummary && (
         <p style={{ margin: "0 0 6px", fontSize: "12px", color: "var(--ink-2)", lineHeight: 1.5 }}>
           <span style={{ whiteSpace: "pre-wrap" }}>{visibleSummary}</span>
@@ -141,10 +151,19 @@ export default function InteractionCard({ interaction, onDelete }: Props) {
         </p>
       )}
 
-      {interaction.notes && (
+      {interaction.notes && !granolaMeeting && (
         <p style={{ margin: "0 0 6px", fontSize: "11px", color: "var(--ink-3)", lineHeight: 1.5 }}>
           {interaction.notes}
         </p>
+      )}
+
+      {granolaMeeting && (
+        <a
+          href={`${LIFE_OS_APP_URLS.events}/events/${granolaMeeting.eventId}`}
+          style={{ display: "inline-block", marginTop: "4px", color: "var(--cognac-deep)", fontSize: "11px", textDecoration: "none" }}
+        >
+          Open meeting summary{granolaMeeting.hasTranscript ? " and transcript" : ""} →
+        </a>
       )}
 
       {actionItems.length > 0 && (

@@ -422,6 +422,7 @@ export const ModelName = {
   EraAccountLink: 'EraAccountLink',
   EraTransactionLink: 'EraTransactionLink',
   Connection: 'Connection',
+  GranolaNoteLink: 'GranolaNoteLink',
   Rule: 'Rule',
   RuleRun: 'RuleRun',
   StagedInteraction: 'StagedInteraction',
@@ -498,7 +499,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "workspace" | "workspaceMember" | "approvedEmail" | "person" | "user" | "device" | "deviceSource" | "deviceCredential" | "deviceAuthorization" | "deviceIngestItem" | "role" | "permission" | "userRole" | "rolePermission" | "apiKey" | "apiKeyScope" | "auditLog" | "calendarConnection" | "calendarEventLink" | "gmailConnection" | "gmailMessageLink" | "eraConnection" | "eraAccountLink" | "eraTransactionLink" | "connection" | "rule" | "ruleRun" | "stagedInteraction" | "event" | "interaction" | "interactionParticipant" | "plan" | "planExpectedPerson" | "place" | "importJob" | "importStagedVisit" | "placeNote" | "item" | "itemDefinition" | "inventoryLot" | "assembly" | "itemInteraction" | "importedFile" | "aiProviderCredential" | "aiAnalysisRun" | "noteAnalysisRun" | "theoryAnalysisRun" | "lifeModelAnalysisRun" | "noteSuggestion" | "group" | "supplierProfile" | "purchaseOrder" | "purchaseOrderLine" | "purchaseReceiptLine" | "personGroup" | "groupGroup" | "placeGroup" | "note" | "theorySnapshot" | "theorySnapshotSource" | "lifeModelSnapshot" | "lifeModelClaim" | "lifeModelClaimFeedback" | "adaptiveDayBrief" | "adaptiveIntervention" | "adaptiveInterventionOutcome" | "stateDefinition" | "state" | "assistantMessage" | "levelUpProfile" | "levelUpTestResult" | "levelUpCombine" | "levelUpRatingSnapshot" | "levelUpTrainingSet" | "levelUpExercise" | "levelUpProgram" | "levelUpProgramDay" | "levelUpProgramEntry" | "levelUpSession" | "levelUpBodyMetric" | "levelUpReadinessSnapshot" | "levelUpBadgeUnlock" | "levelUpTargetBuild" | "graphEvent" | "graphEventReceipt" | "reviewItem"
+    modelProps: "workspace" | "workspaceMember" | "approvedEmail" | "person" | "user" | "device" | "deviceSource" | "deviceCredential" | "deviceAuthorization" | "deviceIngestItem" | "role" | "permission" | "userRole" | "rolePermission" | "apiKey" | "apiKeyScope" | "auditLog" | "calendarConnection" | "calendarEventLink" | "gmailConnection" | "gmailMessageLink" | "eraConnection" | "eraAccountLink" | "eraTransactionLink" | "connection" | "granolaNoteLink" | "rule" | "ruleRun" | "stagedInteraction" | "event" | "interaction" | "interactionParticipant" | "plan" | "planExpectedPerson" | "place" | "importJob" | "importStagedVisit" | "placeNote" | "item" | "itemDefinition" | "inventoryLot" | "assembly" | "itemInteraction" | "importedFile" | "aiProviderCredential" | "aiAnalysisRun" | "noteAnalysisRun" | "theoryAnalysisRun" | "lifeModelAnalysisRun" | "noteSuggestion" | "group" | "supplierProfile" | "purchaseOrder" | "purchaseOrderLine" | "purchaseReceiptLine" | "personGroup" | "groupGroup" | "placeGroup" | "note" | "theorySnapshot" | "theorySnapshotSource" | "lifeModelSnapshot" | "lifeModelClaim" | "lifeModelClaimFeedback" | "adaptiveDayBrief" | "adaptiveIntervention" | "adaptiveInterventionOutcome" | "stateDefinition" | "state" | "assistantMessage" | "levelUpProfile" | "levelUpTestResult" | "levelUpCombine" | "levelUpRatingSnapshot" | "levelUpTrainingSet" | "levelUpExercise" | "levelUpProgram" | "levelUpProgramDay" | "levelUpProgramEntry" | "levelUpSession" | "levelUpBodyMetric" | "levelUpReadinessSnapshot" | "levelUpBadgeUnlock" | "levelUpTargetBuild" | "graphEvent" | "graphEventReceipt" | "reviewItem"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -2349,6 +2350,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.ConnectionCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.ConnectionCountAggregateOutputType> | number
+        }
+      }
+    }
+    GranolaNoteLink: {
+      payload: Prisma.$GranolaNoteLinkPayload<ExtArgs>
+      fields: Prisma.GranolaNoteLinkFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.GranolaNoteLinkFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GranolaNoteLinkPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.GranolaNoteLinkFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GranolaNoteLinkPayload>
+        }
+        findFirst: {
+          args: Prisma.GranolaNoteLinkFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GranolaNoteLinkPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.GranolaNoteLinkFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GranolaNoteLinkPayload>
+        }
+        findMany: {
+          args: Prisma.GranolaNoteLinkFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GranolaNoteLinkPayload>[]
+        }
+        create: {
+          args: Prisma.GranolaNoteLinkCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GranolaNoteLinkPayload>
+        }
+        createMany: {
+          args: Prisma.GranolaNoteLinkCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.GranolaNoteLinkCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GranolaNoteLinkPayload>[]
+        }
+        delete: {
+          args: Prisma.GranolaNoteLinkDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GranolaNoteLinkPayload>
+        }
+        update: {
+          args: Prisma.GranolaNoteLinkUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GranolaNoteLinkPayload>
+        }
+        deleteMany: {
+          args: Prisma.GranolaNoteLinkDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.GranolaNoteLinkUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.GranolaNoteLinkUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GranolaNoteLinkPayload>[]
+        }
+        upsert: {
+          args: Prisma.GranolaNoteLinkUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GranolaNoteLinkPayload>
+        }
+        aggregate: {
+          args: Prisma.GranolaNoteLinkAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateGranolaNoteLink>
+        }
+        groupBy: {
+          args: Prisma.GranolaNoteLinkGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.GranolaNoteLinkGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.GranolaNoteLinkCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.GranolaNoteLinkCountAggregateOutputType> | number
         }
       }
     }
@@ -7327,6 +7402,27 @@ export const ConnectionScalarFieldEnum = {
 export type ConnectionScalarFieldEnum = (typeof ConnectionScalarFieldEnum)[keyof typeof ConnectionScalarFieldEnum]
 
 
+export const GranolaNoteLinkScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  connectionId: 'connectionId',
+  eventId: 'eventId',
+  externalNoteId: 'externalNoteId',
+  sourceUrl: 'sourceUrl',
+  calendarEventId: 'calendarEventId',
+  remoteCreatedAt: 'remoteCreatedAt',
+  remoteUpdatedAt: 'remoteUpdatedAt',
+  contentHash: 'contentHash',
+  status: 'status',
+  lastSyncedAt: 'lastSyncedAt',
+  lastError: 'lastError',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type GranolaNoteLinkScalarFieldEnum = (typeof GranolaNoteLinkScalarFieldEnum)[keyof typeof GranolaNoteLinkScalarFieldEnum]
+
+
 export const RuleScalarFieldEnum = {
   id: 'id',
   workspaceId: 'workspaceId',
@@ -8756,6 +8852,7 @@ export type GlobalOmitConfig = {
   eraAccountLink?: Prisma.EraAccountLinkOmit
   eraTransactionLink?: Prisma.EraTransactionLinkOmit
   connection?: Prisma.ConnectionOmit
+  granolaNoteLink?: Prisma.GranolaNoteLinkOmit
   rule?: Prisma.RuleOmit
   ruleRun?: Prisma.RuleRunOmit
   stagedInteraction?: Prisma.StagedInteractionOmit

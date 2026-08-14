@@ -80,6 +80,7 @@ model Workspace {
   eraAccountLinks      EraAccountLink[]
   eraTransactionLinks  EraTransactionLink[]
   connections          Connection[]
+  granolaNoteLinks     GranolaNoteLink[]
   levelUpProfile       LevelUpProfile?
   levelUpTestResults   LevelUpTestResult[]
   levelUpCombines      LevelUpCombine[]
@@ -690,7 +691,7 @@ model Connection {
   user        User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
-  // "calendar" | "gmail" | "era" — open string, not an enum, matching this
+  // "calendar" | "gmail" | "era" | "meetings" — open string, not an enum, matching this
   // schema's existing convention (Interaction.type, Rule.trigger, etc.) so a
   // new integration kind never needs a migration to add.
   kind        String
@@ -711,6 +712,7 @@ model Connection {
   metadata    String?
   sourceTable String?
   sourceId    String?
+  granolaNoteLinks GranolaNoteLink[]
 
   // No DB-level unique constraint on the business key: accountEmail is
   // nullable (Era has none) and Prisma's compound-unique WHERE input for a
@@ -721,6 +723,35 @@ model Connection {
   @@index([workspaceId, kind, status])
   @@index([sourceTable, sourceId])
   @@index([userId])
+}
+
+// Supporting provenance for Granola meeting notes. The API credential and
+// sync watermark live on Connection; this record makes note-to-Event imports
+// idempotent without turning an external document into a new primitive.
+model GranolaNoteLink {
+  id               String     @id @default(cuid())
+  workspaceId      String     @default("default-workspace")
+  workspace        Workspace  @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  connectionId     String
+  connection       Connection @relation(fields: [connectionId], references: [id], onDelete: Cascade)
+  eventId          String
+  event             Event      @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  externalNoteId   String
+  sourceUrl        String?
+  calendarEventId  String?
+  remoteCreatedAt  DateTime?
+  remoteUpdatedAt  DateTime?
+  contentHash      String?
+  status           String      @default("synced")
+  lastSyncedAt     DateTime?
+  lastError        String?
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+
+  @@unique([workspaceId, externalNoteId])
+  @@index([connectionId, status])
+  @@index([eventId])
+  @@index([workspaceId, remoteUpdatedAt])
 }
 
 // ─────────────────────────────────────────────
@@ -866,6 +897,7 @@ model Event {
   sourceNote    Note?         @relation(fields: [sourceNoteId], references: [id], onDelete: SetNull)
   interactions  Interaction[]
   calendarLinks CalendarEventLink[]
+  granolaNoteLinks GranolaNoteLink[]
   groupTags     Group[]             @relation("EventGroupTags")
   placeNotes    PlaceNote[]
   purchaseReceiptLines PurchaseReceiptLine[]

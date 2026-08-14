@@ -230,6 +230,14 @@ Use these recipes when building UI. Prefer adding to `@life-os/ui` when a patter
 - Active link: `color: var(--cognac-deep); background: var(--cognac-soft); font-weight: 450`.
 - Hover: `background: var(--surface-hover); color: var(--ink)`.
 
+### Cross-app shell and account menu
+
+- Home is the control plane and keeps the full Life OS section navigation visible.
+- Satellite apps show only `Life OS / [current app]` in the cross-app strip. Their own header is reserved for that app's local navigation.
+- On satellite apps, put Home, Stream, Inbox, Intelligence, Automation, Connections, Admin, Capture, identity, and Sign out inside the shared avatar menu at the far right.
+- Do not repeat an avatar or Sign out control in the app-local header.
+- Provider integrations are children of a neutral **Connections** destination. Provider names such as Granola or Google Calendar should not become primary app navigation items.
+
 ### Button — primary (cognac)
 
 ```

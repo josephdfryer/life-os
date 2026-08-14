@@ -49,3 +49,5 @@ deploy memory.
 
 Root config-swap like every Life OS app. `turbo run build --filter=level-up`,
 output `apps/level-up/.next`.
+
+Level Up uses Vercel's managed Next.js builder. Keep the monorepo `outputFileTracingRoot`, but do not set `output: "standalone"`; that mode is for self-hosted servers and breaks Vercel output finalization.
