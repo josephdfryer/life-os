@@ -7,6 +7,7 @@ import { cookies } from "next/headers"
 import { resolveTimeZone, TZ_COOKIE } from "@life-os/ui"
 import RegenerateButton from "./RegenerateButton"
 import AddTheoryNote from "./AddTheoryNote"
+import { getTheoryEvidenceState } from "@life-os/files"
 
 export const dynamic = "force-dynamic"
 
@@ -32,11 +33,19 @@ export default async function TheoryOfPersonPage({ params }: { params: Promise<{
   }
 
   const name = person.nickname || [person.first, person.last].filter(Boolean).join(" ") || "Unknown"
-  const current = await getCurrentTheorySnapshot(personId, access.workspaceId)
-  const versions = await listTheorySnapshots(personId, access.workspaceId)
+  const [current, versions, evidenceState] = await Promise.all([
+    getCurrentTheorySnapshot(personId, access.workspaceId),
+    listTheorySnapshots(personId, access.workspaceId),
+    getTheoryEvidenceState(personId, access.workspaceId),
+  ])
 
   const openQuestions = current ? extractSectionItems(current.markdownBody, "Open Questions") : []
   const sourceCounts = current ? countSources(current.sources) : []
+  const citedSnapshotSources = current ? current.sources.flatMap(source => {
+    if (source.sourceType !== "evidence_claim" || !source.citation) return []
+    try { return [{ ...source, parsedCitation: JSON.parse(source.citation) as { fileId: string; filename: string; chunkId: string; exactQuote: string } }] }
+    catch { return [] }
+  }) : []
 
   return (
     <Shell>
@@ -61,7 +70,7 @@ export default async function TheoryOfPersonPage({ params }: { params: Promise<{
 
       {/* Guardrail */}
       <div style={{
-        background: "var(--accent-soft)",
+        background: evidenceState.stale ? "var(--attention-soft)" : "var(--accent-soft)",
         border: "1px solid var(--border)",
         borderRadius: "10px",
         padding: "10px 14px",
@@ -70,8 +79,17 @@ export default async function TheoryOfPersonPage({ params }: { params: Promise<{
         color: "var(--ink-2)",
         fontStyle: "italic",
       }}>
-        This theory is not truth. It is the current best model based on available evidence.
+        {evidenceState.stale ? `${evidenceState.newEvidenceCount} new cited evidence item${evidenceState.newEvidenceCount === 1 ? "" : "s"}${evidenceState.invalidationCount ? ` and ${evidenceState.invalidationCount} evidence change${evidenceState.invalidationCount === 1 ? "" : "s"}` : ""} since this theory. Regenerate now or let the nightly refresh incorporate it.` : "This theory is current for the available cited evidence. It remains a model, not truth."}
       </div>
+
+      {evidenceState.evidence.length > 0 && <div style={{ ...cardStyle, padding: "18px 20px", marginBottom: "20px" }}>
+        <div style={{ fontSize: "10px", textTransform: "uppercase", letterSpacing: "0.08em", color: "var(--ink-4)", marginBottom: "10px" }}>New evidence since {current ? `v${current.version}` : "the last theory"}</div>
+        <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>{evidenceState.evidence.map(claim => <div key={claim.id} style={{ borderTop: "1px solid var(--border)", paddingTop: "10px" }}>
+          <div style={{ fontSize: "12px", color: "var(--ink-2)" }}>{claim.assertion}</div>
+          <div style={{ fontSize: "10px", color: "var(--ink-4)", marginTop: "4px" }}>{claim.classification} · weight {Math.max(...claim.subjects.map(subject => subject.relevanceWeight), 0).toFixed(2)} · {claim.status}</div>
+          <a href={`${process.env.NEXT_PUBLIC_ASSISTANT_URL ?? "https://assistant.lacollecteur.com"}/files/${claim.sourceFile.id}?chunkId=${claim.chunk.id}#${claim.chunk.id}`} style={{ fontSize: "10px", color: "var(--accent)" }}>{claim.sourceFile.filename} · exact passage</a>
+        </div>)}</div>
+      </div>}
 
       {/* Actions */}
       <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", marginBottom: "24px" }}>
@@ -138,6 +156,14 @@ export default async function TheoryOfPersonPage({ params }: { params: Promise<{
                 </div>
               )}
             </Panel>
+
+            {citedSnapshotSources.length > 0 ? <Panel title="Cited file evidence">
+              <div style={{ display: "flex", flexDirection: "column", gap: "9px" }}>{citedSnapshotSources.map(source => <div key={source.id} style={{ borderTop: "1px solid var(--border)", paddingTop: "8px" }}>
+                <div style={{ fontSize: "10px", color: "var(--ink-3)" }}>{source.evidenceClassification} · weight {source.weight?.toFixed(2) ?? "—"} · {source.evidenceStatus}</div>
+                <div style={{ fontSize: "10px", color: "var(--ink-2)", margin: "4px 0" }}>&ldquo;{source.parsedCitation.exactQuote}&rdquo;</div>
+                <a href={`${process.env.NEXT_PUBLIC_ASSISTANT_URL ?? "https://assistant.lacollecteur.com"}/files/${source.parsedCitation.fileId}?chunkId=${source.parsedCitation.chunkId}#${source.parsedCitation.chunkId}`} style={{ fontSize: "10px", color: "var(--accent)" }}>{source.parsedCitation.filename} · exact passage</a>
+              </div>)}</div>
+            </Panel> : null}
 
             <Panel title={`Prior versions (${versions.length})`}>
               <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>

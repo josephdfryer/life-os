@@ -3,6 +3,7 @@ import { runAgent } from "@/lib/agent"
 import { db } from "@/lib/db"
 import { accessErrorResponse, requireWorkspaceAccess } from "@/lib/access"
 import { chatMessageContract, contractIssues } from "@life-os/contracts"
+import { assertWorkspaceFiles } from "@life-os/files"
 
 export const maxDuration = 300
 export const dynamic = "force-dynamic"
@@ -15,7 +16,7 @@ export async function GET() {
       where: { workspaceId: access.workspaceId, from },
       orderBy: { createdAt: "desc" },
       take: 60,
-      select: { id: true, role: true, content: true, createdAt: true },
+      select: { id: true, role: true, content: true, createdAt: true, metadata: true },
     })
     return NextResponse.json({ messages: messages.reverse() })
   } catch (error) {
@@ -41,8 +42,9 @@ export async function POST(req: NextRequest) {
   const { message } = parsed.data
 
   try {
-    const reply = await runAgent({ channel: "web", from, userMessage: message, workspaceId: access.workspaceId })
-    return NextResponse.json({ reply })
+    const fileIds = await assertWorkspaceFiles(parsed.data.fileIds, access.workspaceId)
+    const result = await runAgent({ channel: "web", from, userMessage: message, workspaceId: access.workspaceId, fileIds })
+    return NextResponse.json(result)
   } catch (error) {
     console.error("Chat agent failed:", error)
     return NextResponse.json({ error: "Agent failed — try again" }, { status: 500 })

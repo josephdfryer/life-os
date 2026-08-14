@@ -31,6 +31,7 @@ export type AssistantMessageMinAggregateOutputType = {
   from: string | null
   role: string | null
   content: string | null
+  metadata: string | null
   createdAt: Date | null
 }
 
@@ -41,6 +42,7 @@ export type AssistantMessageMaxAggregateOutputType = {
   from: string | null
   role: string | null
   content: string | null
+  metadata: string | null
   createdAt: Date | null
 }
 
@@ -51,6 +53,7 @@ export type AssistantMessageCountAggregateOutputType = {
   from: number
   role: number
   content: number
+  metadata: number
   createdAt: number
   _all: number
 }
@@ -63,6 +66,7 @@ export type AssistantMessageMinAggregateInputType = {
   from?: true
   role?: true
   content?: true
+  metadata?: true
   createdAt?: true
 }
 
@@ -73,6 +77,7 @@ export type AssistantMessageMaxAggregateInputType = {
   from?: true
   role?: true
   content?: true
+  metadata?: true
   createdAt?: true
 }
 
@@ -83,6 +88,7 @@ export type AssistantMessageCountAggregateInputType = {
   from?: true
   role?: true
   content?: true
+  metadata?: true
   createdAt?: true
   _all?: true
 }
@@ -166,6 +172,7 @@ export type AssistantMessageGroupByOutputType = {
   from: string
   role: string
   content: string
+  metadata: string | null
   createdAt: Date
   _count: AssistantMessageCountAggregateOutputType | null
   _min: AssistantMessageMinAggregateOutputType | null
@@ -197,6 +204,7 @@ export type AssistantMessageWhereInput = {
   from?: Prisma.StringFilter<"AssistantMessage"> | string
   role?: Prisma.StringFilter<"AssistantMessage"> | string
   content?: Prisma.StringFilter<"AssistantMessage"> | string
+  metadata?: Prisma.StringNullableFilter<"AssistantMessage"> | string | null
   createdAt?: Prisma.DateTimeFilter<"AssistantMessage"> | Date | string
   workspace?: Prisma.XOR<Prisma.WorkspaceScalarRelationFilter, Prisma.WorkspaceWhereInput>
 }
@@ -208,6 +216,7 @@ export type AssistantMessageOrderByWithRelationInput = {
   from?: Prisma.SortOrder
   role?: Prisma.SortOrder
   content?: Prisma.SortOrder
+  metadata?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   workspace?: Prisma.WorkspaceOrderByWithRelationInput
 }
@@ -222,6 +231,7 @@ export type AssistantMessageWhereUniqueInput = Prisma.AtLeast<{
   from?: Prisma.StringFilter<"AssistantMessage"> | string
   role?: Prisma.StringFilter<"AssistantMessage"> | string
   content?: Prisma.StringFilter<"AssistantMessage"> | string
+  metadata?: Prisma.StringNullableFilter<"AssistantMessage"> | string | null
   createdAt?: Prisma.DateTimeFilter<"AssistantMessage"> | Date | string
   workspace?: Prisma.XOR<Prisma.WorkspaceScalarRelationFilter, Prisma.WorkspaceWhereInput>
 }, "id">
@@ -233,6 +243,7 @@ export type AssistantMessageOrderByWithAggregationInput = {
   from?: Prisma.SortOrder
   role?: Prisma.SortOrder
   content?: Prisma.SortOrder
+  metadata?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.AssistantMessageCountOrderByAggregateInput
   _max?: Prisma.AssistantMessageMaxOrderByAggregateInput
@@ -249,6 +260,7 @@ export type AssistantMessageScalarWhereWithAggregatesInput = {
   from?: Prisma.StringWithAggregatesFilter<"AssistantMessage"> | string
   role?: Prisma.StringWithAggregatesFilter<"AssistantMessage"> | string
   content?: Prisma.StringWithAggregatesFilter<"AssistantMessage"> | string
+  metadata?: Prisma.StringNullableWithAggregatesFilter<"AssistantMessage"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"AssistantMessage"> | Date | string
 }
 
@@ -258,6 +270,7 @@ export type AssistantMessageCreateInput = {
   from: string
   role: string
   content: string
+  metadata?: string | null
   createdAt?: Date | string
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutAssistantMessagesInput
 }
@@ -269,6 +282,7 @@ export type AssistantMessageUncheckedCreateInput = {
   from: string
   role: string
   content: string
+  metadata?: string | null
   createdAt?: Date | string
 }
 
@@ -278,6 +292,7 @@ export type AssistantMessageUpdateInput = {
   from?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
+  metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutAssistantMessagesNestedInput
 }
@@ -289,6 +304,7 @@ export type AssistantMessageUncheckedUpdateInput = {
   from?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
+  metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -299,6 +315,7 @@ export type AssistantMessageCreateManyInput = {
   from: string
   role: string
   content: string
+  metadata?: string | null
   createdAt?: Date | string
 }
 
@@ -308,6 +325,7 @@ export type AssistantMessageUpdateManyMutationInput = {
   from?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
+  metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -318,6 +336,7 @@ export type AssistantMessageUncheckedUpdateManyInput = {
   from?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
+  metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -338,6 +357,7 @@ export type AssistantMessageCountOrderByAggregateInput = {
   from?: Prisma.SortOrder
   role?: Prisma.SortOrder
   content?: Prisma.SortOrder
+  metadata?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -348,6 +368,7 @@ export type AssistantMessageMaxOrderByAggregateInput = {
   from?: Prisma.SortOrder
   role?: Prisma.SortOrder
   content?: Prisma.SortOrder
+  metadata?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -358,6 +379,7 @@ export type AssistantMessageMinOrderByAggregateInput = {
   from?: Prisma.SortOrder
   role?: Prisma.SortOrder
   content?: Prisma.SortOrder
+  metadata?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -409,6 +431,7 @@ export type AssistantMessageCreateWithoutWorkspaceInput = {
   from: string
   role: string
   content: string
+  metadata?: string | null
   createdAt?: Date | string
 }
 
@@ -418,6 +441,7 @@ export type AssistantMessageUncheckedCreateWithoutWorkspaceInput = {
   from: string
   role: string
   content: string
+  metadata?: string | null
   createdAt?: Date | string
 }
 
@@ -456,6 +480,7 @@ export type AssistantMessageScalarWhereInput = {
   from?: Prisma.StringFilter<"AssistantMessage"> | string
   role?: Prisma.StringFilter<"AssistantMessage"> | string
   content?: Prisma.StringFilter<"AssistantMessage"> | string
+  metadata?: Prisma.StringNullableFilter<"AssistantMessage"> | string | null
   createdAt?: Prisma.DateTimeFilter<"AssistantMessage"> | Date | string
 }
 
@@ -465,6 +490,7 @@ export type AssistantMessageCreateManyWorkspaceInput = {
   from: string
   role: string
   content: string
+  metadata?: string | null
   createdAt?: Date | string
 }
 
@@ -474,6 +500,7 @@ export type AssistantMessageUpdateWithoutWorkspaceInput = {
   from?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
+  metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -483,6 +510,7 @@ export type AssistantMessageUncheckedUpdateWithoutWorkspaceInput = {
   from?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
+  metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -492,6 +520,7 @@ export type AssistantMessageUncheckedUpdateManyWithoutWorkspaceInput = {
   from?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
+  metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -504,6 +533,7 @@ export type AssistantMessageSelect<ExtArgs extends runtime.Types.Extensions.Inte
   from?: boolean
   role?: boolean
   content?: boolean
+  metadata?: boolean
   createdAt?: boolean
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["assistantMessage"]>
@@ -515,6 +545,7 @@ export type AssistantMessageSelectCreateManyAndReturn<ExtArgs extends runtime.Ty
   from?: boolean
   role?: boolean
   content?: boolean
+  metadata?: boolean
   createdAt?: boolean
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["assistantMessage"]>
@@ -526,6 +557,7 @@ export type AssistantMessageSelectUpdateManyAndReturn<ExtArgs extends runtime.Ty
   from?: boolean
   role?: boolean
   content?: boolean
+  metadata?: boolean
   createdAt?: boolean
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["assistantMessage"]>
@@ -537,10 +569,11 @@ export type AssistantMessageSelectScalar = {
   from?: boolean
   role?: boolean
   content?: boolean
+  metadata?: boolean
   createdAt?: boolean
 }
 
-export type AssistantMessageOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "workspaceId" | "channel" | "from" | "role" | "content" | "createdAt", ExtArgs["result"]["assistantMessage"]>
+export type AssistantMessageOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "workspaceId" | "channel" | "from" | "role" | "content" | "metadata" | "createdAt", ExtArgs["result"]["assistantMessage"]>
 export type AssistantMessageInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
 }
@@ -563,6 +596,7 @@ export type $AssistantMessagePayload<ExtArgs extends runtime.Types.Extensions.In
     from: string
     role: string
     content: string
+    metadata: string | null
     createdAt: Date
   }, ExtArgs["result"]["assistantMessage"]>
   composites: {}
@@ -994,6 +1028,7 @@ export interface AssistantMessageFieldRefs {
   readonly from: Prisma.FieldRef<"AssistantMessage", 'String'>
   readonly role: Prisma.FieldRef<"AssistantMessage", 'String'>
   readonly content: Prisma.FieldRef<"AssistantMessage", 'String'>
+  readonly metadata: Prisma.FieldRef<"AssistantMessage", 'String'>
   readonly createdAt: Prisma.FieldRef<"AssistantMessage", 'DateTime'>
 }
     

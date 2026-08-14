@@ -23,6 +23,6 @@ export const config = {
      *  - /api/health           uptime checks
      *  - /login, Next internals
      */
-    "/((?!api/auth|api/webhook|api/health|login|_next/static|_next/image|favicon.ico).*)",
+    "/((?!api/auth|api/webhook|api/health|login|_next/static|_next/image|favicon.ico|.well-known/workflow/).*)",
   ],
 }

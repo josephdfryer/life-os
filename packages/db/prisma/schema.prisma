@@ -26,82 +26,89 @@ datasource db {
 // ─────────────────────────────────────────────
 
 model Workspace {
-  id             String              @id @default(cuid())
-  createdAt      DateTime            @default(now())
-  updatedAt      DateTime            @updatedAt
-  name           String
-  slug           String              @unique
-  status         String              @default("active")
-  ownerUserId    String?
-  ownerUser      User?               @relation("WorkspaceOwner", fields: [ownerUserId], references: [id], onDelete: SetNull)
+  id                           String                        @id @default(cuid())
+  createdAt                    DateTime                      @default(now())
+  updatedAt                    DateTime                      @updatedAt
+  name                         String
+  slug                         String                        @unique
+  status                       String                        @default("active")
+  ownerUserId                  String?
+  ownerUser                    User?                         @relation("WorkspaceOwner", fields: [ownerUserId], references: [id], onDelete: SetNull)
   // Off by default: unlike the always-available manual dedupe queue,
   // automatic merging deletes rows without a review step, so it stays
   // opt-in. See apps/persons/server/domain/merge.ts's autoDedupePersons.
-  autoMergeEnabled Boolean           @default(false)
-  members        WorkspaceMember[]
-  approvedEmails ApprovedEmail[]
-  persons        Person[]
-  events         Event[]
-  interactions   Interaction[]
-  plans          Plan[]
-  places         Place[]
-  placeNotes     PlaceNote[]
-  notes          Note[]
-  theorySnapshots TheorySnapshot[]
-  groups         Group[]
-  items          Item[]
-  itemDefinitions ItemDefinition[]
-  inventoryLots   InventoryLot[]
-  supplierProfiles SupplierProfile[]
-  purchaseOrders   PurchaseOrder[]
-  purchaseReceiptLines PurchaseReceiptLine[]
-  importedFiles  ImportedFile[]
-  aiProviderCredentials AiProviderCredential[]
-  aiAnalysisRuns AiAnalysisRun[]
-  noteAnalysisRuns NoteAnalysisRun[]
-  theoryAnalysisRuns TheoryAnalysisRun[]
-  lifeModelAnalysisRuns LifeModelAnalysisRun[]
-  lifeModelClaimFeedback LifeModelClaimFeedback[]
-  noteSuggestions NoteSuggestion[]
-  stagedItems    StagedInteraction[]
-  rules          Rule[]
-  ruleRuns       RuleRun[]
-  apiKeys        ApiKey[]
-  auditLogs      AuditLog[]
-  calendarConnections  CalendarConnection[]
-  calendarEventLinks   CalendarEventLink[]
-  gmailConnections     GmailConnection[]
-  gmailMessageLinks    GmailMessageLink[]
-  importJobs           ImportJob[]
-  importStagedVisits   ImportStagedVisit[]
-  planExpectedPersons  PlanExpectedPerson[]
-  assistantMessages    AssistantMessage[]
-  eraConnections       EraConnection[]
-  eraAccountLinks      EraAccountLink[]
-  eraTransactionLinks  EraTransactionLink[]
-  connections          Connection[]
-  levelUpProfile       LevelUpProfile?
-  levelUpTestResults   LevelUpTestResult[]
-  levelUpCombines      LevelUpCombine[]
-  levelUpSnapshots     LevelUpRatingSnapshot[]
-  levelUpTrainingSets  LevelUpTrainingSet[]
-  levelUpBadgeUnlocks  LevelUpBadgeUnlock[]
-  levelUpTargetBuilds  LevelUpTargetBuild[]
-  levelUpExercises     LevelUpExercise[]
-  levelUpPrograms      LevelUpProgram[]
-  levelUpProgramDays   LevelUpProgramDay[]
-  levelUpProgramEntries LevelUpProgramEntry[]
-  levelUpSessions      LevelUpSession[]
-  levelUpBodyMetrics   LevelUpBodyMetric[]
-  levelUpReadinessSnapshots LevelUpReadinessSnapshot[]
-  graphEvents          GraphEvent[]
-  reviewItems          ReviewItem[]
-  lifeModelSnapshots   LifeModelSnapshot[]
-  adaptiveDayBriefs    AdaptiveDayBrief[]
+  autoMergeEnabled             Boolean                       @default(false)
+  members                      WorkspaceMember[]
+  approvedEmails               ApprovedEmail[]
+  persons                      Person[]
+  events                       Event[]
+  interactions                 Interaction[]
+  plans                        Plan[]
+  places                       Place[]
+  placeNotes                   PlaceNote[]
+  notes                        Note[]
+  theorySnapshots              TheorySnapshot[]
+  groups                       Group[]
+  items                        Item[]
+  itemDefinitions              ItemDefinition[]
+  inventoryLots                InventoryLot[]
+  supplierProfiles             SupplierProfile[]
+  purchaseOrders               PurchaseOrder[]
+  purchaseReceiptLines         PurchaseReceiptLine[]
+  importedFiles                ImportedFile[]
+  fileUploadIntents            FileUploadIntent[]
+  fileProcessingRuns           FileProcessingRun[]
+  fileChunks                   FileChunk[]
+  fileEntityMentions           FileEntityMention[]
+  fileEntityResolutions        FileEntityResolution[]
+  personExternalIdentifiers    PersonExternalIdentifier[]
+  evidenceClaims               EvidenceClaim[]
+  aiProviderCredentials        AiProviderCredential[]
+  aiAnalysisRuns               AiAnalysisRun[]
+  noteAnalysisRuns             NoteAnalysisRun[]
+  theoryAnalysisRuns           TheoryAnalysisRun[]
+  lifeModelAnalysisRuns        LifeModelAnalysisRun[]
+  lifeModelClaimFeedback       LifeModelClaimFeedback[]
+  noteSuggestions              NoteSuggestion[]
+  stagedItems                  StagedInteraction[]
+  rules                        Rule[]
+  ruleRuns                     RuleRun[]
+  apiKeys                      ApiKey[]
+  auditLogs                    AuditLog[]
+  calendarConnections          CalendarConnection[]
+  calendarEventLinks           CalendarEventLink[]
+  gmailConnections             GmailConnection[]
+  gmailMessageLinks            GmailMessageLink[]
+  importJobs                   ImportJob[]
+  importStagedVisits           ImportStagedVisit[]
+  planExpectedPersons          PlanExpectedPerson[]
+  assistantMessages            AssistantMessage[]
+  eraConnections               EraConnection[]
+  eraAccountLinks              EraAccountLink[]
+  eraTransactionLinks          EraTransactionLink[]
+  connections                  Connection[]
+  levelUpProfile               LevelUpProfile?
+  levelUpTestResults           LevelUpTestResult[]
+  levelUpCombines              LevelUpCombine[]
+  levelUpSnapshots             LevelUpRatingSnapshot[]
+  levelUpTrainingSets          LevelUpTrainingSet[]
+  levelUpBadgeUnlocks          LevelUpBadgeUnlock[]
+  levelUpTargetBuilds          LevelUpTargetBuild[]
+  levelUpExercises             LevelUpExercise[]
+  levelUpPrograms              LevelUpProgram[]
+  levelUpProgramDays           LevelUpProgramDay[]
+  levelUpProgramEntries        LevelUpProgramEntry[]
+  levelUpSessions              LevelUpSession[]
+  levelUpBodyMetrics           LevelUpBodyMetric[]
+  levelUpReadinessSnapshots    LevelUpReadinessSnapshot[]
+  graphEvents                  GraphEvent[]
+  reviewItems                  ReviewItem[]
+  lifeModelSnapshots           LifeModelSnapshot[]
+  adaptiveDayBriefs            AdaptiveDayBrief[]
   adaptiveInterventionOutcomes AdaptiveInterventionOutcome[]
-  devices              Device[]
-  deviceAuthorizations DeviceAuthorization[]
-  deviceIngestItems    DeviceIngestItem[]
+  devices                      Device[]
+  deviceAuthorizations         DeviceAuthorization[]
+  deviceIngestItems            DeviceIngestItem[]
 
   @@index([ownerUserId])
   @@index([status])
@@ -151,63 +158,67 @@ model ApprovedEmail {
 // ─────────────────────────────────────────────
 
 model Person {
-  id           String        @id @default(cuid())
-  workspaceId  String        @default("default-workspace")
-  workspace    Workspace     @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
-  first        String
-  last         String
-  nickname     String?
-  title        String?
-  headline     String?
-  emails       String        @default("[]")
-  emailSearch  String?
-  phones       String        @default("[]")
-  birthday     String?
-  closeness    Int           @default(2)
-  tags         String        @default("[]")
-  values       String        @default("[]")
-  notes        String?
-  company      String?
-  location     String?
-  linkedin     String?
-  twitter      String?
-  website      String?
-  facebook     String?
-  instagram    String?
-  color        String?
-  colorSoft    String?
+  id                   String                     @id @default(cuid())
+  workspaceId          String                     @default("default-workspace")
+  workspace            Workspace                  @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  createdAt            DateTime                   @default(now())
+  updatedAt            DateTime                   @updatedAt
+  first                String
+  last                 String
+  nickname             String?
+  title                String?
+  headline             String?
+  emails               String                     @default("[]")
+  emailSearch          String?
+  phones               String                     @default("[]")
+  birthday             String?
+  closeness            Int                        @default(2)
+  tags                 String                     @default("[]")
+  values               String                     @default("[]")
+  notes                String?
+  company              String?
+  location             String?
+  linkedin             String?
+  twitter              String?
+  website              String?
+  facebook             String?
+  instagram            String?
+  color                String?
+  colorSoft            String?
   // A shareable, unauthenticated "digital business card" page at
   // /profile/[publicSlug]. Off by default — a person only becomes visible
   // outside the workspace once someone explicitly toggles it on for that
   // specific record. Only identity/professional fields are ever exposed on
   // that page (see apps/persons/app/profile/[slug]/page.tsx) — never emails,
   // phones, notes, or birthday.
-  publicProfileEnabled Boolean @default(false)
-  publicSlug   String?       @unique
+  publicProfileEnabled Boolean                    @default(false)
+  publicSlug           String?                    @unique
   // How this record came to exist — "manual" | "api" | "system" | "rule" |
   // "interaction_import" | "vcard" | "csv" | "spreadsheet" | "gmail_contacts",
   // or null for rows created before this column existed. Purely a display
   // signal (PersonCard's provenance badge); never used for access control.
-  source       String?
+  source               String?
   // Interactions where this person is the counterparty (for a transaction, the merchant)
-  interactions Interaction[] @relation("InteractionCounterparty")
+  interactions         Interaction[]              @relation("InteractionCounterparty")
   // Interactions where this person is whose money/action it was (the payer)
-  actorInteractions Interaction[] @relation("InteractionActor")
-  ownedEraAccounts  EraAccountLink[] @relation("EraAccountOwner")
-  stagedInteractions StagedInteraction[]
-  plans        Plan[]
-  expectedInPlans PlanExpectedPerson[]
-  ownedItems   Item[]
-  assembledBy  Assembly[]    @relation("AssembledBy")
-  disassembledBy Assembly[]  @relation("DisassembledBy")
-  groupMemberships PersonGroup[]
-  users        User[]
-  apiKeys      ApiKey[]
-  auditLogs    AuditLog[]
-  theorySnapshots TheorySnapshot[]
-  theoryAnalysisRuns TheoryAnalysisRun[]
+  actorInteractions    Interaction[]              @relation("InteractionActor")
+  ownedEraAccounts     EraAccountLink[]           @relation("EraAccountOwner")
+  stagedInteractions   StagedInteraction[]
+  plans                Plan[]
+  expectedInPlans      PlanExpectedPerson[]
+  ownedItems           Item[]
+  assembledBy          Assembly[]                 @relation("AssembledBy")
+  disassembledBy       Assembly[]                 @relation("DisassembledBy")
+  groupMemberships     PersonGroup[]
+  users                User[]
+  apiKeys              ApiKey[]
+  auditLogs            AuditLog[]
+  theorySnapshots      TheorySnapshot[]
+  theoryAnalysisRuns   TheoryAnalysisRun[]
+  fileEntityMentions   FileEntityMention[]        @relation("ResolvedPersonFileMentions")
+  fileResolutionsFrom  FileEntityResolution[]     @relation("FileResolutionFromPerson")
+  fileResolutionsTo    FileEntityResolution[]     @relation("FileResolutionToPerson")
+  externalIdentifiers  PersonExternalIdentifier[]
 
   @@index([workspaceId, last, first])
   @@index([workspaceId, createdAt, id])
@@ -226,22 +237,22 @@ model Person {
 // ─────────────────────────────────────────────
 
 model User {
-  id        String    @id @default(cuid())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  email     String    @unique
-  name      String?
-  image     String?
-  status    String    @default("active")
-  personId  String?
-  person    Person?   @relation(fields: [personId], references: [id], onDelete: SetNull)
-  roles     UserRole[]
-  apiKeys   ApiKey[]
-  auditLogs AuditLog[]
-  rules     Rule[]
+  id                   String                @id @default(cuid())
+  createdAt            DateTime              @default(now())
+  updatedAt            DateTime              @updatedAt
+  email                String                @unique
+  name                 String?
+  image                String?
+  status               String                @default("active")
+  personId             String?
+  person               Person?               @relation(fields: [personId], references: [id], onDelete: SetNull)
+  roles                UserRole[]
+  apiKeys              ApiKey[]
+  auditLogs            AuditLog[]
+  rules                Rule[]
   workspaceMemberships WorkspaceMember[]
-  ownedWorkspaces      Workspace[]     @relation("WorkspaceOwner")
-  approvedEmailsSent   ApprovedEmail[] @relation("ApprovedEmailInviter")
+  ownedWorkspaces      Workspace[]           @relation("WorkspaceOwner")
+  approvedEmailsSent   ApprovedEmail[]       @relation("ApprovedEmailInviter")
   calendarConnections  CalendarConnection[]
   gmailConnections     GmailConnection[]
   eraConnections       EraConnection[]
@@ -256,11 +267,11 @@ model User {
 // primitives. They describe which owned endpoint supplied normalized facts;
 // raw source databases, files, samples, and GPS pings never belong here.
 model Device {
-  id             String   @id @default(cuid())
+  id             String                @id @default(cuid())
   workspaceId    String
-  workspace      Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  workspace      Workspace             @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  createdAt      DateTime              @default(now())
+  updatedAt      DateTime              @updatedAt
   platform       String
   displayName    String
   appVersion     String
@@ -276,31 +287,31 @@ model Device {
 }
 
 model DeviceSource {
-  id               String   @id @default(cuid())
+  id               String    @id @default(cuid())
   deviceId         String
-  device           Device   @relation(fields: [deviceId], references: [id], onDelete: Cascade)
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
+  device           Device    @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
   source           String
-  enabled          Boolean  @default(false)
-  permissionStatus String   @default("unknown")
-  healthStatus     String   @default("unknown")
+  enabled          Boolean   @default(false)
+  permissionStatus String    @default("unknown")
+  healthStatus     String    @default("unknown")
   lastSuccessAt    DateTime?
   lastErrorCode    String?
-  schemaVersion    Int      @default(1)
+  schemaVersion    Int       @default(1)
 
   @@unique([deviceId, source])
   @@index([deviceId, enabled])
 }
 
 model DeviceCredential {
-  id               String   @id @default(cuid())
+  id               String    @id @default(cuid())
   deviceId         String
-  device           Device   @relation(fields: [deviceId], references: [id], onDelete: Cascade)
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
-  refreshTokenHash String   @unique
-  accessTokenHash  String   @unique
+  device           Device    @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  refreshTokenHash String    @unique
+  accessTokenHash  String    @unique
   accessExpiresAt  DateTime
   refreshExpiresAt DateTime
   scopes           String
@@ -397,23 +408,23 @@ model RolePermission {
 }
 
 model ApiKey {
-  id            String        @id @default(cuid())
-  workspaceId   String        @default("default-workspace")
-  workspace     Workspace     @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
-  name          String
-  keyPrefix     String        @unique
-  keyHash       String        @unique
-  status        String        @default("active")
-  expiresAt     DateTime?
-  lastUsedAt    DateTime?
+  id              String        @id @default(cuid())
+  workspaceId     String        @default("default-workspace")
+  workspace       Workspace     @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  name            String
+  keyPrefix       String        @unique
+  keyHash         String        @unique
+  status          String        @default("active")
+  expiresAt       DateTime?
+  lastUsedAt      DateTime?
   createdByUserId String?
-  createdByUser User?         @relation(fields: [createdByUserId], references: [id], onDelete: SetNull)
-  ownerPersonId String?
-  ownerPerson   Person?       @relation(fields: [ownerPersonId], references: [id], onDelete: SetNull)
-  scopes        ApiKeyScope[]
-  auditLogs     AuditLog[]
+  createdByUser   User?         @relation(fields: [createdByUserId], references: [id], onDelete: SetNull)
+  ownerPersonId   String?
+  ownerPerson     Person?       @relation(fields: [ownerPersonId], references: [id], onDelete: SetNull)
+  scopes          ApiKeyScope[]
+  auditLogs       AuditLog[]
 
   @@index([status])
   @@index([workspaceId])
@@ -431,23 +442,23 @@ model ApiKeyScope {
 }
 
 model AuditLog {
-  id         String   @id @default(cuid())
-  workspaceId String? @default("default-workspace")
-  workspace Workspace? @relation(fields: [workspaceId], references: [id], onDelete: SetNull)
-  createdAt  DateTime @default(now())
-  action     String
-  targetType String
-  targetId   String?
-  actorType  String
-  actorId    String?
-  actorLabel String?
-  userId     String?
-  user       User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
-  apiKeyId   String?
-  apiKey     ApiKey?  @relation(fields: [apiKeyId], references: [id], onDelete: SetNull)
-  personId   String?
-  person     Person?  @relation(fields: [personId], references: [id], onDelete: SetNull)
-  metadata   String?
+  id          String     @id @default(cuid())
+  workspaceId String?    @default("default-workspace")
+  workspace   Workspace? @relation(fields: [workspaceId], references: [id], onDelete: SetNull)
+  createdAt   DateTime   @default(now())
+  action      String
+  targetType  String
+  targetId    String?
+  actorType   String
+  actorId     String?
+  actorLabel  String?
+  userId      String?
+  user        User?      @relation(fields: [userId], references: [id], onDelete: SetNull)
+  apiKeyId    String?
+  apiKey      ApiKey?    @relation(fields: [apiKeyId], references: [id], onDelete: SetNull)
+  personId    String?
+  person      Person?    @relation(fields: [personId], references: [id], onDelete: SetNull)
+  metadata    String?
 
   @@index([createdAt])
   @@index([workspaceId, createdAt])
@@ -464,27 +475,27 @@ model AuditLog {
 // ─────────────────────────────────────────────
 
 model CalendarConnection {
-  id              String   @id @default(cuid())
-  workspaceId     String   @default("default-workspace")
-  workspace       Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  userId          String
-  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-  provider        String   @default("google")
-  status          String   @default("active")
-  accountEmail    String?
-  calendarId      String   @default("primary")
-  calendarSummary String?
+  id                    String              @id @default(cuid())
+  workspaceId           String              @default("default-workspace")
+  workspace             Workspace           @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  userId                String
+  user                  User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt             DateTime            @default(now())
+  updatedAt             DateTime            @updatedAt
+  provider              String              @default("google")
+  status                String              @default("active")
+  accountEmail          String?
+  calendarId            String              @default("primary")
+  calendarSummary       String?
   // Ciphertext ("iv:authTag:ciphertext"), see packages/db/src/crypto.ts. Never store plaintext tokens.
   accessTokenEncrypted  String?
   refreshTokenEncrypted String?
-  expiresAt       DateTime?
-  scope           String?
+  expiresAt             DateTime?
+  scope                 String?
   syncTokenEncrypted    String?
-  lastSyncedAt    DateTime?
-  lastError       String?
-  eventLinks      CalendarEventLink[]
+  lastSyncedAt          DateTime?
+  lastError             String?
+  eventLinks            CalendarEventLink[]
 
   @@unique([workspaceId, provider, calendarId])
   @@index([userId])
@@ -492,23 +503,23 @@ model CalendarConnection {
 }
 
 model CalendarEventLink {
-  id             String   @id @default(cuid())
-  workspaceId    String   @default("default-workspace")
-  workspace      Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  connectionId   String
-  connection     CalendarConnection @relation(fields: [connectionId], references: [id], onDelete: Cascade)
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-  provider       String   @default("google")
-  calendarId     String
+  id              String             @id @default(cuid())
+  workspaceId     String             @default("default-workspace")
+  workspace       Workspace          @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  connectionId    String
+  connection      CalendarConnection @relation(fields: [connectionId], references: [id], onDelete: Cascade)
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+  provider        String             @default("google")
+  calendarId      String
   externalEventId String
-  iCalUID        String?
-  planId         String?
-  plan           Plan?    @relation(fields: [planId], references: [id], onDelete: SetNull)
-  eventId        String?
-  event          Event?   @relation(fields: [eventId], references: [id], onDelete: SetNull)
-  status         String   @default("active")
-  lastSeenAt     DateTime?
+  iCalUID         String?
+  planId          String?
+  plan            Plan?              @relation(fields: [planId], references: [id], onDelete: SetNull)
+  eventId         String?
+  event           Event?             @relation(fields: [eventId], references: [id], onDelete: SetNull)
+  status          String             @default("active")
+  lastSeenAt      DateTime?
 
   @@unique([workspaceId, provider, calendarId, externalEventId])
   @@index([connectionId])
@@ -522,26 +533,26 @@ model CalendarEventLink {
 // ─────────────────────────────────────────────
 
 model GmailConnection {
-  id             String   @id @default(cuid())
-  workspaceId    String   @default("default-workspace")
-  workspace      Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  userId         String
-  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-  provider       String   @default("google")
-  status         String   @default("active")
-  accountEmail   String?
-  mailboxId      String   @default("me")
+  id                    String             @id @default(cuid())
+  workspaceId           String             @default("default-workspace")
+  workspace             Workspace          @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  userId                String
+  user                  User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt             DateTime           @default(now())
+  updatedAt             DateTime           @updatedAt
+  provider              String             @default("google")
+  status                String             @default("active")
+  accountEmail          String?
+  mailboxId             String             @default("me")
   // Ciphertext ("iv:authTag:ciphertext"), see packages/db/src/crypto.ts. Never store plaintext tokens.
   accessTokenEncrypted  String?
   refreshTokenEncrypted String?
-  expiresAt      DateTime?
-  scope          String?
-  historyId      String?
-  lastSyncedAt   DateTime?
-  lastError      String?
-  messageLinks   GmailMessageLink[]
+  expiresAt             DateTime?
+  scope                 String?
+  historyId             String?
+  lastSyncedAt          DateTime?
+  lastError             String?
+  messageLinks          GmailMessageLink[]
 
   @@unique([workspaceId, provider, mailboxId])
   @@index([userId])
@@ -549,24 +560,24 @@ model GmailConnection {
 }
 
 model GmailMessageLink {
-  id              String   @id @default(cuid())
-  workspaceId     String   @default("default-workspace")
-  workspace       Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  connectionId    String
-  connection      GmailConnection @relation(fields: [connectionId], references: [id], onDelete: Cascade)
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-  provider        String   @default("google")
-  mailboxId       String
+  id                String             @id @default(cuid())
+  workspaceId       String             @default("default-workspace")
+  workspace         Workspace          @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  connectionId      String
+  connection        GmailConnection    @relation(fields: [connectionId], references: [id], onDelete: Cascade)
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  provider          String             @default("google")
+  mailboxId         String
   externalMessageId String
-  threadId        String?
-  historyId       String?
-  interactionId   String?
-  interaction     Interaction? @relation(fields: [interactionId], references: [id], onDelete: SetNull)
-  stagedItemId    String?
-  stagedItem      StagedInteraction? @relation(fields: [stagedItemId], references: [id], onDelete: SetNull)
-  status          String   @default("active")
-  lastSeenAt      DateTime?
+  threadId          String?
+  historyId         String?
+  interactionId     String?
+  interaction       Interaction?       @relation(fields: [interactionId], references: [id], onDelete: SetNull)
+  stagedItemId      String?
+  stagedItem        StagedInteraction? @relation(fields: [stagedItemId], references: [id], onDelete: SetNull)
+  status            String             @default("active")
+  lastSeenAt        DateTime?
 
   @@unique([workspaceId, provider, mailboxId, externalMessageId])
   @@index([connectionId])
@@ -580,25 +591,25 @@ model GmailMessageLink {
 // ─────────────────────────────────────────────
 
 model EraConnection {
-  id               String   @id @default(cuid())
-  workspaceId      String   @default("default-workspace")
-  workspace        Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  userId           String
-  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
-  status           String   @default("active")
-  accountEmail     String?
+  id                    String               @id @default(cuid())
+  workspaceId           String               @default("default-workspace")
+  workspace             Workspace            @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  userId                String
+  user                  User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt             DateTime             @default(now())
+  updatedAt             DateTime             @updatedAt
+  status                String               @default("active")
+  accountEmail          String?
   // Ciphertext ("iv:authTag:ciphertext"), see packages/db/src/crypto.ts. Never store plaintext tokens.
   accessTokenEncrypted  String?
   refreshTokenEncrypted String?
-  expiresAt        DateTime?
-  scope            String?
-  lastSyncedAt     DateTime?
-  lastError        String?
-  syncCursor       String?
-  transactionLinks EraTransactionLink[]
-  accountLinks     EraAccountLink[]
+  expiresAt             DateTime?
+  scope                 String?
+  lastSyncedAt          DateTime?
+  lastError             String?
+  syncCursor            String?
+  transactionLinks      EraTransactionLink[]
+  accountLinks          EraAccountLink[]
 
   @@unique([workspaceId, userId])
   @@index([userId])
@@ -606,19 +617,19 @@ model EraConnection {
 }
 
 model EraAccountLink {
-  id               String        @id @default(cuid())
-  workspaceId      String        @default("default-workspace")
-  workspace        Workspace     @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  id               String               @id @default(cuid())
+  workspaceId      String               @default("default-workspace")
+  workspace        Workspace            @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   connectionId     String
-  connection       EraConnection @relation(fields: [connectionId], references: [id], onDelete: Cascade)
-  createdAt        DateTime      @default(now())
-  updatedAt        DateTime      @updatedAt
+  connection       EraConnection        @relation(fields: [connectionId], references: [id], onDelete: Cascade)
+  createdAt        DateTime             @default(now())
+  updatedAt        DateTime             @updatedAt
   eraAccountId     String
   institution      String?
   accountName      String?
   accountType      String?
-  currency         String?       @default("USD")
-  status           String        @default("active")
+  currency         String?              @default("USD")
+  status           String               @default("active")
   lastSeenAt       DateTime?
   transactionLinks EraTransactionLink[]
 
@@ -641,21 +652,21 @@ model EraAccountLink {
 }
 
 model EraTransactionLink {
-  id               String         @id @default(cuid())
-  workspaceId      String         @default("default-workspace")
-  workspace        Workspace      @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  id               String             @id @default(cuid())
+  workspaceId      String             @default("default-workspace")
+  workspace        Workspace          @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   connectionId     String
-  connection       EraConnection  @relation(fields: [connectionId], references: [id], onDelete: Cascade)
+  connection       EraConnection      @relation(fields: [connectionId], references: [id], onDelete: Cascade)
   accountLinkId    String?
-  accountLink      EraAccountLink? @relation(fields: [accountLinkId], references: [id], onDelete: SetNull)
-  createdAt        DateTime       @default(now())
-  updatedAt        DateTime       @updatedAt
+  accountLink      EraAccountLink?    @relation(fields: [accountLinkId], references: [id], onDelete: SetNull)
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
   eraTransactionId String
   interactionId    String?
-  interaction      Interaction?   @relation(fields: [interactionId], references: [id], onDelete: SetNull)
+  interaction      Interaction?       @relation(fields: [interactionId], references: [id], onDelete: SetNull)
   stagedItemId     String?
   stagedItem       StagedInteraction? @relation(fields: [stagedItemId], references: [id], onDelete: SetNull)
-  status           String         @default("staged")
+  status           String             @default("staged")
   lastSeenAt       DateTime?
 
   @@unique([workspaceId, eraTransactionId])
@@ -683,34 +694,34 @@ model EraTransactionLink {
 // ─────────────────────────────────────────────
 
 model Connection {
-  id          String    @id @default(cuid())
-  workspaceId String    @default("default-workspace")
-  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  userId      String?
-  user        User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  id                    String    @id @default(cuid())
+  workspaceId           String    @default("default-workspace")
+  workspace             Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  userId                String?
+  user                  User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
   // "calendar" | "gmail" | "era" — open string, not an enum, matching this
   // schema's existing convention (Interaction.type, Rule.trigger, etc.) so a
   // new integration kind never needs a migration to add.
-  kind        String
-  provider    String    @default("google")
-  status      String    @default("active")
-  accountEmail String?
-  label       String?
+  kind                  String
+  provider              String    @default("google")
+  status                String    @default("active")
+  accountEmail          String?
+  label                 String?
   // Ciphertext ("iv:authTag:ciphertext"), see packages/db/src/crypto.ts. Never store plaintext tokens.
   accessTokenEncrypted  String?
   refreshTokenEncrypted String?
-  expiresAt   DateTime?
-  scope       String?
-  lastSyncedAt DateTime?
-  lastError   String?
+  expiresAt             DateTime?
+  scope                 String?
+  lastSyncedAt          DateTime?
+  lastError             String?
   // Kind-specific fields that don't earn their own column (calendarId/
   // calendarSummary/syncToken for calendar, mailboxId/historyId for gmail,
   // syncCursor for era) — JSON-encoded, not sensitive so stored plaintext.
-  metadata    String?
-  sourceTable String?
-  sourceId    String?
+  metadata              String?
+  sourceTable           String?
+  sourceId              String?
 
   // No DB-level unique constraint on the business key: accountEmail is
   // nullable (Era has none) and Prisma's compound-unique WHERE input for a
@@ -760,13 +771,13 @@ model Rule {
 }
 
 model RuleRun {
-  id             String   @id @default(cuid())
-  workspaceId    String   @default("default-workspace")
+  id             String    @id @default(cuid())
+  workspaceId    String    @default("default-workspace")
   workspace      Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  createdAt      DateTime @default(now())
+  createdAt      DateTime  @default(now())
   ruleId         String
-  rule           Rule     @relation(fields: [ruleId], references: [id], onDelete: Cascade)
-  ruleVersion    Int      @default(1)
+  rule           Rule      @relation(fields: [ruleId], references: [id], onDelete: Cascade)
+  ruleVersion    Int       @default(1)
   trigger        String
   targetType     String?
   targetId       String?
@@ -781,7 +792,7 @@ model RuleRun {
   // by an app event, not by another rule's action) — packages/automation's
   // causation-depth guard, same MAX_CAUSATION_DEPTH concept as
   // GraphEvent.causationDepth, so a rule chain can't loop forever.
-  causationDepth Int      @default(0)
+  causationDepth Int       @default(0)
 
   @@index([ruleId, createdAt])
   @@index([workspaceId, createdAt])
@@ -797,23 +808,23 @@ model RuleRun {
 // ─────────────────────────────────────────────
 
 model StagedInteraction {
-  id                String   @id @default(cuid())
-  workspaceId        String   @default("default-workspace")
-  workspace          Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
+  id                String               @id @default(cuid())
+  workspaceId       String               @default("default-workspace")
+  workspace         Workspace            @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  createdAt         DateTime             @default(now())
+  updatedAt         DateTime             @updatedAt
   source            String
   sourceId          String
-  itemType          String   @default("interaction")
-  status            String   @default("pending")
+  itemType          String               @default("interaction")
+  status            String               @default("pending")
   contactName       String?
   contactEmail      String?
   contactPhone      String?
   candidatePersonId String?
-  candidatePerson   Person?  @relation(fields: [candidatePersonId], references: [id], onDelete: SetNull)
+  candidatePerson   Person?              @relation(fields: [candidatePersonId], references: [id], onDelete: SetNull)
   confidence        Float?
   matchReason       String?
-  type              String   @default("message")
+  type              String               @default("message")
   timestamp         DateTime
   summary           String?
   body              String?
@@ -822,7 +833,7 @@ model StagedInteraction {
   acceptedAt        DateTime?
   acceptedPersonId  String?
   interactionId     String?
-  priority          Int       @default(3)
+  priority          Int                  @default(3)
   enrichedAt        DateTime?
   gmailLinks        GmailMessageLink[]
   eraLinks          EraTransactionLink[]
@@ -839,35 +850,35 @@ model StagedInteraction {
 // ─────────────────────────────────────────────
 
 model Event {
-  id            String        @id @default(cuid())
-  workspaceId   String        @default("default-workspace")
-  workspace     Workspace     @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  createdAt     DateTime      @default(now())
-  name          String
-  type          String
+  id                   String                @id @default(cuid())
+  workspaceId          String                @default("default-workspace")
+  workspace            Workspace             @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  createdAt            DateTime              @default(now())
+  name                 String
+  type                 String
   // start/end are the canonical time bounds; timestamp mirrors start for Persons compatibility
-  start         DateTime
-  end           DateTime?
-  timestamp     DateTime
-  placeId       String?
-  place         Place?        @relation(fields: [placeId], references: [id])
-  notes         String?
-  transcript    String?
-  metadata      String?
+  start                DateTime
+  end                  DateTime?
+  timestamp            DateTime
+  placeId              String?
+  place                Place?                @relation(fields: [placeId], references: [id])
+  notes                String?
+  transcript           String?
+  metadata             String?
   // Which prediction (if any) this occurrence fulfilled
-  sourcePlanId  String?       @unique
-  sourcePlan    Plan?         @relation("PlanFulfillment", fields: [sourcePlanId], references: [id], onDelete: SetNull)
+  sourcePlanId         String?               @unique
+  sourcePlan           Plan?                 @relation("PlanFulfillment", fields: [sourcePlanId], references: [id], onDelete: SetNull)
   // Containment nesting — bind to the narrowest true event
-  parentEventId String?
-  parentEvent   Event?        @relation("EventNesting", fields: [parentEventId], references: [id], onDelete: SetNull)
-  childEvents   Event[]       @relation("EventNesting")
+  parentEventId        String?
+  parentEvent          Event?                @relation("EventNesting", fields: [parentEventId], references: [id], onDelete: SetNull)
+  childEvents          Event[]               @relation("EventNesting")
   // Provenance — the Note this Event was derived from, if any
-  sourceNoteId  String?
-  sourceNote    Note?         @relation(fields: [sourceNoteId], references: [id], onDelete: SetNull)
-  interactions  Interaction[]
-  calendarLinks CalendarEventLink[]
-  groupTags     Group[]             @relation("EventGroupTags")
-  placeNotes    PlaceNote[]
+  sourceNoteId         String?
+  sourceNote           Note?                 @relation(fields: [sourceNoteId], references: [id], onDelete: SetNull)
+  interactions         Interaction[]
+  calendarLinks        CalendarEventLink[]
+  groupTags            Group[]               @relation("EventGroupTags")
+  placeNotes           PlaceNote[]
   purchaseReceiptLines PurchaseReceiptLine[]
 
   @@index([workspaceId, start])
@@ -882,20 +893,20 @@ model Event {
 // ─────────────────────────────────────────────
 
 model Interaction {
-  id              String            @id @default(cuid())
-  workspaceId     String            @default("default-workspace")
-  workspace       Workspace         @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  createdAt       DateTime          @default(now())
+  id              String        @id @default(cuid())
+  workspaceId     String        @default("default-workspace")
+  workspace       Workspace     @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  createdAt       DateTime      @default(now())
   // The counterparty — who was on the other end. For a financial Interaction
   // that is the merchant/payee, not the payer (see actorPersonId below).
   // Optional: interactions can involve any combination of primaries.
   personId        String?
-  person          Person?           @relation("InteractionCounterparty", fields: [personId], references: [id], onDelete: Cascade)
+  person          Person?       @relation("InteractionCounterparty", fields: [personId], references: [id], onDelete: Cascade)
   eventId         String?
-  event           Event?            @relation(fields: [eventId], references: [id])
+  event           Event?        @relation(fields: [eventId], references: [id])
   // Context place (where this interaction happened)
   placeId         String?
-  place           Place?            @relation(fields: [placeId], references: [id])
+  place           Place?        @relation(fields: [placeId], references: [id])
   type            String
   timestamp       DateTime
   duration        Int?
@@ -904,30 +915,30 @@ model Interaction {
   summary         String?
   notes           String?
   actionItems     String?
-  billable        Boolean           @default(false)
+  billable        Boolean       @default(false)
   // Integer minor units (cents), not Float — avoids floating-point drift in money.
   amount          Int?
   direction       String?
   sourceFileId    String?
-  sourceFile      ImportedFile?     @relation(fields: [sourceFileId], references: [id])
+  sourceFile      ImportedFile? @relation(fields: [sourceFileId], references: [id])
   // Provenance — the Note this Interaction was derived from, if any
   sourceNoteId    String?
-  sourceNote      Note?             @relation(fields: [sourceNoteId], references: [id], onDelete: SetNull)
+  sourceNote      Note?         @relation(fields: [sourceNoteId], references: [id], onDelete: SetNull)
 
   // ── Provenance: dedupe anchor at the canonical level ────────────────────
   // Lets any source write straight to Interaction idempotently, instead of
   // routing through StagedInteraction and waiting on a human gate.
-  source          String?           // "era" | "manual" | "imessage" | "gmail" | "calendar"
-  sourceId        String?           // Era transaction_id, Gmail message id, etc.
+  source   String? // "era" | "manual" | "imessage" | "gmail" | "calendar"
+  sourceId String? // Era transaction_id, Gmail message id, etc.
 
   // ── Money ───────────────────────────────────────────────────────────────
   // amount (cents) and direction above carry the value and its sign.
-  subtype         String?           // purchase | payment | transfer | refund | income | fee | subscription
-  currency        String            @default("USD")
-  category        String?           // promoted out of metadata JSON — every spend query groups by it
-  merchantName    String?           // cleaned descriptor; true even when no Person node is warranted
-  accountLinkId   String?           // which card/account — the ownership anchor
-  accountLink     EraAccountLink?   @relation(fields: [accountLinkId], references: [id], onDelete: SetNull)
+  subtype       String? // purchase | payment | transfer | refund | income | fee | subscription
+  currency      String          @default("USD")
+  category      String? // promoted out of metadata JSON — every spend query groups by it
+  merchantName  String? // cleaned descriptor; true even when no Person node is warranted
+  accountLinkId String? // which card/account — the ownership anchor
+  accountLink   EraAccountLink? @relation(fields: [accountLinkId], references: [id], onDelete: SetNull)
 
   // ── Whose money moved ───────────────────────────────────────────────────
   // A CACHE of EraAccountLink.ownerPersonId, which stays authoritative. Kept on
@@ -935,17 +946,17 @@ model Interaction {
   // and because "all of Qin's spending" should be one indexed scan.
   // Drift is reported by the reconciler; never hand-edit this on a row that
   // has an accountLinkId.
-  actorPersonId   String?
-  actorPerson     Person?           @relation("InteractionActor", fields: [actorPersonId], references: [id], onDelete: SetNull)
+  actorPersonId String?
+  actorPerson   Person? @relation("InteractionActor", fields: [actorPersonId], references: [id], onDelete: SetNull)
 
   // Source fields worth keeping but never queried directly, as JSON.
   // `notes` is human-written prose — never put structured data there.
-  metadata        String?
+  metadata String?
 
   // ── Enrichment state ────────────────────────────────────────────────────
   // Context (Place, Event, beneficiaries) attaches later via participants.
   // Bump enrichmentVersion to force the reconciler to revisit a row.
-  enrichmentVersion Int             @default(0)
+  enrichmentVersion Int       @default(0)
   enrichedAt        DateTime?
 
   itemInteractions ItemInteraction[]
@@ -981,20 +992,20 @@ model InteractionParticipant {
   id            String      @id @default(cuid())
   interactionId String
   interaction   Interaction @relation(fields: [interactionId], references: [id], onDelete: Cascade)
-  entityType    String      // "Person" | "Place" | "Event" | "Group" | "Plan" | "State" | "Note" | "Item"
+  entityType    String // "Person" | "Place" | "Event" | "Group" | "Plan" | "State" | "Note" | "Item"
   entityId      String
-  role          String?     // "subject" | "observer" | "mentioned"; finance: payer | payee | merchant | occasion | location | beneficiary | household
+  role          String? // "subject" | "observer" | "mentioned"; finance: payer | payee | merchant | occasion | location | beneficiary | household
   workspaceId   String
 
   // ── Late-bound context, with provenance ─────────────────────────────────
   // These make enrichment safely re-runnable: the reconciler may overwrite only
   // rows whose band it wrote itself. band = "manual" is immutable to automation.
-  confidence    Float?      // 0–1
-  band          String?     // "auto" | "suggested" | "adjudicated" | "manual"
-  source        String?     // "era" | "timeline-join" | "merchant-map" | "rule" | "manual"
-  evidence      String?     // JSON — what matched and why; the audit trail
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
+  confidence Float? // 0–1
+  band       String? // "auto" | "suggested" | "adjudicated" | "manual"
+  source     String? // "era" | "timeline-join" | "merchant-map" | "rule" | "manual"
+  evidence   String? // JSON — what matched and why; the audit trail
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
   // Upsert key for the reconciler. Rows written before this migration may have
   // a null role; SQLite treats those as distinct, so always set a role on write.
@@ -1019,44 +1030,44 @@ enum PlanStatus {
 }
 
 model Plan {
-  id             String     @id @default(cuid())
-  workspaceId    String     @default("default-workspace")
-  workspace      Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  createdAt      DateTime   @default(now())
-  personId       String?
-  person         Person?  @relation(fields: [personId], references: [id], onDelete: Cascade)
-  text           String
-  timescale      String?
-  successSignals String?
-  status         PlanStatus @default(active)
+  id                   String               @id @default(cuid())
+  workspaceId          String               @default("default-workspace")
+  workspace            Workspace            @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  createdAt            DateTime             @default(now())
+  personId             String?
+  person               Person?              @relation(fields: [personId], references: [id], onDelete: Cascade)
+  text                 String
+  timescale            String?
+  successSignals       String?
+  status               PlanStatus           @default(active)
   // Commitment tracking. `dueOn` is the day I declared I would do this — a
   // promise to myself, not a calendar slot (that is `scheduledStart`). Snoozing
   // pushes `dueOn` forward and increments `deferCount`; past STALE_DEFER_COUNT
   // Home stops offering snooze and forces schedule-or-drop.
-  dueOn          DateTime?
-  deferCount     Int        @default(0)
-  completedAt    DateTime?
-  parentId       String?
-  children       Plan[]   @relation("PlanHierarchy")
-  parent         Plan?    @relation("PlanHierarchy", fields: [parentId], references: [id])
+  dueOn                DateTime?
+  deferCount           Int                  @default(0)
+  completedAt          DateTime?
+  parentId             String?
+  children             Plan[]               @relation("PlanHierarchy")
+  parent               Plan?                @relation("PlanHierarchy", fields: [parentId], references: [id])
   // Calendar-backed prediction fields (null = goal-type plan, set = temporal prediction)
-  scheduledStart     DateTime?
-  scheduledEnd       DateTime?
-  placeId            String?
-  place              Place?    @relation(fields: [placeId], references: [id])
-  externalSource     String?
-  externalInstanceId String?   @unique
+  scheduledStart       DateTime?
+  scheduledEnd         DateTime?
+  placeId              String?
+  place                Place?               @relation(fields: [placeId], references: [id])
+  externalSource       String?
+  externalInstanceId   String?              @unique
   // Calendar occurrence review state. Null for non-calendar Plans.
   reconciliationStatus String?
   reconciledAt         DateTime?
-  expectedPeople     PlanExpectedPerson[]
+  expectedPeople       PlanExpectedPerson[]
   // Reverse of Event.sourcePlanId — a fulfilled Plan has exactly one Event here
-  fulfilledBy        Event?    @relation("PlanFulfillment")
+  fulfilledBy          Event?               @relation("PlanFulfillment")
   // Provenance — the Note this Plan was derived from, if any
-  sourceNoteId       String?
-  sourceNote         Note?     @relation(fields: [sourceNoteId], references: [id], onDelete: SetNull)
-  purchaseOrder      PurchaseOrder?
-  calendarLinks      CalendarEventLink[]
+  sourceNoteId         String?
+  sourceNote           Note?                @relation(fields: [sourceNoteId], references: [id], onDelete: SetNull)
+  purchaseOrder        PurchaseOrder?
+  calendarLinks        CalendarEventLink[]
 
   @@index([workspaceId, createdAt])
   @@index([workspaceId, personId])
@@ -1069,7 +1080,7 @@ model Plan {
 model PlanExpectedPerson {
   planId      String
   personId    String
-  workspaceId String   @default("default-workspace")
+  workspaceId String    @default("default-workspace")
   workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   plan        Plan      @relation(fields: [planId], references: [id], onDelete: Cascade)
   person      Person    @relation(fields: [personId], references: [id], onDelete: Cascade)
@@ -1084,26 +1095,26 @@ model PlanExpectedPerson {
 // ─────────────────────────────────────────────
 
 model Place {
-  id            String        @id @default(cuid())
-  workspaceId   String        @default("default-workspace")
-  workspace     Workspace     @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  name          String
-  googlePlaceId String?       @unique
-  type          String?
-  address       String?
-  coordinates   String?
-  meaning       String?
-  favorite      Boolean       @default(false)
+  id                 String              @id @default(cuid())
+  workspaceId        String              @default("default-workspace")
+  workspace          Workspace           @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  name               String
+  googlePlaceId      String?             @unique
+  type               String?
+  address            String?
+  coordinates        String?
+  meaning            String?
+  favorite           Boolean             @default(false)
   // Self-referencing hierarchy: Earth → Country → City → Home → Room → Shelf
-  parentPlaceId String?
-  parentPlace   Place?        @relation("PlaceHierarchy", fields: [parentPlaceId], references: [id])
-  childPlaces   Place[]       @relation("PlaceHierarchy")
-  events        Event[]
-  plans         Plan[]
-  interactions  Interaction[]
-  items         Item[]
-  notes         PlaceNote[]
-  groupAffiliations PlaceGroup[]
+  parentPlaceId      String?
+  parentPlace        Place?              @relation("PlaceHierarchy", fields: [parentPlaceId], references: [id])
+  childPlaces        Place[]             @relation("PlaceHierarchy")
+  events             Event[]
+  plans              Plan[]
+  interactions       Interaction[]
+  items              Item[]
+  notes              PlaceNote[]
+  groupAffiliations  PlaceGroup[]
   importStagedVisits ImportStagedVisit[]
   purchaseOrderLines PurchaseOrderLine[]
 
@@ -1132,8 +1143,8 @@ model ImportJob {
   finishedAt    DateTime?
   createdAt     DateTime        @default(now())
 
-  workspace     Workspace       @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  stagedVisits  ImportStagedVisit[]
+  workspace    Workspace           @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  stagedVisits ImportStagedVisit[]
 
   @@index([workspaceId, createdAt])
   @@index([workspaceId, status])
@@ -1165,9 +1176,9 @@ model ImportStagedVisit {
   resolvedEventId String?
   createdAt       DateTime          @default(now())
 
-  importJob       ImportJob         @relation(fields: [importJobId], references: [id], onDelete: Cascade)
-  workspace       Workspace         @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  resolvedPlace   Place?            @relation(fields: [resolvedPlaceId], references: [id], onDelete: SetNull)
+  importJob     ImportJob @relation(fields: [importJobId], references: [id], onDelete: Cascade)
+  workspace     Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  resolvedPlace Place?    @relation(fields: [resolvedPlaceId], references: [id], onDelete: SetNull)
 
   @@index([importJobId, status, confidence])
   @@index([workspaceId, status, startedAt])
@@ -1181,17 +1192,17 @@ enum StagedVisitStatus {
 }
 
 model PlaceNote {
-  id          String    @id @default(cuid())
+  id          String   @id @default(cuid())
   placeId     String
   workspaceId String
   body        String
   eventId     String?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
-  place       Place     @relation(fields: [placeId], references: [id])
-  workspace   Workspace @relation(fields: [workspaceId], references: [id])
-  event       Event?    @relation(fields: [eventId], references: [id])
+  place     Place     @relation(fields: [placeId], references: [id])
+  workspace Workspace @relation(fields: [workspaceId], references: [id])
+  event     Event?    @relation(fields: [eventId], references: [id])
 
   @@index([placeId, createdAt])
   @@index([workspaceId, createdAt])
@@ -1203,71 +1214,72 @@ model PlaceNote {
 // ─────────────────────────────────────────────
 
 model Item {
-  id               String           @id @default(cuid())
-  workspaceId      String           @default("default-workspace")
-  workspace        Workspace        @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  createdAt        DateTime         @default(now())
-  updatedAt        DateTime         @updatedAt
-  name             String
-  description      String?
-  category         String?
-  make             String?
-  model            String?
-  serialNumber     String?
+  id           String    @id @default(cuid())
+  workspaceId  String    @default("default-workspace")
+  workspace    Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  name         String
+  description  String?
+  category     String?
+  make         String?
+  model        String?
+  serialNumber String?
   // Auto-generated QR-printable identifier e.g. "#001-042"
-  assetId          String           @unique
-  quantity         Float            @default(1)
+  assetId      String    @unique
+  quantity     Float     @default(1)
 
   // Optional stock definition. This is catalog/type metadata, not a primitive:
   // the Item remains the actual physical holding at a Place.
-  definitionId     String?
-  definition       ItemDefinition?  @relation(fields: [definitionId], references: [id], onDelete: SetNull)
+  definitionId String?
+  definition   ItemDefinition? @relation(fields: [definitionId], references: [id], onDelete: SetNull)
 
   // Optional shared batch/lot. Serialized Items do not use a lot unless the
   // physical product genuinely has both manufacturer lot and serial identity.
-  lotId            String?
-  lot              InventoryLot?    @relation(fields: [lotId], references: [id], onDelete: SetNull)
+  lotId String?
+  lot   InventoryLot? @relation(fields: [lotId], references: [id], onDelete: SetNull)
 
   // Acquisition
-  purchaseDate     DateTime?
+  purchaseDate  DateTime?
   // Integer minor units (cents), not Float — avoids floating-point drift in money.
-  purchasePrice    Int?
-  purchaseFrom     String?
+  purchasePrice Int?
+  purchaseFrom  String?
 
   // Warranty
   warrantyExpires  DateTime?
-  lifetimeWarranty Boolean          @default(false)
+  lifetimeWarranty Boolean   @default(false)
   warrantyDetails  String?
 
   // Direct location — null when assembled inside another item (location is inherited)
-  placeId          String?
-  place            Place?           @relation(fields: [placeId], references: [id])
+  placeId String?
+  place   Place?  @relation(fields: [placeId], references: [id])
 
   // Owner
-  ownedById        String?
-  ownedBy          Person?          @relation(fields: [ownedById], references: [id])
+  ownedById String?
+  ownedBy   Person? @relation(fields: [ownedById], references: [id])
 
   // Optional representative media. The bytes remain outside the graph; this
   // points to the storage-neutral ImportedFile provenance record.
   primaryImageFileId String?
-  primaryImageFile   ImportedFile?  @relation("ItemPrimaryImage", fields: [primaryImageFileId], references: [id], onDelete: SetNull)
+  primaryImageFile   ImportedFile? @relation("ItemPrimaryImage", fields: [primaryImageFileId], references: [id], onDelete: SetNull)
 
   // Domain-specific, user-correctable attributes encoded as JSON. Keeping
   // wardrobe details here avoids turning garment taxonomy into primitives.
-  attributes       String?
+  attributes String?
 
   // Assembly tree
-  assembledInto    Assembly[]       @relation("ChildItem")   // this item is inside something
-  components       Assembly[]       @relation("ParentItem")  // things currently inside this item
+  assembledInto Assembly[] @relation("ChildItem") // this item is inside something
+  components    Assembly[] @relation("ParentItem") // things currently inside this item
 
-  itemInteractions ItemInteraction[]
+  itemInteractions     ItemInteraction[]
   purchaseReceiptLines PurchaseReceiptLine[]
 
-  tags             String?
-  notes            String?
-  color            String?
-  colorSoft        String?
+  tags      String?
+  notes     String?
+  color     String?
+  colorSoft String?
 
+  @@unique([workspaceId, definitionId, serialNumber])
   @@index([name])
   @@index([category])
   @@index([assetId])
@@ -1278,7 +1290,6 @@ model Item {
   @@index([workspaceId])
   @@index([definitionId])
   @@index([lotId])
-  @@unique([workspaceId, definitionId, serialNumber])
 }
 
 enum InventoryTrackingMode {
@@ -1292,18 +1303,18 @@ model ItemDefinition {
   id                   String                @id @default(cuid())
   workspaceId          String
   workspace            Workspace             @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  createdAt            DateTime               @default(now())
-  updatedAt            DateTime               @updatedAt
+  createdAt            DateTime              @default(now())
+  updatedAt            DateTime              @updatedAt
   name                 String
   sku                  String?
   category             String?
   description          String?
-  unit                 String                 @default("each")
-  trackingMode         InventoryTrackingMode  @default(untracked)
+  unit                 String                @default("each")
+  trackingMode         InventoryTrackingMode @default(untracked)
   reorderPoint         Float?
   targetStock          Float?
   defaultShelfLifeDays Int?
-  active               Boolean                @default(true)
+  active               Boolean               @default(true)
   items                Item[]
   lots                 InventoryLot[]
   purchaseOrderLines   PurchaseOrderLine[]
@@ -1315,19 +1326,19 @@ model ItemDefinition {
 
 // SUPPORT: manufacturer or receiving batch shared by one or more Item holdings.
 model InventoryLot {
-  id             String         @id @default(cuid())
-  workspaceId    String
-  workspace      Workspace      @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  definitionId   String
-  definition     ItemDefinition @relation(fields: [definitionId], references: [id], onDelete: Cascade)
-  lotCode        String
-  manufacturedAt DateTime?
-  receivedAt     DateTime?
-  expiresAt      DateTime?
-  notes          String?
-  createdAt      DateTime       @default(now())
-  updatedAt      DateTime       @updatedAt
-  items          Item[]
+  id                   String                @id @default(cuid())
+  workspaceId          String
+  workspace            Workspace             @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  definitionId         String
+  definition           ItemDefinition        @relation(fields: [definitionId], references: [id], onDelete: Cascade)
+  lotCode              String
+  manufacturedAt       DateTime?
+  receivedAt           DateTime?
+  expiresAt            DateTime?
+  notes                String?
+  createdAt            DateTime              @default(now())
+  updatedAt            DateTime              @updatedAt
+  items                Item[]
   purchaseReceiptLines PurchaseReceiptLine[]
 
   @@unique([workspaceId, definitionId, lotCode])
@@ -1342,25 +1353,25 @@ model InventoryLot {
 // ─────────────────────────────────────────────
 
 model Assembly {
-  id               String    @id @default(cuid())
-  createdAt        DateTime  @default(now())
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
 
-  childItemId      String
-  childItem        Item      @relation("ChildItem",      fields: [childItemId],      references: [id])
+  childItemId String
+  childItem   Item   @relation("ChildItem", fields: [childItemId], references: [id])
 
-  parentItemId     String
-  parentItem       Item      @relation("ParentItem",     fields: [parentItemId],     references: [id])
+  parentItemId String
+  parentItem   Item   @relation("ParentItem", fields: [parentItemId], references: [id])
 
-  assembledAt      DateTime  @default(now())
-  assembledById    String?
-  assembledBy      Person?   @relation("AssembledBy",    fields: [assembledById],    references: [id])
+  assembledAt   DateTime @default(now())
+  assembledById String?
+  assembledBy   Person?  @relation("AssembledBy", fields: [assembledById], references: [id])
 
   // null = currently installed; set when item is removed
   disassembledAt   DateTime?
   disassembledById String?
   disassembledBy   Person?   @relation("DisassembledBy", fields: [disassembledById], references: [id])
 
-  notes            String?
+  notes String?
 
   @@index([childItemId])
   @@index([parentItemId])
@@ -1373,10 +1384,10 @@ model Assembly {
 
 model ItemInteraction {
   itemId        String
-  item          Item        @relation(fields: [itemId],        references: [id], onDelete: Cascade)
+  item          Item        @relation(fields: [itemId], references: [id], onDelete: Cascade)
   interactionId String
   interaction   Interaction @relation(fields: [interactionId], references: [id], onDelete: Cascade)
-  role          String?     // "subject", "target", "context" — optional semantic hint
+  role          String? // "subject", "target", "context" — optional semantic hint
   // Ledger metadata. Item.quantity is the current projection; adjustment
   // Interactions retain the delta and resulting balance.
   quantityDelta Float?
@@ -1390,27 +1401,256 @@ model ItemInteraction {
 // ─────────────────────────────────────────────
 
 model ImportedFile {
-  id           String        @id @default(cuid())
-  workspaceId  String        @default("default-workspace")
-  workspace    Workspace     @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  createdAt    DateTime      @default(now())
-  filename     String
-  format       String
-  filePath     String
-  sizeBytes    Int
-  content      String?
-  storageProvider String      @default("local")
+  id              String              @id @default(cuid())
+  workspaceId     String              @default("default-workspace")
+  workspace       Workspace           @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  createdAt       DateTime            @default(now())
+  filename        String
+  format          String
+  filePath        String
+  sizeBytes       Int
+  content         String?
+  storageProvider String              @default("local")
   storageKey      String?
   mimeType        String?
   checksum        String?
   capturedAt      DateTime?
-  interactions Interaction[]
-  notes        Note[]
-  primaryForItems Item[]      @relation("ItemPrimaryImage")
-  aiAnalysisRuns AiAnalysisRun[]
+  uploadIntentId  String?             @unique
+  uploadIntent    FileUploadIntent?   @relation(fields: [uploadIntentId], references: [id], onDelete: SetNull)
+  archivedAt      DateTime?
+  archiveReason   String?
+  processingState String              @default("pending")
+  interactions    Interaction[]
+  notes           Note[]
+  primaryForItems Item[]              @relation("ItemPrimaryImage")
+  aiAnalysisRuns  AiAnalysisRun[]
+  processingRuns  FileProcessingRun[]
+  chunks          FileChunk[]
+  entityMentions  FileEntityMention[]
+  evidenceClaims  EvidenceClaim[]
 
   @@index([workspaceId, createdAt])
   @@index([workspaceId, checksum])
+  @@index([workspaceId, archivedAt, createdAt])
+  @@index([workspaceId, processingState, createdAt])
+}
+
+// One-use authorization for a direct-to-object-storage upload. This record
+// exists before ImportedFile because no provenance row is trusted until S3
+// confirms the signed MIME type, checksum, and size.
+model FileUploadIntent {
+  id              String        @id @default(cuid())
+  workspaceId     String
+  workspace       Workspace     @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  createdAt       DateTime      @default(now())
+  expiresAt       DateTime
+  completedAt     DateTime?
+  status          String        @default("pending") // pending | completed | expired | rejected
+  filename        String
+  safeFilename    String
+  mimeType        String
+  format          String
+  sizeBytes       Int
+  checksumSha256  String
+  storageProvider String
+  storageKey      String
+  storeOnly       Boolean       @default(false)
+  importedFile    ImportedFile?
+
+  @@unique([workspaceId, storageKey])
+  @@index([workspaceId, status, createdAt])
+  @@index([expiresAt])
+}
+
+// Durable orchestration state for one processing attempt. A file may be
+// reprocessed with a newer processor without altering earlier evidence.
+model FileProcessingRun {
+  id               String              @id @default(cuid())
+  workspaceId      String
+  workspace        Workspace           @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  sourceFileId     String
+  sourceFile       ImportedFile        @relation(fields: [sourceFileId], references: [id], onDelete: Cascade)
+  createdAt        DateTime            @default(now())
+  updatedAt        DateTime            @updatedAt
+  startedAt        DateTime?
+  completedAt      DateTime?
+  status           String              @default("queued") // queued | processing | ready | partial | store_only | failed
+  processorVersion String
+  runKey           String
+  workflowRunId    String?
+  summary          String?
+  error            String?
+  chunks           FileChunk[]
+  entityMentions   FileEntityMention[]
+  evidenceClaims   EvidenceClaim[]
+  aiAnalysisRuns   AiAnalysisRun[]
+
+  @@unique([workspaceId, runKey])
+  @@index([workspaceId, status, createdAt])
+  @@index([sourceFileId, createdAt])
+  @@index([workflowRunId])
+}
+
+// Immutable, versioned extracted source text. locator is JSON with the
+// format-specific page/section/cell/region/timestamp coordinates.
+model FileChunk {
+  id              String              @id @default(cuid())
+  workspaceId     String
+  workspace       Workspace           @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  sourceFileId    String
+  sourceFile      ImportedFile        @relation(fields: [sourceFileId], references: [id], onDelete: Cascade)
+  processingRunId String
+  processingRun   FileProcessingRun   @relation(fields: [processingRunId], references: [id], onDelete: Cascade)
+  createdAt       DateTime            @default(now())
+  version         Int
+  ordinal         Int
+  content         String
+  contentHash     String
+  locatorType     String
+  locator         String
+  mentions        FileEntityMention[]
+  evidenceClaims  EvidenceClaim[]
+
+  @@unique([processingRunId, ordinal])
+  @@index([workspaceId, sourceFileId, version, ordinal])
+  @@index([workspaceId, createdAt])
+}
+
+// Every source occurrence is retained separately, even when the same entity
+// is mentioned repeatedly. Generic entity IDs preserve future Place/Item/
+// Group resolution; resolvedPersonId provides an enforced/queryable Person
+// relation for Theory and Persons surfaces.
+model FileEntityMention {
+  id                  String                 @id @default(cuid())
+  workspaceId         String
+  workspace           Workspace              @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  sourceFileId        String
+  sourceFile          ImportedFile           @relation(fields: [sourceFileId], references: [id], onDelete: Cascade)
+  processingRunId     String
+  processingRun       FileProcessingRun      @relation(fields: [processingRunId], references: [id], onDelete: Cascade)
+  chunkId             String
+  chunk               FileChunk              @relation(fields: [chunkId], references: [id], onDelete: Cascade)
+  createdAt           DateTime               @default(now())
+  updatedAt           DateTime               @updatedAt
+  entityType          String
+  sourceText          String
+  normalizedText      String
+  role                String
+  exactQuote          String
+  identityEvidence    String?
+  startOffset         Int?
+  endOffset           Int?
+  confidence          Float
+  resolutionStatus    String                 @default("unresolved") // unresolved | suggested | resolved | corrected | dismissed
+  resolutionLevel     Int?
+  resolutionReason    String?
+  resolvedEntityId    String?
+  resolvedPersonId    String?
+  resolvedPerson      Person?                @relation("ResolvedPersonFileMentions", fields: [resolvedPersonId], references: [id], onDelete: SetNull)
+  resolutionUpdatedAt DateTime?
+  claimSubjects       EvidenceClaimSubject[]
+  resolutionHistory   FileEntityResolution[]
+
+  @@index([workspaceId, entityType, normalizedText])
+  @@index([workspaceId, resolvedPersonId, createdAt])
+  @@index([workspaceId, resolutionStatus, createdAt])
+  @@index([sourceFileId, chunkId])
+}
+
+model PersonExternalIdentifier {
+  id          String    @id @default(cuid())
+  workspaceId String
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  personId    String
+  person      Person    @relation(fields: [personId], references: [id], onDelete: Cascade)
+  externalId  String
+  provider    String?
+  createdAt   DateTime  @default(now())
+
+  @@unique([workspaceId, externalId])
+  @@index([personId])
+}
+
+// Append-only identity resolution history. Theory staleness derives from
+// these rows so moving a mention marks both the old and new Person stale.
+model FileEntityResolution {
+  id           String            @id @default(cuid())
+  workspaceId  String
+  workspace    Workspace         @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  mentionId    String
+  mention      FileEntityMention @relation(fields: [mentionId], references: [id], onDelete: Cascade)
+  createdAt    DateTime          @default(now())
+  fromPersonId String?
+  fromPerson   Person?           @relation("FileResolutionFromPerson", fields: [fromPersonId], references: [id], onDelete: SetNull)
+  toPersonId   String?
+  toPerson     Person?           @relation("FileResolutionToPerson", fields: [toPersonId], references: [id], onDelete: SetNull)
+  action       String // resolved | corrected | dismissed
+  actorId      String?
+  reason       String?
+
+  @@index([workspaceId, createdAt])
+  @@index([mentionId, createdAt])
+  @@index([fromPersonId, createdAt])
+  @@index([toPersonId, createdAt])
+}
+
+// Atomic cited assertions. Machine output is immutable: corrections create a
+// user Note plus a new claim that supersedes this row.
+model EvidenceClaim {
+  id                    String                 @id @default(cuid())
+  workspaceId           String
+  workspace             Workspace              @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  sourceFileId          String
+  sourceFile            ImportedFile           @relation(fields: [sourceFileId], references: [id], onDelete: Cascade)
+  processingRunId       String
+  processingRun         FileProcessingRun      @relation(fields: [processingRunId], references: [id], onDelete: Cascade)
+  chunkId               String
+  chunk                 FileChunk              @relation(fields: [chunkId], references: [id], onDelete: Cascade)
+  createdAt             DateTime               @default(now())
+  updatedAt             DateTime               @updatedAt
+  assertion             String
+  structuredValue       String?
+  classification        String // explicit | inferred
+  claimType             String?
+  exactQuote            String
+  startOffset           Int?
+  endOffset             Int?
+  occurredAt            DateTime?
+  validFrom             DateTime?
+  validTo               DateTime?
+  confidence            Float
+  status                String                 @default("unreviewed") // unreviewed | accepted | dismissed | superseded | reversed
+  reviewedAt            DateTime?
+  reviewedBy            String?
+  supersedesClaimId     String?
+  supersedesClaim       EvidenceClaim?         @relation("EvidenceClaimSupersession", fields: [supersedesClaimId], references: [id], onDelete: SetNull)
+  supersededBy          EvidenceClaim[]        @relation("EvidenceClaimSupersession")
+  correctionNoteId      String?
+  correctionNote        Note?                  @relation(fields: [correctionNoteId], references: [id], onDelete: SetNull)
+  graphResultType       String?
+  graphResultId         String?
+  graphEventId          String?
+  subjects              EvidenceClaimSubject[]
+  theorySnapshotSources TheorySnapshotSource[]
+
+  @@index([workspaceId, status, createdAt])
+  @@index([workspaceId, classification, createdAt])
+  @@index([sourceFileId, chunkId])
+  @@index([supersedesClaimId])
+}
+
+model EvidenceClaimSubject {
+  claimId         String
+  claim           EvidenceClaim     @relation(fields: [claimId], references: [id], onDelete: Cascade)
+  mentionId       String
+  mention         FileEntityMention @relation(fields: [mentionId], references: [id], onDelete: Cascade)
+  subjectRole     String
+  relevanceWeight Float
+  createdAt       DateTime          @default(now())
+
+  @@id([claimId, mentionId])
+  @@index([mentionId])
+  @@index([claimId, relevanceWeight])
 }
 
 // ─────────────────────────────────────────────
@@ -1419,20 +1659,20 @@ model ImportedFile {
 // ─────────────────────────────────────────────
 
 model AiProviderCredential {
-  id              String    @id @default(cuid())
-  workspaceId     String
-  workspace       Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
-  provider        String
-  label           String?
-  apiKeyEncrypted String
-  modelId         String
-  status          String    @default("active")
-  lastUsedAt      DateTime?
-  analysisRuns    AiAnalysisRun[]
-  noteAnalysisRuns NoteAnalysisRun[]
-  theoryAnalysisRuns TheoryAnalysisRun[]
+  id                    String                 @id @default(cuid())
+  workspaceId           String
+  workspace             Workspace              @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  createdAt             DateTime               @default(now())
+  updatedAt             DateTime               @updatedAt
+  provider              String
+  label                 String?
+  apiKeyEncrypted       String
+  modelId               String
+  status                String                 @default("active")
+  lastUsedAt            DateTime?
+  analysisRuns          AiAnalysisRun[]
+  noteAnalysisRuns      NoteAnalysisRun[]
+  theoryAnalysisRuns    TheoryAnalysisRun[]
   lifeModelAnalysisRuns LifeModelAnalysisRun[]
 
   @@unique([workspaceId, provider])
@@ -1458,37 +1698,41 @@ model AiAnalysisRun {
   inputTokens     Int?
   outputTokens    Int?
   estimatedCost   Float?
+  processingRunId String?
+  processingRun   FileProcessingRun?    @relation(fields: [processingRunId], references: [id], onDelete: SetNull)
+  purpose         String?
 
   @@index([workspaceId, createdAt])
   @@index([sourceFileId])
+  @@index([processingRunId, purpose])
 }
 
 // Operational AI processing for immutable captured Notes. This is not a Life
 // OS primitive: it records paid model usage and review state around proposals.
 model NoteAnalysisRun {
-  id              String                @id @default(cuid())
-  workspaceId     String
-  workspace       Workspace             @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  noteId          String
-  note            Note                  @relation(fields: [noteId], references: [id], onDelete: Cascade)
-  credentialId    String?
-  credential      AiProviderCredential? @relation(fields: [credentialId], references: [id], onDelete: SetNull)
-  createdAt       DateTime              @default(now())
-  completedAt     DateTime?
-  provider        String
-  modelId         String
-  status          String
-  promptVersion   String
-  output          String?
-  error           String?
-  inputTokens     Int?
-  outputTokens    Int?
-  estimatedCost   Float?
-  suggestions     NoteSuggestion[]
+  id            String                @id @default(cuid())
+  workspaceId   String
+  workspace     Workspace             @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  noteId        String
+  note          Note                  @relation(fields: [noteId], references: [id], onDelete: Cascade)
+  credentialId  String?
+  credential    AiProviderCredential? @relation(fields: [credentialId], references: [id], onDelete: SetNull)
+  createdAt     DateTime              @default(now())
+  completedAt   DateTime?
+  provider      String
+  modelId       String
+  status        String
+  promptVersion String
+  output        String?
+  error         String?
+  inputTokens   Int?
+  outputTokens  Int?
+  estimatedCost Float?
+  suggestions   NoteSuggestion[]
 
+  @@unique([noteId, promptVersion])
   @@index([workspaceId, createdAt])
   @@index([noteId, createdAt])
-  @@unique([noteId, promptVersion])
 }
 
 // Theory of Person's AI-run tracking (packages/intelligence/src/synthesize.ts).
@@ -1530,24 +1774,24 @@ model TheoryAnalysisRun {
 // unique by prompt version: the workspace evidence changes continuously, so
 // every explicit regenerate command must produce a fresh, auditable reading.
 model LifeModelAnalysisRun {
-  id              String                @id @default(cuid())
-  workspaceId     String                @default("default-workspace")
-  workspace       Workspace             @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  credentialId    String?
-  credential      AiProviderCredential? @relation(fields: [credentialId], references: [id], onDelete: SetNull)
-  snapshotId      String?
-  snapshot        LifeModelSnapshot?    @relation(fields: [snapshotId], references: [id], onDelete: SetNull)
-  createdAt       DateTime              @default(now())
-  completedAt     DateTime?
-  provider        String
-  modelId         String
-  status          String
-  promptVersion   String
-  output          String?
-  error           String?
-  inputTokens     Int?
-  outputTokens    Int?
-  estimatedCost   Float?
+  id            String                @id @default(cuid())
+  workspaceId   String                @default("default-workspace")
+  workspace     Workspace             @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  credentialId  String?
+  credential    AiProviderCredential? @relation(fields: [credentialId], references: [id], onDelete: SetNull)
+  snapshotId    String?
+  snapshot      LifeModelSnapshot?    @relation(fields: [snapshotId], references: [id], onDelete: SetNull)
+  createdAt     DateTime              @default(now())
+  completedAt   DateTime?
+  provider      String
+  modelId       String
+  status        String
+  promptVersion String
+  output        String?
+  error         String?
+  inputTokens   Int?
+  outputTokens  Int?
+  estimatedCost Float?
 
   @@index([workspaceId, createdAt])
   @@index([workspaceId, status])
@@ -1603,25 +1847,25 @@ enum PlaceGroupRelationshipType {
 }
 
 model Group {
-  id              String    @id @default(cuid())
-  workspaceId     String    @default("default-workspace")
-  workspace       Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  name            String
-  groupType       GroupType
-  notes           String?
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
+  id          String    @id @default(cuid())
+  workspaceId String    @default("default-workspace")
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  name        String
+  groupType   GroupType
+  notes       String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 
   personMembers     PersonGroup[]
   // Joint/shared financial accounts belonging to this group (e.g. a household)
   eraAccounts       EraAccountLink[] @relation("EraAccountHousehold")
-  childGroups       GroupGroup[]  @relation("ParentGroup")
-  parentGroups      GroupGroup[]  @relation("ChildGroup")
+  childGroups       GroupGroup[]     @relation("ParentGroup")
+  parentGroups      GroupGroup[]     @relation("ChildGroup")
   placeAffiliations PlaceGroup[]
-  taggedEvents      Event[]       @relation("EventGroupTags")
+  taggedEvents      Event[]          @relation("EventGroupTags")
   // Provenance — the Note this Group was derived from, if any
   sourceNoteId      String?
-  sourceNote        Note?         @relation(fields: [sourceNoteId], references: [id], onDelete: SetNull)
+  sourceNote        Note?            @relation(fields: [sourceNoteId], references: [id], onDelete: SetNull)
   supplierProfile   SupplierProfile?
 
   @@index([workspaceId])
@@ -1630,19 +1874,19 @@ model Group {
 
 // SUPPORT: purchasing-specific details for a supplier Group.
 model SupplierProfile {
-  id             String    @id @default(cuid())
+  id             String          @id @default(cuid())
   workspaceId    String
-  workspace      Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  groupId        String    @unique
-  group          Group     @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  workspace      Workspace       @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  groupId        String          @unique
+  group          Group           @relation(fields: [groupId], references: [id], onDelete: Cascade)
   supplierCode   String?
   email          String?
   phone          String?
   website        String?
   paymentTerms   String?
-  active         Boolean   @default(true)
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
+  active         Boolean         @default(true)
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
   purchaseOrders PurchaseOrder[]
 
   @@unique([workspaceId, supplierCode])
@@ -1651,21 +1895,21 @@ model SupplierProfile {
 
 // SUPPORT: operational purchasing fields extending the canonical Plan.
 model PurchaseOrder {
-  id              String             @id @default(cuid())
-  workspaceId     String
-  workspace       Workspace          @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  planId          String             @unique
-  plan            Plan               @relation(fields: [planId], references: [id], onDelete: Cascade)
-  supplierId      String
-  supplier        SupplierProfile    @relation(fields: [supplierId], references: [id])
-  orderNumber     String
-  currency        String             @default("USD")
-  orderedAt       DateTime
-  expectedAt      DateTime?
-  notes           String?
-  createdAt       DateTime           @default(now())
-  updatedAt       DateTime           @updatedAt
-  lines           PurchaseOrderLine[]
+  id          String              @id @default(cuid())
+  workspaceId String
+  workspace   Workspace           @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  planId      String              @unique
+  plan        Plan                @relation(fields: [planId], references: [id], onDelete: Cascade)
+  supplierId  String
+  supplier    SupplierProfile     @relation(fields: [supplierId], references: [id])
+  orderNumber String
+  currency    String              @default("USD")
+  orderedAt   DateTime
+  expectedAt  DateTime?
+  notes       String?
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+  lines       PurchaseOrderLine[]
 
   @@unique([workspaceId, orderNumber])
   @@index([workspaceId, orderedAt])
@@ -1673,19 +1917,19 @@ model PurchaseOrder {
 }
 
 model PurchaseOrderLine {
-  id                 String                @id @default(cuid())
-  purchaseOrderId    String
-  purchaseOrder      PurchaseOrder         @relation(fields: [purchaseOrderId], references: [id], onDelete: Cascade)
-  definitionId       String
-  definition         ItemDefinition        @relation(fields: [definitionId], references: [id])
+  id                  String                @id @default(cuid())
+  purchaseOrderId     String
+  purchaseOrder       PurchaseOrder         @relation(fields: [purchaseOrderId], references: [id], onDelete: Cascade)
+  definitionId        String
+  definition          ItemDefinition        @relation(fields: [definitionId], references: [id])
   descriptionSnapshot String
-  skuSnapshot        String?
-  orderedQuantity    Float
-  unitCost           Int?
-  destinationPlaceId String?
-  destinationPlace   Place?                @relation(fields: [destinationPlaceId], references: [id], onDelete: SetNull)
-  createdAt          DateTime              @default(now())
-  receiptLines       PurchaseReceiptLine[]
+  skuSnapshot         String?
+  orderedQuantity     Float
+  unitCost            Int?
+  destinationPlaceId  String?
+  destinationPlace    Place?                @relation(fields: [destinationPlaceId], references: [id], onDelete: SetNull)
+  createdAt           DateTime              @default(now())
+  receiptLines        PurchaseReceiptLine[]
 
   @@index([purchaseOrderId])
   @@index([definitionId])
@@ -1694,19 +1938,19 @@ model PurchaseOrderLine {
 
 // SUPPORT: exact order-line-to-Item quantity accepted during a receiving Event.
 model PurchaseReceiptLine {
-  id            String            @id @default(cuid())
-  workspaceId   String
-  workspace     Workspace         @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  eventId       String
-  event         Event             @relation(fields: [eventId], references: [id], onDelete: Cascade)
-  orderLineId   String
-  orderLine     PurchaseOrderLine @relation(fields: [orderLineId], references: [id])
-  itemId        String
-  item          Item              @relation(fields: [itemId], references: [id])
-  lotId         String?
-  lot           InventoryLot?     @relation(fields: [lotId], references: [id], onDelete: SetNull)
-  quantity      Float
-  createdAt     DateTime          @default(now())
+  id          String            @id @default(cuid())
+  workspaceId String
+  workspace   Workspace         @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  eventId     String
+  event       Event             @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  orderLineId String
+  orderLine   PurchaseOrderLine @relation(fields: [orderLineId], references: [id])
+  itemId      String
+  item        Item              @relation(fields: [itemId], references: [id])
+  lotId       String?
+  lot         InventoryLot?     @relation(fields: [lotId], references: [id], onDelete: SetNull)
+  quantity    Float
+  createdAt   DateTime          @default(now())
 
   @@index([workspaceId, createdAt])
   @@index([eventId])
@@ -1722,8 +1966,8 @@ model PersonGroup {
   startDate DateTime?
   endDate   DateTime?
 
-  person    Person    @relation(fields: [personId], references: [id])
-  group     Group     @relation(fields: [groupId], references: [id])
+  person Person @relation(fields: [personId], references: [id])
+  group  Group  @relation(fields: [groupId], references: [id])
 
   @@index([personId])
   @@index([groupId])
@@ -1737,23 +1981,23 @@ model GroupGroup {
   startDate     DateTime?
   endDate       DateTime?
 
-  parent        Group     @relation("ParentGroup", fields: [parentGroupId], references: [id])
-  child         Group     @relation("ChildGroup", fields: [childGroupId], references: [id])
+  parent Group @relation("ParentGroup", fields: [parentGroupId], references: [id])
+  child  Group @relation("ChildGroup", fields: [childGroupId], references: [id])
 
   @@index([parentGroupId])
   @@index([childGroupId])
 }
 
 model PlaceGroup {
-  id               String                    @id @default(cuid())
+  id               String                     @id @default(cuid())
   placeId          String
   groupId          String
   relationshipType PlaceGroupRelationshipType
   startDate        DateTime?
   endDate          DateTime?
 
-  place            Place                     @relation(fields: [placeId], references: [id])
-  group            Group                     @relation(fields: [groupId], references: [id])
+  place Place @relation(fields: [placeId], references: [id])
+  group Group @relation(fields: [groupId], references: [id])
 
   @@index([placeId])
   @@index([groupId])
@@ -1783,14 +2027,15 @@ model Note {
   sourceFile   ImportedFile? @relation(fields: [sourceFileId], references: [id])
 
   // Reverse provenance — nodes derived from this Note
-  plans        Plan[]
-  events       Event[]
-  interactions Interaction[]
-  states       State[]
-  groups       Group[]
-  aiAnalysisRuns NoteAnalysisRun[]
-  suggestions    NoteSuggestion[]
+  plans                  Plan[]
+  events                 Event[]
+  interactions           Interaction[]
+  states                 State[]
+  groups                 Group[]
+  aiAnalysisRuns         NoteAnalysisRun[]
+  suggestions            NoteSuggestion[]
   lifeModelClaimFeedback LifeModelClaimFeedback[]
+  evidenceCorrections    EvidenceClaim[]
 
   @@index([workspaceId, timestamp(sort: Desc)])
   @@index([sourceFileId])
@@ -1804,28 +2049,28 @@ model Note {
 // ─────────────────────────────────────────────
 
 model TheorySnapshot {
-  id              String    @id @default(cuid())
-  workspaceId     String    @default("default-workspace")
-  workspace       Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  id          String    @id @default(cuid())
+  workspaceId String    @default("default-workspace")
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
 
   subjectPersonId String
-  subjectPerson   Person    @relation(fields: [subjectPersonId], references: [id], onDelete: Cascade)
+  subjectPerson   Person @relation(fields: [subjectPersonId], references: [id], onDelete: Cascade)
 
-  version         Int
-  title           String
+  version Int
+  title   String
 
-  summary         String
-  markdownBody    String
+  summary      String
+  markdownBody String
 
   // current | archived | draft | rejected
-  status          String    @default("current")
-  confidence      Float?
+  status     String @default("current")
+  confidence Float?
 
-  synthesizedAt   DateTime  @default(now())
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
+  synthesizedAt DateTime @default(now())
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
-  sources         TheorySnapshotSource[]
+  sources TheorySnapshotSource[]
 
   @@index([subjectPersonId])
   @@index([subjectPersonId, version])
@@ -1834,22 +2079,28 @@ model TheorySnapshot {
 }
 
 model TheorySnapshotSource {
-  id           String         @id @default(cuid())
+  id String @id @default(cuid())
 
-  snapshotId   String
-  snapshot     TheorySnapshot @relation(fields: [snapshotId], references: [id], onDelete: Cascade)
+  snapshotId String
+  snapshot   TheorySnapshot @relation(fields: [snapshotId], references: [id], onDelete: Cascade)
 
   // note | event | interaction | state | plan | person
-  sourceType   String
-  sourceId     String
+  sourceType String
+  sourceId   String
 
-  contribution String?
-  weight       Float?
+  contribution           String?
+  weight                 Float?
+  evidenceClaimId        String?
+  evidenceClaim          EvidenceClaim? @relation(fields: [evidenceClaimId], references: [id], onDelete: SetNull)
+  evidenceClassification String?
+  evidenceStatus         String?
+  citation               String?
 
-  createdAt    DateTime       @default(now())
+  createdAt DateTime @default(now())
 
   @@index([snapshotId])
   @@index([sourceType, sourceId])
+  @@index([evidenceClaimId])
 }
 
 // Whole-life synthesis (packages/intelligence, Track A6) — versioned exactly
@@ -1861,59 +2112,59 @@ model TheorySnapshotSource {
 // deliberately more granular than TheorySnapshot's single markdownBody, so a
 // claim can be filtered/queried/re-derived on its own.
 model LifeModelSnapshot {
-  id            String    @id @default(cuid())
-  workspaceId   String    @default("default-workspace")
-  workspace     Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  id          String    @id @default(cuid())
+  workspaceId String    @default("default-workspace")
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
 
-  version       Int
-  summary       String
+  version Int
+  summary String
 
   // current | archived | draft | rejected — same vocabulary as TheorySnapshot.status
-  status        String    @default("current")
+  status String @default("current")
 
   modelId       String?
   promptVersion String?
 
-  synthesizedAt DateTime  @default(now())
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  synthesizedAt DateTime @default(now())
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
-  claims        LifeModelClaim[]
-  analysisRuns  LifeModelAnalysisRun[]
+  claims       LifeModelClaim[]
+  analysisRuns LifeModelAnalysisRun[]
 
   @@index([workspaceId, version])
   @@index([workspaceId, status])
 }
 
 model LifeModelClaim {
-  id           String            @id @default(cuid())
-  snapshotId   String
-  snapshot     LifeModelSnapshot @relation(fields: [snapshotId], references: [id], onDelete: Cascade)
+  id         String            @id @default(cuid())
+  snapshotId String
+  snapshot   LifeModelSnapshot @relation(fields: [snapshotId], references: [id], onDelete: Cascade)
 
   // observed | inferred | declared | tension
-  kind         String
-  statement    String
-  confidence   Float?
+  kind       String
+  statement  String
+  confidence Float?
 
   // The primitive this claim is about, if it's about one specific thing
   // rather than the whole graph.
-  subjectType  String?
-  subjectId    String?
+  subjectType String?
+  subjectId   String?
 
   // The time range the claim draws on, if bounded — an inferred pattern
   // might cover the last 90 days; a tension is as of the snapshot's
   // synthesizedAt and has no window.
-  windowStart  DateTime?
-  windowEnd    DateTime?
+  windowStart DateTime?
+  windowEnd   DateTime?
 
   // JSON array of { sourceType, sourceId } — the provenance trail, same
   // shape as TheorySnapshotSource's sourceType/sourceId pair, just inlined
   // per-claim instead of a join table (a claim's evidence is small and
   // claim-specific, unlike a whole snapshot's).
-  evidence     String?
+  evidence String?
 
-  createdAt    DateTime          @default(now())
-  feedback     LifeModelClaimFeedback[]
+  createdAt DateTime                 @default(now())
+  feedback  LifeModelClaimFeedback[]
 
   @@index([snapshotId])
   @@index([kind])
@@ -1961,42 +2212,42 @@ model LifeModelClaimFeedback {
 // proposedCommand through the registered command it names.
 
 model AdaptiveDayBrief {
-  id            String   @id @default(cuid())
-  workspaceId   String   @default("default-workspace")
-  workspace     Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  id          String    @id @default(cuid())
+  workspaceId String    @default("default-workspace")
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
 
   // Local calendar day this brief is for, e.g. "2026-08-14" — computed in
   // the workspace's timezone, never the server clock's.
-  day           String
-  timezone      String
+  day      String
+  timezone String
 
   // Deterministic engine version that produced this brief. A rules-version
   // bump makes the existing "current" brief for a day stale without being a
   // uniqueness conflict — refresh supersedes it and generates a new one.
-  rulesVersion  String
+  rulesVersion String
 
   // full | adjust | recover — matches LevelUpReadinessSnapshot.band exactly,
   // so Adaptive Day and Level Up never disagree about what a band means.
-  capacityBand  String
+  capacityBand String
 
   // Bounded snapshot of the inputs the engine actually read (fixed
   // commitments, latest energy/mood/stress, Level Up band, workout plan,
   // health freshness) — kept thin, a pointer/summary, not a second copy of
   // the primitives themselves.
-  inputSnapshot String
+  inputSnapshot  String
   // JSON array of input names that were missing or stale when this brief
   // was generated, e.g. ["levelUpReadiness", "morningCheckIn"]. Drives
   // Home's "visible missing-data state."
-  missingSignals String  @default("[]")
+  missingSignals String @default("[]")
 
-  generatedAt   DateTime @default(now())
+  generatedAt DateTime @default(now())
   // current | superseded — a refresh marks the prior brief for the same day
   // superseded and creates a new current one; already-accepted interventions
   // on the superseded brief are untouched.
-  status        String   @default("current")
+  status      String   @default("current")
 
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   interventions AdaptiveIntervention[]
 
@@ -2012,37 +2263,37 @@ model AdaptiveDayBrief {
 }
 
 model AdaptiveIntervention {
-  id                String           @id @default(cuid())
-  briefId           String
-  brief             AdaptiveDayBrief @relation(fields: [briefId], references: [id], onDelete: Cascade)
+  id      String           @id @default(cuid())
+  briefId String
+  brief   AdaptiveDayBrief @relation(fields: [briefId], references: [id], onDelete: Cascade)
 
-  rank              Int
+  rank               Int
   // plan_schedule | plan_reschedule | workout_adjustment | capacity_guidance
-  category          String
+  category           String
   recommendationText String
   // JSON array of short machine-stable reason codes, e.g. ["fixed_commitments_5h", "energy_low"]
-  reasonCodes       String           @default("[]")
+  reasonCodes        String  @default("[]")
   // JSON — same shape/purpose as ReviewItem.evidence, copied straight into
   // the dual-written ReviewItem row so "Why this?" has one source.
-  evidence          String?
+  evidence           String?
 
   // The proposed graph command, not yet applied — null for capacity_guidance,
   // which has nothing to accept, only acknowledge/dismiss. Same shape as
   // ReviewItem.proposedCommand: JSON { command: string, input: object }.
-  proposedCommand   String?
+  proposedCommand String?
   // observe | safe_auto | review | confirm — same vocabulary as
   // ReviewItem.riskTier and ActionAuthorityTier.
-  riskTier          String           @default("review")
+  riskTier        String  @default("review")
 
   // Same status vocabulary as ReviewItemStatus, since this dual-writes one.
-  status            String           @default("pending")
-  reviewItemId      String?          @unique
-  resultType        String?
-  resultId          String?
+  status       String  @default("pending")
+  reviewItemId String? @unique
+  resultType   String?
+  resultId     String?
 
-  createdAt         DateTime         @default(now())
+  createdAt DateTime @default(now())
 
-  outcomes          AdaptiveInterventionOutcome[]
+  outcomes AdaptiveInterventionOutcome[]
 
   @@index([briefId, rank])
   @@index([reviewItemId])
@@ -2056,19 +2307,19 @@ model AdaptiveInterventionOutcome {
   intervention   AdaptiveIntervention @relation(fields: [interventionId], references: [id], onDelete: Cascade)
 
   // passive | user_reported
-  source         String
+  source     String
   // followed_through | not_followed_through | unknown | helpful | not_helpful | not_sure
-  outcome        String
-  confidence     Float?
+  outcome    String
+  confidence Float?
   // JSON — what the passive matcher looked at, or the user-reported context
-  evidence       String?
-  note           String?
+  evidence   String?
+  note       String?
 
-  actorType      String?
-  actorId        String?
-  actorLabel     String?
+  actorType  String?
+  actorId    String?
+  actorLabel String?
 
-  createdAt      DateTime             @default(now())
+  createdAt DateTime @default(now())
 
   @@index([workspaceId, createdAt])
   @@index([interventionId, createdAt])
@@ -2120,10 +2371,11 @@ model AssistantMessage {
   id          String    @id @default(cuid())
   workspaceId String    @default("default-workspace")
   workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  channel     String    // "whatsapp"
-  from        String    // phone number e.g. "whatsapp:+14155238886"
-  role        String    // "user" | "assistant"
+  channel     String // "whatsapp"
+  from        String // phone number e.g. "whatsapp:+14155238886"
+  role        String // "user" | "assistant"
   content     String
+  metadata    String?
   createdAt   DateTime  @default(now())
 
   @@index([workspaceId, from, createdAt])
@@ -2154,8 +2406,8 @@ model LevelUpProfile {
   sex                  String    @default("male") // "male" | "female" — norm selection only
   bodyweightKg         Float?
   heightCm             Float?
-  standingReachCm      Float?    // for jump/dunk target builds
-  primaryBuild         String?   // selected archetype key for the headline OVR
+  standingReachCm      Float? // for jump/dunk target builds
+  primaryBuild         String? // selected archetype key for the headline OVR
   coldStartCompletedAt DateTime?
   // Display unit for the workout module. Storage is always kg — the engine's
   // norms are metric — and lb exists only at the picker and the readout.
@@ -2168,21 +2420,21 @@ model LevelUpProfile {
 // A single raw measurement. Provenance is sacred: nothing derived is stored
 // here, only what was actually measured, how, and under what conditions.
 model LevelUpTestResult {
-  id               String          @id @default(cuid())
-  workspaceId      String
-  workspace        Workspace       @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  createdAt        DateTime        @default(now())
-  measuredAt       DateTime        @default(now())
-  testKey          String          // catalog key, e.g. "vertical_cmj", "vo2max", "grip"
-  value            Float           // raw value in the test's canonical unit
-  bodyweightKg     Float?          // snapshot at time of test (for relative-strength tests)
-  populationSource String          @default("general") // "general" | "trained"
-  source           String          @default("combine")  // combine | training | self_report | wearable
-  protocolFlags    String?         // JSON: { arms, countermovement, ... } — must match history
-  context          String?         // JSON: { shoes, surface, timeOfDay, hoursSlept, daysSinceHard, device }
-  deviceFingerprint String?        // reaction-time hardware identity; comparisons refuse to cross it
-  combineId        String?
-  combine          LevelUpCombine? @relation(fields: [combineId], references: [id], onDelete: SetNull)
+  id                String          @id @default(cuid())
+  workspaceId       String
+  workspace         Workspace       @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  createdAt         DateTime        @default(now())
+  measuredAt        DateTime        @default(now())
+  testKey           String // catalog key, e.g. "vertical_cmj", "vo2max", "grip"
+  value             Float // raw value in the test's canonical unit
+  bodyweightKg      Float? // snapshot at time of test (for relative-strength tests)
+  populationSource  String          @default("general") // "general" | "trained"
+  source            String          @default("combine") // combine | training | self_report | wearable
+  protocolFlags     String? // JSON: { arms, countermovement, ... } — must match history
+  context           String? // JSON: { shoes, surface, timeOfDay, hoursSlept, daysSinceHard, device }
+  deviceFingerprint String? // reaction-time hardware identity; comparisons refuse to cross it
+  combineId         String?
+  combine           LevelUpCombine? @relation(fields: [combineId], references: [id], onDelete: SetNull)
 
   @@index([workspaceId, testKey, measuredAt])
   @@index([combineId])
@@ -2191,17 +2443,17 @@ model LevelUpTestResult {
 // The Human Combine: a testing session, run every 8–12 weeks. Only a completed
 // combine raises an attribute's verified ceiling.
 model LevelUpCombine {
-  id           String                  @id @default(cuid())
-  workspaceId  String
-  workspace    Workspace               @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  createdAt    DateTime                @default(now())
-  startedAt    DateTime                @default(now())
-  completedAt  DateTime?
-  label        String?
-  notes        String?
-  block        String?                 // athletic | strength | engine | movement | full
-  results      LevelUpTestResult[]
-  snapshot     LevelUpRatingSnapshot?
+  id          String                 @id @default(cuid())
+  workspaceId String
+  workspace   Workspace              @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  createdAt   DateTime               @default(now())
+  startedAt   DateTime               @default(now())
+  completedAt DateTime?
+  label       String?
+  notes       String?
+  block       String? // athletic | strength | engine | movement | full
+  results     LevelUpTestResult[]
+  snapshot    LevelUpRatingSnapshot?
 
   @@index([workspaceId, completedAt])
 }
@@ -2209,20 +2461,20 @@ model LevelUpCombine {
 // Frozen record of the engine's output at a point in time (career timeline +
 // verified ceiling). ratings/subRatings/buildOvrs/caps/badges are JSON blobs.
 model LevelUpRatingSnapshot {
-  id           String          @id @default(cuid())
-  workspaceId  String
-  workspace    Workspace       @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  createdAt    DateTime        @default(now())
-  computedAt   DateTime        @default(now())
-  combineId    String?         @unique
-  combine      LevelUpCombine? @relation(fields: [combineId], references: [id], onDelete: SetNull)
-  engineVersion String         @default("v2")
-  ovr          Float
-  ratings      String          // JSON: { attributeKey: { rating, lower, upper, cap, confidence } }
-  subRatings   String          // JSON: { subKey: { rating, residualSd? } }
-  buildOvrs    String          // JSON: { buildKey: ovr }
-  badges       String          // JSON: [ { key, tier, progress } ]
-  caps         String          // JSON: { attributeKey: { cap, reason } }
+  id            String          @id @default(cuid())
+  workspaceId   String
+  workspace     Workspace       @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  createdAt     DateTime        @default(now())
+  computedAt    DateTime        @default(now())
+  combineId     String?         @unique
+  combine       LevelUpCombine? @relation(fields: [combineId], references: [id], onDelete: SetNull)
+  engineVersion String          @default("v2")
+  ovr           Float
+  ratings       String // JSON: { attributeKey: { rating, lower, upper, cap, confidence } }
+  subRatings    String // JSON: { subKey: { rating, residualSd? } }
+  buildOvrs     String // JSON: { buildKey: ovr }
+  badges        String // JSON: [ { key, tier, progress } ]
+  caps          String // JSON: { attributeKey: { cap, reason } }
 
   @@index([workspaceId, computedAt])
 }
@@ -2230,13 +2482,13 @@ model LevelUpRatingSnapshot {
 // Per-set training evidence (Part 9). Raw inputs stored; RANK + BALANCE cached
 // at log time for the post-set line and history, but always re-derivable.
 model LevelUpTrainingSet {
-  id              String    @id @default(cuid())
+  id              String           @id @default(cuid())
   workspaceId     String
-  workspace       Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  createdAt       DateTime  @default(now())
-  performedAt     DateTime  @default(now())
-  sessionId       String?   // groups sets performed together
-  session         LevelUpSession? @relation(fields: [sessionId], references: [id], onDelete: SetNull)
+  workspace       Workspace        @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  createdAt       DateTime         @default(now())
+  performedAt     DateTime         @default(now())
+  sessionId       String? // groups sets performed together
+  session         LevelUpSession?  @relation(fields: [sessionId], references: [id], onDelete: SetNull)
   exerciseKey     String
   // The workspace's own Exercise row. exerciseKey stays the engine-catalog key
   // (or the exercise's slug) so rating stays keyed to the pure catalog.
@@ -2251,23 +2503,23 @@ model LevelUpTrainingSet {
   durationSec     Int?
   // The load was the body itself. loadKg then carries added weight only (0 for
   // an unweighted set), which keeps every load column in the same unit.
-  isBodyweight    Boolean   @default(false)
+  isBodyweight    Boolean          @default(false)
   bodyweightKg    Float?
   rpe             Float?
-  rank            Float?    // cached population rating (null when movement isn't well-normed)
+  rank            Float? // cached population rating (null when movement isn't well-normed)
   rankLetter      String?
-  balanceResidual Float?    // cached residual vs anchor-lift prediction, in rating points
-  isPr            Boolean   @default(false)
+  balanceResidual Float? // cached residual vs anchor-lift prediction, in rating points
+  isPr            Boolean          @default(false)
   // Set when logged by a native device rather than the web app. Paired with
   // sourceId (a client-generated stable set ID) so replay after a partial
   // batch failure or a cross-device collision converges instead of duplicating.
   source          String?
   sourceId        String?
 
+  @@unique([workspaceId, source, sourceId])
   @@index([workspaceId, exerciseKey, performedAt])
   @@index([workspaceId, sessionId])
   @@index([workspaceId, exerciseId, performedAt])
-  @@unique([workspaceId, source, sourceId])
 }
 
 // ─────────────────────────────────────────────
@@ -2282,23 +2534,23 @@ model LevelUpTrainingSet {
 // ─────────────────────────────────────────────
 
 model LevelUpExercise {
-  id             String    @id @default(cuid())
+  id             String                @id @default(cuid())
   workspaceId    String
-  workspace      Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  createdAt      DateTime  @default(now())
-  key            String    // stable slug, unique within the workspace
+  workspace      Workspace             @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  createdAt      DateTime              @default(now())
+  key            String // stable slug, unique within the workspace
   label          String
-  modality       String    @default("load") // load | duration | bodyweight
-  catalogKey     String?   // engine EXERCISE_CATALOG key when a norm exists
-  defaultRestSec Int       @default(90)
+  modality       String                @default("load") // load | duration | bodyweight
+  catalogKey     String? // engine EXERCISE_CATALOG key when a norm exists
+  defaultRestSec Int                   @default(90)
   muscleGroup    String?
   // Joint load this movement puts at risk, as a JSON array of tags
   // ("knee", "lumbar"). First-class because the substitution rule reads it.
   jointLoad      String?
   // The lighter movement to swap in when the matching joint is flaring.
   substituteId   String?
-  substitute     LevelUpExercise?  @relation("ExerciseSubstitution", fields: [substituteId], references: [id], onDelete: SetNull)
-  substituteFor  LevelUpExercise[] @relation("ExerciseSubstitution")
+  substitute     LevelUpExercise?      @relation("ExerciseSubstitution", fields: [substituteId], references: [id], onDelete: SetNull)
+  substituteFor  LevelUpExercise[]     @relation("ExerciseSubstitution")
   entries        LevelUpProgramEntry[]
   sets           LevelUpTrainingSet[]
 
@@ -2346,7 +2598,7 @@ model LevelUpProgramEntry {
   targetReps        Int?
   targetLoadKg      Float?
   targetDurationSec Int?
-  restSec           Int?              // overrides the exercise default
+  restSec           Int? // overrides the exercise default
   order             Int               @default(0)
 
   @@index([programDayId, order])
@@ -2356,34 +2608,34 @@ model LevelUpProgramEntry {
 // One trip to the gym. Sets hang off it; duration is derived from the
 // timestamps, never stored.
 model LevelUpSession {
-  id           String             @id @default(cuid())
-  workspaceId  String
-  workspace    Workspace          @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  createdAt    DateTime           @default(now())
-  startedAt    DateTime           @default(now())
-  endedAt      DateTime?
-  programDayId String?
-  programDay   LevelUpProgramDay? @relation(fields: [programDayId], references: [id], onDelete: SetNull)
+  id                String                    @id @default(cuid())
+  workspaceId       String
+  workspace         Workspace                 @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  createdAt         DateTime                  @default(now())
+  startedAt         DateTime                  @default(now())
+  endedAt           DateTime?
+  programDayId      String?
+  programDay        LevelUpProgramDay?        @relation(fields: [programDayId], references: [id], onDelete: SetNull)
   // "Knee is cranky today" — recorded on the session, not buried in notes,
   // because it changes which movements were prescribed and must stay auditable.
-  kneeFlare    Boolean            @default(false)
-  lumbarFlare  Boolean            @default(false)
-  notes        String?
-  sets         LevelUpTrainingSet[]
+  kneeFlare         Boolean                   @default(false)
+  lumbarFlare       Boolean                   @default(false)
+  notes             String?
+  sets              LevelUpTrainingSet[]
   readinessSnapshot LevelUpReadinessSnapshot?
   // Set when started by a native device rather than the web app. Paired with
   // sourceId (a client-generated stable session ID) so replay after a partial
   // batch failure or a cross-device collision converges instead of duplicating.
-  source       String?
-  sourceId     String?
+  source            String?
+  sourceId          String?
   // Session RPE (rate of perceived exertion), recorded at completion.
-  sessionRpe   Float?
+  sessionRpe        Float?
   // The canonical Event this session reconciled to on HealthKit write-back —
   // one Event per real-world workout, not one per ingestion path.
-  workoutEventId String?
+  workoutEventId    String?
 
-  @@index([workspaceId, startedAt])
   @@unique([workspaceId, source, sourceId])
+  @@index([workspaceId, startedAt])
 }
 
 // Body composition, deliberately its own log rather than a field on the set
@@ -2407,28 +2659,28 @@ model LevelUpBodyMetric {
 // audit the recommendation, not to become the source of truth for it.
 // See docs/LEVEL_UP_ADAPTIVE_WORKOUT_PLAN.md "Readiness provenance".
 model LevelUpReadinessSnapshot {
-  id           String         @id @default(cuid())
-  workspaceId  String
-  workspace    Workspace      @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  sessionId    String         @unique
-  session      LevelUpSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
-  createdAt    DateTime       @default(now())
-  snapshotAt   DateTime       @default(now())
-  localDay     String         // YYYY-MM-DD, the athlete's local calendar day
-  engineVersion  String       @default("v1")
-  ruleSetVersion String       @default("v1")
+  id                        String         @id @default(cuid())
+  workspaceId               String
+  workspace                 Workspace      @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  sessionId                 String         @unique
+  session                   LevelUpSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  createdAt                 DateTime       @default(now())
+  snapshotAt                DateTime       @default(now())
+  localDay                  String // YYYY-MM-DD, the athlete's local calendar day
+  engineVersion             String         @default("v1")
+  ruleSetVersion            String         @default("v1")
   // JSON: bounded normalized input values, each with freshness + source —
   // HRV/RHR deviation, sleep debt, Oura readiness, ACWR, flare flags, etc.
   // Synthetic-neutral until HealthKit/Oura wiring lands (M3/M4).
-  inputs       String
+  inputs                    String
   // JSON: Current Form engine output at snapshot time, or null when synthetic.
-  formSignal   String?
-  band         String         @default("full") // full | adjust | recover
+  formSignal                String?
+  band                      String         @default("full") // full | adjust | recover
   originalPrescriptionHash  String?
   suggestedPrescriptionHash String?
-  reasonCodes  String         @default("[]") // JSON array of stable reason codes
-  userChoice   String?        // accepted | overridden | edited
-  overriddenAt DateTime?
+  reasonCodes               String         @default("[]") // JSON array of stable reason codes
+  userChoice                String? // accepted | overridden | edited
+  overriddenAt              DateTime?
 
   @@index([workspaceId, snapshotAt])
 }
@@ -2442,7 +2694,7 @@ model LevelUpBadgeUnlock {
   createdAt   DateTime  @default(now())
   unlockedAt  DateTime  @default(now())
   badgeKey    String
-  tier        String    // bronze | silver | gold | hof
+  tier        String // bronze | silver | gold | hof
 
   @@unique([workspaceId, badgeKey, tier])
   @@index([workspaceId, unlockedAt])
@@ -2457,7 +2709,7 @@ model LevelUpTargetBuild {
   createdAt   DateTime  @default(now())
   buildKey    String
   label       String
-  targets     String    // JSON: { attributeKey|subKey: requiredRating }
+  targets     String // JSON: { attributeKey|subKey: requiredRating }
   status      String    @default("active") // active | achieved | archived
   achievedAt  DateTime?
 
@@ -2490,43 +2742,43 @@ model LevelUpTargetBuild {
 // this one, and causationDepth is a hard cap that makes an automation loop
 // mathematically impossible rather than merely unlikely.
 model GraphEvent {
-  id              String    @id @default(cuid())
-  workspaceId     String    @default("default-workspace")
-  workspace       Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  schemaVersion   Int       @default(1)
-  occurredAt      DateTime  @default(now())
-  recordedAt      DateTime  @default(now())
+  id            String    @id @default(cuid())
+  workspaceId   String    @default("default-workspace")
+  workspace     Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  schemaVersion Int       @default(1)
+  occurredAt    DateTime  @default(now())
+  recordedAt    DateTime  @default(now())
 
   // Typed reference to what changed. subjectType is one of the eight
   // primitives, "Interaction", or another supporting model (e.g. "ReviewItem")
   // — a string, not an enum, matching InteractionParticipant.entityType so the
   // same reference shape is used everywhere in the graph.
-  subjectType     String
-  subjectId       String
+  subjectType String
+  subjectId   String
 
   // "interaction.created" | "plan.completed" | "state.recorded" |
   // "review.resolved" | ... — a growing, intentionally un-enumerated
   // vocabulary owned by packages/domain, not the schema.
-  eventType       String
+  eventType String
 
-  actorType       String    // "user" | "api_key" | "system" | "rule"
+  actorType       String // "user" | "api_key" | "system" | "rule"
   actorId         String?
-  sourceConnector String?   // "era" | "gmail" | "imessage" | "manual" | ...
+  sourceConnector String? // "era" | "gmail" | "imessage" | "manual" | ...
 
-  correlationId   String?
-  causationId     String?
-  causationEvent  GraphEvent?  @relation("EventCausation", fields: [causationId], references: [id], onDelete: SetNull)
-  causedEvents    GraphEvent[] @relation("EventCausation")
-  causationDepth  Int       @default(0)
+  correlationId  String?
+  causationId    String?
+  causationEvent GraphEvent?  @relation("EventCausation", fields: [causationId], references: [id], onDelete: SetNull)
+  causedEvents   GraphEvent[] @relation("EventCausation")
+  causationDepth Int          @default(0)
   // Set only when this event was produced by an automation rule, so a rule
   // can never act twice on the same upstream event at the same version.
-  ruleVersionId   String?
+  ruleVersionId  String?
 
-  idempotencyKey  String
-  payload         String    // JSON, minimal + typed per eventType
-  provenance      String?   // JSON: refs back to the Note/file/sync run that caused this
+  idempotencyKey String
+  payload        String // JSON, minimal + typed per eventType
+  provenance     String? // JSON: refs back to the Note/file/sync run that caused this
 
-  receipts        GraphEventReceipt[]
+  receipts GraphEventReceipt[]
 
   @@unique([workspaceId, idempotencyKey])
   @@index([workspaceId, occurredAt(sort: Desc)])
@@ -2541,16 +2793,16 @@ model GraphEvent {
 // in effect. A consumer that crashes mid-handling retries from attempts+1,
 // never from zero, and never re-applies a completed effect.
 model GraphEventReceipt {
-  id           String     @id @default(cuid())
-  eventId      String
-  event        GraphEvent @relation(fields: [eventId], references: [id], onDelete: Cascade)
-  consumer     String     // "automation" | "intelligence" | ... — one per subscriber
-  status       String     @default("pending") // pending | processing | done | failed
-  attempts     Int        @default(0)
-  lastError    String?
-  nextRetryAt  DateTime?
-  processedAt  DateTime?
-  createdAt    DateTime   @default(now())
+  id          String     @id @default(cuid())
+  eventId     String
+  event       GraphEvent @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  consumer    String // "automation" | "intelligence" | ... — one per subscriber
+  status      String     @default("pending") // pending | processing | done | failed
+  attempts    Int        @default(0)
+  lastError   String?
+  nextRetryAt DateTime?
+  processedAt DateTime?
+  createdAt   DateTime   @default(now())
 
   @@unique([eventId, consumer])
   @@index([consumer, status, nextRetryAt])
@@ -2571,35 +2823,35 @@ enum ReviewItemStatus {
 // adapter is proven. See docs/PERSONS_ARCHITECTURE.md for the four legacy
 // queues this generalizes.
 model ReviewItem {
-  id              String    @id @default(cuid())
-  workspaceId     String    @default("default-workspace")
-  workspace       Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
+  id          String    @id @default(cuid())
+  workspaceId String    @default("default-workspace")
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 
   // Where this came from, so the Inbox can filter/group by source without
   // duplicating the source record itself.
-  source          String    // "staged_interaction" | "note_suggestion" | "import_staged_visit" | "calendar_reconciliation"
-  sourceId        String    // id in the legacy table this adapts
-  itemType        String    // what accepting this creates: "interaction" | "plan" | "event" | ...
+  source   String // "staged_interaction" | "note_suggestion" | "import_staged_visit" | "calendar_reconciliation"
+  sourceId String // id in the legacy table this adapts
+  itemType String // what accepting this creates: "interaction" | "plan" | "event" | ...
 
   // The proposed graph command, not yet applied. Structured so acceptance is
   // "run this command", never "re-derive what to do from the raw content".
-  proposedCommand String    // JSON: { command: string, input: object }
+  proposedCommand String // JSON: { command: string, input: object }
 
-  targetType      String?   // primitive this most likely resolves against, if known
-  targetId        String?
+  targetType String? // primitive this most likely resolves against, if known
+  targetId   String?
 
-  confidence      Float?
-  evidence        String?   // JSON — audit trail for why this was proposed
-  riskTier        String    @default("review") // observe | safe_auto | review | confirm
-  priority        Int       @default(3)
+  confidence Float?
+  evidence   String? // JSON — audit trail for why this was proposed
+  riskTier   String  @default("review") // observe | safe_auto | review | confirm
+  priority   Int     @default(3)
 
-  status          ReviewItemStatus @default(pending)
-  resolvedAt      DateTime?
-  resolvedBy      String?   // actor id
-  resultType      String?   // entity type actually created/updated on accept
-  resultId        String?
+  status     ReviewItemStatus @default(pending)
+  resolvedAt DateTime?
+  resolvedBy String? // actor id
+  resultType String? // entity type actually created/updated on accept
+  resultId   String?
 
   @@unique([workspaceId, source, sourceId])
   @@index([workspaceId, status, priority, createdAt])

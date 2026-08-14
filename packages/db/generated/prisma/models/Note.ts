@@ -216,6 +216,7 @@ export type NoteWhereInput = {
   aiAnalysisRuns?: Prisma.NoteAnalysisRunListRelationFilter
   suggestions?: Prisma.NoteSuggestionListRelationFilter
   lifeModelClaimFeedback?: Prisma.LifeModelClaimFeedbackListRelationFilter
+  evidenceCorrections?: Prisma.EvidenceClaimListRelationFilter
 }
 
 export type NoteOrderByWithRelationInput = {
@@ -237,6 +238,7 @@ export type NoteOrderByWithRelationInput = {
   aiAnalysisRuns?: Prisma.NoteAnalysisRunOrderByRelationAggregateInput
   suggestions?: Prisma.NoteSuggestionOrderByRelationAggregateInput
   lifeModelClaimFeedback?: Prisma.LifeModelClaimFeedbackOrderByRelationAggregateInput
+  evidenceCorrections?: Prisma.EvidenceClaimOrderByRelationAggregateInput
 }
 
 export type NoteWhereUniqueInput = Prisma.AtLeast<{
@@ -261,6 +263,7 @@ export type NoteWhereUniqueInput = Prisma.AtLeast<{
   aiAnalysisRuns?: Prisma.NoteAnalysisRunListRelationFilter
   suggestions?: Prisma.NoteSuggestionListRelationFilter
   lifeModelClaimFeedback?: Prisma.LifeModelClaimFeedbackListRelationFilter
+  evidenceCorrections?: Prisma.EvidenceClaimListRelationFilter
 }, "id">
 
 export type NoteOrderByWithAggregationInput = {
@@ -308,6 +311,7 @@ export type NoteCreateInput = {
   aiAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutNoteInput
   suggestions?: Prisma.NoteSuggestionCreateNestedManyWithoutNoteInput
   lifeModelClaimFeedback?: Prisma.LifeModelClaimFeedbackCreateNestedManyWithoutSourceNoteInput
+  evidenceCorrections?: Prisma.EvidenceClaimCreateNestedManyWithoutCorrectionNoteInput
 }
 
 export type NoteUncheckedCreateInput = {
@@ -327,6 +331,7 @@ export type NoteUncheckedCreateInput = {
   aiAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutNoteInput
   suggestions?: Prisma.NoteSuggestionUncheckedCreateNestedManyWithoutNoteInput
   lifeModelClaimFeedback?: Prisma.LifeModelClaimFeedbackUncheckedCreateNestedManyWithoutSourceNoteInput
+  evidenceCorrections?: Prisma.EvidenceClaimUncheckedCreateNestedManyWithoutCorrectionNoteInput
 }
 
 export type NoteUpdateInput = {
@@ -346,6 +351,7 @@ export type NoteUpdateInput = {
   aiAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutNoteNestedInput
   suggestions?: Prisma.NoteSuggestionUpdateManyWithoutNoteNestedInput
   lifeModelClaimFeedback?: Prisma.LifeModelClaimFeedbackUpdateManyWithoutSourceNoteNestedInput
+  evidenceCorrections?: Prisma.EvidenceClaimUpdateManyWithoutCorrectionNoteNestedInput
 }
 
 export type NoteUncheckedUpdateInput = {
@@ -365,6 +371,7 @@ export type NoteUncheckedUpdateInput = {
   aiAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutNoteNestedInput
   suggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutNoteNestedInput
   lifeModelClaimFeedback?: Prisma.LifeModelClaimFeedbackUncheckedUpdateManyWithoutSourceNoteNestedInput
+  evidenceCorrections?: Prisma.EvidenceClaimUncheckedUpdateManyWithoutCorrectionNoteNestedInput
 }
 
 export type NoteCreateManyInput = {
@@ -583,6 +590,22 @@ export type NoteUncheckedUpdateManyWithoutSourceFileNestedInput = {
   deleteMany?: Prisma.NoteScalarWhereInput | Prisma.NoteScalarWhereInput[]
 }
 
+export type NoteCreateNestedOneWithoutEvidenceCorrectionsInput = {
+  create?: Prisma.XOR<Prisma.NoteCreateWithoutEvidenceCorrectionsInput, Prisma.NoteUncheckedCreateWithoutEvidenceCorrectionsInput>
+  connectOrCreate?: Prisma.NoteCreateOrConnectWithoutEvidenceCorrectionsInput
+  connect?: Prisma.NoteWhereUniqueInput
+}
+
+export type NoteUpdateOneWithoutEvidenceCorrectionsNestedInput = {
+  create?: Prisma.XOR<Prisma.NoteCreateWithoutEvidenceCorrectionsInput, Prisma.NoteUncheckedCreateWithoutEvidenceCorrectionsInput>
+  connectOrCreate?: Prisma.NoteCreateOrConnectWithoutEvidenceCorrectionsInput
+  upsert?: Prisma.NoteUpsertWithoutEvidenceCorrectionsInput
+  disconnect?: Prisma.NoteWhereInput | boolean
+  delete?: Prisma.NoteWhereInput | boolean
+  connect?: Prisma.NoteWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.NoteUpdateToOneWithWhereWithoutEvidenceCorrectionsInput, Prisma.NoteUpdateWithoutEvidenceCorrectionsInput>, Prisma.NoteUncheckedUpdateWithoutEvidenceCorrectionsInput>
+}
+
 export type NoteCreateNestedOneWithoutAiAnalysisRunsInput = {
   create?: Prisma.XOR<Prisma.NoteCreateWithoutAiAnalysisRunsInput, Prisma.NoteUncheckedCreateWithoutAiAnalysisRunsInput>
   connectOrCreate?: Prisma.NoteCreateOrConnectWithoutAiAnalysisRunsInput
@@ -675,6 +698,7 @@ export type NoteCreateWithoutWorkspaceInput = {
   aiAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutNoteInput
   suggestions?: Prisma.NoteSuggestionCreateNestedManyWithoutNoteInput
   lifeModelClaimFeedback?: Prisma.LifeModelClaimFeedbackCreateNestedManyWithoutSourceNoteInput
+  evidenceCorrections?: Prisma.EvidenceClaimCreateNestedManyWithoutCorrectionNoteInput
 }
 
 export type NoteUncheckedCreateWithoutWorkspaceInput = {
@@ -693,6 +717,7 @@ export type NoteUncheckedCreateWithoutWorkspaceInput = {
   aiAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutNoteInput
   suggestions?: Prisma.NoteSuggestionUncheckedCreateNestedManyWithoutNoteInput
   lifeModelClaimFeedback?: Prisma.LifeModelClaimFeedbackUncheckedCreateNestedManyWithoutSourceNoteInput
+  evidenceCorrections?: Prisma.EvidenceClaimUncheckedCreateNestedManyWithoutCorrectionNoteInput
 }
 
 export type NoteCreateOrConnectWithoutWorkspaceInput = {
@@ -750,6 +775,7 @@ export type NoteCreateWithoutEventsInput = {
   aiAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutNoteInput
   suggestions?: Prisma.NoteSuggestionCreateNestedManyWithoutNoteInput
   lifeModelClaimFeedback?: Prisma.LifeModelClaimFeedbackCreateNestedManyWithoutSourceNoteInput
+  evidenceCorrections?: Prisma.EvidenceClaimCreateNestedManyWithoutCorrectionNoteInput
 }
 
 export type NoteUncheckedCreateWithoutEventsInput = {
@@ -768,6 +794,7 @@ export type NoteUncheckedCreateWithoutEventsInput = {
   aiAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutNoteInput
   suggestions?: Prisma.NoteSuggestionUncheckedCreateNestedManyWithoutNoteInput
   lifeModelClaimFeedback?: Prisma.LifeModelClaimFeedbackUncheckedCreateNestedManyWithoutSourceNoteInput
+  evidenceCorrections?: Prisma.EvidenceClaimUncheckedCreateNestedManyWithoutCorrectionNoteInput
 }
 
 export type NoteCreateOrConnectWithoutEventsInput = {
@@ -802,6 +829,7 @@ export type NoteUpdateWithoutEventsInput = {
   aiAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutNoteNestedInput
   suggestions?: Prisma.NoteSuggestionUpdateManyWithoutNoteNestedInput
   lifeModelClaimFeedback?: Prisma.LifeModelClaimFeedbackUpdateManyWithoutSourceNoteNestedInput
+  evidenceCorrections?: Prisma.EvidenceClaimUpdateManyWithoutCorrectionNoteNestedInput
 }
 
 export type NoteUncheckedUpdateWithoutEventsInput = {
@@ -820,6 +848,7 @@ export type NoteUncheckedUpdateWithoutEventsInput = {
   aiAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutNoteNestedInput
   suggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutNoteNestedInput
   lifeModelClaimFeedback?: Prisma.LifeModelClaimFeedbackUncheckedUpdateManyWithoutSourceNoteNestedInput
+  evidenceCorrections?: Prisma.EvidenceClaimUncheckedUpdateManyWithoutCorrectionNoteNestedInput
 }
 
 export type NoteCreateWithoutInteractionsInput = {
@@ -838,6 +867,7 @@ export type NoteCreateWithoutInteractionsInput = {
   aiAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutNoteInput
   suggestions?: Prisma.NoteSuggestionCreateNestedManyWithoutNoteInput
   lifeModelClaimFeedback?: Prisma.LifeModelClaimFeedbackCreateNestedManyWithoutSourceNoteInput
+  evidenceCorrections?: Prisma.EvidenceClaimCreateNestedManyWithoutCorrectionNoteInput
 }
 
 export type NoteUncheckedCreateWithoutInteractionsInput = {
@@ -856,6 +886,7 @@ export type NoteUncheckedCreateWithoutInteractionsInput = {
   aiAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutNoteInput
   suggestions?: Prisma.NoteSuggestionUncheckedCreateNestedManyWithoutNoteInput
   lifeModelClaimFeedback?: Prisma.LifeModelClaimFeedbackUncheckedCreateNestedManyWithoutSourceNoteInput
+  evidenceCorrections?: Prisma.EvidenceClaimUncheckedCreateNestedManyWithoutCorrectionNoteInput
 }
 
 export type NoteCreateOrConnectWithoutInteractionsInput = {
@@ -890,6 +921,7 @@ export type NoteUpdateWithoutInteractionsInput = {
   aiAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutNoteNestedInput
   suggestions?: Prisma.NoteSuggestionUpdateManyWithoutNoteNestedInput
   lifeModelClaimFeedback?: Prisma.LifeModelClaimFeedbackUpdateManyWithoutSourceNoteNestedInput
+  evidenceCorrections?: Prisma.EvidenceClaimUpdateManyWithoutCorrectionNoteNestedInput
 }
 
 export type NoteUncheckedUpdateWithoutInteractionsInput = {
@@ -908,6 +940,7 @@ export type NoteUncheckedUpdateWithoutInteractionsInput = {
   aiAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutNoteNestedInput
   suggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutNoteNestedInput
   lifeModelClaimFeedback?: Prisma.LifeModelClaimFeedbackUncheckedUpdateManyWithoutSourceNoteNestedInput
+  evidenceCorrections?: Prisma.EvidenceClaimUncheckedUpdateManyWithoutCorrectionNoteNestedInput
 }
 
 export type NoteCreateWithoutPlansInput = {
@@ -926,6 +959,7 @@ export type NoteCreateWithoutPlansInput = {
   aiAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutNoteInput
   suggestions?: Prisma.NoteSuggestionCreateNestedManyWithoutNoteInput
   lifeModelClaimFeedback?: Prisma.LifeModelClaimFeedbackCreateNestedManyWithoutSourceNoteInput
+  evidenceCorrections?: Prisma.EvidenceClaimCreateNestedManyWithoutCorrectionNoteInput
 }
 
 export type NoteUncheckedCreateWithoutPlansInput = {
@@ -944,6 +978,7 @@ export type NoteUncheckedCreateWithoutPlansInput = {
   aiAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutNoteInput
   suggestions?: Prisma.NoteSuggestionUncheckedCreateNestedManyWithoutNoteInput
   lifeModelClaimFeedback?: Prisma.LifeModelClaimFeedbackUncheckedCreateNestedManyWithoutSourceNoteInput
+  evidenceCorrections?: Prisma.EvidenceClaimUncheckedCreateNestedManyWithoutCorrectionNoteInput
 }
 
 export type NoteCreateOrConnectWithoutPlansInput = {
@@ -978,6 +1013,7 @@ export type NoteUpdateWithoutPlansInput = {
   aiAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutNoteNestedInput
   suggestions?: Prisma.NoteSuggestionUpdateManyWithoutNoteNestedInput
   lifeModelClaimFeedback?: Prisma.LifeModelClaimFeedbackUpdateManyWithoutSourceNoteNestedInput
+  evidenceCorrections?: Prisma.EvidenceClaimUpdateManyWithoutCorrectionNoteNestedInput
 }
 
 export type NoteUncheckedUpdateWithoutPlansInput = {
@@ -996,6 +1032,7 @@ export type NoteUncheckedUpdateWithoutPlansInput = {
   aiAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutNoteNestedInput
   suggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutNoteNestedInput
   lifeModelClaimFeedback?: Prisma.LifeModelClaimFeedbackUncheckedUpdateManyWithoutSourceNoteNestedInput
+  evidenceCorrections?: Prisma.EvidenceClaimUncheckedUpdateManyWithoutCorrectionNoteNestedInput
 }
 
 export type NoteCreateWithoutSourceFileInput = {
@@ -1014,6 +1051,7 @@ export type NoteCreateWithoutSourceFileInput = {
   aiAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutNoteInput
   suggestions?: Prisma.NoteSuggestionCreateNestedManyWithoutNoteInput
   lifeModelClaimFeedback?: Prisma.LifeModelClaimFeedbackCreateNestedManyWithoutSourceNoteInput
+  evidenceCorrections?: Prisma.EvidenceClaimCreateNestedManyWithoutCorrectionNoteInput
 }
 
 export type NoteUncheckedCreateWithoutSourceFileInput = {
@@ -1032,6 +1070,7 @@ export type NoteUncheckedCreateWithoutSourceFileInput = {
   aiAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutNoteInput
   suggestions?: Prisma.NoteSuggestionUncheckedCreateNestedManyWithoutNoteInput
   lifeModelClaimFeedback?: Prisma.LifeModelClaimFeedbackUncheckedCreateNestedManyWithoutSourceNoteInput
+  evidenceCorrections?: Prisma.EvidenceClaimUncheckedCreateNestedManyWithoutCorrectionNoteInput
 }
 
 export type NoteCreateOrConnectWithoutSourceFileInput = {
@@ -1059,6 +1098,98 @@ export type NoteUpdateManyWithWhereWithoutSourceFileInput = {
   data: Prisma.XOR<Prisma.NoteUpdateManyMutationInput, Prisma.NoteUncheckedUpdateManyWithoutSourceFileInput>
 }
 
+export type NoteCreateWithoutEvidenceCorrectionsInput = {
+  id?: string
+  createdAt?: Date | string
+  timestamp: Date | string
+  type: string
+  content: string
+  metadata?: string | null
+  workspace?: Prisma.WorkspaceCreateNestedOneWithoutNotesInput
+  sourceFile?: Prisma.ImportedFileCreateNestedOneWithoutNotesInput
+  plans?: Prisma.PlanCreateNestedManyWithoutSourceNoteInput
+  events?: Prisma.EventCreateNestedManyWithoutSourceNoteInput
+  interactions?: Prisma.InteractionCreateNestedManyWithoutSourceNoteInput
+  states?: Prisma.StateCreateNestedManyWithoutSourceNoteInput
+  groups?: Prisma.GroupCreateNestedManyWithoutSourceNoteInput
+  aiAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutNoteInput
+  suggestions?: Prisma.NoteSuggestionCreateNestedManyWithoutNoteInput
+  lifeModelClaimFeedback?: Prisma.LifeModelClaimFeedbackCreateNestedManyWithoutSourceNoteInput
+}
+
+export type NoteUncheckedCreateWithoutEvidenceCorrectionsInput = {
+  id?: string
+  workspaceId?: string
+  createdAt?: Date | string
+  timestamp: Date | string
+  type: string
+  content: string
+  metadata?: string | null
+  sourceFileId?: string | null
+  plans?: Prisma.PlanUncheckedCreateNestedManyWithoutSourceNoteInput
+  events?: Prisma.EventUncheckedCreateNestedManyWithoutSourceNoteInput
+  interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutSourceNoteInput
+  states?: Prisma.StateUncheckedCreateNestedManyWithoutSourceNoteInput
+  groups?: Prisma.GroupUncheckedCreateNestedManyWithoutSourceNoteInput
+  aiAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutNoteInput
+  suggestions?: Prisma.NoteSuggestionUncheckedCreateNestedManyWithoutNoteInput
+  lifeModelClaimFeedback?: Prisma.LifeModelClaimFeedbackUncheckedCreateNestedManyWithoutSourceNoteInput
+}
+
+export type NoteCreateOrConnectWithoutEvidenceCorrectionsInput = {
+  where: Prisma.NoteWhereUniqueInput
+  create: Prisma.XOR<Prisma.NoteCreateWithoutEvidenceCorrectionsInput, Prisma.NoteUncheckedCreateWithoutEvidenceCorrectionsInput>
+}
+
+export type NoteUpsertWithoutEvidenceCorrectionsInput = {
+  update: Prisma.XOR<Prisma.NoteUpdateWithoutEvidenceCorrectionsInput, Prisma.NoteUncheckedUpdateWithoutEvidenceCorrectionsInput>
+  create: Prisma.XOR<Prisma.NoteCreateWithoutEvidenceCorrectionsInput, Prisma.NoteUncheckedCreateWithoutEvidenceCorrectionsInput>
+  where?: Prisma.NoteWhereInput
+}
+
+export type NoteUpdateToOneWithWhereWithoutEvidenceCorrectionsInput = {
+  where?: Prisma.NoteWhereInput
+  data: Prisma.XOR<Prisma.NoteUpdateWithoutEvidenceCorrectionsInput, Prisma.NoteUncheckedUpdateWithoutEvidenceCorrectionsInput>
+}
+
+export type NoteUpdateWithoutEvidenceCorrectionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutNotesNestedInput
+  sourceFile?: Prisma.ImportedFileUpdateOneWithoutNotesNestedInput
+  plans?: Prisma.PlanUpdateManyWithoutSourceNoteNestedInput
+  events?: Prisma.EventUpdateManyWithoutSourceNoteNestedInput
+  interactions?: Prisma.InteractionUpdateManyWithoutSourceNoteNestedInput
+  states?: Prisma.StateUpdateManyWithoutSourceNoteNestedInput
+  groups?: Prisma.GroupUpdateManyWithoutSourceNoteNestedInput
+  aiAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutNoteNestedInput
+  suggestions?: Prisma.NoteSuggestionUpdateManyWithoutNoteNestedInput
+  lifeModelClaimFeedback?: Prisma.LifeModelClaimFeedbackUpdateManyWithoutSourceNoteNestedInput
+}
+
+export type NoteUncheckedUpdateWithoutEvidenceCorrectionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  plans?: Prisma.PlanUncheckedUpdateManyWithoutSourceNoteNestedInput
+  events?: Prisma.EventUncheckedUpdateManyWithoutSourceNoteNestedInput
+  interactions?: Prisma.InteractionUncheckedUpdateManyWithoutSourceNoteNestedInput
+  states?: Prisma.StateUncheckedUpdateManyWithoutSourceNoteNestedInput
+  groups?: Prisma.GroupUncheckedUpdateManyWithoutSourceNoteNestedInput
+  aiAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutNoteNestedInput
+  suggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutNoteNestedInput
+  lifeModelClaimFeedback?: Prisma.LifeModelClaimFeedbackUncheckedUpdateManyWithoutSourceNoteNestedInput
+}
+
 export type NoteCreateWithoutAiAnalysisRunsInput = {
   id?: string
   createdAt?: Date | string
@@ -1075,6 +1206,7 @@ export type NoteCreateWithoutAiAnalysisRunsInput = {
   groups?: Prisma.GroupCreateNestedManyWithoutSourceNoteInput
   suggestions?: Prisma.NoteSuggestionCreateNestedManyWithoutNoteInput
   lifeModelClaimFeedback?: Prisma.LifeModelClaimFeedbackCreateNestedManyWithoutSourceNoteInput
+  evidenceCorrections?: Prisma.EvidenceClaimCreateNestedManyWithoutCorrectionNoteInput
 }
 
 export type NoteUncheckedCreateWithoutAiAnalysisRunsInput = {
@@ -1093,6 +1225,7 @@ export type NoteUncheckedCreateWithoutAiAnalysisRunsInput = {
   groups?: Prisma.GroupUncheckedCreateNestedManyWithoutSourceNoteInput
   suggestions?: Prisma.NoteSuggestionUncheckedCreateNestedManyWithoutNoteInput
   lifeModelClaimFeedback?: Prisma.LifeModelClaimFeedbackUncheckedCreateNestedManyWithoutSourceNoteInput
+  evidenceCorrections?: Prisma.EvidenceClaimUncheckedCreateNestedManyWithoutCorrectionNoteInput
 }
 
 export type NoteCreateOrConnectWithoutAiAnalysisRunsInput = {
@@ -1127,6 +1260,7 @@ export type NoteUpdateWithoutAiAnalysisRunsInput = {
   groups?: Prisma.GroupUpdateManyWithoutSourceNoteNestedInput
   suggestions?: Prisma.NoteSuggestionUpdateManyWithoutNoteNestedInput
   lifeModelClaimFeedback?: Prisma.LifeModelClaimFeedbackUpdateManyWithoutSourceNoteNestedInput
+  evidenceCorrections?: Prisma.EvidenceClaimUpdateManyWithoutCorrectionNoteNestedInput
 }
 
 export type NoteUncheckedUpdateWithoutAiAnalysisRunsInput = {
@@ -1145,6 +1279,7 @@ export type NoteUncheckedUpdateWithoutAiAnalysisRunsInput = {
   groups?: Prisma.GroupUncheckedUpdateManyWithoutSourceNoteNestedInput
   suggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutNoteNestedInput
   lifeModelClaimFeedback?: Prisma.LifeModelClaimFeedbackUncheckedUpdateManyWithoutSourceNoteNestedInput
+  evidenceCorrections?: Prisma.EvidenceClaimUncheckedUpdateManyWithoutCorrectionNoteNestedInput
 }
 
 export type NoteCreateWithoutSuggestionsInput = {
@@ -1163,6 +1298,7 @@ export type NoteCreateWithoutSuggestionsInput = {
   groups?: Prisma.GroupCreateNestedManyWithoutSourceNoteInput
   aiAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutNoteInput
   lifeModelClaimFeedback?: Prisma.LifeModelClaimFeedbackCreateNestedManyWithoutSourceNoteInput
+  evidenceCorrections?: Prisma.EvidenceClaimCreateNestedManyWithoutCorrectionNoteInput
 }
 
 export type NoteUncheckedCreateWithoutSuggestionsInput = {
@@ -1181,6 +1317,7 @@ export type NoteUncheckedCreateWithoutSuggestionsInput = {
   groups?: Prisma.GroupUncheckedCreateNestedManyWithoutSourceNoteInput
   aiAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutNoteInput
   lifeModelClaimFeedback?: Prisma.LifeModelClaimFeedbackUncheckedCreateNestedManyWithoutSourceNoteInput
+  evidenceCorrections?: Prisma.EvidenceClaimUncheckedCreateNestedManyWithoutCorrectionNoteInput
 }
 
 export type NoteCreateOrConnectWithoutSuggestionsInput = {
@@ -1215,6 +1352,7 @@ export type NoteUpdateWithoutSuggestionsInput = {
   groups?: Prisma.GroupUpdateManyWithoutSourceNoteNestedInput
   aiAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutNoteNestedInput
   lifeModelClaimFeedback?: Prisma.LifeModelClaimFeedbackUpdateManyWithoutSourceNoteNestedInput
+  evidenceCorrections?: Prisma.EvidenceClaimUpdateManyWithoutCorrectionNoteNestedInput
 }
 
 export type NoteUncheckedUpdateWithoutSuggestionsInput = {
@@ -1233,6 +1371,7 @@ export type NoteUncheckedUpdateWithoutSuggestionsInput = {
   groups?: Prisma.GroupUncheckedUpdateManyWithoutSourceNoteNestedInput
   aiAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutNoteNestedInput
   lifeModelClaimFeedback?: Prisma.LifeModelClaimFeedbackUncheckedUpdateManyWithoutSourceNoteNestedInput
+  evidenceCorrections?: Prisma.EvidenceClaimUncheckedUpdateManyWithoutCorrectionNoteNestedInput
 }
 
 export type NoteCreateWithoutGroupsInput = {
@@ -1251,6 +1390,7 @@ export type NoteCreateWithoutGroupsInput = {
   aiAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutNoteInput
   suggestions?: Prisma.NoteSuggestionCreateNestedManyWithoutNoteInput
   lifeModelClaimFeedback?: Prisma.LifeModelClaimFeedbackCreateNestedManyWithoutSourceNoteInput
+  evidenceCorrections?: Prisma.EvidenceClaimCreateNestedManyWithoutCorrectionNoteInput
 }
 
 export type NoteUncheckedCreateWithoutGroupsInput = {
@@ -1269,6 +1409,7 @@ export type NoteUncheckedCreateWithoutGroupsInput = {
   aiAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutNoteInput
   suggestions?: Prisma.NoteSuggestionUncheckedCreateNestedManyWithoutNoteInput
   lifeModelClaimFeedback?: Prisma.LifeModelClaimFeedbackUncheckedCreateNestedManyWithoutSourceNoteInput
+  evidenceCorrections?: Prisma.EvidenceClaimUncheckedCreateNestedManyWithoutCorrectionNoteInput
 }
 
 export type NoteCreateOrConnectWithoutGroupsInput = {
@@ -1303,6 +1444,7 @@ export type NoteUpdateWithoutGroupsInput = {
   aiAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutNoteNestedInput
   suggestions?: Prisma.NoteSuggestionUpdateManyWithoutNoteNestedInput
   lifeModelClaimFeedback?: Prisma.LifeModelClaimFeedbackUpdateManyWithoutSourceNoteNestedInput
+  evidenceCorrections?: Prisma.EvidenceClaimUpdateManyWithoutCorrectionNoteNestedInput
 }
 
 export type NoteUncheckedUpdateWithoutGroupsInput = {
@@ -1321,6 +1463,7 @@ export type NoteUncheckedUpdateWithoutGroupsInput = {
   aiAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutNoteNestedInput
   suggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutNoteNestedInput
   lifeModelClaimFeedback?: Prisma.LifeModelClaimFeedbackUncheckedUpdateManyWithoutSourceNoteNestedInput
+  evidenceCorrections?: Prisma.EvidenceClaimUncheckedUpdateManyWithoutCorrectionNoteNestedInput
 }
 
 export type NoteCreateWithoutLifeModelClaimFeedbackInput = {
@@ -1339,6 +1482,7 @@ export type NoteCreateWithoutLifeModelClaimFeedbackInput = {
   groups?: Prisma.GroupCreateNestedManyWithoutSourceNoteInput
   aiAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutNoteInput
   suggestions?: Prisma.NoteSuggestionCreateNestedManyWithoutNoteInput
+  evidenceCorrections?: Prisma.EvidenceClaimCreateNestedManyWithoutCorrectionNoteInput
 }
 
 export type NoteUncheckedCreateWithoutLifeModelClaimFeedbackInput = {
@@ -1357,6 +1501,7 @@ export type NoteUncheckedCreateWithoutLifeModelClaimFeedbackInput = {
   groups?: Prisma.GroupUncheckedCreateNestedManyWithoutSourceNoteInput
   aiAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutNoteInput
   suggestions?: Prisma.NoteSuggestionUncheckedCreateNestedManyWithoutNoteInput
+  evidenceCorrections?: Prisma.EvidenceClaimUncheckedCreateNestedManyWithoutCorrectionNoteInput
 }
 
 export type NoteCreateOrConnectWithoutLifeModelClaimFeedbackInput = {
@@ -1391,6 +1536,7 @@ export type NoteUpdateWithoutLifeModelClaimFeedbackInput = {
   groups?: Prisma.GroupUpdateManyWithoutSourceNoteNestedInput
   aiAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutNoteNestedInput
   suggestions?: Prisma.NoteSuggestionUpdateManyWithoutNoteNestedInput
+  evidenceCorrections?: Prisma.EvidenceClaimUpdateManyWithoutCorrectionNoteNestedInput
 }
 
 export type NoteUncheckedUpdateWithoutLifeModelClaimFeedbackInput = {
@@ -1409,6 +1555,7 @@ export type NoteUncheckedUpdateWithoutLifeModelClaimFeedbackInput = {
   groups?: Prisma.GroupUncheckedUpdateManyWithoutSourceNoteNestedInput
   aiAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutNoteNestedInput
   suggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutNoteNestedInput
+  evidenceCorrections?: Prisma.EvidenceClaimUncheckedUpdateManyWithoutCorrectionNoteNestedInput
 }
 
 export type NoteCreateWithoutStatesInput = {
@@ -1427,6 +1574,7 @@ export type NoteCreateWithoutStatesInput = {
   aiAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutNoteInput
   suggestions?: Prisma.NoteSuggestionCreateNestedManyWithoutNoteInput
   lifeModelClaimFeedback?: Prisma.LifeModelClaimFeedbackCreateNestedManyWithoutSourceNoteInput
+  evidenceCorrections?: Prisma.EvidenceClaimCreateNestedManyWithoutCorrectionNoteInput
 }
 
 export type NoteUncheckedCreateWithoutStatesInput = {
@@ -1445,6 +1593,7 @@ export type NoteUncheckedCreateWithoutStatesInput = {
   aiAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutNoteInput
   suggestions?: Prisma.NoteSuggestionUncheckedCreateNestedManyWithoutNoteInput
   lifeModelClaimFeedback?: Prisma.LifeModelClaimFeedbackUncheckedCreateNestedManyWithoutSourceNoteInput
+  evidenceCorrections?: Prisma.EvidenceClaimUncheckedCreateNestedManyWithoutCorrectionNoteInput
 }
 
 export type NoteCreateOrConnectWithoutStatesInput = {
@@ -1479,6 +1628,7 @@ export type NoteUpdateWithoutStatesInput = {
   aiAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutNoteNestedInput
   suggestions?: Prisma.NoteSuggestionUpdateManyWithoutNoteNestedInput
   lifeModelClaimFeedback?: Prisma.LifeModelClaimFeedbackUpdateManyWithoutSourceNoteNestedInput
+  evidenceCorrections?: Prisma.EvidenceClaimUpdateManyWithoutCorrectionNoteNestedInput
 }
 
 export type NoteUncheckedUpdateWithoutStatesInput = {
@@ -1497,6 +1647,7 @@ export type NoteUncheckedUpdateWithoutStatesInput = {
   aiAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutNoteNestedInput
   suggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutNoteNestedInput
   lifeModelClaimFeedback?: Prisma.LifeModelClaimFeedbackUncheckedUpdateManyWithoutSourceNoteNestedInput
+  evidenceCorrections?: Prisma.EvidenceClaimUncheckedUpdateManyWithoutCorrectionNoteNestedInput
 }
 
 export type NoteCreateManyWorkspaceInput = {
@@ -1525,6 +1676,7 @@ export type NoteUpdateWithoutWorkspaceInput = {
   aiAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutNoteNestedInput
   suggestions?: Prisma.NoteSuggestionUpdateManyWithoutNoteNestedInput
   lifeModelClaimFeedback?: Prisma.LifeModelClaimFeedbackUpdateManyWithoutSourceNoteNestedInput
+  evidenceCorrections?: Prisma.EvidenceClaimUpdateManyWithoutCorrectionNoteNestedInput
 }
 
 export type NoteUncheckedUpdateWithoutWorkspaceInput = {
@@ -1543,6 +1695,7 @@ export type NoteUncheckedUpdateWithoutWorkspaceInput = {
   aiAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutNoteNestedInput
   suggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutNoteNestedInput
   lifeModelClaimFeedback?: Prisma.LifeModelClaimFeedbackUncheckedUpdateManyWithoutSourceNoteNestedInput
+  evidenceCorrections?: Prisma.EvidenceClaimUncheckedUpdateManyWithoutCorrectionNoteNestedInput
 }
 
 export type NoteUncheckedUpdateManyWithoutWorkspaceInput = {
@@ -1581,6 +1734,7 @@ export type NoteUpdateWithoutSourceFileInput = {
   aiAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutNoteNestedInput
   suggestions?: Prisma.NoteSuggestionUpdateManyWithoutNoteNestedInput
   lifeModelClaimFeedback?: Prisma.LifeModelClaimFeedbackUpdateManyWithoutSourceNoteNestedInput
+  evidenceCorrections?: Prisma.EvidenceClaimUpdateManyWithoutCorrectionNoteNestedInput
 }
 
 export type NoteUncheckedUpdateWithoutSourceFileInput = {
@@ -1599,6 +1753,7 @@ export type NoteUncheckedUpdateWithoutSourceFileInput = {
   aiAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutNoteNestedInput
   suggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutNoteNestedInput
   lifeModelClaimFeedback?: Prisma.LifeModelClaimFeedbackUncheckedUpdateManyWithoutSourceNoteNestedInput
+  evidenceCorrections?: Prisma.EvidenceClaimUncheckedUpdateManyWithoutCorrectionNoteNestedInput
 }
 
 export type NoteUncheckedUpdateManyWithoutSourceFileInput = {
@@ -1625,6 +1780,7 @@ export type NoteCountOutputType = {
   aiAnalysisRuns: number
   suggestions: number
   lifeModelClaimFeedback: number
+  evidenceCorrections: number
 }
 
 export type NoteCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1636,6 +1792,7 @@ export type NoteCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   aiAnalysisRuns?: boolean | NoteCountOutputTypeCountAiAnalysisRunsArgs
   suggestions?: boolean | NoteCountOutputTypeCountSuggestionsArgs
   lifeModelClaimFeedback?: boolean | NoteCountOutputTypeCountLifeModelClaimFeedbackArgs
+  evidenceCorrections?: boolean | NoteCountOutputTypeCountEvidenceCorrectionsArgs
 }
 
 /**
@@ -1704,6 +1861,13 @@ export type NoteCountOutputTypeCountLifeModelClaimFeedbackArgs<ExtArgs extends r
   where?: Prisma.LifeModelClaimFeedbackWhereInput
 }
 
+/**
+ * NoteCountOutputType without action
+ */
+export type NoteCountOutputTypeCountEvidenceCorrectionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.EvidenceClaimWhereInput
+}
+
 
 export type NoteSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1724,6 +1888,7 @@ export type NoteSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   aiAnalysisRuns?: boolean | Prisma.Note$aiAnalysisRunsArgs<ExtArgs>
   suggestions?: boolean | Prisma.Note$suggestionsArgs<ExtArgs>
   lifeModelClaimFeedback?: boolean | Prisma.Note$lifeModelClaimFeedbackArgs<ExtArgs>
+  evidenceCorrections?: boolean | Prisma.Note$evidenceCorrectionsArgs<ExtArgs>
   _count?: boolean | Prisma.NoteCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["note"]>
 
@@ -1776,6 +1941,7 @@ export type NoteInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   aiAnalysisRuns?: boolean | Prisma.Note$aiAnalysisRunsArgs<ExtArgs>
   suggestions?: boolean | Prisma.Note$suggestionsArgs<ExtArgs>
   lifeModelClaimFeedback?: boolean | Prisma.Note$lifeModelClaimFeedbackArgs<ExtArgs>
+  evidenceCorrections?: boolean | Prisma.Note$evidenceCorrectionsArgs<ExtArgs>
   _count?: boolean | Prisma.NoteCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type NoteIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1800,6 +1966,7 @@ export type $NotePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     aiAnalysisRuns: Prisma.$NoteAnalysisRunPayload<ExtArgs>[]
     suggestions: Prisma.$NoteSuggestionPayload<ExtArgs>[]
     lifeModelClaimFeedback: Prisma.$LifeModelClaimFeedbackPayload<ExtArgs>[]
+    evidenceCorrections: Prisma.$EvidenceClaimPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2214,6 +2381,7 @@ export interface Prisma__NoteClient<T, Null = never, ExtArgs extends runtime.Typ
   aiAnalysisRuns<T extends Prisma.Note$aiAnalysisRunsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Note$aiAnalysisRunsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NoteAnalysisRunPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   suggestions<T extends Prisma.Note$suggestionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Note$suggestionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NoteSuggestionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   lifeModelClaimFeedback<T extends Prisma.Note$lifeModelClaimFeedbackArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Note$lifeModelClaimFeedbackArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LifeModelClaimFeedbackPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  evidenceCorrections<T extends Prisma.Note$evidenceCorrectionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Note$evidenceCorrectionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EvidenceClaimPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2858,6 +3026,30 @@ export type Note$lifeModelClaimFeedbackArgs<ExtArgs extends runtime.Types.Extens
   take?: number
   skip?: number
   distinct?: Prisma.LifeModelClaimFeedbackScalarFieldEnum | Prisma.LifeModelClaimFeedbackScalarFieldEnum[]
+}
+
+/**
+ * Note.evidenceCorrections
+ */
+export type Note$evidenceCorrectionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the EvidenceClaim
+   */
+  select?: Prisma.EvidenceClaimSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the EvidenceClaim
+   */
+  omit?: Prisma.EvidenceClaimOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.EvidenceClaimInclude<ExtArgs> | null
+  where?: Prisma.EvidenceClaimWhereInput
+  orderBy?: Prisma.EvidenceClaimOrderByWithRelationInput | Prisma.EvidenceClaimOrderByWithRelationInput[]
+  cursor?: Prisma.EvidenceClaimWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.EvidenceClaimScalarFieldEnum | Prisma.EvidenceClaimScalarFieldEnum[]
 }
 
 /**

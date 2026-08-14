@@ -26,6 +26,22 @@ type FullPerson = Person & {
   lastInteractionDate: Date | null
   daysSinceLast: number | null
   health?: PersonHealthSummary | null
+  fileEvidence?: FileEvidence[]
+}
+
+type FileEvidence = {
+  id: string
+  assertion: string
+  classification: string
+  status: string
+  exactQuote: string
+  confidence: number
+  fileId: string
+  filename: string
+  chunkId: string
+  locator: string
+  inCurrentTheory: boolean
+  subjects: Array<{ mentionId: string; role: string; sourceText: string; resolutionConfidence: number; relevanceWeight: number }>
 }
 
 const closenessPercent: Record<number, number> = { 1: 25, 2: 50, 3: 75, 4: 100 }
@@ -223,6 +239,20 @@ export default function PersonDetailClient({ id, initialData }: { id: string; in
       </Card>
 
       <PublicProfilePanel personId={person.id} />
+
+      <Card title={`File evidence (${person.fileEvidence?.length ?? 0})`} style={{ borderRadius: "14px", marginBottom: "20px", overflow: "hidden" }}>
+        {!person.fileEvidence?.length ? <EmptyState icon="▧" title="No file evidence" subtitle="Resolved, relevant evidence from private files will appear here." /> : <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+          {person.fileEvidence.map(claim => <article key={claim.id} style={{ padding: "12px", background: "var(--bg)", border: "1px solid var(--border)", borderRadius: "10px" }}>
+            <div style={{ fontSize: "12px", color: "var(--ink)", lineHeight: 1.5 }}>{claim.assertion}</div>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: "6px", marginTop: "6px", color: "var(--ink-4)", fontSize: "10px" }}><span>{claim.classification}</span><span>·</span><span>{claim.status}</span><span>·</span><span>weight {Math.max(...claim.subjects.map(subject => subject.relevanceWeight)).toFixed(2)}</span><span>·</span><span>{claim.subjects.map(subject => subject.role).join(", ")}</span><span>·</span><span>{Math.round(Math.max(...claim.subjects.map(subject => subject.resolutionConfidence)) * 100)}% identity confidence</span><span>·</span><span>{claim.inCurrentTheory ? "in current Theory" : "not yet in current Theory"}</span></div>
+            <blockquote style={{ margin: "8px 0", paddingLeft: "10px", borderLeft: "2px solid var(--cognac-soft)", color: "var(--ink-3)", fontSize: "11px" }}>&ldquo;{claim.exactQuote}&rdquo;</blockquote>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "8px" }}>
+              <a href={`${process.env.NEXT_PUBLIC_ASSISTANT_URL ?? "https://assistant.lacollecteur.com"}/files/${claim.fileId}?chunkId=${claim.chunkId}#${claim.chunkId}`} style={{ color: "var(--cognac-deep)", fontSize: "10px" }}>{claim.filename} · exact passage</a>
+              <button onClick={async () => { const response = await fetch(`/api/file-mentions/${claim.subjects[0]?.mentionId}`, { method: "PATCH", headers: { "content-type": "application/json" }, body: JSON.stringify({ action: "not_this_person" }) }); if (response.ok) window.location.reload() }} style={{ border: 0, background: "transparent", color: "var(--ink-4)", textDecoration: "underline", fontSize: "10px", cursor: "pointer" }}>Not actually this person</button>
+            </div>
+          </article>)}
+        </div>}
+      </Card>
 
       {/* ── Health ──────────────────────────────────────────────── */}
       {person.health && (

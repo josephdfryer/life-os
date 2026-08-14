@@ -1,0 +1,5 @@
+{
+  "crons": [
+    { "path": "/api/cron/theory-refresh", "schedule": "0 10 * * *" }
+  ]
+}

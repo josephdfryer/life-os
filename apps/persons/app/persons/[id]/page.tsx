@@ -6,6 +6,7 @@ import { AppError } from "@/server/api/errors"
 import { getPersonHealthSummary } from "@/server/domain/health"
 import PersonDetailClient from "./PersonDetailClient"
 import type { Interaction } from "@/types"
+import { getPersonFileEvidence } from "@life-os/files"
 
 export const dynamic = "force-dynamic"
 
@@ -57,7 +58,10 @@ export default async function PersonDetailPage({ params }: { params: Promise<{ i
         : null,
     })) as unknown as Interaction[]
 
-    const health = await getPersonHealthSummary(person.id, actor.workspaceId)
+    const [health, fileEvidence] = await Promise.all([
+      getPersonHealthSummary(person.id, actor.workspaceId),
+      getPersonFileEvidence(person.id, actor.workspaceId),
+    ])
 
     return (
       <PersonDetailClient
@@ -70,6 +74,26 @@ export default async function PersonDetailPage({ params }: { params: Promise<{ i
           phones: parseTags(person.phones),
           interactions,
           health,
+          fileEvidence: fileEvidence.map(claim => ({
+            id: claim.id,
+            assertion: claim.assertion,
+            classification: claim.classification,
+            status: claim.status,
+            exactQuote: claim.exactQuote,
+            confidence: claim.confidence,
+            fileId: claim.sourceFile.id,
+            filename: claim.sourceFile.filename,
+            chunkId: claim.chunk.id,
+            locator: claim.chunk.locator,
+            inCurrentTheory: claim.theorySnapshotSources.length > 0,
+            subjects: claim.subjects.filter(subject => subject.mention.resolvedPersonId === person.id).map(subject => ({
+              mentionId: subject.mention.id,
+              role: subject.mention.role,
+              sourceText: subject.mention.sourceText,
+              resolutionConfidence: subject.mention.confidence,
+              relevanceWeight: subject.relevanceWeight,
+            })),
+          })),
           plans: person.plans.map((p: typeof person.plans[number]) => ({
             ...p,
             successSignals: parseTags(p.successSignals),

@@ -34,6 +34,7 @@
         "NEXT_PUBLIC_CONTEXT_URL",
         "NEXT_PUBLIC_EVENTS_URL",
         "NEXT_PUBLIC_THEORY_URL",
+        "NEXT_PUBLIC_ASSISTANT_URL",
         "LIFE_OS_COOKIE_DOMAIN",
         "OWNER_EMAILS",
         "THEORY_WORKSPACE_ID",
@@ -48,6 +49,16 @@
         "LIFE_OS_API_URL",
         "PERSONS_API_KEY",
         "CRON_SECRET"
+        ,"FILE_STORAGE_PROVIDER"
+        ,"AWS_REGION"
+        ,"AWS_ROLE_ARN"
+        ,"S3_BUCKET_NAME"
+        ,"LIFE_OS_FILE_DIR"
+        ,"FILE_INTELLIGENCE_INGESTION"
+        ,"FILE_INTELLIGENCE_REVIEW_PROPOSALS"
+        ,"FILE_INTELLIGENCE_SAFE_AUTO"
+        ,"FILE_INTELLIGENCE_NIGHTLY_THEORY"
+        ,"FILE_INTELLIGENCE_NIGHTLY_MAX_PEOPLE"
       ],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
       "outputs": [".next/**", "!.next/cache/**", "dist/**"]

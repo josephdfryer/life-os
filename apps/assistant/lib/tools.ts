@@ -1,14 +1,20 @@
-import type Anthropic from "@anthropic-ai/sdk"
 import { db } from "@/lib/db"
 import { centsToDollars } from "@life-os/db"
 import { captureNote as createCapturedNote } from "@life-os/domain"
 import { getSpendBreakdown, getPlaceSpend as placeSpend, type SpendBreakdownInput } from "@/lib/finance"
+import { getPersonFileEvidence, searchFileChunks as searchIndexedFileChunks } from "@life-os/files"
 
 const TZ = "America/Los_Angeles"
 
-// ── Tool schemas (Anthropic tool-use format) ─────────────────────
+// ── Tool schemas (provider-neutral JSON Schema) ───────────────────
 
-export const TOOLS: Anthropic.Tool[] = [
+export type AssistantToolDefinition = {
+  name: string
+  description: string
+  input_schema: Record<string, unknown>
+}
+
+export const TOOLS: AssistantToolDefinition[] = [
   {
     name: "search_people",
     description: "Search Joseph's people by name, company, or email fragment. Returns compact matches with ids for use in other tools.",
@@ -242,6 +248,35 @@ export const TOOLS: Anthropic.Tool[] = [
       required: [],
     },
   },
+  {
+    name: "search_file_chunks",
+    description: "Search faithful extracted file passages. Returns chunk IDs and exact locators that may be cited as [chunk:ID].",
+    input_schema: {
+      type: "object",
+      properties: { query: { type: "string" }, limit: { type: "number" } },
+      required: ["query"],
+    },
+  },
+  {
+    name: "get_file_context",
+    description: "Get metadata and a keyset-paginated page of latest-version extracted chunks for one workspace-owned file. Follow nextCursor when more context is needed.",
+    input_schema: { type: "object", properties: { fileId: { type: "string" }, cursor: { type: "string" }, limit: { type: "number", description: "Default 40, max 80" } }, required: ["fileId"] },
+  },
+  {
+    name: "list_file_claims",
+    description: "List cited explicit and inferred evidence claims for one file.",
+    input_schema: { type: "object", properties: { fileId: { type: "string" } }, required: ["fileId"] },
+  },
+  {
+    name: "list_file_people",
+    description: "List every Person mention and its role, confidence, and resolution status for one file.",
+    input_schema: { type: "object", properties: { fileId: { type: "string" } }, required: ["fileId"] },
+  },
+  {
+    name: "get_person_file_evidence",
+    description: "Get cited file evidence connected to a resolved Person.",
+    input_schema: { type: "object", properties: { personId: { type: "string" } }, required: ["personId"] },
+  },
 ]
 
 // ── Executors ────────────────────────────────────────────────────
@@ -249,7 +284,7 @@ export const TOOLS: Anthropic.Tool[] = [
 // workspaceId always comes from the authenticated caller's resolved
 // membership (see requireWorkspaceAccess in lib/access.ts) — never from an
 // env var or default. Every DB call below is scoped to it.
-export async function executeTool(name: string, input: Record<string, unknown>, workspaceId: string): Promise<string> {
+export async function executeTool(name: string, input: Record<string, unknown>, workspaceId: string, fileScope: string[] = []): Promise<string> {
   try {
     switch (name) {
       case "search_people": return await searchPeople(String(input.query ?? ""), workspaceId)
@@ -273,11 +308,62 @@ export async function executeTool(name: string, input: Record<string, unknown>, 
       case "get_plans": return await getPlans(input, workspaceId)
       case "get_states": return await getStates(input, workspaceId)
       case "search_groups": return await searchGroups(input, workspaceId)
+      case "search_file_chunks": return await searchFileChunksTool(input, workspaceId, fileScope)
+      case "get_file_context": return await getFileContextTool(input, workspaceId, fileScope)
+      case "list_file_claims": return await listFileClaimsTool(String(input.fileId ?? ""), workspaceId, fileScope)
+      case "list_file_people": return await listFilePeopleTool(String(input.fileId ?? ""), workspaceId, fileScope)
+      case "get_person_file_evidence": return await getPersonFileEvidenceTool(String(input.personId ?? ""), workspaceId, fileScope)
       default: return `Unknown tool: ${name}`
     }
   } catch (error) {
     return `Tool error: ${error instanceof Error ? error.message : String(error)}`
   }
+}
+
+function scopedFileWhere(fileId: string, workspaceId: string, fileScope: string[]) {
+  return { id: fileId, workspaceId, archivedAt: null, ...(fileScope.length ? { id: { equals: fileId, in: fileScope } } : {}) }
+}
+
+async function searchFileChunksTool(input: Record<string, unknown>, workspaceId: string, fileScope: string[]) {
+  const rows = await searchIndexedFileChunks({ workspaceId, query: String(input.query ?? ""), fileIds: fileScope, limit: clampNumber(input.limit, 12, 1, 30) })
+  return JSON.stringify(rows.map(row => ({ chunkId: row.id, fileId: row.sourceFileId, filename: row.filename, locator: JSON.parse(row.locator), text: row.content })))
+}
+
+async function getFileContextTool(input: Record<string, unknown>, workspaceId: string, fileScope: string[]) {
+  const fileId = String(input.fileId ?? "")
+  const file = await db.importedFile.findFirst({ where: scopedFileWhere(fileId, workspaceId, fileScope), select: { id: true, filename: true, mimeType: true, processingState: true } })
+  if (!file) return "File not found"
+  const latest = await db.fileChunk.aggregate({ where: { workspaceId, sourceFileId: fileId }, _max: { version: true } })
+  const limit = clampNumber(input.limit, 40, 1, 80)
+  const cursor = typeof input.cursor === "string" && input.cursor ? input.cursor : undefined
+  const chunks = await db.fileChunk.findMany({
+    where: { workspaceId, sourceFileId: fileId, version: latest._max.version ?? 0 },
+    orderBy: [{ ordinal: "asc" }, { id: "asc" }], take: limit + 1,
+    ...(cursor ? { cursor: { id: cursor }, skip: 1 } : {}),
+    select: { id: true, locator: true, content: true },
+  })
+  const hasMore = chunks.length > limit
+  const page = hasMore ? chunks.slice(0, limit) : chunks
+  return JSON.stringify({ ...file, chunks: page.map(chunk => ({ chunkId: chunk.id, locator: JSON.parse(chunk.locator), text: chunk.content })), nextCursor: hasMore ? page.at(-1)?.id ?? null : null })
+}
+
+async function listFileClaimsTool(fileId: string, workspaceId: string, fileScope: string[]) {
+  const file = await db.importedFile.findFirst({ where: scopedFileWhere(fileId, workspaceId, fileScope), select: { id: true } })
+  if (!file) return "File not found"
+  const claims = await db.evidenceClaim.findMany({ where: { workspaceId, sourceFileId: fileId, status: { notIn: ["dismissed", "superseded", "reversed"] } }, include: { chunk: { select: { id: true, locator: true } }, subjects: { include: { mention: { select: { sourceText: true, role: true, resolutionStatus: true, resolvedPersonId: true } } } } } })
+  return JSON.stringify(claims.map(claim => ({ id: claim.id, assertion: claim.assertion, classification: claim.classification, status: claim.status, exactQuote: claim.exactQuote, chunkId: claim.chunk.id, locator: JSON.parse(claim.chunk.locator), subjects: claim.subjects })))
+}
+
+async function listFilePeopleTool(fileId: string, workspaceId: string, fileScope: string[]) {
+  const file = await db.importedFile.findFirst({ where: scopedFileWhere(fileId, workspaceId, fileScope), select: { id: true } })
+  if (!file) return "File not found"
+  return JSON.stringify(await db.fileEntityMention.findMany({ where: { workspaceId, sourceFileId: fileId, entityType: "Person" }, select: { id: true, sourceText: true, role: true, exactQuote: true, confidence: true, resolutionStatus: true, resolutionLevel: true, resolvedPerson: { select: { id: true, first: true, last: true } }, chunkId: true } }))
+}
+
+async function getPersonFileEvidenceTool(personId: string, workspaceId: string, fileScope: string[]) {
+  const evidence = await getPersonFileEvidence(personId, workspaceId)
+  const scoped = fileScope.length ? evidence.filter(claim => fileScope.includes(claim.sourceFileId)) : evidence
+  return JSON.stringify(scoped.map(claim => ({ id: claim.id, assertion: claim.assertion, classification: claim.classification, status: claim.status, exactQuote: claim.exactQuote, chunkId: claim.chunk.id, locator: JSON.parse(claim.chunk.locator), filename: claim.sourceFile.filename })))
 }
 
 async function searchPeople(query: string, workspaceId: string) {

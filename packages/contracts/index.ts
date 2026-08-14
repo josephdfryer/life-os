@@ -250,6 +250,7 @@ export const confirmImportContract = z.object({
 
 export const chatMessageContract = z.object({
   message: z.string().trim().min(1).max(50_000),
+  fileIds: z.array(z.string().trim().min(1)).max(10).optional().default([]),
 }).strict()
 
 export const lifeModelClaimFeedbackContract = z.object({

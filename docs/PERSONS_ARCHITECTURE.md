@@ -1053,3 +1053,35 @@ flowchart LR
 - Inbox filtering by `source` and `itemType` in the UI.
 - Background/scheduled Google Calendar sync and optional review queue for unmatched calendar attendees.
 - Background/scheduled Gmail sync.
+
+## File Intelligence and Person Evidence
+
+Assistant now owns private file intake, while Persons consumes the resulting cited evidence. An uploaded file never becomes canonical relationship truth merely because names occur together.
+
+```mermaid
+flowchart LR
+  Upload["Assistant upload intent"] --> S3["Private S3 original"]
+  S3 --> Workflow["Durable extraction workflow"]
+  Workflow --> Note["Source-linked Note"]
+  Workflow --> Chunks["Versioned FileChunks + FTS"]
+  Chunks --> Mentions["FileEntityMentions"]
+  Chunks --> Claims["EvidenceClaims"]
+  Claims --> Subjects["EvidenceClaimSubjects"]
+  Mentions --> Person["Resolved existing Person"]
+  Subjects --> Person
+  Person --> Panel["Person File evidence panel"]
+  Subjects --> Theory["Cited Theory source loader"]
+  Claims --> Review["Home ReviewItem"]
+  Review --> Commands["Registered domain command"]
+  Commands --> Graph["Canonical primitive + atomic GraphEvent"]
+```
+
+Identity resolution auto-links only exact contact/external identifiers or a corroborated unique full name. A unique full name alone is a suggestion; ambiguous or incomplete names remain unresolved and cannot enter Theory. `apps/persons/app/api/file-mentions/[mentionId]` supports user correction, including moving evidence away from an incorrect Person. That updates `resolutionUpdatedAt`, making the old and new Person Theory inputs stale without rewriting the extracted source.
+
+`apps/persons/app/api/file-claims/[claimId]` accepts, dismisses, or corrects a claim. Corrections create a user-authored `Note` and a superseding accepted `EvidenceClaim`; the machine claim remains immutable. The Person detail page reads `getPersonFileEvidence()` from `@life-os/files` and shows role, confidence, review status, Theory weight, source file, exact quotation, and chunk citation.
+
+The durable intake path lives in `apps/assistant/workflows/process-file.ts`. Storage, extraction, identity, citation validation, query, and mutation policy live in `packages/files`. Safe automatic Event/State promotion is implemented by `packages/domain/file-evidence.ts`: deterministic result IDs, the canonical write, provenance, and `GraphEvent` are atomic, and a compensating Undo command is available. New People, Places, Items, Groups, Plans, Interactions, sensitive claims, inferences, ambiguity, and contradictions remain review-only.
+
+Theory reads file evidence only through `EvidenceClaimSubject` and `FileEntityMention` joins. `PersonExternalIdentifier` supplies workspace-scoped exact identifiers for conservative matching, while append-only `FileEntityResolution` rows preserve identity-correction history and make both the old and new Person stale. Incidental, unresolved, dismissed, superseded, reversed, or archived evidence is excluded. Snapshot source rows retain classification, review state, weight, claim ID, and citation. The nightly Theory workflow keyset-paginates all People and stops at its AI budget without marking remaining People current.
+
+Operational setup and rollout order are documented in `docs/FILE_STORAGE_S3_RUNBOOK.md`; the complete product contract is `docs/FILE_INTELLIGENCE_PLAN.md`.

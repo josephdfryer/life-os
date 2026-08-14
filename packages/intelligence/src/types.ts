@@ -9,12 +9,17 @@ export type TheorySourceType =
   | "state"
   | "plan"
   | "person"
+  | "evidence_claim"
 
 export type TheorySource = {
   sourceType: TheorySourceType
   sourceId: string
   contribution?: string
   weight?: number
+  evidenceClaimId?: string
+  evidenceClassification?: "explicit" | "inferred"
+  evidenceStatus?: string
+  citation?: { fileId: string; filename: string; chunkId: string; locator: string; exactQuote: string }
 }
 
 // The shape produced by synthesizeTheoryOfPerson and consumed by
@@ -45,6 +50,7 @@ export type TheorySourceBundle = {
   interactionIds: string[]
   stateIds: string[]
   planIds: string[]
+  evidenceClaimIds: string[]
   // Flattened, de-duplicated provenance trail for TheorySnapshotSource rows.
   sources: TheorySource[]
 }

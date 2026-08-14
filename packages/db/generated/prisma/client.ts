@@ -257,6 +257,46 @@ export type ItemInteraction = Prisma.ItemInteractionModel
  */
 export type ImportedFile = Prisma.ImportedFileModel
 /**
+ * Model FileUploadIntent
+ * 
+ */
+export type FileUploadIntent = Prisma.FileUploadIntentModel
+/**
+ * Model FileProcessingRun
+ * 
+ */
+export type FileProcessingRun = Prisma.FileProcessingRunModel
+/**
+ * Model FileChunk
+ * 
+ */
+export type FileChunk = Prisma.FileChunkModel
+/**
+ * Model FileEntityMention
+ * 
+ */
+export type FileEntityMention = Prisma.FileEntityMentionModel
+/**
+ * Model PersonExternalIdentifier
+ * 
+ */
+export type PersonExternalIdentifier = Prisma.PersonExternalIdentifierModel
+/**
+ * Model FileEntityResolution
+ * 
+ */
+export type FileEntityResolution = Prisma.FileEntityResolutionModel
+/**
+ * Model EvidenceClaim
+ * 
+ */
+export type EvidenceClaim = Prisma.EvidenceClaimModel
+/**
+ * Model EvidenceClaimSubject
+ * 
+ */
+export type EvidenceClaimSubject = Prisma.EvidenceClaimSubjectModel
+/**
  * Model AiProviderCredential
  * 
  */

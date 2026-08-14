@@ -53,6 +53,22 @@ export async function getTheorySourcesForPerson(
     take: 500,
   })
 
+  const evidenceClaims = await db.evidenceClaim.findMany({
+    where: {
+      workspaceId,
+      status: { notIn: ["dismissed", "superseded", "reversed"] },
+      sourceFile: { archivedAt: null },
+      subjects: { some: { relevanceWeight: { gt: 0 }, mention: { resolvedPersonId: personId, resolutionStatus: { in: ["resolved", "corrected"] } } } },
+    },
+    orderBy: [{ createdAt: "desc" }, { id: "desc" }],
+    take: 500,
+    include: {
+      sourceFile: { select: { id: true, filename: true } },
+      chunk: { select: { id: true, locator: true } },
+      subjects: { include: { mention: { select: { resolvedPersonId: true, sourceText: true, role: true } } } },
+    },
+  })
+
   const eventIds = dedupe(interactions.map(i => i.eventId).filter(isString))
   const interactionIds = interactions.map(i => i.id)
   const planIds = plans.map(p => p.id)
@@ -72,6 +88,20 @@ export async function getTheorySourcesForPerson(
     ...interactionIds.map(id => ({ sourceType: "interaction" as const, sourceId: id })),
     ...stateIds.map(id => ({ sourceType: "state" as const, sourceId: id })),
     ...planIds.map(id => ({ sourceType: "plan" as const, sourceId: id })),
+    ...evidenceClaims.map(claim => {
+      const direct = claim.subjects.filter(subject => subject.mention.resolvedPersonId === personId)
+      const participants = claim.subjects.map(subject => `${subject.mention.sourceText} (${subject.subjectRole})`).join(", ")
+      return {
+        sourceType: "evidence_claim" as const,
+        sourceId: claim.id,
+        evidenceClaimId: claim.id,
+        contribution: `${claim.assertion}${participants ? ` Participants: ${participants}.` : ""}`,
+        weight: Math.max(...direct.map(subject => subject.relevanceWeight), 0),
+        evidenceClassification: claim.classification as "explicit" | "inferred",
+        evidenceStatus: claim.status,
+        citation: { fileId: claim.sourceFile.id, filename: claim.sourceFile.filename, chunkId: claim.chunk.id, locator: claim.chunk.locator, exactQuote: claim.exactQuote },
+      }
+    }),
   ]
 
   return {
@@ -83,6 +113,7 @@ export async function getTheorySourcesForPerson(
     interactionIds,
     stateIds,
     planIds,
+    evidenceClaimIds: evidenceClaims.map(claim => claim.id),
     sources,
   }
 }

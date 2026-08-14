@@ -19,6 +19,7 @@
     "@life-os/contracts": "*",
     "@life-os/db": "*",
     "@life-os/domain": "*",
+    "@life-os/files": "*",
     "@life-os/ui": "*",
     "@paralleldrive/cuid2": "^3.3.0",
     "exceljs": "^4.4.0",

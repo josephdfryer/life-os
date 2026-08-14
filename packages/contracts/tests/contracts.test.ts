@@ -41,6 +41,7 @@ test("bulk delete contract rejects empty and oversized batches", () => {
 
 test("chat contract trims a valid message and rejects blank input", () => {
   assert.equal(chatMessageContract.parse({ message: "  hello  " }).message, "hello")
+  assert.deepEqual(chatMessageContract.parse({ message: "hello", fileIds: ["file-1"] }).fileIds, ["file-1"])
   assert.equal(chatMessageContract.safeParse({ message: "   " }).success, false)
 })
 

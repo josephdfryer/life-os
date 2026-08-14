@@ -17,7 +17,7 @@ const NOTE_CONTENT_CHARS = 1_000
 export async function buildEvidenceText(bundle: TheorySourceBundle, workspaceId: string): Promise<string> {
   const { db } = await import("@life-os/db")
 
-  const [notes, interactions, events, plans, states] = await Promise.all([
+  const [notes, interactions, events, plans, states, fileClaims] = await Promise.all([
     bundle.noteIds.length
       ? db.note.findMany({
           where: { id: { in: bundle.noteIds }, workspaceId },
@@ -61,6 +61,14 @@ export async function buildEvidenceText(bundle: TheorySourceBundle, workspaceId:
           select: { recordedAt: true, severity: true, definition: { select: { type: true, value: true, description: true } } },
         })
       : [],
+    bundle.evidenceClaimIds.length
+      ? db.evidenceClaim.findMany({
+          where: { id: { in: bundle.evidenceClaimIds }, workspaceId, status: { notIn: ["dismissed", "superseded", "reversed"] }, sourceFile: { archivedAt: null } },
+          orderBy: [{ createdAt: "desc" }, { id: "desc" }],
+          take: 100,
+          include: { sourceFile: { select: { filename: true } }, chunk: { select: { id: true, locator: true } }, subjects: { include: { mention: { select: { sourceText: true, role: true, resolvedPersonId: true } } } } },
+        })
+      : [],
   ])
 
   const sections: string[] = []
@@ -89,6 +97,18 @@ export async function buildEvidenceText(bundle: TheorySourceBundle, workspaceId:
     sections.push(formatSection("Latest tracked readings", states.map(s =>
       `[${dateTag(s.recordedAt)}] ${s.definition.value}${s.definition.description ? ` (${s.definition.description})` : ""}: ${s.severity ?? "n/a"}`,
     )))
+  }
+  if (fileClaims.length) {
+    sections.push(formatSection("Cited file evidence", fileClaims.map(claim => {
+      const label = claim.classification === "explicit" ? "EXPLICIT — eligible for Observed" : "INFERRED — Inferred/Hypotheses only"
+      const participants = claim.subjects.map(subject => `${subject.mention.sourceText} (${subject.subjectRole})`).join(", ")
+      // Weight is per-subject: a claim about several people carries a different
+      // relevance for each. Score only this person's subject rows, or a
+      // co-subject's higher weight would be presented as if it were theirs.
+      const direct = claim.subjects.filter(subject => subject.mention.resolvedPersonId === bundle.person?.id)
+      const weight = Math.max(...direct.map(subject => subject.relevanceWeight), 0)
+      return `[${label}; review=${claim.status}; weight=${weight.toFixed(2)}] ${claim.assertion}\n  Participants: ${participants}\n  Citation: ${claim.sourceFile.filename} [chunk:${claim.chunk.id}] ${claim.chunk.locator}\n  Exact source: “${claim.exactQuote}”`
+    })))
   }
 
   return sections.length ? sections.join("\n\n") : "No evidence recorded yet."

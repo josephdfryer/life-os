@@ -12,6 +12,7 @@ const bundle: TheorySourceBundle = {
   interactionIds: ["i1"],
   stateIds: [],
   planIds: ["p1"],
+  evidenceClaimIds: [],
   sources: [
     { sourceType: "note", sourceId: "n1" },
     { sourceType: "event", sourceId: "e1" },

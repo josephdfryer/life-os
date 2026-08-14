@@ -5,7 +5,7 @@ import { useEffect, useMemo, useState, useTransition } from 'react'
 export type InboxItem = {
   id: string
   source: string
-  sourceKey: 'staged_interaction' | 'note_suggestion' | 'import_staged_visit' | 'calendar_reconciliation'
+  sourceKey: 'staged_interaction' | 'note_suggestion' | 'import_staged_visit' | 'calendar_reconciliation' | 'file_evidence'
   primitive: string
   title: string
   detail: string
@@ -32,10 +32,12 @@ const SOURCE_FILTERS = [
   ['note_suggestion', 'Notes'],
   ['import_staged_visit', 'Places'],
   ['calendar_reconciliation', 'Calendar'],
+  ['file_evidence', 'File evidence'],
 ] as const
 
 export default function FederatedInbox({ items }: { items: InboxItem[] }) {
   const [reviewItems, setReviewItems] = useState(items)
+  const [nextCursor, setNextCursor] = useState<string | null>(null)
   const [serviceMode, setServiceMode] = useState<'checking' | 'canonical' | 'legacy'>('checking')
   const [actionError, setActionError] = useState<string | null>(null)
   const [pendingId, setPendingId] = useState<string | null>(null)
@@ -50,12 +52,13 @@ export default function FederatedInbox({ items }: { items: InboxItem[] }) {
     fetch('/api/review-items?status=pending&limit=200', { signal: controller.signal })
       .then(async response => {
         if (!response.ok) throw new Error('legacy')
-        return response.json() as Promise<{ data?: ReviewItem[] }>
+        return response.json() as Promise<{ data?: ReviewItem[]; nextCursor?: string | null }>
       })
       .then(page => {
         if (!Array.isArray(page.data)) throw new Error('legacy')
         startTransition(() => {
           setReviewItems(page.data!.map(toInboxItem))
+          setNextCursor(page.nextCursor ?? null)
           setServiceMode('canonical')
         })
       })
@@ -65,6 +68,21 @@ export default function FederatedInbox({ items }: { items: InboxItem[] }) {
       })
     return () => controller.abort()
   }, [])
+
+  async function loadMore() {
+    if (!nextCursor || pendingId) return
+    setPendingId('pagination')
+    setActionError(null)
+    try {
+      const response = await fetch(`/api/review-items?status=pending&limit=200&cursor=${encodeURIComponent(nextCursor)}`)
+      const page = await response.json() as { data?: ReviewItem[]; nextCursor?: string | null; error?: string }
+      if (!response.ok || !Array.isArray(page.data)) throw new Error(page.error || 'Could not load more review items.')
+      setReviewItems(current => [...current, ...page.data!.map(toInboxItem)])
+      setNextCursor(page.nextCursor ?? null)
+    } catch (error) {
+      setActionError(error instanceof Error ? error.message : 'Could not load more review items.')
+    } finally { setPendingId(null) }
+  }
 
   const primitives = useMemo(() => ['all', ...new Set(reviewItems.map(item => item.primitive))], [reviewItems])
   const filtered = useMemo(() => reviewItems.filter(item => {
@@ -122,6 +140,7 @@ export default function FederatedInbox({ items }: { items: InboxItem[] }) {
         </div>
       )}
       {serviceMode === 'legacy' ? <p className="inbox-read-only">The shared queue is not configured, so these legacy queues remain read only.</p> : null}
+      {serviceMode === 'canonical' && nextCursor ? <button type="button" className="inbox-action" disabled={pendingId === 'pagination'} onClick={loadMore}>{pendingId === 'pagination' ? 'Loading…' : 'Load more review items'}</button> : null}
     </section>
   )
 }
@@ -157,10 +176,10 @@ function toInboxItem(item: ReviewItem): InboxItem {
   const input = item.proposedCommand.input
   const evidence = asRecord(item.evidence)
   const title = firstString(input, ['title', 'text', 'summary', 'placeName', 'contactName'])
-    || firstString(evidence, ['title', 'summary', 'placeName'])
+    || firstString(evidence, ['title', 'summary', 'placeName', 'assertion', 'sourceText'])
     || labelize(item.proposedCommand.command)
   const detail = firstString(input, ['description', 'body', 'reason', 'placeAddress'])
-    || firstString(evidence, ['description', 'body', 'reason'])
+    || firstString(evidence, ['description', 'body', 'reason', 'exactQuote'])
     || `Proposed command: ${labelize(item.proposedCommand.command)}`
 
   return {
@@ -181,6 +200,7 @@ function normalizeSource(source: string): InboxItem['sourceKey'] {
   if (source === 'note_suggestion') return source
   if (source === 'import_staged_visit') return source
   if (source === 'calendar_reconciliation') return source
+  if (source === 'file_entity_mention' || source === 'evidence_claim') return 'file_evidence'
   return 'staged_interaction'
 }
 
@@ -189,6 +209,7 @@ function sourceLabel(source: string) {
   if (source === 'note_suggestion') return 'Notes'
   if (source === 'import_staged_visit') return 'Places'
   if (source === 'calendar_reconciliation') return 'Calendar'
+  if (source === 'file_entity_mention' || source === 'evidence_claim') return 'File evidence'
   return labelize(source)
 }
 

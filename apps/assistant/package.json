@@ -9,19 +9,21 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.92.0",
     "@life-os/alignment": "*",
     "@life-os/auth": "*",
     "@life-os/contracts": "*",
     "@life-os/db": "*",
     "@life-os/domain": "*",
+    "@life-os/files": "*",
     "@life-os/ui": "*",
     "@paralleldrive/cuid2": "^3.3.0",
+    "ai": "^7.0.65",
     "next": "^16.3.0",
     "next-auth": "^5.0.0-beta.30",
     "react": "19.2.4",
     "react-dom": "19.2.4",
-    "twilio": "^5.5.2"
+    "twilio": "^5.5.2",
+    "workflow": "^4.8.2"
   },
   "devDependencies": {
     "@types/node": "^20",

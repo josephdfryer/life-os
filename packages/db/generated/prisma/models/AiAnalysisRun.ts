@@ -54,6 +54,8 @@ export type AiAnalysisRunMinAggregateOutputType = {
   inputTokens: number | null
   outputTokens: number | null
   estimatedCost: number | null
+  processingRunId: string | null
+  purpose: string | null
 }
 
 export type AiAnalysisRunMaxAggregateOutputType = {
@@ -72,6 +74,8 @@ export type AiAnalysisRunMaxAggregateOutputType = {
   inputTokens: number | null
   outputTokens: number | null
   estimatedCost: number | null
+  processingRunId: string | null
+  purpose: string | null
 }
 
 export type AiAnalysisRunCountAggregateOutputType = {
@@ -90,6 +94,8 @@ export type AiAnalysisRunCountAggregateOutputType = {
   inputTokens: number
   outputTokens: number
   estimatedCost: number
+  processingRunId: number
+  purpose: number
   _all: number
 }
 
@@ -122,6 +128,8 @@ export type AiAnalysisRunMinAggregateInputType = {
   inputTokens?: true
   outputTokens?: true
   estimatedCost?: true
+  processingRunId?: true
+  purpose?: true
 }
 
 export type AiAnalysisRunMaxAggregateInputType = {
@@ -140,6 +148,8 @@ export type AiAnalysisRunMaxAggregateInputType = {
   inputTokens?: true
   outputTokens?: true
   estimatedCost?: true
+  processingRunId?: true
+  purpose?: true
 }
 
 export type AiAnalysisRunCountAggregateInputType = {
@@ -158,6 +168,8 @@ export type AiAnalysisRunCountAggregateInputType = {
   inputTokens?: true
   outputTokens?: true
   estimatedCost?: true
+  processingRunId?: true
+  purpose?: true
   _all?: true
 }
 
@@ -263,6 +275,8 @@ export type AiAnalysisRunGroupByOutputType = {
   inputTokens: number | null
   outputTokens: number | null
   estimatedCost: number | null
+  processingRunId: string | null
+  purpose: string | null
   _count: AiAnalysisRunCountAggregateOutputType | null
   _avg: AiAnalysisRunAvgAggregateOutputType | null
   _sum: AiAnalysisRunSumAggregateOutputType | null
@@ -304,9 +318,12 @@ export type AiAnalysisRunWhereInput = {
   inputTokens?: Prisma.IntNullableFilter<"AiAnalysisRun"> | number | null
   outputTokens?: Prisma.IntNullableFilter<"AiAnalysisRun"> | number | null
   estimatedCost?: Prisma.FloatNullableFilter<"AiAnalysisRun"> | number | null
+  processingRunId?: Prisma.StringNullableFilter<"AiAnalysisRun"> | string | null
+  purpose?: Prisma.StringNullableFilter<"AiAnalysisRun"> | string | null
   workspace?: Prisma.XOR<Prisma.WorkspaceScalarRelationFilter, Prisma.WorkspaceWhereInput>
   credential?: Prisma.XOR<Prisma.AiProviderCredentialNullableScalarRelationFilter, Prisma.AiProviderCredentialWhereInput> | null
   sourceFile?: Prisma.XOR<Prisma.ImportedFileScalarRelationFilter, Prisma.ImportedFileWhereInput>
+  processingRun?: Prisma.XOR<Prisma.FileProcessingRunNullableScalarRelationFilter, Prisma.FileProcessingRunWhereInput> | null
 }
 
 export type AiAnalysisRunOrderByWithRelationInput = {
@@ -325,9 +342,12 @@ export type AiAnalysisRunOrderByWithRelationInput = {
   inputTokens?: Prisma.SortOrderInput | Prisma.SortOrder
   outputTokens?: Prisma.SortOrderInput | Prisma.SortOrder
   estimatedCost?: Prisma.SortOrderInput | Prisma.SortOrder
+  processingRunId?: Prisma.SortOrderInput | Prisma.SortOrder
+  purpose?: Prisma.SortOrderInput | Prisma.SortOrder
   workspace?: Prisma.WorkspaceOrderByWithRelationInput
   credential?: Prisma.AiProviderCredentialOrderByWithRelationInput
   sourceFile?: Prisma.ImportedFileOrderByWithRelationInput
+  processingRun?: Prisma.FileProcessingRunOrderByWithRelationInput
 }
 
 export type AiAnalysisRunWhereUniqueInput = Prisma.AtLeast<{
@@ -349,9 +369,12 @@ export type AiAnalysisRunWhereUniqueInput = Prisma.AtLeast<{
   inputTokens?: Prisma.IntNullableFilter<"AiAnalysisRun"> | number | null
   outputTokens?: Prisma.IntNullableFilter<"AiAnalysisRun"> | number | null
   estimatedCost?: Prisma.FloatNullableFilter<"AiAnalysisRun"> | number | null
+  processingRunId?: Prisma.StringNullableFilter<"AiAnalysisRun"> | string | null
+  purpose?: Prisma.StringNullableFilter<"AiAnalysisRun"> | string | null
   workspace?: Prisma.XOR<Prisma.WorkspaceScalarRelationFilter, Prisma.WorkspaceWhereInput>
   credential?: Prisma.XOR<Prisma.AiProviderCredentialNullableScalarRelationFilter, Prisma.AiProviderCredentialWhereInput> | null
   sourceFile?: Prisma.XOR<Prisma.ImportedFileScalarRelationFilter, Prisma.ImportedFileWhereInput>
+  processingRun?: Prisma.XOR<Prisma.FileProcessingRunNullableScalarRelationFilter, Prisma.FileProcessingRunWhereInput> | null
 }, "id">
 
 export type AiAnalysisRunOrderByWithAggregationInput = {
@@ -370,6 +393,8 @@ export type AiAnalysisRunOrderByWithAggregationInput = {
   inputTokens?: Prisma.SortOrderInput | Prisma.SortOrder
   outputTokens?: Prisma.SortOrderInput | Prisma.SortOrder
   estimatedCost?: Prisma.SortOrderInput | Prisma.SortOrder
+  processingRunId?: Prisma.SortOrderInput | Prisma.SortOrder
+  purpose?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.AiAnalysisRunCountOrderByAggregateInput
   _avg?: Prisma.AiAnalysisRunAvgOrderByAggregateInput
   _max?: Prisma.AiAnalysisRunMaxOrderByAggregateInput
@@ -396,6 +421,8 @@ export type AiAnalysisRunScalarWhereWithAggregatesInput = {
   inputTokens?: Prisma.IntNullableWithAggregatesFilter<"AiAnalysisRun"> | number | null
   outputTokens?: Prisma.IntNullableWithAggregatesFilter<"AiAnalysisRun"> | number | null
   estimatedCost?: Prisma.FloatNullableWithAggregatesFilter<"AiAnalysisRun"> | number | null
+  processingRunId?: Prisma.StringNullableWithAggregatesFilter<"AiAnalysisRun"> | string | null
+  purpose?: Prisma.StringNullableWithAggregatesFilter<"AiAnalysisRun"> | string | null
 }
 
 export type AiAnalysisRunCreateInput = {
@@ -411,9 +438,11 @@ export type AiAnalysisRunCreateInput = {
   inputTokens?: number | null
   outputTokens?: number | null
   estimatedCost?: number | null
+  purpose?: string | null
   workspace: Prisma.WorkspaceCreateNestedOneWithoutAiAnalysisRunsInput
   credential?: Prisma.AiProviderCredentialCreateNestedOneWithoutAnalysisRunsInput
   sourceFile: Prisma.ImportedFileCreateNestedOneWithoutAiAnalysisRunsInput
+  processingRun?: Prisma.FileProcessingRunCreateNestedOneWithoutAiAnalysisRunsInput
 }
 
 export type AiAnalysisRunUncheckedCreateInput = {
@@ -432,6 +461,8 @@ export type AiAnalysisRunUncheckedCreateInput = {
   inputTokens?: number | null
   outputTokens?: number | null
   estimatedCost?: number | null
+  processingRunId?: string | null
+  purpose?: string | null
 }
 
 export type AiAnalysisRunUpdateInput = {
@@ -447,9 +478,11 @@ export type AiAnalysisRunUpdateInput = {
   inputTokens?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   outputTokens?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   estimatedCost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  purpose?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutAiAnalysisRunsNestedInput
   credential?: Prisma.AiProviderCredentialUpdateOneWithoutAnalysisRunsNestedInput
   sourceFile?: Prisma.ImportedFileUpdateOneRequiredWithoutAiAnalysisRunsNestedInput
+  processingRun?: Prisma.FileProcessingRunUpdateOneWithoutAiAnalysisRunsNestedInput
 }
 
 export type AiAnalysisRunUncheckedUpdateInput = {
@@ -468,6 +501,8 @@ export type AiAnalysisRunUncheckedUpdateInput = {
   inputTokens?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   outputTokens?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   estimatedCost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  processingRunId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  purpose?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type AiAnalysisRunCreateManyInput = {
@@ -486,6 +521,8 @@ export type AiAnalysisRunCreateManyInput = {
   inputTokens?: number | null
   outputTokens?: number | null
   estimatedCost?: number | null
+  processingRunId?: string | null
+  purpose?: string | null
 }
 
 export type AiAnalysisRunUpdateManyMutationInput = {
@@ -501,6 +538,7 @@ export type AiAnalysisRunUpdateManyMutationInput = {
   inputTokens?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   outputTokens?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   estimatedCost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  purpose?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type AiAnalysisRunUncheckedUpdateManyInput = {
@@ -519,6 +557,8 @@ export type AiAnalysisRunUncheckedUpdateManyInput = {
   inputTokens?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   outputTokens?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   estimatedCost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  processingRunId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  purpose?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type AiAnalysisRunListRelationFilter = {
@@ -547,6 +587,8 @@ export type AiAnalysisRunCountOrderByAggregateInput = {
   inputTokens?: Prisma.SortOrder
   outputTokens?: Prisma.SortOrder
   estimatedCost?: Prisma.SortOrder
+  processingRunId?: Prisma.SortOrder
+  purpose?: Prisma.SortOrder
 }
 
 export type AiAnalysisRunAvgOrderByAggregateInput = {
@@ -571,6 +613,8 @@ export type AiAnalysisRunMaxOrderByAggregateInput = {
   inputTokens?: Prisma.SortOrder
   outputTokens?: Prisma.SortOrder
   estimatedCost?: Prisma.SortOrder
+  processingRunId?: Prisma.SortOrder
+  purpose?: Prisma.SortOrder
 }
 
 export type AiAnalysisRunMinOrderByAggregateInput = {
@@ -589,6 +633,8 @@ export type AiAnalysisRunMinOrderByAggregateInput = {
   inputTokens?: Prisma.SortOrder
   outputTokens?: Prisma.SortOrder
   estimatedCost?: Prisma.SortOrder
+  processingRunId?: Prisma.SortOrder
+  purpose?: Prisma.SortOrder
 }
 
 export type AiAnalysisRunSumOrderByAggregateInput = {
@@ -681,6 +727,48 @@ export type AiAnalysisRunUncheckedUpdateManyWithoutSourceFileNestedInput = {
   deleteMany?: Prisma.AiAnalysisRunScalarWhereInput | Prisma.AiAnalysisRunScalarWhereInput[]
 }
 
+export type AiAnalysisRunCreateNestedManyWithoutProcessingRunInput = {
+  create?: Prisma.XOR<Prisma.AiAnalysisRunCreateWithoutProcessingRunInput, Prisma.AiAnalysisRunUncheckedCreateWithoutProcessingRunInput> | Prisma.AiAnalysisRunCreateWithoutProcessingRunInput[] | Prisma.AiAnalysisRunUncheckedCreateWithoutProcessingRunInput[]
+  connectOrCreate?: Prisma.AiAnalysisRunCreateOrConnectWithoutProcessingRunInput | Prisma.AiAnalysisRunCreateOrConnectWithoutProcessingRunInput[]
+  createMany?: Prisma.AiAnalysisRunCreateManyProcessingRunInputEnvelope
+  connect?: Prisma.AiAnalysisRunWhereUniqueInput | Prisma.AiAnalysisRunWhereUniqueInput[]
+}
+
+export type AiAnalysisRunUncheckedCreateNestedManyWithoutProcessingRunInput = {
+  create?: Prisma.XOR<Prisma.AiAnalysisRunCreateWithoutProcessingRunInput, Prisma.AiAnalysisRunUncheckedCreateWithoutProcessingRunInput> | Prisma.AiAnalysisRunCreateWithoutProcessingRunInput[] | Prisma.AiAnalysisRunUncheckedCreateWithoutProcessingRunInput[]
+  connectOrCreate?: Prisma.AiAnalysisRunCreateOrConnectWithoutProcessingRunInput | Prisma.AiAnalysisRunCreateOrConnectWithoutProcessingRunInput[]
+  createMany?: Prisma.AiAnalysisRunCreateManyProcessingRunInputEnvelope
+  connect?: Prisma.AiAnalysisRunWhereUniqueInput | Prisma.AiAnalysisRunWhereUniqueInput[]
+}
+
+export type AiAnalysisRunUpdateManyWithoutProcessingRunNestedInput = {
+  create?: Prisma.XOR<Prisma.AiAnalysisRunCreateWithoutProcessingRunInput, Prisma.AiAnalysisRunUncheckedCreateWithoutProcessingRunInput> | Prisma.AiAnalysisRunCreateWithoutProcessingRunInput[] | Prisma.AiAnalysisRunUncheckedCreateWithoutProcessingRunInput[]
+  connectOrCreate?: Prisma.AiAnalysisRunCreateOrConnectWithoutProcessingRunInput | Prisma.AiAnalysisRunCreateOrConnectWithoutProcessingRunInput[]
+  upsert?: Prisma.AiAnalysisRunUpsertWithWhereUniqueWithoutProcessingRunInput | Prisma.AiAnalysisRunUpsertWithWhereUniqueWithoutProcessingRunInput[]
+  createMany?: Prisma.AiAnalysisRunCreateManyProcessingRunInputEnvelope
+  set?: Prisma.AiAnalysisRunWhereUniqueInput | Prisma.AiAnalysisRunWhereUniqueInput[]
+  disconnect?: Prisma.AiAnalysisRunWhereUniqueInput | Prisma.AiAnalysisRunWhereUniqueInput[]
+  delete?: Prisma.AiAnalysisRunWhereUniqueInput | Prisma.AiAnalysisRunWhereUniqueInput[]
+  connect?: Prisma.AiAnalysisRunWhereUniqueInput | Prisma.AiAnalysisRunWhereUniqueInput[]
+  update?: Prisma.AiAnalysisRunUpdateWithWhereUniqueWithoutProcessingRunInput | Prisma.AiAnalysisRunUpdateWithWhereUniqueWithoutProcessingRunInput[]
+  updateMany?: Prisma.AiAnalysisRunUpdateManyWithWhereWithoutProcessingRunInput | Prisma.AiAnalysisRunUpdateManyWithWhereWithoutProcessingRunInput[]
+  deleteMany?: Prisma.AiAnalysisRunScalarWhereInput | Prisma.AiAnalysisRunScalarWhereInput[]
+}
+
+export type AiAnalysisRunUncheckedUpdateManyWithoutProcessingRunNestedInput = {
+  create?: Prisma.XOR<Prisma.AiAnalysisRunCreateWithoutProcessingRunInput, Prisma.AiAnalysisRunUncheckedCreateWithoutProcessingRunInput> | Prisma.AiAnalysisRunCreateWithoutProcessingRunInput[] | Prisma.AiAnalysisRunUncheckedCreateWithoutProcessingRunInput[]
+  connectOrCreate?: Prisma.AiAnalysisRunCreateOrConnectWithoutProcessingRunInput | Prisma.AiAnalysisRunCreateOrConnectWithoutProcessingRunInput[]
+  upsert?: Prisma.AiAnalysisRunUpsertWithWhereUniqueWithoutProcessingRunInput | Prisma.AiAnalysisRunUpsertWithWhereUniqueWithoutProcessingRunInput[]
+  createMany?: Prisma.AiAnalysisRunCreateManyProcessingRunInputEnvelope
+  set?: Prisma.AiAnalysisRunWhereUniqueInput | Prisma.AiAnalysisRunWhereUniqueInput[]
+  disconnect?: Prisma.AiAnalysisRunWhereUniqueInput | Prisma.AiAnalysisRunWhereUniqueInput[]
+  delete?: Prisma.AiAnalysisRunWhereUniqueInput | Prisma.AiAnalysisRunWhereUniqueInput[]
+  connect?: Prisma.AiAnalysisRunWhereUniqueInput | Prisma.AiAnalysisRunWhereUniqueInput[]
+  update?: Prisma.AiAnalysisRunUpdateWithWhereUniqueWithoutProcessingRunInput | Prisma.AiAnalysisRunUpdateWithWhereUniqueWithoutProcessingRunInput[]
+  updateMany?: Prisma.AiAnalysisRunUpdateManyWithWhereWithoutProcessingRunInput | Prisma.AiAnalysisRunUpdateManyWithWhereWithoutProcessingRunInput[]
+  deleteMany?: Prisma.AiAnalysisRunScalarWhereInput | Prisma.AiAnalysisRunScalarWhereInput[]
+}
+
 export type AiAnalysisRunCreateNestedManyWithoutCredentialInput = {
   create?: Prisma.XOR<Prisma.AiAnalysisRunCreateWithoutCredentialInput, Prisma.AiAnalysisRunUncheckedCreateWithoutCredentialInput> | Prisma.AiAnalysisRunCreateWithoutCredentialInput[] | Prisma.AiAnalysisRunUncheckedCreateWithoutCredentialInput[]
   connectOrCreate?: Prisma.AiAnalysisRunCreateOrConnectWithoutCredentialInput | Prisma.AiAnalysisRunCreateOrConnectWithoutCredentialInput[]
@@ -736,8 +824,10 @@ export type AiAnalysisRunCreateWithoutWorkspaceInput = {
   inputTokens?: number | null
   outputTokens?: number | null
   estimatedCost?: number | null
+  purpose?: string | null
   credential?: Prisma.AiProviderCredentialCreateNestedOneWithoutAnalysisRunsInput
   sourceFile: Prisma.ImportedFileCreateNestedOneWithoutAiAnalysisRunsInput
+  processingRun?: Prisma.FileProcessingRunCreateNestedOneWithoutAiAnalysisRunsInput
 }
 
 export type AiAnalysisRunUncheckedCreateWithoutWorkspaceInput = {
@@ -755,6 +845,8 @@ export type AiAnalysisRunUncheckedCreateWithoutWorkspaceInput = {
   inputTokens?: number | null
   outputTokens?: number | null
   estimatedCost?: number | null
+  processingRunId?: string | null
+  purpose?: string | null
 }
 
 export type AiAnalysisRunCreateOrConnectWithoutWorkspaceInput = {
@@ -801,6 +893,8 @@ export type AiAnalysisRunScalarWhereInput = {
   inputTokens?: Prisma.IntNullableFilter<"AiAnalysisRun"> | number | null
   outputTokens?: Prisma.IntNullableFilter<"AiAnalysisRun"> | number | null
   estimatedCost?: Prisma.FloatNullableFilter<"AiAnalysisRun"> | number | null
+  processingRunId?: Prisma.StringNullableFilter<"AiAnalysisRun"> | string | null
+  purpose?: Prisma.StringNullableFilter<"AiAnalysisRun"> | string | null
 }
 
 export type AiAnalysisRunCreateWithoutSourceFileInput = {
@@ -816,8 +910,10 @@ export type AiAnalysisRunCreateWithoutSourceFileInput = {
   inputTokens?: number | null
   outputTokens?: number | null
   estimatedCost?: number | null
+  purpose?: string | null
   workspace: Prisma.WorkspaceCreateNestedOneWithoutAiAnalysisRunsInput
   credential?: Prisma.AiProviderCredentialCreateNestedOneWithoutAnalysisRunsInput
+  processingRun?: Prisma.FileProcessingRunCreateNestedOneWithoutAiAnalysisRunsInput
 }
 
 export type AiAnalysisRunUncheckedCreateWithoutSourceFileInput = {
@@ -835,6 +931,8 @@ export type AiAnalysisRunUncheckedCreateWithoutSourceFileInput = {
   inputTokens?: number | null
   outputTokens?: number | null
   estimatedCost?: number | null
+  processingRunId?: string | null
+  purpose?: string | null
 }
 
 export type AiAnalysisRunCreateOrConnectWithoutSourceFileInput = {
@@ -862,6 +960,69 @@ export type AiAnalysisRunUpdateManyWithWhereWithoutSourceFileInput = {
   data: Prisma.XOR<Prisma.AiAnalysisRunUpdateManyMutationInput, Prisma.AiAnalysisRunUncheckedUpdateManyWithoutSourceFileInput>
 }
 
+export type AiAnalysisRunCreateWithoutProcessingRunInput = {
+  id?: string
+  createdAt?: Date | string
+  completedAt?: Date | string | null
+  provider: string
+  modelId: string
+  status: string
+  promptVersion: string
+  output?: string | null
+  error?: string | null
+  inputTokens?: number | null
+  outputTokens?: number | null
+  estimatedCost?: number | null
+  purpose?: string | null
+  workspace: Prisma.WorkspaceCreateNestedOneWithoutAiAnalysisRunsInput
+  credential?: Prisma.AiProviderCredentialCreateNestedOneWithoutAnalysisRunsInput
+  sourceFile: Prisma.ImportedFileCreateNestedOneWithoutAiAnalysisRunsInput
+}
+
+export type AiAnalysisRunUncheckedCreateWithoutProcessingRunInput = {
+  id?: string
+  workspaceId: string
+  createdAt?: Date | string
+  completedAt?: Date | string | null
+  credentialId?: string | null
+  sourceFileId: string
+  provider: string
+  modelId: string
+  status: string
+  promptVersion: string
+  output?: string | null
+  error?: string | null
+  inputTokens?: number | null
+  outputTokens?: number | null
+  estimatedCost?: number | null
+  purpose?: string | null
+}
+
+export type AiAnalysisRunCreateOrConnectWithoutProcessingRunInput = {
+  where: Prisma.AiAnalysisRunWhereUniqueInput
+  create: Prisma.XOR<Prisma.AiAnalysisRunCreateWithoutProcessingRunInput, Prisma.AiAnalysisRunUncheckedCreateWithoutProcessingRunInput>
+}
+
+export type AiAnalysisRunCreateManyProcessingRunInputEnvelope = {
+  data: Prisma.AiAnalysisRunCreateManyProcessingRunInput | Prisma.AiAnalysisRunCreateManyProcessingRunInput[]
+}
+
+export type AiAnalysisRunUpsertWithWhereUniqueWithoutProcessingRunInput = {
+  where: Prisma.AiAnalysisRunWhereUniqueInput
+  update: Prisma.XOR<Prisma.AiAnalysisRunUpdateWithoutProcessingRunInput, Prisma.AiAnalysisRunUncheckedUpdateWithoutProcessingRunInput>
+  create: Prisma.XOR<Prisma.AiAnalysisRunCreateWithoutProcessingRunInput, Prisma.AiAnalysisRunUncheckedCreateWithoutProcessingRunInput>
+}
+
+export type AiAnalysisRunUpdateWithWhereUniqueWithoutProcessingRunInput = {
+  where: Prisma.AiAnalysisRunWhereUniqueInput
+  data: Prisma.XOR<Prisma.AiAnalysisRunUpdateWithoutProcessingRunInput, Prisma.AiAnalysisRunUncheckedUpdateWithoutProcessingRunInput>
+}
+
+export type AiAnalysisRunUpdateManyWithWhereWithoutProcessingRunInput = {
+  where: Prisma.AiAnalysisRunScalarWhereInput
+  data: Prisma.XOR<Prisma.AiAnalysisRunUpdateManyMutationInput, Prisma.AiAnalysisRunUncheckedUpdateManyWithoutProcessingRunInput>
+}
+
 export type AiAnalysisRunCreateWithoutCredentialInput = {
   id?: string
   createdAt?: Date | string
@@ -875,8 +1036,10 @@ export type AiAnalysisRunCreateWithoutCredentialInput = {
   inputTokens?: number | null
   outputTokens?: number | null
   estimatedCost?: number | null
+  purpose?: string | null
   workspace: Prisma.WorkspaceCreateNestedOneWithoutAiAnalysisRunsInput
   sourceFile: Prisma.ImportedFileCreateNestedOneWithoutAiAnalysisRunsInput
+  processingRun?: Prisma.FileProcessingRunCreateNestedOneWithoutAiAnalysisRunsInput
 }
 
 export type AiAnalysisRunUncheckedCreateWithoutCredentialInput = {
@@ -894,6 +1057,8 @@ export type AiAnalysisRunUncheckedCreateWithoutCredentialInput = {
   inputTokens?: number | null
   outputTokens?: number | null
   estimatedCost?: number | null
+  processingRunId?: string | null
+  purpose?: string | null
 }
 
 export type AiAnalysisRunCreateOrConnectWithoutCredentialInput = {
@@ -936,6 +1101,8 @@ export type AiAnalysisRunCreateManyWorkspaceInput = {
   inputTokens?: number | null
   outputTokens?: number | null
   estimatedCost?: number | null
+  processingRunId?: string | null
+  purpose?: string | null
 }
 
 export type AiAnalysisRunUpdateWithoutWorkspaceInput = {
@@ -951,8 +1118,10 @@ export type AiAnalysisRunUpdateWithoutWorkspaceInput = {
   inputTokens?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   outputTokens?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   estimatedCost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  purpose?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   credential?: Prisma.AiProviderCredentialUpdateOneWithoutAnalysisRunsNestedInput
   sourceFile?: Prisma.ImportedFileUpdateOneRequiredWithoutAiAnalysisRunsNestedInput
+  processingRun?: Prisma.FileProcessingRunUpdateOneWithoutAiAnalysisRunsNestedInput
 }
 
 export type AiAnalysisRunUncheckedUpdateWithoutWorkspaceInput = {
@@ -970,6 +1139,8 @@ export type AiAnalysisRunUncheckedUpdateWithoutWorkspaceInput = {
   inputTokens?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   outputTokens?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   estimatedCost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  processingRunId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  purpose?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type AiAnalysisRunUncheckedUpdateManyWithoutWorkspaceInput = {
@@ -987,6 +1158,8 @@ export type AiAnalysisRunUncheckedUpdateManyWithoutWorkspaceInput = {
   inputTokens?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   outputTokens?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   estimatedCost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  processingRunId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  purpose?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type AiAnalysisRunCreateManySourceFileInput = {
@@ -1004,6 +1177,8 @@ export type AiAnalysisRunCreateManySourceFileInput = {
   inputTokens?: number | null
   outputTokens?: number | null
   estimatedCost?: number | null
+  processingRunId?: string | null
+  purpose?: string | null
 }
 
 export type AiAnalysisRunUpdateWithoutSourceFileInput = {
@@ -1019,8 +1194,10 @@ export type AiAnalysisRunUpdateWithoutSourceFileInput = {
   inputTokens?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   outputTokens?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   estimatedCost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  purpose?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutAiAnalysisRunsNestedInput
   credential?: Prisma.AiProviderCredentialUpdateOneWithoutAnalysisRunsNestedInput
+  processingRun?: Prisma.FileProcessingRunUpdateOneWithoutAiAnalysisRunsNestedInput
 }
 
 export type AiAnalysisRunUncheckedUpdateWithoutSourceFileInput = {
@@ -1038,6 +1215,8 @@ export type AiAnalysisRunUncheckedUpdateWithoutSourceFileInput = {
   inputTokens?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   outputTokens?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   estimatedCost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  processingRunId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  purpose?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type AiAnalysisRunUncheckedUpdateManyWithoutSourceFileInput = {
@@ -1055,6 +1234,84 @@ export type AiAnalysisRunUncheckedUpdateManyWithoutSourceFileInput = {
   inputTokens?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   outputTokens?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   estimatedCost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  processingRunId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  purpose?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+}
+
+export type AiAnalysisRunCreateManyProcessingRunInput = {
+  id?: string
+  workspaceId: string
+  createdAt?: Date | string
+  completedAt?: Date | string | null
+  credentialId?: string | null
+  sourceFileId: string
+  provider: string
+  modelId: string
+  status: string
+  promptVersion: string
+  output?: string | null
+  error?: string | null
+  inputTokens?: number | null
+  outputTokens?: number | null
+  estimatedCost?: number | null
+  purpose?: string | null
+}
+
+export type AiAnalysisRunUpdateWithoutProcessingRunInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  provider?: Prisma.StringFieldUpdateOperationsInput | string
+  modelId?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  promptVersion?: Prisma.StringFieldUpdateOperationsInput | string
+  output?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  error?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  inputTokens?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  outputTokens?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  estimatedCost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  purpose?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutAiAnalysisRunsNestedInput
+  credential?: Prisma.AiProviderCredentialUpdateOneWithoutAnalysisRunsNestedInput
+  sourceFile?: Prisma.ImportedFileUpdateOneRequiredWithoutAiAnalysisRunsNestedInput
+}
+
+export type AiAnalysisRunUncheckedUpdateWithoutProcessingRunInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  credentialId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceFileId?: Prisma.StringFieldUpdateOperationsInput | string
+  provider?: Prisma.StringFieldUpdateOperationsInput | string
+  modelId?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  promptVersion?: Prisma.StringFieldUpdateOperationsInput | string
+  output?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  error?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  inputTokens?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  outputTokens?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  estimatedCost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  purpose?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+}
+
+export type AiAnalysisRunUncheckedUpdateManyWithoutProcessingRunInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  credentialId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceFileId?: Prisma.StringFieldUpdateOperationsInput | string
+  provider?: Prisma.StringFieldUpdateOperationsInput | string
+  modelId?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  promptVersion?: Prisma.StringFieldUpdateOperationsInput | string
+  output?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  error?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  inputTokens?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  outputTokens?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  estimatedCost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  purpose?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type AiAnalysisRunCreateManyCredentialInput = {
@@ -1072,6 +1329,8 @@ export type AiAnalysisRunCreateManyCredentialInput = {
   inputTokens?: number | null
   outputTokens?: number | null
   estimatedCost?: number | null
+  processingRunId?: string | null
+  purpose?: string | null
 }
 
 export type AiAnalysisRunUpdateWithoutCredentialInput = {
@@ -1087,8 +1346,10 @@ export type AiAnalysisRunUpdateWithoutCredentialInput = {
   inputTokens?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   outputTokens?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   estimatedCost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  purpose?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutAiAnalysisRunsNestedInput
   sourceFile?: Prisma.ImportedFileUpdateOneRequiredWithoutAiAnalysisRunsNestedInput
+  processingRun?: Prisma.FileProcessingRunUpdateOneWithoutAiAnalysisRunsNestedInput
 }
 
 export type AiAnalysisRunUncheckedUpdateWithoutCredentialInput = {
@@ -1106,6 +1367,8 @@ export type AiAnalysisRunUncheckedUpdateWithoutCredentialInput = {
   inputTokens?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   outputTokens?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   estimatedCost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  processingRunId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  purpose?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type AiAnalysisRunUncheckedUpdateManyWithoutCredentialInput = {
@@ -1123,6 +1386,8 @@ export type AiAnalysisRunUncheckedUpdateManyWithoutCredentialInput = {
   inputTokens?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   outputTokens?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   estimatedCost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  processingRunId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  purpose?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
@@ -1143,9 +1408,12 @@ export type AiAnalysisRunSelect<ExtArgs extends runtime.Types.Extensions.Interna
   inputTokens?: boolean
   outputTokens?: boolean
   estimatedCost?: boolean
+  processingRunId?: boolean
+  purpose?: boolean
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   credential?: boolean | Prisma.AiAnalysisRun$credentialArgs<ExtArgs>
   sourceFile?: boolean | Prisma.ImportedFileDefaultArgs<ExtArgs>
+  processingRun?: boolean | Prisma.AiAnalysisRun$processingRunArgs<ExtArgs>
 }, ExtArgs["result"]["aiAnalysisRun"]>
 
 export type AiAnalysisRunSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1164,9 +1432,12 @@ export type AiAnalysisRunSelectCreateManyAndReturn<ExtArgs extends runtime.Types
   inputTokens?: boolean
   outputTokens?: boolean
   estimatedCost?: boolean
+  processingRunId?: boolean
+  purpose?: boolean
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   credential?: boolean | Prisma.AiAnalysisRun$credentialArgs<ExtArgs>
   sourceFile?: boolean | Prisma.ImportedFileDefaultArgs<ExtArgs>
+  processingRun?: boolean | Prisma.AiAnalysisRun$processingRunArgs<ExtArgs>
 }, ExtArgs["result"]["aiAnalysisRun"]>
 
 export type AiAnalysisRunSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1185,9 +1456,12 @@ export type AiAnalysisRunSelectUpdateManyAndReturn<ExtArgs extends runtime.Types
   inputTokens?: boolean
   outputTokens?: boolean
   estimatedCost?: boolean
+  processingRunId?: boolean
+  purpose?: boolean
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   credential?: boolean | Prisma.AiAnalysisRun$credentialArgs<ExtArgs>
   sourceFile?: boolean | Prisma.ImportedFileDefaultArgs<ExtArgs>
+  processingRun?: boolean | Prisma.AiAnalysisRun$processingRunArgs<ExtArgs>
 }, ExtArgs["result"]["aiAnalysisRun"]>
 
 export type AiAnalysisRunSelectScalar = {
@@ -1206,23 +1480,28 @@ export type AiAnalysisRunSelectScalar = {
   inputTokens?: boolean
   outputTokens?: boolean
   estimatedCost?: boolean
+  processingRunId?: boolean
+  purpose?: boolean
 }
 
-export type AiAnalysisRunOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "workspaceId" | "createdAt" | "completedAt" | "credentialId" | "sourceFileId" | "provider" | "modelId" | "status" | "promptVersion" | "output" | "error" | "inputTokens" | "outputTokens" | "estimatedCost", ExtArgs["result"]["aiAnalysisRun"]>
+export type AiAnalysisRunOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "workspaceId" | "createdAt" | "completedAt" | "credentialId" | "sourceFileId" | "provider" | "modelId" | "status" | "promptVersion" | "output" | "error" | "inputTokens" | "outputTokens" | "estimatedCost" | "processingRunId" | "purpose", ExtArgs["result"]["aiAnalysisRun"]>
 export type AiAnalysisRunInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   credential?: boolean | Prisma.AiAnalysisRun$credentialArgs<ExtArgs>
   sourceFile?: boolean | Prisma.ImportedFileDefaultArgs<ExtArgs>
+  processingRun?: boolean | Prisma.AiAnalysisRun$processingRunArgs<ExtArgs>
 }
 export type AiAnalysisRunIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   credential?: boolean | Prisma.AiAnalysisRun$credentialArgs<ExtArgs>
   sourceFile?: boolean | Prisma.ImportedFileDefaultArgs<ExtArgs>
+  processingRun?: boolean | Prisma.AiAnalysisRun$processingRunArgs<ExtArgs>
 }
 export type AiAnalysisRunIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   credential?: boolean | Prisma.AiAnalysisRun$credentialArgs<ExtArgs>
   sourceFile?: boolean | Prisma.ImportedFileDefaultArgs<ExtArgs>
+  processingRun?: boolean | Prisma.AiAnalysisRun$processingRunArgs<ExtArgs>
 }
 
 export type $AiAnalysisRunPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1231,6 +1510,7 @@ export type $AiAnalysisRunPayload<ExtArgs extends runtime.Types.Extensions.Inter
     workspace: Prisma.$WorkspacePayload<ExtArgs>
     credential: Prisma.$AiProviderCredentialPayload<ExtArgs> | null
     sourceFile: Prisma.$ImportedFilePayload<ExtArgs>
+    processingRun: Prisma.$FileProcessingRunPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1248,6 +1528,8 @@ export type $AiAnalysisRunPayload<ExtArgs extends runtime.Types.Extensions.Inter
     inputTokens: number | null
     outputTokens: number | null
     estimatedCost: number | null
+    processingRunId: string | null
+    purpose: string | null
   }, ExtArgs["result"]["aiAnalysisRun"]>
   composites: {}
 }
@@ -1645,6 +1927,7 @@ export interface Prisma__AiAnalysisRunClient<T, Null = never, ExtArgs extends ru
   workspace<T extends Prisma.WorkspaceDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WorkspaceDefaultArgs<ExtArgs>>): Prisma.Prisma__WorkspaceClient<runtime.Types.Result.GetResult<Prisma.$WorkspacePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   credential<T extends Prisma.AiAnalysisRun$credentialArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AiAnalysisRun$credentialArgs<ExtArgs>>): Prisma.Prisma__AiProviderCredentialClient<runtime.Types.Result.GetResult<Prisma.$AiProviderCredentialPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   sourceFile<T extends Prisma.ImportedFileDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ImportedFileDefaultArgs<ExtArgs>>): Prisma.Prisma__ImportedFileClient<runtime.Types.Result.GetResult<Prisma.$ImportedFilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  processingRun<T extends Prisma.AiAnalysisRun$processingRunArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AiAnalysisRun$processingRunArgs<ExtArgs>>): Prisma.Prisma__FileProcessingRunClient<runtime.Types.Result.GetResult<Prisma.$FileProcessingRunPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1689,6 +1972,8 @@ export interface AiAnalysisRunFieldRefs {
   readonly inputTokens: Prisma.FieldRef<"AiAnalysisRun", 'Int'>
   readonly outputTokens: Prisma.FieldRef<"AiAnalysisRun", 'Int'>
   readonly estimatedCost: Prisma.FieldRef<"AiAnalysisRun", 'Float'>
+  readonly processingRunId: Prisma.FieldRef<"AiAnalysisRun", 'String'>
+  readonly purpose: Prisma.FieldRef<"AiAnalysisRun", 'String'>
 }
     
 
@@ -2104,6 +2389,25 @@ export type AiAnalysisRun$credentialArgs<ExtArgs extends runtime.Types.Extension
    */
   include?: Prisma.AiProviderCredentialInclude<ExtArgs> | null
   where?: Prisma.AiProviderCredentialWhereInput
+}
+
+/**
+ * AiAnalysisRun.processingRun
+ */
+export type AiAnalysisRun$processingRunArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the FileProcessingRun
+   */
+  select?: Prisma.FileProcessingRunSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the FileProcessingRun
+   */
+  omit?: Prisma.FileProcessingRunOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FileProcessingRunInclude<ExtArgs> | null
+  where?: Prisma.FileProcessingRunWhereInput
 }
 
 /**

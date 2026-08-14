@@ -4,6 +4,9 @@ import { reviewItemActionContract } from "@life-os/contracts"
 import { resolveReviewItem } from "@life-os/domain"
 import { authorizeRequest } from "@/lib/auth"
 import { unauthorizedResponse, handleRouteError, errorResponse } from "@/lib/respond"
+import { registerFileReviewHandlers } from "@life-os/files"
+
+registerFileReviewHandlers()
 
 /**
  * Resolve a single ReviewItem — accept the proposed command as-is,

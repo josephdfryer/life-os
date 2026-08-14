@@ -13,6 +13,7 @@ export default tseslint.config(
       "**/node_modules/**",
       "**/.next/**",
       "**/.turbo/**",
+      "**/app/.well-known/workflow/**",
       "**/dist/**",
       "**/coverage/**",
       "**/*.tsbuildinfo",

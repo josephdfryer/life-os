@@ -440,6 +440,14 @@ export const ModelName = {
   Assembly: 'Assembly',
   ItemInteraction: 'ItemInteraction',
   ImportedFile: 'ImportedFile',
+  FileUploadIntent: 'FileUploadIntent',
+  FileProcessingRun: 'FileProcessingRun',
+  FileChunk: 'FileChunk',
+  FileEntityMention: 'FileEntityMention',
+  PersonExternalIdentifier: 'PersonExternalIdentifier',
+  FileEntityResolution: 'FileEntityResolution',
+  EvidenceClaim: 'EvidenceClaim',
+  EvidenceClaimSubject: 'EvidenceClaimSubject',
   AiProviderCredential: 'AiProviderCredential',
   AiAnalysisRun: 'AiAnalysisRun',
   NoteAnalysisRun: 'NoteAnalysisRun',
@@ -498,7 +506,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "workspace" | "workspaceMember" | "approvedEmail" | "person" | "user" | "device" | "deviceSource" | "deviceCredential" | "deviceAuthorization" | "deviceIngestItem" | "role" | "permission" | "userRole" | "rolePermission" | "apiKey" | "apiKeyScope" | "auditLog" | "calendarConnection" | "calendarEventLink" | "gmailConnection" | "gmailMessageLink" | "eraConnection" | "eraAccountLink" | "eraTransactionLink" | "connection" | "rule" | "ruleRun" | "stagedInteraction" | "event" | "interaction" | "interactionParticipant" | "plan" | "planExpectedPerson" | "place" | "importJob" | "importStagedVisit" | "placeNote" | "item" | "itemDefinition" | "inventoryLot" | "assembly" | "itemInteraction" | "importedFile" | "aiProviderCredential" | "aiAnalysisRun" | "noteAnalysisRun" | "theoryAnalysisRun" | "lifeModelAnalysisRun" | "noteSuggestion" | "group" | "supplierProfile" | "purchaseOrder" | "purchaseOrderLine" | "purchaseReceiptLine" | "personGroup" | "groupGroup" | "placeGroup" | "note" | "theorySnapshot" | "theorySnapshotSource" | "lifeModelSnapshot" | "lifeModelClaim" | "lifeModelClaimFeedback" | "adaptiveDayBrief" | "adaptiveIntervention" | "adaptiveInterventionOutcome" | "stateDefinition" | "state" | "assistantMessage" | "levelUpProfile" | "levelUpTestResult" | "levelUpCombine" | "levelUpRatingSnapshot" | "levelUpTrainingSet" | "levelUpExercise" | "levelUpProgram" | "levelUpProgramDay" | "levelUpProgramEntry" | "levelUpSession" | "levelUpBodyMetric" | "levelUpReadinessSnapshot" | "levelUpBadgeUnlock" | "levelUpTargetBuild" | "graphEvent" | "graphEventReceipt" | "reviewItem"
+    modelProps: "workspace" | "workspaceMember" | "approvedEmail" | "person" | "user" | "device" | "deviceSource" | "deviceCredential" | "deviceAuthorization" | "deviceIngestItem" | "role" | "permission" | "userRole" | "rolePermission" | "apiKey" | "apiKeyScope" | "auditLog" | "calendarConnection" | "calendarEventLink" | "gmailConnection" | "gmailMessageLink" | "eraConnection" | "eraAccountLink" | "eraTransactionLink" | "connection" | "rule" | "ruleRun" | "stagedInteraction" | "event" | "interaction" | "interactionParticipant" | "plan" | "planExpectedPerson" | "place" | "importJob" | "importStagedVisit" | "placeNote" | "item" | "itemDefinition" | "inventoryLot" | "assembly" | "itemInteraction" | "importedFile" | "fileUploadIntent" | "fileProcessingRun" | "fileChunk" | "fileEntityMention" | "personExternalIdentifier" | "fileEntityResolution" | "evidenceClaim" | "evidenceClaimSubject" | "aiProviderCredential" | "aiAnalysisRun" | "noteAnalysisRun" | "theoryAnalysisRun" | "lifeModelAnalysisRun" | "noteSuggestion" | "group" | "supplierProfile" | "purchaseOrder" | "purchaseOrderLine" | "purchaseReceiptLine" | "personGroup" | "groupGroup" | "placeGroup" | "note" | "theorySnapshot" | "theorySnapshotSource" | "lifeModelSnapshot" | "lifeModelClaim" | "lifeModelClaimFeedback" | "adaptiveDayBrief" | "adaptiveIntervention" | "adaptiveInterventionOutcome" | "stateDefinition" | "state" | "assistantMessage" | "levelUpProfile" | "levelUpTestResult" | "levelUpCombine" | "levelUpRatingSnapshot" | "levelUpTrainingSet" | "levelUpExercise" | "levelUpProgram" | "levelUpProgramDay" | "levelUpProgramEntry" | "levelUpSession" | "levelUpBodyMetric" | "levelUpReadinessSnapshot" | "levelUpBadgeUnlock" | "levelUpTargetBuild" | "graphEvent" | "graphEventReceipt" | "reviewItem"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -3681,6 +3689,598 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.ImportedFileCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.ImportedFileCountAggregateOutputType> | number
+        }
+      }
+    }
+    FileUploadIntent: {
+      payload: Prisma.$FileUploadIntentPayload<ExtArgs>
+      fields: Prisma.FileUploadIntentFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.FileUploadIntentFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FileUploadIntentPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.FileUploadIntentFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FileUploadIntentPayload>
+        }
+        findFirst: {
+          args: Prisma.FileUploadIntentFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FileUploadIntentPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.FileUploadIntentFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FileUploadIntentPayload>
+        }
+        findMany: {
+          args: Prisma.FileUploadIntentFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FileUploadIntentPayload>[]
+        }
+        create: {
+          args: Prisma.FileUploadIntentCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FileUploadIntentPayload>
+        }
+        createMany: {
+          args: Prisma.FileUploadIntentCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.FileUploadIntentCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FileUploadIntentPayload>[]
+        }
+        delete: {
+          args: Prisma.FileUploadIntentDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FileUploadIntentPayload>
+        }
+        update: {
+          args: Prisma.FileUploadIntentUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FileUploadIntentPayload>
+        }
+        deleteMany: {
+          args: Prisma.FileUploadIntentDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.FileUploadIntentUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.FileUploadIntentUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FileUploadIntentPayload>[]
+        }
+        upsert: {
+          args: Prisma.FileUploadIntentUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FileUploadIntentPayload>
+        }
+        aggregate: {
+          args: Prisma.FileUploadIntentAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateFileUploadIntent>
+        }
+        groupBy: {
+          args: Prisma.FileUploadIntentGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.FileUploadIntentGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.FileUploadIntentCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.FileUploadIntentCountAggregateOutputType> | number
+        }
+      }
+    }
+    FileProcessingRun: {
+      payload: Prisma.$FileProcessingRunPayload<ExtArgs>
+      fields: Prisma.FileProcessingRunFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.FileProcessingRunFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FileProcessingRunPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.FileProcessingRunFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FileProcessingRunPayload>
+        }
+        findFirst: {
+          args: Prisma.FileProcessingRunFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FileProcessingRunPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.FileProcessingRunFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FileProcessingRunPayload>
+        }
+        findMany: {
+          args: Prisma.FileProcessingRunFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FileProcessingRunPayload>[]
+        }
+        create: {
+          args: Prisma.FileProcessingRunCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FileProcessingRunPayload>
+        }
+        createMany: {
+          args: Prisma.FileProcessingRunCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.FileProcessingRunCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FileProcessingRunPayload>[]
+        }
+        delete: {
+          args: Prisma.FileProcessingRunDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FileProcessingRunPayload>
+        }
+        update: {
+          args: Prisma.FileProcessingRunUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FileProcessingRunPayload>
+        }
+        deleteMany: {
+          args: Prisma.FileProcessingRunDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.FileProcessingRunUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.FileProcessingRunUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FileProcessingRunPayload>[]
+        }
+        upsert: {
+          args: Prisma.FileProcessingRunUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FileProcessingRunPayload>
+        }
+        aggregate: {
+          args: Prisma.FileProcessingRunAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateFileProcessingRun>
+        }
+        groupBy: {
+          args: Prisma.FileProcessingRunGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.FileProcessingRunGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.FileProcessingRunCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.FileProcessingRunCountAggregateOutputType> | number
+        }
+      }
+    }
+    FileChunk: {
+      payload: Prisma.$FileChunkPayload<ExtArgs>
+      fields: Prisma.FileChunkFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.FileChunkFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FileChunkPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.FileChunkFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FileChunkPayload>
+        }
+        findFirst: {
+          args: Prisma.FileChunkFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FileChunkPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.FileChunkFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FileChunkPayload>
+        }
+        findMany: {
+          args: Prisma.FileChunkFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FileChunkPayload>[]
+        }
+        create: {
+          args: Prisma.FileChunkCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FileChunkPayload>
+        }
+        createMany: {
+          args: Prisma.FileChunkCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.FileChunkCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FileChunkPayload>[]
+        }
+        delete: {
+          args: Prisma.FileChunkDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FileChunkPayload>
+        }
+        update: {
+          args: Prisma.FileChunkUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FileChunkPayload>
+        }
+        deleteMany: {
+          args: Prisma.FileChunkDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.FileChunkUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.FileChunkUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FileChunkPayload>[]
+        }
+        upsert: {
+          args: Prisma.FileChunkUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FileChunkPayload>
+        }
+        aggregate: {
+          args: Prisma.FileChunkAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateFileChunk>
+        }
+        groupBy: {
+          args: Prisma.FileChunkGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.FileChunkGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.FileChunkCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.FileChunkCountAggregateOutputType> | number
+        }
+      }
+    }
+    FileEntityMention: {
+      payload: Prisma.$FileEntityMentionPayload<ExtArgs>
+      fields: Prisma.FileEntityMentionFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.FileEntityMentionFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FileEntityMentionPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.FileEntityMentionFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FileEntityMentionPayload>
+        }
+        findFirst: {
+          args: Prisma.FileEntityMentionFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FileEntityMentionPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.FileEntityMentionFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FileEntityMentionPayload>
+        }
+        findMany: {
+          args: Prisma.FileEntityMentionFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FileEntityMentionPayload>[]
+        }
+        create: {
+          args: Prisma.FileEntityMentionCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FileEntityMentionPayload>
+        }
+        createMany: {
+          args: Prisma.FileEntityMentionCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.FileEntityMentionCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FileEntityMentionPayload>[]
+        }
+        delete: {
+          args: Prisma.FileEntityMentionDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FileEntityMentionPayload>
+        }
+        update: {
+          args: Prisma.FileEntityMentionUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FileEntityMentionPayload>
+        }
+        deleteMany: {
+          args: Prisma.FileEntityMentionDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.FileEntityMentionUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.FileEntityMentionUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FileEntityMentionPayload>[]
+        }
+        upsert: {
+          args: Prisma.FileEntityMentionUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FileEntityMentionPayload>
+        }
+        aggregate: {
+          args: Prisma.FileEntityMentionAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateFileEntityMention>
+        }
+        groupBy: {
+          args: Prisma.FileEntityMentionGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.FileEntityMentionGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.FileEntityMentionCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.FileEntityMentionCountAggregateOutputType> | number
+        }
+      }
+    }
+    PersonExternalIdentifier: {
+      payload: Prisma.$PersonExternalIdentifierPayload<ExtArgs>
+      fields: Prisma.PersonExternalIdentifierFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.PersonExternalIdentifierFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PersonExternalIdentifierPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.PersonExternalIdentifierFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PersonExternalIdentifierPayload>
+        }
+        findFirst: {
+          args: Prisma.PersonExternalIdentifierFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PersonExternalIdentifierPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.PersonExternalIdentifierFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PersonExternalIdentifierPayload>
+        }
+        findMany: {
+          args: Prisma.PersonExternalIdentifierFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PersonExternalIdentifierPayload>[]
+        }
+        create: {
+          args: Prisma.PersonExternalIdentifierCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PersonExternalIdentifierPayload>
+        }
+        createMany: {
+          args: Prisma.PersonExternalIdentifierCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.PersonExternalIdentifierCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PersonExternalIdentifierPayload>[]
+        }
+        delete: {
+          args: Prisma.PersonExternalIdentifierDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PersonExternalIdentifierPayload>
+        }
+        update: {
+          args: Prisma.PersonExternalIdentifierUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PersonExternalIdentifierPayload>
+        }
+        deleteMany: {
+          args: Prisma.PersonExternalIdentifierDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.PersonExternalIdentifierUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.PersonExternalIdentifierUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PersonExternalIdentifierPayload>[]
+        }
+        upsert: {
+          args: Prisma.PersonExternalIdentifierUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PersonExternalIdentifierPayload>
+        }
+        aggregate: {
+          args: Prisma.PersonExternalIdentifierAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePersonExternalIdentifier>
+        }
+        groupBy: {
+          args: Prisma.PersonExternalIdentifierGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PersonExternalIdentifierGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.PersonExternalIdentifierCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PersonExternalIdentifierCountAggregateOutputType> | number
+        }
+      }
+    }
+    FileEntityResolution: {
+      payload: Prisma.$FileEntityResolutionPayload<ExtArgs>
+      fields: Prisma.FileEntityResolutionFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.FileEntityResolutionFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FileEntityResolutionPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.FileEntityResolutionFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FileEntityResolutionPayload>
+        }
+        findFirst: {
+          args: Prisma.FileEntityResolutionFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FileEntityResolutionPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.FileEntityResolutionFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FileEntityResolutionPayload>
+        }
+        findMany: {
+          args: Prisma.FileEntityResolutionFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FileEntityResolutionPayload>[]
+        }
+        create: {
+          args: Prisma.FileEntityResolutionCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FileEntityResolutionPayload>
+        }
+        createMany: {
+          args: Prisma.FileEntityResolutionCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.FileEntityResolutionCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FileEntityResolutionPayload>[]
+        }
+        delete: {
+          args: Prisma.FileEntityResolutionDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FileEntityResolutionPayload>
+        }
+        update: {
+          args: Prisma.FileEntityResolutionUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FileEntityResolutionPayload>
+        }
+        deleteMany: {
+          args: Prisma.FileEntityResolutionDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.FileEntityResolutionUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.FileEntityResolutionUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FileEntityResolutionPayload>[]
+        }
+        upsert: {
+          args: Prisma.FileEntityResolutionUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FileEntityResolutionPayload>
+        }
+        aggregate: {
+          args: Prisma.FileEntityResolutionAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateFileEntityResolution>
+        }
+        groupBy: {
+          args: Prisma.FileEntityResolutionGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.FileEntityResolutionGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.FileEntityResolutionCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.FileEntityResolutionCountAggregateOutputType> | number
+        }
+      }
+    }
+    EvidenceClaim: {
+      payload: Prisma.$EvidenceClaimPayload<ExtArgs>
+      fields: Prisma.EvidenceClaimFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.EvidenceClaimFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EvidenceClaimPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.EvidenceClaimFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EvidenceClaimPayload>
+        }
+        findFirst: {
+          args: Prisma.EvidenceClaimFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EvidenceClaimPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.EvidenceClaimFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EvidenceClaimPayload>
+        }
+        findMany: {
+          args: Prisma.EvidenceClaimFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EvidenceClaimPayload>[]
+        }
+        create: {
+          args: Prisma.EvidenceClaimCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EvidenceClaimPayload>
+        }
+        createMany: {
+          args: Prisma.EvidenceClaimCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.EvidenceClaimCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EvidenceClaimPayload>[]
+        }
+        delete: {
+          args: Prisma.EvidenceClaimDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EvidenceClaimPayload>
+        }
+        update: {
+          args: Prisma.EvidenceClaimUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EvidenceClaimPayload>
+        }
+        deleteMany: {
+          args: Prisma.EvidenceClaimDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.EvidenceClaimUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.EvidenceClaimUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EvidenceClaimPayload>[]
+        }
+        upsert: {
+          args: Prisma.EvidenceClaimUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EvidenceClaimPayload>
+        }
+        aggregate: {
+          args: Prisma.EvidenceClaimAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateEvidenceClaim>
+        }
+        groupBy: {
+          args: Prisma.EvidenceClaimGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.EvidenceClaimGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.EvidenceClaimCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.EvidenceClaimCountAggregateOutputType> | number
+        }
+      }
+    }
+    EvidenceClaimSubject: {
+      payload: Prisma.$EvidenceClaimSubjectPayload<ExtArgs>
+      fields: Prisma.EvidenceClaimSubjectFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.EvidenceClaimSubjectFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EvidenceClaimSubjectPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.EvidenceClaimSubjectFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EvidenceClaimSubjectPayload>
+        }
+        findFirst: {
+          args: Prisma.EvidenceClaimSubjectFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EvidenceClaimSubjectPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.EvidenceClaimSubjectFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EvidenceClaimSubjectPayload>
+        }
+        findMany: {
+          args: Prisma.EvidenceClaimSubjectFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EvidenceClaimSubjectPayload>[]
+        }
+        create: {
+          args: Prisma.EvidenceClaimSubjectCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EvidenceClaimSubjectPayload>
+        }
+        createMany: {
+          args: Prisma.EvidenceClaimSubjectCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.EvidenceClaimSubjectCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EvidenceClaimSubjectPayload>[]
+        }
+        delete: {
+          args: Prisma.EvidenceClaimSubjectDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EvidenceClaimSubjectPayload>
+        }
+        update: {
+          args: Prisma.EvidenceClaimSubjectUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EvidenceClaimSubjectPayload>
+        }
+        deleteMany: {
+          args: Prisma.EvidenceClaimSubjectDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.EvidenceClaimSubjectUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.EvidenceClaimSubjectUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EvidenceClaimSubjectPayload>[]
+        }
+        upsert: {
+          args: Prisma.EvidenceClaimSubjectUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EvidenceClaimSubjectPayload>
+        }
+        aggregate: {
+          args: Prisma.EvidenceClaimSubjectAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateEvidenceClaimSubject>
+        }
+        groupBy: {
+          args: Prisma.EvidenceClaimSubjectGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.EvidenceClaimSubjectGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.EvidenceClaimSubjectCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.EvidenceClaimSubjectCountAggregateOutputType> | number
         }
       }
     }
@@ -7693,10 +8293,169 @@ export const ImportedFileScalarFieldEnum = {
   storageKey: 'storageKey',
   mimeType: 'mimeType',
   checksum: 'checksum',
-  capturedAt: 'capturedAt'
+  capturedAt: 'capturedAt',
+  uploadIntentId: 'uploadIntentId',
+  archivedAt: 'archivedAt',
+  archiveReason: 'archiveReason',
+  processingState: 'processingState'
 } as const
 
 export type ImportedFileScalarFieldEnum = (typeof ImportedFileScalarFieldEnum)[keyof typeof ImportedFileScalarFieldEnum]
+
+
+export const FileUploadIntentScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  createdAt: 'createdAt',
+  expiresAt: 'expiresAt',
+  completedAt: 'completedAt',
+  status: 'status',
+  filename: 'filename',
+  safeFilename: 'safeFilename',
+  mimeType: 'mimeType',
+  format: 'format',
+  sizeBytes: 'sizeBytes',
+  checksumSha256: 'checksumSha256',
+  storageProvider: 'storageProvider',
+  storageKey: 'storageKey',
+  storeOnly: 'storeOnly'
+} as const
+
+export type FileUploadIntentScalarFieldEnum = (typeof FileUploadIntentScalarFieldEnum)[keyof typeof FileUploadIntentScalarFieldEnum]
+
+
+export const FileProcessingRunScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  sourceFileId: 'sourceFileId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  startedAt: 'startedAt',
+  completedAt: 'completedAt',
+  status: 'status',
+  processorVersion: 'processorVersion',
+  runKey: 'runKey',
+  workflowRunId: 'workflowRunId',
+  summary: 'summary',
+  error: 'error'
+} as const
+
+export type FileProcessingRunScalarFieldEnum = (typeof FileProcessingRunScalarFieldEnum)[keyof typeof FileProcessingRunScalarFieldEnum]
+
+
+export const FileChunkScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  sourceFileId: 'sourceFileId',
+  processingRunId: 'processingRunId',
+  createdAt: 'createdAt',
+  version: 'version',
+  ordinal: 'ordinal',
+  content: 'content',
+  contentHash: 'contentHash',
+  locatorType: 'locatorType',
+  locator: 'locator'
+} as const
+
+export type FileChunkScalarFieldEnum = (typeof FileChunkScalarFieldEnum)[keyof typeof FileChunkScalarFieldEnum]
+
+
+export const FileEntityMentionScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  sourceFileId: 'sourceFileId',
+  processingRunId: 'processingRunId',
+  chunkId: 'chunkId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  entityType: 'entityType',
+  sourceText: 'sourceText',
+  normalizedText: 'normalizedText',
+  role: 'role',
+  exactQuote: 'exactQuote',
+  identityEvidence: 'identityEvidence',
+  startOffset: 'startOffset',
+  endOffset: 'endOffset',
+  confidence: 'confidence',
+  resolutionStatus: 'resolutionStatus',
+  resolutionLevel: 'resolutionLevel',
+  resolutionReason: 'resolutionReason',
+  resolvedEntityId: 'resolvedEntityId',
+  resolvedPersonId: 'resolvedPersonId',
+  resolutionUpdatedAt: 'resolutionUpdatedAt'
+} as const
+
+export type FileEntityMentionScalarFieldEnum = (typeof FileEntityMentionScalarFieldEnum)[keyof typeof FileEntityMentionScalarFieldEnum]
+
+
+export const PersonExternalIdentifierScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  personId: 'personId',
+  externalId: 'externalId',
+  provider: 'provider',
+  createdAt: 'createdAt'
+} as const
+
+export type PersonExternalIdentifierScalarFieldEnum = (typeof PersonExternalIdentifierScalarFieldEnum)[keyof typeof PersonExternalIdentifierScalarFieldEnum]
+
+
+export const FileEntityResolutionScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  mentionId: 'mentionId',
+  createdAt: 'createdAt',
+  fromPersonId: 'fromPersonId',
+  toPersonId: 'toPersonId',
+  action: 'action',
+  actorId: 'actorId',
+  reason: 'reason'
+} as const
+
+export type FileEntityResolutionScalarFieldEnum = (typeof FileEntityResolutionScalarFieldEnum)[keyof typeof FileEntityResolutionScalarFieldEnum]
+
+
+export const EvidenceClaimScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  sourceFileId: 'sourceFileId',
+  processingRunId: 'processingRunId',
+  chunkId: 'chunkId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  assertion: 'assertion',
+  structuredValue: 'structuredValue',
+  classification: 'classification',
+  claimType: 'claimType',
+  exactQuote: 'exactQuote',
+  startOffset: 'startOffset',
+  endOffset: 'endOffset',
+  occurredAt: 'occurredAt',
+  validFrom: 'validFrom',
+  validTo: 'validTo',
+  confidence: 'confidence',
+  status: 'status',
+  reviewedAt: 'reviewedAt',
+  reviewedBy: 'reviewedBy',
+  supersedesClaimId: 'supersedesClaimId',
+  correctionNoteId: 'correctionNoteId',
+  graphResultType: 'graphResultType',
+  graphResultId: 'graphResultId',
+  graphEventId: 'graphEventId'
+} as const
+
+export type EvidenceClaimScalarFieldEnum = (typeof EvidenceClaimScalarFieldEnum)[keyof typeof EvidenceClaimScalarFieldEnum]
+
+
+export const EvidenceClaimSubjectScalarFieldEnum = {
+  claimId: 'claimId',
+  mentionId: 'mentionId',
+  subjectRole: 'subjectRole',
+  relevanceWeight: 'relevanceWeight',
+  createdAt: 'createdAt'
+} as const
+
+export type EvidenceClaimSubjectScalarFieldEnum = (typeof EvidenceClaimSubjectScalarFieldEnum)[keyof typeof EvidenceClaimSubjectScalarFieldEnum]
 
 
 export const AiProviderCredentialScalarFieldEnum = {
@@ -7730,7 +8489,9 @@ export const AiAnalysisRunScalarFieldEnum = {
   error: 'error',
   inputTokens: 'inputTokens',
   outputTokens: 'outputTokens',
-  estimatedCost: 'estimatedCost'
+  estimatedCost: 'estimatedCost',
+  processingRunId: 'processingRunId',
+  purpose: 'purpose'
 } as const
 
 export type AiAnalysisRunScalarFieldEnum = (typeof AiAnalysisRunScalarFieldEnum)[keyof typeof AiAnalysisRunScalarFieldEnum]
@@ -7971,6 +8732,10 @@ export const TheorySnapshotSourceScalarFieldEnum = {
   sourceId: 'sourceId',
   contribution: 'contribution',
   weight: 'weight',
+  evidenceClaimId: 'evidenceClaimId',
+  evidenceClassification: 'evidenceClassification',
+  evidenceStatus: 'evidenceStatus',
+  citation: 'citation',
   createdAt: 'createdAt'
 } as const
 
@@ -8118,6 +8883,7 @@ export const AssistantMessageScalarFieldEnum = {
   from: 'from',
   role: 'role',
   content: 'content',
+  metadata: 'metadata',
   createdAt: 'createdAt'
 } as const
 
@@ -8774,6 +9540,14 @@ export type GlobalOmitConfig = {
   assembly?: Prisma.AssemblyOmit
   itemInteraction?: Prisma.ItemInteractionOmit
   importedFile?: Prisma.ImportedFileOmit
+  fileUploadIntent?: Prisma.FileUploadIntentOmit
+  fileProcessingRun?: Prisma.FileProcessingRunOmit
+  fileChunk?: Prisma.FileChunkOmit
+  fileEntityMention?: Prisma.FileEntityMentionOmit
+  personExternalIdentifier?: Prisma.PersonExternalIdentifierOmit
+  fileEntityResolution?: Prisma.FileEntityResolutionOmit
+  evidenceClaim?: Prisma.EvidenceClaimOmit
+  evidenceClaimSubject?: Prisma.EvidenceClaimSubjectOmit
   aiProviderCredential?: Prisma.AiProviderCredentialOmit
   aiAnalysisRun?: Prisma.AiAnalysisRunOmit
   noteAnalysisRun?: Prisma.NoteAnalysisRunOmit

@@ -41,6 +41,10 @@ export type TheorySnapshotSourceMinAggregateOutputType = {
   sourceId: string | null
   contribution: string | null
   weight: number | null
+  evidenceClaimId: string | null
+  evidenceClassification: string | null
+  evidenceStatus: string | null
+  citation: string | null
   createdAt: Date | null
 }
 
@@ -51,6 +55,10 @@ export type TheorySnapshotSourceMaxAggregateOutputType = {
   sourceId: string | null
   contribution: string | null
   weight: number | null
+  evidenceClaimId: string | null
+  evidenceClassification: string | null
+  evidenceStatus: string | null
+  citation: string | null
   createdAt: Date | null
 }
 
@@ -61,6 +69,10 @@ export type TheorySnapshotSourceCountAggregateOutputType = {
   sourceId: number
   contribution: number
   weight: number
+  evidenceClaimId: number
+  evidenceClassification: number
+  evidenceStatus: number
+  citation: number
   createdAt: number
   _all: number
 }
@@ -81,6 +93,10 @@ export type TheorySnapshotSourceMinAggregateInputType = {
   sourceId?: true
   contribution?: true
   weight?: true
+  evidenceClaimId?: true
+  evidenceClassification?: true
+  evidenceStatus?: true
+  citation?: true
   createdAt?: true
 }
 
@@ -91,6 +107,10 @@ export type TheorySnapshotSourceMaxAggregateInputType = {
   sourceId?: true
   contribution?: true
   weight?: true
+  evidenceClaimId?: true
+  evidenceClassification?: true
+  evidenceStatus?: true
+  citation?: true
   createdAt?: true
 }
 
@@ -101,6 +121,10 @@ export type TheorySnapshotSourceCountAggregateInputType = {
   sourceId?: true
   contribution?: true
   weight?: true
+  evidenceClaimId?: true
+  evidenceClassification?: true
+  evidenceStatus?: true
+  citation?: true
   createdAt?: true
   _all?: true
 }
@@ -198,6 +222,10 @@ export type TheorySnapshotSourceGroupByOutputType = {
   sourceId: string
   contribution: string | null
   weight: number | null
+  evidenceClaimId: string | null
+  evidenceClassification: string | null
+  evidenceStatus: string | null
+  citation: string | null
   createdAt: Date
   _count: TheorySnapshotSourceCountAggregateOutputType | null
   _avg: TheorySnapshotSourceAvgAggregateOutputType | null
@@ -231,8 +259,13 @@ export type TheorySnapshotSourceWhereInput = {
   sourceId?: Prisma.StringFilter<"TheorySnapshotSource"> | string
   contribution?: Prisma.StringNullableFilter<"TheorySnapshotSource"> | string | null
   weight?: Prisma.FloatNullableFilter<"TheorySnapshotSource"> | number | null
+  evidenceClaimId?: Prisma.StringNullableFilter<"TheorySnapshotSource"> | string | null
+  evidenceClassification?: Prisma.StringNullableFilter<"TheorySnapshotSource"> | string | null
+  evidenceStatus?: Prisma.StringNullableFilter<"TheorySnapshotSource"> | string | null
+  citation?: Prisma.StringNullableFilter<"TheorySnapshotSource"> | string | null
   createdAt?: Prisma.DateTimeFilter<"TheorySnapshotSource"> | Date | string
   snapshot?: Prisma.XOR<Prisma.TheorySnapshotScalarRelationFilter, Prisma.TheorySnapshotWhereInput>
+  evidenceClaim?: Prisma.XOR<Prisma.EvidenceClaimNullableScalarRelationFilter, Prisma.EvidenceClaimWhereInput> | null
 }
 
 export type TheorySnapshotSourceOrderByWithRelationInput = {
@@ -242,8 +275,13 @@ export type TheorySnapshotSourceOrderByWithRelationInput = {
   sourceId?: Prisma.SortOrder
   contribution?: Prisma.SortOrderInput | Prisma.SortOrder
   weight?: Prisma.SortOrderInput | Prisma.SortOrder
+  evidenceClaimId?: Prisma.SortOrderInput | Prisma.SortOrder
+  evidenceClassification?: Prisma.SortOrderInput | Prisma.SortOrder
+  evidenceStatus?: Prisma.SortOrderInput | Prisma.SortOrder
+  citation?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   snapshot?: Prisma.TheorySnapshotOrderByWithRelationInput
+  evidenceClaim?: Prisma.EvidenceClaimOrderByWithRelationInput
 }
 
 export type TheorySnapshotSourceWhereUniqueInput = Prisma.AtLeast<{
@@ -256,8 +294,13 @@ export type TheorySnapshotSourceWhereUniqueInput = Prisma.AtLeast<{
   sourceId?: Prisma.StringFilter<"TheorySnapshotSource"> | string
   contribution?: Prisma.StringNullableFilter<"TheorySnapshotSource"> | string | null
   weight?: Prisma.FloatNullableFilter<"TheorySnapshotSource"> | number | null
+  evidenceClaimId?: Prisma.StringNullableFilter<"TheorySnapshotSource"> | string | null
+  evidenceClassification?: Prisma.StringNullableFilter<"TheorySnapshotSource"> | string | null
+  evidenceStatus?: Prisma.StringNullableFilter<"TheorySnapshotSource"> | string | null
+  citation?: Prisma.StringNullableFilter<"TheorySnapshotSource"> | string | null
   createdAt?: Prisma.DateTimeFilter<"TheorySnapshotSource"> | Date | string
   snapshot?: Prisma.XOR<Prisma.TheorySnapshotScalarRelationFilter, Prisma.TheorySnapshotWhereInput>
+  evidenceClaim?: Prisma.XOR<Prisma.EvidenceClaimNullableScalarRelationFilter, Prisma.EvidenceClaimWhereInput> | null
 }, "id">
 
 export type TheorySnapshotSourceOrderByWithAggregationInput = {
@@ -267,6 +310,10 @@ export type TheorySnapshotSourceOrderByWithAggregationInput = {
   sourceId?: Prisma.SortOrder
   contribution?: Prisma.SortOrderInput | Prisma.SortOrder
   weight?: Prisma.SortOrderInput | Prisma.SortOrder
+  evidenceClaimId?: Prisma.SortOrderInput | Prisma.SortOrder
+  evidenceClassification?: Prisma.SortOrderInput | Prisma.SortOrder
+  evidenceStatus?: Prisma.SortOrderInput | Prisma.SortOrder
+  citation?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.TheorySnapshotSourceCountOrderByAggregateInput
   _avg?: Prisma.TheorySnapshotSourceAvgOrderByAggregateInput
@@ -285,6 +332,10 @@ export type TheorySnapshotSourceScalarWhereWithAggregatesInput = {
   sourceId?: Prisma.StringWithAggregatesFilter<"TheorySnapshotSource"> | string
   contribution?: Prisma.StringNullableWithAggregatesFilter<"TheorySnapshotSource"> | string | null
   weight?: Prisma.FloatNullableWithAggregatesFilter<"TheorySnapshotSource"> | number | null
+  evidenceClaimId?: Prisma.StringNullableWithAggregatesFilter<"TheorySnapshotSource"> | string | null
+  evidenceClassification?: Prisma.StringNullableWithAggregatesFilter<"TheorySnapshotSource"> | string | null
+  evidenceStatus?: Prisma.StringNullableWithAggregatesFilter<"TheorySnapshotSource"> | string | null
+  citation?: Prisma.StringNullableWithAggregatesFilter<"TheorySnapshotSource"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"TheorySnapshotSource"> | Date | string
 }
 
@@ -294,8 +345,12 @@ export type TheorySnapshotSourceCreateInput = {
   sourceId: string
   contribution?: string | null
   weight?: number | null
+  evidenceClassification?: string | null
+  evidenceStatus?: string | null
+  citation?: string | null
   createdAt?: Date | string
   snapshot: Prisma.TheorySnapshotCreateNestedOneWithoutSourcesInput
+  evidenceClaim?: Prisma.EvidenceClaimCreateNestedOneWithoutTheorySnapshotSourcesInput
 }
 
 export type TheorySnapshotSourceUncheckedCreateInput = {
@@ -305,6 +360,10 @@ export type TheorySnapshotSourceUncheckedCreateInput = {
   sourceId: string
   contribution?: string | null
   weight?: number | null
+  evidenceClaimId?: string | null
+  evidenceClassification?: string | null
+  evidenceStatus?: string | null
+  citation?: string | null
   createdAt?: Date | string
 }
 
@@ -314,8 +373,12 @@ export type TheorySnapshotSourceUpdateInput = {
   sourceId?: Prisma.StringFieldUpdateOperationsInput | string
   contribution?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   weight?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  evidenceClassification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  evidenceStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  citation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   snapshot?: Prisma.TheorySnapshotUpdateOneRequiredWithoutSourcesNestedInput
+  evidenceClaim?: Prisma.EvidenceClaimUpdateOneWithoutTheorySnapshotSourcesNestedInput
 }
 
 export type TheorySnapshotSourceUncheckedUpdateInput = {
@@ -325,6 +388,10 @@ export type TheorySnapshotSourceUncheckedUpdateInput = {
   sourceId?: Prisma.StringFieldUpdateOperationsInput | string
   contribution?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   weight?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  evidenceClaimId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  evidenceClassification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  evidenceStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  citation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -335,6 +402,10 @@ export type TheorySnapshotSourceCreateManyInput = {
   sourceId: string
   contribution?: string | null
   weight?: number | null
+  evidenceClaimId?: string | null
+  evidenceClassification?: string | null
+  evidenceStatus?: string | null
+  citation?: string | null
   createdAt?: Date | string
 }
 
@@ -344,6 +415,9 @@ export type TheorySnapshotSourceUpdateManyMutationInput = {
   sourceId?: Prisma.StringFieldUpdateOperationsInput | string
   contribution?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   weight?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  evidenceClassification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  evidenceStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  citation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -354,6 +428,10 @@ export type TheorySnapshotSourceUncheckedUpdateManyInput = {
   sourceId?: Prisma.StringFieldUpdateOperationsInput | string
   contribution?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   weight?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  evidenceClaimId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  evidenceClassification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  evidenceStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  citation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -374,6 +452,10 @@ export type TheorySnapshotSourceCountOrderByAggregateInput = {
   sourceId?: Prisma.SortOrder
   contribution?: Prisma.SortOrder
   weight?: Prisma.SortOrder
+  evidenceClaimId?: Prisma.SortOrder
+  evidenceClassification?: Prisma.SortOrder
+  evidenceStatus?: Prisma.SortOrder
+  citation?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -388,6 +470,10 @@ export type TheorySnapshotSourceMaxOrderByAggregateInput = {
   sourceId?: Prisma.SortOrder
   contribution?: Prisma.SortOrder
   weight?: Prisma.SortOrder
+  evidenceClaimId?: Prisma.SortOrder
+  evidenceClassification?: Prisma.SortOrder
+  evidenceStatus?: Prisma.SortOrder
+  citation?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -398,11 +484,57 @@ export type TheorySnapshotSourceMinOrderByAggregateInput = {
   sourceId?: Prisma.SortOrder
   contribution?: Prisma.SortOrder
   weight?: Prisma.SortOrder
+  evidenceClaimId?: Prisma.SortOrder
+  evidenceClassification?: Prisma.SortOrder
+  evidenceStatus?: Prisma.SortOrder
+  citation?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
 export type TheorySnapshotSourceSumOrderByAggregateInput = {
   weight?: Prisma.SortOrder
+}
+
+export type TheorySnapshotSourceCreateNestedManyWithoutEvidenceClaimInput = {
+  create?: Prisma.XOR<Prisma.TheorySnapshotSourceCreateWithoutEvidenceClaimInput, Prisma.TheorySnapshotSourceUncheckedCreateWithoutEvidenceClaimInput> | Prisma.TheorySnapshotSourceCreateWithoutEvidenceClaimInput[] | Prisma.TheorySnapshotSourceUncheckedCreateWithoutEvidenceClaimInput[]
+  connectOrCreate?: Prisma.TheorySnapshotSourceCreateOrConnectWithoutEvidenceClaimInput | Prisma.TheorySnapshotSourceCreateOrConnectWithoutEvidenceClaimInput[]
+  createMany?: Prisma.TheorySnapshotSourceCreateManyEvidenceClaimInputEnvelope
+  connect?: Prisma.TheorySnapshotSourceWhereUniqueInput | Prisma.TheorySnapshotSourceWhereUniqueInput[]
+}
+
+export type TheorySnapshotSourceUncheckedCreateNestedManyWithoutEvidenceClaimInput = {
+  create?: Prisma.XOR<Prisma.TheorySnapshotSourceCreateWithoutEvidenceClaimInput, Prisma.TheorySnapshotSourceUncheckedCreateWithoutEvidenceClaimInput> | Prisma.TheorySnapshotSourceCreateWithoutEvidenceClaimInput[] | Prisma.TheorySnapshotSourceUncheckedCreateWithoutEvidenceClaimInput[]
+  connectOrCreate?: Prisma.TheorySnapshotSourceCreateOrConnectWithoutEvidenceClaimInput | Prisma.TheorySnapshotSourceCreateOrConnectWithoutEvidenceClaimInput[]
+  createMany?: Prisma.TheorySnapshotSourceCreateManyEvidenceClaimInputEnvelope
+  connect?: Prisma.TheorySnapshotSourceWhereUniqueInput | Prisma.TheorySnapshotSourceWhereUniqueInput[]
+}
+
+export type TheorySnapshotSourceUpdateManyWithoutEvidenceClaimNestedInput = {
+  create?: Prisma.XOR<Prisma.TheorySnapshotSourceCreateWithoutEvidenceClaimInput, Prisma.TheorySnapshotSourceUncheckedCreateWithoutEvidenceClaimInput> | Prisma.TheorySnapshotSourceCreateWithoutEvidenceClaimInput[] | Prisma.TheorySnapshotSourceUncheckedCreateWithoutEvidenceClaimInput[]
+  connectOrCreate?: Prisma.TheorySnapshotSourceCreateOrConnectWithoutEvidenceClaimInput | Prisma.TheorySnapshotSourceCreateOrConnectWithoutEvidenceClaimInput[]
+  upsert?: Prisma.TheorySnapshotSourceUpsertWithWhereUniqueWithoutEvidenceClaimInput | Prisma.TheorySnapshotSourceUpsertWithWhereUniqueWithoutEvidenceClaimInput[]
+  createMany?: Prisma.TheorySnapshotSourceCreateManyEvidenceClaimInputEnvelope
+  set?: Prisma.TheorySnapshotSourceWhereUniqueInput | Prisma.TheorySnapshotSourceWhereUniqueInput[]
+  disconnect?: Prisma.TheorySnapshotSourceWhereUniqueInput | Prisma.TheorySnapshotSourceWhereUniqueInput[]
+  delete?: Prisma.TheorySnapshotSourceWhereUniqueInput | Prisma.TheorySnapshotSourceWhereUniqueInput[]
+  connect?: Prisma.TheorySnapshotSourceWhereUniqueInput | Prisma.TheorySnapshotSourceWhereUniqueInput[]
+  update?: Prisma.TheorySnapshotSourceUpdateWithWhereUniqueWithoutEvidenceClaimInput | Prisma.TheorySnapshotSourceUpdateWithWhereUniqueWithoutEvidenceClaimInput[]
+  updateMany?: Prisma.TheorySnapshotSourceUpdateManyWithWhereWithoutEvidenceClaimInput | Prisma.TheorySnapshotSourceUpdateManyWithWhereWithoutEvidenceClaimInput[]
+  deleteMany?: Prisma.TheorySnapshotSourceScalarWhereInput | Prisma.TheorySnapshotSourceScalarWhereInput[]
+}
+
+export type TheorySnapshotSourceUncheckedUpdateManyWithoutEvidenceClaimNestedInput = {
+  create?: Prisma.XOR<Prisma.TheorySnapshotSourceCreateWithoutEvidenceClaimInput, Prisma.TheorySnapshotSourceUncheckedCreateWithoutEvidenceClaimInput> | Prisma.TheorySnapshotSourceCreateWithoutEvidenceClaimInput[] | Prisma.TheorySnapshotSourceUncheckedCreateWithoutEvidenceClaimInput[]
+  connectOrCreate?: Prisma.TheorySnapshotSourceCreateOrConnectWithoutEvidenceClaimInput | Prisma.TheorySnapshotSourceCreateOrConnectWithoutEvidenceClaimInput[]
+  upsert?: Prisma.TheorySnapshotSourceUpsertWithWhereUniqueWithoutEvidenceClaimInput | Prisma.TheorySnapshotSourceUpsertWithWhereUniqueWithoutEvidenceClaimInput[]
+  createMany?: Prisma.TheorySnapshotSourceCreateManyEvidenceClaimInputEnvelope
+  set?: Prisma.TheorySnapshotSourceWhereUniqueInput | Prisma.TheorySnapshotSourceWhereUniqueInput[]
+  disconnect?: Prisma.TheorySnapshotSourceWhereUniqueInput | Prisma.TheorySnapshotSourceWhereUniqueInput[]
+  delete?: Prisma.TheorySnapshotSourceWhereUniqueInput | Prisma.TheorySnapshotSourceWhereUniqueInput[]
+  connect?: Prisma.TheorySnapshotSourceWhereUniqueInput | Prisma.TheorySnapshotSourceWhereUniqueInput[]
+  update?: Prisma.TheorySnapshotSourceUpdateWithWhereUniqueWithoutEvidenceClaimInput | Prisma.TheorySnapshotSourceUpdateWithWhereUniqueWithoutEvidenceClaimInput[]
+  updateMany?: Prisma.TheorySnapshotSourceUpdateManyWithWhereWithoutEvidenceClaimInput | Prisma.TheorySnapshotSourceUpdateManyWithWhereWithoutEvidenceClaimInput[]
+  deleteMany?: Prisma.TheorySnapshotSourceScalarWhereInput | Prisma.TheorySnapshotSourceScalarWhereInput[]
 }
 
 export type TheorySnapshotSourceCreateNestedManyWithoutSnapshotInput = {
@@ -447,13 +579,85 @@ export type TheorySnapshotSourceUncheckedUpdateManyWithoutSnapshotNestedInput = 
   deleteMany?: Prisma.TheorySnapshotSourceScalarWhereInput | Prisma.TheorySnapshotSourceScalarWhereInput[]
 }
 
+export type TheorySnapshotSourceCreateWithoutEvidenceClaimInput = {
+  id?: string
+  sourceType: string
+  sourceId: string
+  contribution?: string | null
+  weight?: number | null
+  evidenceClassification?: string | null
+  evidenceStatus?: string | null
+  citation?: string | null
+  createdAt?: Date | string
+  snapshot: Prisma.TheorySnapshotCreateNestedOneWithoutSourcesInput
+}
+
+export type TheorySnapshotSourceUncheckedCreateWithoutEvidenceClaimInput = {
+  id?: string
+  snapshotId: string
+  sourceType: string
+  sourceId: string
+  contribution?: string | null
+  weight?: number | null
+  evidenceClassification?: string | null
+  evidenceStatus?: string | null
+  citation?: string | null
+  createdAt?: Date | string
+}
+
+export type TheorySnapshotSourceCreateOrConnectWithoutEvidenceClaimInput = {
+  where: Prisma.TheorySnapshotSourceWhereUniqueInput
+  create: Prisma.XOR<Prisma.TheorySnapshotSourceCreateWithoutEvidenceClaimInput, Prisma.TheorySnapshotSourceUncheckedCreateWithoutEvidenceClaimInput>
+}
+
+export type TheorySnapshotSourceCreateManyEvidenceClaimInputEnvelope = {
+  data: Prisma.TheorySnapshotSourceCreateManyEvidenceClaimInput | Prisma.TheorySnapshotSourceCreateManyEvidenceClaimInput[]
+}
+
+export type TheorySnapshotSourceUpsertWithWhereUniqueWithoutEvidenceClaimInput = {
+  where: Prisma.TheorySnapshotSourceWhereUniqueInput
+  update: Prisma.XOR<Prisma.TheorySnapshotSourceUpdateWithoutEvidenceClaimInput, Prisma.TheorySnapshotSourceUncheckedUpdateWithoutEvidenceClaimInput>
+  create: Prisma.XOR<Prisma.TheorySnapshotSourceCreateWithoutEvidenceClaimInput, Prisma.TheorySnapshotSourceUncheckedCreateWithoutEvidenceClaimInput>
+}
+
+export type TheorySnapshotSourceUpdateWithWhereUniqueWithoutEvidenceClaimInput = {
+  where: Prisma.TheorySnapshotSourceWhereUniqueInput
+  data: Prisma.XOR<Prisma.TheorySnapshotSourceUpdateWithoutEvidenceClaimInput, Prisma.TheorySnapshotSourceUncheckedUpdateWithoutEvidenceClaimInput>
+}
+
+export type TheorySnapshotSourceUpdateManyWithWhereWithoutEvidenceClaimInput = {
+  where: Prisma.TheorySnapshotSourceScalarWhereInput
+  data: Prisma.XOR<Prisma.TheorySnapshotSourceUpdateManyMutationInput, Prisma.TheorySnapshotSourceUncheckedUpdateManyWithoutEvidenceClaimInput>
+}
+
+export type TheorySnapshotSourceScalarWhereInput = {
+  AND?: Prisma.TheorySnapshotSourceScalarWhereInput | Prisma.TheorySnapshotSourceScalarWhereInput[]
+  OR?: Prisma.TheorySnapshotSourceScalarWhereInput[]
+  NOT?: Prisma.TheorySnapshotSourceScalarWhereInput | Prisma.TheorySnapshotSourceScalarWhereInput[]
+  id?: Prisma.StringFilter<"TheorySnapshotSource"> | string
+  snapshotId?: Prisma.StringFilter<"TheorySnapshotSource"> | string
+  sourceType?: Prisma.StringFilter<"TheorySnapshotSource"> | string
+  sourceId?: Prisma.StringFilter<"TheorySnapshotSource"> | string
+  contribution?: Prisma.StringNullableFilter<"TheorySnapshotSource"> | string | null
+  weight?: Prisma.FloatNullableFilter<"TheorySnapshotSource"> | number | null
+  evidenceClaimId?: Prisma.StringNullableFilter<"TheorySnapshotSource"> | string | null
+  evidenceClassification?: Prisma.StringNullableFilter<"TheorySnapshotSource"> | string | null
+  evidenceStatus?: Prisma.StringNullableFilter<"TheorySnapshotSource"> | string | null
+  citation?: Prisma.StringNullableFilter<"TheorySnapshotSource"> | string | null
+  createdAt?: Prisma.DateTimeFilter<"TheorySnapshotSource"> | Date | string
+}
+
 export type TheorySnapshotSourceCreateWithoutSnapshotInput = {
   id?: string
   sourceType: string
   sourceId: string
   contribution?: string | null
   weight?: number | null
+  evidenceClassification?: string | null
+  evidenceStatus?: string | null
+  citation?: string | null
   createdAt?: Date | string
+  evidenceClaim?: Prisma.EvidenceClaimCreateNestedOneWithoutTheorySnapshotSourcesInput
 }
 
 export type TheorySnapshotSourceUncheckedCreateWithoutSnapshotInput = {
@@ -462,6 +666,10 @@ export type TheorySnapshotSourceUncheckedCreateWithoutSnapshotInput = {
   sourceId: string
   contribution?: string | null
   weight?: number | null
+  evidenceClaimId?: string | null
+  evidenceClassification?: string | null
+  evidenceStatus?: string | null
+  citation?: string | null
   createdAt?: Date | string
 }
 
@@ -490,17 +698,56 @@ export type TheorySnapshotSourceUpdateManyWithWhereWithoutSnapshotInput = {
   data: Prisma.XOR<Prisma.TheorySnapshotSourceUpdateManyMutationInput, Prisma.TheorySnapshotSourceUncheckedUpdateManyWithoutSnapshotInput>
 }
 
-export type TheorySnapshotSourceScalarWhereInput = {
-  AND?: Prisma.TheorySnapshotSourceScalarWhereInput | Prisma.TheorySnapshotSourceScalarWhereInput[]
-  OR?: Prisma.TheorySnapshotSourceScalarWhereInput[]
-  NOT?: Prisma.TheorySnapshotSourceScalarWhereInput | Prisma.TheorySnapshotSourceScalarWhereInput[]
-  id?: Prisma.StringFilter<"TheorySnapshotSource"> | string
-  snapshotId?: Prisma.StringFilter<"TheorySnapshotSource"> | string
-  sourceType?: Prisma.StringFilter<"TheorySnapshotSource"> | string
-  sourceId?: Prisma.StringFilter<"TheorySnapshotSource"> | string
-  contribution?: Prisma.StringNullableFilter<"TheorySnapshotSource"> | string | null
-  weight?: Prisma.FloatNullableFilter<"TheorySnapshotSource"> | number | null
-  createdAt?: Prisma.DateTimeFilter<"TheorySnapshotSource"> | Date | string
+export type TheorySnapshotSourceCreateManyEvidenceClaimInput = {
+  id?: string
+  snapshotId: string
+  sourceType: string
+  sourceId: string
+  contribution?: string | null
+  weight?: number | null
+  evidenceClassification?: string | null
+  evidenceStatus?: string | null
+  citation?: string | null
+  createdAt?: Date | string
+}
+
+export type TheorySnapshotSourceUpdateWithoutEvidenceClaimInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  sourceType?: Prisma.StringFieldUpdateOperationsInput | string
+  sourceId?: Prisma.StringFieldUpdateOperationsInput | string
+  contribution?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  weight?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  evidenceClassification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  evidenceStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  citation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  snapshot?: Prisma.TheorySnapshotUpdateOneRequiredWithoutSourcesNestedInput
+}
+
+export type TheorySnapshotSourceUncheckedUpdateWithoutEvidenceClaimInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  snapshotId?: Prisma.StringFieldUpdateOperationsInput | string
+  sourceType?: Prisma.StringFieldUpdateOperationsInput | string
+  sourceId?: Prisma.StringFieldUpdateOperationsInput | string
+  contribution?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  weight?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  evidenceClassification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  evidenceStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  citation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type TheorySnapshotSourceUncheckedUpdateManyWithoutEvidenceClaimInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  snapshotId?: Prisma.StringFieldUpdateOperationsInput | string
+  sourceType?: Prisma.StringFieldUpdateOperationsInput | string
+  sourceId?: Prisma.StringFieldUpdateOperationsInput | string
+  contribution?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  weight?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  evidenceClassification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  evidenceStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  citation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type TheorySnapshotSourceCreateManySnapshotInput = {
@@ -509,6 +756,10 @@ export type TheorySnapshotSourceCreateManySnapshotInput = {
   sourceId: string
   contribution?: string | null
   weight?: number | null
+  evidenceClaimId?: string | null
+  evidenceClassification?: string | null
+  evidenceStatus?: string | null
+  citation?: string | null
   createdAt?: Date | string
 }
 
@@ -518,7 +769,11 @@ export type TheorySnapshotSourceUpdateWithoutSnapshotInput = {
   sourceId?: Prisma.StringFieldUpdateOperationsInput | string
   contribution?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   weight?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  evidenceClassification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  evidenceStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  citation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  evidenceClaim?: Prisma.EvidenceClaimUpdateOneWithoutTheorySnapshotSourcesNestedInput
 }
 
 export type TheorySnapshotSourceUncheckedUpdateWithoutSnapshotInput = {
@@ -527,6 +782,10 @@ export type TheorySnapshotSourceUncheckedUpdateWithoutSnapshotInput = {
   sourceId?: Prisma.StringFieldUpdateOperationsInput | string
   contribution?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   weight?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  evidenceClaimId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  evidenceClassification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  evidenceStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  citation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -536,6 +795,10 @@ export type TheorySnapshotSourceUncheckedUpdateManyWithoutSnapshotInput = {
   sourceId?: Prisma.StringFieldUpdateOperationsInput | string
   contribution?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   weight?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  evidenceClaimId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  evidenceClassification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  evidenceStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  citation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -548,8 +811,13 @@ export type TheorySnapshotSourceSelect<ExtArgs extends runtime.Types.Extensions.
   sourceId?: boolean
   contribution?: boolean
   weight?: boolean
+  evidenceClaimId?: boolean
+  evidenceClassification?: boolean
+  evidenceStatus?: boolean
+  citation?: boolean
   createdAt?: boolean
   snapshot?: boolean | Prisma.TheorySnapshotDefaultArgs<ExtArgs>
+  evidenceClaim?: boolean | Prisma.TheorySnapshotSource$evidenceClaimArgs<ExtArgs>
 }, ExtArgs["result"]["theorySnapshotSource"]>
 
 export type TheorySnapshotSourceSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -559,8 +827,13 @@ export type TheorySnapshotSourceSelectCreateManyAndReturn<ExtArgs extends runtim
   sourceId?: boolean
   contribution?: boolean
   weight?: boolean
+  evidenceClaimId?: boolean
+  evidenceClassification?: boolean
+  evidenceStatus?: boolean
+  citation?: boolean
   createdAt?: boolean
   snapshot?: boolean | Prisma.TheorySnapshotDefaultArgs<ExtArgs>
+  evidenceClaim?: boolean | Prisma.TheorySnapshotSource$evidenceClaimArgs<ExtArgs>
 }, ExtArgs["result"]["theorySnapshotSource"]>
 
 export type TheorySnapshotSourceSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -570,8 +843,13 @@ export type TheorySnapshotSourceSelectUpdateManyAndReturn<ExtArgs extends runtim
   sourceId?: boolean
   contribution?: boolean
   weight?: boolean
+  evidenceClaimId?: boolean
+  evidenceClassification?: boolean
+  evidenceStatus?: boolean
+  citation?: boolean
   createdAt?: boolean
   snapshot?: boolean | Prisma.TheorySnapshotDefaultArgs<ExtArgs>
+  evidenceClaim?: boolean | Prisma.TheorySnapshotSource$evidenceClaimArgs<ExtArgs>
 }, ExtArgs["result"]["theorySnapshotSource"]>
 
 export type TheorySnapshotSourceSelectScalar = {
@@ -581,24 +859,32 @@ export type TheorySnapshotSourceSelectScalar = {
   sourceId?: boolean
   contribution?: boolean
   weight?: boolean
+  evidenceClaimId?: boolean
+  evidenceClassification?: boolean
+  evidenceStatus?: boolean
+  citation?: boolean
   createdAt?: boolean
 }
 
-export type TheorySnapshotSourceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "snapshotId" | "sourceType" | "sourceId" | "contribution" | "weight" | "createdAt", ExtArgs["result"]["theorySnapshotSource"]>
+export type TheorySnapshotSourceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "snapshotId" | "sourceType" | "sourceId" | "contribution" | "weight" | "evidenceClaimId" | "evidenceClassification" | "evidenceStatus" | "citation" | "createdAt", ExtArgs["result"]["theorySnapshotSource"]>
 export type TheorySnapshotSourceInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   snapshot?: boolean | Prisma.TheorySnapshotDefaultArgs<ExtArgs>
+  evidenceClaim?: boolean | Prisma.TheorySnapshotSource$evidenceClaimArgs<ExtArgs>
 }
 export type TheorySnapshotSourceIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   snapshot?: boolean | Prisma.TheorySnapshotDefaultArgs<ExtArgs>
+  evidenceClaim?: boolean | Prisma.TheorySnapshotSource$evidenceClaimArgs<ExtArgs>
 }
 export type TheorySnapshotSourceIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   snapshot?: boolean | Prisma.TheorySnapshotDefaultArgs<ExtArgs>
+  evidenceClaim?: boolean | Prisma.TheorySnapshotSource$evidenceClaimArgs<ExtArgs>
 }
 
 export type $TheorySnapshotSourcePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "TheorySnapshotSource"
   objects: {
     snapshot: Prisma.$TheorySnapshotPayload<ExtArgs>
+    evidenceClaim: Prisma.$EvidenceClaimPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -607,6 +893,10 @@ export type $TheorySnapshotSourcePayload<ExtArgs extends runtime.Types.Extension
     sourceId: string
     contribution: string | null
     weight: number | null
+    evidenceClaimId: string | null
+    evidenceClassification: string | null
+    evidenceStatus: string | null
+    citation: string | null
     createdAt: Date
   }, ExtArgs["result"]["theorySnapshotSource"]>
   composites: {}
@@ -1003,6 +1293,7 @@ readonly fields: TheorySnapshotSourceFieldRefs;
 export interface Prisma__TheorySnapshotSourceClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   snapshot<T extends Prisma.TheorySnapshotDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TheorySnapshotDefaultArgs<ExtArgs>>): Prisma.Prisma__TheorySnapshotClient<runtime.Types.Result.GetResult<Prisma.$TheorySnapshotPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  evidenceClaim<T extends Prisma.TheorySnapshotSource$evidenceClaimArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TheorySnapshotSource$evidenceClaimArgs<ExtArgs>>): Prisma.Prisma__EvidenceClaimClient<runtime.Types.Result.GetResult<Prisma.$EvidenceClaimPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1038,6 +1329,10 @@ export interface TheorySnapshotSourceFieldRefs {
   readonly sourceId: Prisma.FieldRef<"TheorySnapshotSource", 'String'>
   readonly contribution: Prisma.FieldRef<"TheorySnapshotSource", 'String'>
   readonly weight: Prisma.FieldRef<"TheorySnapshotSource", 'Float'>
+  readonly evidenceClaimId: Prisma.FieldRef<"TheorySnapshotSource", 'String'>
+  readonly evidenceClassification: Prisma.FieldRef<"TheorySnapshotSource", 'String'>
+  readonly evidenceStatus: Prisma.FieldRef<"TheorySnapshotSource", 'String'>
+  readonly citation: Prisma.FieldRef<"TheorySnapshotSource", 'String'>
   readonly createdAt: Prisma.FieldRef<"TheorySnapshotSource", 'DateTime'>
 }
     
@@ -1435,6 +1730,25 @@ export type TheorySnapshotSourceDeleteManyArgs<ExtArgs extends runtime.Types.Ext
    * Limit how many TheorySnapshotSources to delete.
    */
   limit?: number
+}
+
+/**
+ * TheorySnapshotSource.evidenceClaim
+ */
+export type TheorySnapshotSource$evidenceClaimArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the EvidenceClaim
+   */
+  select?: Prisma.EvidenceClaimSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the EvidenceClaim
+   */
+  omit?: Prisma.EvidenceClaimOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.EvidenceClaimInclude<ExtArgs> | null
+  where?: Prisma.EvidenceClaimWhereInput
 }
 
 /**

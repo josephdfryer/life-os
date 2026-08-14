@@ -15,6 +15,7 @@
     "@life-os/contracts": "*",
     "@life-os/db": "*",
     "@life-os/domain": "*",
+    "@life-os/files": "*",
     "@life-os/intelligence": "*",
     "@life-os/level-up": "*",
     "next": "^16.3.0",

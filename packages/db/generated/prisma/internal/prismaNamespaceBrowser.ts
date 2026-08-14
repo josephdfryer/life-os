@@ -94,6 +94,14 @@ export const ModelName = {
   Assembly: 'Assembly',
   ItemInteraction: 'ItemInteraction',
   ImportedFile: 'ImportedFile',
+  FileUploadIntent: 'FileUploadIntent',
+  FileProcessingRun: 'FileProcessingRun',
+  FileChunk: 'FileChunk',
+  FileEntityMention: 'FileEntityMention',
+  PersonExternalIdentifier: 'PersonExternalIdentifier',
+  FileEntityResolution: 'FileEntityResolution',
+  EvidenceClaim: 'EvidenceClaim',
+  EvidenceClaimSubject: 'EvidenceClaimSubject',
   AiProviderCredential: 'AiProviderCredential',
   AiAnalysisRun: 'AiAnalysisRun',
   NoteAnalysisRun: 'NoteAnalysisRun',
@@ -943,10 +951,169 @@ export const ImportedFileScalarFieldEnum = {
   storageKey: 'storageKey',
   mimeType: 'mimeType',
   checksum: 'checksum',
-  capturedAt: 'capturedAt'
+  capturedAt: 'capturedAt',
+  uploadIntentId: 'uploadIntentId',
+  archivedAt: 'archivedAt',
+  archiveReason: 'archiveReason',
+  processingState: 'processingState'
 } as const
 
 export type ImportedFileScalarFieldEnum = (typeof ImportedFileScalarFieldEnum)[keyof typeof ImportedFileScalarFieldEnum]
+
+
+export const FileUploadIntentScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  createdAt: 'createdAt',
+  expiresAt: 'expiresAt',
+  completedAt: 'completedAt',
+  status: 'status',
+  filename: 'filename',
+  safeFilename: 'safeFilename',
+  mimeType: 'mimeType',
+  format: 'format',
+  sizeBytes: 'sizeBytes',
+  checksumSha256: 'checksumSha256',
+  storageProvider: 'storageProvider',
+  storageKey: 'storageKey',
+  storeOnly: 'storeOnly'
+} as const
+
+export type FileUploadIntentScalarFieldEnum = (typeof FileUploadIntentScalarFieldEnum)[keyof typeof FileUploadIntentScalarFieldEnum]
+
+
+export const FileProcessingRunScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  sourceFileId: 'sourceFileId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  startedAt: 'startedAt',
+  completedAt: 'completedAt',
+  status: 'status',
+  processorVersion: 'processorVersion',
+  runKey: 'runKey',
+  workflowRunId: 'workflowRunId',
+  summary: 'summary',
+  error: 'error'
+} as const
+
+export type FileProcessingRunScalarFieldEnum = (typeof FileProcessingRunScalarFieldEnum)[keyof typeof FileProcessingRunScalarFieldEnum]
+
+
+export const FileChunkScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  sourceFileId: 'sourceFileId',
+  processingRunId: 'processingRunId',
+  createdAt: 'createdAt',
+  version: 'version',
+  ordinal: 'ordinal',
+  content: 'content',
+  contentHash: 'contentHash',
+  locatorType: 'locatorType',
+  locator: 'locator'
+} as const
+
+export type FileChunkScalarFieldEnum = (typeof FileChunkScalarFieldEnum)[keyof typeof FileChunkScalarFieldEnum]
+
+
+export const FileEntityMentionScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  sourceFileId: 'sourceFileId',
+  processingRunId: 'processingRunId',
+  chunkId: 'chunkId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  entityType: 'entityType',
+  sourceText: 'sourceText',
+  normalizedText: 'normalizedText',
+  role: 'role',
+  exactQuote: 'exactQuote',
+  identityEvidence: 'identityEvidence',
+  startOffset: 'startOffset',
+  endOffset: 'endOffset',
+  confidence: 'confidence',
+  resolutionStatus: 'resolutionStatus',
+  resolutionLevel: 'resolutionLevel',
+  resolutionReason: 'resolutionReason',
+  resolvedEntityId: 'resolvedEntityId',
+  resolvedPersonId: 'resolvedPersonId',
+  resolutionUpdatedAt: 'resolutionUpdatedAt'
+} as const
+
+export type FileEntityMentionScalarFieldEnum = (typeof FileEntityMentionScalarFieldEnum)[keyof typeof FileEntityMentionScalarFieldEnum]
+
+
+export const PersonExternalIdentifierScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  personId: 'personId',
+  externalId: 'externalId',
+  provider: 'provider',
+  createdAt: 'createdAt'
+} as const
+
+export type PersonExternalIdentifierScalarFieldEnum = (typeof PersonExternalIdentifierScalarFieldEnum)[keyof typeof PersonExternalIdentifierScalarFieldEnum]
+
+
+export const FileEntityResolutionScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  mentionId: 'mentionId',
+  createdAt: 'createdAt',
+  fromPersonId: 'fromPersonId',
+  toPersonId: 'toPersonId',
+  action: 'action',
+  actorId: 'actorId',
+  reason: 'reason'
+} as const
+
+export type FileEntityResolutionScalarFieldEnum = (typeof FileEntityResolutionScalarFieldEnum)[keyof typeof FileEntityResolutionScalarFieldEnum]
+
+
+export const EvidenceClaimScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  sourceFileId: 'sourceFileId',
+  processingRunId: 'processingRunId',
+  chunkId: 'chunkId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  assertion: 'assertion',
+  structuredValue: 'structuredValue',
+  classification: 'classification',
+  claimType: 'claimType',
+  exactQuote: 'exactQuote',
+  startOffset: 'startOffset',
+  endOffset: 'endOffset',
+  occurredAt: 'occurredAt',
+  validFrom: 'validFrom',
+  validTo: 'validTo',
+  confidence: 'confidence',
+  status: 'status',
+  reviewedAt: 'reviewedAt',
+  reviewedBy: 'reviewedBy',
+  supersedesClaimId: 'supersedesClaimId',
+  correctionNoteId: 'correctionNoteId',
+  graphResultType: 'graphResultType',
+  graphResultId: 'graphResultId',
+  graphEventId: 'graphEventId'
+} as const
+
+export type EvidenceClaimScalarFieldEnum = (typeof EvidenceClaimScalarFieldEnum)[keyof typeof EvidenceClaimScalarFieldEnum]
+
+
+export const EvidenceClaimSubjectScalarFieldEnum = {
+  claimId: 'claimId',
+  mentionId: 'mentionId',
+  subjectRole: 'subjectRole',
+  relevanceWeight: 'relevanceWeight',
+  createdAt: 'createdAt'
+} as const
+
+export type EvidenceClaimSubjectScalarFieldEnum = (typeof EvidenceClaimSubjectScalarFieldEnum)[keyof typeof EvidenceClaimSubjectScalarFieldEnum]
 
 
 export const AiProviderCredentialScalarFieldEnum = {
@@ -980,7 +1147,9 @@ export const AiAnalysisRunScalarFieldEnum = {
   error: 'error',
   inputTokens: 'inputTokens',
   outputTokens: 'outputTokens',
-  estimatedCost: 'estimatedCost'
+  estimatedCost: 'estimatedCost',
+  processingRunId: 'processingRunId',
+  purpose: 'purpose'
 } as const
 
 export type AiAnalysisRunScalarFieldEnum = (typeof AiAnalysisRunScalarFieldEnum)[keyof typeof AiAnalysisRunScalarFieldEnum]
@@ -1221,6 +1390,10 @@ export const TheorySnapshotSourceScalarFieldEnum = {
   sourceId: 'sourceId',
   contribution: 'contribution',
   weight: 'weight',
+  evidenceClaimId: 'evidenceClaimId',
+  evidenceClassification: 'evidenceClassification',
+  evidenceStatus: 'evidenceStatus',
+  citation: 'citation',
   createdAt: 'createdAt'
 } as const
 
@@ -1368,6 +1541,7 @@ export const AssistantMessageScalarFieldEnum = {
   from: 'from',
   role: 'role',
   content: 'content',
+  metadata: 'metadata',
   createdAt: 'createdAt'
 } as const
 
