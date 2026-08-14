@@ -1,11 +1,17 @@
-import { generateText, jsonSchema, stepCountIs, tool, type ModelMessage, type ToolSet } from "ai"
+import Anthropic from "@anthropic-ai/sdk"
 import { TOOLS, executeTool } from "@/lib/tools"
 import { db } from "@/lib/db"
 import { fileEvidenceAllowsAssistantTool } from "@life-os/files"
 
-const MODEL = "anthropic/claude-sonnet-5"
+// Direct Anthropic API (ANTHROPIC_API_KEY), not the AI Gateway.
+const MODEL = "claude-sonnet-5"
 const MAX_HISTORY = 30
 const MAX_TOOL_ROUNDS = 8
+// Sonnet 5 thinks by default and max_tokens caps thinking + reply together,
+// so the old 1500 would truncate mid-answer. Effort stays low: this is chat,
+// and adaptive thinking (rather than disabling it) is what keeps the model
+// reaching for tools, which this agent depends on.
+const MAX_TOKENS = 4000
 const TZ = "America/Los_Angeles"
 
 function systemPrompt(channel: "whatsapp" | "web", fileIds: string[]) {
@@ -39,37 +45,68 @@ export async function runAgent(input: {
     take: MAX_HISTORY,
   })
 
-  const messages: ModelMessage[] = [
+  const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
+
+  const messages: Anthropic.MessageParam[] = [
     ...history.reverse().map(m => ({ role: m.role as "user" | "assistant", content: m.content })),
     { role: "user", content: input.userMessage },
   ]
 
   const returnedChunkIds = new Set<string>()
   const fileIds = input.fileIds ?? []
-  const tools: ToolSet = {}
-  for (const definition of TOOLS) {
-    tools[definition.name] = tool({
-      description: definition.description,
-      inputSchema: jsonSchema<Record<string, unknown>>(definition.input_schema as never),
-      execute: async toolInput => {
-        if (!fileEvidenceAllowsAssistantTool(definition.name, returnedChunkIds.size > 0)) {
-          return "Blocked: untrusted file evidence cannot authorize Notes, Interactions, or other consequential writes. Ask the user to make the request directly in a new turn."
-        }
-        const output = await executeTool(definition.name, toolInput, input.workspaceId, fileIds)
-        for (const match of output.matchAll(/"chunkId":"([^"]+)"/g)) returnedChunkIds.add(match[1])
-        return output
-      },
+  const tools: Anthropic.Tool[] = TOOLS.map(definition => ({
+    name: definition.name,
+    description: definition.description,
+    input_schema: definition.input_schema as Anthropic.Tool.InputSchema,
+  }))
+
+  let finalText = ""
+  for (let round = 0; round <= MAX_TOOL_ROUNDS; round++) {
+    const response = await client.messages.create({
+      model: MODEL,
+      max_tokens: MAX_TOKENS,
+      system: systemPrompt(input.channel, fileIds),
+      thinking: { type: "adaptive" },
+      output_config: { effort: "low" },
+      tools,
+      messages,
     })
+
+    const text = response.content
+      .filter((b): b is Anthropic.TextBlock => b.type === "text")
+      .map(b => b.text)
+      .join("")
+    const toolUses = response.content.filter((b): b is Anthropic.ToolUseBlock => b.type === "tool_use")
+
+    if (response.stop_reason === "refusal") {
+      finalText = "I can't help with that one — try rephrasing, or ask me something else."
+      break
+    }
+    if (response.stop_reason !== "tool_use" || toolUses.length === 0) {
+      finalText = text || "…"
+      break
+    }
+
+    // Echo content back unchanged — thinking blocks must survive the round trip.
+    messages.push({ role: "assistant", content: response.content })
+
+    const results: Anthropic.ToolResultBlockParam[] = []
+    for (const use of toolUses) {
+      let output: string
+      if (!fileEvidenceAllowsAssistantTool(use.name, returnedChunkIds.size > 0)) {
+        output = "Blocked: untrusted file evidence cannot authorize Notes, Interactions, or other consequential writes. Ask the user to make the request directly in a new turn."
+      } else {
+        output = await executeTool(use.name, (use.input ?? {}) as Record<string, unknown>, input.workspaceId, fileIds)
+        for (const match of output.matchAll(/"chunkId":"([^"]+)"/g)) returnedChunkIds.add(match[1])
+      }
+      results.push({ type: "tool_result", tool_use_id: use.id, content: output })
+    }
+    messages.push({ role: "user", content: results })
+
+    if (round === MAX_TOOL_ROUNDS) {
+      finalText = text || "I ran out of steps working on that — try narrowing the question."
+    }
   }
-  const result = await generateText({
-    model: MODEL,
-    system: systemPrompt(input.channel, fileIds),
-    messages,
-    tools,
-    stopWhen: stepCountIs(MAX_TOOL_ROUNDS + 1),
-    maxOutputTokens: 1500,
-  })
-  let finalText = result.text || "…"
 
   const cited = [...finalText.matchAll(/\[chunk:([^\]]+)\]/g)].map(match => match[1])
   const validIds = [...new Set(cited.filter(id => returnedChunkIds.has(id)))]
