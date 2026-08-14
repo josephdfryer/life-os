@@ -11,7 +11,19 @@ async function main() {
   if (!url || !authToken) throw new Error("Missing TURSO_DATABASE_URL or TURSO_AUTH_TOKEN")
   const migrationUrl = new URL(`./prisma/migrations/${migrationName}/migration.sql`, import.meta.url)
   const sql = await readFile(migrationUrl, "utf8")
-  const statements = sql.split(/;\s*\n/).map(value => value.trim()).filter(Boolean)
+  // `filter(Boolean)` is not enough: splitting on `;\n` also yields chunks that
+  // are only SQL comments — this migration has a two-line comment block above
+  // the FileChunkFts virtual table, and its first line lands in a chunk of its
+  // own. Those chunks are non-empty strings, so they survived the truthiness
+  // filter and Turso rejected them with SQL_PARSE_ERROR ("SQL string does not
+  // contain any statement"), aborting the run partway through. Keep only chunks
+  // that carry at least one line of actual SQL.
+  const hasExecutableSql = (chunk: string) =>
+    chunk.split("\n").some(line => {
+      const trimmed = line.trim()
+      return trimmed.length > 0 && !trimmed.startsWith("--")
+    })
+  const statements = sql.split(/;\s*\n/).map(value => value.trim()).filter(hasExecutableSql)
   const client = createClient({ url, authToken })
   try {
     for (const statement of statements) {
