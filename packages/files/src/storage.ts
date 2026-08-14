@@ -68,16 +68,12 @@ export class S3FileStorage implements FileStorage {
       Metadata: { "life-os-sha256": checksumSha256Base64 },
       ServerSideEncryption: "AES256",
     })
+    const url = await getSignedUrl(this.client, command, { expiresIn: UPLOAD_URL_TTL_SECONDS })
     return {
-      url: await getSignedUrl(this.client, command, { expiresIn: UPLOAD_URL_TTL_SECONDS }),
+      url,
       method: "PUT" as const,
       expiresIn: UPLOAD_URL_TTL_SECONDS,
-      headers: {
-        "content-type": mimeType,
-        "x-amz-checksum-sha256": checksumSha256Base64,
-        "x-amz-meta-life-os-sha256": checksumSha256Base64,
-        "x-amz-server-side-encryption": "AES256",
-      },
+      headers: uploadHeadersFor(url, mimeType, checksumSha256Base64),
     }
   }
 
@@ -163,6 +159,39 @@ export class LocalFileStorage implements FileStorage {
 export function getFileStorage(): FileStorage {
   if (process.env.FILE_STORAGE_PROVIDER === "local") return new LocalFileStorage()
   return new S3FileStorage()
+}
+
+// Which headers the browser may send with a presigned PUT is decided by the
+// signature, not by us. SigV4 requires every `x-amz-*` header to be covered by
+// the signature, so sending an uncovered one makes S3 reject the whole request
+// with 403 — which is exactly what happened when this list was hand-written:
+// the SDK hoists `x-amz-checksum-sha256` and `x-amz-meta-*` into query
+// parameters and signs only `x-amz-server-side-encryption`, so re-sending the
+// hoisted two as headers invalidated an otherwise correct upload.
+//
+// Deriving the set from X-Amz-SignedHeaders keeps this correct if a future SDK
+// version changes what it hoists versus signs. Exported for the test that pins
+// the invariant.
+export function uploadHeadersFor(signedUrl: string, mimeType: string, checksumSha256Base64: string) {
+  const signed = new Set(
+    (new URL(signedUrl).searchParams.get("X-Amz-SignedHeaders") ?? "")
+      .split(";")
+      .map(name => name.trim().toLowerCase())
+      .filter(name => name && name !== "host"), // the browser sets Host itself
+  )
+  const candidates: Record<string, string> = {
+    "x-amz-checksum-sha256": checksumSha256Base64,
+    "x-amz-meta-life-os-sha256": checksumSha256Base64,
+    "x-amz-server-side-encryption": "AES256",
+  }
+  const headers: Record<string, string> = {}
+  for (const [name, value] of Object.entries(candidates)) if (signed.has(name)) headers[name] = value
+  // Content-Type is not an `x-amz-*` header, so it is safe to send unsigned —
+  // and it must be sent: finalize compares the stored object's MIME type against
+  // the intent, and S3 would otherwise default it to binary/octet-stream and
+  // fail that check.
+  headers["content-type"] = mimeType
+  return headers
 }
 
 export function safeFilename(filename: string) {
