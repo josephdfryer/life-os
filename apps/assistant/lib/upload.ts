@@ -12,6 +12,16 @@ export type UploadedFile = {
 
 export type UploadProgress = (stage: "hashing" | "authorizing" | "uploading" | "verifying", filename: string) => void
 
+// Read a JSON body only after confirming the response is OK. A failing route can
+// return an HTML error page, and calling .json() on that throws the parser's own
+// message — which surfaced to the user as Safari's "The string did not match the
+// expected pattern" instead of the actual 500. Report the status we got.
+async function readJson(response: Response, fallback: string) {
+  const body = await response.json().catch(() => null)
+  if (!response.ok) throw new Error(body?.error ?? `${fallback} (HTTP ${response.status})`)
+  return body
+}
+
 export async function uploadFile(
   file: File,
   options: { storeOnly?: boolean; onProgress?: UploadProgress } = {},
@@ -34,8 +44,7 @@ export async function uploadFile(
       storeOnly,
     }),
   })
-  const intent = await intentResponse.json()
-  if (!intentResponse.ok) throw new Error(intent.error ?? "Upload authorization failed")
+  const intent = await readJson(intentResponse, "Upload authorization failed")
 
   onProgress?.("uploading", file.name)
   const uploadResponse = await fetch(intent.upload.url, { method: "PUT", headers: intent.upload.headers, body: file })
@@ -43,8 +52,7 @@ export async function uploadFile(
 
   onProgress?.("verifying", file.name)
   const completeResponse = await fetch(`/api/files/upload-intents/${intent.intentId}/complete`, { method: "POST" })
-  const completed = await completeResponse.json()
-  if (!completeResponse.ok) throw new Error(completed.error ?? "Upload verification failed")
+  const completed = await readJson(completeResponse, "Upload verification failed")
 
   return completed.file as UploadedFile
 }

@@ -1,10 +1,21 @@
 import { createHash } from "node:crypto"
-import ExcelJS from "exceljs"
-import mammoth from "mammoth"
-import { PDFParse } from "pdf-parse"
 import { transcribe, generateText } from "ai"
 import { gateway } from "@ai-sdk/gateway"
+import type ExcelJS from "exceljs"
 import type { ExtractedChunk, ExtractedFile } from "./types"
+
+// The document parsers are imported lazily, inside the functions that use them.
+// pdf-parse pulls in pdfjs-dist, which references DOMMatrix at module scope —
+// a browser global that does not exist on Node. Importing it eagerly crashed
+// every serverless function that touched this package with
+// `ReferenceError: DOMMatrix is not defined`, at module evaluation, before any
+// of our code ran. That took down POST /api/files/upload-intents with a 500,
+// even though authorizing an upload never parses a document.
+//
+// exceljs and mammoth are lazy for the cheaper reason: they are megabytes of
+// parser that only the extraction workflow needs, and every other route paid
+// for them on cold start. Keep these dynamic — a top-level import here is a
+// production outage, not a style preference.
 
 const TEXT_MIMES = new Set([
   "text/plain", "text/markdown", "text/csv", "text/tab-separated-values",
@@ -63,6 +74,7 @@ export async function extractFile(bytes: Uint8Array, mimeType: string, filename:
 }
 
 async function extractPdf(bytes: Uint8Array): Promise<ExtractedFile> {
+  const { PDFParse } = await import("pdf-parse")
   const parser = new PDFParse({ data: bytes })
   try {
     const result = await parser.getText()
@@ -94,13 +106,15 @@ async function extractPdf(bytes: Uint8Array): Promise<ExtractedFile> {
 }
 
 async function extractDocx(bytes: Uint8Array) {
+  const { default: mammoth } = await import("mammoth")
   const result = await mammoth.extractRawText({ buffer: Buffer.from(bytes) })
   const extracted = fromText(result.value, "section")
   return { ...extracted, complete: result.messages.every(message => message.type !== "error"), extractionMethod: "docx_raw_text" }
 }
 
 async function extractXlsx(bytes: Uint8Array): Promise<ExtractedFile> {
-  const workbook = new ExcelJS.Workbook()
+  const { default: ExcelJSRuntime } = await import("exceljs")
+  const workbook = new ExcelJSRuntime.Workbook()
   await workbook.xlsx.load(Buffer.from(bytes) as never)
   const chunks: ExtractedChunk[] = []
   workbook.eachSheet(sheet => {
