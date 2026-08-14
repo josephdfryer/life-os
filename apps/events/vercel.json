@@ -1,4 +1,10 @@
 {
   "buildCommand": "cd ../.. && npx turbo run build --filter=events",
-  "installCommand": "cd ../.. && npm install"
+  "installCommand": "cd ../.. && npm install",
+  "crons": [
+    {
+      "path": "/api/cron/granola-sync",
+      "schedule": "0 14 * * *"
+    }
+  ]
 }

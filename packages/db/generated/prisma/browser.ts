@@ -143,6 +143,11 @@ export type EraTransactionLink = Prisma.EraTransactionLinkModel
  */
 export type Connection = Prisma.ConnectionModel
 /**
+ * Model GranolaNoteLink
+ * 
+ */
+export type GranolaNoteLink = Prisma.GranolaNoteLinkModel
+/**
  * Model Rule
  * 
  */

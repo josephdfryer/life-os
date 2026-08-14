@@ -297,7 +297,17 @@ Runtime configuration:
 - `GOOGLE_CALENDAR_REDIRECT_URI` can pin the callback to one exact production URL, avoiding mismatches when someone opens a preview deployment or alternate Vercel alias.
 - The first sync reads the selected bounded window around the present; later syncs use Google's sync token when available.
 
-### 3c. Gmail sync
+### 3c. Granola meeting sync
+
+The Events app also owns Granola ingestion. A Granola note fills or creates one canonical meeting Event and stores its generated summary, complete transcript, exact source link, and remote update provenance once on that Event. If Granola identifies the Google occurrence, `CalendarEventLink` is used first so the calendar Plan/Event and meeting evidence do not fork into duplicate occurrences.
+
+Attendees are linked to existing People only when one exact normalized email matches in the current workspace. Each successful match becomes an idempotent Granola Interaction attached to the meeting Event. Missing and ambiguous identities become `StagedInteraction` plus universal `ReviewItem` records, and review acceptance attaches the selected Person to the existing Event rather than creating a second daily Event. Granola never creates a Person or Group silently. Existing Group memberships may tag the Event only when one company/team is uniquely supported by at least two matched attendees; the evidence and unresolved count remain on the Event metadata.
+
+On a Person profile, a Granola meeting Interaction reads its recap from that linked canonical Event, hides connector bookkeeping markers, and links to the Events detail page for the complete summary and transcript. The Interaction still owns person-specific context such as emotional weight, outcome, and follow-up actions; the shared meeting evidence is not copied separately for every attendee.
+
+The Home Connections hub exposes the unified `Connection` row (`kind=meetings`, `provider=granola`) and routes management to Events `/settings/granola`. The encrypted API key never appears in the read-side Connections response. Daily sync is a reconciliation import: all cursors are followed, edited notes update provider-owned fields, and user-written Event notes are preserved.
+
+### 3d. Gmail sync
 
 ```mermaid
 flowchart TD

@@ -81,6 +81,8 @@ export type Interaction = {
   billable: boolean
   amount: number | null
   direction: string | null
+  source: string | null
+  sourceId: string | null
   sourceFileId: string | null
   sourceFile: ImportedFile | null
 }

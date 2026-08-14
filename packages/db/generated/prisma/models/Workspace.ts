@@ -226,6 +226,7 @@ export type WorkspaceWhereInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineListRelationFilter
   importedFiles?: Prisma.ImportedFileListRelationFilter
   fileUploadIntents?: Prisma.FileUploadIntentListRelationFilter
+  granolaNoteLinks?: Prisma.GranolaNoteLinkListRelationFilter
   fileProcessingRuns?: Prisma.FileProcessingRunListRelationFilter
   fileChunks?: Prisma.FileChunkListRelationFilter
   fileEntityMentions?: Prisma.FileEntityMentionListRelationFilter
@@ -309,6 +310,7 @@ export type WorkspaceOrderByWithRelationInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineOrderByRelationAggregateInput
   importedFiles?: Prisma.ImportedFileOrderByRelationAggregateInput
   fileUploadIntents?: Prisma.FileUploadIntentOrderByRelationAggregateInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkOrderByRelationAggregateInput
   fileProcessingRuns?: Prisma.FileProcessingRunOrderByRelationAggregateInput
   fileChunks?: Prisma.FileChunkOrderByRelationAggregateInput
   fileEntityMentions?: Prisma.FileEntityMentionOrderByRelationAggregateInput
@@ -395,6 +397,7 @@ export type WorkspaceWhereUniqueInput = Prisma.AtLeast<{
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineListRelationFilter
   importedFiles?: Prisma.ImportedFileListRelationFilter
   fileUploadIntents?: Prisma.FileUploadIntentListRelationFilter
+  granolaNoteLinks?: Prisma.GranolaNoteLinkListRelationFilter
   fileProcessingRuns?: Prisma.FileProcessingRunListRelationFilter
   fileChunks?: Prisma.FileChunkListRelationFilter
   fileEntityMentions?: Prisma.FileEntityMentionListRelationFilter
@@ -505,6 +508,7 @@ export type WorkspaceCreateInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionCreateNestedManyWithoutWorkspaceInput
@@ -587,6 +591,7 @@ export type WorkspaceUncheckedCreateInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -669,6 +674,7 @@ export type WorkspaceUpdateInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUpdateManyWithoutWorkspaceNestedInput
@@ -751,6 +757,7 @@ export type WorkspaceUncheckedUpdateInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -1174,6 +1181,20 @@ export type WorkspaceUpdateOneRequiredWithoutConnectionsNestedInput = {
   upsert?: Prisma.WorkspaceUpsertWithoutConnectionsInput
   connect?: Prisma.WorkspaceWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.WorkspaceUpdateToOneWithWhereWithoutConnectionsInput, Prisma.WorkspaceUpdateWithoutConnectionsInput>, Prisma.WorkspaceUncheckedUpdateWithoutConnectionsInput>
+}
+
+export type WorkspaceCreateNestedOneWithoutGranolaNoteLinksInput = {
+  create?: Prisma.XOR<Prisma.WorkspaceCreateWithoutGranolaNoteLinksInput, Prisma.WorkspaceUncheckedCreateWithoutGranolaNoteLinksInput>
+  connectOrCreate?: Prisma.WorkspaceCreateOrConnectWithoutGranolaNoteLinksInput
+  connect?: Prisma.WorkspaceWhereUniqueInput
+}
+
+export type WorkspaceUpdateOneRequiredWithoutGranolaNoteLinksNestedInput = {
+  create?: Prisma.XOR<Prisma.WorkspaceCreateWithoutGranolaNoteLinksInput, Prisma.WorkspaceUncheckedCreateWithoutGranolaNoteLinksInput>
+  connectOrCreate?: Prisma.WorkspaceCreateOrConnectWithoutGranolaNoteLinksInput
+  upsert?: Prisma.WorkspaceUpsertWithoutGranolaNoteLinksInput
+  connect?: Prisma.WorkspaceWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.WorkspaceUpdateToOneWithWhereWithoutGranolaNoteLinksInput, Prisma.WorkspaceUpdateWithoutGranolaNoteLinksInput>, Prisma.WorkspaceUncheckedUpdateWithoutGranolaNoteLinksInput>
 }
 
 export type WorkspaceCreateNestedOneWithoutRulesInput = {
@@ -1973,6 +1994,7 @@ export type WorkspaceCreateWithoutMembersInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionCreateNestedManyWithoutWorkspaceInput
@@ -2054,6 +2076,7 @@ export type WorkspaceUncheckedCreateWithoutMembersInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -2151,6 +2174,7 @@ export type WorkspaceUpdateWithoutMembersInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUpdateManyWithoutWorkspaceNestedInput
@@ -2232,6 +2256,7 @@ export type WorkspaceUncheckedUpdateWithoutMembersInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -2313,6 +2338,7 @@ export type WorkspaceCreateWithoutApprovedEmailsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionCreateNestedManyWithoutWorkspaceInput
@@ -2394,6 +2420,7 @@ export type WorkspaceUncheckedCreateWithoutApprovedEmailsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -2491,6 +2518,7 @@ export type WorkspaceUpdateWithoutApprovedEmailsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUpdateManyWithoutWorkspaceNestedInput
@@ -2572,6 +2600,7 @@ export type WorkspaceUncheckedUpdateWithoutApprovedEmailsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -2653,6 +2682,7 @@ export type WorkspaceCreateWithoutPersonsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionCreateNestedManyWithoutWorkspaceInput
@@ -2734,6 +2764,7 @@ export type WorkspaceUncheckedCreateWithoutPersonsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -2831,6 +2862,7 @@ export type WorkspaceUpdateWithoutPersonsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUpdateManyWithoutWorkspaceNestedInput
@@ -2912,6 +2944,7 @@ export type WorkspaceUncheckedUpdateWithoutPersonsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -2993,6 +3026,7 @@ export type WorkspaceCreateWithoutOwnerUserInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionCreateNestedManyWithoutWorkspaceInput
@@ -3074,6 +3108,7 @@ export type WorkspaceUncheckedCreateWithoutOwnerUserInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -3195,6 +3230,7 @@ export type WorkspaceCreateWithoutDevicesInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionCreateNestedManyWithoutWorkspaceInput
@@ -3276,6 +3312,7 @@ export type WorkspaceUncheckedCreateWithoutDevicesInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -3373,6 +3410,7 @@ export type WorkspaceUpdateWithoutDevicesInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUpdateManyWithoutWorkspaceNestedInput
@@ -3454,6 +3492,7 @@ export type WorkspaceUncheckedUpdateWithoutDevicesInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -3535,6 +3574,7 @@ export type WorkspaceCreateWithoutDeviceAuthorizationsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionCreateNestedManyWithoutWorkspaceInput
@@ -3616,6 +3656,7 @@ export type WorkspaceUncheckedCreateWithoutDeviceAuthorizationsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -3713,6 +3754,7 @@ export type WorkspaceUpdateWithoutDeviceAuthorizationsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUpdateManyWithoutWorkspaceNestedInput
@@ -3794,6 +3836,7 @@ export type WorkspaceUncheckedUpdateWithoutDeviceAuthorizationsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -3875,6 +3918,7 @@ export type WorkspaceCreateWithoutDeviceIngestItemsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionCreateNestedManyWithoutWorkspaceInput
@@ -3956,6 +4000,7 @@ export type WorkspaceUncheckedCreateWithoutDeviceIngestItemsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -4053,6 +4098,7 @@ export type WorkspaceUpdateWithoutDeviceIngestItemsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUpdateManyWithoutWorkspaceNestedInput
@@ -4134,6 +4180,7 @@ export type WorkspaceUncheckedUpdateWithoutDeviceIngestItemsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -4215,6 +4262,7 @@ export type WorkspaceCreateWithoutApiKeysInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionCreateNestedManyWithoutWorkspaceInput
@@ -4296,6 +4344,7 @@ export type WorkspaceUncheckedCreateWithoutApiKeysInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -4393,6 +4442,7 @@ export type WorkspaceUpdateWithoutApiKeysInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUpdateManyWithoutWorkspaceNestedInput
@@ -4474,6 +4524,7 @@ export type WorkspaceUncheckedUpdateWithoutApiKeysInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -4555,6 +4606,7 @@ export type WorkspaceCreateWithoutAuditLogsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionCreateNestedManyWithoutWorkspaceInput
@@ -4636,6 +4688,7 @@ export type WorkspaceUncheckedCreateWithoutAuditLogsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -4733,6 +4786,7 @@ export type WorkspaceUpdateWithoutAuditLogsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUpdateManyWithoutWorkspaceNestedInput
@@ -4814,6 +4868,7 @@ export type WorkspaceUncheckedUpdateWithoutAuditLogsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -4895,6 +4950,7 @@ export type WorkspaceCreateWithoutCalendarConnectionsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionCreateNestedManyWithoutWorkspaceInput
@@ -4976,6 +5032,7 @@ export type WorkspaceUncheckedCreateWithoutCalendarConnectionsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -5073,6 +5130,7 @@ export type WorkspaceUpdateWithoutCalendarConnectionsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUpdateManyWithoutWorkspaceNestedInput
@@ -5154,6 +5212,7 @@ export type WorkspaceUncheckedUpdateWithoutCalendarConnectionsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -5235,6 +5294,7 @@ export type WorkspaceCreateWithoutCalendarEventLinksInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionCreateNestedManyWithoutWorkspaceInput
@@ -5316,6 +5376,7 @@ export type WorkspaceUncheckedCreateWithoutCalendarEventLinksInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -5413,6 +5474,7 @@ export type WorkspaceUpdateWithoutCalendarEventLinksInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUpdateManyWithoutWorkspaceNestedInput
@@ -5494,6 +5556,7 @@ export type WorkspaceUncheckedUpdateWithoutCalendarEventLinksInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -5575,6 +5638,7 @@ export type WorkspaceCreateWithoutGmailConnectionsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionCreateNestedManyWithoutWorkspaceInput
@@ -5656,6 +5720,7 @@ export type WorkspaceUncheckedCreateWithoutGmailConnectionsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -5753,6 +5818,7 @@ export type WorkspaceUpdateWithoutGmailConnectionsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUpdateManyWithoutWorkspaceNestedInput
@@ -5834,6 +5900,7 @@ export type WorkspaceUncheckedUpdateWithoutGmailConnectionsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -5915,6 +5982,7 @@ export type WorkspaceCreateWithoutGmailMessageLinksInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionCreateNestedManyWithoutWorkspaceInput
@@ -5996,6 +6064,7 @@ export type WorkspaceUncheckedCreateWithoutGmailMessageLinksInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -6093,6 +6162,7 @@ export type WorkspaceUpdateWithoutGmailMessageLinksInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUpdateManyWithoutWorkspaceNestedInput
@@ -6174,6 +6244,7 @@ export type WorkspaceUncheckedUpdateWithoutGmailMessageLinksInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -6255,6 +6326,7 @@ export type WorkspaceCreateWithoutEraConnectionsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionCreateNestedManyWithoutWorkspaceInput
@@ -6336,6 +6408,7 @@ export type WorkspaceUncheckedCreateWithoutEraConnectionsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -6433,6 +6506,7 @@ export type WorkspaceUpdateWithoutEraConnectionsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUpdateManyWithoutWorkspaceNestedInput
@@ -6514,6 +6588,7 @@ export type WorkspaceUncheckedUpdateWithoutEraConnectionsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -6595,6 +6670,7 @@ export type WorkspaceCreateWithoutEraAccountLinksInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionCreateNestedManyWithoutWorkspaceInput
@@ -6676,6 +6752,7 @@ export type WorkspaceUncheckedCreateWithoutEraAccountLinksInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -6773,6 +6850,7 @@ export type WorkspaceUpdateWithoutEraAccountLinksInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUpdateManyWithoutWorkspaceNestedInput
@@ -6854,6 +6932,7 @@ export type WorkspaceUncheckedUpdateWithoutEraAccountLinksInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -6935,6 +7014,7 @@ export type WorkspaceCreateWithoutEraTransactionLinksInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionCreateNestedManyWithoutWorkspaceInput
@@ -7016,6 +7096,7 @@ export type WorkspaceUncheckedCreateWithoutEraTransactionLinksInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -7113,6 +7194,7 @@ export type WorkspaceUpdateWithoutEraTransactionLinksInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUpdateManyWithoutWorkspaceNestedInput
@@ -7194,6 +7276,7 @@ export type WorkspaceUncheckedUpdateWithoutEraTransactionLinksInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -7275,6 +7358,7 @@ export type WorkspaceCreateWithoutConnectionsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionCreateNestedManyWithoutWorkspaceInput
@@ -7356,6 +7440,7 @@ export type WorkspaceUncheckedCreateWithoutConnectionsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -7453,6 +7538,7 @@ export type WorkspaceUpdateWithoutConnectionsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUpdateManyWithoutWorkspaceNestedInput
@@ -7534,6 +7620,7 @@ export type WorkspaceUncheckedUpdateWithoutConnectionsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -7587,6 +7674,350 @@ export type WorkspaceUncheckedUpdateWithoutConnectionsInput = {
   deviceIngestItems?: Prisma.DeviceIngestItemUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
+export type WorkspaceCreateWithoutGranolaNoteLinksInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  name: string
+  slug: string
+  status?: string
+  autoMergeEnabled?: boolean
+  ownerUser?: Prisma.UserCreateNestedOneWithoutOwnedWorkspacesInput
+  members?: Prisma.WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
+  approvedEmails?: Prisma.ApprovedEmailCreateNestedManyWithoutWorkspaceInput
+  persons?: Prisma.PersonCreateNestedManyWithoutWorkspaceInput
+  events?: Prisma.EventCreateNestedManyWithoutWorkspaceInput
+  interactions?: Prisma.InteractionCreateNestedManyWithoutWorkspaceInput
+  plans?: Prisma.PlanCreateNestedManyWithoutWorkspaceInput
+  places?: Prisma.PlaceCreateNestedManyWithoutWorkspaceInput
+  placeNotes?: Prisma.PlaceNoteCreateNestedManyWithoutWorkspaceInput
+  notes?: Prisma.NoteCreateNestedManyWithoutWorkspaceInput
+  theorySnapshots?: Prisma.TheorySnapshotCreateNestedManyWithoutWorkspaceInput
+  groups?: Prisma.GroupCreateNestedManyWithoutWorkspaceInput
+  items?: Prisma.ItemCreateNestedManyWithoutWorkspaceInput
+  itemDefinitions?: Prisma.ItemDefinitionCreateNestedManyWithoutWorkspaceInput
+  inventoryLots?: Prisma.InventoryLotCreateNestedManyWithoutWorkspaceInput
+  supplierProfiles?: Prisma.SupplierProfileCreateNestedManyWithoutWorkspaceInput
+  purchaseOrders?: Prisma.PurchaseOrderCreateNestedManyWithoutWorkspaceInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutWorkspaceInput
+  importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
+  fileUploadIntents?: Prisma.FileUploadIntentCreateNestedManyWithoutWorkspaceInput
+  fileProcessingRuns?: Prisma.FileProcessingRunCreateNestedManyWithoutWorkspaceInput
+  fileChunks?: Prisma.FileChunkCreateNestedManyWithoutWorkspaceInput
+  fileEntityMentions?: Prisma.FileEntityMentionCreateNestedManyWithoutWorkspaceInput
+  fileEntityResolutions?: Prisma.FileEntityResolutionCreateNestedManyWithoutWorkspaceInput
+  personExternalIdentifiers?: Prisma.PersonExternalIdentifierCreateNestedManyWithoutWorkspaceInput
+  evidenceClaims?: Prisma.EvidenceClaimCreateNestedManyWithoutWorkspaceInput
+  aiProviderCredentials?: Prisma.AiProviderCredentialCreateNestedManyWithoutWorkspaceInput
+  aiAnalysisRuns?: Prisma.AiAnalysisRunCreateNestedManyWithoutWorkspaceInput
+  noteAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunCreateNestedManyWithoutWorkspaceInput
+  lifeModelAnalysisRuns?: Prisma.LifeModelAnalysisRunCreateNestedManyWithoutWorkspaceInput
+  lifeModelClaimFeedback?: Prisma.LifeModelClaimFeedbackCreateNestedManyWithoutWorkspaceInput
+  noteSuggestions?: Prisma.NoteSuggestionCreateNestedManyWithoutWorkspaceInput
+  stagedItems?: Prisma.StagedInteractionCreateNestedManyWithoutWorkspaceInput
+  rules?: Prisma.RuleCreateNestedManyWithoutWorkspaceInput
+  ruleRuns?: Prisma.RuleRunCreateNestedManyWithoutWorkspaceInput
+  apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutWorkspaceInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutWorkspaceInput
+  calendarConnections?: Prisma.CalendarConnectionCreateNestedManyWithoutWorkspaceInput
+  calendarEventLinks?: Prisma.CalendarEventLinkCreateNestedManyWithoutWorkspaceInput
+  gmailConnections?: Prisma.GmailConnectionCreateNestedManyWithoutWorkspaceInput
+  gmailMessageLinks?: Prisma.GmailMessageLinkCreateNestedManyWithoutWorkspaceInput
+  importJobs?: Prisma.ImportJobCreateNestedManyWithoutWorkspaceInput
+  importStagedVisits?: Prisma.ImportStagedVisitCreateNestedManyWithoutWorkspaceInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonCreateNestedManyWithoutWorkspaceInput
+  assistantMessages?: Prisma.AssistantMessageCreateNestedManyWithoutWorkspaceInput
+  eraConnections?: Prisma.EraConnectionCreateNestedManyWithoutWorkspaceInput
+  eraAccountLinks?: Prisma.EraAccountLinkCreateNestedManyWithoutWorkspaceInput
+  eraTransactionLinks?: Prisma.EraTransactionLinkCreateNestedManyWithoutWorkspaceInput
+  connections?: Prisma.ConnectionCreateNestedManyWithoutWorkspaceInput
+  levelUpProfile?: Prisma.LevelUpProfileCreateNestedOneWithoutWorkspaceInput
+  levelUpTestResults?: Prisma.LevelUpTestResultCreateNestedManyWithoutWorkspaceInput
+  levelUpCombines?: Prisma.LevelUpCombineCreateNestedManyWithoutWorkspaceInput
+  levelUpSnapshots?: Prisma.LevelUpRatingSnapshotCreateNestedManyWithoutWorkspaceInput
+  levelUpTrainingSets?: Prisma.LevelUpTrainingSetCreateNestedManyWithoutWorkspaceInput
+  levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockCreateNestedManyWithoutWorkspaceInput
+  levelUpTargetBuilds?: Prisma.LevelUpTargetBuildCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricCreateNestedManyWithoutWorkspaceInput
+  levelUpReadinessSnapshots?: Prisma.LevelUpReadinessSnapshotCreateNestedManyWithoutWorkspaceInput
+  graphEvents?: Prisma.GraphEventCreateNestedManyWithoutWorkspaceInput
+  reviewItems?: Prisma.ReviewItemCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeCreateNestedManyWithoutWorkspaceInput
+  devices?: Prisma.DeviceCreateNestedManyWithoutWorkspaceInput
+  deviceAuthorizations?: Prisma.DeviceAuthorizationCreateNestedManyWithoutWorkspaceInput
+  deviceIngestItems?: Prisma.DeviceIngestItemCreateNestedManyWithoutWorkspaceInput
+}
+
+export type WorkspaceUncheckedCreateWithoutGranolaNoteLinksInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  name: string
+  slug: string
+  status?: string
+  ownerUserId?: string | null
+  autoMergeEnabled?: boolean
+  members?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
+  approvedEmails?: Prisma.ApprovedEmailUncheckedCreateNestedManyWithoutWorkspaceInput
+  persons?: Prisma.PersonUncheckedCreateNestedManyWithoutWorkspaceInput
+  events?: Prisma.EventUncheckedCreateNestedManyWithoutWorkspaceInput
+  interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutWorkspaceInput
+  plans?: Prisma.PlanUncheckedCreateNestedManyWithoutWorkspaceInput
+  places?: Prisma.PlaceUncheckedCreateNestedManyWithoutWorkspaceInput
+  placeNotes?: Prisma.PlaceNoteUncheckedCreateNestedManyWithoutWorkspaceInput
+  notes?: Prisma.NoteUncheckedCreateNestedManyWithoutWorkspaceInput
+  theorySnapshots?: Prisma.TheorySnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  groups?: Prisma.GroupUncheckedCreateNestedManyWithoutWorkspaceInput
+  items?: Prisma.ItemUncheckedCreateNestedManyWithoutWorkspaceInput
+  itemDefinitions?: Prisma.ItemDefinitionUncheckedCreateNestedManyWithoutWorkspaceInput
+  inventoryLots?: Prisma.InventoryLotUncheckedCreateNestedManyWithoutWorkspaceInput
+  supplierProfiles?: Prisma.SupplierProfileUncheckedCreateNestedManyWithoutWorkspaceInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutWorkspaceInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutWorkspaceInput
+  importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
+  fileUploadIntents?: Prisma.FileUploadIntentUncheckedCreateNestedManyWithoutWorkspaceInput
+  fileProcessingRuns?: Prisma.FileProcessingRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  fileChunks?: Prisma.FileChunkUncheckedCreateNestedManyWithoutWorkspaceInput
+  fileEntityMentions?: Prisma.FileEntityMentionUncheckedCreateNestedManyWithoutWorkspaceInput
+  fileEntityResolutions?: Prisma.FileEntityResolutionUncheckedCreateNestedManyWithoutWorkspaceInput
+  personExternalIdentifiers?: Prisma.PersonExternalIdentifierUncheckedCreateNestedManyWithoutWorkspaceInput
+  evidenceClaims?: Prisma.EvidenceClaimUncheckedCreateNestedManyWithoutWorkspaceInput
+  aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedCreateNestedManyWithoutWorkspaceInput
+  aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  lifeModelAnalysisRuns?: Prisma.LifeModelAnalysisRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  lifeModelClaimFeedback?: Prisma.LifeModelClaimFeedbackUncheckedCreateNestedManyWithoutWorkspaceInput
+  noteSuggestions?: Prisma.NoteSuggestionUncheckedCreateNestedManyWithoutWorkspaceInput
+  stagedItems?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutWorkspaceInput
+  rules?: Prisma.RuleUncheckedCreateNestedManyWithoutWorkspaceInput
+  ruleRuns?: Prisma.RuleRunUncheckedCreateNestedManyWithoutWorkspaceInput
+  apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutWorkspaceInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutWorkspaceInput
+  calendarConnections?: Prisma.CalendarConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  calendarEventLinks?: Prisma.CalendarEventLinkUncheckedCreateNestedManyWithoutWorkspaceInput
+  gmailConnections?: Prisma.GmailConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  gmailMessageLinks?: Prisma.GmailMessageLinkUncheckedCreateNestedManyWithoutWorkspaceInput
+  importJobs?: Prisma.ImportJobUncheckedCreateNestedManyWithoutWorkspaceInput
+  importStagedVisits?: Prisma.ImportStagedVisitUncheckedCreateNestedManyWithoutWorkspaceInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUncheckedCreateNestedManyWithoutWorkspaceInput
+  assistantMessages?: Prisma.AssistantMessageUncheckedCreateNestedManyWithoutWorkspaceInput
+  eraConnections?: Prisma.EraConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  eraAccountLinks?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutWorkspaceInput
+  eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedCreateNestedManyWithoutWorkspaceInput
+  connections?: Prisma.ConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProfile?: Prisma.LevelUpProfileUncheckedCreateNestedOneWithoutWorkspaceInput
+  levelUpTestResults?: Prisma.LevelUpTestResultUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpCombines?: Prisma.LevelUpCombineUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpSnapshots?: Prisma.LevelUpRatingSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedCreateNestedManyWithoutWorkspaceInput
+  levelUpReadinessSnapshots?: Prisma.LevelUpReadinessSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  graphEvents?: Prisma.GraphEventUncheckedCreateNestedManyWithoutWorkspaceInput
+  reviewItems?: Prisma.ReviewItemUncheckedCreateNestedManyWithoutWorkspaceInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedCreateNestedManyWithoutWorkspaceInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedCreateNestedManyWithoutWorkspaceInput
+  devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutWorkspaceInput
+  deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedCreateNestedManyWithoutWorkspaceInput
+  deviceIngestItems?: Prisma.DeviceIngestItemUncheckedCreateNestedManyWithoutWorkspaceInput
+}
+
+export type WorkspaceCreateOrConnectWithoutGranolaNoteLinksInput = {
+  where: Prisma.WorkspaceWhereUniqueInput
+  create: Prisma.XOR<Prisma.WorkspaceCreateWithoutGranolaNoteLinksInput, Prisma.WorkspaceUncheckedCreateWithoutGranolaNoteLinksInput>
+}
+
+export type WorkspaceUpsertWithoutGranolaNoteLinksInput = {
+  update: Prisma.XOR<Prisma.WorkspaceUpdateWithoutGranolaNoteLinksInput, Prisma.WorkspaceUncheckedUpdateWithoutGranolaNoteLinksInput>
+  create: Prisma.XOR<Prisma.WorkspaceCreateWithoutGranolaNoteLinksInput, Prisma.WorkspaceUncheckedCreateWithoutGranolaNoteLinksInput>
+  where?: Prisma.WorkspaceWhereInput
+}
+
+export type WorkspaceUpdateToOneWithWhereWithoutGranolaNoteLinksInput = {
+  where?: Prisma.WorkspaceWhereInput
+  data: Prisma.XOR<Prisma.WorkspaceUpdateWithoutGranolaNoteLinksInput, Prisma.WorkspaceUncheckedUpdateWithoutGranolaNoteLinksInput>
+}
+
+export type WorkspaceUpdateWithoutGranolaNoteLinksInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  ownerUser?: Prisma.UserUpdateOneWithoutOwnedWorkspacesNestedInput
+  members?: Prisma.WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
+  approvedEmails?: Prisma.ApprovedEmailUpdateManyWithoutWorkspaceNestedInput
+  persons?: Prisma.PersonUpdateManyWithoutWorkspaceNestedInput
+  events?: Prisma.EventUpdateManyWithoutWorkspaceNestedInput
+  interactions?: Prisma.InteractionUpdateManyWithoutWorkspaceNestedInput
+  plans?: Prisma.PlanUpdateManyWithoutWorkspaceNestedInput
+  places?: Prisma.PlaceUpdateManyWithoutWorkspaceNestedInput
+  placeNotes?: Prisma.PlaceNoteUpdateManyWithoutWorkspaceNestedInput
+  notes?: Prisma.NoteUpdateManyWithoutWorkspaceNestedInput
+  theorySnapshots?: Prisma.TheorySnapshotUpdateManyWithoutWorkspaceNestedInput
+  groups?: Prisma.GroupUpdateManyWithoutWorkspaceNestedInput
+  items?: Prisma.ItemUpdateManyWithoutWorkspaceNestedInput
+  itemDefinitions?: Prisma.ItemDefinitionUpdateManyWithoutWorkspaceNestedInput
+  inventoryLots?: Prisma.InventoryLotUpdateManyWithoutWorkspaceNestedInput
+  supplierProfiles?: Prisma.SupplierProfileUpdateManyWithoutWorkspaceNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUpdateManyWithoutWorkspaceNestedInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutWorkspaceNestedInput
+  importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
+  fileUploadIntents?: Prisma.FileUploadIntentUpdateManyWithoutWorkspaceNestedInput
+  fileProcessingRuns?: Prisma.FileProcessingRunUpdateManyWithoutWorkspaceNestedInput
+  fileChunks?: Prisma.FileChunkUpdateManyWithoutWorkspaceNestedInput
+  fileEntityMentions?: Prisma.FileEntityMentionUpdateManyWithoutWorkspaceNestedInput
+  fileEntityResolutions?: Prisma.FileEntityResolutionUpdateManyWithoutWorkspaceNestedInput
+  personExternalIdentifiers?: Prisma.PersonExternalIdentifierUpdateManyWithoutWorkspaceNestedInput
+  evidenceClaims?: Prisma.EvidenceClaimUpdateManyWithoutWorkspaceNestedInput
+  aiProviderCredentials?: Prisma.AiProviderCredentialUpdateManyWithoutWorkspaceNestedInput
+  aiAnalysisRuns?: Prisma.AiAnalysisRunUpdateManyWithoutWorkspaceNestedInput
+  noteAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUpdateManyWithoutWorkspaceNestedInput
+  lifeModelAnalysisRuns?: Prisma.LifeModelAnalysisRunUpdateManyWithoutWorkspaceNestedInput
+  lifeModelClaimFeedback?: Prisma.LifeModelClaimFeedbackUpdateManyWithoutWorkspaceNestedInput
+  noteSuggestions?: Prisma.NoteSuggestionUpdateManyWithoutWorkspaceNestedInput
+  stagedItems?: Prisma.StagedInteractionUpdateManyWithoutWorkspaceNestedInput
+  rules?: Prisma.RuleUpdateManyWithoutWorkspaceNestedInput
+  ruleRuns?: Prisma.RuleRunUpdateManyWithoutWorkspaceNestedInput
+  apiKeys?: Prisma.ApiKeyUpdateManyWithoutWorkspaceNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutWorkspaceNestedInput
+  calendarConnections?: Prisma.CalendarConnectionUpdateManyWithoutWorkspaceNestedInput
+  calendarEventLinks?: Prisma.CalendarEventLinkUpdateManyWithoutWorkspaceNestedInput
+  gmailConnections?: Prisma.GmailConnectionUpdateManyWithoutWorkspaceNestedInput
+  gmailMessageLinks?: Prisma.GmailMessageLinkUpdateManyWithoutWorkspaceNestedInput
+  importJobs?: Prisma.ImportJobUpdateManyWithoutWorkspaceNestedInput
+  importStagedVisits?: Prisma.ImportStagedVisitUpdateManyWithoutWorkspaceNestedInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUpdateManyWithoutWorkspaceNestedInput
+  assistantMessages?: Prisma.AssistantMessageUpdateManyWithoutWorkspaceNestedInput
+  eraConnections?: Prisma.EraConnectionUpdateManyWithoutWorkspaceNestedInput
+  eraAccountLinks?: Prisma.EraAccountLinkUpdateManyWithoutWorkspaceNestedInput
+  eraTransactionLinks?: Prisma.EraTransactionLinkUpdateManyWithoutWorkspaceNestedInput
+  connections?: Prisma.ConnectionUpdateManyWithoutWorkspaceNestedInput
+  levelUpProfile?: Prisma.LevelUpProfileUpdateOneWithoutWorkspaceNestedInput
+  levelUpTestResults?: Prisma.LevelUpTestResultUpdateManyWithoutWorkspaceNestedInput
+  levelUpCombines?: Prisma.LevelUpCombineUpdateManyWithoutWorkspaceNestedInput
+  levelUpSnapshots?: Prisma.LevelUpRatingSnapshotUpdateManyWithoutWorkspaceNestedInput
+  levelUpTrainingSets?: Prisma.LevelUpTrainingSetUpdateManyWithoutWorkspaceNestedInput
+  levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUpdateManyWithoutWorkspaceNestedInput
+  levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUpdateManyWithoutWorkspaceNestedInput
+  levelUpReadinessSnapshots?: Prisma.LevelUpReadinessSnapshotUpdateManyWithoutWorkspaceNestedInput
+  graphEvents?: Prisma.GraphEventUpdateManyWithoutWorkspaceNestedInput
+  reviewItems?: Prisma.ReviewItemUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUpdateManyWithoutWorkspaceNestedInput
+  devices?: Prisma.DeviceUpdateManyWithoutWorkspaceNestedInput
+  deviceAuthorizations?: Prisma.DeviceAuthorizationUpdateManyWithoutWorkspaceNestedInput
+  deviceIngestItems?: Prisma.DeviceIngestItemUpdateManyWithoutWorkspaceNestedInput
+}
+
+export type WorkspaceUncheckedUpdateWithoutGranolaNoteLinksInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  ownerUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autoMergeEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  members?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
+  approvedEmails?: Prisma.ApprovedEmailUncheckedUpdateManyWithoutWorkspaceNestedInput
+  persons?: Prisma.PersonUncheckedUpdateManyWithoutWorkspaceNestedInput
+  events?: Prisma.EventUncheckedUpdateManyWithoutWorkspaceNestedInput
+  interactions?: Prisma.InteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  plans?: Prisma.PlanUncheckedUpdateManyWithoutWorkspaceNestedInput
+  places?: Prisma.PlaceUncheckedUpdateManyWithoutWorkspaceNestedInput
+  placeNotes?: Prisma.PlaceNoteUncheckedUpdateManyWithoutWorkspaceNestedInput
+  notes?: Prisma.NoteUncheckedUpdateManyWithoutWorkspaceNestedInput
+  theorySnapshots?: Prisma.TheorySnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  groups?: Prisma.GroupUncheckedUpdateManyWithoutWorkspaceNestedInput
+  items?: Prisma.ItemUncheckedUpdateManyWithoutWorkspaceNestedInput
+  itemDefinitions?: Prisma.ItemDefinitionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  inventoryLots?: Prisma.InventoryLotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  supplierProfiles?: Prisma.SupplierProfileUncheckedUpdateManyWithoutWorkspaceNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutWorkspaceNestedInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutWorkspaceNestedInput
+  importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
+  fileUploadIntents?: Prisma.FileUploadIntentUncheckedUpdateManyWithoutWorkspaceNestedInput
+  fileProcessingRuns?: Prisma.FileProcessingRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  fileChunks?: Prisma.FileChunkUncheckedUpdateManyWithoutWorkspaceNestedInput
+  fileEntityMentions?: Prisma.FileEntityMentionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  fileEntityResolutions?: Prisma.FileEntityResolutionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  personExternalIdentifiers?: Prisma.PersonExternalIdentifierUncheckedUpdateManyWithoutWorkspaceNestedInput
+  evidenceClaims?: Prisma.EvidenceClaimUncheckedUpdateManyWithoutWorkspaceNestedInput
+  aiProviderCredentials?: Prisma.AiProviderCredentialUncheckedUpdateManyWithoutWorkspaceNestedInput
+  aiAnalysisRuns?: Prisma.AiAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  noteAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  lifeModelAnalysisRuns?: Prisma.LifeModelAnalysisRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  lifeModelClaimFeedback?: Prisma.LifeModelClaimFeedbackUncheckedUpdateManyWithoutWorkspaceNestedInput
+  noteSuggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  stagedItems?: Prisma.StagedInteractionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  rules?: Prisma.RuleUncheckedUpdateManyWithoutWorkspaceNestedInput
+  ruleRuns?: Prisma.RuleRunUncheckedUpdateManyWithoutWorkspaceNestedInput
+  apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutWorkspaceNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutWorkspaceNestedInput
+  calendarConnections?: Prisma.CalendarConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  calendarEventLinks?: Prisma.CalendarEventLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
+  gmailConnections?: Prisma.GmailConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  gmailMessageLinks?: Prisma.GmailMessageLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
+  importJobs?: Prisma.ImportJobUncheckedUpdateManyWithoutWorkspaceNestedInput
+  importStagedVisits?: Prisma.ImportStagedVisitUncheckedUpdateManyWithoutWorkspaceNestedInput
+  planExpectedPersons?: Prisma.PlanExpectedPersonUncheckedUpdateManyWithoutWorkspaceNestedInput
+  assistantMessages?: Prisma.AssistantMessageUncheckedUpdateManyWithoutWorkspaceNestedInput
+  eraConnections?: Prisma.EraConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  eraAccountLinks?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
+  eraTransactionLinks?: Prisma.EraTransactionLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
+  connections?: Prisma.ConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProfile?: Prisma.LevelUpProfileUncheckedUpdateOneWithoutWorkspaceNestedInput
+  levelUpTestResults?: Prisma.LevelUpTestResultUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpCombines?: Prisma.LevelUpCombineUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpSnapshots?: Prisma.LevelUpRatingSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpTrainingSets?: Prisma.LevelUpTrainingSetUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpBadgeUnlocks?: Prisma.LevelUpBadgeUnlockUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpTargetBuilds?: Prisma.LevelUpTargetBuildUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpExercises?: Prisma.LevelUpExerciseUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpPrograms?: Prisma.LevelUpProgramUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramDays?: Prisma.LevelUpProgramDayUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpProgramEntries?: Prisma.LevelUpProgramEntryUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpSessions?: Prisma.LevelUpSessionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpBodyMetrics?: Prisma.LevelUpBodyMetricUncheckedUpdateManyWithoutWorkspaceNestedInput
+  levelUpReadinessSnapshots?: Prisma.LevelUpReadinessSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  graphEvents?: Prisma.GraphEventUncheckedUpdateManyWithoutWorkspaceNestedInput
+  reviewItems?: Prisma.ReviewItemUncheckedUpdateManyWithoutWorkspaceNestedInput
+  lifeModelSnapshots?: Prisma.LifeModelSnapshotUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveDayBriefs?: Prisma.AdaptiveDayBriefUncheckedUpdateManyWithoutWorkspaceNestedInput
+  adaptiveInterventionOutcomes?: Prisma.AdaptiveInterventionOutcomeUncheckedUpdateManyWithoutWorkspaceNestedInput
+  devices?: Prisma.DeviceUncheckedUpdateManyWithoutWorkspaceNestedInput
+  deviceAuthorizations?: Prisma.DeviceAuthorizationUncheckedUpdateManyWithoutWorkspaceNestedInput
+  deviceIngestItems?: Prisma.DeviceIngestItemUncheckedUpdateManyWithoutWorkspaceNestedInput
+}
+
 export type WorkspaceCreateWithoutRulesInput = {
   id?: string
   createdAt?: Date | string
@@ -7615,6 +8046,7 @@ export type WorkspaceCreateWithoutRulesInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionCreateNestedManyWithoutWorkspaceInput
@@ -7696,6 +8128,7 @@ export type WorkspaceUncheckedCreateWithoutRulesInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -7793,6 +8226,7 @@ export type WorkspaceUpdateWithoutRulesInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUpdateManyWithoutWorkspaceNestedInput
@@ -7874,6 +8308,7 @@ export type WorkspaceUncheckedUpdateWithoutRulesInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -7955,6 +8390,7 @@ export type WorkspaceCreateWithoutRuleRunsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionCreateNestedManyWithoutWorkspaceInput
@@ -8036,6 +8472,7 @@ export type WorkspaceUncheckedCreateWithoutRuleRunsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -8133,6 +8570,7 @@ export type WorkspaceUpdateWithoutRuleRunsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUpdateManyWithoutWorkspaceNestedInput
@@ -8214,6 +8652,7 @@ export type WorkspaceUncheckedUpdateWithoutRuleRunsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -8295,6 +8734,7 @@ export type WorkspaceCreateWithoutStagedItemsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionCreateNestedManyWithoutWorkspaceInput
@@ -8376,6 +8816,7 @@ export type WorkspaceUncheckedCreateWithoutStagedItemsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -8473,6 +8914,7 @@ export type WorkspaceUpdateWithoutStagedItemsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUpdateManyWithoutWorkspaceNestedInput
@@ -8554,6 +8996,7 @@ export type WorkspaceUncheckedUpdateWithoutStagedItemsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -8634,6 +9077,7 @@ export type WorkspaceCreateWithoutEventsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionCreateNestedManyWithoutWorkspaceInput
@@ -8715,6 +9159,7 @@ export type WorkspaceUncheckedCreateWithoutEventsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -8812,6 +9257,7 @@ export type WorkspaceUpdateWithoutEventsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUpdateManyWithoutWorkspaceNestedInput
@@ -8893,6 +9339,7 @@ export type WorkspaceUncheckedUpdateWithoutEventsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -8974,6 +9421,7 @@ export type WorkspaceCreateWithoutInteractionsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionCreateNestedManyWithoutWorkspaceInput
@@ -9055,6 +9503,7 @@ export type WorkspaceUncheckedCreateWithoutInteractionsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -9152,6 +9601,7 @@ export type WorkspaceUpdateWithoutInteractionsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUpdateManyWithoutWorkspaceNestedInput
@@ -9233,6 +9683,7 @@ export type WorkspaceUncheckedUpdateWithoutInteractionsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -9314,6 +9765,7 @@ export type WorkspaceCreateWithoutPlansInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionCreateNestedManyWithoutWorkspaceInput
@@ -9395,6 +9847,7 @@ export type WorkspaceUncheckedCreateWithoutPlansInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -9492,6 +9945,7 @@ export type WorkspaceUpdateWithoutPlansInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUpdateManyWithoutWorkspaceNestedInput
@@ -9573,6 +10027,7 @@ export type WorkspaceUncheckedUpdateWithoutPlansInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -9655,6 +10110,7 @@ export type WorkspaceCreateWithoutPlanExpectedPersonsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionCreateNestedManyWithoutWorkspaceInput
@@ -9736,6 +10192,7 @@ export type WorkspaceUncheckedCreateWithoutPlanExpectedPersonsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -9833,6 +10290,7 @@ export type WorkspaceUpdateWithoutPlanExpectedPersonsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUpdateManyWithoutWorkspaceNestedInput
@@ -9914,6 +10372,7 @@ export type WorkspaceUncheckedUpdateWithoutPlanExpectedPersonsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -9994,6 +10453,7 @@ export type WorkspaceCreateWithoutPlacesInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionCreateNestedManyWithoutWorkspaceInput
@@ -10075,6 +10535,7 @@ export type WorkspaceUncheckedCreateWithoutPlacesInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -10172,6 +10633,7 @@ export type WorkspaceUpdateWithoutPlacesInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUpdateManyWithoutWorkspaceNestedInput
@@ -10253,6 +10715,7 @@ export type WorkspaceUncheckedUpdateWithoutPlacesInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -10335,6 +10798,7 @@ export type WorkspaceCreateWithoutImportJobsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionCreateNestedManyWithoutWorkspaceInput
@@ -10416,6 +10880,7 @@ export type WorkspaceUncheckedCreateWithoutImportJobsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -10513,6 +10978,7 @@ export type WorkspaceUpdateWithoutImportJobsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUpdateManyWithoutWorkspaceNestedInput
@@ -10594,6 +11060,7 @@ export type WorkspaceUncheckedUpdateWithoutImportJobsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -10675,6 +11142,7 @@ export type WorkspaceCreateWithoutImportStagedVisitsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionCreateNestedManyWithoutWorkspaceInput
@@ -10756,6 +11224,7 @@ export type WorkspaceUncheckedCreateWithoutImportStagedVisitsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -10853,6 +11322,7 @@ export type WorkspaceUpdateWithoutImportStagedVisitsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUpdateManyWithoutWorkspaceNestedInput
@@ -10934,6 +11404,7 @@ export type WorkspaceUncheckedUpdateWithoutImportStagedVisitsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -11014,6 +11485,7 @@ export type WorkspaceCreateWithoutPlaceNotesInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionCreateNestedManyWithoutWorkspaceInput
@@ -11095,6 +11567,7 @@ export type WorkspaceUncheckedCreateWithoutPlaceNotesInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -11192,6 +11665,7 @@ export type WorkspaceUpdateWithoutPlaceNotesInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUpdateManyWithoutWorkspaceNestedInput
@@ -11273,6 +11747,7 @@ export type WorkspaceUncheckedUpdateWithoutPlaceNotesInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -11354,6 +11829,7 @@ export type WorkspaceCreateWithoutItemsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionCreateNestedManyWithoutWorkspaceInput
@@ -11435,6 +11911,7 @@ export type WorkspaceUncheckedCreateWithoutItemsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -11532,6 +12009,7 @@ export type WorkspaceUpdateWithoutItemsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUpdateManyWithoutWorkspaceNestedInput
@@ -11613,6 +12091,7 @@ export type WorkspaceUncheckedUpdateWithoutItemsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -11694,6 +12173,7 @@ export type WorkspaceCreateWithoutItemDefinitionsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionCreateNestedManyWithoutWorkspaceInput
@@ -11775,6 +12255,7 @@ export type WorkspaceUncheckedCreateWithoutItemDefinitionsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -11872,6 +12353,7 @@ export type WorkspaceUpdateWithoutItemDefinitionsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUpdateManyWithoutWorkspaceNestedInput
@@ -11953,6 +12435,7 @@ export type WorkspaceUncheckedUpdateWithoutItemDefinitionsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -12034,6 +12517,7 @@ export type WorkspaceCreateWithoutInventoryLotsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionCreateNestedManyWithoutWorkspaceInput
@@ -12115,6 +12599,7 @@ export type WorkspaceUncheckedCreateWithoutInventoryLotsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -12212,6 +12697,7 @@ export type WorkspaceUpdateWithoutInventoryLotsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUpdateManyWithoutWorkspaceNestedInput
@@ -12293,6 +12779,7 @@ export type WorkspaceUncheckedUpdateWithoutInventoryLotsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -12374,6 +12861,7 @@ export type WorkspaceCreateWithoutImportedFilesInput = {
   purchaseOrders?: Prisma.PurchaseOrderCreateNestedManyWithoutWorkspaceInput
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionCreateNestedManyWithoutWorkspaceInput
@@ -12455,6 +12943,7 @@ export type WorkspaceUncheckedCreateWithoutImportedFilesInput = {
   purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutWorkspaceInput
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -12552,6 +13041,7 @@ export type WorkspaceUpdateWithoutImportedFilesInput = {
   purchaseOrders?: Prisma.PurchaseOrderUpdateManyWithoutWorkspaceNestedInput
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUpdateManyWithoutWorkspaceNestedInput
@@ -12633,6 +13123,7 @@ export type WorkspaceUncheckedUpdateWithoutImportedFilesInput = {
   purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutWorkspaceNestedInput
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -12714,6 +13205,7 @@ export type WorkspaceCreateWithoutFileUploadIntentsInput = {
   purchaseOrders?: Prisma.PurchaseOrderCreateNestedManyWithoutWorkspaceInput
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionCreateNestedManyWithoutWorkspaceInput
@@ -12795,6 +13287,7 @@ export type WorkspaceUncheckedCreateWithoutFileUploadIntentsInput = {
   purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutWorkspaceInput
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -12892,6 +13385,7 @@ export type WorkspaceUpdateWithoutFileUploadIntentsInput = {
   purchaseOrders?: Prisma.PurchaseOrderUpdateManyWithoutWorkspaceNestedInput
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUpdateManyWithoutWorkspaceNestedInput
@@ -12973,6 +13467,7 @@ export type WorkspaceUncheckedUpdateWithoutFileUploadIntentsInput = {
   purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutWorkspaceNestedInput
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -13055,6 +13550,7 @@ export type WorkspaceCreateWithoutFileProcessingRunsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionCreateNestedManyWithoutWorkspaceInput
   fileEntityResolutions?: Prisma.FileEntityResolutionCreateNestedManyWithoutWorkspaceInput
@@ -13136,6 +13632,7 @@ export type WorkspaceUncheckedCreateWithoutFileProcessingRunsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedCreateNestedManyWithoutWorkspaceInput
   fileEntityResolutions?: Prisma.FileEntityResolutionUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -13233,6 +13730,7 @@ export type WorkspaceUpdateWithoutFileProcessingRunsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUpdateManyWithoutWorkspaceNestedInput
   fileEntityResolutions?: Prisma.FileEntityResolutionUpdateManyWithoutWorkspaceNestedInput
@@ -13314,6 +13812,7 @@ export type WorkspaceUncheckedUpdateWithoutFileProcessingRunsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileEntityResolutions?: Prisma.FileEntityResolutionUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -13395,6 +13894,7 @@ export type WorkspaceCreateWithoutFileChunksInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionCreateNestedManyWithoutWorkspaceInput
   fileEntityResolutions?: Prisma.FileEntityResolutionCreateNestedManyWithoutWorkspaceInput
@@ -13476,6 +13976,7 @@ export type WorkspaceUncheckedCreateWithoutFileChunksInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedCreateNestedManyWithoutWorkspaceInput
   fileEntityResolutions?: Prisma.FileEntityResolutionUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -13573,6 +14074,7 @@ export type WorkspaceUpdateWithoutFileChunksInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUpdateManyWithoutWorkspaceNestedInput
   fileEntityResolutions?: Prisma.FileEntityResolutionUpdateManyWithoutWorkspaceNestedInput
@@ -13654,6 +14156,7 @@ export type WorkspaceUncheckedUpdateWithoutFileChunksInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileEntityResolutions?: Prisma.FileEntityResolutionUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -13735,6 +14238,7 @@ export type WorkspaceCreateWithoutFileEntityMentionsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkCreateNestedManyWithoutWorkspaceInput
   fileEntityResolutions?: Prisma.FileEntityResolutionCreateNestedManyWithoutWorkspaceInput
@@ -13816,6 +14320,7 @@ export type WorkspaceUncheckedCreateWithoutFileEntityMentionsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileEntityResolutions?: Prisma.FileEntityResolutionUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -13913,6 +14418,7 @@ export type WorkspaceUpdateWithoutFileEntityMentionsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUpdateManyWithoutWorkspaceNestedInput
   fileEntityResolutions?: Prisma.FileEntityResolutionUpdateManyWithoutWorkspaceNestedInput
@@ -13994,6 +14500,7 @@ export type WorkspaceUncheckedUpdateWithoutFileEntityMentionsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileEntityResolutions?: Prisma.FileEntityResolutionUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -14075,6 +14582,7 @@ export type WorkspaceCreateWithoutPersonExternalIdentifiersInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionCreateNestedManyWithoutWorkspaceInput
@@ -14156,6 +14664,7 @@ export type WorkspaceUncheckedCreateWithoutPersonExternalIdentifiersInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -14253,6 +14762,7 @@ export type WorkspaceUpdateWithoutPersonExternalIdentifiersInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUpdateManyWithoutWorkspaceNestedInput
@@ -14334,6 +14844,7 @@ export type WorkspaceUncheckedUpdateWithoutPersonExternalIdentifiersInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -14415,6 +14926,7 @@ export type WorkspaceCreateWithoutFileEntityResolutionsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionCreateNestedManyWithoutWorkspaceInput
@@ -14496,6 +15008,7 @@ export type WorkspaceUncheckedCreateWithoutFileEntityResolutionsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -14593,6 +15106,7 @@ export type WorkspaceUpdateWithoutFileEntityResolutionsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUpdateManyWithoutWorkspaceNestedInput
@@ -14674,6 +15188,7 @@ export type WorkspaceUncheckedUpdateWithoutFileEntityResolutionsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -14755,6 +15270,7 @@ export type WorkspaceCreateWithoutEvidenceClaimsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionCreateNestedManyWithoutWorkspaceInput
@@ -14836,6 +15352,7 @@ export type WorkspaceUncheckedCreateWithoutEvidenceClaimsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -14933,6 +15450,7 @@ export type WorkspaceUpdateWithoutEvidenceClaimsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUpdateManyWithoutWorkspaceNestedInput
@@ -15014,6 +15532,7 @@ export type WorkspaceUncheckedUpdateWithoutEvidenceClaimsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -15095,6 +15614,7 @@ export type WorkspaceCreateWithoutAiProviderCredentialsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionCreateNestedManyWithoutWorkspaceInput
@@ -15176,6 +15696,7 @@ export type WorkspaceUncheckedCreateWithoutAiProviderCredentialsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -15273,6 +15794,7 @@ export type WorkspaceUpdateWithoutAiProviderCredentialsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUpdateManyWithoutWorkspaceNestedInput
@@ -15354,6 +15876,7 @@ export type WorkspaceUncheckedUpdateWithoutAiProviderCredentialsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -15435,6 +15958,7 @@ export type WorkspaceCreateWithoutAiAnalysisRunsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionCreateNestedManyWithoutWorkspaceInput
@@ -15516,6 +16040,7 @@ export type WorkspaceUncheckedCreateWithoutAiAnalysisRunsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -15613,6 +16138,7 @@ export type WorkspaceUpdateWithoutAiAnalysisRunsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUpdateManyWithoutWorkspaceNestedInput
@@ -15694,6 +16220,7 @@ export type WorkspaceUncheckedUpdateWithoutAiAnalysisRunsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -15775,6 +16302,7 @@ export type WorkspaceCreateWithoutNoteAnalysisRunsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionCreateNestedManyWithoutWorkspaceInput
@@ -15856,6 +16384,7 @@ export type WorkspaceUncheckedCreateWithoutNoteAnalysisRunsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -15953,6 +16482,7 @@ export type WorkspaceUpdateWithoutNoteAnalysisRunsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUpdateManyWithoutWorkspaceNestedInput
@@ -16034,6 +16564,7 @@ export type WorkspaceUncheckedUpdateWithoutNoteAnalysisRunsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -16115,6 +16646,7 @@ export type WorkspaceCreateWithoutTheoryAnalysisRunsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionCreateNestedManyWithoutWorkspaceInput
@@ -16196,6 +16728,7 @@ export type WorkspaceUncheckedCreateWithoutTheoryAnalysisRunsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -16293,6 +16826,7 @@ export type WorkspaceUpdateWithoutTheoryAnalysisRunsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUpdateManyWithoutWorkspaceNestedInput
@@ -16374,6 +16908,7 @@ export type WorkspaceUncheckedUpdateWithoutTheoryAnalysisRunsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -16455,6 +16990,7 @@ export type WorkspaceCreateWithoutLifeModelAnalysisRunsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionCreateNestedManyWithoutWorkspaceInput
@@ -16536,6 +17072,7 @@ export type WorkspaceUncheckedCreateWithoutLifeModelAnalysisRunsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -16633,6 +17170,7 @@ export type WorkspaceUpdateWithoutLifeModelAnalysisRunsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUpdateManyWithoutWorkspaceNestedInput
@@ -16714,6 +17252,7 @@ export type WorkspaceUncheckedUpdateWithoutLifeModelAnalysisRunsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -16795,6 +17334,7 @@ export type WorkspaceCreateWithoutNoteSuggestionsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionCreateNestedManyWithoutWorkspaceInput
@@ -16876,6 +17416,7 @@ export type WorkspaceUncheckedCreateWithoutNoteSuggestionsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -16973,6 +17514,7 @@ export type WorkspaceUpdateWithoutNoteSuggestionsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUpdateManyWithoutWorkspaceNestedInput
@@ -17054,6 +17596,7 @@ export type WorkspaceUncheckedUpdateWithoutNoteSuggestionsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -17134,6 +17677,7 @@ export type WorkspaceCreateWithoutGroupsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionCreateNestedManyWithoutWorkspaceInput
@@ -17215,6 +17759,7 @@ export type WorkspaceUncheckedCreateWithoutGroupsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -17312,6 +17857,7 @@ export type WorkspaceUpdateWithoutGroupsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUpdateManyWithoutWorkspaceNestedInput
@@ -17393,6 +17939,7 @@ export type WorkspaceUncheckedUpdateWithoutGroupsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -17474,6 +18021,7 @@ export type WorkspaceCreateWithoutSupplierProfilesInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionCreateNestedManyWithoutWorkspaceInput
@@ -17555,6 +18103,7 @@ export type WorkspaceUncheckedCreateWithoutSupplierProfilesInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -17652,6 +18201,7 @@ export type WorkspaceUpdateWithoutSupplierProfilesInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUpdateManyWithoutWorkspaceNestedInput
@@ -17733,6 +18283,7 @@ export type WorkspaceUncheckedUpdateWithoutSupplierProfilesInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -17814,6 +18365,7 @@ export type WorkspaceCreateWithoutPurchaseOrdersInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionCreateNestedManyWithoutWorkspaceInput
@@ -17895,6 +18447,7 @@ export type WorkspaceUncheckedCreateWithoutPurchaseOrdersInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -17992,6 +18545,7 @@ export type WorkspaceUpdateWithoutPurchaseOrdersInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUpdateManyWithoutWorkspaceNestedInput
@@ -18073,6 +18627,7 @@ export type WorkspaceUncheckedUpdateWithoutPurchaseOrdersInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -18154,6 +18709,7 @@ export type WorkspaceCreateWithoutPurchaseReceiptLinesInput = {
   purchaseOrders?: Prisma.PurchaseOrderCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionCreateNestedManyWithoutWorkspaceInput
@@ -18235,6 +18791,7 @@ export type WorkspaceUncheckedCreateWithoutPurchaseReceiptLinesInput = {
   purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -18332,6 +18889,7 @@ export type WorkspaceUpdateWithoutPurchaseReceiptLinesInput = {
   purchaseOrders?: Prisma.PurchaseOrderUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUpdateManyWithoutWorkspaceNestedInput
@@ -18413,6 +18971,7 @@ export type WorkspaceUncheckedUpdateWithoutPurchaseReceiptLinesInput = {
   purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -18494,6 +19053,7 @@ export type WorkspaceCreateWithoutNotesInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionCreateNestedManyWithoutWorkspaceInput
@@ -18575,6 +19135,7 @@ export type WorkspaceUncheckedCreateWithoutNotesInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -18672,6 +19233,7 @@ export type WorkspaceUpdateWithoutNotesInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUpdateManyWithoutWorkspaceNestedInput
@@ -18753,6 +19315,7 @@ export type WorkspaceUncheckedUpdateWithoutNotesInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -18834,6 +19397,7 @@ export type WorkspaceCreateWithoutTheorySnapshotsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionCreateNestedManyWithoutWorkspaceInput
@@ -18915,6 +19479,7 @@ export type WorkspaceUncheckedCreateWithoutTheorySnapshotsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -19012,6 +19577,7 @@ export type WorkspaceUpdateWithoutTheorySnapshotsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUpdateManyWithoutWorkspaceNestedInput
@@ -19093,6 +19659,7 @@ export type WorkspaceUncheckedUpdateWithoutTheorySnapshotsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -19175,6 +19742,7 @@ export type WorkspaceCreateWithoutLifeModelSnapshotsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionCreateNestedManyWithoutWorkspaceInput
@@ -19256,6 +19824,7 @@ export type WorkspaceUncheckedCreateWithoutLifeModelSnapshotsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -19353,6 +19922,7 @@ export type WorkspaceUpdateWithoutLifeModelSnapshotsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUpdateManyWithoutWorkspaceNestedInput
@@ -19434,6 +20004,7 @@ export type WorkspaceUncheckedUpdateWithoutLifeModelSnapshotsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -19515,6 +20086,7 @@ export type WorkspaceCreateWithoutLifeModelClaimFeedbackInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionCreateNestedManyWithoutWorkspaceInput
@@ -19596,6 +20168,7 @@ export type WorkspaceUncheckedCreateWithoutLifeModelClaimFeedbackInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -19693,6 +20266,7 @@ export type WorkspaceUpdateWithoutLifeModelClaimFeedbackInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUpdateManyWithoutWorkspaceNestedInput
@@ -19774,6 +20348,7 @@ export type WorkspaceUncheckedUpdateWithoutLifeModelClaimFeedbackInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -19855,6 +20430,7 @@ export type WorkspaceCreateWithoutAdaptiveDayBriefsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionCreateNestedManyWithoutWorkspaceInput
@@ -19936,6 +20512,7 @@ export type WorkspaceUncheckedCreateWithoutAdaptiveDayBriefsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -20033,6 +20610,7 @@ export type WorkspaceUpdateWithoutAdaptiveDayBriefsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUpdateManyWithoutWorkspaceNestedInput
@@ -20114,6 +20692,7 @@ export type WorkspaceUncheckedUpdateWithoutAdaptiveDayBriefsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -20195,6 +20774,7 @@ export type WorkspaceCreateWithoutAdaptiveInterventionOutcomesInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionCreateNestedManyWithoutWorkspaceInput
@@ -20276,6 +20856,7 @@ export type WorkspaceUncheckedCreateWithoutAdaptiveInterventionOutcomesInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -20373,6 +20954,7 @@ export type WorkspaceUpdateWithoutAdaptiveInterventionOutcomesInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUpdateManyWithoutWorkspaceNestedInput
@@ -20454,6 +21036,7 @@ export type WorkspaceUncheckedUpdateWithoutAdaptiveInterventionOutcomesInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -20535,6 +21118,7 @@ export type WorkspaceCreateWithoutAssistantMessagesInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionCreateNestedManyWithoutWorkspaceInput
@@ -20616,6 +21200,7 @@ export type WorkspaceUncheckedCreateWithoutAssistantMessagesInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -20713,6 +21298,7 @@ export type WorkspaceUpdateWithoutAssistantMessagesInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUpdateManyWithoutWorkspaceNestedInput
@@ -20794,6 +21380,7 @@ export type WorkspaceUncheckedUpdateWithoutAssistantMessagesInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -20875,6 +21462,7 @@ export type WorkspaceCreateWithoutLevelUpProfileInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionCreateNestedManyWithoutWorkspaceInput
@@ -20956,6 +21544,7 @@ export type WorkspaceUncheckedCreateWithoutLevelUpProfileInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -21053,6 +21642,7 @@ export type WorkspaceUpdateWithoutLevelUpProfileInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUpdateManyWithoutWorkspaceNestedInput
@@ -21134,6 +21724,7 @@ export type WorkspaceUncheckedUpdateWithoutLevelUpProfileInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -21215,6 +21806,7 @@ export type WorkspaceCreateWithoutLevelUpTestResultsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionCreateNestedManyWithoutWorkspaceInput
@@ -21296,6 +21888,7 @@ export type WorkspaceUncheckedCreateWithoutLevelUpTestResultsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -21393,6 +21986,7 @@ export type WorkspaceUpdateWithoutLevelUpTestResultsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUpdateManyWithoutWorkspaceNestedInput
@@ -21474,6 +22068,7 @@ export type WorkspaceUncheckedUpdateWithoutLevelUpTestResultsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -21555,6 +22150,7 @@ export type WorkspaceCreateWithoutLevelUpCombinesInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionCreateNestedManyWithoutWorkspaceInput
@@ -21636,6 +22232,7 @@ export type WorkspaceUncheckedCreateWithoutLevelUpCombinesInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -21733,6 +22330,7 @@ export type WorkspaceUpdateWithoutLevelUpCombinesInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUpdateManyWithoutWorkspaceNestedInput
@@ -21814,6 +22412,7 @@ export type WorkspaceUncheckedUpdateWithoutLevelUpCombinesInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -21895,6 +22494,7 @@ export type WorkspaceCreateWithoutLevelUpSnapshotsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionCreateNestedManyWithoutWorkspaceInput
@@ -21976,6 +22576,7 @@ export type WorkspaceUncheckedCreateWithoutLevelUpSnapshotsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -22073,6 +22674,7 @@ export type WorkspaceUpdateWithoutLevelUpSnapshotsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUpdateManyWithoutWorkspaceNestedInput
@@ -22154,6 +22756,7 @@ export type WorkspaceUncheckedUpdateWithoutLevelUpSnapshotsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -22235,6 +22838,7 @@ export type WorkspaceCreateWithoutLevelUpTrainingSetsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionCreateNestedManyWithoutWorkspaceInput
@@ -22316,6 +22920,7 @@ export type WorkspaceUncheckedCreateWithoutLevelUpTrainingSetsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -22413,6 +23018,7 @@ export type WorkspaceUpdateWithoutLevelUpTrainingSetsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUpdateManyWithoutWorkspaceNestedInput
@@ -22494,6 +23100,7 @@ export type WorkspaceUncheckedUpdateWithoutLevelUpTrainingSetsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -22575,6 +23182,7 @@ export type WorkspaceCreateWithoutLevelUpExercisesInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionCreateNestedManyWithoutWorkspaceInput
@@ -22656,6 +23264,7 @@ export type WorkspaceUncheckedCreateWithoutLevelUpExercisesInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -22753,6 +23362,7 @@ export type WorkspaceUpdateWithoutLevelUpExercisesInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUpdateManyWithoutWorkspaceNestedInput
@@ -22834,6 +23444,7 @@ export type WorkspaceUncheckedUpdateWithoutLevelUpExercisesInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -22915,6 +23526,7 @@ export type WorkspaceCreateWithoutLevelUpProgramsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionCreateNestedManyWithoutWorkspaceInput
@@ -22996,6 +23608,7 @@ export type WorkspaceUncheckedCreateWithoutLevelUpProgramsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -23093,6 +23706,7 @@ export type WorkspaceUpdateWithoutLevelUpProgramsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUpdateManyWithoutWorkspaceNestedInput
@@ -23174,6 +23788,7 @@ export type WorkspaceUncheckedUpdateWithoutLevelUpProgramsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -23255,6 +23870,7 @@ export type WorkspaceCreateWithoutLevelUpProgramDaysInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionCreateNestedManyWithoutWorkspaceInput
@@ -23336,6 +23952,7 @@ export type WorkspaceUncheckedCreateWithoutLevelUpProgramDaysInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -23433,6 +24050,7 @@ export type WorkspaceUpdateWithoutLevelUpProgramDaysInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUpdateManyWithoutWorkspaceNestedInput
@@ -23514,6 +24132,7 @@ export type WorkspaceUncheckedUpdateWithoutLevelUpProgramDaysInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -23595,6 +24214,7 @@ export type WorkspaceCreateWithoutLevelUpProgramEntriesInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionCreateNestedManyWithoutWorkspaceInput
@@ -23676,6 +24296,7 @@ export type WorkspaceUncheckedCreateWithoutLevelUpProgramEntriesInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -23773,6 +24394,7 @@ export type WorkspaceUpdateWithoutLevelUpProgramEntriesInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUpdateManyWithoutWorkspaceNestedInput
@@ -23854,6 +24476,7 @@ export type WorkspaceUncheckedUpdateWithoutLevelUpProgramEntriesInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -23935,6 +24558,7 @@ export type WorkspaceCreateWithoutLevelUpSessionsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionCreateNestedManyWithoutWorkspaceInput
@@ -24016,6 +24640,7 @@ export type WorkspaceUncheckedCreateWithoutLevelUpSessionsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -24113,6 +24738,7 @@ export type WorkspaceUpdateWithoutLevelUpSessionsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUpdateManyWithoutWorkspaceNestedInput
@@ -24194,6 +24820,7 @@ export type WorkspaceUncheckedUpdateWithoutLevelUpSessionsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -24275,6 +24902,7 @@ export type WorkspaceCreateWithoutLevelUpBodyMetricsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionCreateNestedManyWithoutWorkspaceInput
@@ -24356,6 +24984,7 @@ export type WorkspaceUncheckedCreateWithoutLevelUpBodyMetricsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -24453,6 +25082,7 @@ export type WorkspaceUpdateWithoutLevelUpBodyMetricsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUpdateManyWithoutWorkspaceNestedInput
@@ -24534,6 +25164,7 @@ export type WorkspaceUncheckedUpdateWithoutLevelUpBodyMetricsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -24615,6 +25246,7 @@ export type WorkspaceCreateWithoutLevelUpReadinessSnapshotsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionCreateNestedManyWithoutWorkspaceInput
@@ -24696,6 +25328,7 @@ export type WorkspaceUncheckedCreateWithoutLevelUpReadinessSnapshotsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -24793,6 +25426,7 @@ export type WorkspaceUpdateWithoutLevelUpReadinessSnapshotsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUpdateManyWithoutWorkspaceNestedInput
@@ -24874,6 +25508,7 @@ export type WorkspaceUncheckedUpdateWithoutLevelUpReadinessSnapshotsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -24955,6 +25590,7 @@ export type WorkspaceCreateWithoutLevelUpBadgeUnlocksInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionCreateNestedManyWithoutWorkspaceInput
@@ -25036,6 +25672,7 @@ export type WorkspaceUncheckedCreateWithoutLevelUpBadgeUnlocksInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -25133,6 +25770,7 @@ export type WorkspaceUpdateWithoutLevelUpBadgeUnlocksInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUpdateManyWithoutWorkspaceNestedInput
@@ -25214,6 +25852,7 @@ export type WorkspaceUncheckedUpdateWithoutLevelUpBadgeUnlocksInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -25295,6 +25934,7 @@ export type WorkspaceCreateWithoutLevelUpTargetBuildsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionCreateNestedManyWithoutWorkspaceInput
@@ -25376,6 +26016,7 @@ export type WorkspaceUncheckedCreateWithoutLevelUpTargetBuildsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -25473,6 +26114,7 @@ export type WorkspaceUpdateWithoutLevelUpTargetBuildsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUpdateManyWithoutWorkspaceNestedInput
@@ -25554,6 +26196,7 @@ export type WorkspaceUncheckedUpdateWithoutLevelUpTargetBuildsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -25635,6 +26278,7 @@ export type WorkspaceCreateWithoutGraphEventsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionCreateNestedManyWithoutWorkspaceInput
@@ -25716,6 +26360,7 @@ export type WorkspaceUncheckedCreateWithoutGraphEventsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -25813,6 +26458,7 @@ export type WorkspaceUpdateWithoutGraphEventsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUpdateManyWithoutWorkspaceNestedInput
@@ -25894,6 +26540,7 @@ export type WorkspaceUncheckedUpdateWithoutGraphEventsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -25975,6 +26622,7 @@ export type WorkspaceCreateWithoutReviewItemsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionCreateNestedManyWithoutWorkspaceInput
@@ -26056,6 +26704,7 @@ export type WorkspaceUncheckedCreateWithoutReviewItemsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutWorkspaceInput
   importedFiles?: Prisma.ImportedFileUncheckedCreateNestedManyWithoutWorkspaceInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedCreateNestedManyWithoutWorkspaceInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedCreateNestedManyWithoutWorkspaceInput
   fileChunks?: Prisma.FileChunkUncheckedCreateNestedManyWithoutWorkspaceInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -26153,6 +26802,7 @@ export type WorkspaceUpdateWithoutReviewItemsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUpdateManyWithoutWorkspaceNestedInput
@@ -26234,6 +26884,7 @@ export type WorkspaceUncheckedUpdateWithoutReviewItemsInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -26324,6 +26975,7 @@ export type WorkspaceUpdateWithoutOwnerUserInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUpdateManyWithoutWorkspaceNestedInput
@@ -26405,6 +27057,7 @@ export type WorkspaceUncheckedUpdateWithoutOwnerUserInput = {
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutWorkspaceNestedInput
   importedFiles?: Prisma.ImportedFileUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileUploadIntents?: Prisma.FileUploadIntentUncheckedUpdateManyWithoutWorkspaceNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileProcessingRuns?: Prisma.FileProcessingRunUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileChunks?: Prisma.FileChunkUncheckedUpdateManyWithoutWorkspaceNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -26494,6 +27147,7 @@ export type WorkspaceCountOutputType = {
   purchaseReceiptLines: number
   importedFiles: number
   fileUploadIntents: number
+  granolaNoteLinks: number
   fileProcessingRuns: number
   fileChunks: number
   fileEntityMentions: number
@@ -26567,6 +27221,7 @@ export type WorkspaceCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensi
   purchaseReceiptLines?: boolean | WorkspaceCountOutputTypeCountPurchaseReceiptLinesArgs
   importedFiles?: boolean | WorkspaceCountOutputTypeCountImportedFilesArgs
   fileUploadIntents?: boolean | WorkspaceCountOutputTypeCountFileUploadIntentsArgs
+  granolaNoteLinks?: boolean | WorkspaceCountOutputTypeCountGranolaNoteLinksArgs
   fileProcessingRuns?: boolean | WorkspaceCountOutputTypeCountFileProcessingRunsArgs
   fileChunks?: boolean | WorkspaceCountOutputTypeCountFileChunksArgs
   fileEntityMentions?: boolean | WorkspaceCountOutputTypeCountFileEntityMentionsArgs
@@ -26761,6 +27416,13 @@ export type WorkspaceCountOutputTypeCountImportedFilesArgs<ExtArgs extends runti
  */
 export type WorkspaceCountOutputTypeCountFileUploadIntentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.FileUploadIntentWhereInput
+}
+
+/**
+ * WorkspaceCountOutputType without action
+ */
+export type WorkspaceCountOutputTypeCountGranolaNoteLinksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.GranolaNoteLinkWhereInput
 }
 
 /**
@@ -27150,6 +27812,7 @@ export type WorkspaceSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   purchaseReceiptLines?: boolean | Prisma.Workspace$purchaseReceiptLinesArgs<ExtArgs>
   importedFiles?: boolean | Prisma.Workspace$importedFilesArgs<ExtArgs>
   fileUploadIntents?: boolean | Prisma.Workspace$fileUploadIntentsArgs<ExtArgs>
+  granolaNoteLinks?: boolean | Prisma.Workspace$granolaNoteLinksArgs<ExtArgs>
   fileProcessingRuns?: boolean | Prisma.Workspace$fileProcessingRunsArgs<ExtArgs>
   fileChunks?: boolean | Prisma.Workspace$fileChunksArgs<ExtArgs>
   fileEntityMentions?: boolean | Prisma.Workspace$fileEntityMentionsArgs<ExtArgs>
@@ -27262,6 +27925,7 @@ export type WorkspaceInclude<ExtArgs extends runtime.Types.Extensions.InternalAr
   purchaseReceiptLines?: boolean | Prisma.Workspace$purchaseReceiptLinesArgs<ExtArgs>
   importedFiles?: boolean | Prisma.Workspace$importedFilesArgs<ExtArgs>
   fileUploadIntents?: boolean | Prisma.Workspace$fileUploadIntentsArgs<ExtArgs>
+  granolaNoteLinks?: boolean | Prisma.Workspace$granolaNoteLinksArgs<ExtArgs>
   fileProcessingRuns?: boolean | Prisma.Workspace$fileProcessingRunsArgs<ExtArgs>
   fileChunks?: boolean | Prisma.Workspace$fileChunksArgs<ExtArgs>
   fileEntityMentions?: boolean | Prisma.Workspace$fileEntityMentionsArgs<ExtArgs>
@@ -27346,6 +28010,7 @@ export type $WorkspacePayload<ExtArgs extends runtime.Types.Extensions.InternalA
     purchaseReceiptLines: Prisma.$PurchaseReceiptLinePayload<ExtArgs>[]
     importedFiles: Prisma.$ImportedFilePayload<ExtArgs>[]
     fileUploadIntents: Prisma.$FileUploadIntentPayload<ExtArgs>[]
+    granolaNoteLinks: Prisma.$GranolaNoteLinkPayload<ExtArgs>[]
     fileProcessingRuns: Prisma.$FileProcessingRunPayload<ExtArgs>[]
     fileChunks: Prisma.$FileChunkPayload<ExtArgs>[]
     fileEntityMentions: Prisma.$FileEntityMentionPayload<ExtArgs>[]
@@ -27822,6 +28487,7 @@ export interface Prisma__WorkspaceClient<T, Null = never, ExtArgs extends runtim
   purchaseReceiptLines<T extends Prisma.Workspace$purchaseReceiptLinesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Workspace$purchaseReceiptLinesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PurchaseReceiptLinePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   importedFiles<T extends Prisma.Workspace$importedFilesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Workspace$importedFilesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ImportedFilePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   fileUploadIntents<T extends Prisma.Workspace$fileUploadIntentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Workspace$fileUploadIntentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FileUploadIntentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  granolaNoteLinks<T extends Prisma.Workspace$granolaNoteLinksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Workspace$granolaNoteLinksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$GranolaNoteLinkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   fileProcessingRuns<T extends Prisma.Workspace$fileProcessingRunsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Workspace$fileProcessingRunsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FileProcessingRunPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   fileChunks<T extends Prisma.Workspace$fileChunksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Workspace$fileChunksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FileChunkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   fileEntityMentions<T extends Prisma.Workspace$fileEntityMentionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Workspace$fileEntityMentionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FileEntityMentionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -28782,6 +29448,30 @@ export type Workspace$fileUploadIntentsArgs<ExtArgs extends runtime.Types.Extens
   take?: number
   skip?: number
   distinct?: Prisma.FileUploadIntentScalarFieldEnum | Prisma.FileUploadIntentScalarFieldEnum[]
+}
+
+/**
+ * Workspace.granolaNoteLinks
+ */
+export type Workspace$granolaNoteLinksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the GranolaNoteLink
+   */
+  select?: Prisma.GranolaNoteLinkSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the GranolaNoteLink
+   */
+  omit?: Prisma.GranolaNoteLinkOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.GranolaNoteLinkInclude<ExtArgs> | null
+  where?: Prisma.GranolaNoteLinkWhereInput
+  orderBy?: Prisma.GranolaNoteLinkOrderByWithRelationInput | Prisma.GranolaNoteLinkOrderByWithRelationInput[]
+  cursor?: Prisma.GranolaNoteLinkWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.GranolaNoteLinkScalarFieldEnum | Prisma.GranolaNoteLinkScalarFieldEnum[]
 }
 
 /**

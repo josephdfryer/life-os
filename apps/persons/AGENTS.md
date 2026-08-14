@@ -37,3 +37,9 @@ UI work in Persons (and all Life OS apps) follows **Still v2**. Read `docs/STILL
 
 Prefer accessible language and Mermaid diagrams over code-heavy explanations. If implementation names are useful, include them as supporting labels rather than making the doc require code knowledge.
 <!-- END:persons-architecture-doc -->
+
+<!-- BEGIN:vercel-managed-output -->
+# Managed Vercel output
+
+Persons is deployed through Vercel's managed Next.js builder. Keep `outputFileTracingRoot` for monorepo tracing, but do not set Next.js `output: "standalone"`; that output mode is for self-hosted servers and breaks Vercel's managed output finalization.
+<!-- END:vercel-managed-output -->

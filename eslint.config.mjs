@@ -24,7 +24,12 @@ export default tseslint.config(
       "logs/**",
       ".backups/**",
       ".claude/**",
-      ".vercel/**",
+      // Must be `**/.vercel/**`, not `.vercel/**`: per-app Vercel builds write
+      // minified output to apps/*/.vercel/output, which a root-relative pattern
+      // does not match. Because `npm run lint` chains eslint && boundaries &&
+      // migrations, those bundles failing lint silently skipped both repo
+      // invariants — the same trap the design-sync note below describes.
+      "**/.vercel/**",
       "docs/ui-preview/**",
       // design-sync build output — gitignored, generated, and not ours to lint.
       // While these were scanned, `npm run lint` exited 1 on 263 pre-existing

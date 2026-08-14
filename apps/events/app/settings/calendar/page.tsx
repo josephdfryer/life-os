@@ -1,4 +1,5 @@
 import { Suspense } from "react"
+import Link from "next/link"
 import { redirect } from "next/navigation"
 import { auth } from "@/auth"
 import CalendarSettingsClient from "@/components/settings/CalendarSettingsClient"
@@ -12,6 +13,7 @@ export default async function CalendarSettingsPage() {
   return (
     <div style={{ maxWidth: "760px", margin: "0 auto", padding: "40px 24px" }}>
       <div style={{ marginBottom: "28px" }}>
+        <Link href="/connections" style={{ display: "inline-block", marginBottom: 12, color: "var(--ink-3)", fontSize: 12, textDecoration: "none" }}>← Connections</Link>
         <h1
           style={{
             fontFamily: "var(--font-display)",

@@ -3,7 +3,7 @@ import { Cormorant_Garamond, IBM_Plex_Mono, IBM_Plex_Sans } from "next/font/goog
 import "./globals.css"
 import Providers from "./providers"
 import Nav from "@/components/Nav"
-import { LifeOSBar } from "@life-os/ui"
+import { AuthenticatedLifeOSBar } from "@life-os/auth/client"
 
 const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
@@ -53,7 +53,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className={`${cormorant.variable} ${plexMono.variable} ${plexSans.variable}`}>
       <body>
         <Providers>
-          <LifeOSBar current="levelUp" />
+          <AuthenticatedLifeOSBar current="levelUp" />
           <Nav />
           <main>{children}</main>
         </Providers>

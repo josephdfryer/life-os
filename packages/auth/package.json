@@ -5,7 +5,8 @@
   "main": "./index.ts",
   "types": "./index.ts",
   "exports": {
-    ".": "./index.ts"
+    ".": "./index.ts",
+    "./client": "./client.tsx"
   },
   "dependencies": {
     "@life-os/db": "*",
