@@ -8,7 +8,13 @@ This runbook provisions the private original-file store used by Assistant. It do
 2. Enable Block Public Access, object versioning, and default encryption. Do not add a public bucket policy.
 3. Add a lifecycle policy for noncurrent versions only after choosing a recovery period. Archive in Life OS is logical: the application does not delete the S3 object.
 4. Create a narrow IAM role for the Assistant Vercel project. Its trust policy must accept Vercel OIDC only for the intended team, project, and production environment. Follow the current [Vercel OIDC AWS guide](https://vercel.com/docs/oidc/aws) when constructing claim conditions.
-5. Grant the role only `s3:PutObject`, `s3:GetObject`, and `s3:HeadObject` for `arn:aws:s3:::BUCKET/workspaces/*/files/*`. Add checksum and encryption conditions where AWS policy support permits them.
+5. Grant the role only `s3:PutObject` and `s3:GetObject` for `arn:aws:s3:::BUCKET/workspaces/*`. Add checksum and encryption conditions where AWS policy support permits them.
+
+   Do **not** try to grant `s3:HeadObject` — it is not a distinct IAM action. The `HeadObject`
+   call this pipeline makes to verify a completed upload is authorized by `s3:GetObject`.
+   Adding `s3:ListBucket` is optional but worth it: without it, a `HeadObject` against a missing
+   key returns `403 Forbidden` instead of `404 Not Found`, which makes a failed upload look like
+   a permissions problem.
 6. Configure the bucket CORS policy to allow `PUT` from the exact Assistant production origin with `content-type`, `x-amz-checksum-sha256`, `x-amz-meta-life-os-sha256`, and `x-amz-server-side-encryption` request headers.
 
 ## Vercel environment
