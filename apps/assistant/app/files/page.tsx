@@ -1,6 +1,9 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
+import { uploadFile } from "@/lib/upload"
+
+const STAGE_LABEL = { hashing: "Hashing", authorizing: "Authorizing", uploading: "Uploading", verifying: "Verifying" } as const
 
 type FileRow = {
   id: string
@@ -32,20 +35,10 @@ export default function FilesPage() {
   useEffect(() => { refresh().catch(() => {}) }, [])
 
   async function upload(file: File) {
-    setStatus(`Hashing ${file.name}…`)
-    const digest = await crypto.subtle.digest("SHA-256", await file.arrayBuffer())
-    const checksumSha256 = [...new Uint8Array(digest)].map(byte => byte.toString(16).padStart(2, "0")).join("")
-    setStatus(`Authorizing ${file.name}…`)
-    const intentResponse = await fetch("/api/files/upload-intents", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ filename: file.name, mimeType: file.type || "application/octet-stream", sizeBytes: file.size, checksumSha256, storeOnly }) })
-    const intent = await intentResponse.json()
-    if (!intentResponse.ok) throw new Error(intent.error ?? "Upload authorization failed")
-    setStatus(`Uploading ${file.name}…`)
-    const uploadResponse = await fetch(intent.upload.url, { method: "PUT", headers: intent.upload.headers, body: file })
-    if (!uploadResponse.ok) throw new Error(`Upload failed (${uploadResponse.status})`)
-    setStatus(`Verifying ${file.name}…`)
-    const completeResponse = await fetch(`/api/files/upload-intents/${intent.intentId}/complete`, { method: "POST" })
-    const completed = await completeResponse.json()
-    if (!completeResponse.ok) throw new Error(completed.error ?? "Upload verification failed")
+    await uploadFile(file, {
+      storeOnly,
+      onProgress: (stage, filename) => setStatus(`${STAGE_LABEL[stage]} ${filename}…`),
+    })
     setStatus(`${file.name} is queued for processing.`)
     await refresh()
   }

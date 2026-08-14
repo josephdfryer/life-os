@@ -1,6 +1,10 @@
 "use client"
 
-import { useEffect, useMemo, useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
+import { uploadFile, type UploadedFile } from "@/lib/upload"
+
+const STAGE_LABEL = { hashing: "Hashing", authorizing: "Authorizing", uploading: "Uploading", verifying: "Verifying" } as const
+const MAX_SCOPED_FILES = 10
 
 type Message = {
   id: string
@@ -11,23 +15,21 @@ type Message = {
   citations?: Array<{ chunkId: string; fileId: string; filename: string; locator: unknown; exactQuote: string }>
 }
 
-type LibraryFile = { id: string; filename: string; processingState: string }
-
 export default function AssistantChat() {
   const [messages, setMessages] = useState<Message[]>([])
   const [draft, setDraft] = useState("")
   const [thinking, setThinking] = useState(false)
   const [loaded, setLoaded] = useState(false)
-  const [files, setFiles] = useState<LibraryFile[]>([])
+  // Only files attached during this session are offered as scope. Scoping is a
+  // narrowing of what the agent already reaches — with none selected it searches
+  // the whole library — so a library-wide picker sitting above the composer was
+  // permanent clutter that also had to page the entire library on every load.
+  const [sessionFiles, setSessionFiles] = useState<UploadedFile[]>([])
   const [fileIds, setFileIds] = useState<string[]>([])
-  const [fileQuery, setFileQuery] = useState("")
+  const [uploadStatus, setUploadStatus] = useState("")
   const bottomRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLTextAreaElement>(null)
-  const visibleFiles = useMemo(() => {
-    const query = fileQuery.trim().toLowerCase()
-    const selected = new Set(fileIds)
-    return files.filter(file => file.filename.toLowerCase().includes(query)).sort((a, b) => Number(selected.has(b.id)) - Number(selected.has(a.id))).slice(0, 20)
-  }, [fileIds, fileQuery, files])
+  const attachRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     fetch("/api/chat")
@@ -40,26 +42,28 @@ export default function AssistantChat() {
   }, [])
 
   useEffect(() => {
-    const controller = new AbortController()
-    async function loadLibrary() {
-      const loaded: LibraryFile[] = []
-      let cursor: string | null = null
-      do {
-        const response: Response = await fetch(`/api/files?limit=100${cursor ? `&cursor=${encodeURIComponent(cursor)}` : ""}`, { signal: controller.signal })
-        if (!response.ok) break
-        const page = await response.json() as { files?: LibraryFile[]; nextCursor?: string | null }
-        loaded.push(...(page.files ?? []))
-        cursor = page.nextCursor ?? null
-      } while (cursor && !controller.signal.aborted)
-      if (!controller.signal.aborted) setFiles(loaded)
-    }
-    loadLibrary().catch(() => {})
-    return () => controller.abort()
-  }, [])
-
-  useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: messages.length > 2 ? "smooth" : "auto" })
   }, [messages, thinking])
+
+  async function attach(event: React.ChangeEvent<HTMLInputElement>) {
+    const chosen = [...(event.target.files ?? [])]
+    if (attachRef.current) attachRef.current.value = ""
+    for (const file of chosen) {
+      try {
+        const uploaded = await uploadFile(file, {
+          onProgress: (stage, filename) => setUploadStatus(`${STAGE_LABEL[stage]} ${filename}…`),
+        })
+        // Attaching is the intent to scope — select it rather than making the
+        // user upload and then pick the same file again.
+        setSessionFiles(current => current.some(f => f.id === uploaded.id) ? current : [...current, uploaded])
+        setFileIds(current => current.includes(uploaded.id) || current.length >= MAX_SCOPED_FILES ? current : [...current, uploaded.id])
+        setUploadStatus(`${uploaded.filename} attached — still processing, so extraction may lag a moment.`)
+      } catch (error) {
+        setUploadStatus(error instanceof Error ? error.message : "Upload failed")
+        return
+      }
+    }
+  }
 
   async function send() {
     const text = draft.trim()
@@ -154,16 +158,38 @@ export default function AssistantChat() {
 
       <footer style={{ borderTop: "1px solid var(--border-subtle)", background: "var(--surface)", padding: "14px 24px 18px" }}>
         <div style={{ width: "min(100%, 720px)", margin: "0 auto" }}>
-          {!!files.length && <div style={{ display: "flex", gap: "6px", alignItems: "center", marginBottom: "8px", overflowX: "auto" }}>
-            <span style={{ color: "var(--ink-4)", fontSize: "11px", flex: "0 0 auto" }}>Scope to files</span>
-            <label style={{ position: "absolute", width: 1, height: 1, overflow: "hidden", clip: "rect(0,0,0,0)" }} htmlFor="file-scope-search">Find a file</label>
-            <input id="file-scope-search" value={fileQuery} onChange={event => setFileQuery(event.target.value)} placeholder="Find a file…" style={{ width: 120, border: "1px solid var(--border)", borderRadius: "var(--radius-pill)", padding: "4px 9px", background: "transparent", color: "var(--ink-2)", font: "inherit", fontSize: 10 }} />
-            {visibleFiles.map(file => {
+          {!!sessionFiles.length && <div style={{ display: "flex", gap: "6px", alignItems: "center", marginBottom: "8px", overflowX: "auto" }}>
+            <span style={{ color: "var(--ink-4)", fontSize: "11px", flex: "0 0 auto" }}>Scope to</span>
+            {sessionFiles.map(file => {
               const selected = fileIds.includes(file.id)
-              return <button key={file.id} type="button" onClick={() => setFileIds(ids => selected ? ids.filter(id => id !== file.id) : ids.length < 10 ? [...ids, file.id] : ids)} style={{ border: `1px solid ${selected ? "var(--cognac)" : "var(--border)"}`, background: selected ? "var(--cognac-soft)" : "transparent", color: selected ? "var(--cognac-deep)" : "var(--ink-3)", borderRadius: "var(--radius-pill)", padding: "4px 9px", fontSize: "10px", whiteSpace: "nowrap" }}>{file.filename}</button>
+              return <button
+                key={file.id}
+                type="button"
+                aria-pressed={selected}
+                onClick={() => setFileIds(ids => selected ? ids.filter(id => id !== file.id) : ids.length < MAX_SCOPED_FILES ? [...ids, file.id] : ids)}
+                title={selected ? `${file.filename} — tap to stop scoping to it` : `${file.filename} — tap to scope this turn to it`}
+                style={{ border: `1px solid ${selected ? "var(--cognac)" : "var(--border)"}`, background: selected ? "var(--cognac-soft)" : "transparent", color: selected ? "var(--cognac-deep)" : "var(--ink-3)", borderRadius: "var(--radius-pill)", padding: "4px 9px", fontSize: "10px", whiteSpace: "nowrap", flex: "0 0 auto" }}
+              >{file.filename}</button>
             })}
           </div>}
+          {uploadStatus && <div style={{ color: "var(--ink-3)", fontSize: "11px", marginBottom: "8px" }}>{uploadStatus}</div>}
           <div style={{ display: "flex", gap: "10px", alignItems: "flex-end" }}>
+          <input ref={attachRef} hidden type="file" multiple onChange={attach} />
+          <button
+            type="button"
+            onClick={() => attachRef.current?.click()}
+            disabled={thinking}
+            aria-label="Attach a photo or file"
+            title="Attach a photo or file"
+            style={{
+              flex: "0 0 auto", width: 42, height: 42, borderRadius: "12px",
+              border: "1px solid var(--border)", background: "transparent",
+              color: "var(--ink-3)", font: "inherit", fontSize: "17px",
+              cursor: thinking ? "default" : "pointer", lineHeight: 1,
+            }}
+          >
+            +
+          </button>
           <textarea
             ref={inputRef}
             value={draft}
