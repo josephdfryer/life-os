@@ -31,7 +31,12 @@ FILE_INTELLIGENCE_REVIEW_PROPOSALS=false
 FILE_INTELLIGENCE_SAFE_AUTO=false
 ```
 
-Set `FILE_INTELLIGENCE_NIGHTLY_THEORY=false` on Theory until cited evidence has been reviewed in production. AI Gateway credentials must also be configured for extraction, OCR, transcription, and Theory synthesis.
+Set `FILE_INTELLIGENCE_NIGHTLY_THEORY=false` on Theory until cited evidence has been reviewed in production.
+
+File extraction uses `ANTHROPIC_API_KEY` directly — no AI Gateway credentials are
+needed for OCR, image description, or claim extraction. Theory synthesis is a
+separate pipeline (`packages/intelligence`) that still reads an encrypted provider
+credential from the database, unchanged by this.
 
 ## Verification order
 

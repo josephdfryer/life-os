@@ -49,7 +49,14 @@ After upload finalization, start a Vercel Workflow DevKit workflow. Each step is
 10. Make affected Theory snapshots derivably stale.
 11. Finish as `ready`, `partial`, `store_only`, or `failed`.
 
-Supported extraction covers PDF (including OCR), DOCX/text, CSV/XLSX with cell citations, JPEG/PNG/WebP/HEIC with OCR/description, and MP3/M4A/WAV with timestamped AI Gateway transcription. Unknown, encrypted, oversized, archived, executable, and video files produce no unsupported claims.
+Supported extraction covers PDF (including OCR), DOCX/text, CSV/XLSX with cell citations, and JPEG/PNG/WebP/HEIC with OCR/description. Unknown, encrypted, oversized, archived, executable, and video files produce no unsupported claims.
+
+**Audio is preserved but not transcribed.** Extraction runs on `ANTHROPIC_API_KEY`
+rather than the AI Gateway, and Anthropic has no speech-to-text endpoint, so
+MP3/M4A/WAV uploads complete as `partial` carrying an explicit warning: the
+original is stored and the row exists, but there are no chunks and therefore no
+claims. Restoring timestamped transcription requires deliberately choosing a
+speech-to-text provider; it should not return as an implicit dependency.
 
 ## Identity resolution
 
