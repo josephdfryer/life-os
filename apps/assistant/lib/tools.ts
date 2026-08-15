@@ -1,6 +1,12 @@
 import { db } from "@/lib/db"
 import { centsToDollars } from "@life-os/db"
-import { captureNote as createCapturedNote } from "@life-os/domain"
+import {
+  captureNote as createCapturedNote,
+  createInteraction,
+  createItem,
+  createPlaceNote,
+  createPlan,
+} from "@life-os/domain"
 import { getSpendBreakdown, getPlaceSpend as placeSpend, type SpendBreakdownInput } from "@/lib/finance"
 import { getPersonFileEvidence, searchFileChunks as searchIndexedFileChunks } from "@life-os/files"
 
@@ -8,15 +14,28 @@ const TZ = "America/Los_Angeles"
 
 // ── Tool schemas (provider-neutral JSON Schema) ───────────────────
 
+// Capability is REQUIRED, and deliberately has no default. The guard that stops
+// untrusted file content from inducing graph writes keys off this value, and its
+// previous form named the two write tools that existed — so every tool added
+// afterwards was permitted by default. Making this a required field turns
+// "forgot to classify a new tool" into a type error instead of a silent hole.
+//
+//   read        — no side effects
+//   write       — creates or mutates graph data
+//   destructive — deletes or merges; never executed, proposed for review instead
+export type ToolCapability = "read" | "write" | "destructive"
+
 export type AssistantToolDefinition = {
   name: string
   description: string
   input_schema: Record<string, unknown>
+  capability: ToolCapability
 }
 
 export const TOOLS: AssistantToolDefinition[] = [
   {
     name: "search_people",
+    capability: "read",
     description: "Search Joseph's people by name, company, or email fragment. Returns compact matches with ids for use in other tools.",
     input_schema: {
       type: "object",
@@ -26,6 +45,7 @@ export const TOOLS: AssistantToolDefinition[] = [
   },
   {
     name: "get_person",
+    capability: "read",
     description: "Full detail for one person: profile, recent interactions, active plans. Use the id from search_people.",
     input_schema: {
       type: "object",
@@ -35,6 +55,7 @@ export const TOOLS: AssistantToolDefinition[] = [
   },
   {
     name: "get_schedule",
+    capability: "read",
     description: "Events for a specific date (defaults to today, Pacific time). Includes places when known.",
     input_schema: {
       type: "object",
@@ -44,6 +65,7 @@ export const TOOLS: AssistantToolDefinition[] = [
   },
   {
     name: "capture_note",
+    capability: "write",
     description: "Capture a raw thought, observation, or declaration as a Note in Life OS. Use when Joseph wants to remember, note, or declare something.",
     input_schema: {
       type: "object",
@@ -56,6 +78,7 @@ export const TOOLS: AssistantToolDefinition[] = [
   },
   {
     name: "log_interaction",
+    capability: "write",
     description: "Log an interaction with a person (call, meeting, message, meal...). Use after confirming which person via search_people.",
     input_schema: {
       type: "object",
@@ -68,7 +91,53 @@ export const TOOLS: AssistantToolDefinition[] = [
     },
   },
   {
+    name: "create_item",
+    capability: "write",
+    description: "Create a new physical belonging in Stuff (a vehicle, appliance, instrument, piece of gear). Use when Joseph refers to something he owns that search_items cannot find, so receipts, warranties and interactions can be filed against it. Returns the new itemId.",
+    input_schema: {
+      type: "object",
+      properties: {
+        name: { type: "string", description: "What it is, e.g. '2021 Volvo XC60'" },
+        category: { type: "string", description: "e.g. vehicle, appliance, electronics" },
+        brand: { type: "string" },
+        model: { type: "string" },
+        serialNumber: { type: "string", description: "Serial or VIN if known" },
+        notes: { type: "string", description: "Anything worth preserving about it" },
+        placeId: { type: "string", description: "Where it lives, from search_places" },
+      },
+      required: ["name"],
+    },
+  },
+  {
+    name: "create_plan",
+    capability: "write",
+    description: "Record a declared intention or commitment as a Plan. Use when Joseph says he intends to do something, optionally about a specific person.",
+    input_schema: {
+      type: "object",
+      properties: {
+        text: { type: "string", description: "The intention, in his own words where possible" },
+        personId: { type: "string", description: "Who it concerns, from search_people" },
+        timescale: { type: "string", description: "e.g. this week, this quarter, someday" },
+      },
+      required: ["text"],
+    },
+  },
+  {
+    name: "add_place_note",
+    capability: "write",
+    description: "Attach a note to an existing Place — what happened there, what is stored there, what to remember about it. Find the placeId with search_places first.",
+    input_schema: {
+      type: "object",
+      properties: {
+        placeId: { type: "string", description: "From search_places" },
+        body: { type: "string", description: "The note" },
+      },
+      required: ["placeId", "body"],
+    },
+  },
+  {
     name: "query_finance",
+    capability: "read",
     description: "Compatibility spending summary over the last N days. Prefer get_spend_breakdown for exact dates, named periods, and breakdown questions.",
     input_schema: {
       type: "object",
@@ -82,6 +151,7 @@ export const TOOLS: AssistantToolDefinition[] = [
   },
   {
     name: "get_spend_breakdown",
+    capability: "read",
     description: "Read-only spend total and breakdown for a specific date or range. Use for questions like 'how much did I spend yesterday?', 'break it down by category', or 'what did I spend at restaurants last week?'.",
     input_schema: {
       type: "object",
@@ -100,6 +170,7 @@ export const TOOLS: AssistantToolDefinition[] = [
   },
   {
     name: "get_place_spend",
+    capability: "read",
     description: "Spending grouped by physical place (from location-matched transactions). Optionally filter by place name.",
     input_schema: {
       type: "object",
@@ -109,6 +180,7 @@ export const TOOLS: AssistantToolDefinition[] = [
   },
   {
     name: "search_notes",
+    capability: "read",
     description: "Search Joseph's captured notes (thoughts, observations, declarations).",
     input_schema: {
       type: "object",
@@ -118,6 +190,7 @@ export const TOOLS: AssistantToolDefinition[] = [
   },
   {
     name: "list_inbox",
+    capability: "read",
     description: "Preview pending review-inbox items (unmatched communications awaiting triage). Read-only.",
     input_schema: {
       type: "object",
@@ -127,6 +200,7 @@ export const TOOLS: AssistantToolDefinition[] = [
   },
   {
     name: "search_places",
+    capability: "read",
     description: "Search Joseph's places by name, address, or type (city, home, room, shelf, etc). Returns compact matches with ids for use in get_place.",
     input_schema: {
       type: "object",
@@ -136,6 +210,7 @@ export const TOOLS: AssistantToolDefinition[] = [
   },
   {
     name: "get_place",
+    capability: "read",
     description: "Full detail for one place: hierarchy, meaning, recent notes, items stored there, recent events there. Use the id from search_places.",
     input_schema: {
       type: "object",
@@ -145,6 +220,7 @@ export const TOOLS: AssistantToolDefinition[] = [
   },
   {
     name: "search_items",
+    capability: "read",
     description: "Search Joseph's physical belongings (Stuff app) by name, category, make/model, or asset id. Returns compact matches with ids for use in get_item.",
     input_schema: {
       type: "object",
@@ -154,6 +230,7 @@ export const TOOLS: AssistantToolDefinition[] = [
   },
   {
     name: "get_item",
+    capability: "read",
     description: "Full detail for one physical item: location, owner, purchase/warranty info, and assembly (what it's inside, what's inside it). Use the id from search_items.",
     input_schema: {
       type: "object",
@@ -163,6 +240,7 @@ export const TOOLS: AssistantToolDefinition[] = [
   },
   {
     name: "search_events",
+    capability: "read",
     description: "Keyword search over Joseph's events/calendar within a lookback window — use for 'when did I last...' or finding a specific past/future event by name, unlike get_schedule which only covers one day.",
     input_schema: {
       type: "object",
@@ -175,6 +253,7 @@ export const TOOLS: AssistantToolDefinition[] = [
   },
   {
     name: "get_theory",
+    capability: "read",
     description: "Joseph's current 'theory of mind' synthesis for a person — a standing derived read on who they are, patterns, and context, built from their notes/interactions/events over time. Use the id from search_people.",
     input_schema: {
       type: "object",
@@ -184,6 +263,7 @@ export const TOOLS: AssistantToolDefinition[] = [
   },
   {
     name: "get_alignment_signals",
+    capability: "read",
     description: "Compare Joseph's declared intentions against his actual behavior to surface where they've drifted apart — relationships going cold relative to how close he says they are, and person-linked goals with no follow-through since he declared them. Use when he asks what he's neglecting, what needs attention, or wants a check-in on his stated priorities.",
     input_schema: {
       type: "object",
@@ -194,6 +274,7 @@ export const TOOLS: AssistantToolDefinition[] = [
   {
     // The reason the graph exists: one stream, not one page per person.
     name: "get_interactions",
+    capability: "read",
     description: "Joseph's unified interaction stream — every logged thing across his whole life in one continuous list, newest first: calls, meals, meetings, messages, emails, calendar events and financial transactions. Use for 'what have I been doing', 'what happened last week', or any question that spans more than one person. Filter by type, person, place, merchant or date. This is the general feed; use get_spend_breakdown for money totals.",
     input_schema: {
       type: "object",
@@ -209,6 +290,7 @@ export const TOOLS: AssistantToolDefinition[] = [
   },
   {
     name: "get_plans",
+    capability: "read",
     description: "Joseph's declared intentions — goals, commitments and plans, with status and due dates. This is what he SAID he would do, as opposed to what the interaction log shows he did. Use for 'what am I committed to', 'what's overdue', or to check a goal before advising.",
     input_schema: {
       type: "object",
@@ -223,6 +305,7 @@ export const TOOLS: AssistantToolDefinition[] = [
   },
   {
     name: "get_states",
+    capability: "read",
     description: "Point-in-time conditions recorded on people, places or projects — health readings, relationship phases, project status. Each is a timestamped fact, never overwritten, so this shows how something has changed. Use for 'how has my sleep been', 'what's the state of X', or trend questions.",
     input_schema: {
       type: "object",
@@ -237,6 +320,7 @@ export const TOOLS: AssistantToolDefinition[] = [
   },
   {
     name: "search_groups",
+    capability: "read",
     description: "Collectives in Joseph's graph: his household/family, employers, and every merchant he transacts with (merchants are modelled as companies). Use to find who a group's members are, or to get total spend with a company across all time.",
     input_schema: {
       type: "object",
@@ -250,6 +334,7 @@ export const TOOLS: AssistantToolDefinition[] = [
   },
   {
     name: "search_file_chunks",
+    capability: "read",
     description: "Search faithful extracted file passages. Returns chunk IDs and exact locators that may be cited as [chunk:ID].",
     input_schema: {
       type: "object",
@@ -259,21 +344,25 @@ export const TOOLS: AssistantToolDefinition[] = [
   },
   {
     name: "get_file_context",
+    capability: "read",
     description: "Get metadata and a keyset-paginated page of latest-version extracted chunks for one workspace-owned file. Follow nextCursor when more context is needed.",
     input_schema: { type: "object", properties: { fileId: { type: "string" }, cursor: { type: "string" }, limit: { type: "number", description: "Default 40, max 80" } }, required: ["fileId"] },
   },
   {
     name: "list_file_claims",
+    capability: "read",
     description: "List cited explicit and inferred evidence claims for one file.",
     input_schema: { type: "object", properties: { fileId: { type: "string" } }, required: ["fileId"] },
   },
   {
     name: "list_file_people",
+    capability: "read",
     description: "List every Person mention and its role, confidence, and resolution status for one file.",
     input_schema: { type: "object", properties: { fileId: { type: "string" } }, required: ["fileId"] },
   },
   {
     name: "get_person_file_evidence",
+    capability: "read",
     description: "Get cited file evidence connected to a resolved Person.",
     input_schema: { type: "object", properties: { personId: { type: "string" } }, required: ["personId"] },
   },
@@ -292,6 +381,9 @@ export async function executeTool(name: string, input: Record<string, unknown>, 
       case "get_schedule": return await getSchedule(workspaceId, input.date ? String(input.date) : undefined)
       case "capture_note": return await captureNote(String(input.content ?? ""), input.noteType ? String(input.noteType) : "thought", workspaceId)
       case "log_interaction": return await logInteraction(String(input.personId ?? ""), String(input.type ?? "message"), String(input.summary ?? ""), workspaceId)
+      case "create_item": return await createItemTool(input, workspaceId)
+      case "create_plan": return await createPlanTool(input, workspaceId)
+      case "add_place_note": return await addPlaceNoteTool(input, workspaceId)
       case "query_finance": return await queryFinance(Number(input.sinceDays ?? 30), workspaceId, input.merchant ? String(input.merchant) : undefined, input.category ? String(input.category) : undefined)
       case "get_spend_breakdown": return await spendBreakdown(input, workspaceId)
       case "get_place_spend": return await getPlaceSpend(workspaceId, input.placeName ? String(input.placeName) : undefined)
@@ -475,13 +567,51 @@ async function captureNote(content: string, noteType: string, workspaceId: strin
   return `Captured ${note.type} (${note.id}). It will flow into synthesis.`
 }
 
+// Every assistant write goes through a domain command rather than db.* directly,
+// so it publishes a GraphEvent carrying the assistant actor and is therefore
+// attributable and undoable. This one previously called db.interaction.create()
+// and produced no audit trail at all.
+const ASSISTANT_ACTOR = { type: "assistant" as const, label: "Life OS Assistant" }
+
 async function logInteraction(personId: string, type: string, summary: string, workspaceId: string) {
   const person = await db.person.findFirst({ where: { id: personId, workspaceId }, select: { id: true, first: true, last: true } })
   if (!person) return "Person not found — search_people first"
-  await db.interaction.create({
-    data: { workspaceId, personId, type, timestamp: new Date(), summary },
-  })
+  await createInteraction({ personId, type, summary, timestamp: new Date().toISOString() }, workspaceId, ASSISTANT_ACTOR)
   return `Logged ${type} with ${person.first} ${person.last}: ${summary}`
+}
+
+async function createItemTool(input: Record<string, unknown>, workspaceId: string) {
+  const name = String(input.name ?? "").trim()
+  if (!name) return "An item needs a name"
+  const item = await createItem({
+    name,
+    category: optionalString(input.category) ?? null,
+    brand: optionalString(input.brand) ?? null,
+    model: optionalString(input.model) ?? null,
+    serialNumber: optionalString(input.serialNumber) ?? null,
+    notes: optionalString(input.notes) ?? null,
+    placeId: optionalString(input.placeId) ?? null,
+  } as never, workspaceId, ASSISTANT_ACTOR)
+  return `Created item ${item.id}: ${item.name}. Use it as itemId in other tools.`
+}
+
+async function createPlanTool(input: Record<string, unknown>, workspaceId: string) {
+  const text = String(input.text ?? "").trim()
+  if (!text) return "A plan needs text"
+  const plan = await createPlan({
+    text,
+    personId: optionalString(input.personId),
+    timescale: optionalString(input.timescale),
+  }, workspaceId, ASSISTANT_ACTOR)
+  return `Created plan ${plan.id}: ${plan.text}`
+}
+
+async function addPlaceNoteTool(input: Record<string, unknown>, workspaceId: string) {
+  const placeId = String(input.placeId ?? "").trim()
+  const body = String(input.body ?? "").trim()
+  if (!placeId || !body) return "A place note needs placeId and body — search_places first"
+  const note = await createPlaceNote(placeId, workspaceId, body, { actor: ASSISTANT_ACTOR })
+  return `Added note to place ${placeId} (${note.id})`
 }
 
 async function queryFinance(sinceDays: number, workspaceId: string, merchant?: string, category?: string) {
@@ -992,3 +1122,9 @@ function clampNumber(value: unknown, fallback: number, min: number, max: number)
 function localDate(date: Date) {
   return new Intl.DateTimeFormat("en-CA", { timeZone: TZ, year: "numeric", month: "2-digit", day: "2-digit" }).format(date)
 }
+
+// Name → capability, derived from the definitions above so the two can never
+// disagree. agent.ts resolves through this and treats an unknown name as
+// destructive.
+export const TOOL_CAPABILITIES: Record<string, ToolCapability> =
+  Object.fromEntries(TOOLS.map(tool => [tool.name, tool.capability]))

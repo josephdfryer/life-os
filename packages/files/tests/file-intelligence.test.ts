@@ -50,9 +50,12 @@ test("file evidence remains cited, multi-subject, workspace-safe, relevance-awar
   assert.equal(files.relevanceWeight("explicit", "subject", "unresolved"), 0)
   assert.equal(files.verifyFileSignature(new TextEncoder().encode("%PDF-1.7"), "application/pdf", "lease.pdf"), true)
   assert.equal(files.verifyFileSignature(new TextEncoder().encode("MZ executable"), "application/pdf", "lease.pdf"), false)
-  assert.equal(files.fileEvidenceAllowsAssistantTool("capture_note", true), false)
-  assert.equal(files.fileEvidenceAllowsAssistantTool("log_interaction", true), false)
-  assert.equal(files.fileEvidenceAllowsAssistantTool("search_file_chunks", true), true)
+  // Was keyed off tool names, which meant any write tool added later was allowed
+  // by default. Now keyed off declared capability, so the same intent holds for
+  // tools that do not exist yet. Detailed cases live in write-guard.test.ts.
+  assert.equal(files.fileEvidenceAllowsCapability("write", true), false)
+  assert.equal(files.fileEvidenceAllowsCapability("destructive", true), false)
+  assert.equal(files.fileEvidenceAllowsCapability("read", true), true)
 
   const citationResult = files.validateEvidenceCitations({
     summary: "Joint lease",

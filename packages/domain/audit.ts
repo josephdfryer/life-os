@@ -10,7 +10,11 @@
 // to this for the write itself.
 
 export type AuditActor = {
-  type: "user" | "api_key" | "system" | "rule"
+  // Kept in step with GraphEventActor in events.ts. "assistant" separates a write
+  // the assistant made on Joseph's behalf from one he made himself — the audit
+  // log is where that distinction has to survive. AuditLog.actorType and
+  // GraphEvent.actorType are plain String columns, so this needs no migration.
+  type: "user" | "api_key" | "system" | "rule" | "assistant"
   id?: string | null
   label?: string | null
   workspaceId?: string | null

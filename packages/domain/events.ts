@@ -13,7 +13,10 @@ import type { Prisma } from "@life-os/db"
 // one actually happened. Structurally compatible with DomainActor (same
 // shape, just a wider `type` union), so callers passing either satisfy this.
 export type GraphEventActor = {
-  type: "user" | "api_key" | "system" | "rule"
+  // "assistant" is distinct from "user": a write Joseph made by hand and one the
+  // assistant made on his behalf need to be tellable apart after the fact, which
+  // is the first question asked when something turns out wrong.
+  type: "user" | "api_key" | "system" | "rule" | "assistant"
   id?: string | null
   label?: string | null
 }
