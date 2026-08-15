@@ -33,6 +33,7 @@ export type NoteMinAggregateOutputType = {
   content: string | null
   metadata: string | null
   sourceFileId: string | null
+  aboutGroupId: string | null
 }
 
 export type NoteMaxAggregateOutputType = {
@@ -44,6 +45,7 @@ export type NoteMaxAggregateOutputType = {
   content: string | null
   metadata: string | null
   sourceFileId: string | null
+  aboutGroupId: string | null
 }
 
 export type NoteCountAggregateOutputType = {
@@ -55,6 +57,7 @@ export type NoteCountAggregateOutputType = {
   content: number
   metadata: number
   sourceFileId: number
+  aboutGroupId: number
   _all: number
 }
 
@@ -68,6 +71,7 @@ export type NoteMinAggregateInputType = {
   content?: true
   metadata?: true
   sourceFileId?: true
+  aboutGroupId?: true
 }
 
 export type NoteMaxAggregateInputType = {
@@ -79,6 +83,7 @@ export type NoteMaxAggregateInputType = {
   content?: true
   metadata?: true
   sourceFileId?: true
+  aboutGroupId?: true
 }
 
 export type NoteCountAggregateInputType = {
@@ -90,6 +95,7 @@ export type NoteCountAggregateInputType = {
   content?: true
   metadata?: true
   sourceFileId?: true
+  aboutGroupId?: true
   _all?: true
 }
 
@@ -174,6 +180,7 @@ export type NoteGroupByOutputType = {
   content: string
   metadata: string | null
   sourceFileId: string | null
+  aboutGroupId: string | null
   _count: NoteCountAggregateOutputType | null
   _min: NoteMinAggregateOutputType | null
   _max: NoteMaxAggregateOutputType | null
@@ -206,8 +213,10 @@ export type NoteWhereInput = {
   content?: Prisma.StringFilter<"Note"> | string
   metadata?: Prisma.StringNullableFilter<"Note"> | string | null
   sourceFileId?: Prisma.StringNullableFilter<"Note"> | string | null
+  aboutGroupId?: Prisma.StringNullableFilter<"Note"> | string | null
   workspace?: Prisma.XOR<Prisma.WorkspaceScalarRelationFilter, Prisma.WorkspaceWhereInput>
   sourceFile?: Prisma.XOR<Prisma.ImportedFileNullableScalarRelationFilter, Prisma.ImportedFileWhereInput> | null
+  aboutGroup?: Prisma.XOR<Prisma.GroupNullableScalarRelationFilter, Prisma.GroupWhereInput> | null
   plans?: Prisma.PlanListRelationFilter
   events?: Prisma.EventListRelationFilter
   interactions?: Prisma.InteractionListRelationFilter
@@ -228,8 +237,10 @@ export type NoteOrderByWithRelationInput = {
   content?: Prisma.SortOrder
   metadata?: Prisma.SortOrderInput | Prisma.SortOrder
   sourceFileId?: Prisma.SortOrderInput | Prisma.SortOrder
+  aboutGroupId?: Prisma.SortOrderInput | Prisma.SortOrder
   workspace?: Prisma.WorkspaceOrderByWithRelationInput
   sourceFile?: Prisma.ImportedFileOrderByWithRelationInput
+  aboutGroup?: Prisma.GroupOrderByWithRelationInput
   plans?: Prisma.PlanOrderByRelationAggregateInput
   events?: Prisma.EventOrderByRelationAggregateInput
   interactions?: Prisma.InteractionOrderByRelationAggregateInput
@@ -253,8 +264,10 @@ export type NoteWhereUniqueInput = Prisma.AtLeast<{
   content?: Prisma.StringFilter<"Note"> | string
   metadata?: Prisma.StringNullableFilter<"Note"> | string | null
   sourceFileId?: Prisma.StringNullableFilter<"Note"> | string | null
+  aboutGroupId?: Prisma.StringNullableFilter<"Note"> | string | null
   workspace?: Prisma.XOR<Prisma.WorkspaceScalarRelationFilter, Prisma.WorkspaceWhereInput>
   sourceFile?: Prisma.XOR<Prisma.ImportedFileNullableScalarRelationFilter, Prisma.ImportedFileWhereInput> | null
+  aboutGroup?: Prisma.XOR<Prisma.GroupNullableScalarRelationFilter, Prisma.GroupWhereInput> | null
   plans?: Prisma.PlanListRelationFilter
   events?: Prisma.EventListRelationFilter
   interactions?: Prisma.InteractionListRelationFilter
@@ -275,6 +288,7 @@ export type NoteOrderByWithAggregationInput = {
   content?: Prisma.SortOrder
   metadata?: Prisma.SortOrderInput | Prisma.SortOrder
   sourceFileId?: Prisma.SortOrderInput | Prisma.SortOrder
+  aboutGroupId?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.NoteCountOrderByAggregateInput
   _max?: Prisma.NoteMaxOrderByAggregateInput
   _min?: Prisma.NoteMinOrderByAggregateInput
@@ -292,6 +306,7 @@ export type NoteScalarWhereWithAggregatesInput = {
   content?: Prisma.StringWithAggregatesFilter<"Note"> | string
   metadata?: Prisma.StringNullableWithAggregatesFilter<"Note"> | string | null
   sourceFileId?: Prisma.StringNullableWithAggregatesFilter<"Note"> | string | null
+  aboutGroupId?: Prisma.StringNullableWithAggregatesFilter<"Note"> | string | null
 }
 
 export type NoteCreateInput = {
@@ -303,6 +318,7 @@ export type NoteCreateInput = {
   metadata?: string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutNotesInput
   sourceFile?: Prisma.ImportedFileCreateNestedOneWithoutNotesInput
+  aboutGroup?: Prisma.GroupCreateNestedOneWithoutAboutNotesInput
   plans?: Prisma.PlanCreateNestedManyWithoutSourceNoteInput
   events?: Prisma.EventCreateNestedManyWithoutSourceNoteInput
   interactions?: Prisma.InteractionCreateNestedManyWithoutSourceNoteInput
@@ -323,6 +339,7 @@ export type NoteUncheckedCreateInput = {
   content: string
   metadata?: string | null
   sourceFileId?: string | null
+  aboutGroupId?: string | null
   plans?: Prisma.PlanUncheckedCreateNestedManyWithoutSourceNoteInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutSourceNoteInput
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutSourceNoteInput
@@ -343,6 +360,7 @@ export type NoteUpdateInput = {
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutNotesNestedInput
   sourceFile?: Prisma.ImportedFileUpdateOneWithoutNotesNestedInput
+  aboutGroup?: Prisma.GroupUpdateOneWithoutAboutNotesNestedInput
   plans?: Prisma.PlanUpdateManyWithoutSourceNoteNestedInput
   events?: Prisma.EventUpdateManyWithoutSourceNoteNestedInput
   interactions?: Prisma.InteractionUpdateManyWithoutSourceNoteNestedInput
@@ -363,6 +381,7 @@ export type NoteUncheckedUpdateInput = {
   content?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutGroupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   plans?: Prisma.PlanUncheckedUpdateManyWithoutSourceNoteNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutSourceNoteNestedInput
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutSourceNoteNestedInput
@@ -383,6 +402,7 @@ export type NoteCreateManyInput = {
   content: string
   metadata?: string | null
   sourceFileId?: string | null
+  aboutGroupId?: string | null
 }
 
 export type NoteUpdateManyMutationInput = {
@@ -403,6 +423,7 @@ export type NoteUncheckedUpdateManyInput = {
   content?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutGroupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type NoteListRelationFilter = {
@@ -434,6 +455,7 @@ export type NoteCountOrderByAggregateInput = {
   content?: Prisma.SortOrder
   metadata?: Prisma.SortOrder
   sourceFileId?: Prisma.SortOrder
+  aboutGroupId?: Prisma.SortOrder
 }
 
 export type NoteMaxOrderByAggregateInput = {
@@ -445,6 +467,7 @@ export type NoteMaxOrderByAggregateInput = {
   content?: Prisma.SortOrder
   metadata?: Prisma.SortOrder
   sourceFileId?: Prisma.SortOrder
+  aboutGroupId?: Prisma.SortOrder
 }
 
 export type NoteMinOrderByAggregateInput = {
@@ -456,6 +479,7 @@ export type NoteMinOrderByAggregateInput = {
   content?: Prisma.SortOrder
   metadata?: Prisma.SortOrder
   sourceFileId?: Prisma.SortOrder
+  aboutGroupId?: Prisma.SortOrder
 }
 
 export type NoteCreateNestedManyWithoutWorkspaceInput = {
@@ -634,10 +658,38 @@ export type NoteUpdateOneRequiredWithoutSuggestionsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.NoteUpdateToOneWithWhereWithoutSuggestionsInput, Prisma.NoteUpdateWithoutSuggestionsInput>, Prisma.NoteUncheckedUpdateWithoutSuggestionsInput>
 }
 
+export type NoteCreateNestedManyWithoutAboutGroupInput = {
+  create?: Prisma.XOR<Prisma.NoteCreateWithoutAboutGroupInput, Prisma.NoteUncheckedCreateWithoutAboutGroupInput> | Prisma.NoteCreateWithoutAboutGroupInput[] | Prisma.NoteUncheckedCreateWithoutAboutGroupInput[]
+  connectOrCreate?: Prisma.NoteCreateOrConnectWithoutAboutGroupInput | Prisma.NoteCreateOrConnectWithoutAboutGroupInput[]
+  createMany?: Prisma.NoteCreateManyAboutGroupInputEnvelope
+  connect?: Prisma.NoteWhereUniqueInput | Prisma.NoteWhereUniqueInput[]
+}
+
 export type NoteCreateNestedOneWithoutGroupsInput = {
   create?: Prisma.XOR<Prisma.NoteCreateWithoutGroupsInput, Prisma.NoteUncheckedCreateWithoutGroupsInput>
   connectOrCreate?: Prisma.NoteCreateOrConnectWithoutGroupsInput
   connect?: Prisma.NoteWhereUniqueInput
+}
+
+export type NoteUncheckedCreateNestedManyWithoutAboutGroupInput = {
+  create?: Prisma.XOR<Prisma.NoteCreateWithoutAboutGroupInput, Prisma.NoteUncheckedCreateWithoutAboutGroupInput> | Prisma.NoteCreateWithoutAboutGroupInput[] | Prisma.NoteUncheckedCreateWithoutAboutGroupInput[]
+  connectOrCreate?: Prisma.NoteCreateOrConnectWithoutAboutGroupInput | Prisma.NoteCreateOrConnectWithoutAboutGroupInput[]
+  createMany?: Prisma.NoteCreateManyAboutGroupInputEnvelope
+  connect?: Prisma.NoteWhereUniqueInput | Prisma.NoteWhereUniqueInput[]
+}
+
+export type NoteUpdateManyWithoutAboutGroupNestedInput = {
+  create?: Prisma.XOR<Prisma.NoteCreateWithoutAboutGroupInput, Prisma.NoteUncheckedCreateWithoutAboutGroupInput> | Prisma.NoteCreateWithoutAboutGroupInput[] | Prisma.NoteUncheckedCreateWithoutAboutGroupInput[]
+  connectOrCreate?: Prisma.NoteCreateOrConnectWithoutAboutGroupInput | Prisma.NoteCreateOrConnectWithoutAboutGroupInput[]
+  upsert?: Prisma.NoteUpsertWithWhereUniqueWithoutAboutGroupInput | Prisma.NoteUpsertWithWhereUniqueWithoutAboutGroupInput[]
+  createMany?: Prisma.NoteCreateManyAboutGroupInputEnvelope
+  set?: Prisma.NoteWhereUniqueInput | Prisma.NoteWhereUniqueInput[]
+  disconnect?: Prisma.NoteWhereUniqueInput | Prisma.NoteWhereUniqueInput[]
+  delete?: Prisma.NoteWhereUniqueInput | Prisma.NoteWhereUniqueInput[]
+  connect?: Prisma.NoteWhereUniqueInput | Prisma.NoteWhereUniqueInput[]
+  update?: Prisma.NoteUpdateWithWhereUniqueWithoutAboutGroupInput | Prisma.NoteUpdateWithWhereUniqueWithoutAboutGroupInput[]
+  updateMany?: Prisma.NoteUpdateManyWithWhereWithoutAboutGroupInput | Prisma.NoteUpdateManyWithWhereWithoutAboutGroupInput[]
+  deleteMany?: Prisma.NoteScalarWhereInput | Prisma.NoteScalarWhereInput[]
 }
 
 export type NoteUpdateOneWithoutGroupsNestedInput = {
@@ -648,6 +700,20 @@ export type NoteUpdateOneWithoutGroupsNestedInput = {
   delete?: Prisma.NoteWhereInput | boolean
   connect?: Prisma.NoteWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.NoteUpdateToOneWithWhereWithoutGroupsInput, Prisma.NoteUpdateWithoutGroupsInput>, Prisma.NoteUncheckedUpdateWithoutGroupsInput>
+}
+
+export type NoteUncheckedUpdateManyWithoutAboutGroupNestedInput = {
+  create?: Prisma.XOR<Prisma.NoteCreateWithoutAboutGroupInput, Prisma.NoteUncheckedCreateWithoutAboutGroupInput> | Prisma.NoteCreateWithoutAboutGroupInput[] | Prisma.NoteUncheckedCreateWithoutAboutGroupInput[]
+  connectOrCreate?: Prisma.NoteCreateOrConnectWithoutAboutGroupInput | Prisma.NoteCreateOrConnectWithoutAboutGroupInput[]
+  upsert?: Prisma.NoteUpsertWithWhereUniqueWithoutAboutGroupInput | Prisma.NoteUpsertWithWhereUniqueWithoutAboutGroupInput[]
+  createMany?: Prisma.NoteCreateManyAboutGroupInputEnvelope
+  set?: Prisma.NoteWhereUniqueInput | Prisma.NoteWhereUniqueInput[]
+  disconnect?: Prisma.NoteWhereUniqueInput | Prisma.NoteWhereUniqueInput[]
+  delete?: Prisma.NoteWhereUniqueInput | Prisma.NoteWhereUniqueInput[]
+  connect?: Prisma.NoteWhereUniqueInput | Prisma.NoteWhereUniqueInput[]
+  update?: Prisma.NoteUpdateWithWhereUniqueWithoutAboutGroupInput | Prisma.NoteUpdateWithWhereUniqueWithoutAboutGroupInput[]
+  updateMany?: Prisma.NoteUpdateManyWithWhereWithoutAboutGroupInput | Prisma.NoteUpdateManyWithWhereWithoutAboutGroupInput[]
+  deleteMany?: Prisma.NoteScalarWhereInput | Prisma.NoteScalarWhereInput[]
 }
 
 export type NoteCreateNestedOneWithoutLifeModelClaimFeedbackInput = {
@@ -690,6 +756,7 @@ export type NoteCreateWithoutWorkspaceInput = {
   content: string
   metadata?: string | null
   sourceFile?: Prisma.ImportedFileCreateNestedOneWithoutNotesInput
+  aboutGroup?: Prisma.GroupCreateNestedOneWithoutAboutNotesInput
   plans?: Prisma.PlanCreateNestedManyWithoutSourceNoteInput
   events?: Prisma.EventCreateNestedManyWithoutSourceNoteInput
   interactions?: Prisma.InteractionCreateNestedManyWithoutSourceNoteInput
@@ -709,6 +776,7 @@ export type NoteUncheckedCreateWithoutWorkspaceInput = {
   content: string
   metadata?: string | null
   sourceFileId?: string | null
+  aboutGroupId?: string | null
   plans?: Prisma.PlanUncheckedCreateNestedManyWithoutSourceNoteInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutSourceNoteInput
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutSourceNoteInput
@@ -757,6 +825,7 @@ export type NoteScalarWhereInput = {
   content?: Prisma.StringFilter<"Note"> | string
   metadata?: Prisma.StringNullableFilter<"Note"> | string | null
   sourceFileId?: Prisma.StringNullableFilter<"Note"> | string | null
+  aboutGroupId?: Prisma.StringNullableFilter<"Note"> | string | null
 }
 
 export type NoteCreateWithoutEventsInput = {
@@ -768,6 +837,7 @@ export type NoteCreateWithoutEventsInput = {
   metadata?: string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutNotesInput
   sourceFile?: Prisma.ImportedFileCreateNestedOneWithoutNotesInput
+  aboutGroup?: Prisma.GroupCreateNestedOneWithoutAboutNotesInput
   plans?: Prisma.PlanCreateNestedManyWithoutSourceNoteInput
   interactions?: Prisma.InteractionCreateNestedManyWithoutSourceNoteInput
   states?: Prisma.StateCreateNestedManyWithoutSourceNoteInput
@@ -787,6 +857,7 @@ export type NoteUncheckedCreateWithoutEventsInput = {
   content: string
   metadata?: string | null
   sourceFileId?: string | null
+  aboutGroupId?: string | null
   plans?: Prisma.PlanUncheckedCreateNestedManyWithoutSourceNoteInput
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutSourceNoteInput
   states?: Prisma.StateUncheckedCreateNestedManyWithoutSourceNoteInput
@@ -822,6 +893,7 @@ export type NoteUpdateWithoutEventsInput = {
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutNotesNestedInput
   sourceFile?: Prisma.ImportedFileUpdateOneWithoutNotesNestedInput
+  aboutGroup?: Prisma.GroupUpdateOneWithoutAboutNotesNestedInput
   plans?: Prisma.PlanUpdateManyWithoutSourceNoteNestedInput
   interactions?: Prisma.InteractionUpdateManyWithoutSourceNoteNestedInput
   states?: Prisma.StateUpdateManyWithoutSourceNoteNestedInput
@@ -841,6 +913,7 @@ export type NoteUncheckedUpdateWithoutEventsInput = {
   content?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutGroupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   plans?: Prisma.PlanUncheckedUpdateManyWithoutSourceNoteNestedInput
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutSourceNoteNestedInput
   states?: Prisma.StateUncheckedUpdateManyWithoutSourceNoteNestedInput
@@ -860,6 +933,7 @@ export type NoteCreateWithoutInteractionsInput = {
   metadata?: string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutNotesInput
   sourceFile?: Prisma.ImportedFileCreateNestedOneWithoutNotesInput
+  aboutGroup?: Prisma.GroupCreateNestedOneWithoutAboutNotesInput
   plans?: Prisma.PlanCreateNestedManyWithoutSourceNoteInput
   events?: Prisma.EventCreateNestedManyWithoutSourceNoteInput
   states?: Prisma.StateCreateNestedManyWithoutSourceNoteInput
@@ -879,6 +953,7 @@ export type NoteUncheckedCreateWithoutInteractionsInput = {
   content: string
   metadata?: string | null
   sourceFileId?: string | null
+  aboutGroupId?: string | null
   plans?: Prisma.PlanUncheckedCreateNestedManyWithoutSourceNoteInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutSourceNoteInput
   states?: Prisma.StateUncheckedCreateNestedManyWithoutSourceNoteInput
@@ -914,6 +989,7 @@ export type NoteUpdateWithoutInteractionsInput = {
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutNotesNestedInput
   sourceFile?: Prisma.ImportedFileUpdateOneWithoutNotesNestedInput
+  aboutGroup?: Prisma.GroupUpdateOneWithoutAboutNotesNestedInput
   plans?: Prisma.PlanUpdateManyWithoutSourceNoteNestedInput
   events?: Prisma.EventUpdateManyWithoutSourceNoteNestedInput
   states?: Prisma.StateUpdateManyWithoutSourceNoteNestedInput
@@ -933,6 +1009,7 @@ export type NoteUncheckedUpdateWithoutInteractionsInput = {
   content?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutGroupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   plans?: Prisma.PlanUncheckedUpdateManyWithoutSourceNoteNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutSourceNoteNestedInput
   states?: Prisma.StateUncheckedUpdateManyWithoutSourceNoteNestedInput
@@ -952,6 +1029,7 @@ export type NoteCreateWithoutPlansInput = {
   metadata?: string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutNotesInput
   sourceFile?: Prisma.ImportedFileCreateNestedOneWithoutNotesInput
+  aboutGroup?: Prisma.GroupCreateNestedOneWithoutAboutNotesInput
   events?: Prisma.EventCreateNestedManyWithoutSourceNoteInput
   interactions?: Prisma.InteractionCreateNestedManyWithoutSourceNoteInput
   states?: Prisma.StateCreateNestedManyWithoutSourceNoteInput
@@ -971,6 +1049,7 @@ export type NoteUncheckedCreateWithoutPlansInput = {
   content: string
   metadata?: string | null
   sourceFileId?: string | null
+  aboutGroupId?: string | null
   events?: Prisma.EventUncheckedCreateNestedManyWithoutSourceNoteInput
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutSourceNoteInput
   states?: Prisma.StateUncheckedCreateNestedManyWithoutSourceNoteInput
@@ -1006,6 +1085,7 @@ export type NoteUpdateWithoutPlansInput = {
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutNotesNestedInput
   sourceFile?: Prisma.ImportedFileUpdateOneWithoutNotesNestedInput
+  aboutGroup?: Prisma.GroupUpdateOneWithoutAboutNotesNestedInput
   events?: Prisma.EventUpdateManyWithoutSourceNoteNestedInput
   interactions?: Prisma.InteractionUpdateManyWithoutSourceNoteNestedInput
   states?: Prisma.StateUpdateManyWithoutSourceNoteNestedInput
@@ -1025,6 +1105,7 @@ export type NoteUncheckedUpdateWithoutPlansInput = {
   content?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutGroupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   events?: Prisma.EventUncheckedUpdateManyWithoutSourceNoteNestedInput
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutSourceNoteNestedInput
   states?: Prisma.StateUncheckedUpdateManyWithoutSourceNoteNestedInput
@@ -1043,6 +1124,7 @@ export type NoteCreateWithoutSourceFileInput = {
   content: string
   metadata?: string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutNotesInput
+  aboutGroup?: Prisma.GroupCreateNestedOneWithoutAboutNotesInput
   plans?: Prisma.PlanCreateNestedManyWithoutSourceNoteInput
   events?: Prisma.EventCreateNestedManyWithoutSourceNoteInput
   interactions?: Prisma.InteractionCreateNestedManyWithoutSourceNoteInput
@@ -1062,6 +1144,7 @@ export type NoteUncheckedCreateWithoutSourceFileInput = {
   type: string
   content: string
   metadata?: string | null
+  aboutGroupId?: string | null
   plans?: Prisma.PlanUncheckedCreateNestedManyWithoutSourceNoteInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutSourceNoteInput
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutSourceNoteInput
@@ -1107,6 +1190,7 @@ export type NoteCreateWithoutEvidenceCorrectionsInput = {
   metadata?: string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutNotesInput
   sourceFile?: Prisma.ImportedFileCreateNestedOneWithoutNotesInput
+  aboutGroup?: Prisma.GroupCreateNestedOneWithoutAboutNotesInput
   plans?: Prisma.PlanCreateNestedManyWithoutSourceNoteInput
   events?: Prisma.EventCreateNestedManyWithoutSourceNoteInput
   interactions?: Prisma.InteractionCreateNestedManyWithoutSourceNoteInput
@@ -1126,6 +1210,7 @@ export type NoteUncheckedCreateWithoutEvidenceCorrectionsInput = {
   content: string
   metadata?: string | null
   sourceFileId?: string | null
+  aboutGroupId?: string | null
   plans?: Prisma.PlanUncheckedCreateNestedManyWithoutSourceNoteInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutSourceNoteInput
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutSourceNoteInput
@@ -1161,6 +1246,7 @@ export type NoteUpdateWithoutEvidenceCorrectionsInput = {
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutNotesNestedInput
   sourceFile?: Prisma.ImportedFileUpdateOneWithoutNotesNestedInput
+  aboutGroup?: Prisma.GroupUpdateOneWithoutAboutNotesNestedInput
   plans?: Prisma.PlanUpdateManyWithoutSourceNoteNestedInput
   events?: Prisma.EventUpdateManyWithoutSourceNoteNestedInput
   interactions?: Prisma.InteractionUpdateManyWithoutSourceNoteNestedInput
@@ -1180,6 +1266,7 @@ export type NoteUncheckedUpdateWithoutEvidenceCorrectionsInput = {
   content?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutGroupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   plans?: Prisma.PlanUncheckedUpdateManyWithoutSourceNoteNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutSourceNoteNestedInput
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutSourceNoteNestedInput
@@ -1199,6 +1286,7 @@ export type NoteCreateWithoutAiAnalysisRunsInput = {
   metadata?: string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutNotesInput
   sourceFile?: Prisma.ImportedFileCreateNestedOneWithoutNotesInput
+  aboutGroup?: Prisma.GroupCreateNestedOneWithoutAboutNotesInput
   plans?: Prisma.PlanCreateNestedManyWithoutSourceNoteInput
   events?: Prisma.EventCreateNestedManyWithoutSourceNoteInput
   interactions?: Prisma.InteractionCreateNestedManyWithoutSourceNoteInput
@@ -1218,6 +1306,7 @@ export type NoteUncheckedCreateWithoutAiAnalysisRunsInput = {
   content: string
   metadata?: string | null
   sourceFileId?: string | null
+  aboutGroupId?: string | null
   plans?: Prisma.PlanUncheckedCreateNestedManyWithoutSourceNoteInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutSourceNoteInput
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutSourceNoteInput
@@ -1253,6 +1342,7 @@ export type NoteUpdateWithoutAiAnalysisRunsInput = {
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutNotesNestedInput
   sourceFile?: Prisma.ImportedFileUpdateOneWithoutNotesNestedInput
+  aboutGroup?: Prisma.GroupUpdateOneWithoutAboutNotesNestedInput
   plans?: Prisma.PlanUpdateManyWithoutSourceNoteNestedInput
   events?: Prisma.EventUpdateManyWithoutSourceNoteNestedInput
   interactions?: Prisma.InteractionUpdateManyWithoutSourceNoteNestedInput
@@ -1272,6 +1362,7 @@ export type NoteUncheckedUpdateWithoutAiAnalysisRunsInput = {
   content?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutGroupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   plans?: Prisma.PlanUncheckedUpdateManyWithoutSourceNoteNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutSourceNoteNestedInput
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutSourceNoteNestedInput
@@ -1291,6 +1382,7 @@ export type NoteCreateWithoutSuggestionsInput = {
   metadata?: string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutNotesInput
   sourceFile?: Prisma.ImportedFileCreateNestedOneWithoutNotesInput
+  aboutGroup?: Prisma.GroupCreateNestedOneWithoutAboutNotesInput
   plans?: Prisma.PlanCreateNestedManyWithoutSourceNoteInput
   events?: Prisma.EventCreateNestedManyWithoutSourceNoteInput
   interactions?: Prisma.InteractionCreateNestedManyWithoutSourceNoteInput
@@ -1310,6 +1402,7 @@ export type NoteUncheckedCreateWithoutSuggestionsInput = {
   content: string
   metadata?: string | null
   sourceFileId?: string | null
+  aboutGroupId?: string | null
   plans?: Prisma.PlanUncheckedCreateNestedManyWithoutSourceNoteInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutSourceNoteInput
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutSourceNoteInput
@@ -1345,6 +1438,7 @@ export type NoteUpdateWithoutSuggestionsInput = {
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutNotesNestedInput
   sourceFile?: Prisma.ImportedFileUpdateOneWithoutNotesNestedInput
+  aboutGroup?: Prisma.GroupUpdateOneWithoutAboutNotesNestedInput
   plans?: Prisma.PlanUpdateManyWithoutSourceNoteNestedInput
   events?: Prisma.EventUpdateManyWithoutSourceNoteNestedInput
   interactions?: Prisma.InteractionUpdateManyWithoutSourceNoteNestedInput
@@ -1364,6 +1458,7 @@ export type NoteUncheckedUpdateWithoutSuggestionsInput = {
   content?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutGroupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   plans?: Prisma.PlanUncheckedUpdateManyWithoutSourceNoteNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutSourceNoteNestedInput
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutSourceNoteNestedInput
@@ -1372,6 +1467,55 @@ export type NoteUncheckedUpdateWithoutSuggestionsInput = {
   aiAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutNoteNestedInput
   lifeModelClaimFeedback?: Prisma.LifeModelClaimFeedbackUncheckedUpdateManyWithoutSourceNoteNestedInput
   evidenceCorrections?: Prisma.EvidenceClaimUncheckedUpdateManyWithoutCorrectionNoteNestedInput
+}
+
+export type NoteCreateWithoutAboutGroupInput = {
+  id?: string
+  createdAt?: Date | string
+  timestamp: Date | string
+  type: string
+  content: string
+  metadata?: string | null
+  workspace?: Prisma.WorkspaceCreateNestedOneWithoutNotesInput
+  sourceFile?: Prisma.ImportedFileCreateNestedOneWithoutNotesInput
+  plans?: Prisma.PlanCreateNestedManyWithoutSourceNoteInput
+  events?: Prisma.EventCreateNestedManyWithoutSourceNoteInput
+  interactions?: Prisma.InteractionCreateNestedManyWithoutSourceNoteInput
+  states?: Prisma.StateCreateNestedManyWithoutSourceNoteInput
+  groups?: Prisma.GroupCreateNestedManyWithoutSourceNoteInput
+  aiAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutNoteInput
+  suggestions?: Prisma.NoteSuggestionCreateNestedManyWithoutNoteInput
+  lifeModelClaimFeedback?: Prisma.LifeModelClaimFeedbackCreateNestedManyWithoutSourceNoteInput
+  evidenceCorrections?: Prisma.EvidenceClaimCreateNestedManyWithoutCorrectionNoteInput
+}
+
+export type NoteUncheckedCreateWithoutAboutGroupInput = {
+  id?: string
+  workspaceId?: string
+  createdAt?: Date | string
+  timestamp: Date | string
+  type: string
+  content: string
+  metadata?: string | null
+  sourceFileId?: string | null
+  plans?: Prisma.PlanUncheckedCreateNestedManyWithoutSourceNoteInput
+  events?: Prisma.EventUncheckedCreateNestedManyWithoutSourceNoteInput
+  interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutSourceNoteInput
+  states?: Prisma.StateUncheckedCreateNestedManyWithoutSourceNoteInput
+  groups?: Prisma.GroupUncheckedCreateNestedManyWithoutSourceNoteInput
+  aiAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutNoteInput
+  suggestions?: Prisma.NoteSuggestionUncheckedCreateNestedManyWithoutNoteInput
+  lifeModelClaimFeedback?: Prisma.LifeModelClaimFeedbackUncheckedCreateNestedManyWithoutSourceNoteInput
+  evidenceCorrections?: Prisma.EvidenceClaimUncheckedCreateNestedManyWithoutCorrectionNoteInput
+}
+
+export type NoteCreateOrConnectWithoutAboutGroupInput = {
+  where: Prisma.NoteWhereUniqueInput
+  create: Prisma.XOR<Prisma.NoteCreateWithoutAboutGroupInput, Prisma.NoteUncheckedCreateWithoutAboutGroupInput>
+}
+
+export type NoteCreateManyAboutGroupInputEnvelope = {
+  data: Prisma.NoteCreateManyAboutGroupInput | Prisma.NoteCreateManyAboutGroupInput[]
 }
 
 export type NoteCreateWithoutGroupsInput = {
@@ -1383,6 +1527,7 @@ export type NoteCreateWithoutGroupsInput = {
   metadata?: string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutNotesInput
   sourceFile?: Prisma.ImportedFileCreateNestedOneWithoutNotesInput
+  aboutGroup?: Prisma.GroupCreateNestedOneWithoutAboutNotesInput
   plans?: Prisma.PlanCreateNestedManyWithoutSourceNoteInput
   events?: Prisma.EventCreateNestedManyWithoutSourceNoteInput
   interactions?: Prisma.InteractionCreateNestedManyWithoutSourceNoteInput
@@ -1402,6 +1547,7 @@ export type NoteUncheckedCreateWithoutGroupsInput = {
   content: string
   metadata?: string | null
   sourceFileId?: string | null
+  aboutGroupId?: string | null
   plans?: Prisma.PlanUncheckedCreateNestedManyWithoutSourceNoteInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutSourceNoteInput
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutSourceNoteInput
@@ -1415,6 +1561,22 @@ export type NoteUncheckedCreateWithoutGroupsInput = {
 export type NoteCreateOrConnectWithoutGroupsInput = {
   where: Prisma.NoteWhereUniqueInput
   create: Prisma.XOR<Prisma.NoteCreateWithoutGroupsInput, Prisma.NoteUncheckedCreateWithoutGroupsInput>
+}
+
+export type NoteUpsertWithWhereUniqueWithoutAboutGroupInput = {
+  where: Prisma.NoteWhereUniqueInput
+  update: Prisma.XOR<Prisma.NoteUpdateWithoutAboutGroupInput, Prisma.NoteUncheckedUpdateWithoutAboutGroupInput>
+  create: Prisma.XOR<Prisma.NoteCreateWithoutAboutGroupInput, Prisma.NoteUncheckedCreateWithoutAboutGroupInput>
+}
+
+export type NoteUpdateWithWhereUniqueWithoutAboutGroupInput = {
+  where: Prisma.NoteWhereUniqueInput
+  data: Prisma.XOR<Prisma.NoteUpdateWithoutAboutGroupInput, Prisma.NoteUncheckedUpdateWithoutAboutGroupInput>
+}
+
+export type NoteUpdateManyWithWhereWithoutAboutGroupInput = {
+  where: Prisma.NoteScalarWhereInput
+  data: Prisma.XOR<Prisma.NoteUpdateManyMutationInput, Prisma.NoteUncheckedUpdateManyWithoutAboutGroupInput>
 }
 
 export type NoteUpsertWithoutGroupsInput = {
@@ -1437,6 +1599,7 @@ export type NoteUpdateWithoutGroupsInput = {
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutNotesNestedInput
   sourceFile?: Prisma.ImportedFileUpdateOneWithoutNotesNestedInput
+  aboutGroup?: Prisma.GroupUpdateOneWithoutAboutNotesNestedInput
   plans?: Prisma.PlanUpdateManyWithoutSourceNoteNestedInput
   events?: Prisma.EventUpdateManyWithoutSourceNoteNestedInput
   interactions?: Prisma.InteractionUpdateManyWithoutSourceNoteNestedInput
@@ -1456,6 +1619,7 @@ export type NoteUncheckedUpdateWithoutGroupsInput = {
   content?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutGroupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   plans?: Prisma.PlanUncheckedUpdateManyWithoutSourceNoteNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutSourceNoteNestedInput
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutSourceNoteNestedInput
@@ -1475,6 +1639,7 @@ export type NoteCreateWithoutLifeModelClaimFeedbackInput = {
   metadata?: string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutNotesInput
   sourceFile?: Prisma.ImportedFileCreateNestedOneWithoutNotesInput
+  aboutGroup?: Prisma.GroupCreateNestedOneWithoutAboutNotesInput
   plans?: Prisma.PlanCreateNestedManyWithoutSourceNoteInput
   events?: Prisma.EventCreateNestedManyWithoutSourceNoteInput
   interactions?: Prisma.InteractionCreateNestedManyWithoutSourceNoteInput
@@ -1494,6 +1659,7 @@ export type NoteUncheckedCreateWithoutLifeModelClaimFeedbackInput = {
   content: string
   metadata?: string | null
   sourceFileId?: string | null
+  aboutGroupId?: string | null
   plans?: Prisma.PlanUncheckedCreateNestedManyWithoutSourceNoteInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutSourceNoteInput
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutSourceNoteInput
@@ -1529,6 +1695,7 @@ export type NoteUpdateWithoutLifeModelClaimFeedbackInput = {
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutNotesNestedInput
   sourceFile?: Prisma.ImportedFileUpdateOneWithoutNotesNestedInput
+  aboutGroup?: Prisma.GroupUpdateOneWithoutAboutNotesNestedInput
   plans?: Prisma.PlanUpdateManyWithoutSourceNoteNestedInput
   events?: Prisma.EventUpdateManyWithoutSourceNoteNestedInput
   interactions?: Prisma.InteractionUpdateManyWithoutSourceNoteNestedInput
@@ -1548,6 +1715,7 @@ export type NoteUncheckedUpdateWithoutLifeModelClaimFeedbackInput = {
   content?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutGroupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   plans?: Prisma.PlanUncheckedUpdateManyWithoutSourceNoteNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutSourceNoteNestedInput
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutSourceNoteNestedInput
@@ -1567,6 +1735,7 @@ export type NoteCreateWithoutStatesInput = {
   metadata?: string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutNotesInput
   sourceFile?: Prisma.ImportedFileCreateNestedOneWithoutNotesInput
+  aboutGroup?: Prisma.GroupCreateNestedOneWithoutAboutNotesInput
   plans?: Prisma.PlanCreateNestedManyWithoutSourceNoteInput
   events?: Prisma.EventCreateNestedManyWithoutSourceNoteInput
   interactions?: Prisma.InteractionCreateNestedManyWithoutSourceNoteInput
@@ -1586,6 +1755,7 @@ export type NoteUncheckedCreateWithoutStatesInput = {
   content: string
   metadata?: string | null
   sourceFileId?: string | null
+  aboutGroupId?: string | null
   plans?: Prisma.PlanUncheckedCreateNestedManyWithoutSourceNoteInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutSourceNoteInput
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutSourceNoteInput
@@ -1621,6 +1791,7 @@ export type NoteUpdateWithoutStatesInput = {
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutNotesNestedInput
   sourceFile?: Prisma.ImportedFileUpdateOneWithoutNotesNestedInput
+  aboutGroup?: Prisma.GroupUpdateOneWithoutAboutNotesNestedInput
   plans?: Prisma.PlanUpdateManyWithoutSourceNoteNestedInput
   events?: Prisma.EventUpdateManyWithoutSourceNoteNestedInput
   interactions?: Prisma.InteractionUpdateManyWithoutSourceNoteNestedInput
@@ -1640,6 +1811,7 @@ export type NoteUncheckedUpdateWithoutStatesInput = {
   content?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutGroupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   plans?: Prisma.PlanUncheckedUpdateManyWithoutSourceNoteNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutSourceNoteNestedInput
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutSourceNoteNestedInput
@@ -1658,6 +1830,7 @@ export type NoteCreateManyWorkspaceInput = {
   content: string
   metadata?: string | null
   sourceFileId?: string | null
+  aboutGroupId?: string | null
 }
 
 export type NoteUpdateWithoutWorkspaceInput = {
@@ -1668,6 +1841,7 @@ export type NoteUpdateWithoutWorkspaceInput = {
   content?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceFile?: Prisma.ImportedFileUpdateOneWithoutNotesNestedInput
+  aboutGroup?: Prisma.GroupUpdateOneWithoutAboutNotesNestedInput
   plans?: Prisma.PlanUpdateManyWithoutSourceNoteNestedInput
   events?: Prisma.EventUpdateManyWithoutSourceNoteNestedInput
   interactions?: Prisma.InteractionUpdateManyWithoutSourceNoteNestedInput
@@ -1687,6 +1861,7 @@ export type NoteUncheckedUpdateWithoutWorkspaceInput = {
   content?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutGroupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   plans?: Prisma.PlanUncheckedUpdateManyWithoutSourceNoteNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutSourceNoteNestedInput
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutSourceNoteNestedInput
@@ -1706,6 +1881,7 @@ export type NoteUncheckedUpdateManyWithoutWorkspaceInput = {
   content?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutGroupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type NoteCreateManySourceFileInput = {
@@ -1716,6 +1892,7 @@ export type NoteCreateManySourceFileInput = {
   type: string
   content: string
   metadata?: string | null
+  aboutGroupId?: string | null
 }
 
 export type NoteUpdateWithoutSourceFileInput = {
@@ -1726,6 +1903,7 @@ export type NoteUpdateWithoutSourceFileInput = {
   content?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutNotesNestedInput
+  aboutGroup?: Prisma.GroupUpdateOneWithoutAboutNotesNestedInput
   plans?: Prisma.PlanUpdateManyWithoutSourceNoteNestedInput
   events?: Prisma.EventUpdateManyWithoutSourceNoteNestedInput
   interactions?: Prisma.InteractionUpdateManyWithoutSourceNoteNestedInput
@@ -1745,6 +1923,7 @@ export type NoteUncheckedUpdateWithoutSourceFileInput = {
   type?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutGroupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   plans?: Prisma.PlanUncheckedUpdateManyWithoutSourceNoteNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutSourceNoteNestedInput
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutSourceNoteNestedInput
@@ -1764,6 +1943,69 @@ export type NoteUncheckedUpdateManyWithoutSourceFileInput = {
   type?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutGroupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+}
+
+export type NoteCreateManyAboutGroupInput = {
+  id?: string
+  workspaceId?: string
+  createdAt?: Date | string
+  timestamp: Date | string
+  type: string
+  content: string
+  metadata?: string | null
+  sourceFileId?: string | null
+}
+
+export type NoteUpdateWithoutAboutGroupInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutNotesNestedInput
+  sourceFile?: Prisma.ImportedFileUpdateOneWithoutNotesNestedInput
+  plans?: Prisma.PlanUpdateManyWithoutSourceNoteNestedInput
+  events?: Prisma.EventUpdateManyWithoutSourceNoteNestedInput
+  interactions?: Prisma.InteractionUpdateManyWithoutSourceNoteNestedInput
+  states?: Prisma.StateUpdateManyWithoutSourceNoteNestedInput
+  groups?: Prisma.GroupUpdateManyWithoutSourceNoteNestedInput
+  aiAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutNoteNestedInput
+  suggestions?: Prisma.NoteSuggestionUpdateManyWithoutNoteNestedInput
+  lifeModelClaimFeedback?: Prisma.LifeModelClaimFeedbackUpdateManyWithoutSourceNoteNestedInput
+  evidenceCorrections?: Prisma.EvidenceClaimUpdateManyWithoutCorrectionNoteNestedInput
+}
+
+export type NoteUncheckedUpdateWithoutAboutGroupInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  plans?: Prisma.PlanUncheckedUpdateManyWithoutSourceNoteNestedInput
+  events?: Prisma.EventUncheckedUpdateManyWithoutSourceNoteNestedInput
+  interactions?: Prisma.InteractionUncheckedUpdateManyWithoutSourceNoteNestedInput
+  states?: Prisma.StateUncheckedUpdateManyWithoutSourceNoteNestedInput
+  groups?: Prisma.GroupUncheckedUpdateManyWithoutSourceNoteNestedInput
+  aiAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutNoteNestedInput
+  suggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutNoteNestedInput
+  lifeModelClaimFeedback?: Prisma.LifeModelClaimFeedbackUncheckedUpdateManyWithoutSourceNoteNestedInput
+  evidenceCorrections?: Prisma.EvidenceClaimUncheckedUpdateManyWithoutCorrectionNoteNestedInput
+}
+
+export type NoteUncheckedUpdateManyWithoutAboutGroupInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
@@ -1878,8 +2120,10 @@ export type NoteSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   content?: boolean
   metadata?: boolean
   sourceFileId?: boolean
+  aboutGroupId?: boolean
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   sourceFile?: boolean | Prisma.Note$sourceFileArgs<ExtArgs>
+  aboutGroup?: boolean | Prisma.Note$aboutGroupArgs<ExtArgs>
   plans?: boolean | Prisma.Note$plansArgs<ExtArgs>
   events?: boolean | Prisma.Note$eventsArgs<ExtArgs>
   interactions?: boolean | Prisma.Note$interactionsArgs<ExtArgs>
@@ -1901,8 +2145,10 @@ export type NoteSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   content?: boolean
   metadata?: boolean
   sourceFileId?: boolean
+  aboutGroupId?: boolean
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   sourceFile?: boolean | Prisma.Note$sourceFileArgs<ExtArgs>
+  aboutGroup?: boolean | Prisma.Note$aboutGroupArgs<ExtArgs>
 }, ExtArgs["result"]["note"]>
 
 export type NoteSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1914,8 +2160,10 @@ export type NoteSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   content?: boolean
   metadata?: boolean
   sourceFileId?: boolean
+  aboutGroupId?: boolean
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   sourceFile?: boolean | Prisma.Note$sourceFileArgs<ExtArgs>
+  aboutGroup?: boolean | Prisma.Note$aboutGroupArgs<ExtArgs>
 }, ExtArgs["result"]["note"]>
 
 export type NoteSelectScalar = {
@@ -1927,12 +2175,14 @@ export type NoteSelectScalar = {
   content?: boolean
   metadata?: boolean
   sourceFileId?: boolean
+  aboutGroupId?: boolean
 }
 
-export type NoteOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "workspaceId" | "createdAt" | "timestamp" | "type" | "content" | "metadata" | "sourceFileId", ExtArgs["result"]["note"]>
+export type NoteOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "workspaceId" | "createdAt" | "timestamp" | "type" | "content" | "metadata" | "sourceFileId" | "aboutGroupId", ExtArgs["result"]["note"]>
 export type NoteInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   sourceFile?: boolean | Prisma.Note$sourceFileArgs<ExtArgs>
+  aboutGroup?: boolean | Prisma.Note$aboutGroupArgs<ExtArgs>
   plans?: boolean | Prisma.Note$plansArgs<ExtArgs>
   events?: boolean | Prisma.Note$eventsArgs<ExtArgs>
   interactions?: boolean | Prisma.Note$interactionsArgs<ExtArgs>
@@ -1947,10 +2197,12 @@ export type NoteInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
 export type NoteIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   sourceFile?: boolean | Prisma.Note$sourceFileArgs<ExtArgs>
+  aboutGroup?: boolean | Prisma.Note$aboutGroupArgs<ExtArgs>
 }
 export type NoteIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   sourceFile?: boolean | Prisma.Note$sourceFileArgs<ExtArgs>
+  aboutGroup?: boolean | Prisma.Note$aboutGroupArgs<ExtArgs>
 }
 
 export type $NotePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1958,6 +2210,7 @@ export type $NotePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   objects: {
     workspace: Prisma.$WorkspacePayload<ExtArgs>
     sourceFile: Prisma.$ImportedFilePayload<ExtArgs> | null
+    aboutGroup: Prisma.$GroupPayload<ExtArgs> | null
     plans: Prisma.$PlanPayload<ExtArgs>[]
     events: Prisma.$EventPayload<ExtArgs>[]
     interactions: Prisma.$InteractionPayload<ExtArgs>[]
@@ -1977,6 +2230,7 @@ export type $NotePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     content: string
     metadata: string | null
     sourceFileId: string | null
+    aboutGroupId: string | null
   }, ExtArgs["result"]["note"]>
   composites: {}
 }
@@ -2373,6 +2627,7 @@ export interface Prisma__NoteClient<T, Null = never, ExtArgs extends runtime.Typ
   readonly [Symbol.toStringTag]: "PrismaPromise"
   workspace<T extends Prisma.WorkspaceDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WorkspaceDefaultArgs<ExtArgs>>): Prisma.Prisma__WorkspaceClient<runtime.Types.Result.GetResult<Prisma.$WorkspacePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   sourceFile<T extends Prisma.Note$sourceFileArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Note$sourceFileArgs<ExtArgs>>): Prisma.Prisma__ImportedFileClient<runtime.Types.Result.GetResult<Prisma.$ImportedFilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  aboutGroup<T extends Prisma.Note$aboutGroupArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Note$aboutGroupArgs<ExtArgs>>): Prisma.Prisma__GroupClient<runtime.Types.Result.GetResult<Prisma.$GroupPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   plans<T extends Prisma.Note$plansArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Note$plansArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PlanPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   events<T extends Prisma.Note$eventsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Note$eventsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   interactions<T extends Prisma.Note$interactionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Note$interactionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InteractionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -2419,6 +2674,7 @@ export interface NoteFieldRefs {
   readonly content: Prisma.FieldRef<"Note", 'String'>
   readonly metadata: Prisma.FieldRef<"Note", 'String'>
   readonly sourceFileId: Prisma.FieldRef<"Note", 'String'>
+  readonly aboutGroupId: Prisma.FieldRef<"Note", 'String'>
 }
     
 
@@ -2834,6 +3090,25 @@ export type Note$sourceFileArgs<ExtArgs extends runtime.Types.Extensions.Interna
    */
   include?: Prisma.ImportedFileInclude<ExtArgs> | null
   where?: Prisma.ImportedFileWhereInput
+}
+
+/**
+ * Note.aboutGroup
+ */
+export type Note$aboutGroupArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Group
+   */
+  select?: Prisma.GroupSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Group
+   */
+  omit?: Prisma.GroupOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.GroupInclude<ExtArgs> | null
+  where?: Prisma.GroupWhereInput
 }
 
 /**

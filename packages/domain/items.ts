@@ -29,22 +29,22 @@ export type ItemWriteOptions = {
 }
 
 // Matches the #CAT-NNN convention apps/stuff established: first three letters of
-// the category, or ITM. The count is not atomic, so two concurrent creates can
-// pick the same number — the @unique constraint catches that and the caller
-// retries with the next free suffix rather than failing the write.
-async function nextAssetId(tx: Prisma.TransactionClient, workspaceId: string, category: string | null) {
-  const prefix = category?.trim()
+// the category, or ITM.
+//
+// Exactly one query, deliberately. An earlier version probed for a free suffix in
+// a loop, which meant up to 26 round-trips *inside the write transaction* — long
+// enough to time out under concurrent writes. assetId is unique, so a collision
+// is better handled by letting the insert fail and retrying (see createItem) than
+// by holding a write lock open while checking.
+function assetIdPrefix(category: string | null) {
+  return category?.trim()
     ? category.trim().slice(0, 3).toUpperCase().replace(/[^A-Z]/g, "X")
     : "ITM"
+}
+
+async function nextAssetId(tx: Prisma.TransactionClient, workspaceId: string, category: string | null) {
   const count = await tx.item.count({ where: { workspaceId } })
-  for (let attempt = 0; attempt < 25; attempt++) {
-    const candidate = `#${prefix}-${String(count + 1 + attempt).padStart(3, "0")}`
-    const taken = await tx.item.findFirst({ where: { workspaceId, assetId: candidate }, select: { id: true } })
-    if (!taken) return candidate
-  }
-  // Deterministic suffixes exhausted (heavily concurrent, or a manual assetId
-  // already occupies the run). Fall back to something that cannot collide.
-  return `#${prefix}-${Date.now().toString(36).toUpperCase()}`
+  return `#${assetIdPrefix(category)}-${String(count + 1).padStart(3, "0")}`
 }
 
 export async function createItemInTransaction(
@@ -142,7 +142,18 @@ export async function createItem(
   actor?: Actor,
 ) {
   const { db } = await import("@life-os/db")
-  const item = await db.$transaction(tx => createItemInTransaction(tx, data, workspaceId, { actor }))
+  let item
+  try {
+    item = await db.$transaction(tx => createItemInTransaction(tx, data, workspaceId, { actor }))
+  } catch (error) {
+    // count + 1 is not atomic, so two concurrent creates can pick the same
+    // suffix. Retry once with a value that cannot collide rather than pre-checking
+    // inside the transaction and holding the write lock while we do it.
+    const message = error instanceof Error ? error.message : String(error)
+    if (data.assetId || !/unique|constraint/i.test(message)) throw error
+    const fallback = `#${assetIdPrefix(typeof data.category === "string" ? data.category : null)}-${Date.now().toString(36).toUpperCase()}`
+    item = await db.$transaction(tx => createItemInTransaction(tx, { ...data, assetId: fallback }, workspaceId, { actor }))
+  }
   await writeAuditLog({ actor, action: "item.create", targetType: "item", targetId: item.id })
   return item
 }

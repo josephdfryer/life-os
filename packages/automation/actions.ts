@@ -2,6 +2,7 @@ import type { z } from "@life-os/contracts"
 import { ruleActionContract } from "@life-os/contracts"
 import {
   setInteractionField, InteractionFieldError,
+  setInteractionGroup,
   getPersonTags, setPersonTags,
   updatePlan, PlanError,
   updateEventPrimitive, EventPrimitiveError,
@@ -130,6 +131,26 @@ registerAction({
   type: "remove_tag",
   authorityTier: "safe_auto",
   execute: (action, ctx) => applyPersonTag(action, ctx, "remove"),
+})
+
+// Organization attribution, the action learned merchant rules fire. Calls the
+// shared domain command rather than a raw write, so every application publishes
+// its own GraphEvent and a bulk sweep stays traceable row by row.
+//
+// authorityTier is "review", not "safe_auto": brand-to-parent is confidently
+// wrong in both directions (MAC and Clinique are Estee Lauder; Sephora is LVMH),
+// and a wrong attribution silently inflates "what I spent with them" rather than
+// leaving a visible gap.
+registerAction({
+  type: "set_interaction_group",
+  authorityTier: "review",
+  async execute(action, ctx) {
+    if (ctx.targetType !== "interaction" || !ctx.targetId) return null
+    const groupId = typeof action.value === "string" && action.value.trim() ? action.value.trim() : null
+    if (!groupId) return null
+    const result = await setInteractionGroup(ctx.targetId, groupId, ctx.workspaceId, ctx.actor)
+    return result.changed ? action : null
+  },
 })
 
 // The first action to target the canonical Interaction directly rather than

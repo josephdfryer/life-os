@@ -1,7 +1,11 @@
 import { db } from "@/lib/db"
 import { centsToDollars } from "@life-os/db"
 import {
+  addMember,
   captureNote as createCapturedNote,
+  createGroup,
+  getOrganizationDossier,
+  listRelationshipOrganizations,
   createInteraction,
   createItem,
   createPlaceNote,
@@ -133,6 +137,54 @@ export const TOOLS: AssistantToolDefinition[] = [
         body: { type: "string", description: "The note" },
       },
       required: ["placeId", "body"],
+    },
+  },
+  {
+    name: "search_organizations",
+    capability: "read",
+    description: "Find companies and organizations Joseph has a working relationship with. Returns ids for get_organization. Only lists organizations with people or real contact attached, not every merchant he has ever bought from.",
+    input_schema: {
+      type: "object",
+      properties: { query: { type: "string", description: "Name fragment; omit to list all" } },
+      required: [],
+    },
+  },
+  {
+    name: "get_organization",
+    capability: "read",
+    description: "The full dossier for one organization: every interaction with anyone there (including after they moved on), total spend with them, current and past people, their sites, recorded facts like headcount or market cap, and research notes. Use this whenever Joseph asks about a company as a whole.",
+    input_schema: {
+      type: "object",
+      properties: { groupId: { type: "string", description: "From search_organizations" } },
+      required: ["groupId"],
+    },
+  },
+  {
+    name: "create_group",
+    capability: "write",
+    description: "Create an organization or group — a company he works with, a family, a team. Search first so an existing one is extended rather than duplicated.",
+    input_schema: {
+      type: "object",
+      properties: {
+        name: { type: "string" },
+        groupType: { type: "string", description: "corporation, employer, family, friend_group, sports_team, community, or other" },
+        notes: { type: "string" },
+      },
+      required: ["name"],
+    },
+  },
+  {
+    name: "add_person_to_group",
+    capability: "write",
+    description: "Record that a person belongs to an organization, with their role. This is how the company's people list gets built, so do it whenever Joseph mentions where someone works.",
+    input_schema: {
+      type: "object",
+      properties: {
+        groupId: { type: "string", description: "From search_organizations" },
+        personId: { type: "string", description: "From search_people" },
+        role: { type: "string", description: "Their title or role there" },
+      },
+      required: ["groupId", "personId"],
     },
   },
   {
@@ -381,6 +433,10 @@ export async function executeTool(name: string, input: Record<string, unknown>, 
       case "get_schedule": return await getSchedule(workspaceId, input.date ? String(input.date) : undefined)
       case "capture_note": return await captureNote(String(input.content ?? ""), input.noteType ? String(input.noteType) : "thought", workspaceId)
       case "log_interaction": return await logInteraction(String(input.personId ?? ""), String(input.type ?? "message"), String(input.summary ?? ""), workspaceId)
+      case "search_organizations": return await searchOrganizationsTool(input, workspaceId)
+      case "get_organization": return await getOrganizationTool(input, workspaceId)
+      case "create_group": return await createGroupTool(input, workspaceId)
+      case "add_person_to_group": return await addPersonToGroupTool(input, workspaceId)
       case "create_item": return await createItemTool(input, workspaceId)
       case "create_plan": return await createPlanTool(input, workspaceId)
       case "add_place_note": return await addPlaceNoteTool(input, workspaceId)
@@ -578,6 +634,52 @@ async function logInteraction(personId: string, type: string, summary: string, w
   if (!person) return "Person not found — search_people first"
   await createInteraction({ personId, type, summary, timestamp: new Date().toISOString() }, workspaceId, ASSISTANT_ACTOR)
   return `Logged ${type} with ${person.first} ${person.last}: ${summary}`
+}
+
+async function searchOrganizationsTool(input: Record<string, unknown>, workspaceId: string) {
+  const query = optionalString(input.query)?.toLowerCase()
+  const orgs = await listRelationshipOrganizations(workspaceId, 40)
+  const matched = query ? orgs.filter(o => o.name.toLowerCase().includes(query)) : orgs
+  if (!matched.length) return "No organizations with relationships recorded yet. create_group adds one."
+  return matched.map(o => `${o.id} — ${o.name} (${o.groupType})`).join("\n")
+}
+
+async function getOrganizationTool(input: Record<string, unknown>, workspaceId: string) {
+  const groupId = String(input.groupId ?? "").trim()
+  if (!groupId) return "A groupId is required — search_organizations first"
+  const dossier = await getOrganizationDossier(groupId, workspaceId)
+  if (!dossier) return "Organization not found"
+  const lines = [`${dossier.group.name} (${dossier.group.groupType})`]
+  const i = dossier.interactions
+  lines.push(`Interactions: ${i.total}${i.total ? ` — ${i.byType.map(t => `${t.count} ${t.type}`).join(", ")}` : ""}`)
+  if (i.firstAt) lines.push(`History: ${i.firstAt.toISOString().slice(0, 10)} to ${i.lastAt?.toISOString().slice(0, 10)}`)
+  if (dossier.spend.count) lines.push(`Spend: ${centsToDollars(dossier.spend.total)} across ${dossier.spend.count} transactions`)
+  if (dossier.people.length) {
+    lines.push(`People: ${dossier.people.map(p => `${p.name}${p.role ? ` (${p.role})` : ""}${p.current ? "" : " [former]"}`).join(", ")}`)
+  }
+  if (dossier.places.length) lines.push(`Sites: ${dossier.places.map(p => `${p.name} (${p.relationshipType})`).join(", ")}`)
+  if (dossier.facts.length) lines.push(`Facts: ${dossier.facts.map(f => `${f.type}=${f.value} as of ${f.recordedAt.toISOString().slice(0, 10)}`).join("; ")}`)
+  if (dossier.notes.length) lines.push(`Notes:\n${dossier.notes.map(n => `  [${n.timestamp.toISOString().slice(0, 10)}] ${n.content.slice(0, 200)}`).join("\n")}`)
+  return lines.join("\n")
+}
+
+async function createGroupTool(input: Record<string, unknown>, workspaceId: string) {
+  const name = String(input.name ?? "").trim()
+  if (!name) return "An organization needs a name"
+  const group = await createGroup({
+    name,
+    groupType: optionalString(input.groupType) ?? "corporation",
+    notes: optionalString(input.notes),
+  }, workspaceId, ASSISTANT_ACTOR)
+  return `Created ${group.name} (${group.id}). Use it as groupId in other tools.`
+}
+
+async function addPersonToGroupTool(input: Record<string, unknown>, workspaceId: string) {
+  const groupId = String(input.groupId ?? "").trim()
+  const personId = String(input.personId ?? "").trim()
+  if (!groupId || !personId) return "Both groupId and personId are required — search first"
+  await addMember(groupId, { personId, role: optionalString(input.role) }, workspaceId, ASSISTANT_ACTOR)
+  return `Recorded membership in ${groupId} for person ${personId}.`
 }
 
 async function createItemTool(input: Record<string, unknown>, workspaceId: string) {

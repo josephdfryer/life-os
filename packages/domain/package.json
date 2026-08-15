@@ -11,7 +11,7 @@
     "tsx": "^4.22.4"
   },
   "scripts": {
-    "test": "tsx --test tests/*.test.ts",
-    "type-check": "tsc --noEmit --moduleResolution bundler --module esnext --target es2022 --strict index.ts capture.ts actions.ts note-suggestions.ts calendar-reconciliation.ts events.ts audit.ts staged-interactions.ts states.ts interaction-stream.ts interactions.ts items.ts event-primitive.ts groups.ts persons.ts plans.ts place-notes.ts review.ts adaptive-day-commands.ts daily-brief.ts daily-brief-commands.ts file-evidence.ts"
+    "test": "tsx --test --test-concurrency=1 tests/*.test.ts",
+    "type-check": "tsc --noEmit --moduleResolution bundler --module esnext --target es2022 --strict index.ts capture.ts actions.ts note-suggestions.ts calendar-reconciliation.ts events.ts audit.ts staged-interactions.ts states.ts interaction-stream.ts interactions.ts items.ts event-primitive.ts groups.ts persons.ts plans.ts place-notes.ts review.ts organizations.ts organization-review.ts adaptive-day-commands.ts daily-brief.ts daily-brief-commands.ts file-evidence.ts"
   }
 }

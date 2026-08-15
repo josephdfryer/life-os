@@ -939,6 +939,12 @@ model Interaction {
   // Context place (where this interaction happened)
   placeId         String?
   place           Place?        @relation(fields: [placeId], references: [id])
+  // The organization this interaction was with, recorded when it happens rather
+  // than inferred later from employment dates. That is what lets the history
+  // survive a person changing jobs, and what lets spend — which has no person to
+  // infer from — belong to an organization at all.
+  groupId         String?
+  group           Group?        @relation("InteractionOrganization", fields: [groupId], references: [id], onDelete: SetNull)
   type            String
   timestamp       DateTime
   duration        Int?
@@ -1011,6 +1017,7 @@ model Interaction {
   @@index([workspaceId, actorPersonId, timestamp(sort: Desc)])
   @@index([workspaceId, category, timestamp(sort: Desc)])
   @@index([accountLinkId])
+  @@index([workspaceId, groupId, timestamp(sort: Desc)])
 }
 
 // ─────────────────────────────────────────────
@@ -1895,6 +1902,8 @@ model Group {
   parentGroups      GroupGroup[]     @relation("ChildGroup")
   placeAffiliations PlaceGroup[]
   taggedEvents      Event[]          @relation("EventGroupTags")
+  interactions      Interaction[]    @relation("InteractionOrganization")
+  aboutNotes        Note[]           @relation("NoteAboutGroup")
   // Provenance — the Note this Group was derived from, if any
   sourceNoteId      String?
   sourceNote        Note?            @relation(fields: [sourceNoteId], references: [id], onDelete: SetNull)
@@ -2057,6 +2066,11 @@ model Note {
   // Raw/derived split: link back to the archived raw file, when one exists
   sourceFileId String?
   sourceFile   ImportedFile? @relation(fields: [sourceFileId], references: [id])
+  // Subject, not provenance. Group.sourceNoteId is the reverse edge and means
+  // "this Group was derived from this Note"; this one means "this Note is about
+  // this Group" — research, earnings-call takeaways, org context.
+  aboutGroupId String?
+  aboutGroup   Group?        @relation("NoteAboutGroup", fields: [aboutGroupId], references: [id], onDelete: SetNull)
 
   // Reverse provenance — nodes derived from this Note
   plans                  Plan[]
@@ -2071,6 +2085,7 @@ model Note {
 
   @@index([workspaceId, timestamp(sort: Desc)])
   @@index([sourceFileId])
+  @@index([workspaceId, aboutGroupId, timestamp(sort: Desc)])
 }
 
 // ─────────────────────────────────────────────

@@ -709,6 +709,7 @@ export const InteractionScalarFieldEnum = {
   personId: 'personId',
   eventId: 'eventId',
   placeId: 'placeId',
+  groupId: 'groupId',
   type: 'type',
   timestamp: 'timestamp',
   duration: 'duration',
@@ -1381,7 +1382,8 @@ export const NoteScalarFieldEnum = {
   type: 'type',
   content: 'content',
   metadata: 'metadata',
-  sourceFileId: 'sourceFileId'
+  sourceFileId: 'sourceFileId',
+  aboutGroupId: 'aboutGroupId'
 } as const
 
 export type NoteScalarFieldEnum = (typeof NoteScalarFieldEnum)[keyof typeof NoteScalarFieldEnum]
