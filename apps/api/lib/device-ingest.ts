@@ -151,7 +151,12 @@ async function workspaceOwnerPersonId(workspaceId: string) {
 }
 
 function hashPayload(value: unknown) { return createHash("sha256").update(JSON.stringify(value)).digest("hex") }
-function accuracyConfidence(meters: number) { return Math.max(0.1, Math.min(1, 1 - meters / 1_000)) }
+// Out of 100, not out of 1: ImportStagedVisit.confidence is scored on the same
+// scale as the Places importer, which gates on AUTO_CREATE_THRESHOLD 70 and
+// STAGE_THRESHOLD 30. Returning a fraction here would have put every visit the
+// phone reports below the threshold that decides whether a visit is worth
+// staging at all. No rows had come through this path yet, so nothing to repair.
+function accuracyConfidence(meters: number) { return Math.max(10, Math.min(100, 100 - meters / 10)) }
 function accepted(sourceId: string, resultType: string, resultId: string | null): DeviceIngestResult { return { sourceId, status: "accepted", resultType, resultId, errorCode: null } }
 function rejected(sourceId: string, errorCode: string): DeviceIngestResult { return { sourceId, status: "rejected", resultType: null, resultId: null, errorCode } }
 function isUniqueConflict(error: unknown) { return Boolean(error && typeof error === "object" && "code" in error && error.code === "P2002") }

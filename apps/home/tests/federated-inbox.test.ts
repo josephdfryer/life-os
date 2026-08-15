@@ -2,6 +2,7 @@ import test from "node:test"
 import assert from "node:assert/strict"
 
 import { mergeQueues, type InboxItem } from "../components/FederatedInbox"
+import { unitConfidence } from "../lib/confidence"
 
 // The inbox showed 231 items, then swapped them for the 43 in the canonical
 // queue the moment the fetch resolved — so selecting Places emptied the list and
@@ -44,4 +45,32 @@ test("merging twice changes nothing, so pagination cannot duplicate rows", () =>
   const twice = mergeQueues(once.filter(i => !i.canonical), once.filter(i => i.canonical))
 
   assert.deepEqual(twice.map(i => i.id), once.map(i => i.id))
+})
+
+// "7370% confidence" on a place visit. ImportStagedVisit scores out of 100 while
+// the rest of the platform stores a fraction, and the inbox multiplied by 100
+// regardless.
+
+test("a place visit scored out of 100 reads as a percentage, not 7370%", () => {
+  assert.equal(unitConfidence(73.7, "percent"), 0.737)
+  assert.equal(Math.round(unitConfidence(73.7, "percent")! * 100), 74)
+})
+
+test("a fraction is left alone", () => {
+  assert.equal(unitConfidence(0.95, "unit"), 0.95)
+  assert.equal(unitConfidence(0, "unit"), 0)
+})
+
+test("legacy rows carrying the wrong scale are read as the scale they are on", () => {
+  // 11 dismissed gmail rows sit at 15–95 in a column that is otherwise 0–1.
+  assert.equal(unitConfidence(95, "unit"), 0.95)
+})
+
+test("no input can produce a confidence outside 0–100%", () => {
+  for (const [value, scale] of [[9_999, "unit"], [-4, "percent"], [1e6, "percent"]] as const) {
+    const result = unitConfidence(value, scale)
+    assert.ok(result !== null && result >= 0 && result <= 1, `${value} on the ${scale} scale escaped the range`)
+  }
+  assert.equal(unitConfidence(null, "unit"), null, "absent stays absent — it must not read as 0% certainty")
+  assert.equal(unitConfidence(Number.NaN, "unit"), null)
 })

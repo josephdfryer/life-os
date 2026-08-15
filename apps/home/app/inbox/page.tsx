@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation'
 import { db } from '@life-os/db'
 import { workspaceForHomeRequest } from '@/lib/request-access'
 import FederatedInbox, { type InboxItem } from '../../components/FederatedInbox'
+import { unitConfidence } from '@/lib/confidence'
 
 export const metadata = { title: 'Inbox · Life OS' }
 
@@ -64,7 +65,7 @@ async function InboxContent() {
       title: item.summary || item.contactName || 'Unmatched communication',
       detail: item.body || item.contactName || 'Staged interaction awaiting review',
       timestamp: item.timestamp.toISOString(),
-      confidence: item.confidence,
+      confidence: unitConfidence(item.confidence, 'unit'),
       priority: item.priority,
     })),
     ...suggestions.map(item => ({
@@ -75,7 +76,7 @@ async function InboxContent() {
       title: item.title,
       detail: suggestionDetail(item.payload),
       timestamp: item.createdAt.toISOString(),
-      confidence: item.confidence,
+      confidence: unitConfidence(item.confidence, 'unit'),
       priority: 3,
     })),
     ...visits.map(item => ({
@@ -86,7 +87,7 @@ async function InboxContent() {
       title: item.placeName || 'Unresolved visit',
       detail: item.placeAddress || 'A visit is waiting for place resolution',
       timestamp: item.startedAt.toISOString(),
-      confidence: item.confidence,
+      confidence: unitConfidence(item.confidence, 'percent'),
       priority: 3,
     })),
     ...plans.map(item => ({
@@ -108,7 +109,7 @@ async function InboxContent() {
       title: `Who is "${item.sourceText}"?`,
       detail: `Unresolved ${item.entityType.toLowerCase()} mentioned as ${item.role} in a file`,
       timestamp: item.createdAt.toISOString(),
-      confidence: item.confidence,
+      confidence: unitConfidence(item.confidence, 'unit'),
       priority: 3,
     })),
     ...claims.map(item => ({
@@ -119,7 +120,7 @@ async function InboxContent() {
       title: item.assertion,
       detail: `${item.classification} claim extracted from a file, awaiting review`,
       timestamp: item.createdAt.toISOString(),
-      confidence: item.confidence,
+      confidence: unitConfidence(item.confidence, 'unit'),
       priority: 3,
     })),
   ].sort((a, b) => b.timestamp.localeCompare(a.timestamp))

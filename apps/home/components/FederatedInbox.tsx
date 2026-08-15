@@ -2,6 +2,8 @@
 
 import { useEffect, useMemo, useState, useTransition } from 'react'
 
+import { unitConfidence } from '../lib/confidence'
+
 export type InboxItem = {
   id: string
   source: string
@@ -296,7 +298,7 @@ function toInboxItem(item: ReviewItem): InboxItem {
     title,
     detail,
     timestamp: item.createdAt,
-    confidence: item.confidence,
+    confidence: unitConfidence(item.confidence, 'unit'),
     priority: item.priority,
     riskTier: item.riskTier ?? 'review',
     itemType: item.itemType,
