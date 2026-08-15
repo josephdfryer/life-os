@@ -152,15 +152,68 @@ same instinct as filtering interactions rather than typing them.
 ## Phasing
 
 1. **`Interaction.groupId`** — nullable, indexed, additive. Nothing else matters until this exists.
-2. **Merchant → Group resolution** for financial interactions, following the existing
-   merchant → Place resolver. Biggest single unlock: 5,400 interactions currently attributable to
+2. **Merchant → Group resolution**, conservative: auto-attribute only unambiguous matches, stage
+   the rest as `ReviewItem`s. Biggest single unlock — 5,400 interactions currently attributable to
    nothing.
+2b. **Learn rules from review decisions** — a `set_interaction_group` action via `registerAction`,
+   rules created in `suggest` mode, blast radius shown before creation.
 3. **Calendar attendee-domain → Group** backfill for professional history.
 4. **`Note.groupId`** for research, and start recording company facts as `State` on the Group
    (no schema change needed for the latter).
 5. **Company dossier surface** — one query, plus an assistant tool over it.
 6. **Assistant write tools** (`create_group`, `add_person_to_group`) so membership gets recorded
    as a by-product of conversation rather than as data entry.
+
+## Attribution is conservative, reviewed, and learns
+
+Merchant → Group resolution stays deliberately timid. Wrong attribution is worse than none,
+because a missing row is visibly missing while a wrong one silently inflates "what I spent with
+them". So the resolver auto-attributes only unambiguous matches and sends everything else to
+review — and **each review decision becomes a rule**, so the same judgement is never made twice.
+
+None of this needs new machinery. All four pieces exist:
+
+| Piece | Already there |
+| --- | --- |
+| Review queue | `ReviewItem` — 62 live items across 3 sources, with `confidence`, `evidence`, and a `riskTier` of `observe / safe_auto / review / confirm` |
+| Inbox UI | Home's federated inbox, already rendering and executing proposed commands |
+| Rules engine | `Rule` with `trigger` / `conditions` / `actions` / `mode`, `interaction.create` already a registered trigger |
+| Audit of applications | `RuleRun` records every evaluation with `matched`, `mode`, `status`, and target |
+
+The one rule that exists today — *"Auto-approve high-confidence matches"*, trigger `inbox.stage`,
+mode `auto` — is already this exact pattern. This extends it rather than inventing anything.
+
+### The loop
+
+1. **Resolve conservatively.** Unambiguous merchant matches attribute directly. Everything else
+   becomes a `ReviewItem` with `source: "merchant_group"`, `riskTier: "review"`, and `evidence`
+   carrying why — the merchant string, how many transactions it covers, and the candidate Groups.
+2. **You decide** in the inbox that already exists.
+3. **Accepting writes a rule, not just a row.** Trigger `interaction.create`, a condition matching
+   that merchant string, and a new `set_interaction_group` action registered through
+   `registerAction` in `packages/automation/actions.ts`.
+4. **Future interactions attribute themselves**, with every application recorded as a `RuleRun`.
+5. **Past interactions are swept** by the same rule — one `GraphEvent` per interaction, per the
+   traceability decision below.
+
+Two additions worth building in:
+
+**Rules start in `suggest` mode and graduate.** `Rule.mode` already supports this. A newly learned
+merchant rule proposes for a while before it acts on its own, which turns a wrong guess into a
+second review rather than a silent mess.
+
+**Show the blast radius before the rule is created.** "This will attribute 412 past transactions
+to Estée Lauder" is the difference between an informed decision and a shrug. The count is a cheap
+query and it is the single most useful thing on that screen.
+
+### Why the caution is warranted
+
+Brand-to-parent is genuinely treacherous, and confidently wrong in both directions. MAC and
+Clinique **are** Estée Lauder. Sephora is **not** — it is LVMH. Aveda is Estée Lauder; Aesop was,
+then was not. No string similarity gets this right, and a learned rule is durable: a wrong one
+keeps being wrong, quietly, forever. That asymmetry — cheap to review once, expensive to be wrong
+permanently — is exactly why this belongs in review rather than in a resolver's confidence
+threshold.
 
 ## Decided
 
@@ -185,6 +238,6 @@ is a State.
    probably show both, clearly labelled by era.
 2. **One `groupId`, or several?** A meeting can involve two organizations. A single column is
    right until you have a real example; a join table is the escape hatch if you do.
-3. **How aggressive should merchant → Group resolution be?** Wrong attribution is worse than none,
-   since it silently inflates "what I spent with them". The Places importer's confidence tiering is
-   the precedent to follow.
+3. **What is the condition language for a learned merchant rule?** Exact string match is safest
+   and most brittle; a normalized-contains match covers "ESTEE LAUDER #4471" and "ESTEE LAUDER
+   ONLINE" but risks over-matching. Worth deciding when the first rule is written, not before.
