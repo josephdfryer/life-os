@@ -271,6 +271,54 @@ export async function bulkDismissReviewItems(input: BulkDismissReviewItemsInput)
   return { processed: result.count, skipped: unique.length - result.count }
 }
 
+export type BulkAcceptReviewItemsInput = {
+  ids: string[]
+  workspaceId?: string
+  actor?: GraphEventActor & AuditActor
+}
+
+/**
+ * Accept a same-source, same-itemType group in one action.
+ *
+ * Mirrors bulkDismissReviewItems' guard exactly, including the tier restriction:
+ * review and confirm tier items exist precisely because they need individual
+ * judgment, so a group action must not reach them. The way to make a class of
+ * proposal bulk-acceptable is to earn a lower tier by producing a confidence
+ * score — not to widen this.
+ *
+ * Each item still runs its own registered command, so accepting fifty is fifty
+ * real writes with fifty audit trails; only the decision is shared.
+ */
+export async function bulkAcceptReviewItems(input: BulkAcceptReviewItemsInput) {
+  const { db } = await import("@life-os/db")
+  const workspaceId = input.workspaceId ?? "default-workspace"
+  const unique = [...new Set(input.ids)]
+  const items = await db.reviewItem.findMany({ where: { id: { in: unique }, workspaceId, status: "pending" } })
+  if (!items.length) return { processed: 0, failed: 0, skipped: unique.length }
+
+  const [first, ...rest] = items
+  const sameGroup = rest.every(item => item.source === first.source && item.itemType === first.itemType)
+  if (!sameGroup) throw new ReviewItemError("Bulk accept requires every item to share the same source and itemType", "validation")
+  if (first.riskTier !== "observe" && first.riskTier !== "safe_auto") {
+    throw new ReviewItemError(`Bulk accept is not allowed for risk tier "${first.riskTier}"`, "validation")
+  }
+
+  let processed = 0
+  let failed = 0
+  for (const item of items) {
+    try {
+      await resolveReviewItem({ id: item.id, action: "accept", workspaceId, actor: input.actor })
+      processed++
+    } catch (error) {
+      // One bad row must not abandon the rest — the point of the group action is
+      // that the remaining forty-nine still get cleared.
+      console.warn("[review] bulk accept failed for item", item.id, error)
+      failed++
+    }
+  }
+  return { processed, failed, skipped: unique.length - items.length }
+}
+
 export type ListReviewItemsParams = {
   cursor?: string | null
   limit?: number

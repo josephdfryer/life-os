@@ -38,7 +38,8 @@
     "test": "tsx --test \"scripts/**/*.test.ts\" && npm run test --workspaces --if-present",
     "type-check": "tsc --noEmit -p tsconfig.json && turbo run type-check",
     "check:migrations": "node scripts/check-migration-integrity.mjs",
-    "files:backfill-preview": "tsx scripts/file-intelligence-backfill-preview.ts"
+    "files:backfill-preview": "tsx scripts/file-intelligence-backfill-preview.ts",
+    "inbox:reconcile-calendar": "tsx scripts/reconcile-calendar-backlog.ts"
   },
   "packageManager": "npm@11.12.1",
   "overrides": {

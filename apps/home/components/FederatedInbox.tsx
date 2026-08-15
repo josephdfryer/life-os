@@ -12,6 +12,12 @@ export type InboxItem = {
   timestamp: string
   confidence: number | null
   priority: number
+  // Governs whether a group may be cleared in one action. Review and confirm
+  // tier items are excluded by the API on purpose, so the UI must not offer it.
+  // Optional because the legacy read-only queues carry neither — absent means
+  // not bulkable, which is the safe default.
+  riskTier?: string
+  itemType?: string
   canonical?: boolean
 }
 
@@ -19,6 +25,7 @@ type ReviewItem = {
   id: string
   source: string
   itemType: string
+  riskTier: string
   proposedCommand: { command: string; input: Record<string, unknown> }
   confidence: number | null
   priority: number
@@ -118,6 +125,45 @@ export default function FederatedInbox({ items }: { items: InboxItem[] }) {
     }
   }
 
+  // Group by the question being asked, not by source. 59 items sharing one
+  // command shape are one decision, and presenting them as 59 rows is what made
+  // the queue unclearable. Only groups whose tier permits it get a bulk action —
+  // review and confirm tier items exist because they need individual judgment.
+  const groups = useMemo(() => {
+    const byKey = new Map<string, InboxItem[]>()
+    for (const item of filtered) {
+      const key = `${item.sourceKey}:${item.itemType ?? 'item'}`
+      const bucket = byKey.get(key) ?? []
+      bucket.push(item)
+      byKey.set(key, bucket)
+    }
+    return [...byKey.entries()]
+      .map(([key, items]) => ({ key, items, bulkable: items.length > 1 && items.every(i => i.riskTier === 'observe' || i.riskTier === 'safe_auto') }))
+      .sort((a, b) => b.items.length - a.items.length)
+  }, [filtered])
+
+  async function resolveGroup(items: InboxItem[], action: 'accept' | 'dismiss') {
+    if (pendingId) return
+    setPendingId(`group:${items[0]?.id}`)
+    setActionError(null)
+    const ids = items.map(i => i.id)
+    try {
+      const response = await fetch(`/api/review-items/bulk-${action === 'accept' ? 'accept' : 'dismiss'}`, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify(action === 'accept' ? { ids } : { ids, reason: 'Bulk dismissed from inbox' }),
+      })
+      const body = await response.json() as { error?: string }
+      if (!response.ok) throw new Error(body.error || 'Could not resolve this group.')
+      const removed = new Set(ids)
+      setReviewItems(current => current.filter(candidate => !removed.has(candidate.id)))
+    } catch (error) {
+      setActionError(error instanceof Error ? error.message : 'Could not resolve this group.')
+    } finally {
+      setPendingId(null)
+    }
+  }
+
   return (
     <section aria-label="Federated review inbox">
       <div className="inbox-filters">
@@ -134,9 +180,24 @@ export default function FederatedInbox({ items }: { items: InboxItem[] }) {
         </span>
       </div>
       {actionError ? <p className="inbox-action-error" role="alert">{actionError}</p> : null}
-      {filtered.length === 0 ? <div className="stream-message">Nothing matches these filters.</div> : (
+      {filtered.length === 0 ? <div className="stream-message">Nothing to review — the queue is clear.</div> : (
         <div className="stream-list">
-          {filtered.map(item => <InboxRow key={`${item.sourceKey}:${item.id}`} item={item} pending={pendingId === item.id} onResolve={resolve} />)}
+          {groups.map(group => (
+            <div key={group.key} className="inbox-group">
+              {group.items.length > 1 ? (
+                <div className="inbox-group-head">
+                  <span className="inbox-group-title">{group.items.length} × {sourceLabel(group.items[0].source)}</span>
+                  {group.bulkable ? (
+                    <span className="inbox-group-actions">
+                      <button type="button" className="inbox-action" disabled={!!pendingId} onClick={() => resolveGroup(group.items, 'accept')}>Accept all {group.items.length}</button>
+                      <button type="button" className="inbox-action" disabled={!!pendingId} onClick={() => resolveGroup(group.items, 'dismiss')}>Dismiss all</button>
+                    </span>
+                  ) : <span className="inbox-group-note">Needs individual review</span>}
+                </div>
+              ) : null}
+              {group.items.map(item => <InboxRow key={`${item.sourceKey}:${item.id}`} item={item} pending={pendingId === item.id} onResolve={resolve} />)}
+            </div>
+          ))}
         </div>
       )}
       {serviceMode === 'legacy' ? <p className="inbox-read-only">The shared queue is not configured, so these legacy queues remain read only.</p> : null}
@@ -192,6 +253,8 @@ function toInboxItem(item: ReviewItem): InboxItem {
     timestamp: item.createdAt,
     confidence: item.confidence,
     priority: item.priority,
+    riskTier: item.riskTier ?? 'review',
+    itemType: item.itemType,
     canonical: true,
   }
 }

@@ -900,6 +900,10 @@ export const reviewItemBulkDismissContract = z.object({
   reason: z.string().trim().min(1).max(2_000).optional(),
 }).strict()
 
+export const reviewItemBulkAcceptContract = z.object({
+  ids: z.array(id).min(1).max(200),
+}).strict()
+
 export const graphEventTypeContract = z.string().trim().min(1).max(128)
 
 export const graphEventContract = z.object({

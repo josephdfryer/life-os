@@ -597,6 +597,24 @@ export async function syncAllGoogleCalendars(options: SyncOptions = {}) {
   }
 }
 
+
+// How likely is it that this slot actually happened? Used to rank the queue and
+// to let the existing "auto-approve high-confidence matches" rule act, which it
+// could not while every item was created with a null confidence.
+//
+// The signals are the ones Google already gives us: accepting an invitation is
+// the strongest, a cancelled event the weakest, and a solo hold in a calendar is
+// the least evidence of anything.
+function reconciliationConfidence(item: { status?: string; attendees?: { self?: boolean; responseStatus?: string | null }[] }, _planId: string) {
+  if (item.status === "cancelled") return 0.1
+  const attendees = item.attendees ?? []
+  const me = attendees.find(a => a.self)
+  if (me?.responseStatus === "accepted") return 0.95
+  if (me?.responseStatus === "declined") return 0.15
+  if (attendees.length > 1) return 0.7
+  return 0.5
+}
+
 async function syncGoogleCalendarConnection(
   actor: SyncActor,
   connection: SyncConnection,
@@ -814,7 +832,13 @@ async function upsertCalendarEvent(input: {
     },
   })
 
-  if (!link?.eventId) {
+  // Only ask once the day has passed. Creating a review item at sync time asked
+  // "did this happen?" about events that had not happened yet, which is most of
+  // how the queue reached 59 pending. Anything still unresolved is picked up by
+  // matchCalendarOutcomes, which resolves it from evidence or retires it.
+  const dayHasPassed = start.getTime() < Date.now() - 24 * 60 * 60 * 1000
+  const confidence = reconciliationConfidence(input.item, planId)
+  if (!link?.eventId && dayHasPassed) {
     await createReviewItem({
       workspaceId: input.workspaceId,
       source: "calendar_reconciliation",
@@ -831,8 +855,15 @@ async function upsertCalendarEvent(input: {
         externalEventId: input.item.id,
         calendarId: input.calendarId,
       },
-      riskTier: "review",
-      priority: 2,
+      // Tier follows the evidence instead of being hardcoded to "review". Every
+      // item used to be review tier with a null confidence, which blocked bulk
+      // action (bulk dismiss refuses review/confirm by design) and left the
+      // existing "auto-approve high-confidence matches" rule with nothing to act
+      // on. An invitation you accepted is genuinely safe to clear in bulk; a solo
+      // hold with no corroboration still deserves a look.
+      riskTier: confidence >= 0.9 ? "safe_auto" : "review",
+      priority: confidence >= 0.9 ? 4 : 2,
+      confidence,
     })
   }
 
