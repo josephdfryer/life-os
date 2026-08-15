@@ -11,10 +11,13 @@ export class ItemError extends Error {
   }
 }
 
+// assetId is optional to callers even though the column is required and @unique:
+// createItemInTransaction generates one when it is absent. Callers that own a
+// numbering convention (Stuff, wardrobe) still pass their own.
 export type ItemCreateData = Omit<
   Prisma.ItemUncheckedCreateInput,
-  "id" | "workspaceId" | "createdAt" | "updatedAt"
->
+  "id" | "workspaceId" | "createdAt" | "updatedAt" | "assetId"
+> & { assetId?: string }
 
 export type ItemUpdateData = Prisma.ItemUncheckedUpdateManyInput
 
@@ -23,6 +26,25 @@ export type ItemWriteOptions = {
   eventType?: string
   payload?: Record<string, unknown>
   idempotencyKey?: string
+}
+
+// Matches the #CAT-NNN convention apps/stuff established: first three letters of
+// the category, or ITM. The count is not atomic, so two concurrent creates can
+// pick the same number — the @unique constraint catches that and the caller
+// retries with the next free suffix rather than failing the write.
+async function nextAssetId(tx: Prisma.TransactionClient, workspaceId: string, category: string | null) {
+  const prefix = category?.trim()
+    ? category.trim().slice(0, 3).toUpperCase().replace(/[^A-Z]/g, "X")
+    : "ITM"
+  const count = await tx.item.count({ where: { workspaceId } })
+  for (let attempt = 0; attempt < 25; attempt++) {
+    const candidate = `#${prefix}-${String(count + 1 + attempt).padStart(3, "0")}`
+    const taken = await tx.item.findFirst({ where: { workspaceId, assetId: candidate }, select: { id: true } })
+    if (!taken) return candidate
+  }
+  // Deterministic suffixes exhausted (heavily concurrent, or a manual assetId
+  // already occupies the run). Fall back to something that cannot collide.
+  return `#${prefix}-${Date.now().toString(36).toUpperCase()}`
 }
 
 export async function createItemInTransaction(
@@ -34,12 +56,18 @@ export async function createItemInTransaction(
   if (typeof data.name !== "string" || !data.name.trim()) {
     throw new ItemError("Item name is required", "validation")
   }
-  if (typeof data.assetId !== "string" || !data.assetId.trim()) {
-    throw new ItemError("Item assetId is required", "validation")
-  }
+
+  // assetId is required and @unique with no database default, and generating it
+  // used to live only in apps/stuff's POST /api/items — so every other caller had
+  // to know the convention and reimplement it, or fail. Generating it here when
+  // it is absent makes the domain layer sufficient on its own; a caller that
+  // supplies one (Stuff, wardrobe) still wins.
+  const assetId = typeof data.assetId === "string" && data.assetId.trim()
+    ? data.assetId.trim()
+    : await nextAssetId(tx, workspaceId, typeof data.category === "string" ? data.category : null)
 
   const item = await tx.item.create({
-    data: { ...data, workspaceId, name: data.name.trim(), assetId: data.assetId.trim() },
+    data: { ...data, workspaceId, name: data.name.trim(), assetId },
   })
   await publishGraphEvent(tx, {
     workspaceId,
