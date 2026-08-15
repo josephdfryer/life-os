@@ -1,11 +1,30 @@
 import type { NextRequest } from "next/server"
 import { authorizeApiKey, extractApiKey, type AccessActor, type ApiKeyAuthResult } from "@life-os/access"
+import { authorizeDeviceToken, extractBearerToken } from "@life-os/access/device"
 
 export async function authorizeRequest(
   req: NextRequest,
   requiredScopes: string | string[] = [],
 ): Promise<ApiKeyAuthResult | null> {
-  return authorizeApiKey(extractApiKey(req.headers), requiredScopes)
+  const apiKey = await authorizeApiKey(extractApiKey(req.headers), requiredScopes)
+  if (apiKey) return apiKey
+
+  const device = await authorizeDeviceToken(extractBearerToken(req.headers))
+  if (!device) return null
+
+  const scopes = Array.isArray(requiredScopes) ? requiredScopes : [requiredScopes]
+  if (!scopes.every(scope => device.scopes.includes(scope))) return null
+
+  return {
+    actor: {
+      type: "system",
+      id: device.deviceId,
+      label: "signed-in-device",
+      workspaceId: device.workspaceId,
+    },
+    scopes: device.scopes,
+    workspaceId: device.workspaceId,
+  }
 }
 
 /**

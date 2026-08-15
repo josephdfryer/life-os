@@ -22,6 +22,8 @@ test("device authorization, replay receipt, rotation, and revocation", async () 
   const pair = await exchangeDeviceAuthorization({ code: grant.code, codeVerifier: verifier, deviceId })
   accessToken = pair.accessToken; refreshToken = pair.refreshToken
   assert.equal((await authorizeDeviceToken(accessToken, "device.ingest"))?.workspaceId, workspaceId)
+  assert.equal((await authorizeDeviceToken(accessToken, "people.read"))?.workspaceId, workspaceId)
+  assert.equal(await authorizeDeviceToken(accessToken, "people.write"), null)
 
   const item = deviceIngestItemContract.parse({ deviceId, source: "voice_journal", sourceId: "voice-1", schemaVersion: 1, observedAt: new Date().toISOString(), record: { type: "voice.transcript", recordedAt: new Date().toISOString(), durationSeconds: 10, transcript: "A durable, normalized thought." } })
   assert.equal((await ingestDeviceItem(item, workspaceId)).status, "accepted")

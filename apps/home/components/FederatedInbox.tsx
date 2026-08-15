@@ -34,7 +34,7 @@ type ReviewItem = {
 }
 
 const SOURCE_FILTERS = [
-  ['all', 'All sources'],
+  ['all', 'Everything'],
   ['staged_interaction', 'Communications'],
   ['note_suggestion', 'Notes'],
   ['import_staged_visit', 'Places'],
@@ -125,6 +125,20 @@ export default function FederatedInbox({ items }: { items: InboxItem[] }) {
     }
   }
 
+  // Counts come from the unfiltered set: a tab has to say how much work is in
+  // that queue even while you are looking at another one. Queues with nothing
+  // pending are dropped rather than shown as an empty choice.
+  const queueTabs = useMemo(() => {
+    const counts = new Map<string, number>()
+    for (const item of reviewItems) counts.set(item.sourceKey, (counts.get(item.sourceKey) ?? 0) + 1)
+    const tabs = SOURCE_FILTERS
+      .filter(([key]) => key !== 'all')
+      .map(([key, label]) => ({ key, label, count: counts.get(key) ?? 0 }))
+      .filter(tab => tab.count > 0)
+      .sort((a, b) => b.count - a.count)
+    return [{ key: 'all', label: 'Everything', count: reviewItems.length }, ...tabs]
+  }, [reviewItems])
+
   // Group by the question being asked, not by source. 59 items sharing one
   // command shape are one decision, and presenting them as 59 rows is what made
   // the queue unclearable. Only groups whose tier permits it get a bulk action —
@@ -166,8 +180,22 @@ export default function FederatedInbox({ items }: { items: InboxItem[] }) {
 
   return (
     <section aria-label="Federated review inbox">
+      <div className="inbox-queues" role="tablist" aria-label="Review queues">
+        {queueTabs.map(tab => (
+          <button
+            key={tab.key}
+            type="button"
+            role="tab"
+            aria-selected={source === tab.key}
+            className={`inbox-queue${source === tab.key ? ' inbox-queue--active' : ''}`}
+            onClick={() => setSource(tab.key)}
+          >
+            {tab.label}<span className="inbox-queue-count">{tab.count}</span>
+          </button>
+        ))}
+      </div>
+
       <div className="inbox-filters">
-        <Filter label="Source" value={source} options={SOURCE_FILTERS} onChange={setSource} />
         <Filter label="Primitive" value={primitive} options={primitives.map(value => [value, value === 'all' ? 'All primitives' : labelize(value)] as const)} onChange={setPrimitive} />
         <Filter label="Confidence" value={confidence} options={[['all', 'Any confidence'], ['high', 'High'], ['medium', 'Medium'], ['low', 'Low']]} onChange={setConfidence} />
         <Filter label="Age" value={age} options={[['all', 'Any age'], ['1', 'Older than 1 day'], ['7', 'Older than 7 days'], ['30', 'Older than 30 days']]} onChange={setAge} />

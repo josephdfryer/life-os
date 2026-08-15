@@ -4,7 +4,14 @@ import { db, Prisma } from "@life-os/db"
 const ACCESS_TTL_MS = 15 * 60 * 1000
 const REFRESH_TTL_MS = 90 * 24 * 60 * 60 * 1000
 const AUTHORIZATION_TTL_MS = 10 * 60 * 1000
-export const DEVICE_SCOPES = ["device.ingest", "device.heartbeat", "device.self", "workout.read", "workout.write"] as const
+export const DEVICE_SCOPES = [
+  "device.ingest",
+  "device.heartbeat",
+  "device.self",
+  "workout.read",
+  "workout.write",
+  "people.read",
+] as const
 
 export type DeviceAuthResult = {
   deviceId: string

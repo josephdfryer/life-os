@@ -237,6 +237,24 @@ a {
 .stream-load-more { display: flex; margin: 20px auto 0; }
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
 .inbox-count { color: var(--cognac); font-size: 13px; }
+/* Queue switcher. Tabs rather than a dropdown because the whole question is
+   "which queue needs me" — a count you have to open a menu to see is not an
+   answer. Scrolls horizontally on narrow screens instead of wrapping into a
+   block that pushes the work off screen. */
+.inbox-queues { display: flex; gap: 6px; margin-bottom: 12px; overflow-x: auto; padding-bottom: 2px; }
+.inbox-queue { flex: 0 0 auto; display: inline-flex; align-items: center; gap: 7px; padding: 8px 13px; border: 1px solid var(--border); border-radius: var(--radius-pill); background: var(--surface); color: var(--ink-3); font: inherit; font-size: 12px; cursor: pointer; white-space: nowrap; }
+.inbox-queue:hover { color: var(--ink-2); }
+.inbox-queue--active { border-color: var(--cognac); background: var(--cognac-soft); color: var(--cognac-deep); }
+.inbox-queue-count { min-width: 20px; padding: 1px 6px; border-radius: var(--radius-pill); background: var(--surface-2); color: var(--ink-3); font-size: 11px; text-align: center; }
+.inbox-queue--active .inbox-queue-count { background: var(--cognac); color: #fff; }
+
+/* Grouped decisions — the count and its one action, above the rows it covers. */
+.inbox-group + .inbox-group { border-top: 1px solid var(--border-subtle); }
+.inbox-group-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 20px; background: var(--surface-2); }
+.inbox-group-title { color: var(--ink-2); font-size: 12px; }
+.inbox-group-actions { display: flex; gap: 8px; }
+.inbox-group-note { color: var(--ink-4); font-size: 11px; }
+
 .inbox-filters { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin-bottom: 16px; padding: 14px; border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--surface); }
 .inbox-filter { display: grid; gap: 5px; color: var(--ink-3); font-size: 11px; }
 .inbox-filter select { min-width: 0; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--surface-2); color: var(--ink); padding: 8px 9px; font: inherit; font-size: 12px; }
@@ -567,6 +585,7 @@ a {
   .stream-row-date { grid-column: 1 / -1; }
   .stream-row-meta { grid-column: 2; grid-row: 2; }
   .inbox-filters { grid-template-columns: 1fr 1fr; }
+  .inbox-group-head { flex-wrap: wrap; }
   .inbox-row { grid-template-columns: 1fr auto; gap: 8px 12px; }
   .inbox-row-leading { grid-column: 1 / -1; flex-direction: row; align-items: center; }
   .inbox-row-trailing { grid-column: 2; grid-row: 2; }

@@ -1,6 +1,6 @@
 # Life OS iOS Platform Plan
 
-Status: implementation in progress — M2 backend complete; M5 canonical API slices underway
+Status: implementation in progress — M2 backend complete; M5 canonical API and first native People slice underway
 Date: 2026-08-12
 Supersedes the app-topology portions of `docs/COMPANION_ARCHITECTURE.md` and
 `docs/LEVEL_UP_ADAPTIVE_WORKOUT_PLAN.md`. The engineering content of both documents
@@ -564,6 +564,14 @@ owner name is resolved and substituted into the AI analysis prompt, no
 longer hardcoded to Joseph Fryer) but still live in `apps/persons`; moving
 them to `apps/api` remains a separate step from fixing their multi-tenant
 correctness.
+
+Implementation note (2026-08-15): the first native M5 feature slice now exists
+as `apps/companion/Packages/PersonsFeature`. The personal iOS shell mounts its
+People tab after device sign-in. It supports bounded cursor pagination,
+debounced canonical-API search, pull-to-refresh, and read-only person detail.
+Signed-in device credentials now carry `people.read`; `people.write` remains
+absent and is pinned by integration coverage. Capture, Today, Inbox, local
+cache/offline behavior, and the standalone saleable shell remain future slices.
 
 ---
 

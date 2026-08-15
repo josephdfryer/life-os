@@ -14,7 +14,7 @@ async function InboxContent() {
   const workspaceId = await workspaceForHomeRequest()
   if (!workspaceId) redirect('/login')
 
-  const [staged, suggestions, visits, plans] = await Promise.all([
+  const [staged, suggestions, visits, plans, mentions, claims] = await Promise.all([
     safeQueue('communications', () => db.stagedInteraction.findMany({
       where: { workspaceId, status: { in: ['pending', 'blocked'] }, type: { not: 'financial' } },
       orderBy: [{ priority: 'asc' }, { timestamp: 'desc' }],
@@ -38,6 +38,20 @@ async function InboxContent() {
       orderBy: { scheduledStart: 'desc' },
       take: 100,
       select: { id: true, text: true, scheduledStart: true, createdAt: true },
+    })),
+    // File evidence was missing from the inbox entirely, so unresolved identities
+    // and unreviewed claims accumulated with no surface that showed them.
+    safeQueue('file identities', () => db.fileEntityMention.findMany({
+      where: { workspaceId, resolutionStatus: 'unresolved', sourceFile: { archivedAt: null } },
+      orderBy: { createdAt: 'desc' },
+      take: 100,
+      select: { id: true, sourceText: true, entityType: true, role: true, confidence: true, createdAt: true },
+    })),
+    safeQueue('file claims', () => db.evidenceClaim.findMany({
+      where: { workspaceId, status: 'unreviewed', sourceFile: { archivedAt: null } },
+      orderBy: { createdAt: 'desc' },
+      take: 100,
+      select: { id: true, assertion: true, classification: true, confidence: true, createdAt: true },
     })),
   ])
 
@@ -85,6 +99,28 @@ async function InboxContent() {
       timestamp: (item.scheduledStart ?? item.createdAt).toISOString(),
       confidence: null,
       priority: 2,
+    })),
+    ...mentions.map(item => ({
+      id: item.id,
+      source: 'File identities',
+      sourceKey: 'file_evidence' as const,
+      primitive: 'identity',
+      title: `Who is "${item.sourceText}"?`,
+      detail: `Unresolved ${item.entityType.toLowerCase()} mentioned as ${item.role} in a file`,
+      timestamp: item.createdAt.toISOString(),
+      confidence: item.confidence,
+      priority: 3,
+    })),
+    ...claims.map(item => ({
+      id: item.id,
+      source: 'File claims',
+      sourceKey: 'file_evidence' as const,
+      primitive: 'claim',
+      title: item.assertion,
+      detail: `${item.classification} claim extracted from a file, awaiting review`,
+      timestamp: item.createdAt.toISOString(),
+      confidence: item.confidence,
+      priority: 3,
     })),
   ].sort((a, b) => b.timestamp.localeCompare(a.timestamp))
 

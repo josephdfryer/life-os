@@ -2,6 +2,7 @@ import assert from "node:assert/strict"
 import { createHash } from "node:crypto"
 import test from "node:test"
 import { NextRequest } from "next/server"
+import { createDeviceAuthorization, exchangeDeviceAuthorization, pkceChallenge } from "@life-os/access/device"
 import { peoplePageContract, personResourceContract } from "@life-os/contracts"
 import { db } from "@life-os/db"
 import { GET as listPeople, POST as createPerson } from "../app/v1/people/route"
@@ -14,6 +15,7 @@ const keyA = `lifeos_test_a_${suffix}`
 const keyB = `lifeos_test_b_${suffix}`
 let personAId = ""
 let personBId = ""
+let userId = ""
 
 test("people API: contracts, cursor pagination, and workspace isolation", async () => {
   await db.workspace.createMany({ data: [
@@ -26,6 +28,15 @@ test("people API: contracts, cursor pagination, and workspace isolation", async 
   ])
   personAId = personA.id
   personBId = personB.id
+  const user = await db.user.create({
+    data: {
+      email: `people-device-${suffix}@example.test`,
+      personId: personA.id,
+      workspaceMemberships: { create: { workspaceId: workspaceA, role: "owner" } },
+    },
+  })
+  userId = user.id
+  await db.workspace.update({ where: { id: workspaceA }, data: { ownerUserId: user.id } })
   await Promise.all([
     createApiKey(workspaceA, keyA, ["people.read", "people.write"]),
     createApiKey(workspaceB, keyB, ["people.read", "people.write"]),
@@ -73,9 +84,32 @@ test("people API: contracts, cursor pagination, and workspace isolation", async 
 
   const otherWorkspaceList = peoplePageContract.parse(await (await listPeople(request("http://localhost/v1/people", keyB))).json())
   assert.deepEqual(otherWorkspaceList.data.map(person => person.id), [personBId])
+
+  const verifier = "p".repeat(64)
+  const grant = await createDeviceAuthorization({
+    workspaceId: workspaceA,
+    userId,
+    platform: "ios",
+    displayName: "People test iPhone",
+    appVersion: "1.0",
+    redirectUri: "lifeos-companion://auth/callback",
+    codeChallenge: pkceChallenge(verifier),
+  })
+  const device = await exchangeDeviceAuthorization({ code: grant.code, codeVerifier: verifier, deviceId: grant.deviceId })
+  const deviceList = await listPeople(bearerRequest("http://localhost/v1/people?limit=1", device.accessToken))
+  assert.equal(deviceList.status, 200)
+  assert.equal(peoplePageContract.parse(await deviceList.json()).data.length, 1)
+
+  const refusedDeviceWrite = await createPerson(bearerRequest("http://localhost/v1/people", device.accessToken, {
+    method: "POST",
+    body: JSON.stringify({ first: "Must", last: "Not Write" }),
+  }))
+  assert.equal(refusedDeviceWrite.status, 401)
+  assert.equal(await db.person.count({ where: { workspaceId: workspaceA, first: "Must", last: "Not Write" } }), 0)
 })
 
 test.after(async () => {
+  await db.user.delete({ where: { id: userId } }).catch(() => undefined)
   await db.workspace.delete({ where: { id: workspaceA } }).catch(() => undefined)
   await db.workspace.delete({ where: { id: workspaceB } }).catch(() => undefined)
   await db.$disconnect()
@@ -86,6 +120,14 @@ function request(url: string, key: string, init?: { method?: string; body?: stri
     method: init?.method,
     body: init?.body,
     headers: { "x-api-key": key, "content-type": "application/json" },
+  })
+}
+
+function bearerRequest(url: string, token: string, init?: { method?: string; body?: string }) {
+  return new NextRequest(url, {
+    method: init?.method,
+    body: init?.body,
+    headers: { authorization: `Bearer ${token}`, "content-type": "application/json" },
   })
 }
 

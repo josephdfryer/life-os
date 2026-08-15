@@ -11,6 +11,7 @@
 		AA0000000000000000000003 /* LifeOSCompanionCore in Frameworks */ = {isa = PBXBuildFile; productRef = AA0000000000000000000013 /* LifeOSCompanionCore */; };
 		AA0000000000000000000004 /* LifeOSCompanionCore in Frameworks */ = {isa = PBXBuildFile; productRef = AA0000000000000000000014 /* LifeOSCompanionCore */; };
 		AA0000000000000000000005 /* Life OS Collector.app in Embed Login Items */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000022 /* Life OS Collector.app */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		AA0000000000000000000006 /* PersonsFeature in Frameworks */ = {isa = PBXBuildFile; productRef = AA0000000000000000000018 /* PersonsFeature */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -32,7 +33,7 @@
 /* Begin PBXFrameworksBuildPhase section */
 		AA0000000000000000000051 = {isa = PBXFrameworksBuildPhase; buildActionMask = 2147483647; files = (AA0000000000000000000001, AA0000000000000000000002, ); runOnlyForDeploymentPostprocessing = 0; };
 		AA0000000000000000000052 = {isa = PBXFrameworksBuildPhase; buildActionMask = 2147483647; files = (AA0000000000000000000003, ); runOnlyForDeploymentPostprocessing = 0; };
-		AA0000000000000000000053 = {isa = PBXFrameworksBuildPhase; buildActionMask = 2147483647; files = (AA0000000000000000000004, ); runOnlyForDeploymentPostprocessing = 0; };
+		AA0000000000000000000053 = {isa = PBXFrameworksBuildPhase; buildActionMask = 2147483647; files = (AA0000000000000000000004, AA0000000000000000000006, ); runOnlyForDeploymentPostprocessing = 0; };
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -43,11 +44,11 @@
 /* Begin PBXNativeTarget section */
 		AA0000000000000000000071 /* Life OS Companion */ = {isa = PBXNativeTarget; buildConfigurationList = AA0000000000000000000091; buildPhases = (AA0000000000000000000081, AA0000000000000000000051, AA0000000000000000000031, ); buildRules = (); dependencies = (AA00000000000000000000B1, ); fileSystemSynchronizedGroups = (AA0000000000000000000041, ); name = "Life OS Companion"; packageProductDependencies = (AA0000000000000000000011, AA0000000000000000000012, ); productName = LifeOSCompanionMac; productReference = AA0000000000000000000021; productType = "com.apple.product-type.application"; };
 		AA0000000000000000000072 /* Life OS Collector */ = {isa = PBXNativeTarget; buildConfigurationList = AA0000000000000000000092; buildPhases = (AA0000000000000000000082, AA0000000000000000000052, ); buildRules = (); dependencies = (); fileSystemSynchronizedGroups = (AA0000000000000000000042, ); name = "Life OS Collector"; packageProductDependencies = (AA0000000000000000000013, ); productName = LifeOSCompanionHelper; productReference = AA0000000000000000000022; productType = "com.apple.product-type.application"; };
-		AA0000000000000000000073 /* Life OS Companion iOS */ = {isa = PBXNativeTarget; buildConfigurationList = AA0000000000000000000093; buildPhases = (AA0000000000000000000083, AA0000000000000000000053, ); buildRules = (); dependencies = (); fileSystemSynchronizedGroups = (AA0000000000000000000043, ); name = "Life OS Companion iOS"; packageProductDependencies = (AA0000000000000000000014, ); productName = LifeOSCompanionIOS; productReference = AA0000000000000000000023; productType = "com.apple.product-type.application"; };
+		AA0000000000000000000073 /* Life OS Companion iOS */ = {isa = PBXNativeTarget; buildConfigurationList = AA0000000000000000000093; buildPhases = (AA0000000000000000000083, AA0000000000000000000053, ); buildRules = (); dependencies = (); fileSystemSynchronizedGroups = (AA0000000000000000000043, ); name = "Life OS Companion iOS"; packageProductDependencies = (AA0000000000000000000014, AA0000000000000000000018, ); productName = LifeOSCompanionIOS; productReference = AA0000000000000000000023; productType = "com.apple.product-type.application"; };
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		AA00000000000000000000A0 /* Project object */ = {isa = PBXProject; attributes = {BuildIndependentTargetsInParallel = 1; LastSwiftUpdateCheck = 1600; LastUpgradeCheck = 1600; TargetAttributes = {AA0000000000000000000071 = {CreatedOnToolsVersion = 16.0; }; AA0000000000000000000072 = {CreatedOnToolsVersion = 16.0; }; AA0000000000000000000073 = {CreatedOnToolsVersion = 16.0; }; }; }; buildConfigurationList = AA0000000000000000000090; compatibilityVersion = "Xcode 16.0"; developmentRegion = en; hasScannedForEncodings = 0; knownRegions = (en, Base, ); mainGroup = AA0000000000000000000060; packageReferences = (AA0000000000000000000015, AA0000000000000000000016, ); productRefGroup = AA0000000000000000000061; projectDirPath = ""; projectRoot = ""; targets = (AA0000000000000000000071, AA0000000000000000000072, AA0000000000000000000073, ); };
+		AA00000000000000000000A0 /* Project object */ = {isa = PBXProject; attributes = {BuildIndependentTargetsInParallel = 1; LastSwiftUpdateCheck = 1600; LastUpgradeCheck = 1600; TargetAttributes = {AA0000000000000000000071 = {CreatedOnToolsVersion = 16.0; }; AA0000000000000000000072 = {CreatedOnToolsVersion = 16.0; }; AA0000000000000000000073 = {CreatedOnToolsVersion = 16.0; }; }; }; buildConfigurationList = AA0000000000000000000090; compatibilityVersion = "Xcode 16.0"; developmentRegion = en; hasScannedForEncodings = 0; knownRegions = (en, Base, ); mainGroup = AA0000000000000000000060; packageReferences = (AA0000000000000000000015, AA0000000000000000000016, AA0000000000000000000017, ); productRefGroup = AA0000000000000000000061; projectDirPath = ""; projectRoot = ""; targets = (AA0000000000000000000071, AA0000000000000000000072, AA0000000000000000000073, ); };
 /* End PBXProject section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -70,8 +71,8 @@
 		AA0000000000000000000C12 = {isa = XCBuildConfiguration; buildSettings = {CODE_SIGN_ENTITLEMENTS = Config/Mac.entitlements; CODE_SIGN_STYLE = Manual; COMBINE_HIDPI_IMAGES = YES; CURRENT_PROJECT_VERSION = 1; DEVELOPMENT_TEAM = ""; ENABLE_HARDENED_RUNTIME = YES; GENERATE_INFOPLIST_FILE = NO; INFOPLIST_FILE = Config/Mac-Info.plist; LD_RUNPATH_SEARCH_PATHS = ("$(inherited)", "@executable_path/../Frameworks", ); MACOSX_DEPLOYMENT_TARGET = 14.0; MARKETING_VERSION = 0.1.0; PRODUCT_BUNDLE_IDENTIFIER = com.lacollecteur.lifeos.companion; PRODUCT_NAME = "Life OS Companion"; SPARKLE_FEED_URL = "https://home.lacollecteur.com/companion/appcast.xml"; SPARKLE_PUBLIC_ED_KEY = ""; SWIFT_EMIT_LOC_STRINGS = YES; }; name = Release; };
 		AA0000000000000000000C21 = {isa = XCBuildConfiguration; buildSettings = {CODE_SIGN_ENTITLEMENTS = Config/Helper.entitlements; CODE_SIGN_STYLE = Automatic; CURRENT_PROJECT_VERSION = 1; DEVELOPMENT_TEAM = ""; ENABLE_HARDENED_RUNTIME = YES; GENERATE_INFOPLIST_FILE = NO; INFOPLIST_FILE = Config/Helper-Info.plist; MACOSX_DEPLOYMENT_TARGET = 14.0; MARKETING_VERSION = 0.1.0; PRODUCT_BUNDLE_IDENTIFIER = com.lacollecteur.lifeos.companion.helper; PRODUCT_NAME = "Life OS Collector"; SKIP_INSTALL = YES; SWIFT_EMIT_LOC_STRINGS = YES; }; name = Debug; };
 		AA0000000000000000000C22 = {isa = XCBuildConfiguration; buildSettings = {CODE_SIGN_ENTITLEMENTS = Config/Helper.entitlements; CODE_SIGN_STYLE = Manual; CURRENT_PROJECT_VERSION = 1; DEVELOPMENT_TEAM = ""; ENABLE_HARDENED_RUNTIME = YES; GENERATE_INFOPLIST_FILE = NO; INFOPLIST_FILE = Config/Helper-Info.plist; MACOSX_DEPLOYMENT_TARGET = 14.0; MARKETING_VERSION = 0.1.0; PRODUCT_BUNDLE_IDENTIFIER = com.lacollecteur.lifeos.companion.helper; PRODUCT_NAME = "Life OS Collector"; SKIP_INSTALL = YES; SWIFT_EMIT_LOC_STRINGS = YES; }; name = Release; };
-		AA0000000000000000000C31 = {isa = XCBuildConfiguration; buildSettings = {CODE_SIGN_ENTITLEMENTS = Config/iOS.entitlements; CODE_SIGN_STYLE = Automatic; CURRENT_PROJECT_VERSION = 1; DEVELOPMENT_TEAM = ""; GENERATE_INFOPLIST_FILE = NO; INFOPLIST_FILE = Config/iOS-Info.plist; IPHONEOS_DEPLOYMENT_TARGET = 17.0; MARKETING_VERSION = 0.1.0; PRODUCT_BUNDLE_IDENTIFIER = com.lacollecteur.lifeos.companion.ios; PRODUCT_NAME = "Life OS Companion"; SDKROOT = iphoneos; SUPPORTS_MACCATALYST = NO; SWIFT_EMIT_LOC_STRINGS = YES; TARGETED_DEVICE_FAMILY = 1; }; name = Debug; };
-		AA0000000000000000000C32 = {isa = XCBuildConfiguration; buildSettings = {CODE_SIGN_ENTITLEMENTS = Config/iOS.entitlements; CODE_SIGN_STYLE = Automatic; CURRENT_PROJECT_VERSION = 1; DEVELOPMENT_TEAM = ""; GENERATE_INFOPLIST_FILE = NO; INFOPLIST_FILE = Config/iOS-Info.plist; IPHONEOS_DEPLOYMENT_TARGET = 17.0; MARKETING_VERSION = 0.1.0; PRODUCT_BUNDLE_IDENTIFIER = com.lacollecteur.lifeos.companion.ios; PRODUCT_NAME = "Life OS Companion"; SDKROOT = iphoneos; SUPPORTS_MACCATALYST = NO; SWIFT_EMIT_LOC_STRINGS = YES; TARGETED_DEVICE_FAMILY = 1; }; name = Release; };
+		AA0000000000000000000C31 = {isa = XCBuildConfiguration; buildSettings = {CODE_SIGN_ENTITLEMENTS = Config/iOS.entitlements; CODE_SIGN_STYLE = Automatic; CURRENT_PROJECT_VERSION = 1; DEVELOPMENT_TEAM = 99Y9DA2XW9; GENERATE_INFOPLIST_FILE = NO; INFOPLIST_FILE = Config/iOS-Info.plist; IPHONEOS_DEPLOYMENT_TARGET = 17.0; MARKETING_VERSION = 0.1.0; PRODUCT_BUNDLE_IDENTIFIER = com.lacollecteur.lifeos.companion.ios; PRODUCT_NAME = "Life OS Companion"; SDKROOT = iphoneos; SUPPORTS_MACCATALYST = NO; SWIFT_EMIT_LOC_STRINGS = YES; TARGETED_DEVICE_FAMILY = 1; }; name = Debug; };
+		AA0000000000000000000C32 = {isa = XCBuildConfiguration; buildSettings = {CODE_SIGN_ENTITLEMENTS = Config/iOS.entitlements; CODE_SIGN_STYLE = Automatic; CURRENT_PROJECT_VERSION = 1; DEVELOPMENT_TEAM = 99Y9DA2XW9; GENERATE_INFOPLIST_FILE = NO; INFOPLIST_FILE = Config/iOS-Info.plist; IPHONEOS_DEPLOYMENT_TARGET = 17.0; MARKETING_VERSION = 0.1.0; PRODUCT_BUNDLE_IDENTIFIER = com.lacollecteur.lifeos.companion.ios; PRODUCT_NAME = "Life OS Companion"; SDKROOT = iphoneos; SUPPORTS_MACCATALYST = NO; SWIFT_EMIT_LOC_STRINGS = YES; TARGETED_DEVICE_FAMILY = 1; }; name = Release; };
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -83,6 +84,7 @@
 
 /* Begin XCLocalSwiftPackageReference section */
 		AA0000000000000000000015 = {isa = XCLocalSwiftPackageReference; relativePath = Packages/LifeOSCompanionCore; };
+		AA0000000000000000000017 = {isa = XCLocalSwiftPackageReference; relativePath = Packages/PersonsFeature; };
 /* End XCLocalSwiftPackageReference section */
 /* Begin XCRemoteSwiftPackageReference section */
 		AA0000000000000000000016 = {isa = XCRemoteSwiftPackageReference; repositoryURL = "https://github.com/sparkle-project/Sparkle"; requirement = {kind = upToNextMajorVersion; minimumVersion = 2.6.4; }; };
@@ -92,6 +94,7 @@
 		AA0000000000000000000012 = {isa = XCSwiftPackageProductDependency; package = AA0000000000000000000016; productName = Sparkle; };
 		AA0000000000000000000013 = {isa = XCSwiftPackageProductDependency; package = AA0000000000000000000015; productName = LifeOSCompanionCore; };
 		AA0000000000000000000014 = {isa = XCSwiftPackageProductDependency; package = AA0000000000000000000015; productName = LifeOSCompanionCore; };
+		AA0000000000000000000018 = {isa = XCSwiftPackageProductDependency; package = AA0000000000000000000017; productName = PersonsFeature; };
 /* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = AA00000000000000000000A0 /* Project object */;

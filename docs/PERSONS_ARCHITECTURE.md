@@ -11,6 +11,22 @@ Think of the app as four layers:
 3. **Plumbing**: domain commands that decide what should happen.
 4. **Memory**: the database tables where Persons stores the result.
 
+## Native iOS front door
+
+The personal Life OS iPhone app now includes the first reusable
+`PersonsFeature` Swift package. Its People screen reads the canonical
+`GET /v1/people` API through `LifeOSCompanionCore.APIClient`, with debounced
+server search, cursor pagination, pull-to-refresh, and a phone-native detail
+view. The package owns the UI and People wire models; the app target remains a
+thin shell that supplies the signed-in API client.
+
+Device credentials include `people.read`, and `apps/api/lib/auth.ts` accepts
+those bearer tokens for routes whose required scopes are present. Devices do
+not receive `people.write`, so this first native surface cannot create, update,
+merge, or delete People. API keys continue to work unchanged. This is the M5
+personal-app path; the later saleable `Persons.app` shell still depends on the
+customer-owned Life Vault and its separate account/subscription launch gates.
+
 ## Big Picture
 
 ```mermaid

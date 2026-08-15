@@ -19,6 +19,27 @@ public actor APIClient {
         return try await send(path: "v1/device/ingest", body: Batch(items: wire), authorized: true)
     }
 
+    public func get<Response: Decodable>(path: String, queryItems: [URLQueryItem] = []) async throws -> Response {
+        try await get(path: path, queryItems: queryItems, mayRefresh: true)
+    }
+
+    private func get<Response: Decodable>(path: String, queryItems: [URLQueryItem], mayRefresh: Bool) async throws -> Response {
+        guard let access = tokens?.accessToken else { throw APIError.signedOut }
+        var components = URLComponents(url: baseURL.appending(path: path), resolvingAgainstBaseURL: false)
+        components?.queryItems = queryItems.isEmpty ? nil : queryItems
+        guard let url = components?.url else { throw APIError.invalidResponse }
+        var request = URLRequest(url: url)
+        request.setValue("Bearer \(access)", forHTTPHeaderField: "Authorization")
+        let (data, response) = try await URLSession.shared.data(for: request)
+        guard let http = response as? HTTPURLResponse else { throw APIError.invalidResponse }
+        if http.statusCode == 401, mayRefresh {
+            try await refresh()
+            return try await get(path: path, queryItems: queryItems, mayRefresh: false)
+        }
+        guard (200..<300).contains(http.statusCode) else { throw APIError.http(http.statusCode) }
+        return try JSONDecoder.lifeOS.decode(Response.self, from: data)
+    }
+
     private func send<Response: Decodable, Body: Encodable>(path: String, body: Body, authorized: Bool, mayRefresh: Bool = true) async throws -> Response {
         var request = URLRequest(url: baseURL.appending(path: path)); request.httpMethod = "POST"; request.setValue("application/json", forHTTPHeaderField: "Content-Type"); request.httpBody = try JSONEncoder.lifeOS.encode(body)
         if authorized { guard let access = tokens?.accessToken else { throw APIError.signedOut }; request.setValue("Bearer \(access)", forHTTPHeaderField: "Authorization") }
