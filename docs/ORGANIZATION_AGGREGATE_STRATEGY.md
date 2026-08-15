@@ -106,6 +106,28 @@ interaction — a market cap is not something that happened.
 Receiving an investor deck genuinely *is* an interaction with the organization — no person needed,
 which is another thing the `groupId` column unlocks.
 
+### Choosing between State and Note: not time, structure
+
+Both already carry an as-of time, in the same two-field pattern — the moment the thing was true,
+plus the moment you wrote it down:
+
+| | when it was true | when recorded |
+| --- | --- | --- |
+| `State` | `recordedAt` (indexed) | `createdAt` |
+| `Note` | `timestamp` — commented as *"may predate createdAt"* | `createdAt` |
+
+So "which one has a date on it" does not decide anything. What decides it is whether the value is
+**structured**. A `State` points at a `StateDefinition` with a `type` and a `value`, so a series of
+them sorts, charts, and compares. A `Note` holds prose, which reads well and aggregates not at all.
+
+**Rule of thumb: if you would ever sort it, chart it, or compare two of them — State. If it is
+something you would read — Note.**
+
+Market cap is a State: you will want it as a series, and against headcount or your own spend.
+"Their Japan plant is being retooled" is a Note. The same fact can warrant both — a State for the
+number, a Note for what it meant — and they will line up on the timeline because both are anchored
+to when they were true rather than when they were typed.
+
 I previously proposed a `GroupNote` join table and a `CompanyProfile` extension. Both are dropped:
 a nullable `Note.groupId` does the same job for one column, and `State` already holds typed, dated
 values against any entity including Group, so ticker and market cap need no new structure.
@@ -140,16 +162,29 @@ same instinct as filtering interactions rather than typing them.
 6. **Assistant write tools** (`create_group`, `add_person_to_group`) so membership gets recorded
    as a by-product of conversation rather than as data entry.
 
+## Decided
+
+**Retroactive attribution is allowed, and traceable.** Stamping makes the attribution a historical
+fact, but a mis-resolved merchant still has to be fixable. So re-attributing an interaction is a
+normal write that publishes a `GraphEvent` — `interaction.reattributed`, carrying the old and new
+`groupId`, correlated to the original event. The correction becomes part of the history rather
+than overwriting it, and "why does this interaction say Estée Lauder" stays answerable.
+
+This is the pattern `promoteSafeFileClaim` / `undoSafeFileClaimPromotion` already established:
+never mutate silently, publish a compensating event that points back at what it amends. Bulk
+re-attribution from a merchant resolver should publish one event per interaction, not one per
+batch, so a single wrong row can be traced and reversed on its own.
+
+**State vs. Note is settled by structure, not by time** — see the rule of thumb above. Market cap
+is a State.
+
 ## Open questions
 
-1. **Should `groupId` ever be corrected retroactively?** Stamping makes history immutable, which
-   is the point — but a mis-resolved merchant will want fixing. Suggest corrections are allowed but
-   recorded as GraphEvents, so the amendment is itself part of the history.
-2. **What about a person who works with you across two employers?** Their EL-era interactions stay
+1. **What about a person who works with you across two employers?** Their EL-era interactions stay
    with EL and their new ones attach elsewhere, which is correct — but a person-centric view should
    probably show both, clearly labelled by era.
-3. **One `groupId`, or several?** A meeting can involve two organizations. A single column is
+2. **One `groupId`, or several?** A meeting can involve two organizations. A single column is
    right until you have a real example; a join table is the escape hatch if you do.
-4. **How aggressive should merchant → Group resolution be?** Wrong attribution is worse than none,
+3. **How aggressive should merchant → Group resolution be?** Wrong attribution is worse than none,
    since it silently inflates "what I spent with them". The Places importer's confidence tiering is
    the precedent to follow.
