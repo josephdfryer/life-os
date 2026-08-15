@@ -1,0 +1,47 @@
+import test from "node:test"
+import assert from "node:assert/strict"
+
+import { mergeQueues, type InboxItem } from "../components/FederatedInbox"
+
+// The inbox showed 231 items, then swapped them for the 43 in the canonical
+// queue the moment the fetch resolved — so selecting Places emptied the list and
+// removed the tab you had just clicked. These pin the merge that replaced it.
+
+function item(id: string, sourceKey: InboxItem["sourceKey"], extra: Partial<InboxItem> = {}): InboxItem {
+  return {
+    id, sourceKey, source: sourceKey, primitive: "thing", title: id, detail: "",
+    timestamp: "2026-08-14T00:00:00.000Z", confidence: null, priority: 3, ...extra,
+  }
+}
+
+test("queues the canonical feed does not cover survive the fetch", () => {
+  const legacy = [item("visit-1", "import_staged_visit"), item("claim-1", "file_evidence")]
+  const canonical = [item("ri-1", "calendar_reconciliation", { canonical: true, sourceId: "plan-1" })]
+
+  const merged = mergeQueues(legacy, canonical)
+
+  assert.equal(merged.length, 3, "the canonical response must not delete the queues it says nothing about")
+  assert.ok(merged.some(i => i.id === "visit-1"), "place visits have no ReviewItem row and must be kept")
+  assert.ok(merged.some(i => i.id === "claim-1"))
+})
+
+test("a decision staged into the canonical queue is listed once, not twice", () => {
+  const legacy = [item("plan-1", "calendar_reconciliation"), item("visit-1", "import_staged_visit")]
+  const canonical = [item("ri-1", "calendar_reconciliation", { canonical: true, sourceId: "plan-1" })]
+
+  const merged = mergeQueues(legacy, canonical)
+
+  assert.equal(merged.filter(i => i.sourceKey === "calendar_reconciliation").length, 1)
+  // The actionable row is the one that wins — the legacy copy has no buttons.
+  assert.equal(merged.find(i => i.sourceKey === "calendar_reconciliation")?.canonical, true)
+})
+
+test("merging twice changes nothing, so pagination cannot duplicate rows", () => {
+  const legacy = [item("plan-1", "calendar_reconciliation"), item("visit-1", "import_staged_visit")]
+  const canonical = [item("ri-1", "calendar_reconciliation", { canonical: true, sourceId: "plan-1" })]
+
+  const once = mergeQueues(legacy, canonical)
+  const twice = mergeQueues(once.filter(i => !i.canonical), once.filter(i => i.canonical))
+
+  assert.deepEqual(twice.map(i => i.id), once.map(i => i.id))
+})

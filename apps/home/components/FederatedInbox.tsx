@@ -19,11 +19,15 @@ export type InboxItem = {
   riskTier?: string
   itemType?: string
   canonical?: boolean
+  // On a canonical row, the id of the legacy record it was staged from. It is
+  // what lets the two sets be merged without showing the same decision twice.
+  sourceId?: string
 }
 
 type ReviewItem = {
   id: string
   source: string
+  sourceId: string
   itemType: string
   riskTier: string
   proposedCommand: { command: string; input: Record<string, unknown> }
@@ -64,7 +68,7 @@ export default function FederatedInbox({ items }: { items: InboxItem[] }) {
       .then(page => {
         if (!Array.isArray(page.data)) throw new Error('legacy')
         startTransition(() => {
-          setReviewItems(page.data!.map(toInboxItem))
+          setReviewItems(mergeQueues(items, page.data!.map(toInboxItem)))
           setNextCursor(page.nextCursor ?? null)
           setServiceMode('canonical')
         })
@@ -84,7 +88,10 @@ export default function FederatedInbox({ items }: { items: InboxItem[] }) {
       const response = await fetch(`/api/review-items?status=pending&limit=200&cursor=${encodeURIComponent(nextCursor)}`)
       const page = await response.json() as { data?: ReviewItem[]; nextCursor?: string | null; error?: string }
       if (!response.ok || !Array.isArray(page.data)) throw new Error(page.error || 'Could not load more review items.')
-      setReviewItems(current => [...current, ...page.data!.map(toInboxItem)])
+      setReviewItems(current => mergeQueues(
+        current.filter(item => !item.canonical),
+        [...current.filter(item => item.canonical), ...page.data!.map(toInboxItem)],
+      ))
       setNextCursor(page.nextCursor ?? null)
     } catch (error) {
       setActionError(error instanceof Error ? error.message : 'Could not load more review items.')
@@ -138,6 +145,15 @@ export default function FederatedInbox({ items }: { items: InboxItem[] }) {
       .sort((a, b) => b.count - a.count)
     return [{ key: 'all', label: 'Everything', count: reviewItems.length }, ...tabs]
   }, [reviewItems])
+
+  // A queue can empty while you are standing in it. Without this the switcher
+  // drops the tab, the selection survives, and the inbox reads as permanently
+  // empty with no indication of why.
+  useEffect(() => {
+    if (source !== 'all' && !queueTabs.some(tab => tab.key === source)) setSource('all')
+  }, [queueTabs, source])
+
+  const readOnlyCount = useMemo(() => filtered.filter(item => !item.canonical).length, [filtered])
 
   // Group by the question being asked, not by source. 59 items sharing one
   // command shape are one decision, and presenting them as 59 rows is what made
@@ -208,7 +224,7 @@ export default function FederatedInbox({ items }: { items: InboxItem[] }) {
         </span>
       </div>
       {actionError ? <p className="inbox-action-error" role="alert">{actionError}</p> : null}
-      {filtered.length === 0 ? <div className="stream-message">Nothing to review — the queue is clear.</div> : (
+      {filtered.length === 0 ? <div className="stream-message">{source === 'all' ? 'Nothing to review — the queue is clear.' : 'Nothing left in this queue.'}</div> : (
         <div className="stream-list">
           {groups.map(group => (
             <div key={group.key} className="inbox-group">
@@ -229,6 +245,7 @@ export default function FederatedInbox({ items }: { items: InboxItem[] }) {
         </div>
       )}
       {serviceMode === 'legacy' ? <p className="inbox-read-only">The shared queue is not configured, so these legacy queues remain read only.</p> : null}
+      {serviceMode === 'canonical' && readOnlyCount > 0 ? <p className="inbox-read-only">{readOnlyCount} of these have not been staged into the shared queue yet, so they are shown here but resolved in their own app.</p> : null}
       {serviceMode === 'canonical' && nextCursor ? <button type="button" className="inbox-action" disabled={pendingId === 'pagination'} onClick={loadMore}>{pendingId === 'pagination' ? 'Loading…' : 'Load more review items'}</button> : null}
     </section>
   )
@@ -284,7 +301,26 @@ function toInboxItem(item: ReviewItem): InboxItem {
     riskTier: item.riskTier ?? 'review',
     itemType: item.itemType,
     canonical: true,
+    sourceId: item.sourceId,
   }
+}
+
+/**
+ * Canonical rows and legacy queue rows describe overlapping work, so they have
+ * to be combined rather than swapped.
+ *
+ * Replacing one with the other is what broke this: only calendar reconciliation
+ * dual-writes into ReviewItem today, so the canonical response deleted the 165
+ * pending place visits and every file-evidence item from the inbox the moment
+ * it arrived — including the tab you had just selected.
+ *
+ * Canonical wins wherever it exists, matched on sourceId (the legacy row's own
+ * id), so a calendar decision is never listed twice.
+ */
+export function mergeQueues(legacy: InboxItem[], canonical: InboxItem[]): InboxItem[] {
+  const covered = new Set(canonical.map(item => item.sourceId).filter(Boolean))
+  return [...canonical, ...legacy.filter(item => !covered.has(item.id))]
+    .sort((a, b) => b.timestamp.localeCompare(a.timestamp))
 }
 
 function normalizeSource(source: string): InboxItem['sourceKey'] {

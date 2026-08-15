@@ -18,25 +18,25 @@ async function InboxContent() {
     safeQueue('communications', () => db.stagedInteraction.findMany({
       where: { workspaceId, status: { in: ['pending', 'blocked'] }, type: { not: 'financial' } },
       orderBy: [{ priority: 'asc' }, { timestamp: 'desc' }],
-      take: 100,
+      take: 500,
       select: { id: true, source: true, itemType: true, summary: true, body: true, contactName: true, timestamp: true, confidence: true, priority: true },
     })),
     safeQueue('notes', () => db.noteSuggestion.findMany({
       where: { workspaceId, status: 'pending' },
       orderBy: [{ confidence: 'desc' }, { createdAt: 'desc' }],
-      take: 100,
+      take: 500,
       select: { id: true, kind: true, title: true, payload: true, createdAt: true, confidence: true },
     })),
     safeQueue('places', () => db.importStagedVisit.findMany({
       where: { workspaceId, status: 'pending' },
       orderBy: [{ confidence: 'desc' }, { startedAt: 'desc' }],
-      take: 100,
+      take: 500,
       select: { id: true, placeName: true, placeAddress: true, startedAt: true, confidence: true },
     })),
     safeQueue('calendar', () => db.plan.findMany({
       where: { workspaceId, externalSource: 'google-calendar', reconciliationStatus: 'pending', fulfilledBy: null, status: 'active' },
       orderBy: { scheduledStart: 'desc' },
-      take: 100,
+      take: 500,
       select: { id: true, text: true, scheduledStart: true, createdAt: true },
     })),
     // File evidence was missing from the inbox entirely, so unresolved identities
@@ -44,13 +44,13 @@ async function InboxContent() {
     safeQueue('file identities', () => db.fileEntityMention.findMany({
       where: { workspaceId, resolutionStatus: 'unresolved', sourceFile: { archivedAt: null } },
       orderBy: { createdAt: 'desc' },
-      take: 100,
+      take: 500,
       select: { id: true, sourceText: true, entityType: true, role: true, confidence: true, createdAt: true },
     })),
     safeQueue('file claims', () => db.evidenceClaim.findMany({
       where: { workspaceId, status: 'unreviewed', sourceFile: { archivedAt: null } },
       orderBy: { createdAt: 'desc' },
-      take: 100,
+      take: 500,
       select: { id: true, assertion: true, classification: true, confidence: true, createdAt: true },
     })),
   ])
