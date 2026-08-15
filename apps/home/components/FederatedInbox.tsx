@@ -21,6 +21,15 @@ export type InboxItem = {
   riskTier?: string
   itemType?: string
   canonical?: boolean
+  // Present on staged place visits. The decision they need is about the place,
+  // not the individual visit, so the place has to travel with the row.
+  place?: {
+    googlePlaceId: string | null
+    name: string | null
+    address: string | null
+    latitude: number | null
+    longitude: number | null
+  }
   // On a canonical row, the id of the legacy record it was staged from. It is
   // what lets the two sets be merged without showing the same decision twice.
   sourceId?: string
@@ -155,35 +164,67 @@ export default function FederatedInbox({ items }: { items: InboxItem[] }) {
     if (source !== 'all' && !queueTabs.some(tab => tab.key === source)) setSource('all')
   }, [queueTabs, source])
 
-  const readOnlyCount = useMemo(() => filtered.filter(item => !item.canonical).length, [filtered])
+  const readOnlyCount = useMemo(() => filtered.filter(item => !item.canonical && !item.place).length, [filtered])
 
   // Group by the question being asked, not by source. 59 items sharing one
   // command shape are one decision, and presenting them as 59 rows is what made
   // the queue unclearable. Only groups whose tier permits it get a bulk action —
   // review and confirm tier items exist because they need individual judgment.
+  //
+  // Place visits group tighter still: by place. 165 pending visits describe
+  // three places, 154 of them one address the phone sees every day. The decision
+  // is "is this Red Rock Villas?", asked once — not "was I there on the 4th?",
+  // asked 154 times.
   const groups = useMemo(() => {
     const byKey = new Map<string, InboxItem[]>()
     for (const item of filtered) {
-      const key = `${item.sourceKey}:${item.itemType ?? 'item'}`
+      const key = item.place
+        ? `place:${item.place.googlePlaceId ?? `${item.place.name ?? ''}|${item.place.address ?? ''}`}`
+        : `${item.sourceKey}:${item.itemType ?? 'item'}`
       const bucket = byKey.get(key) ?? []
       bucket.push(item)
       byKey.set(key, bucket)
     }
     return [...byKey.entries()]
-      .map(([key, items]) => ({ key, items, bulkable: items.length > 1 && items.every(i => i.riskTier === 'observe' || i.riskTier === 'safe_auto') }))
+      .map(([key, items]) => ({
+        key,
+        items,
+        place: items[0].place,
+        label: items[0].place
+          ? items[0].place.name || items[0].place.address || 'Unnamed place'
+          : sourceLabel(items[0].source),
+        bulkable: items.length > 1 && items.every(i => i.riskTier === 'observe' || i.riskTier === 'safe_auto'),
+      }))
       .sort((a, b) => b.items.length - a.items.length)
   }, [filtered])
 
-  async function resolveGroup(items: InboxItem[], action: 'accept' | 'dismiss') {
+  async function resolveGroup(group: { key: string; items: InboxItem[]; place?: InboxItem['place'] }, action: 'accept' | 'dismiss') {
     if (pendingId) return
-    setPendingId(`group:${items[0]?.id}`)
+    setPendingId(`group:${group.key}`)
     setActionError(null)
-    const ids = items.map(i => i.id)
+    const ids = group.items.map(i => i.id)
     try {
-      const response = await fetch(`/api/review-items/bulk-${action === 'accept' ? 'accept' : 'dismiss'}`, {
+      // A place group is resolved as a place — one Place record, an Event per
+      // visit, and every future visit there matched automatically — rather than
+      // as a list of review items, which these visits never were.
+      const request = group.place
+        ? {
+            url: '/api/staged-visits/resolve',
+            body: {
+              googlePlaceId: group.place.googlePlaceId,
+              placeName: group.place.googlePlaceId ? undefined : group.place.name,
+              placeAddress: group.place.googlePlaceId ? undefined : group.place.address,
+              action,
+            },
+          }
+        : {
+            url: `/api/review-items/bulk-${action === 'accept' ? 'accept' : 'dismiss'}`,
+            body: action === 'accept' ? { ids } : { ids, reason: 'Bulk dismissed from inbox' },
+          }
+      const response = await fetch(request.url, {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify(action === 'accept' ? { ids } : { ids, reason: 'Bulk dismissed from inbox' }),
+        body: JSON.stringify(request.body),
       })
       const body = await response.json() as { error?: string }
       if (!response.ok) throw new Error(body.error || 'Could not resolve this group.')
@@ -230,18 +271,48 @@ export default function FederatedInbox({ items }: { items: InboxItem[] }) {
         <div className="stream-list">
           {groups.map(group => (
             <div key={group.key} className="inbox-group">
-              {group.items.length > 1 ? (
+              {group.place ? (
                 <div className="inbox-group-head">
-                  <span className="inbox-group-title">{group.items.length} × {sourceLabel(group.items[0].source)}</span>
+                  <span className="inbox-group-title">
+                    <b>{group.label}</b>
+                    <span className="inbox-group-sub">
+                      {group.items.length} visit{group.items.length === 1 ? '' : 's'}
+                      {group.place.address ? ` · ${group.place.address}` : ''}
+                      {dateRange(group.items)}
+                    </span>
+                  </span>
+                  <span className="inbox-group-actions">
+                    {mapUrl(group.place) ? (
+                      // You cannot confirm a place you cannot see. Opens in a new
+                      // tab so a half-triaged queue is not lost to navigation.
+                      <a className="inbox-action" href={mapUrl(group.place)!} target="_blank" rel="noopener noreferrer">View on map</a>
+                    ) : null}
+                    <button type="button" className="inbox-action inbox-action--accept" disabled={!!pendingId} onClick={() => resolveGroup(group, 'accept')}>
+                      {pendingId === `group:${group.key}` ? 'Working…' : `This is the place · accept ${group.items.length}`}
+                    </button>
+                    <button type="button" className="inbox-action" disabled={!!pendingId} onClick={() => resolveGroup(group, 'dismiss')}>Not a place</button>
+                  </span>
+                </div>
+              ) : group.items.length > 1 ? (
+                <div className="inbox-group-head">
+                  <span className="inbox-group-title">{group.items.length} × {group.label}</span>
                   {group.bulkable ? (
                     <span className="inbox-group-actions">
-                      <button type="button" className="inbox-action" disabled={!!pendingId} onClick={() => resolveGroup(group.items, 'accept')}>Accept all {group.items.length}</button>
-                      <button type="button" className="inbox-action" disabled={!!pendingId} onClick={() => resolveGroup(group.items, 'dismiss')}>Dismiss all</button>
+                      <button type="button" className="inbox-action" disabled={!!pendingId} onClick={() => resolveGroup(group, 'accept')}>Accept all {group.items.length}</button>
+                      <button type="button" className="inbox-action" disabled={!!pendingId} onClick={() => resolveGroup(group, 'dismiss')}>Dismiss all</button>
                     </span>
                   ) : <span className="inbox-group-note">Needs individual review</span>}
                 </div>
               ) : null}
-              {group.items.map(item => <InboxRow key={`${item.sourceKey}:${item.id}`} item={item} pending={pendingId === item.id} onResolve={resolve} />)}
+              {/* A place group answers itself in the header. Listing all 154
+                  visits underneath is the noise this replaces — the first few
+                  are enough to recognise it. */}
+              {(group.place ? group.items.slice(0, 3) : group.items).map(item => (
+                <InboxRow key={`${item.sourceKey}:${item.id}`} item={item} pending={pendingId === item.id} onResolve={resolve} />
+              ))}
+              {group.place && group.items.length > 3 ? (
+                <p className="inbox-group-more">and {group.items.length - 3} more visit{group.items.length - 3 === 1 ? '' : 's'} to this place</p>
+              ) : null}
             </div>
           ))}
         </div>
@@ -358,6 +429,27 @@ function firstString(record: Record<string, unknown>, keys: string[]) {
     if (typeof record[key] === 'string' && record[key].trim()) return record[key].trim()
   }
   return null
+}
+
+function mapUrl(place: NonNullable<InboxItem['place']>) {
+  // Google's documented cross-platform search URL. Coordinates first because a
+  // pin is what actually answers "is this my building?"; the place id refines
+  // the label when Google knows the spot.
+  if (place.latitude != null && place.longitude != null) {
+    const query = `${place.latitude},${place.longitude}`
+    const id = place.googlePlaceId ? `&query_place_id=${encodeURIComponent(place.googlePlaceId)}` : ''
+    return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}${id}`
+  }
+  if (place.address) return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(place.address)}`
+  return null
+}
+
+function dateRange(items: InboxItem[]) {
+  const times = items.map(item => new Date(item.timestamp).getTime()).filter(Number.isFinite)
+  if (!times.length) return ''
+  const first = formatDate(new Date(Math.min(...times)).toISOString())
+  const last = formatDate(new Date(Math.max(...times)).toISOString())
+  return first === last ? ` · ${first}` : ` · ${first} – ${last}`
 }
 
 function formatDate(value: string) {

@@ -32,7 +32,7 @@ async function InboxContent() {
       where: { workspaceId, status: 'pending' },
       orderBy: [{ confidence: 'desc' }, { startedAt: 'desc' }],
       take: 500,
-      select: { id: true, placeName: true, placeAddress: true, startedAt: true, confidence: true },
+      select: { id: true, placeName: true, placeAddress: true, startedAt: true, confidence: true, latitude: true, longitude: true, googlePlaceId: true },
     })),
     safeQueue('calendar', () => db.plan.findMany({
       where: { workspaceId, externalSource: 'google-calendar', reconciliationStatus: 'pending', fulfilledBy: null, status: 'active' },
@@ -89,6 +89,15 @@ async function InboxContent() {
       timestamp: item.startedAt.toISOString(),
       confidence: unitConfidence(item.confidence, 'percent'),
       priority: 3,
+      // Carried so the inbox can group these by place and link out to the map.
+      // A staged visit is unverifiable without seeing where it actually is.
+      place: {
+        googlePlaceId: item.googlePlaceId,
+        name: item.placeName,
+        address: item.placeAddress,
+        latitude: item.latitude,
+        longitude: item.longitude,
+      },
     })),
     ...plans.map(item => ({
       id: item.id,

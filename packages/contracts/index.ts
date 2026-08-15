@@ -613,13 +613,14 @@ export const deviceScopeContract = z.enum(["device.ingest", "device.heartbeat", 
 const healthMetricContract = z.object({
   key: z.string().trim().min(1).max(128),
   value: z.number().finite(),
+  unit: z.string().trim().min(1).max(64).optional(),
 }).strict()
 
 const deviceRecordContract = z.discriminatedUnion("type", [
   z.object({
     type: z.literal("health.daily"),
     day: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
-    metrics: z.array(healthMetricContract).min(1).max(128),
+    metrics: z.array(healthMetricContract).min(1).max(512),
   }).strict(),
   z.object({
     type: z.literal("health.workout"),
@@ -903,6 +904,19 @@ export const reviewItemBulkDismissContract = z.object({
 export const reviewItemBulkAcceptContract = z.object({
   ids: z.array(id).min(1).max(200),
 }).strict()
+
+// Resolving a whole place at once: the selector identifies which pending visits
+// are covered, and refusing an empty selector is what stops "accept" from
+// meaning "accept every staged visit in the workspace".
+export const stagedVisitGroupResolveContract = z.object({
+  googlePlaceId: z.string().trim().min(1).max(255).nullish(),
+  placeName: z.string().trim().min(1).max(255).nullish(),
+  placeAddress: z.string().trim().min(1).max(500).nullish(),
+  action: z.enum(["accept", "dismiss"]),
+}).strict().refine(
+  value => Boolean(value.googlePlaceId || value.placeName || value.placeAddress),
+  { message: "A place selector is required" },
+)
 
 export const graphEventTypeContract = z.string().trim().min(1).max(128)
 

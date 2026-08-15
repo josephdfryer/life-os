@@ -254,6 +254,10 @@ a {
 .inbox-group-title { color: var(--ink-2); font-size: 12px; }
 .inbox-group-actions { display: flex; gap: 8px; }
 .inbox-group-note { color: var(--ink-4); font-size: 11px; }
+.inbox-group-title b { display: block; font-size: 13px; color: var(--ink-1); }
+.inbox-group-sub { display: block; margin-top: 2px; color: var(--ink-4); font-size: 11px; }
+.inbox-group-actions a.inbox-action { text-decoration: none; }
+.inbox-group-more { margin: 0; padding: 10px 20px; color: var(--ink-4); font-size: 11px; }
 
 .inbox-filters { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin-bottom: 16px; padding: 14px; border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--surface); }
 .inbox-filter { display: grid; gap: 5px; color: var(--ink-3); font-size: 11px; }
