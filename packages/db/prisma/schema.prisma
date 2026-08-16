@@ -195,7 +195,8 @@ model Person {
   publicProfileEnabled Boolean                    @default(false)
   publicSlug           String?                    @unique
   // How this record came to exist — "manual" | "api" | "system" | "rule" |
-  // "interaction_import" | "vcard" | "csv" | "spreadsheet" | "gmail_contacts",
+  // "interaction_import" | "vcard" | "csv" | "spreadsheet" | "gmail_contacts" |
+  // "ios_contacts" (device Contacts sync, apps/api/lib/device-ingest.ts),
   // or null for rows created before this column existed. Purely a display
   // signal (PersonCard's provenance badge); never used for access control.
   source               String?

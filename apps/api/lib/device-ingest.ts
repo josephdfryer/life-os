@@ -1,8 +1,9 @@
 import { createHash } from "node:crypto"
 import type { DeviceIngestItemInput } from "@life-os/contracts"
 import { db } from "@life-os/db"
-import { createReviewItem, publishGraphEvent } from "@life-os/domain"
+import { createReviewItem, publishGraphEvent, findMatch, updatePerson, type MatchableExistingPerson } from "@life-os/domain"
 import { HEALTH_DAILY_TRANSACTION, ensureHealthMetricDefinitions, recordHealthDailyDigestInTransaction, fireHealthDailyRules } from "./health-daily"
+import { storedStringList } from "./people"
 
 export type DeviceIngestResult = {
   sourceId: string
@@ -33,6 +34,7 @@ export async function ingestDeviceItem(item: DeviceIngestItemInput, workspaceId:
       case "voice.transcript": return await ingestNote(item, workspaceId, payloadHash, "voice_transcript", item.record.transcript)
       case "document.metadata": return await ingestNote(item, workspaceId, payloadHash, "import", item.record.extractedText ?? `Document captured: ${item.record.filename}`)
       case "photo.metadata": return await ingestNote(item, workspaceId, payloadHash, "observation", item.record.caption ?? `Photo metadata captured at ${item.record.capturedAt}`)
+      case "contact.person": return await ingestContact(item as ItemFor<"contact.person">, workspaceId, payloadHash)
     }
   } catch (error) {
     if (isUniqueConflict(error)) {
@@ -133,6 +135,71 @@ async function ingestNote(item: DeviceIngestItemInput, workspaceId: string, payl
   return accepted(item.sourceId, "Note", note.id)
 }
 
+// The CSV/vCard import UI's DUPLICATE_THRESHOLD (0.85) only ever decides a
+// *label* there — a human reviews every row before anything is written,
+// regardless of score. Here, crossing the threshold means an unattended
+// write happens with nobody looking, which is a different risk class. The
+// bar is set high enough that only exact-identifier matches qualify
+// (findMatch scores an exact email 1.0, exact phone 0.97) — fuzzy name-only
+// matches, even strong ones, always go to review instead.
+const AUTO_APPLY_THRESHOLD = 0.95
+
+async function ingestContact(item: ItemFor<"contact.person">, workspaceId: string, payloadHash: string): Promise<DeviceIngestResult> {
+  const actor = { type: "system" as const, id: item.deviceId, label: "life-os-companion-persons" }
+  const persons = await db.person.findMany({
+    where: { workspaceId },
+    select: {
+      id: true, first: true, last: true, company: true, title: true, headline: true,
+      birthday: true, location: true, linkedin: true, twitter: true, website: true,
+      facebook: true, instagram: true, notes: true, emails: true, phones: true,
+    },
+  })
+  const candidates: MatchableExistingPerson[] = persons.map(person => ({
+    ...person,
+    emails: storedStringList(person.emails),
+    phones: storedStringList(person.phones),
+  }))
+  const candidate = {
+    first: item.record.givenName, last: item.record.familyName,
+    company: item.record.organizationName, title: item.record.jobTitle,
+    emails: item.record.emails, phones: item.record.phones,
+  }
+  const match = findMatch(candidate, candidates)
+
+  // Confident identifier match: apply only the fields the matched Person is
+  // currently missing (findMatch already computed this against the winning
+  // candidate) — never overwrite a populated field. No human in the loop.
+  if (match && match.score >= AUTO_APPLY_THRESHOLD) {
+    if (Object.keys(match.fillableFields).length > 0) {
+      await updatePerson(match.personId, match.fillableFields, workspaceId, actor)
+    }
+    await db.deviceIngestItem.create({ data: receiptData(item, workspaceId, payloadHash, "Person", match.personId) })
+    return accepted(item.sourceId, "Person", match.personId)
+  }
+
+  // No confident match, or no match at all: a phone's address book can
+  // contain garbage/duplicate/test entries, so nothing gets auto-created —
+  // this always goes to the review queue via the contact.import command
+  // (packages/domain/contact-import.ts), same as staged interactions/visits.
+  const contactName = `${item.record.givenName ?? ""} ${item.record.familyName ?? ""}`.trim() || null
+  const receipt = await db.deviceIngestItem.create({ data: receiptData(item, workspaceId, payloadHash, "ReviewItem", null) })
+  await createReviewItem({
+    workspaceId, source: "contact_import", sourceId: receipt.id, itemType: "person",
+    command: "contact.import",
+    commandInput: {
+      contactName, first: item.record.givenName, last: item.record.familyName,
+      company: item.record.organizationName, title: item.record.jobTitle,
+      emails: item.record.emails, phones: item.record.phones,
+      matchedPersonId: match?.personId ?? null,
+    },
+    targetType: match ? "Person" : null, targetId: match?.personId ?? null,
+    confidence: match?.score ?? null,
+    evidence: { deviceIngestItemId: receipt.id, source: item.source, sourceId: item.sourceId, matchReason: match?.reason ?? null },
+    riskTier: "review", priority: 3,
+  }).catch(error => console.warn("[device/ingest] contact review item creation failed", { sourceId: item.sourceId, error }))
+  return accepted(item.sourceId, "ReviewItem", receipt.id)
+}
+
 async function repairReviewIndex(receiptId: string, resultType: string | null, resultId: string | null, item: DeviceIngestItemInput, workspaceId: string) {
   if (!resultId || (resultType !== "StagedInteraction" && resultType !== "ImportStagedVisit")) return
   await createReviewItem({
@@ -144,7 +211,7 @@ async function repairReviewIndex(receiptId: string, resultType: string | null, r
   }).catch(error => console.warn("[device/ingest] review index repair failed", { resultType, error }))
 }
 
-function receiptData(item: DeviceIngestItemInput, workspaceId: string, payloadHash: string, resultType: string, resultId: string) {
+function receiptData(item: DeviceIngestItemInput, workspaceId: string, payloadHash: string, resultType: string, resultId: string | null) {
   return { workspaceId, deviceId: item.deviceId, source: item.source, sourceId: item.sourceId, recordType: item.record.type, schemaVersion: item.schemaVersion, observedAt: new Date(item.observedAt), payloadHash, status: "accepted", resultType, resultId }
 }
 

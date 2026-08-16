@@ -13,7 +13,10 @@ struct PersonsShell: View {
     var body: some View {
         Group {
             if model.signedIn, let api = model.api {
-                PersonsRootView(api: api)
+                VStack(spacing: 0) {
+                    syncStatusBar
+                    PersonsRootView(api: api)
+                }
             } else {
                 ZStack {
                     linen.ignoresSafeArea()
@@ -27,7 +30,7 @@ struct PersonsShell: View {
                             Text("Connect your workspace")
                                 .font(.headline)
                                 .foregroundStyle(ink)
-                            Text("Approve this app using your existing Life OS web account. Persons stores its own revocable credential and does not request Health, Location, or Photos access.")
+                            Text("Approve this app using your existing Life OS web account. Persons stores its own revocable credential and does not request Health, Location, or Photos access — only Contacts, to keep your people in sync.")
                                 .font(.subheadline)
                                 .foregroundStyle(mutedInk)
                             Button("Connect Persons") { model.connect() }
@@ -46,5 +49,32 @@ struct PersonsShell: View {
             }
         }
         .preferredColorScheme(.light)
+    }
+
+    @ViewBuilder
+    private var syncStatusBar: some View {
+        HStack(spacing: 12) {
+            if model.contactsStatus.enabled {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(model.syncMessage).font(.caption).foregroundStyle(mutedInk)
+                    if let lastSync = model.lastSync {
+                        Text("Last synced \(lastSync.formatted(.relative(presentation: .named)))").font(.caption2).foregroundStyle(mutedInk.opacity(0.7))
+                    }
+                }
+                Spacer()
+                Button(model.isSyncing ? "Syncing…" : "Sync Now") { Task { await model.syncNow() } }
+                    .font(.caption)
+                    .disabled(model.isSyncing)
+            } else {
+                Text("Contacts sync is off").font(.caption).foregroundStyle(mutedInk)
+                Spacer()
+                Button("Enable Contacts") { Task { await model.enableContacts() } }
+                    .font(.caption)
+                    .tint(cognac)
+            }
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 10)
+        .background(surface)
     }
 }

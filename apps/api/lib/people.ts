@@ -96,7 +96,7 @@ function boundedLimit(value: number | undefined) {
   return Math.min(500, Math.max(1, Math.round(value ?? 100)))
 }
 
-function storedStringList(raw: string): string[] {
+export function storedStringList(raw: string): string[] {
   if (!raw) return []
   if (!raw.trim().startsWith("[")) return splitLegacyValue(raw)
   try {

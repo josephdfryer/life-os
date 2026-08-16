@@ -11,5 +11,8 @@
 <key>CFBundleShortVersionString</key><string>$(MARKETING_VERSION)</string>
 <key>CFBundleVersion</key><string>$(CURRENT_PROJECT_VERSION)</string>
 <key>CFBundleURLTypes</key><array><dict><key>CFBundleURLSchemes</key><array><string>persons</string></array></dict></array>
+<key>NSContactsUsageDescription</key><string>Persons uses Contacts to keep the people in your address book in sync with your Life OS workspace.</string>
+<key>BGTaskSchedulerPermittedIdentifiers</key><array><string>com.lacollecteur.persons.refresh</string></array>
+<key>UIBackgroundModes</key><array><string>fetch</string></array>
 <key>UILaunchScreen</key><dict/>
 </dict></plist>

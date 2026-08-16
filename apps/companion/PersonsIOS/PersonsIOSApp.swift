@@ -1,3 +1,4 @@
+import BackgroundTasks
 import SwiftUI
 
 @main
@@ -10,5 +11,6 @@ struct PersonsIOSApp: App {
                 .environmentObject(model)
                 .task { await model.start() }
         }
+        .backgroundTask(.appRefresh(PersonsBackground.refreshTaskId)) { await model.backgroundRefresh() }
     }
 }

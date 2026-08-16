@@ -656,7 +656,7 @@ export const idempotencyKeyContract = z.string().trim().min(1).max(256)
 export const devicePlatformContract = z.enum(["macos", "ios"])
 export const deviceSourceContract = z.enum([
   "imessage", "whatsapp", "call_history", "healthkit", "location",
-  "photos", "voice_journal", "documents",
+  "photos", "voice_journal", "documents", "contacts",
 ])
 export const deviceScopeContract = z.enum(["device.ingest", "device.heartbeat", "device.self", "workout.read", "workout.write"])
 
@@ -722,6 +722,15 @@ const deviceRecordContract = z.discriminatedUnion("type", [
     durationSeconds: z.number().nonnegative().max(604_800).nullable(),
     transcript: z.string().trim().min(1).max(100_000),
   }).strict(),
+  z.object({
+    type: z.literal("contact.person"),
+    givenName: z.string().trim().max(200).nullable(),
+    familyName: z.string().trim().max(200).nullable(),
+    organizationName: z.string().trim().max(300).nullable(),
+    jobTitle: z.string().trim().max(300).nullable(),
+    emails: z.array(z.string().trim().max(320)).max(20),
+    phones: z.array(z.string().trim().max(64)).max(20),
+  }).strict(),
 ])
 export { deviceRecordContract }
 export type DeviceRecord = z.infer<typeof deviceRecordContract>
@@ -738,6 +747,7 @@ export const deviceIngestItemContract = z.object({
     "health.daily": "healthkit", "health.workout": "healthkit", "location.visit": "location",
     "communication.message": item.record.type === "communication.message" ? ({ imessage: "imessage", whatsapp: "whatsapp", call: "call_history" } as const)[item.record.channel] : "imessage",
     "document.metadata": "documents", "photo.metadata": "photos", "voice.transcript": "voice_journal",
+    "contact.person": "contacts",
   }
   if (item.source !== expectedSource[item.record.type]) context.addIssue({ code: "custom", path: ["source"], message: "source does not match normalized record type" })
   if (item.record.type === "health.daily") {
