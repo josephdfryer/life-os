@@ -176,10 +176,6 @@ function appUrlFromEnv(app: LifeOsApp) {
   const configured = value?.trim()
   if (configured) return configured
 
-  if (app === "context") {
-    return process.env.NEXT_PUBLIC_THEORY_URL?.trim() || null
-  }
-
   return null
 }
 

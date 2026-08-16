@@ -66,8 +66,6 @@ export function renderTheoryMarkdown(markdown: string): string {
   return out.join("\n")
 }
 
-// Pull the bullet items under a named `## Section` heading. Used to surface
-// Open Questions in a dedicated panel without re-rendering the whole body.
 export function extractSectionItems(markdown: string, section: string): string[] {
   const lines = markdown.split("\n")
   const items: string[] = []

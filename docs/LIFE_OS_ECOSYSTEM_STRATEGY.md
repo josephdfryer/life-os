@@ -359,7 +359,7 @@ and kept identical indefinitely. "Portable contracts and test vectors" is the mi
 size of the job.
 
 **The existing customer-facing web surface goes away.** Persons, Home, Places, Level Up, Events,
-Stuff, Assistant and Theory-of are Next.js apps that read the cloud database directly. Vault-backed
+Stuff, and Assistant are Next.js apps that read the cloud database directly. Vault-backed
 customers cannot use any of them. The saleable product becomes Apple-native or it does not exist —
 and decrypting a vault in an ordinary browser is a materially weaker mode, not a port. This is the
 single largest thing being given up and it should be said out loud in every discussion of the

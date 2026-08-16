@@ -21,7 +21,7 @@ flowchart TD
   Domain["packages/domain\nshared graph commands"] --> DB
   Home --> Domain
   Assistant["apps/assistant\nchat + actions"] --> Domain
-  Theory["apps/theory-of\nnotes + synthesis"] --> Domain
+  Persons --> Intelligence["packages/intelligence\nTheory of Person"]
   Persons --> DB
   Places --> DB
   Stuff --> DB
@@ -43,9 +43,10 @@ flowchart TD
 ## Current Apps
 
 - `apps/home`: Cross-primitive daily front door for orientation, preparation, commitments, review burden, and one prioritized nudge.
-- `apps/persons`: People, interactions, inbox, admin, imports, Gmail, Calendar, iMessage.
+- `apps/persons`: People, interactions, inbox, imports, Gmail, Calendar, iMessage, Theory of Person, and graph notes.
 - `apps/places`: Places, place profiles, visits, Google location import review.
 - `apps/stuff`: Items and inventory.
+- `apps/theory-of`: Redirect shell at `context.lacollecteur.com`. Theory lives in Persons.
 
 ### Home daily read model
 
@@ -84,17 +85,25 @@ occurs.
 ### Note-first capture
 
 `@life-os/domain` owns the canonical `captureNote` command. Home's
-`POST /api/capture`, the Assistant `capture_note` tool, and Theory's
-`POST /api/notes` all enter through this command:
+`POST /api/capture`, the Assistant `capture_note` tool, Persons'
+`POST /api/notes`, and the canonical `POST /v1/notes` all enter through this
+command. A Note may carry first-class subject edges (`aboutPersonId`,
+`aboutPlaceId`, `aboutItemId`, `aboutEventId`, `aboutPlanId`, `aboutGroupId`,
+`aboutStateId`) — "this note is about X" — which is not the same as provenance
+(`X.sourceNoteId` = "X was derived from this note") and is not an Interaction
+(an observation is not something that happened). The assistant searches, then
+passes those ids on `capture_note` so Person theory, place pages, and Stuff read the
+same Note.
 
 ```mermaid
 flowchart LR
   Bar["Life OS bar Capture"] --> HomeCapture["Home quick capture"]
   HomeCapture --> HomeAPI["POST /api/capture"]
   AssistantCapture["Assistant capture_note"] --> Command["captureNote command"]
-  TheoryCapture["Theory POST /api/notes"] --> Command
+  PersonsCapture["Persons POST /api/notes"] --> Command
   HomeAPI --> Command
-  Command --> Note["Immutable Note + source metadata"]
+  CanonicalAPI["POST /v1/notes"] --> Command
+  Command --> Note["Immutable Note + subject edges + source metadata"]
   Note -->|explicit paid action| Run["NoteAnalysisRun"]
   Run --> Suggestion["NoteSuggestion review record"]
   Suggestion -->|accept edited preview| Plan["Plan + sourceNoteId"]

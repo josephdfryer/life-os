@@ -9,14 +9,15 @@ import { unauthorizedResponse, handleRouteError, errorResponse } from "@/lib/res
  *
  *   POST /v1/theory/<personId>/regenerate
  *
- * The canonical command/API surface for this — apps/theory-of's own
+ * The canonical command/API surface for this — Persons' own
  * Regenerate button calls the same underlying regenerateTheory() directly
  * (same app, no HTTP hop needed), but any other consumer (Home) should call
  * this route rather than growing its own duplicate trigger.
  *
- * Manual, human-triggered only — this makes a real, billed AI Gateway call.
- * Costs real money and can take a while; there is no automatic/scheduled
- * path to this route anywhere in the system.
+ * Manual or nightly-budgeted only — this makes a real, billed AI Gateway call.
+ * Costs real money and can take a while. Passive page rendering never hits
+ * this route. The Persons nightly cron calls regenerateTheory() in-process,
+ * not over HTTP.
  */
 export async function POST(req: NextRequest, { params }: { params: Promise<{ personId: string }> }) {
   const auth = await authorizeRequest(req, "intelligence.write")

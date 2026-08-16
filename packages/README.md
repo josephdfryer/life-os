@@ -11,6 +11,7 @@ Packages expose reusable contracts and inward-facing infrastructure. They never 
 | `@life-os/ui` | Shared Still components and tokens | Client-safe; no database or app-internal dependency |
 | `@life-os/types` | Cross-package TypeScript shapes | Types do not introduce runtime coupling |
 | `@life-os/alignment` | Derived relationship/plan signals | Signals are computed, not persisted primitives; `/pure` stays free of DB imports |
-| `@life-os/theory` | Derived theory computations | Interpretation remains traceable to graph facts |
+| `@life-os/intelligence` | Derived theory and life-model synthesis | Interpretation remains traceable to graph facts |
+| `@life-os/theory` | Re-export of `@life-os/intelligence` | Compatibility alias only |
 
 The default owner is defined in `.github/CODEOWNERS`. Add a package README when its public exports or invariants need more detail than this index.

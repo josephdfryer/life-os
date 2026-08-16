@@ -99,7 +99,7 @@ test("formatMarkdown includes the confidence value and source count", () => {
   assert.ok(markdown.includes(`${bundle.sources.length} source record(s)`))
 })
 
-// Copy of apps/theory-of/lib/markdown.ts's extractSectionItems — that file
+// Copy of apps/persons/lib/theory-markdown.ts's extractSectionItems — that file
 // isn't importable from a package (app-internal), so this pins the exact
 // same parsing rule here to verify compatibility without a cross-boundary
 // import.

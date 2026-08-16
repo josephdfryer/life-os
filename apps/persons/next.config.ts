@@ -1,5 +1,6 @@
 import type { NextConfig } from "next"
 import path from "path"
+import { withWorkflow } from "workflow/next"
 
 const nextConfig: NextConfig = {
   outputFileTracingRoot: path.resolve(__dirname, "../.."),
@@ -11,4 +12,4 @@ const nextConfig: NextConfig = {
   ],
 }
 
-export default nextConfig
+export default withWorkflow(nextConfig)

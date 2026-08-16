@@ -17,7 +17,7 @@ Do not implement Option C unless Life OS later needs SSO across unrelated root d
 
 ## Goal
 
-Log in once (in any app), be authenticated in every Life OS app — persons, home, assistant, places, stuff, theory-of — without re-entering credentials.
+Log in once (in any app), be authenticated in every Life OS app — persons, home, assistant, places, stuff — without re-entering credentials.
 
 ## Current state
 
@@ -68,7 +68,7 @@ This is the entire mechanism — no env var is currently set, so it's inert in p
 | places | `life-os-places.vercel.app` |
 | home | `life-os-home.vercel.app` (inferred from project naming) |
 | assistant | `life-os-assistant.vercel.app` (inferred) |
-| stuff, theory-of | not yet deployed under a confirmed URL |
+| stuff | not yet deployed under a confirmed URL |
 
 No custom domain is configured anywhere in the repo — no `life-os.app` (or similar) string appears in any `vercel.json`, README, or env file. Every app sits on a **different root domain** (`persons-azure.vercel.app` vs `life-os-places.vercel.app` — the root domain is `vercel.app` itself, owned by Vercel, not by this project). A cookie can only be scoped to a domain the setter is itself a subdomain of; you cannot set a cookie on `.vercel.app` (browsers reject cookies scoped to public suffixes), and even if you could, it would leak across every Vercel customer's app.
 
@@ -225,7 +225,7 @@ If a custom domain is already planned or trivial to set up (e.g. the team alread
 2. **Add `@auth/prisma-adapter`** to `packages/auth/package.json`, run install.
 3. **Wire the adapter** into `createLifeOsAuth()` in `packages/auth/index.ts`: add `adapter: PrismaAdapter(db)` and `session: { strategy: "database" }`. Audit the `signIn`/`authorized` callbacks for any place that assumes a JWT `token` argument instead of the database-strategy `user` argument.
 4. **Add the session-adoption route** (`app/api/session/adopt/route.ts`) to each app — a small shared helper in `packages/auth` is worth extracting since the logic (look up `sid`, validate, set cookie) is identical across all six apps.
-5. **Update the home launcher** (`apps/home/app/page.tsx`) to append `?sid=<session.id>` to its outbound links to persons/places/stuff/theory-of/assistant, so navigating from home (after already being logged in there) adopts the session in the destination app on first click.
+5. **Update the home launcher** (`apps/home/app/page.tsx`) to append `?sid=<session.id>` to its outbound links to persons/places/stuff/assistant, so navigating from home (after already being logged in there) adopts the session in the destination app on first click.
 6. **New env vars:** none strictly required beyond what exists (`AUTH_SECRET`, `GOOGLE_CLIENT_ID/SECRET`, `DATABASE_URL`/`TURSO_*` — already shared). `AUTH_COOKIE_DOMAIN` stays unset unless/until a custom domain exists.
 7. **Test plan:**
    - Local: run two apps concurrently on different ports (e.g. persons on 3000, home on 3002, matching `.env.example`'s `NEXT_PUBLIC_*_URL` defaults), sign in on persons, click through to home via a manually-constructed `?sid=` link, confirm home renders as authenticated without hitting `/login`.

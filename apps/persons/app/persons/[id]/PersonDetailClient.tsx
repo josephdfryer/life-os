@@ -12,6 +12,8 @@ import EditPersonModal from "@/components/persons/EditPersonModal"
 import PublicProfilePanel from "@/components/persons/PublicProfilePanel"
 import LogInteractionModal from "@/components/interactions/LogInteractionModal"
 import AddPlanModal from "@/components/plans/AddPlanModal"
+import RegenerateButton from "@/components/theory/RegenerateButton"
+import AddTheoryNote from "@/components/theory/AddTheoryNote"
 import {
   relativeTime, closenessLabel, parseTags, parseJsonArray, formatBirthday,
 } from "@/lib/utils"
@@ -46,9 +48,27 @@ type FileEvidence = {
 
 const closenessPercent: Record<number, number> = { 1: 25, 2: 50, 3: 75, 4: 100 }
 
+export type PersonTheorySummary = {
+  version: number | null
+  confidence: number | null
+  synthesizedAt: string | null
+  stale: boolean
+  newEvidenceCount: number
+  invalidationCount: number
+  notes: { id: string; content: string; timestamp: string; type: string }[]
+}
+
 type InitialData = Omit<FullPerson, "attentionScore" | "lastInteractionDate" | "daysSinceLast">
 
-export default function PersonDetailClient({ id, initialData }: { id: string; initialData: InitialData | null }) {
+export default function PersonDetailClient({
+  id,
+  initialData,
+  theory,
+}: {
+  id: string
+  initialData: InitialData | null
+  theory?: PersonTheorySummary | null
+}) {
   const router = useRouter()
   const [person, setPerson] = useState<FullPerson | null>(
     () => initialData ? enrichWithAttention(initialData as never) as FullPerson : null
@@ -240,6 +260,67 @@ export default function PersonDetailClient({ id, initialData }: { id: string; in
 
       <PublicProfilePanel personId={person.id} />
 
+      {theory && (
+        <Card
+          title="Theory"
+          headerAction={
+            <Link href={`/persons/${person.id}/theory`} style={{ fontSize: "11px", color: "var(--cognac-deep)", textDecoration: "none" }}>
+              Open
+            </Link>
+          }
+          style={{ borderRadius: "14px", marginBottom: "20px", overflow: "hidden" }}
+        >
+          {theory.stale && (
+            <div style={{
+              fontSize: "11px",
+              color: "var(--ink-2)",
+              fontStyle: "italic",
+              background: "var(--attention-soft)",
+              borderRadius: "8px",
+              padding: "8px 10px",
+              marginBottom: "12px",
+            }}>
+              {theory.newEvidenceCount} new cited evidence item{theory.newEvidenceCount === 1 ? "" : "s"}
+              {theory.invalidationCount ? ` and ${theory.invalidationCount} evidence change${theory.invalidationCount === 1 ? "" : "s"}` : ""} since this theory.
+            </div>
+          )}
+          {theory.version == null ? (
+            <EmptyState icon="◎" title="No theory yet" subtitle="Synthesize a living model from this person's graph." />
+          ) : (
+            <div style={{ display: "flex", gap: "16px", flexWrap: "wrap", marginBottom: theory.notes.length ? "12px" : 0 }}>
+              <StatBlock label="Version" value={`v${theory.version}`} style={{ borderRadius: "8px" }} />
+              <StatBlock label="Confidence" value={theory.confidence == null ? "—" : theory.confidence.toFixed(2)} style={{ borderRadius: "8px" }} />
+              <StatBlock
+                label="Synthesized"
+                value={theory.synthesizedAt ? relativeTime(new Date(theory.synthesizedAt)) : "—"}
+                style={{ borderRadius: "8px" }}
+              />
+            </div>
+          )}
+          {theory.notes.length > 0 && (
+            <div style={{ display: "flex", flexDirection: "column", gap: "8px", margin: "12px 0" }}>
+              {theory.notes.map(note => (
+                <div key={note.id} style={{
+                  padding: "10px 12px",
+                  background: "var(--bg)",
+                  border: "1px solid var(--border)",
+                  borderRadius: "8px",
+                }}>
+                  <div style={{ fontSize: "10px", color: "var(--ink-4)", marginBottom: "4px" }}>
+                    {note.type.replaceAll("_", " ")} · {relativeTime(new Date(note.timestamp))}
+                  </div>
+                  <div style={{ fontSize: "12px", color: "var(--ink-2)", lineHeight: 1.55 }}>{note.content}</div>
+                </div>
+              ))}
+            </div>
+          )}
+          <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", marginTop: "12px" }}>
+            <RegenerateButton personId={person.id} />
+            <AddTheoryNote personId={person.id} personName={[person.first, person.last].filter(Boolean).join(" ") || "this person"} />
+          </div>
+        </Card>
+      )}
+
       <Card title={`File evidence (${person.fileEvidence?.length ?? 0})`} style={{ borderRadius: "14px", marginBottom: "20px", overflow: "hidden" }}>
         {!person.fileEvidence?.length ? <EmptyState icon="▧" title="No file evidence" subtitle="Resolved, relevant evidence from private files will appear here." /> : <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
           {person.fileEvidence.map(claim => <article key={claim.id} style={{ padding: "12px", background: "var(--bg)", border: "1px solid var(--border)", borderRadius: "10px" }}>
@@ -309,7 +390,7 @@ export default function PersonDetailClient({ id, initialData }: { id: string; in
       {/* ── Notes ───────────────────────────────────────────────── */}
       {person.notes && (
         <Card
-          title="Notes"
+          title="Profile notes"
           style={{ borderRadius: "14px", marginBottom: "20px", overflow: "hidden" }}
         >
           <p style={{ margin: 0, fontSize: "12px", color: "var(--ink-2)", lineHeight: 1.7, whiteSpace: "pre-wrap" }}>

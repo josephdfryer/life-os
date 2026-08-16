@@ -21,9 +21,8 @@ Do not switch to database-backed Auth.js sessions for this phase. That path is s
 | Stuff | `life-os-stuff` | `stuff.lacollecteur.com` |
 | Events | `life-os-events` | `events.lacollecteur.com` |
 | Assistant | `life-os-assistant` | `assistant.lacollecteur.com` |
-| Context | not yet confirmed as a Vercel project | `context.lacollecteur.com` |
 
-`Context` is the public name for the app currently implemented as `apps/theory-of`. It is the declared and interpretive layer of Life OS: values, principles, identity, preferences, patterns, goals, and commitments. Principles live inside Context; they should not be split into a separate subdomain unless they become a genuinely independent surface later.
+Theory of Person lives in Persons. `context.lacollecteur.com` is a redirect shell (`apps/theory-of`), not a separate product and not a login surface.
 
 ## Current setup status
 
@@ -43,7 +42,6 @@ Still required:
 
 - add the DNS A records below in Squarespace / Google Domains
 - add the Google OAuth callback URLs below
-- create or confirm a Vercel project for Context before adding `context.lacollecteur.com`
 - redeploy apps after DNS and OAuth are ready
 
 ## Required DNS records
@@ -90,8 +88,6 @@ Set app URLs for the Home launcher. The code now defaults to these values in pro
 NEXT_PUBLIC_PERSONS_URL=https://persons.lacollecteur.com
 NEXT_PUBLIC_PLACES_URL=https://places.lacollecteur.com
 NEXT_PUBLIC_STUFF_URL=https://stuff.lacollecteur.com
-NEXT_PUBLIC_CONTEXT_URL=https://context.lacollecteur.com
-NEXT_PUBLIC_THEORY_URL=https://context.lacollecteur.com
 ```
 
 For app-specific OAuth helpers in Persons, set the app's own canonical URL:
@@ -112,7 +108,6 @@ https://home.lacollecteur.com/api/auth/callback/google
 https://persons.lacollecteur.com/api/auth/callback/google
 https://places.lacollecteur.com/api/auth/callback/google
 https://stuff.lacollecteur.com/api/auth/callback/google
-https://context.lacollecteur.com/api/auth/callback/google
 ```
 
 The assistant webhook app does not need a Google callback unless it grows a browser login surface.
@@ -134,7 +129,7 @@ persons.lacollecteur.com     persons
 places.lacollecteur.com      life-os-places
 stuff.lacollecteur.com       life-os-stuff
 assistant.lacollecteur.com   life-os-assistant
-context.lacollecteur.com     future Context/Theory project
+context.lacollecteur.com     theory-of (redirects into Persons)
 ```
 
 The root `.vercel/project.json` is currently linked to `persons`. This repo has historically swapped `.vercel/project.json` between app projects for deploys, so verify the linked project before any Vercel command that mutates domains or env vars.
@@ -148,7 +143,6 @@ The root `.vercel/project.json` is currently linked to `persons`. This repo has 
    dig +short A persons.lacollecteur.com
    dig +short A places.lacollecteur.com
    dig +short A stuff.lacollecteur.com
-   dig +short A context.lacollecteur.com
    ```
 
 2. Verify Vercel domain status:

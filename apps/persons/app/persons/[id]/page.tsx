@@ -6,7 +6,8 @@ import { AppError } from "@/server/api/errors"
 import { getPersonHealthSummary } from "@/server/domain/health"
 import PersonDetailClient from "./PersonDetailClient"
 import type { Interaction } from "@/types"
-import { getPersonFileEvidence } from "@life-os/files"
+import { getPersonFileEvidence, getTheoryEvidenceState } from "@life-os/files"
+import { getCurrentTheorySnapshot } from "@life-os/intelligence"
 
 export const dynamic = "force-dynamic"
 
@@ -58,14 +59,36 @@ export default async function PersonDetailPage({ params }: { params: Promise<{ i
         : null,
     })) as unknown as Interaction[]
 
-    const [health, fileEvidence] = await Promise.all([
+    const [health, fileEvidence, currentTheory, evidenceState, aboutNotes] = await Promise.all([
       getPersonHealthSummary(person.id, actor.workspaceId),
       getPersonFileEvidence(person.id, actor.workspaceId),
+      getCurrentTheorySnapshot(person.id, actor.workspaceId),
+      getTheoryEvidenceState(person.id, actor.workspaceId),
+      db.note.findMany({
+        where: { workspaceId: actor.workspaceId, aboutPersonId: person.id },
+        orderBy: { timestamp: "desc" },
+        take: 5,
+        select: { id: true, content: true, timestamp: true, type: true },
+      }),
     ])
 
     return (
       <PersonDetailClient
         id={id}
+        theory={{
+          version: currentTheory?.version ?? null,
+          confidence: currentTheory?.confidence ?? null,
+          synthesizedAt: currentTheory?.synthesizedAt?.toISOString() ?? null,
+          stale: evidenceState.stale,
+          newEvidenceCount: evidenceState.newEvidenceCount,
+          invalidationCount: evidenceState.invalidationCount,
+          notes: aboutNotes.map(note => ({
+            id: note.id,
+            content: note.content.length > 180 ? `${note.content.slice(0, 180)}…` : note.content,
+            timestamp: note.timestamp.toISOString(),
+            type: note.type,
+          })),
+        }}
         initialData={{
           ...person,
           tags:   parseTags(person.tags),

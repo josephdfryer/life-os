@@ -103,7 +103,6 @@ services:
       NEXT_PUBLIC_STUFF_URL: ${NEXT_PUBLIC_STUFF_URL:-http://stuff.localhost}
       NEXT_PUBLIC_PLACES_URL: ${NEXT_PUBLIC_PLACES_URL:-http://places.localhost}
       NEXT_PUBLIC_EVENTS_URL: ${NEXT_PUBLIC_EVENTS_URL:-http://events.localhost}
-      NEXT_PUBLIC_THEORY_URL: ${NEXT_PUBLIC_THEORY_URL:-http://theory.localhost}
 
   events:
     <<: *app-defaults

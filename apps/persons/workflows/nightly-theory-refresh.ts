@@ -1,5 +1,5 @@
 import { db } from "@life-os/db"
-import { regenerateTheory } from "@life-os/theory"
+import { regenerateTheory } from "@life-os/intelligence"
 import { fileIntelligenceFlags, getTheoryEvidenceState, listStaleTheoryPeoplePage } from "@life-os/files"
 
 const PAGE_SIZE = 100

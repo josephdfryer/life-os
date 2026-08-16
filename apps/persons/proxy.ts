@@ -24,6 +24,6 @@ export const config = {
      *  - /_next/*          Next.js internals
      *  - /favicon.ico
      */
-    "/((?!api/auth|api/v1|login|_next/static|_next/image|favicon.ico).*)",
+    "/((?!api/auth|api/v1|api/cron|login|_next/static|_next/image|favicon.ico|.well-known/workflow/).*)",
   ],
 }

@@ -1,6 +1,5 @@
-// Renamed to @life-os/intelligence (Track A6) — this package is a thin
-// re-export so apps/theory-of's existing imports keep working unchanged.
-// New code should import @life-os/intelligence directly.
+// Thin re-export of @life-os/intelligence. New code should import
+// @life-os/intelligence directly.
 
 export {
   getTheorySourcesForPerson,

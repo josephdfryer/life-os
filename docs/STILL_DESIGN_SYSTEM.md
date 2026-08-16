@@ -31,7 +31,7 @@ Still feels like a **well-made personal object** — warm linen, cognac leather,
 3. **Do not extend Warm Concrete** — no terracotta `#c4572a`, no DM Mono body text, no square-corner buttons, no uppercase micro-labels on CTAs.
 4. **Prefer CSS variables** over hard-coded hex in new code.
 5. **Reuse patterns** below (nav, person row, sidebar card) instead of inventing per-app styles.
-6. **One app shell shape** — same nav height, link style, and page padding across Persons, Places, Events, Stuff, Theory-of, Home (Home may keep a petrol-heavy dashboard variant).
+6. **One app shell shape** — same nav height, link style, and page padding across Persons, Places, Events, Stuff, Home (Home may keep a petrol-heavy dashboard variant).
 7. **Living doc** — if you establish a new repeated pattern used in 2+ places, add it here in the same PR.
 
 ### Legacy vs Still
@@ -391,7 +391,7 @@ padding: 10px 14px
 | **Places** | Same shell. Map UI can use petrol for layer panel chrome. |
 | **Events** | Calendar cells stay light; use cognac for "today" marker. |
 | **Stuff** | Simpler lists — person row pattern works for items. |
-| **Theory-of** | Newsreader-forward — prose-heavy, extra whitespace. |
+| **Persons theory** | Newsreader-forward — prose-heavy, extra whitespace (`/persons/[id]/theory`). |
 | **Home** | May use petrol-heavy dashboard (widgets on dark panels). Keep Newsreader greetings; align stat colors to camel on petrol. |
 | **Assistant** | Minimal — apply tokens when UI expands. |
 

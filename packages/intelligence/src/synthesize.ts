@@ -24,10 +24,9 @@ export class TheoryError extends Error {
 //     person", not "has this exact input already been analyzed".
 // Safe to make this AI-backed (unlike synthesizeLifeModel, see life-model.ts
 // and ~/.claude/plans/serialized-bubbling-pearl.md's "Why LifeModel is
-// Phase 2" section) because its only caller, regenerateTheory, only ever
-// runs from an explicit human click
-// (apps/theory-of/app/person/[personId]/RegenerateButton.tsx) — never from
-// a passive page load.
+// Phase 2" section) because its only callers go through regenerateTheory:
+// an explicit click in Persons (`apps/persons/components/theory/RegenerateButton.tsx`)
+// or the Persons nightly budgeted cron. Never from a passive page load.
 export async function synthesizeTheoryOfPerson(
   personId: string,
   workspaceId: string = DEFAULT_WORKSPACE,
@@ -211,7 +210,7 @@ export function validateSynthesisResponse(value: unknown): SynthesisResponse {
 }
 
 // Renders into the exact section headers the existing scaffold already used
-// (formatMarkdown replaces scaffoldBody) — apps/theory-of/lib/markdown.ts's
+// (formatMarkdown replaces scaffoldBody) — apps/persons/lib/theory-markdown.ts's
 // extractSectionItems parses a "## Open Questions" header (case-insensitive)
 // followed by "- " bullet lines, so this must keep that shape or the
 // Codex-owned sidebar panel silently breaks.

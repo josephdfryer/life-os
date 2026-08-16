@@ -57,7 +57,7 @@ export async function createTheorySnapshot(
 }
 
 // workspaceId defaults for backward compatibility with existing callers that
-// pre-date this check (apps/theory-of's page independently verified the
+// pre-date this check (Persons' theory page independently verified the
 // Person belongs to the caller's workspace before ever reaching here, so
 // this was masked rather than exploitable there) — but every new caller
 // should pass it explicitly. Without it, any caller that knows a personId

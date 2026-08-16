@@ -6,29 +6,17 @@
     "dev": "next dev --port 3004",
     "build": "next build",
     "start": "next start",
-    "seed": "tsx prisma/seed.ts",
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
-    "@life-os/auth": "*",
-    "@life-os/db": "*",
-    "@life-os/domain": "*",
-    "@life-os/files": "*",
-    "@life-os/theory": "*",
-    "@life-os/ui": "*",
     "next": "^16.3.0",
-    "next-auth": "^5.0.0-beta.30",
     "react": "19.2.4",
-    "react-dom": "19.2.4",
-    "workflow": "^4.8.2"
+    "react-dom": "19.2.4"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "tailwindcss": "^4",
-    "tsx": "^4.21.0",
     "typescript": "^5"
   }
 }

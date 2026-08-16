@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
+import { Button } from "@life-os/ui"
 
 export default function RegenerateButton({ personId }: { personId: string }) {
   const router = useRouter()
@@ -12,8 +13,9 @@ export default function RegenerateButton({ personId }: { personId: string }) {
     setBusy(true)
     setError(null)
     try {
-      const res = await fetch(`/api/theory/${personId}/regenerate`, { method: "POST" })
-      if (!res.ok) throw new Error((await res.json().catch(() => ({})))?.error ?? "Failed to regenerate")
+      const res = await fetch(`/api/persons/${personId}/theory/regenerate`, { method: "POST" })
+      const body = await res.json().catch(() => ({}))
+      if (!res.ok) throw new Error(body.error?.message ?? body.error ?? "Failed to regenerate")
       router.refresh()
     } catch (e) {
       setError(e instanceof Error ? e.message : "Failed to regenerate")
@@ -24,27 +26,17 @@ export default function RegenerateButton({ personId }: { personId: string }) {
 
   return (
     <div style={{ display: "inline-flex", flexDirection: "column", gap: "4px" }}>
-      <button
+      <Button
+        variant="primary"
+        size="sm"
         onClick={regenerate}
         disabled={busy}
         title="Synthesize a new versioned theory snapshot from the current graph"
-        style={{
-          padding: "7px 14px",
-          borderRadius: "8px",
-          fontSize: "12px",
-          fontWeight: 500,
-          fontFamily: "inherit",
-          color: "var(--bg)",
-          background: "var(--ink)",
-          border: "none",
-          cursor: busy ? "default" : "pointer",
-          opacity: busy ? 0.6 : 1,
-          transition: "opacity 0.1s",
-        }}
+        style={{ borderRadius: "100px", textTransform: "none", letterSpacing: 0 }}
       >
-        {busy ? "Regenerating…" : "Regenerate Theory"}
-      </button>
-      {error && <span style={{ fontSize: "10px", color: "var(--accent)" }}>{error}</span>}
+        {busy ? "Regenerating…" : "Regenerate theory"}
+      </Button>
+      {error && <span style={{ fontSize: "10px", color: "var(--attention)" }}>{error}</span>}
     </div>
   )
 }

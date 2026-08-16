@@ -91,7 +91,7 @@ If foundation is complete, **start at Phase 2 remaining work** (deep Persons scr
 Phase 0  Verify/finish foundation (@life-os/ui)     ← skip if verified complete
 Phase 1  Shared AppShell (optional but high leverage)
 Phase 2  Persons — deep workflows (priority)
-Phase 3  Stuff + Theory-of — detail/new/notes
+Phase 3  Stuff — detail/new/notes
 Phase 4  Events — calendar, detail, settings
 Phase 5  Places — map chrome, profile, import
 Phase 6  Home — widgets full Still petrol variant
@@ -213,7 +213,7 @@ Where `@life-os/ui` Button/Input/Card/Avatar/EmptyState/BackLink fit, use them (
 
 ---
 
-## Phase 3 — Stuff + Theory-of
+## Phase 3 — Stuff
 
 ### Stuff
 
@@ -223,12 +223,7 @@ Where `@life-os/ui` Button/Input/Card/Avatar/EmptyState/BackLink fit, use them (
 - [ ] Login  
 - [ ] Header = AppShell pattern  
 
-### Theory-of
-
-- [ ] Home (verify first-pass)  
-- [ ] `/person/[personId]` theory page — Newsreader titles, Inter chrome  
-- [ ] Notes surfaces  
-- [ ] Regenerate / add note controls = cognac/ghost  
+Theory of Person now lives in Persons (`/persons/[id]/theory`, `/persons/notes`). Style those surfaces as part of Phase 2, not a separate app.
 
 **Acceptance:** Detail/new pages match list chrome; no legacy fonts/accent.
 
@@ -311,9 +306,8 @@ grep -R "Playfair\|DM Mono\|font-playfair\|font-dm-mono\|#c4572a\|c4572a" apps p
 
 | App | Must click |
 |-----|------------|
-| Persons | Login, Today, People, Person detail, Inbox, Import, Merge, Admin |
+| Persons | Login, Today, People, Person detail, Theory, Notes, Inbox, Import, Merge, Admin |
 | Stuff | List, detail, new |
-| Theory-of | Home, person theory, notes |
 | Events | List, detail, new, calendar, settings |
 | Places | List, profile, map layers, import |
 | Home | Dashboard, login |
