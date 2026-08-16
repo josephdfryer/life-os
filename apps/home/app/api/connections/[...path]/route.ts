@@ -8,10 +8,12 @@ export async function GET(request: NextRequest, { params }: Params) {
   if (!baseUrl || !apiKey) return error("connections_not_configured", "The shared connections service is not configured yet.", 503)
 
   const pathname = (await params).path.join("/")
-  if (pathname !== "list") return error("not_found", "Connections endpoint not found.", 404)
+  if (!isAllowedConnectionRead(pathname)) return error("not_found", "Connections endpoint not found.", 404)
 
   try {
-    const response = await fetch(new URL("/v1/connections", baseUrl), {
+    const target = pathname === "list" ? "/v1/connections" : `/v1/connections/${pathname}`
+    const incoming = request.nextUrl.search
+    const response = await fetch(new URL(`${target}${incoming}`, baseUrl), {
       headers: { accept: "application/json", "x-api-key": apiKey },
       cache: "no-store",
     })
@@ -56,8 +58,13 @@ async function mutate(request: NextRequest, paramsPromise: Params["params"], met
   }
 }
 
+export function isAllowedConnectionRead(pathname: string) {
+  return pathname === "list" || pathname === "oura/authorize"
+}
+
 export function isAllowedConnectionMutation(method: string, pathname: string) {
-  return (method === "POST" && pathname === "era") || (method === "DELETE" && /^[-\w]+$/.test(pathname))
+  return (method === "POST" && (pathname === "era" || pathname === "oura/callback" || pathname === "oura/sync"))
+    || (method === "DELETE" && /^[-\w]+$/.test(pathname))
 }
 
 function error(code: string, message: string, status: number) {

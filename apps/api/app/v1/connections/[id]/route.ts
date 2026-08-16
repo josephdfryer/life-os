@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { authorizeRequest } from "@/lib/auth"
 import { unauthorizedResponse, handleRouteError, errorResponse } from "@/lib/respond"
+import { disconnectOuraConnection } from "@/lib/oura-ingest"
 
 /**
  * Disconnect an integration — marks the Connection mirror row disabled and,
@@ -39,6 +40,10 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
       }
       await tx.connection.update({ where: { id }, data: { status: "disabled" } })
     })
+
+    if (connection.kind === "oura") {
+      await disconnectOuraConnection(connection).catch(() => undefined)
+    }
 
     return NextResponse.json({ status: "disabled" })
   } catch (error) {

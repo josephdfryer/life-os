@@ -2,20 +2,36 @@
 
 import { FormEvent, useCallback, useEffect, useState } from "react"
 
-type Kind = "calendar" | "gmail" | "meetings" | "era"
+type Kind = "calendar" | "gmail" | "meetings" | "era" | "oura"
 type Connection = { id: string; kind: string; provider: string; accountEmail: string | null; label: string | null; status: string; lastSyncedAt: string | null; lastError: string | null; actions: string[] }
+
+const KIND_MARK: Record<Kind, string> = { calendar: "31", gmail: "@", meetings: "G", era: "$", oura: "O" }
 
 const INTEGRATIONS: Array<{ kind: Kind; name: string; description: string; href: string; cta: string }> = [
   { kind: "calendar", name: "Google Calendar", description: "Events, attendance, and the shape of your time.", href: "https://events.lacollecteur.com/settings/calendar", cta: "Manage calendars" },
   { kind: "gmail", name: "Gmail", description: "Messages and relationship history, matched conservatively.", href: "https://persons.lacollecteur.com/api/gmail/google/connect", cta: "Connect Gmail" },
   { kind: "meetings", name: "Granola", description: "Meeting summaries, transcripts, People, and company context.", href: "https://events.lacollecteur.com/settings/granola", cta: "Manage Granola" },
   { kind: "era", name: "Era", description: "Accounts and financial activity, with source provenance.", href: "", cta: "Connect Era" },
+  { kind: "oura", name: "Oura", description: "Readiness, sleep score, activity score, and stress — Oura's numbers, not Apple Health.", href: "/connections/oura/connect", cta: "Connect Oura" },
 ]
+
+const OURA_STATUS: Record<string, string> = {
+  connected: "Oura is connected. The last 35 days are in the graph.",
+  connected_sync_failed: "Oura is connected, but the first import did not finish. Use Sync now.",
+  denied: "Oura access was declined.",
+  scope: "Oura did not grant Daily access. Reconnect and leave Daily enabled.",
+  not_configured: "Oura is not configured yet. Add the API application credentials.",
+  authorize_failed: "Oura could not start authorization.",
+  callback_failed: "Oura authorization did not complete.",
+  invalid: "Oura returned an incomplete callback.",
+  unavailable: "The connections service was unavailable.",
+}
 
 export function ConnectionsClient() {
   const [connections, setConnections] = useState<Connection[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [ouraStatus, setOuraStatus] = useState<string | null>(null)
 
   const load = useCallback(async () => {
     setLoading(true); setError(null)
@@ -30,8 +46,13 @@ export function ConnectionsClient() {
   }, [])
 
   useEffect(() => { void load() }, [load])
+  useEffect(() => {
+    const value = new URLSearchParams(window.location.search).get("oura")
+    if (value && OURA_STATUS[value]) setOuraStatus(OURA_STATUS[value])
+  }, [])
 
   return <section className="connections-grid" aria-live="polite">
+    {ouraStatus && <div className="stream-message connections-wide" role="status"><strong>Oura</strong><span>{ouraStatus}</span></div>}
     {error && <div className="stream-message stream-message-error connections-wide" role="alert"><strong>Connection status is unavailable.</strong><span>{error}</span><button className="still-button still-button-secondary" onClick={load}>Try again</button></div>}
     {INTEGRATIONS.map(integration => <ConnectionCard integration={integration} rows={connections.filter(row => row.kind === integration.kind)} loading={loading} reload={load} key={integration.kind} />)}
   </section>
@@ -56,9 +77,21 @@ function ConnectionCard({ integration, rows, loading, reload }: { integration: t
     } finally { setBusyId(null) }
   }
 
+  const syncOura = async () => {
+    setBusyId("oura-sync"); setActionError(null)
+    try {
+      const response = await fetch("/api/connections/oura/sync", { method: "POST" })
+      const body = await response.json()
+      if (!response.ok) throw new Error(body.error?.message || "Oura could not be synced.")
+      await reload()
+    } catch (caught) {
+      setActionError(caught instanceof Error ? caught.message : "Oura could not be synced.")
+    } finally { setBusyId(null) }
+  }
+
   return <article className={needsAttention ? "connection-card connection-card-attention" : "connection-card"}>
-    <div className="connection-card-heading"><div><span className={`connection-kind connection-kind-${integration.kind}`} aria-hidden>{integration.kind === "calendar" ? "31" : integration.kind === "gmail" ? "@" : integration.kind === "meetings" ? "G" : "$"}</span><div><h2>{integration.name}</h2><p>{integration.description}</p></div></div><span className={needsAttention ? "integration-status integration-status-error" : healthy ? "integration-status integration-status-active" : "integration-status"}>{loading ? "Checking…" : needsAttention ? "Needs attention" : healthy ? `${healthy} active` : "Not connected"}</span></div>
-    <div className="connection-accounts">{loading ? <div className="connection-account-placeholder">Loading account status…</div> : rows.length === 0 ? <div className="connection-account-placeholder">No {integration.name} account connected yet.</div> : rows.map(row => <div className="connection-account" key={row.id}><div><strong>{row.label || row.accountEmail || "Unnamed account"}</strong><span>{row.accountEmail && row.label ? row.accountEmail : row.provider}</span></div><div><span>{row.lastError || (row.lastSyncedAt ? `Last synced ${formatRelative(row.lastSyncedAt)}` : "Not synced yet")}</span><small>{row.status}</small>{integration.kind !== "meetings" && row.status === "active" && row.actions.includes("disconnect") && <button className="connection-text-action" disabled={busyId === row.id} onClick={() => void disconnect(row.id)}>{busyId === row.id ? "Disconnecting…" : "Disconnect"}</button>}</div></div>)}</div>
+    <div className="connection-card-heading"><div><span className={`connection-kind connection-kind-${integration.kind}`} aria-hidden>{KIND_MARK[integration.kind]}</span><div><h2>{integration.name}</h2><p>{integration.description}</p></div></div><span className={needsAttention ? "integration-status integration-status-error" : healthy ? "integration-status integration-status-active" : "integration-status"}>{loading ? "Checking…" : needsAttention ? "Needs attention" : healthy ? `${healthy} active` : "Not connected"}</span></div>
+    <div className="connection-accounts">{loading ? <div className="connection-account-placeholder">Loading account status…</div> : rows.length === 0 ? <div className="connection-account-placeholder">No {integration.name} account connected yet.</div> : rows.map(row => <div className="connection-account" key={row.id}><div><strong>{row.label || row.accountEmail || "Unnamed account"}</strong><span>{row.accountEmail && row.label ? row.accountEmail : row.provider}</span></div><div><span>{row.lastError || (row.lastSyncedAt ? `Last synced ${formatRelative(row.lastSyncedAt)}` : "Not synced yet")}</span><small>{row.status}</small>{integration.kind === "oura" && row.status === "active" && row.actions.includes("sync") && <button className="connection-text-action" disabled={busyId !== null} onClick={() => void syncOura()}>{busyId === "oura-sync" ? "Syncing…" : "Sync now"}</button>}{integration.kind !== "meetings" && row.status === "active" && row.actions.includes("disconnect") && <button className="connection-text-action" disabled={busyId === row.id} onClick={() => void disconnect(row.id)}>{busyId === row.id ? "Disconnecting…" : "Disconnect"}</button>}</div></div>)}</div>
     {actionError && <p className="connection-action-error" role="alert">{actionError}</p>}
     {showEraForm && <EraConnectionForm onConnected={async () => { setShowEraForm(false); await reload() }} onCancel={() => setShowEraForm(false)} />}
     <div className="connection-card-actions">{integration.kind === "era" ? <button className="still-button still-button-primary" onClick={() => setShowEraForm(value => !value)}>{rows.length ? "Reconnect Era" : integration.cta}</button> : <a className="still-button still-button-primary" href={integration.href}>{rows.length ? integration.cta.replace("Connect", "Reconnect") : integration.cta}</a>}{rows.length > 0 && <span>{rows.reduce((sum, row) => sum + row.actions.length, 0)} available actions</span>}</div>
