@@ -161,7 +161,7 @@ final class PersonsAppModel: NSObject, ObservableObject, ASWebAuthenticationPres
         do {
             if contactsStatus.enabled {
                 syncMessage = "Checking Contacts for changes…"
-                await contacts.collectIncremental()
+                await contacts.sync()
             }
 
             syncMessage = "Uploading securely…"
