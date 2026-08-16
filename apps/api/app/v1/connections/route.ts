@@ -3,7 +3,7 @@ import { authorizeRequest } from "@/lib/auth"
 import { unauthorizedResponse, handleRouteError } from "@/lib/respond"
 
 /**
- * Every third-party account connection (Calendar, Gmail, Era) in one list —
+ * Every third-party account connection (Calendar, Gmail, Era, Oura) in one list —
  * the read side of Track C's Connection unification
  * (docs/adr/0003-connection-model.md). Calendar/Gmail rows here are a
  * dual-written mirror of the real OAuth state (still owned by apps/events

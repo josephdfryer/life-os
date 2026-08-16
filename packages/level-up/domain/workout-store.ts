@@ -1,6 +1,6 @@
 import { db } from "@life-os/db"
 import { SEED_EXERCISES, SEED_PROGRAM, type JointTag } from "./seed-program"
-import { neutralReadinessSnapshot } from "./workout-commands"
+import { assembleReadinessSnapshot } from "./readiness"
 
 // ─────────────────────────────────────────────
 // THE WORKOUT READ PATH
@@ -282,7 +282,7 @@ export type TodayBundle = {
   dayName: string
   entries: PreparedEntry[]
   profile: { bodyweightKg: number | null; unit: "kg" | "lb"; microPlates: boolean }
-  readiness: ReturnType<typeof neutralReadinessSnapshot>
+  readiness: Awaited<ReturnType<typeof assembleReadinessSnapshot>>
 }
 
 /**
@@ -291,8 +291,8 @@ export type TodayBundle = {
  * profile units and a readiness snapshot. Defaults to the next day in
  * rotation — the day after whichever program day the most recently completed
  * session used — when the caller doesn't request a specific one. The
- * readiness snapshot is synthetic-neutral until HealthKit (M3) and Oura (M4)
- * feed real inputs; see docs/IOS_PLATFORM_PLAN.md section 9.
+ * readiness snapshot uses Oura scores when those States exist, otherwise
+ * stays synthetic-neutral. Prescriptions stay Full during shadow mode.
  */
 export async function today(
   workspaceId: string,
@@ -327,6 +327,6 @@ export async function today(
     dayName: prepared.dayName,
     entries: prepared.entries,
     profile,
-    readiness: neutralReadinessSnapshot(new Date().toISOString().slice(0, 10)),
+    readiness: await assembleReadinessSnapshot(workspaceId, new Date().toISOString().slice(0, 10)),
   }
 }

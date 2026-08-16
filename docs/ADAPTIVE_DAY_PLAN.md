@@ -297,8 +297,11 @@ docs for full detail):
 2. Add sleep duration/stages and source-aware FoodNoms nutrition aggregates —
    confirmed fully greenfield, zero FoodNoms code today.
 3. Feed real HealthKit inputs into Level Up readiness.
-4. Add direct Oura daily-score integration and shadow validation — confirmed
-   fully greenfield, zero Oura connector code today.
+4. Add direct Oura daily-score integration and shadow validation — OAuth,
+   35-day backfill, webhooks, and `source=oura` daily States now exist.
+   Level Up readiness assembly reads those States and stays in shadow
+   (`band=full`, no prescription change) until the seven-day validation
+   window is done.
 5. Expose source freshness and missing permissions in Home and Level Up.
 
 Keep raw samples, meals and GPS data local. Sync only approved daily
