@@ -10,6 +10,5 @@ Each app is independently deployable but remains part of one modular monolith an
 | `stuff` | Items and assemblies | Item identity and graph relationships remain canonical in shared DB |
 | `home` | Cross-domain overview | Read-oriented composition; no competing primitive definitions |
 | `assistant` | Conversational graph tools | Tool calls honor workspace access and domain write boundaries |
-| `theory-of` | Redirects old Context URLs into Persons | No product UI; Theory of Person lives in Persons |
 
 Read the nearest `AGENTS.md`, relevant architecture document, and `docs/MANIFESTO.md` before changing an app contract.

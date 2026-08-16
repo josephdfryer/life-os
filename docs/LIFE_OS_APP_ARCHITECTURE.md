@@ -46,7 +46,6 @@ flowchart TD
 - `apps/persons`: People, interactions, inbox, imports, Gmail, Calendar, iMessage, Theory of Person, and graph notes.
 - `apps/places`: Places, place profiles, visits, Google location import review.
 - `apps/stuff`: Items and inventory.
-- `apps/theory-of`: Redirect shell at `context.lacollecteur.com`. Theory lives in Persons.
 
 ### Home daily read model
 

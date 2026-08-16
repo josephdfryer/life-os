@@ -41,7 +41,6 @@ const PROJECTS = [
   "life-os-places",
   "life-os-stuff",
   "life-os-assistant",
-  "life-os-context",
   "life-os-api",
   "level-up",
 ]

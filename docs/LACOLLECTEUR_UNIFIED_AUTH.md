@@ -22,7 +22,7 @@ Do not switch to database-backed Auth.js sessions for this phase. That path is s
 | Events | `life-os-events` | `events.lacollecteur.com` |
 | Assistant | `life-os-assistant` | `assistant.lacollecteur.com` |
 
-Theory of Person lives in Persons. `context.lacollecteur.com` is a redirect shell (`apps/theory-of`), not a separate product and not a login surface.
+Theory of Person lives in Persons; `apps/theory-of` no longer exists. `context.lacollecteur.com` is not routed anywhere.
 
 ## Current setup status
 
@@ -129,7 +129,6 @@ persons.lacollecteur.com     persons
 places.lacollecteur.com      life-os-places
 stuff.lacollecteur.com       life-os-stuff
 assistant.lacollecteur.com   life-os-assistant
-context.lacollecteur.com     theory-of (redirects into Persons)
 ```
 
 The root `.vercel/project.json` is currently linked to `persons`. This repo has historically swapped `.vercel/project.json` between app projects for deploys, so verify the linked project before any Vercel command that mutates domains or env vars.
