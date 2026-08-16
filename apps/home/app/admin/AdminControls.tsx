@@ -60,8 +60,14 @@ export function AccessControls({ roles, users, permissions }: { roles: Role[]; u
 export function ApprovedEmailControls({ rows }: { rows: ApprovedEmail[] }) {
   const router = useRouter()
   const [email, setEmail] = useState("")
+  const [standalone, setStandalone] = useState(false)
   const mutation = useAdminMutation(router.refresh)
-  return <AdminGrid aside={<AdminCard title="Approve an email"><Field label="Email" value={email} onChange={setEmail} placeholder="name@example.com" /><p className="admin-control-help">The person joins this workspace after signing in with this address.</p><MutationButton disabled={!email.trim()} mutation={mutation} onClick={async () => { const result = await mutation.run("/api/admin/approved-emails", "POST", { email }); if (result) setEmail("") }}>Approve email</MutationButton></AdminCard>}>
+  return <AdminGrid aside={<AdminCard title="Approve an email">
+    <Field label="Email" value={email} onChange={setEmail} placeholder="name@example.com" />
+    <label className="admin-control-checkbox"><input type="checkbox" checked={standalone} onChange={event => setStandalone(event.target.checked)} /> Give this person their own standalone workspace</label>
+    <p className="admin-control-help">{standalone ? "They get a brand-new, fully isolated workspace on first sign-in — no access to your data." : "The person joins this workspace after signing in with this address."}</p>
+    <MutationButton disabled={!email.trim()} mutation={mutation} onClick={async () => { const result = await mutation.run("/api/admin/approved-emails", "POST", { email, ...(standalone ? { workspaceId: null } : {}) }); if (result) { setEmail(""); setStandalone(false) } }}>Approve email</MutationButton>
+  </AdminCard>}>
     <AdminCard title="Approved emails" meta={`${rows.length} addresses`}><div className="admin-control-list">{rows.map(row => <div className="admin-control-row" key={row.id}><div><strong>{row.email}</strong><span>Approved {formatDate(row.createdAt)}</span></div><div><span className="stream-type-badge">{row.status}</span><button className="still-button still-button-secondary" disabled={mutation.busy} onClick={() => mutation.run(`/api/admin/approved-emails/${row.id}`, "PATCH", { status: row.status === "approved" ? "revoked" : "approved" })}>{row.status === "approved" ? "Revoke" : "Re-approve"}</button></div></div>)}</div></AdminCard><MutationMessage mutation={mutation} />
   </AdminGrid>
 }

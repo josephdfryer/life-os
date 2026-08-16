@@ -324,6 +324,7 @@ a {
 .admin-control-field > span { color: var(--ink-3); font-size: 12px; }
 .admin-control-field input { padding: 10px 14px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); color: var(--ink); font: inherit; font-size: 14px; }
 .admin-control-field input:focus { border-color: var(--cognac); box-shadow: 0 0 0 3px var(--cognac-soft); outline: 0; }
+.admin-control-checkbox { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; color: var(--ink-2); font-size: 13px; }
 .admin-scope-picker { display: grid; gap: 8px; max-height: 380px; margin-bottom: var(--space-md); overflow: auto; }
 .admin-scope-picker label { display: flex; align-items: flex-start; gap: 8px; color: var(--ink-3); font-size: 11px; }
 .admin-scope-picker label span { display: grid; gap: 2px; }

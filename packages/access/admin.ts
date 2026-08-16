@@ -25,8 +25,11 @@ export async function addApprovedEmail(input: Record<string, unknown>, actor: Ac
   const { db } = await import("@life-os/db")
   const email = requiredString(input.email, "email").toLowerCase().trim()
   // An admin can only invite people into their own workspace — never an
-  // arbitrary workspaceId supplied by the client.
-  const workspaceId = actor.workspaceId
+  // arbitrary workspaceId supplied by the client. The one client-supplied
+  // value honored is explicit null: "give this person their own standalone
+  // workspace." Any other supplied value (someone else's real workspace id)
+  // is still ignored.
+  const workspaceId = input.workspaceId === null ? null : actor.workspaceId
 
   const existing = await db.approvedEmail.findUnique({ where: { email } })
   if (existing) throw new AccessError("Email is already approved", "validation")
