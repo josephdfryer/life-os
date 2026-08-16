@@ -1,11 +1,13 @@
 import { Suspense } from 'react'
 import { redirect } from 'next/navigation'
-import { cookies } from 'next/headers'
+import { cookies, headers } from 'next/headers'
 import { unstable_cache } from 'next/cache'
 import { auth } from '../auth'
 import { db } from '@life-os/db'
 import { LIFE_OS_APP_URLS, lifeOsAppUrl } from '@life-os/auth'
 import { LIFE_OS_APPS, resolveTimeZone, TZ_COOKIE, TimezonePicker } from '@life-os/ui'
+import { isMarketingHost } from '@/lib/site'
+import MarketingHome from '../components/MarketingHome'
 import ScheduleWidget from '../components/ScheduleWidget'
 import CommitmentsWidget from '../components/CommitmentsWidget'
 import NudgesWidget from '../components/NudgesWidget'
@@ -51,6 +53,10 @@ async function HomePageContent({
 }: {
   searchParams: Promise<{ day?: string }>
 }) {
+  if (isMarketingHost((await headers()).get('host'))) {
+    return <MarketingHome />
+  }
+
   const session = await auth()
   const localReview = process.env.NODE_ENV !== 'production' && process.env.LIFE_OS_LOCAL_REVIEW === '1'
   if (!session?.user?.email && !localReview) redirect('/login')
