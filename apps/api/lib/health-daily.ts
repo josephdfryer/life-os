@@ -60,6 +60,11 @@ export type RecordHealthDailyDigestInput = {
   actor: HealthDailyActor
 }
 
+// Shared by native `health.daily` ingest and POST /v1/health/samples.
+// Default 5s interactive-transaction timeout is not enough for ~30 sequential
+// State+GraphEvent writes over Turso; a full daily digest times out mid-write.
+export const HEALTH_DAILY_TRANSACTION = { maxWait: 10_000, timeout: 30_000 } as const
+
 /**
  * Resolves (creating if needed) the StateDefinition for every metric key
  * about to be recorded. Each call opens its own transaction internally

@@ -36,6 +36,15 @@ test("device authorization, replay receipt, rotation, and revocation", async () 
   const rotated = await refreshDeviceCredential(refreshToken)
   assert.equal(await authorizeDeviceToken(accessToken, "device.ingest"), null)
   assert.ok(await authorizeDeviceToken(rotated.accessToken, "device.ingest"))
+
+  // Simulate the installed iPhone: rotation succeeded on the server, the new
+  // pair was never persisted or used, and the next tap still sends the old token.
+  const unused = await refreshDeviceCredential(rotated.refreshToken)
+  const recovered = await refreshDeviceCredential(rotated.refreshToken)
+  assert.equal(await authorizeDeviceToken(unused.accessToken, "device.ingest"), null)
+  assert.ok(await authorizeDeviceToken(recovered.accessToken, "device.ingest"))
+  await assert.rejects(() => refreshDeviceCredential(rotated.refreshToken))
+
   await revokeDevice(deviceId, workspaceId)
   assert.equal(await authorizeDeviceToken(rotated.accessToken, "device.ingest"), null)
 })

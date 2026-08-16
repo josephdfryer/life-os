@@ -44,7 +44,34 @@ The registered callback is exactly `lifeos-companion://auth/callback`; arbitrary
 
 Messages enter `StagedInteraction`; visits enter `ImportStagedVisit`; both index into the universal `ReviewItem` inbox. Daily health aggregates enter the existing State taxonomy. Workouts become Events. Transcripts and metadata become provenance-bearing Notes. Graph changes and receipts share a transaction where the destination command permits it.
 
-The in-progress legacy `POST /v1/health/samples` route remains untouched. Before that route is committed, its daily-health write should be moved onto the same helper as `health.daily`; until then, taxonomy compatibility is enforced by the accepted metric-key list in `apps/api/lib/device-ingest.ts`.
+The native HealthKit collector requests the standard quantity and category types
+available on the installed OS, including activity, sleep stages, nutrition,
+body measurements, vitals, mobility, symptoms, reproductive health, mindfulness,
+and workouts. Activity, nutrition, and vitals wait for a scheduled ~11:50 PM
+local refresh so the day is nearly complete. Sleep uses immediate HealthKit
+background delivery and is sent as soon as a night exists. Sleep aggregation
+picks one source (Apple Watch, then Oura, then other wearables, then iPhone),
+unions overlapping intervals, and attributes the session to the wake day —
+it does not sum Watch + iPhone + Oura into an impossible 30-hour night.
+Quantity samples become daily sums or averages in the person's preferred unit;
+other category samples become bounded daily counts/durations. Raw samples stay
+on the phone. Metric units travel beside values in the wire record and are
+retained in the daily Note metadata. Content-hashed daily source IDs allow a
+day to be updated safely as HealthKit receives more data. Oura Readiness,
+Sleep Score, Activity Score, and Stress do not enter HealthKit; those come
+from the Oura API through Home Connections, not this collector.
+
+The legacy `POST /v1/health/samples` route and native `health.daily` ingestion
+share the same State/Note write helper and the same 30-second Turso transaction
+budget. A full daily digest writes many States sequentially; the default 5-second
+interactive transaction times out mid-write (`P2028`). Native metric keys are
+intentionally extensible because the set of HealthKit types varies by OS and
+hardware; the strict contract still bounds key, unit, metric count, and payload
+size. Heartbeat source objects strip unknown keys and treat `lastSuccessAt` /
+`lastErrorCode` as optional so the installed iOS encoder cannot 400 a live sync.
+Refresh-token rotation re-issues a pair when the previous token is presented
+again and the successor was never used — otherwise a failed Keychain save
+bricks the phone until a full sign-in.
 
 ## Local privacy boundary
 
@@ -60,7 +87,7 @@ Legacy collectors are not disabled by installing this project. For each connecto
 
 ## Current implementation boundary
 
-The committed foundation includes native shells, PKCE sign-in, credential rotation, encrypted outbox/checkpoints, ordered retry upload, heartbeat status, an `SMAppService` login item, incremental iMessage/WhatsApp reads, HealthKit daily/workout collection, and significant-change/visit location capture.
+The committed foundation includes native shells, PKCE sign-in, credential rotation, encrypted outbox/checkpoints, ordered retry upload, visible sync progress/results, heartbeat status, an `SMAppService` login item, incremental iMessage/WhatsApp reads, broad HealthKit daily/workout collection, and significant-change/visit location capture.
 
 Documents, voice-folder watching, Photos metadata collection, call-history experimentation, connector-specific repair screens, diagnostics export, cloud schedules, and multi-device Home UI remain subsequent slices. Sparkle 2 is linked and guarded until a real EdDSA public key is supplied.
 
@@ -73,4 +100,3 @@ Documents, voice-folder watching, Photos metadata collection, call-history exper
 - Ingestion dispatch: `apps/api/lib/device-ingest.ts`
 - Database models: `packages/db/prisma/schema.prisma`
 - Wire contracts: `packages/contracts/index.ts`
-

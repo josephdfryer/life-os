@@ -1,7 +1,7 @@
 import assert from "node:assert/strict"
 import { createHash } from "node:crypto"
 import test from "node:test"
-import { hashToken, pkceChallenge } from "../device"
+import { hashToken, isAllowedDeviceRedirectUri, pkceChallenge } from "../device"
 
 test("PKCE challenge is SHA-256 base64url without padding", () => {
   const verifier = "a".repeat(64)
@@ -15,4 +15,12 @@ test("stored token hash never contains the opaque credential", () => {
   const hash = hashToken(token)
   assert.equal(hash.length, 64)
   assert.equal(hash.includes(token), false)
+})
+
+test("device callbacks use an exact per-app allowlist", () => {
+  assert.equal(isAllowedDeviceRedirectUri("lifeos-companion://auth/callback"), true)
+  assert.equal(isAllowedDeviceRedirectUri("persons://auth/callback"), true)
+  assert.equal(isAllowedDeviceRedirectUri("persons://auth/other"), false)
+  assert.equal(isAllowedDeviceRedirectUri("https://example.com/auth/callback"), false)
+  assert.equal(isAllowedDeviceRedirectUri("not a url"), false)
 })

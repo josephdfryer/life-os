@@ -109,20 +109,45 @@ export async function refreshDeviceCredential(refreshToken: string): Promise<Dev
     where: { refreshTokenHash: hashToken(refreshToken) },
     include: { device: true },
   })
-  if (!credential || credential.revokedAt || credential.refreshExpiresAt <= new Date()) {
+  if (!credential) throw new DeviceAuthError("unauthorized", "Refresh credential is invalid or expired")
+  if (credential.device.revokedAt) throw new DeviceAuthError("revoked", "Device has been revoked")
+  if (credential.refreshExpiresAt <= new Date()) {
     throw new DeviceAuthError("unauthorized", "Refresh credential is invalid or expired")
   }
-  if (credential.device.revokedAt) throw new DeviceAuthError("revoked", "Device has been revoked")
 
-  const tokens = createTokenPair(credential.deviceId, credential.device.workspaceId)
+  // Rotation is one-time. If the phone received the new pair and failed to
+  // persist it, the next tap presents this revoked token while the successor
+  // has never been used. Re-issue instead of bricking the device.
+  if (credential.revokedAt) {
+    const successor = await db.deviceCredential.findFirst({
+      where: {
+        deviceId: credential.deviceId,
+        revokedAt: null,
+        lastUsedAt: null,
+        createdAt: { gte: new Date(credential.revokedAt.getTime() - 1_000) },
+      },
+      orderBy: { createdAt: "desc" },
+    })
+    if (!successor || successor.refreshExpiresAt <= new Date()) {
+      throw new DeviceAuthError("unauthorized", "Refresh credential is invalid or expired")
+    }
+    console.warn("[device/auth/refresh] recovering unused rotation", { deviceId: credential.deviceId })
+    return rotateDeviceCredential(successor.id, successor.refreshTokenHash, successor.deviceId, credential.device.workspaceId)
+  }
+
+  return rotateDeviceCredential(credential.id, credential.refreshTokenHash, credential.deviceId, credential.device.workspaceId)
+}
+
+async function rotateDeviceCredential(credentialId: string, refreshTokenHash: string, deviceId: string, workspaceId: string) {
+  const tokens = createTokenPair(deviceId, workspaceId)
   const rotated = await db.$transaction(async tx => {
     const result = await tx.deviceCredential.updateMany({
-      where: { id: credential.id, refreshTokenHash: credential.refreshTokenHash, revokedAt: null },
+      where: { id: credentialId, refreshTokenHash, revokedAt: null },
       data: { revokedAt: new Date(), lastUsedAt: new Date() },
     })
     if (result.count !== 1) return false
     await tx.deviceCredential.create({ data: tokens.credential })
-    await tx.device.update({ where: { id: credential.deviceId }, data: { lastSeenAt: new Date() } })
+    await tx.device.update({ where: { id: deviceId }, data: { lastSeenAt: new Date() } })
     return true
   })
   if (!rotated) throw new DeviceAuthError("unauthorized", "Refresh credential was already rotated")
@@ -209,10 +234,17 @@ function parseScopes(value: string) {
 }
 
 function assertRedirectUri(value: string) {
-  let url: URL
-  try { url = new URL(value) } catch { throw new DeviceAuthError("validation", "Redirect URI is invalid") }
-  if (url.protocol !== "lifeos-companion:" || url.hostname !== "auth" || url.pathname !== "/callback") {
-    throw new DeviceAuthError("validation", "Redirect URI is not registered for Life OS Companion")
+  if (!isAllowedDeviceRedirectUri(value)) {
+    throw new DeviceAuthError("validation", "Redirect URI is not registered for this Life OS app")
+  }
+}
+
+export function isAllowedDeviceRedirectUri(value: string) {
+  try {
+    const normalized = new URL(value).toString()
+    return normalized === "lifeos-companion://auth/callback" || normalized === "persons://auth/callback"
+  } catch {
+    return false
   }
 }
 

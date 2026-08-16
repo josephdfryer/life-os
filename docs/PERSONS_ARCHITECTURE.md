@@ -13,19 +13,22 @@ Think of the app as four layers:
 
 ## Native iOS front door
 
-The personal Life OS iPhone app now includes the first reusable
-`PersonsFeature` Swift package. Its People screen reads the canonical
+Persons now has a standalone signed iOS shell (`Persons iOS`, bundle ID
+`com.lacollecteur.persons.ios`) separate from the Life OS data-collection app.
+The shell owns its own Keychain credential and browser callback and requests no
+Health, Location, or Photos permissions. Its People screen reads the canonical
 `GET /v1/people` API through `LifeOSCompanionCore.APIClient`, with debounced
 server search, cursor pagination, pull-to-refresh, and a phone-native detail
-view. The package owns the UI and People wire models; the app target remains a
-thin shell that supplies the signed-in API client.
+view. The reusable `PersonsFeature` package owns the UI and People wire models;
+the app target remains a thin shell that supplies the signed-in API client.
 
 Device credentials include `people.read`, and `apps/api/lib/auth.ts` accepts
 those bearer tokens for routes whose required scopes are present. Devices do
 not receive `people.write`, so this first native surface cannot create, update,
-merge, or delete People. API keys continue to work unchanged. This is the M5
-personal-app path; the later saleable `Persons.app` shell still depends on the
-customer-owned Life Vault and its separate account/subscription launch gates.
+merge, or delete People. API keys continue to work unchanged. This is still a
+development shell against Joseph's cloud workspace; a saleable release still
+depends on the customer-owned Life Vault, self-serve accounts, subscriptions,
+export/deletion/restore, and App Store privacy/review gates.
 
 ## Big Picture
 
@@ -357,6 +360,28 @@ Runtime configuration:
 - `GOOGLE_GMAIL_REDIRECT_URI` can pin the callback to one exact production URL.
 - People import from Google Contacts uses the same Gmail connection but also needs the Google People API enabled and the `https://www.googleapis.com/auth/contacts.readonly` scope. Older Gmail connections that only granted Gmail read access must reconnect before `/import/people` can pull Google Contacts.
 
+### 3e. Oura daily scores
+
+```mermaid
+flowchart TD
+  Home["Home Connections"] --> OAuth["Oura OAuth, daily scope only"]
+  OAuth --> Connection["Connection kind=oura stores encrypted tokens"]
+  Connection --> Backfill["35-day daily_readiness / sleep / activity / stress import"]
+  Connection --> Webhooks["Signed Oura webhooks"]
+  Backfill --> Note["One provenance Note per Oura day"]
+  Webhooks --> Note
+  Note --> States["source=oura States on the owner Person"]
+  States --> Readiness["Level Up readiness assembly, shadow mode"]
+```
+
+Plain English: Apple Health never receives Oura Readiness, Sleep Score, Activity Score, or Stress. Those scores enter Life OS through Home Connections, not the iPhone collector. Connecting Oura asks only for the Daily scope, encrypts the tokens on the existing `Connection` row, imports 35 calendar days once, then listens for signed webhooks and rewrites only that day's Oura States. HealthKit measurements stay on their own Notes. The two sources are never averaged. Level Up can see the Oura scores as evidence; it does not yet change workout prescriptions.
+
+Runtime configuration:
+
+- `OURA_CLIENT_ID` and `OURA_CLIENT_SECRET` from the Oura API application at cloud.ouraring.com/oauth/applications.
+- Redirect URI on Home: `/connections/oura/callback` (pin with `OURA_REDIRECT_URI`).
+- Webhook callback on the API: `/v1/webhooks/oura` (pin with `OURA_WEBHOOK_CALLBACK_URL` and `OURA_WEBHOOK_VERIFICATION_TOKEN`).
+
 ### 3d. Krisp transcript processing
 
 ```mermaid
@@ -587,16 +612,21 @@ People and Event lists; the Interaction stream already has that index.
 no-UI, API-key-only deployable app (`api.lacollecteur.com`) that's the
 intended long-term home for cross-app resources. Its first M5 verticals are
 `/v1/people` + `/v1/people/:id`, `/v1/plans` + `/v1/plans/:id`,
-`/v1/rules` + `/v1/rules/:id` + `/v1/rules/:id/test`, and
-`/v1/events` + `/v1/events/:id`. It also owns bounded
+`/v1/rules` + `/v1/rules/:id` + `/v1/rules/:id/test`,
+`/v1/events` + `/v1/events/:id`, and `/v1/notes` + `/v1/notes/:id`.
+It also owns bounded
 `GET /v1/audit-log` reads and database-backed `GET /v1/files/:id` downloads.
 `/v1/interactions` + `/v1/interactions/:id` provide canonical Interaction
 listing, creation, detail, update, and deletion; `/v1/stream` remains the
 descriptive name for the same bounded, filterable list read.
+`POST /v1/notes` wraps the same `captureNote` command the Assistant, Home, and
+Persons already use, and persists first-class subject edges (`aboutPersonId`
+and the rest) rather than stuffing ids into metadata. Notes are immutable on
+this surface: list and create, then read one by id. No PATCH or DELETE.
 Scoped API keys can page, search, create, read, update, or delete supported
 resources only inside their own workspace. The JSON wire shapes come from
 `@life-os/contracts`, and list reads use compound keyset cursors instead of
-offsets: `(date, id)` for People and Plans, `(timestamp, id)` for Events, and
+offsets: `(date, id)` for People and Plans, `(timestamp, id)` for Events and Notes, and
 `(createdAt, id)` for audit rows. Audit filtering supports action, actor
 type, target type, and target id. Events uses new `life-events.read`/
 `life-events.write` scopes rather than the existing `events.read` — that
@@ -696,6 +726,14 @@ server-only `/api/admin/*` proxy forwards a strict mutation allowlist to
 `apps/api`'s canonical `/v1/access/*` commands. Persons `/admin` is now only a
 redirect to Home, and the duplicate Persons `/api/admin/*` routes and tab
 components have been removed.
+
+Theory of Person lives in Persons, not in a sidecar app. `/persons/[id]` shows
+a Theory card (version, stale evidence, recent notes about that person,
+regenerate, add observation). `/persons/[id]/theory` is the full versioned
+reading. `/persons/notes` is the graph notes browser. Synthesis still lives in
+`@life-os/intelligence`; Persons calls `regenerateTheory` and `captureNote`
+in-process. The nightly budgeted refresh cron now runs on the Persons deploy
+(`GET /api/cron/theory-refresh`). `context.lacollecteur.com` redirects here.
 
 Theory of Person is also available through the canonical API:
 `GET /v1/theory/:personId`, `GET /v1/theory/:personId/history`, and the
@@ -938,7 +976,7 @@ Plain English version:
 - **CalendarConnection, CalendarEventLink**: Google Calendar integration state. Connections store OAuth/sync state; event links make imports repeatable without duplicating Events.
 - **GmailConnection, GmailMessageLink**: Gmail integration state. Connections store OAuth/history state; message links make email imports repeatable and tie Gmail messages to Interactions or Inbox items.
 - **State, StateDefinition**: a timestamped condition on any entity (currently: health metrics and check-ins on a self Person, plus inventory conditions on Items). `StateDefinition` is the taxonomy entry (key + description); `State` is one dated reading, optionally tracing back to the Note it was derived from via `sourceNoteId`. `packages/domain/states.ts` owns taxonomy upsert, recording, and source-Note replacement writes.
-- **Note**: raw captured input — currently the daily digest text the health sync writes per day, with the day's metrics as its `raw` metadata and States as its structured children. Not yet shown generically in the UI; the Person page's Health card is the first place Notes surface.
+- **Note**: raw captured input. Graph notes tagged to a person (`aboutPersonId`) appear on the Person Theory card and `/persons/notes`. The Person page's "Profile notes" field is the older blob on `Person.notes`. Health sync still writes daily digest Notes.
 
 ## Outputs
 
@@ -947,6 +985,8 @@ flowchart LR
   DB["Persons database"] --> UI["Web app views"]
   DB --> Today["Today dashboard"]
   DB --> People["People pages"]
+  DB --> Theory["Theory of Person"]
+  DB --> Notes["Graph notes"]
   DB --> Cleanup["Data cleaning"]
   DB --> Inbox["Inbox review"]
   DB --> Admin["Admin tools"]
@@ -1065,9 +1105,11 @@ flowchart LR
 - Gmail Mail import: `/import/interactions` can launch the same batched Gmail sync from the import area, defaulting to a 30-day Known People only import.
 - Krisp transcript automation: a local scheduled worker archives completed transcripts, maps them to calendar context, splits mixed customer discussions, and writes Team OS meeting records with a private ambiguity queue.
 - Health Auto Export sync: `scripts/health-sync.ts` attaches Apple Health data to a self Person as States (daily metrics) and Notes (daily digests), and workouts as Events — not Interactions, so the relationship-tracking Interaction log stays uncluttered. The Person detail page surfaces this via a Health card (`apps/persons/server/domain/health.ts`).
+- Oura daily scores: Home Connections starts Oura OAuth (`daily` scope only). Encrypted tokens live on `Connection` (`kind=oura`). A 35-day backfill and signed webhooks write one provenance Note plus `source=oura` States per day. HealthKit measurements stay on their own Notes. Level Up readiness assembly can read the scores; it does not yet change workout prescriptions.
 - Control-plane spine: `apps/api` (canonical `/v1`, no UI, API-key-only) and three new shared packages — `packages/domain` (shared write commands: `appendDailySourceInteraction`, `acceptStagedInteraction`, `createReviewItem`, `publishGraphEvent`), `packages/automation` (the rules engine, versioned + causation-capped + authority-tiered), `packages/intelligence` (renamed from `packages/theory`; adds workspace-scoped `LifeModelSnapshot` alongside the existing person-scoped Theory). `GraphEvent` is the new append-only event ledger every shared command publishes to. `ReviewItem` unifies all four review queues into one federated inbox `apps/home` reads. `scripts/imessage-sync.ts` and `scripts/whatsapp-sync.ts` moved off their own hand-rolled day-bucket-append/rules-fork logic onto the shared commands.
 - Home is now the control plane: Stream (a chronological feed over `apps/api`'s `/v1/stream`), the federated Inbox, and Intelligence/Automation surfaces all live in `apps/home`, reading from the shared packages rather than each app maintaining its own copy.
-- Theory of Person is AI-backed: `synthesizeTheoryOfPerson` (`packages/intelligence/src/synthesize.ts`) now makes a real model call via the same Vercel AI Gateway pattern `packages/domain/note-suggestions.ts` proved out — grounded in real evidence text (`src/evidence.ts`, bounded/recent, not just IDs), tracked per-run in `TheoryAnalysisRun` (status, tokens, cost — no unique-by-promptVersion caching, since a person's evidence changes and "regenerate" must always run fresh). Reuses whichever `AiProviderCredential` is already configured for `vercel-ai-gateway` in the workspace (credentials are workspace+provider scoped, not app-scoped) — if none exists yet, surfaces a clear configuration error rather than silently failing. Still only runs on an explicit click (`apps/theory-of`'s Regenerate button), never automatically.
+- Theory of Person is AI-backed: `synthesizeTheoryOfPerson` (`packages/intelligence/src/synthesize.ts`) now makes a real model call via the same Vercel AI Gateway pattern `packages/domain/note-suggestions.ts` proved out — grounded in real evidence text (`src/evidence.ts`, bounded/recent, not just IDs), tracked per-run in `TheoryAnalysisRun` (status, tokens, cost — no unique-by-promptVersion caching, since a person's evidence changes and "regenerate" must always run fresh). Reuses whichever `AiProviderCredential` is already configured for `vercel-ai-gateway` in the workspace (credentials are workspace+provider scoped, not app-scoped) — if none exists yet, surfaces a clear configuration error rather than silently failing. Runs from an explicit click in Persons (`/persons/[id]/theory`) or the Persons nightly budgeted cron, never from a passive page load.
+- Theory of Person is folded into Persons. The person page has a Theory card; the full reading is `/persons/[id]/theory`; graph notes are `/persons/notes`. `apps/theory-of` is a redirect shell at `context.lacollecteur.com`, and Context is no longer a separate item in the app switcher.
 - Whole-life synthesis is AI-backed only behind an explicit Home confirmation and canonical `POST /v1/life-model/regenerate`; passive page loads retain the free deterministic preview. `GET /v1/life-model` and `/history` expose saved versions, while `POST /v1/life-model/claims/:claimId/feedback` records corrections or dismissals. Home keeps the control-plane API key server-side through its allowlisted proxy.
 
 ### Future

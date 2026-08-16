@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { authorizeRequest } from "@/lib/auth"
 import { unauthorizedResponse, handleRouteError, errorResponse } from "@/lib/respond"
-import { ensureHealthMetricDefinitions, recordHealthDailyDigestInTransaction, fireHealthDailyRules } from "@/lib/health-daily"
+import { HEALTH_DAILY_TRANSACTION, ensureHealthMetricDefinitions, recordHealthDailyDigestInTransaction, fireHealthDailyRules } from "@/lib/health-daily"
 
 /**
  * Ingests Health Auto Export's REST API automation payload as a live trigger
@@ -146,10 +146,7 @@ export async function POST(req: NextRequest) {
           metadataExtra: { zipFilename: "rest-api-live-sync" },
           actor,
         }),
-        // Default 5s interactive-transaction timeout isn't enough for ~30
-        // sequential State+GraphEvent writes over Turso's network round-trip
-        // per query — a "All Selected" daily digest was timing out mid-write.
-        { maxWait: 10_000, timeout: 30_000 },
+        HEALTH_DAILY_TRANSACTION,
       )
       await fireHealthDailyRules(states, actor)
 

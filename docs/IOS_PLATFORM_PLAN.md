@@ -1,6 +1,6 @@
 # Life OS iOS Platform Plan
 
-Status: implementation in progress — M2 backend complete; M5 canonical API and first native People slice underway
+Status: implementation in progress — two signed iOS shells run on a physical device; connector and Persons feature depth remain underway
 Date: 2026-08-12
 Supersedes the app-topology portions of `docs/COMPANION_ARCHITECTURE.md` and
 `docs/LEVEL_UP_ADAPTIVE_WORKOUT_PLAN.md`. The engineering content of both documents
@@ -30,14 +30,28 @@ There are two product lines with different economics, and they must not be confl
 
 **Life OS (personal).** One app, mine, never submitted for sale in any near timeframe.
 It owns the device-collection plumbing — device authorization, encrypted outbox,
-HealthKit, location, connections, automations — and exposes life domains as
-**sections**. The first section is Workout. People, Places, Stuff, and Assistant
-follow, one at a time.
+HealthKit, location, Photos metadata, connections, and automations. People and
+relationship-management surfaces belong to Persons rather than this collector.
 
 **Persons (saleable).** A standalone App Store product, shipped later, aimed at
 replacing Mesh (`me.sh`) as a personal CRM. Sold to customers, so it carries
 self-serve signup, subscription billing, App Review constraints, and a privacy
 posture that Life OS does not need.
+
+As of 2026-08-15, this split exists in Xcode and on a physical iPhone. The
+`Life OS Companion iOS` target installs as **Life OS**
+(`com.lacollecteur.lifeos.companion.ios`) and owns HealthKit, significant
+location visits, Photos metadata, the encrypted outbox, and connector health.
+The `Persons iOS` target installs separately as **Persons**
+(`com.lacollecteur.persons.ios`) and imports only `PersonsFeature` plus the
+shared API client. Persons requests none of the Health, Location, or Photos
+entitlements or usage permissions.
+
+The Photos connector starts its checkpoint at the time access is granted. It
+syncs metadata for subsequent photos and videos—capture time, media type,
+favorite flag, and optional coordinates—while original bytes stay on-device.
+Historical-library ingestion remains deliberately unavailable until the UI can
+show a bounded preview and ask for explicit confirmation.
 
 The decision that makes both affordable for one developer: **screens live in Swift
 feature packages; apps are thin shells.**
@@ -53,7 +67,7 @@ flowchart TD
 
   subgraph Shells["App shells — thin"]
     LifeOS["LifeOS.app (personal)\ncollector + Sections tab bar"]
-    Persons["Persons.app (saleable, later)\nsingle-purpose shell"]
+    Persons["Persons.app (saleable path)\nsingle-purpose shell"]
     LevelUp["LevelUp.app (optional, later)"]
   end
 
@@ -61,10 +75,9 @@ flowchart TD
   Kit --> PF
   Kit --> AF
   LU --> LifeOS
-  PF --> LifeOS
   AF --> LifeOS
   LU -.later.-> LevelUp
-  PF -.later.-> Persons
+  PF --> Persons
 
   subgraph Mac["macOS — unchanged"]
     Helper["LifeOSCompanionHelper\nheadless: chat.db, WhatsApp, folders"]
@@ -80,8 +93,9 @@ Consequences worth stating plainly:
   built.
 - The macOS helper stays a separate headless collector. iMessage `chat.db` reading is
   Mac-only and always will be — iOS exposes no iMessage API.
-- `Persons.app` costs a shell, not a rewrite, whenever it is time to ship it. The
-  decision can be deferred without penalty, which is the entire point of the split.
+- `Persons.app` is a thin shell rather than a rewrite. Its current development
+  build proves the split; sale adds product infrastructure and feature depth
+  without moving the screens back into Life OS.
 - The discipline tax is real: a feature package may not reach for app-specific
   globals or singletons. Dependencies enter through initializers or an environment
   protocol defined in `LifeOSKit`.
@@ -100,9 +114,10 @@ Consequences worth stating plainly:
 
 **What exists and is real**
 
-- `apps/companion` Xcode project with three targets: macOS app
-  (`com.lacollecteur.lifeos.companion`), macOS helper (`.helper`), iOS app
-  (`.ios`). Deployment targets iOS 17.0 / macOS 14.0.
+- `apps/companion` Xcode project with four targets: macOS app
+  (`com.lacollecteur.lifeos.companion`), macOS helper (`.helper`), Life OS iOS
+  (`.ios`), and Persons iOS (`com.lacollecteur.persons.ios`). Deployment targets
+  iOS 17.0 / macOS 14.0.
 - `Packages/LifeOSCompanionCore` — 268 lines: `APIClient`, `Connector`,
   `EncryptedOutbox`, `KeychainStore`, `Models`. PKCE device authorization, AES-GCM
   encrypted outbox, credential rotation. This is the seed of `LifeOSKit`.
@@ -116,16 +131,20 @@ Consequences worth stating plainly:
 - Full workspace scoping: every `LevelUp*` model carries `workspaceId` with a
   cascade relation. `WorkspaceMember`, roles, and a scope list already exist in
   `packages/access`.
+- Both iOS targets have been automatically provisioned, signed, installed, and
+  launched on a physical iPhone. Life OS has guided Health, Location, and Photos
+  setup; Persons has a separate Keychain credential and exact
+  `persons://auth/callback` web-authorization redirect.
 
 **What does not exist**
 
 | Gap | Impact |
 |---|---|
-| iOS app is a skeleton — `IOSDashboard.swift` is 8 lines, iOS-specific Swift totals ~130 lines | There is no product surface yet. All of it is to build. |
+| Native surfaces are still early slices | Life OS has connector setup/status and Persons has read-only People list/detail; broader product surfaces remain to build. |
 | **Level Up has zero API routes** (only `auth/[...nextauth]`) — it is entirely RSC + server actions | A native client has nothing to talk to. This is the single largest backend item for the Workout section. |
 | Persons `/api/v1` lives in `apps/persons`, not the shared `apps/api` | Native clients would depend on a product app's internal API. Needs consolidating. |
 | **No dark mode in `packages/ui/still-tokens.css`** — zero `prefers-color-scheme` or `[data-theme]` rules across 110 lines | A gym app opened at 6am and any modern iOS app need this. Dark Still must be designed, not derived mechanically. |
-| Apple Developer Program not enrolled | Blocks signing, device testing, TestFlight, push, HealthKit on device, submission. |
+| App Store distribution is not configured | Physical development signing works; TestFlight, StoreKit, App Review metadata, and release provisioning remain. |
 
 ---
 
@@ -137,6 +156,32 @@ Grow `LifeOSCompanionCore` into `LifeOSKit`, keeping what works.
 `home.lacollecteur.com/device/authorize`, Keychain storage with
 `AfterFirstUnlockThisDeviceOnly`, AES-GCM encrypted outbox with the key held outside
 SQLite, ordered retry upload, heartbeat.
+
+Home owns the signed-in approval screen, but it does not write device records to
+its own database. Its `POST /api/device/authorize` handler forwards the validated
+request, signed with Home's server-only API key, to the canonical
+`POST /v1/device/auth/authorize` endpoint in `apps/api`. The canonical API resolves
+the signed-in email inside the API key's workspace and creates the short-lived
+authorization code and device record in the same database used by exchange,
+refresh, heartbeat, and ingest. This prevents the browser approval flow and device
+sync flow from splitting across separately configured application databases.
+
+The Life OS Health connector requests every standard quantity and category type
+that the installed OS makes available, rather than maintaining a narrow fixed
+list. Sleep uses immediate HealthKit background delivery and a source-aware
+union (one wearable, wake-day attribution) so overlapping Watch/iPhone/Oura
+samples cannot become a 30-hour night. Activity, nutrition, and vitals wait
+for a scheduled ~11:50 PM local `BGAppRefresh` so the day is nearly complete;
+iOS does not guarantee that exact minute. Sleep stages and category
+durations/counts join quantity sums/averages in bounded daily `health.daily`
+summaries, with units retained as provenance; workouts remain separate
+`health.workout` records. Granular HealthKit samples, clinical records
+requiring separate capabilities, ECG waveforms, and workout routes remain
+local. Sync is serialized and the UI reports collection, upload,
+completed-record count, pending retry count, and heartbeat-only failures.
+Oura Readiness, Sleep Score, Activity Score, and Stress are not HealthKit
+types — they arrive through the Oura API (Home Connections), per
+`docs/LEVEL_UP_ADAPTIVE_WORKOUT_PLAN.md`.
 
 **Added:**
 
@@ -520,7 +565,7 @@ contracts, engine work, `LifeOSKit`, feature packages, and Simulator builds.
 | **M1** | `LifeOSKit`: extract from `LifeOSCompanionCore`, add local store, command queue, Still-for-iOS with dark mode. `LifeOS.app` shell with section navigation and settings-level collector surfaces. Simulator only. | No |
 | **M2** | Backend: `workout/today` bundle + idempotent session/set commands + contracts + tests. Native Workout section: offline logging, timers, previous-set recall, force-quit recovery. Synthetic neutral readiness. | No |
 | **M3** | HealthKit anchored incremental queries, sleep + FoodNoms nutrition aggregation, real readiness inputs, workout write-back with duplicate reconciliation. Three real gym sessions before adaptation is enabled. | Device testing yes |
-| **M4** | Oura OAuth via Home connections, 35-day backfill, webhooks, source-priority readiness. Seven days of shadow mode before suggestions pre-adjust the UI. | No |
+| **M4** | Oura OAuth via Home connections, 35-day backfill, webhooks, source-priority readiness. Seven days of shadow mode before suggestions pre-adjust the UI. Implementation note (2026-08-15): connect/callback/sync and webhook ingest are in `apps/api` + Home Connections; readiness assembly records Oura evidence but does not change prescriptions yet. | No |
 | **M5** | Persons `/api/v1` consolidation into `apps/api` + workspace isolation test suite. `PersonsFeature`: capture, today, inbox triage, person detail. | No |
 | **M6+** | Remaining Persons parity · Places · Assistant · saleable `Persons.app` shell, Sign in with Apple, StoreKit. | Yes |
 

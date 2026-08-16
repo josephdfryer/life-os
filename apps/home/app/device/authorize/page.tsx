@@ -23,7 +23,7 @@ async function DeviceAuthorizationContent({ searchParams }: Props) {
   const valid = (platform === "macos" || platform === "ios")
     && deviceName.length > 0 && deviceName.length <= 200
     && appVersion.length > 0 && appVersion.length <= 64
-    && redirectUri === "lifeos-companion://auth/callback"
+    && (redirectUri === "lifeos-companion://auth/callback" || redirectUri === "persons://auth/callback")
     && /^[A-Za-z0-9_-]{43,128}$/.test(codeChallenge)
     && state.length >= 16 && state.length <= 256
 

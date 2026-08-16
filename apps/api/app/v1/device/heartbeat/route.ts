@@ -7,7 +7,13 @@ export async function POST(request: Request) {
   const auth = await authorizeDeviceRequest(request, "device.heartbeat")
   if (!auth) return errorResponse(401, "unauthorized", "Device access token is invalid or expired")
   const parsed = deviceHeartbeatContract.safeParse(await request.json().catch(() => null))
-  if (!parsed.success) return errorResponse(400, "validation", "Invalid device heartbeat", contractIssues(parsed.error))
+  if (!parsed.success) {
+    console.warn("[device/heartbeat] invalid payload", {
+      requestId: request.headers.get("x-vercel-id"),
+      issues: parsed.error.issues.map(issue => ({ path: issue.path.join("."), code: issue.code, message: issue.message })),
+    })
+    return errorResponse(400, "validation", "Invalid device heartbeat", contractIssues(parsed.error))
+  }
   const now = new Date()
   await db.$transaction(async tx => {
     await tx.device.update({ where: { id: auth.deviceId }, data: { appVersion: parsed.data.appVersion, lastSeenAt: now } })

@@ -2,7 +2,7 @@ import { createHash } from "node:crypto"
 import type { DeviceIngestItemInput } from "@life-os/contracts"
 import { db } from "@life-os/db"
 import { createReviewItem, publishGraphEvent } from "@life-os/domain"
-import { HEALTH_METRIC_TAXONOMY, ensureHealthMetricDefinitions, recordHealthDailyDigestInTransaction, fireHealthDailyRules } from "./health-daily"
+import { HEALTH_DAILY_TRANSACTION, ensureHealthMetricDefinitions, recordHealthDailyDigestInTransaction, fireHealthDailyRules } from "./health-daily"
 
 export type DeviceIngestResult = {
   sourceId: string
@@ -41,6 +41,9 @@ export async function ingestDeviceItem(item: DeviceIngestItemInput, workspaceId:
       })
       if (raced?.payloadHash === payloadHash) return { sourceId: item.sourceId, status: "duplicate", resultType: raced.resultType, resultId: raced.resultId, errorCode: null }
     }
+    if (isDeviceReceiptUniqueConflict(error)) {
+      return { sourceId: item.sourceId, status: "duplicate", resultType: null, resultId: null, errorCode: null }
+    }
     console.error("[device/ingest] retryable item failure", { source: item.source, recordType: item.record.type, error })
     return { sourceId: item.sourceId, status: "retryable", resultType: null, resultId: null, errorCode: "temporary_failure" }
   }
@@ -52,9 +55,6 @@ type ItemFor<T extends RecordType> = Omit<DeviceIngestItemInput, "record"> & { r
 async function ingestHealthDaily(item: ItemFor<"health.daily">, workspaceId: string, payloadHash: string): Promise<DeviceIngestResult> {
   const personId = await workspaceOwnerPersonId(workspaceId)
   if (!personId) return rejected(item.sourceId, "owner_person_missing")
-  const unknown = item.record.metrics.find(metric => !(metric.key in HEALTH_METRIC_TAXONOMY))
-  if (unknown) return rejected(item.sourceId, "unsupported_health_metric")
-
   const marker = `healthkit:${item.deviceId}:day:${item.record.day}`
   const actor = { type: "system" as const, id: item.deviceId, label: "life-os-companion" }
   const definitions = await ensureHealthMetricDefinitions(workspaceId, item.record.metrics.map(metric => metric.key))
@@ -63,12 +63,16 @@ async function ingestHealthDaily(item: ItemFor<"health.daily">, workspaceId: str
       workspaceId, personId, day: item.record.day,
       samples: item.record.metrics.map(metric => ({ key: metric.key, value: metric.value })),
       source: "healthkit", marker, contentLabel: "HealthKit daily digest",
-      metadataExtra: { source: "healthkit", deviceId: item.deviceId },
+      metadataExtra: {
+        source: "healthkit",
+        deviceId: item.deviceId,
+        units: Object.fromEntries(item.record.metrics.filter(metric => metric.unit).map(metric => [metric.key, metric.unit])),
+      },
       actor,
     })
     await tx.deviceIngestItem.create({ data: receiptData(item, workspaceId, payloadHash, "State", result.noteId) })
     return result
-  })
+  }, HEALTH_DAILY_TRANSACTION)
   await fireHealthDailyRules(states, actor).catch(error => console.warn("[device/ingest] state rule dispatch failed", { sourceId: item.sourceId, error }))
   return accepted(item.sourceId, "State", states[0]?.state.id ?? null)
 }
@@ -160,3 +164,7 @@ function accuracyConfidence(meters: number) { return Math.max(10, Math.min(100, 
 function accepted(sourceId: string, resultType: string, resultId: string | null): DeviceIngestResult { return { sourceId, status: "accepted", resultType, resultId, errorCode: null } }
 function rejected(sourceId: string, errorCode: string): DeviceIngestResult { return { sourceId, status: "rejected", resultType: null, resultId: null, errorCode } }
 function isUniqueConflict(error: unknown) { return Boolean(error && typeof error === "object" && "code" in error && error.code === "P2002") }
+function isDeviceReceiptUniqueConflict(error: unknown) {
+  const message = error instanceof Error ? error.message : String(error)
+  return message.includes("UNIQUE constraint failed: DeviceIngestItem.workspaceId, DeviceIngestItem.source, DeviceIngestItem.sourceId")
+}
