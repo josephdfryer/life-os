@@ -40,6 +40,7 @@ export function isAllowed(method: Method, pathname: string) {
     || /^roles\/[^/]+$/.test(pathname)
     || /^users\/[^/]+\/roles$/.test(pathname)
     || /^approved-emails\/[^/]+$/.test(pathname)
+    || /^workspaces\/[^/]+$/.test(pathname)
 }
 
 function error(code: string, message: string, status: number) {

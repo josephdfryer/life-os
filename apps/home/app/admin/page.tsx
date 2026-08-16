@@ -2,7 +2,7 @@ import { Suspense } from 'react'
 import { db } from '@life-os/db'
 import { workspaceForHomeRequest } from '@/lib/request-access'
 import { redirect } from 'next/navigation'
-import { AccessControls, ApiKeyControls, ApprovedEmailControls } from './AdminControls'
+import { AccessControls, ApiKeyControls, ApprovedEmailControls, WorkspacesControls } from './AdminControls'
 
 export const metadata = { title: 'Admin · Life OS' }
 
@@ -14,7 +14,7 @@ async function AdminContent({ searchParams }: { searchParams: Promise<{ tab?: st
   const workspaceId = await workspaceForHomeRequest()
   if (!workspaceId) redirect('/login')
   const { tab = 'overview' } = await searchParams
-  const [audit, workspace, roles, permissions, apiKeys, approvedEmails, systemHealth] = await Promise.all([
+  const [audit, workspace, roles, permissions, apiKeys, approvedEmails, systemHealth, allWorkspaces] = await Promise.all([
     tab === 'audit'
       ? db.auditLog.findMany({
           where: { workspaceId },
@@ -53,6 +53,22 @@ async function AdminContent({ searchParams }: { searchParams: Promise<{ tab?: st
       ? db.approvedEmail.findMany({ where: { workspaceId }, orderBy: { createdAt: 'desc' }, take: 500, select: { id: true, email: true, status: true, createdAt: true } })
       : Promise.resolve([]),
     tab === 'system' ? loadSystemHealth(workspaceId) : Promise.resolve(null),
+    // Cross-tenant view: only the instance owner's own primary workspace is
+    // literally "default-workspace" (see packages/access/index.ts's
+    // buildWorkspace) — every other workspace's owner has full
+    // settings.manage scope inside its own workspace, so this gate must be
+    // "is this literally the default workspace", not a scope check.
+    tab === 'workspace' && workspaceId === 'default-workspace'
+      ? db.workspace.findMany({
+          orderBy: { createdAt: 'desc' },
+          take: 200,
+          select: {
+            id: true, name: true, slug: true, status: true, createdAt: true,
+            ownerUser: { select: { email: true } },
+            _count: { select: { members: true, approvedEmails: true } },
+          },
+        })
+      : Promise.resolve([]),
   ])
 
   const accessUsers = tab === 'access'
@@ -69,7 +85,15 @@ async function AdminContent({ searchParams }: { searchParams: Promise<{ tab?: st
           {Object.entries(ADMIN_TABS).map(([value, label]) => <a key={value} className={tab === value ? 'admin-tab-active' : ''} href={`/admin?tab=${value}`}>{label}</a>)}
         </nav>
         {tab === 'audit' ? <AuditTable rows={audit} />
-          : tab === 'workspace' ? <><WorkspacePanel workspace={workspace} /><ApprovedEmailControls rows={approvedEmails.map(row => ({ ...row, createdAt: row.createdAt.toISOString() }))} /></>
+          : tab === 'workspace' ? <>
+              <WorkspacePanel workspace={workspace} />
+              <ApprovedEmailControls rows={approvedEmails.map(row => ({ ...row, createdAt: row.createdAt.toISOString() }))} />
+              {workspaceId === 'default-workspace' && <WorkspacesControls rows={allWorkspaces.map(row => ({
+                id: row.id, name: row.name, slug: row.slug, status: row.status, createdAt: row.createdAt.toISOString(),
+                ownerEmail: row.ownerUser?.email ?? null, memberCount: row._count.members, approvedEmailCount: row._count.approvedEmails,
+                isDefault: row.id === 'default-workspace',
+              }))} />}
+            </>
           : tab === 'access' ? <AccessControls roles={roles.map(role => ({ ...role, permissions: role.permissions.map(item => item.permission), userCount: role._count.users }))} users={accessUsers} permissions={permissions} />
           : tab === 'api-keys' ? <ApiKeyControls apiKeys={apiKeys.map(key => ({ ...key, lastUsedAt: key.lastUsedAt?.toISOString() ?? null, scopes: key.scopes.map(scope => scope.scope) }))} permissions={permissions} />
           : tab === 'system' && systemHealth ? <SystemHealthPanel health={systemHealth} />

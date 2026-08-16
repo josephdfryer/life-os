@@ -8,6 +8,7 @@ export type Role = { id: string; key: string; name: string; description: string 
 export type AdminUser = { id: string; email: string; name: string | null; roles: { id: string; name: string }[] }
 export type ApiKey = { id: string; name: string; keyPrefix: string; status: string; scopes: string[]; lastUsedAt: string | null }
 export type ApprovedEmail = { id: string; email: string; status: string; createdAt: string }
+export type WorkspaceRow = { id: string; name: string; slug: string; status: string; createdAt: string; ownerEmail: string | null; memberCount: number; approvedEmailCount: number; isDefault: boolean }
 
 export function ApiKeyControls({ apiKeys, permissions }: { apiKeys: ApiKey[]; permissions: Permission[] }) {
   const router = useRouter()
@@ -70,6 +71,33 @@ export function ApprovedEmailControls({ rows }: { rows: ApprovedEmail[] }) {
   </AdminCard>}>
     <AdminCard title="Approved emails" meta={`${rows.length} addresses`}><div className="admin-control-list">{rows.map(row => <div className="admin-control-row" key={row.id}><div><strong>{row.email}</strong><span>Approved {formatDate(row.createdAt)}</span></div><div><span className="stream-type-badge">{row.status}</span><button className="still-button still-button-secondary" disabled={mutation.busy} onClick={() => mutation.run(`/api/admin/approved-emails/${row.id}`, "PATCH", { status: row.status === "approved" ? "revoked" : "approved" })}>{row.status === "approved" ? "Revoke" : "Re-approve"}</button></div></div>)}</div></AdminCard><MutationMessage mutation={mutation} />
   </AdminGrid>
+}
+
+// Only rendered when the signed-in admin's own workspace is literally
+// "default-workspace" (the instance owner) — see apps/home/app/admin/page.tsx.
+// Every other workspace's owner has full settings.manage scope inside its
+// own workspace, so that check has to happen before this component ever
+// renders, not just at the API layer.
+export function WorkspacesControls({ rows }: { rows: WorkspaceRow[] }) {
+  const router = useRouter()
+  const mutation = useAdminMutation(router.refresh)
+  const standalone = rows.filter(row => !row.isDefault)
+  return <AdminCard title="Workspaces" meta={`${standalone.length} standalone`}>
+    <p className="admin-control-help">Every workspace on this instance, including yours. Suspending blocks future sign-in for everyone in that workspace — it does not end an already-signed-in session.</p>
+    <div className="admin-control-list">
+      {rows.map(row => <div className="admin-control-row" key={row.id}>
+        <div>
+          <strong>{row.name}{row.isDefault ? " (yours)" : ""}</strong>
+          <span>{row.ownerEmail ?? "no owner"} · {row.memberCount} member{row.memberCount === 1 ? "" : "s"} · {row.approvedEmailCount} approved · Created {formatDate(row.createdAt)}</span>
+        </div>
+        <div>
+          <span className="stream-type-badge">{row.status}</span>
+          {!row.isDefault && <button className="still-button still-button-secondary" disabled={mutation.busy} onClick={() => mutation.run(`/api/admin/workspaces/${row.id}`, "PATCH", { status: row.status === "active" ? "suspended" : "active" })}>{row.status === "active" ? "Suspend" : "Reactivate"}</button>}
+        </div>
+      </div>)}
+    </div>
+    <MutationMessage mutation={mutation} />
+  </AdminCard>
 }
 
 function useAdminMutation(refresh: () => void) {

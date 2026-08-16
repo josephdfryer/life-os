@@ -24,6 +24,7 @@ process.env.ALLOWED_EMAILS = [
 
 type Modules = {
   access: typeof import("../index")
+  admin: typeof import("../admin")
   db: typeof import("@life-os/db")["db"]
 }
 
@@ -33,11 +34,21 @@ async function setup() {
   if (!modulesPromise) {
     modulesPromise = (async () => {
       applyMigrations(dbPath)
-      const [access, dbModule] = await Promise.all([import("../index"), import("@life-os/db")])
-      return { access, db: dbModule.db }
+      const [access, admin, dbModule] = await Promise.all([import("../index"), import("../admin"), import("@life-os/db")])
+      return { access, admin, db: dbModule.db }
     })()
   }
   return modulesPromise
+}
+
+function fakeActor(overrides: Partial<import("../index").AccessActor> & { workspaceId: string; userId: string }): import("../index").AccessActor {
+  return {
+    email: "actor@example.com",
+    workspaceName: "Test",
+    scopes: ["*"],
+    actor: { type: "user", id: overrides.userId, label: overrides.email ?? "actor@example.com", workspaceId: overrides.workspaceId },
+    ...overrides,
+  }
 }
 
 function applyMigrations(path: string) {
@@ -140,6 +151,79 @@ test("viewer scopes permit reads and reject writes", async () => {
     () => accessService.requireAccess("people.write", "access-owned"),
     /missing required permission/i,
   )
+})
+
+test("a suspended workspace blocks its sole member rather than provisioning a replacement", async () => {
+  const { access, db } = await setup()
+  await createWorkspace(db, "access-suspend-target")
+  const user = await createMember(db, { email: "suspend@example.com", workspaceId: "access-suspend-target" })
+  await db.approvedEmail.create({ data: { email: user.email, status: "approved" } })
+  const accessService = service(access, user.email)
+  await accessService.seedDefaultAccess()
+  await grantRole(db, user.id, "viewer")
+
+  // Confirm sign-in works before suspension.
+  const before = await accessService.requireAccess("people.read")
+  assert.equal(before.workspaceId, "access-suspend-target")
+
+  await db.workspace.update({ where: { id: "access-suspend-target" }, data: { status: "suspended" } })
+
+  await assert.rejects(
+    () => service(access, user.email).requireAccess("people.read"),
+    /suspended/i,
+  )
+  // Blocked, not silently reprovisioned: no second workspace was created for this user.
+  const memberships = await db.workspaceMember.findMany({ where: { userId: user.id } })
+  assert.equal(memberships.length, 1)
+})
+
+test("a returning user with no workspace membership gets owner scopes on the new workspace it's provisioned into", async () => {
+  const { access, db } = await setup()
+  // Simulate a user who already has a User row (not their first-ever
+  // sign-in) but was never actually added to any workspace — e.g. a prior
+  // provisioning attempt that never completed. isFirstUser would be false
+  // here, so without buildWorkspace's own grantRole call this user would
+  // get a workspace and then 403 on every request inside it.
+  const user = await db.user.create({ data: { email: "orphaned@example.com", status: "active" } })
+  await db.approvedEmail.create({ data: { email: user.email, status: "approved", workspaceId: null } })
+
+  const actor = await service(access, user.email).requireAccess("people.read")
+  assert.ok(actor.scopes.includes("*"))
+  assert.notEqual(actor.workspaceId, "default-workspace")
+})
+
+test("only the instance owner (default-workspace) can suspend another workspace", async () => {
+  const { admin, db } = await setup()
+  await createWorkspace(db, "access-owner-target")
+  await createWorkspace(db, "access-owner-outsider-home")
+  const outsider = await createMember(db, { email: "outsider@example.com", workspaceId: "access-owner-outsider-home" })
+
+  await assert.rejects(
+    () => admin.updateWorkspaceStatus("access-owner-target", { status: "suspended" }, fakeActor({ userId: outsider.id, workspaceId: "access-owner-outsider-home" })),
+    /instance owner/i,
+  )
+})
+
+test("the instance owner's own default workspace cannot be suspended", async () => {
+  const { admin, db } = await setup()
+  const owner = await db.user.create({ data: { email: "owner-self@example.com", status: "active" } })
+
+  await assert.rejects(
+    () => admin.updateWorkspaceStatus("default-workspace", { status: "suspended" }, fakeActor({ userId: owner.id, workspaceId: "default-workspace" })),
+    /cannot be suspended/i,
+  )
+})
+
+test("the instance owner can suspend and reactivate another workspace", async () => {
+  const { admin, db } = await setup()
+  await createWorkspace(db, "access-suspendable")
+  const owner = await db.user.create({ data: { email: "owner-suspend@example.com", status: "active" } })
+  const actor = fakeActor({ userId: owner.id, workspaceId: "default-workspace" })
+
+  const suspended = await admin.updateWorkspaceStatus("access-suspendable", { status: "suspended" }, actor)
+  assert.equal(suspended.workspace.status, "suspended")
+  const reactivated = await admin.updateWorkspaceStatus("access-suspendable", { status: "active" }, actor)
+  assert.equal(reactivated.workspace.status, "active")
 })
 
 test("cache entries remain isolated by explicit workspace", async () => {

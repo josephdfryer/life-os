@@ -77,6 +77,67 @@ export async function updateApprovedEmail(id: string, input: Record<string, unkn
   return { approvedEmail: formatApprovedEmail(updated) }
 }
 
+// Only the instance owner (the account whose primary workspace is the
+// literal "default-workspace") gets a cross-tenant view — every other
+// workspace's own owner has full settings.manage scope inside their own
+// workspace (see packages/access/index.ts's buildWorkspace grantRole call),
+// but must never be able to see or touch a workspace they don't belong to.
+function assertInstanceOwner(actor: AccessActor) {
+  if (actor.workspaceId !== "default-workspace") {
+    throw new AccessError("Only the instance owner can manage other workspaces", "validation")
+  }
+}
+
+export async function updateWorkspaceStatus(id: string, input: Record<string, unknown>, actor: AccessActor) {
+  assertInstanceOwner(actor)
+  if (id === "default-workspace") throw new AccessError("The instance owner's own workspace cannot be suspended", "validation")
+
+  const status = requiredString(input.status, "status")
+  if (status !== "active" && status !== "suspended") throw new AccessError("status must be 'active' or 'suspended'", "validation")
+
+  const { db } = await import("@life-os/db")
+  const existing = await db.workspace.findUnique({ where: { id }, select: { id: true } })
+  if (!existing) throw new AccessError("Workspace not found", "not_found")
+
+  await db.workspace.update({ where: { id }, data: { status } })
+  const updated = await db.workspace.findUniqueOrThrow({
+    where: { id },
+    include: { ownerUser: { select: { email: true } }, _count: { select: { members: true, approvedEmails: true } } },
+  })
+
+  await writeAuditLog({
+    actor: actor.actor,
+    action: "workspace.updateStatus",
+    targetType: "workspace",
+    targetId: id,
+    metadata: { status },
+  })
+
+  return { workspace: formatWorkspace(updated) }
+}
+
+function formatWorkspace(workspace: {
+  id: string
+  name: string
+  slug: string
+  status: string
+  createdAt: Date
+  ownerUser: { email: string } | null
+  _count: { members: number; approvedEmails: number }
+}) {
+  return {
+    id: workspace.id,
+    name: workspace.name,
+    slug: workspace.slug,
+    status: workspace.status,
+    createdAt: workspace.createdAt,
+    ownerEmail: workspace.ownerUser?.email ?? null,
+    memberCount: workspace._count.members,
+    approvedEmailCount: workspace._count.approvedEmails,
+    isDefault: workspace.id === "default-workspace",
+  }
+}
+
 export async function createApiKey(input: Record<string, unknown>, actor: AccessActor) {
   const { db } = await import("@life-os/db")
   const name = requiredString(input.name, "name")

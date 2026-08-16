@@ -248,10 +248,13 @@ export function createAccessService(dependencies: AccessDependencies) {
       : await db.user.create({ data: { email, name, image, status: "active" } })
 
     if (isFirstUser || isOwner) await grantRole(user.id, "owner")
-    const [scopes, workspace] = await Promise.all([
-      userScopes(user.id),
-      resolveWorkspace(user.id, email, workspaceId, isFirstUser || isOwner, approvedRow?.workspaceId ?? null, dependencies),
-    ])
+    // Sequential, not Promise.all: resolveWorkspace can itself grant the
+    // "owner" role for a brand-new workspace (buildWorkspace, below), and
+    // userScopes must not read UserRole until that write has landed —
+    // running them concurrently raced the two and silently deprived a
+    // newly provisioned user of any scopes.
+    const workspace = await resolveWorkspace(user.id, email, workspaceId, isFirstUser || isOwner, approvedRow?.workspaceId ?? null, dependencies)
+    const scopes = await userScopes(user.id)
 
     if (!hasScope(scopes, requiredScope)) {
       throw dependencies.errors.forbidden("Missing required permission", { requiredScope })
@@ -289,15 +292,23 @@ async function resolveWorkspace(
     return member.workspace
   }
 
-  const memberships = await db.workspaceMember.findMany({
-    where: { userId, status: "active", workspace: { status: "active" } },
+  const allMemberships = await db.workspaceMember.findMany({
+    where: { userId, status: "active" },
     include: { workspace: true },
     orderBy: { createdAt: "asc" },
   })
-  if (memberships.length > 1) {
+  const active = allMemberships.filter(member => member.workspace.status === "active")
+  if (active.length > 1) {
     throw dependencies.errors.badRequest("Multiple workspace memberships; workspace must be specified explicitly", { userId })
   }
-  if (memberships.length === 1) return memberships[0].workspace
+  if (active.length === 1) return active[0].workspace
+  // The user has a membership, but every workspace it points at is
+  // suspended — block sign-in rather than silently provisioning a
+  // replacement workspace, which is what re-falling into buildWorkspace
+  // below would otherwise do.
+  if (allMemberships.length > 0) {
+    throw dependencies.errors.forbidden("Your workspace has been suspended", { userId })
+  }
   return buildWorkspace(userId, email, useDefaultBootstrap, approvedWorkspaceId)
 }
 
@@ -342,6 +353,17 @@ async function buildWorkspace(userId: string, email: string, useDefault: boolean
       },
     })
   await addWorkspaceMember(workspace.id, userId, "owner")
+  // WorkspaceMember.role above is a per-workspace label; it grants no
+  // scopes on its own — userScopes() reads UserRole, which is otherwise
+  // only populated for the env-configured owner or the very first user
+  // ever (see the isFirstUser || isOwner branch above). Without this, a
+  // standalone user would get a real workspace and then 403 on every
+  // single request inside it. Global UserRole is safe to grant here
+  // (rather than scoping it to just this workspace) because access is a
+  // capability check independent of tenant isolation — every domain
+  // command still scopes its data by the resolved workspaceId, and a user
+  // can only ever be an active member of one workspace at a time.
+  await grantRole(userId, "owner")
   return workspace
 }
 
