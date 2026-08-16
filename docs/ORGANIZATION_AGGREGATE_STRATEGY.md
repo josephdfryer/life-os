@@ -135,7 +135,9 @@ values against any entity including Group, so ticker and market cap need no new 
 One caution on `Note`: it already has a `groups` relation, but that is the reverse of
 `Group.sourceNoteId` and means *"this Group was derived from this Note."* A new `groupId` meaning
 *"this Note is about this Group"* is a different edge and should be named and documented as such,
-not folded into the existing one.
+not folded into the existing one. That subject edge is `Note.aboutGroupId`. The same
+pattern now exists for every other primitive (`aboutPersonId`, `aboutPlaceId`,
+`aboutItemId`, `aboutEventId`, `aboutPlanId`, `aboutStateId`).
 
 ## Merchant groups and relationship groups are the same groups
 

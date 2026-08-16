@@ -268,6 +268,7 @@ export type EventWhereInput = {
   parentEvent?: Prisma.XOR<Prisma.EventNullableScalarRelationFilter, Prisma.EventWhereInput> | null
   childEvents?: Prisma.EventListRelationFilter
   sourceNote?: Prisma.XOR<Prisma.NoteNullableScalarRelationFilter, Prisma.NoteWhereInput> | null
+  aboutNotes?: Prisma.NoteListRelationFilter
   interactions?: Prisma.InteractionListRelationFilter
   calendarLinks?: Prisma.CalendarEventLinkListRelationFilter
   granolaNoteLinks?: Prisma.GranolaNoteLinkListRelationFilter
@@ -298,6 +299,7 @@ export type EventOrderByWithRelationInput = {
   parentEvent?: Prisma.EventOrderByWithRelationInput
   childEvents?: Prisma.EventOrderByRelationAggregateInput
   sourceNote?: Prisma.NoteOrderByWithRelationInput
+  aboutNotes?: Prisma.NoteOrderByRelationAggregateInput
   interactions?: Prisma.InteractionOrderByRelationAggregateInput
   calendarLinks?: Prisma.CalendarEventLinkOrderByRelationAggregateInput
   granolaNoteLinks?: Prisma.GranolaNoteLinkOrderByRelationAggregateInput
@@ -331,6 +333,7 @@ export type EventWhereUniqueInput = Prisma.AtLeast<{
   parentEvent?: Prisma.XOR<Prisma.EventNullableScalarRelationFilter, Prisma.EventWhereInput> | null
   childEvents?: Prisma.EventListRelationFilter
   sourceNote?: Prisma.XOR<Prisma.NoteNullableScalarRelationFilter, Prisma.NoteWhereInput> | null
+  aboutNotes?: Prisma.NoteListRelationFilter
   interactions?: Prisma.InteractionListRelationFilter
   calendarLinks?: Prisma.CalendarEventLinkListRelationFilter
   granolaNoteLinks?: Prisma.GranolaNoteLinkListRelationFilter
@@ -398,6 +401,7 @@ export type EventCreateInput = {
   parentEvent?: Prisma.EventCreateNestedOneWithoutChildEventsInput
   childEvents?: Prisma.EventCreateNestedManyWithoutParentEventInput
   sourceNote?: Prisma.NoteCreateNestedOneWithoutEventsInput
+  aboutNotes?: Prisma.NoteCreateNestedManyWithoutAboutEventInput
   interactions?: Prisma.InteractionCreateNestedManyWithoutEventInput
   calendarLinks?: Prisma.CalendarEventLinkCreateNestedManyWithoutEventInput
   granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutEventInput
@@ -423,6 +427,7 @@ export type EventUncheckedCreateInput = {
   parentEventId?: string | null
   sourceNoteId?: string | null
   childEvents?: Prisma.EventUncheckedCreateNestedManyWithoutParentEventInput
+  aboutNotes?: Prisma.NoteUncheckedCreateNestedManyWithoutAboutEventInput
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutEventInput
   calendarLinks?: Prisma.CalendarEventLinkUncheckedCreateNestedManyWithoutEventInput
   granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutEventInput
@@ -448,6 +453,7 @@ export type EventUpdateInput = {
   parentEvent?: Prisma.EventUpdateOneWithoutChildEventsNestedInput
   childEvents?: Prisma.EventUpdateManyWithoutParentEventNestedInput
   sourceNote?: Prisma.NoteUpdateOneWithoutEventsNestedInput
+  aboutNotes?: Prisma.NoteUpdateManyWithoutAboutEventNestedInput
   interactions?: Prisma.InteractionUpdateManyWithoutEventNestedInput
   calendarLinks?: Prisma.CalendarEventLinkUpdateManyWithoutEventNestedInput
   granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutEventNestedInput
@@ -473,6 +479,7 @@ export type EventUncheckedUpdateInput = {
   parentEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   childEvents?: Prisma.EventUncheckedUpdateManyWithoutParentEventNestedInput
+  aboutNotes?: Prisma.NoteUncheckedUpdateManyWithoutAboutEventNestedInput
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutEventNestedInput
   calendarLinks?: Prisma.CalendarEventLinkUncheckedUpdateManyWithoutEventNestedInput
   granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutEventNestedInput
@@ -892,6 +899,12 @@ export type EventUpdateOneRequiredWithoutPurchaseReceiptLinesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.EventUpdateToOneWithWhereWithoutPurchaseReceiptLinesInput, Prisma.EventUpdateWithoutPurchaseReceiptLinesInput>, Prisma.EventUncheckedUpdateWithoutPurchaseReceiptLinesInput>
 }
 
+export type EventCreateNestedOneWithoutAboutNotesInput = {
+  create?: Prisma.XOR<Prisma.EventCreateWithoutAboutNotesInput, Prisma.EventUncheckedCreateWithoutAboutNotesInput>
+  connectOrCreate?: Prisma.EventCreateOrConnectWithoutAboutNotesInput
+  connect?: Prisma.EventWhereUniqueInput
+}
+
 export type EventCreateNestedManyWithoutSourceNoteInput = {
   create?: Prisma.XOR<Prisma.EventCreateWithoutSourceNoteInput, Prisma.EventUncheckedCreateWithoutSourceNoteInput> | Prisma.EventCreateWithoutSourceNoteInput[] | Prisma.EventUncheckedCreateWithoutSourceNoteInput[]
   connectOrCreate?: Prisma.EventCreateOrConnectWithoutSourceNoteInput | Prisma.EventCreateOrConnectWithoutSourceNoteInput[]
@@ -904,6 +917,16 @@ export type EventUncheckedCreateNestedManyWithoutSourceNoteInput = {
   connectOrCreate?: Prisma.EventCreateOrConnectWithoutSourceNoteInput | Prisma.EventCreateOrConnectWithoutSourceNoteInput[]
   createMany?: Prisma.EventCreateManySourceNoteInputEnvelope
   connect?: Prisma.EventWhereUniqueInput | Prisma.EventWhereUniqueInput[]
+}
+
+export type EventUpdateOneWithoutAboutNotesNestedInput = {
+  create?: Prisma.XOR<Prisma.EventCreateWithoutAboutNotesInput, Prisma.EventUncheckedCreateWithoutAboutNotesInput>
+  connectOrCreate?: Prisma.EventCreateOrConnectWithoutAboutNotesInput
+  upsert?: Prisma.EventUpsertWithoutAboutNotesInput
+  disconnect?: Prisma.EventWhereInput | boolean
+  delete?: Prisma.EventWhereInput | boolean
+  connect?: Prisma.EventWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.EventUpdateToOneWithWhereWithoutAboutNotesInput, Prisma.EventUpdateWithoutAboutNotesInput>, Prisma.EventUncheckedUpdateWithoutAboutNotesInput>
 }
 
 export type EventUpdateManyWithoutSourceNoteNestedInput = {
@@ -950,6 +973,7 @@ export type EventCreateWithoutWorkspaceInput = {
   parentEvent?: Prisma.EventCreateNestedOneWithoutChildEventsInput
   childEvents?: Prisma.EventCreateNestedManyWithoutParentEventInput
   sourceNote?: Prisma.NoteCreateNestedOneWithoutEventsInput
+  aboutNotes?: Prisma.NoteCreateNestedManyWithoutAboutEventInput
   interactions?: Prisma.InteractionCreateNestedManyWithoutEventInput
   calendarLinks?: Prisma.CalendarEventLinkCreateNestedManyWithoutEventInput
   granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutEventInput
@@ -974,6 +998,7 @@ export type EventUncheckedCreateWithoutWorkspaceInput = {
   parentEventId?: string | null
   sourceNoteId?: string | null
   childEvents?: Prisma.EventUncheckedCreateNestedManyWithoutParentEventInput
+  aboutNotes?: Prisma.NoteUncheckedCreateNestedManyWithoutAboutEventInput
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutEventInput
   calendarLinks?: Prisma.CalendarEventLinkUncheckedCreateNestedManyWithoutEventInput
   granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutEventInput
@@ -1045,6 +1070,7 @@ export type EventCreateWithoutCalendarLinksInput = {
   parentEvent?: Prisma.EventCreateNestedOneWithoutChildEventsInput
   childEvents?: Prisma.EventCreateNestedManyWithoutParentEventInput
   sourceNote?: Prisma.NoteCreateNestedOneWithoutEventsInput
+  aboutNotes?: Prisma.NoteCreateNestedManyWithoutAboutEventInput
   interactions?: Prisma.InteractionCreateNestedManyWithoutEventInput
   granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutEventInput
   groupTags?: Prisma.GroupCreateNestedManyWithoutTaggedEventsInput
@@ -1069,6 +1095,7 @@ export type EventUncheckedCreateWithoutCalendarLinksInput = {
   parentEventId?: string | null
   sourceNoteId?: string | null
   childEvents?: Prisma.EventUncheckedCreateNestedManyWithoutParentEventInput
+  aboutNotes?: Prisma.NoteUncheckedCreateNestedManyWithoutAboutEventInput
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutEventInput
   granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutEventInput
   groupTags?: Prisma.GroupUncheckedCreateNestedManyWithoutTaggedEventsInput
@@ -1109,6 +1136,7 @@ export type EventUpdateWithoutCalendarLinksInput = {
   parentEvent?: Prisma.EventUpdateOneWithoutChildEventsNestedInput
   childEvents?: Prisma.EventUpdateManyWithoutParentEventNestedInput
   sourceNote?: Prisma.NoteUpdateOneWithoutEventsNestedInput
+  aboutNotes?: Prisma.NoteUpdateManyWithoutAboutEventNestedInput
   interactions?: Prisma.InteractionUpdateManyWithoutEventNestedInput
   granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutEventNestedInput
   groupTags?: Prisma.GroupUpdateManyWithoutTaggedEventsNestedInput
@@ -1133,6 +1161,7 @@ export type EventUncheckedUpdateWithoutCalendarLinksInput = {
   parentEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   childEvents?: Prisma.EventUncheckedUpdateManyWithoutParentEventNestedInput
+  aboutNotes?: Prisma.NoteUncheckedUpdateManyWithoutAboutEventNestedInput
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutEventNestedInput
   granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutEventNestedInput
   groupTags?: Prisma.GroupUncheckedUpdateManyWithoutTaggedEventsNestedInput
@@ -1157,6 +1186,7 @@ export type EventCreateWithoutGranolaNoteLinksInput = {
   parentEvent?: Prisma.EventCreateNestedOneWithoutChildEventsInput
   childEvents?: Prisma.EventCreateNestedManyWithoutParentEventInput
   sourceNote?: Prisma.NoteCreateNestedOneWithoutEventsInput
+  aboutNotes?: Prisma.NoteCreateNestedManyWithoutAboutEventInput
   interactions?: Prisma.InteractionCreateNestedManyWithoutEventInput
   calendarLinks?: Prisma.CalendarEventLinkCreateNestedManyWithoutEventInput
   groupTags?: Prisma.GroupCreateNestedManyWithoutTaggedEventsInput
@@ -1181,6 +1211,7 @@ export type EventUncheckedCreateWithoutGranolaNoteLinksInput = {
   parentEventId?: string | null
   sourceNoteId?: string | null
   childEvents?: Prisma.EventUncheckedCreateNestedManyWithoutParentEventInput
+  aboutNotes?: Prisma.NoteUncheckedCreateNestedManyWithoutAboutEventInput
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutEventInput
   calendarLinks?: Prisma.CalendarEventLinkUncheckedCreateNestedManyWithoutEventInput
   groupTags?: Prisma.GroupUncheckedCreateNestedManyWithoutTaggedEventsInput
@@ -1221,6 +1252,7 @@ export type EventUpdateWithoutGranolaNoteLinksInput = {
   parentEvent?: Prisma.EventUpdateOneWithoutChildEventsNestedInput
   childEvents?: Prisma.EventUpdateManyWithoutParentEventNestedInput
   sourceNote?: Prisma.NoteUpdateOneWithoutEventsNestedInput
+  aboutNotes?: Prisma.NoteUpdateManyWithoutAboutEventNestedInput
   interactions?: Prisma.InteractionUpdateManyWithoutEventNestedInput
   calendarLinks?: Prisma.CalendarEventLinkUpdateManyWithoutEventNestedInput
   groupTags?: Prisma.GroupUpdateManyWithoutTaggedEventsNestedInput
@@ -1245,6 +1277,7 @@ export type EventUncheckedUpdateWithoutGranolaNoteLinksInput = {
   parentEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   childEvents?: Prisma.EventUncheckedUpdateManyWithoutParentEventNestedInput
+  aboutNotes?: Prisma.NoteUncheckedUpdateManyWithoutAboutEventNestedInput
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutEventNestedInput
   calendarLinks?: Prisma.CalendarEventLinkUncheckedUpdateManyWithoutEventNestedInput
   groupTags?: Prisma.GroupUncheckedUpdateManyWithoutTaggedEventsNestedInput
@@ -1268,6 +1301,7 @@ export type EventCreateWithoutChildEventsInput = {
   sourcePlan?: Prisma.PlanCreateNestedOneWithoutFulfilledByInput
   parentEvent?: Prisma.EventCreateNestedOneWithoutChildEventsInput
   sourceNote?: Prisma.NoteCreateNestedOneWithoutEventsInput
+  aboutNotes?: Prisma.NoteCreateNestedManyWithoutAboutEventInput
   interactions?: Prisma.InteractionCreateNestedManyWithoutEventInput
   calendarLinks?: Prisma.CalendarEventLinkCreateNestedManyWithoutEventInput
   granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutEventInput
@@ -1292,6 +1326,7 @@ export type EventUncheckedCreateWithoutChildEventsInput = {
   sourcePlanId?: string | null
   parentEventId?: string | null
   sourceNoteId?: string | null
+  aboutNotes?: Prisma.NoteUncheckedCreateNestedManyWithoutAboutEventInput
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutEventInput
   calendarLinks?: Prisma.CalendarEventLinkUncheckedCreateNestedManyWithoutEventInput
   granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutEventInput
@@ -1321,6 +1356,7 @@ export type EventCreateWithoutParentEventInput = {
   sourcePlan?: Prisma.PlanCreateNestedOneWithoutFulfilledByInput
   childEvents?: Prisma.EventCreateNestedManyWithoutParentEventInput
   sourceNote?: Prisma.NoteCreateNestedOneWithoutEventsInput
+  aboutNotes?: Prisma.NoteCreateNestedManyWithoutAboutEventInput
   interactions?: Prisma.InteractionCreateNestedManyWithoutEventInput
   calendarLinks?: Prisma.CalendarEventLinkCreateNestedManyWithoutEventInput
   granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutEventInput
@@ -1345,6 +1381,7 @@ export type EventUncheckedCreateWithoutParentEventInput = {
   sourcePlanId?: string | null
   sourceNoteId?: string | null
   childEvents?: Prisma.EventUncheckedCreateNestedManyWithoutParentEventInput
+  aboutNotes?: Prisma.NoteUncheckedCreateNestedManyWithoutAboutEventInput
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutEventInput
   calendarLinks?: Prisma.CalendarEventLinkUncheckedCreateNestedManyWithoutEventInput
   granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutEventInput
@@ -1389,6 +1426,7 @@ export type EventUpdateWithoutChildEventsInput = {
   sourcePlan?: Prisma.PlanUpdateOneWithoutFulfilledByNestedInput
   parentEvent?: Prisma.EventUpdateOneWithoutChildEventsNestedInput
   sourceNote?: Prisma.NoteUpdateOneWithoutEventsNestedInput
+  aboutNotes?: Prisma.NoteUpdateManyWithoutAboutEventNestedInput
   interactions?: Prisma.InteractionUpdateManyWithoutEventNestedInput
   calendarLinks?: Prisma.CalendarEventLinkUpdateManyWithoutEventNestedInput
   granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutEventNestedInput
@@ -1413,6 +1451,7 @@ export type EventUncheckedUpdateWithoutChildEventsInput = {
   sourcePlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutNotes?: Prisma.NoteUncheckedUpdateManyWithoutAboutEventNestedInput
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutEventNestedInput
   calendarLinks?: Prisma.CalendarEventLinkUncheckedUpdateManyWithoutEventNestedInput
   granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutEventNestedInput
@@ -1454,6 +1493,7 @@ export type EventCreateWithoutInteractionsInput = {
   parentEvent?: Prisma.EventCreateNestedOneWithoutChildEventsInput
   childEvents?: Prisma.EventCreateNestedManyWithoutParentEventInput
   sourceNote?: Prisma.NoteCreateNestedOneWithoutEventsInput
+  aboutNotes?: Prisma.NoteCreateNestedManyWithoutAboutEventInput
   calendarLinks?: Prisma.CalendarEventLinkCreateNestedManyWithoutEventInput
   granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutEventInput
   groupTags?: Prisma.GroupCreateNestedManyWithoutTaggedEventsInput
@@ -1478,6 +1518,7 @@ export type EventUncheckedCreateWithoutInteractionsInput = {
   parentEventId?: string | null
   sourceNoteId?: string | null
   childEvents?: Prisma.EventUncheckedCreateNestedManyWithoutParentEventInput
+  aboutNotes?: Prisma.NoteUncheckedCreateNestedManyWithoutAboutEventInput
   calendarLinks?: Prisma.CalendarEventLinkUncheckedCreateNestedManyWithoutEventInput
   granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutEventInput
   groupTags?: Prisma.GroupUncheckedCreateNestedManyWithoutTaggedEventsInput
@@ -1518,6 +1559,7 @@ export type EventUpdateWithoutInteractionsInput = {
   parentEvent?: Prisma.EventUpdateOneWithoutChildEventsNestedInput
   childEvents?: Prisma.EventUpdateManyWithoutParentEventNestedInput
   sourceNote?: Prisma.NoteUpdateOneWithoutEventsNestedInput
+  aboutNotes?: Prisma.NoteUpdateManyWithoutAboutEventNestedInput
   calendarLinks?: Prisma.CalendarEventLinkUpdateManyWithoutEventNestedInput
   granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutEventNestedInput
   groupTags?: Prisma.GroupUpdateManyWithoutTaggedEventsNestedInput
@@ -1542,6 +1584,7 @@ export type EventUncheckedUpdateWithoutInteractionsInput = {
   parentEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   childEvents?: Prisma.EventUncheckedUpdateManyWithoutParentEventNestedInput
+  aboutNotes?: Prisma.NoteUncheckedUpdateManyWithoutAboutEventNestedInput
   calendarLinks?: Prisma.CalendarEventLinkUncheckedUpdateManyWithoutEventNestedInput
   granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutEventNestedInput
   groupTags?: Prisma.GroupUncheckedUpdateManyWithoutTaggedEventsNestedInput
@@ -1565,6 +1608,7 @@ export type EventCreateWithoutSourcePlanInput = {
   parentEvent?: Prisma.EventCreateNestedOneWithoutChildEventsInput
   childEvents?: Prisma.EventCreateNestedManyWithoutParentEventInput
   sourceNote?: Prisma.NoteCreateNestedOneWithoutEventsInput
+  aboutNotes?: Prisma.NoteCreateNestedManyWithoutAboutEventInput
   interactions?: Prisma.InteractionCreateNestedManyWithoutEventInput
   calendarLinks?: Prisma.CalendarEventLinkCreateNestedManyWithoutEventInput
   granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutEventInput
@@ -1589,6 +1633,7 @@ export type EventUncheckedCreateWithoutSourcePlanInput = {
   parentEventId?: string | null
   sourceNoteId?: string | null
   childEvents?: Prisma.EventUncheckedCreateNestedManyWithoutParentEventInput
+  aboutNotes?: Prisma.NoteUncheckedCreateNestedManyWithoutAboutEventInput
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutEventInput
   calendarLinks?: Prisma.CalendarEventLinkUncheckedCreateNestedManyWithoutEventInput
   granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutEventInput
@@ -1629,6 +1674,7 @@ export type EventUpdateWithoutSourcePlanInput = {
   parentEvent?: Prisma.EventUpdateOneWithoutChildEventsNestedInput
   childEvents?: Prisma.EventUpdateManyWithoutParentEventNestedInput
   sourceNote?: Prisma.NoteUpdateOneWithoutEventsNestedInput
+  aboutNotes?: Prisma.NoteUpdateManyWithoutAboutEventNestedInput
   interactions?: Prisma.InteractionUpdateManyWithoutEventNestedInput
   calendarLinks?: Prisma.CalendarEventLinkUpdateManyWithoutEventNestedInput
   granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutEventNestedInput
@@ -1653,6 +1699,7 @@ export type EventUncheckedUpdateWithoutSourcePlanInput = {
   parentEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   childEvents?: Prisma.EventUncheckedUpdateManyWithoutParentEventNestedInput
+  aboutNotes?: Prisma.NoteUncheckedUpdateManyWithoutAboutEventNestedInput
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutEventNestedInput
   calendarLinks?: Prisma.CalendarEventLinkUncheckedUpdateManyWithoutEventNestedInput
   granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutEventNestedInput
@@ -1677,6 +1724,7 @@ export type EventCreateWithoutPlaceInput = {
   parentEvent?: Prisma.EventCreateNestedOneWithoutChildEventsInput
   childEvents?: Prisma.EventCreateNestedManyWithoutParentEventInput
   sourceNote?: Prisma.NoteCreateNestedOneWithoutEventsInput
+  aboutNotes?: Prisma.NoteCreateNestedManyWithoutAboutEventInput
   interactions?: Prisma.InteractionCreateNestedManyWithoutEventInput
   calendarLinks?: Prisma.CalendarEventLinkCreateNestedManyWithoutEventInput
   granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutEventInput
@@ -1701,6 +1749,7 @@ export type EventUncheckedCreateWithoutPlaceInput = {
   parentEventId?: string | null
   sourceNoteId?: string | null
   childEvents?: Prisma.EventUncheckedCreateNestedManyWithoutParentEventInput
+  aboutNotes?: Prisma.NoteUncheckedCreateNestedManyWithoutAboutEventInput
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutEventInput
   calendarLinks?: Prisma.CalendarEventLinkUncheckedCreateNestedManyWithoutEventInput
   granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutEventInput
@@ -1751,6 +1800,7 @@ export type EventCreateWithoutPlaceNotesInput = {
   parentEvent?: Prisma.EventCreateNestedOneWithoutChildEventsInput
   childEvents?: Prisma.EventCreateNestedManyWithoutParentEventInput
   sourceNote?: Prisma.NoteCreateNestedOneWithoutEventsInput
+  aboutNotes?: Prisma.NoteCreateNestedManyWithoutAboutEventInput
   interactions?: Prisma.InteractionCreateNestedManyWithoutEventInput
   calendarLinks?: Prisma.CalendarEventLinkCreateNestedManyWithoutEventInput
   granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutEventInput
@@ -1775,6 +1825,7 @@ export type EventUncheckedCreateWithoutPlaceNotesInput = {
   parentEventId?: string | null
   sourceNoteId?: string | null
   childEvents?: Prisma.EventUncheckedCreateNestedManyWithoutParentEventInput
+  aboutNotes?: Prisma.NoteUncheckedCreateNestedManyWithoutAboutEventInput
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutEventInput
   calendarLinks?: Prisma.CalendarEventLinkUncheckedCreateNestedManyWithoutEventInput
   granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutEventInput
@@ -1815,6 +1866,7 @@ export type EventUpdateWithoutPlaceNotesInput = {
   parentEvent?: Prisma.EventUpdateOneWithoutChildEventsNestedInput
   childEvents?: Prisma.EventUpdateManyWithoutParentEventNestedInput
   sourceNote?: Prisma.NoteUpdateOneWithoutEventsNestedInput
+  aboutNotes?: Prisma.NoteUpdateManyWithoutAboutEventNestedInput
   interactions?: Prisma.InteractionUpdateManyWithoutEventNestedInput
   calendarLinks?: Prisma.CalendarEventLinkUpdateManyWithoutEventNestedInput
   granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutEventNestedInput
@@ -1839,6 +1891,7 @@ export type EventUncheckedUpdateWithoutPlaceNotesInput = {
   parentEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   childEvents?: Prisma.EventUncheckedUpdateManyWithoutParentEventNestedInput
+  aboutNotes?: Prisma.NoteUncheckedUpdateManyWithoutAboutEventNestedInput
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutEventNestedInput
   calendarLinks?: Prisma.CalendarEventLinkUncheckedUpdateManyWithoutEventNestedInput
   granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutEventNestedInput
@@ -1863,6 +1916,7 @@ export type EventCreateWithoutGroupTagsInput = {
   parentEvent?: Prisma.EventCreateNestedOneWithoutChildEventsInput
   childEvents?: Prisma.EventCreateNestedManyWithoutParentEventInput
   sourceNote?: Prisma.NoteCreateNestedOneWithoutEventsInput
+  aboutNotes?: Prisma.NoteCreateNestedManyWithoutAboutEventInput
   interactions?: Prisma.InteractionCreateNestedManyWithoutEventInput
   calendarLinks?: Prisma.CalendarEventLinkCreateNestedManyWithoutEventInput
   granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutEventInput
@@ -1887,6 +1941,7 @@ export type EventUncheckedCreateWithoutGroupTagsInput = {
   parentEventId?: string | null
   sourceNoteId?: string | null
   childEvents?: Prisma.EventUncheckedCreateNestedManyWithoutParentEventInput
+  aboutNotes?: Prisma.NoteUncheckedCreateNestedManyWithoutAboutEventInput
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutEventInput
   calendarLinks?: Prisma.CalendarEventLinkUncheckedCreateNestedManyWithoutEventInput
   granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutEventInput
@@ -1932,6 +1987,7 @@ export type EventCreateWithoutPurchaseReceiptLinesInput = {
   parentEvent?: Prisma.EventCreateNestedOneWithoutChildEventsInput
   childEvents?: Prisma.EventCreateNestedManyWithoutParentEventInput
   sourceNote?: Prisma.NoteCreateNestedOneWithoutEventsInput
+  aboutNotes?: Prisma.NoteCreateNestedManyWithoutAboutEventInput
   interactions?: Prisma.InteractionCreateNestedManyWithoutEventInput
   calendarLinks?: Prisma.CalendarEventLinkCreateNestedManyWithoutEventInput
   granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutEventInput
@@ -1956,6 +2012,7 @@ export type EventUncheckedCreateWithoutPurchaseReceiptLinesInput = {
   parentEventId?: string | null
   sourceNoteId?: string | null
   childEvents?: Prisma.EventUncheckedCreateNestedManyWithoutParentEventInput
+  aboutNotes?: Prisma.NoteUncheckedCreateNestedManyWithoutAboutEventInput
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutEventInput
   calendarLinks?: Prisma.CalendarEventLinkUncheckedCreateNestedManyWithoutEventInput
   granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutEventInput
@@ -1996,6 +2053,7 @@ export type EventUpdateWithoutPurchaseReceiptLinesInput = {
   parentEvent?: Prisma.EventUpdateOneWithoutChildEventsNestedInput
   childEvents?: Prisma.EventUpdateManyWithoutParentEventNestedInput
   sourceNote?: Prisma.NoteUpdateOneWithoutEventsNestedInput
+  aboutNotes?: Prisma.NoteUpdateManyWithoutAboutEventNestedInput
   interactions?: Prisma.InteractionUpdateManyWithoutEventNestedInput
   calendarLinks?: Prisma.CalendarEventLinkUpdateManyWithoutEventNestedInput
   granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutEventNestedInput
@@ -2020,11 +2078,67 @@ export type EventUncheckedUpdateWithoutPurchaseReceiptLinesInput = {
   parentEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   childEvents?: Prisma.EventUncheckedUpdateManyWithoutParentEventNestedInput
+  aboutNotes?: Prisma.NoteUncheckedUpdateManyWithoutAboutEventNestedInput
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutEventNestedInput
   calendarLinks?: Prisma.CalendarEventLinkUncheckedUpdateManyWithoutEventNestedInput
   granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutEventNestedInput
   groupTags?: Prisma.GroupUncheckedUpdateManyWithoutTaggedEventsNestedInput
   placeNotes?: Prisma.PlaceNoteUncheckedUpdateManyWithoutEventNestedInput
+}
+
+export type EventCreateWithoutAboutNotesInput = {
+  id?: string
+  createdAt?: Date | string
+  name: string
+  type: string
+  start: Date | string
+  end?: Date | string | null
+  timestamp: Date | string
+  notes?: string | null
+  transcript?: string | null
+  metadata?: string | null
+  workspace?: Prisma.WorkspaceCreateNestedOneWithoutEventsInput
+  place?: Prisma.PlaceCreateNestedOneWithoutEventsInput
+  sourcePlan?: Prisma.PlanCreateNestedOneWithoutFulfilledByInput
+  parentEvent?: Prisma.EventCreateNestedOneWithoutChildEventsInput
+  childEvents?: Prisma.EventCreateNestedManyWithoutParentEventInput
+  sourceNote?: Prisma.NoteCreateNestedOneWithoutEventsInput
+  interactions?: Prisma.InteractionCreateNestedManyWithoutEventInput
+  calendarLinks?: Prisma.CalendarEventLinkCreateNestedManyWithoutEventInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutEventInput
+  groupTags?: Prisma.GroupCreateNestedManyWithoutTaggedEventsInput
+  placeNotes?: Prisma.PlaceNoteCreateNestedManyWithoutEventInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutEventInput
+}
+
+export type EventUncheckedCreateWithoutAboutNotesInput = {
+  id?: string
+  workspaceId?: string
+  createdAt?: Date | string
+  name: string
+  type: string
+  start: Date | string
+  end?: Date | string | null
+  timestamp: Date | string
+  placeId?: string | null
+  notes?: string | null
+  transcript?: string | null
+  metadata?: string | null
+  sourcePlanId?: string | null
+  parentEventId?: string | null
+  sourceNoteId?: string | null
+  childEvents?: Prisma.EventUncheckedCreateNestedManyWithoutParentEventInput
+  interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutEventInput
+  calendarLinks?: Prisma.CalendarEventLinkUncheckedCreateNestedManyWithoutEventInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutEventInput
+  groupTags?: Prisma.GroupUncheckedCreateNestedManyWithoutTaggedEventsInput
+  placeNotes?: Prisma.PlaceNoteUncheckedCreateNestedManyWithoutEventInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutEventInput
+}
+
+export type EventCreateOrConnectWithoutAboutNotesInput = {
+  where: Prisma.EventWhereUniqueInput
+  create: Prisma.XOR<Prisma.EventCreateWithoutAboutNotesInput, Prisma.EventUncheckedCreateWithoutAboutNotesInput>
 }
 
 export type EventCreateWithoutSourceNoteInput = {
@@ -2043,6 +2157,7 @@ export type EventCreateWithoutSourceNoteInput = {
   sourcePlan?: Prisma.PlanCreateNestedOneWithoutFulfilledByInput
   parentEvent?: Prisma.EventCreateNestedOneWithoutChildEventsInput
   childEvents?: Prisma.EventCreateNestedManyWithoutParentEventInput
+  aboutNotes?: Prisma.NoteCreateNestedManyWithoutAboutEventInput
   interactions?: Prisma.InteractionCreateNestedManyWithoutEventInput
   calendarLinks?: Prisma.CalendarEventLinkCreateNestedManyWithoutEventInput
   granolaNoteLinks?: Prisma.GranolaNoteLinkCreateNestedManyWithoutEventInput
@@ -2067,6 +2182,7 @@ export type EventUncheckedCreateWithoutSourceNoteInput = {
   sourcePlanId?: string | null
   parentEventId?: string | null
   childEvents?: Prisma.EventUncheckedCreateNestedManyWithoutParentEventInput
+  aboutNotes?: Prisma.NoteUncheckedCreateNestedManyWithoutAboutEventInput
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutEventInput
   calendarLinks?: Prisma.CalendarEventLinkUncheckedCreateNestedManyWithoutEventInput
   granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedCreateNestedManyWithoutEventInput
@@ -2082,6 +2198,67 @@ export type EventCreateOrConnectWithoutSourceNoteInput = {
 
 export type EventCreateManySourceNoteInputEnvelope = {
   data: Prisma.EventCreateManySourceNoteInput | Prisma.EventCreateManySourceNoteInput[]
+}
+
+export type EventUpsertWithoutAboutNotesInput = {
+  update: Prisma.XOR<Prisma.EventUpdateWithoutAboutNotesInput, Prisma.EventUncheckedUpdateWithoutAboutNotesInput>
+  create: Prisma.XOR<Prisma.EventCreateWithoutAboutNotesInput, Prisma.EventUncheckedCreateWithoutAboutNotesInput>
+  where?: Prisma.EventWhereInput
+}
+
+export type EventUpdateToOneWithWhereWithoutAboutNotesInput = {
+  where?: Prisma.EventWhereInput
+  data: Prisma.XOR<Prisma.EventUpdateWithoutAboutNotesInput, Prisma.EventUncheckedUpdateWithoutAboutNotesInput>
+}
+
+export type EventUpdateWithoutAboutNotesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  start?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  end?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  transcript?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutEventsNestedInput
+  place?: Prisma.PlaceUpdateOneWithoutEventsNestedInput
+  sourcePlan?: Prisma.PlanUpdateOneWithoutFulfilledByNestedInput
+  parentEvent?: Prisma.EventUpdateOneWithoutChildEventsNestedInput
+  childEvents?: Prisma.EventUpdateManyWithoutParentEventNestedInput
+  sourceNote?: Prisma.NoteUpdateOneWithoutEventsNestedInput
+  interactions?: Prisma.InteractionUpdateManyWithoutEventNestedInput
+  calendarLinks?: Prisma.CalendarEventLinkUpdateManyWithoutEventNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutEventNestedInput
+  groupTags?: Prisma.GroupUpdateManyWithoutTaggedEventsNestedInput
+  placeNotes?: Prisma.PlaceNoteUpdateManyWithoutEventNestedInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutEventNestedInput
+}
+
+export type EventUncheckedUpdateWithoutAboutNotesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  start?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  end?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  placeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  transcript?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourcePlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  childEvents?: Prisma.EventUncheckedUpdateManyWithoutParentEventNestedInput
+  interactions?: Prisma.InteractionUncheckedUpdateManyWithoutEventNestedInput
+  calendarLinks?: Prisma.CalendarEventLinkUncheckedUpdateManyWithoutEventNestedInput
+  granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutEventNestedInput
+  groupTags?: Prisma.GroupUncheckedUpdateManyWithoutTaggedEventsNestedInput
+  placeNotes?: Prisma.PlaceNoteUncheckedUpdateManyWithoutEventNestedInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutEventNestedInput
 }
 
 export type EventUpsertWithWhereUniqueWithoutSourceNoteInput = {
@@ -2133,6 +2310,7 @@ export type EventUpdateWithoutWorkspaceInput = {
   parentEvent?: Prisma.EventUpdateOneWithoutChildEventsNestedInput
   childEvents?: Prisma.EventUpdateManyWithoutParentEventNestedInput
   sourceNote?: Prisma.NoteUpdateOneWithoutEventsNestedInput
+  aboutNotes?: Prisma.NoteUpdateManyWithoutAboutEventNestedInput
   interactions?: Prisma.InteractionUpdateManyWithoutEventNestedInput
   calendarLinks?: Prisma.CalendarEventLinkUpdateManyWithoutEventNestedInput
   granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutEventNestedInput
@@ -2157,6 +2335,7 @@ export type EventUncheckedUpdateWithoutWorkspaceInput = {
   parentEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   childEvents?: Prisma.EventUncheckedUpdateManyWithoutParentEventNestedInput
+  aboutNotes?: Prisma.NoteUncheckedUpdateManyWithoutAboutEventNestedInput
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutEventNestedInput
   calendarLinks?: Prisma.CalendarEventLinkUncheckedUpdateManyWithoutEventNestedInput
   granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutEventNestedInput
@@ -2215,6 +2394,7 @@ export type EventUpdateWithoutParentEventInput = {
   sourcePlan?: Prisma.PlanUpdateOneWithoutFulfilledByNestedInput
   childEvents?: Prisma.EventUpdateManyWithoutParentEventNestedInput
   sourceNote?: Prisma.NoteUpdateOneWithoutEventsNestedInput
+  aboutNotes?: Prisma.NoteUpdateManyWithoutAboutEventNestedInput
   interactions?: Prisma.InteractionUpdateManyWithoutEventNestedInput
   calendarLinks?: Prisma.CalendarEventLinkUpdateManyWithoutEventNestedInput
   granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutEventNestedInput
@@ -2239,6 +2419,7 @@ export type EventUncheckedUpdateWithoutParentEventInput = {
   sourcePlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   childEvents?: Prisma.EventUncheckedUpdateManyWithoutParentEventNestedInput
+  aboutNotes?: Prisma.NoteUncheckedUpdateManyWithoutAboutEventNestedInput
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutEventNestedInput
   calendarLinks?: Prisma.CalendarEventLinkUncheckedUpdateManyWithoutEventNestedInput
   granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutEventNestedInput
@@ -2297,6 +2478,7 @@ export type EventUpdateWithoutPlaceInput = {
   parentEvent?: Prisma.EventUpdateOneWithoutChildEventsNestedInput
   childEvents?: Prisma.EventUpdateManyWithoutParentEventNestedInput
   sourceNote?: Prisma.NoteUpdateOneWithoutEventsNestedInput
+  aboutNotes?: Prisma.NoteUpdateManyWithoutAboutEventNestedInput
   interactions?: Prisma.InteractionUpdateManyWithoutEventNestedInput
   calendarLinks?: Prisma.CalendarEventLinkUpdateManyWithoutEventNestedInput
   granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutEventNestedInput
@@ -2321,6 +2503,7 @@ export type EventUncheckedUpdateWithoutPlaceInput = {
   parentEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   childEvents?: Prisma.EventUncheckedUpdateManyWithoutParentEventNestedInput
+  aboutNotes?: Prisma.NoteUncheckedUpdateManyWithoutAboutEventNestedInput
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutEventNestedInput
   calendarLinks?: Prisma.CalendarEventLinkUncheckedUpdateManyWithoutEventNestedInput
   granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutEventNestedInput
@@ -2363,6 +2546,7 @@ export type EventUpdateWithoutGroupTagsInput = {
   parentEvent?: Prisma.EventUpdateOneWithoutChildEventsNestedInput
   childEvents?: Prisma.EventUpdateManyWithoutParentEventNestedInput
   sourceNote?: Prisma.NoteUpdateOneWithoutEventsNestedInput
+  aboutNotes?: Prisma.NoteUpdateManyWithoutAboutEventNestedInput
   interactions?: Prisma.InteractionUpdateManyWithoutEventNestedInput
   calendarLinks?: Prisma.CalendarEventLinkUpdateManyWithoutEventNestedInput
   granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutEventNestedInput
@@ -2387,6 +2571,7 @@ export type EventUncheckedUpdateWithoutGroupTagsInput = {
   parentEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   childEvents?: Prisma.EventUncheckedUpdateManyWithoutParentEventNestedInput
+  aboutNotes?: Prisma.NoteUncheckedUpdateManyWithoutAboutEventNestedInput
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutEventNestedInput
   calendarLinks?: Prisma.CalendarEventLinkUncheckedUpdateManyWithoutEventNestedInput
   granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutEventNestedInput
@@ -2445,6 +2630,7 @@ export type EventUpdateWithoutSourceNoteInput = {
   sourcePlan?: Prisma.PlanUpdateOneWithoutFulfilledByNestedInput
   parentEvent?: Prisma.EventUpdateOneWithoutChildEventsNestedInput
   childEvents?: Prisma.EventUpdateManyWithoutParentEventNestedInput
+  aboutNotes?: Prisma.NoteUpdateManyWithoutAboutEventNestedInput
   interactions?: Prisma.InteractionUpdateManyWithoutEventNestedInput
   calendarLinks?: Prisma.CalendarEventLinkUpdateManyWithoutEventNestedInput
   granolaNoteLinks?: Prisma.GranolaNoteLinkUpdateManyWithoutEventNestedInput
@@ -2469,6 +2655,7 @@ export type EventUncheckedUpdateWithoutSourceNoteInput = {
   sourcePlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   childEvents?: Prisma.EventUncheckedUpdateManyWithoutParentEventNestedInput
+  aboutNotes?: Prisma.NoteUncheckedUpdateManyWithoutAboutEventNestedInput
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutEventNestedInput
   calendarLinks?: Prisma.CalendarEventLinkUncheckedUpdateManyWithoutEventNestedInput
   granolaNoteLinks?: Prisma.GranolaNoteLinkUncheckedUpdateManyWithoutEventNestedInput
@@ -2501,6 +2688,7 @@ export type EventUncheckedUpdateManyWithoutSourceNoteInput = {
 
 export type EventCountOutputType = {
   childEvents: number
+  aboutNotes: number
   interactions: number
   calendarLinks: number
   granolaNoteLinks: number
@@ -2511,6 +2699,7 @@ export type EventCountOutputType = {
 
 export type EventCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   childEvents?: boolean | EventCountOutputTypeCountChildEventsArgs
+  aboutNotes?: boolean | EventCountOutputTypeCountAboutNotesArgs
   interactions?: boolean | EventCountOutputTypeCountInteractionsArgs
   calendarLinks?: boolean | EventCountOutputTypeCountCalendarLinksArgs
   granolaNoteLinks?: boolean | EventCountOutputTypeCountGranolaNoteLinksArgs
@@ -2534,6 +2723,13 @@ export type EventCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extens
  */
 export type EventCountOutputTypeCountChildEventsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.EventWhereInput
+}
+
+/**
+ * EventCountOutputType without action
+ */
+export type EventCountOutputTypeCountAboutNotesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.NoteWhereInput
 }
 
 /**
@@ -2601,6 +2797,7 @@ export type EventSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   parentEvent?: boolean | Prisma.Event$parentEventArgs<ExtArgs>
   childEvents?: boolean | Prisma.Event$childEventsArgs<ExtArgs>
   sourceNote?: boolean | Prisma.Event$sourceNoteArgs<ExtArgs>
+  aboutNotes?: boolean | Prisma.Event$aboutNotesArgs<ExtArgs>
   interactions?: boolean | Prisma.Event$interactionsArgs<ExtArgs>
   calendarLinks?: boolean | Prisma.Event$calendarLinksArgs<ExtArgs>
   granolaNoteLinks?: boolean | Prisma.Event$granolaNoteLinksArgs<ExtArgs>
@@ -2682,6 +2879,7 @@ export type EventInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   parentEvent?: boolean | Prisma.Event$parentEventArgs<ExtArgs>
   childEvents?: boolean | Prisma.Event$childEventsArgs<ExtArgs>
   sourceNote?: boolean | Prisma.Event$sourceNoteArgs<ExtArgs>
+  aboutNotes?: boolean | Prisma.Event$aboutNotesArgs<ExtArgs>
   interactions?: boolean | Prisma.Event$interactionsArgs<ExtArgs>
   calendarLinks?: boolean | Prisma.Event$calendarLinksArgs<ExtArgs>
   granolaNoteLinks?: boolean | Prisma.Event$granolaNoteLinksArgs<ExtArgs>
@@ -2714,6 +2912,7 @@ export type $EventPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     parentEvent: Prisma.$EventPayload<ExtArgs> | null
     childEvents: Prisma.$EventPayload<ExtArgs>[]
     sourceNote: Prisma.$NotePayload<ExtArgs> | null
+    aboutNotes: Prisma.$NotePayload<ExtArgs>[]
     interactions: Prisma.$InteractionPayload<ExtArgs>[]
     calendarLinks: Prisma.$CalendarEventLinkPayload<ExtArgs>[]
     granolaNoteLinks: Prisma.$GranolaNoteLinkPayload<ExtArgs>[]
@@ -3137,6 +3336,7 @@ export interface Prisma__EventClient<T, Null = never, ExtArgs extends runtime.Ty
   parentEvent<T extends Prisma.Event$parentEventArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Event$parentEventArgs<ExtArgs>>): Prisma.Prisma__EventClient<runtime.Types.Result.GetResult<Prisma.$EventPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   childEvents<T extends Prisma.Event$childEventsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Event$childEventsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   sourceNote<T extends Prisma.Event$sourceNoteArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Event$sourceNoteArgs<ExtArgs>>): Prisma.Prisma__NoteClient<runtime.Types.Result.GetResult<Prisma.$NotePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  aboutNotes<T extends Prisma.Event$aboutNotesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Event$aboutNotesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NotePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   interactions<T extends Prisma.Event$interactionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Event$interactionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InteractionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   calendarLinks<T extends Prisma.Event$calendarLinksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Event$calendarLinksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CalendarEventLinkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   granolaNoteLinks<T extends Prisma.Event$granolaNoteLinksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Event$granolaNoteLinksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$GranolaNoteLinkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -3683,6 +3883,30 @@ export type Event$sourceNoteArgs<ExtArgs extends runtime.Types.Extensions.Intern
    */
   include?: Prisma.NoteInclude<ExtArgs> | null
   where?: Prisma.NoteWhereInput
+}
+
+/**
+ * Event.aboutNotes
+ */
+export type Event$aboutNotesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Note
+   */
+  select?: Prisma.NoteSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Note
+   */
+  omit?: Prisma.NoteOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.NoteInclude<ExtArgs> | null
+  where?: Prisma.NoteWhereInput
+  orderBy?: Prisma.NoteOrderByWithRelationInput | Prisma.NoteOrderByWithRelationInput[]
+  cursor?: Prisma.NoteWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.NoteScalarFieldEnum | Prisma.NoteScalarFieldEnum[]
 }
 
 /**

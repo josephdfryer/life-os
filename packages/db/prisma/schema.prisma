@@ -216,6 +216,7 @@ model Person {
   auditLogs            AuditLog[]
   theorySnapshots      TheorySnapshot[]
   theoryAnalysisRuns   TheoryAnalysisRun[]
+  aboutNotes           Note[]                     @relation("NoteAboutPerson")
   fileEntityMentions   FileEntityMention[]        @relation("ResolvedPersonFileMentions")
   fileResolutionsFrom  FileEntityResolution[]     @relation("FileResolutionFromPerson")
   fileResolutionsTo    FileEntityResolution[]     @relation("FileResolutionToPerson")
@@ -702,7 +703,7 @@ model Connection {
   user                  User?             @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt             DateTime          @default(now())
   updatedAt             DateTime          @updatedAt
-  // "calendar" | "gmail" | "era" | "meetings" — open string, not an enum, matching this
+  // "calendar" | "gmail" | "era" | "meetings" | "oura" — open string, not an enum, matching this
   // schema's existing convention (Interaction.type, Rule.trigger, etc.) so a
   // new integration kind never needs a migration to add.
   kind                  String
@@ -906,6 +907,7 @@ model Event {
   // Provenance — the Note this Event was derived from, if any
   sourceNoteId         String?
   sourceNote           Note?                 @relation(fields: [sourceNoteId], references: [id], onDelete: SetNull)
+  aboutNotes           Note[]                @relation("NoteAboutEvent")
   interactions         Interaction[]
   calendarLinks        CalendarEventLink[]
   granolaNoteLinks     GranolaNoteLink[]
@@ -1105,6 +1107,7 @@ model Plan {
   // Provenance — the Note this Plan was derived from, if any
   sourceNoteId         String?
   sourceNote           Note?                @relation(fields: [sourceNoteId], references: [id], onDelete: SetNull)
+  aboutNotes           Note[]               @relation("NoteAboutPlan")
   purchaseOrder        PurchaseOrder?
   calendarLinks        CalendarEventLink[]
 
@@ -1153,6 +1156,7 @@ model Place {
   interactions       Interaction[]
   items              Item[]
   notes              PlaceNote[]
+  aboutNotes         Note[]              @relation("NoteAboutPlace")
   groupAffiliations  PlaceGroup[]
   importStagedVisits ImportStagedVisit[]
   purchaseOrderLines PurchaseOrderLine[]
@@ -1313,10 +1317,11 @@ model Item {
   itemInteractions     ItemInteraction[]
   purchaseReceiptLines PurchaseReceiptLine[]
 
-  tags      String?
-  notes     String?
-  color     String?
-  colorSoft String?
+  tags       String?
+  notes      String?
+  aboutNotes Note[]  @relation("NoteAboutItem")
+  color      String?
+  colorSoft  String?
 
   @@unique([workspaceId, definitionId, serialNumber])
   @@index([name])
@@ -2066,11 +2071,24 @@ model Note {
   // Raw/derived split: link back to the archived raw file, when one exists
   sourceFileId String?
   sourceFile   ImportedFile? @relation(fields: [sourceFileId], references: [id])
-  // Subject, not provenance. Group.sourceNoteId is the reverse edge and means
-  // "this Group was derived from this Note"; this one means "this Note is about
-  // this Group" — research, earnings-call takeaways, org context.
-  aboutGroupId String?
-  aboutGroup   Group?        @relation("NoteAboutGroup", fields: [aboutGroupId], references: [id], onDelete: SetNull)
+  // Subject, not provenance. X.sourceNoteId means "X was derived from this
+  // Note"; these mean "this Note is about X". A note may name more than one
+  // subject (Qin at a place, about an item) — that is still observation, not
+  // an Interaction.
+  aboutPersonId String?
+  aboutPerson   Person?       @relation("NoteAboutPerson", fields: [aboutPersonId], references: [id], onDelete: SetNull)
+  aboutPlaceId  String?
+  aboutPlace    Place?        @relation("NoteAboutPlace", fields: [aboutPlaceId], references: [id], onDelete: SetNull)
+  aboutItemId   String?
+  aboutItem     Item?         @relation("NoteAboutItem", fields: [aboutItemId], references: [id], onDelete: SetNull)
+  aboutEventId  String?
+  aboutEvent    Event?        @relation("NoteAboutEvent", fields: [aboutEventId], references: [id], onDelete: SetNull)
+  aboutPlanId   String?
+  aboutPlan     Plan?         @relation("NoteAboutPlan", fields: [aboutPlanId], references: [id], onDelete: SetNull)
+  aboutGroupId  String?
+  aboutGroup    Group?        @relation("NoteAboutGroup", fields: [aboutGroupId], references: [id], onDelete: SetNull)
+  aboutStateId  String?
+  aboutState    State?        @relation("NoteAboutState", fields: [aboutStateId], references: [id], onDelete: SetNull)
 
   // Reverse provenance — nodes derived from this Note
   plans                  Plan[]
@@ -2085,7 +2103,13 @@ model Note {
 
   @@index([workspaceId, timestamp(sort: Desc)])
   @@index([sourceFileId])
+  @@index([workspaceId, aboutPersonId, timestamp(sort: Desc)])
+  @@index([workspaceId, aboutPlaceId, timestamp(sort: Desc)])
+  @@index([workspaceId, aboutItemId, timestamp(sort: Desc)])
+  @@index([workspaceId, aboutEventId, timestamp(sort: Desc)])
+  @@index([workspaceId, aboutPlanId, timestamp(sort: Desc)])
   @@index([workspaceId, aboutGroupId, timestamp(sort: Desc)])
+  @@index([workspaceId, aboutStateId, timestamp(sort: Desc)])
 }
 
 // ─────────────────────────────────────────────
@@ -2401,6 +2425,7 @@ model State {
   // Provenance — the Note this State was derived from, if any
   sourceNoteId String?
   sourceNote   Note?           @relation(fields: [sourceNoteId], references: [id], onDelete: SetNull)
+  aboutNotes   Note[]          @relation("NoteAboutState")
   recordedAt   DateTime
   createdAt    DateTime        @default(now())
 

@@ -33,7 +33,13 @@ export type NoteMinAggregateOutputType = {
   content: string | null
   metadata: string | null
   sourceFileId: string | null
+  aboutPersonId: string | null
+  aboutPlaceId: string | null
+  aboutItemId: string | null
+  aboutEventId: string | null
+  aboutPlanId: string | null
   aboutGroupId: string | null
+  aboutStateId: string | null
 }
 
 export type NoteMaxAggregateOutputType = {
@@ -45,7 +51,13 @@ export type NoteMaxAggregateOutputType = {
   content: string | null
   metadata: string | null
   sourceFileId: string | null
+  aboutPersonId: string | null
+  aboutPlaceId: string | null
+  aboutItemId: string | null
+  aboutEventId: string | null
+  aboutPlanId: string | null
   aboutGroupId: string | null
+  aboutStateId: string | null
 }
 
 export type NoteCountAggregateOutputType = {
@@ -57,7 +69,13 @@ export type NoteCountAggregateOutputType = {
   content: number
   metadata: number
   sourceFileId: number
+  aboutPersonId: number
+  aboutPlaceId: number
+  aboutItemId: number
+  aboutEventId: number
+  aboutPlanId: number
   aboutGroupId: number
+  aboutStateId: number
   _all: number
 }
 
@@ -71,7 +89,13 @@ export type NoteMinAggregateInputType = {
   content?: true
   metadata?: true
   sourceFileId?: true
+  aboutPersonId?: true
+  aboutPlaceId?: true
+  aboutItemId?: true
+  aboutEventId?: true
+  aboutPlanId?: true
   aboutGroupId?: true
+  aboutStateId?: true
 }
 
 export type NoteMaxAggregateInputType = {
@@ -83,7 +107,13 @@ export type NoteMaxAggregateInputType = {
   content?: true
   metadata?: true
   sourceFileId?: true
+  aboutPersonId?: true
+  aboutPlaceId?: true
+  aboutItemId?: true
+  aboutEventId?: true
+  aboutPlanId?: true
   aboutGroupId?: true
+  aboutStateId?: true
 }
 
 export type NoteCountAggregateInputType = {
@@ -95,7 +125,13 @@ export type NoteCountAggregateInputType = {
   content?: true
   metadata?: true
   sourceFileId?: true
+  aboutPersonId?: true
+  aboutPlaceId?: true
+  aboutItemId?: true
+  aboutEventId?: true
+  aboutPlanId?: true
   aboutGroupId?: true
+  aboutStateId?: true
   _all?: true
 }
 
@@ -180,7 +216,13 @@ export type NoteGroupByOutputType = {
   content: string
   metadata: string | null
   sourceFileId: string | null
+  aboutPersonId: string | null
+  aboutPlaceId: string | null
+  aboutItemId: string | null
+  aboutEventId: string | null
+  aboutPlanId: string | null
   aboutGroupId: string | null
+  aboutStateId: string | null
   _count: NoteCountAggregateOutputType | null
   _min: NoteMinAggregateOutputType | null
   _max: NoteMaxAggregateOutputType | null
@@ -213,10 +255,22 @@ export type NoteWhereInput = {
   content?: Prisma.StringFilter<"Note"> | string
   metadata?: Prisma.StringNullableFilter<"Note"> | string | null
   sourceFileId?: Prisma.StringNullableFilter<"Note"> | string | null
+  aboutPersonId?: Prisma.StringNullableFilter<"Note"> | string | null
+  aboutPlaceId?: Prisma.StringNullableFilter<"Note"> | string | null
+  aboutItemId?: Prisma.StringNullableFilter<"Note"> | string | null
+  aboutEventId?: Prisma.StringNullableFilter<"Note"> | string | null
+  aboutPlanId?: Prisma.StringNullableFilter<"Note"> | string | null
   aboutGroupId?: Prisma.StringNullableFilter<"Note"> | string | null
+  aboutStateId?: Prisma.StringNullableFilter<"Note"> | string | null
   workspace?: Prisma.XOR<Prisma.WorkspaceScalarRelationFilter, Prisma.WorkspaceWhereInput>
   sourceFile?: Prisma.XOR<Prisma.ImportedFileNullableScalarRelationFilter, Prisma.ImportedFileWhereInput> | null
+  aboutPerson?: Prisma.XOR<Prisma.PersonNullableScalarRelationFilter, Prisma.PersonWhereInput> | null
+  aboutPlace?: Prisma.XOR<Prisma.PlaceNullableScalarRelationFilter, Prisma.PlaceWhereInput> | null
+  aboutItem?: Prisma.XOR<Prisma.ItemNullableScalarRelationFilter, Prisma.ItemWhereInput> | null
+  aboutEvent?: Prisma.XOR<Prisma.EventNullableScalarRelationFilter, Prisma.EventWhereInput> | null
+  aboutPlan?: Prisma.XOR<Prisma.PlanNullableScalarRelationFilter, Prisma.PlanWhereInput> | null
   aboutGroup?: Prisma.XOR<Prisma.GroupNullableScalarRelationFilter, Prisma.GroupWhereInput> | null
+  aboutState?: Prisma.XOR<Prisma.StateNullableScalarRelationFilter, Prisma.StateWhereInput> | null
   plans?: Prisma.PlanListRelationFilter
   events?: Prisma.EventListRelationFilter
   interactions?: Prisma.InteractionListRelationFilter
@@ -237,10 +291,22 @@ export type NoteOrderByWithRelationInput = {
   content?: Prisma.SortOrder
   metadata?: Prisma.SortOrderInput | Prisma.SortOrder
   sourceFileId?: Prisma.SortOrderInput | Prisma.SortOrder
+  aboutPersonId?: Prisma.SortOrderInput | Prisma.SortOrder
+  aboutPlaceId?: Prisma.SortOrderInput | Prisma.SortOrder
+  aboutItemId?: Prisma.SortOrderInput | Prisma.SortOrder
+  aboutEventId?: Prisma.SortOrderInput | Prisma.SortOrder
+  aboutPlanId?: Prisma.SortOrderInput | Prisma.SortOrder
   aboutGroupId?: Prisma.SortOrderInput | Prisma.SortOrder
+  aboutStateId?: Prisma.SortOrderInput | Prisma.SortOrder
   workspace?: Prisma.WorkspaceOrderByWithRelationInput
   sourceFile?: Prisma.ImportedFileOrderByWithRelationInput
+  aboutPerson?: Prisma.PersonOrderByWithRelationInput
+  aboutPlace?: Prisma.PlaceOrderByWithRelationInput
+  aboutItem?: Prisma.ItemOrderByWithRelationInput
+  aboutEvent?: Prisma.EventOrderByWithRelationInput
+  aboutPlan?: Prisma.PlanOrderByWithRelationInput
   aboutGroup?: Prisma.GroupOrderByWithRelationInput
+  aboutState?: Prisma.StateOrderByWithRelationInput
   plans?: Prisma.PlanOrderByRelationAggregateInput
   events?: Prisma.EventOrderByRelationAggregateInput
   interactions?: Prisma.InteractionOrderByRelationAggregateInput
@@ -264,10 +330,22 @@ export type NoteWhereUniqueInput = Prisma.AtLeast<{
   content?: Prisma.StringFilter<"Note"> | string
   metadata?: Prisma.StringNullableFilter<"Note"> | string | null
   sourceFileId?: Prisma.StringNullableFilter<"Note"> | string | null
+  aboutPersonId?: Prisma.StringNullableFilter<"Note"> | string | null
+  aboutPlaceId?: Prisma.StringNullableFilter<"Note"> | string | null
+  aboutItemId?: Prisma.StringNullableFilter<"Note"> | string | null
+  aboutEventId?: Prisma.StringNullableFilter<"Note"> | string | null
+  aboutPlanId?: Prisma.StringNullableFilter<"Note"> | string | null
   aboutGroupId?: Prisma.StringNullableFilter<"Note"> | string | null
+  aboutStateId?: Prisma.StringNullableFilter<"Note"> | string | null
   workspace?: Prisma.XOR<Prisma.WorkspaceScalarRelationFilter, Prisma.WorkspaceWhereInput>
   sourceFile?: Prisma.XOR<Prisma.ImportedFileNullableScalarRelationFilter, Prisma.ImportedFileWhereInput> | null
+  aboutPerson?: Prisma.XOR<Prisma.PersonNullableScalarRelationFilter, Prisma.PersonWhereInput> | null
+  aboutPlace?: Prisma.XOR<Prisma.PlaceNullableScalarRelationFilter, Prisma.PlaceWhereInput> | null
+  aboutItem?: Prisma.XOR<Prisma.ItemNullableScalarRelationFilter, Prisma.ItemWhereInput> | null
+  aboutEvent?: Prisma.XOR<Prisma.EventNullableScalarRelationFilter, Prisma.EventWhereInput> | null
+  aboutPlan?: Prisma.XOR<Prisma.PlanNullableScalarRelationFilter, Prisma.PlanWhereInput> | null
   aboutGroup?: Prisma.XOR<Prisma.GroupNullableScalarRelationFilter, Prisma.GroupWhereInput> | null
+  aboutState?: Prisma.XOR<Prisma.StateNullableScalarRelationFilter, Prisma.StateWhereInput> | null
   plans?: Prisma.PlanListRelationFilter
   events?: Prisma.EventListRelationFilter
   interactions?: Prisma.InteractionListRelationFilter
@@ -288,7 +366,13 @@ export type NoteOrderByWithAggregationInput = {
   content?: Prisma.SortOrder
   metadata?: Prisma.SortOrderInput | Prisma.SortOrder
   sourceFileId?: Prisma.SortOrderInput | Prisma.SortOrder
+  aboutPersonId?: Prisma.SortOrderInput | Prisma.SortOrder
+  aboutPlaceId?: Prisma.SortOrderInput | Prisma.SortOrder
+  aboutItemId?: Prisma.SortOrderInput | Prisma.SortOrder
+  aboutEventId?: Prisma.SortOrderInput | Prisma.SortOrder
+  aboutPlanId?: Prisma.SortOrderInput | Prisma.SortOrder
   aboutGroupId?: Prisma.SortOrderInput | Prisma.SortOrder
+  aboutStateId?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.NoteCountOrderByAggregateInput
   _max?: Prisma.NoteMaxOrderByAggregateInput
   _min?: Prisma.NoteMinOrderByAggregateInput
@@ -306,7 +390,13 @@ export type NoteScalarWhereWithAggregatesInput = {
   content?: Prisma.StringWithAggregatesFilter<"Note"> | string
   metadata?: Prisma.StringNullableWithAggregatesFilter<"Note"> | string | null
   sourceFileId?: Prisma.StringNullableWithAggregatesFilter<"Note"> | string | null
+  aboutPersonId?: Prisma.StringNullableWithAggregatesFilter<"Note"> | string | null
+  aboutPlaceId?: Prisma.StringNullableWithAggregatesFilter<"Note"> | string | null
+  aboutItemId?: Prisma.StringNullableWithAggregatesFilter<"Note"> | string | null
+  aboutEventId?: Prisma.StringNullableWithAggregatesFilter<"Note"> | string | null
+  aboutPlanId?: Prisma.StringNullableWithAggregatesFilter<"Note"> | string | null
   aboutGroupId?: Prisma.StringNullableWithAggregatesFilter<"Note"> | string | null
+  aboutStateId?: Prisma.StringNullableWithAggregatesFilter<"Note"> | string | null
 }
 
 export type NoteCreateInput = {
@@ -318,7 +408,13 @@ export type NoteCreateInput = {
   metadata?: string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutNotesInput
   sourceFile?: Prisma.ImportedFileCreateNestedOneWithoutNotesInput
+  aboutPerson?: Prisma.PersonCreateNestedOneWithoutAboutNotesInput
+  aboutPlace?: Prisma.PlaceCreateNestedOneWithoutAboutNotesInput
+  aboutItem?: Prisma.ItemCreateNestedOneWithoutAboutNotesInput
+  aboutEvent?: Prisma.EventCreateNestedOneWithoutAboutNotesInput
+  aboutPlan?: Prisma.PlanCreateNestedOneWithoutAboutNotesInput
   aboutGroup?: Prisma.GroupCreateNestedOneWithoutAboutNotesInput
+  aboutState?: Prisma.StateCreateNestedOneWithoutAboutNotesInput
   plans?: Prisma.PlanCreateNestedManyWithoutSourceNoteInput
   events?: Prisma.EventCreateNestedManyWithoutSourceNoteInput
   interactions?: Prisma.InteractionCreateNestedManyWithoutSourceNoteInput
@@ -339,7 +435,13 @@ export type NoteUncheckedCreateInput = {
   content: string
   metadata?: string | null
   sourceFileId?: string | null
+  aboutPersonId?: string | null
+  aboutPlaceId?: string | null
+  aboutItemId?: string | null
+  aboutEventId?: string | null
+  aboutPlanId?: string | null
   aboutGroupId?: string | null
+  aboutStateId?: string | null
   plans?: Prisma.PlanUncheckedCreateNestedManyWithoutSourceNoteInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutSourceNoteInput
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutSourceNoteInput
@@ -360,7 +462,13 @@ export type NoteUpdateInput = {
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutNotesNestedInput
   sourceFile?: Prisma.ImportedFileUpdateOneWithoutNotesNestedInput
+  aboutPerson?: Prisma.PersonUpdateOneWithoutAboutNotesNestedInput
+  aboutPlace?: Prisma.PlaceUpdateOneWithoutAboutNotesNestedInput
+  aboutItem?: Prisma.ItemUpdateOneWithoutAboutNotesNestedInput
+  aboutEvent?: Prisma.EventUpdateOneWithoutAboutNotesNestedInput
+  aboutPlan?: Prisma.PlanUpdateOneWithoutAboutNotesNestedInput
   aboutGroup?: Prisma.GroupUpdateOneWithoutAboutNotesNestedInput
+  aboutState?: Prisma.StateUpdateOneWithoutAboutNotesNestedInput
   plans?: Prisma.PlanUpdateManyWithoutSourceNoteNestedInput
   events?: Prisma.EventUpdateManyWithoutSourceNoteNestedInput
   interactions?: Prisma.InteractionUpdateManyWithoutSourceNoteNestedInput
@@ -381,7 +489,13 @@ export type NoteUncheckedUpdateInput = {
   content?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutPersonId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutPlaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutItemId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutPlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aboutGroupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutStateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   plans?: Prisma.PlanUncheckedUpdateManyWithoutSourceNoteNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutSourceNoteNestedInput
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutSourceNoteNestedInput
@@ -402,7 +516,13 @@ export type NoteCreateManyInput = {
   content: string
   metadata?: string | null
   sourceFileId?: string | null
+  aboutPersonId?: string | null
+  aboutPlaceId?: string | null
+  aboutItemId?: string | null
+  aboutEventId?: string | null
+  aboutPlanId?: string | null
   aboutGroupId?: string | null
+  aboutStateId?: string | null
 }
 
 export type NoteUpdateManyMutationInput = {
@@ -423,7 +543,13 @@ export type NoteUncheckedUpdateManyInput = {
   content?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutPersonId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutPlaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutItemId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutPlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aboutGroupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutStateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type NoteListRelationFilter = {
@@ -455,7 +581,13 @@ export type NoteCountOrderByAggregateInput = {
   content?: Prisma.SortOrder
   metadata?: Prisma.SortOrder
   sourceFileId?: Prisma.SortOrder
+  aboutPersonId?: Prisma.SortOrder
+  aboutPlaceId?: Prisma.SortOrder
+  aboutItemId?: Prisma.SortOrder
+  aboutEventId?: Prisma.SortOrder
+  aboutPlanId?: Prisma.SortOrder
   aboutGroupId?: Prisma.SortOrder
+  aboutStateId?: Prisma.SortOrder
 }
 
 export type NoteMaxOrderByAggregateInput = {
@@ -467,7 +599,13 @@ export type NoteMaxOrderByAggregateInput = {
   content?: Prisma.SortOrder
   metadata?: Prisma.SortOrder
   sourceFileId?: Prisma.SortOrder
+  aboutPersonId?: Prisma.SortOrder
+  aboutPlaceId?: Prisma.SortOrder
+  aboutItemId?: Prisma.SortOrder
+  aboutEventId?: Prisma.SortOrder
+  aboutPlanId?: Prisma.SortOrder
   aboutGroupId?: Prisma.SortOrder
+  aboutStateId?: Prisma.SortOrder
 }
 
 export type NoteMinOrderByAggregateInput = {
@@ -479,7 +617,13 @@ export type NoteMinOrderByAggregateInput = {
   content?: Prisma.SortOrder
   metadata?: Prisma.SortOrder
   sourceFileId?: Prisma.SortOrder
+  aboutPersonId?: Prisma.SortOrder
+  aboutPlaceId?: Prisma.SortOrder
+  aboutItemId?: Prisma.SortOrder
+  aboutEventId?: Prisma.SortOrder
+  aboutPlanId?: Prisma.SortOrder
   aboutGroupId?: Prisma.SortOrder
+  aboutStateId?: Prisma.SortOrder
 }
 
 export type NoteCreateNestedManyWithoutWorkspaceInput = {
@@ -524,10 +668,66 @@ export type NoteUncheckedUpdateManyWithoutWorkspaceNestedInput = {
   deleteMany?: Prisma.NoteScalarWhereInput | Prisma.NoteScalarWhereInput[]
 }
 
+export type NoteCreateNestedManyWithoutAboutPersonInput = {
+  create?: Prisma.XOR<Prisma.NoteCreateWithoutAboutPersonInput, Prisma.NoteUncheckedCreateWithoutAboutPersonInput> | Prisma.NoteCreateWithoutAboutPersonInput[] | Prisma.NoteUncheckedCreateWithoutAboutPersonInput[]
+  connectOrCreate?: Prisma.NoteCreateOrConnectWithoutAboutPersonInput | Prisma.NoteCreateOrConnectWithoutAboutPersonInput[]
+  createMany?: Prisma.NoteCreateManyAboutPersonInputEnvelope
+  connect?: Prisma.NoteWhereUniqueInput | Prisma.NoteWhereUniqueInput[]
+}
+
+export type NoteUncheckedCreateNestedManyWithoutAboutPersonInput = {
+  create?: Prisma.XOR<Prisma.NoteCreateWithoutAboutPersonInput, Prisma.NoteUncheckedCreateWithoutAboutPersonInput> | Prisma.NoteCreateWithoutAboutPersonInput[] | Prisma.NoteUncheckedCreateWithoutAboutPersonInput[]
+  connectOrCreate?: Prisma.NoteCreateOrConnectWithoutAboutPersonInput | Prisma.NoteCreateOrConnectWithoutAboutPersonInput[]
+  createMany?: Prisma.NoteCreateManyAboutPersonInputEnvelope
+  connect?: Prisma.NoteWhereUniqueInput | Prisma.NoteWhereUniqueInput[]
+}
+
+export type NoteUpdateManyWithoutAboutPersonNestedInput = {
+  create?: Prisma.XOR<Prisma.NoteCreateWithoutAboutPersonInput, Prisma.NoteUncheckedCreateWithoutAboutPersonInput> | Prisma.NoteCreateWithoutAboutPersonInput[] | Prisma.NoteUncheckedCreateWithoutAboutPersonInput[]
+  connectOrCreate?: Prisma.NoteCreateOrConnectWithoutAboutPersonInput | Prisma.NoteCreateOrConnectWithoutAboutPersonInput[]
+  upsert?: Prisma.NoteUpsertWithWhereUniqueWithoutAboutPersonInput | Prisma.NoteUpsertWithWhereUniqueWithoutAboutPersonInput[]
+  createMany?: Prisma.NoteCreateManyAboutPersonInputEnvelope
+  set?: Prisma.NoteWhereUniqueInput | Prisma.NoteWhereUniqueInput[]
+  disconnect?: Prisma.NoteWhereUniqueInput | Prisma.NoteWhereUniqueInput[]
+  delete?: Prisma.NoteWhereUniqueInput | Prisma.NoteWhereUniqueInput[]
+  connect?: Prisma.NoteWhereUniqueInput | Prisma.NoteWhereUniqueInput[]
+  update?: Prisma.NoteUpdateWithWhereUniqueWithoutAboutPersonInput | Prisma.NoteUpdateWithWhereUniqueWithoutAboutPersonInput[]
+  updateMany?: Prisma.NoteUpdateManyWithWhereWithoutAboutPersonInput | Prisma.NoteUpdateManyWithWhereWithoutAboutPersonInput[]
+  deleteMany?: Prisma.NoteScalarWhereInput | Prisma.NoteScalarWhereInput[]
+}
+
+export type NoteUncheckedUpdateManyWithoutAboutPersonNestedInput = {
+  create?: Prisma.XOR<Prisma.NoteCreateWithoutAboutPersonInput, Prisma.NoteUncheckedCreateWithoutAboutPersonInput> | Prisma.NoteCreateWithoutAboutPersonInput[] | Prisma.NoteUncheckedCreateWithoutAboutPersonInput[]
+  connectOrCreate?: Prisma.NoteCreateOrConnectWithoutAboutPersonInput | Prisma.NoteCreateOrConnectWithoutAboutPersonInput[]
+  upsert?: Prisma.NoteUpsertWithWhereUniqueWithoutAboutPersonInput | Prisma.NoteUpsertWithWhereUniqueWithoutAboutPersonInput[]
+  createMany?: Prisma.NoteCreateManyAboutPersonInputEnvelope
+  set?: Prisma.NoteWhereUniqueInput | Prisma.NoteWhereUniqueInput[]
+  disconnect?: Prisma.NoteWhereUniqueInput | Prisma.NoteWhereUniqueInput[]
+  delete?: Prisma.NoteWhereUniqueInput | Prisma.NoteWhereUniqueInput[]
+  connect?: Prisma.NoteWhereUniqueInput | Prisma.NoteWhereUniqueInput[]
+  update?: Prisma.NoteUpdateWithWhereUniqueWithoutAboutPersonInput | Prisma.NoteUpdateWithWhereUniqueWithoutAboutPersonInput[]
+  updateMany?: Prisma.NoteUpdateManyWithWhereWithoutAboutPersonInput | Prisma.NoteUpdateManyWithWhereWithoutAboutPersonInput[]
+  deleteMany?: Prisma.NoteScalarWhereInput | Prisma.NoteScalarWhereInput[]
+}
+
 export type NoteCreateNestedOneWithoutEventsInput = {
   create?: Prisma.XOR<Prisma.NoteCreateWithoutEventsInput, Prisma.NoteUncheckedCreateWithoutEventsInput>
   connectOrCreate?: Prisma.NoteCreateOrConnectWithoutEventsInput
   connect?: Prisma.NoteWhereUniqueInput
+}
+
+export type NoteCreateNestedManyWithoutAboutEventInput = {
+  create?: Prisma.XOR<Prisma.NoteCreateWithoutAboutEventInput, Prisma.NoteUncheckedCreateWithoutAboutEventInput> | Prisma.NoteCreateWithoutAboutEventInput[] | Prisma.NoteUncheckedCreateWithoutAboutEventInput[]
+  connectOrCreate?: Prisma.NoteCreateOrConnectWithoutAboutEventInput | Prisma.NoteCreateOrConnectWithoutAboutEventInput[]
+  createMany?: Prisma.NoteCreateManyAboutEventInputEnvelope
+  connect?: Prisma.NoteWhereUniqueInput | Prisma.NoteWhereUniqueInput[]
+}
+
+export type NoteUncheckedCreateNestedManyWithoutAboutEventInput = {
+  create?: Prisma.XOR<Prisma.NoteCreateWithoutAboutEventInput, Prisma.NoteUncheckedCreateWithoutAboutEventInput> | Prisma.NoteCreateWithoutAboutEventInput[] | Prisma.NoteUncheckedCreateWithoutAboutEventInput[]
+  connectOrCreate?: Prisma.NoteCreateOrConnectWithoutAboutEventInput | Prisma.NoteCreateOrConnectWithoutAboutEventInput[]
+  createMany?: Prisma.NoteCreateManyAboutEventInputEnvelope
+  connect?: Prisma.NoteWhereUniqueInput | Prisma.NoteWhereUniqueInput[]
 }
 
 export type NoteUpdateOneWithoutEventsNestedInput = {
@@ -538,6 +738,34 @@ export type NoteUpdateOneWithoutEventsNestedInput = {
   delete?: Prisma.NoteWhereInput | boolean
   connect?: Prisma.NoteWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.NoteUpdateToOneWithWhereWithoutEventsInput, Prisma.NoteUpdateWithoutEventsInput>, Prisma.NoteUncheckedUpdateWithoutEventsInput>
+}
+
+export type NoteUpdateManyWithoutAboutEventNestedInput = {
+  create?: Prisma.XOR<Prisma.NoteCreateWithoutAboutEventInput, Prisma.NoteUncheckedCreateWithoutAboutEventInput> | Prisma.NoteCreateWithoutAboutEventInput[] | Prisma.NoteUncheckedCreateWithoutAboutEventInput[]
+  connectOrCreate?: Prisma.NoteCreateOrConnectWithoutAboutEventInput | Prisma.NoteCreateOrConnectWithoutAboutEventInput[]
+  upsert?: Prisma.NoteUpsertWithWhereUniqueWithoutAboutEventInput | Prisma.NoteUpsertWithWhereUniqueWithoutAboutEventInput[]
+  createMany?: Prisma.NoteCreateManyAboutEventInputEnvelope
+  set?: Prisma.NoteWhereUniqueInput | Prisma.NoteWhereUniqueInput[]
+  disconnect?: Prisma.NoteWhereUniqueInput | Prisma.NoteWhereUniqueInput[]
+  delete?: Prisma.NoteWhereUniqueInput | Prisma.NoteWhereUniqueInput[]
+  connect?: Prisma.NoteWhereUniqueInput | Prisma.NoteWhereUniqueInput[]
+  update?: Prisma.NoteUpdateWithWhereUniqueWithoutAboutEventInput | Prisma.NoteUpdateWithWhereUniqueWithoutAboutEventInput[]
+  updateMany?: Prisma.NoteUpdateManyWithWhereWithoutAboutEventInput | Prisma.NoteUpdateManyWithWhereWithoutAboutEventInput[]
+  deleteMany?: Prisma.NoteScalarWhereInput | Prisma.NoteScalarWhereInput[]
+}
+
+export type NoteUncheckedUpdateManyWithoutAboutEventNestedInput = {
+  create?: Prisma.XOR<Prisma.NoteCreateWithoutAboutEventInput, Prisma.NoteUncheckedCreateWithoutAboutEventInput> | Prisma.NoteCreateWithoutAboutEventInput[] | Prisma.NoteUncheckedCreateWithoutAboutEventInput[]
+  connectOrCreate?: Prisma.NoteCreateOrConnectWithoutAboutEventInput | Prisma.NoteCreateOrConnectWithoutAboutEventInput[]
+  upsert?: Prisma.NoteUpsertWithWhereUniqueWithoutAboutEventInput | Prisma.NoteUpsertWithWhereUniqueWithoutAboutEventInput[]
+  createMany?: Prisma.NoteCreateManyAboutEventInputEnvelope
+  set?: Prisma.NoteWhereUniqueInput | Prisma.NoteWhereUniqueInput[]
+  disconnect?: Prisma.NoteWhereUniqueInput | Prisma.NoteWhereUniqueInput[]
+  delete?: Prisma.NoteWhereUniqueInput | Prisma.NoteWhereUniqueInput[]
+  connect?: Prisma.NoteWhereUniqueInput | Prisma.NoteWhereUniqueInput[]
+  update?: Prisma.NoteUpdateWithWhereUniqueWithoutAboutEventInput | Prisma.NoteUpdateWithWhereUniqueWithoutAboutEventInput[]
+  updateMany?: Prisma.NoteUpdateManyWithWhereWithoutAboutEventInput | Prisma.NoteUpdateManyWithWhereWithoutAboutEventInput[]
+  deleteMany?: Prisma.NoteScalarWhereInput | Prisma.NoteScalarWhereInput[]
 }
 
 export type NoteCreateNestedOneWithoutInteractionsInput = {
@@ -562,6 +790,20 @@ export type NoteCreateNestedOneWithoutPlansInput = {
   connect?: Prisma.NoteWhereUniqueInput
 }
 
+export type NoteCreateNestedManyWithoutAboutPlanInput = {
+  create?: Prisma.XOR<Prisma.NoteCreateWithoutAboutPlanInput, Prisma.NoteUncheckedCreateWithoutAboutPlanInput> | Prisma.NoteCreateWithoutAboutPlanInput[] | Prisma.NoteUncheckedCreateWithoutAboutPlanInput[]
+  connectOrCreate?: Prisma.NoteCreateOrConnectWithoutAboutPlanInput | Prisma.NoteCreateOrConnectWithoutAboutPlanInput[]
+  createMany?: Prisma.NoteCreateManyAboutPlanInputEnvelope
+  connect?: Prisma.NoteWhereUniqueInput | Prisma.NoteWhereUniqueInput[]
+}
+
+export type NoteUncheckedCreateNestedManyWithoutAboutPlanInput = {
+  create?: Prisma.XOR<Prisma.NoteCreateWithoutAboutPlanInput, Prisma.NoteUncheckedCreateWithoutAboutPlanInput> | Prisma.NoteCreateWithoutAboutPlanInput[] | Prisma.NoteUncheckedCreateWithoutAboutPlanInput[]
+  connectOrCreate?: Prisma.NoteCreateOrConnectWithoutAboutPlanInput | Prisma.NoteCreateOrConnectWithoutAboutPlanInput[]
+  createMany?: Prisma.NoteCreateManyAboutPlanInputEnvelope
+  connect?: Prisma.NoteWhereUniqueInput | Prisma.NoteWhereUniqueInput[]
+}
+
 export type NoteUpdateOneWithoutPlansNestedInput = {
   create?: Prisma.XOR<Prisma.NoteCreateWithoutPlansInput, Prisma.NoteUncheckedCreateWithoutPlansInput>
   connectOrCreate?: Prisma.NoteCreateOrConnectWithoutPlansInput
@@ -570,6 +812,118 @@ export type NoteUpdateOneWithoutPlansNestedInput = {
   delete?: Prisma.NoteWhereInput | boolean
   connect?: Prisma.NoteWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.NoteUpdateToOneWithWhereWithoutPlansInput, Prisma.NoteUpdateWithoutPlansInput>, Prisma.NoteUncheckedUpdateWithoutPlansInput>
+}
+
+export type NoteUpdateManyWithoutAboutPlanNestedInput = {
+  create?: Prisma.XOR<Prisma.NoteCreateWithoutAboutPlanInput, Prisma.NoteUncheckedCreateWithoutAboutPlanInput> | Prisma.NoteCreateWithoutAboutPlanInput[] | Prisma.NoteUncheckedCreateWithoutAboutPlanInput[]
+  connectOrCreate?: Prisma.NoteCreateOrConnectWithoutAboutPlanInput | Prisma.NoteCreateOrConnectWithoutAboutPlanInput[]
+  upsert?: Prisma.NoteUpsertWithWhereUniqueWithoutAboutPlanInput | Prisma.NoteUpsertWithWhereUniqueWithoutAboutPlanInput[]
+  createMany?: Prisma.NoteCreateManyAboutPlanInputEnvelope
+  set?: Prisma.NoteWhereUniqueInput | Prisma.NoteWhereUniqueInput[]
+  disconnect?: Prisma.NoteWhereUniqueInput | Prisma.NoteWhereUniqueInput[]
+  delete?: Prisma.NoteWhereUniqueInput | Prisma.NoteWhereUniqueInput[]
+  connect?: Prisma.NoteWhereUniqueInput | Prisma.NoteWhereUniqueInput[]
+  update?: Prisma.NoteUpdateWithWhereUniqueWithoutAboutPlanInput | Prisma.NoteUpdateWithWhereUniqueWithoutAboutPlanInput[]
+  updateMany?: Prisma.NoteUpdateManyWithWhereWithoutAboutPlanInput | Prisma.NoteUpdateManyWithWhereWithoutAboutPlanInput[]
+  deleteMany?: Prisma.NoteScalarWhereInput | Prisma.NoteScalarWhereInput[]
+}
+
+export type NoteUncheckedUpdateManyWithoutAboutPlanNestedInput = {
+  create?: Prisma.XOR<Prisma.NoteCreateWithoutAboutPlanInput, Prisma.NoteUncheckedCreateWithoutAboutPlanInput> | Prisma.NoteCreateWithoutAboutPlanInput[] | Prisma.NoteUncheckedCreateWithoutAboutPlanInput[]
+  connectOrCreate?: Prisma.NoteCreateOrConnectWithoutAboutPlanInput | Prisma.NoteCreateOrConnectWithoutAboutPlanInput[]
+  upsert?: Prisma.NoteUpsertWithWhereUniqueWithoutAboutPlanInput | Prisma.NoteUpsertWithWhereUniqueWithoutAboutPlanInput[]
+  createMany?: Prisma.NoteCreateManyAboutPlanInputEnvelope
+  set?: Prisma.NoteWhereUniqueInput | Prisma.NoteWhereUniqueInput[]
+  disconnect?: Prisma.NoteWhereUniqueInput | Prisma.NoteWhereUniqueInput[]
+  delete?: Prisma.NoteWhereUniqueInput | Prisma.NoteWhereUniqueInput[]
+  connect?: Prisma.NoteWhereUniqueInput | Prisma.NoteWhereUniqueInput[]
+  update?: Prisma.NoteUpdateWithWhereUniqueWithoutAboutPlanInput | Prisma.NoteUpdateWithWhereUniqueWithoutAboutPlanInput[]
+  updateMany?: Prisma.NoteUpdateManyWithWhereWithoutAboutPlanInput | Prisma.NoteUpdateManyWithWhereWithoutAboutPlanInput[]
+  deleteMany?: Prisma.NoteScalarWhereInput | Prisma.NoteScalarWhereInput[]
+}
+
+export type NoteCreateNestedManyWithoutAboutPlaceInput = {
+  create?: Prisma.XOR<Prisma.NoteCreateWithoutAboutPlaceInput, Prisma.NoteUncheckedCreateWithoutAboutPlaceInput> | Prisma.NoteCreateWithoutAboutPlaceInput[] | Prisma.NoteUncheckedCreateWithoutAboutPlaceInput[]
+  connectOrCreate?: Prisma.NoteCreateOrConnectWithoutAboutPlaceInput | Prisma.NoteCreateOrConnectWithoutAboutPlaceInput[]
+  createMany?: Prisma.NoteCreateManyAboutPlaceInputEnvelope
+  connect?: Prisma.NoteWhereUniqueInput | Prisma.NoteWhereUniqueInput[]
+}
+
+export type NoteUncheckedCreateNestedManyWithoutAboutPlaceInput = {
+  create?: Prisma.XOR<Prisma.NoteCreateWithoutAboutPlaceInput, Prisma.NoteUncheckedCreateWithoutAboutPlaceInput> | Prisma.NoteCreateWithoutAboutPlaceInput[] | Prisma.NoteUncheckedCreateWithoutAboutPlaceInput[]
+  connectOrCreate?: Prisma.NoteCreateOrConnectWithoutAboutPlaceInput | Prisma.NoteCreateOrConnectWithoutAboutPlaceInput[]
+  createMany?: Prisma.NoteCreateManyAboutPlaceInputEnvelope
+  connect?: Prisma.NoteWhereUniqueInput | Prisma.NoteWhereUniqueInput[]
+}
+
+export type NoteUpdateManyWithoutAboutPlaceNestedInput = {
+  create?: Prisma.XOR<Prisma.NoteCreateWithoutAboutPlaceInput, Prisma.NoteUncheckedCreateWithoutAboutPlaceInput> | Prisma.NoteCreateWithoutAboutPlaceInput[] | Prisma.NoteUncheckedCreateWithoutAboutPlaceInput[]
+  connectOrCreate?: Prisma.NoteCreateOrConnectWithoutAboutPlaceInput | Prisma.NoteCreateOrConnectWithoutAboutPlaceInput[]
+  upsert?: Prisma.NoteUpsertWithWhereUniqueWithoutAboutPlaceInput | Prisma.NoteUpsertWithWhereUniqueWithoutAboutPlaceInput[]
+  createMany?: Prisma.NoteCreateManyAboutPlaceInputEnvelope
+  set?: Prisma.NoteWhereUniqueInput | Prisma.NoteWhereUniqueInput[]
+  disconnect?: Prisma.NoteWhereUniqueInput | Prisma.NoteWhereUniqueInput[]
+  delete?: Prisma.NoteWhereUniqueInput | Prisma.NoteWhereUniqueInput[]
+  connect?: Prisma.NoteWhereUniqueInput | Prisma.NoteWhereUniqueInput[]
+  update?: Prisma.NoteUpdateWithWhereUniqueWithoutAboutPlaceInput | Prisma.NoteUpdateWithWhereUniqueWithoutAboutPlaceInput[]
+  updateMany?: Prisma.NoteUpdateManyWithWhereWithoutAboutPlaceInput | Prisma.NoteUpdateManyWithWhereWithoutAboutPlaceInput[]
+  deleteMany?: Prisma.NoteScalarWhereInput | Prisma.NoteScalarWhereInput[]
+}
+
+export type NoteUncheckedUpdateManyWithoutAboutPlaceNestedInput = {
+  create?: Prisma.XOR<Prisma.NoteCreateWithoutAboutPlaceInput, Prisma.NoteUncheckedCreateWithoutAboutPlaceInput> | Prisma.NoteCreateWithoutAboutPlaceInput[] | Prisma.NoteUncheckedCreateWithoutAboutPlaceInput[]
+  connectOrCreate?: Prisma.NoteCreateOrConnectWithoutAboutPlaceInput | Prisma.NoteCreateOrConnectWithoutAboutPlaceInput[]
+  upsert?: Prisma.NoteUpsertWithWhereUniqueWithoutAboutPlaceInput | Prisma.NoteUpsertWithWhereUniqueWithoutAboutPlaceInput[]
+  createMany?: Prisma.NoteCreateManyAboutPlaceInputEnvelope
+  set?: Prisma.NoteWhereUniqueInput | Prisma.NoteWhereUniqueInput[]
+  disconnect?: Prisma.NoteWhereUniqueInput | Prisma.NoteWhereUniqueInput[]
+  delete?: Prisma.NoteWhereUniqueInput | Prisma.NoteWhereUniqueInput[]
+  connect?: Prisma.NoteWhereUniqueInput | Prisma.NoteWhereUniqueInput[]
+  update?: Prisma.NoteUpdateWithWhereUniqueWithoutAboutPlaceInput | Prisma.NoteUpdateWithWhereUniqueWithoutAboutPlaceInput[]
+  updateMany?: Prisma.NoteUpdateManyWithWhereWithoutAboutPlaceInput | Prisma.NoteUpdateManyWithWhereWithoutAboutPlaceInput[]
+  deleteMany?: Prisma.NoteScalarWhereInput | Prisma.NoteScalarWhereInput[]
+}
+
+export type NoteCreateNestedManyWithoutAboutItemInput = {
+  create?: Prisma.XOR<Prisma.NoteCreateWithoutAboutItemInput, Prisma.NoteUncheckedCreateWithoutAboutItemInput> | Prisma.NoteCreateWithoutAboutItemInput[] | Prisma.NoteUncheckedCreateWithoutAboutItemInput[]
+  connectOrCreate?: Prisma.NoteCreateOrConnectWithoutAboutItemInput | Prisma.NoteCreateOrConnectWithoutAboutItemInput[]
+  createMany?: Prisma.NoteCreateManyAboutItemInputEnvelope
+  connect?: Prisma.NoteWhereUniqueInput | Prisma.NoteWhereUniqueInput[]
+}
+
+export type NoteUncheckedCreateNestedManyWithoutAboutItemInput = {
+  create?: Prisma.XOR<Prisma.NoteCreateWithoutAboutItemInput, Prisma.NoteUncheckedCreateWithoutAboutItemInput> | Prisma.NoteCreateWithoutAboutItemInput[] | Prisma.NoteUncheckedCreateWithoutAboutItemInput[]
+  connectOrCreate?: Prisma.NoteCreateOrConnectWithoutAboutItemInput | Prisma.NoteCreateOrConnectWithoutAboutItemInput[]
+  createMany?: Prisma.NoteCreateManyAboutItemInputEnvelope
+  connect?: Prisma.NoteWhereUniqueInput | Prisma.NoteWhereUniqueInput[]
+}
+
+export type NoteUpdateManyWithoutAboutItemNestedInput = {
+  create?: Prisma.XOR<Prisma.NoteCreateWithoutAboutItemInput, Prisma.NoteUncheckedCreateWithoutAboutItemInput> | Prisma.NoteCreateWithoutAboutItemInput[] | Prisma.NoteUncheckedCreateWithoutAboutItemInput[]
+  connectOrCreate?: Prisma.NoteCreateOrConnectWithoutAboutItemInput | Prisma.NoteCreateOrConnectWithoutAboutItemInput[]
+  upsert?: Prisma.NoteUpsertWithWhereUniqueWithoutAboutItemInput | Prisma.NoteUpsertWithWhereUniqueWithoutAboutItemInput[]
+  createMany?: Prisma.NoteCreateManyAboutItemInputEnvelope
+  set?: Prisma.NoteWhereUniqueInput | Prisma.NoteWhereUniqueInput[]
+  disconnect?: Prisma.NoteWhereUniqueInput | Prisma.NoteWhereUniqueInput[]
+  delete?: Prisma.NoteWhereUniqueInput | Prisma.NoteWhereUniqueInput[]
+  connect?: Prisma.NoteWhereUniqueInput | Prisma.NoteWhereUniqueInput[]
+  update?: Prisma.NoteUpdateWithWhereUniqueWithoutAboutItemInput | Prisma.NoteUpdateWithWhereUniqueWithoutAboutItemInput[]
+  updateMany?: Prisma.NoteUpdateManyWithWhereWithoutAboutItemInput | Prisma.NoteUpdateManyWithWhereWithoutAboutItemInput[]
+  deleteMany?: Prisma.NoteScalarWhereInput | Prisma.NoteScalarWhereInput[]
+}
+
+export type NoteUncheckedUpdateManyWithoutAboutItemNestedInput = {
+  create?: Prisma.XOR<Prisma.NoteCreateWithoutAboutItemInput, Prisma.NoteUncheckedCreateWithoutAboutItemInput> | Prisma.NoteCreateWithoutAboutItemInput[] | Prisma.NoteUncheckedCreateWithoutAboutItemInput[]
+  connectOrCreate?: Prisma.NoteCreateOrConnectWithoutAboutItemInput | Prisma.NoteCreateOrConnectWithoutAboutItemInput[]
+  upsert?: Prisma.NoteUpsertWithWhereUniqueWithoutAboutItemInput | Prisma.NoteUpsertWithWhereUniqueWithoutAboutItemInput[]
+  createMany?: Prisma.NoteCreateManyAboutItemInputEnvelope
+  set?: Prisma.NoteWhereUniqueInput | Prisma.NoteWhereUniqueInput[]
+  disconnect?: Prisma.NoteWhereUniqueInput | Prisma.NoteWhereUniqueInput[]
+  delete?: Prisma.NoteWhereUniqueInput | Prisma.NoteWhereUniqueInput[]
+  connect?: Prisma.NoteWhereUniqueInput | Prisma.NoteWhereUniqueInput[]
+  update?: Prisma.NoteUpdateWithWhereUniqueWithoutAboutItemInput | Prisma.NoteUpdateWithWhereUniqueWithoutAboutItemInput[]
+  updateMany?: Prisma.NoteUpdateManyWithWhereWithoutAboutItemInput | Prisma.NoteUpdateManyWithWhereWithoutAboutItemInput[]
+  deleteMany?: Prisma.NoteScalarWhereInput | Prisma.NoteScalarWhereInput[]
 }
 
 export type NoteCreateNestedManyWithoutSourceFileInput = {
@@ -738,6 +1092,20 @@ export type NoteCreateNestedOneWithoutStatesInput = {
   connect?: Prisma.NoteWhereUniqueInput
 }
 
+export type NoteCreateNestedManyWithoutAboutStateInput = {
+  create?: Prisma.XOR<Prisma.NoteCreateWithoutAboutStateInput, Prisma.NoteUncheckedCreateWithoutAboutStateInput> | Prisma.NoteCreateWithoutAboutStateInput[] | Prisma.NoteUncheckedCreateWithoutAboutStateInput[]
+  connectOrCreate?: Prisma.NoteCreateOrConnectWithoutAboutStateInput | Prisma.NoteCreateOrConnectWithoutAboutStateInput[]
+  createMany?: Prisma.NoteCreateManyAboutStateInputEnvelope
+  connect?: Prisma.NoteWhereUniqueInput | Prisma.NoteWhereUniqueInput[]
+}
+
+export type NoteUncheckedCreateNestedManyWithoutAboutStateInput = {
+  create?: Prisma.XOR<Prisma.NoteCreateWithoutAboutStateInput, Prisma.NoteUncheckedCreateWithoutAboutStateInput> | Prisma.NoteCreateWithoutAboutStateInput[] | Prisma.NoteUncheckedCreateWithoutAboutStateInput[]
+  connectOrCreate?: Prisma.NoteCreateOrConnectWithoutAboutStateInput | Prisma.NoteCreateOrConnectWithoutAboutStateInput[]
+  createMany?: Prisma.NoteCreateManyAboutStateInputEnvelope
+  connect?: Prisma.NoteWhereUniqueInput | Prisma.NoteWhereUniqueInput[]
+}
+
 export type NoteUpdateOneWithoutStatesNestedInput = {
   create?: Prisma.XOR<Prisma.NoteCreateWithoutStatesInput, Prisma.NoteUncheckedCreateWithoutStatesInput>
   connectOrCreate?: Prisma.NoteCreateOrConnectWithoutStatesInput
@@ -748,6 +1116,34 @@ export type NoteUpdateOneWithoutStatesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.NoteUpdateToOneWithWhereWithoutStatesInput, Prisma.NoteUpdateWithoutStatesInput>, Prisma.NoteUncheckedUpdateWithoutStatesInput>
 }
 
+export type NoteUpdateManyWithoutAboutStateNestedInput = {
+  create?: Prisma.XOR<Prisma.NoteCreateWithoutAboutStateInput, Prisma.NoteUncheckedCreateWithoutAboutStateInput> | Prisma.NoteCreateWithoutAboutStateInput[] | Prisma.NoteUncheckedCreateWithoutAboutStateInput[]
+  connectOrCreate?: Prisma.NoteCreateOrConnectWithoutAboutStateInput | Prisma.NoteCreateOrConnectWithoutAboutStateInput[]
+  upsert?: Prisma.NoteUpsertWithWhereUniqueWithoutAboutStateInput | Prisma.NoteUpsertWithWhereUniqueWithoutAboutStateInput[]
+  createMany?: Prisma.NoteCreateManyAboutStateInputEnvelope
+  set?: Prisma.NoteWhereUniqueInput | Prisma.NoteWhereUniqueInput[]
+  disconnect?: Prisma.NoteWhereUniqueInput | Prisma.NoteWhereUniqueInput[]
+  delete?: Prisma.NoteWhereUniqueInput | Prisma.NoteWhereUniqueInput[]
+  connect?: Prisma.NoteWhereUniqueInput | Prisma.NoteWhereUniqueInput[]
+  update?: Prisma.NoteUpdateWithWhereUniqueWithoutAboutStateInput | Prisma.NoteUpdateWithWhereUniqueWithoutAboutStateInput[]
+  updateMany?: Prisma.NoteUpdateManyWithWhereWithoutAboutStateInput | Prisma.NoteUpdateManyWithWhereWithoutAboutStateInput[]
+  deleteMany?: Prisma.NoteScalarWhereInput | Prisma.NoteScalarWhereInput[]
+}
+
+export type NoteUncheckedUpdateManyWithoutAboutStateNestedInput = {
+  create?: Prisma.XOR<Prisma.NoteCreateWithoutAboutStateInput, Prisma.NoteUncheckedCreateWithoutAboutStateInput> | Prisma.NoteCreateWithoutAboutStateInput[] | Prisma.NoteUncheckedCreateWithoutAboutStateInput[]
+  connectOrCreate?: Prisma.NoteCreateOrConnectWithoutAboutStateInput | Prisma.NoteCreateOrConnectWithoutAboutStateInput[]
+  upsert?: Prisma.NoteUpsertWithWhereUniqueWithoutAboutStateInput | Prisma.NoteUpsertWithWhereUniqueWithoutAboutStateInput[]
+  createMany?: Prisma.NoteCreateManyAboutStateInputEnvelope
+  set?: Prisma.NoteWhereUniqueInput | Prisma.NoteWhereUniqueInput[]
+  disconnect?: Prisma.NoteWhereUniqueInput | Prisma.NoteWhereUniqueInput[]
+  delete?: Prisma.NoteWhereUniqueInput | Prisma.NoteWhereUniqueInput[]
+  connect?: Prisma.NoteWhereUniqueInput | Prisma.NoteWhereUniqueInput[]
+  update?: Prisma.NoteUpdateWithWhereUniqueWithoutAboutStateInput | Prisma.NoteUpdateWithWhereUniqueWithoutAboutStateInput[]
+  updateMany?: Prisma.NoteUpdateManyWithWhereWithoutAboutStateInput | Prisma.NoteUpdateManyWithWhereWithoutAboutStateInput[]
+  deleteMany?: Prisma.NoteScalarWhereInput | Prisma.NoteScalarWhereInput[]
+}
+
 export type NoteCreateWithoutWorkspaceInput = {
   id?: string
   createdAt?: Date | string
@@ -756,7 +1152,13 @@ export type NoteCreateWithoutWorkspaceInput = {
   content: string
   metadata?: string | null
   sourceFile?: Prisma.ImportedFileCreateNestedOneWithoutNotesInput
+  aboutPerson?: Prisma.PersonCreateNestedOneWithoutAboutNotesInput
+  aboutPlace?: Prisma.PlaceCreateNestedOneWithoutAboutNotesInput
+  aboutItem?: Prisma.ItemCreateNestedOneWithoutAboutNotesInput
+  aboutEvent?: Prisma.EventCreateNestedOneWithoutAboutNotesInput
+  aboutPlan?: Prisma.PlanCreateNestedOneWithoutAboutNotesInput
   aboutGroup?: Prisma.GroupCreateNestedOneWithoutAboutNotesInput
+  aboutState?: Prisma.StateCreateNestedOneWithoutAboutNotesInput
   plans?: Prisma.PlanCreateNestedManyWithoutSourceNoteInput
   events?: Prisma.EventCreateNestedManyWithoutSourceNoteInput
   interactions?: Prisma.InteractionCreateNestedManyWithoutSourceNoteInput
@@ -776,7 +1178,13 @@ export type NoteUncheckedCreateWithoutWorkspaceInput = {
   content: string
   metadata?: string | null
   sourceFileId?: string | null
+  aboutPersonId?: string | null
+  aboutPlaceId?: string | null
+  aboutItemId?: string | null
+  aboutEventId?: string | null
+  aboutPlanId?: string | null
   aboutGroupId?: string | null
+  aboutStateId?: string | null
   plans?: Prisma.PlanUncheckedCreateNestedManyWithoutSourceNoteInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutSourceNoteInput
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutSourceNoteInput
@@ -825,7 +1233,90 @@ export type NoteScalarWhereInput = {
   content?: Prisma.StringFilter<"Note"> | string
   metadata?: Prisma.StringNullableFilter<"Note"> | string | null
   sourceFileId?: Prisma.StringNullableFilter<"Note"> | string | null
+  aboutPersonId?: Prisma.StringNullableFilter<"Note"> | string | null
+  aboutPlaceId?: Prisma.StringNullableFilter<"Note"> | string | null
+  aboutItemId?: Prisma.StringNullableFilter<"Note"> | string | null
+  aboutEventId?: Prisma.StringNullableFilter<"Note"> | string | null
+  aboutPlanId?: Prisma.StringNullableFilter<"Note"> | string | null
   aboutGroupId?: Prisma.StringNullableFilter<"Note"> | string | null
+  aboutStateId?: Prisma.StringNullableFilter<"Note"> | string | null
+}
+
+export type NoteCreateWithoutAboutPersonInput = {
+  id?: string
+  createdAt?: Date | string
+  timestamp: Date | string
+  type: string
+  content: string
+  metadata?: string | null
+  workspace?: Prisma.WorkspaceCreateNestedOneWithoutNotesInput
+  sourceFile?: Prisma.ImportedFileCreateNestedOneWithoutNotesInput
+  aboutPlace?: Prisma.PlaceCreateNestedOneWithoutAboutNotesInput
+  aboutItem?: Prisma.ItemCreateNestedOneWithoutAboutNotesInput
+  aboutEvent?: Prisma.EventCreateNestedOneWithoutAboutNotesInput
+  aboutPlan?: Prisma.PlanCreateNestedOneWithoutAboutNotesInput
+  aboutGroup?: Prisma.GroupCreateNestedOneWithoutAboutNotesInput
+  aboutState?: Prisma.StateCreateNestedOneWithoutAboutNotesInput
+  plans?: Prisma.PlanCreateNestedManyWithoutSourceNoteInput
+  events?: Prisma.EventCreateNestedManyWithoutSourceNoteInput
+  interactions?: Prisma.InteractionCreateNestedManyWithoutSourceNoteInput
+  states?: Prisma.StateCreateNestedManyWithoutSourceNoteInput
+  groups?: Prisma.GroupCreateNestedManyWithoutSourceNoteInput
+  aiAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutNoteInput
+  suggestions?: Prisma.NoteSuggestionCreateNestedManyWithoutNoteInput
+  lifeModelClaimFeedback?: Prisma.LifeModelClaimFeedbackCreateNestedManyWithoutSourceNoteInput
+  evidenceCorrections?: Prisma.EvidenceClaimCreateNestedManyWithoutCorrectionNoteInput
+}
+
+export type NoteUncheckedCreateWithoutAboutPersonInput = {
+  id?: string
+  workspaceId?: string
+  createdAt?: Date | string
+  timestamp: Date | string
+  type: string
+  content: string
+  metadata?: string | null
+  sourceFileId?: string | null
+  aboutPlaceId?: string | null
+  aboutItemId?: string | null
+  aboutEventId?: string | null
+  aboutPlanId?: string | null
+  aboutGroupId?: string | null
+  aboutStateId?: string | null
+  plans?: Prisma.PlanUncheckedCreateNestedManyWithoutSourceNoteInput
+  events?: Prisma.EventUncheckedCreateNestedManyWithoutSourceNoteInput
+  interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutSourceNoteInput
+  states?: Prisma.StateUncheckedCreateNestedManyWithoutSourceNoteInput
+  groups?: Prisma.GroupUncheckedCreateNestedManyWithoutSourceNoteInput
+  aiAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutNoteInput
+  suggestions?: Prisma.NoteSuggestionUncheckedCreateNestedManyWithoutNoteInput
+  lifeModelClaimFeedback?: Prisma.LifeModelClaimFeedbackUncheckedCreateNestedManyWithoutSourceNoteInput
+  evidenceCorrections?: Prisma.EvidenceClaimUncheckedCreateNestedManyWithoutCorrectionNoteInput
+}
+
+export type NoteCreateOrConnectWithoutAboutPersonInput = {
+  where: Prisma.NoteWhereUniqueInput
+  create: Prisma.XOR<Prisma.NoteCreateWithoutAboutPersonInput, Prisma.NoteUncheckedCreateWithoutAboutPersonInput>
+}
+
+export type NoteCreateManyAboutPersonInputEnvelope = {
+  data: Prisma.NoteCreateManyAboutPersonInput | Prisma.NoteCreateManyAboutPersonInput[]
+}
+
+export type NoteUpsertWithWhereUniqueWithoutAboutPersonInput = {
+  where: Prisma.NoteWhereUniqueInput
+  update: Prisma.XOR<Prisma.NoteUpdateWithoutAboutPersonInput, Prisma.NoteUncheckedUpdateWithoutAboutPersonInput>
+  create: Prisma.XOR<Prisma.NoteCreateWithoutAboutPersonInput, Prisma.NoteUncheckedCreateWithoutAboutPersonInput>
+}
+
+export type NoteUpdateWithWhereUniqueWithoutAboutPersonInput = {
+  where: Prisma.NoteWhereUniqueInput
+  data: Prisma.XOR<Prisma.NoteUpdateWithoutAboutPersonInput, Prisma.NoteUncheckedUpdateWithoutAboutPersonInput>
+}
+
+export type NoteUpdateManyWithWhereWithoutAboutPersonInput = {
+  where: Prisma.NoteScalarWhereInput
+  data: Prisma.XOR<Prisma.NoteUpdateManyMutationInput, Prisma.NoteUncheckedUpdateManyWithoutAboutPersonInput>
 }
 
 export type NoteCreateWithoutEventsInput = {
@@ -837,7 +1328,13 @@ export type NoteCreateWithoutEventsInput = {
   metadata?: string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutNotesInput
   sourceFile?: Prisma.ImportedFileCreateNestedOneWithoutNotesInput
+  aboutPerson?: Prisma.PersonCreateNestedOneWithoutAboutNotesInput
+  aboutPlace?: Prisma.PlaceCreateNestedOneWithoutAboutNotesInput
+  aboutItem?: Prisma.ItemCreateNestedOneWithoutAboutNotesInput
+  aboutEvent?: Prisma.EventCreateNestedOneWithoutAboutNotesInput
+  aboutPlan?: Prisma.PlanCreateNestedOneWithoutAboutNotesInput
   aboutGroup?: Prisma.GroupCreateNestedOneWithoutAboutNotesInput
+  aboutState?: Prisma.StateCreateNestedOneWithoutAboutNotesInput
   plans?: Prisma.PlanCreateNestedManyWithoutSourceNoteInput
   interactions?: Prisma.InteractionCreateNestedManyWithoutSourceNoteInput
   states?: Prisma.StateCreateNestedManyWithoutSourceNoteInput
@@ -857,7 +1354,13 @@ export type NoteUncheckedCreateWithoutEventsInput = {
   content: string
   metadata?: string | null
   sourceFileId?: string | null
+  aboutPersonId?: string | null
+  aboutPlaceId?: string | null
+  aboutItemId?: string | null
+  aboutEventId?: string | null
+  aboutPlanId?: string | null
   aboutGroupId?: string | null
+  aboutStateId?: string | null
   plans?: Prisma.PlanUncheckedCreateNestedManyWithoutSourceNoteInput
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutSourceNoteInput
   states?: Prisma.StateUncheckedCreateNestedManyWithoutSourceNoteInput
@@ -871,6 +1374,67 @@ export type NoteUncheckedCreateWithoutEventsInput = {
 export type NoteCreateOrConnectWithoutEventsInput = {
   where: Prisma.NoteWhereUniqueInput
   create: Prisma.XOR<Prisma.NoteCreateWithoutEventsInput, Prisma.NoteUncheckedCreateWithoutEventsInput>
+}
+
+export type NoteCreateWithoutAboutEventInput = {
+  id?: string
+  createdAt?: Date | string
+  timestamp: Date | string
+  type: string
+  content: string
+  metadata?: string | null
+  workspace?: Prisma.WorkspaceCreateNestedOneWithoutNotesInput
+  sourceFile?: Prisma.ImportedFileCreateNestedOneWithoutNotesInput
+  aboutPerson?: Prisma.PersonCreateNestedOneWithoutAboutNotesInput
+  aboutPlace?: Prisma.PlaceCreateNestedOneWithoutAboutNotesInput
+  aboutItem?: Prisma.ItemCreateNestedOneWithoutAboutNotesInput
+  aboutPlan?: Prisma.PlanCreateNestedOneWithoutAboutNotesInput
+  aboutGroup?: Prisma.GroupCreateNestedOneWithoutAboutNotesInput
+  aboutState?: Prisma.StateCreateNestedOneWithoutAboutNotesInput
+  plans?: Prisma.PlanCreateNestedManyWithoutSourceNoteInput
+  events?: Prisma.EventCreateNestedManyWithoutSourceNoteInput
+  interactions?: Prisma.InteractionCreateNestedManyWithoutSourceNoteInput
+  states?: Prisma.StateCreateNestedManyWithoutSourceNoteInput
+  groups?: Prisma.GroupCreateNestedManyWithoutSourceNoteInput
+  aiAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutNoteInput
+  suggestions?: Prisma.NoteSuggestionCreateNestedManyWithoutNoteInput
+  lifeModelClaimFeedback?: Prisma.LifeModelClaimFeedbackCreateNestedManyWithoutSourceNoteInput
+  evidenceCorrections?: Prisma.EvidenceClaimCreateNestedManyWithoutCorrectionNoteInput
+}
+
+export type NoteUncheckedCreateWithoutAboutEventInput = {
+  id?: string
+  workspaceId?: string
+  createdAt?: Date | string
+  timestamp: Date | string
+  type: string
+  content: string
+  metadata?: string | null
+  sourceFileId?: string | null
+  aboutPersonId?: string | null
+  aboutPlaceId?: string | null
+  aboutItemId?: string | null
+  aboutPlanId?: string | null
+  aboutGroupId?: string | null
+  aboutStateId?: string | null
+  plans?: Prisma.PlanUncheckedCreateNestedManyWithoutSourceNoteInput
+  events?: Prisma.EventUncheckedCreateNestedManyWithoutSourceNoteInput
+  interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutSourceNoteInput
+  states?: Prisma.StateUncheckedCreateNestedManyWithoutSourceNoteInput
+  groups?: Prisma.GroupUncheckedCreateNestedManyWithoutSourceNoteInput
+  aiAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutNoteInput
+  suggestions?: Prisma.NoteSuggestionUncheckedCreateNestedManyWithoutNoteInput
+  lifeModelClaimFeedback?: Prisma.LifeModelClaimFeedbackUncheckedCreateNestedManyWithoutSourceNoteInput
+  evidenceCorrections?: Prisma.EvidenceClaimUncheckedCreateNestedManyWithoutCorrectionNoteInput
+}
+
+export type NoteCreateOrConnectWithoutAboutEventInput = {
+  where: Prisma.NoteWhereUniqueInput
+  create: Prisma.XOR<Prisma.NoteCreateWithoutAboutEventInput, Prisma.NoteUncheckedCreateWithoutAboutEventInput>
+}
+
+export type NoteCreateManyAboutEventInputEnvelope = {
+  data: Prisma.NoteCreateManyAboutEventInput | Prisma.NoteCreateManyAboutEventInput[]
 }
 
 export type NoteUpsertWithoutEventsInput = {
@@ -893,7 +1457,13 @@ export type NoteUpdateWithoutEventsInput = {
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutNotesNestedInput
   sourceFile?: Prisma.ImportedFileUpdateOneWithoutNotesNestedInput
+  aboutPerson?: Prisma.PersonUpdateOneWithoutAboutNotesNestedInput
+  aboutPlace?: Prisma.PlaceUpdateOneWithoutAboutNotesNestedInput
+  aboutItem?: Prisma.ItemUpdateOneWithoutAboutNotesNestedInput
+  aboutEvent?: Prisma.EventUpdateOneWithoutAboutNotesNestedInput
+  aboutPlan?: Prisma.PlanUpdateOneWithoutAboutNotesNestedInput
   aboutGroup?: Prisma.GroupUpdateOneWithoutAboutNotesNestedInput
+  aboutState?: Prisma.StateUpdateOneWithoutAboutNotesNestedInput
   plans?: Prisma.PlanUpdateManyWithoutSourceNoteNestedInput
   interactions?: Prisma.InteractionUpdateManyWithoutSourceNoteNestedInput
   states?: Prisma.StateUpdateManyWithoutSourceNoteNestedInput
@@ -913,7 +1483,13 @@ export type NoteUncheckedUpdateWithoutEventsInput = {
   content?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutPersonId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutPlaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutItemId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutPlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aboutGroupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutStateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   plans?: Prisma.PlanUncheckedUpdateManyWithoutSourceNoteNestedInput
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutSourceNoteNestedInput
   states?: Prisma.StateUncheckedUpdateManyWithoutSourceNoteNestedInput
@@ -922,6 +1498,22 @@ export type NoteUncheckedUpdateWithoutEventsInput = {
   suggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutNoteNestedInput
   lifeModelClaimFeedback?: Prisma.LifeModelClaimFeedbackUncheckedUpdateManyWithoutSourceNoteNestedInput
   evidenceCorrections?: Prisma.EvidenceClaimUncheckedUpdateManyWithoutCorrectionNoteNestedInput
+}
+
+export type NoteUpsertWithWhereUniqueWithoutAboutEventInput = {
+  where: Prisma.NoteWhereUniqueInput
+  update: Prisma.XOR<Prisma.NoteUpdateWithoutAboutEventInput, Prisma.NoteUncheckedUpdateWithoutAboutEventInput>
+  create: Prisma.XOR<Prisma.NoteCreateWithoutAboutEventInput, Prisma.NoteUncheckedCreateWithoutAboutEventInput>
+}
+
+export type NoteUpdateWithWhereUniqueWithoutAboutEventInput = {
+  where: Prisma.NoteWhereUniqueInput
+  data: Prisma.XOR<Prisma.NoteUpdateWithoutAboutEventInput, Prisma.NoteUncheckedUpdateWithoutAboutEventInput>
+}
+
+export type NoteUpdateManyWithWhereWithoutAboutEventInput = {
+  where: Prisma.NoteScalarWhereInput
+  data: Prisma.XOR<Prisma.NoteUpdateManyMutationInput, Prisma.NoteUncheckedUpdateManyWithoutAboutEventInput>
 }
 
 export type NoteCreateWithoutInteractionsInput = {
@@ -933,7 +1525,13 @@ export type NoteCreateWithoutInteractionsInput = {
   metadata?: string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutNotesInput
   sourceFile?: Prisma.ImportedFileCreateNestedOneWithoutNotesInput
+  aboutPerson?: Prisma.PersonCreateNestedOneWithoutAboutNotesInput
+  aboutPlace?: Prisma.PlaceCreateNestedOneWithoutAboutNotesInput
+  aboutItem?: Prisma.ItemCreateNestedOneWithoutAboutNotesInput
+  aboutEvent?: Prisma.EventCreateNestedOneWithoutAboutNotesInput
+  aboutPlan?: Prisma.PlanCreateNestedOneWithoutAboutNotesInput
   aboutGroup?: Prisma.GroupCreateNestedOneWithoutAboutNotesInput
+  aboutState?: Prisma.StateCreateNestedOneWithoutAboutNotesInput
   plans?: Prisma.PlanCreateNestedManyWithoutSourceNoteInput
   events?: Prisma.EventCreateNestedManyWithoutSourceNoteInput
   states?: Prisma.StateCreateNestedManyWithoutSourceNoteInput
@@ -953,7 +1551,13 @@ export type NoteUncheckedCreateWithoutInteractionsInput = {
   content: string
   metadata?: string | null
   sourceFileId?: string | null
+  aboutPersonId?: string | null
+  aboutPlaceId?: string | null
+  aboutItemId?: string | null
+  aboutEventId?: string | null
+  aboutPlanId?: string | null
   aboutGroupId?: string | null
+  aboutStateId?: string | null
   plans?: Prisma.PlanUncheckedCreateNestedManyWithoutSourceNoteInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutSourceNoteInput
   states?: Prisma.StateUncheckedCreateNestedManyWithoutSourceNoteInput
@@ -989,7 +1593,13 @@ export type NoteUpdateWithoutInteractionsInput = {
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutNotesNestedInput
   sourceFile?: Prisma.ImportedFileUpdateOneWithoutNotesNestedInput
+  aboutPerson?: Prisma.PersonUpdateOneWithoutAboutNotesNestedInput
+  aboutPlace?: Prisma.PlaceUpdateOneWithoutAboutNotesNestedInput
+  aboutItem?: Prisma.ItemUpdateOneWithoutAboutNotesNestedInput
+  aboutEvent?: Prisma.EventUpdateOneWithoutAboutNotesNestedInput
+  aboutPlan?: Prisma.PlanUpdateOneWithoutAboutNotesNestedInput
   aboutGroup?: Prisma.GroupUpdateOneWithoutAboutNotesNestedInput
+  aboutState?: Prisma.StateUpdateOneWithoutAboutNotesNestedInput
   plans?: Prisma.PlanUpdateManyWithoutSourceNoteNestedInput
   events?: Prisma.EventUpdateManyWithoutSourceNoteNestedInput
   states?: Prisma.StateUpdateManyWithoutSourceNoteNestedInput
@@ -1009,7 +1619,13 @@ export type NoteUncheckedUpdateWithoutInteractionsInput = {
   content?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutPersonId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutPlaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutItemId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutPlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aboutGroupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutStateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   plans?: Prisma.PlanUncheckedUpdateManyWithoutSourceNoteNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutSourceNoteNestedInput
   states?: Prisma.StateUncheckedUpdateManyWithoutSourceNoteNestedInput
@@ -1029,7 +1645,13 @@ export type NoteCreateWithoutPlansInput = {
   metadata?: string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutNotesInput
   sourceFile?: Prisma.ImportedFileCreateNestedOneWithoutNotesInput
+  aboutPerson?: Prisma.PersonCreateNestedOneWithoutAboutNotesInput
+  aboutPlace?: Prisma.PlaceCreateNestedOneWithoutAboutNotesInput
+  aboutItem?: Prisma.ItemCreateNestedOneWithoutAboutNotesInput
+  aboutEvent?: Prisma.EventCreateNestedOneWithoutAboutNotesInput
+  aboutPlan?: Prisma.PlanCreateNestedOneWithoutAboutNotesInput
   aboutGroup?: Prisma.GroupCreateNestedOneWithoutAboutNotesInput
+  aboutState?: Prisma.StateCreateNestedOneWithoutAboutNotesInput
   events?: Prisma.EventCreateNestedManyWithoutSourceNoteInput
   interactions?: Prisma.InteractionCreateNestedManyWithoutSourceNoteInput
   states?: Prisma.StateCreateNestedManyWithoutSourceNoteInput
@@ -1049,7 +1671,13 @@ export type NoteUncheckedCreateWithoutPlansInput = {
   content: string
   metadata?: string | null
   sourceFileId?: string | null
+  aboutPersonId?: string | null
+  aboutPlaceId?: string | null
+  aboutItemId?: string | null
+  aboutEventId?: string | null
+  aboutPlanId?: string | null
   aboutGroupId?: string | null
+  aboutStateId?: string | null
   events?: Prisma.EventUncheckedCreateNestedManyWithoutSourceNoteInput
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutSourceNoteInput
   states?: Prisma.StateUncheckedCreateNestedManyWithoutSourceNoteInput
@@ -1063,6 +1691,67 @@ export type NoteUncheckedCreateWithoutPlansInput = {
 export type NoteCreateOrConnectWithoutPlansInput = {
   where: Prisma.NoteWhereUniqueInput
   create: Prisma.XOR<Prisma.NoteCreateWithoutPlansInput, Prisma.NoteUncheckedCreateWithoutPlansInput>
+}
+
+export type NoteCreateWithoutAboutPlanInput = {
+  id?: string
+  createdAt?: Date | string
+  timestamp: Date | string
+  type: string
+  content: string
+  metadata?: string | null
+  workspace?: Prisma.WorkspaceCreateNestedOneWithoutNotesInput
+  sourceFile?: Prisma.ImportedFileCreateNestedOneWithoutNotesInput
+  aboutPerson?: Prisma.PersonCreateNestedOneWithoutAboutNotesInput
+  aboutPlace?: Prisma.PlaceCreateNestedOneWithoutAboutNotesInput
+  aboutItem?: Prisma.ItemCreateNestedOneWithoutAboutNotesInput
+  aboutEvent?: Prisma.EventCreateNestedOneWithoutAboutNotesInput
+  aboutGroup?: Prisma.GroupCreateNestedOneWithoutAboutNotesInput
+  aboutState?: Prisma.StateCreateNestedOneWithoutAboutNotesInput
+  plans?: Prisma.PlanCreateNestedManyWithoutSourceNoteInput
+  events?: Prisma.EventCreateNestedManyWithoutSourceNoteInput
+  interactions?: Prisma.InteractionCreateNestedManyWithoutSourceNoteInput
+  states?: Prisma.StateCreateNestedManyWithoutSourceNoteInput
+  groups?: Prisma.GroupCreateNestedManyWithoutSourceNoteInput
+  aiAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutNoteInput
+  suggestions?: Prisma.NoteSuggestionCreateNestedManyWithoutNoteInput
+  lifeModelClaimFeedback?: Prisma.LifeModelClaimFeedbackCreateNestedManyWithoutSourceNoteInput
+  evidenceCorrections?: Prisma.EvidenceClaimCreateNestedManyWithoutCorrectionNoteInput
+}
+
+export type NoteUncheckedCreateWithoutAboutPlanInput = {
+  id?: string
+  workspaceId?: string
+  createdAt?: Date | string
+  timestamp: Date | string
+  type: string
+  content: string
+  metadata?: string | null
+  sourceFileId?: string | null
+  aboutPersonId?: string | null
+  aboutPlaceId?: string | null
+  aboutItemId?: string | null
+  aboutEventId?: string | null
+  aboutGroupId?: string | null
+  aboutStateId?: string | null
+  plans?: Prisma.PlanUncheckedCreateNestedManyWithoutSourceNoteInput
+  events?: Prisma.EventUncheckedCreateNestedManyWithoutSourceNoteInput
+  interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutSourceNoteInput
+  states?: Prisma.StateUncheckedCreateNestedManyWithoutSourceNoteInput
+  groups?: Prisma.GroupUncheckedCreateNestedManyWithoutSourceNoteInput
+  aiAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutNoteInput
+  suggestions?: Prisma.NoteSuggestionUncheckedCreateNestedManyWithoutNoteInput
+  lifeModelClaimFeedback?: Prisma.LifeModelClaimFeedbackUncheckedCreateNestedManyWithoutSourceNoteInput
+  evidenceCorrections?: Prisma.EvidenceClaimUncheckedCreateNestedManyWithoutCorrectionNoteInput
+}
+
+export type NoteCreateOrConnectWithoutAboutPlanInput = {
+  where: Prisma.NoteWhereUniqueInput
+  create: Prisma.XOR<Prisma.NoteCreateWithoutAboutPlanInput, Prisma.NoteUncheckedCreateWithoutAboutPlanInput>
+}
+
+export type NoteCreateManyAboutPlanInputEnvelope = {
+  data: Prisma.NoteCreateManyAboutPlanInput | Prisma.NoteCreateManyAboutPlanInput[]
 }
 
 export type NoteUpsertWithoutPlansInput = {
@@ -1085,7 +1774,13 @@ export type NoteUpdateWithoutPlansInput = {
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutNotesNestedInput
   sourceFile?: Prisma.ImportedFileUpdateOneWithoutNotesNestedInput
+  aboutPerson?: Prisma.PersonUpdateOneWithoutAboutNotesNestedInput
+  aboutPlace?: Prisma.PlaceUpdateOneWithoutAboutNotesNestedInput
+  aboutItem?: Prisma.ItemUpdateOneWithoutAboutNotesNestedInput
+  aboutEvent?: Prisma.EventUpdateOneWithoutAboutNotesNestedInput
+  aboutPlan?: Prisma.PlanUpdateOneWithoutAboutNotesNestedInput
   aboutGroup?: Prisma.GroupUpdateOneWithoutAboutNotesNestedInput
+  aboutState?: Prisma.StateUpdateOneWithoutAboutNotesNestedInput
   events?: Prisma.EventUpdateManyWithoutSourceNoteNestedInput
   interactions?: Prisma.InteractionUpdateManyWithoutSourceNoteNestedInput
   states?: Prisma.StateUpdateManyWithoutSourceNoteNestedInput
@@ -1105,7 +1800,13 @@ export type NoteUncheckedUpdateWithoutPlansInput = {
   content?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutPersonId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutPlaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutItemId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutPlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aboutGroupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutStateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   events?: Prisma.EventUncheckedUpdateManyWithoutSourceNoteNestedInput
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutSourceNoteNestedInput
   states?: Prisma.StateUncheckedUpdateManyWithoutSourceNoteNestedInput
@@ -1116,6 +1817,176 @@ export type NoteUncheckedUpdateWithoutPlansInput = {
   evidenceCorrections?: Prisma.EvidenceClaimUncheckedUpdateManyWithoutCorrectionNoteNestedInput
 }
 
+export type NoteUpsertWithWhereUniqueWithoutAboutPlanInput = {
+  where: Prisma.NoteWhereUniqueInput
+  update: Prisma.XOR<Prisma.NoteUpdateWithoutAboutPlanInput, Prisma.NoteUncheckedUpdateWithoutAboutPlanInput>
+  create: Prisma.XOR<Prisma.NoteCreateWithoutAboutPlanInput, Prisma.NoteUncheckedCreateWithoutAboutPlanInput>
+}
+
+export type NoteUpdateWithWhereUniqueWithoutAboutPlanInput = {
+  where: Prisma.NoteWhereUniqueInput
+  data: Prisma.XOR<Prisma.NoteUpdateWithoutAboutPlanInput, Prisma.NoteUncheckedUpdateWithoutAboutPlanInput>
+}
+
+export type NoteUpdateManyWithWhereWithoutAboutPlanInput = {
+  where: Prisma.NoteScalarWhereInput
+  data: Prisma.XOR<Prisma.NoteUpdateManyMutationInput, Prisma.NoteUncheckedUpdateManyWithoutAboutPlanInput>
+}
+
+export type NoteCreateWithoutAboutPlaceInput = {
+  id?: string
+  createdAt?: Date | string
+  timestamp: Date | string
+  type: string
+  content: string
+  metadata?: string | null
+  workspace?: Prisma.WorkspaceCreateNestedOneWithoutNotesInput
+  sourceFile?: Prisma.ImportedFileCreateNestedOneWithoutNotesInput
+  aboutPerson?: Prisma.PersonCreateNestedOneWithoutAboutNotesInput
+  aboutItem?: Prisma.ItemCreateNestedOneWithoutAboutNotesInput
+  aboutEvent?: Prisma.EventCreateNestedOneWithoutAboutNotesInput
+  aboutPlan?: Prisma.PlanCreateNestedOneWithoutAboutNotesInput
+  aboutGroup?: Prisma.GroupCreateNestedOneWithoutAboutNotesInput
+  aboutState?: Prisma.StateCreateNestedOneWithoutAboutNotesInput
+  plans?: Prisma.PlanCreateNestedManyWithoutSourceNoteInput
+  events?: Prisma.EventCreateNestedManyWithoutSourceNoteInput
+  interactions?: Prisma.InteractionCreateNestedManyWithoutSourceNoteInput
+  states?: Prisma.StateCreateNestedManyWithoutSourceNoteInput
+  groups?: Prisma.GroupCreateNestedManyWithoutSourceNoteInput
+  aiAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutNoteInput
+  suggestions?: Prisma.NoteSuggestionCreateNestedManyWithoutNoteInput
+  lifeModelClaimFeedback?: Prisma.LifeModelClaimFeedbackCreateNestedManyWithoutSourceNoteInput
+  evidenceCorrections?: Prisma.EvidenceClaimCreateNestedManyWithoutCorrectionNoteInput
+}
+
+export type NoteUncheckedCreateWithoutAboutPlaceInput = {
+  id?: string
+  workspaceId?: string
+  createdAt?: Date | string
+  timestamp: Date | string
+  type: string
+  content: string
+  metadata?: string | null
+  sourceFileId?: string | null
+  aboutPersonId?: string | null
+  aboutItemId?: string | null
+  aboutEventId?: string | null
+  aboutPlanId?: string | null
+  aboutGroupId?: string | null
+  aboutStateId?: string | null
+  plans?: Prisma.PlanUncheckedCreateNestedManyWithoutSourceNoteInput
+  events?: Prisma.EventUncheckedCreateNestedManyWithoutSourceNoteInput
+  interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutSourceNoteInput
+  states?: Prisma.StateUncheckedCreateNestedManyWithoutSourceNoteInput
+  groups?: Prisma.GroupUncheckedCreateNestedManyWithoutSourceNoteInput
+  aiAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutNoteInput
+  suggestions?: Prisma.NoteSuggestionUncheckedCreateNestedManyWithoutNoteInput
+  lifeModelClaimFeedback?: Prisma.LifeModelClaimFeedbackUncheckedCreateNestedManyWithoutSourceNoteInput
+  evidenceCorrections?: Prisma.EvidenceClaimUncheckedCreateNestedManyWithoutCorrectionNoteInput
+}
+
+export type NoteCreateOrConnectWithoutAboutPlaceInput = {
+  where: Prisma.NoteWhereUniqueInput
+  create: Prisma.XOR<Prisma.NoteCreateWithoutAboutPlaceInput, Prisma.NoteUncheckedCreateWithoutAboutPlaceInput>
+}
+
+export type NoteCreateManyAboutPlaceInputEnvelope = {
+  data: Prisma.NoteCreateManyAboutPlaceInput | Prisma.NoteCreateManyAboutPlaceInput[]
+}
+
+export type NoteUpsertWithWhereUniqueWithoutAboutPlaceInput = {
+  where: Prisma.NoteWhereUniqueInput
+  update: Prisma.XOR<Prisma.NoteUpdateWithoutAboutPlaceInput, Prisma.NoteUncheckedUpdateWithoutAboutPlaceInput>
+  create: Prisma.XOR<Prisma.NoteCreateWithoutAboutPlaceInput, Prisma.NoteUncheckedCreateWithoutAboutPlaceInput>
+}
+
+export type NoteUpdateWithWhereUniqueWithoutAboutPlaceInput = {
+  where: Prisma.NoteWhereUniqueInput
+  data: Prisma.XOR<Prisma.NoteUpdateWithoutAboutPlaceInput, Prisma.NoteUncheckedUpdateWithoutAboutPlaceInput>
+}
+
+export type NoteUpdateManyWithWhereWithoutAboutPlaceInput = {
+  where: Prisma.NoteScalarWhereInput
+  data: Prisma.XOR<Prisma.NoteUpdateManyMutationInput, Prisma.NoteUncheckedUpdateManyWithoutAboutPlaceInput>
+}
+
+export type NoteCreateWithoutAboutItemInput = {
+  id?: string
+  createdAt?: Date | string
+  timestamp: Date | string
+  type: string
+  content: string
+  metadata?: string | null
+  workspace?: Prisma.WorkspaceCreateNestedOneWithoutNotesInput
+  sourceFile?: Prisma.ImportedFileCreateNestedOneWithoutNotesInput
+  aboutPerson?: Prisma.PersonCreateNestedOneWithoutAboutNotesInput
+  aboutPlace?: Prisma.PlaceCreateNestedOneWithoutAboutNotesInput
+  aboutEvent?: Prisma.EventCreateNestedOneWithoutAboutNotesInput
+  aboutPlan?: Prisma.PlanCreateNestedOneWithoutAboutNotesInput
+  aboutGroup?: Prisma.GroupCreateNestedOneWithoutAboutNotesInput
+  aboutState?: Prisma.StateCreateNestedOneWithoutAboutNotesInput
+  plans?: Prisma.PlanCreateNestedManyWithoutSourceNoteInput
+  events?: Prisma.EventCreateNestedManyWithoutSourceNoteInput
+  interactions?: Prisma.InteractionCreateNestedManyWithoutSourceNoteInput
+  states?: Prisma.StateCreateNestedManyWithoutSourceNoteInput
+  groups?: Prisma.GroupCreateNestedManyWithoutSourceNoteInput
+  aiAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutNoteInput
+  suggestions?: Prisma.NoteSuggestionCreateNestedManyWithoutNoteInput
+  lifeModelClaimFeedback?: Prisma.LifeModelClaimFeedbackCreateNestedManyWithoutSourceNoteInput
+  evidenceCorrections?: Prisma.EvidenceClaimCreateNestedManyWithoutCorrectionNoteInput
+}
+
+export type NoteUncheckedCreateWithoutAboutItemInput = {
+  id?: string
+  workspaceId?: string
+  createdAt?: Date | string
+  timestamp: Date | string
+  type: string
+  content: string
+  metadata?: string | null
+  sourceFileId?: string | null
+  aboutPersonId?: string | null
+  aboutPlaceId?: string | null
+  aboutEventId?: string | null
+  aboutPlanId?: string | null
+  aboutGroupId?: string | null
+  aboutStateId?: string | null
+  plans?: Prisma.PlanUncheckedCreateNestedManyWithoutSourceNoteInput
+  events?: Prisma.EventUncheckedCreateNestedManyWithoutSourceNoteInput
+  interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutSourceNoteInput
+  states?: Prisma.StateUncheckedCreateNestedManyWithoutSourceNoteInput
+  groups?: Prisma.GroupUncheckedCreateNestedManyWithoutSourceNoteInput
+  aiAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutNoteInput
+  suggestions?: Prisma.NoteSuggestionUncheckedCreateNestedManyWithoutNoteInput
+  lifeModelClaimFeedback?: Prisma.LifeModelClaimFeedbackUncheckedCreateNestedManyWithoutSourceNoteInput
+  evidenceCorrections?: Prisma.EvidenceClaimUncheckedCreateNestedManyWithoutCorrectionNoteInput
+}
+
+export type NoteCreateOrConnectWithoutAboutItemInput = {
+  where: Prisma.NoteWhereUniqueInput
+  create: Prisma.XOR<Prisma.NoteCreateWithoutAboutItemInput, Prisma.NoteUncheckedCreateWithoutAboutItemInput>
+}
+
+export type NoteCreateManyAboutItemInputEnvelope = {
+  data: Prisma.NoteCreateManyAboutItemInput | Prisma.NoteCreateManyAboutItemInput[]
+}
+
+export type NoteUpsertWithWhereUniqueWithoutAboutItemInput = {
+  where: Prisma.NoteWhereUniqueInput
+  update: Prisma.XOR<Prisma.NoteUpdateWithoutAboutItemInput, Prisma.NoteUncheckedUpdateWithoutAboutItemInput>
+  create: Prisma.XOR<Prisma.NoteCreateWithoutAboutItemInput, Prisma.NoteUncheckedCreateWithoutAboutItemInput>
+}
+
+export type NoteUpdateWithWhereUniqueWithoutAboutItemInput = {
+  where: Prisma.NoteWhereUniqueInput
+  data: Prisma.XOR<Prisma.NoteUpdateWithoutAboutItemInput, Prisma.NoteUncheckedUpdateWithoutAboutItemInput>
+}
+
+export type NoteUpdateManyWithWhereWithoutAboutItemInput = {
+  where: Prisma.NoteScalarWhereInput
+  data: Prisma.XOR<Prisma.NoteUpdateManyMutationInput, Prisma.NoteUncheckedUpdateManyWithoutAboutItemInput>
+}
+
 export type NoteCreateWithoutSourceFileInput = {
   id?: string
   createdAt?: Date | string
@@ -1124,7 +1995,13 @@ export type NoteCreateWithoutSourceFileInput = {
   content: string
   metadata?: string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutNotesInput
+  aboutPerson?: Prisma.PersonCreateNestedOneWithoutAboutNotesInput
+  aboutPlace?: Prisma.PlaceCreateNestedOneWithoutAboutNotesInput
+  aboutItem?: Prisma.ItemCreateNestedOneWithoutAboutNotesInput
+  aboutEvent?: Prisma.EventCreateNestedOneWithoutAboutNotesInput
+  aboutPlan?: Prisma.PlanCreateNestedOneWithoutAboutNotesInput
   aboutGroup?: Prisma.GroupCreateNestedOneWithoutAboutNotesInput
+  aboutState?: Prisma.StateCreateNestedOneWithoutAboutNotesInput
   plans?: Prisma.PlanCreateNestedManyWithoutSourceNoteInput
   events?: Prisma.EventCreateNestedManyWithoutSourceNoteInput
   interactions?: Prisma.InteractionCreateNestedManyWithoutSourceNoteInput
@@ -1144,7 +2021,13 @@ export type NoteUncheckedCreateWithoutSourceFileInput = {
   type: string
   content: string
   metadata?: string | null
+  aboutPersonId?: string | null
+  aboutPlaceId?: string | null
+  aboutItemId?: string | null
+  aboutEventId?: string | null
+  aboutPlanId?: string | null
   aboutGroupId?: string | null
+  aboutStateId?: string | null
   plans?: Prisma.PlanUncheckedCreateNestedManyWithoutSourceNoteInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutSourceNoteInput
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutSourceNoteInput
@@ -1190,7 +2073,13 @@ export type NoteCreateWithoutEvidenceCorrectionsInput = {
   metadata?: string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutNotesInput
   sourceFile?: Prisma.ImportedFileCreateNestedOneWithoutNotesInput
+  aboutPerson?: Prisma.PersonCreateNestedOneWithoutAboutNotesInput
+  aboutPlace?: Prisma.PlaceCreateNestedOneWithoutAboutNotesInput
+  aboutItem?: Prisma.ItemCreateNestedOneWithoutAboutNotesInput
+  aboutEvent?: Prisma.EventCreateNestedOneWithoutAboutNotesInput
+  aboutPlan?: Prisma.PlanCreateNestedOneWithoutAboutNotesInput
   aboutGroup?: Prisma.GroupCreateNestedOneWithoutAboutNotesInput
+  aboutState?: Prisma.StateCreateNestedOneWithoutAboutNotesInput
   plans?: Prisma.PlanCreateNestedManyWithoutSourceNoteInput
   events?: Prisma.EventCreateNestedManyWithoutSourceNoteInput
   interactions?: Prisma.InteractionCreateNestedManyWithoutSourceNoteInput
@@ -1210,7 +2099,13 @@ export type NoteUncheckedCreateWithoutEvidenceCorrectionsInput = {
   content: string
   metadata?: string | null
   sourceFileId?: string | null
+  aboutPersonId?: string | null
+  aboutPlaceId?: string | null
+  aboutItemId?: string | null
+  aboutEventId?: string | null
+  aboutPlanId?: string | null
   aboutGroupId?: string | null
+  aboutStateId?: string | null
   plans?: Prisma.PlanUncheckedCreateNestedManyWithoutSourceNoteInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutSourceNoteInput
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutSourceNoteInput
@@ -1246,7 +2141,13 @@ export type NoteUpdateWithoutEvidenceCorrectionsInput = {
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutNotesNestedInput
   sourceFile?: Prisma.ImportedFileUpdateOneWithoutNotesNestedInput
+  aboutPerson?: Prisma.PersonUpdateOneWithoutAboutNotesNestedInput
+  aboutPlace?: Prisma.PlaceUpdateOneWithoutAboutNotesNestedInput
+  aboutItem?: Prisma.ItemUpdateOneWithoutAboutNotesNestedInput
+  aboutEvent?: Prisma.EventUpdateOneWithoutAboutNotesNestedInput
+  aboutPlan?: Prisma.PlanUpdateOneWithoutAboutNotesNestedInput
   aboutGroup?: Prisma.GroupUpdateOneWithoutAboutNotesNestedInput
+  aboutState?: Prisma.StateUpdateOneWithoutAboutNotesNestedInput
   plans?: Prisma.PlanUpdateManyWithoutSourceNoteNestedInput
   events?: Prisma.EventUpdateManyWithoutSourceNoteNestedInput
   interactions?: Prisma.InteractionUpdateManyWithoutSourceNoteNestedInput
@@ -1266,7 +2167,13 @@ export type NoteUncheckedUpdateWithoutEvidenceCorrectionsInput = {
   content?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutPersonId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutPlaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutItemId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutPlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aboutGroupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutStateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   plans?: Prisma.PlanUncheckedUpdateManyWithoutSourceNoteNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutSourceNoteNestedInput
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutSourceNoteNestedInput
@@ -1286,7 +2193,13 @@ export type NoteCreateWithoutAiAnalysisRunsInput = {
   metadata?: string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutNotesInput
   sourceFile?: Prisma.ImportedFileCreateNestedOneWithoutNotesInput
+  aboutPerson?: Prisma.PersonCreateNestedOneWithoutAboutNotesInput
+  aboutPlace?: Prisma.PlaceCreateNestedOneWithoutAboutNotesInput
+  aboutItem?: Prisma.ItemCreateNestedOneWithoutAboutNotesInput
+  aboutEvent?: Prisma.EventCreateNestedOneWithoutAboutNotesInput
+  aboutPlan?: Prisma.PlanCreateNestedOneWithoutAboutNotesInput
   aboutGroup?: Prisma.GroupCreateNestedOneWithoutAboutNotesInput
+  aboutState?: Prisma.StateCreateNestedOneWithoutAboutNotesInput
   plans?: Prisma.PlanCreateNestedManyWithoutSourceNoteInput
   events?: Prisma.EventCreateNestedManyWithoutSourceNoteInput
   interactions?: Prisma.InteractionCreateNestedManyWithoutSourceNoteInput
@@ -1306,7 +2219,13 @@ export type NoteUncheckedCreateWithoutAiAnalysisRunsInput = {
   content: string
   metadata?: string | null
   sourceFileId?: string | null
+  aboutPersonId?: string | null
+  aboutPlaceId?: string | null
+  aboutItemId?: string | null
+  aboutEventId?: string | null
+  aboutPlanId?: string | null
   aboutGroupId?: string | null
+  aboutStateId?: string | null
   plans?: Prisma.PlanUncheckedCreateNestedManyWithoutSourceNoteInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutSourceNoteInput
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutSourceNoteInput
@@ -1342,7 +2261,13 @@ export type NoteUpdateWithoutAiAnalysisRunsInput = {
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutNotesNestedInput
   sourceFile?: Prisma.ImportedFileUpdateOneWithoutNotesNestedInput
+  aboutPerson?: Prisma.PersonUpdateOneWithoutAboutNotesNestedInput
+  aboutPlace?: Prisma.PlaceUpdateOneWithoutAboutNotesNestedInput
+  aboutItem?: Prisma.ItemUpdateOneWithoutAboutNotesNestedInput
+  aboutEvent?: Prisma.EventUpdateOneWithoutAboutNotesNestedInput
+  aboutPlan?: Prisma.PlanUpdateOneWithoutAboutNotesNestedInput
   aboutGroup?: Prisma.GroupUpdateOneWithoutAboutNotesNestedInput
+  aboutState?: Prisma.StateUpdateOneWithoutAboutNotesNestedInput
   plans?: Prisma.PlanUpdateManyWithoutSourceNoteNestedInput
   events?: Prisma.EventUpdateManyWithoutSourceNoteNestedInput
   interactions?: Prisma.InteractionUpdateManyWithoutSourceNoteNestedInput
@@ -1362,7 +2287,13 @@ export type NoteUncheckedUpdateWithoutAiAnalysisRunsInput = {
   content?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutPersonId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutPlaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutItemId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutPlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aboutGroupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutStateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   plans?: Prisma.PlanUncheckedUpdateManyWithoutSourceNoteNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutSourceNoteNestedInput
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutSourceNoteNestedInput
@@ -1382,7 +2313,13 @@ export type NoteCreateWithoutSuggestionsInput = {
   metadata?: string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutNotesInput
   sourceFile?: Prisma.ImportedFileCreateNestedOneWithoutNotesInput
+  aboutPerson?: Prisma.PersonCreateNestedOneWithoutAboutNotesInput
+  aboutPlace?: Prisma.PlaceCreateNestedOneWithoutAboutNotesInput
+  aboutItem?: Prisma.ItemCreateNestedOneWithoutAboutNotesInput
+  aboutEvent?: Prisma.EventCreateNestedOneWithoutAboutNotesInput
+  aboutPlan?: Prisma.PlanCreateNestedOneWithoutAboutNotesInput
   aboutGroup?: Prisma.GroupCreateNestedOneWithoutAboutNotesInput
+  aboutState?: Prisma.StateCreateNestedOneWithoutAboutNotesInput
   plans?: Prisma.PlanCreateNestedManyWithoutSourceNoteInput
   events?: Prisma.EventCreateNestedManyWithoutSourceNoteInput
   interactions?: Prisma.InteractionCreateNestedManyWithoutSourceNoteInput
@@ -1402,7 +2339,13 @@ export type NoteUncheckedCreateWithoutSuggestionsInput = {
   content: string
   metadata?: string | null
   sourceFileId?: string | null
+  aboutPersonId?: string | null
+  aboutPlaceId?: string | null
+  aboutItemId?: string | null
+  aboutEventId?: string | null
+  aboutPlanId?: string | null
   aboutGroupId?: string | null
+  aboutStateId?: string | null
   plans?: Prisma.PlanUncheckedCreateNestedManyWithoutSourceNoteInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutSourceNoteInput
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutSourceNoteInput
@@ -1438,7 +2381,13 @@ export type NoteUpdateWithoutSuggestionsInput = {
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutNotesNestedInput
   sourceFile?: Prisma.ImportedFileUpdateOneWithoutNotesNestedInput
+  aboutPerson?: Prisma.PersonUpdateOneWithoutAboutNotesNestedInput
+  aboutPlace?: Prisma.PlaceUpdateOneWithoutAboutNotesNestedInput
+  aboutItem?: Prisma.ItemUpdateOneWithoutAboutNotesNestedInput
+  aboutEvent?: Prisma.EventUpdateOneWithoutAboutNotesNestedInput
+  aboutPlan?: Prisma.PlanUpdateOneWithoutAboutNotesNestedInput
   aboutGroup?: Prisma.GroupUpdateOneWithoutAboutNotesNestedInput
+  aboutState?: Prisma.StateUpdateOneWithoutAboutNotesNestedInput
   plans?: Prisma.PlanUpdateManyWithoutSourceNoteNestedInput
   events?: Prisma.EventUpdateManyWithoutSourceNoteNestedInput
   interactions?: Prisma.InteractionUpdateManyWithoutSourceNoteNestedInput
@@ -1458,7 +2407,13 @@ export type NoteUncheckedUpdateWithoutSuggestionsInput = {
   content?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutPersonId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutPlaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutItemId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutPlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aboutGroupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutStateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   plans?: Prisma.PlanUncheckedUpdateManyWithoutSourceNoteNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutSourceNoteNestedInput
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutSourceNoteNestedInput
@@ -1478,6 +2433,12 @@ export type NoteCreateWithoutAboutGroupInput = {
   metadata?: string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutNotesInput
   sourceFile?: Prisma.ImportedFileCreateNestedOneWithoutNotesInput
+  aboutPerson?: Prisma.PersonCreateNestedOneWithoutAboutNotesInput
+  aboutPlace?: Prisma.PlaceCreateNestedOneWithoutAboutNotesInput
+  aboutItem?: Prisma.ItemCreateNestedOneWithoutAboutNotesInput
+  aboutEvent?: Prisma.EventCreateNestedOneWithoutAboutNotesInput
+  aboutPlan?: Prisma.PlanCreateNestedOneWithoutAboutNotesInput
+  aboutState?: Prisma.StateCreateNestedOneWithoutAboutNotesInput
   plans?: Prisma.PlanCreateNestedManyWithoutSourceNoteInput
   events?: Prisma.EventCreateNestedManyWithoutSourceNoteInput
   interactions?: Prisma.InteractionCreateNestedManyWithoutSourceNoteInput
@@ -1498,6 +2459,12 @@ export type NoteUncheckedCreateWithoutAboutGroupInput = {
   content: string
   metadata?: string | null
   sourceFileId?: string | null
+  aboutPersonId?: string | null
+  aboutPlaceId?: string | null
+  aboutItemId?: string | null
+  aboutEventId?: string | null
+  aboutPlanId?: string | null
+  aboutStateId?: string | null
   plans?: Prisma.PlanUncheckedCreateNestedManyWithoutSourceNoteInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutSourceNoteInput
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutSourceNoteInput
@@ -1527,7 +2494,13 @@ export type NoteCreateWithoutGroupsInput = {
   metadata?: string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutNotesInput
   sourceFile?: Prisma.ImportedFileCreateNestedOneWithoutNotesInput
+  aboutPerson?: Prisma.PersonCreateNestedOneWithoutAboutNotesInput
+  aboutPlace?: Prisma.PlaceCreateNestedOneWithoutAboutNotesInput
+  aboutItem?: Prisma.ItemCreateNestedOneWithoutAboutNotesInput
+  aboutEvent?: Prisma.EventCreateNestedOneWithoutAboutNotesInput
+  aboutPlan?: Prisma.PlanCreateNestedOneWithoutAboutNotesInput
   aboutGroup?: Prisma.GroupCreateNestedOneWithoutAboutNotesInput
+  aboutState?: Prisma.StateCreateNestedOneWithoutAboutNotesInput
   plans?: Prisma.PlanCreateNestedManyWithoutSourceNoteInput
   events?: Prisma.EventCreateNestedManyWithoutSourceNoteInput
   interactions?: Prisma.InteractionCreateNestedManyWithoutSourceNoteInput
@@ -1547,7 +2520,13 @@ export type NoteUncheckedCreateWithoutGroupsInput = {
   content: string
   metadata?: string | null
   sourceFileId?: string | null
+  aboutPersonId?: string | null
+  aboutPlaceId?: string | null
+  aboutItemId?: string | null
+  aboutEventId?: string | null
+  aboutPlanId?: string | null
   aboutGroupId?: string | null
+  aboutStateId?: string | null
   plans?: Prisma.PlanUncheckedCreateNestedManyWithoutSourceNoteInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutSourceNoteInput
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutSourceNoteInput
@@ -1599,7 +2578,13 @@ export type NoteUpdateWithoutGroupsInput = {
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutNotesNestedInput
   sourceFile?: Prisma.ImportedFileUpdateOneWithoutNotesNestedInput
+  aboutPerson?: Prisma.PersonUpdateOneWithoutAboutNotesNestedInput
+  aboutPlace?: Prisma.PlaceUpdateOneWithoutAboutNotesNestedInput
+  aboutItem?: Prisma.ItemUpdateOneWithoutAboutNotesNestedInput
+  aboutEvent?: Prisma.EventUpdateOneWithoutAboutNotesNestedInput
+  aboutPlan?: Prisma.PlanUpdateOneWithoutAboutNotesNestedInput
   aboutGroup?: Prisma.GroupUpdateOneWithoutAboutNotesNestedInput
+  aboutState?: Prisma.StateUpdateOneWithoutAboutNotesNestedInput
   plans?: Prisma.PlanUpdateManyWithoutSourceNoteNestedInput
   events?: Prisma.EventUpdateManyWithoutSourceNoteNestedInput
   interactions?: Prisma.InteractionUpdateManyWithoutSourceNoteNestedInput
@@ -1619,7 +2604,13 @@ export type NoteUncheckedUpdateWithoutGroupsInput = {
   content?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutPersonId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutPlaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutItemId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutPlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aboutGroupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutStateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   plans?: Prisma.PlanUncheckedUpdateManyWithoutSourceNoteNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutSourceNoteNestedInput
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutSourceNoteNestedInput
@@ -1639,7 +2630,13 @@ export type NoteCreateWithoutLifeModelClaimFeedbackInput = {
   metadata?: string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutNotesInput
   sourceFile?: Prisma.ImportedFileCreateNestedOneWithoutNotesInput
+  aboutPerson?: Prisma.PersonCreateNestedOneWithoutAboutNotesInput
+  aboutPlace?: Prisma.PlaceCreateNestedOneWithoutAboutNotesInput
+  aboutItem?: Prisma.ItemCreateNestedOneWithoutAboutNotesInput
+  aboutEvent?: Prisma.EventCreateNestedOneWithoutAboutNotesInput
+  aboutPlan?: Prisma.PlanCreateNestedOneWithoutAboutNotesInput
   aboutGroup?: Prisma.GroupCreateNestedOneWithoutAboutNotesInput
+  aboutState?: Prisma.StateCreateNestedOneWithoutAboutNotesInput
   plans?: Prisma.PlanCreateNestedManyWithoutSourceNoteInput
   events?: Prisma.EventCreateNestedManyWithoutSourceNoteInput
   interactions?: Prisma.InteractionCreateNestedManyWithoutSourceNoteInput
@@ -1659,7 +2656,13 @@ export type NoteUncheckedCreateWithoutLifeModelClaimFeedbackInput = {
   content: string
   metadata?: string | null
   sourceFileId?: string | null
+  aboutPersonId?: string | null
+  aboutPlaceId?: string | null
+  aboutItemId?: string | null
+  aboutEventId?: string | null
+  aboutPlanId?: string | null
   aboutGroupId?: string | null
+  aboutStateId?: string | null
   plans?: Prisma.PlanUncheckedCreateNestedManyWithoutSourceNoteInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutSourceNoteInput
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutSourceNoteInput
@@ -1695,7 +2698,13 @@ export type NoteUpdateWithoutLifeModelClaimFeedbackInput = {
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutNotesNestedInput
   sourceFile?: Prisma.ImportedFileUpdateOneWithoutNotesNestedInput
+  aboutPerson?: Prisma.PersonUpdateOneWithoutAboutNotesNestedInput
+  aboutPlace?: Prisma.PlaceUpdateOneWithoutAboutNotesNestedInput
+  aboutItem?: Prisma.ItemUpdateOneWithoutAboutNotesNestedInput
+  aboutEvent?: Prisma.EventUpdateOneWithoutAboutNotesNestedInput
+  aboutPlan?: Prisma.PlanUpdateOneWithoutAboutNotesNestedInput
   aboutGroup?: Prisma.GroupUpdateOneWithoutAboutNotesNestedInput
+  aboutState?: Prisma.StateUpdateOneWithoutAboutNotesNestedInput
   plans?: Prisma.PlanUpdateManyWithoutSourceNoteNestedInput
   events?: Prisma.EventUpdateManyWithoutSourceNoteNestedInput
   interactions?: Prisma.InteractionUpdateManyWithoutSourceNoteNestedInput
@@ -1715,7 +2724,13 @@ export type NoteUncheckedUpdateWithoutLifeModelClaimFeedbackInput = {
   content?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutPersonId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutPlaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutItemId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutPlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aboutGroupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutStateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   plans?: Prisma.PlanUncheckedUpdateManyWithoutSourceNoteNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutSourceNoteNestedInput
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutSourceNoteNestedInput
@@ -1735,7 +2750,13 @@ export type NoteCreateWithoutStatesInput = {
   metadata?: string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutNotesInput
   sourceFile?: Prisma.ImportedFileCreateNestedOneWithoutNotesInput
+  aboutPerson?: Prisma.PersonCreateNestedOneWithoutAboutNotesInput
+  aboutPlace?: Prisma.PlaceCreateNestedOneWithoutAboutNotesInput
+  aboutItem?: Prisma.ItemCreateNestedOneWithoutAboutNotesInput
+  aboutEvent?: Prisma.EventCreateNestedOneWithoutAboutNotesInput
+  aboutPlan?: Prisma.PlanCreateNestedOneWithoutAboutNotesInput
   aboutGroup?: Prisma.GroupCreateNestedOneWithoutAboutNotesInput
+  aboutState?: Prisma.StateCreateNestedOneWithoutAboutNotesInput
   plans?: Prisma.PlanCreateNestedManyWithoutSourceNoteInput
   events?: Prisma.EventCreateNestedManyWithoutSourceNoteInput
   interactions?: Prisma.InteractionCreateNestedManyWithoutSourceNoteInput
@@ -1755,7 +2776,13 @@ export type NoteUncheckedCreateWithoutStatesInput = {
   content: string
   metadata?: string | null
   sourceFileId?: string | null
+  aboutPersonId?: string | null
+  aboutPlaceId?: string | null
+  aboutItemId?: string | null
+  aboutEventId?: string | null
+  aboutPlanId?: string | null
   aboutGroupId?: string | null
+  aboutStateId?: string | null
   plans?: Prisma.PlanUncheckedCreateNestedManyWithoutSourceNoteInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutSourceNoteInput
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutSourceNoteInput
@@ -1769,6 +2796,67 @@ export type NoteUncheckedCreateWithoutStatesInput = {
 export type NoteCreateOrConnectWithoutStatesInput = {
   where: Prisma.NoteWhereUniqueInput
   create: Prisma.XOR<Prisma.NoteCreateWithoutStatesInput, Prisma.NoteUncheckedCreateWithoutStatesInput>
+}
+
+export type NoteCreateWithoutAboutStateInput = {
+  id?: string
+  createdAt?: Date | string
+  timestamp: Date | string
+  type: string
+  content: string
+  metadata?: string | null
+  workspace?: Prisma.WorkspaceCreateNestedOneWithoutNotesInput
+  sourceFile?: Prisma.ImportedFileCreateNestedOneWithoutNotesInput
+  aboutPerson?: Prisma.PersonCreateNestedOneWithoutAboutNotesInput
+  aboutPlace?: Prisma.PlaceCreateNestedOneWithoutAboutNotesInput
+  aboutItem?: Prisma.ItemCreateNestedOneWithoutAboutNotesInput
+  aboutEvent?: Prisma.EventCreateNestedOneWithoutAboutNotesInput
+  aboutPlan?: Prisma.PlanCreateNestedOneWithoutAboutNotesInput
+  aboutGroup?: Prisma.GroupCreateNestedOneWithoutAboutNotesInput
+  plans?: Prisma.PlanCreateNestedManyWithoutSourceNoteInput
+  events?: Prisma.EventCreateNestedManyWithoutSourceNoteInput
+  interactions?: Prisma.InteractionCreateNestedManyWithoutSourceNoteInput
+  states?: Prisma.StateCreateNestedManyWithoutSourceNoteInput
+  groups?: Prisma.GroupCreateNestedManyWithoutSourceNoteInput
+  aiAnalysisRuns?: Prisma.NoteAnalysisRunCreateNestedManyWithoutNoteInput
+  suggestions?: Prisma.NoteSuggestionCreateNestedManyWithoutNoteInput
+  lifeModelClaimFeedback?: Prisma.LifeModelClaimFeedbackCreateNestedManyWithoutSourceNoteInput
+  evidenceCorrections?: Prisma.EvidenceClaimCreateNestedManyWithoutCorrectionNoteInput
+}
+
+export type NoteUncheckedCreateWithoutAboutStateInput = {
+  id?: string
+  workspaceId?: string
+  createdAt?: Date | string
+  timestamp: Date | string
+  type: string
+  content: string
+  metadata?: string | null
+  sourceFileId?: string | null
+  aboutPersonId?: string | null
+  aboutPlaceId?: string | null
+  aboutItemId?: string | null
+  aboutEventId?: string | null
+  aboutPlanId?: string | null
+  aboutGroupId?: string | null
+  plans?: Prisma.PlanUncheckedCreateNestedManyWithoutSourceNoteInput
+  events?: Prisma.EventUncheckedCreateNestedManyWithoutSourceNoteInput
+  interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutSourceNoteInput
+  states?: Prisma.StateUncheckedCreateNestedManyWithoutSourceNoteInput
+  groups?: Prisma.GroupUncheckedCreateNestedManyWithoutSourceNoteInput
+  aiAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedCreateNestedManyWithoutNoteInput
+  suggestions?: Prisma.NoteSuggestionUncheckedCreateNestedManyWithoutNoteInput
+  lifeModelClaimFeedback?: Prisma.LifeModelClaimFeedbackUncheckedCreateNestedManyWithoutSourceNoteInput
+  evidenceCorrections?: Prisma.EvidenceClaimUncheckedCreateNestedManyWithoutCorrectionNoteInput
+}
+
+export type NoteCreateOrConnectWithoutAboutStateInput = {
+  where: Prisma.NoteWhereUniqueInput
+  create: Prisma.XOR<Prisma.NoteCreateWithoutAboutStateInput, Prisma.NoteUncheckedCreateWithoutAboutStateInput>
+}
+
+export type NoteCreateManyAboutStateInputEnvelope = {
+  data: Prisma.NoteCreateManyAboutStateInput | Prisma.NoteCreateManyAboutStateInput[]
 }
 
 export type NoteUpsertWithoutStatesInput = {
@@ -1791,7 +2879,13 @@ export type NoteUpdateWithoutStatesInput = {
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutNotesNestedInput
   sourceFile?: Prisma.ImportedFileUpdateOneWithoutNotesNestedInput
+  aboutPerson?: Prisma.PersonUpdateOneWithoutAboutNotesNestedInput
+  aboutPlace?: Prisma.PlaceUpdateOneWithoutAboutNotesNestedInput
+  aboutItem?: Prisma.ItemUpdateOneWithoutAboutNotesNestedInput
+  aboutEvent?: Prisma.EventUpdateOneWithoutAboutNotesNestedInput
+  aboutPlan?: Prisma.PlanUpdateOneWithoutAboutNotesNestedInput
   aboutGroup?: Prisma.GroupUpdateOneWithoutAboutNotesNestedInput
+  aboutState?: Prisma.StateUpdateOneWithoutAboutNotesNestedInput
   plans?: Prisma.PlanUpdateManyWithoutSourceNoteNestedInput
   events?: Prisma.EventUpdateManyWithoutSourceNoteNestedInput
   interactions?: Prisma.InteractionUpdateManyWithoutSourceNoteNestedInput
@@ -1811,7 +2905,13 @@ export type NoteUncheckedUpdateWithoutStatesInput = {
   content?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutPersonId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutPlaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutItemId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutPlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aboutGroupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutStateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   plans?: Prisma.PlanUncheckedUpdateManyWithoutSourceNoteNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutSourceNoteNestedInput
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutSourceNoteNestedInput
@@ -1822,6 +2922,22 @@ export type NoteUncheckedUpdateWithoutStatesInput = {
   evidenceCorrections?: Prisma.EvidenceClaimUncheckedUpdateManyWithoutCorrectionNoteNestedInput
 }
 
+export type NoteUpsertWithWhereUniqueWithoutAboutStateInput = {
+  where: Prisma.NoteWhereUniqueInput
+  update: Prisma.XOR<Prisma.NoteUpdateWithoutAboutStateInput, Prisma.NoteUncheckedUpdateWithoutAboutStateInput>
+  create: Prisma.XOR<Prisma.NoteCreateWithoutAboutStateInput, Prisma.NoteUncheckedCreateWithoutAboutStateInput>
+}
+
+export type NoteUpdateWithWhereUniqueWithoutAboutStateInput = {
+  where: Prisma.NoteWhereUniqueInput
+  data: Prisma.XOR<Prisma.NoteUpdateWithoutAboutStateInput, Prisma.NoteUncheckedUpdateWithoutAboutStateInput>
+}
+
+export type NoteUpdateManyWithWhereWithoutAboutStateInput = {
+  where: Prisma.NoteScalarWhereInput
+  data: Prisma.XOR<Prisma.NoteUpdateManyMutationInput, Prisma.NoteUncheckedUpdateManyWithoutAboutStateInput>
+}
+
 export type NoteCreateManyWorkspaceInput = {
   id?: string
   createdAt?: Date | string
@@ -1830,7 +2946,13 @@ export type NoteCreateManyWorkspaceInput = {
   content: string
   metadata?: string | null
   sourceFileId?: string | null
+  aboutPersonId?: string | null
+  aboutPlaceId?: string | null
+  aboutItemId?: string | null
+  aboutEventId?: string | null
+  aboutPlanId?: string | null
   aboutGroupId?: string | null
+  aboutStateId?: string | null
 }
 
 export type NoteUpdateWithoutWorkspaceInput = {
@@ -1841,7 +2963,13 @@ export type NoteUpdateWithoutWorkspaceInput = {
   content?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceFile?: Prisma.ImportedFileUpdateOneWithoutNotesNestedInput
+  aboutPerson?: Prisma.PersonUpdateOneWithoutAboutNotesNestedInput
+  aboutPlace?: Prisma.PlaceUpdateOneWithoutAboutNotesNestedInput
+  aboutItem?: Prisma.ItemUpdateOneWithoutAboutNotesNestedInput
+  aboutEvent?: Prisma.EventUpdateOneWithoutAboutNotesNestedInput
+  aboutPlan?: Prisma.PlanUpdateOneWithoutAboutNotesNestedInput
   aboutGroup?: Prisma.GroupUpdateOneWithoutAboutNotesNestedInput
+  aboutState?: Prisma.StateUpdateOneWithoutAboutNotesNestedInput
   plans?: Prisma.PlanUpdateManyWithoutSourceNoteNestedInput
   events?: Prisma.EventUpdateManyWithoutSourceNoteNestedInput
   interactions?: Prisma.InteractionUpdateManyWithoutSourceNoteNestedInput
@@ -1861,7 +2989,13 @@ export type NoteUncheckedUpdateWithoutWorkspaceInput = {
   content?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutPersonId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutPlaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutItemId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutPlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aboutGroupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutStateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   plans?: Prisma.PlanUncheckedUpdateManyWithoutSourceNoteNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutSourceNoteNestedInput
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutSourceNoteNestedInput
@@ -1881,7 +3015,443 @@ export type NoteUncheckedUpdateManyWithoutWorkspaceInput = {
   content?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutPersonId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutPlaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutItemId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutPlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aboutGroupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutStateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+}
+
+export type NoteCreateManyAboutPersonInput = {
+  id?: string
+  workspaceId?: string
+  createdAt?: Date | string
+  timestamp: Date | string
+  type: string
+  content: string
+  metadata?: string | null
+  sourceFileId?: string | null
+  aboutPlaceId?: string | null
+  aboutItemId?: string | null
+  aboutEventId?: string | null
+  aboutPlanId?: string | null
+  aboutGroupId?: string | null
+  aboutStateId?: string | null
+}
+
+export type NoteUpdateWithoutAboutPersonInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutNotesNestedInput
+  sourceFile?: Prisma.ImportedFileUpdateOneWithoutNotesNestedInput
+  aboutPlace?: Prisma.PlaceUpdateOneWithoutAboutNotesNestedInput
+  aboutItem?: Prisma.ItemUpdateOneWithoutAboutNotesNestedInput
+  aboutEvent?: Prisma.EventUpdateOneWithoutAboutNotesNestedInput
+  aboutPlan?: Prisma.PlanUpdateOneWithoutAboutNotesNestedInput
+  aboutGroup?: Prisma.GroupUpdateOneWithoutAboutNotesNestedInput
+  aboutState?: Prisma.StateUpdateOneWithoutAboutNotesNestedInput
+  plans?: Prisma.PlanUpdateManyWithoutSourceNoteNestedInput
+  events?: Prisma.EventUpdateManyWithoutSourceNoteNestedInput
+  interactions?: Prisma.InteractionUpdateManyWithoutSourceNoteNestedInput
+  states?: Prisma.StateUpdateManyWithoutSourceNoteNestedInput
+  groups?: Prisma.GroupUpdateManyWithoutSourceNoteNestedInput
+  aiAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutNoteNestedInput
+  suggestions?: Prisma.NoteSuggestionUpdateManyWithoutNoteNestedInput
+  lifeModelClaimFeedback?: Prisma.LifeModelClaimFeedbackUpdateManyWithoutSourceNoteNestedInput
+  evidenceCorrections?: Prisma.EvidenceClaimUpdateManyWithoutCorrectionNoteNestedInput
+}
+
+export type NoteUncheckedUpdateWithoutAboutPersonInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutPlaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutItemId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutPlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutGroupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutStateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  plans?: Prisma.PlanUncheckedUpdateManyWithoutSourceNoteNestedInput
+  events?: Prisma.EventUncheckedUpdateManyWithoutSourceNoteNestedInput
+  interactions?: Prisma.InteractionUncheckedUpdateManyWithoutSourceNoteNestedInput
+  states?: Prisma.StateUncheckedUpdateManyWithoutSourceNoteNestedInput
+  groups?: Prisma.GroupUncheckedUpdateManyWithoutSourceNoteNestedInput
+  aiAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutNoteNestedInput
+  suggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutNoteNestedInput
+  lifeModelClaimFeedback?: Prisma.LifeModelClaimFeedbackUncheckedUpdateManyWithoutSourceNoteNestedInput
+  evidenceCorrections?: Prisma.EvidenceClaimUncheckedUpdateManyWithoutCorrectionNoteNestedInput
+}
+
+export type NoteUncheckedUpdateManyWithoutAboutPersonInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutPlaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutItemId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutPlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutGroupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutStateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+}
+
+export type NoteCreateManyAboutEventInput = {
+  id?: string
+  workspaceId?: string
+  createdAt?: Date | string
+  timestamp: Date | string
+  type: string
+  content: string
+  metadata?: string | null
+  sourceFileId?: string | null
+  aboutPersonId?: string | null
+  aboutPlaceId?: string | null
+  aboutItemId?: string | null
+  aboutPlanId?: string | null
+  aboutGroupId?: string | null
+  aboutStateId?: string | null
+}
+
+export type NoteUpdateWithoutAboutEventInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutNotesNestedInput
+  sourceFile?: Prisma.ImportedFileUpdateOneWithoutNotesNestedInput
+  aboutPerson?: Prisma.PersonUpdateOneWithoutAboutNotesNestedInput
+  aboutPlace?: Prisma.PlaceUpdateOneWithoutAboutNotesNestedInput
+  aboutItem?: Prisma.ItemUpdateOneWithoutAboutNotesNestedInput
+  aboutPlan?: Prisma.PlanUpdateOneWithoutAboutNotesNestedInput
+  aboutGroup?: Prisma.GroupUpdateOneWithoutAboutNotesNestedInput
+  aboutState?: Prisma.StateUpdateOneWithoutAboutNotesNestedInput
+  plans?: Prisma.PlanUpdateManyWithoutSourceNoteNestedInput
+  events?: Prisma.EventUpdateManyWithoutSourceNoteNestedInput
+  interactions?: Prisma.InteractionUpdateManyWithoutSourceNoteNestedInput
+  states?: Prisma.StateUpdateManyWithoutSourceNoteNestedInput
+  groups?: Prisma.GroupUpdateManyWithoutSourceNoteNestedInput
+  aiAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutNoteNestedInput
+  suggestions?: Prisma.NoteSuggestionUpdateManyWithoutNoteNestedInput
+  lifeModelClaimFeedback?: Prisma.LifeModelClaimFeedbackUpdateManyWithoutSourceNoteNestedInput
+  evidenceCorrections?: Prisma.EvidenceClaimUpdateManyWithoutCorrectionNoteNestedInput
+}
+
+export type NoteUncheckedUpdateWithoutAboutEventInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutPersonId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutPlaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutItemId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutPlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutGroupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutStateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  plans?: Prisma.PlanUncheckedUpdateManyWithoutSourceNoteNestedInput
+  events?: Prisma.EventUncheckedUpdateManyWithoutSourceNoteNestedInput
+  interactions?: Prisma.InteractionUncheckedUpdateManyWithoutSourceNoteNestedInput
+  states?: Prisma.StateUncheckedUpdateManyWithoutSourceNoteNestedInput
+  groups?: Prisma.GroupUncheckedUpdateManyWithoutSourceNoteNestedInput
+  aiAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutNoteNestedInput
+  suggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutNoteNestedInput
+  lifeModelClaimFeedback?: Prisma.LifeModelClaimFeedbackUncheckedUpdateManyWithoutSourceNoteNestedInput
+  evidenceCorrections?: Prisma.EvidenceClaimUncheckedUpdateManyWithoutCorrectionNoteNestedInput
+}
+
+export type NoteUncheckedUpdateManyWithoutAboutEventInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutPersonId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutPlaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutItemId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutPlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutGroupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutStateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+}
+
+export type NoteCreateManyAboutPlanInput = {
+  id?: string
+  workspaceId?: string
+  createdAt?: Date | string
+  timestamp: Date | string
+  type: string
+  content: string
+  metadata?: string | null
+  sourceFileId?: string | null
+  aboutPersonId?: string | null
+  aboutPlaceId?: string | null
+  aboutItemId?: string | null
+  aboutEventId?: string | null
+  aboutGroupId?: string | null
+  aboutStateId?: string | null
+}
+
+export type NoteUpdateWithoutAboutPlanInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutNotesNestedInput
+  sourceFile?: Prisma.ImportedFileUpdateOneWithoutNotesNestedInput
+  aboutPerson?: Prisma.PersonUpdateOneWithoutAboutNotesNestedInput
+  aboutPlace?: Prisma.PlaceUpdateOneWithoutAboutNotesNestedInput
+  aboutItem?: Prisma.ItemUpdateOneWithoutAboutNotesNestedInput
+  aboutEvent?: Prisma.EventUpdateOneWithoutAboutNotesNestedInput
+  aboutGroup?: Prisma.GroupUpdateOneWithoutAboutNotesNestedInput
+  aboutState?: Prisma.StateUpdateOneWithoutAboutNotesNestedInput
+  plans?: Prisma.PlanUpdateManyWithoutSourceNoteNestedInput
+  events?: Prisma.EventUpdateManyWithoutSourceNoteNestedInput
+  interactions?: Prisma.InteractionUpdateManyWithoutSourceNoteNestedInput
+  states?: Prisma.StateUpdateManyWithoutSourceNoteNestedInput
+  groups?: Prisma.GroupUpdateManyWithoutSourceNoteNestedInput
+  aiAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutNoteNestedInput
+  suggestions?: Prisma.NoteSuggestionUpdateManyWithoutNoteNestedInput
+  lifeModelClaimFeedback?: Prisma.LifeModelClaimFeedbackUpdateManyWithoutSourceNoteNestedInput
+  evidenceCorrections?: Prisma.EvidenceClaimUpdateManyWithoutCorrectionNoteNestedInput
+}
+
+export type NoteUncheckedUpdateWithoutAboutPlanInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutPersonId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutPlaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutItemId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutGroupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutStateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  plans?: Prisma.PlanUncheckedUpdateManyWithoutSourceNoteNestedInput
+  events?: Prisma.EventUncheckedUpdateManyWithoutSourceNoteNestedInput
+  interactions?: Prisma.InteractionUncheckedUpdateManyWithoutSourceNoteNestedInput
+  states?: Prisma.StateUncheckedUpdateManyWithoutSourceNoteNestedInput
+  groups?: Prisma.GroupUncheckedUpdateManyWithoutSourceNoteNestedInput
+  aiAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutNoteNestedInput
+  suggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutNoteNestedInput
+  lifeModelClaimFeedback?: Prisma.LifeModelClaimFeedbackUncheckedUpdateManyWithoutSourceNoteNestedInput
+  evidenceCorrections?: Prisma.EvidenceClaimUncheckedUpdateManyWithoutCorrectionNoteNestedInput
+}
+
+export type NoteUncheckedUpdateManyWithoutAboutPlanInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutPersonId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutPlaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutItemId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutGroupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutStateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+}
+
+export type NoteCreateManyAboutPlaceInput = {
+  id?: string
+  workspaceId?: string
+  createdAt?: Date | string
+  timestamp: Date | string
+  type: string
+  content: string
+  metadata?: string | null
+  sourceFileId?: string | null
+  aboutPersonId?: string | null
+  aboutItemId?: string | null
+  aboutEventId?: string | null
+  aboutPlanId?: string | null
+  aboutGroupId?: string | null
+  aboutStateId?: string | null
+}
+
+export type NoteUpdateWithoutAboutPlaceInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutNotesNestedInput
+  sourceFile?: Prisma.ImportedFileUpdateOneWithoutNotesNestedInput
+  aboutPerson?: Prisma.PersonUpdateOneWithoutAboutNotesNestedInput
+  aboutItem?: Prisma.ItemUpdateOneWithoutAboutNotesNestedInput
+  aboutEvent?: Prisma.EventUpdateOneWithoutAboutNotesNestedInput
+  aboutPlan?: Prisma.PlanUpdateOneWithoutAboutNotesNestedInput
+  aboutGroup?: Prisma.GroupUpdateOneWithoutAboutNotesNestedInput
+  aboutState?: Prisma.StateUpdateOneWithoutAboutNotesNestedInput
+  plans?: Prisma.PlanUpdateManyWithoutSourceNoteNestedInput
+  events?: Prisma.EventUpdateManyWithoutSourceNoteNestedInput
+  interactions?: Prisma.InteractionUpdateManyWithoutSourceNoteNestedInput
+  states?: Prisma.StateUpdateManyWithoutSourceNoteNestedInput
+  groups?: Prisma.GroupUpdateManyWithoutSourceNoteNestedInput
+  aiAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutNoteNestedInput
+  suggestions?: Prisma.NoteSuggestionUpdateManyWithoutNoteNestedInput
+  lifeModelClaimFeedback?: Prisma.LifeModelClaimFeedbackUpdateManyWithoutSourceNoteNestedInput
+  evidenceCorrections?: Prisma.EvidenceClaimUpdateManyWithoutCorrectionNoteNestedInput
+}
+
+export type NoteUncheckedUpdateWithoutAboutPlaceInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutPersonId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutItemId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutPlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutGroupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutStateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  plans?: Prisma.PlanUncheckedUpdateManyWithoutSourceNoteNestedInput
+  events?: Prisma.EventUncheckedUpdateManyWithoutSourceNoteNestedInput
+  interactions?: Prisma.InteractionUncheckedUpdateManyWithoutSourceNoteNestedInput
+  states?: Prisma.StateUncheckedUpdateManyWithoutSourceNoteNestedInput
+  groups?: Prisma.GroupUncheckedUpdateManyWithoutSourceNoteNestedInput
+  aiAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutNoteNestedInput
+  suggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutNoteNestedInput
+  lifeModelClaimFeedback?: Prisma.LifeModelClaimFeedbackUncheckedUpdateManyWithoutSourceNoteNestedInput
+  evidenceCorrections?: Prisma.EvidenceClaimUncheckedUpdateManyWithoutCorrectionNoteNestedInput
+}
+
+export type NoteUncheckedUpdateManyWithoutAboutPlaceInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutPersonId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutItemId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutPlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutGroupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutStateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+}
+
+export type NoteCreateManyAboutItemInput = {
+  id?: string
+  workspaceId?: string
+  createdAt?: Date | string
+  timestamp: Date | string
+  type: string
+  content: string
+  metadata?: string | null
+  sourceFileId?: string | null
+  aboutPersonId?: string | null
+  aboutPlaceId?: string | null
+  aboutEventId?: string | null
+  aboutPlanId?: string | null
+  aboutGroupId?: string | null
+  aboutStateId?: string | null
+}
+
+export type NoteUpdateWithoutAboutItemInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutNotesNestedInput
+  sourceFile?: Prisma.ImportedFileUpdateOneWithoutNotesNestedInput
+  aboutPerson?: Prisma.PersonUpdateOneWithoutAboutNotesNestedInput
+  aboutPlace?: Prisma.PlaceUpdateOneWithoutAboutNotesNestedInput
+  aboutEvent?: Prisma.EventUpdateOneWithoutAboutNotesNestedInput
+  aboutPlan?: Prisma.PlanUpdateOneWithoutAboutNotesNestedInput
+  aboutGroup?: Prisma.GroupUpdateOneWithoutAboutNotesNestedInput
+  aboutState?: Prisma.StateUpdateOneWithoutAboutNotesNestedInput
+  plans?: Prisma.PlanUpdateManyWithoutSourceNoteNestedInput
+  events?: Prisma.EventUpdateManyWithoutSourceNoteNestedInput
+  interactions?: Prisma.InteractionUpdateManyWithoutSourceNoteNestedInput
+  states?: Prisma.StateUpdateManyWithoutSourceNoteNestedInput
+  groups?: Prisma.GroupUpdateManyWithoutSourceNoteNestedInput
+  aiAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutNoteNestedInput
+  suggestions?: Prisma.NoteSuggestionUpdateManyWithoutNoteNestedInput
+  lifeModelClaimFeedback?: Prisma.LifeModelClaimFeedbackUpdateManyWithoutSourceNoteNestedInput
+  evidenceCorrections?: Prisma.EvidenceClaimUpdateManyWithoutCorrectionNoteNestedInput
+}
+
+export type NoteUncheckedUpdateWithoutAboutItemInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutPersonId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutPlaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutPlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutGroupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutStateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  plans?: Prisma.PlanUncheckedUpdateManyWithoutSourceNoteNestedInput
+  events?: Prisma.EventUncheckedUpdateManyWithoutSourceNoteNestedInput
+  interactions?: Prisma.InteractionUncheckedUpdateManyWithoutSourceNoteNestedInput
+  states?: Prisma.StateUncheckedUpdateManyWithoutSourceNoteNestedInput
+  groups?: Prisma.GroupUncheckedUpdateManyWithoutSourceNoteNestedInput
+  aiAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutNoteNestedInput
+  suggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutNoteNestedInput
+  lifeModelClaimFeedback?: Prisma.LifeModelClaimFeedbackUncheckedUpdateManyWithoutSourceNoteNestedInput
+  evidenceCorrections?: Prisma.EvidenceClaimUncheckedUpdateManyWithoutCorrectionNoteNestedInput
+}
+
+export type NoteUncheckedUpdateManyWithoutAboutItemInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutPersonId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutPlaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutPlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutGroupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutStateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type NoteCreateManySourceFileInput = {
@@ -1892,7 +3462,13 @@ export type NoteCreateManySourceFileInput = {
   type: string
   content: string
   metadata?: string | null
+  aboutPersonId?: string | null
+  aboutPlaceId?: string | null
+  aboutItemId?: string | null
+  aboutEventId?: string | null
+  aboutPlanId?: string | null
   aboutGroupId?: string | null
+  aboutStateId?: string | null
 }
 
 export type NoteUpdateWithoutSourceFileInput = {
@@ -1903,7 +3479,13 @@ export type NoteUpdateWithoutSourceFileInput = {
   content?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutNotesNestedInput
+  aboutPerson?: Prisma.PersonUpdateOneWithoutAboutNotesNestedInput
+  aboutPlace?: Prisma.PlaceUpdateOneWithoutAboutNotesNestedInput
+  aboutItem?: Prisma.ItemUpdateOneWithoutAboutNotesNestedInput
+  aboutEvent?: Prisma.EventUpdateOneWithoutAboutNotesNestedInput
+  aboutPlan?: Prisma.PlanUpdateOneWithoutAboutNotesNestedInput
   aboutGroup?: Prisma.GroupUpdateOneWithoutAboutNotesNestedInput
+  aboutState?: Prisma.StateUpdateOneWithoutAboutNotesNestedInput
   plans?: Prisma.PlanUpdateManyWithoutSourceNoteNestedInput
   events?: Prisma.EventUpdateManyWithoutSourceNoteNestedInput
   interactions?: Prisma.InteractionUpdateManyWithoutSourceNoteNestedInput
@@ -1923,7 +3505,13 @@ export type NoteUncheckedUpdateWithoutSourceFileInput = {
   type?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutPersonId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutPlaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutItemId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutPlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aboutGroupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutStateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   plans?: Prisma.PlanUncheckedUpdateManyWithoutSourceNoteNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutSourceNoteNestedInput
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutSourceNoteNestedInput
@@ -1943,7 +3531,13 @@ export type NoteUncheckedUpdateManyWithoutSourceFileInput = {
   type?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutPersonId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutPlaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutItemId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutPlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aboutGroupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutStateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type NoteCreateManyAboutGroupInput = {
@@ -1955,6 +3549,12 @@ export type NoteCreateManyAboutGroupInput = {
   content: string
   metadata?: string | null
   sourceFileId?: string | null
+  aboutPersonId?: string | null
+  aboutPlaceId?: string | null
+  aboutItemId?: string | null
+  aboutEventId?: string | null
+  aboutPlanId?: string | null
+  aboutStateId?: string | null
 }
 
 export type NoteUpdateWithoutAboutGroupInput = {
@@ -1966,6 +3566,12 @@ export type NoteUpdateWithoutAboutGroupInput = {
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutNotesNestedInput
   sourceFile?: Prisma.ImportedFileUpdateOneWithoutNotesNestedInput
+  aboutPerson?: Prisma.PersonUpdateOneWithoutAboutNotesNestedInput
+  aboutPlace?: Prisma.PlaceUpdateOneWithoutAboutNotesNestedInput
+  aboutItem?: Prisma.ItemUpdateOneWithoutAboutNotesNestedInput
+  aboutEvent?: Prisma.EventUpdateOneWithoutAboutNotesNestedInput
+  aboutPlan?: Prisma.PlanUpdateOneWithoutAboutNotesNestedInput
+  aboutState?: Prisma.StateUpdateOneWithoutAboutNotesNestedInput
   plans?: Prisma.PlanUpdateManyWithoutSourceNoteNestedInput
   events?: Prisma.EventUpdateManyWithoutSourceNoteNestedInput
   interactions?: Prisma.InteractionUpdateManyWithoutSourceNoteNestedInput
@@ -1986,6 +3592,12 @@ export type NoteUncheckedUpdateWithoutAboutGroupInput = {
   content?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutPersonId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutPlaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutItemId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutPlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutStateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   plans?: Prisma.PlanUncheckedUpdateManyWithoutSourceNoteNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutSourceNoteNestedInput
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutSourceNoteNestedInput
@@ -2006,6 +3618,98 @@ export type NoteUncheckedUpdateManyWithoutAboutGroupInput = {
   content?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutPersonId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutPlaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutItemId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutPlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutStateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+}
+
+export type NoteCreateManyAboutStateInput = {
+  id?: string
+  workspaceId?: string
+  createdAt?: Date | string
+  timestamp: Date | string
+  type: string
+  content: string
+  metadata?: string | null
+  sourceFileId?: string | null
+  aboutPersonId?: string | null
+  aboutPlaceId?: string | null
+  aboutItemId?: string | null
+  aboutEventId?: string | null
+  aboutPlanId?: string | null
+  aboutGroupId?: string | null
+}
+
+export type NoteUpdateWithoutAboutStateInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutNotesNestedInput
+  sourceFile?: Prisma.ImportedFileUpdateOneWithoutNotesNestedInput
+  aboutPerson?: Prisma.PersonUpdateOneWithoutAboutNotesNestedInput
+  aboutPlace?: Prisma.PlaceUpdateOneWithoutAboutNotesNestedInput
+  aboutItem?: Prisma.ItemUpdateOneWithoutAboutNotesNestedInput
+  aboutEvent?: Prisma.EventUpdateOneWithoutAboutNotesNestedInput
+  aboutPlan?: Prisma.PlanUpdateOneWithoutAboutNotesNestedInput
+  aboutGroup?: Prisma.GroupUpdateOneWithoutAboutNotesNestedInput
+  plans?: Prisma.PlanUpdateManyWithoutSourceNoteNestedInput
+  events?: Prisma.EventUpdateManyWithoutSourceNoteNestedInput
+  interactions?: Prisma.InteractionUpdateManyWithoutSourceNoteNestedInput
+  states?: Prisma.StateUpdateManyWithoutSourceNoteNestedInput
+  groups?: Prisma.GroupUpdateManyWithoutSourceNoteNestedInput
+  aiAnalysisRuns?: Prisma.NoteAnalysisRunUpdateManyWithoutNoteNestedInput
+  suggestions?: Prisma.NoteSuggestionUpdateManyWithoutNoteNestedInput
+  lifeModelClaimFeedback?: Prisma.LifeModelClaimFeedbackUpdateManyWithoutSourceNoteNestedInput
+  evidenceCorrections?: Prisma.EvidenceClaimUpdateManyWithoutCorrectionNoteNestedInput
+}
+
+export type NoteUncheckedUpdateWithoutAboutStateInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutPersonId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutPlaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutItemId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutPlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutGroupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  plans?: Prisma.PlanUncheckedUpdateManyWithoutSourceNoteNestedInput
+  events?: Prisma.EventUncheckedUpdateManyWithoutSourceNoteNestedInput
+  interactions?: Prisma.InteractionUncheckedUpdateManyWithoutSourceNoteNestedInput
+  states?: Prisma.StateUncheckedUpdateManyWithoutSourceNoteNestedInput
+  groups?: Prisma.GroupUncheckedUpdateManyWithoutSourceNoteNestedInput
+  aiAnalysisRuns?: Prisma.NoteAnalysisRunUncheckedUpdateManyWithoutNoteNestedInput
+  suggestions?: Prisma.NoteSuggestionUncheckedUpdateManyWithoutNoteNestedInput
+  lifeModelClaimFeedback?: Prisma.LifeModelClaimFeedbackUncheckedUpdateManyWithoutSourceNoteNestedInput
+  evidenceCorrections?: Prisma.EvidenceClaimUncheckedUpdateManyWithoutCorrectionNoteNestedInput
+}
+
+export type NoteUncheckedUpdateManyWithoutAboutStateInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutPersonId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutPlaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutItemId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutPlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aboutGroupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
@@ -2120,10 +3824,22 @@ export type NoteSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   content?: boolean
   metadata?: boolean
   sourceFileId?: boolean
+  aboutPersonId?: boolean
+  aboutPlaceId?: boolean
+  aboutItemId?: boolean
+  aboutEventId?: boolean
+  aboutPlanId?: boolean
   aboutGroupId?: boolean
+  aboutStateId?: boolean
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   sourceFile?: boolean | Prisma.Note$sourceFileArgs<ExtArgs>
+  aboutPerson?: boolean | Prisma.Note$aboutPersonArgs<ExtArgs>
+  aboutPlace?: boolean | Prisma.Note$aboutPlaceArgs<ExtArgs>
+  aboutItem?: boolean | Prisma.Note$aboutItemArgs<ExtArgs>
+  aboutEvent?: boolean | Prisma.Note$aboutEventArgs<ExtArgs>
+  aboutPlan?: boolean | Prisma.Note$aboutPlanArgs<ExtArgs>
   aboutGroup?: boolean | Prisma.Note$aboutGroupArgs<ExtArgs>
+  aboutState?: boolean | Prisma.Note$aboutStateArgs<ExtArgs>
   plans?: boolean | Prisma.Note$plansArgs<ExtArgs>
   events?: boolean | Prisma.Note$eventsArgs<ExtArgs>
   interactions?: boolean | Prisma.Note$interactionsArgs<ExtArgs>
@@ -2145,10 +3861,22 @@ export type NoteSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   content?: boolean
   metadata?: boolean
   sourceFileId?: boolean
+  aboutPersonId?: boolean
+  aboutPlaceId?: boolean
+  aboutItemId?: boolean
+  aboutEventId?: boolean
+  aboutPlanId?: boolean
   aboutGroupId?: boolean
+  aboutStateId?: boolean
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   sourceFile?: boolean | Prisma.Note$sourceFileArgs<ExtArgs>
+  aboutPerson?: boolean | Prisma.Note$aboutPersonArgs<ExtArgs>
+  aboutPlace?: boolean | Prisma.Note$aboutPlaceArgs<ExtArgs>
+  aboutItem?: boolean | Prisma.Note$aboutItemArgs<ExtArgs>
+  aboutEvent?: boolean | Prisma.Note$aboutEventArgs<ExtArgs>
+  aboutPlan?: boolean | Prisma.Note$aboutPlanArgs<ExtArgs>
   aboutGroup?: boolean | Prisma.Note$aboutGroupArgs<ExtArgs>
+  aboutState?: boolean | Prisma.Note$aboutStateArgs<ExtArgs>
 }, ExtArgs["result"]["note"]>
 
 export type NoteSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -2160,10 +3888,22 @@ export type NoteSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   content?: boolean
   metadata?: boolean
   sourceFileId?: boolean
+  aboutPersonId?: boolean
+  aboutPlaceId?: boolean
+  aboutItemId?: boolean
+  aboutEventId?: boolean
+  aboutPlanId?: boolean
   aboutGroupId?: boolean
+  aboutStateId?: boolean
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   sourceFile?: boolean | Prisma.Note$sourceFileArgs<ExtArgs>
+  aboutPerson?: boolean | Prisma.Note$aboutPersonArgs<ExtArgs>
+  aboutPlace?: boolean | Prisma.Note$aboutPlaceArgs<ExtArgs>
+  aboutItem?: boolean | Prisma.Note$aboutItemArgs<ExtArgs>
+  aboutEvent?: boolean | Prisma.Note$aboutEventArgs<ExtArgs>
+  aboutPlan?: boolean | Prisma.Note$aboutPlanArgs<ExtArgs>
   aboutGroup?: boolean | Prisma.Note$aboutGroupArgs<ExtArgs>
+  aboutState?: boolean | Prisma.Note$aboutStateArgs<ExtArgs>
 }, ExtArgs["result"]["note"]>
 
 export type NoteSelectScalar = {
@@ -2175,14 +3915,26 @@ export type NoteSelectScalar = {
   content?: boolean
   metadata?: boolean
   sourceFileId?: boolean
+  aboutPersonId?: boolean
+  aboutPlaceId?: boolean
+  aboutItemId?: boolean
+  aboutEventId?: boolean
+  aboutPlanId?: boolean
   aboutGroupId?: boolean
+  aboutStateId?: boolean
 }
 
-export type NoteOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "workspaceId" | "createdAt" | "timestamp" | "type" | "content" | "metadata" | "sourceFileId" | "aboutGroupId", ExtArgs["result"]["note"]>
+export type NoteOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "workspaceId" | "createdAt" | "timestamp" | "type" | "content" | "metadata" | "sourceFileId" | "aboutPersonId" | "aboutPlaceId" | "aboutItemId" | "aboutEventId" | "aboutPlanId" | "aboutGroupId" | "aboutStateId", ExtArgs["result"]["note"]>
 export type NoteInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   sourceFile?: boolean | Prisma.Note$sourceFileArgs<ExtArgs>
+  aboutPerson?: boolean | Prisma.Note$aboutPersonArgs<ExtArgs>
+  aboutPlace?: boolean | Prisma.Note$aboutPlaceArgs<ExtArgs>
+  aboutItem?: boolean | Prisma.Note$aboutItemArgs<ExtArgs>
+  aboutEvent?: boolean | Prisma.Note$aboutEventArgs<ExtArgs>
+  aboutPlan?: boolean | Prisma.Note$aboutPlanArgs<ExtArgs>
   aboutGroup?: boolean | Prisma.Note$aboutGroupArgs<ExtArgs>
+  aboutState?: boolean | Prisma.Note$aboutStateArgs<ExtArgs>
   plans?: boolean | Prisma.Note$plansArgs<ExtArgs>
   events?: boolean | Prisma.Note$eventsArgs<ExtArgs>
   interactions?: boolean | Prisma.Note$interactionsArgs<ExtArgs>
@@ -2197,12 +3949,24 @@ export type NoteInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
 export type NoteIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   sourceFile?: boolean | Prisma.Note$sourceFileArgs<ExtArgs>
+  aboutPerson?: boolean | Prisma.Note$aboutPersonArgs<ExtArgs>
+  aboutPlace?: boolean | Prisma.Note$aboutPlaceArgs<ExtArgs>
+  aboutItem?: boolean | Prisma.Note$aboutItemArgs<ExtArgs>
+  aboutEvent?: boolean | Prisma.Note$aboutEventArgs<ExtArgs>
+  aboutPlan?: boolean | Prisma.Note$aboutPlanArgs<ExtArgs>
   aboutGroup?: boolean | Prisma.Note$aboutGroupArgs<ExtArgs>
+  aboutState?: boolean | Prisma.Note$aboutStateArgs<ExtArgs>
 }
 export type NoteIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   sourceFile?: boolean | Prisma.Note$sourceFileArgs<ExtArgs>
+  aboutPerson?: boolean | Prisma.Note$aboutPersonArgs<ExtArgs>
+  aboutPlace?: boolean | Prisma.Note$aboutPlaceArgs<ExtArgs>
+  aboutItem?: boolean | Prisma.Note$aboutItemArgs<ExtArgs>
+  aboutEvent?: boolean | Prisma.Note$aboutEventArgs<ExtArgs>
+  aboutPlan?: boolean | Prisma.Note$aboutPlanArgs<ExtArgs>
   aboutGroup?: boolean | Prisma.Note$aboutGroupArgs<ExtArgs>
+  aboutState?: boolean | Prisma.Note$aboutStateArgs<ExtArgs>
 }
 
 export type $NotePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2210,7 +3974,13 @@ export type $NotePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   objects: {
     workspace: Prisma.$WorkspacePayload<ExtArgs>
     sourceFile: Prisma.$ImportedFilePayload<ExtArgs> | null
+    aboutPerson: Prisma.$PersonPayload<ExtArgs> | null
+    aboutPlace: Prisma.$PlacePayload<ExtArgs> | null
+    aboutItem: Prisma.$ItemPayload<ExtArgs> | null
+    aboutEvent: Prisma.$EventPayload<ExtArgs> | null
+    aboutPlan: Prisma.$PlanPayload<ExtArgs> | null
     aboutGroup: Prisma.$GroupPayload<ExtArgs> | null
+    aboutState: Prisma.$StatePayload<ExtArgs> | null
     plans: Prisma.$PlanPayload<ExtArgs>[]
     events: Prisma.$EventPayload<ExtArgs>[]
     interactions: Prisma.$InteractionPayload<ExtArgs>[]
@@ -2230,7 +4000,13 @@ export type $NotePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     content: string
     metadata: string | null
     sourceFileId: string | null
+    aboutPersonId: string | null
+    aboutPlaceId: string | null
+    aboutItemId: string | null
+    aboutEventId: string | null
+    aboutPlanId: string | null
     aboutGroupId: string | null
+    aboutStateId: string | null
   }, ExtArgs["result"]["note"]>
   composites: {}
 }
@@ -2627,7 +4403,13 @@ export interface Prisma__NoteClient<T, Null = never, ExtArgs extends runtime.Typ
   readonly [Symbol.toStringTag]: "PrismaPromise"
   workspace<T extends Prisma.WorkspaceDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WorkspaceDefaultArgs<ExtArgs>>): Prisma.Prisma__WorkspaceClient<runtime.Types.Result.GetResult<Prisma.$WorkspacePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   sourceFile<T extends Prisma.Note$sourceFileArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Note$sourceFileArgs<ExtArgs>>): Prisma.Prisma__ImportedFileClient<runtime.Types.Result.GetResult<Prisma.$ImportedFilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  aboutPerson<T extends Prisma.Note$aboutPersonArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Note$aboutPersonArgs<ExtArgs>>): Prisma.Prisma__PersonClient<runtime.Types.Result.GetResult<Prisma.$PersonPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  aboutPlace<T extends Prisma.Note$aboutPlaceArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Note$aboutPlaceArgs<ExtArgs>>): Prisma.Prisma__PlaceClient<runtime.Types.Result.GetResult<Prisma.$PlacePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  aboutItem<T extends Prisma.Note$aboutItemArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Note$aboutItemArgs<ExtArgs>>): Prisma.Prisma__ItemClient<runtime.Types.Result.GetResult<Prisma.$ItemPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  aboutEvent<T extends Prisma.Note$aboutEventArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Note$aboutEventArgs<ExtArgs>>): Prisma.Prisma__EventClient<runtime.Types.Result.GetResult<Prisma.$EventPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  aboutPlan<T extends Prisma.Note$aboutPlanArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Note$aboutPlanArgs<ExtArgs>>): Prisma.Prisma__PlanClient<runtime.Types.Result.GetResult<Prisma.$PlanPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   aboutGroup<T extends Prisma.Note$aboutGroupArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Note$aboutGroupArgs<ExtArgs>>): Prisma.Prisma__GroupClient<runtime.Types.Result.GetResult<Prisma.$GroupPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  aboutState<T extends Prisma.Note$aboutStateArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Note$aboutStateArgs<ExtArgs>>): Prisma.Prisma__StateClient<runtime.Types.Result.GetResult<Prisma.$StatePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   plans<T extends Prisma.Note$plansArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Note$plansArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PlanPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   events<T extends Prisma.Note$eventsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Note$eventsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   interactions<T extends Prisma.Note$interactionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Note$interactionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InteractionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -2674,7 +4456,13 @@ export interface NoteFieldRefs {
   readonly content: Prisma.FieldRef<"Note", 'String'>
   readonly metadata: Prisma.FieldRef<"Note", 'String'>
   readonly sourceFileId: Prisma.FieldRef<"Note", 'String'>
+  readonly aboutPersonId: Prisma.FieldRef<"Note", 'String'>
+  readonly aboutPlaceId: Prisma.FieldRef<"Note", 'String'>
+  readonly aboutItemId: Prisma.FieldRef<"Note", 'String'>
+  readonly aboutEventId: Prisma.FieldRef<"Note", 'String'>
+  readonly aboutPlanId: Prisma.FieldRef<"Note", 'String'>
   readonly aboutGroupId: Prisma.FieldRef<"Note", 'String'>
+  readonly aboutStateId: Prisma.FieldRef<"Note", 'String'>
 }
     
 
@@ -3093,6 +4881,101 @@ export type Note$sourceFileArgs<ExtArgs extends runtime.Types.Extensions.Interna
 }
 
 /**
+ * Note.aboutPerson
+ */
+export type Note$aboutPersonArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Person
+   */
+  select?: Prisma.PersonSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Person
+   */
+  omit?: Prisma.PersonOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PersonInclude<ExtArgs> | null
+  where?: Prisma.PersonWhereInput
+}
+
+/**
+ * Note.aboutPlace
+ */
+export type Note$aboutPlaceArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Place
+   */
+  select?: Prisma.PlaceSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Place
+   */
+  omit?: Prisma.PlaceOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PlaceInclude<ExtArgs> | null
+  where?: Prisma.PlaceWhereInput
+}
+
+/**
+ * Note.aboutItem
+ */
+export type Note$aboutItemArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Item
+   */
+  select?: Prisma.ItemSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Item
+   */
+  omit?: Prisma.ItemOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ItemInclude<ExtArgs> | null
+  where?: Prisma.ItemWhereInput
+}
+
+/**
+ * Note.aboutEvent
+ */
+export type Note$aboutEventArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Event
+   */
+  select?: Prisma.EventSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Event
+   */
+  omit?: Prisma.EventOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.EventInclude<ExtArgs> | null
+  where?: Prisma.EventWhereInput
+}
+
+/**
+ * Note.aboutPlan
+ */
+export type Note$aboutPlanArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Plan
+   */
+  select?: Prisma.PlanSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Plan
+   */
+  omit?: Prisma.PlanOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PlanInclude<ExtArgs> | null
+  where?: Prisma.PlanWhereInput
+}
+
+/**
  * Note.aboutGroup
  */
 export type Note$aboutGroupArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -3109,6 +4992,25 @@ export type Note$aboutGroupArgs<ExtArgs extends runtime.Types.Extensions.Interna
    */
   include?: Prisma.GroupInclude<ExtArgs> | null
   where?: Prisma.GroupWhereInput
+}
+
+/**
+ * Note.aboutState
+ */
+export type Note$aboutStateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the State
+   */
+  select?: Prisma.StateSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the State
+   */
+  omit?: Prisma.StateOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.StateInclude<ExtArgs> | null
+  where?: Prisma.StateWhereInput
 }
 
 /**

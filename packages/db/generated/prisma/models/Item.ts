@@ -414,6 +414,7 @@ export type ItemWhereInput = {
   components?: Prisma.AssemblyListRelationFilter
   itemInteractions?: Prisma.ItemInteractionListRelationFilter
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineListRelationFilter
+  aboutNotes?: Prisma.NoteListRelationFilter
 }
 
 export type ItemOrderByWithRelationInput = {
@@ -455,6 +456,7 @@ export type ItemOrderByWithRelationInput = {
   components?: Prisma.AssemblyOrderByRelationAggregateInput
   itemInteractions?: Prisma.ItemInteractionOrderByRelationAggregateInput
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineOrderByRelationAggregateInput
+  aboutNotes?: Prisma.NoteOrderByRelationAggregateInput
 }
 
 export type ItemWhereUniqueInput = Prisma.AtLeast<{
@@ -500,6 +502,7 @@ export type ItemWhereUniqueInput = Prisma.AtLeast<{
   components?: Prisma.AssemblyListRelationFilter
   itemInteractions?: Prisma.ItemInteractionListRelationFilter
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineListRelationFilter
+  aboutNotes?: Prisma.NoteListRelationFilter
 }, "id" | "assetId" | "workspaceId_definitionId_serialNumber">
 
 export type ItemOrderByWithAggregationInput = {
@@ -605,6 +608,7 @@ export type ItemCreateInput = {
   components?: Prisma.AssemblyCreateNestedManyWithoutParentItemInput
   itemInteractions?: Prisma.ItemInteractionCreateNestedManyWithoutItemInput
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutItemInput
+  aboutNotes?: Prisma.NoteCreateNestedManyWithoutAboutItemInput
 }
 
 export type ItemUncheckedCreateInput = {
@@ -640,6 +644,7 @@ export type ItemUncheckedCreateInput = {
   components?: Prisma.AssemblyUncheckedCreateNestedManyWithoutParentItemInput
   itemInteractions?: Prisma.ItemInteractionUncheckedCreateNestedManyWithoutItemInput
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutItemInput
+  aboutNotes?: Prisma.NoteUncheckedCreateNestedManyWithoutAboutItemInput
 }
 
 export type ItemUpdateInput = {
@@ -675,6 +680,7 @@ export type ItemUpdateInput = {
   components?: Prisma.AssemblyUpdateManyWithoutParentItemNestedInput
   itemInteractions?: Prisma.ItemInteractionUpdateManyWithoutItemNestedInput
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutItemNestedInput
+  aboutNotes?: Prisma.NoteUpdateManyWithoutAboutItemNestedInput
 }
 
 export type ItemUncheckedUpdateInput = {
@@ -710,6 +716,7 @@ export type ItemUncheckedUpdateInput = {
   components?: Prisma.AssemblyUncheckedUpdateManyWithoutParentItemNestedInput
   itemInteractions?: Prisma.ItemInteractionUncheckedUpdateManyWithoutItemNestedInput
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutItemNestedInput
+  aboutNotes?: Prisma.NoteUncheckedUpdateManyWithoutAboutItemNestedInput
 }
 
 export type ItemCreateManyInput = {
@@ -921,6 +928,11 @@ export type ItemSumOrderByAggregateInput = {
 export type ItemScalarRelationFilter = {
   is?: Prisma.ItemWhereInput
   isNot?: Prisma.ItemWhereInput
+}
+
+export type ItemNullableScalarRelationFilter = {
+  is?: Prisma.ItemWhereInput | null
+  isNot?: Prisma.ItemWhereInput | null
 }
 
 export type ItemCreateNestedManyWithoutWorkspaceInput = {
@@ -1231,6 +1243,22 @@ export type ItemUpdateOneRequiredWithoutPurchaseReceiptLinesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ItemUpdateToOneWithWhereWithoutPurchaseReceiptLinesInput, Prisma.ItemUpdateWithoutPurchaseReceiptLinesInput>, Prisma.ItemUncheckedUpdateWithoutPurchaseReceiptLinesInput>
 }
 
+export type ItemCreateNestedOneWithoutAboutNotesInput = {
+  create?: Prisma.XOR<Prisma.ItemCreateWithoutAboutNotesInput, Prisma.ItemUncheckedCreateWithoutAboutNotesInput>
+  connectOrCreate?: Prisma.ItemCreateOrConnectWithoutAboutNotesInput
+  connect?: Prisma.ItemWhereUniqueInput
+}
+
+export type ItemUpdateOneWithoutAboutNotesNestedInput = {
+  create?: Prisma.XOR<Prisma.ItemCreateWithoutAboutNotesInput, Prisma.ItemUncheckedCreateWithoutAboutNotesInput>
+  connectOrCreate?: Prisma.ItemCreateOrConnectWithoutAboutNotesInput
+  upsert?: Prisma.ItemUpsertWithoutAboutNotesInput
+  disconnect?: Prisma.ItemWhereInput | boolean
+  delete?: Prisma.ItemWhereInput | boolean
+  connect?: Prisma.ItemWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ItemUpdateToOneWithWhereWithoutAboutNotesInput, Prisma.ItemUpdateWithoutAboutNotesInput>, Prisma.ItemUncheckedUpdateWithoutAboutNotesInput>
+}
+
 export type ItemCreateWithoutWorkspaceInput = {
   id?: string
   createdAt?: Date | string
@@ -1263,6 +1291,7 @@ export type ItemCreateWithoutWorkspaceInput = {
   components?: Prisma.AssemblyCreateNestedManyWithoutParentItemInput
   itemInteractions?: Prisma.ItemInteractionCreateNestedManyWithoutItemInput
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutItemInput
+  aboutNotes?: Prisma.NoteCreateNestedManyWithoutAboutItemInput
 }
 
 export type ItemUncheckedCreateWithoutWorkspaceInput = {
@@ -1297,6 +1326,7 @@ export type ItemUncheckedCreateWithoutWorkspaceInput = {
   components?: Prisma.AssemblyUncheckedCreateNestedManyWithoutParentItemInput
   itemInteractions?: Prisma.ItemInteractionUncheckedCreateNestedManyWithoutItemInput
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutItemInput
+  aboutNotes?: Prisma.NoteUncheckedCreateNestedManyWithoutAboutItemInput
 }
 
 export type ItemCreateOrConnectWithoutWorkspaceInput = {
@@ -1390,6 +1420,7 @@ export type ItemCreateWithoutOwnedByInput = {
   components?: Prisma.AssemblyCreateNestedManyWithoutParentItemInput
   itemInteractions?: Prisma.ItemInteractionCreateNestedManyWithoutItemInput
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutItemInput
+  aboutNotes?: Prisma.NoteCreateNestedManyWithoutAboutItemInput
 }
 
 export type ItemUncheckedCreateWithoutOwnedByInput = {
@@ -1424,6 +1455,7 @@ export type ItemUncheckedCreateWithoutOwnedByInput = {
   components?: Prisma.AssemblyUncheckedCreateNestedManyWithoutParentItemInput
   itemInteractions?: Prisma.ItemInteractionUncheckedCreateNestedManyWithoutItemInput
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutItemInput
+  aboutNotes?: Prisma.NoteUncheckedCreateNestedManyWithoutAboutItemInput
 }
 
 export type ItemCreateOrConnectWithoutOwnedByInput = {
@@ -1483,6 +1515,7 @@ export type ItemCreateWithoutPlaceInput = {
   components?: Prisma.AssemblyCreateNestedManyWithoutParentItemInput
   itemInteractions?: Prisma.ItemInteractionCreateNestedManyWithoutItemInput
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutItemInput
+  aboutNotes?: Prisma.NoteCreateNestedManyWithoutAboutItemInput
 }
 
 export type ItemUncheckedCreateWithoutPlaceInput = {
@@ -1517,6 +1550,7 @@ export type ItemUncheckedCreateWithoutPlaceInput = {
   components?: Prisma.AssemblyUncheckedCreateNestedManyWithoutParentItemInput
   itemInteractions?: Prisma.ItemInteractionUncheckedCreateNestedManyWithoutItemInput
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutItemInput
+  aboutNotes?: Prisma.NoteUncheckedCreateNestedManyWithoutAboutItemInput
 }
 
 export type ItemCreateOrConnectWithoutPlaceInput = {
@@ -1576,6 +1610,7 @@ export type ItemCreateWithoutDefinitionInput = {
   components?: Prisma.AssemblyCreateNestedManyWithoutParentItemInput
   itemInteractions?: Prisma.ItemInteractionCreateNestedManyWithoutItemInput
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutItemInput
+  aboutNotes?: Prisma.NoteCreateNestedManyWithoutAboutItemInput
 }
 
 export type ItemUncheckedCreateWithoutDefinitionInput = {
@@ -1610,6 +1645,7 @@ export type ItemUncheckedCreateWithoutDefinitionInput = {
   components?: Prisma.AssemblyUncheckedCreateNestedManyWithoutParentItemInput
   itemInteractions?: Prisma.ItemInteractionUncheckedCreateNestedManyWithoutItemInput
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutItemInput
+  aboutNotes?: Prisma.NoteUncheckedCreateNestedManyWithoutAboutItemInput
 }
 
 export type ItemCreateOrConnectWithoutDefinitionInput = {
@@ -1669,6 +1705,7 @@ export type ItemCreateWithoutLotInput = {
   components?: Prisma.AssemblyCreateNestedManyWithoutParentItemInput
   itemInteractions?: Prisma.ItemInteractionCreateNestedManyWithoutItemInput
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutItemInput
+  aboutNotes?: Prisma.NoteCreateNestedManyWithoutAboutItemInput
 }
 
 export type ItemUncheckedCreateWithoutLotInput = {
@@ -1703,6 +1740,7 @@ export type ItemUncheckedCreateWithoutLotInput = {
   components?: Prisma.AssemblyUncheckedCreateNestedManyWithoutParentItemInput
   itemInteractions?: Prisma.ItemInteractionUncheckedCreateNestedManyWithoutItemInput
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutItemInput
+  aboutNotes?: Prisma.NoteUncheckedCreateNestedManyWithoutAboutItemInput
 }
 
 export type ItemCreateOrConnectWithoutLotInput = {
@@ -1762,6 +1800,7 @@ export type ItemCreateWithoutAssembledIntoInput = {
   components?: Prisma.AssemblyCreateNestedManyWithoutParentItemInput
   itemInteractions?: Prisma.ItemInteractionCreateNestedManyWithoutItemInput
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutItemInput
+  aboutNotes?: Prisma.NoteCreateNestedManyWithoutAboutItemInput
 }
 
 export type ItemUncheckedCreateWithoutAssembledIntoInput = {
@@ -1796,6 +1835,7 @@ export type ItemUncheckedCreateWithoutAssembledIntoInput = {
   components?: Prisma.AssemblyUncheckedCreateNestedManyWithoutParentItemInput
   itemInteractions?: Prisma.ItemInteractionUncheckedCreateNestedManyWithoutItemInput
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutItemInput
+  aboutNotes?: Prisma.NoteUncheckedCreateNestedManyWithoutAboutItemInput
 }
 
 export type ItemCreateOrConnectWithoutAssembledIntoInput = {
@@ -1835,6 +1875,7 @@ export type ItemCreateWithoutComponentsInput = {
   assembledInto?: Prisma.AssemblyCreateNestedManyWithoutChildItemInput
   itemInteractions?: Prisma.ItemInteractionCreateNestedManyWithoutItemInput
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutItemInput
+  aboutNotes?: Prisma.NoteCreateNestedManyWithoutAboutItemInput
 }
 
 export type ItemUncheckedCreateWithoutComponentsInput = {
@@ -1869,6 +1910,7 @@ export type ItemUncheckedCreateWithoutComponentsInput = {
   assembledInto?: Prisma.AssemblyUncheckedCreateNestedManyWithoutChildItemInput
   itemInteractions?: Prisma.ItemInteractionUncheckedCreateNestedManyWithoutItemInput
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutItemInput
+  aboutNotes?: Prisma.NoteUncheckedCreateNestedManyWithoutAboutItemInput
 }
 
 export type ItemCreateOrConnectWithoutComponentsInput = {
@@ -1919,6 +1961,7 @@ export type ItemUpdateWithoutAssembledIntoInput = {
   components?: Prisma.AssemblyUpdateManyWithoutParentItemNestedInput
   itemInteractions?: Prisma.ItemInteractionUpdateManyWithoutItemNestedInput
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutItemNestedInput
+  aboutNotes?: Prisma.NoteUpdateManyWithoutAboutItemNestedInput
 }
 
 export type ItemUncheckedUpdateWithoutAssembledIntoInput = {
@@ -1953,6 +1996,7 @@ export type ItemUncheckedUpdateWithoutAssembledIntoInput = {
   components?: Prisma.AssemblyUncheckedUpdateManyWithoutParentItemNestedInput
   itemInteractions?: Prisma.ItemInteractionUncheckedUpdateManyWithoutItemNestedInput
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutItemNestedInput
+  aboutNotes?: Prisma.NoteUncheckedUpdateManyWithoutAboutItemNestedInput
 }
 
 export type ItemUpsertWithoutComponentsInput = {
@@ -1998,6 +2042,7 @@ export type ItemUpdateWithoutComponentsInput = {
   assembledInto?: Prisma.AssemblyUpdateManyWithoutChildItemNestedInput
   itemInteractions?: Prisma.ItemInteractionUpdateManyWithoutItemNestedInput
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutItemNestedInput
+  aboutNotes?: Prisma.NoteUpdateManyWithoutAboutItemNestedInput
 }
 
 export type ItemUncheckedUpdateWithoutComponentsInput = {
@@ -2032,6 +2077,7 @@ export type ItemUncheckedUpdateWithoutComponentsInput = {
   assembledInto?: Prisma.AssemblyUncheckedUpdateManyWithoutChildItemNestedInput
   itemInteractions?: Prisma.ItemInteractionUncheckedUpdateManyWithoutItemNestedInput
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutItemNestedInput
+  aboutNotes?: Prisma.NoteUncheckedUpdateManyWithoutAboutItemNestedInput
 }
 
 export type ItemCreateWithoutItemInteractionsInput = {
@@ -2066,6 +2112,7 @@ export type ItemCreateWithoutItemInteractionsInput = {
   assembledInto?: Prisma.AssemblyCreateNestedManyWithoutChildItemInput
   components?: Prisma.AssemblyCreateNestedManyWithoutParentItemInput
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutItemInput
+  aboutNotes?: Prisma.NoteCreateNestedManyWithoutAboutItemInput
 }
 
 export type ItemUncheckedCreateWithoutItemInteractionsInput = {
@@ -2100,6 +2147,7 @@ export type ItemUncheckedCreateWithoutItemInteractionsInput = {
   assembledInto?: Prisma.AssemblyUncheckedCreateNestedManyWithoutChildItemInput
   components?: Prisma.AssemblyUncheckedCreateNestedManyWithoutParentItemInput
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutItemInput
+  aboutNotes?: Prisma.NoteUncheckedCreateNestedManyWithoutAboutItemInput
 }
 
 export type ItemCreateOrConnectWithoutItemInteractionsInput = {
@@ -2150,6 +2198,7 @@ export type ItemUpdateWithoutItemInteractionsInput = {
   assembledInto?: Prisma.AssemblyUpdateManyWithoutChildItemNestedInput
   components?: Prisma.AssemblyUpdateManyWithoutParentItemNestedInput
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutItemNestedInput
+  aboutNotes?: Prisma.NoteUpdateManyWithoutAboutItemNestedInput
 }
 
 export type ItemUncheckedUpdateWithoutItemInteractionsInput = {
@@ -2184,6 +2233,7 @@ export type ItemUncheckedUpdateWithoutItemInteractionsInput = {
   assembledInto?: Prisma.AssemblyUncheckedUpdateManyWithoutChildItemNestedInput
   components?: Prisma.AssemblyUncheckedUpdateManyWithoutParentItemNestedInput
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutItemNestedInput
+  aboutNotes?: Prisma.NoteUncheckedUpdateManyWithoutAboutItemNestedInput
 }
 
 export type ItemCreateWithoutPrimaryImageFileInput = {
@@ -2218,6 +2268,7 @@ export type ItemCreateWithoutPrimaryImageFileInput = {
   components?: Prisma.AssemblyCreateNestedManyWithoutParentItemInput
   itemInteractions?: Prisma.ItemInteractionCreateNestedManyWithoutItemInput
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutItemInput
+  aboutNotes?: Prisma.NoteCreateNestedManyWithoutAboutItemInput
 }
 
 export type ItemUncheckedCreateWithoutPrimaryImageFileInput = {
@@ -2252,6 +2303,7 @@ export type ItemUncheckedCreateWithoutPrimaryImageFileInput = {
   components?: Prisma.AssemblyUncheckedCreateNestedManyWithoutParentItemInput
   itemInteractions?: Prisma.ItemInteractionUncheckedCreateNestedManyWithoutItemInput
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutItemInput
+  aboutNotes?: Prisma.NoteUncheckedCreateNestedManyWithoutAboutItemInput
 }
 
 export type ItemCreateOrConnectWithoutPrimaryImageFileInput = {
@@ -2311,6 +2363,7 @@ export type ItemCreateWithoutPurchaseReceiptLinesInput = {
   assembledInto?: Prisma.AssemblyCreateNestedManyWithoutChildItemInput
   components?: Prisma.AssemblyCreateNestedManyWithoutParentItemInput
   itemInteractions?: Prisma.ItemInteractionCreateNestedManyWithoutItemInput
+  aboutNotes?: Prisma.NoteCreateNestedManyWithoutAboutItemInput
 }
 
 export type ItemUncheckedCreateWithoutPurchaseReceiptLinesInput = {
@@ -2345,6 +2398,7 @@ export type ItemUncheckedCreateWithoutPurchaseReceiptLinesInput = {
   assembledInto?: Prisma.AssemblyUncheckedCreateNestedManyWithoutChildItemInput
   components?: Prisma.AssemblyUncheckedCreateNestedManyWithoutParentItemInput
   itemInteractions?: Prisma.ItemInteractionUncheckedCreateNestedManyWithoutItemInput
+  aboutNotes?: Prisma.NoteUncheckedCreateNestedManyWithoutAboutItemInput
 }
 
 export type ItemCreateOrConnectWithoutPurchaseReceiptLinesInput = {
@@ -2395,6 +2449,7 @@ export type ItemUpdateWithoutPurchaseReceiptLinesInput = {
   assembledInto?: Prisma.AssemblyUpdateManyWithoutChildItemNestedInput
   components?: Prisma.AssemblyUpdateManyWithoutParentItemNestedInput
   itemInteractions?: Prisma.ItemInteractionUpdateManyWithoutItemNestedInput
+  aboutNotes?: Prisma.NoteUpdateManyWithoutAboutItemNestedInput
 }
 
 export type ItemUncheckedUpdateWithoutPurchaseReceiptLinesInput = {
@@ -2429,6 +2484,163 @@ export type ItemUncheckedUpdateWithoutPurchaseReceiptLinesInput = {
   assembledInto?: Prisma.AssemblyUncheckedUpdateManyWithoutChildItemNestedInput
   components?: Prisma.AssemblyUncheckedUpdateManyWithoutParentItemNestedInput
   itemInteractions?: Prisma.ItemInteractionUncheckedUpdateManyWithoutItemNestedInput
+  aboutNotes?: Prisma.NoteUncheckedUpdateManyWithoutAboutItemNestedInput
+}
+
+export type ItemCreateWithoutAboutNotesInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  name: string
+  description?: string | null
+  category?: string | null
+  make?: string | null
+  model?: string | null
+  serialNumber?: string | null
+  assetId: string
+  quantity?: number
+  purchaseDate?: Date | string | null
+  purchasePrice?: number | null
+  purchaseFrom?: string | null
+  warrantyExpires?: Date | string | null
+  lifetimeWarranty?: boolean
+  warrantyDetails?: string | null
+  attributes?: string | null
+  tags?: string | null
+  notes?: string | null
+  color?: string | null
+  colorSoft?: string | null
+  workspace?: Prisma.WorkspaceCreateNestedOneWithoutItemsInput
+  definition?: Prisma.ItemDefinitionCreateNestedOneWithoutItemsInput
+  lot?: Prisma.InventoryLotCreateNestedOneWithoutItemsInput
+  place?: Prisma.PlaceCreateNestedOneWithoutItemsInput
+  ownedBy?: Prisma.PersonCreateNestedOneWithoutOwnedItemsInput
+  primaryImageFile?: Prisma.ImportedFileCreateNestedOneWithoutPrimaryForItemsInput
+  assembledInto?: Prisma.AssemblyCreateNestedManyWithoutChildItemInput
+  components?: Prisma.AssemblyCreateNestedManyWithoutParentItemInput
+  itemInteractions?: Prisma.ItemInteractionCreateNestedManyWithoutItemInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineCreateNestedManyWithoutItemInput
+}
+
+export type ItemUncheckedCreateWithoutAboutNotesInput = {
+  id?: string
+  workspaceId?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  name: string
+  description?: string | null
+  category?: string | null
+  make?: string | null
+  model?: string | null
+  serialNumber?: string | null
+  assetId: string
+  quantity?: number
+  definitionId?: string | null
+  lotId?: string | null
+  purchaseDate?: Date | string | null
+  purchasePrice?: number | null
+  purchaseFrom?: string | null
+  warrantyExpires?: Date | string | null
+  lifetimeWarranty?: boolean
+  warrantyDetails?: string | null
+  placeId?: string | null
+  ownedById?: string | null
+  primaryImageFileId?: string | null
+  attributes?: string | null
+  tags?: string | null
+  notes?: string | null
+  color?: string | null
+  colorSoft?: string | null
+  assembledInto?: Prisma.AssemblyUncheckedCreateNestedManyWithoutChildItemInput
+  components?: Prisma.AssemblyUncheckedCreateNestedManyWithoutParentItemInput
+  itemInteractions?: Prisma.ItemInteractionUncheckedCreateNestedManyWithoutItemInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedCreateNestedManyWithoutItemInput
+}
+
+export type ItemCreateOrConnectWithoutAboutNotesInput = {
+  where: Prisma.ItemWhereUniqueInput
+  create: Prisma.XOR<Prisma.ItemCreateWithoutAboutNotesInput, Prisma.ItemUncheckedCreateWithoutAboutNotesInput>
+}
+
+export type ItemUpsertWithoutAboutNotesInput = {
+  update: Prisma.XOR<Prisma.ItemUpdateWithoutAboutNotesInput, Prisma.ItemUncheckedUpdateWithoutAboutNotesInput>
+  create: Prisma.XOR<Prisma.ItemCreateWithoutAboutNotesInput, Prisma.ItemUncheckedCreateWithoutAboutNotesInput>
+  where?: Prisma.ItemWhereInput
+}
+
+export type ItemUpdateToOneWithWhereWithoutAboutNotesInput = {
+  where?: Prisma.ItemWhereInput
+  data: Prisma.XOR<Prisma.ItemUpdateWithoutAboutNotesInput, Prisma.ItemUncheckedUpdateWithoutAboutNotesInput>
+}
+
+export type ItemUpdateWithoutAboutNotesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  make?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  model?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  serialNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assetId?: Prisma.StringFieldUpdateOperationsInput | string
+  quantity?: Prisma.FloatFieldUpdateOperationsInput | number
+  purchaseDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  purchasePrice?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  purchaseFrom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  warrantyExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lifetimeWarranty?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  warrantyDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attributes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tags?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutItemsNestedInput
+  definition?: Prisma.ItemDefinitionUpdateOneWithoutItemsNestedInput
+  lot?: Prisma.InventoryLotUpdateOneWithoutItemsNestedInput
+  place?: Prisma.PlaceUpdateOneWithoutItemsNestedInput
+  ownedBy?: Prisma.PersonUpdateOneWithoutOwnedItemsNestedInput
+  primaryImageFile?: Prisma.ImportedFileUpdateOneWithoutPrimaryForItemsNestedInput
+  assembledInto?: Prisma.AssemblyUpdateManyWithoutChildItemNestedInput
+  components?: Prisma.AssemblyUpdateManyWithoutParentItemNestedInput
+  itemInteractions?: Prisma.ItemInteractionUpdateManyWithoutItemNestedInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutItemNestedInput
+}
+
+export type ItemUncheckedUpdateWithoutAboutNotesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  make?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  model?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  serialNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assetId?: Prisma.StringFieldUpdateOperationsInput | string
+  quantity?: Prisma.FloatFieldUpdateOperationsInput | number
+  definitionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lotId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  purchaseDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  purchasePrice?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  purchaseFrom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  warrantyExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lifetimeWarranty?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  warrantyDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  placeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ownedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  primaryImageFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attributes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tags?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assembledInto?: Prisma.AssemblyUncheckedUpdateManyWithoutChildItemNestedInput
+  components?: Prisma.AssemblyUncheckedUpdateManyWithoutParentItemNestedInput
+  itemInteractions?: Prisma.ItemInteractionUncheckedUpdateManyWithoutItemNestedInput
+  purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutItemNestedInput
 }
 
 export type ItemCreateManyWorkspaceInput = {
@@ -2493,6 +2705,7 @@ export type ItemUpdateWithoutWorkspaceInput = {
   components?: Prisma.AssemblyUpdateManyWithoutParentItemNestedInput
   itemInteractions?: Prisma.ItemInteractionUpdateManyWithoutItemNestedInput
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutItemNestedInput
+  aboutNotes?: Prisma.NoteUpdateManyWithoutAboutItemNestedInput
 }
 
 export type ItemUncheckedUpdateWithoutWorkspaceInput = {
@@ -2527,6 +2740,7 @@ export type ItemUncheckedUpdateWithoutWorkspaceInput = {
   components?: Prisma.AssemblyUncheckedUpdateManyWithoutParentItemNestedInput
   itemInteractions?: Prisma.ItemInteractionUncheckedUpdateManyWithoutItemNestedInput
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutItemNestedInput
+  aboutNotes?: Prisma.NoteUncheckedUpdateManyWithoutAboutItemNestedInput
 }
 
 export type ItemUncheckedUpdateManyWithoutWorkspaceInput = {
@@ -2621,6 +2835,7 @@ export type ItemUpdateWithoutOwnedByInput = {
   components?: Prisma.AssemblyUpdateManyWithoutParentItemNestedInput
   itemInteractions?: Prisma.ItemInteractionUpdateManyWithoutItemNestedInput
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutItemNestedInput
+  aboutNotes?: Prisma.NoteUpdateManyWithoutAboutItemNestedInput
 }
 
 export type ItemUncheckedUpdateWithoutOwnedByInput = {
@@ -2655,6 +2870,7 @@ export type ItemUncheckedUpdateWithoutOwnedByInput = {
   components?: Prisma.AssemblyUncheckedUpdateManyWithoutParentItemNestedInput
   itemInteractions?: Prisma.ItemInteractionUncheckedUpdateManyWithoutItemNestedInput
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutItemNestedInput
+  aboutNotes?: Prisma.NoteUncheckedUpdateManyWithoutAboutItemNestedInput
 }
 
 export type ItemUncheckedUpdateManyWithoutOwnedByInput = {
@@ -2749,6 +2965,7 @@ export type ItemUpdateWithoutPlaceInput = {
   components?: Prisma.AssemblyUpdateManyWithoutParentItemNestedInput
   itemInteractions?: Prisma.ItemInteractionUpdateManyWithoutItemNestedInput
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutItemNestedInput
+  aboutNotes?: Prisma.NoteUpdateManyWithoutAboutItemNestedInput
 }
 
 export type ItemUncheckedUpdateWithoutPlaceInput = {
@@ -2783,6 +3000,7 @@ export type ItemUncheckedUpdateWithoutPlaceInput = {
   components?: Prisma.AssemblyUncheckedUpdateManyWithoutParentItemNestedInput
   itemInteractions?: Prisma.ItemInteractionUncheckedUpdateManyWithoutItemNestedInput
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutItemNestedInput
+  aboutNotes?: Prisma.NoteUncheckedUpdateManyWithoutAboutItemNestedInput
 }
 
 export type ItemUncheckedUpdateManyWithoutPlaceInput = {
@@ -2877,6 +3095,7 @@ export type ItemUpdateWithoutDefinitionInput = {
   components?: Prisma.AssemblyUpdateManyWithoutParentItemNestedInput
   itemInteractions?: Prisma.ItemInteractionUpdateManyWithoutItemNestedInput
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutItemNestedInput
+  aboutNotes?: Prisma.NoteUpdateManyWithoutAboutItemNestedInput
 }
 
 export type ItemUncheckedUpdateWithoutDefinitionInput = {
@@ -2911,6 +3130,7 @@ export type ItemUncheckedUpdateWithoutDefinitionInput = {
   components?: Prisma.AssemblyUncheckedUpdateManyWithoutParentItemNestedInput
   itemInteractions?: Prisma.ItemInteractionUncheckedUpdateManyWithoutItemNestedInput
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutItemNestedInput
+  aboutNotes?: Prisma.NoteUncheckedUpdateManyWithoutAboutItemNestedInput
 }
 
 export type ItemUncheckedUpdateManyWithoutDefinitionInput = {
@@ -3005,6 +3225,7 @@ export type ItemUpdateWithoutLotInput = {
   components?: Prisma.AssemblyUpdateManyWithoutParentItemNestedInput
   itemInteractions?: Prisma.ItemInteractionUpdateManyWithoutItemNestedInput
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutItemNestedInput
+  aboutNotes?: Prisma.NoteUpdateManyWithoutAboutItemNestedInput
 }
 
 export type ItemUncheckedUpdateWithoutLotInput = {
@@ -3039,6 +3260,7 @@ export type ItemUncheckedUpdateWithoutLotInput = {
   components?: Prisma.AssemblyUncheckedUpdateManyWithoutParentItemNestedInput
   itemInteractions?: Prisma.ItemInteractionUncheckedUpdateManyWithoutItemNestedInput
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutItemNestedInput
+  aboutNotes?: Prisma.NoteUncheckedUpdateManyWithoutAboutItemNestedInput
 }
 
 export type ItemUncheckedUpdateManyWithoutLotInput = {
@@ -3133,6 +3355,7 @@ export type ItemUpdateWithoutPrimaryImageFileInput = {
   components?: Prisma.AssemblyUpdateManyWithoutParentItemNestedInput
   itemInteractions?: Prisma.ItemInteractionUpdateManyWithoutItemNestedInput
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUpdateManyWithoutItemNestedInput
+  aboutNotes?: Prisma.NoteUpdateManyWithoutAboutItemNestedInput
 }
 
 export type ItemUncheckedUpdateWithoutPrimaryImageFileInput = {
@@ -3167,6 +3390,7 @@ export type ItemUncheckedUpdateWithoutPrimaryImageFileInput = {
   components?: Prisma.AssemblyUncheckedUpdateManyWithoutParentItemNestedInput
   itemInteractions?: Prisma.ItemInteractionUncheckedUpdateManyWithoutItemNestedInput
   purchaseReceiptLines?: Prisma.PurchaseReceiptLineUncheckedUpdateManyWithoutItemNestedInput
+  aboutNotes?: Prisma.NoteUncheckedUpdateManyWithoutAboutItemNestedInput
 }
 
 export type ItemUncheckedUpdateManyWithoutPrimaryImageFileInput = {
@@ -3209,6 +3433,7 @@ export type ItemCountOutputType = {
   components: number
   itemInteractions: number
   purchaseReceiptLines: number
+  aboutNotes: number
 }
 
 export type ItemCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -3216,6 +3441,7 @@ export type ItemCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   components?: boolean | ItemCountOutputTypeCountComponentsArgs
   itemInteractions?: boolean | ItemCountOutputTypeCountItemInteractionsArgs
   purchaseReceiptLines?: boolean | ItemCountOutputTypeCountPurchaseReceiptLinesArgs
+  aboutNotes?: boolean | ItemCountOutputTypeCountAboutNotesArgs
 }
 
 /**
@@ -3254,6 +3480,13 @@ export type ItemCountOutputTypeCountItemInteractionsArgs<ExtArgs extends runtime
  */
 export type ItemCountOutputTypeCountPurchaseReceiptLinesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.PurchaseReceiptLineWhereInput
+}
+
+/**
+ * ItemCountOutputType without action
+ */
+export type ItemCountOutputTypeCountAboutNotesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.NoteWhereInput
 }
 
 
@@ -3296,6 +3529,7 @@ export type ItemSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   components?: boolean | Prisma.Item$componentsArgs<ExtArgs>
   itemInteractions?: boolean | Prisma.Item$itemInteractionsArgs<ExtArgs>
   purchaseReceiptLines?: boolean | Prisma.Item$purchaseReceiptLinesArgs<ExtArgs>
+  aboutNotes?: boolean | Prisma.Item$aboutNotesArgs<ExtArgs>
   _count?: boolean | Prisma.ItemCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["item"]>
 
@@ -3416,6 +3650,7 @@ export type ItemInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   components?: boolean | Prisma.Item$componentsArgs<ExtArgs>
   itemInteractions?: boolean | Prisma.Item$itemInteractionsArgs<ExtArgs>
   purchaseReceiptLines?: boolean | Prisma.Item$purchaseReceiptLinesArgs<ExtArgs>
+  aboutNotes?: boolean | Prisma.Item$aboutNotesArgs<ExtArgs>
   _count?: boolean | Prisma.ItemCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ItemIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -3448,6 +3683,7 @@ export type $ItemPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     components: Prisma.$AssemblyPayload<ExtArgs>[]
     itemInteractions: Prisma.$ItemInteractionPayload<ExtArgs>[]
     purchaseReceiptLines: Prisma.$PurchaseReceiptLinePayload<ExtArgs>[]
+    aboutNotes: Prisma.$NotePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -3882,6 +4118,7 @@ export interface Prisma__ItemClient<T, Null = never, ExtArgs extends runtime.Typ
   components<T extends Prisma.Item$componentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Item$componentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AssemblyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   itemInteractions<T extends Prisma.Item$itemInteractionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Item$itemInteractionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ItemInteractionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   purchaseReceiptLines<T extends Prisma.Item$purchaseReceiptLinesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Item$purchaseReceiptLinesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PurchaseReceiptLinePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  aboutNotes<T extends Prisma.Item$aboutNotesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Item$aboutNotesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NotePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4526,6 +4763,30 @@ export type Item$purchaseReceiptLinesArgs<ExtArgs extends runtime.Types.Extensio
   take?: number
   skip?: number
   distinct?: Prisma.PurchaseReceiptLineScalarFieldEnum | Prisma.PurchaseReceiptLineScalarFieldEnum[]
+}
+
+/**
+ * Item.aboutNotes
+ */
+export type Item$aboutNotesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Note
+   */
+  select?: Prisma.NoteSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Note
+   */
+  omit?: Prisma.NoteOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.NoteInclude<ExtArgs> | null
+  where?: Prisma.NoteWhereInput
+  orderBy?: Prisma.NoteOrderByWithRelationInput | Prisma.NoteOrderByWithRelationInput[]
+  cursor?: Prisma.NoteWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.NoteScalarFieldEnum | Prisma.NoteScalarFieldEnum[]
 }
 
 /**

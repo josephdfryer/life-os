@@ -424,6 +424,7 @@ export type PersonWhereInput = {
   auditLogs?: Prisma.AuditLogListRelationFilter
   theorySnapshots?: Prisma.TheorySnapshotListRelationFilter
   theoryAnalysisRuns?: Prisma.TheoryAnalysisRunListRelationFilter
+  aboutNotes?: Prisma.NoteListRelationFilter
   fileEntityMentions?: Prisma.FileEntityMentionListRelationFilter
   fileResolutionsFrom?: Prisma.FileEntityResolutionListRelationFilter
   fileResolutionsTo?: Prisma.FileEntityResolutionListRelationFilter
@@ -476,6 +477,7 @@ export type PersonOrderByWithRelationInput = {
   auditLogs?: Prisma.AuditLogOrderByRelationAggregateInput
   theorySnapshots?: Prisma.TheorySnapshotOrderByRelationAggregateInput
   theoryAnalysisRuns?: Prisma.TheoryAnalysisRunOrderByRelationAggregateInput
+  aboutNotes?: Prisma.NoteOrderByRelationAggregateInput
   fileEntityMentions?: Prisma.FileEntityMentionOrderByRelationAggregateInput
   fileResolutionsFrom?: Prisma.FileEntityResolutionOrderByRelationAggregateInput
   fileResolutionsTo?: Prisma.FileEntityResolutionOrderByRelationAggregateInput
@@ -531,6 +533,7 @@ export type PersonWhereUniqueInput = Prisma.AtLeast<{
   auditLogs?: Prisma.AuditLogListRelationFilter
   theorySnapshots?: Prisma.TheorySnapshotListRelationFilter
   theoryAnalysisRuns?: Prisma.TheoryAnalysisRunListRelationFilter
+  aboutNotes?: Prisma.NoteListRelationFilter
   fileEntityMentions?: Prisma.FileEntityMentionListRelationFilter
   fileResolutionsFrom?: Prisma.FileEntityResolutionListRelationFilter
   fileResolutionsTo?: Prisma.FileEntityResolutionListRelationFilter
@@ -654,6 +657,7 @@ export type PersonCreateInput = {
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutPersonInput
   theorySnapshots?: Prisma.TheorySnapshotCreateNestedManyWithoutSubjectPersonInput
   theoryAnalysisRuns?: Prisma.TheoryAnalysisRunCreateNestedManyWithoutSubjectPersonInput
+  aboutNotes?: Prisma.NoteCreateNestedManyWithoutAboutPersonInput
   fileEntityMentions?: Prisma.FileEntityMentionCreateNestedManyWithoutResolvedPersonInput
   fileResolutionsFrom?: Prisma.FileEntityResolutionCreateNestedManyWithoutFromPersonInput
   fileResolutionsTo?: Prisma.FileEntityResolutionCreateNestedManyWithoutToPersonInput
@@ -705,6 +709,7 @@ export type PersonUncheckedCreateInput = {
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutPersonInput
   theorySnapshots?: Prisma.TheorySnapshotUncheckedCreateNestedManyWithoutSubjectPersonInput
   theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedCreateNestedManyWithoutSubjectPersonInput
+  aboutNotes?: Prisma.NoteUncheckedCreateNestedManyWithoutAboutPersonInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedCreateNestedManyWithoutResolvedPersonInput
   fileResolutionsFrom?: Prisma.FileEntityResolutionUncheckedCreateNestedManyWithoutFromPersonInput
   fileResolutionsTo?: Prisma.FileEntityResolutionUncheckedCreateNestedManyWithoutToPersonInput
@@ -756,6 +761,7 @@ export type PersonUpdateInput = {
   auditLogs?: Prisma.AuditLogUpdateManyWithoutPersonNestedInput
   theorySnapshots?: Prisma.TheorySnapshotUpdateManyWithoutSubjectPersonNestedInput
   theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUpdateManyWithoutSubjectPersonNestedInput
+  aboutNotes?: Prisma.NoteUpdateManyWithoutAboutPersonNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUpdateManyWithoutResolvedPersonNestedInput
   fileResolutionsFrom?: Prisma.FileEntityResolutionUpdateManyWithoutFromPersonNestedInput
   fileResolutionsTo?: Prisma.FileEntityResolutionUpdateManyWithoutToPersonNestedInput
@@ -807,6 +813,7 @@ export type PersonUncheckedUpdateInput = {
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutPersonNestedInput
   theorySnapshots?: Prisma.TheorySnapshotUncheckedUpdateManyWithoutSubjectPersonNestedInput
   theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedUpdateManyWithoutSubjectPersonNestedInput
+  aboutNotes?: Prisma.NoteUncheckedUpdateManyWithoutAboutPersonNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedUpdateManyWithoutResolvedPersonNestedInput
   fileResolutionsFrom?: Prisma.FileEntityResolutionUncheckedUpdateManyWithoutFromPersonNestedInput
   fileResolutionsTo?: Prisma.FileEntityResolutionUncheckedUpdateManyWithoutToPersonNestedInput
@@ -1362,6 +1369,22 @@ export type PersonUpdateOneRequiredWithoutGroupMembershipsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.PersonUpdateToOneWithWhereWithoutGroupMembershipsInput, Prisma.PersonUpdateWithoutGroupMembershipsInput>, Prisma.PersonUncheckedUpdateWithoutGroupMembershipsInput>
 }
 
+export type PersonCreateNestedOneWithoutAboutNotesInput = {
+  create?: Prisma.XOR<Prisma.PersonCreateWithoutAboutNotesInput, Prisma.PersonUncheckedCreateWithoutAboutNotesInput>
+  connectOrCreate?: Prisma.PersonCreateOrConnectWithoutAboutNotesInput
+  connect?: Prisma.PersonWhereUniqueInput
+}
+
+export type PersonUpdateOneWithoutAboutNotesNestedInput = {
+  create?: Prisma.XOR<Prisma.PersonCreateWithoutAboutNotesInput, Prisma.PersonUncheckedCreateWithoutAboutNotesInput>
+  connectOrCreate?: Prisma.PersonCreateOrConnectWithoutAboutNotesInput
+  upsert?: Prisma.PersonUpsertWithoutAboutNotesInput
+  disconnect?: Prisma.PersonWhereInput | boolean
+  delete?: Prisma.PersonWhereInput | boolean
+  connect?: Prisma.PersonWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.PersonUpdateToOneWithWhereWithoutAboutNotesInput, Prisma.PersonUpdateWithoutAboutNotesInput>, Prisma.PersonUncheckedUpdateWithoutAboutNotesInput>
+}
+
 export type PersonCreateNestedOneWithoutTheorySnapshotsInput = {
   create?: Prisma.XOR<Prisma.PersonCreateWithoutTheorySnapshotsInput, Prisma.PersonUncheckedCreateWithoutTheorySnapshotsInput>
   connectOrCreate?: Prisma.PersonCreateOrConnectWithoutTheorySnapshotsInput
@@ -1420,6 +1443,7 @@ export type PersonCreateWithoutWorkspaceInput = {
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutPersonInput
   theorySnapshots?: Prisma.TheorySnapshotCreateNestedManyWithoutSubjectPersonInput
   theoryAnalysisRuns?: Prisma.TheoryAnalysisRunCreateNestedManyWithoutSubjectPersonInput
+  aboutNotes?: Prisma.NoteCreateNestedManyWithoutAboutPersonInput
   fileEntityMentions?: Prisma.FileEntityMentionCreateNestedManyWithoutResolvedPersonInput
   fileResolutionsFrom?: Prisma.FileEntityResolutionCreateNestedManyWithoutFromPersonInput
   fileResolutionsTo?: Prisma.FileEntityResolutionCreateNestedManyWithoutToPersonInput
@@ -1470,6 +1494,7 @@ export type PersonUncheckedCreateWithoutWorkspaceInput = {
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutPersonInput
   theorySnapshots?: Prisma.TheorySnapshotUncheckedCreateNestedManyWithoutSubjectPersonInput
   theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedCreateNestedManyWithoutSubjectPersonInput
+  aboutNotes?: Prisma.NoteUncheckedCreateNestedManyWithoutAboutPersonInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedCreateNestedManyWithoutResolvedPersonInput
   fileResolutionsFrom?: Prisma.FileEntityResolutionUncheckedCreateNestedManyWithoutFromPersonInput
   fileResolutionsTo?: Prisma.FileEntityResolutionUncheckedCreateNestedManyWithoutToPersonInput
@@ -1580,6 +1605,7 @@ export type PersonCreateWithoutUsersInput = {
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutPersonInput
   theorySnapshots?: Prisma.TheorySnapshotCreateNestedManyWithoutSubjectPersonInput
   theoryAnalysisRuns?: Prisma.TheoryAnalysisRunCreateNestedManyWithoutSubjectPersonInput
+  aboutNotes?: Prisma.NoteCreateNestedManyWithoutAboutPersonInput
   fileEntityMentions?: Prisma.FileEntityMentionCreateNestedManyWithoutResolvedPersonInput
   fileResolutionsFrom?: Prisma.FileEntityResolutionCreateNestedManyWithoutFromPersonInput
   fileResolutionsTo?: Prisma.FileEntityResolutionCreateNestedManyWithoutToPersonInput
@@ -1630,6 +1656,7 @@ export type PersonUncheckedCreateWithoutUsersInput = {
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutPersonInput
   theorySnapshots?: Prisma.TheorySnapshotUncheckedCreateNestedManyWithoutSubjectPersonInput
   theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedCreateNestedManyWithoutSubjectPersonInput
+  aboutNotes?: Prisma.NoteUncheckedCreateNestedManyWithoutAboutPersonInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedCreateNestedManyWithoutResolvedPersonInput
   fileResolutionsFrom?: Prisma.FileEntityResolutionUncheckedCreateNestedManyWithoutFromPersonInput
   fileResolutionsTo?: Prisma.FileEntityResolutionUncheckedCreateNestedManyWithoutToPersonInput
@@ -1696,6 +1723,7 @@ export type PersonUpdateWithoutUsersInput = {
   auditLogs?: Prisma.AuditLogUpdateManyWithoutPersonNestedInput
   theorySnapshots?: Prisma.TheorySnapshotUpdateManyWithoutSubjectPersonNestedInput
   theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUpdateManyWithoutSubjectPersonNestedInput
+  aboutNotes?: Prisma.NoteUpdateManyWithoutAboutPersonNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUpdateManyWithoutResolvedPersonNestedInput
   fileResolutionsFrom?: Prisma.FileEntityResolutionUpdateManyWithoutFromPersonNestedInput
   fileResolutionsTo?: Prisma.FileEntityResolutionUpdateManyWithoutToPersonNestedInput
@@ -1746,6 +1774,7 @@ export type PersonUncheckedUpdateWithoutUsersInput = {
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutPersonNestedInput
   theorySnapshots?: Prisma.TheorySnapshotUncheckedUpdateManyWithoutSubjectPersonNestedInput
   theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedUpdateManyWithoutSubjectPersonNestedInput
+  aboutNotes?: Prisma.NoteUncheckedUpdateManyWithoutAboutPersonNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedUpdateManyWithoutResolvedPersonNestedInput
   fileResolutionsFrom?: Prisma.FileEntityResolutionUncheckedUpdateManyWithoutFromPersonNestedInput
   fileResolutionsTo?: Prisma.FileEntityResolutionUncheckedUpdateManyWithoutToPersonNestedInput
@@ -1796,6 +1825,7 @@ export type PersonCreateWithoutApiKeysInput = {
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutPersonInput
   theorySnapshots?: Prisma.TheorySnapshotCreateNestedManyWithoutSubjectPersonInput
   theoryAnalysisRuns?: Prisma.TheoryAnalysisRunCreateNestedManyWithoutSubjectPersonInput
+  aboutNotes?: Prisma.NoteCreateNestedManyWithoutAboutPersonInput
   fileEntityMentions?: Prisma.FileEntityMentionCreateNestedManyWithoutResolvedPersonInput
   fileResolutionsFrom?: Prisma.FileEntityResolutionCreateNestedManyWithoutFromPersonInput
   fileResolutionsTo?: Prisma.FileEntityResolutionCreateNestedManyWithoutToPersonInput
@@ -1846,6 +1876,7 @@ export type PersonUncheckedCreateWithoutApiKeysInput = {
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutPersonInput
   theorySnapshots?: Prisma.TheorySnapshotUncheckedCreateNestedManyWithoutSubjectPersonInput
   theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedCreateNestedManyWithoutSubjectPersonInput
+  aboutNotes?: Prisma.NoteUncheckedCreateNestedManyWithoutAboutPersonInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedCreateNestedManyWithoutResolvedPersonInput
   fileResolutionsFrom?: Prisma.FileEntityResolutionUncheckedCreateNestedManyWithoutFromPersonInput
   fileResolutionsTo?: Prisma.FileEntityResolutionUncheckedCreateNestedManyWithoutToPersonInput
@@ -1912,6 +1943,7 @@ export type PersonUpdateWithoutApiKeysInput = {
   auditLogs?: Prisma.AuditLogUpdateManyWithoutPersonNestedInput
   theorySnapshots?: Prisma.TheorySnapshotUpdateManyWithoutSubjectPersonNestedInput
   theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUpdateManyWithoutSubjectPersonNestedInput
+  aboutNotes?: Prisma.NoteUpdateManyWithoutAboutPersonNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUpdateManyWithoutResolvedPersonNestedInput
   fileResolutionsFrom?: Prisma.FileEntityResolutionUpdateManyWithoutFromPersonNestedInput
   fileResolutionsTo?: Prisma.FileEntityResolutionUpdateManyWithoutToPersonNestedInput
@@ -1962,6 +1994,7 @@ export type PersonUncheckedUpdateWithoutApiKeysInput = {
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutPersonNestedInput
   theorySnapshots?: Prisma.TheorySnapshotUncheckedUpdateManyWithoutSubjectPersonNestedInput
   theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedUpdateManyWithoutSubjectPersonNestedInput
+  aboutNotes?: Prisma.NoteUncheckedUpdateManyWithoutAboutPersonNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedUpdateManyWithoutResolvedPersonNestedInput
   fileResolutionsFrom?: Prisma.FileEntityResolutionUncheckedUpdateManyWithoutFromPersonNestedInput
   fileResolutionsTo?: Prisma.FileEntityResolutionUncheckedUpdateManyWithoutToPersonNestedInput
@@ -2012,6 +2045,7 @@ export type PersonCreateWithoutAuditLogsInput = {
   apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutOwnerPersonInput
   theorySnapshots?: Prisma.TheorySnapshotCreateNestedManyWithoutSubjectPersonInput
   theoryAnalysisRuns?: Prisma.TheoryAnalysisRunCreateNestedManyWithoutSubjectPersonInput
+  aboutNotes?: Prisma.NoteCreateNestedManyWithoutAboutPersonInput
   fileEntityMentions?: Prisma.FileEntityMentionCreateNestedManyWithoutResolvedPersonInput
   fileResolutionsFrom?: Prisma.FileEntityResolutionCreateNestedManyWithoutFromPersonInput
   fileResolutionsTo?: Prisma.FileEntityResolutionCreateNestedManyWithoutToPersonInput
@@ -2062,6 +2096,7 @@ export type PersonUncheckedCreateWithoutAuditLogsInput = {
   apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutOwnerPersonInput
   theorySnapshots?: Prisma.TheorySnapshotUncheckedCreateNestedManyWithoutSubjectPersonInput
   theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedCreateNestedManyWithoutSubjectPersonInput
+  aboutNotes?: Prisma.NoteUncheckedCreateNestedManyWithoutAboutPersonInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedCreateNestedManyWithoutResolvedPersonInput
   fileResolutionsFrom?: Prisma.FileEntityResolutionUncheckedCreateNestedManyWithoutFromPersonInput
   fileResolutionsTo?: Prisma.FileEntityResolutionUncheckedCreateNestedManyWithoutToPersonInput
@@ -2128,6 +2163,7 @@ export type PersonUpdateWithoutAuditLogsInput = {
   apiKeys?: Prisma.ApiKeyUpdateManyWithoutOwnerPersonNestedInput
   theorySnapshots?: Prisma.TheorySnapshotUpdateManyWithoutSubjectPersonNestedInput
   theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUpdateManyWithoutSubjectPersonNestedInput
+  aboutNotes?: Prisma.NoteUpdateManyWithoutAboutPersonNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUpdateManyWithoutResolvedPersonNestedInput
   fileResolutionsFrom?: Prisma.FileEntityResolutionUpdateManyWithoutFromPersonNestedInput
   fileResolutionsTo?: Prisma.FileEntityResolutionUpdateManyWithoutToPersonNestedInput
@@ -2178,6 +2214,7 @@ export type PersonUncheckedUpdateWithoutAuditLogsInput = {
   apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutOwnerPersonNestedInput
   theorySnapshots?: Prisma.TheorySnapshotUncheckedUpdateManyWithoutSubjectPersonNestedInput
   theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedUpdateManyWithoutSubjectPersonNestedInput
+  aboutNotes?: Prisma.NoteUncheckedUpdateManyWithoutAboutPersonNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedUpdateManyWithoutResolvedPersonNestedInput
   fileResolutionsFrom?: Prisma.FileEntityResolutionUncheckedUpdateManyWithoutFromPersonNestedInput
   fileResolutionsTo?: Prisma.FileEntityResolutionUncheckedUpdateManyWithoutToPersonNestedInput
@@ -2228,6 +2265,7 @@ export type PersonCreateWithoutOwnedEraAccountsInput = {
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutPersonInput
   theorySnapshots?: Prisma.TheorySnapshotCreateNestedManyWithoutSubjectPersonInput
   theoryAnalysisRuns?: Prisma.TheoryAnalysisRunCreateNestedManyWithoutSubjectPersonInput
+  aboutNotes?: Prisma.NoteCreateNestedManyWithoutAboutPersonInput
   fileEntityMentions?: Prisma.FileEntityMentionCreateNestedManyWithoutResolvedPersonInput
   fileResolutionsFrom?: Prisma.FileEntityResolutionCreateNestedManyWithoutFromPersonInput
   fileResolutionsTo?: Prisma.FileEntityResolutionCreateNestedManyWithoutToPersonInput
@@ -2278,6 +2316,7 @@ export type PersonUncheckedCreateWithoutOwnedEraAccountsInput = {
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutPersonInput
   theorySnapshots?: Prisma.TheorySnapshotUncheckedCreateNestedManyWithoutSubjectPersonInput
   theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedCreateNestedManyWithoutSubjectPersonInput
+  aboutNotes?: Prisma.NoteUncheckedCreateNestedManyWithoutAboutPersonInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedCreateNestedManyWithoutResolvedPersonInput
   fileResolutionsFrom?: Prisma.FileEntityResolutionUncheckedCreateNestedManyWithoutFromPersonInput
   fileResolutionsTo?: Prisma.FileEntityResolutionUncheckedCreateNestedManyWithoutToPersonInput
@@ -2344,6 +2383,7 @@ export type PersonUpdateWithoutOwnedEraAccountsInput = {
   auditLogs?: Prisma.AuditLogUpdateManyWithoutPersonNestedInput
   theorySnapshots?: Prisma.TheorySnapshotUpdateManyWithoutSubjectPersonNestedInput
   theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUpdateManyWithoutSubjectPersonNestedInput
+  aboutNotes?: Prisma.NoteUpdateManyWithoutAboutPersonNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUpdateManyWithoutResolvedPersonNestedInput
   fileResolutionsFrom?: Prisma.FileEntityResolutionUpdateManyWithoutFromPersonNestedInput
   fileResolutionsTo?: Prisma.FileEntityResolutionUpdateManyWithoutToPersonNestedInput
@@ -2394,6 +2434,7 @@ export type PersonUncheckedUpdateWithoutOwnedEraAccountsInput = {
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutPersonNestedInput
   theorySnapshots?: Prisma.TheorySnapshotUncheckedUpdateManyWithoutSubjectPersonNestedInput
   theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedUpdateManyWithoutSubjectPersonNestedInput
+  aboutNotes?: Prisma.NoteUncheckedUpdateManyWithoutAboutPersonNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedUpdateManyWithoutResolvedPersonNestedInput
   fileResolutionsFrom?: Prisma.FileEntityResolutionUncheckedUpdateManyWithoutFromPersonNestedInput
   fileResolutionsTo?: Prisma.FileEntityResolutionUncheckedUpdateManyWithoutToPersonNestedInput
@@ -2444,6 +2485,7 @@ export type PersonCreateWithoutStagedInteractionsInput = {
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutPersonInput
   theorySnapshots?: Prisma.TheorySnapshotCreateNestedManyWithoutSubjectPersonInput
   theoryAnalysisRuns?: Prisma.TheoryAnalysisRunCreateNestedManyWithoutSubjectPersonInput
+  aboutNotes?: Prisma.NoteCreateNestedManyWithoutAboutPersonInput
   fileEntityMentions?: Prisma.FileEntityMentionCreateNestedManyWithoutResolvedPersonInput
   fileResolutionsFrom?: Prisma.FileEntityResolutionCreateNestedManyWithoutFromPersonInput
   fileResolutionsTo?: Prisma.FileEntityResolutionCreateNestedManyWithoutToPersonInput
@@ -2494,6 +2536,7 @@ export type PersonUncheckedCreateWithoutStagedInteractionsInput = {
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutPersonInput
   theorySnapshots?: Prisma.TheorySnapshotUncheckedCreateNestedManyWithoutSubjectPersonInput
   theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedCreateNestedManyWithoutSubjectPersonInput
+  aboutNotes?: Prisma.NoteUncheckedCreateNestedManyWithoutAboutPersonInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedCreateNestedManyWithoutResolvedPersonInput
   fileResolutionsFrom?: Prisma.FileEntityResolutionUncheckedCreateNestedManyWithoutFromPersonInput
   fileResolutionsTo?: Prisma.FileEntityResolutionUncheckedCreateNestedManyWithoutToPersonInput
@@ -2560,6 +2603,7 @@ export type PersonUpdateWithoutStagedInteractionsInput = {
   auditLogs?: Prisma.AuditLogUpdateManyWithoutPersonNestedInput
   theorySnapshots?: Prisma.TheorySnapshotUpdateManyWithoutSubjectPersonNestedInput
   theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUpdateManyWithoutSubjectPersonNestedInput
+  aboutNotes?: Prisma.NoteUpdateManyWithoutAboutPersonNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUpdateManyWithoutResolvedPersonNestedInput
   fileResolutionsFrom?: Prisma.FileEntityResolutionUpdateManyWithoutFromPersonNestedInput
   fileResolutionsTo?: Prisma.FileEntityResolutionUpdateManyWithoutToPersonNestedInput
@@ -2610,6 +2654,7 @@ export type PersonUncheckedUpdateWithoutStagedInteractionsInput = {
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutPersonNestedInput
   theorySnapshots?: Prisma.TheorySnapshotUncheckedUpdateManyWithoutSubjectPersonNestedInput
   theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedUpdateManyWithoutSubjectPersonNestedInput
+  aboutNotes?: Prisma.NoteUncheckedUpdateManyWithoutAboutPersonNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedUpdateManyWithoutResolvedPersonNestedInput
   fileResolutionsFrom?: Prisma.FileEntityResolutionUncheckedUpdateManyWithoutFromPersonNestedInput
   fileResolutionsTo?: Prisma.FileEntityResolutionUncheckedUpdateManyWithoutToPersonNestedInput
@@ -2660,6 +2705,7 @@ export type PersonCreateWithoutInteractionsInput = {
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutPersonInput
   theorySnapshots?: Prisma.TheorySnapshotCreateNestedManyWithoutSubjectPersonInput
   theoryAnalysisRuns?: Prisma.TheoryAnalysisRunCreateNestedManyWithoutSubjectPersonInput
+  aboutNotes?: Prisma.NoteCreateNestedManyWithoutAboutPersonInput
   fileEntityMentions?: Prisma.FileEntityMentionCreateNestedManyWithoutResolvedPersonInput
   fileResolutionsFrom?: Prisma.FileEntityResolutionCreateNestedManyWithoutFromPersonInput
   fileResolutionsTo?: Prisma.FileEntityResolutionCreateNestedManyWithoutToPersonInput
@@ -2710,6 +2756,7 @@ export type PersonUncheckedCreateWithoutInteractionsInput = {
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutPersonInput
   theorySnapshots?: Prisma.TheorySnapshotUncheckedCreateNestedManyWithoutSubjectPersonInput
   theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedCreateNestedManyWithoutSubjectPersonInput
+  aboutNotes?: Prisma.NoteUncheckedCreateNestedManyWithoutAboutPersonInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedCreateNestedManyWithoutResolvedPersonInput
   fileResolutionsFrom?: Prisma.FileEntityResolutionUncheckedCreateNestedManyWithoutFromPersonInput
   fileResolutionsTo?: Prisma.FileEntityResolutionUncheckedCreateNestedManyWithoutToPersonInput
@@ -2765,6 +2812,7 @@ export type PersonCreateWithoutActorInteractionsInput = {
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutPersonInput
   theorySnapshots?: Prisma.TheorySnapshotCreateNestedManyWithoutSubjectPersonInput
   theoryAnalysisRuns?: Prisma.TheoryAnalysisRunCreateNestedManyWithoutSubjectPersonInput
+  aboutNotes?: Prisma.NoteCreateNestedManyWithoutAboutPersonInput
   fileEntityMentions?: Prisma.FileEntityMentionCreateNestedManyWithoutResolvedPersonInput
   fileResolutionsFrom?: Prisma.FileEntityResolutionCreateNestedManyWithoutFromPersonInput
   fileResolutionsTo?: Prisma.FileEntityResolutionCreateNestedManyWithoutToPersonInput
@@ -2815,6 +2863,7 @@ export type PersonUncheckedCreateWithoutActorInteractionsInput = {
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutPersonInput
   theorySnapshots?: Prisma.TheorySnapshotUncheckedCreateNestedManyWithoutSubjectPersonInput
   theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedCreateNestedManyWithoutSubjectPersonInput
+  aboutNotes?: Prisma.NoteUncheckedCreateNestedManyWithoutAboutPersonInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedCreateNestedManyWithoutResolvedPersonInput
   fileResolutionsFrom?: Prisma.FileEntityResolutionUncheckedCreateNestedManyWithoutFromPersonInput
   fileResolutionsTo?: Prisma.FileEntityResolutionUncheckedCreateNestedManyWithoutToPersonInput
@@ -2881,6 +2930,7 @@ export type PersonUpdateWithoutInteractionsInput = {
   auditLogs?: Prisma.AuditLogUpdateManyWithoutPersonNestedInput
   theorySnapshots?: Prisma.TheorySnapshotUpdateManyWithoutSubjectPersonNestedInput
   theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUpdateManyWithoutSubjectPersonNestedInput
+  aboutNotes?: Prisma.NoteUpdateManyWithoutAboutPersonNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUpdateManyWithoutResolvedPersonNestedInput
   fileResolutionsFrom?: Prisma.FileEntityResolutionUpdateManyWithoutFromPersonNestedInput
   fileResolutionsTo?: Prisma.FileEntityResolutionUpdateManyWithoutToPersonNestedInput
@@ -2931,6 +2981,7 @@ export type PersonUncheckedUpdateWithoutInteractionsInput = {
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutPersonNestedInput
   theorySnapshots?: Prisma.TheorySnapshotUncheckedUpdateManyWithoutSubjectPersonNestedInput
   theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedUpdateManyWithoutSubjectPersonNestedInput
+  aboutNotes?: Prisma.NoteUncheckedUpdateManyWithoutAboutPersonNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedUpdateManyWithoutResolvedPersonNestedInput
   fileResolutionsFrom?: Prisma.FileEntityResolutionUncheckedUpdateManyWithoutFromPersonNestedInput
   fileResolutionsTo?: Prisma.FileEntityResolutionUncheckedUpdateManyWithoutToPersonNestedInput
@@ -2992,6 +3043,7 @@ export type PersonUpdateWithoutActorInteractionsInput = {
   auditLogs?: Prisma.AuditLogUpdateManyWithoutPersonNestedInput
   theorySnapshots?: Prisma.TheorySnapshotUpdateManyWithoutSubjectPersonNestedInput
   theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUpdateManyWithoutSubjectPersonNestedInput
+  aboutNotes?: Prisma.NoteUpdateManyWithoutAboutPersonNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUpdateManyWithoutResolvedPersonNestedInput
   fileResolutionsFrom?: Prisma.FileEntityResolutionUpdateManyWithoutFromPersonNestedInput
   fileResolutionsTo?: Prisma.FileEntityResolutionUpdateManyWithoutToPersonNestedInput
@@ -3042,6 +3094,7 @@ export type PersonUncheckedUpdateWithoutActorInteractionsInput = {
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutPersonNestedInput
   theorySnapshots?: Prisma.TheorySnapshotUncheckedUpdateManyWithoutSubjectPersonNestedInput
   theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedUpdateManyWithoutSubjectPersonNestedInput
+  aboutNotes?: Prisma.NoteUncheckedUpdateManyWithoutAboutPersonNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedUpdateManyWithoutResolvedPersonNestedInput
   fileResolutionsFrom?: Prisma.FileEntityResolutionUncheckedUpdateManyWithoutFromPersonNestedInput
   fileResolutionsTo?: Prisma.FileEntityResolutionUncheckedUpdateManyWithoutToPersonNestedInput
@@ -3092,6 +3145,7 @@ export type PersonCreateWithoutPlansInput = {
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutPersonInput
   theorySnapshots?: Prisma.TheorySnapshotCreateNestedManyWithoutSubjectPersonInput
   theoryAnalysisRuns?: Prisma.TheoryAnalysisRunCreateNestedManyWithoutSubjectPersonInput
+  aboutNotes?: Prisma.NoteCreateNestedManyWithoutAboutPersonInput
   fileEntityMentions?: Prisma.FileEntityMentionCreateNestedManyWithoutResolvedPersonInput
   fileResolutionsFrom?: Prisma.FileEntityResolutionCreateNestedManyWithoutFromPersonInput
   fileResolutionsTo?: Prisma.FileEntityResolutionCreateNestedManyWithoutToPersonInput
@@ -3142,6 +3196,7 @@ export type PersonUncheckedCreateWithoutPlansInput = {
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutPersonInput
   theorySnapshots?: Prisma.TheorySnapshotUncheckedCreateNestedManyWithoutSubjectPersonInput
   theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedCreateNestedManyWithoutSubjectPersonInput
+  aboutNotes?: Prisma.NoteUncheckedCreateNestedManyWithoutAboutPersonInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedCreateNestedManyWithoutResolvedPersonInput
   fileResolutionsFrom?: Prisma.FileEntityResolutionUncheckedCreateNestedManyWithoutFromPersonInput
   fileResolutionsTo?: Prisma.FileEntityResolutionUncheckedCreateNestedManyWithoutToPersonInput
@@ -3208,6 +3263,7 @@ export type PersonUpdateWithoutPlansInput = {
   auditLogs?: Prisma.AuditLogUpdateManyWithoutPersonNestedInput
   theorySnapshots?: Prisma.TheorySnapshotUpdateManyWithoutSubjectPersonNestedInput
   theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUpdateManyWithoutSubjectPersonNestedInput
+  aboutNotes?: Prisma.NoteUpdateManyWithoutAboutPersonNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUpdateManyWithoutResolvedPersonNestedInput
   fileResolutionsFrom?: Prisma.FileEntityResolutionUpdateManyWithoutFromPersonNestedInput
   fileResolutionsTo?: Prisma.FileEntityResolutionUpdateManyWithoutToPersonNestedInput
@@ -3258,6 +3314,7 @@ export type PersonUncheckedUpdateWithoutPlansInput = {
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutPersonNestedInput
   theorySnapshots?: Prisma.TheorySnapshotUncheckedUpdateManyWithoutSubjectPersonNestedInput
   theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedUpdateManyWithoutSubjectPersonNestedInput
+  aboutNotes?: Prisma.NoteUncheckedUpdateManyWithoutAboutPersonNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedUpdateManyWithoutResolvedPersonNestedInput
   fileResolutionsFrom?: Prisma.FileEntityResolutionUncheckedUpdateManyWithoutFromPersonNestedInput
   fileResolutionsTo?: Prisma.FileEntityResolutionUncheckedUpdateManyWithoutToPersonNestedInput
@@ -3308,6 +3365,7 @@ export type PersonCreateWithoutExpectedInPlansInput = {
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutPersonInput
   theorySnapshots?: Prisma.TheorySnapshotCreateNestedManyWithoutSubjectPersonInput
   theoryAnalysisRuns?: Prisma.TheoryAnalysisRunCreateNestedManyWithoutSubjectPersonInput
+  aboutNotes?: Prisma.NoteCreateNestedManyWithoutAboutPersonInput
   fileEntityMentions?: Prisma.FileEntityMentionCreateNestedManyWithoutResolvedPersonInput
   fileResolutionsFrom?: Prisma.FileEntityResolutionCreateNestedManyWithoutFromPersonInput
   fileResolutionsTo?: Prisma.FileEntityResolutionCreateNestedManyWithoutToPersonInput
@@ -3358,6 +3416,7 @@ export type PersonUncheckedCreateWithoutExpectedInPlansInput = {
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutPersonInput
   theorySnapshots?: Prisma.TheorySnapshotUncheckedCreateNestedManyWithoutSubjectPersonInput
   theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedCreateNestedManyWithoutSubjectPersonInput
+  aboutNotes?: Prisma.NoteUncheckedCreateNestedManyWithoutAboutPersonInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedCreateNestedManyWithoutResolvedPersonInput
   fileResolutionsFrom?: Prisma.FileEntityResolutionUncheckedCreateNestedManyWithoutFromPersonInput
   fileResolutionsTo?: Prisma.FileEntityResolutionUncheckedCreateNestedManyWithoutToPersonInput
@@ -3424,6 +3483,7 @@ export type PersonUpdateWithoutExpectedInPlansInput = {
   auditLogs?: Prisma.AuditLogUpdateManyWithoutPersonNestedInput
   theorySnapshots?: Prisma.TheorySnapshotUpdateManyWithoutSubjectPersonNestedInput
   theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUpdateManyWithoutSubjectPersonNestedInput
+  aboutNotes?: Prisma.NoteUpdateManyWithoutAboutPersonNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUpdateManyWithoutResolvedPersonNestedInput
   fileResolutionsFrom?: Prisma.FileEntityResolutionUpdateManyWithoutFromPersonNestedInput
   fileResolutionsTo?: Prisma.FileEntityResolutionUpdateManyWithoutToPersonNestedInput
@@ -3474,6 +3534,7 @@ export type PersonUncheckedUpdateWithoutExpectedInPlansInput = {
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutPersonNestedInput
   theorySnapshots?: Prisma.TheorySnapshotUncheckedUpdateManyWithoutSubjectPersonNestedInput
   theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedUpdateManyWithoutSubjectPersonNestedInput
+  aboutNotes?: Prisma.NoteUncheckedUpdateManyWithoutAboutPersonNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedUpdateManyWithoutResolvedPersonNestedInput
   fileResolutionsFrom?: Prisma.FileEntityResolutionUncheckedUpdateManyWithoutFromPersonNestedInput
   fileResolutionsTo?: Prisma.FileEntityResolutionUncheckedUpdateManyWithoutToPersonNestedInput
@@ -3524,6 +3585,7 @@ export type PersonCreateWithoutOwnedItemsInput = {
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutPersonInput
   theorySnapshots?: Prisma.TheorySnapshotCreateNestedManyWithoutSubjectPersonInput
   theoryAnalysisRuns?: Prisma.TheoryAnalysisRunCreateNestedManyWithoutSubjectPersonInput
+  aboutNotes?: Prisma.NoteCreateNestedManyWithoutAboutPersonInput
   fileEntityMentions?: Prisma.FileEntityMentionCreateNestedManyWithoutResolvedPersonInput
   fileResolutionsFrom?: Prisma.FileEntityResolutionCreateNestedManyWithoutFromPersonInput
   fileResolutionsTo?: Prisma.FileEntityResolutionCreateNestedManyWithoutToPersonInput
@@ -3574,6 +3636,7 @@ export type PersonUncheckedCreateWithoutOwnedItemsInput = {
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutPersonInput
   theorySnapshots?: Prisma.TheorySnapshotUncheckedCreateNestedManyWithoutSubjectPersonInput
   theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedCreateNestedManyWithoutSubjectPersonInput
+  aboutNotes?: Prisma.NoteUncheckedCreateNestedManyWithoutAboutPersonInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedCreateNestedManyWithoutResolvedPersonInput
   fileResolutionsFrom?: Prisma.FileEntityResolutionUncheckedCreateNestedManyWithoutFromPersonInput
   fileResolutionsTo?: Prisma.FileEntityResolutionUncheckedCreateNestedManyWithoutToPersonInput
@@ -3640,6 +3703,7 @@ export type PersonUpdateWithoutOwnedItemsInput = {
   auditLogs?: Prisma.AuditLogUpdateManyWithoutPersonNestedInput
   theorySnapshots?: Prisma.TheorySnapshotUpdateManyWithoutSubjectPersonNestedInput
   theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUpdateManyWithoutSubjectPersonNestedInput
+  aboutNotes?: Prisma.NoteUpdateManyWithoutAboutPersonNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUpdateManyWithoutResolvedPersonNestedInput
   fileResolutionsFrom?: Prisma.FileEntityResolutionUpdateManyWithoutFromPersonNestedInput
   fileResolutionsTo?: Prisma.FileEntityResolutionUpdateManyWithoutToPersonNestedInput
@@ -3690,6 +3754,7 @@ export type PersonUncheckedUpdateWithoutOwnedItemsInput = {
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutPersonNestedInput
   theorySnapshots?: Prisma.TheorySnapshotUncheckedUpdateManyWithoutSubjectPersonNestedInput
   theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedUpdateManyWithoutSubjectPersonNestedInput
+  aboutNotes?: Prisma.NoteUncheckedUpdateManyWithoutAboutPersonNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedUpdateManyWithoutResolvedPersonNestedInput
   fileResolutionsFrom?: Prisma.FileEntityResolutionUncheckedUpdateManyWithoutFromPersonNestedInput
   fileResolutionsTo?: Prisma.FileEntityResolutionUncheckedUpdateManyWithoutToPersonNestedInput
@@ -3740,6 +3805,7 @@ export type PersonCreateWithoutAssembledByInput = {
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutPersonInput
   theorySnapshots?: Prisma.TheorySnapshotCreateNestedManyWithoutSubjectPersonInput
   theoryAnalysisRuns?: Prisma.TheoryAnalysisRunCreateNestedManyWithoutSubjectPersonInput
+  aboutNotes?: Prisma.NoteCreateNestedManyWithoutAboutPersonInput
   fileEntityMentions?: Prisma.FileEntityMentionCreateNestedManyWithoutResolvedPersonInput
   fileResolutionsFrom?: Prisma.FileEntityResolutionCreateNestedManyWithoutFromPersonInput
   fileResolutionsTo?: Prisma.FileEntityResolutionCreateNestedManyWithoutToPersonInput
@@ -3790,6 +3856,7 @@ export type PersonUncheckedCreateWithoutAssembledByInput = {
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutPersonInput
   theorySnapshots?: Prisma.TheorySnapshotUncheckedCreateNestedManyWithoutSubjectPersonInput
   theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedCreateNestedManyWithoutSubjectPersonInput
+  aboutNotes?: Prisma.NoteUncheckedCreateNestedManyWithoutAboutPersonInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedCreateNestedManyWithoutResolvedPersonInput
   fileResolutionsFrom?: Prisma.FileEntityResolutionUncheckedCreateNestedManyWithoutFromPersonInput
   fileResolutionsTo?: Prisma.FileEntityResolutionUncheckedCreateNestedManyWithoutToPersonInput
@@ -3845,6 +3912,7 @@ export type PersonCreateWithoutDisassembledByInput = {
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutPersonInput
   theorySnapshots?: Prisma.TheorySnapshotCreateNestedManyWithoutSubjectPersonInput
   theoryAnalysisRuns?: Prisma.TheoryAnalysisRunCreateNestedManyWithoutSubjectPersonInput
+  aboutNotes?: Prisma.NoteCreateNestedManyWithoutAboutPersonInput
   fileEntityMentions?: Prisma.FileEntityMentionCreateNestedManyWithoutResolvedPersonInput
   fileResolutionsFrom?: Prisma.FileEntityResolutionCreateNestedManyWithoutFromPersonInput
   fileResolutionsTo?: Prisma.FileEntityResolutionCreateNestedManyWithoutToPersonInput
@@ -3895,6 +3963,7 @@ export type PersonUncheckedCreateWithoutDisassembledByInput = {
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutPersonInput
   theorySnapshots?: Prisma.TheorySnapshotUncheckedCreateNestedManyWithoutSubjectPersonInput
   theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedCreateNestedManyWithoutSubjectPersonInput
+  aboutNotes?: Prisma.NoteUncheckedCreateNestedManyWithoutAboutPersonInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedCreateNestedManyWithoutResolvedPersonInput
   fileResolutionsFrom?: Prisma.FileEntityResolutionUncheckedCreateNestedManyWithoutFromPersonInput
   fileResolutionsTo?: Prisma.FileEntityResolutionUncheckedCreateNestedManyWithoutToPersonInput
@@ -3961,6 +4030,7 @@ export type PersonUpdateWithoutAssembledByInput = {
   auditLogs?: Prisma.AuditLogUpdateManyWithoutPersonNestedInput
   theorySnapshots?: Prisma.TheorySnapshotUpdateManyWithoutSubjectPersonNestedInput
   theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUpdateManyWithoutSubjectPersonNestedInput
+  aboutNotes?: Prisma.NoteUpdateManyWithoutAboutPersonNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUpdateManyWithoutResolvedPersonNestedInput
   fileResolutionsFrom?: Prisma.FileEntityResolutionUpdateManyWithoutFromPersonNestedInput
   fileResolutionsTo?: Prisma.FileEntityResolutionUpdateManyWithoutToPersonNestedInput
@@ -4011,6 +4081,7 @@ export type PersonUncheckedUpdateWithoutAssembledByInput = {
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutPersonNestedInput
   theorySnapshots?: Prisma.TheorySnapshotUncheckedUpdateManyWithoutSubjectPersonNestedInput
   theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedUpdateManyWithoutSubjectPersonNestedInput
+  aboutNotes?: Prisma.NoteUncheckedUpdateManyWithoutAboutPersonNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedUpdateManyWithoutResolvedPersonNestedInput
   fileResolutionsFrom?: Prisma.FileEntityResolutionUncheckedUpdateManyWithoutFromPersonNestedInput
   fileResolutionsTo?: Prisma.FileEntityResolutionUncheckedUpdateManyWithoutToPersonNestedInput
@@ -4072,6 +4143,7 @@ export type PersonUpdateWithoutDisassembledByInput = {
   auditLogs?: Prisma.AuditLogUpdateManyWithoutPersonNestedInput
   theorySnapshots?: Prisma.TheorySnapshotUpdateManyWithoutSubjectPersonNestedInput
   theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUpdateManyWithoutSubjectPersonNestedInput
+  aboutNotes?: Prisma.NoteUpdateManyWithoutAboutPersonNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUpdateManyWithoutResolvedPersonNestedInput
   fileResolutionsFrom?: Prisma.FileEntityResolutionUpdateManyWithoutFromPersonNestedInput
   fileResolutionsTo?: Prisma.FileEntityResolutionUpdateManyWithoutToPersonNestedInput
@@ -4122,6 +4194,7 @@ export type PersonUncheckedUpdateWithoutDisassembledByInput = {
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutPersonNestedInput
   theorySnapshots?: Prisma.TheorySnapshotUncheckedUpdateManyWithoutSubjectPersonNestedInput
   theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedUpdateManyWithoutSubjectPersonNestedInput
+  aboutNotes?: Prisma.NoteUncheckedUpdateManyWithoutAboutPersonNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedUpdateManyWithoutResolvedPersonNestedInput
   fileResolutionsFrom?: Prisma.FileEntityResolutionUncheckedUpdateManyWithoutFromPersonNestedInput
   fileResolutionsTo?: Prisma.FileEntityResolutionUncheckedUpdateManyWithoutToPersonNestedInput
@@ -4173,6 +4246,7 @@ export type PersonCreateWithoutFileEntityMentionsInput = {
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutPersonInput
   theorySnapshots?: Prisma.TheorySnapshotCreateNestedManyWithoutSubjectPersonInput
   theoryAnalysisRuns?: Prisma.TheoryAnalysisRunCreateNestedManyWithoutSubjectPersonInput
+  aboutNotes?: Prisma.NoteCreateNestedManyWithoutAboutPersonInput
   fileResolutionsFrom?: Prisma.FileEntityResolutionCreateNestedManyWithoutFromPersonInput
   fileResolutionsTo?: Prisma.FileEntityResolutionCreateNestedManyWithoutToPersonInput
   externalIdentifiers?: Prisma.PersonExternalIdentifierCreateNestedManyWithoutPersonInput
@@ -4223,6 +4297,7 @@ export type PersonUncheckedCreateWithoutFileEntityMentionsInput = {
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutPersonInput
   theorySnapshots?: Prisma.TheorySnapshotUncheckedCreateNestedManyWithoutSubjectPersonInput
   theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedCreateNestedManyWithoutSubjectPersonInput
+  aboutNotes?: Prisma.NoteUncheckedCreateNestedManyWithoutAboutPersonInput
   fileResolutionsFrom?: Prisma.FileEntityResolutionUncheckedCreateNestedManyWithoutFromPersonInput
   fileResolutionsTo?: Prisma.FileEntityResolutionUncheckedCreateNestedManyWithoutToPersonInput
   externalIdentifiers?: Prisma.PersonExternalIdentifierUncheckedCreateNestedManyWithoutPersonInput
@@ -4289,6 +4364,7 @@ export type PersonUpdateWithoutFileEntityMentionsInput = {
   auditLogs?: Prisma.AuditLogUpdateManyWithoutPersonNestedInput
   theorySnapshots?: Prisma.TheorySnapshotUpdateManyWithoutSubjectPersonNestedInput
   theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUpdateManyWithoutSubjectPersonNestedInput
+  aboutNotes?: Prisma.NoteUpdateManyWithoutAboutPersonNestedInput
   fileResolutionsFrom?: Prisma.FileEntityResolutionUpdateManyWithoutFromPersonNestedInput
   fileResolutionsTo?: Prisma.FileEntityResolutionUpdateManyWithoutToPersonNestedInput
   externalIdentifiers?: Prisma.PersonExternalIdentifierUpdateManyWithoutPersonNestedInput
@@ -4339,6 +4415,7 @@ export type PersonUncheckedUpdateWithoutFileEntityMentionsInput = {
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutPersonNestedInput
   theorySnapshots?: Prisma.TheorySnapshotUncheckedUpdateManyWithoutSubjectPersonNestedInput
   theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedUpdateManyWithoutSubjectPersonNestedInput
+  aboutNotes?: Prisma.NoteUncheckedUpdateManyWithoutAboutPersonNestedInput
   fileResolutionsFrom?: Prisma.FileEntityResolutionUncheckedUpdateManyWithoutFromPersonNestedInput
   fileResolutionsTo?: Prisma.FileEntityResolutionUncheckedUpdateManyWithoutToPersonNestedInput
   externalIdentifiers?: Prisma.PersonExternalIdentifierUncheckedUpdateManyWithoutPersonNestedInput
@@ -4389,6 +4466,7 @@ export type PersonCreateWithoutExternalIdentifiersInput = {
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutPersonInput
   theorySnapshots?: Prisma.TheorySnapshotCreateNestedManyWithoutSubjectPersonInput
   theoryAnalysisRuns?: Prisma.TheoryAnalysisRunCreateNestedManyWithoutSubjectPersonInput
+  aboutNotes?: Prisma.NoteCreateNestedManyWithoutAboutPersonInput
   fileEntityMentions?: Prisma.FileEntityMentionCreateNestedManyWithoutResolvedPersonInput
   fileResolutionsFrom?: Prisma.FileEntityResolutionCreateNestedManyWithoutFromPersonInput
   fileResolutionsTo?: Prisma.FileEntityResolutionCreateNestedManyWithoutToPersonInput
@@ -4439,6 +4517,7 @@ export type PersonUncheckedCreateWithoutExternalIdentifiersInput = {
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutPersonInput
   theorySnapshots?: Prisma.TheorySnapshotUncheckedCreateNestedManyWithoutSubjectPersonInput
   theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedCreateNestedManyWithoutSubjectPersonInput
+  aboutNotes?: Prisma.NoteUncheckedCreateNestedManyWithoutAboutPersonInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedCreateNestedManyWithoutResolvedPersonInput
   fileResolutionsFrom?: Prisma.FileEntityResolutionUncheckedCreateNestedManyWithoutFromPersonInput
   fileResolutionsTo?: Prisma.FileEntityResolutionUncheckedCreateNestedManyWithoutToPersonInput
@@ -4505,6 +4584,7 @@ export type PersonUpdateWithoutExternalIdentifiersInput = {
   auditLogs?: Prisma.AuditLogUpdateManyWithoutPersonNestedInput
   theorySnapshots?: Prisma.TheorySnapshotUpdateManyWithoutSubjectPersonNestedInput
   theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUpdateManyWithoutSubjectPersonNestedInput
+  aboutNotes?: Prisma.NoteUpdateManyWithoutAboutPersonNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUpdateManyWithoutResolvedPersonNestedInput
   fileResolutionsFrom?: Prisma.FileEntityResolutionUpdateManyWithoutFromPersonNestedInput
   fileResolutionsTo?: Prisma.FileEntityResolutionUpdateManyWithoutToPersonNestedInput
@@ -4555,6 +4635,7 @@ export type PersonUncheckedUpdateWithoutExternalIdentifiersInput = {
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutPersonNestedInput
   theorySnapshots?: Prisma.TheorySnapshotUncheckedUpdateManyWithoutSubjectPersonNestedInput
   theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedUpdateManyWithoutSubjectPersonNestedInput
+  aboutNotes?: Prisma.NoteUncheckedUpdateManyWithoutAboutPersonNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedUpdateManyWithoutResolvedPersonNestedInput
   fileResolutionsFrom?: Prisma.FileEntityResolutionUncheckedUpdateManyWithoutFromPersonNestedInput
   fileResolutionsTo?: Prisma.FileEntityResolutionUncheckedUpdateManyWithoutToPersonNestedInput
@@ -4605,6 +4686,7 @@ export type PersonCreateWithoutFileResolutionsFromInput = {
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutPersonInput
   theorySnapshots?: Prisma.TheorySnapshotCreateNestedManyWithoutSubjectPersonInput
   theoryAnalysisRuns?: Prisma.TheoryAnalysisRunCreateNestedManyWithoutSubjectPersonInput
+  aboutNotes?: Prisma.NoteCreateNestedManyWithoutAboutPersonInput
   fileEntityMentions?: Prisma.FileEntityMentionCreateNestedManyWithoutResolvedPersonInput
   fileResolutionsTo?: Prisma.FileEntityResolutionCreateNestedManyWithoutToPersonInput
   externalIdentifiers?: Prisma.PersonExternalIdentifierCreateNestedManyWithoutPersonInput
@@ -4655,6 +4737,7 @@ export type PersonUncheckedCreateWithoutFileResolutionsFromInput = {
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutPersonInput
   theorySnapshots?: Prisma.TheorySnapshotUncheckedCreateNestedManyWithoutSubjectPersonInput
   theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedCreateNestedManyWithoutSubjectPersonInput
+  aboutNotes?: Prisma.NoteUncheckedCreateNestedManyWithoutAboutPersonInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedCreateNestedManyWithoutResolvedPersonInput
   fileResolutionsTo?: Prisma.FileEntityResolutionUncheckedCreateNestedManyWithoutToPersonInput
   externalIdentifiers?: Prisma.PersonExternalIdentifierUncheckedCreateNestedManyWithoutPersonInput
@@ -4710,6 +4793,7 @@ export type PersonCreateWithoutFileResolutionsToInput = {
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutPersonInput
   theorySnapshots?: Prisma.TheorySnapshotCreateNestedManyWithoutSubjectPersonInput
   theoryAnalysisRuns?: Prisma.TheoryAnalysisRunCreateNestedManyWithoutSubjectPersonInput
+  aboutNotes?: Prisma.NoteCreateNestedManyWithoutAboutPersonInput
   fileEntityMentions?: Prisma.FileEntityMentionCreateNestedManyWithoutResolvedPersonInput
   fileResolutionsFrom?: Prisma.FileEntityResolutionCreateNestedManyWithoutFromPersonInput
   externalIdentifiers?: Prisma.PersonExternalIdentifierCreateNestedManyWithoutPersonInput
@@ -4760,6 +4844,7 @@ export type PersonUncheckedCreateWithoutFileResolutionsToInput = {
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutPersonInput
   theorySnapshots?: Prisma.TheorySnapshotUncheckedCreateNestedManyWithoutSubjectPersonInput
   theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedCreateNestedManyWithoutSubjectPersonInput
+  aboutNotes?: Prisma.NoteUncheckedCreateNestedManyWithoutAboutPersonInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedCreateNestedManyWithoutResolvedPersonInput
   fileResolutionsFrom?: Prisma.FileEntityResolutionUncheckedCreateNestedManyWithoutFromPersonInput
   externalIdentifiers?: Prisma.PersonExternalIdentifierUncheckedCreateNestedManyWithoutPersonInput
@@ -4826,6 +4911,7 @@ export type PersonUpdateWithoutFileResolutionsFromInput = {
   auditLogs?: Prisma.AuditLogUpdateManyWithoutPersonNestedInput
   theorySnapshots?: Prisma.TheorySnapshotUpdateManyWithoutSubjectPersonNestedInput
   theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUpdateManyWithoutSubjectPersonNestedInput
+  aboutNotes?: Prisma.NoteUpdateManyWithoutAboutPersonNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUpdateManyWithoutResolvedPersonNestedInput
   fileResolutionsTo?: Prisma.FileEntityResolutionUpdateManyWithoutToPersonNestedInput
   externalIdentifiers?: Prisma.PersonExternalIdentifierUpdateManyWithoutPersonNestedInput
@@ -4876,6 +4962,7 @@ export type PersonUncheckedUpdateWithoutFileResolutionsFromInput = {
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutPersonNestedInput
   theorySnapshots?: Prisma.TheorySnapshotUncheckedUpdateManyWithoutSubjectPersonNestedInput
   theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedUpdateManyWithoutSubjectPersonNestedInput
+  aboutNotes?: Prisma.NoteUncheckedUpdateManyWithoutAboutPersonNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedUpdateManyWithoutResolvedPersonNestedInput
   fileResolutionsTo?: Prisma.FileEntityResolutionUncheckedUpdateManyWithoutToPersonNestedInput
   externalIdentifiers?: Prisma.PersonExternalIdentifierUncheckedUpdateManyWithoutPersonNestedInput
@@ -4937,6 +5024,7 @@ export type PersonUpdateWithoutFileResolutionsToInput = {
   auditLogs?: Prisma.AuditLogUpdateManyWithoutPersonNestedInput
   theorySnapshots?: Prisma.TheorySnapshotUpdateManyWithoutSubjectPersonNestedInput
   theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUpdateManyWithoutSubjectPersonNestedInput
+  aboutNotes?: Prisma.NoteUpdateManyWithoutAboutPersonNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUpdateManyWithoutResolvedPersonNestedInput
   fileResolutionsFrom?: Prisma.FileEntityResolutionUpdateManyWithoutFromPersonNestedInput
   externalIdentifiers?: Prisma.PersonExternalIdentifierUpdateManyWithoutPersonNestedInput
@@ -4987,6 +5075,7 @@ export type PersonUncheckedUpdateWithoutFileResolutionsToInput = {
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutPersonNestedInput
   theorySnapshots?: Prisma.TheorySnapshotUncheckedUpdateManyWithoutSubjectPersonNestedInput
   theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedUpdateManyWithoutSubjectPersonNestedInput
+  aboutNotes?: Prisma.NoteUncheckedUpdateManyWithoutAboutPersonNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedUpdateManyWithoutResolvedPersonNestedInput
   fileResolutionsFrom?: Prisma.FileEntityResolutionUncheckedUpdateManyWithoutFromPersonNestedInput
   externalIdentifiers?: Prisma.PersonExternalIdentifierUncheckedUpdateManyWithoutPersonNestedInput
@@ -5036,6 +5125,7 @@ export type PersonCreateWithoutTheoryAnalysisRunsInput = {
   apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutOwnerPersonInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutPersonInput
   theorySnapshots?: Prisma.TheorySnapshotCreateNestedManyWithoutSubjectPersonInput
+  aboutNotes?: Prisma.NoteCreateNestedManyWithoutAboutPersonInput
   fileEntityMentions?: Prisma.FileEntityMentionCreateNestedManyWithoutResolvedPersonInput
   fileResolutionsFrom?: Prisma.FileEntityResolutionCreateNestedManyWithoutFromPersonInput
   fileResolutionsTo?: Prisma.FileEntityResolutionCreateNestedManyWithoutToPersonInput
@@ -5086,6 +5176,7 @@ export type PersonUncheckedCreateWithoutTheoryAnalysisRunsInput = {
   apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutOwnerPersonInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutPersonInput
   theorySnapshots?: Prisma.TheorySnapshotUncheckedCreateNestedManyWithoutSubjectPersonInput
+  aboutNotes?: Prisma.NoteUncheckedCreateNestedManyWithoutAboutPersonInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedCreateNestedManyWithoutResolvedPersonInput
   fileResolutionsFrom?: Prisma.FileEntityResolutionUncheckedCreateNestedManyWithoutFromPersonInput
   fileResolutionsTo?: Prisma.FileEntityResolutionUncheckedCreateNestedManyWithoutToPersonInput
@@ -5152,6 +5243,7 @@ export type PersonUpdateWithoutTheoryAnalysisRunsInput = {
   apiKeys?: Prisma.ApiKeyUpdateManyWithoutOwnerPersonNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutPersonNestedInput
   theorySnapshots?: Prisma.TheorySnapshotUpdateManyWithoutSubjectPersonNestedInput
+  aboutNotes?: Prisma.NoteUpdateManyWithoutAboutPersonNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUpdateManyWithoutResolvedPersonNestedInput
   fileResolutionsFrom?: Prisma.FileEntityResolutionUpdateManyWithoutFromPersonNestedInput
   fileResolutionsTo?: Prisma.FileEntityResolutionUpdateManyWithoutToPersonNestedInput
@@ -5202,6 +5294,7 @@ export type PersonUncheckedUpdateWithoutTheoryAnalysisRunsInput = {
   apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutOwnerPersonNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutPersonNestedInput
   theorySnapshots?: Prisma.TheorySnapshotUncheckedUpdateManyWithoutSubjectPersonNestedInput
+  aboutNotes?: Prisma.NoteUncheckedUpdateManyWithoutAboutPersonNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedUpdateManyWithoutResolvedPersonNestedInput
   fileResolutionsFrom?: Prisma.FileEntityResolutionUncheckedUpdateManyWithoutFromPersonNestedInput
   fileResolutionsTo?: Prisma.FileEntityResolutionUncheckedUpdateManyWithoutToPersonNestedInput
@@ -5252,6 +5345,7 @@ export type PersonCreateWithoutGroupMembershipsInput = {
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutPersonInput
   theorySnapshots?: Prisma.TheorySnapshotCreateNestedManyWithoutSubjectPersonInput
   theoryAnalysisRuns?: Prisma.TheoryAnalysisRunCreateNestedManyWithoutSubjectPersonInput
+  aboutNotes?: Prisma.NoteCreateNestedManyWithoutAboutPersonInput
   fileEntityMentions?: Prisma.FileEntityMentionCreateNestedManyWithoutResolvedPersonInput
   fileResolutionsFrom?: Prisma.FileEntityResolutionCreateNestedManyWithoutFromPersonInput
   fileResolutionsTo?: Prisma.FileEntityResolutionCreateNestedManyWithoutToPersonInput
@@ -5302,6 +5396,7 @@ export type PersonUncheckedCreateWithoutGroupMembershipsInput = {
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutPersonInput
   theorySnapshots?: Prisma.TheorySnapshotUncheckedCreateNestedManyWithoutSubjectPersonInput
   theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedCreateNestedManyWithoutSubjectPersonInput
+  aboutNotes?: Prisma.NoteUncheckedCreateNestedManyWithoutAboutPersonInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedCreateNestedManyWithoutResolvedPersonInput
   fileResolutionsFrom?: Prisma.FileEntityResolutionUncheckedCreateNestedManyWithoutFromPersonInput
   fileResolutionsTo?: Prisma.FileEntityResolutionUncheckedCreateNestedManyWithoutToPersonInput
@@ -5368,6 +5463,7 @@ export type PersonUpdateWithoutGroupMembershipsInput = {
   auditLogs?: Prisma.AuditLogUpdateManyWithoutPersonNestedInput
   theorySnapshots?: Prisma.TheorySnapshotUpdateManyWithoutSubjectPersonNestedInput
   theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUpdateManyWithoutSubjectPersonNestedInput
+  aboutNotes?: Prisma.NoteUpdateManyWithoutAboutPersonNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUpdateManyWithoutResolvedPersonNestedInput
   fileResolutionsFrom?: Prisma.FileEntityResolutionUpdateManyWithoutFromPersonNestedInput
   fileResolutionsTo?: Prisma.FileEntityResolutionUpdateManyWithoutToPersonNestedInput
@@ -5413,6 +5509,227 @@ export type PersonUncheckedUpdateWithoutGroupMembershipsInput = {
   ownedItems?: Prisma.ItemUncheckedUpdateManyWithoutOwnedByNestedInput
   assembledBy?: Prisma.AssemblyUncheckedUpdateManyWithoutAssembledByNestedInput
   disassembledBy?: Prisma.AssemblyUncheckedUpdateManyWithoutDisassembledByNestedInput
+  users?: Prisma.UserUncheckedUpdateManyWithoutPersonNestedInput
+  apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutOwnerPersonNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutPersonNestedInput
+  theorySnapshots?: Prisma.TheorySnapshotUncheckedUpdateManyWithoutSubjectPersonNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedUpdateManyWithoutSubjectPersonNestedInput
+  aboutNotes?: Prisma.NoteUncheckedUpdateManyWithoutAboutPersonNestedInput
+  fileEntityMentions?: Prisma.FileEntityMentionUncheckedUpdateManyWithoutResolvedPersonNestedInput
+  fileResolutionsFrom?: Prisma.FileEntityResolutionUncheckedUpdateManyWithoutFromPersonNestedInput
+  fileResolutionsTo?: Prisma.FileEntityResolutionUncheckedUpdateManyWithoutToPersonNestedInput
+  externalIdentifiers?: Prisma.PersonExternalIdentifierUncheckedUpdateManyWithoutPersonNestedInput
+}
+
+export type PersonCreateWithoutAboutNotesInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  first: string
+  last: string
+  nickname?: string | null
+  title?: string | null
+  headline?: string | null
+  emails?: string
+  emailSearch?: string | null
+  phones?: string
+  birthday?: string | null
+  closeness?: number
+  tags?: string
+  values?: string
+  notes?: string | null
+  company?: string | null
+  location?: string | null
+  linkedin?: string | null
+  twitter?: string | null
+  website?: string | null
+  facebook?: string | null
+  instagram?: string | null
+  color?: string | null
+  colorSoft?: string | null
+  publicProfileEnabled?: boolean
+  publicSlug?: string | null
+  source?: string | null
+  workspace?: Prisma.WorkspaceCreateNestedOneWithoutPersonsInput
+  interactions?: Prisma.InteractionCreateNestedManyWithoutPersonInput
+  actorInteractions?: Prisma.InteractionCreateNestedManyWithoutActorPersonInput
+  ownedEraAccounts?: Prisma.EraAccountLinkCreateNestedManyWithoutOwnerPersonInput
+  stagedInteractions?: Prisma.StagedInteractionCreateNestedManyWithoutCandidatePersonInput
+  plans?: Prisma.PlanCreateNestedManyWithoutPersonInput
+  expectedInPlans?: Prisma.PlanExpectedPersonCreateNestedManyWithoutPersonInput
+  ownedItems?: Prisma.ItemCreateNestedManyWithoutOwnedByInput
+  assembledBy?: Prisma.AssemblyCreateNestedManyWithoutAssembledByInput
+  disassembledBy?: Prisma.AssemblyCreateNestedManyWithoutDisassembledByInput
+  groupMemberships?: Prisma.PersonGroupCreateNestedManyWithoutPersonInput
+  users?: Prisma.UserCreateNestedManyWithoutPersonInput
+  apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutOwnerPersonInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutPersonInput
+  theorySnapshots?: Prisma.TheorySnapshotCreateNestedManyWithoutSubjectPersonInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunCreateNestedManyWithoutSubjectPersonInput
+  fileEntityMentions?: Prisma.FileEntityMentionCreateNestedManyWithoutResolvedPersonInput
+  fileResolutionsFrom?: Prisma.FileEntityResolutionCreateNestedManyWithoutFromPersonInput
+  fileResolutionsTo?: Prisma.FileEntityResolutionCreateNestedManyWithoutToPersonInput
+  externalIdentifiers?: Prisma.PersonExternalIdentifierCreateNestedManyWithoutPersonInput
+}
+
+export type PersonUncheckedCreateWithoutAboutNotesInput = {
+  id?: string
+  workspaceId?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  first: string
+  last: string
+  nickname?: string | null
+  title?: string | null
+  headline?: string | null
+  emails?: string
+  emailSearch?: string | null
+  phones?: string
+  birthday?: string | null
+  closeness?: number
+  tags?: string
+  values?: string
+  notes?: string | null
+  company?: string | null
+  location?: string | null
+  linkedin?: string | null
+  twitter?: string | null
+  website?: string | null
+  facebook?: string | null
+  instagram?: string | null
+  color?: string | null
+  colorSoft?: string | null
+  publicProfileEnabled?: boolean
+  publicSlug?: string | null
+  source?: string | null
+  interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutPersonInput
+  actorInteractions?: Prisma.InteractionUncheckedCreateNestedManyWithoutActorPersonInput
+  ownedEraAccounts?: Prisma.EraAccountLinkUncheckedCreateNestedManyWithoutOwnerPersonInput
+  stagedInteractions?: Prisma.StagedInteractionUncheckedCreateNestedManyWithoutCandidatePersonInput
+  plans?: Prisma.PlanUncheckedCreateNestedManyWithoutPersonInput
+  expectedInPlans?: Prisma.PlanExpectedPersonUncheckedCreateNestedManyWithoutPersonInput
+  ownedItems?: Prisma.ItemUncheckedCreateNestedManyWithoutOwnedByInput
+  assembledBy?: Prisma.AssemblyUncheckedCreateNestedManyWithoutAssembledByInput
+  disassembledBy?: Prisma.AssemblyUncheckedCreateNestedManyWithoutDisassembledByInput
+  groupMemberships?: Prisma.PersonGroupUncheckedCreateNestedManyWithoutPersonInput
+  users?: Prisma.UserUncheckedCreateNestedManyWithoutPersonInput
+  apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutOwnerPersonInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutPersonInput
+  theorySnapshots?: Prisma.TheorySnapshotUncheckedCreateNestedManyWithoutSubjectPersonInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedCreateNestedManyWithoutSubjectPersonInput
+  fileEntityMentions?: Prisma.FileEntityMentionUncheckedCreateNestedManyWithoutResolvedPersonInput
+  fileResolutionsFrom?: Prisma.FileEntityResolutionUncheckedCreateNestedManyWithoutFromPersonInput
+  fileResolutionsTo?: Prisma.FileEntityResolutionUncheckedCreateNestedManyWithoutToPersonInput
+  externalIdentifiers?: Prisma.PersonExternalIdentifierUncheckedCreateNestedManyWithoutPersonInput
+}
+
+export type PersonCreateOrConnectWithoutAboutNotesInput = {
+  where: Prisma.PersonWhereUniqueInput
+  create: Prisma.XOR<Prisma.PersonCreateWithoutAboutNotesInput, Prisma.PersonUncheckedCreateWithoutAboutNotesInput>
+}
+
+export type PersonUpsertWithoutAboutNotesInput = {
+  update: Prisma.XOR<Prisma.PersonUpdateWithoutAboutNotesInput, Prisma.PersonUncheckedUpdateWithoutAboutNotesInput>
+  create: Prisma.XOR<Prisma.PersonCreateWithoutAboutNotesInput, Prisma.PersonUncheckedCreateWithoutAboutNotesInput>
+  where?: Prisma.PersonWhereInput
+}
+
+export type PersonUpdateToOneWithWhereWithoutAboutNotesInput = {
+  where?: Prisma.PersonWhereInput
+  data: Prisma.XOR<Prisma.PersonUpdateWithoutAboutNotesInput, Prisma.PersonUncheckedUpdateWithoutAboutNotesInput>
+}
+
+export type PersonUpdateWithoutAboutNotesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  first?: Prisma.StringFieldUpdateOperationsInput | string
+  last?: Prisma.StringFieldUpdateOperationsInput | string
+  nickname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emails?: Prisma.StringFieldUpdateOperationsInput | string
+  emailSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phones?: Prisma.StringFieldUpdateOperationsInput | string
+  birthday?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  closeness?: Prisma.IntFieldUpdateOperationsInput | number
+  tags?: Prisma.StringFieldUpdateOperationsInput | string
+  values?: Prisma.StringFieldUpdateOperationsInput | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  company?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  linkedin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebook?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicProfileEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  publicSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutPersonsNestedInput
+  interactions?: Prisma.InteractionUpdateManyWithoutPersonNestedInput
+  actorInteractions?: Prisma.InteractionUpdateManyWithoutActorPersonNestedInput
+  ownedEraAccounts?: Prisma.EraAccountLinkUpdateManyWithoutOwnerPersonNestedInput
+  stagedInteractions?: Prisma.StagedInteractionUpdateManyWithoutCandidatePersonNestedInput
+  plans?: Prisma.PlanUpdateManyWithoutPersonNestedInput
+  expectedInPlans?: Prisma.PlanExpectedPersonUpdateManyWithoutPersonNestedInput
+  ownedItems?: Prisma.ItemUpdateManyWithoutOwnedByNestedInput
+  assembledBy?: Prisma.AssemblyUpdateManyWithoutAssembledByNestedInput
+  disassembledBy?: Prisma.AssemblyUpdateManyWithoutDisassembledByNestedInput
+  groupMemberships?: Prisma.PersonGroupUpdateManyWithoutPersonNestedInput
+  users?: Prisma.UserUpdateManyWithoutPersonNestedInput
+  apiKeys?: Prisma.ApiKeyUpdateManyWithoutOwnerPersonNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutPersonNestedInput
+  theorySnapshots?: Prisma.TheorySnapshotUpdateManyWithoutSubjectPersonNestedInput
+  theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUpdateManyWithoutSubjectPersonNestedInput
+  fileEntityMentions?: Prisma.FileEntityMentionUpdateManyWithoutResolvedPersonNestedInput
+  fileResolutionsFrom?: Prisma.FileEntityResolutionUpdateManyWithoutFromPersonNestedInput
+  fileResolutionsTo?: Prisma.FileEntityResolutionUpdateManyWithoutToPersonNestedInput
+  externalIdentifiers?: Prisma.PersonExternalIdentifierUpdateManyWithoutPersonNestedInput
+}
+
+export type PersonUncheckedUpdateWithoutAboutNotesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  first?: Prisma.StringFieldUpdateOperationsInput | string
+  last?: Prisma.StringFieldUpdateOperationsInput | string
+  nickname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emails?: Prisma.StringFieldUpdateOperationsInput | string
+  emailSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phones?: Prisma.StringFieldUpdateOperationsInput | string
+  birthday?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  closeness?: Prisma.IntFieldUpdateOperationsInput | number
+  tags?: Prisma.StringFieldUpdateOperationsInput | string
+  values?: Prisma.StringFieldUpdateOperationsInput | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  company?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  linkedin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebook?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  colorSoft?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicProfileEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  publicSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  interactions?: Prisma.InteractionUncheckedUpdateManyWithoutPersonNestedInput
+  actorInteractions?: Prisma.InteractionUncheckedUpdateManyWithoutActorPersonNestedInput
+  ownedEraAccounts?: Prisma.EraAccountLinkUncheckedUpdateManyWithoutOwnerPersonNestedInput
+  stagedInteractions?: Prisma.StagedInteractionUncheckedUpdateManyWithoutCandidatePersonNestedInput
+  plans?: Prisma.PlanUncheckedUpdateManyWithoutPersonNestedInput
+  expectedInPlans?: Prisma.PlanExpectedPersonUncheckedUpdateManyWithoutPersonNestedInput
+  ownedItems?: Prisma.ItemUncheckedUpdateManyWithoutOwnedByNestedInput
+  assembledBy?: Prisma.AssemblyUncheckedUpdateManyWithoutAssembledByNestedInput
+  disassembledBy?: Prisma.AssemblyUncheckedUpdateManyWithoutDisassembledByNestedInput
+  groupMemberships?: Prisma.PersonGroupUncheckedUpdateManyWithoutPersonNestedInput
   users?: Prisma.UserUncheckedUpdateManyWithoutPersonNestedInput
   apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutOwnerPersonNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutPersonNestedInput
@@ -5468,6 +5785,7 @@ export type PersonCreateWithoutTheorySnapshotsInput = {
   apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutOwnerPersonInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutPersonInput
   theoryAnalysisRuns?: Prisma.TheoryAnalysisRunCreateNestedManyWithoutSubjectPersonInput
+  aboutNotes?: Prisma.NoteCreateNestedManyWithoutAboutPersonInput
   fileEntityMentions?: Prisma.FileEntityMentionCreateNestedManyWithoutResolvedPersonInput
   fileResolutionsFrom?: Prisma.FileEntityResolutionCreateNestedManyWithoutFromPersonInput
   fileResolutionsTo?: Prisma.FileEntityResolutionCreateNestedManyWithoutToPersonInput
@@ -5518,6 +5836,7 @@ export type PersonUncheckedCreateWithoutTheorySnapshotsInput = {
   apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutOwnerPersonInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutPersonInput
   theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedCreateNestedManyWithoutSubjectPersonInput
+  aboutNotes?: Prisma.NoteUncheckedCreateNestedManyWithoutAboutPersonInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedCreateNestedManyWithoutResolvedPersonInput
   fileResolutionsFrom?: Prisma.FileEntityResolutionUncheckedCreateNestedManyWithoutFromPersonInput
   fileResolutionsTo?: Prisma.FileEntityResolutionUncheckedCreateNestedManyWithoutToPersonInput
@@ -5584,6 +5903,7 @@ export type PersonUpdateWithoutTheorySnapshotsInput = {
   apiKeys?: Prisma.ApiKeyUpdateManyWithoutOwnerPersonNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutPersonNestedInput
   theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUpdateManyWithoutSubjectPersonNestedInput
+  aboutNotes?: Prisma.NoteUpdateManyWithoutAboutPersonNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUpdateManyWithoutResolvedPersonNestedInput
   fileResolutionsFrom?: Prisma.FileEntityResolutionUpdateManyWithoutFromPersonNestedInput
   fileResolutionsTo?: Prisma.FileEntityResolutionUpdateManyWithoutToPersonNestedInput
@@ -5634,6 +5954,7 @@ export type PersonUncheckedUpdateWithoutTheorySnapshotsInput = {
   apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutOwnerPersonNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutPersonNestedInput
   theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedUpdateManyWithoutSubjectPersonNestedInput
+  aboutNotes?: Prisma.NoteUncheckedUpdateManyWithoutAboutPersonNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedUpdateManyWithoutResolvedPersonNestedInput
   fileResolutionsFrom?: Prisma.FileEntityResolutionUncheckedUpdateManyWithoutFromPersonNestedInput
   fileResolutionsTo?: Prisma.FileEntityResolutionUncheckedUpdateManyWithoutToPersonNestedInput
@@ -5715,6 +6036,7 @@ export type PersonUpdateWithoutWorkspaceInput = {
   auditLogs?: Prisma.AuditLogUpdateManyWithoutPersonNestedInput
   theorySnapshots?: Prisma.TheorySnapshotUpdateManyWithoutSubjectPersonNestedInput
   theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUpdateManyWithoutSubjectPersonNestedInput
+  aboutNotes?: Prisma.NoteUpdateManyWithoutAboutPersonNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUpdateManyWithoutResolvedPersonNestedInput
   fileResolutionsFrom?: Prisma.FileEntityResolutionUpdateManyWithoutFromPersonNestedInput
   fileResolutionsTo?: Prisma.FileEntityResolutionUpdateManyWithoutToPersonNestedInput
@@ -5765,6 +6087,7 @@ export type PersonUncheckedUpdateWithoutWorkspaceInput = {
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutPersonNestedInput
   theorySnapshots?: Prisma.TheorySnapshotUncheckedUpdateManyWithoutSubjectPersonNestedInput
   theoryAnalysisRuns?: Prisma.TheoryAnalysisRunUncheckedUpdateManyWithoutSubjectPersonNestedInput
+  aboutNotes?: Prisma.NoteUncheckedUpdateManyWithoutAboutPersonNestedInput
   fileEntityMentions?: Prisma.FileEntityMentionUncheckedUpdateManyWithoutResolvedPersonNestedInput
   fileResolutionsFrom?: Prisma.FileEntityResolutionUncheckedUpdateManyWithoutFromPersonNestedInput
   fileResolutionsTo?: Prisma.FileEntityResolutionUncheckedUpdateManyWithoutToPersonNestedInput
@@ -5823,6 +6146,7 @@ export type PersonCountOutputType = {
   auditLogs: number
   theorySnapshots: number
   theoryAnalysisRuns: number
+  aboutNotes: number
   fileEntityMentions: number
   fileResolutionsFrom: number
   fileResolutionsTo: number
@@ -5845,6 +6169,7 @@ export type PersonCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions
   auditLogs?: boolean | PersonCountOutputTypeCountAuditLogsArgs
   theorySnapshots?: boolean | PersonCountOutputTypeCountTheorySnapshotsArgs
   theoryAnalysisRuns?: boolean | PersonCountOutputTypeCountTheoryAnalysisRunsArgs
+  aboutNotes?: boolean | PersonCountOutputTypeCountAboutNotesArgs
   fileEntityMentions?: boolean | PersonCountOutputTypeCountFileEntityMentionsArgs
   fileResolutionsFrom?: boolean | PersonCountOutputTypeCountFileResolutionsFromArgs
   fileResolutionsTo?: boolean | PersonCountOutputTypeCountFileResolutionsToArgs
@@ -5969,6 +6294,13 @@ export type PersonCountOutputTypeCountTheoryAnalysisRunsArgs<ExtArgs extends run
 /**
  * PersonCountOutputType without action
  */
+export type PersonCountOutputTypeCountAboutNotesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.NoteWhereInput
+}
+
+/**
+ * PersonCountOutputType without action
+ */
 export type PersonCountOutputTypeCountFileEntityMentionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.FileEntityMentionWhereInput
 }
@@ -6041,6 +6373,7 @@ export type PersonSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   auditLogs?: boolean | Prisma.Person$auditLogsArgs<ExtArgs>
   theorySnapshots?: boolean | Prisma.Person$theorySnapshotsArgs<ExtArgs>
   theoryAnalysisRuns?: boolean | Prisma.Person$theoryAnalysisRunsArgs<ExtArgs>
+  aboutNotes?: boolean | Prisma.Person$aboutNotesArgs<ExtArgs>
   fileEntityMentions?: boolean | Prisma.Person$fileEntityMentionsArgs<ExtArgs>
   fileResolutionsFrom?: boolean | Prisma.Person$fileResolutionsFromArgs<ExtArgs>
   fileResolutionsTo?: boolean | Prisma.Person$fileResolutionsToArgs<ExtArgs>
@@ -6164,6 +6497,7 @@ export type PersonInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   auditLogs?: boolean | Prisma.Person$auditLogsArgs<ExtArgs>
   theorySnapshots?: boolean | Prisma.Person$theorySnapshotsArgs<ExtArgs>
   theoryAnalysisRuns?: boolean | Prisma.Person$theoryAnalysisRunsArgs<ExtArgs>
+  aboutNotes?: boolean | Prisma.Person$aboutNotesArgs<ExtArgs>
   fileEntityMentions?: boolean | Prisma.Person$fileEntityMentionsArgs<ExtArgs>
   fileResolutionsFrom?: boolean | Prisma.Person$fileResolutionsFromArgs<ExtArgs>
   fileResolutionsTo?: boolean | Prisma.Person$fileResolutionsToArgs<ExtArgs>
@@ -6196,6 +6530,7 @@ export type $PersonPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     auditLogs: Prisma.$AuditLogPayload<ExtArgs>[]
     theorySnapshots: Prisma.$TheorySnapshotPayload<ExtArgs>[]
     theoryAnalysisRuns: Prisma.$TheoryAnalysisRunPayload<ExtArgs>[]
+    aboutNotes: Prisma.$NotePayload<ExtArgs>[]
     fileEntityMentions: Prisma.$FileEntityMentionPayload<ExtArgs>[]
     fileResolutionsFrom: Prisma.$FileEntityResolutionPayload<ExtArgs>[]
     fileResolutionsTo: Prisma.$FileEntityResolutionPayload<ExtArgs>[]
@@ -6641,6 +6976,7 @@ export interface Prisma__PersonClient<T, Null = never, ExtArgs extends runtime.T
   auditLogs<T extends Prisma.Person$auditLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Person$auditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   theorySnapshots<T extends Prisma.Person$theorySnapshotsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Person$theorySnapshotsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TheorySnapshotPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   theoryAnalysisRuns<T extends Prisma.Person$theoryAnalysisRunsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Person$theoryAnalysisRunsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TheoryAnalysisRunPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  aboutNotes<T extends Prisma.Person$aboutNotesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Person$aboutNotesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NotePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   fileEntityMentions<T extends Prisma.Person$fileEntityMentionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Person$fileEntityMentionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FileEntityMentionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   fileResolutionsFrom<T extends Prisma.Person$fileResolutionsFromArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Person$fileResolutionsFromArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FileEntityResolutionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   fileResolutionsTo<T extends Prisma.Person$fileResolutionsToArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Person$fileResolutionsToArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FileEntityResolutionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -7459,6 +7795,30 @@ export type Person$theoryAnalysisRunsArgs<ExtArgs extends runtime.Types.Extensio
   take?: number
   skip?: number
   distinct?: Prisma.TheoryAnalysisRunScalarFieldEnum | Prisma.TheoryAnalysisRunScalarFieldEnum[]
+}
+
+/**
+ * Person.aboutNotes
+ */
+export type Person$aboutNotesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Note
+   */
+  select?: Prisma.NoteSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Note
+   */
+  omit?: Prisma.NoteOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.NoteInclude<ExtArgs> | null
+  where?: Prisma.NoteWhereInput
+  orderBy?: Prisma.NoteOrderByWithRelationInput | Prisma.NoteOrderByWithRelationInput[]
+  cursor?: Prisma.NoteWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.NoteScalarFieldEnum | Prisma.NoteScalarFieldEnum[]
 }
 
 /**

@@ -70,12 +70,19 @@ export const TOOLS: AssistantToolDefinition[] = [
   {
     name: "capture_note",
     capability: "write",
-    description: "Capture a raw thought, observation, or declaration as a Note in Life OS. Use when Joseph wants to remember, note, or declare something.",
+    description: "Capture a raw thought, observation, or declaration as a Note in Life OS. Use when Joseph wants to remember, note, or declare something. If it is about a person, place, item, event, plan, group, or state, search first and pass that id so Theory and the rest of the graph can find it. Do not use add_place_note or append to a record's notes blob for this.",
     input_schema: {
       type: "object",
       properties: {
         content: { type: "string" },
         noteType: { type: "string", enum: ["thought", "observation", "declaration"], description: "Default thought" },
+        personId: { type: "string", description: "Who this note is about, from search_people" },
+        placeId: { type: "string", description: "Where this note is about, from search_places" },
+        itemId: { type: "string", description: "Which belonging this note is about, from search_items" },
+        eventId: { type: "string", description: "Which event this note is about, from search_events" },
+        planId: { type: "string", description: "Which plan this note is about, from get_plans" },
+        groupId: { type: "string", description: "Which organization this note is about, from search_organizations" },
+        stateId: { type: "string", description: "Which state this note is about, from get_states" },
       },
       required: ["content"],
     },
@@ -129,7 +136,7 @@ export const TOOLS: AssistantToolDefinition[] = [
   {
     name: "add_place_note",
     capability: "write",
-    description: "Attach a note to an existing Place — what happened there, what is stored there, what to remember about it. Find the placeId with search_places first.",
+    description: "Attach a Places-app sidebar note to an existing Place (a mutable PlaceNote row, not a graph Note). For something Theory, Stuff, or the assistant should later retrieve as a Note, use capture_note with placeId instead. Find the placeId with search_places first.",
     input_schema: {
       type: "object",
       properties: {
@@ -233,10 +240,15 @@ export const TOOLS: AssistantToolDefinition[] = [
   {
     name: "search_notes",
     capability: "read",
-    description: "Search Joseph's captured notes (thoughts, observations, declarations).",
+    description: "Search Joseph's captured Notes (thoughts, observations, declarations). Optionally filter to notes about a person, place, or item.",
     input_schema: {
       type: "object",
-      properties: { query: { type: "string" } },
+      properties: {
+        query: { type: "string" },
+        personId: { type: "string", description: "Only notes about this person, from search_people" },
+        placeId: { type: "string", description: "Only notes about this place, from search_places" },
+        itemId: { type: "string", description: "Only notes about this item, from search_items" },
+      },
       required: ["query"],
     },
   },
@@ -431,7 +443,7 @@ export async function executeTool(name: string, input: Record<string, unknown>, 
       case "search_people": return await searchPeople(String(input.query ?? ""), workspaceId)
       case "get_person": return await getPerson(String(input.personId ?? ""), workspaceId)
       case "get_schedule": return await getSchedule(workspaceId, input.date ? String(input.date) : undefined)
-      case "capture_note": return await captureNote(String(input.content ?? ""), input.noteType ? String(input.noteType) : "thought", workspaceId)
+      case "capture_note": return await captureNote(input, workspaceId)
       case "log_interaction": return await logInteraction(String(input.personId ?? ""), String(input.type ?? "message"), String(input.summary ?? ""), workspaceId)
       case "search_organizations": return await searchOrganizationsTool(input, workspaceId)
       case "get_organization": return await getOrganizationTool(input, workspaceId)
@@ -443,7 +455,7 @@ export async function executeTool(name: string, input: Record<string, unknown>, 
       case "query_finance": return await queryFinance(Number(input.sinceDays ?? 30), workspaceId, input.merchant ? String(input.merchant) : undefined, input.category ? String(input.category) : undefined)
       case "get_spend_breakdown": return await spendBreakdown(input, workspaceId)
       case "get_place_spend": return await getPlaceSpend(workspaceId, input.placeName ? String(input.placeName) : undefined)
-      case "search_notes": return await searchNotes(String(input.query ?? ""), workspaceId)
+      case "search_notes": return await searchNotes(input, workspaceId)
       case "list_inbox": return await listInbox(Number(input.limit ?? 5), workspaceId)
       case "search_places": return await searchPlaces(String(input.query ?? ""), workspaceId)
       case "get_place": return await getPlace(String(input.placeId ?? ""), workspaceId)
@@ -549,7 +561,7 @@ async function searchPeople(query: string, workspaceId: string) {
 }
 
 async function getPerson(personId: string, workspaceId: string) {
-  const [p, recentStates] = await Promise.all([
+  const [p, recentStates, aboutNotes] = await Promise.all([
     db.person.findFirst({
       where: { id: personId, workspaceId },
       include: {
@@ -563,6 +575,12 @@ async function getPerson(personId: string, workspaceId: string) {
       include: { definition: { select: { type: true, value: true } } },
       orderBy: { recordedAt: "desc" },
       take: 30,
+    }),
+    db.note.findMany({
+      where: { workspaceId, aboutPersonId: personId },
+      orderBy: { timestamp: "desc" },
+      take: 5,
+      select: { type: true, timestamp: true, content: true, metadata: true },
     }),
   ])
   if (!p) return "Person not found"
@@ -585,7 +603,9 @@ async function getPerson(personId: string, workspaceId: string) {
     `${p.first} ${p.last}${p.nickname ? ` "${p.nickname}"` : ""}`,
     [p.title, p.company, p.location].filter(Boolean).join(" · "),
     p.birthday ? `Birthday: ${p.birthday}` : "",
-    p.notes ? `Notes: ${p.notes.slice(0, 300)}` : "",
+    p.notes ? `Notes blob: ${p.notes.slice(0, 300)}` : "",
+    aboutNotes.length ? "\nNotes about them:" : "",
+    ...aboutNotes.map(n => `  - [${n.type} · ${daysAgo(n.timestamp)}] ${formatNoteBody(n)}`),
     stateLines.length ? "\nCurrent state data:" : "",
     ...stateLines,
     p.interactions.length ? "\nRecent interactions:" : "",
@@ -613,14 +633,30 @@ async function getSchedule(workspaceId: string, date?: string) {
   }).join("\n")
 }
 
-async function captureNote(content: string, noteType: string, workspaceId: string) {
+async function captureNote(input: Record<string, unknown>, workspaceId: string) {
   const { note } = await createCapturedNote({
     workspaceId,
-    content,
-    type: noteType,
+    content: String(input.content ?? ""),
+    type: input.noteType ? String(input.noteType) : "thought",
     source: "assistant",
+    aboutPersonId: optionalString(input.personId),
+    aboutPlaceId: optionalString(input.placeId),
+    aboutItemId: optionalString(input.itemId),
+    aboutEventId: optionalString(input.eventId),
+    aboutPlanId: optionalString(input.planId),
+    aboutGroupId: optionalString(input.groupId),
+    aboutStateId: optionalString(input.stateId),
   })
-  return `Captured ${note.type} (${note.id}). It will flow into synthesis.`
+  const subjects = [
+    note.aboutPersonId ? `person ${note.aboutPersonId}` : null,
+    note.aboutPlaceId ? `place ${note.aboutPlaceId}` : null,
+    note.aboutItemId ? `item ${note.aboutItemId}` : null,
+    note.aboutEventId ? `event ${note.aboutEventId}` : null,
+    note.aboutPlanId ? `plan ${note.aboutPlanId}` : null,
+    note.aboutGroupId ? `group ${note.aboutGroupId}` : null,
+    note.aboutStateId ? `state ${note.aboutStateId}` : null,
+  ].filter(Boolean)
+  return `Captured ${note.type} (${note.id})${subjects.length ? ` about ${subjects.join(", ")}` : ""}. It will flow into synthesis.`
 }
 
 // Every assistant write goes through a domain command rather than db.* directly,
@@ -836,15 +872,30 @@ async function getPlaceSpend(workspaceId: string, placeName?: string) {
   ].join("\n")
 }
 
-async function searchNotes(query: string, workspaceId: string) {
+async function searchNotes(input: Record<string, unknown>, workspaceId: string) {
+  const query = String(input.query ?? "").trim()
+  if (!query) return "Empty query"
   const notes = await db.note.findMany({
-    where: { workspaceId, content: { contains: query } },
+    where: {
+      workspaceId,
+      content: { contains: query },
+      ...(optionalString(input.personId) ? { aboutPersonId: optionalString(input.personId) } : {}),
+      ...(optionalString(input.placeId) ? { aboutPlaceId: optionalString(input.placeId) } : {}),
+      ...(optionalString(input.itemId) ? { aboutItemId: optionalString(input.itemId) } : {}),
+    },
     orderBy: { timestamp: "desc" },
     take: 5,
-    select: { type: true, timestamp: true, content: true, metadata: true },
+    select: { type: true, timestamp: true, content: true, metadata: true, aboutPersonId: true, aboutPlaceId: true, aboutItemId: true },
   })
   if (!notes.length) return `No notes matching "${query}"`
-  return notes.map(n => `[${n.type} · ${daysAgo(n.timestamp)}] ${formatNoteBody(n)}`).join("\n---\n")
+  return notes.map(n => {
+    const about = [
+      n.aboutPersonId ? `person=${n.aboutPersonId}` : null,
+      n.aboutPlaceId ? `place=${n.aboutPlaceId}` : null,
+      n.aboutItemId ? `item=${n.aboutItemId}` : null,
+    ].filter(Boolean).join(" · ")
+    return `[${n.type} · ${daysAgo(n.timestamp)}${about ? ` · ${about}` : ""}] ${formatNoteBody(n)}`
+  }).join("\n---\n")
 }
 
 // Long captured Notes (documents, voice transcripts, photo digests) get a
@@ -912,6 +963,7 @@ async function getPlace(placeId: string, workspaceId: string) {
       parentPlace: { select: { name: true } },
       childPlaces: { select: { name: true }, take: 10 },
       notes: { orderBy: { createdAt: "desc" }, take: 5, select: { body: true, createdAt: true } },
+      aboutNotes: { orderBy: { timestamp: "desc" }, take: 5, select: { type: true, timestamp: true, content: true, metadata: true } },
       items: { select: { name: true, category: true }, take: 15 },
       events: { orderBy: { start: "desc" }, take: 5, select: { name: true, start: true } },
     },
@@ -926,8 +978,10 @@ async function getPlace(placeId: string, workspaceId: string) {
     place.childPlaces.length ? `Contains: ${place.childPlaces.map(c => c.name).join(", ")}` : "",
     place.items.length ? "\nItems here:" : "",
     ...place.items.map(i => `  - ${i.name}${i.category ? ` (${i.category})` : ""}`),
-    place.notes.length ? "\nRecent notes:" : "",
+    place.notes.length ? "\nPlace notes:" : "",
     ...place.notes.map(n => `  - ${daysAgo(n.createdAt)}: ${n.body.slice(0, 150)}`),
+    place.aboutNotes.length ? "\nGraph notes about this place:" : "",
+    ...place.aboutNotes.map(n => `  - [${n.type} · ${daysAgo(n.timestamp)}] ${formatNoteBody(n)}`),
     place.events.length ? "\nRecent events here:" : "",
     ...place.events.map(e => `  - ${e.name} (${daysAgo(e.start)})`),
   ]
@@ -962,6 +1016,7 @@ async function getItem(itemId: string, workspaceId: string) {
       ownedBy: { select: { first: true, last: true } },
       components: { where: { disassembledAt: null }, select: { childItem: { select: { name: true } } } },
       assembledInto: { where: { disassembledAt: null }, select: { parentItem: { select: { name: true } } } },
+      aboutNotes: { orderBy: { timestamp: "desc" }, take: 5, select: { type: true, timestamp: true, content: true, metadata: true } },
     },
   })
   if (!item) return "Item not found"
@@ -977,7 +1032,9 @@ async function getItem(itemId: string, workspaceId: string) {
     item.components.length ? `Contains: ${item.components.map(c => c.childItem.name).join(", ")}` : "",
     item.purchaseDate ? `Purchased: ${item.purchaseDate.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}${item.purchasePrice ? ` for $${centsToDollars(item.purchasePrice)}` : ""}${item.purchaseFrom ? ` from ${item.purchaseFrom}` : ""}` : "",
     item.lifetimeWarranty ? "Warranty: lifetime" : item.warrantyExpires ? `Warranty until ${item.warrantyExpires.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}` : "",
-    item.notes ? `Notes: ${item.notes.slice(0, 300)}` : "",
+    item.notes ? `Notes blob: ${item.notes.slice(0, 300)}` : "",
+    item.aboutNotes.length ? "Notes about it:" : "",
+    ...item.aboutNotes.map(n => `  - [${n.type} · ${daysAgo(n.timestamp)}] ${formatNoteBody(n)}`),
   ]
   return lines.filter(Boolean).join("\n")
 }

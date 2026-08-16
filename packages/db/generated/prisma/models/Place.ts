@@ -230,6 +230,7 @@ export type PlaceWhereInput = {
   interactions?: Prisma.InteractionListRelationFilter
   items?: Prisma.ItemListRelationFilter
   notes?: Prisma.PlaceNoteListRelationFilter
+  aboutNotes?: Prisma.NoteListRelationFilter
   groupAffiliations?: Prisma.PlaceGroupListRelationFilter
   importStagedVisits?: Prisma.ImportStagedVisitListRelationFilter
   purchaseOrderLines?: Prisma.PurchaseOrderLineListRelationFilter
@@ -254,6 +255,7 @@ export type PlaceOrderByWithRelationInput = {
   interactions?: Prisma.InteractionOrderByRelationAggregateInput
   items?: Prisma.ItemOrderByRelationAggregateInput
   notes?: Prisma.PlaceNoteOrderByRelationAggregateInput
+  aboutNotes?: Prisma.NoteOrderByRelationAggregateInput
   groupAffiliations?: Prisma.PlaceGroupOrderByRelationAggregateInput
   importStagedVisits?: Prisma.ImportStagedVisitOrderByRelationAggregateInput
   purchaseOrderLines?: Prisma.PurchaseOrderLineOrderByRelationAggregateInput
@@ -281,6 +283,7 @@ export type PlaceWhereUniqueInput = Prisma.AtLeast<{
   interactions?: Prisma.InteractionListRelationFilter
   items?: Prisma.ItemListRelationFilter
   notes?: Prisma.PlaceNoteListRelationFilter
+  aboutNotes?: Prisma.NoteListRelationFilter
   groupAffiliations?: Prisma.PlaceGroupListRelationFilter
   importStagedVisits?: Prisma.ImportStagedVisitListRelationFilter
   purchaseOrderLines?: Prisma.PurchaseOrderLineListRelationFilter
@@ -335,6 +338,7 @@ export type PlaceCreateInput = {
   interactions?: Prisma.InteractionCreateNestedManyWithoutPlaceInput
   items?: Prisma.ItemCreateNestedManyWithoutPlaceInput
   notes?: Prisma.PlaceNoteCreateNestedManyWithoutPlaceInput
+  aboutNotes?: Prisma.NoteCreateNestedManyWithoutAboutPlaceInput
   groupAffiliations?: Prisma.PlaceGroupCreateNestedManyWithoutPlaceInput
   importStagedVisits?: Prisma.ImportStagedVisitCreateNestedManyWithoutResolvedPlaceInput
   purchaseOrderLines?: Prisma.PurchaseOrderLineCreateNestedManyWithoutDestinationPlaceInput
@@ -357,6 +361,7 @@ export type PlaceUncheckedCreateInput = {
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutPlaceInput
   items?: Prisma.ItemUncheckedCreateNestedManyWithoutPlaceInput
   notes?: Prisma.PlaceNoteUncheckedCreateNestedManyWithoutPlaceInput
+  aboutNotes?: Prisma.NoteUncheckedCreateNestedManyWithoutAboutPlaceInput
   groupAffiliations?: Prisma.PlaceGroupUncheckedCreateNestedManyWithoutPlaceInput
   importStagedVisits?: Prisma.ImportStagedVisitUncheckedCreateNestedManyWithoutResolvedPlaceInput
   purchaseOrderLines?: Prisma.PurchaseOrderLineUncheckedCreateNestedManyWithoutDestinationPlaceInput
@@ -379,6 +384,7 @@ export type PlaceUpdateInput = {
   interactions?: Prisma.InteractionUpdateManyWithoutPlaceNestedInput
   items?: Prisma.ItemUpdateManyWithoutPlaceNestedInput
   notes?: Prisma.PlaceNoteUpdateManyWithoutPlaceNestedInput
+  aboutNotes?: Prisma.NoteUpdateManyWithoutAboutPlaceNestedInput
   groupAffiliations?: Prisma.PlaceGroupUpdateManyWithoutPlaceNestedInput
   importStagedVisits?: Prisma.ImportStagedVisitUpdateManyWithoutResolvedPlaceNestedInput
   purchaseOrderLines?: Prisma.PurchaseOrderLineUpdateManyWithoutDestinationPlaceNestedInput
@@ -401,6 +407,7 @@ export type PlaceUncheckedUpdateInput = {
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutPlaceNestedInput
   items?: Prisma.ItemUncheckedUpdateManyWithoutPlaceNestedInput
   notes?: Prisma.PlaceNoteUncheckedUpdateManyWithoutPlaceNestedInput
+  aboutNotes?: Prisma.NoteUncheckedUpdateManyWithoutAboutPlaceNestedInput
   groupAffiliations?: Prisma.PlaceGroupUncheckedUpdateManyWithoutPlaceNestedInput
   importStagedVisits?: Prisma.ImportStagedVisitUncheckedUpdateManyWithoutResolvedPlaceNestedInput
   purchaseOrderLines?: Prisma.PurchaseOrderLineUncheckedUpdateManyWithoutDestinationPlaceNestedInput
@@ -726,6 +733,22 @@ export type PlaceUpdateOneRequiredWithoutGroupAffiliationsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.PlaceUpdateToOneWithWhereWithoutGroupAffiliationsInput, Prisma.PlaceUpdateWithoutGroupAffiliationsInput>, Prisma.PlaceUncheckedUpdateWithoutGroupAffiliationsInput>
 }
 
+export type PlaceCreateNestedOneWithoutAboutNotesInput = {
+  create?: Prisma.XOR<Prisma.PlaceCreateWithoutAboutNotesInput, Prisma.PlaceUncheckedCreateWithoutAboutNotesInput>
+  connectOrCreate?: Prisma.PlaceCreateOrConnectWithoutAboutNotesInput
+  connect?: Prisma.PlaceWhereUniqueInput
+}
+
+export type PlaceUpdateOneWithoutAboutNotesNestedInput = {
+  create?: Prisma.XOR<Prisma.PlaceCreateWithoutAboutNotesInput, Prisma.PlaceUncheckedCreateWithoutAboutNotesInput>
+  connectOrCreate?: Prisma.PlaceCreateOrConnectWithoutAboutNotesInput
+  upsert?: Prisma.PlaceUpsertWithoutAboutNotesInput
+  disconnect?: Prisma.PlaceWhereInput | boolean
+  delete?: Prisma.PlaceWhereInput | boolean
+  connect?: Prisma.PlaceWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.PlaceUpdateToOneWithWhereWithoutAboutNotesInput, Prisma.PlaceUpdateWithoutAboutNotesInput>, Prisma.PlaceUncheckedUpdateWithoutAboutNotesInput>
+}
+
 export type PlaceCreateWithoutWorkspaceInput = {
   id?: string
   name: string
@@ -742,6 +765,7 @@ export type PlaceCreateWithoutWorkspaceInput = {
   interactions?: Prisma.InteractionCreateNestedManyWithoutPlaceInput
   items?: Prisma.ItemCreateNestedManyWithoutPlaceInput
   notes?: Prisma.PlaceNoteCreateNestedManyWithoutPlaceInput
+  aboutNotes?: Prisma.NoteCreateNestedManyWithoutAboutPlaceInput
   groupAffiliations?: Prisma.PlaceGroupCreateNestedManyWithoutPlaceInput
   importStagedVisits?: Prisma.ImportStagedVisitCreateNestedManyWithoutResolvedPlaceInput
   purchaseOrderLines?: Prisma.PurchaseOrderLineCreateNestedManyWithoutDestinationPlaceInput
@@ -763,6 +787,7 @@ export type PlaceUncheckedCreateWithoutWorkspaceInput = {
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutPlaceInput
   items?: Prisma.ItemUncheckedCreateNestedManyWithoutPlaceInput
   notes?: Prisma.PlaceNoteUncheckedCreateNestedManyWithoutPlaceInput
+  aboutNotes?: Prisma.NoteUncheckedCreateNestedManyWithoutAboutPlaceInput
   groupAffiliations?: Prisma.PlaceGroupUncheckedCreateNestedManyWithoutPlaceInput
   importStagedVisits?: Prisma.ImportStagedVisitUncheckedCreateNestedManyWithoutResolvedPlaceInput
   purchaseOrderLines?: Prisma.PurchaseOrderLineUncheckedCreateNestedManyWithoutDestinationPlaceInput
@@ -825,6 +850,7 @@ export type PlaceCreateWithoutEventsInput = {
   interactions?: Prisma.InteractionCreateNestedManyWithoutPlaceInput
   items?: Prisma.ItemCreateNestedManyWithoutPlaceInput
   notes?: Prisma.PlaceNoteCreateNestedManyWithoutPlaceInput
+  aboutNotes?: Prisma.NoteCreateNestedManyWithoutAboutPlaceInput
   groupAffiliations?: Prisma.PlaceGroupCreateNestedManyWithoutPlaceInput
   importStagedVisits?: Prisma.ImportStagedVisitCreateNestedManyWithoutResolvedPlaceInput
   purchaseOrderLines?: Prisma.PurchaseOrderLineCreateNestedManyWithoutDestinationPlaceInput
@@ -846,6 +872,7 @@ export type PlaceUncheckedCreateWithoutEventsInput = {
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutPlaceInput
   items?: Prisma.ItemUncheckedCreateNestedManyWithoutPlaceInput
   notes?: Prisma.PlaceNoteUncheckedCreateNestedManyWithoutPlaceInput
+  aboutNotes?: Prisma.NoteUncheckedCreateNestedManyWithoutAboutPlaceInput
   groupAffiliations?: Prisma.PlaceGroupUncheckedCreateNestedManyWithoutPlaceInput
   importStagedVisits?: Prisma.ImportStagedVisitUncheckedCreateNestedManyWithoutResolvedPlaceInput
   purchaseOrderLines?: Prisma.PurchaseOrderLineUncheckedCreateNestedManyWithoutDestinationPlaceInput
@@ -883,6 +910,7 @@ export type PlaceUpdateWithoutEventsInput = {
   interactions?: Prisma.InteractionUpdateManyWithoutPlaceNestedInput
   items?: Prisma.ItemUpdateManyWithoutPlaceNestedInput
   notes?: Prisma.PlaceNoteUpdateManyWithoutPlaceNestedInput
+  aboutNotes?: Prisma.NoteUpdateManyWithoutAboutPlaceNestedInput
   groupAffiliations?: Prisma.PlaceGroupUpdateManyWithoutPlaceNestedInput
   importStagedVisits?: Prisma.ImportStagedVisitUpdateManyWithoutResolvedPlaceNestedInput
   purchaseOrderLines?: Prisma.PurchaseOrderLineUpdateManyWithoutDestinationPlaceNestedInput
@@ -904,6 +932,7 @@ export type PlaceUncheckedUpdateWithoutEventsInput = {
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutPlaceNestedInput
   items?: Prisma.ItemUncheckedUpdateManyWithoutPlaceNestedInput
   notes?: Prisma.PlaceNoteUncheckedUpdateManyWithoutPlaceNestedInput
+  aboutNotes?: Prisma.NoteUncheckedUpdateManyWithoutAboutPlaceNestedInput
   groupAffiliations?: Prisma.PlaceGroupUncheckedUpdateManyWithoutPlaceNestedInput
   importStagedVisits?: Prisma.ImportStagedVisitUncheckedUpdateManyWithoutResolvedPlaceNestedInput
   purchaseOrderLines?: Prisma.PurchaseOrderLineUncheckedUpdateManyWithoutDestinationPlaceNestedInput
@@ -925,6 +954,7 @@ export type PlaceCreateWithoutInteractionsInput = {
   plans?: Prisma.PlanCreateNestedManyWithoutPlaceInput
   items?: Prisma.ItemCreateNestedManyWithoutPlaceInput
   notes?: Prisma.PlaceNoteCreateNestedManyWithoutPlaceInput
+  aboutNotes?: Prisma.NoteCreateNestedManyWithoutAboutPlaceInput
   groupAffiliations?: Prisma.PlaceGroupCreateNestedManyWithoutPlaceInput
   importStagedVisits?: Prisma.ImportStagedVisitCreateNestedManyWithoutResolvedPlaceInput
   purchaseOrderLines?: Prisma.PurchaseOrderLineCreateNestedManyWithoutDestinationPlaceInput
@@ -946,6 +976,7 @@ export type PlaceUncheckedCreateWithoutInteractionsInput = {
   plans?: Prisma.PlanUncheckedCreateNestedManyWithoutPlaceInput
   items?: Prisma.ItemUncheckedCreateNestedManyWithoutPlaceInput
   notes?: Prisma.PlaceNoteUncheckedCreateNestedManyWithoutPlaceInput
+  aboutNotes?: Prisma.NoteUncheckedCreateNestedManyWithoutAboutPlaceInput
   groupAffiliations?: Prisma.PlaceGroupUncheckedCreateNestedManyWithoutPlaceInput
   importStagedVisits?: Prisma.ImportStagedVisitUncheckedCreateNestedManyWithoutResolvedPlaceInput
   purchaseOrderLines?: Prisma.PurchaseOrderLineUncheckedCreateNestedManyWithoutDestinationPlaceInput
@@ -983,6 +1014,7 @@ export type PlaceUpdateWithoutInteractionsInput = {
   plans?: Prisma.PlanUpdateManyWithoutPlaceNestedInput
   items?: Prisma.ItemUpdateManyWithoutPlaceNestedInput
   notes?: Prisma.PlaceNoteUpdateManyWithoutPlaceNestedInput
+  aboutNotes?: Prisma.NoteUpdateManyWithoutAboutPlaceNestedInput
   groupAffiliations?: Prisma.PlaceGroupUpdateManyWithoutPlaceNestedInput
   importStagedVisits?: Prisma.ImportStagedVisitUpdateManyWithoutResolvedPlaceNestedInput
   purchaseOrderLines?: Prisma.PurchaseOrderLineUpdateManyWithoutDestinationPlaceNestedInput
@@ -1004,6 +1036,7 @@ export type PlaceUncheckedUpdateWithoutInteractionsInput = {
   plans?: Prisma.PlanUncheckedUpdateManyWithoutPlaceNestedInput
   items?: Prisma.ItemUncheckedUpdateManyWithoutPlaceNestedInput
   notes?: Prisma.PlaceNoteUncheckedUpdateManyWithoutPlaceNestedInput
+  aboutNotes?: Prisma.NoteUncheckedUpdateManyWithoutAboutPlaceNestedInput
   groupAffiliations?: Prisma.PlaceGroupUncheckedUpdateManyWithoutPlaceNestedInput
   importStagedVisits?: Prisma.ImportStagedVisitUncheckedUpdateManyWithoutResolvedPlaceNestedInput
   purchaseOrderLines?: Prisma.PurchaseOrderLineUncheckedUpdateManyWithoutDestinationPlaceNestedInput
@@ -1025,6 +1058,7 @@ export type PlaceCreateWithoutPlansInput = {
   interactions?: Prisma.InteractionCreateNestedManyWithoutPlaceInput
   items?: Prisma.ItemCreateNestedManyWithoutPlaceInput
   notes?: Prisma.PlaceNoteCreateNestedManyWithoutPlaceInput
+  aboutNotes?: Prisma.NoteCreateNestedManyWithoutAboutPlaceInput
   groupAffiliations?: Prisma.PlaceGroupCreateNestedManyWithoutPlaceInput
   importStagedVisits?: Prisma.ImportStagedVisitCreateNestedManyWithoutResolvedPlaceInput
   purchaseOrderLines?: Prisma.PurchaseOrderLineCreateNestedManyWithoutDestinationPlaceInput
@@ -1046,6 +1080,7 @@ export type PlaceUncheckedCreateWithoutPlansInput = {
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutPlaceInput
   items?: Prisma.ItemUncheckedCreateNestedManyWithoutPlaceInput
   notes?: Prisma.PlaceNoteUncheckedCreateNestedManyWithoutPlaceInput
+  aboutNotes?: Prisma.NoteUncheckedCreateNestedManyWithoutAboutPlaceInput
   groupAffiliations?: Prisma.PlaceGroupUncheckedCreateNestedManyWithoutPlaceInput
   importStagedVisits?: Prisma.ImportStagedVisitUncheckedCreateNestedManyWithoutResolvedPlaceInput
   purchaseOrderLines?: Prisma.PurchaseOrderLineUncheckedCreateNestedManyWithoutDestinationPlaceInput
@@ -1083,6 +1118,7 @@ export type PlaceUpdateWithoutPlansInput = {
   interactions?: Prisma.InteractionUpdateManyWithoutPlaceNestedInput
   items?: Prisma.ItemUpdateManyWithoutPlaceNestedInput
   notes?: Prisma.PlaceNoteUpdateManyWithoutPlaceNestedInput
+  aboutNotes?: Prisma.NoteUpdateManyWithoutAboutPlaceNestedInput
   groupAffiliations?: Prisma.PlaceGroupUpdateManyWithoutPlaceNestedInput
   importStagedVisits?: Prisma.ImportStagedVisitUpdateManyWithoutResolvedPlaceNestedInput
   purchaseOrderLines?: Prisma.PurchaseOrderLineUpdateManyWithoutDestinationPlaceNestedInput
@@ -1104,6 +1140,7 @@ export type PlaceUncheckedUpdateWithoutPlansInput = {
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutPlaceNestedInput
   items?: Prisma.ItemUncheckedUpdateManyWithoutPlaceNestedInput
   notes?: Prisma.PlaceNoteUncheckedUpdateManyWithoutPlaceNestedInput
+  aboutNotes?: Prisma.NoteUncheckedUpdateManyWithoutAboutPlaceNestedInput
   groupAffiliations?: Prisma.PlaceGroupUncheckedUpdateManyWithoutPlaceNestedInput
   importStagedVisits?: Prisma.ImportStagedVisitUncheckedUpdateManyWithoutResolvedPlaceNestedInput
   purchaseOrderLines?: Prisma.PurchaseOrderLineUncheckedUpdateManyWithoutDestinationPlaceNestedInput
@@ -1125,6 +1162,7 @@ export type PlaceCreateWithoutChildPlacesInput = {
   interactions?: Prisma.InteractionCreateNestedManyWithoutPlaceInput
   items?: Prisma.ItemCreateNestedManyWithoutPlaceInput
   notes?: Prisma.PlaceNoteCreateNestedManyWithoutPlaceInput
+  aboutNotes?: Prisma.NoteCreateNestedManyWithoutAboutPlaceInput
   groupAffiliations?: Prisma.PlaceGroupCreateNestedManyWithoutPlaceInput
   importStagedVisits?: Prisma.ImportStagedVisitCreateNestedManyWithoutResolvedPlaceInput
   purchaseOrderLines?: Prisma.PurchaseOrderLineCreateNestedManyWithoutDestinationPlaceInput
@@ -1146,6 +1184,7 @@ export type PlaceUncheckedCreateWithoutChildPlacesInput = {
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutPlaceInput
   items?: Prisma.ItemUncheckedCreateNestedManyWithoutPlaceInput
   notes?: Prisma.PlaceNoteUncheckedCreateNestedManyWithoutPlaceInput
+  aboutNotes?: Prisma.NoteUncheckedCreateNestedManyWithoutAboutPlaceInput
   groupAffiliations?: Prisma.PlaceGroupUncheckedCreateNestedManyWithoutPlaceInput
   importStagedVisits?: Prisma.ImportStagedVisitUncheckedCreateNestedManyWithoutResolvedPlaceInput
   purchaseOrderLines?: Prisma.PurchaseOrderLineUncheckedCreateNestedManyWithoutDestinationPlaceInput
@@ -1172,6 +1211,7 @@ export type PlaceCreateWithoutParentPlaceInput = {
   interactions?: Prisma.InteractionCreateNestedManyWithoutPlaceInput
   items?: Prisma.ItemCreateNestedManyWithoutPlaceInput
   notes?: Prisma.PlaceNoteCreateNestedManyWithoutPlaceInput
+  aboutNotes?: Prisma.NoteCreateNestedManyWithoutAboutPlaceInput
   groupAffiliations?: Prisma.PlaceGroupCreateNestedManyWithoutPlaceInput
   importStagedVisits?: Prisma.ImportStagedVisitCreateNestedManyWithoutResolvedPlaceInput
   purchaseOrderLines?: Prisma.PurchaseOrderLineCreateNestedManyWithoutDestinationPlaceInput
@@ -1193,6 +1233,7 @@ export type PlaceUncheckedCreateWithoutParentPlaceInput = {
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutPlaceInput
   items?: Prisma.ItemUncheckedCreateNestedManyWithoutPlaceInput
   notes?: Prisma.PlaceNoteUncheckedCreateNestedManyWithoutPlaceInput
+  aboutNotes?: Prisma.NoteUncheckedCreateNestedManyWithoutAboutPlaceInput
   groupAffiliations?: Prisma.PlaceGroupUncheckedCreateNestedManyWithoutPlaceInput
   importStagedVisits?: Prisma.ImportStagedVisitUncheckedCreateNestedManyWithoutResolvedPlaceInput
   purchaseOrderLines?: Prisma.PurchaseOrderLineUncheckedCreateNestedManyWithoutDestinationPlaceInput
@@ -1234,6 +1275,7 @@ export type PlaceUpdateWithoutChildPlacesInput = {
   interactions?: Prisma.InteractionUpdateManyWithoutPlaceNestedInput
   items?: Prisma.ItemUpdateManyWithoutPlaceNestedInput
   notes?: Prisma.PlaceNoteUpdateManyWithoutPlaceNestedInput
+  aboutNotes?: Prisma.NoteUpdateManyWithoutAboutPlaceNestedInput
   groupAffiliations?: Prisma.PlaceGroupUpdateManyWithoutPlaceNestedInput
   importStagedVisits?: Prisma.ImportStagedVisitUpdateManyWithoutResolvedPlaceNestedInput
   purchaseOrderLines?: Prisma.PurchaseOrderLineUpdateManyWithoutDestinationPlaceNestedInput
@@ -1255,6 +1297,7 @@ export type PlaceUncheckedUpdateWithoutChildPlacesInput = {
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutPlaceNestedInput
   items?: Prisma.ItemUncheckedUpdateManyWithoutPlaceNestedInput
   notes?: Prisma.PlaceNoteUncheckedUpdateManyWithoutPlaceNestedInput
+  aboutNotes?: Prisma.NoteUncheckedUpdateManyWithoutAboutPlaceNestedInput
   groupAffiliations?: Prisma.PlaceGroupUncheckedUpdateManyWithoutPlaceNestedInput
   importStagedVisits?: Prisma.ImportStagedVisitUncheckedUpdateManyWithoutResolvedPlaceNestedInput
   purchaseOrderLines?: Prisma.PurchaseOrderLineUncheckedUpdateManyWithoutDestinationPlaceNestedInput
@@ -1293,6 +1336,7 @@ export type PlaceCreateWithoutImportStagedVisitsInput = {
   interactions?: Prisma.InteractionCreateNestedManyWithoutPlaceInput
   items?: Prisma.ItemCreateNestedManyWithoutPlaceInput
   notes?: Prisma.PlaceNoteCreateNestedManyWithoutPlaceInput
+  aboutNotes?: Prisma.NoteCreateNestedManyWithoutAboutPlaceInput
   groupAffiliations?: Prisma.PlaceGroupCreateNestedManyWithoutPlaceInput
   purchaseOrderLines?: Prisma.PurchaseOrderLineCreateNestedManyWithoutDestinationPlaceInput
 }
@@ -1314,6 +1358,7 @@ export type PlaceUncheckedCreateWithoutImportStagedVisitsInput = {
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutPlaceInput
   items?: Prisma.ItemUncheckedCreateNestedManyWithoutPlaceInput
   notes?: Prisma.PlaceNoteUncheckedCreateNestedManyWithoutPlaceInput
+  aboutNotes?: Prisma.NoteUncheckedCreateNestedManyWithoutAboutPlaceInput
   groupAffiliations?: Prisma.PlaceGroupUncheckedCreateNestedManyWithoutPlaceInput
   purchaseOrderLines?: Prisma.PurchaseOrderLineUncheckedCreateNestedManyWithoutDestinationPlaceInput
 }
@@ -1351,6 +1396,7 @@ export type PlaceUpdateWithoutImportStagedVisitsInput = {
   interactions?: Prisma.InteractionUpdateManyWithoutPlaceNestedInput
   items?: Prisma.ItemUpdateManyWithoutPlaceNestedInput
   notes?: Prisma.PlaceNoteUpdateManyWithoutPlaceNestedInput
+  aboutNotes?: Prisma.NoteUpdateManyWithoutAboutPlaceNestedInput
   groupAffiliations?: Prisma.PlaceGroupUpdateManyWithoutPlaceNestedInput
   purchaseOrderLines?: Prisma.PurchaseOrderLineUpdateManyWithoutDestinationPlaceNestedInput
 }
@@ -1372,6 +1418,7 @@ export type PlaceUncheckedUpdateWithoutImportStagedVisitsInput = {
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutPlaceNestedInput
   items?: Prisma.ItemUncheckedUpdateManyWithoutPlaceNestedInput
   notes?: Prisma.PlaceNoteUncheckedUpdateManyWithoutPlaceNestedInput
+  aboutNotes?: Prisma.NoteUncheckedUpdateManyWithoutAboutPlaceNestedInput
   groupAffiliations?: Prisma.PlaceGroupUncheckedUpdateManyWithoutPlaceNestedInput
   purchaseOrderLines?: Prisma.PurchaseOrderLineUncheckedUpdateManyWithoutDestinationPlaceNestedInput
 }
@@ -1392,6 +1439,7 @@ export type PlaceCreateWithoutNotesInput = {
   plans?: Prisma.PlanCreateNestedManyWithoutPlaceInput
   interactions?: Prisma.InteractionCreateNestedManyWithoutPlaceInput
   items?: Prisma.ItemCreateNestedManyWithoutPlaceInput
+  aboutNotes?: Prisma.NoteCreateNestedManyWithoutAboutPlaceInput
   groupAffiliations?: Prisma.PlaceGroupCreateNestedManyWithoutPlaceInput
   importStagedVisits?: Prisma.ImportStagedVisitCreateNestedManyWithoutResolvedPlaceInput
   purchaseOrderLines?: Prisma.PurchaseOrderLineCreateNestedManyWithoutDestinationPlaceInput
@@ -1413,6 +1461,7 @@ export type PlaceUncheckedCreateWithoutNotesInput = {
   plans?: Prisma.PlanUncheckedCreateNestedManyWithoutPlaceInput
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutPlaceInput
   items?: Prisma.ItemUncheckedCreateNestedManyWithoutPlaceInput
+  aboutNotes?: Prisma.NoteUncheckedCreateNestedManyWithoutAboutPlaceInput
   groupAffiliations?: Prisma.PlaceGroupUncheckedCreateNestedManyWithoutPlaceInput
   importStagedVisits?: Prisma.ImportStagedVisitUncheckedCreateNestedManyWithoutResolvedPlaceInput
   purchaseOrderLines?: Prisma.PurchaseOrderLineUncheckedCreateNestedManyWithoutDestinationPlaceInput
@@ -1450,6 +1499,7 @@ export type PlaceUpdateWithoutNotesInput = {
   plans?: Prisma.PlanUpdateManyWithoutPlaceNestedInput
   interactions?: Prisma.InteractionUpdateManyWithoutPlaceNestedInput
   items?: Prisma.ItemUpdateManyWithoutPlaceNestedInput
+  aboutNotes?: Prisma.NoteUpdateManyWithoutAboutPlaceNestedInput
   groupAffiliations?: Prisma.PlaceGroupUpdateManyWithoutPlaceNestedInput
   importStagedVisits?: Prisma.ImportStagedVisitUpdateManyWithoutResolvedPlaceNestedInput
   purchaseOrderLines?: Prisma.PurchaseOrderLineUpdateManyWithoutDestinationPlaceNestedInput
@@ -1471,6 +1521,7 @@ export type PlaceUncheckedUpdateWithoutNotesInput = {
   plans?: Prisma.PlanUncheckedUpdateManyWithoutPlaceNestedInput
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutPlaceNestedInput
   items?: Prisma.ItemUncheckedUpdateManyWithoutPlaceNestedInput
+  aboutNotes?: Prisma.NoteUncheckedUpdateManyWithoutAboutPlaceNestedInput
   groupAffiliations?: Prisma.PlaceGroupUncheckedUpdateManyWithoutPlaceNestedInput
   importStagedVisits?: Prisma.ImportStagedVisitUncheckedUpdateManyWithoutResolvedPlaceNestedInput
   purchaseOrderLines?: Prisma.PurchaseOrderLineUncheckedUpdateManyWithoutDestinationPlaceNestedInput
@@ -1492,6 +1543,7 @@ export type PlaceCreateWithoutItemsInput = {
   plans?: Prisma.PlanCreateNestedManyWithoutPlaceInput
   interactions?: Prisma.InteractionCreateNestedManyWithoutPlaceInput
   notes?: Prisma.PlaceNoteCreateNestedManyWithoutPlaceInput
+  aboutNotes?: Prisma.NoteCreateNestedManyWithoutAboutPlaceInput
   groupAffiliations?: Prisma.PlaceGroupCreateNestedManyWithoutPlaceInput
   importStagedVisits?: Prisma.ImportStagedVisitCreateNestedManyWithoutResolvedPlaceInput
   purchaseOrderLines?: Prisma.PurchaseOrderLineCreateNestedManyWithoutDestinationPlaceInput
@@ -1513,6 +1565,7 @@ export type PlaceUncheckedCreateWithoutItemsInput = {
   plans?: Prisma.PlanUncheckedCreateNestedManyWithoutPlaceInput
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutPlaceInput
   notes?: Prisma.PlaceNoteUncheckedCreateNestedManyWithoutPlaceInput
+  aboutNotes?: Prisma.NoteUncheckedCreateNestedManyWithoutAboutPlaceInput
   groupAffiliations?: Prisma.PlaceGroupUncheckedCreateNestedManyWithoutPlaceInput
   importStagedVisits?: Prisma.ImportStagedVisitUncheckedCreateNestedManyWithoutResolvedPlaceInput
   purchaseOrderLines?: Prisma.PurchaseOrderLineUncheckedCreateNestedManyWithoutDestinationPlaceInput
@@ -1550,6 +1603,7 @@ export type PlaceUpdateWithoutItemsInput = {
   plans?: Prisma.PlanUpdateManyWithoutPlaceNestedInput
   interactions?: Prisma.InteractionUpdateManyWithoutPlaceNestedInput
   notes?: Prisma.PlaceNoteUpdateManyWithoutPlaceNestedInput
+  aboutNotes?: Prisma.NoteUpdateManyWithoutAboutPlaceNestedInput
   groupAffiliations?: Prisma.PlaceGroupUpdateManyWithoutPlaceNestedInput
   importStagedVisits?: Prisma.ImportStagedVisitUpdateManyWithoutResolvedPlaceNestedInput
   purchaseOrderLines?: Prisma.PurchaseOrderLineUpdateManyWithoutDestinationPlaceNestedInput
@@ -1571,6 +1625,7 @@ export type PlaceUncheckedUpdateWithoutItemsInput = {
   plans?: Prisma.PlanUncheckedUpdateManyWithoutPlaceNestedInput
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutPlaceNestedInput
   notes?: Prisma.PlaceNoteUncheckedUpdateManyWithoutPlaceNestedInput
+  aboutNotes?: Prisma.NoteUncheckedUpdateManyWithoutAboutPlaceNestedInput
   groupAffiliations?: Prisma.PlaceGroupUncheckedUpdateManyWithoutPlaceNestedInput
   importStagedVisits?: Prisma.ImportStagedVisitUncheckedUpdateManyWithoutResolvedPlaceNestedInput
   purchaseOrderLines?: Prisma.PurchaseOrderLineUncheckedUpdateManyWithoutDestinationPlaceNestedInput
@@ -1593,6 +1648,7 @@ export type PlaceCreateWithoutPurchaseOrderLinesInput = {
   interactions?: Prisma.InteractionCreateNestedManyWithoutPlaceInput
   items?: Prisma.ItemCreateNestedManyWithoutPlaceInput
   notes?: Prisma.PlaceNoteCreateNestedManyWithoutPlaceInput
+  aboutNotes?: Prisma.NoteCreateNestedManyWithoutAboutPlaceInput
   groupAffiliations?: Prisma.PlaceGroupCreateNestedManyWithoutPlaceInput
   importStagedVisits?: Prisma.ImportStagedVisitCreateNestedManyWithoutResolvedPlaceInput
 }
@@ -1614,6 +1670,7 @@ export type PlaceUncheckedCreateWithoutPurchaseOrderLinesInput = {
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutPlaceInput
   items?: Prisma.ItemUncheckedCreateNestedManyWithoutPlaceInput
   notes?: Prisma.PlaceNoteUncheckedCreateNestedManyWithoutPlaceInput
+  aboutNotes?: Prisma.NoteUncheckedCreateNestedManyWithoutAboutPlaceInput
   groupAffiliations?: Prisma.PlaceGroupUncheckedCreateNestedManyWithoutPlaceInput
   importStagedVisits?: Prisma.ImportStagedVisitUncheckedCreateNestedManyWithoutResolvedPlaceInput
 }
@@ -1651,6 +1708,7 @@ export type PlaceUpdateWithoutPurchaseOrderLinesInput = {
   interactions?: Prisma.InteractionUpdateManyWithoutPlaceNestedInput
   items?: Prisma.ItemUpdateManyWithoutPlaceNestedInput
   notes?: Prisma.PlaceNoteUpdateManyWithoutPlaceNestedInput
+  aboutNotes?: Prisma.NoteUpdateManyWithoutAboutPlaceNestedInput
   groupAffiliations?: Prisma.PlaceGroupUpdateManyWithoutPlaceNestedInput
   importStagedVisits?: Prisma.ImportStagedVisitUpdateManyWithoutResolvedPlaceNestedInput
 }
@@ -1672,6 +1730,7 @@ export type PlaceUncheckedUpdateWithoutPurchaseOrderLinesInput = {
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutPlaceNestedInput
   items?: Prisma.ItemUncheckedUpdateManyWithoutPlaceNestedInput
   notes?: Prisma.PlaceNoteUncheckedUpdateManyWithoutPlaceNestedInput
+  aboutNotes?: Prisma.NoteUncheckedUpdateManyWithoutAboutPlaceNestedInput
   groupAffiliations?: Prisma.PlaceGroupUncheckedUpdateManyWithoutPlaceNestedInput
   importStagedVisits?: Prisma.ImportStagedVisitUncheckedUpdateManyWithoutResolvedPlaceNestedInput
 }
@@ -1693,6 +1752,7 @@ export type PlaceCreateWithoutGroupAffiliationsInput = {
   interactions?: Prisma.InteractionCreateNestedManyWithoutPlaceInput
   items?: Prisma.ItemCreateNestedManyWithoutPlaceInput
   notes?: Prisma.PlaceNoteCreateNestedManyWithoutPlaceInput
+  aboutNotes?: Prisma.NoteCreateNestedManyWithoutAboutPlaceInput
   importStagedVisits?: Prisma.ImportStagedVisitCreateNestedManyWithoutResolvedPlaceInput
   purchaseOrderLines?: Prisma.PurchaseOrderLineCreateNestedManyWithoutDestinationPlaceInput
 }
@@ -1714,6 +1774,7 @@ export type PlaceUncheckedCreateWithoutGroupAffiliationsInput = {
   interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutPlaceInput
   items?: Prisma.ItemUncheckedCreateNestedManyWithoutPlaceInput
   notes?: Prisma.PlaceNoteUncheckedCreateNestedManyWithoutPlaceInput
+  aboutNotes?: Prisma.NoteUncheckedCreateNestedManyWithoutAboutPlaceInput
   importStagedVisits?: Prisma.ImportStagedVisitUncheckedCreateNestedManyWithoutResolvedPlaceInput
   purchaseOrderLines?: Prisma.PurchaseOrderLineUncheckedCreateNestedManyWithoutDestinationPlaceInput
 }
@@ -1751,6 +1812,7 @@ export type PlaceUpdateWithoutGroupAffiliationsInput = {
   interactions?: Prisma.InteractionUpdateManyWithoutPlaceNestedInput
   items?: Prisma.ItemUpdateManyWithoutPlaceNestedInput
   notes?: Prisma.PlaceNoteUpdateManyWithoutPlaceNestedInput
+  aboutNotes?: Prisma.NoteUpdateManyWithoutAboutPlaceNestedInput
   importStagedVisits?: Prisma.ImportStagedVisitUpdateManyWithoutResolvedPlaceNestedInput
   purchaseOrderLines?: Prisma.PurchaseOrderLineUpdateManyWithoutDestinationPlaceNestedInput
 }
@@ -1772,6 +1834,111 @@ export type PlaceUncheckedUpdateWithoutGroupAffiliationsInput = {
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutPlaceNestedInput
   items?: Prisma.ItemUncheckedUpdateManyWithoutPlaceNestedInput
   notes?: Prisma.PlaceNoteUncheckedUpdateManyWithoutPlaceNestedInput
+  aboutNotes?: Prisma.NoteUncheckedUpdateManyWithoutAboutPlaceNestedInput
+  importStagedVisits?: Prisma.ImportStagedVisitUncheckedUpdateManyWithoutResolvedPlaceNestedInput
+  purchaseOrderLines?: Prisma.PurchaseOrderLineUncheckedUpdateManyWithoutDestinationPlaceNestedInput
+}
+
+export type PlaceCreateWithoutAboutNotesInput = {
+  id?: string
+  name: string
+  googlePlaceId?: string | null
+  type?: string | null
+  address?: string | null
+  coordinates?: string | null
+  meaning?: string | null
+  favorite?: boolean
+  workspace?: Prisma.WorkspaceCreateNestedOneWithoutPlacesInput
+  parentPlace?: Prisma.PlaceCreateNestedOneWithoutChildPlacesInput
+  childPlaces?: Prisma.PlaceCreateNestedManyWithoutParentPlaceInput
+  events?: Prisma.EventCreateNestedManyWithoutPlaceInput
+  plans?: Prisma.PlanCreateNestedManyWithoutPlaceInput
+  interactions?: Prisma.InteractionCreateNestedManyWithoutPlaceInput
+  items?: Prisma.ItemCreateNestedManyWithoutPlaceInput
+  notes?: Prisma.PlaceNoteCreateNestedManyWithoutPlaceInput
+  groupAffiliations?: Prisma.PlaceGroupCreateNestedManyWithoutPlaceInput
+  importStagedVisits?: Prisma.ImportStagedVisitCreateNestedManyWithoutResolvedPlaceInput
+  purchaseOrderLines?: Prisma.PurchaseOrderLineCreateNestedManyWithoutDestinationPlaceInput
+}
+
+export type PlaceUncheckedCreateWithoutAboutNotesInput = {
+  id?: string
+  workspaceId?: string
+  name: string
+  googlePlaceId?: string | null
+  type?: string | null
+  address?: string | null
+  coordinates?: string | null
+  meaning?: string | null
+  favorite?: boolean
+  parentPlaceId?: string | null
+  childPlaces?: Prisma.PlaceUncheckedCreateNestedManyWithoutParentPlaceInput
+  events?: Prisma.EventUncheckedCreateNestedManyWithoutPlaceInput
+  plans?: Prisma.PlanUncheckedCreateNestedManyWithoutPlaceInput
+  interactions?: Prisma.InteractionUncheckedCreateNestedManyWithoutPlaceInput
+  items?: Prisma.ItemUncheckedCreateNestedManyWithoutPlaceInput
+  notes?: Prisma.PlaceNoteUncheckedCreateNestedManyWithoutPlaceInput
+  groupAffiliations?: Prisma.PlaceGroupUncheckedCreateNestedManyWithoutPlaceInput
+  importStagedVisits?: Prisma.ImportStagedVisitUncheckedCreateNestedManyWithoutResolvedPlaceInput
+  purchaseOrderLines?: Prisma.PurchaseOrderLineUncheckedCreateNestedManyWithoutDestinationPlaceInput
+}
+
+export type PlaceCreateOrConnectWithoutAboutNotesInput = {
+  where: Prisma.PlaceWhereUniqueInput
+  create: Prisma.XOR<Prisma.PlaceCreateWithoutAboutNotesInput, Prisma.PlaceUncheckedCreateWithoutAboutNotesInput>
+}
+
+export type PlaceUpsertWithoutAboutNotesInput = {
+  update: Prisma.XOR<Prisma.PlaceUpdateWithoutAboutNotesInput, Prisma.PlaceUncheckedUpdateWithoutAboutNotesInput>
+  create: Prisma.XOR<Prisma.PlaceCreateWithoutAboutNotesInput, Prisma.PlaceUncheckedCreateWithoutAboutNotesInput>
+  where?: Prisma.PlaceWhereInput
+}
+
+export type PlaceUpdateToOneWithWhereWithoutAboutNotesInput = {
+  where?: Prisma.PlaceWhereInput
+  data: Prisma.XOR<Prisma.PlaceUpdateWithoutAboutNotesInput, Prisma.PlaceUncheckedUpdateWithoutAboutNotesInput>
+}
+
+export type PlaceUpdateWithoutAboutNotesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  googlePlaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  coordinates?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  meaning?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  favorite?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutPlacesNestedInput
+  parentPlace?: Prisma.PlaceUpdateOneWithoutChildPlacesNestedInput
+  childPlaces?: Prisma.PlaceUpdateManyWithoutParentPlaceNestedInput
+  events?: Prisma.EventUpdateManyWithoutPlaceNestedInput
+  plans?: Prisma.PlanUpdateManyWithoutPlaceNestedInput
+  interactions?: Prisma.InteractionUpdateManyWithoutPlaceNestedInput
+  items?: Prisma.ItemUpdateManyWithoutPlaceNestedInput
+  notes?: Prisma.PlaceNoteUpdateManyWithoutPlaceNestedInput
+  groupAffiliations?: Prisma.PlaceGroupUpdateManyWithoutPlaceNestedInput
+  importStagedVisits?: Prisma.ImportStagedVisitUpdateManyWithoutResolvedPlaceNestedInput
+  purchaseOrderLines?: Prisma.PurchaseOrderLineUpdateManyWithoutDestinationPlaceNestedInput
+}
+
+export type PlaceUncheckedUpdateWithoutAboutNotesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  googlePlaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  coordinates?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  meaning?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  favorite?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  parentPlaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  childPlaces?: Prisma.PlaceUncheckedUpdateManyWithoutParentPlaceNestedInput
+  events?: Prisma.EventUncheckedUpdateManyWithoutPlaceNestedInput
+  plans?: Prisma.PlanUncheckedUpdateManyWithoutPlaceNestedInput
+  interactions?: Prisma.InteractionUncheckedUpdateManyWithoutPlaceNestedInput
+  items?: Prisma.ItemUncheckedUpdateManyWithoutPlaceNestedInput
+  notes?: Prisma.PlaceNoteUncheckedUpdateManyWithoutPlaceNestedInput
+  groupAffiliations?: Prisma.PlaceGroupUncheckedUpdateManyWithoutPlaceNestedInput
   importStagedVisits?: Prisma.ImportStagedVisitUncheckedUpdateManyWithoutResolvedPlaceNestedInput
   purchaseOrderLines?: Prisma.PurchaseOrderLineUncheckedUpdateManyWithoutDestinationPlaceNestedInput
 }
@@ -1804,6 +1971,7 @@ export type PlaceUpdateWithoutWorkspaceInput = {
   interactions?: Prisma.InteractionUpdateManyWithoutPlaceNestedInput
   items?: Prisma.ItemUpdateManyWithoutPlaceNestedInput
   notes?: Prisma.PlaceNoteUpdateManyWithoutPlaceNestedInput
+  aboutNotes?: Prisma.NoteUpdateManyWithoutAboutPlaceNestedInput
   groupAffiliations?: Prisma.PlaceGroupUpdateManyWithoutPlaceNestedInput
   importStagedVisits?: Prisma.ImportStagedVisitUpdateManyWithoutResolvedPlaceNestedInput
   purchaseOrderLines?: Prisma.PurchaseOrderLineUpdateManyWithoutDestinationPlaceNestedInput
@@ -1825,6 +1993,7 @@ export type PlaceUncheckedUpdateWithoutWorkspaceInput = {
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutPlaceNestedInput
   items?: Prisma.ItemUncheckedUpdateManyWithoutPlaceNestedInput
   notes?: Prisma.PlaceNoteUncheckedUpdateManyWithoutPlaceNestedInput
+  aboutNotes?: Prisma.NoteUncheckedUpdateManyWithoutAboutPlaceNestedInput
   groupAffiliations?: Prisma.PlaceGroupUncheckedUpdateManyWithoutPlaceNestedInput
   importStagedVisits?: Prisma.ImportStagedVisitUncheckedUpdateManyWithoutResolvedPlaceNestedInput
   purchaseOrderLines?: Prisma.PurchaseOrderLineUncheckedUpdateManyWithoutDestinationPlaceNestedInput
@@ -1870,6 +2039,7 @@ export type PlaceUpdateWithoutParentPlaceInput = {
   interactions?: Prisma.InteractionUpdateManyWithoutPlaceNestedInput
   items?: Prisma.ItemUpdateManyWithoutPlaceNestedInput
   notes?: Prisma.PlaceNoteUpdateManyWithoutPlaceNestedInput
+  aboutNotes?: Prisma.NoteUpdateManyWithoutAboutPlaceNestedInput
   groupAffiliations?: Prisma.PlaceGroupUpdateManyWithoutPlaceNestedInput
   importStagedVisits?: Prisma.ImportStagedVisitUpdateManyWithoutResolvedPlaceNestedInput
   purchaseOrderLines?: Prisma.PurchaseOrderLineUpdateManyWithoutDestinationPlaceNestedInput
@@ -1891,6 +2061,7 @@ export type PlaceUncheckedUpdateWithoutParentPlaceInput = {
   interactions?: Prisma.InteractionUncheckedUpdateManyWithoutPlaceNestedInput
   items?: Prisma.ItemUncheckedUpdateManyWithoutPlaceNestedInput
   notes?: Prisma.PlaceNoteUncheckedUpdateManyWithoutPlaceNestedInput
+  aboutNotes?: Prisma.NoteUncheckedUpdateManyWithoutAboutPlaceNestedInput
   groupAffiliations?: Prisma.PlaceGroupUncheckedUpdateManyWithoutPlaceNestedInput
   importStagedVisits?: Prisma.ImportStagedVisitUncheckedUpdateManyWithoutResolvedPlaceNestedInput
   purchaseOrderLines?: Prisma.PurchaseOrderLineUncheckedUpdateManyWithoutDestinationPlaceNestedInput
@@ -1920,6 +2091,7 @@ export type PlaceCountOutputType = {
   interactions: number
   items: number
   notes: number
+  aboutNotes: number
   groupAffiliations: number
   importStagedVisits: number
   purchaseOrderLines: number
@@ -1932,6 +2104,7 @@ export type PlaceCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.
   interactions?: boolean | PlaceCountOutputTypeCountInteractionsArgs
   items?: boolean | PlaceCountOutputTypeCountItemsArgs
   notes?: boolean | PlaceCountOutputTypeCountNotesArgs
+  aboutNotes?: boolean | PlaceCountOutputTypeCountAboutNotesArgs
   groupAffiliations?: boolean | PlaceCountOutputTypeCountGroupAffiliationsArgs
   importStagedVisits?: boolean | PlaceCountOutputTypeCountImportStagedVisitsArgs
   purchaseOrderLines?: boolean | PlaceCountOutputTypeCountPurchaseOrderLinesArgs
@@ -1992,6 +2165,13 @@ export type PlaceCountOutputTypeCountNotesArgs<ExtArgs extends runtime.Types.Ext
 /**
  * PlaceCountOutputType without action
  */
+export type PlaceCountOutputTypeCountAboutNotesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.NoteWhereInput
+}
+
+/**
+ * PlaceCountOutputType without action
+ */
 export type PlaceCountOutputTypeCountGroupAffiliationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.PlaceGroupWhereInput
 }
@@ -2030,6 +2210,7 @@ export type PlaceSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   interactions?: boolean | Prisma.Place$interactionsArgs<ExtArgs>
   items?: boolean | Prisma.Place$itemsArgs<ExtArgs>
   notes?: boolean | Prisma.Place$notesArgs<ExtArgs>
+  aboutNotes?: boolean | Prisma.Place$aboutNotesArgs<ExtArgs>
   groupAffiliations?: boolean | Prisma.Place$groupAffiliationsArgs<ExtArgs>
   importStagedVisits?: boolean | Prisma.Place$importStagedVisitsArgs<ExtArgs>
   purchaseOrderLines?: boolean | Prisma.Place$purchaseOrderLinesArgs<ExtArgs>
@@ -2089,6 +2270,7 @@ export type PlaceInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   interactions?: boolean | Prisma.Place$interactionsArgs<ExtArgs>
   items?: boolean | Prisma.Place$itemsArgs<ExtArgs>
   notes?: boolean | Prisma.Place$notesArgs<ExtArgs>
+  aboutNotes?: boolean | Prisma.Place$aboutNotesArgs<ExtArgs>
   groupAffiliations?: boolean | Prisma.Place$groupAffiliationsArgs<ExtArgs>
   importStagedVisits?: boolean | Prisma.Place$importStagedVisitsArgs<ExtArgs>
   purchaseOrderLines?: boolean | Prisma.Place$purchaseOrderLinesArgs<ExtArgs>
@@ -2114,6 +2296,7 @@ export type $PlacePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     interactions: Prisma.$InteractionPayload<ExtArgs>[]
     items: Prisma.$ItemPayload<ExtArgs>[]
     notes: Prisma.$PlaceNotePayload<ExtArgs>[]
+    aboutNotes: Prisma.$NotePayload<ExtArgs>[]
     groupAffiliations: Prisma.$PlaceGroupPayload<ExtArgs>[]
     importStagedVisits: Prisma.$ImportStagedVisitPayload<ExtArgs>[]
     purchaseOrderLines: Prisma.$PurchaseOrderLinePayload<ExtArgs>[]
@@ -2531,6 +2714,7 @@ export interface Prisma__PlaceClient<T, Null = never, ExtArgs extends runtime.Ty
   interactions<T extends Prisma.Place$interactionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Place$interactionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InteractionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   items<T extends Prisma.Place$itemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Place$itemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   notes<T extends Prisma.Place$notesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Place$notesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PlaceNotePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  aboutNotes<T extends Prisma.Place$aboutNotesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Place$aboutNotesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NotePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   groupAffiliations<T extends Prisma.Place$groupAffiliationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Place$groupAffiliationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PlaceGroupPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   importStagedVisits<T extends Prisma.Place$importStagedVisitsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Place$importStagedVisitsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ImportStagedVisitPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   purchaseOrderLines<T extends Prisma.Place$purchaseOrderLinesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Place$purchaseOrderLinesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PurchaseOrderLinePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -3132,6 +3316,30 @@ export type Place$notesArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
   take?: number
   skip?: number
   distinct?: Prisma.PlaceNoteScalarFieldEnum | Prisma.PlaceNoteScalarFieldEnum[]
+}
+
+/**
+ * Place.aboutNotes
+ */
+export type Place$aboutNotesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Note
+   */
+  select?: Prisma.NoteSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Note
+   */
+  omit?: Prisma.NoteOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.NoteInclude<ExtArgs> | null
+  where?: Prisma.NoteWhereInput
+  orderBy?: Prisma.NoteOrderByWithRelationInput | Prisma.NoteOrderByWithRelationInput[]
+  cursor?: Prisma.NoteWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.NoteScalarFieldEnum | Prisma.NoteScalarFieldEnum[]
 }
 
 /**

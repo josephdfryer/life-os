@@ -44,10 +44,14 @@ export async function getTheorySourcesForPerson(
     take: 200,
   })
 
-  // Notes about this person: theory observations (and any note) whose metadata
-  // references the person, plus the source Notes behind their derived records.
   const taggedNotes = await db.note.findMany({
-    where: { workspaceId, metadata: { contains: personId } },
+    where: {
+      workspaceId,
+      OR: [
+        { aboutPersonId: personId },
+        { metadata: { contains: personId } },
+      ],
+    },
     select: { id: true },
     orderBy: { timestamp: "desc" },
     take: 500,

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server"
 import { errorEnvelopeContract } from "@life-os/contracts"
-import { InteractionError, InteractionStreamError, AcceptStagedInteractionError, PersonError, PlanError, EventPrimitiveError, ReviewItemError, StateError } from "@life-os/domain"
+import { InteractionError, InteractionStreamError, AcceptStagedInteractionError, PersonError, PlanError, EventPrimitiveError, ReviewItemError, StateError, CaptureValidationError } from "@life-os/domain"
 import { LifeModelError, TheoryError } from "@life-os/intelligence"
 import { RuleError } from "@life-os/automation"
 import { AccessError } from "@life-os/access"
@@ -9,6 +9,8 @@ import { PeopleApiError } from "./people"
 import { PlansApiError } from "./plans"
 import { EventsApiError } from "./events"
 import { AuditLogApiError } from "./audit-log"
+import { NotesApiError } from "./notes"
+import { OuraError } from "./oura"
 
 // Every error apps/api returns uses one shape — { error: { code, message,
 // details? } } — validated against packages/contracts' errorEnvelopeContract
@@ -54,6 +56,9 @@ export function handleRouteError(error: unknown) {
   if (error instanceof EventPrimitiveError || error instanceof EventsApiError) {
     return errorResponse(error.code === "not_found" ? 404 : 400, error.code, error.message)
   }
+  if (error instanceof CaptureValidationError || error instanceof NotesApiError) {
+    return errorResponse(error.code === "not_found" ? 404 : 400, error.code, error.message)
+  }
   if (error instanceof AuditLogApiError) {
     return errorResponse(400, error.code, error.message)
   }
@@ -73,6 +78,10 @@ export function handleRouteError(error: unknown) {
   }
   if (error instanceof WorkoutCommandError) {
     return errorResponse(error.code === "not_found" ? 404 : 409, error.code, error.message)
+  }
+  if (error instanceof OuraError) {
+    const status = error.code === "not_configured" ? 503 : error.code === "forbidden" || error.code === "revoked" ? 403 : 400
+    return errorResponse(status, error.code, error.message)
   }
   console.error("[apps/api] unhandled route error", error)
   return errorResponse(500, "internal_error", "Internal server error")

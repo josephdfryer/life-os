@@ -57,7 +57,9 @@ export default function Header() {
         <NavLink href="/today" label="Today" active={pathname === "/today"} />
 
         {/* Persons */}
-        <NavLink href="/persons" label="Persons" active={pathname === "/persons" || pathname.startsWith("/persons/") || pathname === "/people" || pathname.startsWith("/people/") || pathname === "/contacts" || pathname.startsWith("/contacts/")} />
+        <NavLink href="/persons" label="Persons" active={pathname === "/persons" || (pathname.startsWith("/persons/") && !pathname.startsWith("/persons/notes")) || pathname === "/people" || pathname.startsWith("/people/") || pathname === "/contacts" || pathname.startsWith("/contacts/")} />
+
+        <NavLink href="/persons/notes" label="Notes" active={pathname === "/persons/notes" || pathname.startsWith("/persons/notes/")} />
 
         <NavLink href="/inbox" label="Inbox" active={pathname === "/inbox"} />
 

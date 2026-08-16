@@ -15,6 +15,8 @@ import {
   entityRefContract,
   errorEnvelopeContract,
   graphEventContract,
+  noteCreateContract,
+  noteResourceContract,
   lifeModelClaimFeedbackContract,
   proposedCommandContract,
   reviewItemActionContract,
@@ -122,6 +124,28 @@ test("review item contract round-trips a realistic pending row", () => {
     resolvedAt: null, resolvedBy: null, resultType: null, resultId: null,
   })
   assert.equal(parsed.success, true)
+})
+
+test("note create accepts subject ids and rejects blank content", () => {
+  assert.equal(noteCreateContract.safeParse({ content: "Qin seemed tired", aboutPersonId: "p1", type: "observation" }).success, true)
+  assert.equal(noteCreateContract.safeParse({ content: "   " }).success, false)
+  assert.equal(noteCreateContract.safeParse({ content: "ok", type: "memo" }).success, false)
+  assert.equal(noteResourceContract.safeParse({
+    id: "n1",
+    createdAt: new Date().toISOString(),
+    timestamp: new Date().toISOString(),
+    type: "observation",
+    content: "Qin seemed tired",
+    metadata: { source: "assistant" },
+    sourceFileId: null,
+    aboutPersonId: "p1",
+    aboutPlaceId: null,
+    aboutItemId: null,
+    aboutEventId: null,
+    aboutPlanId: null,
+    aboutGroupId: null,
+    aboutStateId: null,
+  }).success, true)
 })
 
 test("graph event requires a subject reference and an actor type", () => {

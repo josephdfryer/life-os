@@ -507,6 +507,56 @@ export type PlanResource = z.infer<typeof planResourceContract>
 export const plansPageContract = cursorPageContract(planResourceContract)
 export type PlansPage = z.infer<typeof plansPageContract>
 
+export const noteTypeContract = z.enum([
+  "thought",
+  "observation",
+  "declaration",
+  "voice_transcript",
+  "import",
+  "theory_observation",
+])
+
+const noteSubjectContract = z.object({
+  aboutPersonId: id.nullable().optional(),
+  aboutPlaceId: id.nullable().optional(),
+  aboutItemId: id.nullable().optional(),
+  aboutEventId: id.nullable().optional(),
+  aboutPlanId: id.nullable().optional(),
+  aboutGroupId: id.nullable().optional(),
+  aboutStateId: id.nullable().optional(),
+})
+
+export const noteCreateContract = noteSubjectContract.extend({
+  content: z.string().trim().min(1).max(10_000),
+  type: noteTypeContract.optional(),
+  timestamp: z.iso.datetime().optional(),
+  idempotencyKey: z.string().trim().min(8).max(120).regex(/^[a-zA-Z0-9_-]+$/).optional().nullable(),
+  metadata: record.nullable().optional(),
+  source: z.string().trim().min(1).max(200).optional(),
+}).strict()
+export type NoteCreateInput = z.infer<typeof noteCreateContract>
+
+export const noteResourceContract = z.object({
+  id,
+  createdAt: z.iso.datetime(),
+  timestamp: z.iso.datetime(),
+  type: z.string(),
+  content: z.string(),
+  metadata: z.unknown().nullable(),
+  sourceFileId: id.nullable(),
+  aboutPersonId: id.nullable(),
+  aboutPlaceId: id.nullable(),
+  aboutItemId: id.nullable(),
+  aboutEventId: id.nullable(),
+  aboutPlanId: id.nullable(),
+  aboutGroupId: id.nullable(),
+  aboutStateId: id.nullable(),
+}).strict()
+export type NoteResource = z.infer<typeof noteResourceContract>
+
+export const notesPageContract = cursorPageContract(noteResourceContract)
+export type NotesPage = z.infer<typeof notesPageContract>
+
 // apps/api's canonical /v1/events — the Event *primitive* (a calendar/
 // meeting occurrence), not the GraphEvent ledger. See
 // packages/domain/event-primitive.ts for why the domain module isn't named
@@ -719,10 +769,12 @@ export const deviceHeartbeatContract = z.object({
     enabled: z.boolean(),
     permissionStatus: z.enum(["unknown", "not_requested", "granted", "limited", "denied", "revoked", "unsupported"]),
     healthStatus: z.enum(["unknown", "healthy", "paused", "degraded", "error", "unsupported"]),
-    lastSuccessAt: z.string().datetime({ offset: true }).nullable(),
-    lastErrorCode: z.string().regex(/^[a-z0-9][a-z0-9_.-]{0,127}$/).nullable(),
+    // Optional as well as nullable: Swift JSONEncoder omits nils on some paths
+    // and may include a computed `id`. Strip extras; do not 400 the phone.
+    lastSuccessAt: z.string().datetime({ offset: true }).nullable().optional(),
+    lastErrorCode: z.string().regex(/^[a-z0-9][a-z0-9_.-]{0,127}$/).nullable().optional(),
     schemaVersion: z.literal(1),
-  }).strict()).max(32),
+  })).max(32),
 }).strict()
 
 export const deviceExchangeContract = z.object({

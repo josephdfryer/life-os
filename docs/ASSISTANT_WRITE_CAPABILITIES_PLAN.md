@@ -1,28 +1,27 @@
 # Assistant Write Capabilities Plan
 
-**Status:** Scoped, not started · August 14, 2026
+**Status:** Partially landed · August 15, 2026
+
+The three safety prerequisites below are done (capability on every tool, writes
+through domain commands, assistant actor on GraphEvent). The tool surface is no
+longer 26/2. `capture_note` now takes first-class subject ids and
+`POST /v1/notes` is the canonical API for the same command.
 
 ## Bottom line
 
-The API is not the blocker. **39 v1 routes already accept writes** and every primitive has a
-domain module behind it. The assistant exposes **26 tools, of which only 2 write** — so the gap
-is the tool surface, not the backend.
-
-But do not start by adding tools. Three things are wrong today that are invisible at two write
-tools and become serious at twenty. Fix them first; the tool surface is then mostly mechanical.
-
-The receipt case is the perfect illustration: the assistant read a PDF, extracted every field
-correctly, identified that the invoice names Qin rather than Joseph, and then could do nothing
-with it because there is no `create_item`. It even proposed the right fallback on its own.
+The API is not the blocker for most remaining writes. **`/v1/notes` now exists**
+and every primitive has a domain module behind it. The assistant exposes more
+write tools than this doc originally counted; keep this table honest when adding
+the next one.
 
 ## Current state
 
 | | |
 | --- | --- |
-| Assistant tools | 26 |
-| …that write | **2** — `capture_note`, `log_interaction` |
-| v1 API routes accepting POST/PATCH/DELETE | **39** |
-| Domain modules with write functions | persons, items, plans, groups, events, states, interactions, place-notes, review |
+| Assistant tools | 33 |
+| …that write | **7** — `capture_note` (with subject edges), `log_interaction`, `create_item`, `create_plan`, `add_place_note`, `create_group`, `add_person_to_group` |
+| Canonical note write | `POST /v1/notes` → `captureNote` — same command as Home, Persons, and the assistant |
+| Domain modules with write functions | persons, items, plans, groups, events, states, interactions, place-notes, review, capture |
 
 Everything needed to write safely already exists — `publishGraphEvent` with idempotency keys,
 provenance and actor; `createReviewItem` for the human-in-the-loop path; and

@@ -344,6 +344,7 @@ export type PlanWhereInput = {
   expectedPeople?: Prisma.PlanExpectedPersonListRelationFilter
   fulfilledBy?: Prisma.XOR<Prisma.EventNullableScalarRelationFilter, Prisma.EventWhereInput> | null
   sourceNote?: Prisma.XOR<Prisma.NoteNullableScalarRelationFilter, Prisma.NoteWhereInput> | null
+  aboutNotes?: Prisma.NoteListRelationFilter
   purchaseOrder?: Prisma.XOR<Prisma.PurchaseOrderNullableScalarRelationFilter, Prisma.PurchaseOrderWhereInput> | null
   calendarLinks?: Prisma.CalendarEventLinkListRelationFilter
 }
@@ -377,6 +378,7 @@ export type PlanOrderByWithRelationInput = {
   expectedPeople?: Prisma.PlanExpectedPersonOrderByRelationAggregateInput
   fulfilledBy?: Prisma.EventOrderByWithRelationInput
   sourceNote?: Prisma.NoteOrderByWithRelationInput
+  aboutNotes?: Prisma.NoteOrderByRelationAggregateInput
   purchaseOrder?: Prisma.PurchaseOrderOrderByWithRelationInput
   calendarLinks?: Prisma.CalendarEventLinkOrderByRelationAggregateInput
 }
@@ -413,6 +415,7 @@ export type PlanWhereUniqueInput = Prisma.AtLeast<{
   expectedPeople?: Prisma.PlanExpectedPersonListRelationFilter
   fulfilledBy?: Prisma.XOR<Prisma.EventNullableScalarRelationFilter, Prisma.EventWhereInput> | null
   sourceNote?: Prisma.XOR<Prisma.NoteNullableScalarRelationFilter, Prisma.NoteWhereInput> | null
+  aboutNotes?: Prisma.NoteListRelationFilter
   purchaseOrder?: Prisma.XOR<Prisma.PurchaseOrderNullableScalarRelationFilter, Prisma.PurchaseOrderWhereInput> | null
   calendarLinks?: Prisma.CalendarEventLinkListRelationFilter
 }, "id" | "externalInstanceId">
@@ -495,6 +498,7 @@ export type PlanCreateInput = {
   expectedPeople?: Prisma.PlanExpectedPersonCreateNestedManyWithoutPlanInput
   fulfilledBy?: Prisma.EventCreateNestedOneWithoutSourcePlanInput
   sourceNote?: Prisma.NoteCreateNestedOneWithoutPlansInput
+  aboutNotes?: Prisma.NoteCreateNestedManyWithoutAboutPlanInput
   purchaseOrder?: Prisma.PurchaseOrderCreateNestedOneWithoutPlanInput
   calendarLinks?: Prisma.CalendarEventLinkCreateNestedManyWithoutPlanInput
 }
@@ -523,6 +527,7 @@ export type PlanUncheckedCreateInput = {
   children?: Prisma.PlanUncheckedCreateNestedManyWithoutParentInput
   expectedPeople?: Prisma.PlanExpectedPersonUncheckedCreateNestedManyWithoutPlanInput
   fulfilledBy?: Prisma.EventUncheckedCreateNestedOneWithoutSourcePlanInput
+  aboutNotes?: Prisma.NoteUncheckedCreateNestedManyWithoutAboutPlanInput
   purchaseOrder?: Prisma.PurchaseOrderUncheckedCreateNestedOneWithoutPlanInput
   calendarLinks?: Prisma.CalendarEventLinkUncheckedCreateNestedManyWithoutPlanInput
 }
@@ -551,6 +556,7 @@ export type PlanUpdateInput = {
   expectedPeople?: Prisma.PlanExpectedPersonUpdateManyWithoutPlanNestedInput
   fulfilledBy?: Prisma.EventUpdateOneWithoutSourcePlanNestedInput
   sourceNote?: Prisma.NoteUpdateOneWithoutPlansNestedInput
+  aboutNotes?: Prisma.NoteUpdateManyWithoutAboutPlanNestedInput
   purchaseOrder?: Prisma.PurchaseOrderUpdateOneWithoutPlanNestedInput
   calendarLinks?: Prisma.CalendarEventLinkUpdateManyWithoutPlanNestedInput
 }
@@ -579,6 +585,7 @@ export type PlanUncheckedUpdateInput = {
   children?: Prisma.PlanUncheckedUpdateManyWithoutParentNestedInput
   expectedPeople?: Prisma.PlanExpectedPersonUncheckedUpdateManyWithoutPlanNestedInput
   fulfilledBy?: Prisma.EventUncheckedUpdateOneWithoutSourcePlanNestedInput
+  aboutNotes?: Prisma.NoteUncheckedUpdateManyWithoutAboutPlanNestedInput
   purchaseOrder?: Prisma.PurchaseOrderUncheckedUpdateOneWithoutPlanNestedInput
   calendarLinks?: Prisma.CalendarEventLinkUncheckedUpdateManyWithoutPlanNestedInput
 }
@@ -992,6 +999,12 @@ export type PlanUpdateOneRequiredWithoutPurchaseOrderNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.PlanUpdateToOneWithWhereWithoutPurchaseOrderInput, Prisma.PlanUpdateWithoutPurchaseOrderInput>, Prisma.PlanUncheckedUpdateWithoutPurchaseOrderInput>
 }
 
+export type PlanCreateNestedOneWithoutAboutNotesInput = {
+  create?: Prisma.XOR<Prisma.PlanCreateWithoutAboutNotesInput, Prisma.PlanUncheckedCreateWithoutAboutNotesInput>
+  connectOrCreate?: Prisma.PlanCreateOrConnectWithoutAboutNotesInput
+  connect?: Prisma.PlanWhereUniqueInput
+}
+
 export type PlanCreateNestedManyWithoutSourceNoteInput = {
   create?: Prisma.XOR<Prisma.PlanCreateWithoutSourceNoteInput, Prisma.PlanUncheckedCreateWithoutSourceNoteInput> | Prisma.PlanCreateWithoutSourceNoteInput[] | Prisma.PlanUncheckedCreateWithoutSourceNoteInput[]
   connectOrCreate?: Prisma.PlanCreateOrConnectWithoutSourceNoteInput | Prisma.PlanCreateOrConnectWithoutSourceNoteInput[]
@@ -1004,6 +1017,16 @@ export type PlanUncheckedCreateNestedManyWithoutSourceNoteInput = {
   connectOrCreate?: Prisma.PlanCreateOrConnectWithoutSourceNoteInput | Prisma.PlanCreateOrConnectWithoutSourceNoteInput[]
   createMany?: Prisma.PlanCreateManySourceNoteInputEnvelope
   connect?: Prisma.PlanWhereUniqueInput | Prisma.PlanWhereUniqueInput[]
+}
+
+export type PlanUpdateOneWithoutAboutNotesNestedInput = {
+  create?: Prisma.XOR<Prisma.PlanCreateWithoutAboutNotesInput, Prisma.PlanUncheckedCreateWithoutAboutNotesInput>
+  connectOrCreate?: Prisma.PlanCreateOrConnectWithoutAboutNotesInput
+  upsert?: Prisma.PlanUpsertWithoutAboutNotesInput
+  disconnect?: Prisma.PlanWhereInput | boolean
+  delete?: Prisma.PlanWhereInput | boolean
+  connect?: Prisma.PlanWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.PlanUpdateToOneWithWhereWithoutAboutNotesInput, Prisma.PlanUpdateWithoutAboutNotesInput>, Prisma.PlanUncheckedUpdateWithoutAboutNotesInput>
 }
 
 export type PlanUpdateManyWithoutSourceNoteNestedInput = {
@@ -1057,6 +1080,7 @@ export type PlanCreateWithoutWorkspaceInput = {
   expectedPeople?: Prisma.PlanExpectedPersonCreateNestedManyWithoutPlanInput
   fulfilledBy?: Prisma.EventCreateNestedOneWithoutSourcePlanInput
   sourceNote?: Prisma.NoteCreateNestedOneWithoutPlansInput
+  aboutNotes?: Prisma.NoteCreateNestedManyWithoutAboutPlanInput
   purchaseOrder?: Prisma.PurchaseOrderCreateNestedOneWithoutPlanInput
   calendarLinks?: Prisma.CalendarEventLinkCreateNestedManyWithoutPlanInput
 }
@@ -1084,6 +1108,7 @@ export type PlanUncheckedCreateWithoutWorkspaceInput = {
   children?: Prisma.PlanUncheckedCreateNestedManyWithoutParentInput
   expectedPeople?: Prisma.PlanExpectedPersonUncheckedCreateNestedManyWithoutPlanInput
   fulfilledBy?: Prisma.EventUncheckedCreateNestedOneWithoutSourcePlanInput
+  aboutNotes?: Prisma.NoteUncheckedCreateNestedManyWithoutAboutPlanInput
   purchaseOrder?: Prisma.PurchaseOrderUncheckedCreateNestedOneWithoutPlanInput
   calendarLinks?: Prisma.CalendarEventLinkUncheckedCreateNestedManyWithoutPlanInput
 }
@@ -1162,6 +1187,7 @@ export type PlanCreateWithoutPersonInput = {
   expectedPeople?: Prisma.PlanExpectedPersonCreateNestedManyWithoutPlanInput
   fulfilledBy?: Prisma.EventCreateNestedOneWithoutSourcePlanInput
   sourceNote?: Prisma.NoteCreateNestedOneWithoutPlansInput
+  aboutNotes?: Prisma.NoteCreateNestedManyWithoutAboutPlanInput
   purchaseOrder?: Prisma.PurchaseOrderCreateNestedOneWithoutPlanInput
   calendarLinks?: Prisma.CalendarEventLinkCreateNestedManyWithoutPlanInput
 }
@@ -1189,6 +1215,7 @@ export type PlanUncheckedCreateWithoutPersonInput = {
   children?: Prisma.PlanUncheckedCreateNestedManyWithoutParentInput
   expectedPeople?: Prisma.PlanExpectedPersonUncheckedCreateNestedManyWithoutPlanInput
   fulfilledBy?: Prisma.EventUncheckedCreateNestedOneWithoutSourcePlanInput
+  aboutNotes?: Prisma.NoteUncheckedCreateNestedManyWithoutAboutPlanInput
   purchaseOrder?: Prisma.PurchaseOrderUncheckedCreateNestedOneWithoutPlanInput
   calendarLinks?: Prisma.CalendarEventLinkUncheckedCreateNestedManyWithoutPlanInput
 }
@@ -1242,6 +1269,7 @@ export type PlanCreateWithoutCalendarLinksInput = {
   expectedPeople?: Prisma.PlanExpectedPersonCreateNestedManyWithoutPlanInput
   fulfilledBy?: Prisma.EventCreateNestedOneWithoutSourcePlanInput
   sourceNote?: Prisma.NoteCreateNestedOneWithoutPlansInput
+  aboutNotes?: Prisma.NoteCreateNestedManyWithoutAboutPlanInput
   purchaseOrder?: Prisma.PurchaseOrderCreateNestedOneWithoutPlanInput
 }
 
@@ -1269,6 +1297,7 @@ export type PlanUncheckedCreateWithoutCalendarLinksInput = {
   children?: Prisma.PlanUncheckedCreateNestedManyWithoutParentInput
   expectedPeople?: Prisma.PlanExpectedPersonUncheckedCreateNestedManyWithoutPlanInput
   fulfilledBy?: Prisma.EventUncheckedCreateNestedOneWithoutSourcePlanInput
+  aboutNotes?: Prisma.NoteUncheckedCreateNestedManyWithoutAboutPlanInput
   purchaseOrder?: Prisma.PurchaseOrderUncheckedCreateNestedOneWithoutPlanInput
 }
 
@@ -1312,6 +1341,7 @@ export type PlanUpdateWithoutCalendarLinksInput = {
   expectedPeople?: Prisma.PlanExpectedPersonUpdateManyWithoutPlanNestedInput
   fulfilledBy?: Prisma.EventUpdateOneWithoutSourcePlanNestedInput
   sourceNote?: Prisma.NoteUpdateOneWithoutPlansNestedInput
+  aboutNotes?: Prisma.NoteUpdateManyWithoutAboutPlanNestedInput
   purchaseOrder?: Prisma.PurchaseOrderUpdateOneWithoutPlanNestedInput
 }
 
@@ -1339,6 +1369,7 @@ export type PlanUncheckedUpdateWithoutCalendarLinksInput = {
   children?: Prisma.PlanUncheckedUpdateManyWithoutParentNestedInput
   expectedPeople?: Prisma.PlanExpectedPersonUncheckedUpdateManyWithoutPlanNestedInput
   fulfilledBy?: Prisma.EventUncheckedUpdateOneWithoutSourcePlanNestedInput
+  aboutNotes?: Prisma.NoteUncheckedUpdateManyWithoutAboutPlanNestedInput
   purchaseOrder?: Prisma.PurchaseOrderUncheckedUpdateOneWithoutPlanNestedInput
 }
 
@@ -1365,6 +1396,7 @@ export type PlanCreateWithoutFulfilledByInput = {
   place?: Prisma.PlaceCreateNestedOneWithoutPlansInput
   expectedPeople?: Prisma.PlanExpectedPersonCreateNestedManyWithoutPlanInput
   sourceNote?: Prisma.NoteCreateNestedOneWithoutPlansInput
+  aboutNotes?: Prisma.NoteCreateNestedManyWithoutAboutPlanInput
   purchaseOrder?: Prisma.PurchaseOrderCreateNestedOneWithoutPlanInput
   calendarLinks?: Prisma.CalendarEventLinkCreateNestedManyWithoutPlanInput
 }
@@ -1392,6 +1424,7 @@ export type PlanUncheckedCreateWithoutFulfilledByInput = {
   sourceNoteId?: string | null
   children?: Prisma.PlanUncheckedCreateNestedManyWithoutParentInput
   expectedPeople?: Prisma.PlanExpectedPersonUncheckedCreateNestedManyWithoutPlanInput
+  aboutNotes?: Prisma.NoteUncheckedCreateNestedManyWithoutAboutPlanInput
   purchaseOrder?: Prisma.PurchaseOrderUncheckedCreateNestedOneWithoutPlanInput
   calendarLinks?: Prisma.CalendarEventLinkUncheckedCreateNestedManyWithoutPlanInput
 }
@@ -1435,6 +1468,7 @@ export type PlanUpdateWithoutFulfilledByInput = {
   place?: Prisma.PlaceUpdateOneWithoutPlansNestedInput
   expectedPeople?: Prisma.PlanExpectedPersonUpdateManyWithoutPlanNestedInput
   sourceNote?: Prisma.NoteUpdateOneWithoutPlansNestedInput
+  aboutNotes?: Prisma.NoteUpdateManyWithoutAboutPlanNestedInput
   purchaseOrder?: Prisma.PurchaseOrderUpdateOneWithoutPlanNestedInput
   calendarLinks?: Prisma.CalendarEventLinkUpdateManyWithoutPlanNestedInput
 }
@@ -1462,6 +1496,7 @@ export type PlanUncheckedUpdateWithoutFulfilledByInput = {
   sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   children?: Prisma.PlanUncheckedUpdateManyWithoutParentNestedInput
   expectedPeople?: Prisma.PlanExpectedPersonUncheckedUpdateManyWithoutPlanNestedInput
+  aboutNotes?: Prisma.NoteUncheckedUpdateManyWithoutAboutPlanNestedInput
   purchaseOrder?: Prisma.PurchaseOrderUncheckedUpdateOneWithoutPlanNestedInput
   calendarLinks?: Prisma.CalendarEventLinkUncheckedUpdateManyWithoutPlanNestedInput
 }
@@ -1489,6 +1524,7 @@ export type PlanCreateWithoutParentInput = {
   expectedPeople?: Prisma.PlanExpectedPersonCreateNestedManyWithoutPlanInput
   fulfilledBy?: Prisma.EventCreateNestedOneWithoutSourcePlanInput
   sourceNote?: Prisma.NoteCreateNestedOneWithoutPlansInput
+  aboutNotes?: Prisma.NoteCreateNestedManyWithoutAboutPlanInput
   purchaseOrder?: Prisma.PurchaseOrderCreateNestedOneWithoutPlanInput
   calendarLinks?: Prisma.CalendarEventLinkCreateNestedManyWithoutPlanInput
 }
@@ -1516,6 +1552,7 @@ export type PlanUncheckedCreateWithoutParentInput = {
   children?: Prisma.PlanUncheckedCreateNestedManyWithoutParentInput
   expectedPeople?: Prisma.PlanExpectedPersonUncheckedCreateNestedManyWithoutPlanInput
   fulfilledBy?: Prisma.EventUncheckedCreateNestedOneWithoutSourcePlanInput
+  aboutNotes?: Prisma.NoteUncheckedCreateNestedManyWithoutAboutPlanInput
   purchaseOrder?: Prisma.PurchaseOrderUncheckedCreateNestedOneWithoutPlanInput
   calendarLinks?: Prisma.CalendarEventLinkUncheckedCreateNestedManyWithoutPlanInput
 }
@@ -1552,6 +1589,7 @@ export type PlanCreateWithoutChildrenInput = {
   expectedPeople?: Prisma.PlanExpectedPersonCreateNestedManyWithoutPlanInput
   fulfilledBy?: Prisma.EventCreateNestedOneWithoutSourcePlanInput
   sourceNote?: Prisma.NoteCreateNestedOneWithoutPlansInput
+  aboutNotes?: Prisma.NoteCreateNestedManyWithoutAboutPlanInput
   purchaseOrder?: Prisma.PurchaseOrderCreateNestedOneWithoutPlanInput
   calendarLinks?: Prisma.CalendarEventLinkCreateNestedManyWithoutPlanInput
 }
@@ -1579,6 +1617,7 @@ export type PlanUncheckedCreateWithoutChildrenInput = {
   sourceNoteId?: string | null
   expectedPeople?: Prisma.PlanExpectedPersonUncheckedCreateNestedManyWithoutPlanInput
   fulfilledBy?: Prisma.EventUncheckedCreateNestedOneWithoutSourcePlanInput
+  aboutNotes?: Prisma.NoteUncheckedCreateNestedManyWithoutAboutPlanInput
   purchaseOrder?: Prisma.PurchaseOrderUncheckedCreateNestedOneWithoutPlanInput
   calendarLinks?: Prisma.CalendarEventLinkUncheckedCreateNestedManyWithoutPlanInput
 }
@@ -1638,6 +1677,7 @@ export type PlanUpdateWithoutChildrenInput = {
   expectedPeople?: Prisma.PlanExpectedPersonUpdateManyWithoutPlanNestedInput
   fulfilledBy?: Prisma.EventUpdateOneWithoutSourcePlanNestedInput
   sourceNote?: Prisma.NoteUpdateOneWithoutPlansNestedInput
+  aboutNotes?: Prisma.NoteUpdateManyWithoutAboutPlanNestedInput
   purchaseOrder?: Prisma.PurchaseOrderUpdateOneWithoutPlanNestedInput
   calendarLinks?: Prisma.CalendarEventLinkUpdateManyWithoutPlanNestedInput
 }
@@ -1665,6 +1705,7 @@ export type PlanUncheckedUpdateWithoutChildrenInput = {
   sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expectedPeople?: Prisma.PlanExpectedPersonUncheckedUpdateManyWithoutPlanNestedInput
   fulfilledBy?: Prisma.EventUncheckedUpdateOneWithoutSourcePlanNestedInput
+  aboutNotes?: Prisma.NoteUncheckedUpdateManyWithoutAboutPlanNestedInput
   purchaseOrder?: Prisma.PurchaseOrderUncheckedUpdateOneWithoutPlanNestedInput
   calendarLinks?: Prisma.CalendarEventLinkUncheckedUpdateManyWithoutPlanNestedInput
 }
@@ -1692,6 +1733,7 @@ export type PlanCreateWithoutExpectedPeopleInput = {
   place?: Prisma.PlaceCreateNestedOneWithoutPlansInput
   fulfilledBy?: Prisma.EventCreateNestedOneWithoutSourcePlanInput
   sourceNote?: Prisma.NoteCreateNestedOneWithoutPlansInput
+  aboutNotes?: Prisma.NoteCreateNestedManyWithoutAboutPlanInput
   purchaseOrder?: Prisma.PurchaseOrderCreateNestedOneWithoutPlanInput
   calendarLinks?: Prisma.CalendarEventLinkCreateNestedManyWithoutPlanInput
 }
@@ -1719,6 +1761,7 @@ export type PlanUncheckedCreateWithoutExpectedPeopleInput = {
   sourceNoteId?: string | null
   children?: Prisma.PlanUncheckedCreateNestedManyWithoutParentInput
   fulfilledBy?: Prisma.EventUncheckedCreateNestedOneWithoutSourcePlanInput
+  aboutNotes?: Prisma.NoteUncheckedCreateNestedManyWithoutAboutPlanInput
   purchaseOrder?: Prisma.PurchaseOrderUncheckedCreateNestedOneWithoutPlanInput
   calendarLinks?: Prisma.CalendarEventLinkUncheckedCreateNestedManyWithoutPlanInput
 }
@@ -1762,6 +1805,7 @@ export type PlanUpdateWithoutExpectedPeopleInput = {
   place?: Prisma.PlaceUpdateOneWithoutPlansNestedInput
   fulfilledBy?: Prisma.EventUpdateOneWithoutSourcePlanNestedInput
   sourceNote?: Prisma.NoteUpdateOneWithoutPlansNestedInput
+  aboutNotes?: Prisma.NoteUpdateManyWithoutAboutPlanNestedInput
   purchaseOrder?: Prisma.PurchaseOrderUpdateOneWithoutPlanNestedInput
   calendarLinks?: Prisma.CalendarEventLinkUpdateManyWithoutPlanNestedInput
 }
@@ -1789,6 +1833,7 @@ export type PlanUncheckedUpdateWithoutExpectedPeopleInput = {
   sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   children?: Prisma.PlanUncheckedUpdateManyWithoutParentNestedInput
   fulfilledBy?: Prisma.EventUncheckedUpdateOneWithoutSourcePlanNestedInput
+  aboutNotes?: Prisma.NoteUncheckedUpdateManyWithoutAboutPlanNestedInput
   purchaseOrder?: Prisma.PurchaseOrderUncheckedUpdateOneWithoutPlanNestedInput
   calendarLinks?: Prisma.CalendarEventLinkUncheckedUpdateManyWithoutPlanNestedInput
 }
@@ -1816,6 +1861,7 @@ export type PlanCreateWithoutPlaceInput = {
   expectedPeople?: Prisma.PlanExpectedPersonCreateNestedManyWithoutPlanInput
   fulfilledBy?: Prisma.EventCreateNestedOneWithoutSourcePlanInput
   sourceNote?: Prisma.NoteCreateNestedOneWithoutPlansInput
+  aboutNotes?: Prisma.NoteCreateNestedManyWithoutAboutPlanInput
   purchaseOrder?: Prisma.PurchaseOrderCreateNestedOneWithoutPlanInput
   calendarLinks?: Prisma.CalendarEventLinkCreateNestedManyWithoutPlanInput
 }
@@ -1843,6 +1889,7 @@ export type PlanUncheckedCreateWithoutPlaceInput = {
   children?: Prisma.PlanUncheckedCreateNestedManyWithoutParentInput
   expectedPeople?: Prisma.PlanExpectedPersonUncheckedCreateNestedManyWithoutPlanInput
   fulfilledBy?: Prisma.EventUncheckedCreateNestedOneWithoutSourcePlanInput
+  aboutNotes?: Prisma.NoteUncheckedCreateNestedManyWithoutAboutPlanInput
   purchaseOrder?: Prisma.PurchaseOrderUncheckedCreateNestedOneWithoutPlanInput
   calendarLinks?: Prisma.CalendarEventLinkUncheckedCreateNestedManyWithoutPlanInput
 }
@@ -1896,6 +1943,7 @@ export type PlanCreateWithoutPurchaseOrderInput = {
   expectedPeople?: Prisma.PlanExpectedPersonCreateNestedManyWithoutPlanInput
   fulfilledBy?: Prisma.EventCreateNestedOneWithoutSourcePlanInput
   sourceNote?: Prisma.NoteCreateNestedOneWithoutPlansInput
+  aboutNotes?: Prisma.NoteCreateNestedManyWithoutAboutPlanInput
   calendarLinks?: Prisma.CalendarEventLinkCreateNestedManyWithoutPlanInput
 }
 
@@ -1923,6 +1971,7 @@ export type PlanUncheckedCreateWithoutPurchaseOrderInput = {
   children?: Prisma.PlanUncheckedCreateNestedManyWithoutParentInput
   expectedPeople?: Prisma.PlanExpectedPersonUncheckedCreateNestedManyWithoutPlanInput
   fulfilledBy?: Prisma.EventUncheckedCreateNestedOneWithoutSourcePlanInput
+  aboutNotes?: Prisma.NoteUncheckedCreateNestedManyWithoutAboutPlanInput
   calendarLinks?: Prisma.CalendarEventLinkUncheckedCreateNestedManyWithoutPlanInput
 }
 
@@ -1966,6 +2015,7 @@ export type PlanUpdateWithoutPurchaseOrderInput = {
   expectedPeople?: Prisma.PlanExpectedPersonUpdateManyWithoutPlanNestedInput
   fulfilledBy?: Prisma.EventUpdateOneWithoutSourcePlanNestedInput
   sourceNote?: Prisma.NoteUpdateOneWithoutPlansNestedInput
+  aboutNotes?: Prisma.NoteUpdateManyWithoutAboutPlanNestedInput
   calendarLinks?: Prisma.CalendarEventLinkUpdateManyWithoutPlanNestedInput
 }
 
@@ -1993,7 +2043,69 @@ export type PlanUncheckedUpdateWithoutPurchaseOrderInput = {
   children?: Prisma.PlanUncheckedUpdateManyWithoutParentNestedInput
   expectedPeople?: Prisma.PlanExpectedPersonUncheckedUpdateManyWithoutPlanNestedInput
   fulfilledBy?: Prisma.EventUncheckedUpdateOneWithoutSourcePlanNestedInput
+  aboutNotes?: Prisma.NoteUncheckedUpdateManyWithoutAboutPlanNestedInput
   calendarLinks?: Prisma.CalendarEventLinkUncheckedUpdateManyWithoutPlanNestedInput
+}
+
+export type PlanCreateWithoutAboutNotesInput = {
+  id?: string
+  createdAt?: Date | string
+  text: string
+  timescale?: string | null
+  successSignals?: string | null
+  status?: $Enums.PlanStatus
+  dueOn?: Date | string | null
+  deferCount?: number
+  completedAt?: Date | string | null
+  scheduledStart?: Date | string | null
+  scheduledEnd?: Date | string | null
+  externalSource?: string | null
+  externalInstanceId?: string | null
+  reconciliationStatus?: string | null
+  reconciledAt?: Date | string | null
+  workspace?: Prisma.WorkspaceCreateNestedOneWithoutPlansInput
+  person?: Prisma.PersonCreateNestedOneWithoutPlansInput
+  children?: Prisma.PlanCreateNestedManyWithoutParentInput
+  parent?: Prisma.PlanCreateNestedOneWithoutChildrenInput
+  place?: Prisma.PlaceCreateNestedOneWithoutPlansInput
+  expectedPeople?: Prisma.PlanExpectedPersonCreateNestedManyWithoutPlanInput
+  fulfilledBy?: Prisma.EventCreateNestedOneWithoutSourcePlanInput
+  sourceNote?: Prisma.NoteCreateNestedOneWithoutPlansInput
+  purchaseOrder?: Prisma.PurchaseOrderCreateNestedOneWithoutPlanInput
+  calendarLinks?: Prisma.CalendarEventLinkCreateNestedManyWithoutPlanInput
+}
+
+export type PlanUncheckedCreateWithoutAboutNotesInput = {
+  id?: string
+  workspaceId?: string
+  createdAt?: Date | string
+  personId?: string | null
+  text: string
+  timescale?: string | null
+  successSignals?: string | null
+  status?: $Enums.PlanStatus
+  dueOn?: Date | string | null
+  deferCount?: number
+  completedAt?: Date | string | null
+  parentId?: string | null
+  scheduledStart?: Date | string | null
+  scheduledEnd?: Date | string | null
+  placeId?: string | null
+  externalSource?: string | null
+  externalInstanceId?: string | null
+  reconciliationStatus?: string | null
+  reconciledAt?: Date | string | null
+  sourceNoteId?: string | null
+  children?: Prisma.PlanUncheckedCreateNestedManyWithoutParentInput
+  expectedPeople?: Prisma.PlanExpectedPersonUncheckedCreateNestedManyWithoutPlanInput
+  fulfilledBy?: Prisma.EventUncheckedCreateNestedOneWithoutSourcePlanInput
+  purchaseOrder?: Prisma.PurchaseOrderUncheckedCreateNestedOneWithoutPlanInput
+  calendarLinks?: Prisma.CalendarEventLinkUncheckedCreateNestedManyWithoutPlanInput
+}
+
+export type PlanCreateOrConnectWithoutAboutNotesInput = {
+  where: Prisma.PlanWhereUniqueInput
+  create: Prisma.XOR<Prisma.PlanCreateWithoutAboutNotesInput, Prisma.PlanUncheckedCreateWithoutAboutNotesInput>
 }
 
 export type PlanCreateWithoutSourceNoteInput = {
@@ -2019,6 +2131,7 @@ export type PlanCreateWithoutSourceNoteInput = {
   place?: Prisma.PlaceCreateNestedOneWithoutPlansInput
   expectedPeople?: Prisma.PlanExpectedPersonCreateNestedManyWithoutPlanInput
   fulfilledBy?: Prisma.EventCreateNestedOneWithoutSourcePlanInput
+  aboutNotes?: Prisma.NoteCreateNestedManyWithoutAboutPlanInput
   purchaseOrder?: Prisma.PurchaseOrderCreateNestedOneWithoutPlanInput
   calendarLinks?: Prisma.CalendarEventLinkCreateNestedManyWithoutPlanInput
 }
@@ -2046,6 +2159,7 @@ export type PlanUncheckedCreateWithoutSourceNoteInput = {
   children?: Prisma.PlanUncheckedCreateNestedManyWithoutParentInput
   expectedPeople?: Prisma.PlanExpectedPersonUncheckedCreateNestedManyWithoutPlanInput
   fulfilledBy?: Prisma.EventUncheckedCreateNestedOneWithoutSourcePlanInput
+  aboutNotes?: Prisma.NoteUncheckedCreateNestedManyWithoutAboutPlanInput
   purchaseOrder?: Prisma.PurchaseOrderUncheckedCreateNestedOneWithoutPlanInput
   calendarLinks?: Prisma.CalendarEventLinkUncheckedCreateNestedManyWithoutPlanInput
 }
@@ -2057,6 +2171,73 @@ export type PlanCreateOrConnectWithoutSourceNoteInput = {
 
 export type PlanCreateManySourceNoteInputEnvelope = {
   data: Prisma.PlanCreateManySourceNoteInput | Prisma.PlanCreateManySourceNoteInput[]
+}
+
+export type PlanUpsertWithoutAboutNotesInput = {
+  update: Prisma.XOR<Prisma.PlanUpdateWithoutAboutNotesInput, Prisma.PlanUncheckedUpdateWithoutAboutNotesInput>
+  create: Prisma.XOR<Prisma.PlanCreateWithoutAboutNotesInput, Prisma.PlanUncheckedCreateWithoutAboutNotesInput>
+  where?: Prisma.PlanWhereInput
+}
+
+export type PlanUpdateToOneWithWhereWithoutAboutNotesInput = {
+  where?: Prisma.PlanWhereInput
+  data: Prisma.XOR<Prisma.PlanUpdateWithoutAboutNotesInput, Prisma.PlanUncheckedUpdateWithoutAboutNotesInput>
+}
+
+export type PlanUpdateWithoutAboutNotesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  text?: Prisma.StringFieldUpdateOperationsInput | string
+  timescale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  successSignals?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumPlanStatusFieldUpdateOperationsInput | $Enums.PlanStatus
+  dueOn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deferCount?: Prisma.IntFieldUpdateOperationsInput | number
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  externalSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  externalInstanceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reconciliationStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reconciledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutPlansNestedInput
+  person?: Prisma.PersonUpdateOneWithoutPlansNestedInput
+  children?: Prisma.PlanUpdateManyWithoutParentNestedInput
+  parent?: Prisma.PlanUpdateOneWithoutChildrenNestedInput
+  place?: Prisma.PlaceUpdateOneWithoutPlansNestedInput
+  expectedPeople?: Prisma.PlanExpectedPersonUpdateManyWithoutPlanNestedInput
+  fulfilledBy?: Prisma.EventUpdateOneWithoutSourcePlanNestedInput
+  sourceNote?: Prisma.NoteUpdateOneWithoutPlansNestedInput
+  purchaseOrder?: Prisma.PurchaseOrderUpdateOneWithoutPlanNestedInput
+  calendarLinks?: Prisma.CalendarEventLinkUpdateManyWithoutPlanNestedInput
+}
+
+export type PlanUncheckedUpdateWithoutAboutNotesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  personId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  text?: Prisma.StringFieldUpdateOperationsInput | string
+  timescale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  successSignals?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumPlanStatusFieldUpdateOperationsInput | $Enums.PlanStatus
+  dueOn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deferCount?: Prisma.IntFieldUpdateOperationsInput | number
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  placeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  externalSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  externalInstanceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reconciliationStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reconciledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  children?: Prisma.PlanUncheckedUpdateManyWithoutParentNestedInput
+  expectedPeople?: Prisma.PlanExpectedPersonUncheckedUpdateManyWithoutPlanNestedInput
+  fulfilledBy?: Prisma.EventUncheckedUpdateOneWithoutSourcePlanNestedInput
+  purchaseOrder?: Prisma.PurchaseOrderUncheckedUpdateOneWithoutPlanNestedInput
+  calendarLinks?: Prisma.CalendarEventLinkUncheckedUpdateManyWithoutPlanNestedInput
 }
 
 export type PlanUpsertWithWhereUniqueWithoutSourceNoteInput = {
@@ -2120,6 +2301,7 @@ export type PlanUpdateWithoutWorkspaceInput = {
   expectedPeople?: Prisma.PlanExpectedPersonUpdateManyWithoutPlanNestedInput
   fulfilledBy?: Prisma.EventUpdateOneWithoutSourcePlanNestedInput
   sourceNote?: Prisma.NoteUpdateOneWithoutPlansNestedInput
+  aboutNotes?: Prisma.NoteUpdateManyWithoutAboutPlanNestedInput
   purchaseOrder?: Prisma.PurchaseOrderUpdateOneWithoutPlanNestedInput
   calendarLinks?: Prisma.CalendarEventLinkUpdateManyWithoutPlanNestedInput
 }
@@ -2147,6 +2329,7 @@ export type PlanUncheckedUpdateWithoutWorkspaceInput = {
   children?: Prisma.PlanUncheckedUpdateManyWithoutParentNestedInput
   expectedPeople?: Prisma.PlanExpectedPersonUncheckedUpdateManyWithoutPlanNestedInput
   fulfilledBy?: Prisma.EventUncheckedUpdateOneWithoutSourcePlanNestedInput
+  aboutNotes?: Prisma.NoteUncheckedUpdateManyWithoutAboutPlanNestedInput
   purchaseOrder?: Prisma.PurchaseOrderUncheckedUpdateOneWithoutPlanNestedInput
   calendarLinks?: Prisma.CalendarEventLinkUncheckedUpdateManyWithoutPlanNestedInput
 }
@@ -2218,6 +2401,7 @@ export type PlanUpdateWithoutPersonInput = {
   expectedPeople?: Prisma.PlanExpectedPersonUpdateManyWithoutPlanNestedInput
   fulfilledBy?: Prisma.EventUpdateOneWithoutSourcePlanNestedInput
   sourceNote?: Prisma.NoteUpdateOneWithoutPlansNestedInput
+  aboutNotes?: Prisma.NoteUpdateManyWithoutAboutPlanNestedInput
   purchaseOrder?: Prisma.PurchaseOrderUpdateOneWithoutPlanNestedInput
   calendarLinks?: Prisma.CalendarEventLinkUpdateManyWithoutPlanNestedInput
 }
@@ -2245,6 +2429,7 @@ export type PlanUncheckedUpdateWithoutPersonInput = {
   children?: Prisma.PlanUncheckedUpdateManyWithoutParentNestedInput
   expectedPeople?: Prisma.PlanExpectedPersonUncheckedUpdateManyWithoutPlanNestedInput
   fulfilledBy?: Prisma.EventUncheckedUpdateOneWithoutSourcePlanNestedInput
+  aboutNotes?: Prisma.NoteUncheckedUpdateManyWithoutAboutPlanNestedInput
   purchaseOrder?: Prisma.PurchaseOrderUncheckedUpdateOneWithoutPlanNestedInput
   calendarLinks?: Prisma.CalendarEventLinkUncheckedUpdateManyWithoutPlanNestedInput
 }
@@ -2316,6 +2501,7 @@ export type PlanUpdateWithoutParentInput = {
   expectedPeople?: Prisma.PlanExpectedPersonUpdateManyWithoutPlanNestedInput
   fulfilledBy?: Prisma.EventUpdateOneWithoutSourcePlanNestedInput
   sourceNote?: Prisma.NoteUpdateOneWithoutPlansNestedInput
+  aboutNotes?: Prisma.NoteUpdateManyWithoutAboutPlanNestedInput
   purchaseOrder?: Prisma.PurchaseOrderUpdateOneWithoutPlanNestedInput
   calendarLinks?: Prisma.CalendarEventLinkUpdateManyWithoutPlanNestedInput
 }
@@ -2343,6 +2529,7 @@ export type PlanUncheckedUpdateWithoutParentInput = {
   children?: Prisma.PlanUncheckedUpdateManyWithoutParentNestedInput
   expectedPeople?: Prisma.PlanExpectedPersonUncheckedUpdateManyWithoutPlanNestedInput
   fulfilledBy?: Prisma.EventUncheckedUpdateOneWithoutSourcePlanNestedInput
+  aboutNotes?: Prisma.NoteUncheckedUpdateManyWithoutAboutPlanNestedInput
   purchaseOrder?: Prisma.PurchaseOrderUncheckedUpdateOneWithoutPlanNestedInput
   calendarLinks?: Prisma.CalendarEventLinkUncheckedUpdateManyWithoutPlanNestedInput
 }
@@ -2414,6 +2601,7 @@ export type PlanUpdateWithoutPlaceInput = {
   expectedPeople?: Prisma.PlanExpectedPersonUpdateManyWithoutPlanNestedInput
   fulfilledBy?: Prisma.EventUpdateOneWithoutSourcePlanNestedInput
   sourceNote?: Prisma.NoteUpdateOneWithoutPlansNestedInput
+  aboutNotes?: Prisma.NoteUpdateManyWithoutAboutPlanNestedInput
   purchaseOrder?: Prisma.PurchaseOrderUpdateOneWithoutPlanNestedInput
   calendarLinks?: Prisma.CalendarEventLinkUpdateManyWithoutPlanNestedInput
 }
@@ -2441,6 +2629,7 @@ export type PlanUncheckedUpdateWithoutPlaceInput = {
   children?: Prisma.PlanUncheckedUpdateManyWithoutParentNestedInput
   expectedPeople?: Prisma.PlanExpectedPersonUncheckedUpdateManyWithoutPlanNestedInput
   fulfilledBy?: Prisma.EventUncheckedUpdateOneWithoutSourcePlanNestedInput
+  aboutNotes?: Prisma.NoteUncheckedUpdateManyWithoutAboutPlanNestedInput
   purchaseOrder?: Prisma.PurchaseOrderUncheckedUpdateOneWithoutPlanNestedInput
   calendarLinks?: Prisma.CalendarEventLinkUncheckedUpdateManyWithoutPlanNestedInput
 }
@@ -2512,6 +2701,7 @@ export type PlanUpdateWithoutSourceNoteInput = {
   place?: Prisma.PlaceUpdateOneWithoutPlansNestedInput
   expectedPeople?: Prisma.PlanExpectedPersonUpdateManyWithoutPlanNestedInput
   fulfilledBy?: Prisma.EventUpdateOneWithoutSourcePlanNestedInput
+  aboutNotes?: Prisma.NoteUpdateManyWithoutAboutPlanNestedInput
   purchaseOrder?: Prisma.PurchaseOrderUpdateOneWithoutPlanNestedInput
   calendarLinks?: Prisma.CalendarEventLinkUpdateManyWithoutPlanNestedInput
 }
@@ -2539,6 +2729,7 @@ export type PlanUncheckedUpdateWithoutSourceNoteInput = {
   children?: Prisma.PlanUncheckedUpdateManyWithoutParentNestedInput
   expectedPeople?: Prisma.PlanExpectedPersonUncheckedUpdateManyWithoutPlanNestedInput
   fulfilledBy?: Prisma.EventUncheckedUpdateOneWithoutSourcePlanNestedInput
+  aboutNotes?: Prisma.NoteUncheckedUpdateManyWithoutAboutPlanNestedInput
   purchaseOrder?: Prisma.PurchaseOrderUncheckedUpdateOneWithoutPlanNestedInput
   calendarLinks?: Prisma.CalendarEventLinkUncheckedUpdateManyWithoutPlanNestedInput
 }
@@ -2573,12 +2764,14 @@ export type PlanUncheckedUpdateManyWithoutSourceNoteInput = {
 export type PlanCountOutputType = {
   children: number
   expectedPeople: number
+  aboutNotes: number
   calendarLinks: number
 }
 
 export type PlanCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   children?: boolean | PlanCountOutputTypeCountChildrenArgs
   expectedPeople?: boolean | PlanCountOutputTypeCountExpectedPeopleArgs
+  aboutNotes?: boolean | PlanCountOutputTypeCountAboutNotesArgs
   calendarLinks?: boolean | PlanCountOutputTypeCountCalendarLinksArgs
 }
 
@@ -2604,6 +2797,13 @@ export type PlanCountOutputTypeCountChildrenArgs<ExtArgs extends runtime.Types.E
  */
 export type PlanCountOutputTypeCountExpectedPeopleArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.PlanExpectedPersonWhereInput
+}
+
+/**
+ * PlanCountOutputType without action
+ */
+export type PlanCountOutputTypeCountAboutNotesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.NoteWhereInput
 }
 
 /**
@@ -2643,6 +2843,7 @@ export type PlanSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   expectedPeople?: boolean | Prisma.Plan$expectedPeopleArgs<ExtArgs>
   fulfilledBy?: boolean | Prisma.Plan$fulfilledByArgs<ExtArgs>
   sourceNote?: boolean | Prisma.Plan$sourceNoteArgs<ExtArgs>
+  aboutNotes?: boolean | Prisma.Plan$aboutNotesArgs<ExtArgs>
   purchaseOrder?: boolean | Prisma.Plan$purchaseOrderArgs<ExtArgs>
   calendarLinks?: boolean | Prisma.Plan$calendarLinksArgs<ExtArgs>
   _count?: boolean | Prisma.PlanCountOutputTypeDefaultArgs<ExtArgs>
@@ -2737,6 +2938,7 @@ export type PlanInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   expectedPeople?: boolean | Prisma.Plan$expectedPeopleArgs<ExtArgs>
   fulfilledBy?: boolean | Prisma.Plan$fulfilledByArgs<ExtArgs>
   sourceNote?: boolean | Prisma.Plan$sourceNoteArgs<ExtArgs>
+  aboutNotes?: boolean | Prisma.Plan$aboutNotesArgs<ExtArgs>
   purchaseOrder?: boolean | Prisma.Plan$purchaseOrderArgs<ExtArgs>
   calendarLinks?: boolean | Prisma.Plan$calendarLinksArgs<ExtArgs>
   _count?: boolean | Prisma.PlanCountOutputTypeDefaultArgs<ExtArgs>
@@ -2767,6 +2969,7 @@ export type $PlanPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     expectedPeople: Prisma.$PlanExpectedPersonPayload<ExtArgs>[]
     fulfilledBy: Prisma.$EventPayload<ExtArgs> | null
     sourceNote: Prisma.$NotePayload<ExtArgs> | null
+    aboutNotes: Prisma.$NotePayload<ExtArgs>[]
     purchaseOrder: Prisma.$PurchaseOrderPayload<ExtArgs> | null
     calendarLinks: Prisma.$CalendarEventLinkPayload<ExtArgs>[]
   }
@@ -3193,6 +3396,7 @@ export interface Prisma__PlanClient<T, Null = never, ExtArgs extends runtime.Typ
   expectedPeople<T extends Prisma.Plan$expectedPeopleArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Plan$expectedPeopleArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PlanExpectedPersonPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   fulfilledBy<T extends Prisma.Plan$fulfilledByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Plan$fulfilledByArgs<ExtArgs>>): Prisma.Prisma__EventClient<runtime.Types.Result.GetResult<Prisma.$EventPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   sourceNote<T extends Prisma.Plan$sourceNoteArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Plan$sourceNoteArgs<ExtArgs>>): Prisma.Prisma__NoteClient<runtime.Types.Result.GetResult<Prisma.$NotePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  aboutNotes<T extends Prisma.Plan$aboutNotesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Plan$aboutNotesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NotePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   purchaseOrder<T extends Prisma.Plan$purchaseOrderArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Plan$purchaseOrderArgs<ExtArgs>>): Prisma.Prisma__PurchaseOrderClient<runtime.Types.Result.GetResult<Prisma.$PurchaseOrderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   calendarLinks<T extends Prisma.Plan$calendarLinksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Plan$calendarLinksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CalendarEventLinkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
@@ -3783,6 +3987,30 @@ export type Plan$sourceNoteArgs<ExtArgs extends runtime.Types.Extensions.Interna
    */
   include?: Prisma.NoteInclude<ExtArgs> | null
   where?: Prisma.NoteWhereInput
+}
+
+/**
+ * Plan.aboutNotes
+ */
+export type Plan$aboutNotesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Note
+   */
+  select?: Prisma.NoteSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Note
+   */
+  omit?: Prisma.NoteOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.NoteInclude<ExtArgs> | null
+  where?: Prisma.NoteWhereInput
+  orderBy?: Prisma.NoteOrderByWithRelationInput | Prisma.NoteOrderByWithRelationInput[]
+  cursor?: Prisma.NoteWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.NoteScalarFieldEnum | Prisma.NoteScalarFieldEnum[]
 }
 
 /**

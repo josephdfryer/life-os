@@ -48,3 +48,18 @@ test("rejects unsafe idempotency keys", () => {
     idempotencyKey: "not safe!",
   }), /idempotencyKey/)
 })
+
+test("trims subject ids and treats blank as unset", () => {
+  const value = normalizeCaptureInput({
+    workspaceId: "w",
+    content: "Qin seemed tired",
+    source: "assistant",
+    aboutPersonId: " person-1 ",
+    aboutPlaceId: "  ",
+    aboutItemId: null,
+  })
+  assert.equal(value.aboutPersonId, "person-1")
+  assert.equal(value.aboutPlaceId, null)
+  assert.equal(value.aboutItemId, null)
+  assert.equal(value.aboutGroupId, null)
+})

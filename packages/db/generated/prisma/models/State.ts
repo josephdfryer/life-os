@@ -258,6 +258,7 @@ export type StateWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"State"> | Date | string
   definition?: Prisma.XOR<Prisma.StateDefinitionScalarRelationFilter, Prisma.StateDefinitionWhereInput>
   sourceNote?: Prisma.XOR<Prisma.NoteNullableScalarRelationFilter, Prisma.NoteWhereInput> | null
+  aboutNotes?: Prisma.NoteListRelationFilter
 }
 
 export type StateOrderByWithRelationInput = {
@@ -273,6 +274,7 @@ export type StateOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   definition?: Prisma.StateDefinitionOrderByWithRelationInput
   sourceNote?: Prisma.NoteOrderByWithRelationInput
+  aboutNotes?: Prisma.NoteOrderByRelationAggregateInput
 }
 
 export type StateWhereUniqueInput = Prisma.AtLeast<{
@@ -291,6 +293,7 @@ export type StateWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"State"> | Date | string
   definition?: Prisma.XOR<Prisma.StateDefinitionScalarRelationFilter, Prisma.StateDefinitionWhereInput>
   sourceNote?: Prisma.XOR<Prisma.NoteNullableScalarRelationFilter, Prisma.NoteWhereInput> | null
+  aboutNotes?: Prisma.NoteListRelationFilter
 }, "id">
 
 export type StateOrderByWithAggregationInput = {
@@ -338,6 +341,7 @@ export type StateCreateInput = {
   createdAt?: Date | string
   definition: Prisma.StateDefinitionCreateNestedOneWithoutStatesInput
   sourceNote?: Prisma.NoteCreateNestedOneWithoutStatesInput
+  aboutNotes?: Prisma.NoteCreateNestedManyWithoutAboutStateInput
 }
 
 export type StateUncheckedCreateInput = {
@@ -351,6 +355,7 @@ export type StateUncheckedCreateInput = {
   sourceNoteId?: string | null
   recordedAt: Date | string
   createdAt?: Date | string
+  aboutNotes?: Prisma.NoteUncheckedCreateNestedManyWithoutAboutStateInput
 }
 
 export type StateUpdateInput = {
@@ -364,6 +369,7 @@ export type StateUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   definition?: Prisma.StateDefinitionUpdateOneRequiredWithoutStatesNestedInput
   sourceNote?: Prisma.NoteUpdateOneWithoutStatesNestedInput
+  aboutNotes?: Prisma.NoteUpdateManyWithoutAboutStateNestedInput
 }
 
 export type StateUncheckedUpdateInput = {
@@ -377,6 +383,7 @@ export type StateUncheckedUpdateInput = {
   sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   recordedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  aboutNotes?: Prisma.NoteUncheckedUpdateManyWithoutAboutStateNestedInput
 }
 
 export type StateCreateManyInput = {
@@ -414,6 +421,11 @@ export type StateUncheckedUpdateManyInput = {
   sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   recordedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type StateNullableScalarRelationFilter = {
+  is?: Prisma.StateWhereInput | null
+  isNot?: Prisma.StateWhereInput | null
 }
 
 export type StateListRelationFilter = {
@@ -473,6 +485,12 @@ export type StateSumOrderByAggregateInput = {
   severity?: Prisma.SortOrder
 }
 
+export type StateCreateNestedOneWithoutAboutNotesInput = {
+  create?: Prisma.XOR<Prisma.StateCreateWithoutAboutNotesInput, Prisma.StateUncheckedCreateWithoutAboutNotesInput>
+  connectOrCreate?: Prisma.StateCreateOrConnectWithoutAboutNotesInput
+  connect?: Prisma.StateWhereUniqueInput
+}
+
 export type StateCreateNestedManyWithoutSourceNoteInput = {
   create?: Prisma.XOR<Prisma.StateCreateWithoutSourceNoteInput, Prisma.StateUncheckedCreateWithoutSourceNoteInput> | Prisma.StateCreateWithoutSourceNoteInput[] | Prisma.StateUncheckedCreateWithoutSourceNoteInput[]
   connectOrCreate?: Prisma.StateCreateOrConnectWithoutSourceNoteInput | Prisma.StateCreateOrConnectWithoutSourceNoteInput[]
@@ -485,6 +503,16 @@ export type StateUncheckedCreateNestedManyWithoutSourceNoteInput = {
   connectOrCreate?: Prisma.StateCreateOrConnectWithoutSourceNoteInput | Prisma.StateCreateOrConnectWithoutSourceNoteInput[]
   createMany?: Prisma.StateCreateManySourceNoteInputEnvelope
   connect?: Prisma.StateWhereUniqueInput | Prisma.StateWhereUniqueInput[]
+}
+
+export type StateUpdateOneWithoutAboutNotesNestedInput = {
+  create?: Prisma.XOR<Prisma.StateCreateWithoutAboutNotesInput, Prisma.StateUncheckedCreateWithoutAboutNotesInput>
+  connectOrCreate?: Prisma.StateCreateOrConnectWithoutAboutNotesInput
+  upsert?: Prisma.StateUpsertWithoutAboutNotesInput
+  disconnect?: Prisma.StateWhereInput | boolean
+  delete?: Prisma.StateWhereInput | boolean
+  connect?: Prisma.StateWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.StateUpdateToOneWithWhereWithoutAboutNotesInput, Prisma.StateUpdateWithoutAboutNotesInput>, Prisma.StateUncheckedUpdateWithoutAboutNotesInput>
 }
 
 export type StateUpdateManyWithoutSourceNoteNestedInput = {
@@ -557,6 +585,37 @@ export type StateUncheckedUpdateManyWithoutDefinitionNestedInput = {
   deleteMany?: Prisma.StateScalarWhereInput | Prisma.StateScalarWhereInput[]
 }
 
+export type StateCreateWithoutAboutNotesInput = {
+  id?: string
+  workspaceId: string
+  entityType: string
+  entityId: string
+  severity?: number | null
+  source?: string | null
+  recordedAt: Date | string
+  createdAt?: Date | string
+  definition: Prisma.StateDefinitionCreateNestedOneWithoutStatesInput
+  sourceNote?: Prisma.NoteCreateNestedOneWithoutStatesInput
+}
+
+export type StateUncheckedCreateWithoutAboutNotesInput = {
+  id?: string
+  workspaceId: string
+  entityType: string
+  entityId: string
+  definitionId: string
+  severity?: number | null
+  source?: string | null
+  sourceNoteId?: string | null
+  recordedAt: Date | string
+  createdAt?: Date | string
+}
+
+export type StateCreateOrConnectWithoutAboutNotesInput = {
+  where: Prisma.StateWhereUniqueInput
+  create: Prisma.XOR<Prisma.StateCreateWithoutAboutNotesInput, Prisma.StateUncheckedCreateWithoutAboutNotesInput>
+}
+
 export type StateCreateWithoutSourceNoteInput = {
   id?: string
   workspaceId: string
@@ -567,6 +626,7 @@ export type StateCreateWithoutSourceNoteInput = {
   recordedAt: Date | string
   createdAt?: Date | string
   definition: Prisma.StateDefinitionCreateNestedOneWithoutStatesInput
+  aboutNotes?: Prisma.NoteCreateNestedManyWithoutAboutStateInput
 }
 
 export type StateUncheckedCreateWithoutSourceNoteInput = {
@@ -579,6 +639,7 @@ export type StateUncheckedCreateWithoutSourceNoteInput = {
   source?: string | null
   recordedAt: Date | string
   createdAt?: Date | string
+  aboutNotes?: Prisma.NoteUncheckedCreateNestedManyWithoutAboutStateInput
 }
 
 export type StateCreateOrConnectWithoutSourceNoteInput = {
@@ -588,6 +649,43 @@ export type StateCreateOrConnectWithoutSourceNoteInput = {
 
 export type StateCreateManySourceNoteInputEnvelope = {
   data: Prisma.StateCreateManySourceNoteInput | Prisma.StateCreateManySourceNoteInput[]
+}
+
+export type StateUpsertWithoutAboutNotesInput = {
+  update: Prisma.XOR<Prisma.StateUpdateWithoutAboutNotesInput, Prisma.StateUncheckedUpdateWithoutAboutNotesInput>
+  create: Prisma.XOR<Prisma.StateCreateWithoutAboutNotesInput, Prisma.StateUncheckedCreateWithoutAboutNotesInput>
+  where?: Prisma.StateWhereInput
+}
+
+export type StateUpdateToOneWithWhereWithoutAboutNotesInput = {
+  where?: Prisma.StateWhereInput
+  data: Prisma.XOR<Prisma.StateUpdateWithoutAboutNotesInput, Prisma.StateUncheckedUpdateWithoutAboutNotesInput>
+}
+
+export type StateUpdateWithoutAboutNotesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
+  entityType?: Prisma.StringFieldUpdateOperationsInput | string
+  entityId?: Prisma.StringFieldUpdateOperationsInput | string
+  severity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recordedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  definition?: Prisma.StateDefinitionUpdateOneRequiredWithoutStatesNestedInput
+  sourceNote?: Prisma.NoteUpdateOneWithoutStatesNestedInput
+}
+
+export type StateUncheckedUpdateWithoutAboutNotesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
+  entityType?: Prisma.StringFieldUpdateOperationsInput | string
+  entityId?: Prisma.StringFieldUpdateOperationsInput | string
+  definitionId?: Prisma.StringFieldUpdateOperationsInput | string
+  severity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recordedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type StateUpsertWithWhereUniqueWithoutSourceNoteInput = {
@@ -632,6 +730,7 @@ export type StateCreateWithoutDefinitionInput = {
   recordedAt: Date | string
   createdAt?: Date | string
   sourceNote?: Prisma.NoteCreateNestedOneWithoutStatesInput
+  aboutNotes?: Prisma.NoteCreateNestedManyWithoutAboutStateInput
 }
 
 export type StateUncheckedCreateWithoutDefinitionInput = {
@@ -644,6 +743,7 @@ export type StateUncheckedCreateWithoutDefinitionInput = {
   sourceNoteId?: string | null
   recordedAt: Date | string
   createdAt?: Date | string
+  aboutNotes?: Prisma.NoteUncheckedCreateNestedManyWithoutAboutStateInput
 }
 
 export type StateCreateOrConnectWithoutDefinitionInput = {
@@ -693,6 +793,7 @@ export type StateUpdateWithoutSourceNoteInput = {
   recordedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   definition?: Prisma.StateDefinitionUpdateOneRequiredWithoutStatesNestedInput
+  aboutNotes?: Prisma.NoteUpdateManyWithoutAboutStateNestedInput
 }
 
 export type StateUncheckedUpdateWithoutSourceNoteInput = {
@@ -705,6 +806,7 @@ export type StateUncheckedUpdateWithoutSourceNoteInput = {
   source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   recordedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  aboutNotes?: Prisma.NoteUncheckedUpdateManyWithoutAboutStateNestedInput
 }
 
 export type StateUncheckedUpdateManyWithoutSourceNoteInput = {
@@ -741,6 +843,7 @@ export type StateUpdateWithoutDefinitionInput = {
   recordedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sourceNote?: Prisma.NoteUpdateOneWithoutStatesNestedInput
+  aboutNotes?: Prisma.NoteUpdateManyWithoutAboutStateNestedInput
 }
 
 export type StateUncheckedUpdateWithoutDefinitionInput = {
@@ -753,6 +856,7 @@ export type StateUncheckedUpdateWithoutDefinitionInput = {
   sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   recordedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  aboutNotes?: Prisma.NoteUncheckedUpdateManyWithoutAboutStateNestedInput
 }
 
 export type StateUncheckedUpdateManyWithoutDefinitionInput = {
@@ -768,6 +872,35 @@ export type StateUncheckedUpdateManyWithoutDefinitionInput = {
 }
 
 
+/**
+ * Count Type StateCountOutputType
+ */
+
+export type StateCountOutputType = {
+  aboutNotes: number
+}
+
+export type StateCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  aboutNotes?: boolean | StateCountOutputTypeCountAboutNotesArgs
+}
+
+/**
+ * StateCountOutputType without action
+ */
+export type StateCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the StateCountOutputType
+   */
+  select?: Prisma.StateCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * StateCountOutputType without action
+ */
+export type StateCountOutputTypeCountAboutNotesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.NoteWhereInput
+}
+
 
 export type StateSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -782,6 +915,8 @@ export type StateSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   createdAt?: boolean
   definition?: boolean | Prisma.StateDefinitionDefaultArgs<ExtArgs>
   sourceNote?: boolean | Prisma.State$sourceNoteArgs<ExtArgs>
+  aboutNotes?: boolean | Prisma.State$aboutNotesArgs<ExtArgs>
+  _count?: boolean | Prisma.StateCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["state"]>
 
 export type StateSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -831,6 +966,8 @@ export type StateOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = ru
 export type StateInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   definition?: boolean | Prisma.StateDefinitionDefaultArgs<ExtArgs>
   sourceNote?: boolean | Prisma.State$sourceNoteArgs<ExtArgs>
+  aboutNotes?: boolean | Prisma.State$aboutNotesArgs<ExtArgs>
+  _count?: boolean | Prisma.StateCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type StateIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   definition?: boolean | Prisma.StateDefinitionDefaultArgs<ExtArgs>
@@ -846,6 +983,7 @@ export type $StatePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   objects: {
     definition: Prisma.$StateDefinitionPayload<ExtArgs>
     sourceNote: Prisma.$NotePayload<ExtArgs> | null
+    aboutNotes: Prisma.$NotePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1254,6 +1392,7 @@ export interface Prisma__StateClient<T, Null = never, ExtArgs extends runtime.Ty
   readonly [Symbol.toStringTag]: "PrismaPromise"
   definition<T extends Prisma.StateDefinitionDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.StateDefinitionDefaultArgs<ExtArgs>>): Prisma.Prisma__StateDefinitionClient<runtime.Types.Result.GetResult<Prisma.$StateDefinitionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   sourceNote<T extends Prisma.State$sourceNoteArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.State$sourceNoteArgs<ExtArgs>>): Prisma.Prisma__NoteClient<runtime.Types.Result.GetResult<Prisma.$NotePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  aboutNotes<T extends Prisma.State$aboutNotesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.State$aboutNotesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NotePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1708,6 +1847,30 @@ export type State$sourceNoteArgs<ExtArgs extends runtime.Types.Extensions.Intern
    */
   include?: Prisma.NoteInclude<ExtArgs> | null
   where?: Prisma.NoteWhereInput
+}
+
+/**
+ * State.aboutNotes
+ */
+export type State$aboutNotesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Note
+   */
+  select?: Prisma.NoteSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Note
+   */
+  omit?: Prisma.NoteOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.NoteInclude<ExtArgs> | null
+  where?: Prisma.NoteWhereInput
+  orderBy?: Prisma.NoteOrderByWithRelationInput | Prisma.NoteOrderByWithRelationInput[]
+  cursor?: Prisma.NoteWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.NoteScalarFieldEnum | Prisma.NoteScalarFieldEnum[]
 }
 
 /**

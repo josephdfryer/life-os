@@ -8799,7 +8799,13 @@ export const NoteScalarFieldEnum = {
   content: 'content',
   metadata: 'metadata',
   sourceFileId: 'sourceFileId',
-  aboutGroupId: 'aboutGroupId'
+  aboutPersonId: 'aboutPersonId',
+  aboutPlaceId: 'aboutPlaceId',
+  aboutItemId: 'aboutItemId',
+  aboutEventId: 'aboutEventId',
+  aboutPlanId: 'aboutPlanId',
+  aboutGroupId: 'aboutGroupId',
+  aboutStateId: 'aboutStateId'
 } as const
 
 export type NoteScalarFieldEnum = (typeof NoteScalarFieldEnum)[keyof typeof NoteScalarFieldEnum]
