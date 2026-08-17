@@ -59,15 +59,19 @@ export async function POST(req: NextRequest) {
     await persistOuraTokens(connection.id, tokens, { scope: grantedScope, lastError: null })
     const stored = await db.connection.findUniqueOrThrow({ where: { id: connection.id } })
 
-    let backfill: { start: string; end: string; daysWritten: number; stressUnavailable: boolean } | null = null
+    let backfill: { start: string; end: string; daysWritten: number; daysSkipped: number; stressUnavailable: boolean } | null = null
     let backfillError: string | null = null
     try {
       backfill = await backfillOuraConnection(stored)
     } catch (error) {
       backfillError = error instanceof OuraError ? error.code : "backfill_failed"
-      await db.connection.update({ where: { id: connection.id }, data: { lastError: backfillError } })
+      console.error("oura backfill failed after token persist", error)
+      await db.connection.update({ where: { id: connection.id }, data: { lastError: backfillError } }).catch(() => undefined)
     }
 
+    // Subscribe after the Turso write storm so Oura's handshake GETs do not
+    // contend with the 35-day ingest. Tokens are already stored; Sync now can
+    // retry the import if this request still fails.
     const webhooks = await ensureOuraWebhookSubscriptions().catch(() => ({ created: [], existing: [] }))
 
     return NextResponse.json({

@@ -46,7 +46,12 @@
         "LIFE_OS_WORKSPACE_ID",
         "LIFE_OS_API_URL",
         "PERSONS_API_KEY",
-        "CRON_SECRET"
+        "CRON_SECRET",
+        "OURA_CLIENT_ID",
+        "OURA_CLIENT_SECRET",
+        "OURA_REDIRECT_URI",
+        "OURA_WEBHOOK_CALLBACK_URL",
+        "OURA_WEBHOOK_VERIFICATION_TOKEN"
         ,"FILE_STORAGE_PROVIDER"
         ,"AWS_REGION"
         ,"AWS_ROLE_ARN"

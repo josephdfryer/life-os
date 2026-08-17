@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server"
 
 type Params = { params: Promise<{ path: string[] }> }
 
+export const maxDuration = 300
+
 export async function GET(request: NextRequest, { params }: Params) {
   const baseUrl = process.env.LIFE_OS_API_URL?.trim()
   const apiKey = process.env.PERSONS_API_KEY?.trim()

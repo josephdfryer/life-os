@@ -106,20 +106,14 @@ export async function ingestOuraDay(input: {
   personId: string
   day: string
   documents: OuraDayDocuments
+  definitions?: Map<string, string>
+  fireRules?: boolean
 }) {
   const { db } = await import("@life-os/db")
   const { samples, documentIds } = normalizeOuraDay(input.documents)
-  const keys = samples.map(sample => sample.key)
-  const definitions = new Map<string, string>()
-  for (const key of new Set(keys)) {
-    const definition = await ensureStateDefinition(
-      { entityType: "Person", type: "health_metric", value: key, description: OURA_METRIC_TAXONOMY[key] ?? null },
-      input.workspaceId,
-    )
-    definitions.set(key, definition.id)
-  }
+  const definitions = input.definitions ?? await ensureOuraMetricDefinitions(input.workspaceId, samples.map(sample => sample.key))
 
-  const result = await db.$transaction(
+  const result = await withSqliteBusyRetry(() => db.$transaction(
     tx => recordHealthDailyDigestInTransaction(tx, definitions, {
       workspaceId: input.workspaceId,
       personId: input.personId,
@@ -132,8 +126,10 @@ export async function ingestOuraDay(input: {
       actor: ACTOR,
     }),
     HEALTH_DAILY_TRANSACTION,
-  )
-  await fireHealthDailyRules(result.states, ACTOR)
+  ))
+  if (input.fireRules !== false) {
+    await withSqliteBusyRetry(() => fireHealthDailyRules(result.states, ACTOR))
+  }
   return { noteId: result.noteId, sampleCount: samples.length, documentIds }
 }
 
@@ -166,9 +162,27 @@ export async function backfillOuraConnection(connection: OuraConnectionRow, days
   const personId = await workspaceOwnerPersonId(connection.workspaceId)
   if (!personId) throw new OuraError("Workspace owner has no linked Person to record Oura States against", "validation")
 
+  const keys = [...byDay.values()].flatMap(documents => normalizeOuraDay(documents).samples.map(sample => sample.key))
+  const definitions = await ensureOuraMetricDefinitions(connection.workspaceId, keys)
+  const alreadyImported = await importedOuraDays(connection.workspaceId)
+
   let daysWritten = 0
-  for (const [day, documents] of [...byDay.entries()].sort(([a], [b]) => a.localeCompare(b))) {
-    await ingestOuraDay({ workspaceId: connection.workspaceId, personId, day, documents })
+  let daysSkipped = 0
+  // Newest first so a timeout still lands today/yesterday. Skip days that
+  // already have an oura:day Note so a retried Sync only fills the gap.
+  for (const [day, documents] of [...byDay.entries()].sort(([a], [b]) => b.localeCompare(a))) {
+    if (alreadyImported.has(day)) {
+      daysSkipped += 1
+      continue
+    }
+    await ingestOuraDay({
+      workspaceId: connection.workspaceId,
+      personId,
+      day,
+      documents,
+      definitions,
+      fireRules: false,
+    })
     daysWritten += 1
   }
 
@@ -177,9 +191,10 @@ export async function backfillOuraConnection(connection: OuraConnectionRow, days
     backfillStart: start,
     backfillEnd: end,
     daysWritten,
+    daysSkipped,
     stressScope: stressUnavailable ? "unavailable" : "granted",
   })
-  return { start, end, daysWritten, stressUnavailable }
+  return { start, end, daysWritten, daysSkipped, stressUnavailable }
 }
 
 export async function ingestOuraWebhookDocument(connection: OuraConnectionRow, dataType: string, objectId: string) {
@@ -239,7 +254,7 @@ export async function persistOuraTokens(
   const expiresAt = new Date(Date.now() + Math.max(0, (tokens.expires_in ?? 0) * 1000))
   const existing = extra?.metadata ? null : await db.connection.findUnique({ where: { id: connectionId }, select: { metadata: true } })
   const metadata = extra?.metadata ?? parseMetadata(existing?.metadata ?? null)
-  await db.connection.update({
+  await withSqliteBusyRetry(() => db.connection.update({
     where: { id: connectionId },
     data: {
       status: "active",
@@ -250,7 +265,7 @@ export async function persistOuraTokens(
       lastError: extra?.lastError ?? null,
       metadata: JSON.stringify(metadata),
     },
-  })
+  }))
 }
 
 export async function disconnectOuraConnection(connection: OuraConnectionRow) {
@@ -298,10 +313,10 @@ async function markConnectionSynced(connectionId: string, patch: Record<string, 
   const { db } = await import("@life-os/db")
   const row = await db.connection.findUnique({ where: { id: connectionId }, select: { metadata: true } })
   const metadata = { ...parseMetadata(row?.metadata ?? null), ...patch }
-  await db.connection.update({
+  await withSqliteBusyRetry(() => db.connection.update({
     where: { id: connectionId },
     data: { lastSyncedAt: new Date(), lastError: null, status: "active", metadata: JSON.stringify(metadata) },
-  })
+  }))
 }
 
 export async function workspaceOwnerPersonId(workspaceId: string) {
@@ -340,4 +355,54 @@ function isDailyCollection(value: string): value is OuraDailyCollection {
 
 function parseMetadata(value: string | null) {
   try { return JSON.parse(value ?? "{}") as Record<string, unknown> } catch { return {} }
+}
+
+export function importedOuraDaysFromNotes(notes: { metadata: string | null }[]) {
+  const days = new Set<string>()
+  for (const note of notes) {
+    const marker = parseMetadata(note.metadata).sourceMarker
+    if (typeof marker === "string" && marker.startsWith("oura:day:")) days.add(marker.slice("oura:day:".length))
+  }
+  return days
+}
+
+async function importedOuraDays(workspaceId: string) {
+  const { db } = await import("@life-os/db")
+  const notes = await db.note.findMany({
+    where: { workspaceId, type: "import", metadata: { contains: "oura:day:" } },
+    select: { metadata: true },
+  })
+  return importedOuraDaysFromNotes(notes)
+}
+
+async function ensureOuraMetricDefinitions(workspaceId: string, keys: Iterable<string>) {
+  const definitions = new Map<string, string>()
+  for (const key of new Set(keys)) {
+    const definition = await withSqliteBusyRetry(() => ensureStateDefinition(
+      { entityType: "Person", type: "health_metric", value: key, description: OURA_METRIC_TAXONOMY[key] ?? null },
+      workspaceId,
+    ))
+    definitions.set(key, definition.id)
+  }
+  return definitions
+}
+
+export function isSqliteBusy(error: unknown) {
+  const code = error && typeof error === "object" && "code" in error ? String(error.code) : ""
+  const message = error instanceof Error ? error.message : String(error ?? "")
+  return /SQLITE_BUSY|database is locked|P2034|P1008/i.test(`${code} ${message}`)
+}
+
+async function withSqliteBusyRetry<T>(fn: () => Promise<T>, attempts = 8): Promise<T> {
+  let last: unknown
+  for (let attempt = 0; attempt < attempts; attempt++) {
+    try {
+      return await fn()
+    } catch (error) {
+      last = error
+      if (!isSqliteBusy(error) || attempt === attempts - 1) throw error
+      await new Promise(resolve => setTimeout(resolve, 80 * 2 ** attempt + Math.floor(Math.random() * 40)))
+    }
+  }
+  throw last
 }

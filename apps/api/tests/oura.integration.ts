@@ -3,7 +3,7 @@ import { createHmac } from "crypto"
 import test from "node:test"
 import { db } from "@life-os/db"
 import { assembleReadinessSnapshot } from "@life-os/level-up"
-import { ingestOuraDay, normalizeOuraDay, ouraDayMarker } from "@/lib/oura-ingest"
+import { importedOuraDaysFromNotes, ingestOuraDay, isSqliteBusy, normalizeOuraDay, ouraDayMarker } from "@/lib/oura-ingest"
 import { signOuraState, verifyOuraState, verifyOuraWebhookSignature, grantedScopeIncludesDaily } from "@/lib/oura"
 
 const suffix = `${Date.now().toString(36)}${Math.random().toString(36).slice(2, 8)}`
@@ -75,6 +75,21 @@ test("oura: daily documents become source=oura States and replace on reprocess",
   assert.equal((snapshot.inputs.oura as { readinessScore: number }).readinessScore, 91)
   assert.equal((snapshot.inputs.sources as { readiness: string }).readiness, "oura")
   assert.equal(snapshot.inputs.synthetic, false)
+})
+
+test("oura: imported day markers are parsed from Note metadata", () => {
+  const days = importedOuraDaysFromNotes([
+    { metadata: JSON.stringify({ sourceMarker: "oura:day:2026-08-02" }) },
+    { metadata: JSON.stringify({ sourceMarker: "healthkit:day:2026-08-02" }) },
+    { metadata: "not-json" },
+  ])
+  assert.deepEqual([...days], ["2026-08-02"])
+})
+
+test("oura: sqlite busy errors are retried", () => {
+  assert.equal(isSqliteBusy(new Error("prisma:error SQLITE_BUSY: database is locked")), true)
+  assert.equal(isSqliteBusy({ code: "P2034", message: "Transaction failed due to a write conflict" }), true)
+  assert.equal(isSqliteBusy(new Error("validation")), false)
 })
 
 test("oura: oauth state and webhook signatures reject tampering", () => {
