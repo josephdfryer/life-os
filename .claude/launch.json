@@ -12,6 +12,12 @@
       "runtimeExecutable": "npm",
       "runtimeArgs": ["run", "dev", "--workspace", "home"],
       "port": 3003
+    },
+    {
+      "name": "persons",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev", "--workspace", "persons"],
+      "port": 3000
     }
   ]
 }
