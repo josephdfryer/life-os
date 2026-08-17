@@ -9,6 +9,28 @@ import { created, handleRouteError } from "@/server/api/respond"
 import { requireAccess } from "@/server/domain/access"
 import { personListViewFilter, type PersonListView } from "@/lib/person-list-presentation"
 import { personListInclude, serializePersonListRow } from "@/server/queries/person-list"
+import { filtersFromParam, type Filter } from "@/lib/filters"
+
+// Presence checks for the 15 non-multiselect filter fields — "has_value" is the
+// existing per-field truthiness rule the old FIELD_CHIPS scheme already used;
+// "is_empty" is its exact inverse. emails/phones are JSON-array-string columns
+// ("[]" means empty); first/last are non-nullable strings ("" means empty);
+// everything else is a nullable string column.
+const FIELD_TO_COLUMN: Record<string, string> = { email: "emails", phone: "phones" }
+const ARRAY_STRING_FIELDS = new Set(["email", "phone"])
+const REQUIRED_STRING_FIELDS = new Set(["first", "last"])
+
+function presenceCheck(field: string): Record<string, unknown> {
+  if (ARRAY_STRING_FIELDS.has(field)) return { not: "[]" }
+  if (REQUIRED_STRING_FIELDS.has(field)) return { not: "" }
+  return { not: null }
+}
+
+function emptinessCheck(field: string): Record<string, unknown> {
+  if (ARRAY_STRING_FIELDS.has(field)) return { equals: "[]" }
+  if (REQUIRED_STRING_FIELDS.has(field)) return { equals: "" }
+  return { equals: null }
+}
 
 export async function GET(req: NextRequest) {
   const actor = await requireAccess("people.read")
@@ -26,13 +48,7 @@ export async function GET(req: NextRequest) {
       ? requestedView as PersonListView
       : "all"
 
-    const fields = searchParams.get("fields")?.split(",").filter(Boolean) ?? []
-    const valueFilters = {
-      title:    searchParams.get("title")?.trim() ?? "",
-      company:  searchParams.get("company")?.trim() ?? "",
-      location: searchParams.get("location")?.trim() ?? "",
-      headline: searchParams.get("headline")?.trim() ?? "",
-    }
+    const filters: Filter[] = filtersFromParam(searchParams.get("filters"))
 
     const AND: Record<string, unknown>[] = []
     // Split into tokens so "Paul G" matches first="Paul" AND last starts with "G"
@@ -52,27 +68,31 @@ export async function GET(req: NextRequest) {
         ],
       })
     }
-    for (const f of fields) {
-      if (f === "first")    AND.push({ first:    { not: "" } })
-      if (f === "last")     AND.push({ last:     { not: "" } })
-      if (f === "email")    AND.push({ emails:   { not: "[]" } })
-      if (f === "phone")    AND.push({ phones:   { not: "[]" } })
-      if (f === "title")    AND.push({ title:    { not: null } })
-      if (f === "company")  AND.push({ company:  { not: null } })
-      if (f === "headline") AND.push({ headline: { not: null } })
-      if (f === "birthday") AND.push({ birthday: { not: null } })
-      if (f === "location") AND.push({ location: { not: null } })
-      if (f === "linkedin")  AND.push({ linkedin:  { not: null } })
-      if (f === "twitter")   AND.push({ twitter:   { not: null } })
-      if (f === "website")   AND.push({ website:   { not: null } })
-      if (f === "facebook")  AND.push({ facebook:  { not: null } })
-      if (f === "instagram") AND.push({ instagram: { not: null } })
-      if (f === "notes")    AND.push({ notes:    { not: null } })
+    for (const f of filters) {
+      if (f.field === "tags") {
+        const tags = (f.value as string[]).filter(Boolean)
+        if (tags.length > 0) {
+          // Person.tags is a JSON-string array (same storage pattern as emails/
+          // phones above). Matching the quoted substring `"tag"` approximates
+          // exact-element matching without a second parse-and-filter pass —
+          // same pragmatic tradeoff the rest of this route already accepts for
+          // emails/phones `contains` search. A tag that is itself a substring
+          // of another tag's name (e.g. "vip" inside "vip-adjacent") can
+          // false-positive; acceptable for a directory filter, not a ledger.
+          AND.push({ OR: tags.map(tag => ({ tags: { contains: JSON.stringify(tag).slice(1, -1) } })) })
+        }
+        continue
+      }
+      if (f.field === "group") {
+        const groupIds = (f.value as string[]).filter(Boolean)
+        if (groupIds.length > 0) AND.push({ groupMemberships: { some: { groupId: { in: groupIds } } } })
+        continue
+      }
+      const col = FIELD_TO_COLUMN[f.field] ?? f.field
+      if (f.operator === "has_value") AND.push({ [col]: presenceCheck(f.field) })
+      else if (f.operator === "is_empty") AND.push({ [col]: emptinessCheck(f.field) })
+      else if (f.operator === "contains" && typeof f.value === "string" && f.value.trim()) AND.push({ [col]: { contains: f.value.trim() } })
     }
-    if (valueFilters.title)    AND.push({ title:    { contains: valueFilters.title } })
-    if (valueFilters.company)  AND.push({ company:  { contains: valueFilters.company } })
-    if (valueFilters.location) AND.push({ location: { contains: valueFilters.location } })
-    if (valueFilters.headline) AND.push({ headline: { contains: valueFilters.headline } })
     const viewFilter = personListViewFilter(view)
     if (viewFilter) AND.push(viewFilter)
     const where = AND.length ? { workspaceId: actor.workspaceId, AND } : { workspaceId: actor.workspaceId }

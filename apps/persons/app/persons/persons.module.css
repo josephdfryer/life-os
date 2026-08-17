@@ -1,0 +1,77 @@
+/* Toolbar responsiveness for the Persons directory. 720px matches the
+   breakpoint PersonCard.module.css already uses for the list rows, so the
+   whole page adapts at one consistent width.
+
+   Both the desktop and mobile variant of "Select" (button vs. menu item) and
+   "Sort" (pills vs. native select) render in the DOM at all times; only CSS
+   decides which is visible. This avoids any window-width JS state and the
+   hydration-mismatch risk that comes with it. */
+
+.headerRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.headerActions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.addPersonButton {
+  flex-shrink: 0;
+}
+
+.selectButton {
+}
+
+.selectMenuItem {
+  display: none;
+}
+
+.sortRow {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.sortPills {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.sortSelect {
+  display: none;
+}
+
+.filterBarSlot {
+  margin-left: auto;
+}
+
+@media (max-width: 720px) {
+  .selectButton {
+    display: none;
+  }
+
+  .selectMenuItem {
+    display: block;
+  }
+
+  .sortPills {
+    display: none;
+  }
+
+  .sortSelect {
+    display: inline-flex;
+  }
+
+  .filterBarSlot {
+    margin-left: 0;
+    width: 100%;
+  }
+}
