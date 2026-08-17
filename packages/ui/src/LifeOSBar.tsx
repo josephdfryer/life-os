@@ -232,7 +232,6 @@ export function LifeOSBar({ current, rightSlot, account, onSignOut, style }: Lif
             href={captureHref}
             aria-label="Quick capture"
             style={{
-              marginLeft: 'auto',
               display: 'inline-flex',
               alignItems: 'center',
               gap: 5,
@@ -251,8 +250,7 @@ export function LifeOSBar({ current, rightSlot, account, onSignOut, style }: Lif
         </>
       )}
 
-      {!isHome && (
-        <div ref={accountRef} style={{ marginLeft: 'auto', position: 'relative' }}>
+      <div ref={accountRef} style={{ marginLeft: 'auto', position: 'relative' }}>
           <button
             type="button"
             aria-label="Open Life OS account menu"
@@ -307,12 +305,18 @@ export function LifeOSBar({ current, rightSlot, account, onSignOut, style }: Lif
                 </div>
               )}
 
-              {SHELL_NAV.map(item => (
-                <a key={item.path} href={shellHref(item.path)} role="menuitem" onClick={() => setAccountOpen(false)} style={accountLinkStyle}>
-                  {item.label}
-                </a>
-              ))}
-              <a href={captureHref} role="menuitem" onClick={() => setAccountOpen(false)} style={accountLinkStyle}>Capture</a>
+              {/* Home already shows these as top-level nav links — only the
+                  satellite apps collapse them into this menu instead. */}
+              {!isHome && (
+                <>
+                  {SHELL_NAV.map(item => (
+                    <a key={item.path} href={shellHref(item.path)} role="menuitem" onClick={() => setAccountOpen(false)} style={accountLinkStyle}>
+                      {item.label}
+                    </a>
+                  ))}
+                  <a href={captureHref} role="menuitem" onClick={() => setAccountOpen(false)} style={accountLinkStyle}>Capture</a>
+                </>
+              )}
 
               {onSignOut && (
                 <button
@@ -326,8 +330,7 @@ export function LifeOSBar({ current, rightSlot, account, onSignOut, style }: Lif
               )}
             </div>
           )}
-        </div>
-      )}
+      </div>
 
       {rightSlot && <div style={{ display: 'flex', alignItems: 'center' }}>{rightSlot}</div>}
     </div>

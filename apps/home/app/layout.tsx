@@ -3,8 +3,10 @@ import { Suspense } from "react"
 import { headers } from "next/headers"
 import { Inter, Newsreader } from "next/font/google"
 import "./globals.css"
-import { LifeOSBar, TimezoneDetector } from "@life-os/ui"
+import { TimezoneDetector } from "@life-os/ui"
+import { AuthenticatedLifeOSBar } from "@life-os/auth/client"
 import { isMarketingHost } from "@/lib/site"
+import Providers from "./providers"
 
 const inter = Inter({
   subsets: ["latin"],
@@ -49,10 +51,10 @@ async function SiteChrome({ children }: { children: React.ReactNode }) {
   if (isMarketingSite) return <>{children}</>
 
   return (
-    <>
+    <Providers>
       <TimezoneDetector />
-      <LifeOSBar current="home" />
+      <AuthenticatedLifeOSBar current="home" />
       {children}
-    </>
+    </Providers>
   )
 }
