@@ -192,6 +192,21 @@ test("a returning user with no workspace membership gets owner scopes on the new
   assert.notEqual(actor.workspaceId, "default-workspace")
 })
 
+test("a brand-new standalone signup gets its own workspace, not default-workspace", async () => {
+  const { access, db } = await setup()
+  // This is the actual production bug: isFirstUser used to mean "this email
+  // has no User row yet," which is true for every new signup forever, not
+  // just the literal first account on the instance. By this point in the
+  // suite other tests have already created users, so db.user.count() > 0 —
+  // this email must NOT be treated as the bootstrap user.
+  assert.ok((await db.user.count()) > 0, "sanity check: earlier tests already created users")
+  await db.approvedEmail.create({ data: { email: "standalone-signup@example.com", status: "approved", workspaceId: null } })
+
+  const actor = await service(access, "standalone-signup@example.com").requireAccess("people.read")
+  assert.notEqual(actor.workspaceId, "default-workspace")
+  assert.ok(actor.scopes.includes("*"))
+})
+
 test("only the instance owner (default-workspace) can suspend another workspace", async () => {
   const { admin, db } = await setup()
   await createWorkspace(db, "access-owner-target")

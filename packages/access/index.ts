@@ -242,7 +242,14 @@ export function createAccessService(dependencies: AccessDependencies) {
       throw dependencies.errors.forbidden("Account is disabled", { email })
     }
 
-    const isFirstUser = existingUser === null
+    // "First user" means the very first account on this whole instance — the
+    // one-time bootstrap that should own default-workspace. existingUser is
+    // only a per-email lookup, so checking `existingUser === null` alone is
+    // true for every brand-new email forever, not just the first one ever;
+    // that silently dropped every later standalone signup (approvedEmail's
+    // workspaceId: null) into default-workspace instead of a fresh workspace.
+    // Only pay for the count() when this email is actually new.
+    const isFirstUser = existingUser === null && (await db.user.count()) === 0
     const user = existingUser
       ? await db.user.update({ where: { id: existingUser.id }, data: { name, image } })
       : await db.user.create({ data: { email, name, image, status: "active" } })
