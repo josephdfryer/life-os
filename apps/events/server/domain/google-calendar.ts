@@ -5,6 +5,7 @@ import { db } from "@/lib/db"
 import { badRequest, forbidden, notFound } from "@/server/api/errors"
 import { auditAction, type DomainActor } from "./audit"
 import type { AccessActor } from "./access"
+import { mapPool, prioritizeCalendarConnections, withCalendarDbRetry } from "./google-calendar-sync"
 
 const GOOGLE_AUTH_URL = "https://accounts.google.com/o/oauth2/v2/auth"
 const GOOGLE_TOKEN_URL = "https://oauth2.googleapis.com/token"
@@ -29,6 +30,13 @@ const CRON_BACKFILL_DAYS = 1
 const CRON_FORWARD_DAYS = 7
 const GOOGLE_PAGE_SIZE = 100
 const DB_BATCH_SIZE = 25
+// Each event upsert used to open an interactive Prisma transaction (default
+// maxWait 2s) and 25 of those ran at once. After the two small personal
+// calendars finished, Qin and Sightmachine consistently died with
+// "Unable to start a transaction in the given time." Keep overlap for Turso
+// latency, but never enough concurrent transactions to stall the rest.
+const UPSERT_CONCURRENCY = 4
+const CALENDAR_TX = { maxWait: 10_000, timeout: 20_000 } as const
 
 type OAuthState = {
   workspaceId: string
@@ -519,10 +527,9 @@ type SyncConnection = {
 type SyncActor = { workspaceId: string; actor: DomainActor }
 
 export async function syncGoogleCalendar(actor: AccessActor, options: SyncOptions = {}) {
-  const connections = await db.calendarConnection.findMany({
+  const connections = prioritizeCalendarConnections(await db.calendarConnection.findMany({
     where: { workspaceId: actor.workspaceId, provider: "google", status: "active" },
-    orderBy: { calendarSummary: "asc" },
-  })
+  }))
   if (!connections.length) throw notFound("Choose at least one Google Calendar to sync")
 
   const backfillDays = normalizeBackfillDays(options.backfillDays)
@@ -561,7 +568,6 @@ export async function syncGoogleCalendar(actor: AccessActor, options: SyncOption
 export async function syncAllGoogleCalendars(options: SyncOptions = {}) {
   const connections = await db.calendarConnection.findMany({
     where: { provider: "google", status: "active" },
-    orderBy: [{ workspaceId: "asc" }, { calendarSummary: "asc" }],
   })
 
   const byWorkspace = new Map<string, typeof connections>()
@@ -584,7 +590,7 @@ export async function syncAllGoogleCalendars(options: SyncOptions = {}) {
     }
     const peopleByEmail = await peopleEmailIndex(workspaceId)
     const calendars: SyncStats[] = []
-    for (const connection of workspaceConnections) {
+    for (const connection of prioritizeCalendarConnections(workspaceConnections)) {
       calendars.push(await syncGoogleCalendarConnection(actor, connection, peopleByEmail, backfillDays, CRON_FORWARD_DAYS))
     }
     results.push({ workspaceId, calendars })
@@ -664,14 +670,14 @@ async function syncGoogleCalendarConnection(
     })
     stats.incremental = listed.usedSyncToken
 
-    await db.calendarConnection.update({
+    await withCalendarDbRetry(() => db.calendarConnection.update({
       where: { id: connection.id },
       data: {
         syncTokenEncrypted: encryptNullable(listed.nextSyncToken ?? syncToken),
         lastSyncedAt: new Date(),
         lastError: null,
       },
-    })
+    }))
     await syncCalendarConnectionMirror(connection.id)
 
     await auditAction({
@@ -709,7 +715,7 @@ async function processCalendarBatch(input: {
     if (!item.id) continue
     fetched += 1
     if (item.status === "cancelled") {
-      cancelled += await markCancelled(input.connectionId, input.workspaceId, input.calendarId, item.id)
+      cancelled += await withCalendarDbRetry(() => markCancelled(input.connectionId, input.workspaceId, input.calendarId, item.id))
       continue
     }
     toUpsert.push(item)
@@ -717,19 +723,17 @@ async function processCalendarBatch(input: {
 
   // Each upsert is several sequential round-trips to a remote (Turso) DB, so
   // processing a batch one event at a time is latency-bound and can blow past the
-  // function timeout on a busy calendar. Events in a batch are independent
-  // (distinct externalEventId), so run the batch concurrently — the per-event
-  // round-trips overlap instead of summing.
-  const results = await Promise.all(
-    toUpsert.map(item => upsertCalendarEvent({
-      actor: input.actor,
-      workspaceId: input.workspaceId,
-      connectionId: input.connectionId,
-      calendarId: input.calendarId,
-      item,
-      peopleByEmail: input.peopleByEmail,
-    })),
-  )
+  // function timeout on a busy calendar. Overlap a few events, not the whole
+  // batch — 25 concurrent interactive transactions is what starved Qin and
+  // Sightmachine after the personal calendars finished.
+  const results = await mapPool(toUpsert, UPSERT_CONCURRENCY, item => withCalendarDbRetry(() => upsertCalendarEvent({
+    actor: input.actor,
+    workspaceId: input.workspaceId,
+    connectionId: input.connectionId,
+    calendarId: input.calendarId,
+    item,
+    peopleByEmail: input.peopleByEmail,
+  })))
   for (const result of results) {
     if (result.createdPlan) createdPlans += 1
     else updatedPlans += 1
@@ -868,18 +872,16 @@ async function upsertCalendarEvent(input: {
   }
 
   const matchedPeople = matchedAttendees(input.item, input.peopleByEmail)
-  await db.$transaction(async tx => {
-    await tx.planExpectedPerson.deleteMany({ where: { planId } })
-    if (matchedPeople.length) {
-      await tx.planExpectedPerson.createMany({
-        data: matchedPeople.map(person => ({
-          planId: planId!,
-          personId: person.id,
-          workspaceId: input.workspaceId,
-        })),
-      })
-    }
-  })
+  await db.$transaction([
+    db.planExpectedPerson.deleteMany({ where: { planId } }),
+    ...(matchedPeople.length ? [db.planExpectedPerson.createMany({
+      data: matchedPeople.map(person => ({
+        planId: planId!,
+        personId: person.id,
+        workspaceId: input.workspaceId,
+      })),
+    })] : []),
+  ], CALENDAR_TX)
 
   return { createdPlan }
 }
@@ -932,7 +934,7 @@ async function markCancelled(connectionId: string, workspaceId: string, calendar
       where: { id: link.planId },
       data: { status: "abandoned", reconciliationStatus: "cancelled", reconciledAt: new Date() },
     })] : []),
-  ])
+  ], CALENDAR_TX)
   return 1
 }
 
