@@ -6,6 +6,11 @@ import type { ParsedContact } from "@/lib/vcard"
 // ParsedContact and this app's Person type both structurally satisfy the
 // shared module's generic MatchableContact/MatchableExistingPerson types, so
 // every call site in this app is unchanged.
+//
+// Imported from the contact-matching submodule directly, not the `@life-os/domain`
+// barrel — this file is pulled into a "use client" page (page.tsx), and the
+// barrel also re-exports plans.ts, which drags packages/db (libsql,
+// better-sqlite3 native bindings) into the client bundle and breaks the build.
 import {
   DUPLICATE_THRESHOLD,
   POSSIBLE_THRESHOLD,
@@ -17,7 +22,7 @@ import {
   computeFillableFields,
   findMatch,
   type MatchResult,
-} from "@life-os/domain"
+} from "@life-os/domain/contact-matching"
 
 export {
   DUPLICATE_THRESHOLD,
