@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
+import { workspaceForHomeRequest } from "@/lib/request-access"
 
 type Params = { params: Promise<{ personId: string }> }
 
@@ -16,6 +17,14 @@ export async function POST(_request: NextRequest, { params }: Params) {
     )
   }
 
+  // See connections proxy's identical comment: without this, the shared key
+  // resolves to its own fixed workspace, not the signed-in caller's — which
+  // would let this route regenerate theory for a personId in any workspace.
+  const workspaceId = await workspaceForHomeRequest()
+  if (!workspaceId) {
+    return NextResponse.json({ error: { code: "unauthorized", message: "Sign in required." } }, { status: 401 })
+  }
+
   const { personId } = await params
   const target = new URL(`/v1/theory/${encodeURIComponent(personId)}/regenerate`, baseUrl)
 
@@ -26,6 +35,7 @@ export async function POST(_request: NextRequest, { params }: Params) {
         accept: "application/json",
         "content-type": "application/json",
         "x-api-key": apiKey,
+        "x-workspace-override": workspaceId,
       },
       cache: "no-store",
     })

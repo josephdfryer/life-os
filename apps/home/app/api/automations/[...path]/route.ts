@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
+import { workspaceForHomeRequest } from "@/lib/request-access"
 
 type Params = { params: Promise<{ path: string[] }> }
 type Method = "GET" | "POST" | "PATCH" | "DELETE"
@@ -24,6 +25,12 @@ async function proxyAutomation(request: NextRequest, { params }: Params, method:
   const apiKey = process.env.PERSONS_API_KEY?.trim()
   if (!baseUrl || !apiKey) return unavailable("automation_not_configured", "The shared automation service is not configured yet.", 503)
 
+  // See connections proxy's identical comment: the shared key is
+  // workspace-fixed, so every request must carry the current session's own
+  // workspace or it silently acts on whichever workspace the key belongs to.
+  const workspaceId = await workspaceForHomeRequest()
+  if (!workspaceId) return unavailable("unauthorized", "Sign in required.", 401)
+
   const { path } = await params
   const pathname = path.join("/")
   if (!isAllowed(method, pathname)) {
@@ -41,6 +48,7 @@ async function proxyAutomation(request: NextRequest, { params }: Params, method:
         accept: "application/json",
         "content-type": "application/json",
         "x-api-key": apiKey,
+        "x-workspace-override": workspaceId,
       },
       cache: "no-store",
     })

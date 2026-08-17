@@ -19,10 +19,21 @@ export type ApiKeyAuthResult = {
  * `Authorization: Bearer <key>` — resolve that header yourself, this stays
  * decoupled from any particular request type (Next's NextRequest, Node's
  * IncomingMessage, etc).
+ *
+ * `workspaceOverride`: a workspaceId a *trusted proxy* wants this call to act
+ * on behalf of, instead of the key's own fixed workspace. Only honored when
+ * the key itself carries "workspace.proxy" — a scope that should only ever
+ * be granted to a server-side proxy (like Home's control-plane routes) that
+ * has already independently verified the caller is an active member of that
+ * workspace. Without this, every app that proxies to apps/api through one
+ * shared key is permanently locked to that key's single workspace, which is
+ * exactly what let one workspace's writes land silently in another's data —
+ * see docs/adr or the fix commit that introduced this.
  */
 export async function authorizeApiKey(
   providedKey: string | null | undefined,
   requiredScopes: string | string[] = [],
+  workspaceOverride?: string | null,
 ): Promise<ApiKeyAuthResult | null> {
   if (!providedKey) return null
   const { db } = await import("@life-os/db")
@@ -40,6 +51,12 @@ export async function authorizeApiKey(
   const granted = apiKey.scopes.map(scope => scope.scope)
   if (!hasScopes(granted, scopes)) return null
 
+  let workspaceId = apiKey.workspaceId
+  if (workspaceOverride && workspaceOverride !== workspaceId && hasScopes(granted, ["workspace.proxy"])) {
+    const target = await db.workspace.findUnique({ where: { id: workspaceOverride }, select: { id: true, status: true } })
+    if (target && target.status === "active") workspaceId = target.id
+  }
+
   await db.apiKey.update({
     where: { id: apiKey.id },
     data: { lastUsedAt: new Date() },
@@ -52,10 +69,10 @@ export async function authorizeApiKey(
       type: "api_key",
       id: apiKey.id,
       label: apiKey.name,
-      workspaceId: apiKey.workspaceId,
+      workspaceId,
     },
     scopes: granted,
-    workspaceId: apiKey.workspaceId,
+    workspaceId,
   }
 }
 

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
+import { workspaceForHomeRequest } from "@/lib/request-access"
 
 type Params = { params: Promise<{ path: string[] }> }
 
@@ -6,6 +7,9 @@ export async function POST(request: NextRequest, { params }: Params) {
   const baseUrl = process.env.LIFE_OS_API_URL?.trim()
   const apiKey = process.env.PERSONS_API_KEY?.trim()
   if (!baseUrl || !apiKey) return unavailable("intelligence_not_configured", "The shared intelligence service is not configured yet.", 503)
+
+  const workspaceId = await workspaceForHomeRequest()
+  if (!workspaceId) return unavailable("unauthorized", "Sign in required.", 401)
 
   const { path } = await params
   const pathname = path.join("/")
@@ -19,7 +23,7 @@ export async function POST(request: NextRequest, { params }: Params) {
     const response = await fetch(target, {
       method: "POST",
       body,
-      headers: { accept: "application/json", "content-type": "application/json", "x-api-key": apiKey },
+      headers: { accept: "application/json", "content-type": "application/json", "x-api-key": apiKey, "x-workspace-override": workspaceId },
       cache: "no-store",
     })
     return NextResponse.json(await response.json(), { status: response.status })

@@ -1,10 +1,13 @@
 import { NextResponse } from "next/server"
 import { auth } from "@/auth"
+import { workspaceForHomeRequest } from "@/lib/request-access"
 
 export async function POST(request: Request) {
   const session = await auth()
   const email = session?.user?.email
   if (!email) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+  const workspaceId = await workspaceForHomeRequest()
+  if (!workspaceId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
   const contentType = request.headers.get("content-type") ?? ""
   if (!contentType.startsWith("application/x-www-form-urlencoded") && !contentType.startsWith("multipart/form-data")) {
     return NextResponse.json({ error: "Form submission required" }, { status: 415 })
@@ -27,7 +30,7 @@ export async function POST(request: Request) {
 
     const response = await fetch(new URL("/v1/device/auth/authorize", baseUrl), {
       method: "POST",
-      headers: { "content-type": "application/json", "x-api-key": apiKey },
+      headers: { "content-type": "application/json", "x-api-key": apiKey, "x-workspace-override": workspaceId },
       cache: "no-store",
       body: JSON.stringify({ email, platform, displayName, appVersion, redirectUri, codeChallenge }),
     })

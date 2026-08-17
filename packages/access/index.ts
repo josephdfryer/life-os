@@ -96,6 +96,12 @@ export const DEFAULT_PERMISSIONS = [
   { scope: "connections.manage", description: "Connect, reconnect, or disconnect third-party accounts" },
   { scope: "devices.read", description: "Read registered companion devices and connector health" },
   { scope: "devices.manage", description: "Revoke companion devices" },
+  // Never grant this to a Role — it's for one thing: a trusted server-side
+  // proxy (Home's control-plane routes) that has already verified a session
+  // belongs to a workspace, and needs its shared API key to act on that
+  // workspace instead of the key's own fixed one. See authorizeApiKey's
+  // workspaceOverride in packages/access/api-key.ts.
+  { scope: "workspace.proxy", description: "Act on behalf of a caller-specified workspace (trusted proxies only)" },
 ] as const
 
 export const DEFAULT_ROLES = [

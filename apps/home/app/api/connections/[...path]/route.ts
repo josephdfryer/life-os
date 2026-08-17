@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
+import { workspaceForHomeRequest } from "@/lib/request-access"
 
 type Params = { params: Promise<{ path: string[] }> }
 
@@ -9,6 +10,12 @@ export async function GET(request: NextRequest, { params }: Params) {
   const apiKey = process.env.PERSONS_API_KEY?.trim()
   if (!baseUrl || !apiKey) return error("connections_not_configured", "The shared connections service is not configured yet.", 503)
 
+  // The proxied API key is shared and workspace-fixed; without this, every
+  // signed-in user would see (and mutate) whatever workspace the key itself
+  // belongs to, not their own — see the workspace.proxy scope's doc comment.
+  const workspaceId = await workspaceForHomeRequest()
+  if (!workspaceId) return error("unauthorized", "Sign in required.", 401)
+
   const pathname = (await params).path.join("/")
   if (!isAllowedConnectionRead(pathname)) return error("not_found", "Connections endpoint not found.", 404)
 
@@ -16,7 +23,7 @@ export async function GET(request: NextRequest, { params }: Params) {
     const target = pathname === "list" ? "/v1/connections" : `/v1/connections/${pathname}`
     const incoming = request.nextUrl.search
     const response = await fetch(new URL(`${target}${incoming}`, baseUrl), {
-      headers: { accept: "application/json", "x-api-key": apiKey },
+      headers: { accept: "application/json", "x-api-key": apiKey, "x-workspace-override": workspaceId },
       cache: "no-store",
     })
     return NextResponse.json(await response.json(), { status: response.status })
@@ -38,6 +45,9 @@ async function mutate(request: NextRequest, paramsPromise: Params["params"], met
   const apiKey = process.env.PERSONS_API_KEY?.trim()
   if (!baseUrl || !apiKey) return error("connections_not_configured", "The shared connections service is not configured yet.", 503)
 
+  const workspaceId = await workspaceForHomeRequest()
+  if (!workspaceId) return error("unauthorized", "Sign in required.", 401)
+
   const pathname = (await paramsPromise).path.join("/")
   const allowed = isAllowedConnectionMutation(method, pathname)
   if (!allowed) return error("not_found", "Connections endpoint not found.", 404)
@@ -50,6 +60,7 @@ async function mutate(request: NextRequest, paramsPromise: Params["params"], met
         accept: "application/json",
         "content-type": "application/json",
         "x-api-key": apiKey,
+        "x-workspace-override": workspaceId,
       },
       body,
       cache: "no-store",

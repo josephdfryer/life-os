@@ -6,7 +6,13 @@ export async function authorizeRequest(
   req: NextRequest,
   requiredScopes: string | string[] = [],
 ): Promise<ApiKeyAuthResult | null> {
-  const apiKey = await authorizeApiKey(extractApiKey(req.headers), requiredScopes)
+  // Only honored by authorizeApiKey when the key itself carries
+  // "workspace.proxy" — see packages/access/api-key.ts. A trusted server-side
+  // proxy (Home's control-plane routes) sets this to the workspace it has
+  // already verified the current session belongs to, so a single shared key
+  // isn't permanently locked to one workspace for every caller.
+  const workspaceOverride = req.headers.get("x-workspace-override")
+  const apiKey = await authorizeApiKey(extractApiKey(req.headers), requiredScopes, workspaceOverride)
   if (apiKey) return apiKey
 
   const device = await authorizeDeviceToken(extractBearerToken(req.headers))

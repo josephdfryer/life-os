@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { workspaceForHomeRequest } from '@/lib/request-access'
 
 const FORWARDED_PARAMS = ['cursor', 'limit', 'status', 'source', 'itemType', 'riskTier']
 
@@ -25,6 +26,9 @@ export async function forward(target: URL, init: RequestInit) {
   const apiKey = process.env.PERSONS_API_KEY?.trim()
   if (!apiKey) return unavailable()
 
+  const workspaceId = await workspaceForHomeRequest()
+  if (!workspaceId) return unauthorized()
+
   try {
     const response = await fetch(target, {
       ...init,
@@ -32,6 +36,7 @@ export async function forward(target: URL, init: RequestInit) {
         accept: 'application/json',
         'content-type': 'application/json',
         'x-api-key': apiKey,
+        'x-workspace-override': workspaceId,
         ...init.headers,
       },
       cache: 'no-store',
@@ -51,4 +56,8 @@ function unavailable() {
     { error: 'The shared review service is not configured yet.', code: 'review_not_configured' },
     { status: 503 },
   )
+}
+
+function unauthorized() {
+  return NextResponse.json({ error: 'Sign in required.', code: 'unauthorized' }, { status: 401 })
 }

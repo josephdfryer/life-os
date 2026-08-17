@@ -1,6 +1,7 @@
 import test from "node:test"
 import assert from "node:assert/strict"
 import { createRequire } from "node:module"
+import { createHash, randomUUID } from "node:crypto"
 import { mkdtempSync, readFileSync, readdirSync } from "node:fs"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
@@ -92,6 +93,22 @@ async function createMember(db: Modules["db"], input: { email: string; workspace
 async function grantRole(db: Modules["db"], userId: string, roleKey: string) {
   const role = await db.role.findUniqueOrThrow({ where: { key: roleKey } })
   await db.userRole.create({ data: { userId, roleId: role.id } })
+}
+
+async function createApiKey(db: Modules["db"], workspaceId: string, scopes: string[]) {
+  const plaintext = `test_${randomUUID()}`
+  const keyHash = createHash("sha256").update(plaintext).digest("hex")
+  const apiKey = await db.apiKey.create({
+    data: {
+      workspaceId,
+      name: "test key",
+      keyPrefix: plaintext.slice(0, 12),
+      keyHash,
+      status: "active",
+      scopes: { create: scopes.map(scope => ({ scope })) },
+    },
+  })
+  return { ...apiKey, plaintext }
 }
 
 test("disabled users stay disabled and cannot be resurrected by an access check", async () => {
@@ -257,4 +274,34 @@ test("cache entries remain isolated by explicit workspace", async () => {
   const second = await accessService.requireAccess("people.read", "access-cache-b")
   assert.equal(first.workspaceId, "access-cache-a")
   assert.equal(second.workspaceId, "access-cache-b")
+})
+
+test("a key with workspace.proxy can act on a caller-specified active workspace", async () => {
+  const { access, db } = await setup()
+  await createWorkspace(db, "proxy-key-home-a")
+  await createWorkspace(db, "proxy-target-active")
+  const key = await createApiKey(db, "proxy-key-home-a", ["interactions.read", "workspace.proxy"])
+
+  const result = await access.authorizeApiKey(key.plaintext, "interactions.read", "proxy-target-active")
+  assert.equal(result?.workspaceId, "proxy-target-active")
+})
+
+test("workspace.proxy override is ignored for a suspended target workspace", async () => {
+  const { access, db } = await setup()
+  await createWorkspace(db, "proxy-key-home-b")
+  await db.workspace.create({ data: { id: "proxy-target-suspended", name: "x", slug: "proxy-target-suspended", status: "suspended" } })
+  const key = await createApiKey(db, "proxy-key-home-b", ["interactions.read", "workspace.proxy"])
+
+  const result = await access.authorizeApiKey(key.plaintext, "interactions.read", "proxy-target-suspended")
+  assert.equal(result?.workspaceId, "proxy-key-home-b")
+})
+
+test("a key without workspace.proxy cannot override its own workspace", async () => {
+  const { access, db } = await setup()
+  await createWorkspace(db, "proxy-key-home-c")
+  await createWorkspace(db, "proxy-target-unauthorized")
+  const key = await createApiKey(db, "proxy-key-home-c", ["interactions.read"])
+
+  const result = await access.authorizeApiKey(key.plaintext, "interactions.read", "proxy-target-unauthorized")
+  assert.equal(result?.workspaceId, "proxy-key-home-c")
 })

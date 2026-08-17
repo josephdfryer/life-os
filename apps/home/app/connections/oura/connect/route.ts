@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
+import { workspaceForHomeRequest } from "@/lib/request-access"
 
 /**
  * Browser entry for Oura OAuth. Asks the API for a signed authorize URL
@@ -11,11 +12,19 @@ export async function GET(request: NextRequest) {
     return NextResponse.redirect(new URL("/connections?oura=not_configured", request.url))
   }
 
+  // Without this the signed OAuth state always encodes the shared key's own
+  // workspace, so the callback would attach Oura's tokens to that workspace
+  // no matter who started the flow.
+  const workspaceId = await workspaceForHomeRequest()
+  if (!workspaceId) {
+    return NextResponse.redirect(new URL("/login", request.url))
+  }
+
   try {
     const target = new URL("/v1/connections/oura/authorize", baseUrl)
     target.searchParams.set("returnTo", "/connections")
     const response = await fetch(target, {
-      headers: { accept: "application/json", "x-api-key": apiKey },
+      headers: { accept: "application/json", "x-api-key": apiKey, "x-workspace-override": workspaceId },
       cache: "no-store",
     })
     const body = await response.json() as { url?: string; error?: { message?: string } }

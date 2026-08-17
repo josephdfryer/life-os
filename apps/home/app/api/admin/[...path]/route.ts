@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
+import { workspaceForHomeRequest } from "@/lib/request-access"
 
 type Params = { params: Promise<{ path: string[] }> }
 type Method = "POST" | "PATCH"
@@ -16,6 +17,13 @@ async function proxyAccess(request: NextRequest, { params }: Params, method: Met
   const apiKey = process.env.PERSONS_API_KEY?.trim()
   if (!baseUrl || !apiKey) return error("admin_not_configured", "The shared access service is not configured yet.", 503)
 
+  // See connections proxy's identical comment: the shared key is
+  // workspace-fixed, so admin mutations (approve an email, create an API
+  // key, suspend a workspace) must be pinned to the current session's own
+  // workspace, not wherever the key itself belongs.
+  const workspaceId = await workspaceForHomeRequest()
+  if (!workspaceId) return error("unauthorized", "Sign in required.", 401)
+
   const pathname = (await params).path.join("/")
   if (!isAllowed(method, pathname)) return error("not_found", "Admin endpoint not found.", 404)
 
@@ -24,7 +32,7 @@ async function proxyAccess(request: NextRequest, { params }: Params, method: Met
     const response = await fetch(target, {
       method,
       body: await request.text(),
-      headers: { accept: "application/json", "content-type": "application/json", "x-api-key": apiKey },
+      headers: { accept: "application/json", "content-type": "application/json", "x-api-key": apiKey, "x-workspace-override": workspaceId },
       cache: "no-store",
     })
     if (response.status === 204) return new NextResponse(null, { status: 204 })
