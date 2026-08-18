@@ -1,7 +1,7 @@
 import { createHash } from "node:crypto"
 import type { DeviceIngestItemInput } from "@life-os/contracts"
 import { db } from "@life-os/db"
-import { createReviewItem, publishGraphEvent, findMatch, updatePerson, type MatchableExistingPerson } from "@life-os/domain"
+import { createReviewItem, publishGraphEvent, findMatch, createPerson, updatePerson, type MatchableExistingPerson } from "@life-os/domain"
 import { HEALTH_DAILY_TRANSACTION, ensureHealthMetricDefinitions, recordHealthDailyDigestInTransaction, fireHealthDailyRules } from "./health-daily"
 import { storedStringList } from "./people"
 
@@ -163,6 +163,10 @@ async function ingestContact(item: ItemFor<"contact.person">, workspaceId: strin
     first: item.record.givenName, last: item.record.familyName,
     company: item.record.organizationName, title: item.record.jobTitle,
     emails: item.record.emails, phones: item.record.phones,
+    ...(item.record.birthday ? { birthday: item.record.birthday } : {}),
+    ...(item.record.location ? { location: item.record.location } : {}),
+    ...(item.record.profileUrl && item.source === "facebook" ? { facebook: item.record.profileUrl } : {}),
+    ...(item.record.notes ? { notes: item.record.notes } : {}),
   }
   const match = findMatch(candidate, candidates)
 
@@ -177,10 +181,32 @@ async function ingestContact(item: ItemFor<"contact.person">, workspaceId: strin
     return accepted(item.sourceId, "Person", match.personId)
   }
 
-  // No confident match, or no match at all: a phone's address book can
-  // contain garbage/duplicate/test entries, so nothing gets auto-created —
-  // this always goes to the review queue via the contact.import command
-  // (packages/domain/contact-import.ts), same as staged interactions/visits.
+  // No match at all (not merely a weak one): the device's address book is a
+  // list the person already curated by saving these contacts on their own
+  // phone, not an arbitrary bulk file from an unknown source — so a brand
+  // new contact is low-touch, create it immediately rather than parking it
+  // in a review queue for something nobody has to approve. An *ambiguous*
+  // match (some similarity but below AUTO_APPLY_THRESHOLD) still goes to
+  // review below: guessing wrong there means silently attaching this
+  // contact's data to the WRONG existing person, a worse failure mode than
+  // a duplicate the merge tool can clean up later.
+  const first = firstNameFor(item.record)
+  if (!match && first) {
+    const person = await createPerson({
+      first, last: item.record.familyName, company: item.record.organizationName, title: item.record.jobTitle,
+      emails: item.record.emails, phones: item.record.phones, source: "ios_contacts",
+      ...(item.record.birthday ? { birthday: item.record.birthday } : {}),
+      ...(item.record.location ? { location: item.record.location } : {}),
+      ...(item.record.profileUrl ? { facebook: item.source === "facebook" ? item.record.profileUrl : undefined, website: item.source !== "facebook" ? item.record.profileUrl : undefined } : {}),
+      ...(item.record.notes ? { notes: item.record.notes } : {}),
+    }, workspaceId, actor)
+    await db.deviceIngestItem.create({ data: receiptData(item, workspaceId, payloadHash, "Person", person.id) })
+    return accepted(item.sourceId, "Person", person.id)
+  }
+
+  // Ambiguous match, or no usable name at all (blank contact card): still
+  // needs a human, via the contact.import command (packages/domain/contact-import.ts),
+  // same as staged interactions/visits.
   const contactName = `${item.record.givenName ?? ""} ${item.record.familyName ?? ""}`.trim() || null
   const receipt = await db.deviceIngestItem.create({ data: receiptData(item, workspaceId, payloadHash, "ReviewItem", null) })
   await createReviewItem({
@@ -198,6 +224,15 @@ async function ingestContact(item: ItemFor<"contact.person">, workspaceId: strin
     riskTier: "review", priority: 3,
   }).catch(error => console.warn("[device/ingest] contact review item creation failed", { sourceId: item.sourceId, error }))
   return accepted(item.sourceId, "ReviewItem", receipt.id)
+}
+
+// A device contact card is worth auto-creating as soon as it has anything
+// name-shaped to show — givenName in the normal case, falling back to
+// familyName or a company/org name (a card saved as just "Acme Plumbing" is
+// still a real, useful entry). Nothing name-shaped at all (no name, no org —
+// just a bare phone number, say) isn't worth a silent auto-create.
+function firstNameFor(record: ItemFor<"contact.person">["record"]): string | null {
+  return record.givenName?.trim() || record.familyName?.trim() || record.organizationName?.trim() || null
 }
 
 async function repairReviewIndex(receiptId: string, resultType: string | null, resultId: string | null, item: DeviceIngestItemInput, workspaceId: string) {

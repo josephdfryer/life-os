@@ -32,7 +32,10 @@ final class FacebookConnector: NSObject, ObservableObject {
     struct FacebookContact {
         let name: String
         let profileId: String
-        var birthday: String? // "MM/DD" or "MM/DD/YYYY"
+        var birthday: String?   // "MM/DD"
+        var profileUrl: String?
+        var hometown: String?
+        var location: String?
     }
 
     // Called by FacebookWebView once the WebView is ready so the connector
@@ -60,9 +63,10 @@ final class FacebookConnector: NSObject, ObservableObject {
                 "organizationName": .null,
                 "jobTitle": .null,
             ]
-            if let bday = contact.birthday {
-                fields["birthday"] = .string(bday)
-            }
+            if let bday = contact.birthday { fields["birthday"] = .string(bday) }
+            if let url = contact.profileUrl { fields["profileUrl"] = .string(url) }
+            if let hometown = contact.hometown { fields["hometown"] = .string(hometown) }
+            if let loc = contact.location { fields["location"] = .string(loc) }
             let record = NormalizedRecord(type: "contact.person", fields: fields)
             await model?.enqueue(OutboxItem(
                 deviceId: deviceId,
@@ -78,67 +82,76 @@ final class FacebookConnector: NSObject, ObservableObject {
 
     // JavaScript to extract friends + birthdays from Facebook's mobile site.
     // Called by the WebView delegate after navigating to the birthday page.
-    static let birthdayExtractionJS = """
+    // Extracts user objects from all inline Relay/GraphQL JSON blobs on the page.
+    // Captures: id, name, profile URL (vanity or id-based), hometown, current city.
+    static let extractUsersJS = """
     (function() {
-        var results = [];
-        // Birthday page: each entry is a link to the profile with the name visible
-        // and a nearby date. Facebook's mobile site embeds Relay data in __bbox scripts.
+        var byId = {};
         var scripts = Array.from(document.querySelectorAll('script'));
         for (var s of scripts) {
             var text = s.textContent;
-            if (!text.includes('"__typename":"User"') && !text.includes('"name":')) continue;
-            // Try to extract from inline Relay JSON
-            var matches = text.matchAll(/"id":"(\\d+)","name":"([^"]+)"[^}]*"birthdate":\\{"day":(\\d+),"month":(\\d+)/g);
-            for (var m of matches) {
-                results.push({ profileId: m[1], name: m[2], month: parseInt(m[4]), day: parseInt(m[3]) });
+            if (!text.includes('"__typename":"User"') && !text.includes('"id":')) continue;
+            // Attempt structured JSON parse of any __bbox require payloads
+            var bboxMatches = text.matchAll(/\\{[^{}]{0,4096}"__typename":"User"[^{}]{0,4096}\\}/g);
+            for (var bm of bboxMatches) {
+                try {
+                    var obj = JSON.parse(bm[0]);
+                    if (!obj.id || !obj.name) continue;
+                    var entry = byId[obj.id] || { profileId: obj.id, name: obj.name };
+                    if (obj.url) entry.profileUrl = obj.url.replace(/\\\\/g, '');
+                    if (obj.hometown && obj.hometown.name) entry.hometown = obj.hometown.name;
+                    if (obj.current_city && obj.current_city.name) entry.location = obj.current_city.name;
+                    if (obj.birthdate) {
+                        if (obj.birthdate.day && obj.birthdate.month) {
+                            entry.month = obj.birthdate.month;
+                            entry.day = obj.birthdate.day;
+                        }
+                    }
+                    byId[obj.id] = entry;
+                } catch(e) {}
+            }
+            // Regex fallback for fragmented JSON
+            var idNames = text.matchAll(/"id":"(\\d{6,})","name":"([^"]{2,80})"/g);
+            for (var m of idNames) {
+                if (!byId[m[1]]) byId[m[1]] = { profileId: m[1], name: m[2] };
+            }
+            var bdayMatches = text.matchAll(/"id":"(\\d{6,})"[^}]{0,200}"birthdate":\\{"day":(\\d+),"month":(\\d+)/g);
+            for (var bm2 of bdayMatches) {
+                if (byId[bm2[1]]) { byId[bm2[1]].day = parseInt(bm2[2]); byId[bm2[1]].month = parseInt(bm2[3]); }
+            }
+            var urlMatches = text.matchAll(/"id":"(\\d{6,})"[^}]{0,200}"url":"(https:\\\\/\\\\/www\\.facebook\\.com\\\\/[^"]+)"/g);
+            for (var um of urlMatches) {
+                if (byId[um[1]]) byId[um[1]].profileUrl = um[2].replace(/\\\\/g, '');
             }
         }
-        // Fallback: parse visible DOM on m.facebook.com/events/birthdays/
-        if (results.length === 0) {
-            var links = Array.from(document.querySelectorAll('a[href*="/"]'));
-            for (var a of links) {
-                var href = a.getAttribute('href') || '';
-                var idMatch = href.match(/(?:\\/|id=)(\\d{8,})/);
-                if (!idMatch) continue;
-                var name = (a.textContent || a.innerText || '').trim();
-                if (!name || name.length < 2 || name.length > 60) continue;
-                // Look for a nearby date string (e.g. "July 18" or "7/18")
-                var parent = a.parentElement;
-                var dateText = '';
-                for (var i = 0; i < 4 && parent; i++) {
-                    dateText = parent.innerText || '';
-                    if (/\\b(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec|\\d{1,2}\\/\\d{1,2})/.test(dateText)) break;
-                    parent = parent.parentElement;
+        // DOM fallback for friends list visible links
+        var links = Array.from(document.querySelectorAll('a[href*="facebook.com"], a[href^="/"]'));
+        for (var a of links) {
+            var href = (a.getAttribute('href') || '').replace(/\\\\/g, '');
+            var idM = href.match(/[?&]id=(\\d{6,})/);
+            var fullUrl = href.startsWith('http') ? href : 'https://www.facebook.com' + href;
+            var vanityM = href.match(/\\/([a-zA-Z0-9.]{5,50})(?:\\?|$)/);
+            if (idM) {
+                var uid = idM[1];
+                if (!byId[uid]) {
+                    var name = (a.textContent || '').trim();
+                    if (name && name.length >= 2 && name.length <= 60) byId[uid] = { profileId: uid, name: name };
                 }
-                results.push({ profileId: idMatch[1], name: name, dateText: dateText.substring(0, 100) });
-            }
-        }
-        return JSON.stringify(results.slice(0, 2000));
-    })();
-    """
-
-    static let friendsListJS = """
-    (function() {
-        var results = [];
-        var scripts = Array.from(document.querySelectorAll('script'));
-        for (var s of scripts) {
-            var text = s.textContent;
-            if (!text.includes('"__typename":"User"')) continue;
-            var matches = text.matchAll(/"id":"(\\d+)","name":"([^"]+)"/g);
-            for (var m of matches) {
-                if (parseInt(m[1]) > 1000) {
-                    results.push({ profileId: m[1], name: m[2] });
+                if (byId[uid] && !byId[uid].profileUrl) byId[uid].profileUrl = fullUrl.split('?')[0];
+            } else if (vanityM && !['home','friends','events','groups','watch','marketplace','me','messages'].includes(vanityM[1])) {
+                var name2 = (a.textContent || '').trim();
+                if (name2 && name2.length >= 2 && name2.length <= 60) {
+                    var key = 'vanity:' + vanityM[1];
+                    if (!byId[key]) byId[key] = { profileId: key, name: name2, profileUrl: 'https://www.facebook.com/' + vanityM[1] };
                 }
             }
         }
-        // Deduplicate by profileId
-        var seen = {};
-        results = results.filter(function(r) {
-            if (seen[r.profileId]) return false;
-            seen[r.profileId] = true;
-            return true;
-        });
+        var results = Object.values(byId).filter(function(r) { return r.name && r.name.length >= 2; });
         return JSON.stringify(results.slice(0, 5000));
     })();
     """
+
+    // Keep old names pointing at unified extractor for the coordinator
+    static var birthdayExtractionJS: String { extractUsersJS }
+    static var friendsListJS: String { extractUsersJS }
 }

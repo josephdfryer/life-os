@@ -43,14 +43,23 @@ final class ContactsConnector {
     // cost is local CNContactStore enumeration time, not server writes.
     func sync() async {
         guard let deviceId = await model?.api?.deviceId else { return }
-        // Enqueue per-contact during enumeration so uploads begin before
-        // the full contact store has been scanned.
-        try? await Task.detached(priority: .utility) { [store, contactKeys, weak self] in
+        // Enumerate on a background thread in batches of 100, then enqueue
+        // each batch on the main actor. Avoids spawning thousands of concurrent
+        // Tasks while still yielding to the run loop between batches.
+        let batches: [[CNContact]] = (try? await Task.detached(priority: .utility) { [store, contactKeys] in
+            var batch: [CNContact] = []
+            var all: [[CNContact]] = []
             let request = CNContactFetchRequest(keysToFetch: contactKeys)
             try store.enumerateContacts(with: request) { contact, _ in
-                Task { await self?.enqueue(contact, deviceId: deviceId) }
+                batch.append(contact)
+                if batch.count == 100 { all.append(batch); batch = [] }
             }
-        }.value
+            if !batch.isEmpty { all.append(batch) }
+            return all
+        }.value) ?? []
+        for batch in batches {
+            for contact in batch { await enqueue(contact, deviceId: deviceId) }
+        }
     }
 
     private func enqueue(_ contact: CNContact, deviceId: String) async {

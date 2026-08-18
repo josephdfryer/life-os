@@ -107,13 +107,19 @@ struct FacebookWebView: UIViewRepresentable {
                           !name.isEmpty else { continue }
                     let birthday = birthdayString(from: item)
                     // Merge: if we already have this profileId, add birthday if missing
+                    let profileUrl = item["profileUrl"] as? String
+                    let hometown = item["hometown"] as? String
+                    let location = item["location"] as? String
                     if let idx = self.connector.extractedContacts.firstIndex(where: { $0.profileId == id }) {
-                        if self.connector.extractedContacts[idx].birthday == nil, let bday = birthday {
-                            self.connector.extractedContacts[idx].birthday = bday
-                        }
+                        var c = self.connector.extractedContacts[idx]
+                        if c.birthday == nil { c.birthday = birthday }
+                        if c.profileUrl == nil { c.profileUrl = profileUrl }
+                        if c.hometown == nil { c.hometown = hometown }
+                        if c.location == nil { c.location = location }
+                        self.connector.extractedContacts[idx] = c
                     } else {
                         self.connector.extractedContacts.append(
-                            FacebookConnector.FacebookContact(name: name, profileId: id, birthday: birthday)
+                            FacebookConnector.FacebookContact(name: name, profileId: id, birthday: birthday, profileUrl: profileUrl, hometown: hometown, location: location)
                         )
                     }
                 }

@@ -159,12 +159,12 @@ struct PersonsShell: View {
 
                     VStack(alignment: .leading, spacing: 18) {
                         syncBenefit(
-                            title: "Secure",
-                            detail: "All your contacts are imported locally. Your information is encrypted end-to-end."
+                            title: "Reads from your phone",
+                            detail: "Persons reads names, emails, and phone numbers directly from iOS Contacts. Nothing else is touched."
                         )
                         syncBenefit(
-                            title: "Private",
-                            detail: "Persons never has access to your Contacts app directly. Everything syncs on device."
+                            title: "Uploads to your workspace",
+                            detail: "Contacts sync to your personal Life OS workspace over HTTPS. Only you have access."
                         )
                     }
                     .padding(20)

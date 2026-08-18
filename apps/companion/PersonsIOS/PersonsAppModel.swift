@@ -61,6 +61,9 @@ final class PersonsAppModel: NSObject, ObservableObject, ASWebAuthenticationPres
             signedIn = await client.isSignedIn
             workspaceId = await client.workspaceId
             pendingCount = try await store.pendingCount()
+            if let saved = UserDefaults.standard.object(forKey: "persons.lastSync") as? Date {
+                lastSync = saved
+            }
             refreshConnectorStatuses()
             scheduleEndOfDayRefresh()
             if contactsStatus.enabled {
@@ -69,7 +72,9 @@ final class PersonsAppModel: NSObject, ObservableObject, ASWebAuthenticationPres
             if calendarStatus.enabled {
                 calendarAttendeeCount = await calendar.attendeeCount()
             }
-            if signedIn, contactsStatus.enabled || calendarStatus.enabled {
+            // Auto-sync only if we've never synced or it's been more than 4 hours.
+            let stale = lastSync.map { Date().timeIntervalSince($0) > 4 * 3600 } ?? true
+            if signedIn, (contactsStatus.enabled || calendarStatus.enabled), stale {
                 await runSync()
             }
         } catch {
@@ -168,6 +173,7 @@ final class PersonsAppModel: NSObject, ObservableObject, ASWebAuthenticationPres
         }
         UserDefaults.standard.removeObject(forKey: "persons.contacts.enabled")
         UserDefaults.standard.removeObject(forKey: "persons.calendar.enabled")
+        UserDefaults.standard.removeObject(forKey: "persons.lastSync")
 
         signedIn = false
         workspaceId = nil
@@ -250,10 +256,12 @@ final class PersonsAppModel: NSObject, ObservableObject, ASWebAuthenticationPres
         do {
             if contactsStatus.enabled {
                 syncMessage = "Checking Contacts for changes…"
+                syncProgress = nil  // indeterminate during scan
                 await contacts.sync()
             }
             if calendarStatus.enabled {
                 syncMessage = "Scanning Calendar attendees…"
+                syncProgress = nil
                 await calendar.sync()
             }
 
@@ -264,10 +272,13 @@ final class PersonsAppModel: NSObject, ObservableObject, ASWebAuthenticationPres
                 uploaded += completed
                 pendingCount = try await outbox?.pendingCount() ?? 0
                 syncProgress = startingPending > 0 ? min(1, Double(uploaded) / Double(startingPending)) : 1
-                syncMessage = "Uploading securely… \(uploaded) of \(startingPending)"
+                syncMessage = startingPending > 0
+                    ? "Uploading… \(uploaded) of \(startingPending)"
+                    : "Everything is up to date"
                 if completed == 0 { break }
             }
             lastSync = Date()
+            UserDefaults.standard.set(lastSync, forKey: "persons.lastSync")
             errorCode = nil
             syncMessage = pendingCount == 0
                 ? (uploaded == 0 ? "Everything is up to date" : "Synced \(uploaded) records")
