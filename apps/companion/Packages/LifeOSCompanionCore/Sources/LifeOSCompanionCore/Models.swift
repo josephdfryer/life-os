@@ -2,7 +2,7 @@ import Foundation
 
 public enum DevicePlatform: String, Codable, Sendable { case macos, ios }
 public enum ConnectorSource: String, Codable, CaseIterable, Sendable {
-    case imessage, whatsapp, callHistory = "call_history", healthkit, location, photos, voiceJournal = "voice_journal", documents, contacts
+    case imessage, whatsapp, callHistory = "call_history", healthkit, location, photos, voiceJournal = "voice_journal", documents, contacts, calendar, facebook, googleContacts = "google_contacts"
 }
 public enum PermissionStatus: String, Codable, Sendable { case unknown, notRequested = "not_requested", granted, limited, denied, revoked, unsupported }
 public enum ConnectorHealth: String, Codable, Sendable { case unknown, healthy, paused, degraded, error, unsupported }

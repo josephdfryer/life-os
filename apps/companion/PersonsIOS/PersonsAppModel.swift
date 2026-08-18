@@ -1,6 +1,7 @@
 import AuthenticationServices
 import BackgroundTasks
 import CryptoKit
+import EventKit
 import Foundation
 import LifeOSCompanionCore
 import UIKit
@@ -22,16 +23,26 @@ final class PersonsAppModel: NSObject, ObservableObject, ASWebAuthenticationPres
     @Published var signedIn = false
     @Published var errorMessage: String?
     @Published var contactsStatus = ConnectorStatus(source: .contacts)
+    @Published var calendarStatus = ConnectorStatus(source: .calendar)
+    @Published var calendarAttendeeCount = 0
+    @Published var facebookStatus = ConnectorStatus(source: .facebook)
+    @Published var googleContactsStatus = ConnectorStatus(source: .googleContacts)
     @Published var pendingCount = 0
     @Published var lastSync: Date?
     @Published var isSyncing = false
     @Published var syncMessage = "Ready to sync"
+    @Published var syncProgress: Double?
+    @Published var totalContacts = 0
     @Published var errorCode: String?
+    @Published var workspaceId: String?
     private(set) var api: APIClient?
     private(set) var outbox: EncryptedOutbox?
     private var scheduler: UploadScheduler?
     private var authSession: ASWebAuthenticationSession?
     lazy var contacts = ContactsConnector(model: self)
+    lazy var calendar = CalendarConnector(model: self)
+    lazy var facebook = FacebookConnector()
+    lazy var googleContacts = GoogleContactsConnector(model: self)
 
     func start() async {
         guard api == nil else { return }
@@ -45,11 +56,20 @@ final class PersonsAppModel: NSObject, ObservableObject, ASWebAuthenticationPres
             outbox = store
             api = client
             scheduler = UploadScheduler(outbox: store, api: client)
+            facebook.model = self
+            googleContacts.model = self
             signedIn = await client.isSignedIn
+            workspaceId = await client.workspaceId
             pendingCount = try await store.pendingCount()
             refreshConnectorStatuses()
             scheduleEndOfDayRefresh()
-            if signedIn, contactsStatus.enabled {
+            if contactsStatus.enabled {
+                totalContacts = await contacts.totalContactCount()
+            }
+            if calendarStatus.enabled {
+                calendarAttendeeCount = await calendar.attendeeCount()
+            }
+            if signedIn, contactsStatus.enabled || calendarStatus.enabled {
                 await runSync()
             }
         } catch {
@@ -86,6 +106,7 @@ final class PersonsAppModel: NSObject, ObservableObject, ASWebAuthenticationPres
                 do {
                     try await api.exchange(code: code, verifier: verifier, deviceId: device)
                     self.signedIn = true
+                    self.workspaceId = await api.workspaceId
                     self.errorMessage = nil
                 } catch {
                     self.errorMessage = "Persons could not finish connecting to your workspace."
@@ -93,7 +114,9 @@ final class PersonsAppModel: NSObject, ObservableObject, ASWebAuthenticationPres
             }
         }
         session.presentationContextProvider = self
-        session.prefersEphemeralWebBrowserSession = false
+        // Ephemeral: never silently reuse a cached Home session from a
+        // previous account. Every Connect starts a real Google sign-in.
+        session.prefersEphemeralWebBrowserSession = true
         authSession = session
         session.start()
     }
@@ -112,6 +135,7 @@ final class PersonsAppModel: NSObject, ObservableObject, ASWebAuthenticationPres
             contactsStatus.permissionStatus = .granted
             contactsStatus.healthStatus = .healthy
             UserDefaults.standard.set(true, forKey: "persons.contacts.enabled")
+            totalContacts = await contacts.totalContactCount()
             scheduleEndOfDayRefresh()
             await runSync()
         } catch {
@@ -120,6 +144,46 @@ final class PersonsAppModel: NSObject, ObservableObject, ASWebAuthenticationPres
             contactsStatus.lastErrorCode = "contacts_permission_denied"
             syncMessage = "Contacts access needs attention"
         }
+    }
+
+    /// Signs out, deletes the local encrypted outbox and its key, and clears Contacts
+    /// sync state — so a different workspace can be connected and onboarding tested
+    /// from a clean slate without reinstalling the app. Nothing server-side is deleted.
+    func resetEnvironment() async {
+        BGTaskScheduler.shared.cancel(taskRequestWithIdentifier: PersonsBackground.refreshTaskId)
+        try? await api?.signOut()
+
+        // Drop references first so EncryptedOutbox closes its SQLite handle before
+        // the underlying file is unlinked.
+        scheduler = nil
+        outbox = nil
+        api = nil
+
+        try? KeychainStore().delete(account: "outbox-encryption-key")
+        if let root = try? CompanionPaths.applicationSupport() {
+            let dbPath = root.appending(path: "persons-companion.sqlite").path
+            for suffix in ["", "-wal", "-shm"] {
+                try? FileManager.default.removeItem(atPath: dbPath + suffix)
+            }
+        }
+        UserDefaults.standard.removeObject(forKey: "persons.contacts.enabled")
+        UserDefaults.standard.removeObject(forKey: "persons.calendar.enabled")
+
+        signedIn = false
+        workspaceId = nil
+        contactsStatus = ConnectorStatus(source: .contacts)
+        calendarStatus = ConnectorStatus(source: .calendar)
+        calendarAttendeeCount = 0
+        facebookStatus = ConnectorStatus(source: .facebook)
+        facebook.reset()
+        pendingCount = 0
+        lastSync = nil
+        isSyncing = false
+        syncMessage = "Ready to sync"
+        errorMessage = nil
+        errorCode = nil
+
+        await start()
     }
 
     func syncNow() async { await runSync() }
@@ -143,10 +207,34 @@ final class PersonsAppModel: NSObject, ObservableObject, ASWebAuthenticationPres
         try? BGTaskScheduler.shared.submit(request)
     }
 
+    func enableCalendar() async {
+        do {
+            syncMessage = "Requesting Calendar access…"
+            try await calendar.requestAccess()
+            calendarStatus.enabled = true
+            calendarStatus.permissionStatus = .granted
+            calendarStatus.healthStatus = .healthy
+            UserDefaults.standard.set(true, forKey: "persons.calendar.enabled")
+            calendarAttendeeCount = await calendar.attendeeCount()
+            await runSync()
+        } catch {
+            calendarStatus.healthStatus = .error
+            calendarStatus.permissionStatus = .denied
+            calendarStatus.lastErrorCode = "calendar_permission_denied"
+            syncMessage = "Calendar access needs attention"
+        }
+    }
+
     private func refreshConnectorStatuses() {
         if UserDefaults.standard.bool(forKey: "persons.contacts.enabled") {
             contactsStatus.enabled = true
             contactsStatus.permissionStatus = .granted
+        }
+        let calStatus = EKEventStore.authorizationStatus(for: .event)
+        if UserDefaults.standard.bool(forKey: "persons.calendar.enabled"),
+           calStatus == .fullAccess || calStatus == .authorized {
+            calendarStatus.enabled = true
+            calendarStatus.permissionStatus = .granted
         }
     }
 
@@ -156,22 +244,29 @@ final class PersonsAppModel: NSObject, ObservableObject, ASWebAuthenticationPres
             return
         }
         isSyncing = true
-        defer { isSyncing = false }
+        syncProgress = 0
+        defer { isSyncing = false; syncProgress = nil }
 
         do {
             if contactsStatus.enabled {
                 syncMessage = "Checking Contacts for changes…"
                 await contacts.sync()
             }
+            if calendarStatus.enabled {
+                syncMessage = "Scanning Calendar attendees…"
+                await calendar.sync()
+            }
 
-            syncMessage = "Uploading securely…"
+            let startingPending = try await outbox?.pendingCount() ?? 0
             var uploaded = 0
-            for _ in 0..<5 {
+            while true {
                 let completed = try await scheduler?.runOnce() ?? 0
                 uploaded += completed
+                pendingCount = try await outbox?.pendingCount() ?? 0
+                syncProgress = startingPending > 0 ? min(1, Double(uploaded) / Double(startingPending)) : 1
+                syncMessage = "Uploading securely… \(uploaded) of \(startingPending)"
                 if completed == 0 { break }
             }
-            pendingCount = try await outbox?.pendingCount() ?? 0
             lastSync = Date()
             errorCode = nil
             syncMessage = pendingCount == 0

@@ -43,10 +43,14 @@ final class ContactsConnector {
     // cost is local CNContactStore enumeration time, not server writes.
     func sync() async {
         guard let deviceId = await model?.api?.deviceId else { return }
-        let contacts = (try? await enumerateAllContacts()) ?? []
-        for contact in contacts {
-            await enqueue(contact, deviceId: deviceId)
-        }
+        // Enqueue per-contact during enumeration so uploads begin before
+        // the full contact store has been scanned.
+        try? await Task.detached(priority: .utility) { [store, contactKeys, weak self] in
+            let request = CNContactFetchRequest(keysToFetch: contactKeys)
+            try store.enumerateContacts(with: request) { contact, _ in
+                Task { await self?.enqueue(contact, deviceId: deviceId) }
+            }
+        }.value
     }
 
     private func enqueue(_ contact: CNContact, deviceId: String) async {
@@ -69,6 +73,17 @@ final class ContactsConnector {
             try store.enumerateContacts(with: request) { contact, _ in results.append(contact) }
             return results
         }.value
+    }
+
+    // Count-only enumeration (identifier key only) so the UI can show "N contacts"
+    // without paying for the full field set used by sync.
+    func totalContactCount() async -> Int {
+        (try? await Task.detached(priority: .utility) { [store] in
+            var count = 0
+            let request = CNContactFetchRequest(keysToFetch: [CNContactIdentifierKey as CNKeyDescriptor])
+            try store.enumerateContacts(with: request) { _, _ in count += 1 }
+            return count
+        }.value) ?? 0
     }
 }
 

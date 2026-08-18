@@ -1,7 +1,11 @@
 import type { Metadata } from "next"
+import { redirect } from "next/navigation"
 import { Suspense } from "react"
+import { auth } from "@/auth"
+import { authorizeDevice } from "@/lib/device-authorize"
+import { AutoGoogleSignIn } from "./AutoGoogleSignIn"
 
-export const metadata: Metadata = { title: "Connect Life OS Companion" }
+export const metadata: Metadata = { title: "Connect LifeOS Companion" }
 
 type Props = {
   searchParams: Promise<Record<string, string | string[] | undefined>>
@@ -26,33 +30,49 @@ async function DeviceAuthorizationContent({ searchParams }: Props) {
     && (redirectUri === "lifeos-companion://auth/callback" || redirectUri === "persons://auth/callback")
     && /^[A-Za-z0-9_-]{43,128}$/.test(codeChallenge)
     && state.length >= 16 && state.length <= 256
+  const isPersons = redirectUri === "persons://auth/callback"
+  const productName = isPersons ? "Persons" : "LifeOS Companion"
 
-  return <AuthorizationShell>
-        <p style={{ margin: "0 0 8px", color: "var(--cognac)", fontSize: 13 }}>Life OS Companion</p>
-        <h1 style={{ margin: "0 0 12px", fontFamily: "var(--font-display)", fontSize: 30, fontWeight: 400 }}>Connect this device</h1>
-        {valid ? <>
-          <p style={{ color: "var(--ink-2)", lineHeight: 1.6 }}>
-            <strong>{deviceName}</strong> will be allowed to send normalized records and connector health to this workspace.
-            Raw databases, files, audio, health samples, and GPS pings stay on the device.
-          </p>
-          <ul style={{ color: "var(--ink-3)", lineHeight: 1.7, paddingLeft: 20 }}>
-            <li>Platform: {platform === "macos" ? "Mac" : "iPhone"}</li>
-            <li>App version: {appVersion}</li>
-            <li>You can revoke access at any time.</li>
-          </ul>
-          <form method="post" action="/api/device/authorize" style={{ display: "flex", justifyContent: "flex-end", marginTop: 24 }}>
-            <input type="hidden" name="platform" value={platform} />
-            <input type="hidden" name="deviceName" value={deviceName} />
-            <input type="hidden" name="appVersion" value={appVersion} />
-            <input type="hidden" name="redirectUri" value={redirectUri} />
-            <input type="hidden" name="codeChallenge" value={codeChallenge} />
-            <input type="hidden" name="state" value={state} />
-            <button type="submit" style={{ border: 0, borderRadius: 999, background: "var(--cognac)", color: "white", padding: "10px 20px", font: "inherit", cursor: "pointer" }}>
-              Connect device
-            </button>
-          </form>
-        </> : <p style={{ color: "var(--attention)" }}>This authorization request is incomplete or invalid. Return to the Companion app and try again.</p>}
-  </AuthorizationShell>
+  if (!valid) {
+    return <AuthorizationShell>
+      <p style={{ margin: "0 0 8px", color: "var(--cognac)", fontSize: 13 }}>{productName}</p>
+      <h1 style={{ margin: "0 0 12px", fontFamily: "var(--font-display)", fontSize: 30, fontWeight: 400 }}>Connect this device</h1>
+      <p style={{ color: "var(--attention)" }}>This authorization request is incomplete or invalid. Return to the app and try again.</p>
+    </AuthorizationShell>
+  }
+
+  // No Home session yet: skip the LifeOS-branded landing entirely and go
+  // straight to the Google account chooser, ephemeral-session-friendly (no
+  // stale cross-app cookie assumed). The device app re-lands here afterward
+  // with the exact same query string.
+  const session = await auth()
+  if (!session?.user?.email) {
+    const params = new URLSearchParams({
+      platform, device_name: deviceName, app_version: appVersion,
+      redirect_uri: redirectUri, code_challenge: codeChallenge, state,
+    })
+    return <AuthorizationShell>
+      <p style={{ margin: "0 0 8px", color: "var(--cognac)", fontSize: 13 }}>{productName}</p>
+      <h1 style={{ margin: "0 0 12px", fontFamily: "var(--font-display)", fontSize: 30, fontWeight: 400 }}>Signing in…</h1>
+      <AutoGoogleSignIn callbackUrl={`/device/authorize?${params.toString()}`} />
+    </AuthorizationShell>
+  }
+
+  // Signed in: authorize immediately, server-side, and hand control back to
+  // the app. No consent screen — the user already approved this exact grant
+  // (Contacts only, revocable) inside the native app before Connect was tapped.
+  const result = await authorizeDevice(
+    { email: session.user.email, platform, displayName: deviceName, appVersion, redirectUri, codeChallenge },
+    state,
+  )
+  if (!result.ok) {
+    return <AuthorizationShell>
+      <p style={{ margin: "0 0 8px", color: "var(--cognac)", fontSize: 13 }}>{productName}</p>
+      <h1 style={{ margin: "0 0 12px", fontFamily: "var(--font-display)", fontSize: 30, fontWeight: 400 }}>Couldn't connect</h1>
+      <p style={{ color: "var(--attention)" }}>{result.error}. Return to the app and try again, or contact support if this keeps happening.</p>
+    </AuthorizationShell>
+  }
+  redirect(result.callbackUrl)
 }
 
 function AuthorizationShell({ children }: { children: React.ReactNode }) {

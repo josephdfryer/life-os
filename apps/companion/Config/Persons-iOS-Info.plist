@@ -7,11 +7,20 @@
 <key>CFBundleIdentifier</key><string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 <key>CFBundleInfoDictionaryVersion</key><string>6.0</string>
 <key>CFBundleName</key><string>$(PRODUCT_NAME)</string>
+<key>CFBundleIconName</key><string>AppIcon</string>
 <key>CFBundlePackageType</key><string>APPL</string>
 <key>CFBundleShortVersionString</key><string>$(MARKETING_VERSION)</string>
 <key>CFBundleVersion</key><string>$(CURRENT_PROJECT_VERSION)</string>
-<key>CFBundleURLTypes</key><array><dict><key>CFBundleURLSchemes</key><array><string>persons</string></array></dict></array>
-<key>NSContactsUsageDescription</key><string>Persons uses Contacts to keep the people in your address book in sync with your Life OS workspace.</string>
+<key>CFBundleURLTypes</key><array>
+  <dict><key>CFBundleURLSchemes</key><array><string>persons</string></array></dict>
+  <dict>
+    <key>CFBundleURLName</key><string>Google OAuth</string>
+    <key>CFBundleURLSchemes</key><array><string>com.googleusercontent.apps.192190254990-ut30dfj7a1g9cvjv4jt43u41ikq0bfpe</string></array>
+  </dict>
+</array>
+<key>GoogleOAuthClientId</key><string>192190254990-ut30dfj7a1g9cvjv4jt43u41ikq0bfpe.apps.googleusercontent.com</string>
+<key>NSContactsUsageDescription</key><string>Persons uses Contacts to keep the people in your address book in sync with your LifeOS workspace.</string>
+<key>NSCalendarsUsageDescription</key><string>Persons reads your calendar to find meeting attendees and keep the people you meet in sync with your workspace.</string>
 <key>BGTaskSchedulerPermittedIdentifiers</key><array><string>com.lacollecteur.persons.refresh</string></array>
 <key>UIBackgroundModes</key><array><string>fetch</string></array>
 <key>UILaunchScreen</key><dict/>

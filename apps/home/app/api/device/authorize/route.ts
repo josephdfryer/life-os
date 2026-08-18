@@ -1,13 +1,14 @@
 import { NextResponse } from "next/server"
 import { auth } from "@/auth"
-import { workspaceForHomeRequest } from "@/lib/request-access"
+import { authorizeDevice } from "@/lib/device-authorize"
 
+// Kept as a fallback for any client that still posts this form (older
+// Companion builds). The /device/authorize page now authorizes inline and
+// redirects without ever rendering this form.
 export async function POST(request: Request) {
   const session = await auth()
   const email = session?.user?.email
   if (!email) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-  const workspaceId = await workspaceForHomeRequest()
-  if (!workspaceId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
   const contentType = request.headers.get("content-type") ?? ""
   if (!contentType.startsWith("application/x-www-form-urlencoded") && !contentType.startsWith("multipart/form-data")) {
     return NextResponse.json({ error: "Form submission required" }, { status: 415 })
@@ -24,26 +25,10 @@ export async function POST(request: Request) {
     if ((platform !== "macos" && platform !== "ios") || !displayName || !appVersion || state.length < 16 || state.length > 256) {
       return NextResponse.json({ error: "Invalid device authorization request" }, { status: 400 })
     }
-    const baseUrl = process.env.LIFE_OS_API_URL?.trim()
-    const apiKey = process.env.PERSONS_API_KEY?.trim()
-    if (!baseUrl || !apiKey) return NextResponse.json({ error: "Device authorization service is not configured" }, { status: 503 })
 
-    const response = await fetch(new URL("/v1/device/auth/authorize", baseUrl), {
-      method: "POST",
-      headers: { "content-type": "application/json", "x-api-key": apiKey, "x-workspace-override": workspaceId },
-      cache: "no-store",
-      body: JSON.stringify({ email, platform, displayName, appVersion, redirectUri, codeChallenge }),
-    })
-    const body = await response.json().catch(() => null) as { code?: string; deviceId?: string; error?: { message?: string } } | null
-    if (!response.ok || !body?.code || !body.deviceId) {
-      console.error("[device/authorize] canonical API refused request", { status: response.status, error: body?.error?.message })
-      return NextResponse.json({ error: body?.error?.message ?? "Could not authorize device" }, { status: response.status || 502 })
-    }
-    const callback = new URL(redirectUri)
-    callback.searchParams.set("code", body.code)
-    callback.searchParams.set("device_id", body.deviceId)
-    callback.searchParams.set("state", state)
-    return NextResponse.redirect(callback, 303)
+    const result = await authorizeDevice({ email, platform, displayName, appVersion, redirectUri, codeChallenge }, state)
+    if (!result.ok) return NextResponse.json({ error: result.error }, { status: 502 })
+    return NextResponse.redirect(result.callbackUrl, 303)
   } catch (error) {
     console.error("[device/authorize] failed", error)
     return NextResponse.json({ error: "Could not authorize device" }, { status: 500 })
