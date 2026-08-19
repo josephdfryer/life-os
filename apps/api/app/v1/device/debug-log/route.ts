@@ -2,7 +2,7 @@ import { authorizeDeviceRequest } from "@/lib/device-auth"
 import { errorResponse } from "@/lib/respond"
 
 export async function POST(request: Request) {
-  const auth = await authorizeDeviceRequest(request, "device.debug-log")
+  const auth = await authorizeDeviceRequest(request, "device.heartbeat")
   if (!auth) return errorResponse(401, "unauthorized", "Device access token is invalid or expired")
 
   const body = await request.json().catch(() => null)
