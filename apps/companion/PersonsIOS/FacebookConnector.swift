@@ -16,6 +16,7 @@ final class FacebookConnector: NSObject, ObservableObject {
     @Published var phase: ImportPhase = .idle
     @Published var importedCount = 0
     @Published var errorMessage: String?
+    @Published var debugLog: [String] = []
 
     enum ImportPhase: Equatable {
         case idle
@@ -47,6 +48,12 @@ final class FacebookConnector: NSObject, ObservableObject {
         importedCount = 0
         errorMessage = nil
         extractedContacts = []
+        debugLog = []
+    }
+
+    func shipDebugLog(tag: String) async {
+        guard !debugLog.isEmpty, let api = await model?.api else { return }
+        try? await api.debugLog(tag: tag, lines: debugLog)
     }
 
     func enqueueAll() async {
@@ -78,13 +85,11 @@ final class FacebookConnector: NSObject, ObservableObject {
         }
         importedCount = extractedContacts.count
         phase = .done(count: importedCount)
+        await shipDebugLog(tag: "facebook-import-done-\(importedCount)")
     }
 
-    // JavaScript to extract friends + birthdays from Facebook's mobile site.
-    // Called by the WebView delegate after navigating to the birthday page.
-    // Extracts user objects from all inline Relay/GraphQL JSON blobs on the page.
-    // Captures: id, name, profile URL (vanity or id-based), hometown, current city.
-    static let extractUsersJS = """
+    // Kept for reference only — extraction now lives in FacebookWebView.extractJS
+    @available(*, unavailable) static let extractUsersJS = """
     (function() {
         var byId = {};
         var scripts = Array.from(document.querySelectorAll('script'));
@@ -151,7 +156,4 @@ final class FacebookConnector: NSObject, ObservableObject {
     })();
     """
 
-    // Keep old names pointing at unified extractor for the coordinator
-    static var birthdayExtractionJS: String { extractUsersJS }
-    static var friendsListJS: String { extractUsersJS }
 }

@@ -6,12 +6,19 @@ public actor APIClient {
     private var tokens: TokenPair?
     public init(baseURL: URL, keychain: KeychainStore = KeychainStore()) throws { self.baseURL = baseURL; self.keychain = keychain; if let data = try keychain.data(account: "device-credential") { tokens = try JSONDecoder.lifeOS.decode(TokenPair.self, from: data) } }
     public var deviceId: String? { tokens?.deviceId }
+    public var workspaceId: String? { tokens?.workspaceId }
     public var isSignedIn: Bool { tokens != nil }
 
     public func save(_ pair: TokenPair) throws { tokens = pair; try keychain.set(JSONEncoder.lifeOS.encode(pair), account: "device-credential") }
     public func signOut() throws { tokens = nil; try keychain.delete(account: "device-credential") }
     public func exchange(code: String, verifier: String, deviceId: String) async throws { let body = ["code": code, "codeVerifier": verifier, "deviceId": deviceId]; let pair: TokenPair = try await send(path: "v1/device/auth/exchange", body: body, authorized: false); try save(pair) }
     public func heartbeat(appVersion: String, sources: [ConnectorStatus]) async throws { struct Body: Encodable { let appVersion: String; let sources: [ConnectorStatus] }; let _: HeartbeatResponse = try await send(path: "v1/device/heartbeat", body: Body(appVersion: appVersion, sources: sources), authorized: true) }
+    public func debugLog(tag: String, lines: [String]) async throws {
+        struct Body: Encodable { let tag: String; let lines: [String] }
+        struct Ack: Decodable { let received: Int }
+        let _: Ack = try await send(path: "v1/device/debug-log", body: Body(tag: tag, lines: lines), authorized: true)
+    }
+
     public func ingest(_ items: [OutboxItem]) async throws -> DeviceIngestResponse {
         struct WireItem: Encodable { let deviceId: String; let source: ConnectorSource; let sourceId: String; let schemaVersion: Int; let observedAt: Date; let record: NormalizedRecord }
         struct Batch: Encodable { let batchId = UUID().uuidString; let schemaVersion = 1; let items: [WireItem] }

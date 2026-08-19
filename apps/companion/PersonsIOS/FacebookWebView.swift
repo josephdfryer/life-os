@@ -89,7 +89,7 @@ struct FacebookWebView: UIViewRepresentable {
                             self.runExtraction(webView: webView, label: "friends") { [weak self] count in
                                 self?.phase = .done
                                 Task { @MainActor in
-                                    await self?.connector.enqueueAll()
+                                    await self?.connector.enqueueAll() // ships log inside
                                     self?.onDone()
                                 }
                             }
@@ -165,6 +165,7 @@ struct FacebookWebView: UIViewRepresentable {
 
         func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
             connector.debugLog.append("Nav error: \(error.localizedDescription)")
+            Task { await connector.shipDebugLog(tag: "facebook-nav-error") }
         }
     }
 
