@@ -5,7 +5,7 @@ import { join } from "node:path"
 import test from "node:test"
 import Database from "better-sqlite3"
 
-test("Granola import is idempotent, preserves user context, links exact emails and stages unknown people", async () => {
+test("Granola import is idempotent, preserves user context, links exact emails, stages unknown people, and skips declined invitees", async () => {
   const directory = mkdtempSync(join(tmpdir(), "life-os-granola-test-"))
   const databasePath = join(directory, "test.db")
   const sqlite = new Database(databasePath)
@@ -77,6 +77,67 @@ test("Granola import is idempotent, preserves user context, links exact emails a
     assert.match(event.transcript ?? "", /Joseph: A complete thought/)
     assert.match(event.metadata ?? "", /Edited provider summary/)
     assert.deepEqual(event.groupTags.map(row => row.id), [group.id])
+
+    const alex = await db.person.create({
+      data: { workspaceId: workspace.id, first: "Alex", last: "Declined", emails: JSON.stringify(["alex@example.com"]) },
+    })
+    const start = new Date("2026-08-20T16:00:00.000Z")
+    const plan = await db.plan.create({
+      data: {
+        workspaceId: workspace.id,
+        text: "TICO <> SM Weekly Sync @ Weekly",
+        scheduledStart: start,
+        externalSource: "google-calendar",
+        successSignals: JSON.stringify({
+          attendees: [
+            { email: "alex@example.com", responseStatus: "declined" },
+            { email: "tyler@example.com", responseStatus: "accepted" },
+          ],
+        }),
+      },
+    })
+    const weekly = await db.event.create({
+      data: {
+        workspaceId: workspace.id,
+        name: "TICO <> SM Weekly Sync @ Weekly",
+        type: "meeting",
+        start,
+        timestamp: start,
+        sourcePlanId: plan.id,
+      },
+    })
+    await db.interaction.create({
+      data: {
+        workspaceId: workspace.id,
+        personId: alex.id,
+        eventId: weekly.id,
+        source: "granola",
+        sourceId: "note-declined:alex@example.com",
+        type: "meeting",
+        timestamp: start,
+        summary: "TICO <> SM Weekly Sync @ Weekly",
+      },
+    })
+    const declinedImport = await importGranolaNote({
+      workspaceId: workspace.id,
+      connectionId: connection.id,
+      note: {
+        id: "note-declined",
+        title: "TICO <> SM Weekly Sync @ Weekly",
+        created_at: start.toISOString(),
+        calendar_event: {
+          scheduled_start_time: start.toISOString(),
+          scheduled_end_time: "2026-08-20T16:30:00.000Z",
+        },
+        attendees: [
+          { name: "Alex Declined", email: "alex@example.com" },
+          { name: "Tyler Fishback", email: "tyler@example.com" },
+        ],
+      },
+    })
+    assert.equal(await db.interaction.count({ where: { workspaceId: workspace.id, personId: alex.id } }), 0)
+    assert.equal(await db.interaction.count({ where: { workspaceId: workspace.id, personId: tyler.id, eventId: declinedImport.eventId } }), 1)
+    assert.equal(declinedImport.matchedPeople, 1)
   } finally {
     await db.$disconnect()
     rmSync(directory, { recursive: true, force: true })

@@ -1,7 +1,7 @@
 import { createHash } from "node:crypto"
 import { db } from "@/lib/db"
 import { decrypt, encrypt } from "@life-os/db/crypto"
-import { createReviewItem } from "@life-os/domain"
+import { createReviewItem, calendarAttendeesFromSignals, declinedAttendeeEmails } from "@life-os/domain"
 import { GranolaClient, formatGranolaTranscript, type GranolaNote, type GranolaPerson } from "./granola-client"
 
 const PROVIDER = "granola"
@@ -186,7 +186,7 @@ export async function importGranolaNote(input: { workspaceId: string; connection
     },
   })
 
-  const resolutions = await linkAttendees({ workspaceId, eventId: event.id, note, title, summary, start, end, attendees })
+  const resolutions = await linkAttendees({ workspaceId, eventId: event.id, note, title, summary, start, end, attendees, sourcePlanId: event.sourcePlanId })
   const group = await linkUnambiguousGroup(workspaceId, event.id, resolutions.personIds, start)
   await writeResolutionMetadata(event.id, metadata, resolutions, group)
   return { eventId: event.id, created: match?.created === true || !existingEvent, matchedPeople: resolutions.personIds.length, unresolved: resolutions.unresolved.length }
@@ -248,9 +248,10 @@ async function loadPersonEmailIndex(workspaceId: string) {
 
 async function linkAttendees(input: {
   workspaceId: string; eventId: string; note: GranolaNote; title: string; summary: string | null
-  start: Date; end: Date | null; attendees: GranolaPerson[]
+  start: Date; end: Date | null; attendees: GranolaPerson[]; sourcePlanId?: string | null
 }) {
   const index = await loadPersonEmailIndex(input.workspaceId)
+  const declinedEmails = await calendarDeclinedEmails(input.workspaceId, input.note, input.sourcePlanId)
   const personIds: string[] = []
   const unresolved: Array<{ name: string | null; email: string }> = []
   const duration = input.end ? Math.max(0, Math.round((input.end.getTime() - input.start.getTime()) / 60000)) : null
@@ -258,6 +259,10 @@ async function linkAttendees(input: {
   for (const attendee of input.attendees) {
     const email = normalizeEmail(attendee.email)
     if (!email) continue
+    if (declinedEmails.has(email)) {
+      await removeDeclinedGranolaAttendee(input.workspaceId, input.note.id, email)
+      continue
+    }
     const matches = index.get(email) ?? []
     if (matches.length === 1) {
       const personId = matches[0]
@@ -277,6 +282,47 @@ async function linkAttendees(input: {
     }
   }
   return { personIds: [...new Set(personIds)], unresolved }
+}
+
+async function calendarDeclinedEmails(workspaceId: string, note: GranolaNote, sourcePlanId?: string | null) {
+  const signals: string[] = []
+  if (sourcePlanId) {
+    const plan = await db.plan.findFirst({
+      where: { id: sourcePlanId, workspaceId },
+      select: { successSignals: true },
+    })
+    if (plan?.successSignals) signals.push(plan.successSignals)
+  }
+  const calendarEventId = note.calendar_event?.calendar_event_id?.trim()
+  if (calendarEventId) {
+    const link = await db.calendarEventLink.findFirst({
+      where: { workspaceId, OR: [{ externalEventId: calendarEventId }, { iCalUID: calendarEventId }] },
+      select: { plan: { select: { successSignals: true } } },
+    })
+    if (link?.plan?.successSignals) signals.push(link.plan.successSignals)
+  }
+  const declined = new Set<string>()
+  for (const raw of signals) {
+    for (const email of declinedAttendeeEmails(calendarAttendeesFromSignals(raw))) declined.add(email)
+  }
+  return declined
+}
+
+async function removeDeclinedGranolaAttendee(workspaceId: string, noteId: string, email: string) {
+  const sourceId = `${noteId}:${email}`
+  await db.interaction.deleteMany({
+    where: {
+      workspaceId,
+      source: PROVIDER,
+      sourceId,
+      emotionalWeight: null,
+      outcome: null,
+      notes: null,
+    },
+  })
+  await db.stagedInteraction.deleteMany({
+    where: { workspaceId, source: PROVIDER, sourceId },
+  })
 }
 
 async function stageUnknownAttendee(input: {

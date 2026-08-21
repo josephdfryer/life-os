@@ -4,7 +4,7 @@
 
 The Events app owns Granola ingestion. One Granola note maps to one canonical `Event`; `GranolaNoteLink` retains the external note ID, exact source URL, update time, hash, and sync status. The generated summary lives in `Event.metadata.granola`, the complete formatted transcript lives in `Event.transcript`, and user-authored `Event.notes` is never overwritten.
 
-Known attendees are linked to People only by one exact normalized email match. Each match creates an idempotent Granola `Interaction` and typed Person/Event participant edges. Missing or ambiguous emails create a `StagedInteraction` plus a universal `ReviewItem`; accepting that review attaches the Person to the already-existing meeting Event. No Person or Group is created automatically.
+Known attendees are linked to People only by one exact normalized email match. A declined calendar RSVP is not attendance: that Person is skipped and any previously auto-created Granola Interaction for that invite is removed. Each remaining match creates an idempotent Granola `Interaction` and typed Person/Event participant edges. Missing or ambiguous emails create a `StagedInteraction` plus a universal `ReviewItem`; accepting that review attaches the Person to the already-existing meeting Event. No Person or Group is created automatically.
 
 When at least two linked attendees share one uniquely strongest active Group membership, the importer tags the Event with that existing Group and records the evidence. `/groups/[id]/meetings` provides meeting count, people coverage, Granola evidence count, cadence, and the meeting timeline.
 

@@ -1,6 +1,7 @@
 export * from "./capture"
 export * from "./actions"
 export * from "./note-suggestions"
+export * from "./calendar-attendees"
 export * from "./calendar-reconciliation"
 export * from "./calendar-reconciliation-outcomes"
 export * from "./events"

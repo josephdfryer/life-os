@@ -1,6 +1,6 @@
 import { createHmac, randomBytes } from "crypto"
 import { decryptNullable, encryptNullable } from "@life-os/db/crypto"
-import { createReviewItem } from "@life-os/domain"
+import { createReviewItem, declinedAttendeeEmails, participatingAttendeeEmails } from "@life-os/domain"
 import { db } from "@/lib/db"
 import { badRequest, forbidden, notFound } from "@/server/api/errors"
 import { auditAction, type DomainActor } from "./audit"
@@ -872,6 +872,7 @@ async function upsertCalendarEvent(input: {
   }
 
   const matchedPeople = matchedAttendees(input.item, input.peopleByEmail)
+  const declinedPeople = declinedMatchedAttendees(input.item, input.peopleByEmail)
   await db.$transaction([
     db.planExpectedPerson.deleteMany({ where: { planId } }),
     ...(matchedPeople.length ? [db.planExpectedPerson.createMany({
@@ -882,6 +883,12 @@ async function upsertCalendarEvent(input: {
       })),
     })] : []),
   ], CALENDAR_TX)
+  await pruneDeclinedAttendeeInteractions({
+    workspaceId: input.workspaceId,
+    planId,
+    eventId: link?.eventId ?? null,
+    declinedPersonIds: declinedPeople.map(person => person.id),
+  })
 
   return { createdPlan }
 }
@@ -905,21 +912,61 @@ async function peopleEmailIndex(workspaceId: string) {
   return byEmail
 }
 
-function matchedAttendees(item: GoogleCalendarEvent, peopleByEmail: Map<string, { id: string; first: string; last: string }>) {
+function peopleFromEmails(
+  emails: Iterable<string>,
+  peopleByEmail: Map<string, { id: string; first: string; last: string }>,
+) {
   const seen = new Set<string>()
   const people: { id: string; first: string; last: string }[] = []
-  const attendeeEmails = [
-    ...(item.attendees ?? []).map(attendee => attendee.email),
-    item.organizer?.email,
-    item.creator?.email,
-  ].filter((email): email is string => Boolean(email))
-  for (const email of attendeeEmails) {
-    const person = peopleByEmail.get(email.toLowerCase())
+  for (const email of emails) {
+    const person = peopleByEmail.get(email)
     if (!person || seen.has(person.id)) continue
     seen.add(person.id)
     people.push(person)
   }
   return people
+}
+
+function matchedAttendees(item: GoogleCalendarEvent, peopleByEmail: Map<string, { id: string; first: string; last: string }>) {
+  return peopleFromEmails(participatingAttendeeEmails(item), peopleByEmail)
+}
+
+function declinedMatchedAttendees(item: GoogleCalendarEvent, peopleByEmail: Map<string, { id: string; first: string; last: string }>) {
+  return peopleFromEmails(declinedAttendeeEmails(item.attendees), peopleByEmail)
+}
+
+async function pruneDeclinedAttendeeInteractions(input: {
+  workspaceId: string
+  planId: string
+  eventId: string | null
+  declinedPersonIds: string[]
+}) {
+  if (!input.declinedPersonIds.length) return
+  let eventId = input.eventId
+  if (!eventId) {
+    const plan = await db.plan.findUnique({
+      where: { id: input.planId },
+      select: { fulfilledBy: { select: { id: true } } },
+    })
+    eventId = plan?.fulfilledBy?.id ?? null
+  }
+  if (!eventId) return
+  await db.interaction.deleteMany({
+    where: {
+      workspaceId: input.workspaceId,
+      eventId,
+      personId: { in: input.declinedPersonIds },
+      type: { in: ["calendar", "meeting"] },
+      emotionalWeight: null,
+      outcome: null,
+      notes: null,
+      OR: [
+        { source: "granola" },
+        { source: "google-calendar" },
+        { source: null, type: "calendar" },
+      ],
+    },
+  })
 }
 
 async function markCancelled(connectionId: string, workspaceId: string, calendarId: string, externalEventId: string) {

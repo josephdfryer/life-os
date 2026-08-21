@@ -48,6 +48,7 @@ final class CalendarConnector {
             for attendee in attendees {
                 guard attendee.participantType == .person,
                       attendee.participantRole != .nonParticipant,
+                      attendee.participantStatus != .declined,
                       let email = attendee.url.absoluteString.lowercased()
                           .components(separatedBy: "mailto:").last,
                       email.contains("@"),
@@ -70,10 +71,10 @@ final class CalendarConnector {
         var seen = Set<String>()
         for event in events {
             for attendee in (event.attendees ?? []) {
-                if let email = attendee.url.absoluteString.components(separatedBy: "mailto:").last,
-                   email.contains("@"), !email.hasSuffix("@resource.calendar.google.com") {
-                    seen.insert(email.lowercased())
-                }
+                guard attendee.participantStatus != .declined,
+                      let email = attendee.url.absoluteString.components(separatedBy: "mailto:").last,
+                      email.contains("@"), !email.hasSuffix("@resource.calendar.google.com") else { continue }
+                seen.insert(email.lowercased())
             }
         }
         return seen.count

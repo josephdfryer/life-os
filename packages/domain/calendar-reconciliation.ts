@@ -1,3 +1,4 @@
+import { calendarAttendeesFromSignals, declinedAttendeeEmails, personDeclinedInvite } from "./calendar-attendees"
 import { registerReviewCommand } from "./review"
 
 export type CalendarReconciliationAction = "happened" | "changed" | "cancelled" | "skip"
@@ -65,9 +66,10 @@ export async function reconcileCalendarPlan(input: {
   if (end && end < start) throw new CalendarReconciliationError("End time must be after start", "validation")
 
   const personIds = [...new Set(input.personIds ?? plan.expectedPeople.map(person => person.personId))]
+  const declinedEmails = declinedAttendeeEmails(calendarAttendeesFromSignals(plan.successSignals))
   const [people, place] = await Promise.all([
     personIds.length
-      ? db.person.findMany({ where: { workspaceId: input.workspaceId, id: { in: personIds } }, select: { id: true } })
+      ? db.person.findMany({ where: { workspaceId: input.workspaceId, id: { in: personIds } }, select: { id: true, emails: true } })
       : [],
     input.placeId
       ? db.place.findFirst({ where: { workspaceId: input.workspaceId, id: input.placeId }, select: { id: true } })
@@ -76,6 +78,7 @@ export async function reconcileCalendarPlan(input: {
   if (people.length !== personIds.length) {
     throw new CalendarReconciliationError("One or more attendees are outside this workspace", "validation")
   }
+  const attendingPeople = people.filter(person => !personDeclinedInvite(person.emails, declinedEmails))
   if (input.placeId && !place) {
     throw new CalendarReconciliationError("Place is outside this workspace", "validation")
   }
@@ -110,7 +113,7 @@ export async function reconcileCalendarPlan(input: {
       },
       select: { id: true },
     })
-    for (const person of people) {
+    for (const person of attendingPeople) {
       const interaction = await tx.interaction.create({
         data: {
           workspaceId: input.workspaceId,
