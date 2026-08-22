@@ -70,7 +70,7 @@ export default function AssistantChat() {
     if (!text || thinking) return
     setDraft("")
     setThinking(true)
-    setMessages(prev => [...prev, { id: `local-${Date.now()}`, role: "user", content: text }])
+    setMessages(prev => [...prev, { id: `local-${Date.now()}`, role: "user", content: text, createdAt: new Date().toISOString() }])
     try {
       const res = await fetch("/api/chat", {
         method: "POST",
@@ -79,29 +79,46 @@ export default function AssistantChat() {
       })
       const data = await res.json()
       const reply = res.ok ? data.reply : (data.error ?? "Something went wrong")
-      setMessages(prev => [...prev, { id: `local-${Date.now()}-r`, role: "assistant", content: reply, citations: data.citations ?? [] }])
+      setMessages(prev => [...prev, { id: `local-${Date.now()}-r`, role: "assistant", content: reply, citations: data.citations ?? [], createdAt: new Date().toISOString() }])
     } catch {
-      setMessages(prev => [...prev, { id: `local-${Date.now()}-e`, role: "assistant", content: "Network error — try again." }])
+      setMessages(prev => [...prev, { id: `local-${Date.now()}-e`, role: "assistant", content: "Network error — try again.", createdAt: new Date().toISOString() }])
     } finally {
       setThinking(false)
       inputRef.current?.focus()
     }
   }
 
+  function formatTimestamp(iso?: string) {
+    if (!iso) return ""
+    const date = new Date(iso)
+    if (Number.isNaN(date.getTime())) return ""
+    const now = new Date()
+    const sameDay = date.toDateString() === now.toDateString()
+    const time = date.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })
+    if (sameDay) return time
+    const day = date.toLocaleDateString([], { month: "short", day: "numeric" })
+    return `${day} · ${time}`
+  }
+
   return (
     <div style={{ height: "100vh", display: "flex", flexDirection: "column", background: "var(--bg)" }}>
-      <header style={{
+      <header className="assistant-header" style={{
         padding: "14px 24px", borderBottom: "1px solid var(--border-subtle)",
-        background: "var(--surface)", display: "flex", alignItems: "baseline", gap: "12px",
+        background: "var(--surface)", display: "flex", alignItems: "baseline", gap: "12px", flexWrap: "wrap", rowGap: "6px",
       }}>
         <a href="/" style={{ fontFamily: "var(--font-display)", fontSize: "18px", color: "var(--ink)", textDecoration: "none" }}>Assistant</a>
         <nav style={{ display: "flex", gap: "6px", marginLeft: "8px" }}>
           <a href="/" style={{ padding: "5px 12px", borderRadius: "var(--radius-pill)", background: "var(--cognac-soft)", color: "var(--cognac-deep)", textDecoration: "none", fontSize: "12px" }}>Chat</a>
           <a href="/files" style={{ padding: "5px 12px", borderRadius: "var(--radius-pill)", color: "var(--ink-3)", textDecoration: "none", fontSize: "12px" }}>Files</a>
         </nav>
-        <span style={{ fontSize: "11px", color: "var(--ink-4)", fontStyle: "italic" }}>
+        <span className="assistant-header-subtitle" style={{ fontSize: "11px", color: "var(--ink-4)", fontStyle: "italic" }}>
           same brain as WhatsApp — people, schedule, notes, money
         </span>
+        <style>{`
+          @media (max-width: 560px) {
+            .assistant-header-subtitle { display: none; }
+          }
+        `}</style>
       </header>
 
       <main style={{ flex: 1, overflowY: "auto", padding: "24px 0" }}>
@@ -121,23 +138,36 @@ export default function AssistantChat() {
             <div
               key={message.id}
               style={{
+                display: "flex",
+                flexDirection: "column",
                 alignSelf: message.role === "user" ? "flex-end" : "flex-start",
                 maxWidth: "85%",
-                padding: "10px 14px",
-                borderRadius: message.role === "user" ? "14px 14px 4px 14px" : "14px 14px 14px 4px",
-                background: message.role === "user" ? "var(--ink)" : "var(--surface)",
-                border: message.role === "user" ? "none" : "1px solid var(--border)",
-                color: message.role === "user" ? "var(--bg)" : "var(--ink)",
-                fontSize: "13.5px",
-                lineHeight: 1.6,
-                whiteSpace: "pre-wrap",
-                overflowWrap: "anywhere",
+                alignItems: message.role === "user" ? "flex-end" : "flex-start",
               }}
             >
-              {message.content}
-              {!!message.citations?.length && <div style={{ marginTop: "8px", paddingTop: "8px", borderTop: "1px solid var(--border-subtle)", fontSize: "11px", color: "var(--ink-3)" }}>
-                {message.citations.map(citation => <a key={citation.chunkId} href={`/files/${citation.fileId}?chunkId=${citation.chunkId}#${citation.chunkId}`} style={{ display: "block", color: "var(--cognac-deep)" }}>{citation.filename} · {citation.chunkId}</a>)}
-              </div>}
+              <div
+                style={{
+                  padding: "10px 14px",
+                  borderRadius: message.role === "user" ? "14px 14px 4px 14px" : "14px 14px 14px 4px",
+                  background: message.role === "user" ? "var(--ink)" : "var(--surface)",
+                  border: message.role === "user" ? "none" : "1px solid var(--border)",
+                  color: message.role === "user" ? "var(--bg)" : "var(--ink)",
+                  fontSize: "13.5px",
+                  lineHeight: 1.6,
+                  whiteSpace: "pre-wrap",
+                  overflowWrap: "anywhere",
+                }}
+              >
+                {message.content}
+                {!!message.citations?.length && <div style={{ marginTop: "8px", paddingTop: "8px", borderTop: "1px solid var(--border-subtle)", fontSize: "11px", color: "var(--ink-3)" }}>
+                  {message.citations.map(citation => <a key={citation.chunkId} href={`/files/${citation.fileId}?chunkId=${citation.chunkId}#${citation.chunkId}`} style={{ display: "block", color: "var(--cognac-deep)" }}>{citation.filename} · {citation.chunkId}</a>)}
+                </div>}
+              </div>
+              {!!formatTimestamp(message.createdAt) && (
+                <span style={{ fontSize: "10.5px", color: "var(--ink-4)", padding: "3px 4px 0" }}>
+                  {formatTimestamp(message.createdAt)}
+                </span>
+              )}
             </div>
           ))}
           {thinking && (
