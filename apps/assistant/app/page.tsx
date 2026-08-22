@@ -242,10 +242,11 @@ export default function AssistantChat() {
             onClick={send}
             disabled={!draft.trim() || thinking}
             style={{
-              padding: "11px 20px", borderRadius: "12px", border: "none",
+              flex: "0 0 auto", height: 42, padding: "0 20px", borderRadius: "12px", border: "none",
+              display: "flex", alignItems: "center", justifyContent: "center",
               background: draft.trim() && !thinking ? "var(--cognac)" : "var(--border)",
               color: draft.trim() && !thinking ? "#fff" : "var(--ink-4)",
-              font: "inherit", fontSize: "13px", fontWeight: 500,
+              font: "inherit", fontSize: "13px", fontWeight: 500, lineHeight: 1,
               cursor: draft.trim() && !thinking ? "pointer" : "default",
             }}
           >
