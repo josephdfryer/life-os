@@ -1,5 +1,5 @@
 import { db } from '@life-os/db'
-import { getRelationshipGaps, getBirthdaySignals } from '@life-os/alignment'
+import { getAlignmentSignals } from '@life-os/alignment'
 import { cacheLife } from 'next/cache'
 
 interface Props {
@@ -14,14 +14,10 @@ export default async function NudgesWidget({ workspaceId, personsUrl }: Props) {
   cacheLife({ stale: 30, revalidate: 60, expire: 300 })
   // Shared with Persons (Today page) and the assistant — one definition of
   // "overdue" instead of three apps quietly disagreeing with each other.
-  // Stalled-plan signals are deliberately excluded here — this widget is
-  // "who deserves attention", the same relationship+birthday scope Persons'
-  // Today page shows, not the broader alignment feed.
-  const [gaps, birthdays] = await Promise.all([
-    getRelationshipGaps(workspaceId),
-    getBirthdaySignals(workspaceId),
-  ])
-  const combined = [...birthdays, ...gaps].sort((a, b) => b.severity - a.severity)
+  // Every signal here always carries a concrete reason: an overdue
+  // connection, a birthday today, or a plan involving that person that's
+  // gone stale — never a person surfaced just because a record exists.
+  const combined = (await getAlignmentSignals(workspaceId)).sort((a, b) => b.severity - a.severity)
   // A person can be both "birthday today" and "overdue for contact" at
   // once — show them once, under whichever signal sorted higher.
   const seen = new Set<string>()

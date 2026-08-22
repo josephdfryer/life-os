@@ -29,6 +29,14 @@ export function relationshipGapScore(input: {
     if (!hasActivePlan) return 0
     return daysSince(lastInteractionAt) / ACQUAINTANCE_WITH_PLAN_THRESHOLD_DAYS
   }
+  // Nurture (2) is the closeness every new Person gets by default, including
+  // contacts pulled in via device sync, Gmail contacts, or CSV/vCard import
+  // that the user has never reviewed. Without a single recorded interaction
+  // or a plan naming them, that default alone isn't evidence of a real
+  // relationship — surfacing it as "overdue" would just be flagging
+  // never-reviewed contacts (businesses, one-off imports) as people to chase.
+  // Only escalate once there's been real contact that's since gone quiet.
+  if (closeness === 2 && !lastInteractionAt && !hasActivePlan) return 0
   const threshold = CLOSENESS_THRESHOLD_DAYS[closeness] ?? 21
   return daysSince(lastInteractionAt) / threshold
 }
