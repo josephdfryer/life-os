@@ -2,8 +2,14 @@ name: Calendar auto-sync
 
 # Keeps Google Calendar events fresh by pinging the events app's cron endpoint.
 # Vercel Hobby caps native crons at once/day, so we drive it from GitHub Actions
-# instead. The endpoint is idempotent (incremental sync via stored tokens), so
-# occasional GitHub Actions scheduling drift is harmless.
+# instead.
+#
+# The endpoint is idempotent. On a connection's first runs it walks the whole
+# calendar unwindowed to earn a Google syncToken, parking a page cursor if it
+# runs out of time budget and resuming here on the next tick; once the token
+# exists every run is a true incremental sync. Neither mode is bounded by a date
+# range, so events arbitrarily far in the future arrive on their own. Scheduling
+# drift is therefore harmless — a late run just resumes where the last stopped.
 on:
   schedule:
     - cron: "*/30 * * * *" # every 30 minutes (UTC); GitHub may delay under load
