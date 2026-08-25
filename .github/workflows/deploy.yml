@@ -1,0 +1,93 @@
+name: Deploy
+
+# Only `life-os-places` is connected to Vercel's GitHub integration; every other
+# project has link: null, so it ships ONLY when someone runs `vercel --prod`
+# from a laptop. That is why apps silently drift from master — Persons sat eight
+# days behind without any signal, and the calendar fix could not reach
+# production even after it merged.
+#
+# This reproduces the flow documented in apps/events/AGENTS.md and
+# apps/persons/HANDOFF.md (deploy from the repo root, project settings supply
+# the Root Directory) but from CI, so it does not depend on whose machine is
+# awake. Vercel builds remotely and reads each project's own environment
+# variables, so no app secrets are needed here — only a token.
+#
+# Deliberately manual. Several of these projects have not deployed in a long
+# time, and shipping all of them unattended could push half-finished work live.
+# Pick one, confirm it, then move on. Switch to Vercel's native GitHub
+# integration (Project → Settings → Git → Connect) when you want true
+# deploy-on-push: it also gives preview deploys and PR comments, which this
+# cannot. This workflow is the fallback for projects you would rather keep on
+# an explicit trigger.
+#
+# Setup: add a repo secret VERCEL_TOKEN (Vercel → Account Settings → Tokens,
+# scoped to the jdf247-3720s-projects team).
+
+on:
+  workflow_dispatch:
+    inputs:
+      app:
+        description: "Which app to deploy"
+        required: true
+        default: events
+        type: choice
+        options:
+          - events
+          - persons
+          - home
+          - assistant
+          - api
+          - stuff
+          - level-up
+          - all
+
+concurrency:
+  group: deploy-${{ inputs.app }}
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    strategy:
+      # One app at a time: a failure should not be masked by a sibling, and
+      # these share a database.
+      max-parallel: 1
+      fail-fast: false
+      matrix:
+        app: ${{ inputs.app == 'all' && fromJSON('["events","persons","home","assistant","api","stuff","level-up"]') || fromJSON(format('["{0}"]', inputs.app)) }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+
+      - name: Resolve Vercel project id
+        id: project
+        run: |
+          case "${{ matrix.app }}" in
+            events)    id=prj_2KwWKc85PvmuSJ92EhX0QsGb7Z9o ;;
+            persons)   id=prj_R3ONwJnoKVWEtq6IrugQOsHu9MmS ;;
+            home)      id=prj_4TifUt9AIklx5ZmdMWss9f9Ktluf ;;
+            assistant) id=prj_LmtslXEZtq3TgwtnvLgh1UEmHbI8 ;;
+            api)       id=prj_0tbb9ZGn84kjwZx67piwmGEYApp1 ;;
+            stuff)     id=prj_rv0TqbNNsk6JwJx9SswDgdFyO59q ;;
+            level-up)  id=prj_K4xc5pnZDLcpI6EiRpm4JTCEqxFj ;;
+            *) echo "Unknown app: ${{ matrix.app }}" >&2; exit 1 ;;
+          esac
+          echo "id=$id" >> "$GITHUB_OUTPUT"
+          echo "Deploying ${{ matrix.app }} -> $id"
+
+      - name: Deploy to production
+        env:
+          VERCEL_ORG_ID: team_ftx6eq2s9NttYUc9WqQRwfa8
+          VERCEL_PROJECT_ID: ${{ steps.project.outputs.id }}
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: |
+          if [ -z "$VERCEL_TOKEN" ]; then
+            echo "VERCEL_TOKEN secret is not set — add it in Settings → Secrets → Actions." >&2
+            exit 1
+          fi
+          # From the repo root, exactly as the app docs prescribe: each Vercel
+          # project's own Root Directory and build command do the rest.
+          npx vercel@latest --prod --yes --token="$VERCEL_TOKEN"
