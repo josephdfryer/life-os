@@ -29,14 +29,13 @@ export function relationshipGapScore(input: {
     if (!hasActivePlan) return 0
     return daysSince(lastInteractionAt) / ACQUAINTANCE_WITH_PLAN_THRESHOLD_DAYS
   }
-  // Nurture (2) is the closeness every new Person gets by default, including
-  // contacts pulled in via device sync, Gmail contacts, or CSV/vCard import
-  // that the user has never reviewed. Without a single recorded interaction
-  // or a plan naming them, that default alone isn't evidence of a real
-  // relationship — surfacing it as "overdue" would just be flagging
-  // never-reviewed contacts (businesses, one-off imports) as people to chase.
-  // Only escalate once there's been real contact that's since gone quiet.
-  if (closeness === 2 && !lastInteractionAt && !hasActivePlan) return 0
+  // Deliberately no "hide people with no recorded contact" rule here. This
+  // function answers one question — how overdue is this relationship against
+  // its declared cadence — and every surface shares it. Whether a given
+  // person is worth surfacing at all is curation, and it belongs to the
+  // caller that has the provenance to judge it (see getRelationshipGaps).
+  // Encoding it here silently emptied Persons' Today page, which passes
+  // plans: [] and so could never hit the active-plan escape hatch.
   const threshold = CLOSENESS_THRESHOLD_DAYS[closeness] ?? 21
   return daysSince(lastInteractionAt) / threshold
 }
