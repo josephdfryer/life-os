@@ -65,6 +65,15 @@ export function reviewDayBounds(value: string, timeZone = HOME_TIME_ZONE) {
   }
 }
 
+export function formatScheduleTime(date: Date, timeZone: string) {
+  return new Intl.DateTimeFormat("en-US", {
+    timeZone,
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
+  }).format(date)
+}
+
 function zonedMidnight(value: string, timeZone: string) {
   const utcMidnight = new Date(`${value}T00:00:00Z`)
   const offsetName = new Intl.DateTimeFormat("en-US", {

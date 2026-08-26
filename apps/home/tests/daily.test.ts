@@ -2,6 +2,7 @@ import assert from "node:assert/strict"
 import test from "node:test"
 import {
   dayKey,
+  formatScheduleTime,
   greetingForHour,
   isProviderScheduledEvent,
   parseActionItems,
@@ -51,6 +52,17 @@ test("daily review uses Los Angeles calendar days across daylight saving time", 
     start: new Date("2026-01-27T08:00:00.000Z"),
     end: new Date("2026-01-28T08:00:00.000Z"),
   })
+})
+
+test("schedule times render in the selected timezone across daylight saving time", () => {
+  assert.equal(
+    formatScheduleTime(new Date("2026-08-26T13:05:00.000Z"), "America/Detroit"),
+    "9:05 AM",
+  )
+  assert.equal(
+    formatScheduleTime(new Date("2026-01-26T13:05:00.000Z"), "America/Detroit"),
+    "8:05 AM",
+  )
 })
 
 test("daily review validates and moves between date keys", () => {

@@ -1,7 +1,7 @@
 import { lifeOsAppUrl } from '@life-os/auth'
 import { db } from '@life-os/db'
 import { BACKGROUND_EVENT_TYPES } from '@life-os/domain'
-import { dayKey, isProviderScheduledEvent, reviewDayBounds } from '@/lib/daily'
+import { dayKey, formatScheduleTime, isProviderScheduledEvent, reviewDayBounds } from '@/lib/daily'
 import { cacheLife } from 'next/cache'
 
 interface Props {
@@ -86,10 +86,6 @@ export default async function ScheduleWidget({ workspaceId, personsUrl, tz }: Pr
     }] : []),
   ].sort((a, b) => a.start.getTime() - b.start.getTime()).slice(0, 8)
 
-  function formatTime(d: Date) {
-    return d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })
-  }
-
   return (
     <div style={card}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
@@ -120,7 +116,7 @@ export default async function ScheduleWidget({ workspaceId, personsUrl, tz }: Pr
                     flexShrink: 0,
                   }}
                 >
-                  {formatTime(new Date(event.start))}
+                  {formatScheduleTime(new Date(event.start), tz)}
                 </div>
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
