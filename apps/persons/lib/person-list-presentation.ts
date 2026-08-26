@@ -22,23 +22,23 @@ function daysAgo(days: number, now: Date): Date {
 
 export function personListViewFilter(view: PersonListView, now = new Date()): Record<string, unknown> | null {
   if (view === "active") {
-    return { interactions: { some: { timestamp: { gte: daysAgo(ACTIVE_WINDOW_DAYS, now) } } } }
+    return { interactions: { some: { timestamp: { gte: daysAgo(ACTIVE_WINDOW_DAYS, now), lte: now } } } }
   }
 
   if (view === "no-history") {
-    return { interactions: { none: {} } }
+    return { interactions: { none: { timestamp: { lte: now } } } }
   }
 
   if (view === "attention") {
     return {
       OR: [
-        { closeness: 4, interactions: { none: { timestamp: { gte: daysAgo(10, now) } } } },
-        { closeness: 3, interactions: { none: { timestamp: { gte: daysAgo(21, now) } } } },
-        { closeness: 2, interactions: { none: { timestamp: { gte: daysAgo(90, now) } } } },
+        { closeness: 4, interactions: { none: { timestamp: { gte: daysAgo(10, now), lte: now } } } },
+        { closeness: 3, interactions: { none: { timestamp: { gte: daysAgo(21, now), lte: now } } } },
+        { closeness: 2, interactions: { none: { timestamp: { gte: daysAgo(90, now), lte: now } } } },
         {
           closeness: 1,
           plans: { some: { status: "active" } },
-          interactions: { none: { timestamp: { gte: daysAgo(30, now) } } },
+          interactions: { none: { timestamp: { gte: daysAgo(30, now), lte: now } } },
         },
       ],
     }

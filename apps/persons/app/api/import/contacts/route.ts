@@ -55,9 +55,19 @@ export async function POST(req: NextRequest) {
     }
 
     // ── CSV — Claude column mapping ────────────────────────────────────────
-    const rows = parseCSVRows(content)
-    if (rows.length < 2) {
+    const allRows = parseCSVRows(content)
+    if (allRows.length < 2) {
       return NextResponse.json({ error: "CSV appears to be empty" }, { status: 400 })
+    }
+
+    // Some exports prefix the real header with disclaimer lines — LinkedIn's
+    // Connections.csv leads with a "Notes:" line and a paragraph, each just
+    // one populated cell. Skip to the first row that actually looks like a
+    // header (several populated columns) rather than assuming row 0 is it.
+    const headerIndex = allRows.findIndex(r => r.filter(c => c.trim()).length >= 3)
+    const rows = headerIndex > 0 ? allRows.slice(headerIndex) : allRows
+    if (rows.length < 2) {
+      return NextResponse.json({ error: "Could not find a header row with at least 3 columns" }, { status: 400 })
     }
 
     const header   = rows[0]
@@ -67,7 +77,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Could not read CSV header row" }, { status: 400 })
     }
 
-    // Ask Claude to map columns → Life OS standard (sends only header + 5 rows)
+    // Ask Claude to map columns → LifeOS standard (sends only header + 5 rows)
     let mapping
     try {
       mapping = await detectColumnMapping(header, dataRows.slice(0, 5))

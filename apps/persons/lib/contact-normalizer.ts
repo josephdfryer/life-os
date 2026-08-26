@@ -1,5 +1,5 @@
 /**
- * Life OS Contact Standard v1
+ * LifeOS Contact Standard v1
  * ─────────────────────────────────────────────────────────────────────────────
  * All contact imports are normalized to this shape before entering the system.
  * Any source format (Google CSV, LinkedIn, Salesforce, vCard, etc.) is mapped
@@ -84,7 +84,7 @@ export async function detectColumnMapping(
     messages: [
       {
         role: "user",
-        content: `You are mapping columns from a contacts CSV export to the Life OS Contact Standard.
+        content: `You are mapping columns from a contacts CSV export to the LifeOS Contact Standard.
 
 Standard fields and what they mean:
 ${fieldList}

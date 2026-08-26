@@ -3,9 +3,10 @@ import { relationshipGapScore, daysSince } from "@life-os/alignment/pure"
 
 export { daysSince }
 
-export function lastInteractionDate(interactions: Interaction[]): Date | null {
-  if (!interactions.length) return null
-  const sorted = [...interactions].sort(
+export function lastInteractionDate(interactions: Interaction[], now = new Date()): Date | null {
+  const completed = interactions.filter(interaction => new Date(interaction.timestamp).getTime() <= now.getTime())
+  if (!completed.length) return null
+  const sorted = completed.sort(
     (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
   )
   return new Date(sorted[0].timestamp)
