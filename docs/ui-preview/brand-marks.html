@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>LifeOS — brand marks specimen</title>
+<style>
+  :root {
+    --bg: #e9e3d8; --surface: #f7f4ee; --surface-2: #efe9df;
+    --border: #d9d0c3; --border-subtle: #e5dfd4;
+    --ink: #2c2620; --ink-2: #524a42; --ink-3: #7a7268; --ink-4: #a69c90;
+    --cognac: #8f6b4a; --cognac-deep: #6e5238; --camel: #c4a574;
+    --petrol: #1a2a35; --attention: #b07d4f; --success: #6b7a63;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 48px 32px 80px; background: var(--bg); color: var(--ink);
+    font-family: Inter, system-ui, sans-serif; font-size: 14px; line-height: 1.55;
+  }
+  .wrap { max-width: 1100px; margin: 0 auto; }
+  h1 { font-family: Newsreader, Georgia, serif; font-size: 28px; font-weight: 400; letter-spacing: -0.02em; margin: 0 0 6px; }
+  .sub { color: var(--ink-3); margin: 0 0 44px; }
+  .label {
+    font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--ink-4); margin: 40px 0 14px;
+  }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+  .cell {
+    background: var(--surface); border: 1px solid var(--border-subtle); border-radius: 10px;
+    padding: 20px 16px; text-align: center;
+  }
+  .cell.dark { background: var(--petrol); border-color: #2a424c; }
+  .cell .name { font-size: 12px; color: var(--ink-2); margin-top: 12px; }
+  .cell.dark .name { color: #a8bcc4; }
+  .cell .meta { font-size: 11px; color: var(--ink-4); }
+  .sizes { display: flex; align-items: flex-end; justify-content: center; gap: 14px; min-height: 44px; }
+  .tiles { display: flex; flex-wrap: wrap; gap: 14px; }
+  .tile { width: 96px; height: 96px; border-radius: 21px; display: grid; place-items: center; }
+  .tile.cream { background: var(--surface); border: 1px solid var(--border); }
+  .tile.petrol { background: var(--petrol); }
+  .bar {
+    display: flex; align-items: center; gap: 10px; height: 40px; padding: 0 16px;
+    background: var(--surface); border: 1px solid var(--border-subtle); border-radius: 10px;
+  }
+  .bar .brand { display: inline-flex; align-items: center; gap: 7px; font-family: Newsreader, Georgia, serif; font-size: 14px; font-weight: 500; }
+  .bar .pill { display: inline-flex; align-items: center; gap: 7px; padding: 4px 9px; border-radius: 999px; background: #f0e6d8; font-size: 13px; font-weight: 500; }
+  svg { display: block; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>LifeOS marks</h1>
+  <p class="sub">
+    Every mark is drawn on one 100&times;100 grid and paints with <code>currentColor</code>.
+    Source of truth: <code>packages/ui/brand/marks/</code> &middot; React mirror: <code>packages/ui/src/marks.tsx</code>.
+  </p>
+
+  <div class="label">Master mark &mdash; optical sizes</div>
+  <div class="grid">
+    <div class="cell">
+      <div class="sizes" style="color: var(--cognac)">
+        <svg viewBox="0 0 100 100" width="40" height="40" fill="none"><g fill="currentColor"><circle cx="22" cy="22" r="11"/><circle cx="78" cy="22" r="11"/><circle cx="22" cy="78" r="11"/><circle cx="78" cy="78" r="11"/></g><circle cx="50" cy="50" r="13" stroke="currentColor" stroke-width="6"/></svg>
+        <svg viewBox="0 0 100 100" width="24" height="24" fill="none"><g fill="currentColor"><circle cx="22" cy="22" r="11"/><circle cx="78" cy="22" r="11"/><circle cx="22" cy="78" r="11"/><circle cx="78" cy="78" r="11"/></g><circle cx="50" cy="50" r="13" stroke="currentColor" stroke-width="6"/></svg>
+        <svg viewBox="0 0 100 100" width="16" height="16" fill="none"><g fill="currentColor"><circle cx="22" cy="22" r="11"/><circle cx="78" cy="22" r="11"/><circle cx="22" cy="78" r="11"/><circle cx="78" cy="78" r="11"/></g><circle cx="50" cy="50" r="13" stroke="currentColor" stroke-width="6"/></svg>
+      </div>
+      <div class="name">LifeOSMark</div><div class="meta">40 / 24 / 16px</div>
+    </div>
+    <div class="cell">
+      <div class="sizes" style="color: var(--cognac)">
+        <svg viewBox="0 0 100 100" width="40" height="40" fill="none"><g fill="currentColor"><circle cx="20" cy="20" r="13"/><circle cx="80" cy="20" r="13"/><circle cx="20" cy="80" r="13"/><circle cx="80" cy="80" r="13"/></g><circle cx="50" cy="50" r="15" stroke="currentColor" stroke-width="8"/></svg>
+        <svg viewBox="0 0 100 100" width="24" height="24" fill="none"><g fill="currentColor"><circle cx="20" cy="20" r="13"/><circle cx="80" cy="20" r="13"/><circle cx="20" cy="80" r="13"/><circle cx="80" cy="80" r="13"/></g><circle cx="50" cy="50" r="15" stroke="currentColor" stroke-width="8"/></svg>
+        <svg viewBox="0 0 100 100" width="16" height="16" fill="none"><g fill="currentColor"><circle cx="20" cy="20" r="13"/><circle cx="80" cy="20" r="13"/><circle cx="20" cy="80" r="13"/><circle cx="80" cy="80" r="13"/></g><circle cx="50" cy="50" r="15" stroke="currentColor" stroke-width="8"/></svg>
+      </div>
+      <div class="name">LifeOSMarkSmall</div><div class="meta">use below 24px</div>
+    </div>
+    <div class="cell dark">
+      <div class="sizes" style="color: var(--camel)">
+        <svg viewBox="0 0 100 100" width="40" height="40" fill="none"><g fill="currentColor"><circle cx="22" cy="22" r="11"/><circle cx="78" cy="22" r="11"/><circle cx="22" cy="78" r="11"/><circle cx="78" cy="78" r="11"/></g><circle cx="50" cy="50" r="13" stroke="currentColor" stroke-width="6"/></svg>
+      </div>
+      <div class="name">on petrol</div><div class="meta">camel</div>
+    </div>
+    <div class="cell">
+      <div class="sizes" style="color: var(--ink)">
+        <svg viewBox="0 0 100 100" width="40" height="40" fill="none"><g fill="currentColor"><circle cx="22" cy="22" r="11"/><circle cx="78" cy="22" r="11"/><circle cx="22" cy="78" r="11"/><circle cx="78" cy="78" r="11"/></g><circle cx="50" cy="50" r="13" stroke="currentColor" stroke-width="6"/></svg>
+      </div>
+      <div class="name">single colour</div><div class="meta">ink</div>
+    </div>
+  </div>
+
+  <div class="label">App suite &mdash; accent on cream</div>
+  <div class="grid" id="apps-light"></div>
+
+  <div class="label">App suite &mdash; camel on petrol</div>
+  <div class="grid" id="apps-dark"></div>
+
+  <div class="label">Alphabet</div>
+  <div class="grid" id="alphabet"></div>
+
+  <div class="label">Icon tiles</div>
+  <div class="tiles" id="tiles"></div>
+
+  <div class="label">Shared chrome in situ</div>
+  <div class="bar">
+    <span class="brand" style="color: var(--ink)">
+      <svg viewBox="0 0 100 100" width="15" height="15" fill="none" style="color: var(--cognac)"><g fill="currentColor"><circle cx="20" cy="20" r="13"/><circle cx="80" cy="20" r="13"/><circle cx="20" cy="80" r="13"/><circle cx="80" cy="80" r="13"/></g><circle cx="50" cy="50" r="15" stroke="currentColor" stroke-width="8"/></svg>
+      LifeOS
+    </span>
+    <span style="color: var(--ink-4)">/</span>
+    <span class="pill" style="color: var(--cognac-deep)">
+      <svg viewBox="0 0 100 100" width="13" height="13" fill="none" style="color:#8f6b4a"><circle cx="36" cy="50" r="26" stroke="currentColor" stroke-width="6"/><circle cx="64" cy="50" r="26" stroke="currentColor" stroke-width="6"/></svg>
+      Persons <span style="font-size:9px;opacity:.7">&#9662;</span>
+    </span>
+  </div>
+</div>
+
+<script>
+const APPS = [
+  ['Home', '#6e5238', '<g fill="currentColor"><circle cx="22" cy="22" r="11"/><circle cx="78" cy="22" r="11"/><circle cx="22" cy="78" r="11"/><circle cx="78" cy="78" r="11"/></g><circle cx="50" cy="50" r="13" stroke="currentColor" stroke-width="6"/>'],
+  ['Persons', '#8f6b4a', '<circle cx="36" cy="50" r="26" stroke="currentColor" stroke-width="6"/><circle cx="64" cy="50" r="26" stroke="currentColor" stroke-width="6"/>'],
+  ['Places', '#6b7a63', '<circle cx="50" cy="50" r="36" stroke="currentColor" stroke-width="5"/><circle cx="50" cy="50" r="21" stroke="currentColor" stroke-width="5"/><circle cx="50" cy="50" r="9" fill="currentColor"/>'],
+  ['Stuff', '#c4a574', '<rect x="14" y="14" width="72" height="72" rx="18" stroke="currentColor" stroke-width="6"/><circle cx="50" cy="58" r="14" fill="currentColor"/>'],
+  ['Events', '#524a42', '<circle cx="24" cy="50" r="14" fill="currentColor"/><line x1="38" y1="50" x2="62" y2="50" stroke="currentColor" stroke-width="5"/><circle cx="76" cy="50" r="14" stroke="currentColor" stroke-width="6"/>'],
+  ['Assistant', '#1a2a35', '<line x1="50" y1="10" x2="50" y2="90" stroke="currentColor" stroke-width="3"/><line x1="20" y1="72" x2="80" y2="28" stroke="currentColor" stroke-width="5"/><g fill="currentColor"><circle cx="18" cy="74" r="10"/><circle cx="50" cy="50" r="10"/><circle cx="82" cy="26" r="10"/></g>'],
+  ['Level Up', '#b07d4f', '<g fill="currentColor"><circle cx="16" cy="50" r="8"/><circle cx="46" cy="50" r="12"/><circle cx="82" cy="50" r="16"/></g>'],
+];
+const ALPHABET = [
+  ['Site', '<circle cx="50" cy="50" r="24" fill="currentColor"/>', 'resolved entity'],
+  ['Vacancy', '<circle cx="50" cy="50" r="24" stroke="currentColor" stroke-width="6"/>', 'declared, unmet'],
+  ['Bond', '<circle cx="24" cy="50" r="12" fill="currentColor"/><line x1="36" y1="50" x2="64" y2="50" stroke="currentColor" stroke-width="5"/><circle cx="76" cy="50" r="12" fill="currentColor"/>', 'the Interaction edge'],
+  ['Frame', '<rect x="14" y="14" width="72" height="72" rx="18" stroke="currentColor" stroke-width="6"/><circle cx="50" cy="58" r="12" fill="currentColor"/>', 'containment'],
+  ['Boundary', '<line x1="50" y1="12" x2="50" y2="88" stroke="currentColor" stroke-width="3"/>', 'the declared axis'],
+];
+const svg = (body, size) => `<svg viewBox="0 0 100 100" width="${size}" height="${size}" fill="none">${body}</svg>`;
+
+document.getElementById('apps-light').innerHTML = APPS.map(([n, c, b]) =>
+  `<div class="cell"><div class="sizes" style="color:${c}">${svg(b,36)}${svg(b,20)}${svg(b,14)}</div><div class="name">${n}</div><div class="meta">${c}</div></div>`).join('');
+document.getElementById('apps-dark').innerHTML = APPS.map(([n, , b]) =>
+  `<div class="cell dark"><div class="sizes" style="color:var(--camel)">${svg(b,36)}${svg(b,20)}${svg(b,14)}</div><div class="name">${n}</div></div>`).join('');
+document.getElementById('alphabet').innerHTML = ALPHABET.map(([n, b, d]) =>
+  `<div class="cell"><div class="sizes" style="color:var(--cognac)">${svg(b,36)}${svg(b,20)}</div><div class="name">${n}</div><div class="meta">${d}</div></div>`).join('');
+document.getElementById('tiles').innerHTML = APPS.map(([n, c, b], i) => {
+  const dark = n === 'Level Up';
+  return `<div class="tile ${dark ? 'petrol' : 'cream'}" title="${n}" style="color:${dark ? 'var(--camel)' : c}">${svg(b,48)}</div>`;
+}).join('');
+</script>
+</body>
+</html>
