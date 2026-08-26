@@ -78,7 +78,9 @@ test("contact.person ingest: auto-apply on exact match, review queue otherwise",
   const conflicting = deviceIngestItemContract.parse({ ...matched, record: { ...matched.record, jobTitle: "Countess" } })
   assert.equal((await ingestDeviceItem(conflicting, contactsWorkspaceId)).errorCode, "source_id_conflict")
 
-  // No match at all: never auto-created, always staged for review.
+  // No match at all: created immediately, no review needed — the device's
+  // own address book is a list the person already chose to save, not an
+  // arbitrary bulk file, so this is the low-touch path.
   const stranger = deviceIngestItemContract.parse({
     deviceId: contactsDeviceId, source: "contacts", sourceId: "cn-stranger",
     schemaVersion: 1, observedAt: new Date().toISOString(),
@@ -86,26 +88,24 @@ test("contact.person ingest: auto-apply on exact match, review queue otherwise",
   })
   const strangerResult = await ingestDeviceItem(stranger, contactsWorkspaceId)
   assert.equal(strangerResult.status, "accepted")
-  assert.equal(strangerResult.resultType, "ReviewItem")
-  const reviewItem = await db.reviewItem.findFirstOrThrow({ where: { workspaceId: contactsWorkspaceId, source: "contact_import", sourceId: strangerResult.resultId! } })
-  assert.equal(reviewItem.status, "pending")
-  assert.equal(await db.person.count({ where: { workspaceId: contactsWorkspaceId, first: "Grace" } }), 0)
-
-  // Accepting the review item is what actually creates the Person.
-  const resolved = await resolveReviewItem({ id: reviewItem.id, action: "accept", workspaceId: contactsWorkspaceId })
-  assert.equal(resolved.status, "accepted")
-  assert.equal(resolved.resultType, "Person")
-  const created = await db.person.findUniqueOrThrow({ where: { id: resolved.resultId! } })
+  assert.equal(strangerResult.resultType, "Person")
+  assert.equal(await db.reviewItem.count({ where: { workspaceId: contactsWorkspaceId } }), 0)
+  const created = await db.person.findUniqueOrThrow({ where: { id: strangerResult.resultId! } })
   assert.equal(created.first, "Grace")
   assert.equal(created.source, "ios_contacts")
 
-  // edit_and_accept merges corrections before the command runs.
+  // A fuzzy-but-not-confident match against that just-created person still
+  // goes to review: auto-creating here risks a silent duplicate, and
+  // auto-applying risks silently attaching to the wrong person — this is the
+  // one case that stays human-gated. edit_and_accept merges corrections
+  // before the command runs.
   const stranger2 = deviceIngestItemContract.parse({
     deviceId: contactsDeviceId, source: "contacts", sourceId: "cn-stranger-2",
     schemaVersion: 1, observedAt: new Date().toISOString(),
     record: { type: "contact.person", givenName: "Grase", familyName: "Hoper", organizationName: null, jobTitle: null, emails: [], phones: [] },
   })
   const stranger2Result = await ingestDeviceItem(stranger2, contactsWorkspaceId)
+  assert.equal(stranger2Result.resultType, "ReviewItem")
   const reviewItem2 = await db.reviewItem.findFirstOrThrow({ where: { workspaceId: contactsWorkspaceId, source: "contact_import", sourceId: stranger2Result.resultId! } })
   const editResolved = await resolveReviewItem({ id: reviewItem2.id, action: "edit_and_accept", editedInput: { first: "Grace", last: "Hopper" }, workspaceId: contactsWorkspaceId })
   const editedPerson = await db.person.findUniqueOrThrow({ where: { id: editResolved.resultId! } })
