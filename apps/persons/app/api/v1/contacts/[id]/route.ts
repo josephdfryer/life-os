@@ -18,6 +18,7 @@ export async function GET(req: NextRequest, { params }: Params) {
     where: { id, workspaceId: auth.workspaceId },
     include: {
       interactions: {
+        where: { timestamp: { lte: new Date() } },
         include: { event: true, sourceFile: true },
         orderBy: { timestamp: "desc" },
       },

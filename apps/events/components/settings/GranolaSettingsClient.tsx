@@ -99,7 +99,7 @@ export default function GranolaSettingsClient({ initialStatus }: { initialStatus
         <div style={eyebrowStyle}>Connection</div>
         <h2 style={headingStyle}>{status.connected ? "Granola is connected" : "Connect Granola"}</h2>
         <p style={copyStyle}>
-          Life OS reads meeting notes from your active Granola workspace. The API key is encrypted at rest and is never sent back to this page.
+          LifeOS reads meeting notes from your active Granola workspace. The API key is encrypted at rest and is never sent back to this page.
         </p>
 
         {status.connected ? (
@@ -135,7 +135,7 @@ export default function GranolaSettingsClient({ initialStatus }: { initialStatus
           <div style={eyebrowStyle}>Import</div>
           <h2 style={headingStyle}>Daily meeting sync</h2>
           <p style={copyStyle}>
-            Each morning, Life OS imports new and edited summaries and full transcripts, links exact-email attendees to People, and stages uncertain identities for review.
+            Each morning, LifeOS imports new and edited summaries and full transcripts, links exact-email attendees to People, and stages uncertain identities for review.
           </p>
           <div style={{ display: "flex", gap: "10px", flexWrap: "wrap", marginTop: "20px" }}>
             <button type="button" onClick={() => sync(false)} disabled={busy !== null} style={primaryButtonStyle}>

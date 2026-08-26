@@ -42,7 +42,15 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
         include: { person: { select: { id: true, first: true, last: true } } },
         orderBy: { timestamp: "asc" },
       },
-      calendarLinks: { select: { externalEventId: true, provider: true } },
+      calendarLinks: {
+        where: { status: { not: "cancelled" } },
+        select: {
+          externalEventId: true,
+          provider: true,
+          calendarId: true,
+          connection: { select: { calendarSummary: true } },
+        },
+      },
       granolaNoteLinks: { select: { sourceUrl: true, remoteUpdatedAt: true }, take: 1 },
       groupTags: { select: { id: true, name: true, groupType: true }, orderBy: { name: "asc" } },
     },
@@ -79,6 +87,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
     : null
   const unresolvedCount = typeof identityResolution?.unresolvedCount === "number" ? identityResolution.unresolvedCount : 0
   const granolaLink = event.granolaNoteLinks[0]
+  const sourceCalendars = [...new Set(event.calendarLinks.map(link => link.connection.calendarSummary ?? link.calendarId))]
 
   const row: React.CSSProperties = {
     display: "flex",
@@ -207,6 +216,12 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
                 Open in calendar
               </a>
             </span>
+          </div>
+        )}
+        {sourceCalendars.length > 0 && (
+          <div style={row}>
+            <span style={keyStyle}>{sourceCalendars.length === 1 ? "Calendar" : "Calendars"}</span>
+            <span style={valStyle}>{sourceCalendars.join(" · ")}</span>
           </div>
         )}
         {granolaLink?.sourceUrl && (

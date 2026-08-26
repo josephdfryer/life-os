@@ -200,7 +200,7 @@ export default function AssistantChat() {
                 send()
               }
             }}
-            placeholder="Message your Life OS…"
+            placeholder="Message your LifeOS…"
             rows={Math.min(5, Math.max(1, draft.split("\n").length))}
             style={{
               flex: 1, resize: "none", border: "1px solid var(--border)", borderRadius: "12px",

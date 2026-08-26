@@ -1,6 +1,6 @@
 # Level Up — IRL Player
 
-A sports-game ratings engine for one real human. A Life OS module (spec:
+A sports-game ratings engine for one real human. A LifeOS module (spec:
 `docs/` writeup "IRL PLAYER v2"). Supersedes STATLINE v1.
 
 ## Governing principle
@@ -39,15 +39,19 @@ never have to look at it to play.
 
 ## Data
 
-Shares the one Life OS Turso DB. Schema lives in
+Shares the one LifeOS Turso DB. Schema lives in
 `packages/db/prisma/schema.prisma` (`LevelUp*` models). Prod schema changes are
 applied manually and idempotently via
-`packages/db/turso-migrate-level-up.ts` **before** deploying — see the root
-deploy memory.
+`packages/db/turso-migrate-level-up.ts` **before** deploying — see
+`docs/DEPLOY_RUNBOOK.md`.
 
 ## Deploy
 
-Root config-swap like every Life OS app. `turbo run build --filter=level-up`,
-output `apps/level-up/.next`.
+```bash
+npm run deploy -- --only level-up
+```
+
+Vercel project `level-up`: Root Directory `.`, `turbo run build --filter=level-up`,
+output `apps/level-up/.next`. See `docs/DEPLOY_RUNBOOK.md`.
 
 Level Up uses Vercel's managed Next.js builder. Keep the monorepo `outputFileTracingRoot`, but do not set `output: "standalone"`; that mode is for self-hosted servers and breaks Vercel output finalization.

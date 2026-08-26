@@ -188,7 +188,7 @@ select.field { appearance: none; }
   height: 100dvh;
   overscroll-behavior: none;
   padding: env(safe-area-inset-top) env(safe-area-inset-right) 0 env(safe-area-inset-left);
-  /* Above the Life OS bar (60) and its menu (100). During a working set nothing
+  /* Above the LifeOS bar (60) and its menu (100). During a working set nothing
      — not even cross-app nav — is allowed to sit on top of the commit button. */
   z-index: 120;
 }

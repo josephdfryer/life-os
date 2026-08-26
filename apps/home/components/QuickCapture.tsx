@@ -183,7 +183,7 @@ export default function QuickCapture() {
       </div>
 
       <form onSubmit={submit}>
-        <label htmlFor="quick-capture-content" className="sr-only">What should Life OS remember?</label>
+        <label htmlFor="quick-capture-content" className="sr-only">What should LifeOS remember?</label>
         <textarea
           id="quick-capture-content"
           ref={textareaRef}

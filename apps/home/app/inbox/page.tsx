@@ -5,7 +5,7 @@ import { workspaceForHomeRequest } from '@/lib/request-access'
 import FederatedInbox, { type InboxItem } from '../../components/FederatedInbox'
 import { unitConfidence } from '@/lib/confidence'
 
-export const metadata = { title: 'Inbox · Life OS' }
+export const metadata = { title: 'Inbox · LifeOS' }
 
 export default function InboxPage() {
   return <Suspense fallback={<InboxFallback />}><InboxContent /></Suspense>

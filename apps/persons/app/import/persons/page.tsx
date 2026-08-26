@@ -90,7 +90,9 @@ export default function ImportContactsPage() {
   const [requiredFields, setRequiredFields] = useState<Set<FieldKey>>(new Set())
   const [spreadsheetSummary, setSpreadsheetSummary] = useState<SpreadsheetImportSummary | null>(null)
   const [importMethod, setImportMethod]     = useState<string | null>(null)
+  const [instagramRelationship, setInstagramRelationship] = useState<"follower" | "following">("follower")
   const inputRef  = useRef<HTMLInputElement>(null)
+  const instagramInputRef = useRef<HTMLInputElement>(null)
   const cardRefs  = useRef<(HTMLDivElement | null)[]>([])
 
   const loadMatchingPeople = useCallback(async () => {
@@ -187,6 +189,40 @@ export default function ImportContactsPage() {
     } finally {
       setLoading(false)
     }
+  }
+
+  async function importInstagramFiles(files: FileList) {
+    if (matchingStatus !== "ready") {
+      setError(matchingStatus === "error"
+        ? "Duplicate checking is unavailable. Retry it before importing."
+        : "Still loading existing people for duplicate checking.")
+      return
+    }
+    setError(null)
+    setGmailReconnectUrl(null)
+    setSpreadsheetSummary(null)
+    setLoading(true)
+    setLoadingMsg(`Reading Instagram ${instagramRelationship === "follower" ? "followers" : "following"}…`)
+    try {
+      const form = new FormData()
+      form.append("relationship", instagramRelationship)
+      Array.from(files).forEach(file => form.append("files", file))
+      const res = await fetch("/api/import/instagram-contacts", { method: "POST", body: form })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || "Failed to read Instagram export")
+      setImportMethod("instagram")
+      processParsedContacts(data.contacts ?? [])
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Failed to read Instagram export")
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  function handleInstagramInput(e: React.ChangeEvent<HTMLInputElement>) {
+    const files = e.target.files
+    if (files && files.length > 0) void importInstagramFiles(files)
+    e.target.value = ""
   }
 
   function processParsedContacts(parsedContacts: ParsedContact[]) {
@@ -496,6 +532,63 @@ export default function ImportContactsPage() {
             >
               Import Gmail Contacts
             </button>
+          </div>
+
+          <div style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "10px", padding: "16px 18px", marginBottom: "14px", fontSize: "12px", color: "var(--ink-2)", lineHeight: 1.7 }}>
+            <div style={{ fontFamily: "var(--font-display), serif", fontSize: "14px", fontWeight: 500, color: "var(--ink)", marginBottom: "6px" }}>Import LinkedIn Connections</div>
+            <div style={{ color: "var(--ink-3)", marginBottom: "8px" }}>
+              LinkedIn has no API for this — the only real path is your own data export. It takes LinkedIn a few minutes to a few hours to prepare.
+            </div>
+            <ol style={{ margin: 0, paddingLeft: "18px" }}>
+              <li>On LinkedIn: <strong>Settings → Data privacy → Get a copy of your data</strong></li>
+              <li>Choose <strong>&quot;Want something in particular?&quot;</strong> and check just <strong>Connections</strong></li>
+              <li>Request the archive — LinkedIn emails you when it&apos;s ready</li>
+              <li>Unzip it and drop <strong>Connections.csv</strong> on the dropzone below</li>
+            </ol>
+          </div>
+
+          <div style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "10px", padding: "16px 18px", marginBottom: "14px", fontSize: "12px", color: "var(--ink-2)", lineHeight: 1.7 }}>
+            <div style={{ fontFamily: "var(--font-display), serif", fontSize: "14px", fontWeight: 500, color: "var(--ink)", marginBottom: "6px" }}>Import Instagram followers / following</div>
+            <div style={{ color: "var(--ink-3)", marginBottom: "8px" }}>
+              Instagram&apos;s export gives a username only — no real name, email, or phone — so these will need a quick glance in review before saving.
+            </div>
+            <ol style={{ margin: 0, paddingLeft: "18px", marginBottom: "10px" }}>
+              <li>On Instagram: <strong>Settings → Accounts Center → Your information and permissions → Download your information</strong></li>
+              <li>Choose <strong>&quot;Some of your information&quot;</strong> → <strong>Followers and following</strong>, format <strong>JSON</strong></li>
+              <li>Download, unzip, and select the file(s) below — large accounts split into <code>followers_1.json</code>, <code>followers_2.json</code>, etc; you can select them all at once</li>
+            </ol>
+            <input
+              ref={instagramInputRef}
+              type="file"
+              accept=".json"
+              multiple
+              disabled={matchingStatus !== "ready"}
+              onChange={handleInstagramInput}
+              style={{ display: "none" }}
+            />
+            <div style={{ display: "flex", gap: "8px" }}>
+              <button
+                onClick={() => { setInstagramRelationship("follower"); instagramInputRef.current?.click() }}
+                disabled={loading || matchingStatus !== "ready"}
+                style={{ padding: "8px 14px", background: "var(--accent)", color: "#fff", border: "none", borderRadius: "7px", cursor: loading || matchingStatus !== "ready" ? "not-allowed" : "pointer", fontFamily: "inherit", fontSize: "12px", fontWeight: 500, opacity: loading || matchingStatus !== "ready" ? 0.55 : 1 }}
+              >
+                Import followers_*.json
+              </button>
+              <button
+                onClick={() => { setInstagramRelationship("following"); instagramInputRef.current?.click() }}
+                disabled={loading || matchingStatus !== "ready"}
+                style={{ ...ghostBtnStyle, opacity: loading || matchingStatus !== "ready" ? 0.55 : 1, cursor: loading || matchingStatus !== "ready" ? "not-allowed" : "pointer" }}
+              >
+                Import following.json
+              </button>
+            </div>
+          </div>
+
+          <div style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "10px", padding: "16px 18px", marginBottom: "14px", fontSize: "12px", color: "var(--ink-3)", lineHeight: 1.7 }}>
+            <div style={{ fontFamily: "var(--font-display), serif", fontSize: "14px", fontWeight: 500, color: "var(--ink)", marginBottom: "6px" }}>About X / Twitter</div>
+            <div>
+              X&apos;s own data export (Settings → Your account → Download an archive) only lists numeric account IDs for who you follow — no usernames or names, so there&apos;s nothing importable in it. If you already have a CSV with X handles from somewhere else, the dropzone below will read it like any other CSV.
+            </div>
           </div>
 
           <div

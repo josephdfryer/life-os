@@ -2,6 +2,7 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
+import { EventsMark } from "@life-os/ui"
 
 export default function Header() {
   const pathname = usePathname()
@@ -27,6 +28,9 @@ export default function Header() {
       <Link
         href="/events"
         style={{
+          display: "inline-flex",
+          alignItems: "center",
+          gap: "9px",
           fontFamily: "var(--font-display)",
           fontSize: "17px",
           fontWeight: 400,
@@ -34,6 +38,7 @@ export default function Header() {
           textDecoration: "none",
         }}
       >
+        <EventsMark size={19} style={{ color: "var(--cognac)", display: "block", flexShrink: 0 }} />
         Events
       </Link>
 

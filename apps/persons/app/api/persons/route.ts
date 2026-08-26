@@ -93,7 +93,8 @@ export async function GET(req: NextRequest) {
       else if (f.operator === "is_empty") AND.push({ [col]: emptinessCheck(f.field) })
       else if (f.operator === "contains" && typeof f.value === "string" && f.value.trim()) AND.push({ [col]: { contains: f.value.trim() } })
     }
-    const viewFilter = personListViewFilter(view)
+    const now = new Date()
+    const viewFilter = personListViewFilter(view, now)
     if (viewFilter) AND.push(viewFilter)
     const where = AND.length ? { workspaceId: actor.workspaceId, AND } : { workspaceId: actor.workspaceId }
 
@@ -105,7 +106,7 @@ export async function GET(req: NextRequest) {
     const [rows, total] = await Promise.all([
       db.person.findMany({
         where, orderBy, skip: page * limit, take: limit,
-        include: personListInclude,
+        include: personListInclude(now),
       }),
       db.person.count({ where }),
     ])
@@ -124,6 +125,7 @@ export async function GET(req: NextRequest) {
     where: { workspaceId: actor.workspaceId },
     include: {
       interactions: {
+        where: { timestamp: { lte: new Date() } },
         select: {
           id: true, createdAt: true, personId: true, eventId: true,
           type: true, timestamp: true, duration: true, emotionalWeight: true,

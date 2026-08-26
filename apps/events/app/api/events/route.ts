@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { auth } from "@/auth"
 import { db } from "@/lib/db"
 import { getWorkspaceId } from "@/lib/workspace"
+import { BACKGROUND_EVENT_TYPES } from "@life-os/domain"
 
 export async function GET(req: NextRequest) {
   const session = await auth()
@@ -15,6 +16,7 @@ export async function GET(req: NextRequest) {
   const events = await db.event.findMany({
     where: {
       workspaceId,
+      type: { notIn: [...BACKGROUND_EVENT_TYPES] },
       ...(search ? { name: { contains: search } } : {}),
     },
     include: {

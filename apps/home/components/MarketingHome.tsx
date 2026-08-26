@@ -1,3 +1,5 @@
+import { LifeOSMark } from '@life-os/ui'
+
 const PRIMITIVES = [
   { name: 'Person', desc: 'A human in your life — attributes, closeness, history.' },
   { name: 'Place', desc: 'A location at any scale, Earth to shelf, self-referencing.' },
@@ -22,8 +24,8 @@ export default function MarketingHome() {
     <div className="marketing-page">
       <header className="marketing-nav">
         <span className="marketing-wordmark">
-          <span aria-hidden className="marketing-wordmark-mark">&#9671;</span>
-          Life OS
+          <LifeOSMark size={19} className="marketing-wordmark-mark" />
+          LifeOS
         </span>
         <a className="marketing-nav-signin" href={SIGN_IN_URL}>Sign in</a>
       </header>
@@ -33,7 +35,7 @@ export default function MarketingHome() {
           <p className="marketing-eyebrow">A foundation, not a to-do list</p>
           <h1>Live intentionally.<br />Let the system hold the context.</h1>
           <p className="marketing-hero-copy">
-            Life OS is a structured, continuously updated model of who you are, what you care
+            LifeOS is a structured, continuously updated model of who you are, what you care
             about, and where you&rsquo;re trying to go — the people, places, plans, and events of
             an actual life, held together with honesty about the gap between what you intend and
             what you do.
@@ -102,7 +104,7 @@ export default function MarketingHome() {
       </main>
 
       <footer className="marketing-footer">
-        <span>&copy; 2026 Life OS</span>
+        <span>&copy; 2026 LifeOS</span>
         <nav aria-label="Legal">
           <a href="/privacy">Privacy Policy</a>
           <a href="/terms">Terms of Service</a>

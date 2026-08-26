@@ -4,7 +4,7 @@ import { workspaceForHomeRequest } from '@/lib/request-access'
 import { redirect } from 'next/navigation'
 import { AccessControls, ApiKeyControls, ApprovedEmailControls, WorkspacesControls } from './AdminControls'
 
-export const metadata = { title: 'Admin · Life OS' }
+export const metadata = { title: 'Admin · LifeOS' }
 
 export default function AdminPage(props: { searchParams: Promise<{ tab?: string }> }) {
   return <Suspense fallback={<AdminFallback />}><AdminContent {...props} /></Suspense>

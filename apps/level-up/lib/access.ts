@@ -7,7 +7,7 @@ export type LevelUpAccess = {
   user: { id: string; personId: string | null; name: string | null; email: string | null }
 }
 
-// Mirrors the access pattern used across Life OS satellites: fail closed, never
+// Mirrors the access pattern used across LifeOS satellites: fail closed, never
 // silently default into the shared "default-workspace" (a cross-tenant leak the
 // moment there's more than one user). Local review picks the first real
 // workspace so the app is usable without the Home SSO hub running.

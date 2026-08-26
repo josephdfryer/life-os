@@ -348,7 +348,7 @@ export default function WardrobeClient(props: Props) {
           <section className="ai-card">
             <div className="eyebrow">Garment analysis</div>
             <h2>{connected ? "AI is connected" : "Connect your own key"}</h2>
-            <p>Usage is billed through your Vercel AI Gateway account. Life OS stores the key encrypted and records each analysis.</p>
+            <p>Usage is billed through your Vercel AI Gateway account. LifeOS stores the key encrypted and records each analysis.</p>
             <label><span>Gateway API key</span><input type="password" value={apiKey} onChange={(event) => setApiKey(event.target.value)} placeholder={connected ? "Replace existing key" : "vck_…"} /></label>
             <label><span>Vision model</span><input value={modelId} onChange={(event) => setModelId(event.target.value)} /></label>
             <button className="dark-button" onClick={() => void connectAi()} disabled={!apiKey || Boolean(busy)}>{busy === "settings" ? "Connecting…" : connected ? "Replace key" : "Connect key"}</button>
@@ -395,6 +395,6 @@ async function requestJson(url: string, init: RequestInit): Promise<{ ok: true; 
     if (!response.ok) return { ok: false, error: data.error ?? "Something went wrong." }
     return { ok: true, data }
   } catch {
-    return { ok: false, error: "Life OS could not complete that request." }
+    return { ok: false, error: "LifeOS could not complete that request." }
   }
 }

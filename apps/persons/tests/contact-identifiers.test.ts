@@ -9,7 +9,7 @@ import type { Person } from "../types"
 const person = (patch: Partial<Person> = {}) => ({
   id: "person-1", first: "Joseph", last: "Fryer",
   emails: ["joseph@example.com"], phones: ["+1 555 123 4567"],
-  company: "Life OS", title: null, headline: null, birthday: null, location: null,
+  company: "LifeOS", title: null, headline: null, birthday: null, location: null,
   linkedin: null, twitter: null, website: null, facebook: null, instagram: null, notes: null,
   ...patch,
 }) as Person

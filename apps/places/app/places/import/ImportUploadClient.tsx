@@ -53,7 +53,7 @@ export default function ImportUploadClient() {
         <header style={{ marginTop: "22px", marginBottom: "24px" }}>
           <h1 style={{ fontFamily: "var(--font-display)", fontSize: "44px", lineHeight: 1, margin: 0 }}>Import Google Maps Timeline</h1>
           <p style={{ maxWidth: "680px", color: "var(--ink-2)", fontSize: "14px" }}>
-            Preview a Google Timeline export before writing anything to Life OS. This pass reads visits only and ignores movement paths.
+            Preview a Google Timeline export before writing anything to LifeOS. This pass reads visits only and ignores movement paths.
           </p>
         </header>
 

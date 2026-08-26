@@ -39,7 +39,7 @@ export async function loadContext(): Promise<LifeOSContext> {
 
     // Recent interactions (last 5)
     db.interaction.findMany({
-      where: { workspaceId: WORKSPACE_ID },
+      where: { workspaceId: WORKSPACE_ID, timestamp: { lte: now } },
       select: {
         type: true,
         timestamp: true,
@@ -67,6 +67,7 @@ export async function loadContext(): Promise<LifeOSContext> {
         last: true,
         closeness: true,
         interactions: {
+          where: { timestamp: { lte: now } },
           select: { timestamp: true },
           orderBy: { timestamp: "desc" },
           take: 1,

@@ -1,26 +1,26 @@
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Terms of Service — Life OS',
-  description: 'The terms governing use of Life OS.',
+  title: 'Terms of Service — LifeOS',
+  description: 'The terms governing use of LifeOS.',
 }
 
 export default function TermsOfServicePage() {
   return (
     <div className="marketing-page">
       <div className="marketing-legal">
-        <a className="marketing-legal-back" href="/">&larr; Life OS</a>
+        <a className="marketing-legal-back" href="/">&larr; LifeOS</a>
         <h1>Terms of Service</h1>
         <p className="marketing-legal-updated">Effective August 15, 2026</p>
 
         <p>
-          These terms govern access to and use of Life OS (&ldquo;the Service&rdquo;). By signing
+          These terms govern access to and use of LifeOS (&ldquo;the Service&rdquo;). By signing
           in, you agree to these terms.
         </p>
 
         <h2>1. The Service</h2>
         <p>
-          Life OS is a personal life-management system. It is invite-only: access is limited to
+          LifeOS is a personal life-management system. It is invite-only: access is limited to
           account holders explicitly approved by the operator, and it is not offered as a general
           public product with open registration.
         </p>

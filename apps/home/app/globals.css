@@ -50,6 +50,14 @@ a {
   padding: 28px;
 }
 
+.dashboard-today-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--space-lg);
+  align-items: start;
+  margin-bottom: 32px;
+}
+
 .header {
   display: flex;
   align-items: center;
@@ -124,6 +132,12 @@ a {
   background: var(--surface);
 }
 
+.login-mark {
+  display: block;
+  margin-bottom: 18px;
+  color: var(--cognac);
+}
+
 .login-title {
   font-family: var(--font-display), Georgia, serif;
   font-size: 32px;
@@ -154,6 +168,9 @@ a {
 }
 
 .dashboard-app-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
   font-size: 14px;
   color: var(--ink-3);
   text-decoration: none;
@@ -639,6 +656,8 @@ a {
   .system-health-metrics { grid-template-columns: 1fr 1fr; }
   .system-event-row { grid-template-columns: 1fr; gap: 7px; }
   .system-event-row > div:last-child { justify-content: flex-start; }
+  .dashboard-today-grid { grid-template-columns: 1fr; }
+  .assistant-composer-input { min-height: 88px; }
 }
 
 @media (max-width: 460px) {
@@ -1780,7 +1799,8 @@ a {
 
 .marketing-wordmark-mark {
   color: var(--cognac);
-  font-size: 13px;
+  display: block;
+  flex-shrink: 0;
 }
 
 .marketing-nav-signin {

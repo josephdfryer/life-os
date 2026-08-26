@@ -6,7 +6,7 @@ import { db } from "@/lib/db"
 
 export const maxDuration = 300
 
-// Twilio webhooks carry no Life OS session — the trust boundary here is the
+// Twilio webhooks carry no LifeOS session — the trust boundary here is the
 // Twilio signature plus the MY_WHATSAPP_NUMBER allowlist, not a workspace
 // membership lookup. This deployment's single owner workspace is fixed via
 // env, unlike the session-authenticated web chat route.

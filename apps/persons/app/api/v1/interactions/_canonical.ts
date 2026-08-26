@@ -28,7 +28,7 @@ export async function forwardCanonicalStream(req: NextRequest, pathname: string)
     return new NextResponse(response.body, { status: response.status, headers: responseHeaders })
   } catch (error) {
     console.error("Canonical API forwarding failed", { pathname, error })
-    const response = NextResponse.json({ error: { code: "upstream_unavailable", message: "Canonical Life OS API is unavailable" } }, { status: 502 })
+    const response = NextResponse.json({ error: { code: "upstream_unavailable", message: "Canonical LifeOS API is unavailable" } }, { status: 502 })
     response.headers.set("Deprecation", "true")
     response.headers.set("Sunset", SUNSET)
     response.headers.set("Link", `<${target.toString()}>; rel="canonical"`)

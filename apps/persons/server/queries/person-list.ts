@@ -3,31 +3,34 @@ import { relationshipGapScore } from "@life-os/alignment/pure"
 import { parseTags } from "@/lib/utils"
 import type { PersonListPerson } from "@/types"
 
-export const personListInclude = {
-  interactions: {
-    take: 1,
-    orderBy: { timestamp: "desc" },
-    select: {
-      id: true,
-      type: true,
-      source: true,
-      timestamp: true,
-      summary: true,
+export function personListInclude(now = new Date()) {
+  return {
+    interactions: {
+      where: { timestamp: { lte: now } },
+      take: 1,
+      orderBy: { timestamp: "desc" },
+      select: {
+        id: true,
+        type: true,
+        source: true,
+        timestamp: true,
+        summary: true,
+      },
     },
-  },
-  plans: {
-    where: { status: "active" },
-    orderBy: [{ dueOn: "asc" }, { createdAt: "desc" }],
-    take: 1,
-    select: {
-      id: true,
-      text: true,
-      dueOn: true,
+    plans: {
+      where: { status: "active" },
+      orderBy: [{ dueOn: "asc" }, { createdAt: "desc" }],
+      take: 1,
+      select: {
+        id: true,
+        text: true,
+        dueOn: true,
+      },
     },
-  },
-} as const satisfies Prisma.PersonInclude
+  } as const satisfies Prisma.PersonInclude
+}
 
-type PersonListRow = Prisma.PersonGetPayload<{ include: typeof personListInclude }>
+type PersonListRow = Prisma.PersonGetPayload<{ include: ReturnType<typeof personListInclude> }>
 
 export function serializePersonListRow(person: PersonListRow): PersonListPerson {
   const latest = person.interactions[0] ?? null

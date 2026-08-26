@@ -5,7 +5,7 @@ import type { Person } from "../types"
 import { DUPLICATE_THRESHOLD, computeFillableFields, findMatch, getStatus, guessNameFromEmail, jaroWinkler, sortByStatus, type ReviewContact } from "../app/import/persons/matching"
 import { keepOnly, setActionAt, setSelectedAt, skipAt } from "../app/import/persons/review-transitions"
 
-const person = (patch: Partial<Person> = {}) => ({ id: "person-1", first: "Joseph", last: "Fryer", emails: ["joseph@example.com"], phones: ["+1 555 123 4567"], company: "Life OS", title: null, headline: null, birthday: null, location: null, linkedin: null, twitter: null, website: null, facebook: null, instagram: null, notes: null, ...patch }) as Person
+const person = (patch: Partial<Person> = {}) => ({ id: "person-1", first: "Joseph", last: "Fryer", emails: ["joseph@example.com"], phones: ["+1 555 123 4567"], company: "LifeOS", title: null, headline: null, birthday: null, location: null, linkedin: null, twitter: null, website: null, facebook: null, instagram: null, notes: null, ...patch }) as Person
 const contact = (patch: Partial<ParsedContact> = {}) => ({ first: "Joseph", last: "Fryer", email: null, phone: null, company: null, title: null, headline: null, birthday: null, location: null, linkedin: null, twitter: null, website: null, facebook: null, instagram: null, notes: null, ...patch }) as ParsedContact
 
 test("exact email is a certain duplicate regardless of casing", () => {
@@ -21,7 +21,7 @@ test("formatted phone numbers match on digits", () => {
 })
 
 test("similar names and company produce a duplicate-strength match", () => {
-  const match = findMatch(contact({ first: "Josef", last: "Fryer", company: "Life OS" }), [person()])
+  const match = findMatch(contact({ first: "Josef", last: "Fryer", company: "LifeOS" }), [person()])
   assert.ok(match)
   assert.ok(match.score >= DUPLICATE_THRESHOLD)
 })

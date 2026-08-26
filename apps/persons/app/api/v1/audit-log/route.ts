@@ -32,7 +32,7 @@ export async function GET(req: NextRequest) {
     } catch (error) {
       console.error("Canonical audit-log response was incompatible", error)
       return NextResponse.json(
-        { error: { code: "upstream_invalid_response", message: "Canonical Life OS API returned an invalid audit-log response" } },
+        { error: { code: "upstream_invalid_response", message: "Canonical LifeOS API returned an invalid audit-log response" } },
         { status: 502 },
       )
     }

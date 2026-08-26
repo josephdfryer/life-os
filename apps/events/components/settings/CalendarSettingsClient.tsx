@@ -223,7 +223,7 @@ export default function CalendarSettingsClient() {
         <section style={panelStyle}>
           <div style={panelTitleStyle}>Calendars to import</div>
           <p style={copyStyle}>
-            Choose any calendar visible to {status.connection.accountEmail ?? expectedAccountEmail}. Life OS keeps each source separate and imports events read-only.
+            Choose any calendar visible to {status.connection.accountEmail ?? expectedAccountEmail}. LifeOS keeps each source separate and imports events read-only.
           </p>
 
           {status.discoveryError && (

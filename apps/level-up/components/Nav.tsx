@@ -2,6 +2,7 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
+import { LevelUpMark } from "@life-os/ui"
 
 const LINKS = [
   { href: "/", label: "Card" },
@@ -20,6 +21,8 @@ export default function Nav() {
     <header className="topbar">
       <div style={{ display: "flex", alignItems: "center", gap: 28 }}>
         <Link href="/" style={{ display: "flex", alignItems: "baseline", gap: 8 }}>
+          {/* Camel, not cognac — Level Up runs a dark shell, where cognac goes muddy. */}
+          <LevelUpMark size={18} style={{ color: "#c4a574", alignSelf: "center", flexShrink: 0 }} />
           <span className="serif" style={{ fontSize: 20, letterSpacing: "-0.01em" }}>Level Up</span>
           <span className="mono mono-faint" style={{ fontSize: 9 }}>IRL PLAYER</span>
         </Link>
@@ -31,7 +34,7 @@ export default function Nav() {
           ))}
         </nav>
       </div>
-      <a href="https://home.lacollecteur.com" className="mono mono-faint">Life OS ↗</a>
+      <a href="https://home.lacollecteur.com" className="mono mono-faint">LifeOS ↗</a>
     </header>
   )
 }

@@ -13,12 +13,14 @@ export const dynamic = "force-dynamic"
 
 export default async function PersonDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
+  const now = new Date()
   try {
     const actor = await requireAccess("people.read")
     const person = await db.person.findFirst({
       where: { id, workspaceId: actor.workspaceId },
       include: {
         interactions: {
+          where: { timestamp: { lte: now } },
           include: { event: true, sourceFile: true },
           orderBy: { timestamp: "desc" },
         },

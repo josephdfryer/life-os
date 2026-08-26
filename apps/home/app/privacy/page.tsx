@@ -1,20 +1,20 @@
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Privacy Policy — Life OS',
-  description: 'How Life OS collects, uses, and protects your data.',
+  title: 'Privacy Policy — LifeOS',
+  description: 'How LifeOS collects, uses, and protects your data.',
 }
 
 export default function PrivacyPolicyPage() {
   return (
     <div className="marketing-page">
       <div className="marketing-legal">
-        <a className="marketing-legal-back" href="/">&larr; Life OS</a>
+        <a className="marketing-legal-back" href="/">&larr; LifeOS</a>
         <h1>Privacy Policy</h1>
         <p className="marketing-legal-updated">Effective August 15, 2026</p>
 
         <p>
-          Life OS (&ldquo;the Service,&rdquo; &ldquo;we,&rdquo; &ldquo;us&rdquo;) is a personal
+          LifeOS (&ldquo;the Service,&rdquo; &ldquo;we,&rdquo; &ldquo;us&rdquo;) is a personal
           life-management system. Access to the Service is limited to account holders explicitly
           approved by the operator &mdash; it is not a public product with open registration. This
           policy explains what information the Service collects from an approved account holder,
@@ -55,7 +55,7 @@ export default function PrivacyPolicyPage() {
 
         <h2>3. Google API Limited Use disclosure</h2>
         <p>
-          Life OS&rsquo;s use and transfer of information received from Google APIs to any other
+          LifeOS&rsquo;s use and transfer of information received from Google APIs to any other
           app will adhere to the{' '}
           <a href="https://developers.google.com/terms/api-services-user-data-policy" target="_blank" rel="noopener noreferrer">
             Google API Services User Data Policy

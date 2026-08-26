@@ -21,6 +21,7 @@ export default async function NudgesWidget({ workspaceId, personsUrl }: Props) {
     getRelationshipGaps(workspaceId),
     getBirthdaySignals(workspaceId),
   ])
+  const now = new Date()
   const combined = [...birthdays, ...gaps].sort((a, b) => b.severity - a.severity)
   // A person can be both "birthday today" and "overdue for contact" at
   // once — show them once, under whichever signal sorted higher.
@@ -38,7 +39,7 @@ export default async function NudgesWidget({ workspaceId, personsUrl }: Props) {
     top.map(signal =>
       signal.personId
         ? db.interaction.findFirst({
-            where: { personId: signal.personId },
+            where: { workspaceId, personId: signal.personId, timestamp: { lte: now } },
             orderBy: { timestamp: 'desc' },
             select: { summary: true },
           })

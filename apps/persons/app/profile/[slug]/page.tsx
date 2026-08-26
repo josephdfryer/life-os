@@ -103,7 +103,7 @@ export default async function PublicProfilePage({ params }: Params) {
         )}
 
         <div style={{ marginTop: "26px", fontSize: "10px", color: "var(--ink-4)" }}>
-          Digital business card via Life OS
+          Digital business card via LifeOS
         </div>
       </div>
     </div>

@@ -38,7 +38,7 @@ export default async function ConnectionsPage() {
           name="Google Calendar"
           description="Import selected calendars as Events and match attendees to People by exact email."
           status={activeCalendars.length ? `${activeCalendars.length} ${activeCalendars.length === 1 ? "calendar" : "calendars"} connected` : "Not connected"}
-          detail={activeCalendars.length ? `${calendarEvents} imported events${calendarLastSync ? ` · Last sync ${formatDate(calendarLastSync)}` : ""}` : "Connect an account and choose which calendars Life OS may read."}
+          detail={activeCalendars.length ? `${calendarEvents} imported events${calendarLastSync ? ` · Last sync ${formatDate(calendarLastSync)}` : ""}` : "Connect an account and choose which calendars LifeOS may read."}
           href="/settings/calendar"
           connected={activeCalendars.length > 0}
         />

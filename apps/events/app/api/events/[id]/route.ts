@@ -22,7 +22,14 @@ export async function GET(_req: NextRequest, { params }: Params) {
         include: { person: { select: { id: true, first: true, last: true } } },
         orderBy: { timestamp: "asc" },
       },
-      calendarLinks: { select: { externalEventId: true, provider: true } },
+      calendarLinks: {
+        select: {
+          externalEventId: true,
+          provider: true,
+          calendarId: true,
+          connection: { select: { calendarSummary: true } },
+        },
+      },
     },
   })
 

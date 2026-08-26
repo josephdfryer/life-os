@@ -70,7 +70,7 @@ export const TOOLS: AssistantToolDefinition[] = [
   {
     name: "capture_note",
     capability: "write",
-    description: "Capture a raw thought, observation, or declaration as a Note in Life OS. Use when Joseph wants to remember, note, or declare something. If it is about a person, place, item, event, plan, group, or state, search first and pass that id so Theory and the rest of the graph can find it. Do not use add_place_note or append to a record's notes blob for this.",
+    description: "Capture a raw thought, observation, or declaration as a Note in LifeOS. Use when Joseph wants to remember, note, or declare something. If it is about a person, place, item, event, plan, group, or state, search first and pass that id so Theory and the rest of the graph can find it. Do not use add_place_note or append to a record's notes blob for this.",
     input_schema: {
       type: "object",
       properties: {
@@ -529,6 +529,7 @@ async function getPersonFileEvidenceTool(personId: string, workspaceId: string, 
 async function searchPeople(query: string, workspaceId: string) {
   if (!query.trim()) return "Empty query"
   const q = query.trim()
+  const now = new Date()
   const parts = q.split(/\s+/)
 
   // Build OR clauses — also handle "First Last" full-name queries by matching parts individually
@@ -549,7 +550,7 @@ async function searchPeople(query: string, workspaceId: string) {
     where: { workspaceId, OR: orClauses },
     select: {
       id: true, first: true, last: true, nickname: true, company: true, closeness: true,
-      interactions: { select: { timestamp: true }, orderBy: { timestamp: "desc" }, take: 1 },
+      interactions: { where: { timestamp: { lte: now } }, select: { timestamp: true }, orderBy: { timestamp: "desc" }, take: 1 },
     },
     take: 6,
   })
@@ -561,11 +562,12 @@ async function searchPeople(query: string, workspaceId: string) {
 }
 
 async function getPerson(personId: string, workspaceId: string) {
+  const now = new Date()
   const [p, recentStates, aboutNotes] = await Promise.all([
     db.person.findFirst({
       where: { id: personId, workspaceId },
       include: {
-        interactions: { orderBy: { timestamp: "desc" }, take: 5, select: { type: true, timestamp: true, summary: true } },
+        interactions: { where: { timestamp: { lte: now } }, orderBy: { timestamp: "desc" }, take: 5, select: { type: true, timestamp: true, summary: true } },
         plans: { where: { status: "active" }, take: 5, select: { text: true, timescale: true } },
       },
     }),
@@ -618,19 +620,54 @@ async function getPerson(personId: string, workspaceId: string) {
 
 async function getSchedule(workspaceId: string, date?: string) {
   const day = date ?? new Intl.DateTimeFormat("en-CA", { timeZone: TZ }).format(new Date())
-  const start = new Date(`${day}T00:00:00-07:00`)
-  const end = new Date(`${day}T23:59:59-07:00`)
-  const events = await db.event.findMany({
-    where: { workspaceId, start: { gte: start, lte: end } },
-    select: { name: true, start: true, end: true, place: { select: { name: true } } },
-    orderBy: { start: "asc" },
-    take: 20,
-  })
-  if (!events.length) return `No events on ${day}`
-  return events.map(e => {
-    const time = e.start.toLocaleTimeString("en-US", { timeZone: TZ, hour: "numeric", minute: "2-digit" })
-    return `${time} ${e.name}${e.place ? ` @ ${e.place.name}` : ""}`
+  const start = zonedMidnight(day, TZ)
+  const end = zonedMidnight(shiftDay(day, 1), TZ)
+  // Confirmed Events aren't the whole picture — anything synced from Google
+  // Calendar but not yet promoted to an Event still lives as an active,
+  // scheduled Plan (same union Home's own Schedule widget shows), so a
+  // meeting that's only on the calendar was previously invisible here.
+  const [events, plans] = await Promise.all([
+    db.event.findMany({
+      where: { workspaceId, start: { gte: start, lt: end } },
+      select: { name: true, start: true, place: { select: { name: true } } },
+      orderBy: { start: "asc" },
+      take: 20,
+    }),
+    db.plan.findMany({
+      where: { workspaceId, externalSource: "google-calendar", status: "active", scheduledStart: { gte: start, lt: end } },
+      select: { text: true, scheduledStart: true, place: { select: { name: true } } },
+      orderBy: { scheduledStart: "asc" },
+      take: 20,
+    }),
+  ])
+  const items = [
+    ...events.map(e => ({ name: e.name, start: e.start, place: e.place })),
+    ...plans.flatMap(p => p.scheduledStart ? [{ name: p.text, start: p.scheduledStart, place: p.place }] : []),
+  ].sort((a, b) => a.start.getTime() - b.start.getTime())
+  if (!items.length) return `No events on ${day}`
+  return items.map(i => {
+    const time = i.start.toLocaleTimeString("en-US", { timeZone: TZ, hour: "numeric", minute: "2-digit" })
+    return `${time} ${i.name}${i.place ? ` @ ${i.place.name}` : ""}`
   }).join("\n")
+}
+
+function shiftDay(value: string, days: number) {
+  const date = new Date(`${value}T12:00:00Z`)
+  date.setUTCDate(date.getUTCDate() + days)
+  return date.toISOString().slice(0, 10)
+}
+
+// Pacific is -07:00 during PDT and -08:00 during PST — a hardcoded offset
+// (the previous version of this function) is wrong for roughly half the
+// year. This resolves the real offset for the given day instead.
+function zonedMidnight(value: string, timeZone: string) {
+  const utcMidnight = new Date(`${value}T00:00:00Z`)
+  const offsetName = new Intl.DateTimeFormat("en-US", { timeZone, timeZoneName: "longOffset" })
+    .formatToParts(utcMidnight).find(part => part.type === "timeZoneName")?.value
+  const match = offsetName?.match(/^GMT([+-])(\d{2}):(\d{2})$/)
+  if (!match) return utcMidnight
+  const minutes = (Number(match[2]) * 60 + Number(match[3])) * (match[1] === "+" ? 1 : -1)
+  return new Date(utcMidnight.getTime() - minutes * 60_000)
 }
 
 async function captureNote(input: Record<string, unknown>, workspaceId: string) {
@@ -663,7 +700,7 @@ async function captureNote(input: Record<string, unknown>, workspaceId: string) 
 // so it publishes a GraphEvent carrying the assistant actor and is therefore
 // attributable and undoable. This one previously called db.interaction.create()
 // and produced no audit trail at all.
-const ASSISTANT_ACTOR = { type: "assistant" as const, label: "Life OS Assistant" }
+const ASSISTANT_ACTOR = { type: "assistant" as const, label: "LifeOS Assistant" }
 
 async function logInteraction(personId: string, type: string, summary: string, workspaceId: string) {
   const person = await db.person.findFirst({ where: { id: personId, workspaceId }, select: { id: true, first: true, last: true } })

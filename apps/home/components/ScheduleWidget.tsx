@@ -1,24 +1,29 @@
 import { lifeOsAppUrl } from '@life-os/auth'
 import { db } from '@life-os/db'
-import { isProviderScheduledEvent } from '@/lib/daily'
+import { BACKGROUND_EVENT_TYPES } from '@life-os/domain'
+import { dayKey, isProviderScheduledEvent, reviewDayBounds } from '@/lib/daily'
 import { cacheLife } from 'next/cache'
 
 interface Props {
   workspaceId: string
+  personsUrl: string
+  tz: string
 }
 
-export default async function ScheduleWidget({ workspaceId }: Props) {
+export default async function ScheduleWidget({ workspaceId, personsUrl, tz }: Props) {
   'use cache'
   cacheLife({ stale: 15, revalidate: 30, expire: 300 })
   const eventsUrl = lifeOsAppUrl('events', 'http://localhost:3006')
-  const now = new Date()
-  const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0)
-  const todayEnd = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59)
+  // Day boundaries in the user's own timezone, not the server's — the server
+  // runs in UTC on Vercel, so plain Date component math here previously
+  // showed tomorrow's events as "Today" for the UTC/local gap every day.
+  const { start: todayStart, end: todayEnd } = reviewDayBounds(dayKey(new Date(), tz), tz)
 
   const [confirmedEvents, scheduledPlans] = await Promise.all([db.event.findMany({
     where: {
       workspaceId,
-      start: { gte: todayStart, lte: todayEnd },
+      type: { notIn: [...BACKGROUND_EVENT_TYPES] },
+      start: { gte: todayStart, lt: todayEnd },
     },
     orderBy: { start: 'asc' },
     select: {
@@ -43,7 +48,7 @@ export default async function ScheduleWidget({ workspaceId }: Props) {
       workspaceId,
       externalSource: 'google-calendar',
       status: 'active',
-      scheduledStart: { gte: todayStart, lte: todayEnd },
+      scheduledStart: { gte: todayStart, lt: todayEnd },
     },
     orderBy: { scheduledStart: 'asc' },
     select: {
@@ -52,7 +57,7 @@ export default async function ScheduleWidget({ workspaceId }: Props) {
       scheduledStart: true,
       place: { select: { name: true } },
       expectedPeople: {
-        select: { person: { select: { first: true, last: true } } },
+        select: { person: { select: { id: true, first: true, last: true } } },
         take: 5,
       },
     },
@@ -66,8 +71,8 @@ export default async function ScheduleWidget({ workspaceId }: Props) {
       place: event.place,
       scheduled: isProviderScheduledEvent(event),
       href: `${eventsUrl}/events/${event.id}`,
-      attendees: event.interactions.flatMap(interaction => interaction.person
-        ? [`${interaction.person.first} ${interaction.person.last ?? ''}`.trim()]
+      attendees: event.interactions.flatMap(interaction => interaction.personId && interaction.person
+        ? [{ id: interaction.personId, name: `${interaction.person.first} ${interaction.person.last ?? ''}`.trim() }]
         : []),
     })),
     ...scheduledPlans.flatMap(plan => plan.scheduledStart ? [{
@@ -77,7 +82,7 @@ export default async function ScheduleWidget({ workspaceId }: Props) {
       place: plan.place,
       scheduled: true,
       href: eventsUrl,
-      attendees: plan.expectedPeople.map(({ person }) => `${person.first} ${person.last}`.trim()),
+      attendees: plan.expectedPeople.map(({ person }) => ({ id: person.id, name: `${person.first} ${person.last}`.trim() })),
     }] : []),
   ].sort((a, b) => a.start.getTime() - b.start.getTime()).slice(0, 8)
 
@@ -101,14 +106,10 @@ export default async function ScheduleWidget({ workspaceId }: Props) {
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
           {events.map((event) => {
-            const uniqueAttendees = [...new Set(event.attendees)].slice(0, 3)
+            const uniqueAttendees = [...new Map(event.attendees.map(person => [person.id, person])).values()].slice(0, 3)
 
             return (
-              <a
-                key={event.id}
-                href={event.href}
-                style={{ display: 'flex', gap: '24px', textDecoration: 'none', color: 'inherit' }}
-              >
+              <div key={event.id} style={{ display: 'flex', gap: '24px' }}>
                 <div
                   style={{
                     fontFamily: 'var(--font-body)',
@@ -123,12 +124,21 @@ export default async function ScheduleWidget({ workspaceId }: Props) {
                 </div>
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-                    <div style={{ fontWeight: 500, lineHeight: 1.3 }}>{event.name}</div>
+                    <a href={event.href} style={{ fontWeight: 500, lineHeight: 1.3, color: 'inherit', textDecoration: 'none' }}>
+                      {event.name}
+                    </a>
                     {event.scheduled && <span style={scheduledBadge}>Scheduled</span>}
                   </div>
                   {uniqueAttendees.length > 0 && (
                     <div style={{ fontSize: '12px', color: 'var(--ink-3)', marginTop: '4px' }}>
-                      with {uniqueAttendees.join(', ')}
+                      with {uniqueAttendees.map((person, i) => (
+                        <span key={person.id}>
+                          {i > 0 && ', '}
+                          <a href={`${personsUrl}/persons/${person.id}`} style={{ color: 'var(--camel)', textDecoration: 'none' }}>
+                            {person.name}
+                          </a>
+                        </span>
+                      ))}
                     </div>
                   )}
                   {event.place && (
@@ -137,7 +147,7 @@ export default async function ScheduleWidget({ workspaceId }: Props) {
                     </div>
                   )}
                 </div>
-              </a>
+              </div>
             )
           })}
         </div>

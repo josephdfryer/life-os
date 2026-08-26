@@ -16,7 +16,7 @@ async function fetchPeopleForPage(workspaceId: string) {
   const [rows, total] = await Promise.all([
     db.person.findMany({
       where, orderBy, skip: 0, take: LIMIT,
-      include: personListInclude,
+      include: personListInclude(),
     }),
     db.person.count({ where }),
   ])

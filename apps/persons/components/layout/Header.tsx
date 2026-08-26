@@ -3,6 +3,7 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useState, useRef, useEffect } from "react"
+import { PersonsMark } from "@life-os/ui"
 
 const IMPORT_ITEMS = [
   { href: "/import/interactions", label: "Import Interactions", desc: "Gmail, Slack, iMessage, notes" },
@@ -43,12 +44,16 @@ export default function Header() {
       zIndex: 50,
     }}>
       <Link href="/today" style={{
+        display: "inline-flex",
+        alignItems: "center",
+        gap: "9px",
         fontFamily: "var(--font-display)",
         fontSize: "17px",
         fontWeight: 400,
         color: "var(--ink)",
         textDecoration: "none",
       }}>
+        <PersonsMark size={19} style={{ color: "var(--cognac)", display: "block", flexShrink: 0 }} />
         Persons
       </Link>
 

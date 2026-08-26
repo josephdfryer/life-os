@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation"
 import { cookies } from "next/headers"
 import { resolveTimeZone, TZ_COOKIE } from "@life-os/ui"
+import { BACKGROUND_EVENT_TYPES } from "@life-os/domain"
 import { auth } from "@/auth"
 import { db } from "@/lib/db"
 import { getWorkspaceId } from "@/lib/workspace"
@@ -40,6 +41,7 @@ export default async function EventsPage({
   const events = await db.event.findMany({
     where: {
       workspaceId,
+      type: { notIn: [...BACKGROUND_EVENT_TYPES] },
       ...(window ? { start: window } : {}),
       ...(search ? { name: { contains: search } } : {}),
     },
@@ -51,6 +53,13 @@ export default async function EventsPage({
         take: 4,
       },
       _count: { select: { interactions: true } },
+      calendarLinks: {
+        where: { status: { not: "cancelled" } },
+        select: {
+          calendarId: true,
+          connection: { select: { calendarSummary: true } },
+        },
+      },
     },
     orderBy,
     take: 100,
@@ -199,6 +208,7 @@ export default async function EventsPage({
                     .map((i) => `${i.person!.first} ${i.person!.last ?? ""}`.trim()),
                 ),
               ].slice(0, 3)
+              const calendars = [...new Set(event.calendarLinks.map(link => link.connection.calendarSummary ?? link.calendarId))]
 
               return (
                 <a
@@ -228,6 +238,11 @@ export default async function EventsPage({
                   </div>
                   <div style={{ minWidth: 0 }}>
                     <div style={{ fontFamily: "var(--font-display)", fontSize: "17px", fontWeight: 400, marginBottom: "4px" }}>{event.name}</div>
+                    {calendars.length > 0 && (
+                      <div style={{ fontSize: "11px", color: "var(--ink-4)", marginBottom: "4px" }}>
+                        {calendars.length === 1 ? `Calendar: ${calendars[0]}` : `Calendars: ${calendars.join(" + ")}`}
+                      </div>
+                    )}
                     {attendees.length > 0 && (
                       <div style={{ fontSize: "11px", color: "var(--ink-3)", marginBottom: "4px" }}>
                         with {attendees.join(", ")}

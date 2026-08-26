@@ -93,7 +93,7 @@ export default function ImportUploadClient() {
             <div style={{ fontFamily: "var(--font-display)", fontSize: "28px" }}>Found {preview.totalRows.toLocaleString()} place visits</div>
             <div style={{ color: "var(--ink-2)", fontSize: "12px" }}>{dateLabel(preview.firstStartedAt, tz)} → {dateLabel(preview.lastStartedAt, tz)}</div>
             <button onClick={startImport} disabled={busy} style={{ marginTop: "16px", border: 0, borderRadius: "999px", padding: "12px 18px", background: "var(--accent)", color: "white", cursor: busy ? "wait" : "pointer", fontFamily: "inherit" }}>
-              {busy ? "Importing..." : "Import into Life OS"}
+              {busy ? "Importing..." : "Import into LifeOS"}
             </button>
           </section>
         )}

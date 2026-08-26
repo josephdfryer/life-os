@@ -13,6 +13,7 @@ export const dynamic = "force-dynamic"
 
 export default async function TodayPage() {
   const actor = await requireAccess("people.read")
+  const now = new Date()
   const tz = resolveTimeZone((await cookies()).get(TZ_COOKIE)?.value)
   // Only load persons who are relevant to today:
   //   - closeness >= 2 (Friends / Inner Circle) for attention tracking
@@ -35,6 +36,7 @@ export default async function TodayPage() {
       linkedin: true, twitter: true, website: true,
       color: true, colorSoft: true,
       interactions: {
+        where: { timestamp: { lte: now } },
         select: { id: true, createdAt: true, personId: true, eventId: true,
           type: true, timestamp: true, duration: true, emotionalWeight: true,
           outcome: true, summary: true, notes: true, actionItems: true,
@@ -81,7 +83,7 @@ export default async function TodayPage() {
   // one-day window, not something that can wait like an overdue check-in.
   const needsAttentionCount = birthdaysToday.length + overdue.length
 
-  const date = new Date().toLocaleDateString("en-US", {
+  const date = now.toLocaleDateString("en-US", {
     timeZone: tz, weekday: "long", month: "long", day: "numeric",
   })
 

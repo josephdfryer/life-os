@@ -39,7 +39,7 @@ export default function AddTheoryNote({ personId, personName }: { personId: stri
         variant="ghost"
         size="sm"
         onClick={() => setOpen(true)}
-        title="Capture an observation as a Life OS Note about this person"
+        title="Capture an observation as a LifeOS Note about this person"
         style={{ borderRadius: "100px", textTransform: "none", letterSpacing: 0 }}
       >
         Add observation

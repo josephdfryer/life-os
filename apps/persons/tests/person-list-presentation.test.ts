@@ -2,9 +2,27 @@ import assert from "node:assert/strict"
 import test from "node:test"
 import {
   interactionSourceLabel,
+  personListViewFilter,
   personContext,
   relationshipStatus,
 } from "../lib/person-list-presentation"
+
+test("relationship list filters bound contact history at now", () => {
+  const now = new Date("2026-08-22T18:00:00.000Z")
+  assert.deepEqual(personListViewFilter("active", now), {
+    interactions: {
+      some: {
+        timestamp: {
+          gte: new Date("2026-07-23T18:00:00.000Z"),
+          lte: now,
+        },
+      },
+    },
+  })
+  assert.deepEqual(personListViewFilter("no-history", now), {
+    interactions: { none: { timestamp: { lte: now } } },
+  })
+})
 
 test("relationship status explains overdue cadence instead of exposing a score", () => {
   assert.deepEqual(relationshipStatus({

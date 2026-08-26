@@ -1,7 +1,7 @@
 import StreamClient from '../../components/StreamClient'
 
 export const metadata = {
-  title: 'Stream · Life OS',
+  title: 'Stream · LifeOS',
 }
 
 export default function StreamPage() {

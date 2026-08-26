@@ -13,7 +13,7 @@ import { redirect } from "next/navigation"
 import { TheoryRegenerator, type TheoryPersonOption } from "@/components/TheoryRegenerator"
 import { ClaimFeedbackControls, LifeModelRegenerator } from "@/components/LifeModelControls"
 
-export const metadata = { title: "Intelligence · Life OS" }
+export const metadata = { title: "Intelligence · LifeOS" }
 
 const CLAIM_KINDS: Array<{ kind: LifeModelClaimKind; label: string; description: string }> = [
   { kind: "observed", label: "Observed", description: "Patterns measured directly from the graph." },
@@ -152,7 +152,7 @@ async function IntelligenceContent() {
             <div><p className="still-eyebrow">Person-level interpretation</p><h2 id="person-theory-heading">Theory of a person</h2></div>
             <span className="automation-caption">Manual, billed, and versioned</span>
           </div>
-          <p className="intelligence-section-intro">Choose someone when you want a fresh evidence-backed model of that relationship. Home sends the command through the canonical Life OS API; it never synthesizes passively on page load.</p>
+          <p className="intelligence-section-intro">Choose someone when you want a fresh evidence-backed model of that relationship. Home sends the command through the canonical LifeOS API; it never synthesizes passively on page load.</p>
           <TheoryRegenerator people={people.map(toTheoryPersonOption)} />
         </section>
 

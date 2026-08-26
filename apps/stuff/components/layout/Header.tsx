@@ -2,6 +2,7 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
+import { StuffMark } from "@life-os/ui"
 
 export default function Header() {
   const pathname = usePathname()
@@ -22,12 +23,16 @@ export default function Header() {
       zIndex: 50,
     }}>
       <Link href="/items" style={{
+        display: "inline-flex",
+        alignItems: "center",
+        gap: "9px",
         fontFamily: "var(--font-display)",
         fontSize: "17px",
         fontWeight: 400,
         color: "var(--ink)",
         textDecoration: "none",
       }}>
+        <StuffMark size={19} style={{ color: "var(--cognac)", display: "block", flexShrink: 0 }} />
         Stuff
       </Link>
 

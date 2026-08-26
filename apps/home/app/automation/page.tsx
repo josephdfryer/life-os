@@ -16,7 +16,7 @@ import { workspaceForHomeRequest } from "@/lib/request-access"
 import { redirect } from "next/navigation"
 import { ApplySuggestionControl, NewRuleControl, RuleControls, type EditableRule } from "@/components/AutomationRuleControls"
 
-export const metadata = { title: "Automation · Life OS" }
+export const metadata = { title: "Automation · LifeOS" }
 
 const AUTHORITY_TIERS: Array<{
   tier: ActionAuthorityTier

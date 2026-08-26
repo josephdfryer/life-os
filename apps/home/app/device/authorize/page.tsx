@@ -27,11 +27,16 @@ async function DeviceAuthorizationContent({ searchParams }: Props) {
   const valid = (platform === "macos" || platform === "ios")
     && deviceName.length > 0 && deviceName.length <= 200
     && appVersion.length > 0 && appVersion.length <= 64
-    && (redirectUri === "lifeos-companion://auth/callback" || redirectUri === "persons://auth/callback")
+    && (
+      redirectUri === "lifeos-companion://auth/callback"
+      || redirectUri === "persons://auth/callback"
+      || redirectUri === "levelup://auth/callback"
+    )
     && /^[A-Za-z0-9_-]{43,128}$/.test(codeChallenge)
     && state.length >= 16 && state.length <= 256
   const isPersons = redirectUri === "persons://auth/callback"
-  const productName = isPersons ? "Persons" : "LifeOS Companion"
+  const isLevelUp = redirectUri === "levelup://auth/callback"
+  const productName = isPersons ? "Persons" : isLevelUp ? "Level Up" : "LifeOS Companion"
 
   if (!valid) {
     return <AuthorizationShell>

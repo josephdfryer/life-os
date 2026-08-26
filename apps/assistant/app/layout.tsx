@@ -18,7 +18,7 @@ const newsreader = Newsreader({
   display: "swap",
 })
 
-export const metadata = { title: "Life OS Assistant" }
+export const metadata = { title: "LifeOS Assistant" }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (

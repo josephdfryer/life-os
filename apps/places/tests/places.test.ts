@@ -56,7 +56,7 @@ test("places map and profile derive stats from events, interactions, groups, pho
   const { createPlaceNote, getPlaceProfile, getPlacesForMap } = places
 
   const workspace = await db.workspace.create({
-    data: { id: "test-workspace", name: "Test Life OS", slug: "test-life-os" },
+    data: { id: "test-workspace", name: "Test LifeOS", slug: "test-life-os" },
   })
   const place = await db.place.create({
     data: {

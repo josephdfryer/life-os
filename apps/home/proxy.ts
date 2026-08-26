@@ -22,7 +22,10 @@ export default auth((req) => {
 })
 
 export const config = {
+  // device/authorize is excluded because it does its own auth() check and
+  // preserves the full PKCE query string via an in-page redirect straight to
+  // Google — this blanket gate only forwards pathname, which would drop it.
   matcher: [
-    "/((?!api/auth|login|privacy|terms|connections/oura/callback|_next/static|_next/image|favicon.ico).*)",
+    "/((?!api/auth|login|privacy|terms|connections/oura/callback|device/authorize|_next/static|_next/image|favicon.ico).*)",
   ],
 }

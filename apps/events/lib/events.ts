@@ -1,4 +1,4 @@
-// The Event table is a shared Life OS graph: Places/Persons import Google Maps
+// The Event table is a shared LifeOS graph: Places/Persons import Google Maps
 // location history ("visit"/"visited_place"), communications land as
 // "message"/"email", Stuff writes "stocktake"/"purchase_received", etc. Only
 // genuinely *scheduled* events belong on the calendar. This allowlist is the
