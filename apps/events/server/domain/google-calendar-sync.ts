@@ -30,6 +30,23 @@ export function prioritizeCalendarConnections<T extends { lastError: string | nu
   })
 }
 
+export const DUPLICATE_OCCURRENCE_WINDOW_MS = 5 * 60 * 1000
+
+export function normalizeCalendarOccurrenceName(value: string) {
+  return value.normalize("NFKC").trim().toLocaleLowerCase("en-US").replace(/\s+/g, " ")
+}
+
+// A repeated title is only the same occurrence when it lands at effectively
+// the same time. The time guard keeps recurring names such as "Workout" or
+// "Weekly sync" from collapsing across separate instances.
+export function sameCalendarOccurrence(
+  left: { name: string; start: Date },
+  right: { name: string; start: Date },
+) {
+  return normalizeCalendarOccurrenceName(left.name) === normalizeCalendarOccurrenceName(right.name)
+    && Math.abs(left.start.getTime() - right.start.getTime()) <= DUPLICATE_OCCURRENCE_WINDOW_MS
+}
+
 export async function mapPool<T, R>(items: T[], concurrency: number, fn: (item: T) => Promise<R>): Promise<R[]> {
   if (!items.length) return []
   const results: R[] = new Array(items.length)

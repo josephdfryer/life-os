@@ -5,23 +5,13 @@ import { unstable_cache } from 'next/cache'
 import { auth } from '../auth'
 import { db } from '@life-os/db'
 import { LIFE_OS_APP_URLS, lifeOsAppUrl } from '@life-os/auth'
-import { LIFE_OS_APPS, resolveTimeZone, TZ_COOKIE, TimezonePicker } from '@life-os/ui'
+import { AppMark, LIFE_OS_APPS, resolveTimeZone, TZ_COOKIE, TimezonePicker } from '@life-os/ui'
 import { isMarketingHost } from '@/lib/site'
 import MarketingHome from '../components/MarketingHome'
 import ScheduleWidget from '../components/ScheduleWidget'
-import CommitmentsWidget from '../components/CommitmentsWidget'
 import NudgesWidget from '../components/NudgesWidget'
-import PrepareWidget from '../components/PrepareWidget'
-import QuickCapture from '../components/QuickCapture'
-import ReconciliationWidget from '../components/ReconciliationWidget'
-import CapacityBriefWidget from '../components/CapacityBriefWidget'
-import OutcomeQuestionWidget from '../components/OutcomeQuestionWidget'
-import CheckIn from '../components/CheckIn'
-import WeeklyReview from '../components/WeeklyReview'
-import CommunicationsReviewWidget from '../components/CommunicationsReviewWidget'
-import DayReviewNavigation from '../components/DayReviewNavigation'
-import CustomizableWidgetGrid from '../components/CustomizableWidgetGrid'
-import { greetingForHour, parseReviewDay } from '@/lib/daily'
+import AssistantPanel from '../components/AssistantPanel'
+import { greetingForHour } from '@/lib/daily'
 
 async function getWorkspaceId(email: string): Promise<string> {
   return unstable_cache(
@@ -38,21 +28,15 @@ async function getWorkspaceId(email: string): Promise<string> {
   )()
 }
 
-export default function HomePage(props: {
-  searchParams: Promise<{ day?: string }>
-}) {
+export default function HomePage() {
   return (
     <Suspense fallback={<HomePageSkeleton />}>
-      <HomePageContent {...props} />
+      <HomePageContent />
     </Suspense>
   )
 }
 
-async function HomePageContent({
-  searchParams,
-}: {
-  searchParams: Promise<{ day?: string }>
-}) {
+async function HomePageContent() {
   if (isMarketingHost((await headers()).get('host'))) {
     return <MarketingHome />
   }
@@ -86,8 +70,6 @@ async function HomePageContent({
   const personsUrl = process.env.NODE_ENV === 'production'
     ? LIFE_OS_APP_URLS.persons
     : lifeOsAppUrl('persons', 'http://localhost:3000')
-  const { day: requestedDay } = await searchParams
-  const reviewDay = parseReviewDay(requestedDay, today, tz)
 
   return (
     <div className="dashboard-page min-h-screen pb-12">
@@ -120,62 +102,20 @@ async function HomePageContent({
             </p>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '6px' }}>
-            <div style={{ fontFamily: 'var(--font-display)', fontSize: '17px', color: 'var(--camel)' }}>Life OS</div>
+            <div style={{ fontFamily: 'var(--font-display)', fontSize: '17px', color: 'var(--camel)' }}>LifeOS</div>
             <TimezonePicker current={tz} />
           </div>
         </div>
 
-        <QuickCapture />
-
-        <DayReviewNavigation day={reviewDay} tz={tz} />
-
-        <Suspense fallback={<WidgetSkeleton />}>
-          <CapacityBriefWidget workspaceId={workspaceId} day={reviewDay} tz={tz} />
-        </Suspense>
-
-        {hourInTz < 12 && <CheckIn slot="morning" />}
+        <div className="dashboard-today-grid">
+          <AssistantPanel />
+          <Suspense fallback={<WidgetSkeleton />}>
+            <ScheduleWidget workspaceId={workspaceId} personsUrl={personsUrl} tz={tz} />
+          </Suspense>
+        </div>
 
         <Suspense fallback={<WidgetSkeleton />}>
-          <ReconciliationWidget workspaceId={workspaceId} day={reviewDay} tz={tz} />
-        </Suspense>
-
-        <Suspense fallback={<WidgetSkeleton />}>
-          <CommunicationsReviewWidget workspaceId={workspaceId} personsUrl={personsUrl} />
-        </Suspense>
-
-        <CustomizableWidgetGrid
-          schedule={
-            <Suspense fallback={<WidgetSkeleton />}>
-              <ScheduleWidget workspaceId={workspaceId} />
-            </Suspense>
-          }
-          prepare={
-            <Suspense fallback={<WidgetSkeleton />}>
-              <PrepareWidget workspaceId={workspaceId} />
-            </Suspense>
-          }
-          commitments={
-            <Suspense fallback={<WidgetSkeleton />}>
-              <CommitmentsWidget workspaceId={workspaceId} personsUrl={personsUrl} />
-            </Suspense>
-          }
-          nudges={
-            <Suspense fallback={<WidgetSkeleton />}>
-              <NudgesWidget workspaceId={workspaceId} personsUrl={personsUrl} />
-            </Suspense>
-          }
-        />
-
-        {hourInTz >= 17 && (
-          <>
-            <CheckIn slot="evening" />
-            <Suspense fallback={null}>
-              <OutcomeQuestionWidget workspaceId={workspaceId} tz={tz} />
-            </Suspense>
-          </>
-        )}
-        <Suspense fallback={<WidgetSkeleton />}>
-          <WeeklyReview workspaceId={workspaceId} />
+          <NudgesWidget workspaceId={workspaceId} personsUrl={personsUrl} />
         </Suspense>
 
         {/* App nav footer */}
@@ -197,13 +137,16 @@ async function HomePageContent({
           >
             Apps
           </div>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px 32px' }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px 32px' }}>
             {LIFE_OS_APPS.filter(app => app.key !== 'home').map(app => (
               <a
                 key={app.key}
                 href={app.key === 'persons' ? personsUrl : lifeOsAppUrl(app.key, app.localUrl)}
                 className="dashboard-app-link"
               >
+                {/* Marks inherit the link color rather than taking their light-ground
+                    accent — on the petrol dashboard those accents go muddy. */}
+                <AppMark app={app.key} size={16} />
                 {app.label}
               </a>
             ))}

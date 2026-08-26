@@ -1,6 +1,6 @@
 # Events App
 
-Life OS lens for the **Event** primitive — things that happened in the world, independent of any one participant.
+LifeOS lens for the **Event** primitive — things that happened in the world, independent of any one participant.
 
 ## Dev
 
@@ -32,7 +32,7 @@ Event data lives once on the Event node. Personal layers live on Interaction edg
 
 - API credentials live only as encrypted `Connection.accessTokenEncrypted` values (`kind=meetings`, `provider=granola`). Never return or log them.
 - `GranolaNoteLink` is the idempotency/provenance anchor. Provider summary and transcript live once on Event; `Event.notes` remains user-owned.
-- Attendees auto-link only through one exact normalized Person email. Unknown/ambiguous identities stage in `StagedInteraction`/`ReviewItem`; never create People or Groups silently.
+- Attendees auto-link only through one exact normalized Person email. A declined calendar RSVP is not attendance and must not create a Person Interaction. Unknown/ambiguous identities stage in `StagedInteraction`/`ReviewItem`; never create People or Groups silently.
 - List Notes and transcript endpoints must follow every cursor. Oversized inline transcripts fall back to the paginated transcript endpoint.
 - Verification: `npm test --workspace=events`, `npm run type-check --workspace=events`, `npm run build --workspace=events`, and root `npm run check:migrations`.
 - Operational detail and secret rotation: `docs/GRANOLA_EVENTS_RUNBOOK.md`.
@@ -47,10 +47,12 @@ self-hosting and conflicts with Vercel's managed Next build adapter in this
 monorepo (`next-server.js.nft.json` is consumed by the adapter).
 
 ```bash
-cp apps/events/.vercel/project.json .vercel/project.json   # after linking
-vercel --prod
-cp apps/persons/.vercel/project.json .vercel/project.json  # restore default
+npm run deploy -- --only events
 ```
+
+`apps/events/vercel.json` holds the granola-sync cron. Do not add a root
+`vercel.json` — it overrides this file and can drop the cron. See
+`docs/DEPLOY_RUNBOOK.md`.
 
 Add Google OAuth callback: `https://events.lacollecteur.com/api/calendar/google/callback`
 

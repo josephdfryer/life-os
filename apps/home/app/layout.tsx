@@ -23,7 +23,7 @@ const newsreader = Newsreader({
 })
 
 export const metadata: Metadata = {
-  title: "Life OS",
+  title: "LifeOS",
   description: "A foundation for becoming who you're trying to become.",
 }
 
