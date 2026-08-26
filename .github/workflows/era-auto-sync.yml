@@ -1,0 +1,58 @@
+name: Era finance auto-sync
+
+# Keeps Era transaction data fresh. Unlike calendar/granola sync, there is no
+# Vercel route for this — the era scripts are standalone (only depend on
+# @life-os/db and the Era MCP endpoint), so this job runs them directly.
+#
+# Pipeline (see scripts/era/sync-from-era.ts header for the canonical order):
+#   1. sync-from-era.ts    — pages Era's MCP for new transactions since the
+#                             watermark (EraConnection.syncCursor), dumps to
+#                             /tmp/era-dump, advances the watermark
+#   2. sync-accounts.ts    — upserts EraAccountLink from accounts.json; must
+#                             run before import or new/changed accounts leave
+#                             transactions unattributed
+#   3. import-transactions.ts — idempotent import of the dump into canonical
+#                             Interactions (dedupes on source+sourceId)
+#   4. rederive-actor-attribution.ts — repairs actorPersonId from account
+#                             ownership; cheap, safe to run every time
+#
+# All four are idempotent, so a failed or overlapping run is harmless — the
+# next run just re-covers the same window.
+on:
+  schedule:
+    - cron: "0 */6 * * *" # every 6 hours (UTC); GitHub may delay under load
+  workflow_dispatch: {} # allow manual runs from the Actions tab
+
+concurrency:
+  group: era-auto-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment: Production
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate Prisma client
+        run: npm run generate -w @life-os/db
+
+      - name: Sync Era transactions
+        env:
+          TURSO_DATABASE_URL: ${{ secrets.TURSO_DATABASE_URL }}
+          TURSO_AUTH_TOKEN: ${{ secrets.TURSO_AUTH_TOKEN }}
+          ERA_API_KEY: ${{ secrets.ERA_API_KEY }}
+        run: |
+          npx tsx scripts/era/sync-from-era.ts --out /tmp/era-dump
+          npx tsx scripts/era/sync-accounts.ts /tmp/era-dump/accounts.json
+          npx tsx scripts/era/import-transactions.ts /tmp/era-dump
+          npx tsx scripts/era/rederive-actor-attribution.ts
