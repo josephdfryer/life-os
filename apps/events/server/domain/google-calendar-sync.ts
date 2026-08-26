@@ -60,3 +60,119 @@ export async function mapPool<T, R>(items: T[], concurrency: number, fn: (item: 
   await Promise.all(Array.from({ length: Math.min(concurrency, items.length) }, () => worker()))
   return results
 }
+
+// ── Event page walking ──────────────────────────────────────────────────────
+// Kept here, free of any server import, so the paging state machine can be
+// tested directly. google-calendar.ts supplies fetchPage/onBatch.
+
+export type CalendarPageEvent = {
+  id: string
+  status?: string
+  start?: { dateTime?: string; date?: string; timeZone?: string }
+}
+
+export type EventPage<T> = { items?: T[]; nextPageToken?: string; nextSyncToken?: string }
+export type PageFetchResult<T> = { status: number; ok: boolean; page?: EventPage<T> }
+
+// A cancellation always passes, whatever its date: a deletion arriving through
+// incremental sync often carries no start at all, and dropping it would leave a
+// ghost event that no later sync revisits.
+export function shouldIngestEvent(item: CalendarPageEvent, ingestFrom: Date): boolean {
+  if (item.status === "cancelled") return true
+  const raw = item.start?.dateTime ?? item.start?.date
+  if (!raw) return true
+  const start = new Date(raw)
+  if (Number.isNaN(start.getTime())) return true
+  return start.getTime() >= ingestFrom.getTime()
+}
+
+// Three modes, chosen entirely by stored state:
+//
+//   incremental — a syncToken exists. Unwindowed by construction, so it sees
+//                 changes at ANY date, including years out. Cheap: changes only.
+//   full        — no syncToken yet. Walks the calendar with NO timeMin/timeMax/
+//                 orderBy, because Google only returns nextSyncToken for a query
+//                 free of those. This is the one-time price of getting a token.
+//   resume      — a full walk that ran out of budget last run, continuing from
+//                 the parked nextPageToken.
+//
+// A full walk can outlive one invocation, so it is bounded by `deadline`: on
+// expiry it hands back the current cursor for the caller to park, and the next
+// run resumes from it. Progress is never lost and never redone.
+//
+// `ingestFrom` bounds what the bootstrap WRITES, not what it reads: pages are
+// walked to the end regardless (the token only arrives on the last page) but
+// events starting before the cutoff are skipped rather than upserted. Future
+// events are never filtered — that is the entire point.
+export async function walkEventPages<T extends CalendarPageEvent>(input: {
+  syncToken: string | null
+  resumePageToken: string | null
+  ingestFrom: Date | null
+  deadline: number
+  pageSize: number
+  batchSize: number
+  now?: () => number
+  fetchPage: (params: URLSearchParams) => Promise<PageFetchResult<T>>
+  onBatch: (items: T[]) => Promise<void>
+}): Promise<{ nextSyncToken?: string; usedSyncToken: boolean; pendingPageToken?: string }> {
+  const now = input.now ?? Date.now
+  let pageToken: string | undefined = input.syncToken ? undefined : (input.resumePageToken ?? undefined)
+  let nextSyncToken: string | undefined
+  let useSyncToken = Boolean(input.syncToken)
+  let usedSyncToken = useSyncToken
+  let resuming = Boolean(pageToken)
+
+  for (;;) {
+    const params = new URLSearchParams({
+      maxResults: String(input.pageSize),
+      showDeleted: "true",
+      singleEvents: "true",
+    })
+    // A page cursor already encodes the original query, so it travels alone —
+    // pairing it with syncToken is rejected by Google.
+    if (pageToken) params.set("pageToken", pageToken)
+    else if (useSyncToken && input.syncToken) params.set("syncToken", input.syncToken)
+    // Deliberately no timeMin/timeMax/orderBy on the full walk: any of them
+    // suppresses nextSyncToken, which is what pinned this sync to a 7-day
+    // forward horizon indefinitely.
+
+    const res = await input.fetchPage(params)
+
+    // 410 GONE: the syncToken expired. Fall back to a fresh full walk.
+    if (res.status === 410) {
+      useSyncToken = false
+      usedSyncToken = false
+      pageToken = undefined
+      resuming = false
+      continue
+    }
+    // A parked cursor can go stale between runs; Google rejects it with 400.
+    // Restart the walk rather than wedging forever on a dead cursor.
+    if (res.status === 400 && resuming) {
+      pageToken = undefined
+      resuming = false
+      continue
+    }
+    if (!res.ok) throw new Error(`Google Calendar events request failed (${res.status})`)
+
+    const page = res.page ?? {}
+    const all = page.items ?? []
+    const items = input.ingestFrom
+      ? all.filter(item => shouldIngestEvent(item, input.ingestFrom as Date))
+      : all
+    for (let i = 0; i < items.length; i += input.batchSize) {
+      await input.onBatch(items.slice(i, i + input.batchSize))
+    }
+
+    pageToken = page.nextPageToken
+    nextSyncToken = page.nextSyncToken ?? nextSyncToken
+    resuming = false
+    if (!pageToken) break
+    // Out of budget mid-walk: park the cursor so the next run continues.
+    if (!useSyncToken && now() >= input.deadline) {
+      return { nextSyncToken, usedSyncToken, pendingPageToken: pageToken }
+    }
+  }
+
+  return { nextSyncToken, usedSyncToken, pendingPageToken: undefined }
+}

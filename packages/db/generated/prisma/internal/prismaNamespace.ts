@@ -7851,6 +7851,7 @@ export const CalendarConnectionScalarFieldEnum = {
   expiresAt: 'expiresAt',
   scope: 'scope',
   syncTokenEncrypted: 'syncTokenEncrypted',
+  fullSyncPageToken: 'fullSyncPageToken',
   lastSyncedAt: 'lastSyncedAt',
   lastError: 'lastError'
 } as const

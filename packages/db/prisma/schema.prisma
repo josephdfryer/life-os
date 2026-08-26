@@ -496,6 +496,13 @@ model CalendarConnection {
   expiresAt             DateTime?
   scope                 String?
   syncTokenEncrypted    String?
+  // Resume cursor for the one-time unwindowed bootstrap sync. Google only
+  // issues a syncToken for a query with no timeMin/timeMax/orderBy, and such a
+  // query walks the whole calendar — more than one cron run can finish. When a
+  // run hits its time budget mid-walk it parks Google's nextPageToken here and
+  // the next run resumes from it, so the bootstrap makes forward progress
+  // instead of restarting. Cleared the moment a syncToken is obtained.
+  fullSyncPageToken     String?
   lastSyncedAt          DateTime?
   lastError             String?
   eventLinks            CalendarEventLink[]

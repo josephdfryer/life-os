@@ -5,13 +5,7 @@ import { db } from "@/lib/db"
 import { badRequest, forbidden, notFound } from "@/server/api/errors"
 import { auditAction, type DomainActor } from "./audit"
 import type { AccessActor } from "./access"
-import {
-  DUPLICATE_OCCURRENCE_WINDOW_MS,
-  mapPool,
-  prioritizeCalendarConnections,
-  sameCalendarOccurrence,
-  withCalendarDbRetry,
-} from "./google-calendar-sync"
+import { mapPool, prioritizeCalendarConnections, walkEventPages, withCalendarDbRetry } from "./google-calendar-sync"
 
 const GOOGLE_AUTH_URL = "https://accounts.google.com/o/oauth2/v2/auth"
 const GOOGLE_TOKEN_URL = "https://oauth2.googleapis.com/token"
@@ -21,19 +15,23 @@ const CALENDAR_SCOPE = "https://www.googleapis.com/auth/calendar.readonly"
 const SOURCE = "google-calendar"
 const DEFAULT_BACKFILL_DAYS = 180
 const MAX_BACKFILL_DAYS = 3650
-// How far ahead a full (non-incremental) sync pulls. singleEvents=true expands
-// recurring meetings into instances, so this window is the dominant cost of a
-// first sync. Manual sync keeps a wide horizon; the auto-sync cron uses a tight
-// window so it always finishes fast and can establish a syncToken — after which
-// incremental sync (change-only) keeps everything current regardless of window.
-const DEFAULT_FORWARD_DAYS = 365
-// The cron re-scans this window every run (Google won't issue an incremental
-// syncToken for a time-bounded query, so each run is a fresh windowed scan). It
-// must be small enough to finish inside the function timeout given remote-DB
-// write latency. A tight near-term window every 30 min keeps the upcoming week
-// fresh; full-history backfill stays the manual Sync button's job.
-const CRON_BACKFILL_DAYS = 1
-const CRON_FORWARD_DAYS = 7
+// There is no forward window any more, and that is the point. Every sync is
+// either an unwindowed bootstrap walk (which earns a syncToken) or a true
+// incremental sync against that token — neither is bounded by a date range, so
+// an event five years out is as visible as one tomorrow.
+//
+// The previous design set timeMin/timeMax on every request, which suppresses
+// Google's nextSyncToken. The token was therefore never obtained, the promised
+// "incremental sync keeps everything current regardless of window" never
+// activated, and the cron sat at a 7-day forward horizon indefinitely.
+//
+// backfillDays now bounds only how much HISTORY the bootstrap ingests, never
+// how far ahead it can see.
+const CRON_BACKFILL_DAYS = 180
+// Work budget for one invocation, under the route's maxDuration of 300s. On
+// expiry a bootstrap walk parks its page cursor and resumes next run, so a
+// large calendar converges across runs instead of timing out on every one.
+const SYNC_TIME_BUDGET_MS = 240_000
 const GOOGLE_PAGE_SIZE = 100
 const DB_BATCH_SIZE = 25
 // Each event upsert used to open an interactive Prisma transaction (default
@@ -514,6 +512,9 @@ type SyncStats = {
   batches: number
   backfillDays: number
   incremental: boolean
+  // True when the bootstrap walk hit its budget and parked a cursor: this
+  // calendar is mid-bootstrap and will continue on the next run.
+  bootstrapping: boolean
   error: string | null
 }
 
@@ -524,6 +525,7 @@ type SyncConnection = {
   accessTokenEncrypted: string | null
   refreshTokenEncrypted: string | null
   syncTokenEncrypted: string | null
+  fullSyncPageToken: string | null
   expiresAt: Date | null
 }
 
@@ -597,7 +599,7 @@ export async function syncAllGoogleCalendars(options: SyncOptions = {}) {
     const peopleByEmail = await peopleEmailIndex(workspaceId)
     const calendars: SyncStats[] = []
     for (const connection of prioritizeCalendarConnections(workspaceConnections)) {
-      calendars.push(await syncGoogleCalendarConnection(actor, connection, peopleByEmail, backfillDays, CRON_FORWARD_DAYS))
+      calendars.push(await syncGoogleCalendarConnection(actor, connection, peopleByEmail, backfillDays))
     }
     results.push({ workspaceId, calendars })
   }
@@ -632,7 +634,6 @@ async function syncGoogleCalendarConnection(
   connection: SyncConnection,
   peopleByEmail: Map<string, { id: string; first: string; last: string }>,
   backfillDays: number,
-  forwardDays: number = DEFAULT_FORWARD_DAYS,
 ) {
   const syncToken = decryptNullable(connection.syncTokenEncrypted)
   const stats: SyncStats = {
@@ -645,6 +646,7 @@ async function syncGoogleCalendarConnection(
     batches: 0,
     backfillDays,
     incremental: Boolean(syncToken),
+    bootstrapping: false,
     error: null,
   }
 
@@ -656,8 +658,13 @@ async function syncGoogleCalendarConnection(
     const listed = await syncEventPages(accessToken, {
       calendarId: connection.calendarId,
       syncToken,
-      backfillDays,
-      forwardDays,
+      resumePageToken: connection.fullSyncPageToken ?? null,
+      // Bound what the bootstrap writes, not what it reads: the walk still
+      // pages to the end to earn the token, but history older than the
+      // caller's backfill window is skipped instead of upserted. Incremental
+      // runs pass null — a change is worth applying whenever it happened.
+      ingestFrom: syncToken ? null : new Date(Date.now() - backfillDays * 24 * 60 * 60 * 1000),
+      deadline: Date.now() + SYNC_TIME_BUDGET_MS,
       onBatch: async items => {
         stats.batches += 1
         const result = await processCalendarBatch({
@@ -675,11 +682,17 @@ async function syncGoogleCalendarConnection(
       }
     })
     stats.incremental = listed.usedSyncToken
+    stats.bootstrapping = Boolean(listed.pendingPageToken)
 
+    // Once a token is in hand the bootstrap is over, so the cursor is cleared.
+    // While the walk is still in flight we keep the cursor and must NOT record
+    // a token we do not have — writing one would strand the unwalked remainder.
+    const nextToken = listed.nextSyncToken ?? (listed.pendingPageToken ? null : syncToken)
     await withCalendarDbRetry(() => db.calendarConnection.update({
       where: { id: connection.id },
       data: {
-        syncTokenEncrypted: encryptNullable(listed.nextSyncToken ?? syncToken),
+        syncTokenEncrypted: encryptNullable(nextToken),
+        fullSyncPageToken: listed.nextSyncToken ? null : (listed.pendingPageToken ?? null),
         lastSyncedAt: new Date(),
         lastError: null,
       },
@@ -769,38 +782,17 @@ async function upsertCalendarEvent(input: {
         externalEventId: input.item.id,
       },
     },
-    include: {
-      plan: {
-        include: { fulfilledBy: { select: { id: true } } },
-      },
-    },
+    include: { plan: true },
   })
 
   const externalInstanceId = `${SOURCE}:${input.calendarId}:${input.item.id}`
-  const title = input.item.summary?.trim() || "Untitled Google Calendar event"
-  const matchingPlan = await findSharedOccurrencePlan({
-    workspaceId: input.workspaceId,
-    calendarId: input.calendarId,
-    iCalUID: input.item.iCalUID,
-    title,
-    start,
-  })
-  const currentPlan = link?.plan ?? null
-  const shouldAdoptMatchingPlan = Boolean(matchingPlan
-    && matchingPlan.id !== currentPlan?.id
-    && (!currentPlan
-      || (!currentPlan.fulfilledBy
-        && (Boolean(matchingPlan.fulfilledBy) || matchingPlan.createdAt < currentPlan.createdAt))))
-  const sharedPlan = shouldAdoptMatchingPlan ? matchingPlan : null
-  const replacedPlanId = sharedPlan && currentPlan?.id !== sharedPlan.id ? currentPlan?.id ?? null : null
-  const linkedEventId = link?.eventId ?? sharedPlan?.fulfilledBy?.id ?? null
-  let planId = sharedPlan?.id ?? link?.planId ?? null
+  let planId = link?.planId ?? null
   let createdPlan = false
   if (planId) {
     await db.plan.update({
       where: { id: planId },
       data: {
-        text: title,
+        text: input.item.summary?.trim() || "Untitled Google Calendar event",
         scheduledStart: start,
         scheduledEnd: end ?? null,
         successSignals: JSON.stringify(metadata),
@@ -811,14 +803,14 @@ async function upsertCalendarEvent(input: {
     const plan = existingPlan ?? await db.plan.create({
       data: {
         workspaceId: input.workspaceId,
-        text: title,
+        text: input.item.summary?.trim() || "Untitled Google Calendar event",
         scheduledStart: start,
         scheduledEnd: end ?? null,
         externalSource: SOURCE,
         externalInstanceId,
-        reconciliationStatus: linkedEventId ? "happened" : "pending",
-        reconciledAt: linkedEventId ? new Date() : null,
-        status: linkedEventId ? "completed" : "active",
+        reconciliationStatus: link?.eventId ? "happened" : "pending",
+        reconciledAt: link?.eventId ? new Date() : null,
+        status: link?.eventId ? "completed" : "active",
         successSignals: JSON.stringify(metadata),
       },
       select: { id: true },
@@ -849,13 +841,7 @@ async function upsertCalendarEvent(input: {
         externalEventId: input.item.id,
       },
     },
-    update: {
-      planId,
-      eventId: sharedPlan?.fulfilledBy?.id ?? undefined,
-      iCalUID: input.item.iCalUID ?? null,
-      status: input.item.status ?? "confirmed",
-      lastSeenAt: new Date(),
-    },
+    update: { planId, iCalUID: input.item.iCalUID ?? null, status: input.item.status ?? "confirmed", lastSeenAt: new Date() },
     create: {
       workspaceId: input.workspaceId,
       connectionId: input.connectionId,
@@ -864,27 +850,10 @@ async function upsertCalendarEvent(input: {
       externalEventId: input.item.id,
       iCalUID: input.item.iCalUID ?? null,
       planId,
-      eventId: sharedPlan?.fulfilledBy?.id ?? null,
       status: input.item.status ?? "confirmed",
       lastSeenAt: new Date(),
     },
   })
-
-  if (replacedPlanId && !currentPlan?.fulfilledBy) {
-    const remainingLinks = await db.calendarEventLink.count({ where: { planId: replacedPlanId } })
-    if (remainingLinks === 0) {
-      await db.$transaction([
-        db.plan.update({
-          where: { id: replacedPlanId },
-          data: { status: "abandoned", reconciliationStatus: "merged_duplicate", reconciledAt: new Date() },
-        }),
-        db.reviewItem.updateMany({
-          where: { workspaceId: input.workspaceId, source: "calendar_reconciliation", sourceId: replacedPlanId, status: "pending" },
-          data: { status: "dismissed", resolvedAt: new Date() },
-        }),
-      ], CALENDAR_TX)
-    }
-  }
 
   // Only ask once the day has passed. Creating a review item at sync time asked
   // "did this happen?" about events that had not happened yet, which is most of
@@ -892,7 +861,7 @@ async function upsertCalendarEvent(input: {
   // matchCalendarOutcomes, which resolves it from evidence or retires it.
   const dayHasPassed = start.getTime() < Date.now() - 24 * 60 * 60 * 1000
   const confidence = reconciliationConfidence(input.item, planId)
-  if (!linkedEventId && dayHasPassed) {
+  if (!link?.eventId && dayHasPassed) {
     await createReviewItem({
       workspaceId: input.workspaceId,
       source: "calendar_reconciliation",
@@ -903,7 +872,7 @@ async function upsertCalendarEvent(input: {
       targetType: "Plan",
       targetId: planId,
       evidence: {
-        title,
+        title: input.item.summary?.trim() || "Untitled Google Calendar event",
         scheduledStart: start.toISOString(),
         scheduledEnd: end?.toISOString() ?? null,
         externalEventId: input.item.id,
@@ -923,106 +892,24 @@ async function upsertCalendarEvent(input: {
 
   const matchedPeople = matchedAttendees(input.item, input.peopleByEmail)
   const declinedPeople = declinedMatchedAttendees(input.item, input.peopleByEmail)
-  const activeSourceCount = await db.calendarEventLink.count({
-    where: { planId, status: { not: "cancelled" } },
-  })
-  if (activeSourceCount > 1) {
-    if (matchedPeople.length) {
-      await db.$transaction(matchedPeople.map(person => db.planExpectedPerson.upsert({
-        where: { planId_personId: { planId: planId!, personId: person.id } },
-        update: { workspaceId: input.workspaceId },
-        create: { planId: planId!, personId: person.id, workspaceId: input.workspaceId },
-      })), CALENDAR_TX)
-    }
-  } else {
-    await db.$transaction([
-      db.planExpectedPerson.deleteMany({ where: { planId } }),
-      ...(matchedPeople.length ? [db.planExpectedPerson.createMany({
-        data: matchedPeople.map(person => ({
-          planId: planId!,
-          personId: person.id,
-          workspaceId: input.workspaceId,
-        })),
-      })] : []),
-    ], CALENDAR_TX)
-  }
+  await db.$transaction([
+    db.planExpectedPerson.deleteMany({ where: { planId } }),
+    ...(matchedPeople.length ? [db.planExpectedPerson.createMany({
+      data: matchedPeople.map(person => ({
+        planId: planId!,
+        personId: person.id,
+        workspaceId: input.workspaceId,
+      })),
+    })] : []),
+  ], CALENDAR_TX)
   await pruneDeclinedAttendeeInteractions({
     workspaceId: input.workspaceId,
     planId,
-    eventId: linkedEventId,
-    // A decline on one copied calendar cannot prove non-attendance when
-    // another source for the shared occurrence may still say accepted.
-    declinedPersonIds: activeSourceCount > 1 ? [] : declinedPeople.map(person => person.id),
+    eventId: link?.eventId ?? null,
+    declinedPersonIds: declinedPeople.map(person => person.id),
   })
 
   return { createdPlan }
-}
-
-async function findSharedOccurrencePlan(input: {
-  workspaceId: string
-  calendarId: string
-  iCalUID?: string
-  title: string
-  start: Date
-}) {
-  if (input.iCalUID) {
-    const exactCopies = await db.calendarEventLink.findMany({
-      where: {
-        workspaceId: input.workspaceId,
-        provider: "google",
-        iCalUID: input.iCalUID,
-        calendarId: { not: input.calendarId },
-        status: { not: "cancelled" },
-        planId: { not: null },
-      },
-      select: {
-        plan: {
-          select: {
-            id: true,
-            createdAt: true,
-            scheduledStart: true,
-            fulfilledBy: { select: { id: true } },
-          },
-        },
-      },
-      orderBy: { createdAt: "asc" },
-      take: 20,
-    })
-    const exact = exactCopies.find(copy => copy.plan?.scheduledStart
-      && Math.abs(copy.plan.scheduledStart.getTime() - input.start.getTime()) <= DUPLICATE_OCCURRENCE_WINDOW_MS)
-    if (exact?.plan) return exact.plan
-  }
-
-  const candidates = await db.plan.findMany({
-    where: {
-      workspaceId: input.workspaceId,
-      externalSource: SOURCE,
-      scheduledStart: {
-        gte: new Date(input.start.getTime() - DUPLICATE_OCCURRENCE_WINDOW_MS),
-        lte: new Date(input.start.getTime() + DUPLICATE_OCCURRENCE_WINDOW_MS),
-      },
-      calendarLinks: {
-        some: {
-          provider: "google",
-          calendarId: { not: input.calendarId },
-          status: { not: "cancelled" },
-        },
-      },
-    },
-    select: {
-      id: true,
-      createdAt: true,
-      text: true,
-      scheduledStart: true,
-      fulfilledBy: { select: { id: true } },
-    },
-    orderBy: { createdAt: "asc" },
-    take: 20,
-  })
-  return candidates.find(candidate => candidate.scheduledStart && sameCalendarOccurrence(
-    { name: candidate.text, start: candidate.scheduledStart },
-    { name: input.title, start: input.start },
-  )) ?? null
 }
 
 async function peopleEmailIndex(workspaceId: string) {
@@ -1107,18 +994,13 @@ async function markCancelled(connectionId: string, workspaceId: string, calendar
     select: { id: true, planId: true, plan: { select: { fulfilledBy: { select: { id: true } } } } },
   })
   if (!link) return 0
-  await db.calendarEventLink.update({ where: { id: link.id }, data: { connectionId, status: "cancelled", lastSeenAt: new Date() } })
-  if (link.planId && !link.plan?.fulfilledBy) {
-    const remainingSources = await db.calendarEventLink.count({
-      where: { planId: link.planId, status: { not: "cancelled" } },
-    })
-    if (remainingSources === 0) {
-      await db.plan.update({
-        where: { id: link.planId },
-        data: { status: "abandoned", reconciliationStatus: "cancelled", reconciledAt: new Date() },
-      })
-    }
-  }
+  await db.$transaction([
+    db.calendarEventLink.update({ where: { id: link.id }, data: { connectionId, status: "cancelled", lastSeenAt: new Date() } }),
+    ...(link.planId && !link.plan?.fulfilledBy ? [db.plan.update({
+      where: { id: link.planId },
+      data: { status: "abandoned", reconciliationStatus: "cancelled", reconciledAt: new Date() },
+    })] : []),
+  ], CALENDAR_TX)
   return 1
 }
 
@@ -1212,56 +1094,37 @@ async function syncCalendarConnectionMirror(connectionId: string) {
   }
 }
 
+// Thin wrapper over walkEventPages (google-calendar-sync.ts), which holds the
+// paging state machine so it can be tested without server imports. All this
+// adds is the Google URL and auth.
 async function syncEventPages(
   accessToken: string,
   input: {
     calendarId: string
     syncToken: string | null
-    backfillDays: number
-    forwardDays: number
+    resumePageToken: string | null
+    ingestFrom: Date | null
+    deadline: number
     onBatch: (items: GoogleCalendarEvent[]) => Promise<void>
   }
 ) {
-  let pageToken: string | undefined
-  let nextSyncToken: string | undefined
-  let useSyncToken = Boolean(input.syncToken)
-  let usedSyncToken = useSyncToken
-
-  for (;;) {
-    const params = new URLSearchParams({
-      maxResults: String(GOOGLE_PAGE_SIZE),
-      showDeleted: "true",
-      singleEvents: "true",
-    })
-    if (pageToken) params.set("pageToken", pageToken)
-    if (useSyncToken && input.syncToken) {
-      params.set("syncToken", input.syncToken)
-    } else {
-      usedSyncToken = false
-      const now = Date.now()
-      params.set("timeMin", new Date(now - input.backfillDays * 24 * 60 * 60 * 1000).toISOString())
-      params.set("timeMax", new Date(now + input.forwardDays * 24 * 60 * 60 * 1000).toISOString())
-      params.set("orderBy", "startTime")
-    }
-
-    const res = await googleFetch(`${GOOGLE_CALENDAR_BASE}/calendars/${encodeURIComponent(input.calendarId)}/events?${params}`, accessToken)
-    if (res.status === 410 && useSyncToken) {
-      useSyncToken = false
-      usedSyncToken = false
-      pageToken = undefined
-      continue
-    }
-    if (!res.ok) throw new Error(`Google Calendar events request failed (${res.status})`)
-    const data = await res.json() as EventsListResponse
-    for (const batch of chunk(data.items ?? [], DB_BATCH_SIZE)) {
-      await input.onBatch(batch)
-    }
-    pageToken = data.nextPageToken
-    nextSyncToken = data.nextSyncToken ?? nextSyncToken
-    if (!pageToken) break
-  }
-
-  return { nextSyncToken, usedSyncToken }
+  return walkEventPages<GoogleCalendarEvent>({
+    syncToken: input.syncToken,
+    resumePageToken: input.resumePageToken,
+    ingestFrom: input.ingestFrom,
+    deadline: input.deadline,
+    pageSize: GOOGLE_PAGE_SIZE,
+    batchSize: DB_BATCH_SIZE,
+    onBatch: input.onBatch,
+    fetchPage: async params => {
+      const res = await googleFetch(
+        `${GOOGLE_CALENDAR_BASE}/calendars/${encodeURIComponent(input.calendarId)}/events?${params}`,
+        accessToken,
+      )
+      if (!res.ok) return { status: res.status, ok: false }
+      return { status: res.status, ok: true, page: await res.json() as EventsListResponse }
+    },
+  })
 }
 
 async function exchangeCode(code: string, redirectUri: string) {

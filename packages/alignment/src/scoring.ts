@@ -29,6 +29,13 @@ export function relationshipGapScore(input: {
     if (!hasActivePlan) return 0
     return daysSince(lastInteractionAt) / ACQUAINTANCE_WITH_PLAN_THRESHOLD_DAYS
   }
+  // Deliberately no "hide people with no recorded contact" rule here. This
+  // function answers one question — how overdue is this relationship against
+  // its declared cadence — and every surface shares it. Whether a given
+  // person is worth surfacing at all is curation, and it belongs to the
+  // caller that has the provenance to judge it (see getRelationshipGaps).
+  // Encoding it here silently emptied Persons' Today page, which passes
+  // plans: [] and so could never hit the active-plan escape hatch.
   const threshold = CLOSENESS_THRESHOLD_DAYS[closeness] ?? 21
   return daysSince(lastInteractionAt) / threshold
 }
