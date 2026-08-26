@@ -5,7 +5,14 @@ import { db } from "@/lib/db"
 import { badRequest, forbidden, notFound } from "@/server/api/errors"
 import { auditAction, type DomainActor } from "./audit"
 import type { AccessActor } from "./access"
-import { mapPool, prioritizeCalendarConnections, walkEventPages, withCalendarDbRetry } from "./google-calendar-sync"
+import {
+  DUPLICATE_OCCURRENCE_WINDOW_MS,
+  mapPool,
+  prioritizeCalendarConnections,
+  sameCalendarOccurrence,
+  walkEventPages,
+  withCalendarDbRetry,
+} from "./google-calendar-sync"
 
 const GOOGLE_AUTH_URL = "https://accounts.google.com/o/oauth2/v2/auth"
 const GOOGLE_TOKEN_URL = "https://oauth2.googleapis.com/token"
@@ -782,17 +789,38 @@ async function upsertCalendarEvent(input: {
         externalEventId: input.item.id,
       },
     },
-    include: { plan: true },
+    include: {
+      plan: {
+        include: { fulfilledBy: { select: { id: true } } },
+      },
+    },
   })
 
   const externalInstanceId = `${SOURCE}:${input.calendarId}:${input.item.id}`
-  let planId = link?.planId ?? null
+  const title = input.item.summary?.trim() || "Untitled Google Calendar event"
+  const matchingPlan = await findSharedOccurrencePlan({
+    workspaceId: input.workspaceId,
+    calendarId: input.calendarId,
+    iCalUID: input.item.iCalUID,
+    title,
+    start,
+  })
+  const currentPlan = link?.plan ?? null
+  const shouldAdoptMatchingPlan = Boolean(matchingPlan
+    && matchingPlan.id !== currentPlan?.id
+    && (!currentPlan
+      || (!currentPlan.fulfilledBy
+        && (Boolean(matchingPlan.fulfilledBy) || matchingPlan.createdAt < currentPlan.createdAt))))
+  const sharedPlan = shouldAdoptMatchingPlan ? matchingPlan : null
+  const replacedPlanId = sharedPlan && currentPlan?.id !== sharedPlan.id ? currentPlan?.id ?? null : null
+  const linkedEventId = link?.eventId ?? sharedPlan?.fulfilledBy?.id ?? null
+  let planId = sharedPlan?.id ?? link?.planId ?? null
   let createdPlan = false
   if (planId) {
     await db.plan.update({
       where: { id: planId },
       data: {
-        text: input.item.summary?.trim() || "Untitled Google Calendar event",
+        text: title,
         scheduledStart: start,
         scheduledEnd: end ?? null,
         successSignals: JSON.stringify(metadata),
@@ -803,14 +831,14 @@ async function upsertCalendarEvent(input: {
     const plan = existingPlan ?? await db.plan.create({
       data: {
         workspaceId: input.workspaceId,
-        text: input.item.summary?.trim() || "Untitled Google Calendar event",
+        text: title,
         scheduledStart: start,
         scheduledEnd: end ?? null,
         externalSource: SOURCE,
         externalInstanceId,
-        reconciliationStatus: link?.eventId ? "happened" : "pending",
-        reconciledAt: link?.eventId ? new Date() : null,
-        status: link?.eventId ? "completed" : "active",
+        reconciliationStatus: linkedEventId ? "happened" : "pending",
+        reconciledAt: linkedEventId ? new Date() : null,
+        status: linkedEventId ? "completed" : "active",
         successSignals: JSON.stringify(metadata),
       },
       select: { id: true },
@@ -841,7 +869,13 @@ async function upsertCalendarEvent(input: {
         externalEventId: input.item.id,
       },
     },
-    update: { planId, iCalUID: input.item.iCalUID ?? null, status: input.item.status ?? "confirmed", lastSeenAt: new Date() },
+    update: {
+      planId,
+      eventId: sharedPlan?.fulfilledBy?.id ?? undefined,
+      iCalUID: input.item.iCalUID ?? null,
+      status: input.item.status ?? "confirmed",
+      lastSeenAt: new Date(),
+    },
     create: {
       workspaceId: input.workspaceId,
       connectionId: input.connectionId,
@@ -850,10 +884,27 @@ async function upsertCalendarEvent(input: {
       externalEventId: input.item.id,
       iCalUID: input.item.iCalUID ?? null,
       planId,
+      eventId: sharedPlan?.fulfilledBy?.id ?? null,
       status: input.item.status ?? "confirmed",
       lastSeenAt: new Date(),
     },
   })
+
+  if (replacedPlanId && !currentPlan?.fulfilledBy) {
+    const remainingLinks = await db.calendarEventLink.count({ where: { planId: replacedPlanId } })
+    if (remainingLinks === 0) {
+      await db.$transaction([
+        db.plan.update({
+          where: { id: replacedPlanId },
+          data: { status: "abandoned", reconciliationStatus: "merged_duplicate", reconciledAt: new Date() },
+        }),
+        db.reviewItem.updateMany({
+          where: { workspaceId: input.workspaceId, source: "calendar_reconciliation", sourceId: replacedPlanId, status: "pending" },
+          data: { status: "dismissed", resolvedAt: new Date() },
+        }),
+      ], CALENDAR_TX)
+    }
+  }
 
   // Only ask once the day has passed. Creating a review item at sync time asked
   // "did this happen?" about events that had not happened yet, which is most of
@@ -861,7 +912,7 @@ async function upsertCalendarEvent(input: {
   // matchCalendarOutcomes, which resolves it from evidence or retires it.
   const dayHasPassed = start.getTime() < Date.now() - 24 * 60 * 60 * 1000
   const confidence = reconciliationConfidence(input.item, planId)
-  if (!link?.eventId && dayHasPassed) {
+  if (!linkedEventId && dayHasPassed) {
     await createReviewItem({
       workspaceId: input.workspaceId,
       source: "calendar_reconciliation",
@@ -872,7 +923,7 @@ async function upsertCalendarEvent(input: {
       targetType: "Plan",
       targetId: planId,
       evidence: {
-        title: input.item.summary?.trim() || "Untitled Google Calendar event",
+        title,
         scheduledStart: start.toISOString(),
         scheduledEnd: end?.toISOString() ?? null,
         externalEventId: input.item.id,
@@ -892,24 +943,106 @@ async function upsertCalendarEvent(input: {
 
   const matchedPeople = matchedAttendees(input.item, input.peopleByEmail)
   const declinedPeople = declinedMatchedAttendees(input.item, input.peopleByEmail)
-  await db.$transaction([
-    db.planExpectedPerson.deleteMany({ where: { planId } }),
-    ...(matchedPeople.length ? [db.planExpectedPerson.createMany({
-      data: matchedPeople.map(person => ({
-        planId: planId!,
-        personId: person.id,
-        workspaceId: input.workspaceId,
-      })),
-    })] : []),
-  ], CALENDAR_TX)
+  const activeSourceCount = await db.calendarEventLink.count({
+    where: { planId, status: { not: "cancelled" } },
+  })
+  if (activeSourceCount > 1) {
+    if (matchedPeople.length) {
+      await db.$transaction(matchedPeople.map(person => db.planExpectedPerson.upsert({
+        where: { planId_personId: { planId: planId!, personId: person.id } },
+        update: { workspaceId: input.workspaceId },
+        create: { planId: planId!, personId: person.id, workspaceId: input.workspaceId },
+      })), CALENDAR_TX)
+    }
+  } else {
+    await db.$transaction([
+      db.planExpectedPerson.deleteMany({ where: { planId } }),
+      ...(matchedPeople.length ? [db.planExpectedPerson.createMany({
+        data: matchedPeople.map(person => ({
+          planId: planId!,
+          personId: person.id,
+          workspaceId: input.workspaceId,
+        })),
+      })] : []),
+    ], CALENDAR_TX)
+  }
   await pruneDeclinedAttendeeInteractions({
     workspaceId: input.workspaceId,
     planId,
-    eventId: link?.eventId ?? null,
-    declinedPersonIds: declinedPeople.map(person => person.id),
+    eventId: linkedEventId,
+    // A decline on one copied calendar cannot prove non-attendance when
+    // another source for the shared occurrence may still say accepted.
+    declinedPersonIds: activeSourceCount > 1 ? [] : declinedPeople.map(person => person.id),
   })
 
   return { createdPlan }
+}
+
+async function findSharedOccurrencePlan(input: {
+  workspaceId: string
+  calendarId: string
+  iCalUID?: string
+  title: string
+  start: Date
+}) {
+  if (input.iCalUID) {
+    const exactCopies = await db.calendarEventLink.findMany({
+      where: {
+        workspaceId: input.workspaceId,
+        provider: "google",
+        iCalUID: input.iCalUID,
+        calendarId: { not: input.calendarId },
+        status: { not: "cancelled" },
+        planId: { not: null },
+      },
+      select: {
+        plan: {
+          select: {
+            id: true,
+            createdAt: true,
+            scheduledStart: true,
+            fulfilledBy: { select: { id: true } },
+          },
+        },
+      },
+      orderBy: { createdAt: "asc" },
+      take: 20,
+    })
+    const exact = exactCopies.find(copy => copy.plan?.scheduledStart
+      && Math.abs(copy.plan.scheduledStart.getTime() - input.start.getTime()) <= DUPLICATE_OCCURRENCE_WINDOW_MS)
+    if (exact?.plan) return exact.plan
+  }
+
+  const candidates = await db.plan.findMany({
+    where: {
+      workspaceId: input.workspaceId,
+      externalSource: SOURCE,
+      scheduledStart: {
+        gte: new Date(input.start.getTime() - DUPLICATE_OCCURRENCE_WINDOW_MS),
+        lte: new Date(input.start.getTime() + DUPLICATE_OCCURRENCE_WINDOW_MS),
+      },
+      calendarLinks: {
+        some: {
+          provider: "google",
+          calendarId: { not: input.calendarId },
+          status: { not: "cancelled" },
+        },
+      },
+    },
+    select: {
+      id: true,
+      createdAt: true,
+      text: true,
+      scheduledStart: true,
+      fulfilledBy: { select: { id: true } },
+    },
+    orderBy: { createdAt: "asc" },
+    take: 20,
+  })
+  return candidates.find(candidate => candidate.scheduledStart && sameCalendarOccurrence(
+    { name: candidate.text, start: candidate.scheduledStart },
+    { name: input.title, start: input.start },
+  )) ?? null
 }
 
 async function peopleEmailIndex(workspaceId: string) {
@@ -994,13 +1127,18 @@ async function markCancelled(connectionId: string, workspaceId: string, calendar
     select: { id: true, planId: true, plan: { select: { fulfilledBy: { select: { id: true } } } } },
   })
   if (!link) return 0
-  await db.$transaction([
-    db.calendarEventLink.update({ where: { id: link.id }, data: { connectionId, status: "cancelled", lastSeenAt: new Date() } }),
-    ...(link.planId && !link.plan?.fulfilledBy ? [db.plan.update({
-      where: { id: link.planId },
-      data: { status: "abandoned", reconciliationStatus: "cancelled", reconciledAt: new Date() },
-    })] : []),
-  ], CALENDAR_TX)
+  await db.calendarEventLink.update({ where: { id: link.id }, data: { connectionId, status: "cancelled", lastSeenAt: new Date() } })
+  if (link.planId && !link.plan?.fulfilledBy) {
+    const remainingSources = await db.calendarEventLink.count({
+      where: { planId: link.planId, status: { not: "cancelled" } },
+    })
+    if (remainingSources === 0) {
+      await db.plan.update({
+        where: { id: link.planId },
+        data: { status: "abandoned", reconciliationStatus: "cancelled", reconciledAt: new Date() },
+      })
+    }
+  }
   return 1
 }
 

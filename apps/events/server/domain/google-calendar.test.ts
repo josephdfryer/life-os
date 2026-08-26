@@ -1,6 +1,14 @@
 import assert from "node:assert/strict"
 import test from "node:test"
-import { isCalendarDbContention, mapPool, prioritizeCalendarConnections, walkEventPages, withCalendarDbRetry } from "./google-calendar-sync"
+import {
+  isCalendarDbContention,
+  mapPool,
+  normalizeCalendarOccurrenceName,
+  prioritizeCalendarConnections,
+  sameCalendarOccurrence,
+  walkEventPages,
+  withCalendarDbRetry,
+} from "./google-calendar-sync"
 
 test("calendar sync retries Turso transaction-start failures", () => {
   assert.equal(isCalendarDbContention(new Error("Transaction API error: Unable to start a transaction in the given time.")), true)
@@ -185,4 +193,22 @@ test("ingestFrom bounds history without ever filtering future events", async () 
     ["deleted-no-start", "far-future", "recent"],
     "history is bounded, the future never is, and cancellations always pass",
   )
+})
+
+test("calendar occurrence names normalize case and incidental spacing", () => {
+  assert.equal(normalizeCalendarOccurrenceName("  TICO   <> SM Weekly Sync  "), "tico <> sm weekly sync")
+})
+
+test("same named calendar copies within five minutes are one occurrence", () => {
+  assert.equal(sameCalendarOccurrence(
+    { name: "Board Meeting", start: new Date("2026-08-22T18:00:00Z") },
+    { name: " board   meeting ", start: new Date("2026-08-22T18:04:59Z") },
+  ), true)
+})
+
+test("recurring same-name items at different times stay separate", () => {
+  assert.equal(sameCalendarOccurrence(
+    { name: "Workout", start: new Date("2026-08-22T18:00:00Z") },
+    { name: "Workout", start: new Date("2026-08-23T18:00:00Z") },
+  ), false)
 })
