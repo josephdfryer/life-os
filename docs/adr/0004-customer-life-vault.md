@@ -17,7 +17,7 @@ description of the code as it exists.
 
 `docs/LIFE_OS_ECOSYSTEM_STRATEGY.md` (2026-08-12) says the opposite: "Customer Life Vaults do not
 use the existing cloud Prisma database as canonical storage." It proposes a device-first encrypted
-local database, optional customer-owned iCloud sync, and a Life OS control plane that never
+local database, optional customer-owned iCloud sync, and a LifeOS control plane that never
 receives graph content.
 
 The strategy document was linked from the platform plan with a banner calling the older sections
@@ -54,7 +54,7 @@ saleable product becomes Apple-native or it does not exist.
 Adopt the customer-owned local Life Vault as the **target** commercial storage boundary, staged
 behind proof gates, with the following boundaries fixed now.
 
-**1. Two storage lines, one semantic contract.** The personal Life OS keeps the cloud-backed
+**1. Two storage lines, one semantic contract.** The personal LifeOS keeps the cloud-backed
 Turso graph as canonical during the entire build-out. Customer vaults are local-first. What must
 not fork is meaning: the eight primitives, the `Interaction` edge, provenance and authority bands,
 `GraphEvent` semantics, and command names/effects are one specification with one conformance suite,
@@ -74,25 +74,25 @@ sovereignty requirement has ever run it. Reordered — the vault must carry Jose
 shadow mode, with recovery tested, before any customer-facing work depends on it. This is also the
 only honest way to size the effort.
 
-**4. The control plane is content-free, and that is a schema-level rule.** Life OS servers may hold
+**4. The control plane is content-free, and that is a schema-level rule.** LifeOS servers may hold
 account/entitlement identifier, subscription state, app and schema version, aggregate crash
 diagnostics, and opt-in support material. Control-plane records must not contain life-graph
 identifiers, names, or content. This is enforced by a test over the control-plane schema, not by
 review discipline.
 
 **5. Inference credentials: on-device first, bring-your-own-key second, managed inference not at
-all in v1.** The strategy document raised customer-owned API credentials versus Life OS-proxied
+all in v1.** The strategy document raised customer-owned API credentials versus LifeOS-proxied
 inference and decided neither. Deciding it now, because it determines whether the privacy claim
 survives:
 
 - v1 ships **Private Intelligence** (deterministic local reasoning plus Apple's on-device
   Foundation Models) as the only path a customer can use without extra setup.
 - **Connected Intelligence is bring-your-own-key**, stored in the device Keychain, with requests
-  going device-to-provider. Life OS is never in the content path. This reuses the pattern already
+  going device-to-provider. LifeOS is never in the content path. This reuses the pattern already
   in the schema — `AiProviderCredential` (`packages/db/prisma/schema.prisma:1401`) already stores
   `apiKeyEncrypted` per provider — so it is the established convention here, not a new one.
-- **Life OS-proxied managed inference is out of scope for v1 and requires its own ADR.** If Life OS
-  ever proxies plaintext prompts for auth, billing, moderation, caching, or observability, Life OS
+- **LifeOS-proxied managed inference is out of scope for v1 and requires its own ADR.** If LifeOS
+  ever proxies plaintext prompts for auth, billing, moderation, caching, or observability, LifeOS
   processes that content and the zero-access claim is dead. That trade may eventually be worth
   making; it may not be made implicitly.
 
@@ -103,7 +103,7 @@ keeps the hardest commercial decision reversible.
 **6. Third-party data in the graph is a first-class design constraint.** A Persons graph is mostly
 data *about people who are not the customer* — contacts, message bodies, meeting transcripts. Every
 design in this ADR must be evaluated for them, not only for the account holder. Concretely: the
-vault being local materially reduces Life OS's own exposure, but the Connected Intelligence path
+vault being local materially reduces LifeOS's own exposure, but the Connected Intelligence path
 transmits other people's personal data to a model provider on the customer's instruction, and the
 grant UI must say so in those words. Per-subject exclusion (a person or group marked never-share)
 must exist before Connected Intelligence ships. The legal posture — controller/processor roles, and
@@ -113,19 +113,19 @@ that any answer will need.
 
 **7. Explicit non-goals.** No customer web client for vault-backed data. No server-side querying,
 joins, or background jobs over customer graphs. No support-side inspection of customer data. No
-Life OS training on customer data, ever, under any tier.
+LifeOS training on customer data, ever, under any tier.
 
 ## Alternatives considered
 
 - **Shared cloud database with workspace scoping (the current §7 position).** Cheapest by a wide
   margin: the schema is already workspace-scoped with cascade deletes, `packages/access` exists,
   and the web apps keep working. Rejected as the *target* because it makes the central promise
-  unavailable — Life OS would hold every customer's graph in plaintext and the honest privacy
+  unavailable — LifeOS would hold every customer's graph in plaintext and the honest privacy
   language would have to say so. §7's own risk note (a tenancy bug has blast radius across both
   audiences) is real and grows with every customer. Retained as the interim state for Joseph's
   personal system, which is not a tenancy problem because there is one tenant.
 - **Database-per-customer (Turso).** Removes cross-tenant blast radius and keeps server-side
-  querying and the web surface. Rejected as the target: Life OS still holds and can read every
+  querying and the web surface. Rejected as the target: LifeOS still holds and can read every
   customer's data, so it buys isolation but not sovereignty. Worth reconsidering only if the vault
   fails a gate below — it is the natural fallback, and this ADR deliberately does not burn it.
 - **Local vault with no sync at all.** Strongest privacy, rejected on product grounds: device loss
@@ -190,7 +190,7 @@ is worth keeping either way as a regression net over `packages/domain`. Gate 3 f
 vault cannot represent the real graph; fall back to database-per-customer Turso, which this ADR
 preserves as a live option. Gate 4 failing is the serious one: if recovery cannot be made safe,
 local-only canonical storage must not ship, and the fallback is again per-customer cloud with
-honest language about what Life OS can see.
+honest language about what LifeOS can see.
 
 **Abandonment criteria.** Abandon the vault direction, and say so in a superseding ADR, if any
 holds: the conformance suite cannot keep two implementations in agreement without per-release

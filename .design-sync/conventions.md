@@ -1,4 +1,4 @@
-# Still — Life OS design system
+# Still — LifeOS design system
 
 Still is a **token-driven** React design system. There is **no provider, no theme
 context, and no CSS class system**. Every component styles itself with inline

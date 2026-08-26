@@ -1,6 +1,6 @@
 # Applications
 
-Each app is independently deployable but remains part of one modular monolith and one Life OS graph. Apps communicate through shared package contracts or HTTP—not imports from another app's internals.
+Each app is independently deployable but remains part of one modular monolith and one LifeOS graph. Apps communicate through shared package contracts or HTTP—not imports from another app's internals.
 
 | App | Public surface | Core invariants |
 |---|---|---|

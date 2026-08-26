@@ -6,7 +6,7 @@
 
 ## Context
 
-Life OS has one graph and eight apps, but no shared record of what happened to it. Automation
+LifeOS has one graph and eight apps, but no shared record of what happened to it. Automation
 (`apps/persons/server/domain/rules.ts`) can only ever mutate `StagedInteraction` fields and
 `Person.tags` — `applyRuleActions` returns `[]` for any other `targetType`. Production holds one
 seeded `Rule` row and zero `RuleRun`s: there is no automation to speak of yet, only the scaffolding

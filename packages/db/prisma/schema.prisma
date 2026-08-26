@@ -1,5 +1,5 @@
 // ═════════════════════════════════════════════
-// LIFE OS — DATA MODEL
+// LIFEOS — DATA MODEL
 // Founding document: docs/MANIFESTO.md
 //
 // Eight primitives connected by one edge type (Interaction):
@@ -266,7 +266,7 @@ model User {
   @@index([status])
 }
 
-// Device trust and collection records are infrastructure, not Life OS
+// Device trust and collection records are infrastructure, not LifeOS
 // primitives. They describe which owned endpoint supplied normalized facts;
 // raw source databases, files, samples, and GPS pings never belong here.
 model Device {
@@ -1700,7 +1700,7 @@ model EvidenceClaimSubject {
 
 // ─────────────────────────────────────────────
 // SUPPORT: AI provider credentials and auditable analysis
-// These are operational records, not Life OS primitives.
+// These are operational records, not LifeOS primitives.
 // ─────────────────────────────────────────────
 
 model AiProviderCredential {
@@ -2437,7 +2437,7 @@ model State {
 // ─────────────────────────────────────────────
 // APP-LAYER: Assistant conversation history
 // Stores WhatsApp ↔ Claude message threads keyed by channel + phone number.
-// Not a Life OS primitive — purely an assistant-app concern.
+// Not a LifeOS primitive — purely an assistant-app concern.
 // ─────────────────────────────────────────────
 
 model AssistantMessage {
@@ -2456,7 +2456,7 @@ model AssistantMessage {
 
 // ═════════════════════════════════════════════
 // LEVEL UP — a sports-game ratings engine for one real human
-// Module tables (not Life OS primitives). Governing principle:
+// Module tables (not LifeOS primitives). Governing principle:
 // the user interacts with the abstraction (ranks, badges, builds);
 // the engine interacts with the science (protocols, raw measurements,
 // population distributions, confidence). Every rating is falsifiable and
@@ -2728,7 +2728,7 @@ model LevelUpBodyMetric {
 }
 
 // What advice was shown when a workout began. Daily readiness itself stays
-// derived, not a mutable Life OS primitive — this snapshot exists only to
+// derived, not a mutable LifeOS primitive — this snapshot exists only to
 // audit the recommendation, not to become the source of truth for it.
 // See docs/LEVEL_UP_ADAPTIVE_WORKOUT_PLAN.md "Readiness provenance".
 model LevelUpReadinessSnapshot {

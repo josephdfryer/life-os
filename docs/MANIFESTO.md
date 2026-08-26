@@ -1,8 +1,8 @@
-# Life OS — A Manifesto
+# LifeOS — A Manifesto
 
 *What this project is, and why I am building it the way I am.*
 
-> **This is the founding document for Life OS.** Read it before touching the data model, before designing a feature, before writing a query. Every decision in this project traces back to the beliefs stated here. When two options compete, this is what breaks the tie.
+> **This is the founding document for LifeOS.** Read it before touching the data model, before designing a feature, before writing a query. Every decision in this project traces back to the beliefs stated here. When two options compete, this is what breaks the tie.
 
 ---
 

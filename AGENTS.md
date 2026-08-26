@@ -1,4 +1,4 @@
-# Life OS Agent Instructions
+# LifeOS Agent Instructions
 
 ## Cross-Agent Sync
 
@@ -40,7 +40,7 @@ Rules for agents:
 
 ### Never destroy person data without explicit session confirmation
 
-The People database (`Person` table + related `Interaction`, `Plan`, `State`, `Group` rows) is the core of Life OS and has been lost twice due to agent actions. The following are forbidden unless the user has typed an explicit confirmation in the *current* conversation (not a previous session, not a brief, not a handoff note):
+The People database (`Person` table + related `Interaction`, `Plan`, `State`, `Group` rows) is the core of LifeOS and has been lost twice due to agent actions. The following are forbidden unless the user has typed an explicit confirmation in the *current* conversation (not a previous session, not a brief, not a handoff note):
 
 - Calling `db.person.deleteMany()`
 - Calling `db.person.delete()` on more than one person
@@ -61,7 +61,7 @@ The same rule applies to `Interaction`, `Event`, `Plan`, `Place`, `State`, `Grou
 
 ## Founding Document — Read First
 
-Before doing anything else, read `docs/MANIFESTO.md`. It is the authoritative statement of what Life OS is, why it is being built this way, the eight primitives (Person, Place, Item, Event, Plan, Group, State, Note) connected by Interaction, and the principles that govern every modeling decision. When two implementation options compete, the manifesto breaks the tie.
+Before doing anything else, read `docs/MANIFESTO.md`. It is the authoritative statement of what LifeOS is, why it is being built this way, the eight primitives (Person, Place, Item, Event, Plan, Group, State, Note) connected by Interaction, and the principles that govern every modeling decision. When two implementation options compete, the manifesto breaks the tie.
 
 `docs/LIFE_OS_VISION.md` is an earlier companion document with supplementary context on the graph model and derived computations. Read it after the manifesto.
 
@@ -69,7 +69,7 @@ Before doing anything else, read `docs/MANIFESTO.md`. It is the authoritative st
 
 Before building or restyling UI in any app, read **`docs/STILL_DESIGN_SYSTEM.md`**.
 
-Still is the approved visual language for all Life OS apps (warm linen, cognac/camel accents, Newsreader + Inter). Production apps may still use legacy Warm Concrete tokens until migrated — **new UI work should follow Still**, not extend the old terracotta / DM Mono patterns.
+Still is the approved visual language for all LifeOS apps (warm linen, cognac/camel accents, Newsreader + Inter). Production apps may still use legacy Warm Concrete tokens until migrated — **new UI work should follow Still**, not extend the old terracotta / DM Mono patterns.
 
 | Resource | Purpose |
 |----------|---------|
@@ -83,6 +83,18 @@ Still is the approved visual language for all Life OS apps (warm linen, cognac/c
 ## App-Specific Notes
 
 Read the nearest app-level `AGENTS.md` or `CLAUDE.md` before editing app code. For the persons CRM, start with `apps/persons/AGENTS.md`.
+
+## Production deploys
+
+Production ships from GitHub Actions on push to `master`, after `lint` and
+`check` pass. The job runs `npx tsx scripts/deploy.ts --ci --affected`.
+
+Do not run `vercel --prod` from a working tree and do not write a root
+`vercel.json`. Laptop fallback: `npm run deploy` on a clean `origin/master`.
+See `docs/DEPLOY_RUNBOOK.md`.
+
+Work on a branch or git worktree. Do not share a dirty `master` checkout
+across agents or developers.
 
 ## Living Architecture Docs
 

@@ -6,7 +6,7 @@
 
 ## Context
 
-Life OS has three third-party account integrations — Google Calendar, Gmail, and Era (finance) —
+LifeOS has three third-party account integrations — Google Calendar, Gmail, and Era (finance) —
 each modeled by its own near-identical Prisma table: `CalendarConnection`, `GmailConnection`,
 `EraConnection`. All three share the same real shape: `accessTokenEncrypted`/
 `refreshTokenEncrypted` (via `packages/db/src/crypto.ts`), `expiresAt`, `scope`, `status`,

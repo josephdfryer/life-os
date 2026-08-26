@@ -1,5 +1,6 @@
 # Operational runbooks
 
+- [Production deploy](../DEPLOY_RUNBOOK.md)
 - [Database migration, backup, restore, and failed migration recovery](../DATABASE_MIGRATION_AND_RECOVERY.md)
 - [Secret rotation](SECRET_ROTATION.md)
 - [Stuck or failed sync](STUCK_SYNC.md)

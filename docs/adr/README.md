@@ -11,7 +11,7 @@ ADRs preserve decisions that affect primitives, package direction, persistence, 
 
 | ADR | Status | Decision |
 |---|---|---|
-| [0001](0001-modular-monolith.md) | accepted | Keep Life OS a boundary-enforced modular monolith |
+| [0001](0001-modular-monolith.md) | accepted | Keep LifeOS a boundary-enforced modular monolith |
 | [0002](0002-graph-event-spine.md) | accepted | Add a GraphEvent ledger as the automation and intelligence spine |
 | [0003](0003-connection-model.md) | accepted | A unified Connection model for third-party account integrations |
 | [0004](0004-customer-life-vault.md) | proposed | A customer-owned local Life Vault as the commercial storage boundary |

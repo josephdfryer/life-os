@@ -1,4 +1,4 @@
-# Life OS Companion release runbook
+# LifeOS Companion release runbook
 
 No collector or LaunchAgent is retired merely because the app builds. A release is complete only after the checks below.
 

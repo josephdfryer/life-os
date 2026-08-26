@@ -1,4 +1,4 @@
-# ADR 0001: Keep Life OS a boundary-enforced modular monolith
+# ADR 0001: Keep LifeOS a boundary-enforced modular monolith
 
 - Status: accepted
 - Date: 2026-07-16
@@ -6,7 +6,7 @@
 
 ## Context
 
-Life OS is a medium-sized TypeScript/Next.js platform maintained by a solo developer or small team. Its apps share one graph and frequently require transactional changes across primitives. Independent services would add deployment, consistency, and operational cost before there is measured scaling or ownership pressure.
+LifeOS is a medium-sized TypeScript/Next.js platform maintained by a solo developer or small team. Its apps share one graph and frequently require transactional changes across primitives. Independent services would add deployment, consistency, and operational cost before there is measured scaling or ownership pressure.
 
 ## Decision
 
