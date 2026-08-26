@@ -35,7 +35,7 @@ struct IOSDashboard: View {
                                 Text("Connect to your workspace")
                                     .font(.headline)
                                     .foregroundStyle(ink)
-                                Text("Approve this iPhone using your existing Life OS web account. This creates a revocable device connection—not a new account—and lets the app load your People data.")
+                                Text("Approve this iPhone using your existing LifeOS web account. This creates a revocable device connection—not a new account—and lets the app load your People data.")
                                     .font(.subheadline)
                                     .foregroundStyle(mutedInk)
                                 Button("Connect this iPhone") { model.signIn() }

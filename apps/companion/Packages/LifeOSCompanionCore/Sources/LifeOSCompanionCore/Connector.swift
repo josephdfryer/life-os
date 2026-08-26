@@ -18,6 +18,6 @@ public struct RedactedLogger: Sendable {
 public enum CompanionPaths {
     public static func applicationSupport() throws -> URL {
         let root = try FileManager.default.url(for: .applicationSupportDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
-        return root.appending(path: "Life OS Companion", directoryHint: .isDirectory)
+        return root.appending(path: "LifeOS Companion", directoryHint: .isDirectory)
     }
 }

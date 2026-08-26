@@ -30,6 +30,13 @@ public actor APIClient {
         try await get(path: path, queryItems: queryItems, mayRefresh: true)
     }
 
+    /// Sends an authenticated JSON command through the same refresh and error
+    /// path as device ingestion. Feature packages use this rather than owning
+    /// token state or constructing authorization headers themselves.
+    public func post<Response: Decodable, Body: Encodable>(path: String, body: Body) async throws -> Response {
+        try await send(path: path, body: body, authorized: true)
+    }
+
     private func get<Response: Decodable>(path: String, queryItems: [URLQueryItem], mayRefresh: Bool) async throws -> Response {
         guard let access = tokens?.accessToken else { throw APIError.signedOut }
         var components = URLComponents(url: baseURL.appending(path: path), resolvingAgainstBaseURL: false)
