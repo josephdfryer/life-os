@@ -10,6 +10,7 @@ import { isMarketingHost } from '@/lib/site'
 import MarketingHome from '../components/MarketingHome'
 import ScheduleWidget from '../components/ScheduleWidget'
 import NudgesWidget from '../components/NudgesWidget'
+import CommunicationsReviewWidget from '../components/CommunicationsReviewWidget'
 import AssistantPanel from '../components/AssistantPanel'
 import { greetingForHour } from '@/lib/daily'
 
@@ -116,6 +117,10 @@ async function HomePageContent() {
 
         <Suspense fallback={<WidgetSkeleton />}>
           <NudgesWidget workspaceId={workspaceId} personsUrl={personsUrl} />
+        </Suspense>
+
+        <Suspense fallback={<WidgetSkeleton />}>
+          <CommunicationsReviewWidget workspaceId={workspaceId} personsUrl={personsUrl} />
         </Suspense>
 
         {/* App nav footer */}
