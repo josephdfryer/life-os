@@ -2,7 +2,7 @@
 
 ## Product Thesis
 
-Places is the spatial interface for Life OS. A Place is not a map pin. It is a living memory page.
+Places is the spatial interface for LifeOS. A Place is not a map pin. It is a living memory page.
 
 The V1 goal: **make a place feel alive.**
 
@@ -20,7 +20,7 @@ Do NOT build a generic map app. The emotional center is the Place Profile. The m
 
 ## Context
 
-Life OS is a personal graph OS built on 6 primitives: Person, Group, Place, Object, Event, Plan. The core edge is Interaction (Person → Event with personal metadata). Read `docs/LIFE_OS_VISION.md` for the full philosophical foundation.
+LifeOS is a personal graph OS built on 6 primitives: Person, Group, Place, Object, Event, Plan. The core edge is Interaction (Person → Event with personal metadata). Read `docs/LIFE_OS_VISION.md` for the full philosophical foundation.
 
 The Group primitive was recently added. Schema includes: Group, PlaceGroup, PersonGroup, GroupGroup. Person represents humans ONLY — groups/organizations/merchants are Group nodes, not Person nodes.
 

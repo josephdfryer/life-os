@@ -1,6 +1,6 @@
 # Service and micro-frontend extraction criteria
 
-Life OS remains a modular monolith by default. Extraction is a response to measured constraints, not source-line count or architectural fashion.
+LifeOS remains a modular monolith by default. Extraction is a response to measured constraints, not source-line count or architectural fashion.
 
 ## Required decision gate
 
@@ -25,7 +25,7 @@ Do not extract a micro-frontend merely because a client component is large. Deco
 
 ## ADR safety questions
 
-- Which Life OS primitives does the candidate own, read, or mutate?
+- Which LifeOS primitives does the candidate own, read, or mutate?
 - Can one transaction currently span the candidate and another module? If yes, what replaces atomicity—an outbox, idempotent command, saga, or retained monolith write boundary?
 - What is the versioned API/event contract and compatibility window?
 - How are workspace authorization, audit, idempotency, tracing, backups, deletion, and replay preserved?

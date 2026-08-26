@@ -1,7 +1,7 @@
-# Still — Life OS Design System (v2)
+# Still — LifeOS Design System (v2)
 
 **Status:** Migrated across production apps · **July 22, 2026**
-**Audience:** Claude, Codex, and any agent building Life OS UI  
+**Audience:** Claude, Codex, and any agent building LifeOS UI  
 **Visual reference:** [`docs/ui-preview/still-direction-v2.html`](ui-preview/still-direction-v2.html)  
 **Token source:** [`packages/ui/still-tokens.css`](../packages/ui/still-tokens.css)
 
@@ -9,7 +9,7 @@
 
 ## What is Still?
 
-**Still** is the shared visual language for all Life OS apps. It replaces the earlier **Warm Concrete** system (Playfair + DM Mono + terracotta + square corners).
+**Still** is the shared visual language for all LifeOS apps. It replaces the earlier **Warm Concrete** system (Playfair + DM Mono + terracotta + square corners).
 
 Still feels like a **well-made personal object** — warm linen, cognac leather, camel highlights, occasional petrol depth. Calm like Muji, breathable like Things, restrained like Aesop, colored like the owner's wardrobe (earth tones, not grey SaaS).
 
@@ -232,8 +232,8 @@ Use these recipes when building UI. Prefer adding to `@life-os/ui` when a patter
 
 ### Cross-app shell and account menu
 
-- Home is the control plane and keeps the full Life OS section navigation visible.
-- Satellite apps show only `Life OS / [current app]` in the cross-app strip. Their own header is reserved for that app's local navigation.
+- Home is the control plane and keeps the full LifeOS section navigation visible.
+- Satellite apps show only `LifeOS / [current app]` in the cross-app strip. Their own header is reserved for that app's local navigation.
 - On satellite apps, put Home, Stream, Inbox, Intelligence, Automation, Connections, Admin, Capture, identity, and Sign out inside the shared avatar menu at the far right.
 - Do not repeat an avatar or Sign out control in the app-local header.
 - Provider integrations are children of a neutral **Connections** destination. Provider names such as Granola or Google Calendar should not become primary app navigation items.
@@ -383,6 +383,71 @@ padding: 10px 14px
 
 ---
 
+## Marks and icons
+
+The identity system. One master mark, one glyph per app, one small alphabet — all
+drawn on a single 100×100 grid so they read as a family at any size.
+
+### Where the marks live
+
+| Layer | Path | Role |
+|-------|------|------|
+| **Source of truth** | `packages/ui/brand/marks/*.svg` | Canonical geometry. Edit here first. |
+| React | `packages/ui/src/marks.tsx` | Hand-maintained mirror. Update in the same commit as the SVG. |
+| Generated icons | `apps/*/app/icon.svg`, `apps/*/app/apple-icon.png` | Committed output of `node scripts/brand/build-icons.mjs`. Never hand-edit. |
+| Native iOS icons | `apps/companion/{LifeOSCompanionIOS,PersonsIOS}/Assets.xcassets/AppIcon.appiconset` | Same script. Square 1024 PNGs (light / dark / tinted). iOS applies the squircle. |
+| Specimen | [`brand-marks.html`](ui-preview/brand-marks.html) | All marks, both grounds, three optical sizes. |
+
+### Using a mark
+
+Marks paint with `currentColor`. Set the color on the mark or a parent — never
+hard-code a hex into a mark component.
+
+```tsx
+import { LifeOSMark, AppMark, PersonsMark } from '@life-os/ui'
+
+<LifeOSMark size={19} style={{ color: 'var(--cognac)' }} />
+<AppMark app="places" size={16} />   // takes the color it inherits
+```
+
+- **Below 24px use `LifeOSMarkSmall`**, not `LifeOSMark`. It carries the optical
+  corrections (nodes pushed out, every weight thickened) that keep the master
+  mark from silting up at favicon size.
+- **On cream** a mark takes its app accent (below) or `--cognac`.
+- **On petrol** every mark takes `--camel`. App accents go muddy on dark ground —
+  do not use them there.
+- **Never** re-tint a mark to a color outside the Still palette.
+
+### App accents
+
+Set in `packages/ui/src/app-registry.ts` as `accent`, and used to tint each app's
+mark in shared chrome and its favicon. All seven are Still tokens — the earlier
+ad-hoc blue, green, and retired terracotta dots are gone.
+
+| App | Accent | Token |
+|-----|--------|-------|
+| Home | `#6e5238` | cognac-deep |
+| Persons | `#8f6b4a` | cognac |
+| Places | `#6b7a63` | success |
+| Stuff | `#c4a574` | camel |
+| Events | `#524a42` | ink-2 |
+| Assistant | `#1a2a35` | petrol |
+| Level Up | `#b07d4f` | attention |
+
+### Changing or adding a mark
+
+1. Edit or add the SVG in `packages/ui/brand/marks/` — 100×100 viewBox, `fill="none"`
+   on the root, geometry in `currentColor`.
+2. Mirror it in `packages/ui/src/marks.tsx` and export it from `index.ts`.
+3. For a new app, add the entry to `APPS` in `scripts/brand/build-icons.mjs`.
+4. Run `node scripts/brand/build-icons.mjs` and commit the regenerated icons (web favicons, Safari apple-icons, and both iPhone AppIcon catalogs).
+5. Check it against the specimen sheet at 36 / 20 / 14px before shipping. Reinstall the iPhone apps so SpringBoard picks up the new home-screen icons.
+
+A new app icon must be distinguishable from every existing one at 20px. If it
+is not, the glyph is wrong — do not solve it with color.
+
+---
+
 ## App-specific guidance
 
 | App | Notes |
@@ -417,6 +482,7 @@ When an app is ready to migrate (future work):
 | File | Purpose |
 |------|---------|
 | [`still-direction-v2.html`](ui-preview/still-direction-v2.html) | **Canonical** visual reference |
+| [`brand-marks.html`](ui-preview/brand-marks.html) | Mark specimen — every glyph, both grounds, three optical sizes |
 | [`still-direction-v3-linen.html`](ui-preview/still-direction-v3-linen.html) | Rejected variant (too light) |
 | [`still-direction-v4-tailored.html`](ui-preview/still-direction-v4-tailored.html) | Rejected variant (too dark) |
 | [`still-pick-one.html`](ui-preview/still-pick-one.html) | Comparison hub |

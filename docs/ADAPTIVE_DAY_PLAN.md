@@ -1,8 +1,8 @@
-# Adaptive Day and Closed-Loop Life OS Plan
+# Adaptive Day and Closed-Loop LifeOS Plan
 
 ## Summary
 
-Build a Home-first Adaptive Day / Capacity Brief that converts existing Life OS
+Build a Home-first Adaptive Day / Capacity Brief that converts existing LifeOS
 context into zero to three evidence-backed recommendations.
 
 The first release will:
@@ -15,14 +15,14 @@ The first release will:
   Quick Capture and the day selector — not a `CustomizableWidgetGrid` slot.
 - Apply changes only after explicit confirmation, routed through the existing
   `ReviewItem`/command-registry confirmation boundary rather than a new one.
-- Reschedule Life OS Plans only; Google Calendar remains read-only.
+- Reschedule LifeOS Plans only; Google Calendar remains read-only.
 - Absorb `scripts/brief`'s daily-assembly role rather than duplicating it —
   one served pipeline, not two that can drift.
 - Learn mostly from observed follow-through, with at most one lightweight
   outcome question per day.
 - Launch progressively with current data — including a new lightweight
   morning check-in — rather than wait for Oura, sleep and nutrition.
-- Add supporting intervention records, not a ninth Life OS primitive.
+- Add supporting intervention records, not a ninth LifeOS primitive.
 
 This document was reviewed against the current codebase before implementation
 (see `~/.claude/plans/luminous-wondering-tome.md` for the full review trail).
@@ -109,7 +109,7 @@ Build the engine as pure, versioned logic in the shared intelligence layer.
 Inputs:
 
 - Fixed calendar-backed Plans and confirmed Events.
-- Flexible Life OS Plans and their estimated or scheduled duration.
+- Flexible LifeOS Plans and their estimated or scheduled duration.
 - Current commitments and deadlines.
 - Latest energy, mood and stress check-ins — **this data model already
   exists**: `State`/`StateDefinition` already stores exactly
@@ -181,8 +181,8 @@ per section 1 above — this is reuse, not new construction.
 
 Add registered commands (`registerReviewCommand`) for:
 
-- Scheduling an existing unscheduled Life OS Plan (`plan.schedule`).
-- Rescheduling an eligible Life OS Plan (`plan.reschedule`, via the new
+- Scheduling an existing unscheduled LifeOS Plan (`plan.schedule`).
+- Rescheduling an eligible LifeOS Plan (`plan.reschedule`, via the new
   `reschedulePlan` command above).
 - Recording a chosen Level Up recommendation and handing the user into the
   existing workout flow (`level_up.record_recommendation`). Clarify at

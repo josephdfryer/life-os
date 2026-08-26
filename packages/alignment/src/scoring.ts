@@ -13,9 +13,9 @@ const CLOSENESS_THRESHOLD_DAYS: Record<number, number> = {
 }
 const ACQUAINTANCE_WITH_PLAN_THRESHOLD_DAYS = 30
 
-export function daysSince(date: Date | null): number {
+export function daysSince(date: Date | null, now = new Date()): number {
   if (!date) return 9999
-  return Math.floor((Date.now() - date.getTime()) / 86400000)
+  return Math.max(0, Math.floor((now.getTime() - date.getTime()) / 86400000))
 }
 
 // >= 1.0 means overdue relative to threshold.

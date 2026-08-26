@@ -34,7 +34,7 @@ Read first, then implement against it:
 - 35-day backfill once, then signed webhooks + fetch the changed document/date.
 - One provenance Note per Oura day. Reprocessing a day replaces only that source’s States (`source=oura`).
 - Oura owns Oura scores and contributors. HealthKit owns Apple Health measurements. Never average competing providers.
-- No new Life OS primitive.
+- No new LifeOS primitive.
 
 ## Endpoints to ingest (daily scope)
 

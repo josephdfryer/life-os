@@ -1,4 +1,4 @@
-# Single Dockerfile for all Life OS Next.js apps.
+# Single Dockerfile for all LifeOS Next.js apps.
 # Build from monorepo root:
 #   docker build -f docker/Dockerfile.nextjs --build-arg APP_NAME=persons --build-arg PORT=3000 .
 ARG NODE_VERSION=24

@@ -173,6 +173,43 @@ async function main() {
       expectedPeople: { create: { workspaceId, personId: person.id } },
     },
   })
+  const calendarUser = await db.user.create({
+    data: { email: `calendar-${workspaceId}@example.com` },
+  })
+  const primaryCalendar = await db.calendarConnection.create({
+    data: {
+      workspaceId,
+      userId: calendarUser.id,
+      calendarId: "primary",
+      calendarSummary: "Personal",
+    },
+  })
+  const workCalendar = await db.calendarConnection.create({
+    data: {
+      workspaceId,
+      userId: calendarUser.id,
+      calendarId: "work@example.com",
+      calendarSummary: "Work",
+    },
+  })
+  await db.calendarEventLink.createMany({
+    data: [
+      {
+        workspaceId,
+        connectionId: primaryCalendar.id,
+        calendarId: primaryCalendar.calendarId,
+        externalEventId: "primary-occurrence",
+        planId: calendarPlan.id,
+      },
+      {
+        workspaceId,
+        connectionId: workCalendar.id,
+        calendarId: workCalendar.calendarId,
+        externalEventId: "work-occurrence",
+        planId: calendarPlan.id,
+      },
+    ],
+  })
   const reconciliation = await reconcileCalendarPlan({
     workspaceId,
     planId: calendarPlan.id,
@@ -203,6 +240,7 @@ async function main() {
   assert.match(reconciledEvent.interactions[0].actionItems ?? "", /Send the summary/)
   assert.equal(reconciledEvent.sourceNote?.content, "The meeting started late.")
   assert.equal(await db.event.count({ where: { sourcePlanId: calendarPlan.id } }), 1)
+  assert.equal(await db.calendarEventLink.count({ where: { planId: calendarPlan.id, eventId: reconciledEvent.id } }), 2)
 
   const cancelledPlan = await db.plan.create({
     data: {

@@ -23,7 +23,7 @@ This is not a permissions or tooling problem. It's a storage problem. Measured a
 | `InteractionParticipant` rows | 8 total (Event/Person/Plan), effectively unused |
 | Transactions in Era | ~5,300 — so **~87% were never even imported** |
 
-Every financial fact in Life OS is sitting in the **review queue**, not the graph. And the amount isn't even a column — it's a string inside `StagedInteraction.metadata` JSON:
+Every financial fact in LifeOS is sitting in the **review queue**, not the graph. And the amount isn't even a column — it's a string inside `StagedInteraction.metadata` JSON:
 
 ```json
 {"eraTransactionId":"utgr_GlzxYv1Dkmh","eraCategory":"Dining out","rawAmount":-20,"amount":20,...}

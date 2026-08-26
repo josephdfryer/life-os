@@ -119,7 +119,7 @@ export async function updatePlan(id: string, input: PlanInput, workspaceId = "de
   return plan
 }
 
-// Moves a flexible Life OS Plan's calendar-backed slot. Deliberately
+// Moves a flexible LifeOS Plan's calendar-backed slot. Deliberately
 // separate from updatePlan: this is the one write path the Adaptive Day
 // capacity engine's plan.reschedule command uses, and it rejects the four
 // cases a Plan must never be moved out from under — calendar-imported

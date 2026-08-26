@@ -9,10 +9,10 @@
 
 ## Overview
 
-Era (era.app) is an MCP-first personal finance platform — the closest thing to "Mint but agentic." Instead of a standalone finance app with a built-in AI, Era exposes your financial data through a standard MCP server called **Context**, which any MCP-compatible AI (Claude, ChatGPT, Cursor, etc.) can call. This is the right integration target for Life OS: it means financial data flows naturally into the same graph that already tracks people, places, events, and items.
+Era (era.app) is an MCP-first personal finance platform — the closest thing to "Mint but agentic." Instead of a standalone finance app with a built-in AI, Era exposes your financial data through a standard MCP server called **Context**, which any MCP-compatible AI (Claude, ChatGPT, Cursor, etc.) can call. This is the right integration target for LifeOS: it means financial data flows naturally into the same graph that already tracks people, places, events, and items.
 
 **Why Era over Monarch:**  
-Monarch is a traditional SaaS finance app — you log into it, use its dashboard, and its AI lives inside it. Era is the inverse: it gives your AI a permissioned, structured window into your financial life. Since Life OS is itself an AI-native system built on the graph + MCP pattern, Era is a philosophical fit. The integration described here would let Claude say "you've spent $340 at Trader Joe's this month" in the same conversation where it knows about your upcoming dinner party — because both facts live in the same graph.
+Monarch is a traditional SaaS finance app — you log into it, use its dashboard, and its AI lives inside it. Era is the inverse: it gives your AI a permissioned, structured window into your financial life. Since LifeOS is itself an AI-native system built on the graph + MCP pattern, Era is a philosophical fit. The integration described here would let Claude say "you've spent $340 at Trader Joe's this month" in the same conversation where it knows about your upcoming dinner party — because both facts live in the same graph.
 
 ---
 
@@ -75,10 +75,10 @@ Monarch is a traditional SaaS finance app — you log into it, use its dashboard
 | `insights__forecast_spending` | Read | Projected future spend based on history |
 | `insights__get_daily_financial_summary` | Read | Daily digest for routines/scheduled tasks |
 
-#### Billing (7 tools) — Not relevant to Life OS sync
+#### Billing (7 tools) — Not relevant to LifeOS sync
 `billing__get_current_plan`, `billing__list_plans`, `billing__preview_subscription_change`, `billing__confirm_subscription_change`, `billing__upgrade`, `billing__manage`, `billing__cancel_subscription`
 
-#### Referrals (5 tools) — Not relevant to Life OS sync
+#### Referrals (5 tools) — Not relevant to LifeOS sync
 `referral__get_referral_link`, `referral__get_referral_stats`, `referral__join_referral_program`, `referral__switch_referral_campaign`, `referral__get_dashboard_sso`
 
 #### Help (1 tool)
@@ -86,7 +86,7 @@ Monarch is a traditional SaaS finance app — you log into it, use its dashboard
 
 ---
 
-## Life OS Schema Analysis
+## LifeOS Schema Analysis
 
 ### What Already Exists
 
@@ -107,7 +107,7 @@ The schema is more finance-ready than it looks. Key facts:
 
 **The 5-primitive graph handles the conceptual mapping cleanly:**
 
-| Financial Concept | Life OS Primitive | Example |
+| Financial Concept | LifeOS Primitive | Example |
 |-------------------|------------------|---------|
 | Merchant / Payee | `Person` (company) | Trader Joe's, Delta Air Lines |
 | Transaction location | `Place` | A specific store, airport, website |
@@ -124,9 +124,9 @@ Four things need to be added to the schema:
 
 **1. `EraConnection`** — Stores OAuth credentials and sync state per user. Models directly after `CalendarConnection` / `GmailConnection`.
 
-**2. `EraTransactionLink`** — Maps an Era transaction ID to a Life OS `Interaction` ID (or `StagedInteraction` ID). The deduplication anchor. Without this, every sync run will create duplicate Interactions.
+**2. `EraTransactionLink`** — Maps an Era transaction ID to a LifeOS `Interaction` ID (or `StagedInteraction` ID). The deduplication anchor. Without this, every sync run will create duplicate Interactions.
 
-**3. `EraAccountLink`** — Tracks each connected financial account (checking, savings, credit card) so Life OS knows which account a transaction came from without storing balance as a derived fact.
+**3. `EraAccountLink`** — Tracks each connected financial account (checking, savings, credit card) so LifeOS knows which account a transaction came from without storing balance as a derived fact.
 
 **4. Optional: `category` field on `Interaction`** — Era has a rich category taxonomy (Groceries, Dining Out, Travel, etc.). This can be stored in `metadata` JSON now and promoted to a first-class column if queries against it become frequent. Start with `metadata`.
 
@@ -236,7 +236,7 @@ eraConnections     EraConnection[]
 
 ## Transaction Data Mapping
 
-### Era Transaction → Life OS StagedInteraction
+### Era Transaction → LifeOS StagedInteraction
 
 When `transactions__list_transactions` or `transactions__search_transactions` returns a transaction, map it as follows before staging:
 
@@ -324,7 +324,7 @@ Matching strategy (in order):
 
 ## Account Data Mapping
 
-Financial accounts from `accounts__list_financial_accounts` should be stored in `EraAccountLink`. Balances are **never stored** — they're a derived/real-time value fetched from `accounts__check_account_balance` on demand. This respects the Life OS principle that computed values are never persisted.
+Financial accounts from `accounts__list_financial_accounts` should be stored in `EraAccountLink`. Balances are **never stored** — they're a derived/real-time value fetched from `accounts__check_account_balance` on demand. This respects the LifeOS principle that computed values are never persisted.
 
 ```typescript
 // Era account → EraAccountLink
@@ -342,7 +342,7 @@ Financial accounts from `accounts__list_financial_accounts` should be stored in 
 
 ## What Can Be Derived (Never Stored)
 
-The Life OS graph principles say derived values are computed, not stored. For finances, this means:
+The LifeOS graph principles say derived values are computed, not stored. For finances, this means:
 
 | Question | Derivation Method |
 |----------|------------------|
@@ -401,7 +401,7 @@ watermark advancement therefore update the same health state shown in Home.
 ### Incremental Sync (Ongoing)
 
 ```
-Trigger: Scheduled (e.g., every 4 hours via Life OS Rules engine)
+Trigger: Scheduled (e.g., every 4 hours via LifeOS Rules engine)
         OR on-demand (user asks "sync my transactions")
 
 1. Call transactions__list_transactions with cursor from EraConnection.syncCursor
@@ -418,32 +418,32 @@ User or Rule accepts a StagedInteraction:
 2. Update EraTransactionLink: stagedItemId → interactionId, status: "accepted"
 3. If merchant Person was created: mark as low-closeness company contact
 4. If user adds eventId/placeId: write back tags to Era via transactions__update_transactions
-   (keeps Era and Life OS in sync bidirectionally)
+   (keeps Era and LifeOS in sync bidirectionally)
 ```
 
 ### Bidirectional Sync Consideration
 
-Era is read-write. When a user enriches a transaction in Life OS (links it to an event, adds notes), we can optionally write tags back to Era using `transactions__update_transactions`. This keeps Era's categorization in sync and makes Era's own insights more useful. The implementation should:
-1. Write Life OS event/place names as tags in Era ("Seattle Trip", "Birthday Dinner")
-2. Write the Life OS Interaction ID as a tag for auditability ("life-os:clxxxxx")
+Era is read-write. When a user enriches a transaction in LifeOS (links it to an event, adds notes), we can optionally write tags back to Era using `transactions__update_transactions`. This keeps Era's categorization in sync and makes Era's own insights more useful. The implementation should:
+1. Write LifeOS event/place names as tags in Era ("Seattle Trip", "Birthday Dinner")
+2. Write the LifeOS Interaction ID as a tag for auditability ("life-os:clxxxxx")
 3. Respect Era's write scope — only write if `mcp:write` scope is granted
 
 ---
 
 ## Rules Integration
 
-Era has its own automation rules engine (`transactions__manage_automation_rules`). Life OS also has a Rules engine (`Rule` model). These are complementary:
+Era has its own automation rules engine (`transactions__manage_automation_rules`). LifeOS also has a Rules engine (`Rule` model). These are complementary:
 
 | Rules Layer | Runs When | Does What |
 |-------------|-----------|-----------|
-| **Era rules** | Transaction arrives at Era (before Life OS sees it) | Categorize, tag, auto-link transfers |
-| **Life OS rules** | `StagedInteraction.created` trigger | Auto-accept known merchants, create/link Person, assign to Event |
+| **Era rules** | Transaction arrives at Era (before LifeOS sees it) | Categorize, tag, auto-link transfers |
+| **LifeOS rules** | `StagedInteraction.created` trigger | Auto-accept known merchants, create/link Person, assign to Event |
 
 **Recommended division of responsibility:**
 - Era handles raw data cleanliness: merchant normalization, category assignment, recurring detection, transfer linking
-- Life OS handles relational enrichment: linking transactions to Events, Plans, Items; creating Person nodes for new merchants; routing to the right workspace
+- LifeOS handles relational enrichment: linking transactions to Events, Plans, Items; creating Person nodes for new merchants; routing to the right workspace
 
-**Life OS Rule examples for finance:**
+**LifeOS Rule examples for finance:**
 
 ```json
 // Auto-accept grocery transactions from known merchants
@@ -475,23 +475,23 @@ Era has its own automation rules engine (`transactions__manage_automation_rules`
 
 ---
 
-## Era Memory → Life OS Plan
+## Era Memory → LifeOS Plan
 
-Era's `knowledge__remember` stores financial facts, goals, and preferences. These map naturally to Life OS `Plan` nodes:
+Era's `knowledge__remember` stores financial facts, goals, and preferences. These map naturally to LifeOS `Plan` nodes:
 
-| Era Memory | Life OS Plan |
+| Era Memory | LifeOS Plan |
 |-----------|--------------|
 | "Save $10k for emergency fund by December" | `Plan { text: "Save $10k emergency fund", timescale: "2026-12", successSignals: "EraAccountLink.savingsBalance >= 10000" }` |
 | "Keep dining out under $400/month" | `Plan { text: "Dining budget ≤ $400/mo", timescale: "monthly" }` |
 | "Pay off Chase card by March" | `Plan { text: "Pay off Chase Freedom ••5678", timescale: "2027-03" }` |
 
-When Life OS syncs Era memory via `knowledge__recall_history`, goals with dollar amounts or timescales should be offered as Plan candidates.
+When LifeOS syncs Era memory via `knowledge__recall_history`, goals with dollar amounts or timescales should be offered as Plan candidates.
 
 ---
 
-## Primary Tools for Life OS Integration
+## Primary Tools for LifeOS Integration
 
-These are the Era MCP tools Life OS will actually call — not the full 43:
+These are the Era MCP tools LifeOS will actually call — not the full 43:
 
 ### Must-Have (Core Sync)
 1. `accounts__list_financial_accounts` — account discovery + EraAccountLink upsert
@@ -501,8 +501,8 @@ These are the Era MCP tools Life OS will actually call — not the full 43:
 5. `knowledge__get_financial_context_and_overview` — initial context load
 
 ### Write Operations (Enrichment)
-6. `transactions__update_transactions` — write Life OS tags/notes back to Era
-7. `transactions__manage_automation_rules` — sync Era rules from Life OS rule definitions
+6. `transactions__update_transactions` — write LifeOS tags/notes back to Era
+7. `transactions__manage_automation_rules` — sync Era rules from LifeOS rule definitions
 8. `knowledge__remember` — persist financial goals as Era memory
 
 ### Analysis (On-Demand, Never Stored)
@@ -538,7 +538,7 @@ These are the Era MCP tools Life OS will actually call — not the full 43:
 **Goal:** Known merchants are auto-linked; new merchants become Person nodes.
 
 1. Build merchant matching logic (exact → fuzzy → create)
-2. Add Life OS Rules for common categories (groceries, gas, utilities)
+2. Add LifeOS Rules for common categories (groceries, gas, utilities)
 3. Add `candidatePersonId` + `confidence` population to Era staged items
 4. UI: show era-staged transactions in the review queue with suggested Person links
 
@@ -546,25 +546,25 @@ These are the Era MCP tools Life OS will actually call — not the full 43:
 
 ### Phase 3: Bidirectional Enrichment
 
-**Goal:** Life OS graph context (events, places) flows back into Era.
+**Goal:** LifeOS graph context (events, places) flows back into Era.
 
-1. On Interaction accept: write Life OS tags back to Era via `transactions__update_transactions`
+1. On Interaction accept: write LifeOS tags back to Era via `transactions__update_transactions`
 2. Trip/event detection: when user has an Event, offer to link nearby transactions by date/place
 3. Item linking: when a transaction looks like a purchase, offer to create/link an `Item`
-4. Plan syncing: pull Era memory goals → offer as Life OS Plan candidates
+4. Plan syncing: pull Era memory goals → offer as LifeOS Plan candidates
 
-**Deliverable:** Era reflects Life OS enrichment; spending-by-trip/event queries work.
+**Deliverable:** Era reflects LifeOS enrichment; spending-by-trip/event queries work.
 
 ### Phase 4: Insights + Scheduled Summaries
 
-**Goal:** Financial intelligence in the Life OS agent experience.
+**Goal:** Financial intelligence in the LifeOS agent experience.
 
 1. Add `insights__get_daily_financial_summary` to morning briefing routine
-2. Add spending queries to the Life OS agent tool set
+2. Add spending queries to the LifeOS agent tool set
 3. Recurring charge audit workflow (monthly)
 4. Net worth tracking (computed from live `accounts__check_account_balance` calls, never stored)
 
-**Deliverable:** Full financial intelligence in Life OS with zero duplication of derived values.
+**Deliverable:** Full financial intelligence in LifeOS with zero duplication of derived values.
 
 ---
 
@@ -572,7 +572,7 @@ These are the Era MCP tools Life OS will actually call — not the full 43:
 
 - OAuth tokens in `EraConnection` must be **encrypted at rest** (not plaintext in SQLite). Use the same encryption approach as any existing token storage in the codebase.
 - The Era MCP server URL (`context.era.app`) requires the `Authorization: Bearer <token>` header on every call.
-- **No bank credentials ever touch Life OS.** All bank auth goes through Era's own Plaid/institution connections. Life OS only ever holds an Era OAuth token.
+- **No bank credentials ever touch LifeOS.** All bank auth goes through Era's own Plaid/institution connections. LifeOS only ever holds an Era OAuth token.
 - Scope the OAuth request to: `mcp:read` (minimum), `mcp:write` (for tag writeback), NOT `mcp:billing-write` (not needed).
 - Token refresh: follow the same refresh-on-expiry pattern as `CalendarConnection`.
 
@@ -661,11 +661,11 @@ person X") become graph traversals.
 
 2. ~~**Pagination API**~~ — **Resolved.** Page-based; use date-watermark incremental sync.
 
-3. ~~**Pending transaction handling**~~ — **Resolved.** `list_transactions` returns only posted/settled transactions; pending rows never reach Life OS.
+3. ~~**Pending transaction handling**~~ — **Resolved.** `list_transactions` returns only posted/settled transactions; pending rows never reach LifeOS.
 
-4. **Transfer linking** — Era's `transactions__manage_transfer_links` handles internal transfers (e.g., savings → checking). These should map to `direction: "transfer"` in Life OS and get a special treatment in cash flow calculations to avoid double-counting.
+4. **Transfer linking** — Era's `transactions__manage_transfer_links` handles internal transfers (e.g., savings → checking). These should map to `direction: "transfer"` in LifeOS and get a special treatment in cash flow calculations to avoid double-counting.
 
-5. **Multi-currency** — Era likely stores amounts in account-native currency. The `EraAccountLink.currency` field captures this, but Life OS currently has no currency field on `Interaction`. For Phase 1, assume USD and store raw currency in metadata. Promote to first-class in a later migration if needed.
+5. **Multi-currency** — Era likely stores amounts in account-native currency. The `EraAccountLink.currency` field captures this, but LifeOS currently has no currency field on `Interaction`. For Phase 1, assume USD and store raw currency in metadata. Promote to first-class in a later migration if needed.
 
 6. **Investment accounts** — Era may expose investment/brokerage accounts. These are different from spending transactions (buy/sell orders, dividends). Treat these as a separate `type: "investment"` interaction subtype and skip auto-accept rules.
 
@@ -678,5 +678,5 @@ person X") become graph traversals.
 - [Connecting Claude to Era](https://era.app/articles/how-to-connect-claude-to-your-bank-account/)
 - [Era Agent-Native Finance Vision](https://era.app/en-GB/articles/what-is-agent-native-finance/)
 - [Era in Anthropic Claude Directory (May 6, 2026)](https://www.businesswire.com/news/home/20260506802708/en/Era-Becomes-the-First-Personal-Finance-Connector-in-Anthropics-Claude-Directory-and-Every-Other-MCP-Compatible-Agent)
-- Life OS schema: `packages/db/prisma/schema.prisma`
+- LifeOS schema: `packages/db/prisma/schema.prisma`
 - Existing integration pattern: `CalendarConnection` / `GmailConnection` models

@@ -172,7 +172,7 @@ StoreKit/Stripe integration decision, not a Persons feature.
 **Groups already exceed anything shown in these Mesh screenshots.** Mesh's
 screenshots show no group/household/team concept for organizing contacts
 beyond the Members list (which is workspace access, not a life-graph
-primitive). Life OS's `Group` primitive — with subgroups, place-tagging, and
+primitive). LifeOS's `Group` primitive — with subgroups, place-tagging, and
 member management (`/api/groups/*`, already canonical-track candidate for a
 future M5 slice) — has no Mesh equivalent shown here.
 

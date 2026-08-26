@@ -21,7 +21,7 @@ test("createItem generates an assetId when the caller omits one", async () => {
 
   const item = await createItem({ name: "2021 Volvo XC60", category: "vehicle" }, workspaceId, {
     type: "assistant",
-    label: "Life OS Assistant",
+    label: "LifeOS Assistant",
   })
   try {
     assert.ok(item.assetId, "assetId should be generated, not left empty")

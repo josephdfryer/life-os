@@ -12,6 +12,7 @@ import { relationshipGapScore, daysSince } from "./scoring"
 
 export async function getRelationshipGaps(workspaceId: string): Promise<AlignmentSignal[]> {
   const { db } = await import("@life-os/db")
+  const now = new Date()
   const persons = await db.person.findMany({
     where: {
       workspaceId,
@@ -25,7 +26,12 @@ export async function getRelationshipGaps(workspaceId: string): Promise<Alignmen
       first: true,
       last: true,
       closeness: true,
-      interactions: { orderBy: { timestamp: "desc" }, take: 1, select: { timestamp: true } },
+      interactions: {
+        where: { timestamp: { lte: now } },
+        orderBy: { timestamp: "desc" },
+        take: 1,
+        select: { timestamp: true },
+      },
       plans: { where: { status: "active" }, select: { id: true }, take: 1 },
     },
     // The WHERE clause already restricts this to close/plan-linked people —

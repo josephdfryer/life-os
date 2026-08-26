@@ -2,7 +2,7 @@
 
 ## Design system: Still v2
 
-Before building or restyling UI in any Life OS app, read **`docs/STILL_DESIGN_SYSTEM.md`**.
+Before building or restyling UI in any LifeOS app, read **`docs/STILL_DESIGN_SYSTEM.md`**.
 
 That document is the canonical spec for colors, typography, spacing, components, and layout patterns. All apps should converge on it over time.
 

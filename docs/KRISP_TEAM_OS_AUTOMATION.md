@@ -1,7 +1,7 @@
 # Krisp to Team OS Automation
 
 This local automation polls Krisp once per minute, maps completed meetings to
-Google Calendar events already imported into Life OS, and writes structured
+Google Calendar events already imported into LifeOS, and writes structured
 meeting files into the local Team OS repository.
 
 ## Flow
@@ -45,7 +45,7 @@ The script loads the private Vercel production environment from
 vercel env pull apps/persons/.env.production.local --environment=production --yes
 ```
 
-Calendar OAuth connection state is read from the local Life OS SQLite database;
+Calendar OAuth connection state is read from the local LifeOS SQLite database;
 the worker pins this to `apps/persons/persons.db` and deliberately does not use
 the production Turso dataset.
 

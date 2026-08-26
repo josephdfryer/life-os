@@ -265,7 +265,7 @@ ${list(parsed.openQuestions)}
 
 ## Evidence Trail
 
-Auto-collected from the Life OS graph: ${bundle.sources.length} source record(s). ${counts}.
+Auto-collected from the LifeOS graph: ${bundle.sources.length} source record(s). ${counts}.
 `
 }
 

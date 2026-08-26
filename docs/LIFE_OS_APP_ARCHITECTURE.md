@@ -1,6 +1,6 @@
-# Life OS App Architecture
+# LifeOS App Architecture
 
-Life OS is one private data graph with multiple focused apps on top.
+LifeOS is one private data graph with multiple focused apps on top.
 
 ## Shape
 
@@ -96,7 +96,7 @@ same Note.
 
 ```mermaid
 flowchart LR
-  Bar["Life OS bar Capture"] --> HomeCapture["Home quick capture"]
+  Bar["LifeOS bar Capture"] --> HomeCapture["Home quick capture"]
   HomeCapture --> HomeAPI["POST /api/capture"]
   AssistantCapture["Assistant capture_note"] --> Command["captureNote command"]
   PersonsCapture["Persons POST /api/notes"] --> Command

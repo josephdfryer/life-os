@@ -6,7 +6,7 @@ This runbook provisions the private original-file store used by Assistant. It do
 
 1. Create a dedicated S3 bucket in the deployment region.
 2. Enable Block Public Access, object versioning, and default encryption. Do not add a public bucket policy.
-3. Add a lifecycle policy for noncurrent versions only after choosing a recovery period. Archive in Life OS is logical: the application does not delete the S3 object.
+3. Add a lifecycle policy for noncurrent versions only after choosing a recovery period. Archive in LifeOS is logical: the application does not delete the S3 object.
 4. Create a narrow IAM role for the Assistant Vercel project. Its trust policy must accept Vercel OIDC only for the intended team, project, and production environment. Follow the current [Vercel OIDC AWS guide](https://vercel.com/docs/oidc/aws) when constructing claim conditions.
 5. Grant the role only `s3:PutObject` and `s3:GetObject` for `arn:aws:s3:::BUCKET/workspaces/*`. Add checksum and encryption conditions where AWS policy support permits them.
 

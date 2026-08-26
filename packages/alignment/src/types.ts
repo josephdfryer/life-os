@@ -1,5 +1,5 @@
 // Alignment signals — the derived gap between the declared layer (closeness,
-// active Plans) and the behavioral layer (Interactions, Events) of the Life OS
+// active Plans) and the behavioral layer (Interactions, Events) of the LifeOS
 // graph. Never stored: every signal is computed fresh from the primitives on
 // each call, so it can never drift out of sync with the underlying truth.
 

@@ -2,7 +2,7 @@
 
 ## Overview
 
-This spec covers importing Google Maps Timeline location history into Life OS as Place + Event nodes.
+This spec covers importing Google Maps Timeline location history into LifeOS as Place + Event nodes.
 
 **Critical context:** Google deprecated cloud-synced Timeline in late 2024. Location data now lives on-device only, and Takeout no longer produces the rich Semantic Location History export for new data. We must handle both formats.
 

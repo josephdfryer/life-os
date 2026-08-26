@@ -1,6 +1,6 @@
 // Theory of Person — derived interpretation types.
 // These describe the *output* of synthesis. The canonical stored truth stays in
-// the Life OS primitives (Person · Note · Event · Plan · State · Interaction).
+// the LifeOS primitives (Person · Note · Event · Plan · State · Interaction).
 
 export type TheorySourceType =
   | "note"

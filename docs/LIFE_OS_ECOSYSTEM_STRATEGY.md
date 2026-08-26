@@ -1,4 +1,4 @@
-# Life OS ecosystem and privacy strategy
+# LifeOS ecosystem and privacy strategy
 
 Status: product direction. The storage decision it argues for is recorded in
 [ADR 0004](adr/0004-customer-life-vault.md) with status `proposed` — staged behind proof gates and
@@ -8,7 +8,7 @@ Date: 2026-08-12
 
 ## The product
 
-Life OS is not a collection of apps that happen to share an account. It is one
+LifeOS is not a collection of apps that happen to share an account. It is one
 customer-owned life graph with multiple lenses over it.
 
 The graph exists from the moment someone enters the ecosystem. Installing Persons,
@@ -26,8 +26,8 @@ that makes sense for the job at hand:
 - Home and the Assistant reason across all enabled domains. This cross-domain view is
   the digital twin.
 
-Someone may buy only Persons and never see the rest of Life OS. They still own a real
-Life OS graph underneath it. Adding another product makes the existing graph richer;
+Someone may buy only Persons and never see the rest of LifeOS. They still own a real
+LifeOS graph underneath it. Adding another product makes the existing graph richer;
 it does not start a new account or data silo.
 
 ```mermaid
@@ -61,7 +61,7 @@ Therefore the preferred high-privacy design is:
 
 1. Generate a vault encryption key on the customer's device.
 2. Keep recoverable key material in the customer's iCloud Keychain / trusted-device
-   keychain, never in Life OS infrastructure.
+   keychain, never in LifeOS infrastructure.
 3. Encrypt sensitive graph payloads before synchronization. Use CloudKit private
    records or encrypted assets as transport, with only the minimum sync metadata
    exposed.
@@ -75,7 +75,7 @@ handling risks and should be treated as a later, explicitly weaker mode.
 
 ## The company boundary
 
-Life OS, the company, provides:
+LifeOS, the company, provides:
 
 - the graph schema and migration engine;
 - native UI and domain features;
@@ -85,7 +85,7 @@ Life OS, the company, provides:
 - App Store entitlement validation, release delivery, and privacy-safe operational
   telemetry.
 
-Life OS infrastructure should not receive the customer's graph, raw sources, prompts,
+LifeOS infrastructure should not receive the customer's graph, raw sources, prompts,
 model responses, embeddings, or derived life claims in the private mode. It may hold
 the minimum commercial control-plane data required to operate the product: account or
 anonymous entitlement identifier, subscription state, app/schema version, aggregate
@@ -99,12 +99,12 @@ preview and expiration.
 
 ## Two customer-chosen intelligence paths
 
-AI access, Life OS company access, and where the graph is stored are three independent
+AI access, LifeOS company access, and where the graph is stored are three independent
 choices. A customer can keep the canonical graph in their Life Vault while allowing a
 cloud model broad access to reason across it. The product must not imply that choosing
-stronger intelligence moves ownership of the graph to Life OS.
+stronger intelligence moves ownership of the graph to LifeOS.
 
-Life OS should offer two equally *legitimate* paths. Connected Intelligence is not a discouraged
+LifeOS should offer two equally *legitimate* paths. Connected Intelligence is not a discouraged
 exception or a grudging concession — it is the right choice for someone who knowingly values
 frontier model capability more than maximum data isolation, and the product must not shame that
 choice or bury it.
@@ -113,7 +113,7 @@ Equally legitimate is not the same as equally frictionless, and the plan should 
 the gap. Private Intelligence is the default and works with no setup. Connected Intelligence in v1
 requires the customer to bring their own provider API key ([ADR 0004](adr/0004-customer-life-vault.md),
 decision 5), which is a developer-grade step that most consumers will not take. That is a
-deliberate v1 trade — it keeps Life OS out of the content path entirely — not a judgment about
+deliberate v1 trade — it keeps LifeOS out of the content path entirely — not a judgment about
 which path a customer *should* pick. Closing that gap without becoming a plaintext proxy is real
 future work, not a detail.
 
@@ -124,7 +124,7 @@ flowchart TD
   Broker --> Connected["Connected Intelligence\nClaude or another chosen provider"]
   Private --> LocalResult["Result stored locally"]
   Connected --> LocalResult
-  Company["Life OS control plane"] -. "no graph path" .-> Broker
+  Company["LifeOS control plane"] -. "no graph path" .-> Broker
 ```
 
 ### Path A: Private Intelligence
@@ -142,7 +142,7 @@ This is the strongest privacy posture:
   inference path is not something to commit to a roadmap or to customer-facing copy
   until it is verified against the current OS and entitlements. Private Intelligence
   must be a complete, useful path with on-device models alone.
-- Prompts, responses, embeddings, and life claims never pass through Life OS
+- Prompts, responses, embeddings, and life claims never pass through LifeOS
   infrastructure.
 - External model providers receive no graph content.
 
@@ -155,7 +155,7 @@ are unavailable.
 This path lets a customer deliberately connect Claude or another frontier provider and
 grant it anything from one-time access to unrestricted read access across the graph.
 The provider connection runs from the customer's device through a local **Context
-Broker**. Life OS infrastructure does not proxy or log graph content.
+Broker**. LifeOS infrastructure does not proxy or log graph content.
 
 "Full graph access" means the provider is authorized to call read tools across every
 enabled domain. It does not mean uploading a database dump into every conversation.
@@ -174,7 +174,7 @@ Joseph's selected personal posture can therefore be:
 
 The provider sees every result returned to it. Connected Intelligence must never be
 described as data staying on-device, even though the canonical vault remains local and
-Life OS itself does not receive the content.
+LifeOS itself does not receive the content.
 
 ### Access is a grant, not one privacy toggle
 
@@ -209,13 +209,13 @@ This was the largest unanswered commercial question in the first draft of this d
 settled in [ADR 0004](adr/0004-customer-life-vault.md), decision 5:
 
 - **v1 Connected Intelligence is bring-your-own-key.** A customer-owned commercial API credential
-  lives in the device Keychain and requests go device-to-provider. Life OS is never in the content
+  lives in the device Keychain and requests go device-to-provider. LifeOS is never in the content
   path, and the provider's own commercial privacy terms apply directly to the customer. This
   reuses the pattern already in the schema: `AiProviderCredential`
   (`packages/db/prisma/schema.prisma:1401`) already stores an encrypted per-provider API key.
-- **Life OS-proxied managed inference is out of scope for v1** and needs its own ADR. If Life OS
+- **LifeOS-proxied managed inference is out of scope for v1** and needs its own ADR. If LifeOS
   proxies plaintext prompts for authentication, billing, moderation, caching, or observability,
-  Life OS processes that content and can no longer claim zero company access. Blind entitlement
+  LifeOS processes that content and can no longer claim zero company access. Blind entitlement
   tokens can separate subscription validation from model requests, but that design must be
   independently reviewed before the claim is made.
 
@@ -229,12 +229,12 @@ Anthropic currently says standard commercial API inputs and outputs are normally
 days and are not used for model training by default. A separately approved zero-data-retention
 arrangement applies only to eligible API traffic and products using that commercial key; Files API,
 explicit prompt caching, batch features, web search, consumer Claude products, and other features
-can have different retention boundaries. Life OS must display the terms for the exact connected
+can have different retention boundaries. LifeOS must display the terms for the exact connected
 route, not merely the provider's name. See Anthropic's current
 [commercial retention explanation](https://privacy.anthropic.com/en/articles/7996866-how-long-do-you-store-my-organization-s-data)
 and [zero-data-retention scope](https://privacy.anthropic.com/en/articles/8956058-i-have-a-zero-data-retention-agreement-with-anthropic-what-products-does-it-apply-to).
 
-**These terms will go stale.** Every provider statement quoted anywhere in Life OS must be
+**These terms will go stale.** Every provider statement quoted anywhere in LifeOS must be
 re-verified against the provider's live policy at the time the grant screen is built and again
 before each App Store submission, and the disclosure must be sourced from a dated, versioned record
 in the app rather than hardcoded prose. A privacy claim that was accurate eighteen months ago and
@@ -254,12 +254,12 @@ Every request follows this local pipeline:
    data requires one.
 5. Redact unnecessary names and identifiers where the task allows it.
 6. Attach provenance to returned claims.
-7. Store the Life OS copy of the response locally; disclose when the connected
+7. Store the LifeOS copy of the response locally; disclose when the connected
    provider separately retains a conversation.
 8. Require confirmation for outbound, financial, destructive, identity-sensitive, or
    otherwise consequential actions.
 
-Life OS may never train its own or a third-party model on customer data. A customer may
+LifeOS may never train its own or a third-party model on customer data. A customer may
 explicitly connect a provider product whose own terms include opt-in training, but that
 choice must be specific and reversible at the provider. Product analytics may measure
 that an AI feature ran, its duration, model class, coarse token band, and
@@ -269,7 +269,7 @@ embeddings, inferred claims, or grant contents.
 Every disclosure produces an on-device `AIRequestReceipt`: provider, model, grant,
 purpose, queried tools, evidence classes, approximate record and token counts, time,
 and outcome. Content is not duplicated into the receipt. The privacy dashboard can
-answer "What has Claude seen?" without Life OS receiving the answer.
+answer "What has Claude seen?" without LifeOS receiving the answer.
 
 ## The people in the graph
 
@@ -281,8 +281,8 @@ protects the buyer is not a privacy strategy; it is a sales position.
 
 This is not a footnote to the vault design. It changes it:
 
-- **Local-first genuinely helps here, and is part of the argument for it.** If Life OS never
-  receives the graph, Life OS is not holding a database of third parties' communications. This is
+- **Local-first genuinely helps here, and is part of the argument for it.** If LifeOS never
+  receives the graph, LifeOS is not holding a database of third parties' communications. This is
   the strongest practical answer available to the problem, and it is a reason to prefer the vault
   over per-customer cloud storage independent of what the buyer wants for themselves.
 - **Connected Intelligence discloses other people's data, and the UI must say that in those
@@ -306,7 +306,7 @@ This is not a footnote to the vault design. It changes it:
 
 **Legal posture is unresolved and needs counsel, not engineering judgment.** The open questions:
 whether the personal-and-household exemption that covers a private address book survives a product
-sold as a professional CRM; whether Life OS is a processor, a joint controller, or outside scope
+sold as a professional CRM; whether LifeOS is a processor, a joint controller, or outside scope
 when it never receives the data; what a subject access or erasure request means when the company
 cannot read the database it would have to search; and how iMessage/WhatsApp ingestion interacts
 with recording and interception rules across jurisdictions. Get this reviewed before App Store
@@ -315,16 +315,16 @@ the engineering requirements that any legal answer will need; it does not preten
 
 ## Product promise and honest language
 
-The target promise leads with the customer's choice, not with what Life OS abstains from. Leading
-with "Life OS cannot browse or sell your life graph" while a fully supported path streams whatever
+The target promise leads with the customer's choice, not with what LifeOS abstains from. Leading
+with "LifeOS cannot browse or sell your life graph" while a fully supported path streams whatever
 a model asks for reads as misdirection, even though both statements are true:
 
 > Your Life Vault lives on your devices and, if you choose, in encrypted storage tied to your Apple
 > account. You choose how it is used: **Private Intelligence** keeps reasoning on your device or on
 > Apple's private servers and sends nothing to an outside model, or **Connected Intelligence** lets
 > a provider you choose — such as Claude — read the parts of your life you authorize, including all
-> of it. Whichever you pick, Life OS itself does not receive your graph, cannot browse it, and
-> cannot sell it. Life OS shows exactly what each provider can reach, keeps an on-device record of
+> of it. Whichever you pick, LifeOS itself does not receive your graph, cannot browse it, and
+> cannot sell it. LifeOS shows exactly what each provider can reach, keeps an on-device record of
 > what was disclosed, and asks before anything is sent, spent, or deleted.
 
 Two disciplines make that promise survivable:
@@ -337,7 +337,7 @@ routinely conflated in marketing copy.
 
 **Never describe Connected Intelligence as private.** The moment a customer enables it, the
 accurate sentence is that their chosen provider sees what it retrieves and retains it under that
-provider's terms. The vault staying local protects against Life OS; it does not protect against the
+provider's terms. The vault staying local protects against LifeOS; it does not protect against the
 provider the customer deliberately invited in. Any screen, App Store description, or support answer
 that blurs those two is a false claim — including by omission, and including when it is technically
 defensible.
@@ -380,7 +380,7 @@ a rollback window.
 **Entitlement must work blind.** Subscription and feature checks have to function without the
 control plane learning anything about the graph.
 
-**Sequencing consequence.** Joseph's personal Life OS continues on the cloud-backed graph while
+**Sequencing consequence.** Joseph's personal LifeOS continues on the cloud-backed graph while
 this is built — but as the *first* vault tenant, not an indefinite exception (see
 [ADR 0004](adr/0004-customer-life-vault.md), decision 3, and Sequencing below). Personal and
 customer storage may differ temporarily; primitive semantics, command contracts, provenance, and
@@ -388,7 +388,7 @@ feature behavior may not. The goal is convergence on the customer-owned vault, n
 fork where the person who wrote the sovereignty requirement is the only one who never gets it.
 
 **The opportunity cost is the real risk.** There is one developer and one working system that is
-used every day. Every week spent on vault architecture is a week not spent on the personal Life OS
+used every day. Every week spent on vault architecture is a week not spent on the personal LifeOS
 or on the five §7 blockers that stand between Persons and a first paying customer — none of which
 this direction addresses. [ADR 0004](adr/0004-customer-life-vault.md) names starving the working
 system as an explicit abandonment criterion for exactly this reason.
@@ -396,7 +396,7 @@ system as an explicit abandonment criterion for exactly this reason.
 ## Validation gates before making the promise
 
 - Demonstrate that a network observer sees no graph content during ordinary local use.
-- Prove Life OS servers receive no graph, prompt, response, embedding, or source data.
+- Prove LifeOS servers receive no graph, prompt, response, embedding, or source data.
 - Inspect CloudKit records and metadata; document exactly what remains visible.
 - Test new-device recovery, lost-device recovery, Keychain reset, iCloud disabled/full,
   offline migration, conflict resolution, and account deletion.

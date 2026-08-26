@@ -1,6 +1,6 @@
 # Database Migration and Recovery Runbook
 
-Life OS treats the Prisma migration directory as the ordered database history.
+LifeOS treats the Prisma migration directory as the ordered database history.
 Production data is not a migration test fixture. Every migration must first pass
 the clean replay and synthetic upgrade/restore gates in CI.
 

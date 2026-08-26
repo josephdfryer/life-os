@@ -33,9 +33,9 @@ export function createLifeOsAuth(options: CreateLifeOsAuthOptions = {}) {
         return !!session?.user
       },
       // After sign-in, NextAuth only allows same-origin redirects by default.
-      // Life OS is one identity spread across *.lacollecteur.com subdomains,
+      // LifeOS is one identity spread across *.lacollecteur.com subdomains,
       // so a user who started on persons.* and logged in via home.* must be
-      // sent back to persons.*. Allow any Life OS host; reject everything else.
+      // sent back to persons.*. Allow any LifeOS host; reject everything else.
       async redirect({ url, baseUrl }) {
         if (url.startsWith("/")) return `${baseUrl}${url}`
         try {

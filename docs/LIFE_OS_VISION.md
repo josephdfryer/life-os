@@ -1,4 +1,4 @@
-# Life OS — Vision and Ethos
+# LifeOS — Vision and Ethos
 
 > **Start with `docs/MANIFESTO.md`.** That is the founding document — the authoritative statement of what this project is, the eight primitives, and every design principle. This file is a companion, not the source of truth.
 
@@ -14,7 +14,7 @@ Every AI tool, every app, every system we use starts from zero. It meets us as a
 
 The difference between a capable assistant who just met you and a wise counsel who has known you for years is not ability. It is context.
 
-Life OS is the foundation that makes context possible. Not another tool. Not another app. A living, connected graph of a person's life — their relationships, obligations, goals, health, history, and the values that give all of it meaning — that persists across time and makes every interaction with intelligence not just informed, but wise.
+LifeOS is the foundation that makes context possible. Not another tool. Not another app. A living, connected graph of a person's life — their relationships, obligations, goals, health, history, and the values that give all of it meaning — that persists across time and makes every interaction with intelligence not just informed, but wise.
 
 ---
 
@@ -36,7 +36,7 @@ All of that requires context. A system that holds a rich, connected model of his
 
 ## The Five Primitives
 
-Everything in Life OS is built on five first-class concepts:
+Everything in LifeOS is built on five first-class concepts:
 
 1. **Person** — the humans in your life: their attributes, history, closeness, attention signals, plans
 2. **Place** — locations at any scale: Earth → Country → City → Home → Room → Shelf
@@ -135,7 +135,7 @@ None of these are novel in isolation. What is novel is the shared foundation. A 
 
 ## For Agents
 
-When building features for Life OS, ask: **which primitives does this connect?**
+When building features for LifeOS, ask: **which primitives does this connect?**
 
 A feature that links two or more primitives is almost always more valuable than one that deepens a single primitive in isolation. The goal is the connected picture, not the individual records.
 

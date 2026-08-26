@@ -1,6 +1,6 @@
 # Dependency boundaries
 
-Life OS stays a modular monorepo. Dependencies point inward toward reusable contracts and infrastructure, never outward toward an application.
+LifeOS stays a modular monorepo. Dependencies point inward toward reusable contracts and infrastructure, never outward toward an application.
 
 ## Permitted direction
 

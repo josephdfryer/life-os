@@ -235,14 +235,16 @@ function parseScopes(value: string) {
 
 function assertRedirectUri(value: string) {
   if (!isAllowedDeviceRedirectUri(value)) {
-    throw new DeviceAuthError("validation", "Redirect URI is not registered for this Life OS app")
+    throw new DeviceAuthError("validation", "Redirect URI is not registered for this LifeOS app")
   }
 }
 
 export function isAllowedDeviceRedirectUri(value: string) {
   try {
     const normalized = new URL(value).toString()
-    return normalized === "lifeos-companion://auth/callback" || normalized === "persons://auth/callback"
+    return normalized === "lifeos-companion://auth/callback"
+      || normalized === "persons://auth/callback"
+      || normalized === "levelup://auth/callback"
   } catch {
     return false
   }

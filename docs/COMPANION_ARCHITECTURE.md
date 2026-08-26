@@ -1,10 +1,10 @@
-# Life OS Companion architecture
+# LifeOS Companion architecture
 
-Life OS Companion is the owned-device collection boundary for Life OS. It is one native project with a macOS control centre, an embedded macOS login item, an iOS companion, and the local Swift package `LifeOSCompanionCore`.
+LifeOS Companion is the owned-device collection boundary for LifeOS. It is one native project with a macOS control centre, an embedded macOS login item, an iOS companion, and the local Swift package `LifeOSCompanionCore`.
 
 It adds no life primitive. `Device`, `DeviceSource`, `DeviceCredential`, `DeviceAuthorization`, and `DeviceIngestItem` are operational records around the eight primitives.
 
-**This is personal-line infrastructure.** Everything below describes a device→cloud pipeline in which the cloud database is canonical: collectors normalize on the device and `POST /v1/device/ingest` to the server, which runs the canonical commands. [ADR 0004](adr/0004-customer-life-vault.md) chose the opposite boundary for *customers* — a local Life Vault where the graph never leaves the device and Life OS servers receive no graph content. Both are correct for their own audience, and the distinction matters before anyone builds on this:
+**This is personal-line infrastructure.** Everything below describes a device→cloud pipeline in which the cloud database is canonical: collectors normalize on the device and `POST /v1/device/ingest` to the server, which runs the canonical commands. [ADR 0004](adr/0004-customer-life-vault.md) chose the opposite boundary for *customers* — a local Life Vault where the graph never leaves the device and LifeOS servers receive no graph content. Both are correct for their own audience, and the distinction matters before anyone builds on this:
 
 - The trust and authorization design (PKCE, hashed rotating credentials, revocation), the encrypted outbox, the checkpoint/replay semantics, the connector implementations, and the local privacy boundary all **carry over** to a vault-backed customer product essentially unchanged. That engineering is not wasted.
 - The **destination** does not carry over. In a customer vault the ingest step writes to the local store rather than to `apps/api`, so the ingest endpoint, the server-side `DeviceIngestItem` receipt, and the server-side dispatch in `apps/api/lib/device-ingest.ts` are personal-line components with local equivalents still to be designed.

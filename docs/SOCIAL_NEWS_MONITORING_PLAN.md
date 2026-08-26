@@ -8,7 +8,7 @@ design for the three signal types Mesh calls "Social Changes," "Posts," and
 document keeps Grok's vendor research where it's useful and replaces its
 architecture, which invents a parallel schema (`people`,
 `profile_snapshots`, `change_events`, `news_mentions`) that duplicates
-`Person`, `Note`, and `State`. Life OS already has primitives shaped for
+`Person`, `Note`, and `State`. LifeOS already has primitives shaped for
 exactly this data — see `docs/MANIFESTO.md`. Nothing here proposes a ninth
 primitive.
 
@@ -23,11 +23,11 @@ it's explicitly greenlit.
 |---|---|---|
 | New `people` table | Existing `Person` | Already the canonical identity. A monitored person is a `Person`, not a parallel record — otherwise every "is this the same person" problem Persons already solved (dedupe, merge) gets solved twice. |
 | New `profile_snapshots` table (full version history) | One new join table (`MonitoredProfile`) holding only the *last* snapshot, plus `State` rows for structured-field history | `State` already is "value of X for entity Y at time T," indexed for history queries. Storing a second parallel history table duplicates it. Only the raw last-fetched blob (needed to diff against the next fetch) has nowhere else to live. |
-| New `change_events` table | `Note` (`type: "social_change"` / `"news_mention"`) | `Note` already carries `aboutPersonId`, timestamp, content, metadata, and a provenance chain — and every other Life OS feed (Home Inbox, Persons profile Communications stream) is already a query over existing primitives, not a bespoke events table. |
+| New `change_events` table | `Note` (`type: "social_change"` / `"news_mention"`) | `Note` already carries `aboutPersonId`, timestamp, content, metadata, and a provenance chain — and every other LifeOS feed (Home Inbox, Persons profile Communications stream) is already a query over existing primitives, not a bespoke events table. |
 | New `news_mentions` table | Same `Note` model, `type: "news_mention"` | Same reasoning; a news mention *is* an observation about a Person, structurally identical to a social-change observation. |
 | LinkedIn: Apify/Crustdata scraping as the recommended starting move | LinkedIn: user's own data export as the only default-recommended path; scraping documented but explicitly flagged, not defaulted | `docs/IOS_PLATFORM_PLAN.md` §6.1 already researched this and concluded scraping violates LinkedIn's ToS with real enforcement precedent (Proxycurl). Nothing about Grok's plan changes that finding — it just doesn't mention it. |
-| n8n/Make orchestration | A cron-driven ingest module living beside the existing Oura/Gmail/Calendar sync pattern (`apps/api/lib/*-ingest.ts`, `Connection` rows, launchd/cron triggers) | Life OS already has a working, understood pattern for "poll an external source on a schedule, write structured data, stay idempotent." A third orchestration tool (n8n) would be a second system doing what `apps/api` + launchd already do for every other integration. |
-| Generic "database (Postgres recommended)" | Existing Turso/SQLite via Prisma, same as everything else | Life OS is already on one database. Splitting monitoring data onto Postgres would mean a second connection, a second migration story, and joins across two databases to show a monitored person's profile next to their Interactions. |
+| n8n/Make orchestration | A cron-driven ingest module living beside the existing Oura/Gmail/Calendar sync pattern (`apps/api/lib/*-ingest.ts`, `Connection` rows, launchd/cron triggers) | LifeOS already has a working, understood pattern for "poll an external source on a schedule, write structured data, stay idempotent." A third orchestration tool (n8n) would be a second system doing what `apps/api` + launchd already do for every other integration. |
+| Generic "database (Postgres recommended)" | Existing Turso/SQLite via Prisma, same as everything else | LifeOS is already on one database. Splitting monitoring data onto Postgres would mean a second connection, a second migration story, and joins across two databases to show a monitored person's profile next to their Interactions. |
 
 What's kept from Grok's plan largely as-is: the phase sequencing logic
 (foundations → one channel → next channel → unified feed → scale), the
@@ -71,7 +71,7 @@ Person (existing)
 
 `MonitoredProfile` is the one genuinely new table, and it's structurally the
 same kind of thing as `GranolaNoteLink` or `CalendarEventLink` — a link
-between a Life OS primitive (`Person`) and an external identity, owned by a
+between a LifeOS primitive (`Person`) and an external identity, owned by a
 `Connection`. It is not a competing identity table.
 
 ```prisma

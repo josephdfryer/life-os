@@ -1,4 +1,4 @@
-# Life OS — local multi-app stack
+# LifeOS — local multi-app stack
 #
 # Usage:
 #   cp .env.example .env        # fill in AUTH_SECRET + ANTHROPIC_API_KEY at minimum

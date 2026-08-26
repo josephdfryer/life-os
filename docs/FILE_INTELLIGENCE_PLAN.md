@@ -1,10 +1,10 @@
-# Life OS File Intelligence and Multi-Person Evidence Plan
+# LifeOS File Intelligence and Multi-Person Evidence Plan
 
 **Status:** Approved for implementation · August 13, 2026
 
 ## Goal
 
-Build a Joseph-first, workspace-safe file intelligence system in which private source files enrich the shared Life OS graph without becoming new primitives or corrupting canonical truth. Originals live in private, versioned object storage. Faithful extraction becomes a source-linked `Note` plus exact chunks. AI may propose cited mentions and atomic claims, but every conclusion remains traceable to the original passage.
+Build a Joseph-first, workspace-safe file intelligence system in which private source files enrich the shared LifeOS graph without becoming new primitives or corrupting canonical truth. Originals live in private, versioned object storage. Faithful extraction becomes a source-linked `Note` plus exact chunks. AI may propose cited mentions and atomic claims, but every conclusion remains traceable to the original passage.
 
 One file may provide evidence about many existing People. A mention is not automatically an `Interaction`; incidental or ambiguous mentions remain searchable and never influence Theory.
 
@@ -20,7 +20,7 @@ One file may provide evidence about many existing People. A mention is not autom
 
 ## Supporting records
 
-These models are operational support, not Life OS primitives:
+These models are operational support, not LifeOS primitives:
 
 - `FileUploadIntent`: one-use authorization and verified upload metadata.
 - `FileProcessingRun`: durable status, version, summary/error, and Workflow run ID.
@@ -105,7 +105,7 @@ Authenticated routes cover upload intent/finalization, file list/detail/download
 
 Feature flags independently gate ingestion, review proposals, safe-auto promotion, and nightly Theory refresh. Initial rollout enables ingestion with safe-auto off, verifies synthetic multi-person PDF/sheet/image/audio fixtures, then enables proposals, safe-auto, and nightly refresh in that order.
 
-Existing files receive a read-only backfill preview only. No backfill runs without separate confirmation. No migration may truncate or reset core Life OS tables.
+Existing files receive a read-only backfill preview only. No backfill runs without separate confirmation. No migration may truncate or reset core LifeOS tables.
 
 ## Verification bar
 

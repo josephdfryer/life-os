@@ -1,4 +1,4 @@
-# Life OS Prime-Time Readiness Audit
+# LifeOS Prime-Time Readiness Audit
 
 **Date:** July 12, 2026  
 **Scope:** Product ontology, relationship context, multi-tenancy, authorization, privacy, AI safety, integrations, reliability, deployment, and commercial operations  
@@ -6,7 +6,7 @@
 
 ## Executive conclusion
 
-Life OS has a stronger conceptual foundation than most products at this stage. The manifesto's eight primitives, the separation of Events from Interactions, and the preference for derived insight over premature stored conclusions are sound. The existing schema also shows serious thought about provenance, staged ingestion, rules, integrations, and auditability.
+LifeOS has a stronger conceptual foundation than most products at this stage. The manifesto's eight primitives, the separation of Events from Interactions, and the preference for derived insight over premature stored conclusions are sound. The existing schema also shows serious thought about provenance, staged ingestion, rules, integrations, and auditability.
 
 The blocking problem is not the central idea. It is that the implementation still assumes one trusted owner and one default workspace in several decisive places while presenting the beginnings of a multi-user, multi-workspace system elsewhere. That mismatch creates real cross-tenant access and mutation paths. A customer must not be added until every read and write is workspace-scoped and permission-checked, integration credentials are encrypted, the database can be rebuilt from migrations, and the known framework security advisories are patched.
 
@@ -290,6 +290,6 @@ Do not call the product market-ready until every item below has objective eviden
 
 ## Bottom line
 
-Life OS does not need a new grand theory before it can become a product. It needs the implementation to honor the theory it already has: every claim must have a perspective and source; every action must have an actor and workspace; every sensitive datum must have a purpose, protection, and deletion path; and every release must be reproducible and recoverable.
+LifeOS does not need a new grand theory before it can become a product. It needs the implementation to honor the theory it already has: every claim must have a perspective and source; every action must have an actor and workspace; every sensitive datum must have a purpose, protection, and deletion path; and every release must be reproducible and recoverable.
 
 Once the P0 gates are cleared, the product is credible enough for a small paid design-partner pilot. Until then, external onboarding would expose customers to unacceptable tenant-isolation, credential, and recovery risk.

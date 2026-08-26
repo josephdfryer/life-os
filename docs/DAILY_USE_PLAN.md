@@ -1,8 +1,8 @@
-# Life OS Daily Use Plan
+# LifeOS Daily Use Plan
 
 **Status:** Engineering pass complete through Phase 6 — deployment and real-use gates pending  
 **Owner:** Joseph  
-**Purpose:** Make Life OS useful enough to open every morning, capture into throughout the day, and close out each evening.
+**Purpose:** Make LifeOS useful enough to open every morning, capture into throughout the day, and close out each evening.
 
 ## Execution record
 
@@ -30,20 +30,20 @@
 - Added `@life-os/domain` as the canonical shared-command package and moved Assistant, Theory, and Home capture through one `captureNote` command.
 - The command trims and validates content, normalizes Note types, records source metadata, and uses caller-provided idempotency keys so a lost response or retry cannot duplicate a Note.
 - Home now has a fast typed capture surface for thoughts, observations, and declarations. `Command/Ctrl + Enter` saves; a failed request leaves the text in place.
-- The shared Life OS bar links directly to Home's capture surface from every app.
+- The shared LifeOS bar links directly to Home's capture surface from every app.
 - Capture remains Note-first and does not call AI. Successful storage is therefore independent of model availability, credentials, pricing, or resolver quality.
 - A full disposable-database integration test proves that one request plus one retry produces exactly one provenance-bearing Note.
 - Production capture rejects unauthenticated requests; local review remains double-gated to non-production.
 - A separate, explicit **Find structure** action can use the workspace's encrypted Vercel AI Gateway credential to suggest only Plans and Events. It is never part of the base Note write, so provider failure cannot lose a capture.
-- Model calls are recorded in `NoteAnalysisRun`, including model, tokens, returned cost when available, prompt version, output, and failure state. `NoteSuggestion` stores the review workflow; neither is a ninth Life OS primitive.
+- Model calls are recorded in `NoteAnalysisRun`, including model, tokens, returned cost when available, prompt version, output, and failure state. `NoteSuggestion` stores the review workflow; neither is a ninth LifeOS primitive.
 - Each suggestion is previewed with editable title and time, matched Person controls, confidence, and rationale. Accept creates a provenance-linked Plan or Event; dismiss creates nothing. Event acceptance also creates the approved Person Interactions.
 - Analysis and acceptance are idempotent. A completed prompt version is reused, and accepting the same suggestion twice returns the first derived entity.
 - Disposable-database integration coverage proves Event/Interaction and Plan creation, Note provenance, Person participation, dismissal, and acceptance retry behavior.
-- Voice capture remains deliberately open. Browser speech APIs may send audio to a browser vendor, so Life OS will not silently introduce them; the implementation should expose that tradeoff or use a selected local transcription path.
+- Voice capture remains deliberately open. Browser speech APIs may send audio to a browser vendor, so LifeOS will not silently introduce them; the implementation should expose that tradeoff or use a selected local transcription path.
 
 ### Phase 3 calendar confirmation implementation — 2026-07-27
 
-- The canonical Events Google sync now writes one idempotent calendar-backed `Plan` per provider occurrence. Known attendees are stored as `PlanExpectedPerson` references; sync no longer creates participant `Interaction` records.
+- Known attendees are stored as `PlanExpectedPerson` references, excluding people who declined the invitation; sync no longer creates participant `Interaction` records.
 - `CalendarEventLink.planId` preserves provider identity across incremental sync, reschedules, recurring instances, reconnects, and cancellations. Provider cancellations abandon the Plan without creating an Event.
 - Legacy provider Events are preserved. When sync encounters an older `CalendarEventLink.eventId`, it creates the corresponding Plan, marks it already fulfilled, and links the existing Event instead of duplicating history.
 - Home surfaces at most three recently ended pending Plans. **Happened** is the one-tap path; **Changed** allows actual title, bounds, attendees, Place, outcome, emotional weight, follow-ups, and an optional Note; **Cancelled** and **Skip** create no Event.
@@ -51,7 +51,7 @@
 - Reconciliation is idempotent. The database uniquely constrains `Event.sourcePlanId`, and a repeated confirmation returns the already-created Event.
 - The migration and confirmation flow pass against a disposable database containing all 38 migrations. Production data was not migrated or rewritten during implementation.
 
-This plan turns Life OS from a collection of capable lenses into one dependable daily loop:
+This plan turns LifeOS from a collection of capable lenses into one dependable daily loop:
 
 > **Orient → remember → act → capture → reconcile → reflect**
 
@@ -59,7 +59,7 @@ The goal is not more dashboard content. The goal is to reduce what Joseph has to
 
 ## Product outcome
 
-Life OS should earn three recurring visits:
+LifeOS should earn three recurring visits:
 
 1. **Morning:** “What matters today, and what context should I remember?”
 2. **During the day:** “Remember this for me.”
@@ -71,7 +71,7 @@ After enough daily evidence accumulates, a weekly review should answer:
 - Which declared priorities received or missed attention?
 - Which commitments remain open?
 - Which people, work, places, or routines repeatedly affected energy and stress?
-- What would likely have been missed without Life OS?
+- What would likely have been missed without LifeOS?
 
 ## Product principles
 
@@ -81,7 +81,7 @@ After enough daily evidence accumulates, a weekly review should answer:
 4. **Most actions take one tap.** Rich detail is optional and reserved for meaningful moments.
 5. **Inference reduces work but never invents truth.** High-confidence matches can be proposed; ambiguous matches enter review.
 6. **Insight is derived and auditable.** Briefings, nudges, tension signals, and weekly summaries point back to the facts supporting them.
-7. **Quiet by default.** Life OS prioritizes a handful of useful prompts instead of displaying every available signal.
+7. **Quiet by default.** LifeOS prioritizes a handful of useful prompts instead of displaying every available signal.
 8. **No ninth primitive.** The daily loop uses the existing eight primitives and `Interaction`.
 
 ## Canonical daily experience
@@ -280,11 +280,11 @@ Gate:
 
 ### Phase 2 — Universal capture
 
-**Purpose:** Make Life OS the easiest place to remember something.
+**Purpose:** Make LifeOS the easiest place to remember something.
 
 Work:
 
-- add the shared quick-capture control to Home and the common Life OS bar;
+- add the shared quick-capture control to Home and the common LifeOS bar;
 - implement a workspace-scoped capture command/API that always writes the Note first;
 - reuse the Assistant capture domain logic rather than creating a second interpretation path;
 - provide immediate typed capture, then optional browser/local voice transcription;
@@ -295,7 +295,7 @@ Work:
 
 Implementation state:
 
-- [x] Shared quick-capture entry from Home and the Life OS bar
+- [x] Shared quick-capture entry from Home and the LifeOS bar
 - [x] Canonical workspace-scoped Note-first command
 - [x] Assistant and Theory reuse the same command
 - [x] Typed capture
@@ -506,6 +506,6 @@ Begin with **Phase 0**, then implement only **Phase 1**. Use the improved Home f
 
 That week should answer the most important product question:
 
-> Does opening Life OS change how Joseph approaches the day?
+> Does opening LifeOS change how Joseph approaches the day?
 
-If not, improve relevance and prioritization before adding more input surfaces. If yes, universal capture is the next highest-leverage step because it turns Life OS from something Joseph reads into the place his life is remembered.
+If not, improve relevance and prioritization before adding more input surfaces. If yes, universal capture is the next highest-leverage step because it turns LifeOS from something Joseph reads into the place his life is remembered.

@@ -38,7 +38,7 @@ async function main() {
 })
 await db.workspace.update({
   where: { id: "default-workspace" },
-  data: { name: "E2E Life OS", slug: "e2e-life-os", ownerUserId: owner.id },
+  data: { name: "E2E LifeOS", slug: "e2e-life-os", ownerUserId: owner.id },
 })
 await db.workspaceMember.create({
   data: { workspaceId: "default-workspace", userId: owner.id, role: "owner", status: "active" },

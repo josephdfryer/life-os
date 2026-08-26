@@ -1,4 +1,4 @@
-// Shared Life OS timezone resolution. ONE master timezone across every app:
+// Shared LifeOS timezone resolution. ONE master timezone across every app:
 // stored in a `tz` cookie scoped to the root domain (.lacollecteur.com) so every
 // *.lacollecteur.com app reads the same value — settable at Home, detected from
 // the browser on first visit. Pure helpers here are server-safe (no React, no

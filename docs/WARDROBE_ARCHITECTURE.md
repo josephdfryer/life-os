@@ -1,6 +1,6 @@
-# Wardrobe in Life OS
+# Wardrobe in LifeOS
 
-Wardrobe is a lens inside the Stuff app. It does not introduce a new Life OS
+Wardrobe is a lens inside the Stuff app. It does not introduce a new LifeOS
 primitive and it was designed from product behavior rather than copied source,
 schema, wording, or visual design from another application.
 
@@ -42,7 +42,7 @@ The file bytes do not live in SQLite/Turso or the Git repository. The default
 directory is:
 
 ```text
-~/Library/Application Support/Life OS/media/
+~/Library/Application Support/LifeOS/media/
 ```
 
 Set `LIFE_OS_MEDIA_DIR` to override it. `ImportedFile` stores a provider,
@@ -51,7 +51,7 @@ the graph storage-neutral: a future private object-storage adapter can retain
 the same record contract.
 
 The media route checks workspace access before reading bytes. Current local
-storage is suitable for Mac-hosted Life OS. A cloud deployment needs durable
+storage is suitable for Mac-hosted LifeOS. A cloud deployment needs durable
 private object storage because a function filesystem is ephemeral.
 
 ## Garment analysis

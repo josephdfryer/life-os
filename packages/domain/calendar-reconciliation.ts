@@ -145,6 +145,10 @@ export async function reconcileCalendarPlan(input: {
       where: { id: plan.id },
       data: { status: "completed", reconciliationStatus: "happened", reconciledAt: new Date() },
     })
+    await tx.calendarEventLink.updateMany({
+      where: { workspaceId: input.workspaceId, planId: plan.id },
+      data: { eventId: event.id },
+    })
     return { status: "happened" as const, eventId: event.id }
   })
 }

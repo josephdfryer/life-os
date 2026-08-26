@@ -1,4 +1,4 @@
-// The single definition of "what an Era transaction means in Life OS".
+// The single definition of "what an Era transaction means in LifeOS".
 //
 // Everything that ingests Era data — the live sync, the JSON-dump importer, the
 // staged-row backfill — maps through here, so there is one place where the sign

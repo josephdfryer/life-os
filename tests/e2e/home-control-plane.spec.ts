@@ -4,7 +4,7 @@ test.describe('Home control plane', () => {
   test('shell navigates across the Home control-plane surfaces', async ({ page }) => {
     await page.goto('/stream')
     await expect(page.getByRole('heading', { name: 'Stream' })).toBeVisible()
-    await expect(page.getByRole('navigation', { name: 'Life OS sections' })).toContainText('Inbox')
+    await expect(page.getByRole('navigation', { name: 'LifeOS sections' })).toContainText('Inbox')
 
     await page.getByRole('link', { name: 'Inbox', exact: true }).click()
     await expect(page).toHaveURL(/\/inbox$/)
@@ -37,7 +37,7 @@ test.describe('Home control plane', () => {
 
   test('admin workspace tab owns approved sign-in controls', async ({ page }) => {
     await page.goto('/admin?tab=workspace')
-    await expect(page.getByRole('region', { name: 'E2E Life OS' })).toBeVisible()
+    await expect(page.getByRole('region', { name: 'E2E LifeOS' })).toBeVisible()
     await expect(page.getByText('active members')).toBeVisible()
     await expect(page.getByRole('heading', { name: 'Approved emails' })).toBeVisible()
     await expect(page.getByRole('heading', { name: 'Approve an email' })).toBeVisible()

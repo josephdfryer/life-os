@@ -8,7 +8,7 @@ or product flow.
 
 ## North star
 
-Places is the spatial memory interface for Life OS.
+Places is the spatial memory interface for LifeOS.
 
 > A Place is not a map pin. It is a living memory page.
 
@@ -322,7 +322,7 @@ provenance-aware work.
 - [x] `PL-403` Show visit duration and gaps when reliable source data permits.
 - [x] `PL-404` Embed people, groups, photos, notes, and spending in the visit where
   they occurred.
-- [x] `PL-405` Make linked Persons and Events navigable to their owning Life OS
+- [x] `PL-405` Make linked Persons and Events navigable to their owning LifeOS
   surfaces.
 - [x] `PL-406` Support adding a note to the Place or to a specific visit.
 - [x] `PL-407` Add an explicit user-authored “Why this place matters” field or

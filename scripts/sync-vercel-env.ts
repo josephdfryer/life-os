@@ -1,11 +1,11 @@
 #!/usr/bin/env tsx
 
-// Push one source-of-truth env file to every Life OS Vercel project.
+// Push one source-of-truth env file to every LifeOS Vercel project.
 //
 // Why this exists: the account is on Hobby, and Vercel's team-level Shared
 // Environment Variables are Pro-only. So the same TURSO_AUTH_TOKEN, AUTH_SECRET,
-// NEXTAUTH_SECRET and GOOGLE_CLIENT_SECRET are copy-pasted into nine separate
-// projects. Rotating any of them by hand is nine dashboard edits, and a
+// NEXTAUTH_SECRET and GOOGLE_CLIENT_SECRET are copy-pasted into eight separate
+// projects. Rotating any of them by hand is eight dashboard edits, and a
 // half-finished rotation leaves some apps talking to the old credential and some
 // to the new one — the kind of outage that looks like a code bug for an hour.
 //
@@ -21,29 +21,18 @@
 //   npx tsx scripts/sync-vercel-env.ts                    # dry run, production
 //   npx tsx scripts/sync-vercel-env.ts --apply            # actually write
 //   npx tsx scripts/sync-vercel-env.ts --env preview --apply
-//   npx tsx scripts/sync-vercel-env.ts --only life-os-places --apply
+//   npx tsx scripts/sync-vercel-env.ts --only places --apply
 //   npx tsx scripts/sync-vercel-env.ts --var AUTH_SECRET --apply
 
 import { execFileSync } from "node:child_process"
 import { readFileSync, existsSync } from "node:fs"
 import { dirname, join, resolve } from "node:path"
 import { fileURLToPath } from "node:url"
+import { findProject, VERCEL_PROJECT_NAMES, VERCEL_TEAM_ID } from "./lib/vercel-projects"
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..")
-const TEAM = "team_ftx6eq2s9NttYUc9WqQRwfa8"
-
-// Every project that should receive the shared set. Names, not IDs, so the
-// output is readable; `vercel env add --project` accepts either.
-const PROJECTS = [
-  "persons",
-  "life-os-home",
-  "life-os-events",
-  "life-os-places",
-  "life-os-stuff",
-  "life-os-assistant",
-  "life-os-api",
-  "level-up",
-]
+const TEAM = VERCEL_TEAM_ID
+const PROJECTS = VERCEL_PROJECT_NAMES
 
 // Variables whose correct value DIFFERS per project. Blanket-syncing these is
 // not merely wasteful, it breaks things: an OAuth callback URL pinned to
@@ -137,7 +126,8 @@ function main() {
     shared.set(name, value)
   }
 
-  const projects = options.only ? PROJECTS.filter(project => project === options.only) : PROJECTS
+  const selected = options.only ? findProject(options.only) : null
+  const projects = options.only ? (selected ? [selected.vercelName] : []) : PROJECTS
   if (options.only && !projects.length) {
     console.error(`Unknown project "${options.only}". Known: ${PROJECTS.join(", ")}`)
     process.exit(1)

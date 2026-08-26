@@ -1,6 +1,12 @@
 import { publishGraphEvent, type GraphEventActor } from "./events"
 import { writeAuditLog, type AuditActor } from "./audit"
 
+// Some occurrences belong in the life graph for analysis and provenance but
+// are intentionally absent from the general-purpose Events timeline. Their
+// focused app owns the human-facing history (for example, Level Up for
+// workouts). Keep this shared so Home and Events cannot drift.
+export const BACKGROUND_EVENT_TYPES = ["workout"] as const
+
 // Extracted from apps/persons/server/domain/events.ts (Track C, phase C4).
 // Named event-primitive.ts, not events.ts, because that name is already
 // taken by this package's GraphEvent spine (publishGraphEvent) — this file

@@ -20,6 +20,7 @@ test("stored token hash never contains the opaque credential", () => {
 test("device callbacks use an exact per-app allowlist", () => {
   assert.equal(isAllowedDeviceRedirectUri("lifeos-companion://auth/callback"), true)
   assert.equal(isAllowedDeviceRedirectUri("persons://auth/callback"), true)
+  assert.equal(isAllowedDeviceRedirectUri("levelup://auth/callback"), true)
   assert.equal(isAllowedDeviceRedirectUri("persons://auth/other"), false)
   assert.equal(isAllowedDeviceRedirectUri("https://example.com/auth/callback"), false)
   assert.equal(isAllowedDeviceRedirectUri("not a url"), false)

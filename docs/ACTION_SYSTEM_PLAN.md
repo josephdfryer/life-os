@@ -1,8 +1,8 @@
-# Life OS Action System Plan
+# LifeOS Action System Plan
 
 **Status:** Phase 1 and core Phase 2 inbox flow implemented  
 **Owner:** Joseph  
-**Purpose:** Reliably hold everything Joseph may need to do without turning Life OS into another guilt-producing task manager.
+**Purpose:** Reliably hold everything Joseph may need to do without turning LifeOS into another guilt-producing task manager.
 
 ## Decision
 
@@ -15,7 +15,7 @@ The system has two intentionally different promises:
 
 This distinction is the core of the product. Capturing everything should be nearly free; committing should remain scarce and honest.
 
-## Why this fits Life OS
+## Why this fits LifeOS
 
 - A task is declared intent, so it is a `Plan`, not a ninth primitive.
 - `Plan.status = draft` already represents an uncommitted candidate.
@@ -29,7 +29,7 @@ The action system should therefore complete and unify the current design, not re
 
 ## Product thesis
 
-Traditional task managers fail by making capture feel like commitment, dates feel like predictions, and the backlog feel like judgment. Life OS should instead answer three small questions:
+Traditional task managers fail by making capture feel like commitment, dates feel like predictions, and the backlog feel like judgment. LifeOS should instead answer three small questions:
 
 - **Capture:** What might I need to do?
 - **Choose:** What am I honestly willing to move today?
@@ -41,7 +41,7 @@ The UI should never imply that an inbox of 100 possibilities means Joseph has 10
 
 ### 1. Capture in one line
 
-Add an **Action** mode to the existing Home quick capture and shared Life OS capture entry point.
+Add an **Action** mode to the existing Home quick capture and shared LifeOS capture entry point.
 
 Examples:
 

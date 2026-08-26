@@ -17,16 +17,22 @@ export type LifeOSAppEntry = {
   label: string
   url: string
   localUrl: string
-  dot: string
+  /**
+   * The app's identity color, used to tint its mark in shared chrome.
+   * Every value is a Still token — the old ad-hoc blues, greens, and the
+   * retired Warm Concrete terracotta are gone. Do not add a color here that
+   * is not in `docs/STILL_DESIGN_SYSTEM.md`.
+   */
+  accent: string
   blurb: string
 }
 
 export const LIFE_OS_APPS: readonly LifeOSAppEntry[] = [
-  { key: 'home', label: 'Home', url: LIFE_OS_APP_URLS.home, localUrl: 'http://localhost:3003', dot: '#8a7a66', blurb: 'Your daily overview' },
-  { key: 'persons', label: 'Persons', url: LIFE_OS_APP_URLS.persons, localUrl: 'http://localhost:3000', dot: '#b5835a', blurb: 'People & relationships' },
-  { key: 'events', label: 'Events', url: LIFE_OS_APP_URLS.events, localUrl: 'http://localhost:3006', dot: '#6a8caf', blurb: 'Calendar & plans' },
-  { key: 'places', label: 'Places', url: LIFE_OS_APP_URLS.places, localUrl: 'http://localhost:3002', dot: '#6f9a7b', blurb: 'Your map of memory' },
-  { key: 'stuff', label: 'Stuff', url: LIFE_OS_APP_URLS.stuff, localUrl: 'http://localhost:3001', dot: '#a98a5c', blurb: 'Everything you own' },
-  { key: 'assistant', label: 'Assistant', url: LIFE_OS_APP_URLS.assistant, localUrl: 'http://localhost:3005', dot: '#c08b6f', blurb: 'Chat & actions' },
-  { key: 'levelUp', label: 'Level Up', url: LIFE_OS_APP_URLS.levelUp, localUrl: 'http://localhost:3010', dot: '#c4522a', blurb: 'IRL player ratings' },
+  { key: 'home', label: 'Home', url: LIFE_OS_APP_URLS.home, localUrl: 'http://localhost:3003', accent: '#6e5238', blurb: 'Your daily overview' },
+  { key: 'persons', label: 'Persons', url: LIFE_OS_APP_URLS.persons, localUrl: 'http://localhost:3000', accent: '#8f6b4a', blurb: 'People & relationships' },
+  { key: 'events', label: 'Events', url: LIFE_OS_APP_URLS.events, localUrl: 'http://localhost:3006', accent: '#524a42', blurb: 'Calendar & plans' },
+  { key: 'places', label: 'Places', url: LIFE_OS_APP_URLS.places, localUrl: 'http://localhost:3002', accent: '#6b7a63', blurb: 'Your map of memory' },
+  { key: 'stuff', label: 'Stuff', url: LIFE_OS_APP_URLS.stuff, localUrl: 'http://localhost:3001', accent: '#c4a574', blurb: 'Everything you own' },
+  { key: 'assistant', label: 'Assistant', url: LIFE_OS_APP_URLS.assistant, localUrl: 'http://localhost:3005', accent: '#1a2a35', blurb: 'Chat & actions' },
+  { key: 'levelUp', label: 'Level Up', url: LIFE_OS_APP_URLS.levelUp, localUrl: 'http://localhost:3010', accent: '#b07d4f', blurb: 'IRL player ratings' },
 ]

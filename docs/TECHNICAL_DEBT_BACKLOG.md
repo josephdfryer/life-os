@@ -1,4 +1,4 @@
-# Life OS Technical Debt Backlog
+# LifeOS Technical Debt Backlog
 
 This is the ordered execution backlog derived from the July 2026 architecture and maintainability review. Work one task at a time. Update the status, evidence, and completion notes in the same change as the implementation.
 

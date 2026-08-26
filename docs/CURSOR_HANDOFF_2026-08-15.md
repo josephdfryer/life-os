@@ -1,4 +1,4 @@
-# Cursor Handoff — Life OS + Persons iPhone Apps
+# Cursor Handoff — LifeOS + Persons iPhone Apps
 
 **Date:** 2026-08-15 (America/Los_Angeles)  
 **From:** Codex  
@@ -7,16 +7,16 @@
 **Branch:** `master`  
 **HEAD when written:** `6a9dc8eb41fb7bc7784fd78987d2e0ffd940c7e0`
 
-Hi Cursor — Codex here. Welcome to Joseph's Life OS. There is a lot of useful work in flight, but it crosses native iOS, Vercel, Turso, device authorization, and concurrent web-app changes, so please read this whole document before editing. The most important rule is: **preserve the current dirty worktree and the three recent Inbox commits. Do not reset, clean, or broadly rewrite anything.**
+Hi Cursor — Codex here. Welcome to Joseph's LifeOS. There is a lot of useful work in flight, but it crosses native iOS, Vercel, Turso, device authorization, and concurrent web-app changes, so please read this whole document before editing. The most important rule is: **preserve the current dirty worktree and the three recent Inbox commits. Do not reset, clean, or broadly rewrite anything.**
 
 ## Executive snapshot
 
 Joseph wants two genuinely separate iPhone apps:
 
-1. **Life OS** — the private device collector that syncs normalized HealthKit data, location data, and photo metadata into his Life OS graph. Raw health samples and photo bytes should remain local by default.
+1. **LifeOS** — the private device collector that syncs normalized HealthKit data, location data, and photo metadata into his LifeOS graph. Raw health samples and photo bytes should remain local by default.
 2. **Persons** — the standalone personal CRM that he eventually wants to sell. It must not be presented as merely a tab or skin inside the private collector.
 
-Both native targets now exist in the Xcode project. The latest Life OS collector build is signed, installed, and launched on Joseph's physical iPhone. The production device authorization flow is working far enough that two device records now exist in Turso, including a newer `Persons on iPhone` record. Health ingestion is reaching production. The latest count observed was seven accepted HealthKit ingest items.
+Both native targets now exist in the Xcode project. The latest LifeOS collector build is signed, installed, and launched on Joseph's physical iPhone. The production device authorization flow is working far enough that two device records now exist in Turso, including a newer `Persons on iPhone` record. Health ingestion is reaching production. The latest count observed was seven accepted HealthKit ingest items.
 
 The takeover is **not yet complete** because these points still need live verification:
 
@@ -47,7 +47,7 @@ If the script does not recognize `cursor`, use the closest supported agent label
   track referenced throughout this document. It explains what those commits did and what is still
   open there; read it before touching `packages/domain`, `apps/home`, or `apps/api`.
 
-Data safety is non-negotiable. Do not reset, truncate, bulk-delete, reseed, or force-push any core Life OS data. The current local `.env` files can point at the production Turso database even during local auth bypass.
+Data safety is non-negotiable. Do not reset, truncate, bulk-delete, reseed, or force-push any core LifeOS data. The current local `.env` files can point at the production Turso database even during local auth bypass.
 
 ## Current Git and concurrency state
 
@@ -177,7 +177,7 @@ Device ID: 50F85B7F-2FA2-5B55-ABDA-1279F934D999
 Model:     iPhone 16 Pro
 ```
 
-Life OS bundle identifier:
+LifeOS bundle identifier:
 
 ```text
 com.lacollecteur.lifeos.companion.ios
@@ -189,14 +189,14 @@ Persons bundle identifier:
 com.lacollecteur.persons.ios
 ```
 
-The latest signed Life OS build was installed and launched at approximately 13:55 PDT after the broad HealthKit changes.
+The latest signed LifeOS build was installed and launched at approximately 13:55 PDT after the broad HealthKit changes.
 
 Successful build command:
 
 ```bash
 DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xcodebuild \
   -project apps/companion/LifeOSCompanion.xcodeproj \
-  -scheme 'Life OS Companion iOS' \
+  -scheme 'LifeOS Companion iOS' \
   -configuration Debug \
   -destination 'id=50F85B7F-2FA2-5B55-ABDA-1279F934D999' \
   -allowProvisioningUpdates build
@@ -207,7 +207,7 @@ Successful install and launch commands:
 ```bash
 DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xcrun devicectl device install app \
   --device 50F85B7F-2FA2-5B55-ABDA-1279F934D999 \
-  '/Users/josephfryer/Library/Developer/Xcode/DerivedData/LifeOSCompanion-fapejkvqrnoaflcinqyoufwgoows/Build/Products/Debug-iphoneos/Life OS Companion.app'
+  '/Users/josephfryer/Library/Developer/Xcode/DerivedData/LifeOSCompanion-fapejkvqrnoaflcinqyoufwgoows/Build/Products/Debug-iphoneos/LifeOS Companion.app'
 
 DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xcrun devicectl device process launch \
   --device 50F85B7F-2FA2-5B55-ABDA-1279F934D999 \
@@ -328,7 +328,7 @@ One concurrency edge remains worth examining: an observer-triggered sync that ar
 
 `packages/access/device.ts`
 
-- Exact redirect allowlist includes both Life OS and Persons native callback URLs.
+- Exact redirect allowlist includes both LifeOS and Persons native callback URLs.
 
 `apps/api/app/v1/device/heartbeat/route.ts`
 
@@ -341,7 +341,7 @@ The following succeeded during this work:
 
 - Generic iOS build with `CODE_SIGNING_ALLOWED=NO`.
 - Signed physical-device build for Joseph's iPhone.
-- Device installation and launch of the latest Life OS build.
+- Device installation and launch of the latest LifeOS build.
 - API typecheck.
 - API production build.
 - Contract tests: 19/19.
@@ -372,7 +372,7 @@ An overlapping `health.daily` ingest produced Prisma `P2028`: `Unable to start a
 
 ### P0 — Capture one fresh sync and diagnose heartbeat
 
-1. Ask Joseph to open Life OS, leave it foregrounded, and tap **Sync Now** once.
+1. Ask Joseph to open LifeOS, leave it foregrounded, and tap **Sync Now** once.
 2. Record the visible sync status shown by the app.
 3. Immediately inspect API logs for the new heartbeat validation diagnostic.
 4. Fix the request/contract mismatch at the narrowest correct layer.
@@ -478,7 +478,7 @@ Joseph has already worked through multiple authorization attempts and wants the 
 
 Most importantly, keep the two-app product boundary clear:
 
-- **Life OS** is Joseph's private collector and life graph client.
+- **LifeOS** is Joseph's private collector and life graph client.
 - **Persons** is the focused, saleable personal CRM.
 
 Good luck, Cursor. The foundations are in place, the phone is connected, and the next win is a clean, evidence-backed Sync Now that proves each source independently.

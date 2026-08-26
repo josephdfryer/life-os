@@ -7,7 +7,7 @@ Domain: `lacollecteur.com`
 
 Use shared-cookie auth across subdomains of `lacollecteur.com`.
 
-This is the smallest correct path because every browser request to a Life OS app can live under one parent domain. The existing Auth.js wrapper in `packages/auth/index.ts` already supports shared cookies through `AUTH_COOKIE_DOMAIN` / `LIFE_OS_COOKIE_DOMAIN`.
+This is the smallest correct path because every browser request to a LifeOS app can live under one parent domain. The existing Auth.js wrapper in `packages/auth/index.ts` already supports shared cookies through `AUTH_COOKIE_DOMAIN` / `LIFE_OS_COOKIE_DOMAIN`.
 
 Do not switch to database-backed Auth.js sessions for this phase. That path is still valid if apps must live on unrelated domains, but it is unnecessary once all apps use `*.lacollecteur.com`.
 
@@ -101,7 +101,7 @@ For other apps, `trustHost: true` should infer the host from the request. Settin
 
 ## Google OAuth callback URLs
 
-Add these authorized redirect URIs to the Google OAuth client used by Life OS:
+Add these authorized redirect URIs to the Google OAuth client used by LifeOS:
 
 ```text
 https://home.lacollecteur.com/api/auth/callback/google

@@ -3,6 +3,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { LIFE_OS_APPS, type LifeOSAppKey } from './app-registry';
+import { AppMark, LifeOSMarkSmall } from './marks';
 
 const HOME_URL = LIFE_OS_APPS[0].url;
 const SHELL_NAV = [
@@ -65,7 +66,7 @@ export function LifeOSBar({ current, rightSlot, account, onSignOut, style }: Lif
   }, []);
 
   // Auth entry point, and public shareable profile pages viewed by people
-  // outside Life OS entirely — never show internal OS chrome there.
+  // outside LifeOS entirely — never show internal OS chrome there.
   if (pathname === '/login' || pathname?.startsWith('/profile/')) return null;
 
   const currentApp = LIFE_OS_APPS.find(a => a.key === current) ?? LIFE_OS_APPS[0];
@@ -93,7 +94,7 @@ export function LifeOSBar({ current, rightSlot, account, onSignOut, style }: Lif
       {/* Brand → Home (the one-click "go home") */}
       <a
         href={HOME_URL}
-        aria-label="Go to Life OS Home"
+        aria-label="Go to LifeOS Home"
         style={{
           display: 'inline-flex',
           alignItems: 'center',
@@ -103,9 +104,9 @@ export function LifeOSBar({ current, rightSlot, account, onSignOut, style }: Lif
           flexShrink: 0,
         }}
       >
-        <span aria-hidden style={{ fontSize: 12, color: 'var(--cognac, var(--accent, #b5835a))', lineHeight: 1 }}>◇</span>
+        <LifeOSMarkSmall size={15} style={{ color: 'var(--cognac, var(--accent, #8f6b4a))', display: 'block', flexShrink: 0 }} />
         <span style={{ fontFamily: 'var(--font-display, serif)', fontSize: 14, fontWeight: 500, letterSpacing: '-0.01em' }}>
-          Life OS
+          LifeOS
         </span>
       </a>
 
@@ -134,7 +135,7 @@ export function LifeOSBar({ current, rightSlot, account, onSignOut, style }: Lif
           onMouseEnter={e => { if (!open) e.currentTarget.style.background = 'var(--surface-hover, rgba(0,0,0,0.03))'; }}
           onMouseLeave={e => { if (!open) e.currentTarget.style.background = 'transparent'; }}
         >
-          <span aria-hidden style={{ width: 7, height: 7, borderRadius: '50%', background: currentApp.dot, flexShrink: 0 }} />
+          <AppMark app={currentApp.key} size={13} style={{ color: currentApp.accent, display: 'block', flexShrink: 0 }} />
           <span style={{ fontWeight: 500 }}>{currentApp.label}</span>
           <span aria-hidden style={{ fontSize: 9, opacity: 0.7, transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.15s' }}>▾</span>
         </button>
@@ -156,7 +157,7 @@ export function LifeOSBar({ current, rightSlot, account, onSignOut, style }: Lif
             }}
           >
             <div style={{ padding: '4px 8px 6px', fontSize: 10, letterSpacing: '0.06em', textTransform: 'uppercase', color: 'var(--ink-4, #b8b2a8)' }}>
-              Life OS apps
+              LifeOS apps
             </div>
             {LIFE_OS_APPS.map(app => {
               const active = app.key === current;
@@ -180,7 +181,7 @@ export function LifeOSBar({ current, rightSlot, account, onSignOut, style }: Lif
                   onMouseEnter={e => { if (!active) e.currentTarget.style.background = 'var(--surface-hover, rgba(0,0,0,0.03))'; }}
                   onMouseLeave={e => { if (!active) e.currentTarget.style.background = 'transparent'; }}
                 >
-                  <span aria-hidden style={{ width: 9, height: 9, borderRadius: '50%', background: app.dot, flexShrink: 0 }} />
+                  <AppMark app={app.key} size={17} style={{ color: app.accent, display: 'block', flexShrink: 0 }} />
                   <span style={{ display: 'flex', flexDirection: 'column', minWidth: 0 }}>
                     <span style={{ fontSize: 13, fontWeight: 500, color: active ? 'var(--cognac-deep, var(--accent, #8a5a2f))' : 'var(--ink, #1a1814)' }}>
                       {app.label}
@@ -200,7 +201,7 @@ export function LifeOSBar({ current, rightSlot, account, onSignOut, style }: Lif
       {isHome && (
         <>
           <nav
-            aria-label="Life OS sections"
+            aria-label="LifeOS sections"
             style={{ display: 'flex', alignItems: 'center', gap: 2, overflowX: 'auto', scrollbarWidth: 'none' }}
           >
             {SHELL_NAV.map(item => {
@@ -253,7 +254,7 @@ export function LifeOSBar({ current, rightSlot, account, onSignOut, style }: Lif
       <div ref={accountRef} style={{ marginLeft: 'auto', position: 'relative' }}>
           <button
             type="button"
-            aria-label="Open Life OS account menu"
+            aria-label="Open LifeOS account menu"
             aria-haspopup="menu"
             aria-expanded={accountOpen}
             onClick={() => setAccountOpen(value => !value)}

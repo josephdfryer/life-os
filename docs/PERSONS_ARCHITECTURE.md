@@ -14,7 +14,7 @@ Think of the app as four layers:
 ## Native iOS front door
 
 Persons now has a standalone signed iOS shell (`Persons iOS`, bundle ID
-`com.lacollecteur.persons.ios`) separate from the Life OS data-collection app.
+`com.lacollecteur.persons.ios`) separate from the LifeOS data-collection app.
 The shell owns its own Keychain credential and browser callback and requests no
 Health, Location, or Photos permissions. Its People screen reads the canonical
 `GET /v1/people` API through `LifeOSCompanionCore.APIClient`, with debounced
@@ -161,6 +161,11 @@ In plain English: the UI does not directly make database decisions. It asks an A
 
 The main `/persons` directory is a relationship snapshot rather than a name-only address book. Its bounded list query returns at most 50 People at a time and attaches only the latest Interaction and one active Plan to each row. The UI derives an explainable state such as **In touch**, **Due for a touch**, **Active follow-up**, or **No history**; it never stores a relationship-health score. Each row prefers the latest Interaction summary, then falls back to role/company, location, email, phone, and finally an explicit "No context yet" prompt. Server-side views for **Needs attention**, **Active this month**, and **No history** apply before pagination, so older People remain reachable and the result is not limited to the first browser page. Maintenance actions such as backup, cleaning, deduplication, and delete-all live under the secondary **Manage** menu instead of competing with everyday relationship work.
 
+Relationship recency is strictly retrospective. Every attention, last-touch,
+active-this-month, and no-history query bounds Interactions at the current time;
+a future appointment remains a `Plan` and cannot become the latest contact,
+suppress an overdue relationship, or produce a negative “days since” value.
+
 The Home app also provides a bounded communications-review surface. It reads pending iMessage, Gmail, and WhatsApp records from the same `StagedInteraction` inbox and mirrors the Persons Inbox selection model: the owner can select one item, shift-select a range, select all, clear the selection, dismiss the selection, or search for one Person and add the entire selection to that Person. Persons offers the same explicit-Person bulk action in its full Inbox. Every row in Home and Persons shows a human-readable source label (`iMessage`, `Email`, or `WhatsApp`) even when the current result set contains only one source. It also mirrors the Inbox keyboard loop (`j`/`k` move, `x` selects, `e` dismisses, Enter expands, and Escape closes). For presentation only, Home groups iMessages from the same normalized phone number when their timestamps fall inside one one-hour session; the original staged messages remain separate, auditable records underneath the grouped card. The owner can expand a single item or text session, accept a confidently matched communication, or dismiss it without navigating into Persons. Home's workspace-scoped `/api/communications/bulk` route accepts an explicit workspace-owned Person for the whole selection or dismisses still-pending communication records. Accepting preserves the existing source/day aggregation convention for `Interaction` records while keeping the raw provider body as the displayed message text. Home can conservatively infer a missing candidate when exactly one Person matches the communication's email, normalized phone number, or complete name; ambiguous results still require manual review. Items without a unique Person match can still open the canonical Persons Inbox with the staged item ID in the URL, and Persons loads and expands that exact record even when it is outside the first inbox page.
 
 On a Person profile, email, iMessage, and WhatsApp Interactions form the primary **Communications** stream. Non-communication relationship history remains in its own section, while Google Calendar Interactions are kept in a separate collapsed **Calendar events** stream so meeting volume cannot bury the conversation. Communication cards show the full stored text by default; unusually long text is shortened only in the UI and can be expanded inline. Newly accepted or directly matched provider messages store the raw body in the daily Interaction text. For previously accepted staged records, the profile reconstructs the full display text from their retained `StagedInteraction.body` values.
@@ -303,9 +308,11 @@ flowchart TD
   Trace --> Interaction
 ```
 
-Plain English: Google Calendar remains the source of truth, and the Events app exclusively owns connection, synchronization, and confirmation. The duplicate Persons Calendar routes have been removed; Home’s Connections hub leads to Events settings. The canonical Events sync creates calendar-backed Plans and expected Person references; only Home confirmation creates Events and attendee Interactions. This prevents two apps from interpreting the same provider occurrence differently.
+Plain English: Google Calendar remains the source of truth, and the Events app exclusively owns connection, synchronization, and confirmation. The duplicate Persons Calendar routes have been removed; Home’s Connections hub leads to Events settings. The canonical Events sync creates calendar-backed Plans and expected Person references for people who have not declined; only Home confirmation creates Events and attendee Interactions, and declined invitees are excluded from both. This prevents two apps from interpreting the same provider occurrence differently.
 
-To keep first-time imports from hogging resources, the Calendar settings screen asks for a backfill range before syncing. The server processes selected calendars sequentially, fetches each one in restrained pages, and writes events in small batches rather than holding one giant event list in memory. Each calendar keeps its own incremental sync token, error, and last-synced time, so one failing calendar does not hide the status of the others. Once Google gives Life OS an incremental sync token, later syncs ignore the historical backfill range and only ask that calendar for changed events.
+Copies of one occurrence across selected calendars converge before confirmation. A matching Google `iCalUID` at the same occurrence time is definitive; otherwise the sync treats an exact normalized title within five minutes as the same occurrence. The shared `Plan` becomes one canonical `Event`, while every source remains separately auditable through its own `CalendarEventLink`. The Events timeline and detail view name each calendar that carried the occurrence. Same-name items at materially different times remain separate, so recurring meetings are not collapsed into one historical Event. Cancelling one copy does not cancel the shared Plan while another calendar still carries it.
+
+To keep first-time imports from hogging resources, the Calendar settings screen asks for a backfill range before syncing. The server processes selected calendars sequentially, fetches each one in restrained pages, and writes events in small batches rather than holding one giant event list in memory. Each calendar keeps its own incremental sync token, error, and last-synced time, so one failing calendar does not hide the status of the others. Once Google gives LifeOS an incremental sync token, later syncs ignore the historical backfill range and only ask that calendar for changed events.
 
 The Calendar settings screen also has a combined sync trace. It reads recent `calendar.sync` audit rows plus `CalendarEventLink`, `Event`, and `Interaction` records across every connected calendar so an operator can see which Google events landed locally and which People were linked.
 
@@ -320,7 +327,7 @@ Runtime configuration:
 
 The Events app also owns Granola ingestion. A Granola note fills or creates one canonical meeting Event and stores its generated summary, complete transcript, exact source link, and remote update provenance once on that Event. If Granola identifies the Google occurrence, `CalendarEventLink` is used first so the calendar Plan/Event and meeting evidence do not fork into duplicate occurrences.
 
-Attendees are linked to existing People only when one exact normalized email matches in the current workspace. Each successful match becomes an idempotent Granola Interaction attached to the meeting Event. Missing and ambiguous identities become `StagedInteraction` plus universal `ReviewItem` records, and review acceptance attaches the selected Person to the existing Event rather than creating a second daily Event. Granola never creates a Person or Group silently. Existing Group memberships may tag the Event only when one company/team is uniquely supported by at least two matched attendees; the evidence and unresolved count remain on the Event metadata.
+Attendees are linked to existing People only when one exact normalized email matches in the current workspace. A declined calendar RSVP is treated as “not involved”: that person is not stored as an expected attendee, does not receive a meeting Interaction, and is not shown on their Persons profile. Missing and ambiguous identities become `StagedInteraction` plus universal `ReviewItem` records, and review acceptance attaches the selected Person to the existing Event rather than creating a second daily Event. Granola never creates a Person or Group silently. Existing Group memberships may tag the Event only when one company/team is uniquely supported by at least two matched attendees; the evidence and unresolved count remain on the Event metadata.
 
 On a Person profile, a Granola meeting Interaction reads its recap from that linked canonical Event, hides connector bookkeeping markers, and links to the Events detail page for the complete summary and transcript. The Interaction still owns person-specific context such as emotional weight, outcome, and follow-up actions; the shared meeting evidence is not copied separately for every attendee.
 
@@ -374,7 +381,7 @@ flowchart TD
   States --> Readiness["Level Up readiness assembly, shadow mode"]
 ```
 
-Plain English: Apple Health never receives Oura Readiness, Sleep Score, Activity Score, or Stress. Those scores enter Life OS through Home Connections, not the iPhone collector. Connecting Oura asks only for the Daily scope, encrypts the tokens on the existing `Connection` row, imports 35 calendar days once, then listens for signed webhooks and rewrites only that day's Oura States. HealthKit measurements stay on their own Notes. The two sources are never averaged. Level Up can see the Oura scores as evidence; it does not yet change workout prescriptions.
+Plain English: Apple Health never receives Oura Readiness, Sleep Score, Activity Score, or Stress. Those scores enter LifeOS through Home Connections, not the iPhone collector. Connecting Oura asks only for the Daily scope, encrypts the tokens on the existing `Connection` row, imports 35 calendar days once, then listens for signed webhooks and rewrites only that day's Oura States. HealthKit measurements stay on their own Notes. The two sources are never averaged. Level Up can see the Oura scores as evidence; it does not yet change workout prescriptions.
 
 Runtime configuration:
 
@@ -395,7 +402,7 @@ flowchart TD
   Customer --> Ledger["Private meeting ledger"]
   Private --> Ledger
   Transcript --> Archive["Private raw transcript archive"]
-  Calendar -->|Existing Life OS Event| EventTranscript["Attach transcript to Event"]
+  Calendar -->|Existing LifeOS Event| EventTranscript["Attach transcript to Event"]
 ```
 
 Plain English: `scripts/krisp/sync.ts` polls meetings owned by Joseph through
@@ -450,6 +457,12 @@ under hundreds of walks. Both the sync script and every write it makes are
 idempotent: re-running with the same zip upserts by a `sourceMarker` in each
 row's metadata rather than duplicating.
 
+Workout Events are background graph records: they remain available to Level Up,
+health analysis, and provenance queries, but the shared
+`BACKGROUND_EVENT_TYPES` policy excludes them from the general Events timeline,
+the Events list API, and Home's Today schedule. Their user-facing history belongs
+in the focused workout experience rather than the main life-events feed.
+
 The Person detail page renders a "Health" card (only when a Person has
 `health_metric` States) showing the latest day's highlight metrics plus an
 expandable log of recent daily digest Notes — see
@@ -480,7 +493,7 @@ Plain English: Inbox is the human filter between automation and your real CRM me
 ### 4b. The unified ReviewItem inbox (cross-app)
 
 Persons' `StagedInteraction` queue was one of four separate review queues
-across Life OS — Places had its own (`ImportStagedVisit`, for Google Maps
+across LifeOS — Places had its own (`ImportStagedVisit`, for Google Maps
 Timeline visits), Persons had a second one for note-derived plan/event
 suggestions (`NoteSuggestion`), and Events had a fourth (calendar
 reconciliation, over `Plan` rows). Each had its own accept/dismiss
@@ -762,7 +775,7 @@ Home's client bundle.
 
 ## Access Control
 
-Browser auth is shared across Life OS apps. Persons keeps a local `apps/persons/auth.ts`
+Browser auth is shared across LifeOS apps. Persons keeps a local `apps/persons/auth.ts`
 wrapper, but the actual Google sign-in policy now lives in `packages/auth`.
 The next authorization step is also shared: `packages/access` is the canonical
 session-to-user, workspace-selection, disabled-user, role/scope, and short-lived
@@ -835,7 +848,7 @@ The current migration preserves existing data in `default-workspace`. Owner and 
 
 **The engine itself moved.** As of the Central Nervous System control-plane
 work, the rules engine lives in `packages/automation` (shared across every
-Life OS app, not just Persons) — `apps/persons/server/domain/rules.ts` is now
+LifeOS app, not just Persons) — `apps/persons/server/domain/rules.ts` is now
 a thin compatibility shim that translates the shared package's generic
 `RuleError` back into Persons' own `AppError`/HTTP shape, so every existing
 route and caller here works unchanged. `scripts/imessage-sync.ts` used to
@@ -1059,7 +1072,7 @@ persistence, audit, and sync orchestration. Calendar event interpretation lives
 in `calendar-event-parser.ts`, while `calendar-client.ts` owns provider paging,
 incremental sync tokens, and bounded full-sync fallback when Google expires a
 token. Those provider paths run against fixtures without a live Google account;
-the domain modules retain Life OS persistence, matching, audit, and trace flow.
+the domain modules retain LifeOS persistence, matching, audit, and trace flow.
 Each Gmail and Calendar sync also emits a structured `workflow.run` start and
 terminal record with a correlation ID, duration, counters, terminal status, and
 error when present. Sync responses return that run ID, while status responses

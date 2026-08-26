@@ -1,12 +1,12 @@
 # Granola → Events Integration Plan
 
 **Status:** slice 1 implemented; scheduled reconciliation implemented; production connection pending rotated key and deployment  
-**Owner:** Life OS Events  
+**Owner:** LifeOS Events  
 **Last reviewed:** 2026-08-14
 
 ## Outcome
 
-Every completed Granola meeting becomes part of the shared Life OS graph:
+Every completed Granola meeting becomes part of the shared LifeOS graph:
 
 - one canonical **Event** for the meeting;
 - the Granola summary and transcript stored once on that Event;
@@ -59,14 +59,14 @@ The first slice should ship the deterministic timeline, cadence, people, and unr
 
 ## Canonical mapping
 
-| Granola data | Life OS destination | Rule |
+| Granola data | LifeOS destination | Rule |
 | --- | --- | --- |
 | Meeting note | `Event` | One Event per Granola note, unless it matches an existing calendar Event. |
 | Title and scheduled times | `Event.name`, `start`, `end`, `timestamp` | Granola is allowed to fill provider-owned fields; manual overrides win. |
 | AI summary | provider-owned Event content | Store once; do not copy onto every participant Interaction. |
 | Transcript | `Event.transcript` | Preserve the complete transcript; use Granola's transcript endpoint when inline retrieval is too large. |
 | Personal notes | provider-owned Event content | Preserve separately from the generated summary when returned. |
-| Owner, organizer, invitees | Person participants | Exact normalized email match only. Unknown or ambiguous identities go to review. |
+| Owner, organizer, invitees | Person participants | Exact normalized email match only. Unknown or ambiguous identities go to review. Invitees who declined the calendar event are not participants. |
 | Company/team association | `Event.groupTags` | Explicit user choice wins; safe inference may link an existing Group. Never create a Group silently. |
 | Granola note ID and URL | supporting provenance link | External note ID is the idempotency anchor; source URL opens the exact note. |
 | Granola folder | sync scope metadata | May suggest an existing Group but must not become a Group automatically. |
@@ -168,7 +168,7 @@ A scheduled incremental reconciliation using `updated_after` remains as repair c
 
 - Granola's API and webhooks currently require a Business or Enterprise plan.
 - The user must create a Granola API key with the intended personal/public note scopes.
-- The Codex Granola plugin is useful for inspecting real data, but it is not the credential or runtime for automatic Life OS ingestion.
+- The Codex Granola plugin is useful for inspecting real data, but it is not the credential or runtime for automatic LifeOS ingestion.
 - Production webhook registration waits until the receiver is deployed at a stable HTTPS URL and its signing secret can be stored immediately; Granola shows that secret only once.
 - This work should start on a dedicated `codex/granola-events-integration` branch, not the current `feat/file-intelligence` branch.
 

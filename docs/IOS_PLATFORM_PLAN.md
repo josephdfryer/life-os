@@ -1,4 +1,4 @@
-# Life OS iOS Platform Plan
+# LifeOS iOS Platform Plan
 
 Status: implementation in progress — two signed iOS shells run on a physical device; connector and Persons feature depth remain underway
 Date: 2026-08-12
@@ -19,7 +19,7 @@ Scope of that supersession, precisely:
   Persons and the Mesh competitive read. None of them are affected by the storage change.
 - **Still current:** §1's two-product-line split and the feature-package topology. The Life Vault
   changes what `LifeOSKit` talks to, not whether screens live in Swift packages.
-- **Unchanged:** Joseph's personal Life OS stays on the cloud-backed Turso graph while the vault
+- **Unchanged:** Joseph's personal LifeOS stays on the cloud-backed Turso graph while the vault
   is built and proven. Every section describing the personal line remains accurate.
 
 ---
@@ -28,7 +28,7 @@ Scope of that supersession, precisely:
 
 There are two product lines with different economics, and they must not be conflated.
 
-**Life OS (personal).** One app, mine, never submitted for sale in any near timeframe.
+**LifeOS (personal).** One app, mine, never submitted for sale in any near timeframe.
 It owns the device-collection plumbing — device authorization, encrypted outbox,
 HealthKit, location, Photos metadata, connections, and automations. People and
 relationship-management surfaces belong to Persons rather than this collector.
@@ -36,10 +36,10 @@ relationship-management surfaces belong to Persons rather than this collector.
 **Persons (saleable).** A standalone App Store product, shipped later, aimed at
 replacing Mesh (`me.sh`) as a personal CRM. Sold to customers, so it carries
 self-serve signup, subscription billing, App Review constraints, and a privacy
-posture that Life OS does not need.
+posture that LifeOS does not need.
 
 As of 2026-08-15, this split exists in Xcode and on a physical iPhone. The
-`Life OS Companion iOS` target installs as **Life OS**
+`LifeOS Companion iOS` target installs as **LifeOS**
 (`com.lacollecteur.lifeos.companion.ios`) and owns HealthKit, significant
 location visits, Photos metadata, the encrypted outbox, and connector health.
 The `Persons iOS` target installs separately as **Persons**
@@ -95,7 +95,7 @@ Consequences worth stating plainly:
   Mac-only and always will be — iOS exposes no iMessage API.
 - `Persons.app` is a thin shell rather than a rewrite. Its current development
   build proves the split; sale adds product infrastructure and feature depth
-  without moving the screens back into Life OS.
+  without moving the screens back into LifeOS.
 - The discipline tax is real: a feature package may not reach for app-specific
   globals or singletons. Dependencies enter through initializers or an environment
   protocol defined in `LifeOSKit`.
@@ -115,7 +115,7 @@ Consequences worth stating plainly:
 **What exists and is real**
 
 - `apps/companion` Xcode project with four targets: macOS app
-  (`com.lacollecteur.lifeos.companion`), macOS helper (`.helper`), Life OS iOS
+  (`com.lacollecteur.lifeos.companion`), macOS helper (`.helper`), LifeOS iOS
   (`.ios`), and Persons iOS (`com.lacollecteur.persons.ios`). Deployment targets
   iOS 17.0 / macOS 14.0.
 - `Packages/LifeOSCompanionCore` — 268 lines: `APIClient`, `Connector`,
@@ -132,7 +132,7 @@ Consequences worth stating plainly:
   cascade relation. `WorkspaceMember`, roles, and a scope list already exist in
   `packages/access`.
 - Both iOS targets have been automatically provisioned, signed, installed, and
-  launched on a physical iPhone. Life OS has guided Health, Location, and Photos
+  launched on a physical iPhone. LifeOS has guided Health, Location, and Photos
   setup; Persons has a separate Keychain credential and exact
   `persons://auth/callback` web-authorization redirect.
 
@@ -140,7 +140,7 @@ Consequences worth stating plainly:
 
 | Gap | Impact |
 |---|---|
-| Native surfaces are still early slices | Life OS has connector setup/status and Persons has read-only People list/detail; broader product surfaces remain to build. |
+| Native surfaces are still early slices | LifeOS has connector setup/status and Persons has read-only People list/detail; broader product surfaces remain to build. |
 | **Level Up has zero API routes** (only `auth/[...nextauth]`) — it is entirely RSC + server actions | A native client has nothing to talk to. This is the single largest backend item for the Workout section. |
 | Persons `/api/v1` lives in `apps/persons`, not the shared `apps/api` | Native clients would depend on a product app's internal API. Needs consolidating. |
 | **No dark mode in `packages/ui/still-tokens.css`** — zero `prefers-color-scheme` or `[data-theme]` rules across 110 lines | A gym app opened at 6am and any modern iOS app need this. Dark Still must be designed, not derived mechanically. |
@@ -166,7 +166,7 @@ authorization code and device record in the same database used by exchange,
 refresh, heartbeat, and ingest. This prevents the browser approval flow and device
 sync flow from splitting across separately configured application databases.
 
-The Life OS Health connector requests every standard quantity and category type
+The LifeOS Health connector requests every standard quantity and category type
 that the installed OS makes available, rather than maintaining a narrow fixed
 list. Sleep uses immediate HealthKit background delivery and a source-aware
 union (one wearable, wake-day attribution) so overlapping Watch/iPhone/Oura
@@ -490,7 +490,7 @@ Not now, but these constrain choices made now.
 > fails a proof gate. The rest of §7, starting at "Real blockers," is current and unaffected.
 
 **Backend model: one backend, strict subset API.** `apps/api` serves both audiences.
-Customer workspaces see a deliberately narrow `/v1` surface. Life OS-only
+Customer workspaces see a deliberately narrow `/v1` surface. LifeOS-only
 capabilities — iMessage ingest, synthesis, life-model, theory, admin, automations —
 never appear in it.
 
@@ -523,7 +523,7 @@ Relationship-strength scoring, Nexus AI navigator, auto-enrichment from email,
 calendar, address book, LinkedIn, X, iMessage. Free to 1,000 contacts. Its reviews
 consistently name four weaknesses: slow search and syncing, confusing onboarding,
 duplicate contacts, and limited filtering. Three of those four — dedupe, search,
-filtering — are things the Life OS graph and its existing merge/dedupe commands are
+filtering — are things the LifeOS graph and its existing merge/dedupe commands are
 already built to do better. Worth remembering when the wedge is eventually chosen.
 
 `docs/PERSONS_MESH_PARITY_PLAN.md` (2026-08-13) is a full screenshot-sourced
@@ -628,7 +628,7 @@ cache/offline behavior, and the standalone saleable shell remain future slices.
 - Local store: SwiftData versus GRDB. SwiftData is less code and iOS 17-native;
   GRDB gives precise control over the crash-safe replay semantics the session logger
   needs. Decide during M1 against the force-quit recovery requirement.
-- Whether `LevelUp.app` ever ships as its own shell, or Workout stays a Life OS
+- Whether `LevelUp.app` ever ships as its own shell, or Workout stays a LifeOS
   section permanently. Deferred at no cost under the package split.
 - Assistant on iOS: which model surface, and whether it gets tool access to the graph
   or stays read-only at first.

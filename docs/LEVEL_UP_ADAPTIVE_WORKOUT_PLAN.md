@@ -1,7 +1,7 @@
 # Level Up Adaptive Workout Plan
 
 Status: decision-complete implementation plan  
-Primary owner surface: Life OS Companion for iPhone  
+Primary owner surface: LifeOS Companion for iPhone  
 Supporting surface: Level Up web app
 
 ## Product outcome
@@ -25,7 +25,7 @@ This is wellness guidance, not medical diagnosis. Readiness may suggest a change
 - The native Companion already owns device authentication, an encrypted SQLite outbox, HealthKit collection, background retries, and normalized device ingestion.
 - Health metrics already map to daily Person `State` records with provenance Notes; workouts map to `Event` records rather than `Interaction` records.
 - Level Up's verified-ceiling rule remains unchanged: ordinary training evidence can move a rating within its proven range, but only a completed combine can raise the verified ceiling.
-- Food continues to be logged exclusively in FoodNoms. Life OS will consume FoodNoms-written Apple Health nutrition data and will not build another food logger.
+- Food continues to be logged exclusively in FoodNoms. LifeOS will consume FoodNoms-written Apple Health nutrition data and will not build another food logger.
 - Preserve concurrent work under `apps/api/app/v1/health/` and consolidate it onto shared health commands rather than creating a third ingestion pipeline.
 
 ## Architecture
@@ -53,7 +53,7 @@ The TypeScript Level Up engine remains authoritative. The server prepares a vers
 
 ### Oura connection
 
-Add Oura as a first-class account connection through Life OS Home's unified Connections hub:
+Add Oura as a first-class account connection through LifeOS Home's unified Connections hub:
 
 - Use Oura API V2 authorization-code OAuth with CSRF state validation.
 - Request only the `daily` scope for the first release. Do not request raw heart-rate, workout, session, tag, email, personal, or SpO2 scopes until a demonstrated feature needs them.
@@ -139,7 +139,7 @@ Add a `LevelUpReadinessSnapshot` infrastructure record linked to the Level Up se
 - Explanation/reason codes.
 - User choice and override timestamp.
 
-Daily readiness remains derived and should not become a mutable Life OS primitive. The snapshot exists only to audit what advice was shown when a workout began.
+Daily readiness remains derived and should not become a mutable LifeOS primitive. The snapshot exists only to audit what advice was shown when a workout began.
 
 ## Public interfaces and persistence
 
@@ -187,7 +187,7 @@ At completion, Companion writes an `HKWorkout` using the real start/end time and
 
 - Do not estimate active energy, distance, route, or heart-rate samples.
 - Include a stable Level Up session identifier in permitted metadata.
-- If HealthKit write permission is denied, the Life OS session still completes normally and exposes a repair action.
+- If HealthKit write permission is denied, the LifeOS session still completes normally and exposes a repair action.
 - When HealthKit ingestion later sees that workout, match it by metadata/session ID and update the existing Event rather than create another one.
 
 ## Delivery sequence
@@ -244,7 +244,7 @@ At completion, Companion writes an `HKWorkout` using the real start/end time and
 ### Native acceptance
 
 - Start and complete a session in airplane mode; force quit after several sets; reopen with timers, selection, and unsynced sets intact; reconnect and drain without duplicates.
-- Deny, revoke, and restore HealthKit read/write permissions without losing the Life OS workout.
+- Deny, revoke, and restore HealthKit read/write permissions without losing the LifeOS workout.
 - Verify completed workout write-back and read-back reconciliation creates one Event.
 - Verify accessible one-handed controls, Dynamic Type, VoiceOver labels, haptics, backgrounded rest timers, and no blocking network spinner between a set and rest.
 - Verify no raw Oura streams, granular HealthKit samples, FoodNoms meals, local paths, secrets, or private diagnostics leave their approved boundary.
@@ -266,7 +266,7 @@ At completion, Companion writes an `HKWorkout` using the real start/end time and
 - Nutrition source: FoodNoms through Apple Health; no new meal-entry UI.
 - Oura integration: direct OAuth because Apple Health does not expose Oura's proprietary Readiness/Sleep/Activity scores.
 - Apple Watch: deferred; iPhone writes completed workouts to HealthKit in v1.
-- No new Life OS primitive. Health measurements use State/Note provenance, workouts use Event, and readiness snapshots are Level Up infrastructure.
+- No new LifeOS primitive. Health measurements use State/Note provenance, workouts use Event, and readiness snapshots are Level Up infrastructure.
 - No automatic workout increases, medical claims, meal-level cloud storage, raw sensor upload, or AI-generated training decisions in the first release.
 
 ## External references

@@ -1,4 +1,4 @@
-# Life OS Finance — Vision & Framework
+# LifeOS Finance — Vision & Framework
 
 *A product blueprint for financial intelligence native to a life graph*
 
@@ -48,7 +48,7 @@ Legacy apps store computed summaries: monthly spend by category, rolling 12-mont
 
 You cannot ask: *What did this relationship actually cost me?* You cannot ask: *How does my spending change in weeks where my emotional weight was high?* You cannot ask: *Which categories correlate with the months I hit my savings goal, and which ones correlate with the months I didn't?*
 
-The Life OS model answers these questions — not because it stores smarter aggregates, but because it never aggregates in the first place. Every financial event is a live node in a connected graph. Every query is run fresh against the full relational structure.
+The LifeOS model answers these questions — not because it stores smarter aggregates, but because it never aggregates in the first place. Every financial event is a live node in a connected graph. Every query is run fresh against the full relational structure.
 
 ### What Becomes Possible
 
@@ -61,11 +61,11 @@ When finance is native to a life graph:
 
 ---
 
-## 2. The Life OS Finance Model
+## 2. The LifeOS Finance Model
 
 ### Financial Events as Interactions
 
-In Life OS, money never exists in isolation. Every financial event is an **Interaction** — the universal edge type that connects nodes in the graph. An Interaction always connects at least two things and always carries a timestamp. A financial Interaction is no different from a social one except that it carries additional financial metadata.
+In LifeOS, money never exists in isolation. Every financial event is an **Interaction** — the universal edge type that connects nodes in the graph. An Interaction always connects at least two things and always carries a timestamp. A financial Interaction is no different from a social one except that it carries additional financial metadata.
 
 The five primitives map onto financial life naturally:
 
@@ -118,7 +118,7 @@ A transaction is not a row in a ledger. It is an event in your life with financi
 2025-11-14 | Nobu Restaurant | $127.43 | Dining ✓
 ```
 
-**Example: The same dinner, as a Life OS Interaction:**
+**Example: The same dinner, as a LifeOS Interaction:**
 ```
 Interaction {
   type: "financial"
@@ -144,7 +144,7 @@ Interaction {
 
 The second record is not more data entry — the graph built it. The calendar knew who was at the dinner. The calendar also knew the occasion. The merchant database knew the place. The AI matched the transaction memo to all of these and proposed the enriched Interaction for confirmation. Joseph reviewed it in 10 seconds.
 
-This is the unit of financial analysis in Life OS. Not the number. The connected moment.
+This is the unit of financial analysis in LifeOS. Not the number. The connected moment.
 
 ---
 
@@ -230,7 +230,7 @@ SELECT sum(duration) * hourlyRate as time_cost
 revenue - direct_cost - time_cost
 ```
 
-Monarch can tell you how much Acme paid you. It cannot tell you how much Acme cost you in unbillable dinners, tools, subscriptions, and hours. Life OS tells you both. The ROI figure that falls out is the honest one.
+Monarch can tell you how much Acme paid you. It cannot tell you how much Acme cost you in unbillable dinners, tools, subscriptions, and hours. LifeOS tells you both. The ROI figure that falls out is the honest one.
 
 ### 3.5 Goal Tension
 
@@ -252,13 +252,13 @@ SELECT sum(amount) WHERE direction = "received"
 
 Tension is surfaced proactively. Not as a guilt-inducing budget alert ("You're over in dining!") but as a pattern observation: "Your savings rate in November was $800 below your declared target. The gap was almost entirely explained by three unplanned weekend trips. Is that a choice you want to make explicitly, or would you like to revisit the goal?"
 
-The distinction matters. Monarch says you failed your budget. Life OS asks whether your behavior reflects your values.
+The distinction matters. Monarch says you failed your budget. LifeOS asks whether your behavior reflects your values.
 
 ### 3.6 Absence Intelligence
 
 A month where discretionary spending drops to near-zero is not silence — it is a signal. Maybe Joseph was traveling. Maybe he was going through something hard. Maybe he made real progress on a goal. The graph can distinguish these cases by looking at what else was happening in the Interaction log that month: travel events, low emotional weight scores, high work meeting density.
 
-**Absence is data.** This is a core Life OS principle, and it applies directly to financial intelligence. A gap in spending is not a gap in information.
+**Absence is data.** This is a core LifeOS principle, and it applies directly to financial intelligence. A gap in spending is not a gap in information.
 
 ---
 
@@ -268,16 +268,16 @@ A month where discretionary spending drops to near-zero is not silence — it is
 
 Era.app (era.app) is an MCP-first personal finance tool. It connects to banks and credit cards — the same data pipeline as Mint — but instead of building a dashboard, it exposes all transaction data via MCP. The "interface" is Claude. You set it up once, give Claude access via MCP, and never open the app again.
 
-This is exactly the right data pipe for Life OS:
+This is exactly the right data pipe for LifeOS:
 - Era handles the hard, compliance-heavy work of bank connectivity (Plaid, direct bank APIs)
 - Era provides clean transaction history across all accounts
-- Life OS provides the enrichment graph that turns raw transactions into connected Interactions
+- LifeOS provides the enrichment graph that turns raw transactions into connected Interactions
 
-Neither can replace the other. Era without Life OS is a bank feed with a chatbot. Life OS without Era is a beautifully structured graph with no financial data flowing in.
+Neither can replace the other. Era without LifeOS is a bank feed with a chatbot. LifeOS without Era is a beautifully structured graph with no financial data flowing in.
 
 ### The Enrichment Pipeline
 
-Raw transactions from Era flow through a four-stage enrichment pipeline before they live in the Life OS graph as full Interactions.
+Raw transactions from Era flow through a four-stage enrichment pipeline before they live in the LifeOS graph as full Interactions.
 
 ```
 Stage 1: Ingest
@@ -318,7 +318,7 @@ Mint (and most bank aggregators) gave you transactions. Era gives you transactio
 
 The refund verification example from Era's own documentation illustrates this well: Claude checks your Gmail to confirm a vendor promised a refund, then queries Era to verify it arrived within the expected window, then alerts you if it didn't. No dashboard visit. No manual cross-referencing. The intelligence runs in the background and surfaces only when it matters.
 
-In the Life OS context, this extends further: Era's transaction data is the seed. The Life OS graph is the soil. The enrichment pipeline is what plants the seed properly — connected to people, places, occasions, and intentions — so that intelligence can grow from it.
+In the LifeOS context, this extends further: Era's transaction data is the seed. The LifeOS graph is the soil. The enrichment pipeline is what plants the seed properly — connected to people, places, occasions, and intentions — so that intelligence can grow from it.
 
 ---
 
@@ -326,13 +326,13 @@ In the Life OS context, this extends further: Era's transaction data is the seed
 
 ### No Dashboard You Visit
 
-The defining characteristic of Life OS finance is that there is no finance app. There is no page you visit to check your budget. There is no dashboard that refreshes with this month's numbers. The interface is Claude, and Claude surfaces what matters when it matters.
+The defining characteristic of LifeOS finance is that there is no finance app. There is no page you visit to check your budget. There is no dashboard that refreshes with this month's numbers. The interface is Claude, and Claude surfaces what matters when it matters.
 
 This is not a limitation. It is a design choice grounded in how financial intelligence should actually work.
 
 A dashboard requires you to have a question. You open Monarch because something prompted you — a large charge you noticed, an end-of-month gut check, a vague concern about spending. You arrive already knowing roughly what you're looking for. The dashboard serves your query.
 
-Life OS finance works differently. Claude has access to your complete financial graph, your relationship graph, your calendar, your declared goals. Claude notices things you didn't ask it to notice. The proactive surface is the primary surface.
+LifeOS finance works differently. Claude has access to your complete financial graph, your relationship graph, your calendar, your declared goals. Claude notices things you didn't ask it to notice. The proactive surface is the primary surface.
 
 ### What Day-to-Day Use Looks Like
 
@@ -354,13 +354,13 @@ This is a query that runs automatically when income is logged. Client ROI is alw
 **When a refund goes missing:**
 > "You returned something to Patagonia on October 3rd — I found the confirmation email. The refund ($189) hasn't appeared in your Era account after 12 days. Their policy says 5–7 business days. Want me to draft a follow-up email?"
 
-This is the Era refund-tracking workflow extended to Life OS. Claude holds the thread across Gmail, the transaction log, and the calendar. You don't have to.
+This is the Era refund-tracking workflow extended to LifeOS. Claude holds the thread across Gmail, the transaction log, and the calendar. You don't have to.
 
 ### Categorization Without Manual Work
 
 In Monarch, you manage categories manually or through rules you write yourself. You train the system by clicking through transaction lists and correcting errors.
 
-In Life OS, categorization is a consequence of entity resolution. When a transaction is matched to a Person node (the merchant), and that Person node carries attributes (client, vendor, restaurant, subscription service), and the transaction is linked to an Event node (dinner, business trip, project kick-off), the category is derived — not assigned.
+In LifeOS, categorization is a consequence of entity resolution. When a transaction is matched to a Person node (the merchant), and that Person node carries attributes (client, vendor, restaurant, subscription service), and the transaction is linked to an Event node (dinner, business trip, project kick-off), the category is derived — not assigned.
 
 When categorization is wrong or ambiguous, Claude creates a rule — in plain language, stored as logic — and asks for confirmation once:
 
@@ -372,25 +372,25 @@ One confirmation. Permanent rule. No dropdown menus, no category management UI, 
 
 ## 6. Better Than Monarch Money
 
-This is not a feature-by-feature race. Life OS finance wins on different terms — structural terms. But the comparison is worth making explicitly.
+This is not a feature-by-feature race. LifeOS finance wins on different terms — structural terms. But the comparison is worth making explicitly.
 
 ### Head-to-Head
 
-| Capability | Monarch Money | Life OS Finance | Why Life OS Wins |
+| Capability | Monarch Money | LifeOS Finance | Why LifeOS Wins |
 |---|---|---|---|
 | **Transaction import** | ✓ Plaid-connected, all accounts | ✓ Via Era.app MCP | Equivalent capability |
-| **Auto-categorization** | ✓ ML-based, trainable | ✓ Graph-derived + Claude rules | Life OS derives from context; Monarch guesses from memo text |
-| **Budget tracking** | ✓ Category budgets, rollover | Derived from Plan tension | Life OS asks if behavior reflects values; Monarch just scores compliance |
-| **Net worth** | ✓ Accounts + assets | ✓ Derived from Item nodes + account balances | Life OS includes physical assets natively (Items with values) |
-| **Spending trends** | ✓ Charts, 12-month history | Derived queries against full history | Monarch visualizes; Life OS explains |
+| **Auto-categorization** | ✓ ML-based, trainable | ✓ Graph-derived + Claude rules | LifeOS derives from context; Monarch guesses from memo text |
+| **Budget tracking** | ✓ Category budgets, rollover | Derived from Plan tension | LifeOS asks if behavior reflects values; Monarch just scores compliance |
+| **Net worth** | ✓ Accounts + assets | ✓ Derived from Item nodes + account balances | LifeOS includes physical assets natively (Items with values) |
+| **Spending trends** | ✓ Charts, 12-month history | Derived queries against full history | Monarch visualizes; LifeOS explains |
 | **Spending by person** | ✗ | ✓ | Monarch doesn't know who was at the dinner |
-| **Spending by place** | ✗ | ✓ | Monarch knows the merchant city; Life OS knows the Place node |
+| **Spending by place** | ✗ | ✓ | Monarch knows the merchant city; LifeOS knows the Place node |
 | **Client ROI** | ✗ | ✓ Revenue vs. spend vs. time by relationship | Monarch has no concept of a business relationship |
 | **Emotional/contextual correlation** | ✗ | ✓ Spending correlated with emotional weight from life log | Monarch is a single-domain silo |
-| **Goal tension** | Partial — budget vs. spend | ✓ Plan node vs. Interaction pattern | Monarch scores compliance; Life OS surfaces the gap between declared values and actual behavior |
-| **Proactive insights** | Partial — alerts, weekly email | ✓ Claude surfaces what matters, unprompted | Monarch alerts are rule-triggered; Life OS insights are graph-emergent |
+| **Goal tension** | Partial — budget vs. spend | ✓ Plan node vs. Interaction pattern | Monarch scores compliance; LifeOS surfaces the gap between declared values and actual behavior |
+| **Proactive insights** | Partial — alerts, weekly email | ✓ Claude surfaces what matters, unprompted | Monarch alerts are rule-triggered; LifeOS insights are graph-emergent |
 | **Refund tracking** | ✗ | ✓ Gmail + transaction log reconciliation | Cross-domain intelligence impossible in a silo |
-| **Subscription audit** | ✓ Subscription detection | ✓ Subscriptions as recurring Interactions on Item nodes | Equivalent detection; Life OS links to what each subscription is for |
+| **Subscription audit** | ✓ Subscription detection | ✓ Subscriptions as recurring Interactions on Item nodes | Equivalent detection; LifeOS links to what each subscription is for |
 | **Interface** | Dashboard you visit | Claude you talk to | Different paradigm entirely |
 | **Rule creation** | Manual, dropdown-based | Claude proposes, you confirm once | No UI maintenance burden |
 
@@ -402,7 +402,7 @@ Monarch's data model is:
 Transaction → Category → Budget
 ```
 
-Life OS's data model is:
+LifeOS's data model is:
 
 ```
 Transaction → FinancialInteraction → [Person, Place, Event, Item, Plan]
@@ -410,16 +410,16 @@ Transaction → FinancialInteraction → [Person, Place, Event, Item, Plan]
                                     Full life graph
 ```
 
-The difference is not that Life OS has more features. The difference is that Life OS operates on a different ontology. A transaction in Monarch is a leaf node with no outbound edges. A transaction in Life OS is an Interaction — an edge in a connected graph that inherits the meaning of everything it touches.
+The difference is not that LifeOS has more features. The difference is that LifeOS operates on a different ontology. A transaction in Monarch is a leaf node with no outbound edges. A transaction in LifeOS is an Interaction — an edge in a connected graph that inherits the meaning of everything it touches.
 
-This means that as the life graph grows richer — more relationships logged, more events captured, more plans articulated — the financial intelligence grows richer too, automatically. Monarch's intelligence is bounded by the transactions it receives. Life OS's intelligence is bounded by life itself, and the graph expands continuously.
+This means that as the life graph grows richer — more relationships logged, more events captured, more plans articulated — the financial intelligence grows richer too, automatically. Monarch's intelligence is bounded by the transactions it receives. LifeOS's intelligence is bounded by life itself, and the graph expands continuously.
 
 ### What Monarch Does Better (Honestly)
 
-- **Visual interface** — Monarch is genuinely beautiful. Charts, flows, and graphs are well-designed and fast. Life OS currently has no visualization layer.
-- **Lower setup cost** — Monarch works in minutes. Life OS requires the Era.app MCP, a running Life OS instance, and some seed data in the graph.
-- **Account management** — Monarch handles multi-account net worth, account reconciliation, and investment tracking well. Life OS finance does not yet have a native investment layer.
-- **Shared finances** — Monarch supports household budgeting with a partner. Life OS would require the partner to also have Life OS nodes, which is a higher ask.
+- **Visual interface** — Monarch is genuinely beautiful. Charts, flows, and graphs are well-designed and fast. LifeOS currently has no visualization layer.
+- **Lower setup cost** — Monarch works in minutes. LifeOS requires the Era.app MCP, a running LifeOS instance, and some seed data in the graph.
+- **Account management** — Monarch handles multi-account net worth, account reconciliation, and investment tracking well. LifeOS finance does not yet have a native investment layer.
+- **Shared finances** — Monarch supports household budgeting with a partner. LifeOS would require the partner to also have LifeOS nodes, which is a higher ask.
 
 These are real gaps. They are also buildable. The architectural foundation — the graph — is harder to build than the UI layer. The UI comes later.
 
@@ -429,7 +429,7 @@ These are real gaps. They are also buildable. The architectural foundation — t
 
 ### Phase 0: Data Pipe
 
-**Goal:** Era transactions flowing into Life OS as Interactions, with basic entity resolution.
+**Goal:** Era transactions flowing into LifeOS as Interactions, with basic entity resolution.
 
 1. Configure Era.app MCP connection
 2. Build `era_ingest` job: poll Era for new transactions, map to FinancialInteraction schema
@@ -478,7 +478,7 @@ Money is a proxy. It is a proxy for time, for priority, for stress, for love, fo
 
 No amount of better categorization or prettier charts answers that question. Only a system that knows what you care about — your declared values, your relationships, your plans — and can read your behavior against them is capable of giving you an honest answer.
 
-That is what Life OS finance is. Not a better Monarch. A system that knows you well enough to tell you the truth.
+That is what LifeOS finance is. Not a better Monarch. A system that knows you well enough to tell you the truth.
 
 ---
 

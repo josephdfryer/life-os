@@ -1,6 +1,6 @@
 # Places Architecture Map
 
-Places is the standalone Life OS app for the Place primitive. It lives in `apps/places`, uses the shared database in `packages/db`, and does not live inside the Persons app.
+Places is the standalone LifeOS app for the Place primitive. It lives in `apps/places`, uses the shared database in `packages/db`, and does not live inside the Persons app.
 
 ## Flow
 
@@ -106,7 +106,7 @@ summary language is deterministic.
 The profile derives visit cadence, reliable duration, and gaps from stored Event
 timestamps. Each visit embeds its connected people, groups, photo identities,
 spending, and visit-specific Place Note, with Events and Persons linked to their
-owning Life OS apps. `PlaceNote.eventId` distinguishes a general Place memory
+owning LifeOS apps. `PlaceNote.eventId` distinguishes a general Place memory
 from a visit memory. `Place.meaning` is the explicit user-authored “Why this
 place matters” field and is never generated. Its update is workspace-scoped,
 length-validated, and audited through `PATCH /api/places/[id]`.

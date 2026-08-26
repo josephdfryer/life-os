@@ -1,4 +1,4 @@
-// @life-os/intelligence — derived interpretation over the Life OS graph, at
+// @life-os/intelligence — derived interpretation over the LifeOS graph, at
 // two scopes: Theory of Person (one person) and the whole-life model (the
 // entire workspace). Interpretation is app-layer synthesis, never a life
 // primitive — the primitives are the source of truth; everything here is

@@ -353,14 +353,14 @@ async function buildWorkspace(userId: string, email: string, useDefault: boolean
       update: useDefault ? { ownerUserId: userId } : {},
       create: {
         id: workspaceId,
-        name: useDefault ? "Joseph's Life OS" : `${displayNameFromEmail(email)}'s Life OS`,
+        name: useDefault ? "Joseph's LifeOS" : `${displayNameFromEmail(email)}'s LifeOS`,
         slug: useDefault ? "joseph-life-os" : uniqueWorkspaceSlug(email),
         ownerUserId: userId,
       },
     })
     : await db.workspace.create({
       data: {
-        name: `${displayNameFromEmail(email)}'s Life OS`,
+        name: `${displayNameFromEmail(email)}'s LifeOS`,
         slug: uniqueWorkspaceSlug(email),
         ownerUserId: userId,
       },

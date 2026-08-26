@@ -2,7 +2,7 @@
 
 ## What this adds
 
-Inventory is a Stuff lens over the existing Life OS graph. It answers:
+Inventory is a Stuff lens over the existing LifeOS graph. It answers:
 
 - Where is this Item now?
 - How did it get there?
@@ -116,7 +116,7 @@ ItemDefinition: "Coffee beans", SKU COFFEE-1KG, unit bag
   └─ Item: 2 bags at Pantry
 ```
 
-`ItemDefinition` and `InventoryLot` are support models, not Life OS
+`ItemDefinition` and `InventoryLot` are support models, not LifeOS
 primitives. `Item` remains the physical object or stock holding at a Place.
 This permits the same definition or manufacturer lot to have separate
 holdings at different Places without pretending the catalog entry is itself a

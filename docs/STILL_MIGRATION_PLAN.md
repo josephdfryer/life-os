@@ -6,7 +6,7 @@
 **Tokens:** `packages/ui/still-tokens.css`  
 **Short status pointer:** [`docs/STILL_UI_MIGRATION_PLAN.md`](STILL_UI_MIGRATION_PLAN.md)
 
-This is the **detailed execution plan** for migrating every Life OS app from legacy Warm Concrete (or partial Still) to full Still v2. Write it so Claude, Codex, or any agent can execute without re-deriving the design.
+This is the **detailed execution plan** for migrating every LifeOS app from legacy Warm Concrete (or partial Still) to full Still v2. Write it so Claude, Codex, or any agent can execute without re-deriving the design.
 
 ## Completion record
 

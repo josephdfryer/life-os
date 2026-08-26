@@ -77,6 +77,15 @@ export type { LifeOSBarProps } from './LifeOSBar';
 export { LIFE_OS_APPS, LIFE_OS_APP_URLS, LIFE_OS_ROOT_DOMAIN } from './app-registry';
 export type { LifeOSAppKey, LifeOSAppEntry } from './app-registry';
 
+// Brand marks
+export {
+  LifeOSMark, LifeOSMarkSmall,
+  HomeMark, PersonsMark, PlacesMark, StuffMark, EventsMark, LevelUpMark, AssistantMark,
+  GlyphSite, GlyphVacancy, GlyphBond, GlyphFrame, GlyphBoundary,
+  AppMark, APP_MARKS,
+} from './marks';
+export type { MarkProps, AppMarkProps } from './marks';
+
 // Timezone — one master tz across all apps (shared root-domain cookie)
 export {
   TZ_COOKIE, LIFE_OS_DEFAULT_TZ, COMMON_TIME_ZONES,
