@@ -239,7 +239,7 @@ export default function FederatedInbox({ items }: { items: InboxItem[] }) {
 
   return (
     <section aria-label="Federated review inbox">
-      <div className="inbox-queues" role="tablist" aria-label="Review queues">
+      <div className="inbox-queues" role="tablist" aria-label="Source">
         {queueTabs.map(tab => (
           <button
             key={tab.key}
