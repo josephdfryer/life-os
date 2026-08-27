@@ -1420,8 +1420,20 @@ async function fetchGoogleAccountEmail(accessToken: string) {
   return data.email ?? null
 }
 
+// Every call to googleFetch used to have no timeout at all: a single stalled
+// request to Google could hang for the platform's full 300s function ceiling,
+// burning the entire invocation on one page and never reaching the deadline
+// checks in walkEventPages (those only run BETWEEN awaited fetches, so they
+// can't interrupt one already in flight). This is what actually caused every
+// calendar-auto-sync run to fail with FUNCTION_INVOCATION_TIMEOUT rather than
+// finishing gracefully within SYNC_TIME_BUDGET_MS / OVERALL_SYNC_DEADLINE_MS.
+const GOOGLE_FETCH_TIMEOUT_MS = 30_000
+
 function googleFetch(url: string, accessToken: string) {
-  return fetch(url, { headers: { Authorization: `Bearer ${accessToken}` } })
+  return fetch(url, {
+    headers: { Authorization: `Bearer ${accessToken}` },
+    signal: AbortSignal.timeout(GOOGLE_FETCH_TIMEOUT_MS),
+  })
 }
 
 function googleCalendarRedirectUri(origin: string | null) {
