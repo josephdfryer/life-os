@@ -35,10 +35,23 @@ const MAX_BACKFILL_DAYS = 3650
 // backfillDays now bounds only how much HISTORY the bootstrap ingests, never
 // how far ahead it can see.
 const CRON_BACKFILL_DAYS = 180
-// Work budget for one invocation, under the route's maxDuration of 300s. On
-// expiry a bootstrap walk parks its page cursor and resumes next run, so a
-// large calendar converges across runs instead of timing out on every one.
+// Per-connection work budget. On expiry a bootstrap walk parks its page
+// cursor and resumes next run, so a large calendar converges across runs
+// instead of timing out on every one.
 const SYNC_TIME_BUDGET_MS = 240_000
+// Whole-invocation ceiling, under the route's maxDuration of 300s. Multiple
+// connections share this — without it, two calendars that both need their
+// full SYNC_TIME_BUDGET_MS (e.g. two still mid-bootstrap) sum to more than
+// Vercel's limit and Vercel kills the function outright (504
+// FUNCTION_INVOCATION_TIMEOUT) before the in-progress connection's DB write
+// lands, so its cursor never advances and every run repeats the same work.
+// 40s of headroom below the 300s cap covers DB/network overhead and response
+// serialization after the last connection finishes.
+const OVERALL_SYNC_DEADLINE_MS = 260_000
+// Below this much remaining budget, don't start another connection — not
+// enough time left to make real progress, and a partial attempt still risks
+// running past the overall deadline itself.
+const MIN_CONNECTION_BUDGET_MS = 15_000
 const GOOGLE_PAGE_SIZE = 100
 const DB_BATCH_SIZE = 25
 // Each event upsert used to open an interactive Prisma transaction (default
@@ -550,9 +563,14 @@ export async function syncGoogleCalendar(actor: AccessActor, options: SyncOption
   const backfillDays = normalizeBackfillDays(options.backfillDays)
   const peopleByEmail = await peopleEmailIndex(actor.workspaceId)
   const calendars: SyncStats[] = []
+  // Same reasoning as syncAllGoogleCalendars: this loop can span several
+  // calendars, and each one's own budget must not be allowed to sum past the
+  // route's maxDuration.
+  const overallDeadline = Date.now() + OVERALL_SYNC_DEADLINE_MS
 
   for (const connection of connections) {
-    calendars.push(await syncGoogleCalendarConnection(actor, connection, peopleByEmail, backfillDays))
+    if (overallDeadline - Date.now() < MIN_CONNECTION_BUDGET_MS) break
+    calendars.push(await syncGoogleCalendarConnection(actor, connection, peopleByEmail, backfillDays, overallDeadline))
   }
 
   return {
@@ -597,16 +615,28 @@ export async function syncAllGoogleCalendars(options: SyncOptions = {}) {
   // the window no longer applies. Full-history backfill stays the manual Sync.
   const backfillDays = options.backfillDays != null ? normalizeBackfillDays(options.backfillDays) : CRON_BACKFILL_DAYS
   const results: Array<{ workspaceId: string; calendars: SyncStats[] }> = []
+  // Shared across every connection in this invocation — see
+  // OVERALL_SYNC_DEADLINE_MS. Connections are already prioritized
+  // stalest-first, so whatever gets skipped here is exactly what leads
+  // priority next run.
+  const overallDeadline = Date.now() + OVERALL_SYNC_DEADLINE_MS
+  let skipped = 0
+  let budgetExhausted = false
 
   for (const [workspaceId, workspaceConnections] of byWorkspace) {
     const actor: SyncActor = {
       workspaceId,
       actor: { type: "system", id: "calendar-cron", label: "Calendar auto-sync", workspaceId },
     }
-    const peopleByEmail = await peopleEmailIndex(workspaceId)
+    const peopleByEmail = budgetExhausted ? new Map() : await peopleEmailIndex(workspaceId)
     const calendars: SyncStats[] = []
     for (const connection of prioritizeCalendarConnections(workspaceConnections)) {
-      calendars.push(await syncGoogleCalendarConnection(actor, connection, peopleByEmail, backfillDays))
+      if (budgetExhausted || overallDeadline - Date.now() < MIN_CONNECTION_BUDGET_MS) {
+        budgetExhausted = true
+        skipped += 1
+        continue
+      }
+      calendars.push(await syncGoogleCalendarConnection(actor, connection, peopleByEmail, backfillDays, overallDeadline))
     }
     results.push({ workspaceId, calendars })
   }
@@ -614,6 +644,7 @@ export async function syncAllGoogleCalendars(options: SyncOptions = {}) {
   return {
     workspaces: results.length,
     connections: connections.length,
+    skipped,
     results,
   }
 }
@@ -641,6 +672,7 @@ async function syncGoogleCalendarConnection(
   connection: SyncConnection,
   peopleByEmail: Map<string, { id: string; first: string; last: string }>,
   backfillDays: number,
+  overallDeadline: number,
 ) {
   const syncToken = decryptNullable(connection.syncTokenEncrypted)
   const stats: SyncStats = {
@@ -671,7 +703,9 @@ async function syncGoogleCalendarConnection(
       // caller's backfill window is skipped instead of upserted. Incremental
       // runs pass null — a change is worth applying whenever it happened.
       ingestFrom: syncToken ? null : new Date(Date.now() - backfillDays * 24 * 60 * 60 * 1000),
-      deadline: Date.now() + SYNC_TIME_BUDGET_MS,
+      // Whichever runs out first: this connection's own slice, or what's left
+      // of the whole invocation's budget.
+      deadline: Math.min(Date.now() + SYNC_TIME_BUDGET_MS, overallDeadline),
       onBatch: async items => {
         stats.batches += 1
         const result = await processCalendarBatch({
