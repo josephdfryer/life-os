@@ -38,22 +38,36 @@ const CRON_BACKFILL_DAYS = 180
 // Per-connection work budget. On expiry a bootstrap walk parks its page
 // cursor and resumes next run, so a large calendar converges across runs
 // instead of timing out on every one.
-const SYNC_TIME_BUDGET_MS = 240_000
+const SYNC_TIME_BUDGET_MS = 200_000
 // Whole-invocation ceiling, under the route's maxDuration of 300s. Multiple
 // connections share this — without it, two calendars that both need their
 // full SYNC_TIME_BUDGET_MS (e.g. two still mid-bootstrap) sum to more than
 // Vercel's limit and Vercel kills the function outright (504
 // FUNCTION_INVOCATION_TIMEOUT) before the in-progress connection's DB write
 // lands, so its cursor never advances and every run repeats the same work.
-// 40s of headroom below the 300s cap covers DB/network overhead and response
-// serialization after the last connection finishes.
-const OVERALL_SYNC_DEADLINE_MS = 260_000
+// 60s of headroom below the 300s cap covers DB/network overhead, response
+// serialization after the last connection finishes, and the fact that the
+// deadline is only checked once per onBatch (see walkEventPages) — a slow
+// enough batch can still overrun this by seconds before the check fires.
+const OVERALL_SYNC_DEADLINE_MS = 240_000
 // Below this much remaining budget, don't start another connection — not
 // enough time left to make real progress, and a partial attempt still risks
 // running past the overall deadline itself.
 const MIN_CONNECTION_BUDGET_MS = 15_000
+// Every call to Google (event pages, token exchange, token refresh) used to
+// have no timeout at all: a single stalled request could hang for the whole
+// platform's 300s function ceiling, and the deadline checks above only run
+// BETWEEN awaited fetches — they can't interrupt one already in flight. This
+// is what actually caused every calendar-auto-sync run to fail with
+// FUNCTION_INVOCATION_TIMEOUT instead of finishing gracefully within budget.
+const GOOGLE_FETCH_TIMEOUT_MS = 30_000
 const GOOGLE_PAGE_SIZE = 100
-const DB_BATCH_SIZE = 25
+// The overall deadline is only checked once per batch (walkEventPages), so
+// this also bounds how far a slow-enough batch can overrun it before the
+// check gets a chance to fire. Smaller than it looks wasteful for: measured
+// per-item cost during the 2026-08-27 incident was ~5s under contention, so
+// a batch of 25 could overrun the deadline by ~30s+ before ever checking.
+const DB_BATCH_SIZE = 10
 // Each event upsert used to open an interactive Prisma transaction (default
 // maxWait 2s) and 25 of those ran at once. After the two small personal
 // calendars finished, Qin and Sightmachine consistently died with
@@ -1313,6 +1327,7 @@ async function exchangeCode(code: string, redirectUri: string) {
       redirect_uri: redirectUri,
       grant_type: "authorization_code",
     }),
+    signal: AbortSignal.timeout(GOOGLE_FETCH_TIMEOUT_MS),
   })
   if (!res.ok) {
     const body = await res.text().catch(() => "")
@@ -1335,6 +1350,7 @@ async function refreshAccessToken(refreshToken: string) {
       client_secret: clientSecret,
       grant_type: "refresh_token",
     }),
+    signal: AbortSignal.timeout(GOOGLE_FETCH_TIMEOUT_MS),
   })
   if (!res.ok) throw new Error(`Google token refresh failed (${res.status})`)
   return await res.json() as TokenResponse
@@ -1419,15 +1435,6 @@ async function fetchGoogleAccountEmail(accessToken: string) {
   const data = await res.json() as { email?: string }
   return data.email ?? null
 }
-
-// Every call to googleFetch used to have no timeout at all: a single stalled
-// request to Google could hang for the platform's full 300s function ceiling,
-// burning the entire invocation on one page and never reaching the deadline
-// checks in walkEventPages (those only run BETWEEN awaited fetches, so they
-// can't interrupt one already in flight). This is what actually caused every
-// calendar-auto-sync run to fail with FUNCTION_INVOCATION_TIMEOUT rather than
-// finishing gracefully within SYNC_TIME_BUDGET_MS / OVERALL_SYNC_DEADLINE_MS.
-const GOOGLE_FETCH_TIMEOUT_MS = 30_000
 
 function googleFetch(url: string, accessToken: string) {
   return fetch(url, {

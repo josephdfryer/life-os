@@ -113,14 +113,35 @@ test("a full walk that exceeds its budget parks a cursor instead of losing progr
   ])
   let clock = 1000
   const result = await walkEventPages<FakeEvent>({
-    syncToken: null, resumePageToken: null, ingestFrom: null,
+    syncToken: null, resumePageToken: "PAGE1", ingestFrom: null,
     deadline: 1500, pageSize: 100, batchSize: 25,
-    now: () => (clock += 1000), // blows the budget after the first page
+    now: () => (clock += 1000), // blows the budget right after the first page's one batch
     fetchPage: google.fetchPage,
     onBatch: async () => {},
   })
-  assert.equal(result.pendingPageToken, "PAGE2", "must hand back the cursor to resume from")
+  // The deadline fires inside page 1's own batch loop (see next test), so what
+  // gets parked is the cursor that FETCHED page 1 — not page 1's nextPageToken
+  // — because a slower page could still have unprocessed items left in it.
+  assert.equal(result.pendingPageToken, "PAGE1", "must hand back the cursor that led to the unfinished page, not the next one")
   assert.equal(result.nextSyncToken, undefined, "no token yet — the walk is unfinished")
+})
+
+test("a slow batch mid-page parks that page's own cursor without skipping its later items", async () => {
+  const google = fakeGoogle([
+    { page: { items: [{ id: "p1a" }, { id: "p1b" }], nextPageToken: "PAGE2" } },
+  ])
+  const seenBatches: string[] = []
+  let clock = 1000
+  const result = await walkEventPages<FakeEvent>({
+    syncToken: null, resumePageToken: null, ingestFrom: null,
+    deadline: 1500, pageSize: 100, batchSize: 1, // one item per batch
+    now: () => (clock += 1000), // deadline blown right after the first batch
+    fetchPage: google.fetchPage,
+    onBatch: async items => { seenBatches.push(...items.map(item => item.id)) },
+  })
+  assert.deepEqual(seenBatches, ["p1a"], "must stop before the page's second batch, not skip it silently")
+  assert.equal(result.pendingPageToken, undefined, "no incoming cursor for the first page, so nothing to resume from but the start")
+  assert.equal(google.seen.length, 1, "must not have fetched a second page")
 })
 
 test("the next run resumes from the parked cursor rather than restarting", async () => {

@@ -123,6 +123,13 @@ export async function walkEventPages<T extends CalendarPageEvent>(input: {
   let resuming = Boolean(pageToken)
 
   for (;;) {
+    // The cursor that fetched THIS page, captured before it gets overwritten
+    // by page.nextPageToken below. If a slow page forces a mid-page bail, we
+    // park this instead of the (not-yet-earned) next cursor, so resume
+    // refetches and reprocesses this exact page. onBatch is idempotent
+    // (upsert-keyed), so redoing already-done batches costs time, not
+    // correctness.
+    const currentPageToken = pageToken
     const params = new URLSearchParams({
       maxResults: String(input.pageSize),
       showDeleted: "true",
@@ -162,6 +169,15 @@ export async function walkEventPages<T extends CalendarPageEvent>(input: {
       : all
     for (let i = 0; i < items.length; i += input.batchSize) {
       await input.onBatch(items.slice(i, i + input.batchSize))
+      // Checked per batch, not just per page: a page can hold up to
+      // pageSize items, and slow-enough per-item processing (contention
+      // retries, extra lookups) can blow the whole budget before a full
+      // page ever finishes — the previous per-page-only check never got a
+      // chance to run, and Vercel killed the function outright instead of
+      // this returning gracefully.
+      if (!useSyncToken && now() >= input.deadline) {
+        return { nextSyncToken, usedSyncToken, pendingPageToken: currentPageToken }
+      }
     }
 
     pageToken = page.nextPageToken
