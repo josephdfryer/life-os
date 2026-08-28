@@ -7,8 +7,14 @@ changing any of the personal CRM of record.
 
 **Status:** execution started 2026-08-28. Turso reads are restored. P0 read
 proof and redundant JSON backups are complete; a native restorable source
-snapshot remains required before final cutover. Application migration is not
-yet implemented.
+snapshot remains required before final cutover. The mechanical application
+migration (P2) and large parts of P3–P5 landed on `codex/postgres-migration`
+in commit `93d57bd` and are **verified to compile and apply**: repo-wide
+`type-check` passes, both Prisma clients generate, and both baseline
+migrations apply cleanly to a real Postgres 17 (`prisma migrate status` =
+up to date). Still open before cutover: finish the case-sensitivity pass,
+port the test/e2e harness and deploy gates off SQLite, provision Neon (P1),
+and run the ETL rehearsals (P5/P7). See the execution ledger below.
 
 ---
 
@@ -440,8 +446,12 @@ deletion remain intentionally deferred.
 | Packet | Status                              | Evidence / blocker                                                                                                                                                                                                                                    |
 | ------ | ----------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | P0     | **In progress**                     | Remote Turso read proven; 7,640 People across all workspaces. People backup plus 102-table/216,698-row raw backup and finance backup are checksummed in `backups/P0_CHECKSUMS_2026-08-28.md`. Turso-native export remains blocked on Turso CLI login. |
-| P1     | **Blocked on one-time user action** | Vercel CLI upgraded to 59.9.1; Neon Free in `pdx1` with Neon Auth disabled selected. Provisioning requires the account owner to accept Neon Marketplace terms, then the exact install command can be retried.                                         |
-| P2–P10 | Not started                         | Follow packet dependencies above.                                                                                                                                                                                                                     |
+| P1     | **Blocked on one-time user action** | Vercel CLI upgraded to 59.9.1; Neon Free in `pdx1` with Neon Auth disabled selected. Provisioning requires the account owner to accept Neon Marketplace terms, then the exact install command can be retried. **This is the critical-path blocker — nothing target-side (baseline apply on Neon, ETL rehearsal) can run until it clears.** |
+| P2     | **Landed, verified locally** (`93d57bd`) | Schema → `postgresql`; `schema.sqlite.prisma` frozen as ETL source; dual client generation; `packages/db/index.ts` on a single `@prisma/adapter-pg` path; `pg` + `@prisma/adapter-pg@^7.10.0` added. 61 SQLite migrations archived to `migrations.sqlite-archive/`; new `00000000000000_init` (3,379 lines) + `00000000000001_defer_foreign_keys`. Verified: `npm run type-check` clean repo-wide; both clients generate; both migrations apply to Postgres 17 with `migrate status` = up to date. Not yet done: local Postgres in `docker-compose` maps host `5432`, which collides with an existing tunnel/container on this machine — use a non-default host port for local runs, or a Neon branch. |
+| P3     | **~60% done** (`93d57bd`)            | ~110 `mode: "insensitive"` added across app/domain/script query sites. Remaining: filters still passing a pre-lowercased needle (`{ contains: q.toLowerCase() }`) in e.g. `apps/api/lib/people.ts`, `apps/assistant/app/api/files/people/route.ts`, `apps/persons/app/api/v1/people/route.ts`, `apps/persons/server/domain/inbox-enrich.ts` — need `mode: "insensitive"` and the `toLowerCase()` dropped. Substring matches into serialized-JSON TEXT columns (`health.ts`, `google-calendar.ts`, `persons/app/api/persons/route.ts` tag match) are intentionally case-sensitive — confirm those columns stayed `String`, not `Json`, in the baseline before leaving them. |
+| P4     | **Partially landed** (`93d57bd`)     | `next.config.ts` across all apps and `docker-compose.yml` switched to Postgres. ETL program `scripts/db/migrate-turso-to-postgres.ts` written (P5, see below). **Not done:** `scripts/e2e/prepare.ts` still builds a `better-sqlite3` DB from the migration SQL — broken now that the SQL is Postgres DDL and `@life-os/db` rejects non-`postgresql://` URLs; unit-test harnesses need the same treatment. `scripts/lib/prod-schema.ts`, `scripts/apply-migration.ts`, `scripts/check-migration-integrity.mjs` still `@libsql/client`. ~50 other tracked libSQL scripts unclassified. |
+| P5     | **Program written, unrun** (`93d57bd`) | `scripts/db/migrate-turso-to-postgres.ts` (419 lines): parses models from the frozen SQLite schema, keyset/offset batched copy inside one transaction with `SET CONSTRAINTS ALL DEFERRED`, source-vs-target content-hash + row-count reconciliation, and a guarded "repairs" path for orphaned test-fixture Workspace/Note parents (aborts on any non-test orphan). Review notes before first run: insert order is schema-declaration order and leans entirely on the deferrable-FK migration — confirm it covers **every** FK, not most; the Note-repair path sets `metadata`/`content` as `JSON.stringify(...)` strings, which a `jsonb` column will reject. |
+| P6–P10 | Not started                         | Follow packet dependencies above. P6 (full verification incl. test harness port) can proceed locally now; P7+ wait on P1. |
 
 ---
 
