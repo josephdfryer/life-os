@@ -7,7 +7,8 @@
   "exports": {
     ".": "./index.ts",
     "./crypto": "./src/crypto.ts",
-    "./enrich": "./src/enrich.ts"
+    "./enrich": "./src/enrich.ts",
+    "./testing": "./testing.ts"
   },
   "scripts": {
     "build": "npm run generate",

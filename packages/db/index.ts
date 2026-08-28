@@ -38,9 +38,26 @@ const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined;
 };
 
-export const db = globalForPrisma.prisma ?? createClient();
+// Lazily constructed on first property access. Importing `db` stays free — a
+// module that pulls it in transitively but never queries (pure-logic helpers,
+// their unit tests) does not need a configured database. The first real call
+// triggers createClient(), which is where a missing/invalid DATABASE_URL
+// surfaces. Also lets `prisma migrate` / `prisma generate` import this package
+// without a live connection string.
+function resolveClient(): PrismaClient {
+  return (globalForPrisma.prisma ??= createClient());
+}
 
-globalForPrisma.prisma = db;
+export const db: PrismaClient = new Proxy({} as PrismaClient, {
+  get(_target, property, receiver) {
+    const client = resolveClient();
+    const value = Reflect.get(client as object, property, receiver);
+    return typeof value === "function" ? value.bind(client) : value;
+  },
+  has(_target, property) {
+    return property in (resolveClient() as object);
+  },
+});
 
 // Money is stored as integer minor units (cents). These convert at the
 // application boundary so callers keep working with dollar floats.

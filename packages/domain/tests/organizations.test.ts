@@ -1,5 +1,10 @@
-import test from "node:test"
+import test, { before, after } from "node:test"
 import assert from "node:assert/strict"
+import { createTestDatabase, type TestDatabase } from "@life-os/db/testing"
+
+let testDb: TestDatabase
+before(async () => { testDb = await createTestDatabase() })
+after(async () => { await testDb?.drop() })
 
 // See docs/ORGANIZATION_AGGREGATE_STRATEGY.md. The two properties worth pinning
 // are the ones the design exists for: history stays with the organization after

@@ -1,34 +1,15 @@
 import assert from "node:assert/strict"
-import test from "node:test"
-import { createRequire } from "node:module"
-import { mkdtempSync, readFileSync, readdirSync } from "node:fs"
-import { tmpdir } from "node:os"
-import { join } from "node:path"
-import { fileURLToPath } from "node:url"
+import test, { after } from "node:test"
+import { createTestDatabase, type TestDatabase } from "@life-os/db/testing"
 
-const repoRoot = fileURLToPath(new URL("../../..", import.meta.url))
-const dbPackageRoot = join(repoRoot, "packages/db")
-const require = createRequire(import.meta.url)
-const dbDir = mkdtempSync(join(tmpdir(), "life-os-stuff-"))
-const dbPath = join(dbDir, "stuff.db")
-process.env.DATABASE_URL = `file:${dbPath}`
-process.env.TURSO_DATABASE_URL = ""
-process.env.TURSO_AUTH_TOKEN = ""
+let testDb: TestDatabase | null = null
 
-function applyMigrations(path: string) {
-  const Database = require("better-sqlite3")
-  const sqlite = new Database(path)
-  sqlite.pragma("foreign_keys = OFF")
-  const migrationsDir = join(dbPackageRoot, "prisma/migrations")
-  for (const dirname of readdirSync(migrationsDir).filter(name => name !== "migration_lock.toml").sort()) {
-    sqlite.exec(readFileSync(join(migrationsDir, dirname, "migration.sql"), "utf8"))
-  }
-  sqlite.pragma("foreign_keys = ON")
-  sqlite.close()
-}
+after(async () => {
+  await testDb?.drop()
+})
 
 test("inventory overview and stocktake detail derive latest item evidence in SQL", async () => {
-  applyMigrations(dbPath)
+  testDb = await createTestDatabase()
   const [{ db }, inventory, core] = await Promise.all([
     import("./db"),
     import("./inventory"),

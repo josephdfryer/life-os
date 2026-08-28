@@ -1,23 +1,9 @@
 import assert from "node:assert/strict"
-import { mkdtempSync, readFileSync, readdirSync, rmSync } from "node:fs"
-import { tmpdir } from "node:os"
-import { join } from "node:path"
 import test from "node:test"
-import Database from "better-sqlite3"
+import { createTestDatabase } from "@life-os/db/testing"
 
 test("Granola import is idempotent, preserves user context, links exact emails, stages unknown people, and skips declined invitees", async () => {
-  const directory = mkdtempSync(join(tmpdir(), "life-os-granola-test-"))
-  const databasePath = join(directory, "test.db")
-  const sqlite = new Database(databasePath)
-  const migrationsRoot = join(process.cwd(), "../../packages/db/prisma/migrations")
-  for (const name of readdirSync(migrationsRoot).filter(name => name !== "migration_lock.toml").sort()) {
-    sqlite.exec(readFileSync(join(migrationsRoot, name, "migration.sql"), "utf8"))
-  }
-  sqlite.close()
-
-  process.env.DATABASE_URL = `file:${databasePath}`
-  process.env.TURSO_DATABASE_URL = ""
-  process.env.TURSO_AUTH_TOKEN = ""
+  const testDb = await createTestDatabase()
   const [{ db }, { importGranolaNote }] = await Promise.all([
     import("@life-os/db"),
     import("./granola"),
@@ -140,6 +126,6 @@ test("Granola import is idempotent, preserves user context, links exact emails, 
     assert.equal(declinedImport.matchedPeople, 1)
   } finally {
     await db.$disconnect()
-    rmSync(directory, { recursive: true, force: true })
+    await testDb.drop()
   }
 })

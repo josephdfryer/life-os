@@ -1,5 +1,10 @@
-import test from "node:test"
+import test, { before, after } from "node:test"
 import assert from "node:assert/strict"
+import { createTestDatabase, type TestDatabase } from "@life-os/db/testing"
+
+let testDb: TestDatabase
+before(async () => { testDb = await createTestDatabase() })
+after(async () => { await testDb?.drop() })
 
 // 165 pending visits describing three places, 154 of them one address the phone
 // sees daily. These pin that the decision is the place, and that answering it

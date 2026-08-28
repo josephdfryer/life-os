@@ -1,19 +1,6 @@
-import test from "node:test"
+import test, { after } from "node:test"
 import assert from "node:assert/strict"
-import { createRequire } from "node:module"
-import { mkdtempSync, readFileSync, readdirSync } from "node:fs"
-import { tmpdir } from "node:os"
-import { join } from "node:path"
-import { fileURLToPath } from "node:url"
-
-const repoRoot = fileURLToPath(new URL("../../..", import.meta.url))
-const dbPackageRoot = join(repoRoot, "packages/db")
-const require = createRequire(import.meta.url)
-const dbDir = mkdtempSync(join(tmpdir(), "life-os-persons-"))
-const dbPath = join(dbDir, "persons.db")
-process.env.DATABASE_URL = `file:${dbPath}`
-process.env.TURSO_DATABASE_URL = ""
-process.env.TURSO_AUTH_TOKEN = ""
+import { createTestDatabase, type TestDatabase } from "@life-os/db/testing"
 
 type TestModules = {
   db: typeof import("../lib/db")["db"]
@@ -23,11 +10,12 @@ type TestModules = {
 }
 
 let modulesPromise: Promise<TestModules> | null = null
+let testDb: TestDatabase | null = null
 
 async function setup() {
   if (!modulesPromise) {
     modulesPromise = (async () => {
-      applyMigrations(dbPath)
+      testDb = await createTestDatabase()
       const [dbModule, merge, fileStorage, importAnalysis] = await Promise.all([
         import("../lib/db"),
         import("../server/domain/merge"),
@@ -76,32 +64,6 @@ test("import analysis resolves each workspace's own owner name, never another's"
   await makeWorkspace(db, "ws-owner-none")
   assert.equal(await importAnalysis.resolveWorkspaceOwnerName("ws-owner-none"), "the workspace owner")
 })
-
-// The committed migration history has a handful of corrective migrations
-// that re-create tables/columns already created by earlier ones (see
-// docs/PRIME_TIME_READINESS_AUDIT_2026-07-12.md, "Repair the database
-// migration and recovery story"). That's a separate, larger fix — this test
-// harness just needs a working clean database, so duplicate-object errors
-// during replay are treated as idempotency, not failure.
-function applyMigrations(path: string) {
-  const Database = require("better-sqlite3")
-  const sqlite = new Database(path)
-  sqlite.pragma("foreign_keys = OFF")
-  const migrationsDir = join(dbPackageRoot, "prisma/migrations")
-  for (const dirname of readdirSync(migrationsDir).filter(name => name !== "migration_lock.toml").sort()) {
-    const sql = readFileSync(join(migrationsDir, dirname, "migration.sql"), "utf8")
-    for (const statement of sql.split(/;\s*\n/).map(s => s.trim()).filter(Boolean)) {
-      try {
-        sqlite.exec(`${statement};`)
-      } catch (error) {
-        const message = error instanceof Error ? error.message : String(error)
-        if (!/already exists|duplicate column/i.test(message)) throw error
-      }
-    }
-  }
-  sqlite.pragma("foreign_keys = ON")
-  sqlite.close()
-}
 
 async function makeWorkspace(db: TestModules["db"], id: string) {
   return db.workspace.create({ data: { id, name: id, slug: id } })

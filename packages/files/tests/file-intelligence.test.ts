@@ -1,29 +1,13 @@
-import test from "node:test"
+import test, { before, after } from "node:test"
 import assert from "node:assert/strict"
-import { createRequire } from "node:module"
-import { mkdtempSync, readFileSync, readdirSync } from "node:fs"
-import { tmpdir } from "node:os"
-import { join } from "node:path"
-import { fileURLToPath } from "node:url"
+import { createTestDatabase, type TestDatabase } from "@life-os/db/testing"
 
-const repoRoot = fileURLToPath(new URL("../../..", import.meta.url))
-const migrationsDir = join(repoRoot, "packages/db/prisma/migrations")
-const scratchDir = mkdtempSync(join(tmpdir(), "life-os-files-test-"))
-const dbPath = join(scratchDir, "files.db")
-process.env.DATABASE_URL = `file:${dbPath}`
-process.env.TURSO_DATABASE_URL = ""
-process.env.TURSO_AUTH_TOKEN = ""
 process.env.FILE_INTELLIGENCE_REVIEW_PROPOSALS = "false"
 process.env.FILE_INTELLIGENCE_SAFE_AUTO = "false"
 
-const require = createRequire(import.meta.url)
-const sqlite = new (require("better-sqlite3"))(dbPath)
-sqlite.pragma("foreign_keys = OFF")
-for (const dirname of readdirSync(migrationsDir).filter(name => name !== "migration_lock.toml").sort()) {
-  sqlite.exec(readFileSync(join(migrationsDir, dirname, "migration.sql"), "utf8"))
-}
-sqlite.pragma("foreign_keys = ON")
-sqlite.close()
+let testDb: TestDatabase
+before(async () => { testDb = await createTestDatabase() })
+after(async () => { await testDb?.drop() })
 
 test("file evidence remains cited, multi-subject, workspace-safe, relevance-aware, correctable, and undoable", async () => {
   const [{ db }, files, domain] = await Promise.all([import("@life-os/db"), import("../index"), import("@life-os/domain")])
