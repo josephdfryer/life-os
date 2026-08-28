@@ -11,6 +11,9 @@ export type AlignmentSignal = {
   severity: number
   subject: string
   detail: string
+  // Optional display evidence already selected while deriving the signal.
+  // Carrying it here lets read surfaces avoid another per-person query.
+  evidenceSummary?: string | null
   personId?: string
   planId?: string
 }

@@ -44,7 +44,7 @@ export async function getRelationshipGaps(workspaceId: string): Promise<Alignmen
       last: true,
       closeness: true,
       source: true,
-      interactions: { orderBy: { timestamp: "desc" }, take: 1, select: { timestamp: true } },
+      interactions: { orderBy: { timestamp: "desc" }, take: 1, select: { timestamp: true, summary: true } },
       plans: { where: { status: "active" }, select: { id: true }, take: 1 },
     },
     // The WHERE clause already restricts this to close/plan-linked people —
@@ -74,6 +74,7 @@ export async function getRelationshipGaps(workspaceId: string): Promise<Alignmen
       severity: score,
       subject: `${p.first} ${p.last}`,
       detail: lastAt ? `No recorded contact in ${daysSince(lastAt)} days` : "No recorded contact yet",
+      evidenceSummary: p.interactions[0]?.summary ?? null,
       personId: p.id,
     })
   }

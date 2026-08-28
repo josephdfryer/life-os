@@ -35,26 +35,26 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${newsreader.variable}`}>
       <body>
-        {/* Host is a per-request dynamic read; Suspense keeps it from forcing
-            every route in the app (including static-capable ones like the
-            legal pages) out of prerendering under cacheComponents. */}
-        <Suspense fallback={children}>
-          <SiteChrome>{children}</SiteChrome>
+        {/* The chrome's host/session work streams independently. Keeping the
+            route body outside this boundary prevents a transient duplicate
+            page and lets useful content paint without waiting for the bar. */}
+        <Suspense fallback={null}>
+          <SiteChrome />
         </Suspense>
+        {children}
       </body>
     </html>
   )
 }
 
-async function SiteChrome({ children }: { children: React.ReactNode }) {
+async function SiteChrome() {
   const isMarketingSite = isMarketingHost((await headers()).get("host"))
-  if (isMarketingSite) return <>{children}</>
+  if (isMarketingSite) return null
 
   return (
     <Providers>
       <TimezoneDetector />
       <AuthenticatedLifeOSBar current="home" />
-      {children}
     </Providers>
   )
 }

@@ -1,5 +1,5 @@
 import { db } from "@life-os/db"
-import { cacheLife } from "next/cache"
+import { cacheLife, unstable_cache } from "next/cache"
 import { groupCommunications } from "@/lib/communication-groups"
 import CommunicationsReview from "./CommunicationsReview"
 
@@ -11,7 +11,21 @@ export default async function CommunicationsReviewWidget({
   personsUrl: string
 }) {
   "use cache"
-  cacheLife({ stale: 15, revalidate: 30, expire: 300 })
+  cacheLife({ stale: 300, revalidate: 30, expire: 86400 })
+  const groups = process.env.NODE_ENV === "production"
+    ? await getCachedCommunicationGroups(workspaceId)
+    : await loadCommunicationGroups(workspaceId)
+
+  return (
+    <CommunicationsReview
+      personsUrl={personsUrl}
+      initialItems={groups}
+    />
+  )
+}
+
+async function loadCommunicationGroups(workspaceId: string) {
+  const startedAt = Date.now()
   const [rows, people] = await Promise.all([db.stagedInteraction.findMany({
     where: {
       workspaceId,
@@ -49,14 +63,15 @@ export default async function CommunicationsReviewWidget({
       candidatePerson: { first: match.first, last: match.last },
     } : row
   })).slice(0, 12)
-
-  return (
-    <CommunicationsReview
-      personsUrl={personsUrl}
-      initialItems={groups}
-    />
-  )
+  console.log(JSON.stringify({ level: "info", message: "home widget loaded", widget: "communications", durationMs: Date.now() - startedAt, count: groups.length }))
+  return groups
 }
+
+const getCachedCommunicationGroups = unstable_cache(
+  loadCommunicationGroups,
+  ['home-communications-read-model-v1'],
+  { revalidate: 30 },
+)
 
 function uniqueExactPersonMatch(
   row: { contactName: string | null; contactEmail: string | null; contactPhone: string | null },

@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from "next/server"
 import { lifeOsAppUrl } from "@life-os/auth"
+import { db } from "@life-os/db"
+import { auth } from "@/auth"
+import { unstable_cache } from "next/cache"
 
 type Params = { params: Promise<{ path: string[] }> }
 
@@ -20,8 +23,82 @@ function isAllowed(pathname: string) {
 }
 
 export async function GET(request: NextRequest, context: Params) {
-  return proxy(request, context)
+  const pathname = (await context.params).path.join("/")
+  if (!isAllowed(pathname)) return error("not_found", "Assistant endpoint not found.", 404)
+
+  // History is shared data, not agent execution. Reading it in Home avoids a
+  // second Vercel function cold start, a second auth pass, and a cross-app
+  // network hop before four small rows can appear. Message writes and agent
+  // execution still belong exclusively to the Assistant app below.
+  const startedAt = Date.now()
+  const session = await auth()
+  let email = session?.user?.email?.toLowerCase()
+  let workspaceId: string | undefined
+  const localReview = process.env.NODE_ENV !== "production" && process.env.LIFE_OS_LOCAL_REVIEW === "1"
+
+  if (localReview && !email) {
+    const membership = await db.workspaceMember.findFirst({
+      where: { status: "active", workspace: { status: "active" }, user: { status: "active" } },
+      select: { workspaceId: true, user: { select: { email: true } } },
+      orderBy: { createdAt: "asc" },
+    })
+    email = membership?.user.email.toLowerCase()
+    workspaceId = membership?.workspaceId
+  } else {
+    if (!email) return error("unauthorized", "Unauthorized", 401)
+    const memberships = await db.workspaceMember.findMany({
+      where: {
+        user: { email, status: "active" },
+        status: "active",
+        workspace: { status: "active" },
+      },
+      select: { workspaceId: true },
+      orderBy: { createdAt: "asc" },
+      take: 2,
+    })
+    if (memberships.length > 1) return error("workspace_required", "Multiple workspaces; choose one explicitly", 400)
+    workspaceId = memberships[0]?.workspaceId
+  }
+
+  if (!email || !workspaceId) return error("forbidden", "No active workspace", 403)
+
+  const requestedLimit = Number(request.nextUrl.searchParams.get("limit") ?? 4)
+  const limit = Number.isInteger(requestedLimit)
+    ? Math.min(Math.max(requestedLimit, 1), 20)
+    : 4
+  const cursor = request.nextUrl.searchParams.get("cursor") || undefined
+  const messages = process.env.NODE_ENV === "production"
+    ? await getCachedAssistantHistory(workspaceId, email, limit, cursor)
+    : await loadAssistantHistory(workspaceId, email, limit, cursor)
+  const hasMore = messages.length > limit
+  const page = messages.slice(0, limit)
+  const durationMs = Date.now() - startedAt
+  console.log(JSON.stringify({ level: "info", message: "home assistant history loaded", durationMs, count: page.length }))
+
+  return NextResponse.json({
+    messages: page.reverse(),
+    nextCursor: hasMore ? page.at(-1)?.id ?? null : null,
+    hasMore,
+  }, {
+    headers: { "Server-Timing": `assistant-history;dur=${durationMs}` },
+  })
 }
+
+async function loadAssistantHistory(workspaceId: string, email: string, limit: number, cursor?: string) {
+  return db.assistantMessage.findMany({
+    where: { workspaceId, from: `web:${email}` },
+    orderBy: [{ createdAt: "desc" }, { id: "desc" }],
+    take: limit + 1,
+    ...(cursor ? { cursor: { id: cursor }, skip: 1 } : {}),
+    select: { id: true, role: true, content: true, createdAt: true, metadata: true },
+  })
+}
+
+const getCachedAssistantHistory = unstable_cache(
+  loadAssistantHistory,
+  ['home-assistant-history-v1'],
+  { revalidate: 30 },
+)
 
 export async function POST(request: NextRequest, context: Params) {
   return proxy(request, context)

@@ -1,6 +1,5 @@
-import { db } from '@life-os/db'
 import { getAlignmentSignals } from '@life-os/alignment'
-import { cacheLife } from 'next/cache'
+import { cacheLife, unstable_cache } from 'next/cache'
 
 interface Props {
   workspaceId: string
@@ -11,13 +10,16 @@ const MAX_NUDGES = 5
 
 export default async function NudgesWidget({ workspaceId, personsUrl }: Props) {
   'use cache'
-  cacheLife({ stale: 30, revalidate: 60, expire: 300 })
+  cacheLife({ stale: 300, revalidate: 60, expire: 86400 })
+  const startedAt = Date.now()
   // Shared with Persons (Today page) and the assistant — one definition of
   // "overdue" instead of three apps quietly disagreeing with each other.
   // Every signal here always carries a concrete reason: an overdue
   // connection, a birthday today, or a plan involving that person that's
   // gone stale — never a person surfaced just because a record exists.
-  const combined = (await getAlignmentSignals(workspaceId)).sort((a, b) => b.severity - a.severity)
+  const combined = (await (process.env.NODE_ENV === 'production'
+    ? getCachedAlignmentSignals(workspaceId)
+    : getAlignmentSignals(workspaceId))).sort((a, b) => b.severity - a.severity)
   // A person can be both "birthday today" and "overdue for contact" at
   // once — show them once, under whichever signal sorted higher.
   const seen = new Set<string>()
@@ -27,22 +29,8 @@ export default async function NudgesWidget({ workspaceId, personsUrl }: Props) {
     return true
   }).slice(0, MAX_NUDGES)
 
-  // Signals are intentionally minimal (kind/severity/subject/detail) so the
-  // assistant can consume them as plain text — fetch the display-only summary
-  // snippet here, bounded to the handful actually shown.
-  const summaries = await Promise.all(
-    top.map(signal =>
-      signal.personId
-        ? db.interaction.findFirst({
-            where: { personId: signal.personId },
-            orderBy: { timestamp: 'desc' },
-            select: { summary: true },
-          })
-        : null
-    )
-  )
-
-  const nudges = top.map((signal, i) => ({ signal, summary: summaries[i]?.summary ?? null }))
+  const nudges = top.map(signal => ({ signal, summary: signal.evidenceSummary ?? null }))
+  console.log(JSON.stringify({ level: 'info', message: 'home widget loaded', widget: 'attention', durationMs: Date.now() - startedAt, count: nudges.length }))
 
   const subtitle = nudges.length === 0
     ? 'All caught up'
@@ -95,6 +83,12 @@ export default async function NudgesWidget({ workspaceId, personsUrl }: Props) {
     </div>
   )
 }
+
+const getCachedAlignmentSignals = unstable_cache(
+  async (workspaceId: string) => getAlignmentSignals(workspaceId),
+  ['home-attention-read-model-v1'],
+  { revalidate: 60 },
+)
 
 const card: React.CSSProperties = {
   background: 'rgba(247, 244, 238, 0.045)',

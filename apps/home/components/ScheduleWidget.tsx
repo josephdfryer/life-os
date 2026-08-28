@@ -2,7 +2,7 @@ import { lifeOsAppUrl } from '@life-os/auth'
 import { db } from '@life-os/db'
 import { BACKGROUND_EVENT_TYPES } from '@life-os/domain'
 import { dayKey, formatScheduleTime, isProviderScheduledEvent, reviewDayBounds } from '@/lib/daily'
-import { cacheLife } from 'next/cache'
+import { cacheLife, unstable_cache } from 'next/cache'
 
 interface Props {
   workspaceId: string
@@ -12,8 +12,80 @@ interface Props {
 
 export default async function ScheduleWidget({ workspaceId, personsUrl, tz }: Props) {
   'use cache'
-  cacheLife({ stale: 15, revalidate: 30, expire: 300 })
+  cacheLife({ stale: 300, revalidate: 30, expire: 86400 })
   const eventsUrl = lifeOsAppUrl('events', 'http://localhost:3006')
+  const events = process.env.NODE_ENV === 'production'
+    ? await getCachedScheduleEvents(workspaceId, tz, eventsUrl)
+    : await loadScheduleEvents(workspaceId, tz, eventsUrl)
+
+  return (
+    <div className="dashboard-schedule-card" style={card}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+        <h2 style={heading}>Today</h2>
+        <a href={eventsUrl} style={{ ...badge, textDecoration: 'none' }}>
+          {events.length} {events.length === 1 ? 'event' : 'events'} →
+        </a>
+      </div>
+
+      {events.length === 0 ? (
+        <div style={{ padding: '48px 0', textAlign: 'center', color: 'var(--ink-3)' }}>
+          Clear day
+        </div>
+      ) : (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          {events.map((event) => {
+            const uniqueAttendees = [...new Map(event.attendees.map(person => [person.id, person])).values()].slice(0, 3)
+
+            return (
+              <div key={event.id} style={{ display: 'flex', gap: '24px' }}>
+                <div
+                  style={{
+                    fontFamily: 'var(--font-body)',
+                    fontSize: '12px',
+                    color: 'var(--ink-3)',
+                    paddingTop: '2px',
+                    minWidth: '72px',
+                    flexShrink: 0,
+                  }}
+                >
+                  {formatScheduleTime(new Date(event.start), tz)}
+                </div>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+                    <a href={event.href} style={{ fontWeight: 500, lineHeight: 1.3, color: 'inherit', textDecoration: 'none' }}>
+                      {event.name}
+                    </a>
+                    {event.scheduled && <span style={scheduledBadge}>Scheduled</span>}
+                  </div>
+                  {uniqueAttendees.length > 0 && (
+                    <div style={{ fontSize: '12px', color: 'var(--ink-3)', marginTop: '4px' }}>
+                      with {uniqueAttendees.map((person, i) => (
+                        <span key={person.id}>
+                          {i > 0 && ', '}
+                          <a href={`${personsUrl}/persons/${person.id}`} style={{ color: 'var(--camel)', textDecoration: 'none' }}>
+                            {person.name}
+                          </a>
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                  {event.place && (
+                    <div style={{ fontSize: '12px', color: 'var(--ink-3)', marginTop: '2px' }}>
+                      {event.place.name}
+                    </div>
+                  )}
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      )}
+    </div>
+  )
+}
+
+async function loadScheduleEvents(workspaceId: string, tz: string, eventsUrl: string) {
+  const startedAt = Date.now()
   // Day boundaries in the user's own timezone, not the server's — the server
   // runs in UTC on Vercel, so plain Date component math here previously
   // showed tomorrow's events as "Today" for the UTC/local gap every day.
@@ -85,72 +157,15 @@ export default async function ScheduleWidget({ workspaceId, personsUrl, tz }: Pr
       attendees: plan.expectedPeople.map(({ person }) => ({ id: person.id, name: `${person.first} ${person.last}`.trim() })),
     }] : []),
   ].sort((a, b) => a.start.getTime() - b.start.getTime()).slice(0, 8)
-
-  return (
-    <div className="dashboard-schedule-card" style={card}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-        <h2 style={heading}>Today</h2>
-        <a href={eventsUrl} style={{ ...badge, textDecoration: 'none' }}>
-          {events.length} {events.length === 1 ? 'event' : 'events'} →
-        </a>
-      </div>
-
-      {events.length === 0 ? (
-        <div style={{ padding: '48px 0', textAlign: 'center', color: 'var(--ink-3)' }}>
-          Clear day
-        </div>
-      ) : (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-          {events.map((event) => {
-            const uniqueAttendees = [...new Map(event.attendees.map(person => [person.id, person])).values()].slice(0, 3)
-
-            return (
-              <div key={event.id} style={{ display: 'flex', gap: '24px' }}>
-                <div
-                  style={{
-                    fontFamily: 'var(--font-body)',
-                    fontSize: '12px',
-                    color: 'var(--ink-3)',
-                    paddingTop: '2px',
-                    minWidth: '72px',
-                    flexShrink: 0,
-                  }}
-                >
-                  {formatScheduleTime(new Date(event.start), tz)}
-                </div>
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-                    <a href={event.href} style={{ fontWeight: 500, lineHeight: 1.3, color: 'inherit', textDecoration: 'none' }}>
-                      {event.name}
-                    </a>
-                    {event.scheduled && <span style={scheduledBadge}>Scheduled</span>}
-                  </div>
-                  {uniqueAttendees.length > 0 && (
-                    <div style={{ fontSize: '12px', color: 'var(--ink-3)', marginTop: '4px' }}>
-                      with {uniqueAttendees.map((person, i) => (
-                        <span key={person.id}>
-                          {i > 0 && ', '}
-                          <a href={`${personsUrl}/persons/${person.id}`} style={{ color: 'var(--camel)', textDecoration: 'none' }}>
-                            {person.name}
-                          </a>
-                        </span>
-                      ))}
-                    </div>
-                  )}
-                  {event.place && (
-                    <div style={{ fontSize: '12px', color: 'var(--ink-3)', marginTop: '2px' }}>
-                      {event.place.name}
-                    </div>
-                  )}
-                </div>
-              </div>
-            )
-          })}
-        </div>
-      )}
-    </div>
-  )
+  console.log(JSON.stringify({ level: 'info', message: 'home widget loaded', widget: 'schedule', durationMs: Date.now() - startedAt, count: events.length }))
+  return events
 }
+
+const getCachedScheduleEvents = unstable_cache(
+  loadScheduleEvents,
+  ['home-schedule-read-model-v1'],
+  { revalidate: 30 },
+)
 
 const card: React.CSSProperties = {
   background: 'rgba(247, 244, 238, 0.045)',
