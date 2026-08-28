@@ -1336,6 +1336,7 @@ export type ItemCreateOrConnectWithoutWorkspaceInput = {
 
 export type ItemCreateManyWorkspaceInputEnvelope = {
   data: Prisma.ItemCreateManyWorkspaceInput | Prisma.ItemCreateManyWorkspaceInput[]
+  skipDuplicates?: boolean
 }
 
 export type ItemUpsertWithWhereUniqueWithoutWorkspaceInput = {
@@ -1465,6 +1466,7 @@ export type ItemCreateOrConnectWithoutOwnedByInput = {
 
 export type ItemCreateManyOwnedByInputEnvelope = {
   data: Prisma.ItemCreateManyOwnedByInput | Prisma.ItemCreateManyOwnedByInput[]
+  skipDuplicates?: boolean
 }
 
 export type ItemUpsertWithWhereUniqueWithoutOwnedByInput = {
@@ -1560,6 +1562,7 @@ export type ItemCreateOrConnectWithoutPlaceInput = {
 
 export type ItemCreateManyPlaceInputEnvelope = {
   data: Prisma.ItemCreateManyPlaceInput | Prisma.ItemCreateManyPlaceInput[]
+  skipDuplicates?: boolean
 }
 
 export type ItemUpsertWithWhereUniqueWithoutPlaceInput = {
@@ -1655,6 +1658,7 @@ export type ItemCreateOrConnectWithoutDefinitionInput = {
 
 export type ItemCreateManyDefinitionInputEnvelope = {
   data: Prisma.ItemCreateManyDefinitionInput | Prisma.ItemCreateManyDefinitionInput[]
+  skipDuplicates?: boolean
 }
 
 export type ItemUpsertWithWhereUniqueWithoutDefinitionInput = {
@@ -1750,6 +1754,7 @@ export type ItemCreateOrConnectWithoutLotInput = {
 
 export type ItemCreateManyLotInputEnvelope = {
   data: Prisma.ItemCreateManyLotInput | Prisma.ItemCreateManyLotInput[]
+  skipDuplicates?: boolean
 }
 
 export type ItemUpsertWithWhereUniqueWithoutLotInput = {
@@ -2313,6 +2318,7 @@ export type ItemCreateOrConnectWithoutPrimaryImageFileInput = {
 
 export type ItemCreateManyPrimaryImageFileInputEnvelope = {
   data: Prisma.ItemCreateManyPrimaryImageFileInput | Prisma.ItemCreateManyPrimaryImageFileInput[]
+  skipDuplicates?: boolean
 }
 
 export type ItemUpsertWithWhereUniqueWithoutPrimaryImageFileInput = {
@@ -4410,6 +4416,7 @@ export type ItemCreateManyArgs<ExtArgs extends runtime.Types.Extensions.Internal
    * The data used to create many Items.
    */
   data: Prisma.ItemCreateManyInput | Prisma.ItemCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -4428,6 +4435,7 @@ export type ItemCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions
    * The data used to create many Items.
    */
   data: Prisma.ItemCreateManyInput | Prisma.ItemCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

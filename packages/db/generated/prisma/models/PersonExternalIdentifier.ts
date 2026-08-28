@@ -454,6 +454,7 @@ export type PersonExternalIdentifierCreateOrConnectWithoutWorkspaceInput = {
 
 export type PersonExternalIdentifierCreateManyWorkspaceInputEnvelope = {
   data: Prisma.PersonExternalIdentifierCreateManyWorkspaceInput | Prisma.PersonExternalIdentifierCreateManyWorkspaceInput[]
+  skipDuplicates?: boolean
 }
 
 export type PersonExternalIdentifierUpsertWithWhereUniqueWithoutWorkspaceInput = {
@@ -507,6 +508,7 @@ export type PersonExternalIdentifierCreateOrConnectWithoutPersonInput = {
 
 export type PersonExternalIdentifierCreateManyPersonInputEnvelope = {
   data: Prisma.PersonExternalIdentifierCreateManyPersonInput | Prisma.PersonExternalIdentifierCreateManyPersonInput[]
+  skipDuplicates?: boolean
 }
 
 export type PersonExternalIdentifierUpsertWithWhereUniqueWithoutPersonInput = {
@@ -1325,6 +1327,7 @@ export type PersonExternalIdentifierCreateManyArgs<ExtArgs extends runtime.Types
    * The data used to create many PersonExternalIdentifiers.
    */
   data: Prisma.PersonExternalIdentifierCreateManyInput | Prisma.PersonExternalIdentifierCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1343,6 +1346,7 @@ export type PersonExternalIdentifierCreateManyAndReturnArgs<ExtArgs extends runt
    * The data used to create many PersonExternalIdentifiers.
    */
   data: Prisma.PersonExternalIdentifierCreateManyInput | Prisma.PersonExternalIdentifierCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

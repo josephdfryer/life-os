@@ -411,6 +411,7 @@ export type LevelUpBadgeUnlockCreateOrConnectWithoutWorkspaceInput = {
 
 export type LevelUpBadgeUnlockCreateManyWorkspaceInputEnvelope = {
   data: Prisma.LevelUpBadgeUnlockCreateManyWorkspaceInput | Prisma.LevelUpBadgeUnlockCreateManyWorkspaceInput[]
+  skipDuplicates?: boolean
 }
 
 export type LevelUpBadgeUnlockUpsertWithWhereUniqueWithoutWorkspaceInput = {
@@ -1201,6 +1202,7 @@ export type LevelUpBadgeUnlockCreateManyArgs<ExtArgs extends runtime.Types.Exten
    * The data used to create many LevelUpBadgeUnlocks.
    */
   data: Prisma.LevelUpBadgeUnlockCreateManyInput | Prisma.LevelUpBadgeUnlockCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1219,6 +1221,7 @@ export type LevelUpBadgeUnlockCreateManyAndReturnArgs<ExtArgs extends runtime.Ty
    * The data used to create many LevelUpBadgeUnlocks.
    */
   data: Prisma.LevelUpBadgeUnlockCreateManyInput | Prisma.LevelUpBadgeUnlockCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

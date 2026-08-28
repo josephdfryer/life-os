@@ -508,6 +508,7 @@ export type LevelUpBodyMetricCreateOrConnectWithoutWorkspaceInput = {
 
 export type LevelUpBodyMetricCreateManyWorkspaceInputEnvelope = {
   data: Prisma.LevelUpBodyMetricCreateManyWorkspaceInput | Prisma.LevelUpBodyMetricCreateManyWorkspaceInput[]
+  skipDuplicates?: boolean
 }
 
 export type LevelUpBodyMetricUpsertWithWhereUniqueWithoutWorkspaceInput = {
@@ -1320,6 +1321,7 @@ export type LevelUpBodyMetricCreateManyArgs<ExtArgs extends runtime.Types.Extens
    * The data used to create many LevelUpBodyMetrics.
    */
   data: Prisma.LevelUpBodyMetricCreateManyInput | Prisma.LevelUpBodyMetricCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1338,6 +1340,7 @@ export type LevelUpBodyMetricCreateManyAndReturnArgs<ExtArgs extends runtime.Typ
    * The data used to create many LevelUpBodyMetrics.
    */
   data: Prisma.LevelUpBodyMetricCreateManyInput | Prisma.LevelUpBodyMetricCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

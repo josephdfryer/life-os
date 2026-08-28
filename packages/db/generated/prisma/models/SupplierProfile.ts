@@ -597,6 +597,7 @@ export type SupplierProfileCreateOrConnectWithoutWorkspaceInput = {
 
 export type SupplierProfileCreateManyWorkspaceInputEnvelope = {
   data: Prisma.SupplierProfileCreateManyWorkspaceInput | Prisma.SupplierProfileCreateManyWorkspaceInput[]
+  skipDuplicates?: boolean
 }
 
 export type SupplierProfileUpsertWithWhereUniqueWithoutWorkspaceInput = {
@@ -1631,6 +1632,7 @@ export type SupplierProfileCreateManyArgs<ExtArgs extends runtime.Types.Extensio
    * The data used to create many SupplierProfiles.
    */
   data: Prisma.SupplierProfileCreateManyInput | Prisma.SupplierProfileCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1649,6 +1651,7 @@ export type SupplierProfileCreateManyAndReturnArgs<ExtArgs extends runtime.Types
    * The data used to create many SupplierProfiles.
    */
   data: Prisma.SupplierProfileCreateManyInput | Prisma.SupplierProfileCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

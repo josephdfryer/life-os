@@ -526,6 +526,7 @@ export type GraphEventReceiptCreateOrConnectWithoutEventInput = {
 
 export type GraphEventReceiptCreateManyEventInputEnvelope = {
   data: Prisma.GraphEventReceiptCreateManyEventInput | Prisma.GraphEventReceiptCreateManyEventInput[]
+  skipDuplicates?: boolean
 }
 
 export type GraphEventReceiptUpsertWithWhereUniqueWithoutEventInput = {
@@ -1349,6 +1350,7 @@ export type GraphEventReceiptCreateManyArgs<ExtArgs extends runtime.Types.Extens
    * The data used to create many GraphEventReceipts.
    */
   data: Prisma.GraphEventReceiptCreateManyInput | Prisma.GraphEventReceiptCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1367,6 +1369,7 @@ export type GraphEventReceiptCreateManyAndReturnArgs<ExtArgs extends runtime.Typ
    * The data used to create many GraphEventReceipts.
    */
   data: Prisma.GraphEventReceiptCreateManyInput | Prisma.GraphEventReceiptCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

@@ -742,6 +742,7 @@ export type RuleCreateOrConnectWithoutWorkspaceInput = {
 
 export type RuleCreateManyWorkspaceInputEnvelope = {
   data: Prisma.RuleCreateManyWorkspaceInput | Prisma.RuleCreateManyWorkspaceInput[]
+  skipDuplicates?: boolean
 }
 
 export type RuleUpsertWithWhereUniqueWithoutWorkspaceInput = {
@@ -824,6 +825,7 @@ export type RuleCreateOrConnectWithoutCreatedByUserInput = {
 
 export type RuleCreateManyCreatedByUserInputEnvelope = {
   data: Prisma.RuleCreateManyCreatedByUserInput | Prisma.RuleCreateManyCreatedByUserInput[]
+  skipDuplicates?: boolean
 }
 
 export type RuleUpsertWithWhereUniqueWithoutCreatedByUserInput = {
@@ -1895,6 +1897,7 @@ export type RuleCreateManyArgs<ExtArgs extends runtime.Types.Extensions.Internal
    * The data used to create many Rules.
    */
   data: Prisma.RuleCreateManyInput | Prisma.RuleCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1913,6 +1916,7 @@ export type RuleCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions
    * The data used to create many Rules.
    */
   data: Prisma.RuleCreateManyInput | Prisma.RuleCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

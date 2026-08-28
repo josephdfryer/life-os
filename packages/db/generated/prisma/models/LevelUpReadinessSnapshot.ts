@@ -683,6 +683,7 @@ export type LevelUpReadinessSnapshotCreateOrConnectWithoutWorkspaceInput = {
 
 export type LevelUpReadinessSnapshotCreateManyWorkspaceInputEnvelope = {
   data: Prisma.LevelUpReadinessSnapshotCreateManyWorkspaceInput | Prisma.LevelUpReadinessSnapshotCreateManyWorkspaceInput[]
+  skipDuplicates?: boolean
 }
 
 export type LevelUpReadinessSnapshotUpsertWithWhereUniqueWithoutWorkspaceInput = {
@@ -1679,6 +1680,7 @@ export type LevelUpReadinessSnapshotCreateManyArgs<ExtArgs extends runtime.Types
    * The data used to create many LevelUpReadinessSnapshots.
    */
   data: Prisma.LevelUpReadinessSnapshotCreateManyInput | Prisma.LevelUpReadinessSnapshotCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1697,6 +1699,7 @@ export type LevelUpReadinessSnapshotCreateManyAndReturnArgs<ExtArgs extends runt
    * The data used to create many LevelUpReadinessSnapshots.
    */
   data: Prisma.LevelUpReadinessSnapshotCreateManyInput | Prisma.LevelUpReadinessSnapshotCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

@@ -458,6 +458,7 @@ export type LevelUpTargetBuildCreateOrConnectWithoutWorkspaceInput = {
 
 export type LevelUpTargetBuildCreateManyWorkspaceInputEnvelope = {
   data: Prisma.LevelUpTargetBuildCreateManyWorkspaceInput | Prisma.LevelUpTargetBuildCreateManyWorkspaceInput[]
+  skipDuplicates?: boolean
 }
 
 export type LevelUpTargetBuildUpsertWithWhereUniqueWithoutWorkspaceInput = {
@@ -1270,6 +1271,7 @@ export type LevelUpTargetBuildCreateManyArgs<ExtArgs extends runtime.Types.Exten
    * The data used to create many LevelUpTargetBuilds.
    */
   data: Prisma.LevelUpTargetBuildCreateManyInput | Prisma.LevelUpTargetBuildCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1288,6 +1290,7 @@ export type LevelUpTargetBuildCreateManyAndReturnArgs<ExtArgs extends runtime.Ty
    * The data used to create many LevelUpTargetBuilds.
    */
   data: Prisma.LevelUpTargetBuildCreateManyInput | Prisma.LevelUpTargetBuildCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

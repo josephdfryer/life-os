@@ -670,6 +670,7 @@ export type TheorySnapshotCreateOrConnectWithoutWorkspaceInput = {
 
 export type TheorySnapshotCreateManyWorkspaceInputEnvelope = {
   data: Prisma.TheorySnapshotCreateManyWorkspaceInput | Prisma.TheorySnapshotCreateManyWorkspaceInput[]
+  skipDuplicates?: boolean
 }
 
 export type TheorySnapshotUpsertWithWhereUniqueWithoutWorkspaceInput = {
@@ -743,6 +744,7 @@ export type TheorySnapshotCreateOrConnectWithoutSubjectPersonInput = {
 
 export type TheorySnapshotCreateManySubjectPersonInputEnvelope = {
   data: Prisma.TheorySnapshotCreateManySubjectPersonInput | Prisma.TheorySnapshotCreateManySubjectPersonInput[]
+  skipDuplicates?: boolean
 }
 
 export type TheorySnapshotUpsertWithWhereUniqueWithoutSubjectPersonInput = {
@@ -1760,6 +1762,7 @@ export type TheorySnapshotCreateManyArgs<ExtArgs extends runtime.Types.Extension
    * The data used to create many TheorySnapshots.
    */
   data: Prisma.TheorySnapshotCreateManyInput | Prisma.TheorySnapshotCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1778,6 +1781,7 @@ export type TheorySnapshotCreateManyAndReturnArgs<ExtArgs extends runtime.Types.
    * The data used to create many TheorySnapshots.
    */
   data: Prisma.TheorySnapshotCreateManyInput | Prisma.TheorySnapshotCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

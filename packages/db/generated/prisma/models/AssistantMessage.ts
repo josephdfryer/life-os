@@ -452,6 +452,7 @@ export type AssistantMessageCreateOrConnectWithoutWorkspaceInput = {
 
 export type AssistantMessageCreateManyWorkspaceInputEnvelope = {
   data: Prisma.AssistantMessageCreateManyWorkspaceInput | Prisma.AssistantMessageCreateManyWorkspaceInput[]
+  skipDuplicates?: boolean
 }
 
 export type AssistantMessageUpsertWithWhereUniqueWithoutWorkspaceInput = {
@@ -1264,6 +1265,7 @@ export type AssistantMessageCreateManyArgs<ExtArgs extends runtime.Types.Extensi
    * The data used to create many AssistantMessages.
    */
   data: Prisma.AssistantMessageCreateManyInput | Prisma.AssistantMessageCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1282,6 +1284,7 @@ export type AssistantMessageCreateManyAndReturnArgs<ExtArgs extends runtime.Type
    * The data used to create many AssistantMessages.
    */
   data: Prisma.AssistantMessageCreateManyInput | Prisma.AssistantMessageCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

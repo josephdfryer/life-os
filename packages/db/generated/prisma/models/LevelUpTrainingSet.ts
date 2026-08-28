@@ -921,6 +921,7 @@ export type LevelUpTrainingSetCreateOrConnectWithoutWorkspaceInput = {
 
 export type LevelUpTrainingSetCreateManyWorkspaceInputEnvelope = {
   data: Prisma.LevelUpTrainingSetCreateManyWorkspaceInput | Prisma.LevelUpTrainingSetCreateManyWorkspaceInput[]
+  skipDuplicates?: boolean
 }
 
 export type LevelUpTrainingSetUpsertWithWhereUniqueWithoutWorkspaceInput = {
@@ -1016,6 +1017,7 @@ export type LevelUpTrainingSetCreateOrConnectWithoutExerciseInput = {
 
 export type LevelUpTrainingSetCreateManyExerciseInputEnvelope = {
   data: Prisma.LevelUpTrainingSetCreateManyExerciseInput | Prisma.LevelUpTrainingSetCreateManyExerciseInput[]
+  skipDuplicates?: boolean
 }
 
 export type LevelUpTrainingSetUpsertWithWhereUniqueWithoutExerciseInput = {
@@ -1085,6 +1087,7 @@ export type LevelUpTrainingSetCreateOrConnectWithoutSessionInput = {
 
 export type LevelUpTrainingSetCreateManySessionInputEnvelope = {
   data: Prisma.LevelUpTrainingSetCreateManySessionInput | Prisma.LevelUpTrainingSetCreateManySessionInput[]
+  skipDuplicates?: boolean
 }
 
 export type LevelUpTrainingSetUpsertWithWhereUniqueWithoutSessionInput = {
@@ -2195,6 +2198,7 @@ export type LevelUpTrainingSetCreateManyArgs<ExtArgs extends runtime.Types.Exten
    * The data used to create many LevelUpTrainingSets.
    */
   data: Prisma.LevelUpTrainingSetCreateManyInput | Prisma.LevelUpTrainingSetCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -2213,6 +2217,7 @@ export type LevelUpTrainingSetCreateManyAndReturnArgs<ExtArgs extends runtime.Ty
    * The data used to create many LevelUpTrainingSets.
    */
   data: Prisma.LevelUpTrainingSetCreateManyInput | Prisma.LevelUpTrainingSetCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

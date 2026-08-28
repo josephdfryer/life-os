@@ -714,6 +714,7 @@ export type GranolaNoteLinkCreateOrConnectWithoutWorkspaceInput = {
 
 export type GranolaNoteLinkCreateManyWorkspaceInputEnvelope = {
   data: Prisma.GranolaNoteLinkCreateManyWorkspaceInput | Prisma.GranolaNoteLinkCreateManyWorkspaceInput[]
+  skipDuplicates?: boolean
 }
 
 export type GranolaNoteLinkUpsertWithWhereUniqueWithoutWorkspaceInput = {
@@ -794,6 +795,7 @@ export type GranolaNoteLinkCreateOrConnectWithoutConnectionInput = {
 
 export type GranolaNoteLinkCreateManyConnectionInputEnvelope = {
   data: Prisma.GranolaNoteLinkCreateManyConnectionInput | Prisma.GranolaNoteLinkCreateManyConnectionInput[]
+  skipDuplicates?: boolean
 }
 
 export type GranolaNoteLinkUpsertWithWhereUniqueWithoutConnectionInput = {
@@ -853,6 +855,7 @@ export type GranolaNoteLinkCreateOrConnectWithoutEventInput = {
 
 export type GranolaNoteLinkCreateManyEventInputEnvelope = {
   data: Prisma.GranolaNoteLinkCreateManyEventInput | Prisma.GranolaNoteLinkCreateManyEventInput[]
+  skipDuplicates?: boolean
 }
 
 export type GranolaNoteLinkUpsertWithWhereUniqueWithoutEventInput = {
@@ -1873,6 +1876,7 @@ export type GranolaNoteLinkCreateManyArgs<ExtArgs extends runtime.Types.Extensio
    * The data used to create many GranolaNoteLinks.
    */
   data: Prisma.GranolaNoteLinkCreateManyInput | Prisma.GranolaNoteLinkCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1891,6 +1895,7 @@ export type GranolaNoteLinkCreateManyAndReturnArgs<ExtArgs extends runtime.Types
    * The data used to create many GranolaNoteLinks.
    */
   data: Prisma.GranolaNoteLinkCreateManyInput | Prisma.GranolaNoteLinkCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

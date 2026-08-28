@@ -452,6 +452,7 @@ export type PlaceGroupCreateOrConnectWithoutPlaceInput = {
 
 export type PlaceGroupCreateManyPlaceInputEnvelope = {
   data: Prisma.PlaceGroupCreateManyPlaceInput | Prisma.PlaceGroupCreateManyPlaceInput[]
+  skipDuplicates?: boolean
 }
 
 export type PlaceGroupUpsertWithWhereUniqueWithoutPlaceInput = {
@@ -505,6 +506,7 @@ export type PlaceGroupCreateOrConnectWithoutGroupInput = {
 
 export type PlaceGroupCreateManyGroupInputEnvelope = {
   data: Prisma.PlaceGroupCreateManyGroupInput | Prisma.PlaceGroupCreateManyGroupInput[]
+  skipDuplicates?: boolean
 }
 
 export type PlaceGroupUpsertWithWhereUniqueWithoutGroupInput = {
@@ -1323,6 +1325,7 @@ export type PlaceGroupCreateManyArgs<ExtArgs extends runtime.Types.Extensions.In
    * The data used to create many PlaceGroups.
    */
   data: Prisma.PlaceGroupCreateManyInput | Prisma.PlaceGroupCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1341,6 +1344,7 @@ export type PlaceGroupCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Exte
    * The data used to create many PlaceGroups.
    */
   data: Prisma.PlaceGroupCreateManyInput | Prisma.PlaceGroupCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

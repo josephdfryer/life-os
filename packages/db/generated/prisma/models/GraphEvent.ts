@@ -850,6 +850,7 @@ export type GraphEventCreateOrConnectWithoutWorkspaceInput = {
 
 export type GraphEventCreateManyWorkspaceInputEnvelope = {
   data: Prisma.GraphEventCreateManyWorkspaceInput | Prisma.GraphEventCreateManyWorkspaceInput[]
+  skipDuplicates?: boolean
 }
 
 export type GraphEventUpsertWithWhereUniqueWithoutWorkspaceInput = {
@@ -992,6 +993,7 @@ export type GraphEventCreateOrConnectWithoutCausationEventInput = {
 
 export type GraphEventCreateManyCausationEventInputEnvelope = {
   data: Prisma.GraphEventCreateManyCausationEventInput | Prisma.GraphEventCreateManyCausationEventInput[]
+  skipDuplicates?: boolean
 }
 
 export type GraphEventUpsertWithoutCausedEventsInput = {
@@ -2193,6 +2195,7 @@ export type GraphEventCreateManyArgs<ExtArgs extends runtime.Types.Extensions.In
    * The data used to create many GraphEvents.
    */
   data: Prisma.GraphEventCreateManyInput | Prisma.GraphEventCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -2211,6 +2214,7 @@ export type GraphEventCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Exte
    * The data used to create many GraphEvents.
    */
   data: Prisma.GraphEventCreateManyInput | Prisma.GraphEventCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

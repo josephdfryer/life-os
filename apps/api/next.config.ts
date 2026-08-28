@@ -3,20 +3,15 @@
 // app in the repo had it removed for the same reason. docker/Dockerfile.nextjs
 // still copies .next/standalone, so container builds need a different strategy
 // before they will work again; that is a repo-wide decision, not a per-app one.
-import type { NextConfig } from "next"
-import path from "path"
+import type { NextConfig } from "next";
+import path from "path";
 
 const nextConfig: NextConfig = {
   outputFileTracingRoot: path.resolve(__dirname, "../.."),
-  serverExternalPackages: [
-    "better-sqlite3",
-    "@prisma/adapter-better-sqlite3",
-    "@prisma/adapter-libsql",
-    "@libsql/client",
-  ],
+  serverExternalPackages: ["pg"],
   turbopack: {
     root: path.resolve(__dirname, "../.."),
   },
-}
+};
 
-export default nextConfig
+export default nextConfig;

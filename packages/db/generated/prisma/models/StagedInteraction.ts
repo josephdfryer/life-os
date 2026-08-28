@@ -1024,6 +1024,7 @@ export type StagedInteractionCreateOrConnectWithoutWorkspaceInput = {
 
 export type StagedInteractionCreateManyWorkspaceInputEnvelope = {
   data: Prisma.StagedInteractionCreateManyWorkspaceInput | Prisma.StagedInteractionCreateManyWorkspaceInput[]
+  skipDuplicates?: boolean
 }
 
 export type StagedInteractionUpsertWithWhereUniqueWithoutWorkspaceInput = {
@@ -1138,6 +1139,7 @@ export type StagedInteractionCreateOrConnectWithoutCandidatePersonInput = {
 
 export type StagedInteractionCreateManyCandidatePersonInputEnvelope = {
   data: Prisma.StagedInteractionCreateManyCandidatePersonInput | Prisma.StagedInteractionCreateManyCandidatePersonInput[]
+  skipDuplicates?: boolean
 }
 
 export type StagedInteractionUpsertWithWhereUniqueWithoutCandidatePersonInput = {
@@ -2542,6 +2544,7 @@ export type StagedInteractionCreateManyArgs<ExtArgs extends runtime.Types.Extens
    * The data used to create many StagedInteractions.
    */
   data: Prisma.StagedInteractionCreateManyInput | Prisma.StagedInteractionCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -2560,6 +2563,7 @@ export type StagedInteractionCreateManyAndReturnArgs<ExtArgs extends runtime.Typ
    * The data used to create many StagedInteractions.
    */
   data: Prisma.StagedInteractionCreateManyInput | Prisma.StagedInteractionCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

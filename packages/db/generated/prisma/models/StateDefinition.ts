@@ -1166,6 +1166,7 @@ export type StateDefinitionCreateManyArgs<ExtArgs extends runtime.Types.Extensio
    * The data used to create many StateDefinitions.
    */
   data: Prisma.StateDefinitionCreateManyInput | Prisma.StateDefinitionCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1184,6 +1185,7 @@ export type StateDefinitionCreateManyAndReturnArgs<ExtArgs extends runtime.Types
    * The data used to create many StateDefinitions.
    */
   data: Prisma.StateDefinitionCreateManyInput | Prisma.StateDefinitionCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**

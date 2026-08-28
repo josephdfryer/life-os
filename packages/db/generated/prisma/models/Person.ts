@@ -1508,6 +1508,7 @@ export type PersonCreateOrConnectWithoutWorkspaceInput = {
 
 export type PersonCreateManyWorkspaceInputEnvelope = {
   data: Prisma.PersonCreateManyWorkspaceInput | Prisma.PersonCreateManyWorkspaceInput[]
+  skipDuplicates?: boolean
 }
 
 export type PersonUpsertWithWhereUniqueWithoutWorkspaceInput = {
@@ -7273,6 +7274,7 @@ export type PersonCreateManyArgs<ExtArgs extends runtime.Types.Extensions.Intern
    * The data used to create many People.
    */
   data: Prisma.PersonCreateManyInput | Prisma.PersonCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -7291,6 +7293,7 @@ export type PersonCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensio
    * The data used to create many People.
    */
   data: Prisma.PersonCreateManyInput | Prisma.PersonCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

@@ -712,6 +712,7 @@ export type CalendarEventLinkCreateOrConnectWithoutWorkspaceInput = {
 
 export type CalendarEventLinkCreateManyWorkspaceInputEnvelope = {
   data: Prisma.CalendarEventLinkCreateManyWorkspaceInput | Prisma.CalendarEventLinkCreateManyWorkspaceInput[]
+  skipDuplicates?: boolean
 }
 
 export type CalendarEventLinkUpsertWithWhereUniqueWithoutWorkspaceInput = {
@@ -786,6 +787,7 @@ export type CalendarEventLinkCreateOrConnectWithoutConnectionInput = {
 
 export type CalendarEventLinkCreateManyConnectionInputEnvelope = {
   data: Prisma.CalendarEventLinkCreateManyConnectionInput | Prisma.CalendarEventLinkCreateManyConnectionInput[]
+  skipDuplicates?: boolean
 }
 
 export type CalendarEventLinkUpsertWithWhereUniqueWithoutConnectionInput = {
@@ -841,6 +843,7 @@ export type CalendarEventLinkCreateOrConnectWithoutEventInput = {
 
 export type CalendarEventLinkCreateManyEventInputEnvelope = {
   data: Prisma.CalendarEventLinkCreateManyEventInput | Prisma.CalendarEventLinkCreateManyEventInput[]
+  skipDuplicates?: boolean
 }
 
 export type CalendarEventLinkUpsertWithWhereUniqueWithoutEventInput = {
@@ -896,6 +899,7 @@ export type CalendarEventLinkCreateOrConnectWithoutPlanInput = {
 
 export type CalendarEventLinkCreateManyPlanInputEnvelope = {
   data: Prisma.CalendarEventLinkCreateManyPlanInput | Prisma.CalendarEventLinkCreateManyPlanInput[]
+  skipDuplicates?: boolean
 }
 
 export type CalendarEventLinkUpsertWithWhereUniqueWithoutPlanInput = {
@@ -1948,6 +1952,7 @@ export type CalendarEventLinkCreateManyArgs<ExtArgs extends runtime.Types.Extens
    * The data used to create many CalendarEventLinks.
    */
   data: Prisma.CalendarEventLinkCreateManyInput | Prisma.CalendarEventLinkCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1966,6 +1971,7 @@ export type CalendarEventLinkCreateManyAndReturnArgs<ExtArgs extends runtime.Typ
    * The data used to create many CalendarEventLinks.
    */
   data: Prisma.CalendarEventLinkCreateManyInput | Prisma.CalendarEventLinkCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

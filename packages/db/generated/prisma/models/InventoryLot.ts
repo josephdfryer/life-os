@@ -606,6 +606,7 @@ export type InventoryLotCreateOrConnectWithoutWorkspaceInput = {
 
 export type InventoryLotCreateManyWorkspaceInputEnvelope = {
   data: Prisma.InventoryLotCreateManyWorkspaceInput | Prisma.InventoryLotCreateManyWorkspaceInput[]
+  skipDuplicates?: boolean
 }
 
 export type InventoryLotUpsertWithWhereUniqueWithoutWorkspaceInput = {
@@ -747,6 +748,7 @@ export type InventoryLotCreateOrConnectWithoutDefinitionInput = {
 
 export type InventoryLotCreateManyDefinitionInputEnvelope = {
   data: Prisma.InventoryLotCreateManyDefinitionInput | Prisma.InventoryLotCreateManyDefinitionInput[]
+  skipDuplicates?: boolean
 }
 
 export type InventoryLotUpsertWithWhereUniqueWithoutDefinitionInput = {
@@ -1749,6 +1751,7 @@ export type InventoryLotCreateManyArgs<ExtArgs extends runtime.Types.Extensions.
    * The data used to create many InventoryLots.
    */
   data: Prisma.InventoryLotCreateManyInput | Prisma.InventoryLotCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1767,6 +1770,7 @@ export type InventoryLotCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Ex
    * The data used to create many InventoryLots.
    */
   data: Prisma.InventoryLotCreateManyInput | Prisma.InventoryLotCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

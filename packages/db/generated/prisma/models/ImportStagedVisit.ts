@@ -812,6 +812,7 @@ export type ImportStagedVisitCreateOrConnectWithoutWorkspaceInput = {
 
 export type ImportStagedVisitCreateManyWorkspaceInputEnvelope = {
   data: Prisma.ImportStagedVisitCreateManyWorkspaceInput | Prisma.ImportStagedVisitCreateManyWorkspaceInput[]
+  skipDuplicates?: boolean
 }
 
 export type ImportStagedVisitUpsertWithWhereUniqueWithoutWorkspaceInput = {
@@ -898,6 +899,7 @@ export type ImportStagedVisitCreateOrConnectWithoutResolvedPlaceInput = {
 
 export type ImportStagedVisitCreateManyResolvedPlaceInputEnvelope = {
   data: Prisma.ImportStagedVisitCreateManyResolvedPlaceInput | Prisma.ImportStagedVisitCreateManyResolvedPlaceInput[]
+  skipDuplicates?: boolean
 }
 
 export type ImportStagedVisitUpsertWithWhereUniqueWithoutResolvedPlaceInput = {
@@ -961,6 +963,7 @@ export type ImportStagedVisitCreateOrConnectWithoutImportJobInput = {
 
 export type ImportStagedVisitCreateManyImportJobInputEnvelope = {
   data: Prisma.ImportStagedVisitCreateManyImportJobInput | Prisma.ImportStagedVisitCreateManyImportJobInput[]
+  skipDuplicates?: boolean
 }
 
 export type ImportStagedVisitUpsertWithWhereUniqueWithoutImportJobInput = {
@@ -2017,6 +2020,7 @@ export type ImportStagedVisitCreateManyArgs<ExtArgs extends runtime.Types.Extens
    * The data used to create many ImportStagedVisits.
    */
   data: Prisma.ImportStagedVisitCreateManyInput | Prisma.ImportStagedVisitCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -2035,6 +2039,7 @@ export type ImportStagedVisitCreateManyAndReturnArgs<ExtArgs extends runtime.Typ
    * The data used to create many ImportStagedVisits.
    */
   data: Prisma.ImportStagedVisitCreateManyInput | Prisma.ImportStagedVisitCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

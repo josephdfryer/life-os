@@ -719,6 +719,7 @@ export type FileChunkCreateOrConnectWithoutWorkspaceInput = {
 
 export type FileChunkCreateManyWorkspaceInputEnvelope = {
   data: Prisma.FileChunkCreateManyWorkspaceInput | Prisma.FileChunkCreateManyWorkspaceInput[]
+  skipDuplicates?: boolean
 }
 
 export type FileChunkUpsertWithWhereUniqueWithoutWorkspaceInput = {
@@ -791,6 +792,7 @@ export type FileChunkCreateOrConnectWithoutSourceFileInput = {
 
 export type FileChunkCreateManySourceFileInputEnvelope = {
   data: Prisma.FileChunkCreateManySourceFileInput | Prisma.FileChunkCreateManySourceFileInput[]
+  skipDuplicates?: boolean
 }
 
 export type FileChunkUpsertWithWhereUniqueWithoutSourceFileInput = {
@@ -846,6 +848,7 @@ export type FileChunkCreateOrConnectWithoutProcessingRunInput = {
 
 export type FileChunkCreateManyProcessingRunInputEnvelope = {
   data: Prisma.FileChunkCreateManyProcessingRunInput | Prisma.FileChunkCreateManyProcessingRunInput[]
+  skipDuplicates?: boolean
 }
 
 export type FileChunkUpsertWithWhereUniqueWithoutProcessingRunInput = {
@@ -2006,6 +2009,7 @@ export type FileChunkCreateManyArgs<ExtArgs extends runtime.Types.Extensions.Int
    * The data used to create many FileChunks.
    */
   data: Prisma.FileChunkCreateManyInput | Prisma.FileChunkCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -2024,6 +2028,7 @@ export type FileChunkCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Exten
    * The data used to create many FileChunks.
    */
   data: Prisma.FileChunkCreateManyInput | Prisma.FileChunkCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

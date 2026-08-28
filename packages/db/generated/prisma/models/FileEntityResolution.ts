@@ -608,6 +608,7 @@ export type FileEntityResolutionCreateOrConnectWithoutWorkspaceInput = {
 
 export type FileEntityResolutionCreateManyWorkspaceInputEnvelope = {
   data: Prisma.FileEntityResolutionCreateManyWorkspaceInput | Prisma.FileEntityResolutionCreateManyWorkspaceInput[]
+  skipDuplicates?: boolean
 }
 
 export type FileEntityResolutionUpsertWithWhereUniqueWithoutWorkspaceInput = {
@@ -670,6 +671,7 @@ export type FileEntityResolutionCreateOrConnectWithoutFromPersonInput = {
 
 export type FileEntityResolutionCreateManyFromPersonInputEnvelope = {
   data: Prisma.FileEntityResolutionCreateManyFromPersonInput | Prisma.FileEntityResolutionCreateManyFromPersonInput[]
+  skipDuplicates?: boolean
 }
 
 export type FileEntityResolutionCreateWithoutToPersonInput = {
@@ -701,6 +703,7 @@ export type FileEntityResolutionCreateOrConnectWithoutToPersonInput = {
 
 export type FileEntityResolutionCreateManyToPersonInputEnvelope = {
   data: Prisma.FileEntityResolutionCreateManyToPersonInput | Prisma.FileEntityResolutionCreateManyToPersonInput[]
+  skipDuplicates?: boolean
 }
 
 export type FileEntityResolutionUpsertWithWhereUniqueWithoutFromPersonInput = {
@@ -764,6 +767,7 @@ export type FileEntityResolutionCreateOrConnectWithoutMentionInput = {
 
 export type FileEntityResolutionCreateManyMentionInputEnvelope = {
   data: Prisma.FileEntityResolutionCreateManyMentionInput | Prisma.FileEntityResolutionCreateManyMentionInput[]
+  skipDuplicates?: boolean
 }
 
 export type FileEntityResolutionUpsertWithWhereUniqueWithoutMentionInput = {
@@ -1728,6 +1732,7 @@ export type FileEntityResolutionCreateManyArgs<ExtArgs extends runtime.Types.Ext
    * The data used to create many FileEntityResolutions.
    */
   data: Prisma.FileEntityResolutionCreateManyInput | Prisma.FileEntityResolutionCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1746,6 +1751,7 @@ export type FileEntityResolutionCreateManyAndReturnArgs<ExtArgs extends runtime.
    * The data used to create many FileEntityResolutions.
    */
   data: Prisma.FileEntityResolutionCreateManyInput | Prisma.FileEntityResolutionCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

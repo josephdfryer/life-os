@@ -12,8 +12,7 @@
 #   http://events.localhost
 #   http://assistant.localhost
 #
-# DB: all apps share a single SQLite file on the `life-os-db` volume.
-# Override with TURSO_DATABASE_URL + TURSO_AUTH_TOKEN in .env to use Turso instead.
+# DB: all apps share the local Postgres service. Production uses Neon Postgres.
 
 x-nextjs-build: &nextjs-build
   context: .
@@ -23,16 +22,34 @@ x-app-defaults: &app-defaults
   env_file:
     - path: .env
       required: false
-  volumes:
-    - life-os-db:/data/db
+  depends_on:
+    postgres:
+      condition: service_healthy
   restart: unless-stopped
 
 volumes:
-  life-os-db:
+  life-os-pg:
   caddy-data:
   caddy-config:
 
 services:
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: lifeos
+      POSTGRES_PASSWORD: lifeos
+      POSTGRES_DB: lifeos
+    ports:
+      - "5432:5432"
+    volumes:
+      - life-os-pg:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U lifeos -d lifeos"]
+      interval: 2s
+      timeout: 5s
+      retries: 15
+    restart: unless-stopped
+
   # ── Caddy reverse proxy ────────────────────────────────────────────────────
   caddy:
     image: caddy:2-alpine
@@ -62,7 +79,7 @@ services:
     ports:
       - "3000:3000"
     environment:
-      DATABASE_URL: file:/data/db/life-os.db
+      DATABASE_URL: postgresql://lifeos:lifeos@postgres:5432/lifeos
 
   stuff:
     <<: *app-defaults
@@ -74,7 +91,7 @@ services:
     ports:
       - "3001:3001"
     environment:
-      DATABASE_URL: file:/data/db/life-os.db
+      DATABASE_URL: postgresql://lifeos:lifeos@postgres:5432/lifeos
 
   places:
     <<: *app-defaults
@@ -86,7 +103,7 @@ services:
     ports:
       - "3002:3002"
     environment:
-      DATABASE_URL: file:/data/db/life-os.db
+      DATABASE_URL: postgresql://lifeos:lifeos@postgres:5432/lifeos
 
   home:
     <<: *app-defaults
@@ -98,7 +115,7 @@ services:
     ports:
       - "3003:3003"
     environment:
-      DATABASE_URL: file:/data/db/life-os.db
+      DATABASE_URL: postgresql://lifeos:lifeos@postgres:5432/lifeos
       NEXT_PUBLIC_PERSONS_URL: ${NEXT_PUBLIC_PERSONS_URL:-http://persons.localhost}
       NEXT_PUBLIC_STUFF_URL: ${NEXT_PUBLIC_STUFF_URL:-http://stuff.localhost}
       NEXT_PUBLIC_PLACES_URL: ${NEXT_PUBLIC_PLACES_URL:-http://places.localhost}
@@ -114,7 +131,7 @@ services:
     ports:
       - "3006:3006"
     environment:
-      DATABASE_URL: file:/data/db/life-os.db
+      DATABASE_URL: postgresql://lifeos:lifeos@postgres:5432/lifeos
 
   assistant:
     <<: *app-defaults
@@ -126,4 +143,4 @@ services:
     ports:
       - "3005:3005"
     environment:
-      DATABASE_URL: file:/data/db/life-os.db
+      DATABASE_URL: postgresql://lifeos:lifeos@postgres:5432/lifeos

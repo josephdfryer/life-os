@@ -1077,6 +1077,7 @@ export type FileEntityMentionCreateOrConnectWithoutWorkspaceInput = {
 
 export type FileEntityMentionCreateManyWorkspaceInputEnvelope = {
   data: Prisma.FileEntityMentionCreateManyWorkspaceInput | Prisma.FileEntityMentionCreateManyWorkspaceInput[]
+  skipDuplicates?: boolean
 }
 
 export type FileEntityMentionUpsertWithWhereUniqueWithoutWorkspaceInput = {
@@ -1182,6 +1183,7 @@ export type FileEntityMentionCreateOrConnectWithoutResolvedPersonInput = {
 
 export type FileEntityMentionCreateManyResolvedPersonInputEnvelope = {
   data: Prisma.FileEntityMentionCreateManyResolvedPersonInput | Prisma.FileEntityMentionCreateManyResolvedPersonInput[]
+  skipDuplicates?: boolean
 }
 
 export type FileEntityMentionUpsertWithWhereUniqueWithoutResolvedPersonInput = {
@@ -1259,6 +1261,7 @@ export type FileEntityMentionCreateOrConnectWithoutSourceFileInput = {
 
 export type FileEntityMentionCreateManySourceFileInputEnvelope = {
   data: Prisma.FileEntityMentionCreateManySourceFileInput | Prisma.FileEntityMentionCreateManySourceFileInput[]
+  skipDuplicates?: boolean
 }
 
 export type FileEntityMentionUpsertWithWhereUniqueWithoutSourceFileInput = {
@@ -1336,6 +1339,7 @@ export type FileEntityMentionCreateOrConnectWithoutProcessingRunInput = {
 
 export type FileEntityMentionCreateManyProcessingRunInputEnvelope = {
   data: Prisma.FileEntityMentionCreateManyProcessingRunInput | Prisma.FileEntityMentionCreateManyProcessingRunInput[]
+  skipDuplicates?: boolean
 }
 
 export type FileEntityMentionUpsertWithWhereUniqueWithoutProcessingRunInput = {
@@ -1413,6 +1417,7 @@ export type FileEntityMentionCreateOrConnectWithoutChunkInput = {
 
 export type FileEntityMentionCreateManyChunkInputEnvelope = {
   data: Prisma.FileEntityMentionCreateManyChunkInput | Prisma.FileEntityMentionCreateManyChunkInput[]
+  skipDuplicates?: boolean
 }
 
 export type FileEntityMentionUpsertWithWhereUniqueWithoutChunkInput = {
@@ -3075,6 +3080,7 @@ export type FileEntityMentionCreateManyArgs<ExtArgs extends runtime.Types.Extens
    * The data used to create many FileEntityMentions.
    */
   data: Prisma.FileEntityMentionCreateManyInput | Prisma.FileEntityMentionCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -3093,6 +3099,7 @@ export type FileEntityMentionCreateManyAndReturnArgs<ExtArgs extends runtime.Typ
    * The data used to create many FileEntityMentions.
    */
   data: Prisma.FileEntityMentionCreateManyInput | Prisma.FileEntityMentionCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

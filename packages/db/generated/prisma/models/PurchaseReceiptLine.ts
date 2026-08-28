@@ -672,6 +672,7 @@ export type PurchaseReceiptLineCreateOrConnectWithoutWorkspaceInput = {
 
 export type PurchaseReceiptLineCreateManyWorkspaceInputEnvelope = {
   data: Prisma.PurchaseReceiptLineCreateManyWorkspaceInput | Prisma.PurchaseReceiptLineCreateManyWorkspaceInput[]
+  skipDuplicates?: boolean
 }
 
 export type PurchaseReceiptLineUpsertWithWhereUniqueWithoutWorkspaceInput = {
@@ -731,6 +732,7 @@ export type PurchaseReceiptLineCreateOrConnectWithoutEventInput = {
 
 export type PurchaseReceiptLineCreateManyEventInputEnvelope = {
   data: Prisma.PurchaseReceiptLineCreateManyEventInput | Prisma.PurchaseReceiptLineCreateManyEventInput[]
+  skipDuplicates?: boolean
 }
 
 export type PurchaseReceiptLineUpsertWithWhereUniqueWithoutEventInput = {
@@ -776,6 +778,7 @@ export type PurchaseReceiptLineCreateOrConnectWithoutItemInput = {
 
 export type PurchaseReceiptLineCreateManyItemInputEnvelope = {
   data: Prisma.PurchaseReceiptLineCreateManyItemInput | Prisma.PurchaseReceiptLineCreateManyItemInput[]
+  skipDuplicates?: boolean
 }
 
 export type PurchaseReceiptLineUpsertWithWhereUniqueWithoutItemInput = {
@@ -821,6 +824,7 @@ export type PurchaseReceiptLineCreateOrConnectWithoutLotInput = {
 
 export type PurchaseReceiptLineCreateManyLotInputEnvelope = {
   data: Prisma.PurchaseReceiptLineCreateManyLotInput | Prisma.PurchaseReceiptLineCreateManyLotInput[]
+  skipDuplicates?: boolean
 }
 
 export type PurchaseReceiptLineUpsertWithWhereUniqueWithoutLotInput = {
@@ -866,6 +870,7 @@ export type PurchaseReceiptLineCreateOrConnectWithoutOrderLineInput = {
 
 export type PurchaseReceiptLineCreateManyOrderLineInputEnvelope = {
   data: Prisma.PurchaseReceiptLineCreateManyOrderLineInput | Prisma.PurchaseReceiptLineCreateManyOrderLineInput[]
+  skipDuplicates?: boolean
 }
 
 export type PurchaseReceiptLineUpsertWithWhereUniqueWithoutOrderLineInput = {
@@ -1856,6 +1861,7 @@ export type PurchaseReceiptLineCreateManyArgs<ExtArgs extends runtime.Types.Exte
    * The data used to create many PurchaseReceiptLines.
    */
   data: Prisma.PurchaseReceiptLineCreateManyInput | Prisma.PurchaseReceiptLineCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1874,6 +1880,7 @@ export type PurchaseReceiptLineCreateManyAndReturnArgs<ExtArgs extends runtime.T
    * The data used to create many PurchaseReceiptLines.
    */
   data: Prisma.PurchaseReceiptLineCreateManyInput | Prisma.PurchaseReceiptLineCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

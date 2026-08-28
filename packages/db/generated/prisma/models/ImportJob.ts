@@ -726,6 +726,7 @@ export type ImportJobCreateOrConnectWithoutWorkspaceInput = {
 
 export type ImportJobCreateManyWorkspaceInputEnvelope = {
   data: Prisma.ImportJobCreateManyWorkspaceInput | Prisma.ImportJobCreateManyWorkspaceInput[]
+  skipDuplicates?: boolean
 }
 
 export type ImportJobUpsertWithWhereUniqueWithoutWorkspaceInput = {
@@ -1740,6 +1741,7 @@ export type ImportJobCreateManyArgs<ExtArgs extends runtime.Types.Extensions.Int
    * The data used to create many ImportJobs.
    */
   data: Prisma.ImportJobCreateManyInput | Prisma.ImportJobCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1758,6 +1760,7 @@ export type ImportJobCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Exten
    * The data used to create many ImportJobs.
    */
   data: Prisma.ImportJobCreateManyInput | Prisma.ImportJobCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

@@ -697,6 +697,7 @@ export type EraConnectionCreateOrConnectWithoutWorkspaceInput = {
 
 export type EraConnectionCreateManyWorkspaceInputEnvelope = {
   data: Prisma.EraConnectionCreateManyWorkspaceInput | Prisma.EraConnectionCreateManyWorkspaceInput[]
+  skipDuplicates?: boolean
 }
 
 export type EraConnectionUpsertWithWhereUniqueWithoutWorkspaceInput = {
@@ -778,6 +779,7 @@ export type EraConnectionCreateOrConnectWithoutUserInput = {
 
 export type EraConnectionCreateManyUserInputEnvelope = {
   data: Prisma.EraConnectionCreateManyUserInput | Prisma.EraConnectionCreateManyUserInput[]
+  skipDuplicates?: boolean
 }
 
 export type EraConnectionUpsertWithWhereUniqueWithoutUserInput = {
@@ -1940,6 +1942,7 @@ export type EraConnectionCreateManyArgs<ExtArgs extends runtime.Types.Extensions
    * The data used to create many EraConnections.
    */
   data: Prisma.EraConnectionCreateManyInput | Prisma.EraConnectionCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1958,6 +1961,7 @@ export type EraConnectionCreateManyAndReturnArgs<ExtArgs extends runtime.Types.E
    * The data used to create many EraConnections.
    */
   data: Prisma.EraConnectionCreateManyInput | Prisma.EraConnectionCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

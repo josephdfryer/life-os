@@ -427,6 +427,7 @@ export type PlanExpectedPersonCreateOrConnectWithoutWorkspaceInput = {
 
 export type PlanExpectedPersonCreateManyWorkspaceInputEnvelope = {
   data: Prisma.PlanExpectedPersonCreateManyWorkspaceInput | Prisma.PlanExpectedPersonCreateManyWorkspaceInput[]
+  skipDuplicates?: boolean
 }
 
 export type PlanExpectedPersonUpsertWithWhereUniqueWithoutWorkspaceInput = {
@@ -471,6 +472,7 @@ export type PlanExpectedPersonCreateOrConnectWithoutPersonInput = {
 
 export type PlanExpectedPersonCreateManyPersonInputEnvelope = {
   data: Prisma.PlanExpectedPersonCreateManyPersonInput | Prisma.PlanExpectedPersonCreateManyPersonInput[]
+  skipDuplicates?: boolean
 }
 
 export type PlanExpectedPersonUpsertWithWhereUniqueWithoutPersonInput = {
@@ -506,6 +508,7 @@ export type PlanExpectedPersonCreateOrConnectWithoutPlanInput = {
 
 export type PlanExpectedPersonCreateManyPlanInputEnvelope = {
   data: Prisma.PlanExpectedPersonCreateManyPlanInput | Prisma.PlanExpectedPersonCreateManyPlanInput[]
+  skipDuplicates?: boolean
 }
 
 export type PlanExpectedPersonUpsertWithWhereUniqueWithoutPlanInput = {
@@ -1310,6 +1313,7 @@ export type PlanExpectedPersonCreateManyArgs<ExtArgs extends runtime.Types.Exten
    * The data used to create many PlanExpectedPeople.
    */
   data: Prisma.PlanExpectedPersonCreateManyInput | Prisma.PlanExpectedPersonCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1328,6 +1332,7 @@ export type PlanExpectedPersonCreateManyAndReturnArgs<ExtArgs extends runtime.Ty
    * The data used to create many PlanExpectedPeople.
    */
   data: Prisma.PlanExpectedPersonCreateManyInput | Prisma.PlanExpectedPersonCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

@@ -611,6 +611,7 @@ export type AiProviderCredentialCreateOrConnectWithoutWorkspaceInput = {
 
 export type AiProviderCredentialCreateManyWorkspaceInputEnvelope = {
   data: Prisma.AiProviderCredentialCreateManyWorkspaceInput | Prisma.AiProviderCredentialCreateManyWorkspaceInput[]
+  skipDuplicates?: boolean
 }
 
 export type AiProviderCredentialUpsertWithWhereUniqueWithoutWorkspaceInput = {
@@ -1847,6 +1848,7 @@ export type AiProviderCredentialCreateManyArgs<ExtArgs extends runtime.Types.Ext
    * The data used to create many AiProviderCredentials.
    */
   data: Prisma.AiProviderCredentialCreateManyInput | Prisma.AiProviderCredentialCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1865,6 +1867,7 @@ export type AiProviderCredentialCreateManyAndReturnArgs<ExtArgs extends runtime.
    * The data used to create many AiProviderCredentials.
    */
   data: Prisma.AiProviderCredentialCreateManyInput | Prisma.AiProviderCredentialCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

@@ -725,6 +725,7 @@ export type LevelUpSessionCreateOrConnectWithoutWorkspaceInput = {
 
 export type LevelUpSessionCreateManyWorkspaceInputEnvelope = {
   data: Prisma.LevelUpSessionCreateManyWorkspaceInput | Prisma.LevelUpSessionCreateManyWorkspaceInput[]
+  skipDuplicates?: boolean
 }
 
 export type LevelUpSessionUpsertWithWhereUniqueWithoutWorkspaceInput = {
@@ -887,6 +888,7 @@ export type LevelUpSessionCreateOrConnectWithoutProgramDayInput = {
 
 export type LevelUpSessionCreateManyProgramDayInputEnvelope = {
   data: Prisma.LevelUpSessionCreateManyProgramDayInput | Prisma.LevelUpSessionCreateManyProgramDayInput[]
+  skipDuplicates?: boolean
 }
 
 export type LevelUpSessionUpsertWithWhereUniqueWithoutProgramDayInput = {
@@ -1934,6 +1936,7 @@ export type LevelUpSessionCreateManyArgs<ExtArgs extends runtime.Types.Extension
    * The data used to create many LevelUpSessions.
    */
   data: Prisma.LevelUpSessionCreateManyInput | Prisma.LevelUpSessionCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1952,6 +1955,7 @@ export type LevelUpSessionCreateManyAndReturnArgs<ExtArgs extends runtime.Types.
    * The data used to create many LevelUpSessions.
    */
   data: Prisma.LevelUpSessionCreateManyInput | Prisma.LevelUpSessionCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

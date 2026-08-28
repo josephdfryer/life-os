@@ -813,6 +813,7 @@ export type EraAccountLinkCreateOrConnectWithoutWorkspaceInput = {
 
 export type EraAccountLinkCreateManyWorkspaceInputEnvelope = {
   data: Prisma.EraAccountLinkCreateManyWorkspaceInput | Prisma.EraAccountLinkCreateManyWorkspaceInput[]
+  skipDuplicates?: boolean
 }
 
 export type EraAccountLinkUpsertWithWhereUniqueWithoutWorkspaceInput = {
@@ -897,6 +898,7 @@ export type EraAccountLinkCreateOrConnectWithoutOwnerPersonInput = {
 
 export type EraAccountLinkCreateManyOwnerPersonInputEnvelope = {
   data: Prisma.EraAccountLinkCreateManyOwnerPersonInput | Prisma.EraAccountLinkCreateManyOwnerPersonInput[]
+  skipDuplicates?: boolean
 }
 
 export type EraAccountLinkUpsertWithWhereUniqueWithoutOwnerPersonInput = {
@@ -960,6 +962,7 @@ export type EraAccountLinkCreateOrConnectWithoutConnectionInput = {
 
 export type EraAccountLinkCreateManyConnectionInputEnvelope = {
   data: Prisma.EraAccountLinkCreateManyConnectionInput | Prisma.EraAccountLinkCreateManyConnectionInput[]
+  skipDuplicates?: boolean
 }
 
 export type EraAccountLinkUpsertWithWhereUniqueWithoutConnectionInput = {
@@ -1207,6 +1210,7 @@ export type EraAccountLinkCreateOrConnectWithoutHouseholdGroupInput = {
 
 export type EraAccountLinkCreateManyHouseholdGroupInputEnvelope = {
   data: Prisma.EraAccountLinkCreateManyHouseholdGroupInput | Prisma.EraAccountLinkCreateManyHouseholdGroupInput[]
+  skipDuplicates?: boolean
 }
 
 export type EraAccountLinkUpsertWithWhereUniqueWithoutHouseholdGroupInput = {
@@ -2367,6 +2371,7 @@ export type EraAccountLinkCreateManyArgs<ExtArgs extends runtime.Types.Extension
    * The data used to create many EraAccountLinks.
    */
   data: Prisma.EraAccountLinkCreateManyInput | Prisma.EraAccountLinkCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -2385,6 +2390,7 @@ export type EraAccountLinkCreateManyAndReturnArgs<ExtArgs extends runtime.Types.
    * The data used to create many EraAccountLinks.
    */
   data: Prisma.EraAccountLinkCreateManyInput | Prisma.EraAccountLinkCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

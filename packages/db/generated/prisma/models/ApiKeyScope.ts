@@ -314,6 +314,7 @@ export type ApiKeyScopeCreateOrConnectWithoutApiKeyInput = {
 
 export type ApiKeyScopeCreateManyApiKeyInputEnvelope = {
   data: Prisma.ApiKeyScopeCreateManyApiKeyInput | Prisma.ApiKeyScopeCreateManyApiKeyInput[]
+  skipDuplicates?: boolean
 }
 
 export type ApiKeyScopeUpsertWithWhereUniqueWithoutApiKeyInput = {
@@ -1060,6 +1061,7 @@ export type ApiKeyScopeCreateManyArgs<ExtArgs extends runtime.Types.Extensions.I
    * The data used to create many ApiKeyScopes.
    */
   data: Prisma.ApiKeyScopeCreateManyInput | Prisma.ApiKeyScopeCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1078,6 +1080,7 @@ export type ApiKeyScopeCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Ext
    * The data used to create many ApiKeyScopes.
    */
   data: Prisma.ApiKeyScopeCreateManyInput | Prisma.ApiKeyScopeCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

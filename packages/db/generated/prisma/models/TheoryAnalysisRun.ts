@@ -788,6 +788,7 @@ export type TheoryAnalysisRunCreateOrConnectWithoutWorkspaceInput = {
 
 export type TheoryAnalysisRunCreateManyWorkspaceInputEnvelope = {
   data: Prisma.TheoryAnalysisRunCreateManyWorkspaceInput | Prisma.TheoryAnalysisRunCreateManyWorkspaceInput[]
+  skipDuplicates?: boolean
 }
 
 export type TheoryAnalysisRunUpsertWithWhereUniqueWithoutWorkspaceInput = {
@@ -871,6 +872,7 @@ export type TheoryAnalysisRunCreateOrConnectWithoutSubjectPersonInput = {
 
 export type TheoryAnalysisRunCreateManySubjectPersonInputEnvelope = {
   data: Prisma.TheoryAnalysisRunCreateManySubjectPersonInput | Prisma.TheoryAnalysisRunCreateManySubjectPersonInput[]
+  skipDuplicates?: boolean
 }
 
 export type TheoryAnalysisRunUpsertWithWhereUniqueWithoutSubjectPersonInput = {
@@ -932,6 +934,7 @@ export type TheoryAnalysisRunCreateOrConnectWithoutCredentialInput = {
 
 export type TheoryAnalysisRunCreateManyCredentialInputEnvelope = {
   data: Prisma.TheoryAnalysisRunCreateManyCredentialInput | Prisma.TheoryAnalysisRunCreateManyCredentialInput[]
+  skipDuplicates?: boolean
 }
 
 export type TheoryAnalysisRunUpsertWithWhereUniqueWithoutCredentialInput = {
@@ -1970,6 +1973,7 @@ export type TheoryAnalysisRunCreateManyArgs<ExtArgs extends runtime.Types.Extens
    * The data used to create many TheoryAnalysisRuns.
    */
   data: Prisma.TheoryAnalysisRunCreateManyInput | Prisma.TheoryAnalysisRunCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1988,6 +1992,7 @@ export type TheoryAnalysisRunCreateManyAndReturnArgs<ExtArgs extends runtime.Typ
    * The data used to create many TheoryAnalysisRuns.
    */
   data: Prisma.TheoryAnalysisRunCreateManyInput | Prisma.TheoryAnalysisRunCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

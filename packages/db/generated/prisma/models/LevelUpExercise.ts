@@ -701,6 +701,7 @@ export type LevelUpExerciseCreateOrConnectWithoutWorkspaceInput = {
 
 export type LevelUpExerciseCreateManyWorkspaceInputEnvelope = {
   data: Prisma.LevelUpExerciseCreateManyWorkspaceInput | Prisma.LevelUpExerciseCreateManyWorkspaceInput[]
+  skipDuplicates?: boolean
 }
 
 export type LevelUpExerciseUpsertWithWhereUniqueWithoutWorkspaceInput = {
@@ -892,6 +893,7 @@ export type LevelUpExerciseCreateOrConnectWithoutSubstituteInput = {
 
 export type LevelUpExerciseCreateManySubstituteInputEnvelope = {
   data: Prisma.LevelUpExerciseCreateManySubstituteInput | Prisma.LevelUpExerciseCreateManySubstituteInput[]
+  skipDuplicates?: boolean
 }
 
 export type LevelUpExerciseUpsertWithoutSubstituteForInput = {
@@ -1976,6 +1978,7 @@ export type LevelUpExerciseCreateManyArgs<ExtArgs extends runtime.Types.Extensio
    * The data used to create many LevelUpExercises.
    */
   data: Prisma.LevelUpExerciseCreateManyInput | Prisma.LevelUpExerciseCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1994,6 +1997,7 @@ export type LevelUpExerciseCreateManyAndReturnArgs<ExtArgs extends runtime.Types
    * The data used to create many LevelUpExercises.
    */
   data: Prisma.LevelUpExerciseCreateManyInput | Prisma.LevelUpExerciseCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

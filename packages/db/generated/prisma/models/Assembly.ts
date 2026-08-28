@@ -608,6 +608,7 @@ export type AssemblyCreateOrConnectWithoutAssembledByInput = {
 
 export type AssemblyCreateManyAssembledByInputEnvelope = {
   data: Prisma.AssemblyCreateManyAssembledByInput | Prisma.AssemblyCreateManyAssembledByInput[]
+  skipDuplicates?: boolean
 }
 
 export type AssemblyCreateWithoutDisassembledByInput = {
@@ -639,6 +640,7 @@ export type AssemblyCreateOrConnectWithoutDisassembledByInput = {
 
 export type AssemblyCreateManyDisassembledByInputEnvelope = {
   data: Prisma.AssemblyCreateManyDisassembledByInput | Prisma.AssemblyCreateManyDisassembledByInput[]
+  skipDuplicates?: boolean
 }
 
 export type AssemblyUpsertWithWhereUniqueWithoutAssembledByInput = {
@@ -717,6 +719,7 @@ export type AssemblyCreateOrConnectWithoutChildItemInput = {
 
 export type AssemblyCreateManyChildItemInputEnvelope = {
   data: Prisma.AssemblyCreateManyChildItemInput | Prisma.AssemblyCreateManyChildItemInput[]
+  skipDuplicates?: boolean
 }
 
 export type AssemblyCreateWithoutParentItemInput = {
@@ -748,6 +751,7 @@ export type AssemblyCreateOrConnectWithoutParentItemInput = {
 
 export type AssemblyCreateManyParentItemInputEnvelope = {
   data: Prisma.AssemblyCreateManyParentItemInput | Prisma.AssemblyCreateManyParentItemInput[]
+  skipDuplicates?: boolean
 }
 
 export type AssemblyUpsertWithWhereUniqueWithoutChildItemInput = {
@@ -1728,6 +1732,7 @@ export type AssemblyCreateManyArgs<ExtArgs extends runtime.Types.Extensions.Inte
    * The data used to create many Assemblies.
    */
   data: Prisma.AssemblyCreateManyInput | Prisma.AssemblyCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1746,6 +1751,7 @@ export type AssemblyCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extens
    * The data used to create many Assemblies.
    */
   data: Prisma.AssemblyCreateManyInput | Prisma.AssemblyCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

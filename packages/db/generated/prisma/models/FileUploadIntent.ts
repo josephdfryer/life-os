@@ -700,6 +700,7 @@ export type FileUploadIntentCreateOrConnectWithoutWorkspaceInput = {
 
 export type FileUploadIntentCreateManyWorkspaceInputEnvelope = {
   data: Prisma.FileUploadIntentCreateManyWorkspaceInput | Prisma.FileUploadIntentCreateManyWorkspaceInput[]
+  skipDuplicates?: boolean
 }
 
 export type FileUploadIntentUpsertWithWhereUniqueWithoutWorkspaceInput = {
@@ -1683,6 +1684,7 @@ export type FileUploadIntentCreateManyArgs<ExtArgs extends runtime.Types.Extensi
    * The data used to create many FileUploadIntents.
    */
   data: Prisma.FileUploadIntentCreateManyInput | Prisma.FileUploadIntentCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1701,6 +1703,7 @@ export type FileUploadIntentCreateManyAndReturnArgs<ExtArgs extends runtime.Type
    * The data used to create many FileUploadIntents.
    */
   data: Prisma.FileUploadIntentCreateManyInput | Prisma.FileUploadIntentCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

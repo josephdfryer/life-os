@@ -1243,6 +1243,7 @@ export type EvidenceClaimCreateOrConnectWithoutWorkspaceInput = {
 
 export type EvidenceClaimCreateManyWorkspaceInputEnvelope = {
   data: Prisma.EvidenceClaimCreateManyWorkspaceInput | Prisma.EvidenceClaimCreateManyWorkspaceInput[]
+  skipDuplicates?: boolean
 }
 
 export type EvidenceClaimUpsertWithWhereUniqueWithoutWorkspaceInput = {
@@ -1362,6 +1363,7 @@ export type EvidenceClaimCreateOrConnectWithoutSourceFileInput = {
 
 export type EvidenceClaimCreateManySourceFileInputEnvelope = {
   data: Prisma.EvidenceClaimCreateManySourceFileInput | Prisma.EvidenceClaimCreateManySourceFileInput[]
+  skipDuplicates?: boolean
 }
 
 export type EvidenceClaimUpsertWithWhereUniqueWithoutSourceFileInput = {
@@ -1449,6 +1451,7 @@ export type EvidenceClaimCreateOrConnectWithoutProcessingRunInput = {
 
 export type EvidenceClaimCreateManyProcessingRunInputEnvelope = {
   data: Prisma.EvidenceClaimCreateManyProcessingRunInput | Prisma.EvidenceClaimCreateManyProcessingRunInput[]
+  skipDuplicates?: boolean
 }
 
 export type EvidenceClaimUpsertWithWhereUniqueWithoutProcessingRunInput = {
@@ -1536,6 +1539,7 @@ export type EvidenceClaimCreateOrConnectWithoutChunkInput = {
 
 export type EvidenceClaimCreateManyChunkInputEnvelope = {
   data: Prisma.EvidenceClaimCreateManyChunkInput | Prisma.EvidenceClaimCreateManyChunkInput[]
+  skipDuplicates?: boolean
 }
 
 export type EvidenceClaimUpsertWithWhereUniqueWithoutChunkInput = {
@@ -1690,6 +1694,7 @@ export type EvidenceClaimCreateOrConnectWithoutSupersedesClaimInput = {
 
 export type EvidenceClaimCreateManySupersedesClaimInputEnvelope = {
   data: Prisma.EvidenceClaimCreateManySupersedesClaimInput | Prisma.EvidenceClaimCreateManySupersedesClaimInput[]
+  skipDuplicates?: boolean
 }
 
 export type EvidenceClaimUpsertWithoutSupersededByInput = {
@@ -1990,6 +1995,7 @@ export type EvidenceClaimCreateOrConnectWithoutCorrectionNoteInput = {
 
 export type EvidenceClaimCreateManyCorrectionNoteInputEnvelope = {
   data: Prisma.EvidenceClaimCreateManyCorrectionNoteInput | Prisma.EvidenceClaimCreateManyCorrectionNoteInput[]
+  skipDuplicates?: boolean
 }
 
 export type EvidenceClaimUpsertWithWhereUniqueWithoutCorrectionNoteInput = {
@@ -3805,6 +3811,7 @@ export type EvidenceClaimCreateManyArgs<ExtArgs extends runtime.Types.Extensions
    * The data used to create many EvidenceClaims.
    */
   data: Prisma.EvidenceClaimCreateManyInput | Prisma.EvidenceClaimCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -3823,6 +3830,7 @@ export type EvidenceClaimCreateManyAndReturnArgs<ExtArgs extends runtime.Types.E
    * The data used to create many EvidenceClaims.
    */
   data: Prisma.EvidenceClaimCreateManyInput | Prisma.EvidenceClaimCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */
