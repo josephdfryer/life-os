@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react"
 
 type Message = {
   id: string
@@ -8,6 +8,14 @@ type Message = {
   content: string
   pending?: boolean
 }
+
+type MessagePage = {
+  messages?: Message[]
+  nextCursor?: string | null
+  hasMore?: boolean
+}
+
+const INITIAL_MESSAGE_COUNT = 4
 
 // Same brain as the standalone assistant.lacollecteur.com chat and WhatsApp —
 // this panel just talks to it through Home's own /api/assistant proxy
@@ -17,26 +25,85 @@ export default function AssistantPanel() {
   const [draft, setDraft] = useState("")
   const [thinking, setThinking] = useState(false)
   const [loaded, setLoaded] = useState(false)
-  const bottomRef = useRef<HTMLDivElement>(null)
+  const [nextCursor, setNextCursor] = useState<string | null>(null)
+  const [loadingEarlier, setLoadingEarlier] = useState(false)
+  const messageListRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLTextAreaElement>(null)
+  const initialPositionedRef = useRef(false)
+  const previousScrollHeightRef = useRef<number | null>(null)
+  const scrollToLatestRef = useRef(false)
+
+  useLayoutEffect(() => {
+    const list = messageListRef.current
+    if (!list || !loaded) return
+
+    if (previousScrollHeightRef.current !== null) {
+      list.scrollTop += list.scrollHeight - previousScrollHeightRef.current
+      previousScrollHeightRef.current = null
+      return
+    }
+
+    if (!initialPositionedRef.current) {
+      list.scrollTop = list.scrollHeight
+      initialPositionedRef.current = true
+      return
+    }
+
+    if (scrollToLatestRef.current) {
+      list.scrollTo({ top: list.scrollHeight, behavior: "smooth" })
+      scrollToLatestRef.current = false
+    }
+  }, [loaded, messages, thinking])
 
   useEffect(() => {
-    fetch("/api/assistant/chat")
+    const controller = new AbortController()
+    fetch(`/api/assistant/chat?limit=${INITIAL_MESSAGE_COUNT}`, { signal: controller.signal })
       .then(res => (res.ok ? res.json() : { messages: [] }))
-      .then(data => setMessages(data.messages ?? []))
+      .then((data: MessagePage) => {
+        setMessages(data.messages ?? [])
+        setNextCursor(data.hasMore ? data.nextCursor ?? null : null)
+      })
       .catch(() => {})
       .finally(() => setLoaded(true))
+    return () => controller.abort()
   }, [])
 
+  const loadEarlier = useCallback(async () => {
+    const list = messageListRef.current
+    if (!nextCursor || loadingEarlier || !list) return
+    setLoadingEarlier(true)
+    previousScrollHeightRef.current = list.scrollHeight
+    try {
+      const response = await fetch(`/api/assistant/chat?limit=${INITIAL_MESSAGE_COUNT}&cursor=${encodeURIComponent(nextCursor)}`)
+      if (!response.ok) throw new Error("Could not load earlier messages")
+      const data = await response.json() as MessagePage
+      const earlier = data.messages ?? []
+      if (earlier.length === 0) previousScrollHeightRef.current = null
+      setMessages(current => [...earlier, ...current])
+      setNextCursor(data.hasMore ? data.nextCursor ?? null : null)
+    } catch {
+      previousScrollHeightRef.current = null
+    } finally {
+      setLoadingEarlier(false)
+    }
+  }, [loadingEarlier, nextCursor])
+
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: messages.length > 2 ? "smooth" : "auto" })
-  }, [messages, thinking])
+    const list = messageListRef.current
+    if (!list) return
+    const handleWheel = (event: WheelEvent) => {
+      if (event.deltaY < 0 && list.scrollTop <= 0) void loadEarlier()
+    }
+    list.addEventListener("wheel", handleWheel, { passive: true })
+    return () => list.removeEventListener("wheel", handleWheel)
+  }, [loadEarlier])
 
   async function send() {
     const text = draft.trim()
     if (!text || thinking) return
     setDraft("")
     setThinking(true)
+    scrollToLatestRef.current = true
     setMessages(prev => [...prev, { id: `local-${Date.now()}`, role: "user", content: text }])
     try {
       const res = await fetch("/api/assistant/chat", {
@@ -46,8 +113,10 @@ export default function AssistantPanel() {
       })
       const data = await res.json()
       const reply = res.ok ? data.reply : (data.error?.message ?? data.error ?? "Something went wrong")
+      scrollToLatestRef.current = true
       setMessages(prev => [...prev, { id: `local-${Date.now()}-r`, role: "assistant", content: reply }])
     } catch {
+      scrollToLatestRef.current = true
       setMessages(prev => [...prev, { id: `local-${Date.now()}-e`, role: "assistant", content: "Network error — try again." }])
     } finally {
       setThinking(false)
@@ -56,10 +125,26 @@ export default function AssistantPanel() {
   }
 
   return (
-    <div style={card}>
+    <div className="dashboard-assistant-card" style={card}>
       <h2 style={{ ...heading, marginBottom: "16px" }}>Assistant</h2>
 
-      <div style={{ maxHeight: "360px", overflowY: "auto", display: "flex", flexDirection: "column", gap: "12px", marginBottom: "16px" }}>
+      <div
+        ref={messageListRef}
+        onScroll={event => {
+          if (event.currentTarget.scrollTop <= 24) void loadEarlier()
+        }}
+        style={{ maxHeight: "360px", overflowY: "auto", display: "flex", flexDirection: "column", gap: "12px", marginBottom: "16px", overscrollBehavior: "contain" }}
+      >
+        {nextCursor && (
+          <button
+            type="button"
+            onClick={() => void loadEarlier()}
+            disabled={loadingEarlier}
+            style={earlierButton}
+          >
+            {loadingEarlier ? "Loading earlier messages…" : "Scroll up for earlier messages"}
+          </button>
+        )}
         {loaded && messages.length === 0 && (
           <div style={{ padding: "24px 0", textAlign: "center", color: "var(--ink-3)", fontSize: "13px" }}>
             &ldquo;What&rsquo;s my day look like?&rdquo; · &ldquo;note: idea for the places map&rdquo; · &ldquo;who have I not talked to in a while?&rdquo;
@@ -87,7 +172,6 @@ export default function AssistantPanel() {
         {thinking && (
           <div style={{ alignSelf: "flex-start", color: "var(--ink-3)", fontSize: "13px" }}>thinking…</div>
         )}
-        <div ref={bottomRef} />
       </div>
 
       <div style={{ display: "flex", gap: "10px", alignItems: "flex-end" }}>
@@ -152,4 +236,15 @@ const heading: React.CSSProperties = {
   fontSize: "1.4rem",
   fontWeight: 400,
   margin: 0,
+}
+
+const earlierButton: React.CSSProperties = {
+  alignSelf: "center",
+  border: 0,
+  background: "transparent",
+  color: "var(--ink-3)",
+  cursor: "pointer",
+  font: "inherit",
+  fontSize: "11px",
+  padding: "2px 8px",
 }

@@ -87,7 +87,7 @@ export default async function ScheduleWidget({ workspaceId, personsUrl, tz }: Pr
   ].sort((a, b) => a.start.getTime() - b.start.getTime()).slice(0, 8)
 
   return (
-    <div style={card}>
+    <div className="dashboard-schedule-card" style={card}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
         <h2 style={heading}>Today</h2>
         <a href={eventsUrl} style={{ ...badge, textDecoration: 'none' }}>

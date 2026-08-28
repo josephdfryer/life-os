@@ -46,9 +46,6 @@ async function HomePageContent() {
   const localReview = process.env.NODE_ENV !== 'production' && process.env.LIFE_OS_LOCAL_REVIEW === '1'
   if (!session?.user?.email && !localReview) redirect('/login')
 
-  const workspaceId = session?.user?.email
-    ? await getWorkspaceId(session.user.email)
-    : 'default-workspace'
   const firstName = session?.user?.name?.split(' ')[0] ?? (localReview ? 'Joseph' : 'there')
 
   // Master timezone: the shared root-domain `tz` cookie, resolved to a valid
@@ -108,20 +105,17 @@ async function HomePageContent() {
           </div>
         </div>
 
-        <div className="dashboard-today-grid">
+        <div className="dashboard-content-grid">
           <AssistantPanel />
-          <Suspense fallback={<WidgetSkeleton />}>
-            <ScheduleWidget workspaceId={workspaceId} personsUrl={personsUrl} tz={tz} />
+          <Suspense fallback={<DashboardDataSkeleton />}>
+            <HomeDataPanels
+              email={session?.user?.email}
+              localReview={localReview}
+              personsUrl={personsUrl}
+              tz={tz}
+            />
           </Suspense>
         </div>
-
-        <Suspense fallback={<WidgetSkeleton />}>
-          <NudgesWidget workspaceId={workspaceId} personsUrl={personsUrl} />
-        </Suspense>
-
-        <Suspense fallback={<WidgetSkeleton />}>
-          <CommunicationsReviewWidget workspaceId={workspaceId} personsUrl={personsUrl} />
-        </Suspense>
 
         {/* App nav footer */}
         <div
@@ -162,6 +156,34 @@ async function HomePageContent() {
   )
 }
 
+async function HomeDataPanels({
+  email,
+  localReview,
+  personsUrl,
+  tz,
+}: {
+  email?: string | null
+  localReview: boolean
+  personsUrl: string
+  tz: string
+}) {
+  const workspaceId = email
+    ? await getWorkspaceId(email)
+    : localReview
+      ? 'default-workspace'
+      : null
+
+  if (!workspaceId) return null
+
+  return (
+    <>
+      <ScheduleWidget workspaceId={workspaceId} personsUrl={personsUrl} tz={tz} />
+      <NudgesWidget workspaceId={workspaceId} personsUrl={personsUrl} />
+      <CommunicationsReviewWidget workspaceId={workspaceId} personsUrl={personsUrl} />
+    </>
+  )
+}
+
 function HomePageSkeleton() {
   return (
     <div className="dashboard-page min-h-screen pb-12">
@@ -176,9 +198,20 @@ function HomePageSkeleton() {
   )
 }
 
-function WidgetSkeleton() {
+function DashboardDataSkeleton() {
+  return (
+    <>
+      <WidgetSkeleton className="dashboard-schedule-card" />
+      <WidgetSkeleton className="dashboard-nudges-card" />
+      <WidgetSkeleton className="dashboard-communications-card" />
+    </>
+  )
+}
+
+function WidgetSkeleton({ className }: { className?: string } = {}) {
   return (
     <div
+      className={className}
       style={{
         background: '#1a2a35',
         border: '1px solid #2a424c',

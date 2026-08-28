@@ -33,6 +33,7 @@ async function proxy(request: NextRequest, { params }: Params) {
 
   const assistantUrl = lifeOsAppUrl("assistant", "http://localhost:3005")
   const target = new URL(`/api/${pathname}`, assistantUrl)
+  target.search = request.nextUrl.search
 
   try {
     const response = await fetch(target, {

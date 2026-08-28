@@ -51,7 +51,7 @@ export default async function NudgesWidget({ workspaceId, personsUrl }: Props) {
     : `${nudges.length} people need attention`
 
   return (
-    <div style={card}>
+    <div className="dashboard-nudges-card" style={card}>
       <div style={{ color: 'var(--camel)', fontSize: '11px', marginBottom: '3px' }}>{subtitle}</div>
       <h2 style={{ ...heading, marginBottom: '24px' }}>Who deserves attention?</h2>
 

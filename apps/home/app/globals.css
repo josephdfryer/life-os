@@ -58,6 +58,27 @@ a {
   margin-bottom: 32px;
 }
 
+.dashboard-content-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 32px var(--space-lg);
+  align-items: start;
+}
+
+.dashboard-assistant-card {
+  grid-column: 1;
+}
+
+.dashboard-schedule-card {
+  grid-column: 2;
+}
+
+.dashboard-nudges-card,
+.dashboard-communications-card,
+.dashboard-content-grid > .communications-review {
+  grid-column: 1 / -1;
+}
+
 .header {
   display: flex;
   align-items: center;
@@ -879,7 +900,7 @@ a {
 }
 
 .communications-review {
-  margin: 0 0 32px;
+  margin: 0;
   padding: 28px 32px;
   background: rgba(247, 244, 238, 0.06);
   border: 1px solid rgba(196, 165, 116, 0.22);
@@ -1341,6 +1362,19 @@ a {
 }
 
 @media (max-width: 640px) {
+  .dashboard-content-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-lg);
+  }
+
+  .dashboard-assistant-card,
+  .dashboard-schedule-card,
+  .dashboard-nudges-card,
+  .dashboard-communications-card,
+  .dashboard-content-grid > .communications-review {
+    grid-column: 1;
+  }
+
   .reconcile-widget {
     padding: 22px 18px;
   }

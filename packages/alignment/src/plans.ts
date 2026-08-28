@@ -41,13 +41,33 @@ export async function getStalledPlanSignals(workspaceId: string): Promise<Alignm
   })
   if (!plans.length) return []
 
+  const personIds = [...new Set(plans.flatMap(plan => plan.personId ? [plan.personId] : []))]
+  const latestInteractions = await db.interaction.groupBy({
+    by: ["personId"],
+    where: {
+      workspaceId,
+      personId: { in: personIds },
+      // Every relevant Plan is at least this old. Keeping the predicate makes
+      // the grouped lookup use the recent part of the interaction index while
+      // still preserving enough history to compare against every Plan below.
+      timestamp: { gte: plans.reduce(
+        (earliest, plan) => plan.createdAt < earliest ? plan.createdAt : earliest,
+        plans[0].createdAt,
+      ) },
+    },
+    _max: { timestamp: true },
+  })
+  const latestByPerson = new Map(
+    latestInteractions.flatMap(row => row.personId && row._max.timestamp
+      ? [[row.personId, row._max.timestamp] as const]
+      : []),
+  )
+
   const signals: AlignmentSignal[] = []
   for (const plan of plans) {
     if (!plan.personId || !plan.person) continue
-    const sinceCount = await db.interaction.count({
-      where: { workspaceId, personId: plan.personId, timestamp: { gte: plan.createdAt } },
-    })
-    if (sinceCount > 0) continue
+    const latestInteraction = latestByPerson.get(plan.personId)
+    if (latestInteraction && latestInteraction >= plan.createdAt) continue
 
     const ageDays = Math.floor((Date.now() - plan.createdAt.getTime()) / 86400000)
     signals.push({

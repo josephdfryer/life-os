@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react"
 import { uploadFile, type UploadedFile } from "@/lib/upload"
 
 const STAGE_LABEL = { hashing: "Hashing", authorizing: "Authorizing", uploading: "Uploading", verifying: "Verifying" } as const
@@ -15,11 +15,27 @@ type Message = {
   citations?: Array<{ chunkId: string; fileId: string; filename: string; locator: unknown; exactQuote: string }>
 }
 
+type MessagePage = {
+  messages?: Array<Message & { metadata?: string | null }>
+  nextCursor?: string | null
+  hasMore?: boolean
+}
+
+const INITIAL_MESSAGE_COUNT = 4
+
+function decodeMessages(page: MessagePage): Message[] {
+  return (page.messages ?? []).map(message => {
+    try { return { ...message, ...(message.metadata ? JSON.parse(message.metadata) : {}) } } catch { return message }
+  })
+}
+
 export default function AssistantChat() {
   const [messages, setMessages] = useState<Message[]>([])
   const [draft, setDraft] = useState("")
   const [thinking, setThinking] = useState(false)
   const [loaded, setLoaded] = useState(false)
+  const [nextCursor, setNextCursor] = useState<string | null>(null)
+  const [loadingEarlier, setLoadingEarlier] = useState(false)
   // Only files attached during this session are offered as scope. Scoping is a
   // narrowing of what the agent already reaches — with none selected it searches
   // the whole library — so a library-wide picker sitting above the composer was
@@ -27,23 +43,77 @@ export default function AssistantChat() {
   const [sessionFiles, setSessionFiles] = useState<UploadedFile[]>([])
   const [fileIds, setFileIds] = useState<string[]>([])
   const [uploadStatus, setUploadStatus] = useState("")
-  const bottomRef = useRef<HTMLDivElement>(null)
+  const messageListRef = useRef<HTMLElement>(null)
   const inputRef = useRef<HTMLTextAreaElement>(null)
   const attachRef = useRef<HTMLInputElement>(null)
+  const initialPositionedRef = useRef(false)
+  const previousScrollHeightRef = useRef<number | null>(null)
+  const scrollToLatestRef = useRef(false)
 
   useEffect(() => {
-    fetch("/api/chat")
+    const controller = new AbortController()
+    fetch(`/api/chat?limit=${INITIAL_MESSAGE_COUNT}`, { signal: controller.signal })
       .then(res => (res.ok ? res.json() : { messages: [] }))
-      .then(data => setMessages((data.messages ?? []).map((message: Message & { metadata?: string | null }) => {
-        try { return { ...message, ...(message.metadata ? JSON.parse(message.metadata) : {}) } } catch { return message }
-      })))
+      .then((data: MessagePage) => {
+        setMessages(decodeMessages(data))
+        setNextCursor(data.hasMore ? data.nextCursor ?? null : null)
+      })
       .catch(() => {})
       .finally(() => setLoaded(true))
+    return () => controller.abort()
   }, [])
 
+  useLayoutEffect(() => {
+    const list = messageListRef.current
+    if (!list || !loaded) return
+
+    if (previousScrollHeightRef.current !== null) {
+      list.scrollTop += list.scrollHeight - previousScrollHeightRef.current
+      previousScrollHeightRef.current = null
+      return
+    }
+
+    if (!initialPositionedRef.current) {
+      list.scrollTop = list.scrollHeight
+      initialPositionedRef.current = true
+      return
+    }
+
+    if (scrollToLatestRef.current) {
+      list.scrollTo({ top: list.scrollHeight, behavior: "smooth" })
+      scrollToLatestRef.current = false
+    }
+  }, [loaded, messages, thinking])
+
+  const loadEarlier = useCallback(async () => {
+    const list = messageListRef.current
+    if (!nextCursor || loadingEarlier || !list) return
+    setLoadingEarlier(true)
+    previousScrollHeightRef.current = list.scrollHeight
+    try {
+      const response = await fetch(`/api/chat?limit=${INITIAL_MESSAGE_COUNT}&cursor=${encodeURIComponent(nextCursor)}`)
+      if (!response.ok) throw new Error("Could not load earlier messages")
+      const data = await response.json() as MessagePage
+      const earlier = decodeMessages(data)
+      if (earlier.length === 0) previousScrollHeightRef.current = null
+      setMessages(current => [...earlier, ...current])
+      setNextCursor(data.hasMore ? data.nextCursor ?? null : null)
+    } catch {
+      previousScrollHeightRef.current = null
+    } finally {
+      setLoadingEarlier(false)
+    }
+  }, [loadingEarlier, nextCursor])
+
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: messages.length > 2 ? "smooth" : "auto" })
-  }, [messages, thinking])
+    const list = messageListRef.current
+    if (!list) return
+    const handleWheel = (event: WheelEvent) => {
+      if (event.deltaY < 0 && list.scrollTop <= 0) void loadEarlier()
+    }
+    list.addEventListener("wheel", handleWheel, { passive: true })
+    return () => list.removeEventListener("wheel", handleWheel)
+  }, [loadEarlier])
 
   async function attach(event: React.ChangeEvent<HTMLInputElement>) {
     const chosen = [...(event.target.files ?? [])]
@@ -70,6 +140,7 @@ export default function AssistantChat() {
     if (!text || thinking) return
     setDraft("")
     setThinking(true)
+    scrollToLatestRef.current = true
     setMessages(prev => [...prev, { id: `local-${Date.now()}`, role: "user", content: text, createdAt: new Date().toISOString() }])
     try {
       const res = await fetch("/api/chat", {
@@ -79,8 +150,10 @@ export default function AssistantChat() {
       })
       const data = await res.json()
       const reply = res.ok ? data.reply : (data.error ?? "Something went wrong")
+      scrollToLatestRef.current = true
       setMessages(prev => [...prev, { id: `local-${Date.now()}-r`, role: "assistant", content: reply, citations: data.citations ?? [], createdAt: new Date().toISOString() }])
     } catch {
+      scrollToLatestRef.current = true
       setMessages(prev => [...prev, { id: `local-${Date.now()}-e`, role: "assistant", content: "Network error — try again.", createdAt: new Date().toISOString() }])
     } finally {
       setThinking(false)
@@ -121,8 +194,24 @@ export default function AssistantChat() {
         `}</style>
       </header>
 
-      <main style={{ flex: 1, overflowY: "auto", padding: "24px 0" }}>
+      <main
+        ref={messageListRef}
+        onScroll={event => {
+          if (event.currentTarget.scrollTop <= 32) void loadEarlier()
+        }}
+        style={{ flex: 1, overflowY: "auto", padding: "24px 0", overscrollBehavior: "contain" }}
+      >
         <div style={{ width: "min(100%, 720px)", margin: "0 auto", padding: "0 24px", display: "flex", flexDirection: "column", gap: "14px" }}>
+          {nextCursor && (
+            <button
+              type="button"
+              onClick={() => void loadEarlier()}
+              disabled={loadingEarlier}
+              style={{ alignSelf: "center", border: 0, background: "transparent", color: "var(--ink-3)", cursor: "pointer", font: "inherit", fontSize: "11px", padding: "2px 8px" }}
+            >
+              {loadingEarlier ? "Loading earlier messages…" : "Scroll up for earlier messages"}
+            </button>
+          )}
           {loaded && messages.length === 0 && (
             <div style={{ textAlign: "center", padding: "80px 24px", color: "var(--ink-3)" }}>
               <div style={{ fontFamily: "var(--font-display)", fontSize: "20px", color: "var(--ink-2)", marginBottom: "8px" }}>
@@ -182,7 +271,6 @@ export default function AssistantChat() {
               `}</style>
             </div>
           )}
-          <div ref={bottomRef} />
         </div>
       </main>
 
