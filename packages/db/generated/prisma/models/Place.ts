@@ -800,6 +800,7 @@ export type PlaceCreateOrConnectWithoutWorkspaceInput = {
 
 export type PlaceCreateManyWorkspaceInputEnvelope = {
   data: Prisma.PlaceCreateManyWorkspaceInput | Prisma.PlaceCreateManyWorkspaceInput[]
+  skipDuplicates?: boolean
 }
 
 export type PlaceUpsertWithWhereUniqueWithoutWorkspaceInput = {
@@ -1246,6 +1247,7 @@ export type PlaceCreateOrConnectWithoutParentPlaceInput = {
 
 export type PlaceCreateManyParentPlaceInputEnvelope = {
   data: Prisma.PlaceCreateManyParentPlaceInput | Prisma.PlaceCreateManyParentPlaceInput[]
+  skipDuplicates?: boolean
 }
 
 export type PlaceUpsertWithoutChildPlacesInput = {
@@ -2991,6 +2993,7 @@ export type PlaceCreateManyArgs<ExtArgs extends runtime.Types.Extensions.Interna
    * The data used to create many Places.
    */
   data: Prisma.PlaceCreateManyInput | Prisma.PlaceCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -3009,6 +3012,7 @@ export type PlaceCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extension
    * The data used to create many Places.
    */
   data: Prisma.PlaceCreateManyInput | Prisma.PlaceCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

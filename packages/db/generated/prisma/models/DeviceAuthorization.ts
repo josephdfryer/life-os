@@ -588,6 +588,7 @@ export type DeviceAuthorizationCreateOrConnectWithoutWorkspaceInput = {
 
 export type DeviceAuthorizationCreateManyWorkspaceInputEnvelope = {
   data: Prisma.DeviceAuthorizationCreateManyWorkspaceInput | Prisma.DeviceAuthorizationCreateManyWorkspaceInput[]
+  skipDuplicates?: boolean
 }
 
 export type DeviceAuthorizationUpsertWithWhereUniqueWithoutWorkspaceInput = {
@@ -653,6 +654,7 @@ export type DeviceAuthorizationCreateOrConnectWithoutUserInput = {
 
 export type DeviceAuthorizationCreateManyUserInputEnvelope = {
   data: Prisma.DeviceAuthorizationCreateManyUserInput | Prisma.DeviceAuthorizationCreateManyUserInput[]
+  skipDuplicates?: boolean
 }
 
 export type DeviceAuthorizationUpsertWithWhereUniqueWithoutUserInput = {
@@ -702,6 +704,7 @@ export type DeviceAuthorizationCreateOrConnectWithoutDeviceInput = {
 
 export type DeviceAuthorizationCreateManyDeviceInputEnvelope = {
   data: Prisma.DeviceAuthorizationCreateManyDeviceInput | Prisma.DeviceAuthorizationCreateManyDeviceInput[]
+  skipDuplicates?: boolean
 }
 
 export type DeviceAuthorizationUpsertWithWhereUniqueWithoutDeviceInput = {
@@ -1632,6 +1635,7 @@ export type DeviceAuthorizationCreateManyArgs<ExtArgs extends runtime.Types.Exte
    * The data used to create many DeviceAuthorizations.
    */
   data: Prisma.DeviceAuthorizationCreateManyInput | Prisma.DeviceAuthorizationCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1650,6 +1654,7 @@ export type DeviceAuthorizationCreateManyAndReturnArgs<ExtArgs extends runtime.T
    * The data used to create many DeviceAuthorizations.
    */
   data: Prisma.DeviceAuthorizationCreateManyInput | Prisma.DeviceAuthorizationCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

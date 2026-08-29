@@ -1454,6 +1454,7 @@ export type LevelUpProfileCreateManyArgs<ExtArgs extends runtime.Types.Extension
    * The data used to create many LevelUpProfiles.
    */
   data: Prisma.LevelUpProfileCreateManyInput | Prisma.LevelUpProfileCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1472,6 +1473,7 @@ export type LevelUpProfileCreateManyAndReturnArgs<ExtArgs extends runtime.Types.
    * The data used to create many LevelUpProfiles.
    */
   data: Prisma.LevelUpProfileCreateManyInput | Prisma.LevelUpProfileCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

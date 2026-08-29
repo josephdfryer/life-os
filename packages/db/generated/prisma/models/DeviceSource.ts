@@ -574,6 +574,7 @@ export type DeviceSourceCreateOrConnectWithoutDeviceInput = {
 
 export type DeviceSourceCreateManyDeviceInputEnvelope = {
   data: Prisma.DeviceSourceCreateManyDeviceInput | Prisma.DeviceSourceCreateManyDeviceInput[]
+  skipDuplicates?: boolean
 }
 
 export type DeviceSourceUpsertWithWhereUniqueWithoutDeviceInput = {
@@ -1419,6 +1420,7 @@ export type DeviceSourceCreateManyArgs<ExtArgs extends runtime.Types.Extensions.
    * The data used to create many DeviceSources.
    */
   data: Prisma.DeviceSourceCreateManyInput | Prisma.DeviceSourceCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1437,6 +1439,7 @@ export type DeviceSourceCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Ex
    * The data used to create many DeviceSources.
    */
   data: Prisma.DeviceSourceCreateManyInput | Prisma.DeviceSourceCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

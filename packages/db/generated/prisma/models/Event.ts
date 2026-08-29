@@ -1014,6 +1014,7 @@ export type EventCreateOrConnectWithoutWorkspaceInput = {
 
 export type EventCreateManyWorkspaceInputEnvelope = {
   data: Prisma.EventCreateManyWorkspaceInput | Prisma.EventCreateManyWorkspaceInput[]
+  skipDuplicates?: boolean
 }
 
 export type EventUpsertWithWhereUniqueWithoutWorkspaceInput = {
@@ -1397,6 +1398,7 @@ export type EventCreateOrConnectWithoutParentEventInput = {
 
 export type EventCreateManyParentEventInputEnvelope = {
   data: Prisma.EventCreateManyParentEventInput | Prisma.EventCreateManyParentEventInput[]
+  skipDuplicates?: boolean
 }
 
 export type EventUpsertWithoutChildEventsInput = {
@@ -1765,6 +1767,7 @@ export type EventCreateOrConnectWithoutPlaceInput = {
 
 export type EventCreateManyPlaceInputEnvelope = {
   data: Prisma.EventCreateManyPlaceInput | Prisma.EventCreateManyPlaceInput[]
+  skipDuplicates?: boolean
 }
 
 export type EventUpsertWithWhereUniqueWithoutPlaceInput = {
@@ -2198,6 +2201,7 @@ export type EventCreateOrConnectWithoutSourceNoteInput = {
 
 export type EventCreateManySourceNoteInputEnvelope = {
   data: Prisma.EventCreateManySourceNoteInput | Prisma.EventCreateManySourceNoteInput[]
+  skipDuplicates?: boolean
 }
 
 export type EventUpsertWithoutAboutNotesInput = {
@@ -3621,6 +3625,7 @@ export type EventCreateManyArgs<ExtArgs extends runtime.Types.Extensions.Interna
    * The data used to create many Events.
    */
   data: Prisma.EventCreateManyInput | Prisma.EventCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -3639,6 +3644,7 @@ export type EventCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extension
    * The data used to create many Events.
    */
   data: Prisma.EventCreateManyInput | Prisma.EventCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

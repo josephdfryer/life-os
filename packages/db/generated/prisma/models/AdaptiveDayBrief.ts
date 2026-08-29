@@ -576,6 +576,7 @@ export type AdaptiveDayBriefCreateOrConnectWithoutWorkspaceInput = {
 
 export type AdaptiveDayBriefCreateManyWorkspaceInputEnvelope = {
   data: Prisma.AdaptiveDayBriefCreateManyWorkspaceInput | Prisma.AdaptiveDayBriefCreateManyWorkspaceInput[]
+  skipDuplicates?: boolean
 }
 
 export type AdaptiveDayBriefUpsertWithWhereUniqueWithoutWorkspaceInput = {
@@ -1545,6 +1546,7 @@ export type AdaptiveDayBriefCreateManyArgs<ExtArgs extends runtime.Types.Extensi
    * The data used to create many AdaptiveDayBriefs.
    */
   data: Prisma.AdaptiveDayBriefCreateManyInput | Prisma.AdaptiveDayBriefCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1563,6 +1565,7 @@ export type AdaptiveDayBriefCreateManyAndReturnArgs<ExtArgs extends runtime.Type
    * The data used to create many AdaptiveDayBriefs.
    */
   data: Prisma.AdaptiveDayBriefCreateManyInput | Prisma.AdaptiveDayBriefCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

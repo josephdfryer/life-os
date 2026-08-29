@@ -636,6 +636,7 @@ export type AdaptiveInterventionOutcomeCreateOrConnectWithoutWorkspaceInput = {
 
 export type AdaptiveInterventionOutcomeCreateManyWorkspaceInputEnvelope = {
   data: Prisma.AdaptiveInterventionOutcomeCreateManyWorkspaceInput | Prisma.AdaptiveInterventionOutcomeCreateManyWorkspaceInput[]
+  skipDuplicates?: boolean
 }
 
 export type AdaptiveInterventionOutcomeUpsertWithWhereUniqueWithoutWorkspaceInput = {
@@ -707,6 +708,7 @@ export type AdaptiveInterventionOutcomeCreateOrConnectWithoutInterventionInput =
 
 export type AdaptiveInterventionOutcomeCreateManyInterventionInputEnvelope = {
   data: Prisma.AdaptiveInterventionOutcomeCreateManyInterventionInput | Prisma.AdaptiveInterventionOutcomeCreateManyInterventionInput[]
+  skipDuplicates?: boolean
 }
 
 export type AdaptiveInterventionOutcomeUpsertWithWhereUniqueWithoutInterventionInput = {
@@ -1609,6 +1611,7 @@ export type AdaptiveInterventionOutcomeCreateManyArgs<ExtArgs extends runtime.Ty
    * The data used to create many AdaptiveInterventionOutcomes.
    */
   data: Prisma.AdaptiveInterventionOutcomeCreateManyInput | Prisma.AdaptiveInterventionOutcomeCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1627,6 +1630,7 @@ export type AdaptiveInterventionOutcomeCreateManyAndReturnArgs<ExtArgs extends r
    * The data used to create many AdaptiveInterventionOutcomes.
    */
   data: Prisma.AdaptiveInterventionOutcomeCreateManyInput | Prisma.AdaptiveInterventionOutcomeCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

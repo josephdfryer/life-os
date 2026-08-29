@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "type-check": "tsc --noEmit",
-    "test": "tsx --test --test-concurrency=1 tests/*.ts"
+    "test": "tsx --test --test-concurrency=1 --import ./tests/setup.mts tests/*.ts"
   },
   "dependencies": {
     "@life-os/access": "*",

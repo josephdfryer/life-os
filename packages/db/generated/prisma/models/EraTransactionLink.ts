@@ -706,6 +706,7 @@ export type EraTransactionLinkCreateOrConnectWithoutWorkspaceInput = {
 
 export type EraTransactionLinkCreateManyWorkspaceInputEnvelope = {
   data: Prisma.EraTransactionLinkCreateManyWorkspaceInput | Prisma.EraTransactionLinkCreateManyWorkspaceInput[]
+  skipDuplicates?: boolean
 }
 
 export type EraTransactionLinkUpsertWithWhereUniqueWithoutWorkspaceInput = {
@@ -774,6 +775,7 @@ export type EraTransactionLinkCreateOrConnectWithoutConnectionInput = {
 
 export type EraTransactionLinkCreateManyConnectionInputEnvelope = {
   data: Prisma.EraTransactionLinkCreateManyConnectionInput | Prisma.EraTransactionLinkCreateManyConnectionInput[]
+  skipDuplicates?: boolean
 }
 
 export type EraTransactionLinkUpsertWithWhereUniqueWithoutConnectionInput = {
@@ -825,6 +827,7 @@ export type EraTransactionLinkCreateOrConnectWithoutAccountLinkInput = {
 
 export type EraTransactionLinkCreateManyAccountLinkInputEnvelope = {
   data: Prisma.EraTransactionLinkCreateManyAccountLinkInput | Prisma.EraTransactionLinkCreateManyAccountLinkInput[]
+  skipDuplicates?: boolean
 }
 
 export type EraTransactionLinkUpsertWithWhereUniqueWithoutAccountLinkInput = {
@@ -876,6 +879,7 @@ export type EraTransactionLinkCreateOrConnectWithoutStagedItemInput = {
 
 export type EraTransactionLinkCreateManyStagedItemInputEnvelope = {
   data: Prisma.EraTransactionLinkCreateManyStagedItemInput | Prisma.EraTransactionLinkCreateManyStagedItemInput[]
+  skipDuplicates?: boolean
 }
 
 export type EraTransactionLinkUpsertWithWhereUniqueWithoutStagedItemInput = {
@@ -927,6 +931,7 @@ export type EraTransactionLinkCreateOrConnectWithoutInteractionInput = {
 
 export type EraTransactionLinkCreateManyInteractionInputEnvelope = {
   data: Prisma.EraTransactionLinkCreateManyInteractionInput | Prisma.EraTransactionLinkCreateManyInteractionInput[]
+  skipDuplicates?: boolean
 }
 
 export type EraTransactionLinkUpsertWithWhereUniqueWithoutInteractionInput = {
@@ -1995,6 +2000,7 @@ export type EraTransactionLinkCreateManyArgs<ExtArgs extends runtime.Types.Exten
    * The data used to create many EraTransactionLinks.
    */
   data: Prisma.EraTransactionLinkCreateManyInput | Prisma.EraTransactionLinkCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -2013,6 +2019,7 @@ export type EraTransactionLinkCreateManyAndReturnArgs<ExtArgs extends runtime.Ty
    * The data used to create many EraTransactionLinks.
    */
   data: Prisma.EraTransactionLinkCreateManyInput | Prisma.EraTransactionLinkCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

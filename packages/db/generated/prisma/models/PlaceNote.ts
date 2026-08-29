@@ -516,6 +516,7 @@ export type PlaceNoteCreateOrConnectWithoutWorkspaceInput = {
 
 export type PlaceNoteCreateManyWorkspaceInputEnvelope = {
   data: Prisma.PlaceNoteCreateManyWorkspaceInput | Prisma.PlaceNoteCreateManyWorkspaceInput[]
+  skipDuplicates?: boolean
 }
 
 export type PlaceNoteUpsertWithWhereUniqueWithoutWorkspaceInput = {
@@ -572,6 +573,7 @@ export type PlaceNoteCreateOrConnectWithoutEventInput = {
 
 export type PlaceNoteCreateManyEventInputEnvelope = {
   data: Prisma.PlaceNoteCreateManyEventInput | Prisma.PlaceNoteCreateManyEventInput[]
+  skipDuplicates?: boolean
 }
 
 export type PlaceNoteUpsertWithWhereUniqueWithoutEventInput = {
@@ -615,6 +617,7 @@ export type PlaceNoteCreateOrConnectWithoutPlaceInput = {
 
 export type PlaceNoteCreateManyPlaceInputEnvelope = {
   data: Prisma.PlaceNoteCreateManyPlaceInput | Prisma.PlaceNoteCreateManyPlaceInput[]
+  skipDuplicates?: boolean
 }
 
 export type PlaceNoteUpsertWithWhereUniqueWithoutPlaceInput = {
@@ -1491,6 +1494,7 @@ export type PlaceNoteCreateManyArgs<ExtArgs extends runtime.Types.Extensions.Int
    * The data used to create many PlaceNotes.
    */
   data: Prisma.PlaceNoteCreateManyInput | Prisma.PlaceNoteCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1509,6 +1513,7 @@ export type PlaceNoteCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Exten
    * The data used to create many PlaceNotes.
    */
   data: Prisma.PlaceNoteCreateManyInput | Prisma.PlaceNoteCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

@@ -704,6 +704,7 @@ export type NoteSuggestionCreateOrConnectWithoutWorkspaceInput = {
 
 export type NoteSuggestionCreateManyWorkspaceInputEnvelope = {
   data: Prisma.NoteSuggestionCreateManyWorkspaceInput | Prisma.NoteSuggestionCreateManyWorkspaceInput[]
+  skipDuplicates?: boolean
 }
 
 export type NoteSuggestionUpsertWithWhereUniqueWithoutWorkspaceInput = {
@@ -778,6 +779,7 @@ export type NoteSuggestionCreateOrConnectWithoutAnalysisRunInput = {
 
 export type NoteSuggestionCreateManyAnalysisRunInputEnvelope = {
   data: Prisma.NoteSuggestionCreateManyAnalysisRunInput | Prisma.NoteSuggestionCreateManyAnalysisRunInput[]
+  skipDuplicates?: boolean
 }
 
 export type NoteSuggestionUpsertWithWhereUniqueWithoutAnalysisRunInput = {
@@ -833,6 +835,7 @@ export type NoteSuggestionCreateOrConnectWithoutNoteInput = {
 
 export type NoteSuggestionCreateManyNoteInputEnvelope = {
   data: Prisma.NoteSuggestionCreateManyNoteInput | Prisma.NoteSuggestionCreateManyNoteInput[]
+  skipDuplicates?: boolean
 }
 
 export type NoteSuggestionUpsertWithWhereUniqueWithoutNoteInput = {
@@ -1817,6 +1820,7 @@ export type NoteSuggestionCreateManyArgs<ExtArgs extends runtime.Types.Extension
    * The data used to create many NoteSuggestions.
    */
   data: Prisma.NoteSuggestionCreateManyInput | Prisma.NoteSuggestionCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1835,6 +1839,7 @@ export type NoteSuggestionCreateManyAndReturnArgs<ExtArgs extends runtime.Types.
    * The data used to create many NoteSuggestions.
    */
   data: Prisma.NoteSuggestionCreateManyInput | Prisma.NoteSuggestionCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

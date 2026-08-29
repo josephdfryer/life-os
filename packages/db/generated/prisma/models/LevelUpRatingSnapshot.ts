@@ -631,6 +631,7 @@ export type LevelUpRatingSnapshotCreateOrConnectWithoutWorkspaceInput = {
 
 export type LevelUpRatingSnapshotCreateManyWorkspaceInputEnvelope = {
   data: Prisma.LevelUpRatingSnapshotCreateManyWorkspaceInput | Prisma.LevelUpRatingSnapshotCreateManyWorkspaceInput[]
+  skipDuplicates?: boolean
 }
 
 export type LevelUpRatingSnapshotUpsertWithWhereUniqueWithoutWorkspaceInput = {
@@ -1567,6 +1568,7 @@ export type LevelUpRatingSnapshotCreateManyArgs<ExtArgs extends runtime.Types.Ex
    * The data used to create many LevelUpRatingSnapshots.
    */
   data: Prisma.LevelUpRatingSnapshotCreateManyInput | Prisma.LevelUpRatingSnapshotCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1585,6 +1587,7 @@ export type LevelUpRatingSnapshotCreateManyAndReturnArgs<ExtArgs extends runtime
    * The data used to create many LevelUpRatingSnapshots.
    */
   data: Prisma.LevelUpRatingSnapshotCreateManyInput | Prisma.LevelUpRatingSnapshotCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

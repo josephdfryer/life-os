@@ -1,5 +1,10 @@
-import test from "node:test"
+import test, { before, after } from "node:test"
 import assert from "node:assert/strict"
+import { createTestDatabase, type TestDatabase } from "@life-os/db/testing"
+
+let testDb: TestDatabase
+before(async () => { testDb = await createTestDatabase() })
+after(async () => { await testDb?.drop() })
 
 // See docs/INBOX_TRIAGE_ANALYSIS.md. The queue reached 59 pending because every
 // synced calendar Plan asked "did this happen?" and nothing ever answered

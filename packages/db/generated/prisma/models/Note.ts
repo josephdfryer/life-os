@@ -1203,6 +1203,7 @@ export type NoteCreateOrConnectWithoutWorkspaceInput = {
 
 export type NoteCreateManyWorkspaceInputEnvelope = {
   data: Prisma.NoteCreateManyWorkspaceInput | Prisma.NoteCreateManyWorkspaceInput[]
+  skipDuplicates?: boolean
 }
 
 export type NoteUpsertWithWhereUniqueWithoutWorkspaceInput = {
@@ -1301,6 +1302,7 @@ export type NoteCreateOrConnectWithoutAboutPersonInput = {
 
 export type NoteCreateManyAboutPersonInputEnvelope = {
   data: Prisma.NoteCreateManyAboutPersonInput | Prisma.NoteCreateManyAboutPersonInput[]
+  skipDuplicates?: boolean
 }
 
 export type NoteUpsertWithWhereUniqueWithoutAboutPersonInput = {
@@ -1435,6 +1437,7 @@ export type NoteCreateOrConnectWithoutAboutEventInput = {
 
 export type NoteCreateManyAboutEventInputEnvelope = {
   data: Prisma.NoteCreateManyAboutEventInput | Prisma.NoteCreateManyAboutEventInput[]
+  skipDuplicates?: boolean
 }
 
 export type NoteUpsertWithoutEventsInput = {
@@ -1752,6 +1755,7 @@ export type NoteCreateOrConnectWithoutAboutPlanInput = {
 
 export type NoteCreateManyAboutPlanInputEnvelope = {
   data: Prisma.NoteCreateManyAboutPlanInput | Prisma.NoteCreateManyAboutPlanInput[]
+  skipDuplicates?: boolean
 }
 
 export type NoteUpsertWithoutPlansInput = {
@@ -1892,6 +1896,7 @@ export type NoteCreateOrConnectWithoutAboutPlaceInput = {
 
 export type NoteCreateManyAboutPlaceInputEnvelope = {
   data: Prisma.NoteCreateManyAboutPlaceInput | Prisma.NoteCreateManyAboutPlaceInput[]
+  skipDuplicates?: boolean
 }
 
 export type NoteUpsertWithWhereUniqueWithoutAboutPlaceInput = {
@@ -1969,6 +1974,7 @@ export type NoteCreateOrConnectWithoutAboutItemInput = {
 
 export type NoteCreateManyAboutItemInputEnvelope = {
   data: Prisma.NoteCreateManyAboutItemInput | Prisma.NoteCreateManyAboutItemInput[]
+  skipDuplicates?: boolean
 }
 
 export type NoteUpsertWithWhereUniqueWithoutAboutItemInput = {
@@ -2046,6 +2052,7 @@ export type NoteCreateOrConnectWithoutSourceFileInput = {
 
 export type NoteCreateManySourceFileInputEnvelope = {
   data: Prisma.NoteCreateManySourceFileInput | Prisma.NoteCreateManySourceFileInput[]
+  skipDuplicates?: boolean
 }
 
 export type NoteUpsertWithWhereUniqueWithoutSourceFileInput = {
@@ -2483,6 +2490,7 @@ export type NoteCreateOrConnectWithoutAboutGroupInput = {
 
 export type NoteCreateManyAboutGroupInputEnvelope = {
   data: Prisma.NoteCreateManyAboutGroupInput | Prisma.NoteCreateManyAboutGroupInput[]
+  skipDuplicates?: boolean
 }
 
 export type NoteCreateWithoutGroupsInput = {
@@ -2857,6 +2865,7 @@ export type NoteCreateOrConnectWithoutAboutStateInput = {
 
 export type NoteCreateManyAboutStateInputEnvelope = {
   data: Prisma.NoteCreateManyAboutStateInput | Prisma.NoteCreateManyAboutStateInput[]
+  skipDuplicates?: boolean
 }
 
 export type NoteUpsertWithoutStatesInput = {
@@ -4697,6 +4706,7 @@ export type NoteCreateManyArgs<ExtArgs extends runtime.Types.Extensions.Internal
    * The data used to create many Notes.
    */
   data: Prisma.NoteCreateManyInput | Prisma.NoteCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -4715,6 +4725,7 @@ export type NoteCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions
    * The data used to create many Notes.
    */
   data: Prisma.NoteCreateManyInput | Prisma.NoteCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

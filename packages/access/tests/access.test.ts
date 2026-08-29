@@ -1,21 +1,8 @@
-import test from "node:test"
+import test, { after } from "node:test"
 import assert from "node:assert/strict"
-import { createRequire } from "node:module"
 import { createHash, randomUUID } from "node:crypto"
-import { mkdtempSync, readFileSync, readdirSync } from "node:fs"
-import { tmpdir } from "node:os"
-import { join } from "node:path"
-import { fileURLToPath } from "node:url"
+import { createTestDatabase, type TestDatabase } from "@life-os/db/testing"
 
-const repoRoot = fileURLToPath(new URL("../../..", import.meta.url))
-const dbPackageRoot = join(repoRoot, "packages/db")
-const require = createRequire(import.meta.url)
-const dbDir = mkdtempSync(join(tmpdir(), "life-os-access-"))
-const dbPath = join(dbDir, "access.db")
-
-process.env.DATABASE_URL = `file:${dbPath}`
-process.env.TURSO_DATABASE_URL = ""
-process.env.TURSO_AUTH_TOKEN = ""
 process.env.ALLOWED_EMAILS = [
   "disabled@example.com",
   "multi@example.com",
@@ -30,17 +17,22 @@ type Modules = {
 }
 
 let modulesPromise: Promise<Modules> | null = null
+let testDb: TestDatabase | null = null
 
 async function setup() {
   if (!modulesPromise) {
     modulesPromise = (async () => {
-      applyMigrations(dbPath)
+      testDb = await createTestDatabase()
       const [access, admin, dbModule] = await Promise.all([import("../index"), import("../admin"), import("@life-os/db")])
       return { access, admin, db: dbModule.db }
     })()
   }
   return modulesPromise
 }
+
+after(async () => {
+  await testDb?.drop()
+})
 
 function fakeActor(overrides: Partial<import("../index").AccessActor> & { workspaceId: string; userId: string }): import("../index").AccessActor {
   return {
@@ -50,18 +42,6 @@ function fakeActor(overrides: Partial<import("../index").AccessActor> & { worksp
     actor: { type: "user", id: overrides.userId, label: overrides.email ?? "actor@example.com", workspaceId: overrides.workspaceId },
     ...overrides,
   }
-}
-
-function applyMigrations(path: string) {
-  const Database = require("better-sqlite3")
-  const sqlite = new Database(path)
-  sqlite.pragma("foreign_keys = OFF")
-  const migrationsDir = join(dbPackageRoot, "prisma/migrations")
-  for (const dirname of readdirSync(migrationsDir).filter(name => name !== "migration_lock.toml").sort()) {
-    sqlite.exec(readFileSync(join(migrationsDir, dirname, "migration.sql"), "utf8"))
-  }
-  sqlite.pragma("foreign_keys = ON")
-  sqlite.close()
 }
 
 function service(access: Modules["access"], email: string) {

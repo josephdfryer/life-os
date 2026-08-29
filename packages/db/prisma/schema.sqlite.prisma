@@ -1,0 +1,2940 @@
+// ═════════════════════════════════════════════
+// LIFEOS — DATA MODEL
+// Founding document: docs/MANIFESTO.md
+//
+// Eight primitives connected by one edge type (Interaction):
+//   Person · Place · Item · Event · Plan · Group · State · Note
+//
+// Core rules:
+//   • Derive, never store, aggregates (net worth, relationship health, attention score)
+//   • Semantic honesty over convenience — never overload a primitive with flags
+//   • Provenance is sacred — every derived node traces back to its source
+//   • Resist new primitives hard; each one earned its place
+// ═════════════════════════════════════════════
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/sqlite-prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+// ─────────────────────────────────────────────
+// TENANCY: Workspace isolation
+// ─────────────────────────────────────────────
+
+model Workspace {
+  id                           String                        @id @default(cuid())
+  createdAt                    DateTime                      @default(now())
+  updatedAt                    DateTime                      @updatedAt
+  name                         String
+  slug                         String                        @unique
+  status                       String                        @default("active")
+  ownerUserId                  String?
+  ownerUser                    User?                         @relation("WorkspaceOwner", fields: [ownerUserId], references: [id], onDelete: SetNull)
+  // Off by default: unlike the always-available manual dedupe queue,
+  // automatic merging deletes rows without a review step, so it stays
+  // opt-in. See apps/persons/server/domain/merge.ts's autoDedupePersons.
+  autoMergeEnabled             Boolean                       @default(false)
+  members                      WorkspaceMember[]
+  approvedEmails               ApprovedEmail[]
+  persons                      Person[]
+  events                       Event[]
+  interactions                 Interaction[]
+  plans                        Plan[]
+  places                       Place[]
+  placeNotes                   PlaceNote[]
+  notes                        Note[]
+  theorySnapshots              TheorySnapshot[]
+  groups                       Group[]
+  items                        Item[]
+  itemDefinitions              ItemDefinition[]
+  inventoryLots                InventoryLot[]
+  supplierProfiles             SupplierProfile[]
+  purchaseOrders               PurchaseOrder[]
+  purchaseReceiptLines         PurchaseReceiptLine[]
+  importedFiles                ImportedFile[]
+  fileUploadIntents            FileUploadIntent[]
+  granolaNoteLinks             GranolaNoteLink[]
+  fileProcessingRuns           FileProcessingRun[]
+  fileChunks                   FileChunk[]
+  fileEntityMentions           FileEntityMention[]
+  fileEntityResolutions        FileEntityResolution[]
+  personExternalIdentifiers    PersonExternalIdentifier[]
+  evidenceClaims               EvidenceClaim[]
+  aiProviderCredentials        AiProviderCredential[]
+  aiAnalysisRuns               AiAnalysisRun[]
+  noteAnalysisRuns             NoteAnalysisRun[]
+  theoryAnalysisRuns           TheoryAnalysisRun[]
+  lifeModelAnalysisRuns        LifeModelAnalysisRun[]
+  lifeModelClaimFeedback       LifeModelClaimFeedback[]
+  noteSuggestions              NoteSuggestion[]
+  stagedItems                  StagedInteraction[]
+  rules                        Rule[]
+  ruleRuns                     RuleRun[]
+  apiKeys                      ApiKey[]
+  auditLogs                    AuditLog[]
+  calendarConnections          CalendarConnection[]
+  calendarEventLinks           CalendarEventLink[]
+  gmailConnections             GmailConnection[]
+  gmailMessageLinks            GmailMessageLink[]
+  importJobs                   ImportJob[]
+  importStagedVisits           ImportStagedVisit[]
+  planExpectedPersons          PlanExpectedPerson[]
+  assistantMessages            AssistantMessage[]
+  eraConnections               EraConnection[]
+  eraAccountLinks              EraAccountLink[]
+  eraTransactionLinks          EraTransactionLink[]
+  connections                  Connection[]
+  levelUpProfile               LevelUpProfile?
+  levelUpTestResults           LevelUpTestResult[]
+  levelUpCombines              LevelUpCombine[]
+  levelUpSnapshots             LevelUpRatingSnapshot[]
+  levelUpTrainingSets          LevelUpTrainingSet[]
+  levelUpBadgeUnlocks          LevelUpBadgeUnlock[]
+  levelUpTargetBuilds          LevelUpTargetBuild[]
+  levelUpExercises             LevelUpExercise[]
+  levelUpPrograms              LevelUpProgram[]
+  levelUpProgramDays           LevelUpProgramDay[]
+  levelUpProgramEntries        LevelUpProgramEntry[]
+  levelUpSessions              LevelUpSession[]
+  levelUpBodyMetrics           LevelUpBodyMetric[]
+  levelUpReadinessSnapshots    LevelUpReadinessSnapshot[]
+  graphEvents                  GraphEvent[]
+  reviewItems                  ReviewItem[]
+  lifeModelSnapshots           LifeModelSnapshot[]
+  adaptiveDayBriefs            AdaptiveDayBrief[]
+  adaptiveInterventionOutcomes AdaptiveInterventionOutcome[]
+  devices                      Device[]
+  deviceAuthorizations         DeviceAuthorization[]
+  deviceIngestItems            DeviceIngestItem[]
+
+  @@index([ownerUserId])
+  @@index([status])
+}
+
+enum WorkspaceRole {
+  owner
+  admin
+  member
+  viewer
+}
+
+model WorkspaceMember {
+  id          String        @id @default(cuid())
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  workspaceId String
+  userId      String
+  role        WorkspaceRole @default(owner)
+  status      String        @default("active")
+  workspace   Workspace     @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([workspaceId, userId])
+  @@index([userId])
+  @@index([workspaceId, status])
+}
+
+model ApprovedEmail {
+  id          String     @id @default(cuid())
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  email       String     @unique
+  status      String     @default("approved")
+  workspaceId String?
+  workspace   Workspace? @relation(fields: [workspaceId], references: [id], onDelete: SetNull)
+  invitedById String?
+  invitedBy   User?      @relation("ApprovedEmailInviter", fields: [invitedById], references: [id], onDelete: SetNull)
+
+  @@index([status])
+  @@index([workspaceId])
+  @@index([invitedById])
+}
+
+// ─────────────────────────────────────────────
+// PRIMARY: Person
+// ─────────────────────────────────────────────
+
+model Person {
+  id                   String                     @id @default(cuid())
+  workspaceId          String                     @default("default-workspace")
+  workspace            Workspace                  @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  createdAt            DateTime                   @default(now())
+  updatedAt            DateTime                   @updatedAt
+  first                String
+  last                 String
+  nickname             String?
+  title                String?
+  headline             String?
+  emails               String                     @default("[]")
+  emailSearch          String?
+  phones               String                     @default("[]")
+  birthday             String?
+  closeness            Int                        @default(2)
+  tags                 String                     @default("[]")
+  values               String                     @default("[]")
+  notes                String?
+  company              String?
+  location             String?
+  linkedin             String?
+  twitter              String?
+  website              String?
+  facebook             String?
+  instagram            String?
+  color                String?
+  colorSoft            String?
+  // A shareable, unauthenticated "digital business card" page at
+  // /profile/[publicSlug]. Off by default — a person only becomes visible
+  // outside the workspace once someone explicitly toggles it on for that
+  // specific record. Only identity/professional fields are ever exposed on
+  // that page (see apps/persons/app/profile/[slug]/page.tsx) — never emails,
+  // phones, notes, or birthday.
+  publicProfileEnabled Boolean                    @default(false)
+  publicSlug           String?                    @unique
+  // How this record came to exist — "manual" | "api" | "system" | "rule" |
+  // "interaction_import" | "vcard" | "csv" | "spreadsheet" | "gmail_contacts" |
+  // "ios_contacts" (device Contacts sync, apps/api/lib/device-ingest.ts),
+  // or null for rows created before this column existed. Purely a display
+  // signal (PersonCard's provenance badge); never used for access control.
+  source               String?
+  // Interactions where this person is the counterparty (for a transaction, the merchant)
+  interactions         Interaction[]              @relation("InteractionCounterparty")
+  // Interactions where this person is whose money/action it was (the payer)
+  actorInteractions    Interaction[]              @relation("InteractionActor")
+  ownedEraAccounts     EraAccountLink[]           @relation("EraAccountOwner")
+  stagedInteractions   StagedInteraction[]
+  plans                Plan[]
+  expectedInPlans      PlanExpectedPerson[]
+  ownedItems           Item[]
+  assembledBy          Assembly[]                 @relation("AssembledBy")
+  disassembledBy       Assembly[]                 @relation("DisassembledBy")
+  groupMemberships     PersonGroup[]
+  users                User[]
+  apiKeys              ApiKey[]
+  auditLogs            AuditLog[]
+  theorySnapshots      TheorySnapshot[]
+  theoryAnalysisRuns   TheoryAnalysisRun[]
+  aboutNotes           Note[]                     @relation("NoteAboutPerson")
+  fileEntityMentions   FileEntityMention[]        @relation("ResolvedPersonFileMentions")
+  fileResolutionsFrom  FileEntityResolution[]     @relation("FileResolutionFromPerson")
+  fileResolutionsTo    FileEntityResolution[]     @relation("FileResolutionToPerson")
+  externalIdentifiers  PersonExternalIdentifier[]
+
+  @@index([workspaceId, last, first])
+  @@index([workspaceId, createdAt, id])
+  @@index([last, first])
+  @@index([title])
+  @@index([closeness])
+  @@index([birthday])
+  @@index([createdAt])
+  @@index([workspaceId, company])
+  @@index([workspaceId, headline])
+  @@index([workspaceId, emailSearch])
+}
+
+// ─────────────────────────────────────────────
+// ACCESS: User, roles, permissions, and API keys
+// ─────────────────────────────────────────────
+
+model User {
+  id                   String                @id @default(cuid())
+  createdAt            DateTime              @default(now())
+  updatedAt            DateTime              @updatedAt
+  email                String                @unique
+  name                 String?
+  image                String?
+  status               String                @default("active")
+  personId             String?
+  person               Person?               @relation(fields: [personId], references: [id], onDelete: SetNull)
+  roles                UserRole[]
+  apiKeys              ApiKey[]
+  auditLogs            AuditLog[]
+  rules                Rule[]
+  workspaceMemberships WorkspaceMember[]
+  ownedWorkspaces      Workspace[]           @relation("WorkspaceOwner")
+  approvedEmailsSent   ApprovedEmail[]       @relation("ApprovedEmailInviter")
+  calendarConnections  CalendarConnection[]
+  gmailConnections     GmailConnection[]
+  eraConnections       EraConnection[]
+  connections          Connection[]
+  deviceAuthorizations DeviceAuthorization[]
+
+  @@index([email])
+  @@index([status])
+}
+
+// Device trust and collection records are infrastructure, not LifeOS
+// primitives. They describe which owned endpoint supplied normalized facts;
+// raw source databases, files, samples, and GPS pings never belong here.
+model Device {
+  id             String                @id @default(cuid())
+  workspaceId    String
+  workspace      Workspace             @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  createdAt      DateTime              @default(now())
+  updatedAt      DateTime              @updatedAt
+  platform       String
+  displayName    String
+  appVersion     String
+  lastSeenAt     DateTime?
+  revokedAt      DateTime?
+  sources        DeviceSource[]
+  credentials    DeviceCredential[]
+  authorizations DeviceAuthorization[]
+  ingestItems    DeviceIngestItem[]
+
+  @@index([workspaceId, createdAt])
+  @@index([workspaceId, revokedAt])
+}
+
+model DeviceSource {
+  id               String    @id @default(cuid())
+  deviceId         String
+  device           Device    @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  source           String
+  enabled          Boolean   @default(false)
+  permissionStatus String    @default("unknown")
+  healthStatus     String    @default("unknown")
+  lastSuccessAt    DateTime?
+  lastErrorCode    String?
+  schemaVersion    Int       @default(1)
+
+  @@unique([deviceId, source])
+  @@index([deviceId, enabled])
+}
+
+model DeviceCredential {
+  id               String    @id @default(cuid())
+  deviceId         String
+  device           Device    @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  refreshTokenHash String    @unique
+  accessTokenHash  String    @unique
+  accessExpiresAt  DateTime
+  refreshExpiresAt DateTime
+  scopes           String
+  lastUsedAt       DateTime?
+  revokedAt        DateTime?
+
+  @@index([deviceId, revokedAt])
+  @@index([accessExpiresAt])
+  @@index([refreshExpiresAt])
+}
+
+model DeviceAuthorization {
+  id            String    @id @default(cuid())
+  workspaceId   String
+  workspace     Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  userId        String
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  deviceId      String
+  device        Device    @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+  createdAt     DateTime  @default(now())
+  codeHash      String    @unique
+  codeChallenge String
+  redirectUri   String
+  expiresAt     DateTime
+  consumedAt    DateTime?
+
+  @@index([workspaceId, createdAt])
+  @@index([deviceId, expiresAt])
+}
+
+// One durable server receipt per stable source record. A client may replay an
+// item indefinitely; the unique key makes the effect exactly-once.
+model DeviceIngestItem {
+  id            String    @id @default(cuid())
+  workspaceId   String
+  workspace     Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  deviceId      String
+  device        Device    @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  source        String
+  sourceId      String
+  recordType    String
+  schemaVersion Int
+  observedAt    DateTime
+  payloadHash   String
+  status        String
+  resultType    String?
+  resultId      String?
+  errorCode     String?
+
+  @@unique([workspaceId, source, sourceId])
+  @@index([deviceId, createdAt])
+  @@index([workspaceId, status, createdAt])
+}
+
+model Role {
+  id          String           @id @default(cuid())
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  key         String           @unique
+  name        String
+  description String?
+  users       UserRole[]
+  permissions RolePermission[]
+}
+
+model Permission {
+  id          String           @id @default(cuid())
+  createdAt   DateTime         @default(now())
+  scope       String           @unique
+  description String?
+  roles       RolePermission[]
+}
+
+model UserRole {
+  userId String
+  roleId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role   Role   @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  @@id([userId, roleId])
+  @@index([roleId])
+}
+
+model RolePermission {
+  roleId       String
+  permissionId String
+  role         Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@id([roleId, permissionId])
+  @@index([permissionId])
+}
+
+model ApiKey {
+  id              String        @id @default(cuid())
+  workspaceId     String        @default("default-workspace")
+  workspace       Workspace     @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  name            String
+  keyPrefix       String        @unique
+  keyHash         String        @unique
+  status          String        @default("active")
+  expiresAt       DateTime?
+  lastUsedAt      DateTime?
+  createdByUserId String?
+  createdByUser   User?         @relation(fields: [createdByUserId], references: [id], onDelete: SetNull)
+  ownerPersonId   String?
+  ownerPerson     Person?       @relation(fields: [ownerPersonId], references: [id], onDelete: SetNull)
+  scopes          ApiKeyScope[]
+  auditLogs       AuditLog[]
+
+  @@index([status])
+  @@index([workspaceId])
+  @@index([createdByUserId])
+  @@index([ownerPersonId])
+}
+
+model ApiKeyScope {
+  apiKeyId String
+  scope    String
+  apiKey   ApiKey @relation(fields: [apiKeyId], references: [id], onDelete: Cascade)
+
+  @@id([apiKeyId, scope])
+  @@index([scope])
+}
+
+model AuditLog {
+  id          String     @id @default(cuid())
+  workspaceId String?    @default("default-workspace")
+  workspace   Workspace? @relation(fields: [workspaceId], references: [id], onDelete: SetNull)
+  createdAt   DateTime   @default(now())
+  action      String
+  targetType  String
+  targetId    String?
+  actorType   String
+  actorId     String?
+  actorLabel  String?
+  userId      String?
+  user        User?      @relation(fields: [userId], references: [id], onDelete: SetNull)
+  apiKeyId    String?
+  apiKey      ApiKey?    @relation(fields: [apiKeyId], references: [id], onDelete: SetNull)
+  personId    String?
+  person      Person?    @relation(fields: [personId], references: [id], onDelete: SetNull)
+  metadata    String?
+
+  @@index([createdAt])
+  @@index([workspaceId, createdAt])
+  @@index([action])
+  @@index([targetType, targetId])
+  @@index([actorType, actorId])
+  @@index([userId])
+  @@index([apiKeyId])
+  @@index([personId])
+}
+
+// ─────────────────────────────────────────────
+// INTEGRATIONS: Google Calendar
+// ─────────────────────────────────────────────
+
+model CalendarConnection {
+  id                    String              @id @default(cuid())
+  workspaceId           String              @default("default-workspace")
+  workspace             Workspace           @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  userId                String
+  user                  User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt             DateTime            @default(now())
+  updatedAt             DateTime            @updatedAt
+  provider              String              @default("google")
+  status                String              @default("active")
+  accountEmail          String?
+  calendarId            String              @default("primary")
+  calendarSummary       String?
+  // Ciphertext ("iv:authTag:ciphertext"), see packages/db/src/crypto.ts. Never store plaintext tokens.
+  accessTokenEncrypted  String?
+  refreshTokenEncrypted String?
+  expiresAt             DateTime?
+  scope                 String?
+  syncTokenEncrypted    String?
+  // Resume cursor for the one-time unwindowed bootstrap sync. Google only
+  // issues a syncToken for a query with no timeMin/timeMax/orderBy, and such a
+  // query walks the whole calendar — more than one cron run can finish. When a
+  // run hits its time budget mid-walk it parks Google's nextPageToken here and
+  // the next run resumes from it, so the bootstrap makes forward progress
+  // instead of restarting. Cleared the moment a syncToken is obtained.
+  fullSyncPageToken     String?
+  lastSyncedAt          DateTime?
+  lastError             String?
+  eventLinks            CalendarEventLink[]
+
+  @@unique([workspaceId, provider, calendarId])
+  @@index([userId])
+  @@index([workspaceId, status])
+}
+
+model CalendarEventLink {
+  id              String             @id @default(cuid())
+  workspaceId     String             @default("default-workspace")
+  workspace       Workspace          @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  connectionId    String
+  connection      CalendarConnection @relation(fields: [connectionId], references: [id], onDelete: Cascade)
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+  provider        String             @default("google")
+  calendarId      String
+  externalEventId String
+  iCalUID         String?
+  planId          String?
+  plan            Plan?              @relation(fields: [planId], references: [id], onDelete: SetNull)
+  eventId         String?
+  event           Event?             @relation(fields: [eventId], references: [id], onDelete: SetNull)
+  status          String             @default("active")
+  lastSeenAt      DateTime?
+
+  @@unique([workspaceId, provider, calendarId, externalEventId])
+  @@index([connectionId])
+  @@index([planId])
+  @@index([eventId])
+  @@index([workspaceId, status])
+}
+
+// ─────────────────────────────────────────────
+// INTEGRATIONS: Gmail
+// ─────────────────────────────────────────────
+
+model GmailConnection {
+  id                    String             @id @default(cuid())
+  workspaceId           String             @default("default-workspace")
+  workspace             Workspace          @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  userId                String
+  user                  User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt             DateTime           @default(now())
+  updatedAt             DateTime           @updatedAt
+  provider              String             @default("google")
+  status                String             @default("active")
+  accountEmail          String?
+  mailboxId             String             @default("me")
+  // Ciphertext ("iv:authTag:ciphertext"), see packages/db/src/crypto.ts. Never store plaintext tokens.
+  accessTokenEncrypted  String?
+  refreshTokenEncrypted String?
+  expiresAt             DateTime?
+  scope                 String?
+  historyId             String?
+  lastSyncedAt          DateTime?
+  lastError             String?
+  messageLinks          GmailMessageLink[]
+
+  @@unique([workspaceId, provider, mailboxId])
+  @@index([userId])
+  @@index([workspaceId, status])
+}
+
+model GmailMessageLink {
+  id                String             @id @default(cuid())
+  workspaceId       String             @default("default-workspace")
+  workspace         Workspace          @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  connectionId      String
+  connection        GmailConnection    @relation(fields: [connectionId], references: [id], onDelete: Cascade)
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  provider          String             @default("google")
+  mailboxId         String
+  externalMessageId String
+  threadId          String?
+  historyId         String?
+  interactionId     String?
+  interaction       Interaction?       @relation(fields: [interactionId], references: [id], onDelete: SetNull)
+  stagedItemId      String?
+  stagedItem        StagedInteraction? @relation(fields: [stagedItemId], references: [id], onDelete: SetNull)
+  status            String             @default("active")
+  lastSeenAt        DateTime?
+
+  @@unique([workspaceId, provider, mailboxId, externalMessageId])
+  @@index([connectionId])
+  @@index([interactionId])
+  @@index([stagedItemId])
+  @@index([workspaceId, status])
+}
+
+// ─────────────────────────────────────────────
+// INTEGRATIONS: Era Finance
+// ─────────────────────────────────────────────
+
+model EraConnection {
+  id                    String               @id @default(cuid())
+  workspaceId           String               @default("default-workspace")
+  workspace             Workspace            @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  userId                String
+  user                  User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt             DateTime             @default(now())
+  updatedAt             DateTime             @updatedAt
+  status                String               @default("active")
+  accountEmail          String?
+  // Ciphertext ("iv:authTag:ciphertext"), see packages/db/src/crypto.ts. Never store plaintext tokens.
+  accessTokenEncrypted  String?
+  refreshTokenEncrypted String?
+  expiresAt             DateTime?
+  scope                 String?
+  lastSyncedAt          DateTime?
+  lastError             String?
+  syncCursor            String?
+  transactionLinks      EraTransactionLink[]
+  accountLinks          EraAccountLink[]
+
+  @@unique([workspaceId, userId])
+  @@index([userId])
+  @@index([workspaceId, status])
+}
+
+model EraAccountLink {
+  id               String               @id @default(cuid())
+  workspaceId      String               @default("default-workspace")
+  workspace        Workspace            @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  connectionId     String
+  connection       EraConnection        @relation(fields: [connectionId], references: [id], onDelete: Cascade)
+  createdAt        DateTime             @default(now())
+  updatedAt        DateTime             @updatedAt
+  eraAccountId     String
+  institution      String?
+  accountName      String?
+  accountType      String?
+  currency         String?              @default("USD")
+  status           String               @default("active")
+  lastSeenAt       DateTime?
+  transactionLinks EraTransactionLink[]
+
+  // ── Ownership: declared once per account, not per transaction ───────────
+  // The authoritative answer to "whose money is this". Interaction.actorPersonId
+  // is derived from here. A sync must never overwrite these three fields.
+  ownerPersonId    String?
+  ownerPerson      Person?       @relation("EraAccountOwner", fields: [ownerPersonId], references: [id], onDelete: SetNull)
+  // Joint accounts attribute to the household rather than falsely to one spouse.
+  householdGroupId String?
+  householdGroup   Group?        @relation("EraAccountHousehold", fields: [householdGroupId], references: [id], onDelete: SetNull)
+  isShared         Boolean       @default(false)
+  interactions     Interaction[]
+
+  @@unique([workspaceId, eraAccountId])
+  @@index([connectionId])
+  @@index([workspaceId, status])
+  @@index([ownerPersonId])
+  @@index([householdGroupId])
+}
+
+model EraTransactionLink {
+  id               String             @id @default(cuid())
+  workspaceId      String             @default("default-workspace")
+  workspace        Workspace          @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  connectionId     String
+  connection       EraConnection      @relation(fields: [connectionId], references: [id], onDelete: Cascade)
+  accountLinkId    String?
+  accountLink      EraAccountLink?    @relation(fields: [accountLinkId], references: [id], onDelete: SetNull)
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  eraTransactionId String
+  interactionId    String?
+  interaction      Interaction?       @relation(fields: [interactionId], references: [id], onDelete: SetNull)
+  stagedItemId     String?
+  stagedItem       StagedInteraction? @relation(fields: [stagedItemId], references: [id], onDelete: SetNull)
+  status           String             @default("staged")
+  lastSeenAt       DateTime?
+
+  @@unique([workspaceId, eraTransactionId])
+  @@index([connectionId])
+  @@index([interactionId])
+  @@index([stagedItemId])
+  @@index([workspaceId, status])
+}
+
+// ─────────────────────────────────────────────
+// INTEGRATIONS: unified Connection (Track C) — one shape for every account
+// connection (Calendar, Gmail, Era, future), so a single hub UI/API can list
+// and manage all of them without a per-integration fan-out. See
+// docs/adr/000X-connection-model.md.
+//
+// This is additive, not a cutover: CalendarConnection/GmailConnection's own
+// downstream link tables (CalendarEventLink, GmailMessageLink) still
+// reference *those* tables' ids, since repointing live foreign keys is a
+// separate, riskier migration. For calendar/gmail, this row is a
+// dual-written mirror of the real OAuth state (sourceTable/sourceId point
+// back to the row of truth) kept in sync purely for the unified read. Era
+// has no legacy production data or write path yet, so new Era connections
+// write here directly with sourceTable/sourceId left null — this table is
+// their one and only home from day one.
+// ─────────────────────────────────────────────
+
+model Connection {
+  id                    String            @id @default(cuid())
+  workspaceId           String            @default("default-workspace")
+  workspace             Workspace         @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  userId                String?
+  user                  User?             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt             DateTime          @default(now())
+  updatedAt             DateTime          @updatedAt
+  // "calendar" | "gmail" | "era" | "meetings" | "oura" — open string, not an enum, matching this
+  // schema's existing convention (Interaction.type, Rule.trigger, etc.) so a
+  // new integration kind never needs a migration to add.
+  kind                  String
+  provider              String            @default("google")
+  status                String            @default("active")
+  accountEmail          String?
+  label                 String?
+  // Ciphertext ("iv:authTag:ciphertext"), see packages/db/src/crypto.ts. Never store plaintext tokens.
+  accessTokenEncrypted  String?
+  refreshTokenEncrypted String?
+  expiresAt             DateTime?
+  scope                 String?
+  lastSyncedAt          DateTime?
+  lastError             String?
+  // Kind-specific fields that don't earn their own column (calendarId/
+  // calendarSummary/syncToken for calendar, mailboxId/historyId for gmail,
+  // syncCursor for era) — JSON-encoded, not sensitive so stored plaintext.
+  metadata              String?
+  sourceTable           String?
+  sourceId              String?
+  granolaNoteLinks      GranolaNoteLink[]
+
+  // No DB-level unique constraint on the business key: accountEmail is
+  // nullable (Era has none) and Prisma's compound-unique WHERE input for a
+  // nullable field can't express "IS NULL", making upsert unusable. The
+  // real invariant this needs — one mirror row per source row — is enforced
+  // at the application layer via a findFirst on (sourceTable, sourceId)
+  // before create, not a DB constraint.
+  @@index([workspaceId, kind, status])
+  @@index([sourceTable, sourceId])
+  @@index([userId])
+}
+
+// Supporting provenance for Granola meeting notes. The API credential and
+// sync watermark live on Connection; this record makes note-to-Event imports
+// idempotent without turning an external document into a new primitive.
+model GranolaNoteLink {
+  id              String     @id @default(cuid())
+  workspaceId     String     @default("default-workspace")
+  workspace       Workspace  @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  connectionId    String
+  connection      Connection @relation(fields: [connectionId], references: [id], onDelete: Cascade)
+  eventId         String
+  event           Event      @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  externalNoteId  String
+  sourceUrl       String?
+  calendarEventId String?
+  remoteCreatedAt DateTime?
+  remoteUpdatedAt DateTime?
+  contentHash     String?
+  status          String     @default("synced")
+  lastSyncedAt    DateTime?
+  lastError       String?
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+
+  @@unique([workspaceId, externalNoteId])
+  @@index([connectionId, status])
+  @@index([eventId])
+  @@index([workspaceId, remoteUpdatedAt])
+}
+
+// ─────────────────────────────────────────────
+// RULES: deterministic policy and enrichment engine
+// ─────────────────────────────────────────────
+
+model Rule {
+  id              String    @id @default(cuid())
+  workspaceId     String    @default("default-workspace")
+  workspace       Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  name            String
+  description     String?
+  trigger         String
+  status          String    @default("active")
+  priority        Int       @default(100)
+  mode            String    @default("suggest")
+  conditions      String    @default("[]")
+  actions         String    @default("[]")
+  stopProcessing  Boolean   @default(false)
+  // Bumped on every edit (packages/automation). Each RuleRun denormalizes the
+  // version active at execution time (RuleRun.ruleVersion) so a run stays
+  // interpretable — "what did this rule look like when it fired" — even
+  // after the rule is later edited. No separate version-history table: the
+  // run rows themselves already carry a full actionsPlanned/actionsApplied
+  // snapshot, so a version number is enough to know whether a given run
+  // reflects the rule's current definition or a past one.
+  version         Int       @default(1)
+  createdByUserId String?
+  createdByUser   User?     @relation(fields: [createdByUserId], references: [id], onDelete: SetNull)
+  runs            RuleRun[]
+
+  @@index([workspaceId, trigger, status, priority])
+  @@index([trigger, status, priority])
+  @@index([createdByUserId])
+}
+
+model RuleRun {
+  id             String    @id @default(cuid())
+  workspaceId    String    @default("default-workspace")
+  workspace      Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  createdAt      DateTime  @default(now())
+  ruleId         String
+  rule           Rule      @relation(fields: [ruleId], references: [id], onDelete: Cascade)
+  ruleVersion    Int       @default(1)
+  trigger        String
+  targetType     String?
+  targetId       String?
+  matched        Boolean
+  mode           String
+  status         String
+  input          String?
+  actionsPlanned String?
+  actionsApplied String?
+  message        String?
+  // How many rule-triggered-rule hops preceded this run (0 = fired directly
+  // by an app event, not by another rule's action) — packages/automation's
+  // causation-depth guard, same MAX_CAUSATION_DEPTH concept as
+  // GraphEvent.causationDepth, so a rule chain can't loop forever.
+  causationDepth Int       @default(0)
+
+  @@index([ruleId, createdAt])
+  @@index([workspaceId, createdAt])
+  @@index([trigger, createdAt])
+  @@index([matched, createdAt])
+  @@index([targetType, targetId])
+}
+
+// ─────────────────────────────────────────────
+// SUPPORT: StagedInteraction
+// Universal review queue — any source can stage records here before they
+// become canonical data. itemType identifies what will be created on accept.
+// ─────────────────────────────────────────────
+
+model StagedInteraction {
+  id                String               @id @default(cuid())
+  workspaceId       String               @default("default-workspace")
+  workspace         Workspace            @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  createdAt         DateTime             @default(now())
+  updatedAt         DateTime             @updatedAt
+  source            String
+  sourceId          String
+  itemType          String               @default("interaction")
+  status            String               @default("pending")
+  contactName       String?
+  contactEmail      String?
+  contactPhone      String?
+  candidatePersonId String?
+  candidatePerson   Person?              @relation(fields: [candidatePersonId], references: [id], onDelete: SetNull)
+  confidence        Float?
+  matchReason       String?
+  type              String               @default("message")
+  timestamp         DateTime
+  summary           String?
+  body              String?
+  direction         String?
+  metadata          String?
+  acceptedAt        DateTime?
+  acceptedPersonId  String?
+  interactionId     String?
+  priority          Int                  @default(3)
+  enrichedAt        DateTime?
+  gmailLinks        GmailMessageLink[]
+  eraLinks          EraTransactionLink[]
+
+  @@unique([workspaceId, source, sourceId])
+  @@index([status, priority, createdAt])
+  @@index([source, itemType, createdAt])
+  @@index([candidatePersonId])
+  @@index([timestamp])
+}
+
+// ─────────────────────────────────────────────
+// PRIMARY: Event
+// ─────────────────────────────────────────────
+
+model Event {
+  id                   String                @id @default(cuid())
+  workspaceId          String                @default("default-workspace")
+  workspace            Workspace             @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  createdAt            DateTime              @default(now())
+  name                 String
+  type                 String
+  // start/end are the canonical time bounds; timestamp mirrors start for Persons compatibility
+  start                DateTime
+  end                  DateTime?
+  timestamp            DateTime
+  placeId              String?
+  place                Place?                @relation(fields: [placeId], references: [id])
+  notes                String?
+  transcript           String?
+  metadata             String?
+  // Which prediction (if any) this occurrence fulfilled
+  sourcePlanId         String?               @unique
+  sourcePlan           Plan?                 @relation("PlanFulfillment", fields: [sourcePlanId], references: [id], onDelete: SetNull)
+  // Containment nesting — bind to the narrowest true event
+  parentEventId        String?
+  parentEvent          Event?                @relation("EventNesting", fields: [parentEventId], references: [id], onDelete: SetNull)
+  childEvents          Event[]               @relation("EventNesting")
+  // Provenance — the Note this Event was derived from, if any
+  sourceNoteId         String?
+  sourceNote           Note?                 @relation(fields: [sourceNoteId], references: [id], onDelete: SetNull)
+  aboutNotes           Note[]                @relation("NoteAboutEvent")
+  interactions         Interaction[]
+  calendarLinks        CalendarEventLink[]
+  granolaNoteLinks     GranolaNoteLink[]
+  groupTags            Group[]               @relation("EventGroupTags")
+  placeNotes           PlaceNote[]
+  purchaseReceiptLines PurchaseReceiptLine[]
+
+  @@index([workspaceId, start])
+  @@index([workspaceId, timestamp])
+  @@index([workspaceId, timestamp(sort: Desc), id])
+  @@index([sourcePlanId])
+  @@index([parentEventId])
+}
+
+// ─────────────────────────────────────────────
+// PRIMARY: Interaction (universal linker)
+// ─────────────────────────────────────────────
+
+model Interaction {
+  id              String        @id @default(cuid())
+  workspaceId     String        @default("default-workspace")
+  workspace       Workspace     @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  createdAt       DateTime      @default(now())
+  // The counterparty — who was on the other end. For a financial Interaction
+  // that is the merchant/payee, not the payer (see actorPersonId below).
+  // Optional: interactions can involve any combination of primaries.
+  personId        String?
+  person          Person?       @relation("InteractionCounterparty", fields: [personId], references: [id], onDelete: Cascade)
+  eventId         String?
+  event           Event?        @relation(fields: [eventId], references: [id])
+  // Context place (where this interaction happened)
+  placeId         String?
+  place           Place?        @relation(fields: [placeId], references: [id])
+  // The organization this interaction was with, recorded when it happens rather
+  // than inferred later from employment dates. That is what lets the history
+  // survive a person changing jobs, and what lets spend — which has no person to
+  // infer from — belong to an organization at all.
+  groupId         String?
+  group           Group?        @relation("InteractionOrganization", fields: [groupId], references: [id], onDelete: SetNull)
+  type            String
+  timestamp       DateTime
+  duration        Int?
+  emotionalWeight String?
+  outcome         String?
+  summary         String?
+  notes           String?
+  actionItems     String?
+  billable        Boolean       @default(false)
+  // Integer minor units (cents), not Float — avoids floating-point drift in money.
+  amount          Int?
+  direction       String?
+  sourceFileId    String?
+  sourceFile      ImportedFile? @relation(fields: [sourceFileId], references: [id])
+  // Provenance — the Note this Interaction was derived from, if any
+  sourceNoteId    String?
+  sourceNote      Note?         @relation(fields: [sourceNoteId], references: [id], onDelete: SetNull)
+
+  // ── Provenance: dedupe anchor at the canonical level ────────────────────
+  // Lets any source write straight to Interaction idempotently, instead of
+  // routing through StagedInteraction and waiting on a human gate.
+  source   String? // "era" | "manual" | "imessage" | "gmail" | "calendar"
+  sourceId String? // Era transaction_id, Gmail message id, etc.
+
+  // ── Money ───────────────────────────────────────────────────────────────
+  // amount (cents) and direction above carry the value and its sign.
+  subtype       String? // purchase | payment | transfer | refund | income | fee | subscription
+  currency      String          @default("USD")
+  category      String? // promoted out of metadata JSON — every spend query groups by it
+  merchantName  String? // cleaned descriptor; true even when no Person node is warranted
+  accountLinkId String? // which card/account — the ownership anchor
+  accountLink   EraAccountLink? @relation(fields: [accountLinkId], references: [id], onDelete: SetNull)
+
+  // ── Whose money moved ───────────────────────────────────────────────────
+  // A CACHE of EraAccountLink.ownerPersonId, which stays authoritative. Kept on
+  // the row because cash/manual interactions have no account to derive from,
+  // and because "all of Qin's spending" should be one indexed scan.
+  // Drift is reported by the reconciler; never hand-edit this on a row that
+  // has an accountLinkId.
+  actorPersonId String?
+  actorPerson   Person? @relation("InteractionActor", fields: [actorPersonId], references: [id], onDelete: SetNull)
+
+  // Source fields worth keeping but never queried directly, as JSON.
+  // `notes` is human-written prose — never put structured data there.
+  metadata String?
+
+  // ── Enrichment state ────────────────────────────────────────────────────
+  // Context (Place, Event, beneficiaries) attaches later via participants.
+  // Bump enrichmentVersion to force the reconciler to revisit a row.
+  enrichmentVersion Int       @default(0)
+  enrichedAt        DateTime?
+
+  itemInteractions ItemInteraction[]
+  gmailLinks       GmailMessageLink[]
+  eraLinks         EraTransactionLink[]
+  // Typed participant edges — lets Group, Plan, State, Note, and Item join as
+  // full participants, not just Person/Event/Place via the direct fields above.
+  participants     InteractionParticipant[]
+
+  // NOTE: SQLite treats NULLs as distinct in a unique index, so the many rows
+  // with no source/sourceId do not collide. Sourced rows dedupe exactly.
+  @@unique([workspaceId, source, sourceId])
+  @@index([personId, timestamp(sort: Desc)])
+  @@index([workspaceId, timestamp(sort: Desc)])
+  @@index([timestamp(sort: Desc)])
+  @@index([placeId])
+  // Keyset stream: filter on workspace, order by timestamp, tie-break on id.
+  @@index([workspaceId, timestamp(sort: Desc), id])
+  @@index([workspaceId, type, timestamp(sort: Desc)])
+  @@index([workspaceId, actorPersonId, timestamp(sort: Desc)])
+  @@index([workspaceId, category, timestamp(sort: Desc)])
+  @@index([accountLinkId])
+  @@index([workspaceId, groupId, timestamp(sort: Desc)])
+}
+
+// ─────────────────────────────────────────────
+// JUNCTION: InteractionParticipant
+// Typed edge letting any primitive join an Interaction as a participant.
+// Coexists with Interaction's direct personId/eventId/placeId fields (kept
+// for backward compatibility); those are dual-written here on create.
+// ─────────────────────────────────────────────
+
+model InteractionParticipant {
+  id            String      @id @default(cuid())
+  interactionId String
+  interaction   Interaction @relation(fields: [interactionId], references: [id], onDelete: Cascade)
+  entityType    String // "Person" | "Place" | "Event" | "Group" | "Plan" | "State" | "Note" | "Item"
+  entityId      String
+  role          String? // "subject" | "observer" | "mentioned"; finance: payer | payee | merchant | occasion | location | beneficiary | household
+  workspaceId   String
+
+  // ── Late-bound context, with provenance ─────────────────────────────────
+  // These make enrichment safely re-runnable: the reconciler may overwrite only
+  // rows whose band it wrote itself. band = "manual" is immutable to automation.
+  confidence Float? // 0–1
+  band       String? // "auto" | "suggested" | "adjudicated" | "manual"
+  source     String? // "era" | "timeline-join" | "merchant-map" | "rule" | "manual"
+  evidence   String? // JSON — what matched and why; the audit trail
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  // Upsert key for the reconciler. Rows written before this migration may have
+  // a null role; SQLite treats those as distinct, so always set a role on write.
+  @@unique([interactionId, entityType, entityId, role])
+  @@index([interactionId])
+  @@index([entityType, entityId])
+  @@index([workspaceId])
+  @@index([entityType, entityId, interactionId])
+  @@index([workspaceId, entityType, entityId])
+}
+
+// ─────────────────────────────────────────────
+// PRIMARY: Plan
+// ─────────────────────────────────────────────
+
+enum PlanStatus {
+  draft
+  active
+  blocked
+  completed
+  abandoned
+}
+
+model Plan {
+  id                   String               @id @default(cuid())
+  workspaceId          String               @default("default-workspace")
+  workspace            Workspace            @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  createdAt            DateTime             @default(now())
+  personId             String?
+  person               Person?              @relation(fields: [personId], references: [id], onDelete: Cascade)
+  text                 String
+  timescale            String?
+  successSignals       String?
+  status               PlanStatus           @default(active)
+  // Commitment tracking. `dueOn` is the day I declared I would do this — a
+  // promise to myself, not a calendar slot (that is `scheduledStart`). Snoozing
+  // pushes `dueOn` forward and increments `deferCount`; past STALE_DEFER_COUNT
+  // Home stops offering snooze and forces schedule-or-drop.
+  dueOn                DateTime?
+  deferCount           Int                  @default(0)
+  completedAt          DateTime?
+  parentId             String?
+  children             Plan[]               @relation("PlanHierarchy")
+  parent               Plan?                @relation("PlanHierarchy", fields: [parentId], references: [id])
+  // Calendar-backed prediction fields (null = goal-type plan, set = temporal prediction)
+  scheduledStart       DateTime?
+  scheduledEnd         DateTime?
+  placeId              String?
+  place                Place?               @relation(fields: [placeId], references: [id])
+  externalSource       String?
+  externalInstanceId   String?              @unique
+  // Calendar occurrence review state. Null for non-calendar Plans.
+  reconciliationStatus String?
+  reconciledAt         DateTime?
+  expectedPeople       PlanExpectedPerson[]
+  // Reverse of Event.sourcePlanId — a fulfilled Plan has exactly one Event here
+  fulfilledBy          Event?               @relation("PlanFulfillment")
+  // Provenance — the Note this Plan was derived from, if any
+  sourceNoteId         String?
+  sourceNote           Note?                @relation(fields: [sourceNoteId], references: [id], onDelete: SetNull)
+  aboutNotes           Note[]               @relation("NoteAboutPlan")
+  purchaseOrder        PurchaseOrder?
+  calendarLinks        CalendarEventLink[]
+
+  @@index([workspaceId, createdAt])
+  @@index([workspaceId, personId])
+  @@index([workspaceId, scheduledStart])
+  @@index([workspaceId, status, dueOn])
+  @@index([externalInstanceId])
+}
+
+// Junction: expected attendees on a Plan (flat Person refs, not Interactions)
+model PlanExpectedPerson {
+  planId      String
+  personId    String
+  workspaceId String    @default("default-workspace")
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  plan        Plan      @relation(fields: [planId], references: [id], onDelete: Cascade)
+  person      Person    @relation(fields: [personId], references: [id], onDelete: Cascade)
+
+  @@id([planId, personId])
+  @@index([personId])
+  @@index([workspaceId])
+}
+
+// ─────────────────────────────────────────────
+// PRIMARY: Place (hierarchical locations)
+// ─────────────────────────────────────────────
+
+model Place {
+  id                 String              @id @default(cuid())
+  workspaceId        String              @default("default-workspace")
+  workspace          Workspace           @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  name               String
+  googlePlaceId      String?             @unique
+  type               String?
+  address            String?
+  coordinates        String?
+  meaning            String?
+  favorite           Boolean             @default(false)
+  // Self-referencing hierarchy: Earth → Country → City → Home → Room → Shelf
+  parentPlaceId      String?
+  parentPlace        Place?              @relation("PlaceHierarchy", fields: [parentPlaceId], references: [id])
+  childPlaces        Place[]             @relation("PlaceHierarchy")
+  events             Event[]
+  plans              Plan[]
+  interactions       Interaction[]
+  items              Item[]
+  notes              PlaceNote[]
+  aboutNotes         Note[]              @relation("NoteAboutPlace")
+  groupAffiliations  PlaceGroup[]
+  importStagedVisits ImportStagedVisit[]
+  purchaseOrderLines PurchaseOrderLine[]
+
+  @@index([parentPlaceId])
+  @@index([workspaceId])
+}
+
+// ─────────────────────────────────────────────
+// INTEGRATIONS: Google Maps Takeout import
+// ─────────────────────────────────────────────
+
+model ImportJob {
+  id            String          @id @default(cuid())
+  workspaceId   String
+  status        ImportJobStatus @default(pending)
+  format        String
+  filename      String
+  rawData       String?
+  totalRows     Int             @default(0)
+  processedRows Int             @default(0)
+  createdRows   Int             @default(0)
+  stagedRows    Int             @default(0)
+  skippedRows   Int             @default(0)
+  errorRows     Int             @default(0)
+  startedAt     DateTime?
+  finishedAt    DateTime?
+  createdAt     DateTime        @default(now())
+
+  workspace    Workspace           @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  stagedVisits ImportStagedVisit[]
+
+  @@index([workspaceId, createdAt])
+  @@index([workspaceId, status])
+}
+
+enum ImportJobStatus {
+  pending
+  running
+  done
+  failed
+}
+
+model ImportStagedVisit {
+  id              String            @id @default(cuid())
+  importJobId     String
+  workspaceId     String
+  rawData         Json
+  placeName       String?
+  placeAddress    String?
+  latitude        Float?
+  longitude       Float?
+  googlePlaceId   String?
+  startedAt       DateTime
+  endedAt         DateTime?
+  confidence      Float
+  aiEnrichment    Json?
+  status          StagedVisitStatus @default(pending)
+  resolvedPlaceId String?
+  resolvedEventId String?
+  createdAt       DateTime          @default(now())
+
+  importJob     ImportJob @relation(fields: [importJobId], references: [id], onDelete: Cascade)
+  workspace     Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  resolvedPlace Place?    @relation(fields: [resolvedPlaceId], references: [id], onDelete: SetNull)
+
+  @@index([importJobId, status, confidence])
+  @@index([workspaceId, status, startedAt])
+  @@index([googlePlaceId])
+}
+
+enum StagedVisitStatus {
+  pending
+  accepted
+  rejected
+}
+
+model PlaceNote {
+  id          String   @id @default(cuid())
+  placeId     String
+  workspaceId String
+  body        String
+  eventId     String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  place     Place     @relation(fields: [placeId], references: [id])
+  workspace Workspace @relation(fields: [workspaceId], references: [id])
+  event     Event?    @relation(fields: [eventId], references: [id])
+
+  @@index([placeId, createdAt])
+  @@index([workspaceId, createdAt])
+  @@index([eventId])
+}
+
+// ─────────────────────────────────────────────
+// PRIMARY: Item (Object — anything physical you own)
+// ─────────────────────────────────────────────
+
+model Item {
+  id           String    @id @default(cuid())
+  workspaceId  String    @default("default-workspace")
+  workspace    Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  name         String
+  description  String?
+  category     String?
+  make         String?
+  model        String?
+  serialNumber String?
+  // Auto-generated QR-printable identifier e.g. "#001-042"
+  assetId      String    @unique
+  quantity     Float     @default(1)
+
+  // Optional stock definition. This is catalog/type metadata, not a primitive:
+  // the Item remains the actual physical holding at a Place.
+  definitionId String?
+  definition   ItemDefinition? @relation(fields: [definitionId], references: [id], onDelete: SetNull)
+
+  // Optional shared batch/lot. Serialized Items do not use a lot unless the
+  // physical product genuinely has both manufacturer lot and serial identity.
+  lotId String?
+  lot   InventoryLot? @relation(fields: [lotId], references: [id], onDelete: SetNull)
+
+  // Acquisition
+  purchaseDate  DateTime?
+  // Integer minor units (cents), not Float — avoids floating-point drift in money.
+  purchasePrice Int?
+  purchaseFrom  String?
+
+  // Warranty
+  warrantyExpires  DateTime?
+  lifetimeWarranty Boolean   @default(false)
+  warrantyDetails  String?
+
+  // Direct location — null when assembled inside another item (location is inherited)
+  placeId String?
+  place   Place?  @relation(fields: [placeId], references: [id])
+
+  // Owner
+  ownedById String?
+  ownedBy   Person? @relation(fields: [ownedById], references: [id])
+
+  // Optional representative media. The bytes remain outside the graph; this
+  // points to the storage-neutral ImportedFile provenance record.
+  primaryImageFileId String?
+  primaryImageFile   ImportedFile? @relation("ItemPrimaryImage", fields: [primaryImageFileId], references: [id], onDelete: SetNull)
+
+  // Domain-specific, user-correctable attributes encoded as JSON. Keeping
+  // wardrobe details here avoids turning garment taxonomy into primitives.
+  attributes String?
+
+  // Assembly tree
+  assembledInto Assembly[] @relation("ChildItem") // this item is inside something
+  components    Assembly[] @relation("ParentItem") // things currently inside this item
+
+  itemInteractions     ItemInteraction[]
+  purchaseReceiptLines PurchaseReceiptLine[]
+
+  tags       String?
+  notes      String?
+  aboutNotes Note[]  @relation("NoteAboutItem")
+  color      String?
+  colorSoft  String?
+
+  @@unique([workspaceId, definitionId, serialNumber])
+  @@index([name])
+  @@index([category])
+  @@index([assetId])
+  @@index([placeId])
+  @@index([ownedById])
+  @@index([primaryImageFileId])
+  @@index([createdAt])
+  @@index([workspaceId])
+  @@index([definitionId])
+  @@index([lotId])
+}
+
+enum InventoryTrackingMode {
+  untracked
+  lot
+  serial
+}
+
+// SUPPORT: reusable catalog/type information for physical Items.
+model ItemDefinition {
+  id                   String                @id @default(cuid())
+  workspaceId          String
+  workspace            Workspace             @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  createdAt            DateTime              @default(now())
+  updatedAt            DateTime              @updatedAt
+  name                 String
+  sku                  String?
+  category             String?
+  description          String?
+  unit                 String                @default("each")
+  trackingMode         InventoryTrackingMode @default(untracked)
+  reorderPoint         Float?
+  targetStock          Float?
+  defaultShelfLifeDays Int?
+  active               Boolean               @default(true)
+  items                Item[]
+  lots                 InventoryLot[]
+  purchaseOrderLines   PurchaseOrderLine[]
+
+  @@unique([workspaceId, sku])
+  @@index([workspaceId, name])
+  @@index([workspaceId, active])
+}
+
+// SUPPORT: manufacturer or receiving batch shared by one or more Item holdings.
+model InventoryLot {
+  id                   String                @id @default(cuid())
+  workspaceId          String
+  workspace            Workspace             @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  definitionId         String
+  definition           ItemDefinition        @relation(fields: [definitionId], references: [id], onDelete: Cascade)
+  lotCode              String
+  manufacturedAt       DateTime?
+  receivedAt           DateTime?
+  expiresAt            DateTime?
+  notes                String?
+  createdAt            DateTime              @default(now())
+  updatedAt            DateTime              @updatedAt
+  items                Item[]
+  purchaseReceiptLines PurchaseReceiptLine[]
+
+  @@unique([workspaceId, definitionId, lotCode])
+  @@index([workspaceId, expiresAt])
+  @@index([definitionId])
+}
+
+// ─────────────────────────────────────────────
+// STRUCTURAL: Assembly
+// Records that one item is (or was) inside another.
+// disassembledAt = null means currently installed.
+// ─────────────────────────────────────────────
+
+model Assembly {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+
+  childItemId String
+  childItem   Item   @relation("ChildItem", fields: [childItemId], references: [id])
+
+  parentItemId String
+  parentItem   Item   @relation("ParentItem", fields: [parentItemId], references: [id])
+
+  assembledAt   DateTime @default(now())
+  assembledById String?
+  assembledBy   Person?  @relation("AssembledBy", fields: [assembledById], references: [id])
+
+  // null = currently installed; set when item is removed
+  disassembledAt   DateTime?
+  disassembledById String?
+  disassembledBy   Person?   @relation("DisassembledBy", fields: [disassembledById], references: [id])
+
+  notes String?
+
+  @@index([childItemId])
+  @@index([parentItemId])
+  @@index([disassembledAt])
+}
+
+// ─────────────────────────────────────────────
+// JUNCTION: ItemInteraction (Item ↔ Interaction M:M)
+// ─────────────────────────────────────────────
+
+model ItemInteraction {
+  itemId        String
+  item          Item        @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  interactionId String
+  interaction   Interaction @relation(fields: [interactionId], references: [id], onDelete: Cascade)
+  role          String? // "subject", "target", "context" — optional semantic hint
+  // Ledger metadata. Item.quantity is the current projection; adjustment
+  // Interactions retain the delta and resulting balance.
+  quantityDelta Float?
+  quantityAfter Float?
+
+  @@id([itemId, interactionId])
+}
+
+// ─────────────────────────────────────────────
+// SUPPORT: ImportedFile
+// ─────────────────────────────────────────────
+
+model ImportedFile {
+  id              String              @id @default(cuid())
+  workspaceId     String              @default("default-workspace")
+  workspace       Workspace           @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  createdAt       DateTime            @default(now())
+  filename        String
+  format          String
+  filePath        String
+  sizeBytes       Int
+  content         String?
+  storageProvider String              @default("local")
+  storageKey      String?
+  mimeType        String?
+  checksum        String?
+  capturedAt      DateTime?
+  uploadIntentId  String?             @unique
+  uploadIntent    FileUploadIntent?   @relation(fields: [uploadIntentId], references: [id], onDelete: SetNull)
+  archivedAt      DateTime?
+  archiveReason   String?
+  processingState String              @default("pending")
+  interactions    Interaction[]
+  notes           Note[]
+  primaryForItems Item[]              @relation("ItemPrimaryImage")
+  aiAnalysisRuns  AiAnalysisRun[]
+  processingRuns  FileProcessingRun[]
+  chunks          FileChunk[]
+  entityMentions  FileEntityMention[]
+  evidenceClaims  EvidenceClaim[]
+
+  @@index([workspaceId, createdAt])
+  @@index([workspaceId, checksum])
+  @@index([workspaceId, archivedAt, createdAt])
+  @@index([workspaceId, processingState, createdAt])
+}
+
+// One-use authorization for a direct-to-object-storage upload. This record
+// exists before ImportedFile because no provenance row is trusted until S3
+// confirms the signed MIME type, checksum, and size.
+model FileUploadIntent {
+  id              String        @id @default(cuid())
+  workspaceId     String
+  workspace       Workspace     @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  createdAt       DateTime      @default(now())
+  expiresAt       DateTime
+  completedAt     DateTime?
+  status          String        @default("pending") // pending | completed | expired | rejected
+  filename        String
+  safeFilename    String
+  mimeType        String
+  format          String
+  sizeBytes       Int
+  checksumSha256  String
+  storageProvider String
+  storageKey      String
+  storeOnly       Boolean       @default(false)
+  importedFile    ImportedFile?
+
+  @@unique([workspaceId, storageKey])
+  @@index([workspaceId, status, createdAt])
+  @@index([expiresAt])
+}
+
+// Durable orchestration state for one processing attempt. A file may be
+// reprocessed with a newer processor without altering earlier evidence.
+model FileProcessingRun {
+  id               String              @id @default(cuid())
+  workspaceId      String
+  workspace        Workspace           @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  sourceFileId     String
+  sourceFile       ImportedFile        @relation(fields: [sourceFileId], references: [id], onDelete: Cascade)
+  createdAt        DateTime            @default(now())
+  updatedAt        DateTime            @updatedAt
+  startedAt        DateTime?
+  completedAt      DateTime?
+  status           String              @default("queued") // queued | processing | ready | partial | store_only | failed
+  processorVersion String
+  runKey           String
+  workflowRunId    String?
+  summary          String?
+  error            String?
+  chunks           FileChunk[]
+  entityMentions   FileEntityMention[]
+  evidenceClaims   EvidenceClaim[]
+  aiAnalysisRuns   AiAnalysisRun[]
+
+  @@unique([workspaceId, runKey])
+  @@index([workspaceId, status, createdAt])
+  @@index([sourceFileId, createdAt])
+  @@index([workflowRunId])
+}
+
+// Immutable, versioned extracted source text. locator is JSON with the
+// format-specific page/section/cell/region/timestamp coordinates.
+model FileChunk {
+  id              String              @id @default(cuid())
+  workspaceId     String
+  workspace       Workspace           @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  sourceFileId    String
+  sourceFile      ImportedFile        @relation(fields: [sourceFileId], references: [id], onDelete: Cascade)
+  processingRunId String
+  processingRun   FileProcessingRun   @relation(fields: [processingRunId], references: [id], onDelete: Cascade)
+  createdAt       DateTime            @default(now())
+  version         Int
+  ordinal         Int
+  content         String
+  contentHash     String
+  locatorType     String
+  locator         String
+  mentions        FileEntityMention[]
+  evidenceClaims  EvidenceClaim[]
+
+  @@unique([processingRunId, ordinal])
+  @@index([workspaceId, sourceFileId, version, ordinal])
+  @@index([workspaceId, createdAt])
+}
+
+// Every source occurrence is retained separately, even when the same entity
+// is mentioned repeatedly. Generic entity IDs preserve future Place/Item/
+// Group resolution; resolvedPersonId provides an enforced/queryable Person
+// relation for Theory and Persons surfaces.
+model FileEntityMention {
+  id                  String                 @id @default(cuid())
+  workspaceId         String
+  workspace           Workspace              @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  sourceFileId        String
+  sourceFile          ImportedFile           @relation(fields: [sourceFileId], references: [id], onDelete: Cascade)
+  processingRunId     String
+  processingRun       FileProcessingRun      @relation(fields: [processingRunId], references: [id], onDelete: Cascade)
+  chunkId             String
+  chunk               FileChunk              @relation(fields: [chunkId], references: [id], onDelete: Cascade)
+  createdAt           DateTime               @default(now())
+  updatedAt           DateTime               @updatedAt
+  entityType          String
+  sourceText          String
+  normalizedText      String
+  role                String
+  exactQuote          String
+  identityEvidence    String?
+  startOffset         Int?
+  endOffset           Int?
+  confidence          Float
+  resolutionStatus    String                 @default("unresolved") // unresolved | suggested | resolved | corrected | dismissed
+  resolutionLevel     Int?
+  resolutionReason    String?
+  resolvedEntityId    String?
+  resolvedPersonId    String?
+  resolvedPerson      Person?                @relation("ResolvedPersonFileMentions", fields: [resolvedPersonId], references: [id], onDelete: SetNull)
+  resolutionUpdatedAt DateTime?
+  claimSubjects       EvidenceClaimSubject[]
+  resolutionHistory   FileEntityResolution[]
+
+  @@index([workspaceId, entityType, normalizedText])
+  @@index([workspaceId, resolvedPersonId, createdAt])
+  @@index([workspaceId, resolutionStatus, createdAt])
+  @@index([sourceFileId, chunkId])
+}
+
+model PersonExternalIdentifier {
+  id          String    @id @default(cuid())
+  workspaceId String
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  personId    String
+  person      Person    @relation(fields: [personId], references: [id], onDelete: Cascade)
+  externalId  String
+  provider    String?
+  createdAt   DateTime  @default(now())
+
+  @@unique([workspaceId, externalId])
+  @@index([personId])
+}
+
+// Append-only identity resolution history. Theory staleness derives from
+// these rows so moving a mention marks both the old and new Person stale.
+model FileEntityResolution {
+  id           String            @id @default(cuid())
+  workspaceId  String
+  workspace    Workspace         @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  mentionId    String
+  mention      FileEntityMention @relation(fields: [mentionId], references: [id], onDelete: Cascade)
+  createdAt    DateTime          @default(now())
+  fromPersonId String?
+  fromPerson   Person?           @relation("FileResolutionFromPerson", fields: [fromPersonId], references: [id], onDelete: SetNull)
+  toPersonId   String?
+  toPerson     Person?           @relation("FileResolutionToPerson", fields: [toPersonId], references: [id], onDelete: SetNull)
+  action       String // resolved | corrected | dismissed
+  actorId      String?
+  reason       String?
+
+  @@index([workspaceId, createdAt])
+  @@index([mentionId, createdAt])
+  @@index([fromPersonId, createdAt])
+  @@index([toPersonId, createdAt])
+}
+
+// Atomic cited assertions. Machine output is immutable: corrections create a
+// user Note plus a new claim that supersedes this row.
+model EvidenceClaim {
+  id                    String                 @id @default(cuid())
+  workspaceId           String
+  workspace             Workspace              @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  sourceFileId          String
+  sourceFile            ImportedFile           @relation(fields: [sourceFileId], references: [id], onDelete: Cascade)
+  processingRunId       String
+  processingRun         FileProcessingRun      @relation(fields: [processingRunId], references: [id], onDelete: Cascade)
+  chunkId               String
+  chunk                 FileChunk              @relation(fields: [chunkId], references: [id], onDelete: Cascade)
+  createdAt             DateTime               @default(now())
+  updatedAt             DateTime               @updatedAt
+  assertion             String
+  structuredValue       String?
+  classification        String // explicit | inferred
+  claimType             String?
+  exactQuote            String
+  startOffset           Int?
+  endOffset             Int?
+  occurredAt            DateTime?
+  validFrom             DateTime?
+  validTo               DateTime?
+  confidence            Float
+  status                String                 @default("unreviewed") // unreviewed | accepted | dismissed | superseded | reversed
+  reviewedAt            DateTime?
+  reviewedBy            String?
+  supersedesClaimId     String?
+  supersedesClaim       EvidenceClaim?         @relation("EvidenceClaimSupersession", fields: [supersedesClaimId], references: [id], onDelete: SetNull)
+  supersededBy          EvidenceClaim[]        @relation("EvidenceClaimSupersession")
+  correctionNoteId      String?
+  correctionNote        Note?                  @relation(fields: [correctionNoteId], references: [id], onDelete: SetNull)
+  graphResultType       String?
+  graphResultId         String?
+  graphEventId          String?
+  subjects              EvidenceClaimSubject[]
+  theorySnapshotSources TheorySnapshotSource[]
+
+  @@index([workspaceId, status, createdAt])
+  @@index([workspaceId, classification, createdAt])
+  @@index([sourceFileId, chunkId])
+  @@index([supersedesClaimId])
+}
+
+model EvidenceClaimSubject {
+  claimId         String
+  claim           EvidenceClaim     @relation(fields: [claimId], references: [id], onDelete: Cascade)
+  mentionId       String
+  mention         FileEntityMention @relation(fields: [mentionId], references: [id], onDelete: Cascade)
+  subjectRole     String
+  relevanceWeight Float
+  createdAt       DateTime          @default(now())
+
+  @@id([claimId, mentionId])
+  @@index([mentionId])
+  @@index([claimId, relevanceWeight])
+}
+
+// ─────────────────────────────────────────────
+// SUPPORT: AI provider credentials and auditable analysis
+// These are operational records, not LifeOS primitives.
+// ─────────────────────────────────────────────
+
+model AiProviderCredential {
+  id                    String                 @id @default(cuid())
+  workspaceId           String
+  workspace             Workspace              @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  createdAt             DateTime               @default(now())
+  updatedAt             DateTime               @updatedAt
+  provider              String
+  label                 String?
+  apiKeyEncrypted       String
+  modelId               String
+  status                String                 @default("active")
+  lastUsedAt            DateTime?
+  analysisRuns          AiAnalysisRun[]
+  noteAnalysisRuns      NoteAnalysisRun[]
+  theoryAnalysisRuns    TheoryAnalysisRun[]
+  lifeModelAnalysisRuns LifeModelAnalysisRun[]
+
+  @@unique([workspaceId, provider])
+  @@index([workspaceId, status])
+}
+
+model AiAnalysisRun {
+  id              String                @id @default(cuid())
+  workspaceId     String
+  workspace       Workspace             @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  createdAt       DateTime              @default(now())
+  completedAt     DateTime?
+  credentialId    String?
+  credential      AiProviderCredential? @relation(fields: [credentialId], references: [id], onDelete: SetNull)
+  sourceFileId    String
+  sourceFile      ImportedFile          @relation(fields: [sourceFileId], references: [id], onDelete: Cascade)
+  provider        String
+  modelId         String
+  status          String
+  promptVersion   String
+  output          String?
+  error           String?
+  inputTokens     Int?
+  outputTokens    Int?
+  estimatedCost   Float?
+  processingRunId String?
+  processingRun   FileProcessingRun?    @relation(fields: [processingRunId], references: [id], onDelete: SetNull)
+  purpose         String?
+
+  @@index([workspaceId, createdAt])
+  @@index([sourceFileId])
+  @@index([processingRunId, purpose])
+}
+
+// Operational AI processing for immutable captured Notes. This is not a Life
+// OS primitive: it records paid model usage and review state around proposals.
+model NoteAnalysisRun {
+  id            String                @id @default(cuid())
+  workspaceId   String
+  workspace     Workspace             @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  noteId        String
+  note          Note                  @relation(fields: [noteId], references: [id], onDelete: Cascade)
+  credentialId  String?
+  credential    AiProviderCredential? @relation(fields: [credentialId], references: [id], onDelete: SetNull)
+  createdAt     DateTime              @default(now())
+  completedAt   DateTime?
+  provider      String
+  modelId       String
+  status        String
+  promptVersion String
+  output        String?
+  error         String?
+  inputTokens   Int?
+  outputTokens  Int?
+  estimatedCost Float?
+  suggestions   NoteSuggestion[]
+
+  @@unique([noteId, promptVersion])
+  @@index([workspaceId, createdAt])
+  @@index([noteId, createdAt])
+}
+
+// Theory of Person's AI-run tracking (packages/intelligence/src/synthesize.ts).
+// Mirrors NoteAnalysisRun's shape, keyed by subjectPersonId instead of noteId.
+// Deliberately NOT unique on (subjectPersonId, promptVersion) the way
+// NoteAnalysisRun is on (noteId, promptVersion) — a Note's content is static,
+// so re-analyzing with the same prompt version can safely reuse a cached
+// result; a person's evidence grows over time, so "regenerate" must always
+// re-run against fresh evidence. The concurrency guard is instead "is there
+// already a running row for this person" (checked in application code), not
+// a DB-level unique constraint.
+model TheoryAnalysisRun {
+  id              String                @id @default(cuid())
+  workspaceId     String                @default("default-workspace")
+  workspace       Workspace             @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  subjectPersonId String
+  subjectPerson   Person                @relation(fields: [subjectPersonId], references: [id], onDelete: Cascade)
+  credentialId    String?
+  credential      AiProviderCredential? @relation(fields: [credentialId], references: [id], onDelete: SetNull)
+  createdAt       DateTime              @default(now())
+  completedAt     DateTime?
+  provider        String
+  modelId         String
+  status          String
+  promptVersion   String
+  snapshotId      String?
+  output          String?
+  error           String?
+  inputTokens     Int?
+  outputTokens    Int?
+  estimatedCost   Float?
+
+  @@index([workspaceId, createdAt])
+  @@index([subjectPersonId, createdAt])
+  @@index([subjectPersonId, status])
+}
+
+// Whole-life synthesis run receipt. Like TheoryAnalysisRun, this is not
+// unique by prompt version: the workspace evidence changes continuously, so
+// every explicit regenerate command must produce a fresh, auditable reading.
+model LifeModelAnalysisRun {
+  id            String                @id @default(cuid())
+  workspaceId   String                @default("default-workspace")
+  workspace     Workspace             @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  credentialId  String?
+  credential    AiProviderCredential? @relation(fields: [credentialId], references: [id], onDelete: SetNull)
+  snapshotId    String?
+  snapshot      LifeModelSnapshot?    @relation(fields: [snapshotId], references: [id], onDelete: SetNull)
+  createdAt     DateTime              @default(now())
+  completedAt   DateTime?
+  provider      String
+  modelId       String
+  status        String
+  promptVersion String
+  output        String?
+  error         String?
+  inputTokens   Int?
+  outputTokens  Int?
+  estimatedCost Float?
+
+  @@index([workspaceId, createdAt])
+  @@index([workspaceId, status])
+  @@index([snapshotId])
+}
+
+model NoteSuggestion {
+  id                 String          @id @default(cuid())
+  workspaceId        String
+  workspace          Workspace       @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  noteId             String
+  note               Note            @relation(fields: [noteId], references: [id], onDelete: Cascade)
+  analysisRunId      String
+  analysisRun        NoteAnalysisRun @relation(fields: [analysisRunId], references: [id], onDelete: Cascade)
+  createdAt          DateTime        @default(now())
+  reviewedAt         DateTime?
+  kind               String
+  status             String          @default("pending")
+  title              String
+  payload            String
+  confidence         Float?
+  acceptedEntityType String?
+  acceptedEntityId   String?
+
+  @@index([workspaceId, status, createdAt])
+  @@index([noteId, status])
+  @@index([analysisRunId])
+}
+
+// ─────────────────────────────────────────────
+// PRIMARY: Group (6th primitive)
+// Represents organizations, families, teams — any collective identity.
+// Person represents humans ONLY; Group is the node for collective entities.
+// ─────────────────────────────────────────────
+
+enum GroupType {
+  family
+  employer
+  friend_group
+  sports_team
+  corporation
+  community
+  other
+}
+
+enum PlaceGroupRelationshipType {
+  corporate_parent
+  employer_location
+  home_venue
+  residence
+  usual_spot
+  other
+}
+
+model Group {
+  id          String    @id @default(cuid())
+  workspaceId String    @default("default-workspace")
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  name        String
+  groupType   GroupType
+  notes       String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  personMembers     PersonGroup[]
+  // Joint/shared financial accounts belonging to this group (e.g. a household)
+  eraAccounts       EraAccountLink[] @relation("EraAccountHousehold")
+  childGroups       GroupGroup[]     @relation("ParentGroup")
+  parentGroups      GroupGroup[]     @relation("ChildGroup")
+  placeAffiliations PlaceGroup[]
+  taggedEvents      Event[]          @relation("EventGroupTags")
+  interactions      Interaction[]    @relation("InteractionOrganization")
+  aboutNotes        Note[]           @relation("NoteAboutGroup")
+  // Provenance — the Note this Group was derived from, if any
+  sourceNoteId      String?
+  sourceNote        Note?            @relation(fields: [sourceNoteId], references: [id], onDelete: SetNull)
+  supplierProfile   SupplierProfile?
+
+  @@index([workspaceId])
+  @@index([workspaceId, groupType])
+}
+
+// SUPPORT: purchasing-specific details for a supplier Group.
+model SupplierProfile {
+  id             String          @id @default(cuid())
+  workspaceId    String
+  workspace      Workspace       @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  groupId        String          @unique
+  group          Group           @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  supplierCode   String?
+  email          String?
+  phone          String?
+  website        String?
+  paymentTerms   String?
+  active         Boolean         @default(true)
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  purchaseOrders PurchaseOrder[]
+
+  @@unique([workspaceId, supplierCode])
+  @@index([workspaceId, active])
+}
+
+// SUPPORT: operational purchasing fields extending the canonical Plan.
+model PurchaseOrder {
+  id          String              @id @default(cuid())
+  workspaceId String
+  workspace   Workspace           @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  planId      String              @unique
+  plan        Plan                @relation(fields: [planId], references: [id], onDelete: Cascade)
+  supplierId  String
+  supplier    SupplierProfile     @relation(fields: [supplierId], references: [id])
+  orderNumber String
+  currency    String              @default("USD")
+  orderedAt   DateTime
+  expectedAt  DateTime?
+  notes       String?
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+  lines       PurchaseOrderLine[]
+
+  @@unique([workspaceId, orderNumber])
+  @@index([workspaceId, orderedAt])
+  @@index([supplierId])
+}
+
+model PurchaseOrderLine {
+  id                  String                @id @default(cuid())
+  purchaseOrderId     String
+  purchaseOrder       PurchaseOrder         @relation(fields: [purchaseOrderId], references: [id], onDelete: Cascade)
+  definitionId        String
+  definition          ItemDefinition        @relation(fields: [definitionId], references: [id])
+  descriptionSnapshot String
+  skuSnapshot         String?
+  orderedQuantity     Float
+  unitCost            Int?
+  destinationPlaceId  String?
+  destinationPlace    Place?                @relation(fields: [destinationPlaceId], references: [id], onDelete: SetNull)
+  createdAt           DateTime              @default(now())
+  receiptLines        PurchaseReceiptLine[]
+
+  @@index([purchaseOrderId])
+  @@index([definitionId])
+  @@index([destinationPlaceId])
+}
+
+// SUPPORT: exact order-line-to-Item quantity accepted during a receiving Event.
+model PurchaseReceiptLine {
+  id          String            @id @default(cuid())
+  workspaceId String
+  workspace   Workspace         @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  eventId     String
+  event       Event             @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  orderLineId String
+  orderLine   PurchaseOrderLine @relation(fields: [orderLineId], references: [id])
+  itemId      String
+  item        Item              @relation(fields: [itemId], references: [id])
+  lotId       String?
+  lot         InventoryLot?     @relation(fields: [lotId], references: [id], onDelete: SetNull)
+  quantity    Float
+  createdAt   DateTime          @default(now())
+
+  @@index([workspaceId, createdAt])
+  @@index([eventId])
+  @@index([orderLineId])
+  @@index([itemId])
+}
+
+model PersonGroup {
+  id        String    @id @default(cuid())
+  personId  String
+  groupId   String
+  role      String?
+  startDate DateTime?
+  endDate   DateTime?
+
+  person Person @relation(fields: [personId], references: [id])
+  group  Group  @relation(fields: [groupId], references: [id])
+
+  @@index([personId])
+  @@index([groupId])
+}
+
+model GroupGroup {
+  id            String    @id @default(cuid())
+  parentGroupId String
+  childGroupId  String
+  role          String?
+  startDate     DateTime?
+  endDate       DateTime?
+
+  parent Group @relation("ParentGroup", fields: [parentGroupId], references: [id])
+  child  Group @relation("ChildGroup", fields: [childGroupId], references: [id])
+
+  @@index([parentGroupId])
+  @@index([childGroupId])
+}
+
+model PlaceGroup {
+  id               String                     @id @default(cuid())
+  placeId          String
+  groupId          String
+  relationshipType PlaceGroupRelationshipType
+  startDate        DateTime?
+  endDate          DateTime?
+
+  place Place @relation(fields: [placeId], references: [id])
+  group Group @relation(fields: [groupId], references: [id])
+
+  @@index([placeId])
+  @@index([groupId])
+}
+
+// ─────────────────────────────────────────────
+// PRIMARY: Note (8th primitive)
+// A raw captured thought, voice memo transcript, or observation — the entry
+// point for unstructured input before it is resolved into structure.
+// Provenance is sacred: every derivable node carries a nullable sourceNoteId
+// back to the Note it came from. Notes are immutable by convention.
+// ─────────────────────────────────────────────
+
+model Note {
+  id           String        @id @default(cuid())
+  workspaceId  String        @default("default-workspace")
+  workspace    Workspace     @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  createdAt    DateTime      @default(now())
+  // When the underlying thought/observation occurred (may predate createdAt)
+  timestamp    DateTime
+  // thought | voice_transcript | observation | import
+  type         String
+  content      String
+  metadata     String?
+  // Raw/derived split: link back to the archived raw file, when one exists
+  sourceFileId String?
+  sourceFile   ImportedFile? @relation(fields: [sourceFileId], references: [id])
+  // Subject, not provenance. X.sourceNoteId means "X was derived from this
+  // Note"; these mean "this Note is about X". A note may name more than one
+  // subject (Qin at a place, about an item) — that is still observation, not
+  // an Interaction.
+  aboutPersonId String?
+  aboutPerson   Person?       @relation("NoteAboutPerson", fields: [aboutPersonId], references: [id], onDelete: SetNull)
+  aboutPlaceId  String?
+  aboutPlace    Place?        @relation("NoteAboutPlace", fields: [aboutPlaceId], references: [id], onDelete: SetNull)
+  aboutItemId   String?
+  aboutItem     Item?         @relation("NoteAboutItem", fields: [aboutItemId], references: [id], onDelete: SetNull)
+  aboutEventId  String?
+  aboutEvent    Event?        @relation("NoteAboutEvent", fields: [aboutEventId], references: [id], onDelete: SetNull)
+  aboutPlanId   String?
+  aboutPlan     Plan?         @relation("NoteAboutPlan", fields: [aboutPlanId], references: [id], onDelete: SetNull)
+  aboutGroupId  String?
+  aboutGroup    Group?        @relation("NoteAboutGroup", fields: [aboutGroupId], references: [id], onDelete: SetNull)
+  aboutStateId  String?
+  aboutState    State?        @relation("NoteAboutState", fields: [aboutStateId], references: [id], onDelete: SetNull)
+
+  // Reverse provenance — nodes derived from this Note
+  plans                  Plan[]
+  events                 Event[]
+  interactions           Interaction[]
+  states                 State[]
+  groups                 Group[]
+  aiAnalysisRuns         NoteAnalysisRun[]
+  suggestions            NoteSuggestion[]
+  lifeModelClaimFeedback LifeModelClaimFeedback[]
+  evidenceCorrections    EvidenceClaim[]
+
+  @@index([workspaceId, timestamp(sort: Desc)])
+  @@index([sourceFileId])
+  @@index([workspaceId, aboutPersonId, timestamp(sort: Desc)])
+  @@index([workspaceId, aboutPlaceId, timestamp(sort: Desc)])
+  @@index([workspaceId, aboutItemId, timestamp(sort: Desc)])
+  @@index([workspaceId, aboutEventId, timestamp(sort: Desc)])
+  @@index([workspaceId, aboutPlanId, timestamp(sort: Desc)])
+  @@index([workspaceId, aboutGroupId, timestamp(sort: Desc)])
+  @@index([workspaceId, aboutStateId, timestamp(sort: Desc)])
+}
+
+// ─────────────────────────────────────────────
+// APP-LAYER STATE: Theory of Person
+// NOT a life primitive. A cached, versioned, auditable synthesis derived from
+// the stored truth (Person · Note · Event · Plan · State · Interaction).
+// Person is the source entity; the theory is the derived interpretation.
+// ─────────────────────────────────────────────
+
+model TheorySnapshot {
+  id          String    @id @default(cuid())
+  workspaceId String    @default("default-workspace")
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  subjectPersonId String
+  subjectPerson   Person @relation(fields: [subjectPersonId], references: [id], onDelete: Cascade)
+
+  version Int
+  title   String
+
+  summary      String
+  markdownBody String
+
+  // current | archived | draft | rejected
+  status     String @default("current")
+  confidence Float?
+
+  synthesizedAt DateTime @default(now())
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  sources TheorySnapshotSource[]
+
+  @@index([subjectPersonId])
+  @@index([subjectPersonId, version])
+  @@index([status])
+  @@index([workspaceId])
+}
+
+model TheorySnapshotSource {
+  id String @id @default(cuid())
+
+  snapshotId String
+  snapshot   TheorySnapshot @relation(fields: [snapshotId], references: [id], onDelete: Cascade)
+
+  // note | event | interaction | state | plan | person
+  sourceType String
+  sourceId   String
+
+  contribution           String?
+  weight                 Float?
+  evidenceClaimId        String?
+  evidenceClaim          EvidenceClaim? @relation(fields: [evidenceClaimId], references: [id], onDelete: SetNull)
+  evidenceClassification String?
+  evidenceStatus         String?
+  citation               String?
+
+  createdAt DateTime @default(now())
+
+  @@index([snapshotId])
+  @@index([sourceType, sourceId])
+  @@index([evidenceClaimId])
+}
+
+// Whole-life synthesis (packages/intelligence, Track A6) — versioned exactly
+// like TheorySnapshot above (demote-current-then-insert in one transaction),
+// but workspace-scoped rather than person-scoped: TheorySnapshot answers
+// "who is this person", LifeModelSnapshot answers "what's true across the
+// whole graph right now". A snapshot is a container; LifeModelClaim rows are
+// the actual statements, each independently typed, evidenced, and dated —
+// deliberately more granular than TheorySnapshot's single markdownBody, so a
+// claim can be filtered/queried/re-derived on its own.
+model LifeModelSnapshot {
+  id          String    @id @default(cuid())
+  workspaceId String    @default("default-workspace")
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  version Int
+  summary String
+
+  // current | archived | draft | rejected — same vocabulary as TheorySnapshot.status
+  status String @default("current")
+
+  modelId       String?
+  promptVersion String?
+
+  synthesizedAt DateTime @default(now())
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  claims       LifeModelClaim[]
+  analysisRuns LifeModelAnalysisRun[]
+
+  @@index([workspaceId, version])
+  @@index([workspaceId, status])
+}
+
+model LifeModelClaim {
+  id         String            @id @default(cuid())
+  snapshotId String
+  snapshot   LifeModelSnapshot @relation(fields: [snapshotId], references: [id], onDelete: Cascade)
+
+  // observed | inferred | declared | tension
+  kind       String
+  statement  String
+  confidence Float?
+
+  // The primitive this claim is about, if it's about one specific thing
+  // rather than the whole graph.
+  subjectType String?
+  subjectId   String?
+
+  // The time range the claim draws on, if bounded — an inferred pattern
+  // might cover the last 90 days; a tension is as of the snapshot's
+  // synthesizedAt and has no window.
+  windowStart DateTime?
+  windowEnd   DateTime?
+
+  // JSON array of { sourceType, sourceId } — the provenance trail, same
+  // shape as TheorySnapshotSource's sourceType/sourceId pair, just inlined
+  // per-claim instead of a join table (a claim's evidence is small and
+  // claim-specific, unlike a whole snapshot's).
+  evidence String?
+
+  createdAt DateTime                 @default(now())
+  feedback  LifeModelClaimFeedback[]
+
+  @@index([snapshotId])
+  @@index([kind])
+  @@index([subjectType, subjectId])
+}
+
+// Human judgment about a derived claim. Snapshots and claims remain
+// immutable: dismissal/correction appends this receipt instead of rewriting
+// model output. A correction also creates a Note, so declared truth enters
+// the graph through an existing primitive and can ground later synthesis.
+model LifeModelClaimFeedback {
+  id                   String         @id @default(cuid())
+  workspaceId          String         @default("default-workspace")
+  workspace            Workspace      @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  claimId              String
+  claim                LifeModelClaim @relation(fields: [claimId], references: [id], onDelete: Cascade)
+  action               String
+  replacementStatement String?
+  reason               String?
+  sourceNoteId         String?
+  sourceNote           Note?          @relation(fields: [sourceNoteId], references: [id], onDelete: SetNull)
+  actorType            String
+  actorId              String?
+  actorLabel           String?
+  createdAt            DateTime       @default(now())
+
+  @@index([workspaceId, createdAt])
+  @@index([claimId, createdAt])
+  @@index([sourceNoteId])
+}
+
+// ─────────────────────────────────────────────
+// ADAPTIVE DAY: deterministic capacity/schedule/workout recommendations
+// ─────────────────────────────────────────────
+// Same shape as LifeModelSnapshot/LifeModelClaim/LifeModelClaimFeedback
+// above (snapshot -> claims -> feedback), day-keyed instead of
+// version-keyed since a brief is inherently daily, not an ever-growing
+// version chain. See docs/ADAPTIVE_DAY_PLAN.md.
+//
+// AdaptiveIntervention is the source-of-record for one proposed
+// recommendation — ReviewItem (see below) is a dual-written index over it
+// for confirmation, the same relationship ReviewItem already has with
+// StagedInteraction/NoteSuggestion/calendar reconciliation. Accepting an
+// intervention never re-derives the action; it runs the stored
+// proposedCommand through the registered command it names.
+
+model AdaptiveDayBrief {
+  id          String    @id @default(cuid())
+  workspaceId String    @default("default-workspace")
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  // Local calendar day this brief is for, e.g. "2026-08-14" — computed in
+  // the workspace's timezone, never the server clock's.
+  day      String
+  timezone String
+
+  // Deterministic engine version that produced this brief. A rules-version
+  // bump makes the existing "current" brief for a day stale without being a
+  // uniqueness conflict — refresh supersedes it and generates a new one.
+  rulesVersion String
+
+  // full | adjust | recover — matches LevelUpReadinessSnapshot.band exactly,
+  // so Adaptive Day and Level Up never disagree about what a band means.
+  capacityBand String
+
+  // Bounded snapshot of the inputs the engine actually read (fixed
+  // commitments, latest energy/mood/stress, Level Up band, workout plan,
+  // health freshness) — kept thin, a pointer/summary, not a second copy of
+  // the primitives themselves.
+  inputSnapshot  String
+  // JSON array of input names that were missing or stale when this brief
+  // was generated, e.g. ["levelUpReadiness", "morningCheckIn"]. Drives
+  // Home's "visible missing-data state."
+  missingSignals String @default("[]")
+
+  generatedAt DateTime @default(now())
+  // current | superseded — a refresh marks the prior brief for the same day
+  // superseded and creates a new current one; already-accepted interventions
+  // on the superseded brief are untouched.
+  status      String   @default("current")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  interventions AdaptiveIntervention[]
+
+  // Not unique: uniqueness of "current" is enforced at the application
+  // layer (generateAndPersistBrief always supersedes the prior current
+  // brief for a day before creating a new one, even when rulesVersion is
+  // unchanged — a refresh doesn't bump the rules version). A DB-level
+  // unique constraint on (workspaceId, day, rulesVersion) would incorrectly
+  // reject that: status isn't part of the key, so a superseded row still
+  // occupies it.
+  @@index([workspaceId, day, rulesVersion])
+  @@index([workspaceId, day, status])
+}
+
+model AdaptiveIntervention {
+  id      String           @id @default(cuid())
+  briefId String
+  brief   AdaptiveDayBrief @relation(fields: [briefId], references: [id], onDelete: Cascade)
+
+  rank               Int
+  // plan_schedule | plan_reschedule | workout_adjustment | capacity_guidance
+  category           String
+  recommendationText String
+  // JSON array of short machine-stable reason codes, e.g. ["fixed_commitments_5h", "energy_low"]
+  reasonCodes        String  @default("[]")
+  // JSON — same shape/purpose as ReviewItem.evidence, copied straight into
+  // the dual-written ReviewItem row so "Why this?" has one source.
+  evidence           String?
+
+  // The proposed graph command, not yet applied — null for capacity_guidance,
+  // which has nothing to accept, only acknowledge/dismiss. Same shape as
+  // ReviewItem.proposedCommand: JSON { command: string, input: object }.
+  proposedCommand String?
+  // observe | safe_auto | review | confirm — same vocabulary as
+  // ReviewItem.riskTier and ActionAuthorityTier.
+  riskTier        String  @default("review")
+
+  // Same status vocabulary as ReviewItemStatus, since this dual-writes one.
+  status       String  @default("pending")
+  reviewItemId String? @unique
+  resultType   String?
+  resultId     String?
+
+  createdAt DateTime @default(now())
+
+  outcomes AdaptiveInterventionOutcome[]
+
+  @@index([briefId, rank])
+  @@index([reviewItemId])
+}
+
+model AdaptiveInterventionOutcome {
+  id             String               @id @default(cuid())
+  workspaceId    String               @default("default-workspace")
+  workspace      Workspace            @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  interventionId String
+  intervention   AdaptiveIntervention @relation(fields: [interventionId], references: [id], onDelete: Cascade)
+
+  // passive | user_reported
+  source     String
+  // followed_through | not_followed_through | unknown | helpful | not_helpful | not_sure
+  outcome    String
+  confidence Float?
+  // JSON — what the passive matcher looked at, or the user-reported context
+  evidence   String?
+  note       String?
+
+  actorType  String?
+  actorId    String?
+  actorLabel String?
+
+  createdAt DateTime @default(now())
+
+  @@index([workspaceId, createdAt])
+  @@index([interventionId, createdAt])
+}
+
+// ─────────────────────────────────────────────
+// STATE LAYER
+// ─────────────────────────────────────────────
+
+model StateDefinition {
+  id          String  @id @default(cuid())
+  workspaceId String
+  entityType  String
+  type        String
+  value       String
+  description String?
+  states      State[]
+
+  @@unique([workspaceId, entityType, type, value])
+  @@index([workspaceId, entityType])
+}
+
+model State {
+  id           String          @id @default(cuid())
+  workspaceId  String
+  entityType   String
+  entityId     String
+  definitionId String
+  definition   StateDefinition @relation(fields: [definitionId], references: [id])
+  severity     Float?
+  source       String?
+  // Provenance — the Note this State was derived from, if any
+  sourceNoteId String?
+  sourceNote   Note?           @relation(fields: [sourceNoteId], references: [id], onDelete: SetNull)
+  aboutNotes   Note[]          @relation("NoteAboutState")
+  recordedAt   DateTime
+  createdAt    DateTime        @default(now())
+
+  @@index([workspaceId, entityId, entityType])
+  @@index([workspaceId, entityId, entityType, recordedAt])
+}
+
+// ─────────────────────────────────────────────
+// APP-LAYER: Assistant conversation history
+// Stores WhatsApp ↔ Claude message threads keyed by channel + phone number.
+// Not a LifeOS primitive — purely an assistant-app concern.
+// ─────────────────────────────────────────────
+
+model AssistantMessage {
+  id          String    @id @default(cuid())
+  workspaceId String    @default("default-workspace")
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  channel     String // "whatsapp"
+  from        String // phone number e.g. "whatsapp:+14155238886"
+  role        String // "user" | "assistant"
+  content     String
+  metadata    String?
+  createdAt   DateTime  @default(now())
+
+  @@index([workspaceId, from, createdAt])
+}
+
+// ═════════════════════════════════════════════
+// LEVEL UP — a sports-game ratings engine for one real human
+// Module tables (not LifeOS primitives). Governing principle:
+// the user interacts with the abstraction (ranks, badges, builds);
+// the engine interacts with the science (protocols, raw measurements,
+// population distributions, confidence). Every rating is falsifiable and
+// traceable to a raw measurement stored here.
+//
+// Ratings themselves are DERIVED (never stored) from LevelUpTestResult by the
+// engine at read time — except LevelUpRatingSnapshot, which is a frozen
+// historical record of "what the engine said on this date" (the career
+// timeline + the combine-verified ceiling). Snapshots are provenance, not a
+// live aggregate.
+// ═════════════════════════════════════════════
+
+model LevelUpProfile {
+  id                   String    @id @default(cuid())
+  workspaceId          String    @unique
+  workspace            Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+  birthDate            DateTime?
+  sex                  String    @default("male") // "male" | "female" — norm selection only
+  bodyweightKg         Float?
+  heightCm             Float?
+  standingReachCm      Float? // for jump/dunk target builds
+  primaryBuild         String? // selected archetype key for the headline OVR
+  coldStartCompletedAt DateTime?
+  // Display unit for the workout module. Storage is always kg — the engine's
+  // norms are metric — and lb exists only at the picker and the readout.
+  unitPreference       String    @default("lb") // lb | kg
+  // 1.25 lb micro-plates available, which halves the weight wheel's step.
+  microPlates          Boolean   @default(false)
+  activeProgramId      String?
+}
+
+// A single raw measurement. Provenance is sacred: nothing derived is stored
+// here, only what was actually measured, how, and under what conditions.
+model LevelUpTestResult {
+  id                String          @id @default(cuid())
+  workspaceId       String
+  workspace         Workspace       @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  createdAt         DateTime        @default(now())
+  measuredAt        DateTime        @default(now())
+  testKey           String // catalog key, e.g. "vertical_cmj", "vo2max", "grip"
+  value             Float // raw value in the test's canonical unit
+  bodyweightKg      Float? // snapshot at time of test (for relative-strength tests)
+  populationSource  String          @default("general") // "general" | "trained"
+  source            String          @default("combine") // combine | training | self_report | wearable
+  protocolFlags     String? // JSON: { arms, countermovement, ... } — must match history
+  context           String? // JSON: { shoes, surface, timeOfDay, hoursSlept, daysSinceHard, device }
+  deviceFingerprint String? // reaction-time hardware identity; comparisons refuse to cross it
+  combineId         String?
+  combine           LevelUpCombine? @relation(fields: [combineId], references: [id], onDelete: SetNull)
+
+  @@index([workspaceId, testKey, measuredAt])
+  @@index([combineId])
+}
+
+// The Human Combine: a testing session, run every 8–12 weeks. Only a completed
+// combine raises an attribute's verified ceiling.
+model LevelUpCombine {
+  id          String                 @id @default(cuid())
+  workspaceId String
+  workspace   Workspace              @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  createdAt   DateTime               @default(now())
+  startedAt   DateTime               @default(now())
+  completedAt DateTime?
+  label       String?
+  notes       String?
+  block       String? // athletic | strength | engine | movement | full
+  results     LevelUpTestResult[]
+  snapshot    LevelUpRatingSnapshot?
+
+  @@index([workspaceId, completedAt])
+}
+
+// Frozen record of the engine's output at a point in time (career timeline +
+// verified ceiling). ratings/subRatings/buildOvrs/caps/badges are JSON blobs.
+model LevelUpRatingSnapshot {
+  id            String          @id @default(cuid())
+  workspaceId   String
+  workspace     Workspace       @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  createdAt     DateTime        @default(now())
+  computedAt    DateTime        @default(now())
+  combineId     String?         @unique
+  combine       LevelUpCombine? @relation(fields: [combineId], references: [id], onDelete: SetNull)
+  engineVersion String          @default("v2")
+  ovr           Float
+  ratings       String // JSON: { attributeKey: { rating, lower, upper, cap, confidence } }
+  subRatings    String // JSON: { subKey: { rating, residualSd? } }
+  buildOvrs     String // JSON: { buildKey: ovr }
+  badges        String // JSON: [ { key, tier, progress } ]
+  caps          String // JSON: { attributeKey: { cap, reason } }
+
+  @@index([workspaceId, computedAt])
+}
+
+// Per-set training evidence (Part 9). Raw inputs stored; RANK + BALANCE cached
+// at log time for the post-set line and history, but always re-derivable.
+model LevelUpTrainingSet {
+  id              String           @id @default(cuid())
+  workspaceId     String
+  workspace       Workspace        @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  createdAt       DateTime         @default(now())
+  performedAt     DateTime         @default(now())
+  sessionId       String? // groups sets performed together
+  session         LevelUpSession?  @relation(fields: [sessionId], references: [id], onDelete: SetNull)
+  exerciseKey     String
+  // The workspace's own Exercise row. exerciseKey stays the engine-catalog key
+  // (or the exercise's slug) so rating stays keyed to the pure catalog.
+  exerciseId      String?
+  exercise        LevelUpExercise? @relation(fields: [exerciseId], references: [id], onDelete: SetNull)
+  // Position within the prescription — "set 2 of 4". Null for freeform sets.
+  setIndex        Int?
+  reps            Int
+  loadKg          Float
+  // Timed work (carries, planks). Null for rep-based movements; the two are
+  // never both meaningful on one set.
+  durationSec     Int?
+  // The load was the body itself. loadKg then carries added weight only (0 for
+  // an unweighted set), which keeps every load column in the same unit.
+  isBodyweight    Boolean          @default(false)
+  bodyweightKg    Float?
+  rpe             Float?
+  rank            Float? // cached population rating (null when movement isn't well-normed)
+  rankLetter      String?
+  balanceResidual Float? // cached residual vs anchor-lift prediction, in rating points
+  isPr            Boolean          @default(false)
+  // Set when logged by a native device rather than the web app. Paired with
+  // sourceId (a client-generated stable set ID) so replay after a partial
+  // batch failure or a cross-device collision converges instead of duplicating.
+  source          String?
+  sourceId        String?
+
+  @@unique([workspaceId, source, sourceId])
+  @@index([workspaceId, exerciseKey, performedAt])
+  @@index([workspaceId, sessionId])
+  @@index([workspaceId, exerciseId, performedAt])
+}
+
+// ─────────────────────────────────────────────
+// THE WORKOUT LAYER
+//
+// The ratings engine sees test protocols; this layer sees a person under a bar.
+// An Exercise is a movement this workspace actually performs — a superset of
+// the engine's EXERCISE_CATALOG, because carries and planks are real training
+// even though no defensible population norm exists for them. `catalogKey` is
+// the join: present when the engine can rate the movement, null when it can't,
+// and the session screen shows Balance-only or nothing accordingly.
+// ─────────────────────────────────────────────
+
+model LevelUpExercise {
+  id             String                @id @default(cuid())
+  workspaceId    String
+  workspace      Workspace             @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  createdAt      DateTime              @default(now())
+  key            String // stable slug, unique within the workspace
+  label          String
+  modality       String                @default("load") // load | duration | bodyweight
+  catalogKey     String? // engine EXERCISE_CATALOG key when a norm exists
+  defaultRestSec Int                   @default(90)
+  muscleGroup    String?
+  // Joint load this movement puts at risk, as a JSON array of tags
+  // ("knee", "lumbar"). First-class because the substitution rule reads it.
+  jointLoad      String?
+  // The lighter movement to swap in when the matching joint is flaring.
+  substituteId   String?
+  substitute     LevelUpExercise?      @relation("ExerciseSubstitution", fields: [substituteId], references: [id], onDelete: SetNull)
+  substituteFor  LevelUpExercise[]     @relation("ExerciseSubstitution")
+  entries        LevelUpProgramEntry[]
+  sets           LevelUpTrainingSet[]
+
+  @@unique([workspaceId, key])
+  @@index([workspaceId])
+}
+
+model LevelUpProgram {
+  id          String              @id @default(cuid())
+  workspaceId String
+  workspace   Workspace           @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  createdAt   DateTime            @default(now())
+  name        String
+  notes       String?
+  isActive    Boolean             @default(true)
+  days        LevelUpProgramDay[]
+
+  @@index([workspaceId, isActive])
+}
+
+model LevelUpProgramDay {
+  id          String                @id @default(cuid())
+  workspaceId String
+  workspace   Workspace             @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  programId   String
+  program     LevelUpProgram        @relation(fields: [programId], references: [id], onDelete: Cascade)
+  name        String
+  order       Int                   @default(0)
+  entries     LevelUpProgramEntry[]
+  sessions    LevelUpSession[]
+
+  @@index([programId, order])
+  @@index([workspaceId])
+}
+
+model LevelUpProgramEntry {
+  id                String            @id @default(cuid())
+  workspaceId       String
+  workspace         Workspace         @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  programDayId      String
+  programDay        LevelUpProgramDay @relation(fields: [programDayId], references: [id], onDelete: Cascade)
+  exerciseId        String
+  exercise          LevelUpExercise   @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+  targetSets        Int               @default(3)
+  targetReps        Int?
+  targetLoadKg      Float?
+  targetDurationSec Int?
+  restSec           Int? // overrides the exercise default
+  order             Int               @default(0)
+
+  @@index([programDayId, order])
+  @@index([workspaceId])
+}
+
+// One trip to the gym. Sets hang off it; duration is derived from the
+// timestamps, never stored.
+model LevelUpSession {
+  id                String                    @id @default(cuid())
+  workspaceId       String
+  workspace         Workspace                 @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  createdAt         DateTime                  @default(now())
+  startedAt         DateTime                  @default(now())
+  endedAt           DateTime?
+  programDayId      String?
+  programDay        LevelUpProgramDay?        @relation(fields: [programDayId], references: [id], onDelete: SetNull)
+  // "Knee is cranky today" — recorded on the session, not buried in notes,
+  // because it changes which movements were prescribed and must stay auditable.
+  kneeFlare         Boolean                   @default(false)
+  lumbarFlare       Boolean                   @default(false)
+  notes             String?
+  sets              LevelUpTrainingSet[]
+  readinessSnapshot LevelUpReadinessSnapshot?
+  // Set when started by a native device rather than the web app. Paired with
+  // sourceId (a client-generated stable session ID) so replay after a partial
+  // batch failure or a cross-device collision converges instead of duplicating.
+  source            String?
+  sourceId          String?
+  // Session RPE (rate of perceived exertion), recorded at completion.
+  sessionRpe        Float?
+  // The canonical Event this session reconciled to on HealthKit write-back —
+  // one Event per real-world workout, not one per ingestion path.
+  workoutEventId    String?
+
+  @@unique([workspaceId, source, sourceId])
+  @@index([workspaceId, startedAt])
+}
+
+// Body composition, deliberately its own log rather than a field on the set
+// logger. Feeds relative-strength norms in the engine.
+model LevelUpBodyMetric {
+  id          String    @id @default(cuid())
+  workspaceId String
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  createdAt   DateTime  @default(now())
+  measuredAt  DateTime  @default(now())
+  weightKg    Float?
+  bodyFatPct  Float?
+  musclePct   Float?
+  notes       String?
+
+  @@index([workspaceId, measuredAt])
+}
+
+// What advice was shown when a workout began. Daily readiness itself stays
+// derived, not a mutable LifeOS primitive — this snapshot exists only to
+// audit the recommendation, not to become the source of truth for it.
+// See docs/LEVEL_UP_ADAPTIVE_WORKOUT_PLAN.md "Readiness provenance".
+model LevelUpReadinessSnapshot {
+  id                        String         @id @default(cuid())
+  workspaceId               String
+  workspace                 Workspace      @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  sessionId                 String         @unique
+  session                   LevelUpSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  createdAt                 DateTime       @default(now())
+  snapshotAt                DateTime       @default(now())
+  localDay                  String // YYYY-MM-DD, the athlete's local calendar day
+  engineVersion             String         @default("v1")
+  ruleSetVersion            String         @default("v1")
+  // JSON: bounded normalized input values, each with freshness + source —
+  // HRV/RHR deviation, sleep debt, Oura readiness, ACWR, flare flags, etc.
+  // Synthetic-neutral until HealthKit/Oura wiring lands (M3/M4).
+  inputs                    String
+  // JSON: Current Form engine output at snapshot time, or null when synthetic.
+  formSignal                String?
+  band                      String         @default("full") // full | adjust | recover
+  originalPrescriptionHash  String?
+  suggestedPrescriptionHash String?
+  reasonCodes               String         @default("[]") // JSON array of stable reason codes
+  userChoice                String? // accepted | overridden | edited
+  overriddenAt              DateTime?
+
+  @@index([workspaceId, snapshotAt])
+}
+
+// Badge unlock events, kept for the career timeline. Current badge state is
+// derived live; this records the first time each tier was earned.
+model LevelUpBadgeUnlock {
+  id          String    @id @default(cuid())
+  workspaceId String
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  createdAt   DateTime  @default(now())
+  unlockedAt  DateTime  @default(now())
+  badgeKey    String
+  tier        String // bronze | silver | gold | hof
+
+  @@unique([workspaceId, badgeKey, tier])
+  @@index([workspaceId, unlockedAt])
+}
+
+// A chosen target build. targets is a JSON map of attributeKey -> required
+// rating; the engine renders current -> required deltas against it.
+model LevelUpTargetBuild {
+  id          String    @id @default(cuid())
+  workspaceId String
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  createdAt   DateTime  @default(now())
+  buildKey    String
+  label       String
+  targets     String // JSON: { attributeKey|subKey: requiredRating }
+  status      String    @default("active") // active | achieved | archived
+  achievedAt  DateTime?
+
+  @@unique([workspaceId, buildKey])
+  @@index([workspaceId, status])
+}
+
+// ─────────────────────────────────────────────
+// SUPPORTING: control plane (GraphEvent, ReviewItem)
+//
+// Neither is a life primitive. GraphEvent is an immutable ledger of what
+// canonical commands did to the graph — deliberately distinct from the Event
+// primitive above, which is something that happened in Joseph's life, not a
+// system record. Never abbreviate GraphEvent to "Event" in code; the name
+// collision is exactly the confusion this comment exists to prevent.
+//
+// ReviewItem is supporting workflow state for the universal Inbox — it
+// references a source record and a proposed command; it never duplicates raw
+// content. See docs/adr/0002-graph-event-spine.md.
+// ─────────────────────────────────────────────
+
+// Every canonical domain command writes its record changes and its GraphEvent
+// in ONE transaction. If a command cannot do both atomically, it is not a
+// command yet — see packages/domain.
+//
+// idempotencyKey + the unique constraint below is what lets a command be
+// retried safely: the same logical action produces the same event exactly
+// once. correlationId threads one user-visible operation across multiple
+// events; causationId points at the event (if any) whose processing produced
+// this one, and causationDepth is a hard cap that makes an automation loop
+// mathematically impossible rather than merely unlikely.
+model GraphEvent {
+  id            String    @id @default(cuid())
+  workspaceId   String    @default("default-workspace")
+  workspace     Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  schemaVersion Int       @default(1)
+  occurredAt    DateTime  @default(now())
+  recordedAt    DateTime  @default(now())
+
+  // Typed reference to what changed. subjectType is one of the eight
+  // primitives, "Interaction", or another supporting model (e.g. "ReviewItem")
+  // — a string, not an enum, matching InteractionParticipant.entityType so the
+  // same reference shape is used everywhere in the graph.
+  subjectType String
+  subjectId   String
+
+  // "interaction.created" | "plan.completed" | "state.recorded" |
+  // "review.resolved" | ... — a growing, intentionally un-enumerated
+  // vocabulary owned by packages/domain, not the schema.
+  eventType String
+
+  actorType       String // "user" | "api_key" | "system" | "rule"
+  actorId         String?
+  sourceConnector String? // "era" | "gmail" | "imessage" | "manual" | ...
+
+  correlationId  String?
+  causationId    String?
+  causationEvent GraphEvent?  @relation("EventCausation", fields: [causationId], references: [id], onDelete: SetNull)
+  causedEvents   GraphEvent[] @relation("EventCausation")
+  causationDepth Int          @default(0)
+  // Set only when this event was produced by an automation rule, so a rule
+  // can never act twice on the same upstream event at the same version.
+  ruleVersionId  String?
+
+  idempotencyKey String
+  payload        String // JSON, minimal + typed per eventType
+  provenance     String? // JSON: refs back to the Note/file/sync run that caused this
+
+  receipts GraphEventReceipt[]
+
+  @@unique([workspaceId, idempotencyKey])
+  @@index([workspaceId, occurredAt(sort: Desc)])
+  @@index([workspaceId, subjectType, subjectId])
+  @@index([workspaceId, eventType, occurredAt(sort: Desc)])
+  @@index([correlationId])
+  @@index([causationId])
+}
+
+// One row per (event, consumer). Processing is at-least-once; this unique
+// constraint is what makes each consumer's handling of each event exactly-once
+// in effect. A consumer that crashes mid-handling retries from attempts+1,
+// never from zero, and never re-applies a completed effect.
+model GraphEventReceipt {
+  id          String     @id @default(cuid())
+  eventId     String
+  event       GraphEvent @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  consumer    String // "automation" | "intelligence" | ... — one per subscriber
+  status      String     @default("pending") // pending | processing | done | failed
+  attempts    Int        @default(0)
+  lastError   String?
+  nextRetryAt DateTime?
+  processedAt DateTime?
+  createdAt   DateTime   @default(now())
+
+  @@unique([eventId, consumer])
+  @@index([consumer, status, nextRetryAt])
+}
+
+enum ReviewItemStatus {
+  pending
+  accepted
+  edited_accepted
+  dismissed
+  superseded
+  failed
+}
+
+// The universal Inbox. Adapters over StagedInteraction, NoteSuggestion,
+// ImportStagedVisit, and calendar reconciliation index into this table during
+// migration (dual-written); central state becomes authoritative once each
+// adapter is proven. See docs/PERSONS_ARCHITECTURE.md for the four legacy
+// queues this generalizes.
+model ReviewItem {
+  id          String    @id @default(cuid())
+  workspaceId String    @default("default-workspace")
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  // Where this came from, so the Inbox can filter/group by source without
+  // duplicating the source record itself.
+  source   String // "staged_interaction" | "note_suggestion" | "import_staged_visit" | "calendar_reconciliation"
+  sourceId String // id in the legacy table this adapts
+  itemType String // what accepting this creates: "interaction" | "plan" | "event" | ...
+
+  // The proposed graph command, not yet applied. Structured so acceptance is
+  // "run this command", never "re-derive what to do from the raw content".
+  proposedCommand String // JSON: { command: string, input: object }
+
+  targetType String? // primitive this most likely resolves against, if known
+  targetId   String?
+
+  confidence Float?
+  evidence   String? // JSON — audit trail for why this was proposed
+  riskTier   String  @default("review") // observe | safe_auto | review | confirm
+  priority   Int     @default(3)
+
+  status     ReviewItemStatus @default(pending)
+  resolvedAt DateTime?
+  resolvedBy String? // actor id
+  resultType String? // entity type actually created/updated on accept
+  resultId   String?
+
+  @@unique([workspaceId, source, sourceId])
+  @@index([workspaceId, status, priority, createdAt])
+  @@index([workspaceId, source, itemType])
+  @@index([workspaceId, targetType, targetId])
+}

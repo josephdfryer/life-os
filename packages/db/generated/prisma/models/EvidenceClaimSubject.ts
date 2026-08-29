@@ -474,6 +474,7 @@ export type EvidenceClaimSubjectCreateOrConnectWithoutMentionInput = {
 
 export type EvidenceClaimSubjectCreateManyMentionInputEnvelope = {
   data: Prisma.EvidenceClaimSubjectCreateManyMentionInput | Prisma.EvidenceClaimSubjectCreateManyMentionInput[]
+  skipDuplicates?: boolean
 }
 
 export type EvidenceClaimSubjectUpsertWithWhereUniqueWithoutMentionInput = {
@@ -524,6 +525,7 @@ export type EvidenceClaimSubjectCreateOrConnectWithoutClaimInput = {
 
 export type EvidenceClaimSubjectCreateManyClaimInputEnvelope = {
   data: Prisma.EvidenceClaimSubjectCreateManyClaimInput | Prisma.EvidenceClaimSubjectCreateManyClaimInput[]
+  skipDuplicates?: boolean
 }
 
 export type EvidenceClaimSubjectUpsertWithWhereUniqueWithoutClaimInput = {
@@ -1328,6 +1330,7 @@ export type EvidenceClaimSubjectCreateManyArgs<ExtArgs extends runtime.Types.Ext
    * The data used to create many EvidenceClaimSubjects.
    */
   data: Prisma.EvidenceClaimSubjectCreateManyInput | Prisma.EvidenceClaimSubjectCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1346,6 +1349,7 @@ export type EvidenceClaimSubjectCreateManyAndReturnArgs<ExtArgs extends runtime.
    * The data used to create many EvidenceClaimSubjects.
    */
   data: Prisma.EvidenceClaimSubjectCreateManyInput | Prisma.EvidenceClaimSubjectCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

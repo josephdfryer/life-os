@@ -16,12 +16,27 @@ jobs:
   # wait for GitHub checks, so Actions is the CD trigger.
   #
   # `npm run lint` is four gates chained with &&: eslint, the dependency
-  # boundary check, the migration integrity check (every turso-migrate
-  # script pairs with a committed migration, and the whole history replays into
-  # an empty database), and the deploy-config check (no root vercel.json; cron
-  # files present).
+  # boundary check, the migration integrity check (the whole migration history
+  # replays into an empty Postgres database), and the deploy-config check
+  # (no root vercel.json; cron files present).
   lint:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: life_os_ci
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/life_os_ci
     steps:
       - uses: actions/checkout@v4
 
@@ -30,8 +45,9 @@ jobs:
           node-version: 22
           cache: npm
 
-      # The migration check needs better-sqlite3, so a full install rather than
-      # --omit=dev. eslint is not type-aware here, so no Prisma generate needed.
+      # eslint is not type-aware here, so no Prisma generate needed. The
+      # migration-integrity gate needs a Postgres server (the `postgres`
+      # service above) to replay the history into.
       - name: Install dependencies
         run: npm ci
 
@@ -40,15 +56,26 @@ jobs:
 
   check:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: life_os_ci
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     env:
       AUTH_SECRET: life-os-ci-only-secret
-      # A literal path, not ${{ runner.temp }}. The `runner` context is only
-      # available to steps; referencing it in job-level `env` is an invalid
-      # context, which GitHub rejects when validating the workflow. The whole
-      # run then fails in 0s with "workflow file issue" and no job ever starts —
-      # which is what had been happening on every push since this env block
-      # was introduced.
-      DATABASE_URL: file:/tmp/life-os-ci.db
+      # Postgres service on localhost:5432 (see `services` above). The test and
+      # migration steps create their own throwaway databases on this server.
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/life_os_ci
+      TEST_DATABASE_URL: postgresql://postgres:postgres@localhost:5432/life_os_ci
       NEXTAUTH_SECRET: life-os-ci-only-secret
     steps:
       - uses: actions/checkout@v4
@@ -72,9 +99,6 @@ jobs:
 
       - name: Apply migrations to an empty database
         run: npm run migrate:deploy -w @life-os/db
-
-      - name: Verify migration upgrade and restore
-        run: npm run db:drill
 
       - name: Lint
         run: npm run lint
@@ -125,6 +149,7 @@ jobs:
       - name: Deploy affected apps
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-          TURSO_DATABASE_URL: ${{ secrets.TURSO_DATABASE_URL }}
-          TURSO_AUTH_TOKEN: ${{ secrets.TURSO_AUTH_TOKEN }}
+          # Direct (unpooled) Neon connection — scripts/deploy.ts runs
+          # `prisma migrate status` against production before shipping.
+          DATABASE_URL: ${{ secrets.DATABASE_URL_UNPOOLED }}
         run: npx tsx scripts/deploy.ts --ci --affected --before "${{ github.event.before }}"

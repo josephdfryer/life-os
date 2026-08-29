@@ -777,6 +777,7 @@ export type ReviewItemCreateOrConnectWithoutWorkspaceInput = {
 
 export type ReviewItemCreateManyWorkspaceInputEnvelope = {
   data: Prisma.ReviewItemCreateManyWorkspaceInput | Prisma.ReviewItemCreateManyWorkspaceInput[]
+  skipDuplicates?: boolean
 }
 
 export type ReviewItemUpsertWithWhereUniqueWithoutWorkspaceInput = {
@@ -1710,6 +1711,7 @@ export type ReviewItemCreateManyArgs<ExtArgs extends runtime.Types.Extensions.In
    * The data used to create many ReviewItems.
    */
   data: Prisma.ReviewItemCreateManyInput | Prisma.ReviewItemCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1728,6 +1730,7 @@ export type ReviewItemCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Exte
    * The data used to create many ReviewItems.
    */
   data: Prisma.ReviewItemCreateManyInput | Prisma.ReviewItemCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

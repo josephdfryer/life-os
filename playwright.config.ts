@@ -1,9 +1,12 @@
 import { defineConfig, devices } from "@playwright/test"
-import { tmpdir } from "node:os"
-import { join } from "node:path"
 
-// Must match scripts/e2e/prepare.ts. Literal "/private/tmp" is macOS-only.
-const databaseUrl = `file:${join(tmpdir(), "life-os-e2e.db")}`
+// A dedicated throwaway Postgres database; scripts/e2e/prepare.ts drops and
+// recreates every table in it. Defaults to the docker-compose `postgres`
+// service; CI overrides via DATABASE_URL / E2E_DATABASE_URL.
+const databaseUrl =
+  process.env.E2E_DATABASE_URL ??
+  process.env.DATABASE_URL ??
+  "postgresql://lifeos:lifeos@localhost:5432/lifeos_e2e"
 
 export default defineConfig({
   testDir: "./tests/e2e",

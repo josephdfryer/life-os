@@ -743,6 +743,7 @@ export type ItemDefinitionCreateOrConnectWithoutWorkspaceInput = {
 
 export type ItemDefinitionCreateManyWorkspaceInputEnvelope = {
   data: Prisma.ItemDefinitionCreateManyWorkspaceInput | Prisma.ItemDefinitionCreateManyWorkspaceInput[]
+  skipDuplicates?: boolean
 }
 
 export type ItemDefinitionUpsertWithWhereUniqueWithoutWorkspaceInput = {
@@ -1964,6 +1965,7 @@ export type ItemDefinitionCreateManyArgs<ExtArgs extends runtime.Types.Extension
    * The data used to create many ItemDefinitions.
    */
   data: Prisma.ItemDefinitionCreateManyInput | Prisma.ItemDefinitionCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1982,6 +1984,7 @@ export type ItemDefinitionCreateManyAndReturnArgs<ExtArgs extends runtime.Types.
    * The data used to create many ItemDefinitions.
    */
   data: Prisma.ItemDefinitionCreateManyInput | Prisma.ItemDefinitionCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

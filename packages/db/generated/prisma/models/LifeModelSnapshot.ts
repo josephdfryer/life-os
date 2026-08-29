@@ -602,6 +602,7 @@ export type LifeModelSnapshotCreateOrConnectWithoutWorkspaceInput = {
 
 export type LifeModelSnapshotCreateManyWorkspaceInputEnvelope = {
   data: Prisma.LifeModelSnapshotCreateManyWorkspaceInput | Prisma.LifeModelSnapshotCreateManyWorkspaceInput[]
+  skipDuplicates?: boolean
 }
 
 export type LifeModelSnapshotUpsertWithWhereUniqueWithoutWorkspaceInput = {
@@ -1632,6 +1633,7 @@ export type LifeModelSnapshotCreateManyArgs<ExtArgs extends runtime.Types.Extens
    * The data used to create many LifeModelSnapshots.
    */
   data: Prisma.LifeModelSnapshotCreateManyInput | Prisma.LifeModelSnapshotCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1650,6 +1652,7 @@ export type LifeModelSnapshotCreateManyAndReturnArgs<ExtArgs extends runtime.Typ
    * The data used to create many LifeModelSnapshots.
    */
   data: Prisma.LifeModelSnapshotCreateManyInput | Prisma.LifeModelSnapshotCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

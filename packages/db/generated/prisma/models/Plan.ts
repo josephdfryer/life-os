@@ -1120,6 +1120,7 @@ export type PlanCreateOrConnectWithoutWorkspaceInput = {
 
 export type PlanCreateManyWorkspaceInputEnvelope = {
   data: Prisma.PlanCreateManyWorkspaceInput | Prisma.PlanCreateManyWorkspaceInput[]
+  skipDuplicates?: boolean
 }
 
 export type PlanUpsertWithWhereUniqueWithoutWorkspaceInput = {
@@ -1227,6 +1228,7 @@ export type PlanCreateOrConnectWithoutPersonInput = {
 
 export type PlanCreateManyPersonInputEnvelope = {
   data: Prisma.PlanCreateManyPersonInput | Prisma.PlanCreateManyPersonInput[]
+  skipDuplicates?: boolean
 }
 
 export type PlanUpsertWithWhereUniqueWithoutPersonInput = {
@@ -1564,6 +1566,7 @@ export type PlanCreateOrConnectWithoutParentInput = {
 
 export type PlanCreateManyParentInputEnvelope = {
   data: Prisma.PlanCreateManyParentInput | Prisma.PlanCreateManyParentInput[]
+  skipDuplicates?: boolean
 }
 
 export type PlanCreateWithoutChildrenInput = {
@@ -1901,6 +1904,7 @@ export type PlanCreateOrConnectWithoutPlaceInput = {
 
 export type PlanCreateManyPlaceInputEnvelope = {
   data: Prisma.PlanCreateManyPlaceInput | Prisma.PlanCreateManyPlaceInput[]
+  skipDuplicates?: boolean
 }
 
 export type PlanUpsertWithWhereUniqueWithoutPlaceInput = {
@@ -2171,6 +2175,7 @@ export type PlanCreateOrConnectWithoutSourceNoteInput = {
 
 export type PlanCreateManySourceNoteInputEnvelope = {
   data: Prisma.PlanCreateManySourceNoteInput | Prisma.PlanCreateManySourceNoteInput[]
+  skipDuplicates?: boolean
 }
 
 export type PlanUpsertWithoutAboutNotesInput = {
@@ -3682,6 +3687,7 @@ export type PlanCreateManyArgs<ExtArgs extends runtime.Types.Extensions.Internal
    * The data used to create many Plans.
    */
   data: Prisma.PlanCreateManyInput | Prisma.PlanCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -3700,6 +3706,7 @@ export type PlanCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions
    * The data used to create many Plans.
    */
   data: Prisma.PlanCreateManyInput | Prisma.PlanCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

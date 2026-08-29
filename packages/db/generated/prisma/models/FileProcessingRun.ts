@@ -726,6 +726,7 @@ export type FileProcessingRunCreateOrConnectWithoutWorkspaceInput = {
 
 export type FileProcessingRunCreateManyWorkspaceInputEnvelope = {
   data: Prisma.FileProcessingRunCreateManyWorkspaceInput | Prisma.FileProcessingRunCreateManyWorkspaceInput[]
+  skipDuplicates?: boolean
 }
 
 export type FileProcessingRunUpsertWithWhereUniqueWithoutWorkspaceInput = {
@@ -808,6 +809,7 @@ export type FileProcessingRunCreateOrConnectWithoutSourceFileInput = {
 
 export type FileProcessingRunCreateManySourceFileInputEnvelope = {
   data: Prisma.FileProcessingRunCreateManySourceFileInput | Prisma.FileProcessingRunCreateManySourceFileInput[]
+  skipDuplicates?: boolean
 }
 
 export type FileProcessingRunUpsertWithWhereUniqueWithoutSourceFileInput = {
@@ -2182,6 +2184,7 @@ export type FileProcessingRunCreateManyArgs<ExtArgs extends runtime.Types.Extens
    * The data used to create many FileProcessingRuns.
    */
   data: Prisma.FileProcessingRunCreateManyInput | Prisma.FileProcessingRunCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -2200,6 +2203,7 @@ export type FileProcessingRunCreateManyAndReturnArgs<ExtArgs extends runtime.Typ
    * The data used to create many FileProcessingRuns.
    */
   data: Prisma.FileProcessingRunCreateManyInput | Prisma.FileProcessingRunCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

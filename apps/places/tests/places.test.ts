@@ -1,19 +1,6 @@
-import test from "node:test"
+import test, { after } from "node:test"
 import assert from "node:assert/strict"
-import { createRequire } from "node:module"
-import { mkdtempSync, readFileSync, readdirSync } from "node:fs"
-import { tmpdir } from "node:os"
-import { join } from "node:path"
-import { fileURLToPath } from "node:url"
-
-const repoRoot = fileURLToPath(new URL("../../..", import.meta.url))
-const dbPackageRoot = join(repoRoot, "packages/db")
-const require = createRequire(import.meta.url)
-const dbDir = mkdtempSync(join(tmpdir(), "life-os-places-"))
-const dbPath = join(dbDir, "places.db")
-process.env.DATABASE_URL = `file:${dbPath}`
-process.env.TURSO_DATABASE_URL = ""
-process.env.TURSO_AUTH_TOKEN = ""
+import { createTestDatabase, type TestDatabase } from "@life-os/db/testing"
 
 type TestModules = {
   db: typeof import("../lib/db")["db"]
@@ -22,11 +9,12 @@ type TestModules = {
 }
 
 let modulesPromise: Promise<TestModules> | null = null
+let testDb: TestDatabase | null = null
 
 async function setup() {
   if (!modulesPromise) {
     modulesPromise = (async () => {
-      applyMigrations(dbPath)
+      testDb = await createTestDatabase()
       const [dbModule, places, mapLayers] = await Promise.all([
         import("../lib/db"),
         import("../server/domain/places"),
@@ -38,18 +26,9 @@ async function setup() {
   return modulesPromise
 }
 
-function applyMigrations(path: string) {
-  const Database = require("better-sqlite3")
-  const sqlite = new Database(path)
-  sqlite.pragma("foreign_keys = OFF")
-  const migrationsDir = join(dbPackageRoot, "prisma/migrations")
-  for (const dirname of readdirSync(migrationsDir).filter(name => name !== "migration_lock.toml").sort()) {
-    const sql = readFileSync(join(migrationsDir, dirname, "migration.sql"), "utf8")
-    sqlite.exec(sql)
-  }
-  sqlite.pragma("foreign_keys = ON")
-  sqlite.close()
-}
+after(async () => {
+  await testDb?.drop()
+})
 
 test("places map and profile derive stats from events, interactions, groups, photos, spend, and notes", async () => {
   const { db, places } = await setup()

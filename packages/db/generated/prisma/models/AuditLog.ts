@@ -704,6 +704,7 @@ export type AuditLogCreateOrConnectWithoutWorkspaceInput = {
 
 export type AuditLogCreateManyWorkspaceInputEnvelope = {
   data: Prisma.AuditLogCreateManyWorkspaceInput | Prisma.AuditLogCreateManyWorkspaceInput[]
+  skipDuplicates?: boolean
 }
 
 export type AuditLogUpsertWithWhereUniqueWithoutWorkspaceInput = {
@@ -778,6 +779,7 @@ export type AuditLogCreateOrConnectWithoutPersonInput = {
 
 export type AuditLogCreateManyPersonInputEnvelope = {
   data: Prisma.AuditLogCreateManyPersonInput | Prisma.AuditLogCreateManyPersonInput[]
+  skipDuplicates?: boolean
 }
 
 export type AuditLogUpsertWithWhereUniqueWithoutPersonInput = {
@@ -833,6 +835,7 @@ export type AuditLogCreateOrConnectWithoutUserInput = {
 
 export type AuditLogCreateManyUserInputEnvelope = {
   data: Prisma.AuditLogCreateManyUserInput | Prisma.AuditLogCreateManyUserInput[]
+  skipDuplicates?: boolean
 }
 
 export type AuditLogUpsertWithWhereUniqueWithoutUserInput = {
@@ -888,6 +891,7 @@ export type AuditLogCreateOrConnectWithoutApiKeyInput = {
 
 export type AuditLogCreateManyApiKeyInputEnvelope = {
   data: Prisma.AuditLogCreateManyApiKeyInput | Prisma.AuditLogCreateManyApiKeyInput[]
+  skipDuplicates?: boolean
 }
 
 export type AuditLogUpsertWithWhereUniqueWithoutApiKeyInput = {
@@ -1940,6 +1944,7 @@ export type AuditLogCreateManyArgs<ExtArgs extends runtime.Types.Extensions.Inte
    * The data used to create many AuditLogs.
    */
   data: Prisma.AuditLogCreateManyInput | Prisma.AuditLogCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1958,6 +1963,7 @@ export type AuditLogCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extens
    * The data used to create many AuditLogs.
    */
   data: Prisma.AuditLogCreateManyInput | Prisma.AuditLogCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

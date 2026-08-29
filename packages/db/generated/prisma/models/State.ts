@@ -649,6 +649,7 @@ export type StateCreateOrConnectWithoutSourceNoteInput = {
 
 export type StateCreateManySourceNoteInputEnvelope = {
   data: Prisma.StateCreateManySourceNoteInput | Prisma.StateCreateManySourceNoteInput[]
+  skipDuplicates?: boolean
 }
 
 export type StateUpsertWithoutAboutNotesInput = {
@@ -753,6 +754,7 @@ export type StateCreateOrConnectWithoutDefinitionInput = {
 
 export type StateCreateManyDefinitionInputEnvelope = {
   data: Prisma.StateCreateManyDefinitionInput | Prisma.StateCreateManyDefinitionInput[]
+  skipDuplicates?: boolean
 }
 
 export type StateUpsertWithWhereUniqueWithoutDefinitionInput = {
@@ -1666,6 +1668,7 @@ export type StateCreateManyArgs<ExtArgs extends runtime.Types.Extensions.Interna
    * The data used to create many States.
    */
   data: Prisma.StateCreateManyInput | Prisma.StateCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1684,6 +1687,7 @@ export type StateCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extension
    * The data used to create many States.
    */
   data: Prisma.StateCreateManyInput | Prisma.StateCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

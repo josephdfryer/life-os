@@ -1,29 +1,39 @@
-import type { PrismaClient } from "@life-os/db"
-import type { ResolvedExtraction } from "./types"
+import type { PrismaClient } from "@life-os/db";
+import type { ResolvedExtraction } from "./types";
 
-const WORKSPACE_ID = process.env.SYNTHESIS_WORKSPACE_ID ?? "default-workspace"
+const WORKSPACE_ID = process.env.SYNTHESIS_WORKSPACE_ID ?? "default-workspace";
 
 export type WriteResult = {
-  eventId: string
-  interactionsCreated: number
-  interactionsUpdated: number
-  skipped: boolean
-}
+  eventId: string;
+  interactionsCreated: number;
+  interactionsUpdated: number;
+  skipped: boolean;
+};
 
 export async function writeExtraction(
   resolved: ResolvedExtraction,
-  db: PrismaClient
+  db: PrismaClient,
 ): Promise<WriteResult> {
-  const { event, participants, rawItem, resolvedPlaceIds, my_action_items } = resolved
+  const { event, participants, rawItem, resolvedPlaceIds, my_action_items } =
+    resolved;
 
-  const synthMarker = `synthesis:${rawItem.source}:${rawItem.id}`
+  const synthMarker = `synthesis:${rawItem.source}:${rawItem.id}`;
 
   // Idempotency: skip if already written
   const existing = await db.event.findFirst({
-    where: { workspaceId: WORKSPACE_ID, metadata: { contains: synthMarker } },
+    where: {
+      workspaceId: WORKSPACE_ID,
+      metadata: { contains: synthMarker, mode: "insensitive" as const },
+    },
     select: { id: true },
-  })
-  if (existing) return { eventId: existing.id, interactionsCreated: 0, interactionsUpdated: 0, skipped: true }
+  });
+  if (existing)
+    return {
+      eventId: existing.id,
+      interactionsCreated: 0,
+      interactionsUpdated: 0,
+      skipped: true,
+    };
 
   // Only a "meeting" plausibly implies physical presence. A place merely
   // mentioned in a call/email/message thread ("remember when we went to
@@ -31,9 +41,10 @@ export async function writeExtraction(
   // or Interaction's placeId for the other three types, or every text
   // reference to a place turns into a fabricated "visit" on that Place's
   // profile (and fabricates shared visits with whoever was in the thread).
-  const placeId = event.type === "meeting" ? (resolvedPlaceIds[0] ?? null) : null
+  const placeId =
+    event.type === "meeting" ? (resolvedPlaceIds[0] ?? null) : null;
 
-  return db.$transaction(async tx => {
+  return db.$transaction(async (tx) => {
     // Provenance: capture the raw item as a Note so every derived node can trace
     // back to the thing that produced it ("provenance is sacred").
     const note = await tx.note.create({
@@ -50,7 +61,7 @@ export async function writeExtraction(
         }),
       },
       select: { id: true },
-    })
+    });
 
     const dbEvent = await tx.event.create({
       data: {
@@ -61,9 +72,15 @@ export async function writeExtraction(
         timestamp: new Date(event.date),
         sourceNoteId: note.id,
         placeId,
-        notes: [event.notes, my_action_items?.length ? `My action items:\n${my_action_items.map(a => `- ${a.description}${a.deadline ? ` (by ${a.deadline})` : ""}`).join("\n")}` : null]
-          .filter(Boolean)
-          .join("\n\n") || null,
+        notes:
+          [
+            event.notes,
+            my_action_items?.length
+              ? `My action items:\n${my_action_items.map((a) => `- ${a.description}${a.deadline ? ` (by ${a.deadline})` : ""}`).join("\n")}`
+              : null,
+          ]
+            .filter(Boolean)
+            .join("\n\n") || null,
         metadata: JSON.stringify({
           source: rawItem.source,
           archivePath: rawItem.archivePath,
@@ -73,15 +90,15 @@ export async function writeExtraction(
         }),
       },
       select: { id: true },
-    })
+    });
 
-    let interactionsCreated = 0
-    let interactionsUpdated = 0
+    let interactionsCreated = 0;
+    let interactionsUpdated = 0;
 
     for (const participant of participants) {
       const actionItemsJson = participant.action_items?.length
         ? JSON.stringify(participant.action_items)
-        : null
+        : null;
 
       if (participant.personId) {
         await tx.interaction.create({
@@ -93,15 +110,21 @@ export async function writeExtraction(
             sourceNoteId: note.id,
             type: event.type,
             timestamp: new Date(event.date),
-            duration: event.duration_minutes ?? rawItem.durationSeconds ? Math.round((rawItem.durationSeconds ?? 0) / 60) : null,
-            emotionalWeight: participant.emotional_weight != null ? String(participant.emotional_weight) : null,
+            duration:
+              (event.duration_minutes ?? rawItem.durationSeconds)
+                ? Math.round((rawItem.durationSeconds ?? 0) / 60)
+                : null,
+            emotionalWeight:
+              participant.emotional_weight != null
+                ? String(participant.emotional_weight)
+                : null,
             outcome: participant.outcomes?.join("; ") ?? null,
             summary: event.notes ?? null,
             actionItems: actionItemsJson,
             notes: synthMarker,
           },
-        })
-        interactionsCreated++
+        });
+        interactionsCreated++;
       } else {
         // Unknown participant — stage for review
         await tx.stagedInteraction.upsert({
@@ -127,11 +150,16 @@ export async function writeExtraction(
             summary: event.notes ?? event.title,
             metadata: JSON.stringify({ eventId: dbEvent.id, synthMarker }),
           },
-        })
-        interactionsUpdated++
+        });
+        interactionsUpdated++;
       }
     }
 
-    return { eventId: dbEvent.id, interactionsCreated, interactionsUpdated, skipped: false }
-  })
+    return {
+      eventId: dbEvent.id,
+      interactionsCreated,
+      interactionsUpdated,
+      skipped: false,
+    };
+  });
 }

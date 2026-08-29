@@ -666,6 +666,7 @@ export type LevelUpTestResultCreateOrConnectWithoutWorkspaceInput = {
 
 export type LevelUpTestResultCreateManyWorkspaceInputEnvelope = {
   data: Prisma.LevelUpTestResultCreateManyWorkspaceInput | Prisma.LevelUpTestResultCreateManyWorkspaceInput[]
+  skipDuplicates?: boolean
 }
 
 export type LevelUpTestResultUpsertWithWhereUniqueWithoutWorkspaceInput = {
@@ -740,6 +741,7 @@ export type LevelUpTestResultCreateOrConnectWithoutCombineInput = {
 
 export type LevelUpTestResultCreateManyCombineInputEnvelope = {
   data: Prisma.LevelUpTestResultCreateManyCombineInput | Prisma.LevelUpTestResultCreateManyCombineInput[]
+  skipDuplicates?: boolean
 }
 
 export type LevelUpTestResultUpsertWithWhereUniqueWithoutCombineInput = {
@@ -1656,6 +1658,7 @@ export type LevelUpTestResultCreateManyArgs<ExtArgs extends runtime.Types.Extens
    * The data used to create many LevelUpTestResults.
    */
   data: Prisma.LevelUpTestResultCreateManyInput | Prisma.LevelUpTestResultCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1674,6 +1677,7 @@ export type LevelUpTestResultCreateManyAndReturnArgs<ExtArgs extends runtime.Typ
    * The data used to create many LevelUpTestResults.
    */
   data: Prisma.LevelUpTestResultCreateManyInput | Prisma.LevelUpTestResultCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

@@ -600,6 +600,7 @@ export type InteractionParticipantCreateOrConnectWithoutInteractionInput = {
 
 export type InteractionParticipantCreateManyInteractionInputEnvelope = {
   data: Prisma.InteractionParticipantCreateManyInteractionInput | Prisma.InteractionParticipantCreateManyInteractionInput[]
+  skipDuplicates?: boolean
 }
 
 export type InteractionParticipantUpsertWithWhereUniqueWithoutInteractionInput = {
@@ -1456,6 +1457,7 @@ export type InteractionParticipantCreateManyArgs<ExtArgs extends runtime.Types.E
    * The data used to create many InteractionParticipants.
    */
   data: Prisma.InteractionParticipantCreateManyInput | Prisma.InteractionParticipantCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1474,6 +1476,7 @@ export type InteractionParticipantCreateManyAndReturnArgs<ExtArgs extends runtim
    * The data used to create many InteractionParticipants.
    */
   data: Prisma.InteractionParticipantCreateManyInput | Prisma.InteractionParticipantCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

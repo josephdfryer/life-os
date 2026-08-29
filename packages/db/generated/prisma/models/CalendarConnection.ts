@@ -771,6 +771,7 @@ export type CalendarConnectionCreateOrConnectWithoutWorkspaceInput = {
 
 export type CalendarConnectionCreateManyWorkspaceInputEnvelope = {
   data: Prisma.CalendarConnectionCreateManyWorkspaceInput | Prisma.CalendarConnectionCreateManyWorkspaceInput[]
+  skipDuplicates?: boolean
 }
 
 export type CalendarConnectionUpsertWithWhereUniqueWithoutWorkspaceInput = {
@@ -862,6 +863,7 @@ export type CalendarConnectionCreateOrConnectWithoutUserInput = {
 
 export type CalendarConnectionCreateManyUserInputEnvelope = {
   data: Prisma.CalendarConnectionCreateManyUserInput | Prisma.CalendarConnectionCreateManyUserInput[]
+  skipDuplicates?: boolean
 }
 
 export type CalendarConnectionUpsertWithWhereUniqueWithoutUserInput = {
@@ -1987,6 +1989,7 @@ export type CalendarConnectionCreateManyArgs<ExtArgs extends runtime.Types.Exten
    * The data used to create many CalendarConnections.
    */
   data: Prisma.CalendarConnectionCreateManyInput | Prisma.CalendarConnectionCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -2005,6 +2008,7 @@ export type CalendarConnectionCreateManyAndReturnArgs<ExtArgs extends runtime.Ty
    * The data used to create many CalendarConnections.
    */
   data: Prisma.CalendarConnectionCreateManyInput | Prisma.CalendarConnectionCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

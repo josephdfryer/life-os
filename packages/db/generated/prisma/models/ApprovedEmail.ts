@@ -472,6 +472,7 @@ export type ApprovedEmailCreateOrConnectWithoutWorkspaceInput = {
 
 export type ApprovedEmailCreateManyWorkspaceInputEnvelope = {
   data: Prisma.ApprovedEmailCreateManyWorkspaceInput | Prisma.ApprovedEmailCreateManyWorkspaceInput[]
+  skipDuplicates?: boolean
 }
 
 export type ApprovedEmailUpsertWithWhereUniqueWithoutWorkspaceInput = {
@@ -528,6 +529,7 @@ export type ApprovedEmailCreateOrConnectWithoutInvitedByInput = {
 
 export type ApprovedEmailCreateManyInvitedByInputEnvelope = {
   data: Prisma.ApprovedEmailCreateManyInvitedByInput | Prisma.ApprovedEmailCreateManyInvitedByInput[]
+  skipDuplicates?: boolean
 }
 
 export type ApprovedEmailUpsertWithWhereUniqueWithoutInvitedByInput = {
@@ -1360,6 +1362,7 @@ export type ApprovedEmailCreateManyArgs<ExtArgs extends runtime.Types.Extensions
    * The data used to create many ApprovedEmails.
    */
   data: Prisma.ApprovedEmailCreateManyInput | Prisma.ApprovedEmailCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1378,6 +1381,7 @@ export type ApprovedEmailCreateManyAndReturnArgs<ExtArgs extends runtime.Types.E
    * The data used to create many ApprovedEmails.
    */
   data: Prisma.ApprovedEmailCreateManyInput | Prisma.ApprovedEmailCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

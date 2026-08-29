@@ -662,6 +662,7 @@ export type LevelUpProgramEntryCreateOrConnectWithoutWorkspaceInput = {
 
 export type LevelUpProgramEntryCreateManyWorkspaceInputEnvelope = {
   data: Prisma.LevelUpProgramEntryCreateManyWorkspaceInput | Prisma.LevelUpProgramEntryCreateManyWorkspaceInput[]
+  skipDuplicates?: boolean
 }
 
 export type LevelUpProgramEntryUpsertWithWhereUniqueWithoutWorkspaceInput = {
@@ -727,6 +728,7 @@ export type LevelUpProgramEntryCreateOrConnectWithoutExerciseInput = {
 
 export type LevelUpProgramEntryCreateManyExerciseInputEnvelope = {
   data: Prisma.LevelUpProgramEntryCreateManyExerciseInput | Prisma.LevelUpProgramEntryCreateManyExerciseInput[]
+  skipDuplicates?: boolean
 }
 
 export type LevelUpProgramEntryUpsertWithWhereUniqueWithoutExerciseInput = {
@@ -776,6 +778,7 @@ export type LevelUpProgramEntryCreateOrConnectWithoutProgramDayInput = {
 
 export type LevelUpProgramEntryCreateManyProgramDayInputEnvelope = {
   data: Prisma.LevelUpProgramEntryCreateManyProgramDayInput | Prisma.LevelUpProgramEntryCreateManyProgramDayInput[]
+  skipDuplicates?: boolean
 }
 
 export type LevelUpProgramEntryUpsertWithWhereUniqueWithoutProgramDayInput = {
@@ -1706,6 +1709,7 @@ export type LevelUpProgramEntryCreateManyArgs<ExtArgs extends runtime.Types.Exte
    * The data used to create many LevelUpProgramEntries.
    */
   data: Prisma.LevelUpProgramEntryCreateManyInput | Prisma.LevelUpProgramEntryCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1724,6 +1728,7 @@ export type LevelUpProgramEntryCreateManyAndReturnArgs<ExtArgs extends runtime.T
    * The data used to create many LevelUpProgramEntries.
    */
   data: Prisma.LevelUpProgramEntryCreateManyInput | Prisma.LevelUpProgramEntryCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

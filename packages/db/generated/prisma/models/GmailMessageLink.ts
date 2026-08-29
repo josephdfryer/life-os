@@ -736,6 +736,7 @@ export type GmailMessageLinkCreateOrConnectWithoutWorkspaceInput = {
 
 export type GmailMessageLinkCreateManyWorkspaceInputEnvelope = {
   data: Prisma.GmailMessageLinkCreateManyWorkspaceInput | Prisma.GmailMessageLinkCreateManyWorkspaceInput[]
+  skipDuplicates?: boolean
 }
 
 export type GmailMessageLinkUpsertWithWhereUniqueWithoutWorkspaceInput = {
@@ -813,6 +814,7 @@ export type GmailMessageLinkCreateOrConnectWithoutConnectionInput = {
 
 export type GmailMessageLinkCreateManyConnectionInputEnvelope = {
   data: Prisma.GmailMessageLinkCreateManyConnectionInput | Prisma.GmailMessageLinkCreateManyConnectionInput[]
+  skipDuplicates?: boolean
 }
 
 export type GmailMessageLinkUpsertWithWhereUniqueWithoutConnectionInput = {
@@ -870,6 +872,7 @@ export type GmailMessageLinkCreateOrConnectWithoutStagedItemInput = {
 
 export type GmailMessageLinkCreateManyStagedItemInputEnvelope = {
   data: Prisma.GmailMessageLinkCreateManyStagedItemInput | Prisma.GmailMessageLinkCreateManyStagedItemInput[]
+  skipDuplicates?: boolean
 }
 
 export type GmailMessageLinkUpsertWithWhereUniqueWithoutStagedItemInput = {
@@ -927,6 +930,7 @@ export type GmailMessageLinkCreateOrConnectWithoutInteractionInput = {
 
 export type GmailMessageLinkCreateManyInteractionInputEnvelope = {
   data: Prisma.GmailMessageLinkCreateManyInteractionInput | Prisma.GmailMessageLinkCreateManyInteractionInput[]
+  skipDuplicates?: boolean
 }
 
 export type GmailMessageLinkUpsertWithWhereUniqueWithoutInteractionInput = {
@@ -2001,6 +2005,7 @@ export type GmailMessageLinkCreateManyArgs<ExtArgs extends runtime.Types.Extensi
    * The data used to create many GmailMessageLinks.
    */
   data: Prisma.GmailMessageLinkCreateManyInput | Prisma.GmailMessageLinkCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -2019,6 +2024,7 @@ export type GmailMessageLinkCreateManyAndReturnArgs<ExtArgs extends runtime.Type
    * The data used to create many GmailMessageLinks.
    */
   data: Prisma.GmailMessageLinkCreateManyInput | Prisma.GmailMessageLinkCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

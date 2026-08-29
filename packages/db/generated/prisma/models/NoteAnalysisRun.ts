@@ -798,6 +798,7 @@ export type NoteAnalysisRunCreateOrConnectWithoutWorkspaceInput = {
 
 export type NoteAnalysisRunCreateManyWorkspaceInputEnvelope = {
   data: Prisma.NoteAnalysisRunCreateManyWorkspaceInput | Prisma.NoteAnalysisRunCreateManyWorkspaceInput[]
+  skipDuplicates?: boolean
 }
 
 export type NoteAnalysisRunUpsertWithWhereUniqueWithoutWorkspaceInput = {
@@ -880,6 +881,7 @@ export type NoteAnalysisRunCreateOrConnectWithoutCredentialInput = {
 
 export type NoteAnalysisRunCreateManyCredentialInputEnvelope = {
   data: Prisma.NoteAnalysisRunCreateManyCredentialInput | Prisma.NoteAnalysisRunCreateManyCredentialInput[]
+  skipDuplicates?: boolean
 }
 
 export type NoteAnalysisRunUpsertWithWhereUniqueWithoutCredentialInput = {
@@ -1029,6 +1031,7 @@ export type NoteAnalysisRunCreateOrConnectWithoutNoteInput = {
 
 export type NoteAnalysisRunCreateManyNoteInputEnvelope = {
   data: Prisma.NoteAnalysisRunCreateManyNoteInput | Prisma.NoteAnalysisRunCreateManyNoteInput[]
+  skipDuplicates?: boolean
 }
 
 export type NoteAnalysisRunUpsertWithWhereUniqueWithoutNoteInput = {
@@ -2090,6 +2093,7 @@ export type NoteAnalysisRunCreateManyArgs<ExtArgs extends runtime.Types.Extensio
    * The data used to create many NoteAnalysisRuns.
    */
   data: Prisma.NoteAnalysisRunCreateManyInput | Prisma.NoteAnalysisRunCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -2108,6 +2112,7 @@ export type NoteAnalysisRunCreateManyAndReturnArgs<ExtArgs extends runtime.Types
    * The data used to create many NoteAnalysisRuns.
    */
   data: Prisma.NoteAnalysisRunCreateManyInput | Prisma.NoteAnalysisRunCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

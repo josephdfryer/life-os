@@ -1533,6 +1533,7 @@ export type InteractionCreateOrConnectWithoutWorkspaceInput = {
 
 export type InteractionCreateManyWorkspaceInputEnvelope = {
   data: Prisma.InteractionCreateManyWorkspaceInput | Prisma.InteractionCreateManyWorkspaceInput[]
+  skipDuplicates?: boolean
 }
 
 export type InteractionUpsertWithWhereUniqueWithoutWorkspaceInput = {
@@ -1669,6 +1670,7 @@ export type InteractionCreateOrConnectWithoutPersonInput = {
 
 export type InteractionCreateManyPersonInputEnvelope = {
   data: Prisma.InteractionCreateManyPersonInput | Prisma.InteractionCreateManyPersonInput[]
+  skipDuplicates?: boolean
 }
 
 export type InteractionCreateWithoutActorPersonInput = {
@@ -1752,6 +1754,7 @@ export type InteractionCreateOrConnectWithoutActorPersonInput = {
 
 export type InteractionCreateManyActorPersonInputEnvelope = {
   data: Prisma.InteractionCreateManyActorPersonInput | Prisma.InteractionCreateManyActorPersonInput[]
+  skipDuplicates?: boolean
 }
 
 export type InteractionUpsertWithWhereUniqueWithoutPersonInput = {
@@ -2031,6 +2034,7 @@ export type InteractionCreateOrConnectWithoutAccountLinkInput = {
 
 export type InteractionCreateManyAccountLinkInputEnvelope = {
   data: Prisma.InteractionCreateManyAccountLinkInput | Prisma.InteractionCreateManyAccountLinkInput[]
+  skipDuplicates?: boolean
 }
 
 export type InteractionUpsertWithWhereUniqueWithoutAccountLinkInput = {
@@ -2294,6 +2298,7 @@ export type InteractionCreateOrConnectWithoutEventInput = {
 
 export type InteractionCreateManyEventInputEnvelope = {
   data: Prisma.InteractionCreateManyEventInput | Prisma.InteractionCreateManyEventInput[]
+  skipDuplicates?: boolean
 }
 
 export type InteractionUpsertWithWhereUniqueWithoutEventInput = {
@@ -2557,6 +2562,7 @@ export type InteractionCreateOrConnectWithoutPlaceInput = {
 
 export type InteractionCreateManyPlaceInputEnvelope = {
   data: Prisma.InteractionCreateManyPlaceInput | Prisma.InteractionCreateManyPlaceInput[]
+  skipDuplicates?: boolean
 }
 
 export type InteractionUpsertWithWhereUniqueWithoutPlaceInput = {
@@ -2820,6 +2826,7 @@ export type InteractionCreateOrConnectWithoutSourceFileInput = {
 
 export type InteractionCreateManySourceFileInputEnvelope = {
   data: Prisma.InteractionCreateManySourceFileInput | Prisma.InteractionCreateManySourceFileInput[]
+  skipDuplicates?: boolean
 }
 
 export type InteractionUpsertWithWhereUniqueWithoutSourceFileInput = {
@@ -2919,6 +2926,7 @@ export type InteractionCreateOrConnectWithoutGroupInput = {
 
 export type InteractionCreateManyGroupInputEnvelope = {
   data: Prisma.InteractionCreateManyGroupInput | Prisma.InteractionCreateManyGroupInput[]
+  skipDuplicates?: boolean
 }
 
 export type InteractionUpsertWithWhereUniqueWithoutGroupInput = {
@@ -3018,6 +3026,7 @@ export type InteractionCreateOrConnectWithoutSourceNoteInput = {
 
 export type InteractionCreateManySourceNoteInputEnvelope = {
   data: Prisma.InteractionCreateManySourceNoteInput | Prisma.InteractionCreateManySourceNoteInput[]
+  skipDuplicates?: boolean
 }
 
 export type InteractionUpsertWithWhereUniqueWithoutSourceNoteInput = {
@@ -5312,6 +5321,7 @@ export type InteractionCreateManyArgs<ExtArgs extends runtime.Types.Extensions.I
    * The data used to create many Interactions.
    */
   data: Prisma.InteractionCreateManyInput | Prisma.InteractionCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -5330,6 +5340,7 @@ export type InteractionCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Ext
    * The data used to create many Interactions.
    */
   data: Prisma.InteractionCreateManyInput | Prisma.InteractionCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

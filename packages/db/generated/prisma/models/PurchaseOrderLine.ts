@@ -642,6 +642,7 @@ export type PurchaseOrderLineCreateOrConnectWithoutDestinationPlaceInput = {
 
 export type PurchaseOrderLineCreateManyDestinationPlaceInputEnvelope = {
   data: Prisma.PurchaseOrderLineCreateManyDestinationPlaceInput | Prisma.PurchaseOrderLineCreateManyDestinationPlaceInput[]
+  skipDuplicates?: boolean
 }
 
 export type PurchaseOrderLineUpsertWithWhereUniqueWithoutDestinationPlaceInput = {
@@ -706,6 +707,7 @@ export type PurchaseOrderLineCreateOrConnectWithoutDefinitionInput = {
 
 export type PurchaseOrderLineCreateManyDefinitionInputEnvelope = {
   data: Prisma.PurchaseOrderLineCreateManyDefinitionInput | Prisma.PurchaseOrderLineCreateManyDefinitionInput[]
+  skipDuplicates?: boolean
 }
 
 export type PurchaseOrderLineUpsertWithWhereUniqueWithoutDefinitionInput = {
@@ -755,6 +757,7 @@ export type PurchaseOrderLineCreateOrConnectWithoutPurchaseOrderInput = {
 
 export type PurchaseOrderLineCreateManyPurchaseOrderInputEnvelope = {
   data: Prisma.PurchaseOrderLineCreateManyPurchaseOrderInput | Prisma.PurchaseOrderLineCreateManyPurchaseOrderInput[]
+  skipDuplicates?: boolean
 }
 
 export type PurchaseOrderLineUpsertWithWhereUniqueWithoutPurchaseOrderInput = {
@@ -1772,6 +1775,7 @@ export type PurchaseOrderLineCreateManyArgs<ExtArgs extends runtime.Types.Extens
    * The data used to create many PurchaseOrderLines.
    */
   data: Prisma.PurchaseOrderLineCreateManyInput | Prisma.PurchaseOrderLineCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1790,6 +1794,7 @@ export type PurchaseOrderLineCreateManyAndReturnArgs<ExtArgs extends runtime.Typ
    * The data used to create many PurchaseOrderLines.
    */
   data: Prisma.PurchaseOrderLineCreateManyInput | Prisma.PurchaseOrderLineCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

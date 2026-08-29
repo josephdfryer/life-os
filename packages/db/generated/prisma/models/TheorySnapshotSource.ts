@@ -612,6 +612,7 @@ export type TheorySnapshotSourceCreateOrConnectWithoutEvidenceClaimInput = {
 
 export type TheorySnapshotSourceCreateManyEvidenceClaimInputEnvelope = {
   data: Prisma.TheorySnapshotSourceCreateManyEvidenceClaimInput | Prisma.TheorySnapshotSourceCreateManyEvidenceClaimInput[]
+  skipDuplicates?: boolean
 }
 
 export type TheorySnapshotSourceUpsertWithWhereUniqueWithoutEvidenceClaimInput = {
@@ -680,6 +681,7 @@ export type TheorySnapshotSourceCreateOrConnectWithoutSnapshotInput = {
 
 export type TheorySnapshotSourceCreateManySnapshotInputEnvelope = {
   data: Prisma.TheorySnapshotSourceCreateManySnapshotInput | Prisma.TheorySnapshotSourceCreateManySnapshotInput[]
+  skipDuplicates?: boolean
 }
 
 export type TheorySnapshotSourceUpsertWithWhereUniqueWithoutSnapshotInput = {
@@ -1568,6 +1570,7 @@ export type TheorySnapshotSourceCreateManyArgs<ExtArgs extends runtime.Types.Ext
    * The data used to create many TheorySnapshotSources.
    */
   data: Prisma.TheorySnapshotSourceCreateManyInput | Prisma.TheorySnapshotSourceCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1586,6 +1589,7 @@ export type TheorySnapshotSourceCreateManyAndReturnArgs<ExtArgs extends runtime.
    * The data used to create many TheorySnapshotSources.
    */
   data: Prisma.TheorySnapshotSourceCreateManyInput | Prisma.TheorySnapshotSourceCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

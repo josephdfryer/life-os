@@ -1,31 +1,44 @@
 import { createRequire } from "node:module"
-import { existsSync, readFileSync, readdirSync, unlinkSync } from "node:fs"
-import { tmpdir } from "node:os"
+import { readFileSync, readdirSync } from "node:fs"
 import { join } from "node:path"
 
 async function main() {
-  // The guard stays — this deletes the file it is pointed at, so it must only
-  // ever point inside the OS temp directory. The prefix is computed rather
-  // than hard-coded, because "/private/tmp" is macOS-only and broke CI.
-  const scratchPrefix = `file:${join(tmpdir(), "life-os-e2e")}`
-  const databaseUrl = process.env.DATABASE_URL ?? `${scratchPrefix}.db`
-  if (!databaseUrl.startsWith(scratchPrefix)) {
-    throw new Error(`Refusing to prepare an E2E database outside ${scratchPrefix}*`)
+  // E2E runs against a dedicated Postgres database named by `E2E_DATABASE_URL`
+  // (falls back to `DATABASE_URL`). This drops and recreates every table it
+  // finds, so it refuses anything that looks like a managed/production host —
+  // the equivalent of the old "temp directory only" guard.
+  const databaseUrl = process.env.E2E_DATABASE_URL ?? process.env.DATABASE_URL
+  if (!databaseUrl || !/^postgres(ql)?:\/\//.test(databaseUrl)) {
+    throw new Error(
+      "E2E_DATABASE_URL (or DATABASE_URL) must be a postgresql:// URL for a " +
+        "throwaway local/CI database. Start the docker-compose `postgres` service.",
+    )
   }
-
-  const dbPath = databaseUrl.slice("file:".length)
-  if (existsSync(dbPath)) unlinkSync(dbPath)
+  if (/\bneon\.tech\b|-pooler\b|amazonaws\.com/i.test(databaseUrl)) {
+    throw new Error(`Refusing to reset what looks like a managed database: ${databaseUrl.replace(/:[^:@/]+@/, ":***@")}`)
+  }
 
   const require = createRequire(import.meta.url)
-  const Database = require("better-sqlite3")
-  const sqlite = new Database(dbPath)
-  sqlite.pragma("foreign_keys = OFF")
-  const migrationsDir = join(process.cwd(), "packages/db/prisma/migrations")
-  for (const dirname of readdirSync(migrationsDir).filter(name => name !== "migration_lock.toml").sort()) {
-    sqlite.exec(readFileSync(join(migrationsDir, dirname, "migration.sql"), "utf8"))
+  const { Client } = require("pg") as typeof import("pg")
+
+  const reset = new Client({ connectionString: databaseUrl })
+  await reset.connect()
+  try {
+    await reset.query('DROP SCHEMA IF EXISTS "public" CASCADE; CREATE SCHEMA "public";')
+    const migrationsDir = join(process.cwd(), "packages/db/prisma/migrations")
+    for (const dirname of readdirSync(migrationsDir).filter(name => name !== "migration_lock.toml").sort()) {
+      await reset.query(readFileSync(join(migrationsDir, dirname, "migration.sql"), "utf8"))
+    }
+    // The squashed baseline carries default-workspace as a column default only;
+    // the row itself has to be seeded (see packages/db/testing.ts).
+    await reset.query(
+      `INSERT INTO "Workspace" ("id", "createdAt", "updatedAt", "name", "slug", "status")
+       VALUES ('default-workspace', now(), now(), 'E2E LifeOS', 'e2e-life-os', 'active')
+       ON CONFLICT ("id") DO NOTHING`,
+    )
+  } finally {
+    await reset.end()
   }
-  sqlite.pragma("foreign_keys = ON")
-  sqlite.close()
 
   process.env.DATABASE_URL = databaseUrl
   process.env.TURSO_DATABASE_URL = ""
@@ -184,7 +197,7 @@ await db.reviewItem.create({
 })
 
   await db.$disconnect()
-  console.log(`Prepared isolated E2E database at ${dbPath}`)
+  console.log(`Prepared E2E database ${databaseUrl.replace(/:[^:@/]+@/, ":***@")}`)
 }
 
 main().catch(error => {

@@ -612,6 +612,7 @@ export type LifeModelClaimFeedbackCreateOrConnectWithoutWorkspaceInput = {
 
 export type LifeModelClaimFeedbackCreateManyWorkspaceInputEnvelope = {
   data: Prisma.LifeModelClaimFeedbackCreateManyWorkspaceInput | Prisma.LifeModelClaimFeedbackCreateManyWorkspaceInput[]
+  skipDuplicates?: boolean
 }
 
 export type LifeModelClaimFeedbackUpsertWithWhereUniqueWithoutWorkspaceInput = {
@@ -680,6 +681,7 @@ export type LifeModelClaimFeedbackCreateOrConnectWithoutSourceNoteInput = {
 
 export type LifeModelClaimFeedbackCreateManySourceNoteInputEnvelope = {
   data: Prisma.LifeModelClaimFeedbackCreateManySourceNoteInput | Prisma.LifeModelClaimFeedbackCreateManySourceNoteInput[]
+  skipDuplicates?: boolean
 }
 
 export type LifeModelClaimFeedbackUpsertWithWhereUniqueWithoutSourceNoteInput = {
@@ -731,6 +733,7 @@ export type LifeModelClaimFeedbackCreateOrConnectWithoutClaimInput = {
 
 export type LifeModelClaimFeedbackCreateManyClaimInputEnvelope = {
   data: Prisma.LifeModelClaimFeedbackCreateManyClaimInput | Prisma.LifeModelClaimFeedbackCreateManyClaimInput[]
+  skipDuplicates?: boolean
 }
 
 export type LifeModelClaimFeedbackUpsertWithWhereUniqueWithoutClaimInput = {
@@ -1679,6 +1682,7 @@ export type LifeModelClaimFeedbackCreateManyArgs<ExtArgs extends runtime.Types.E
    * The data used to create many LifeModelClaimFeedbacks.
    */
   data: Prisma.LifeModelClaimFeedbackCreateManyInput | Prisma.LifeModelClaimFeedbackCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1697,6 +1701,7 @@ export type LifeModelClaimFeedbackCreateManyAndReturnArgs<ExtArgs extends runtim
    * The data used to create many LifeModelClaimFeedbacks.
    */
   data: Prisma.LifeModelClaimFeedbackCreateManyInput | Prisma.LifeModelClaimFeedbackCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

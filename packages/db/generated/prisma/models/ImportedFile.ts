@@ -946,6 +946,7 @@ export type ImportedFileCreateOrConnectWithoutWorkspaceInput = {
 
 export type ImportedFileCreateManyWorkspaceInputEnvelope = {
   data: Prisma.ImportedFileCreateManyWorkspaceInput | Prisma.ImportedFileCreateManyWorkspaceInput[]
+  skipDuplicates?: boolean
 }
 
 export type ImportedFileUpsertWithWhereUniqueWithoutWorkspaceInput = {
@@ -3123,6 +3124,7 @@ export type ImportedFileCreateManyArgs<ExtArgs extends runtime.Types.Extensions.
    * The data used to create many ImportedFiles.
    */
   data: Prisma.ImportedFileCreateManyInput | Prisma.ImportedFileCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -3141,6 +3143,7 @@ export type ImportedFileCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Ex
    * The data used to create many ImportedFiles.
    */
   data: Prisma.ImportedFileCreateManyInput | Prisma.ImportedFileCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

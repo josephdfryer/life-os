@@ -1,5 +1,10 @@
-import test from "node:test"
+import test, { before, after } from "node:test"
 import assert from "node:assert/strict"
+import { createTestDatabase, type TestDatabase } from "@life-os/db/testing"
+
+let testDb: TestDatabase
+before(async () => { testDb = await createTestDatabase() })
+after(async () => { await testDb?.drop() })
 
 // createItem previously required the caller to supply assetId, which is @unique
 // with no database default. The only generator lived in apps/stuff's route

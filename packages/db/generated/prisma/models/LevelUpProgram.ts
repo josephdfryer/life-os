@@ -432,6 +432,7 @@ export type LevelUpProgramCreateOrConnectWithoutWorkspaceInput = {
 
 export type LevelUpProgramCreateManyWorkspaceInputEnvelope = {
   data: Prisma.LevelUpProgramCreateManyWorkspaceInput | Prisma.LevelUpProgramCreateManyWorkspaceInput[]
+  skipDuplicates?: boolean
 }
 
 export type LevelUpProgramUpsertWithWhereUniqueWithoutWorkspaceInput = {
@@ -1311,6 +1312,7 @@ export type LevelUpProgramCreateManyArgs<ExtArgs extends runtime.Types.Extension
    * The data used to create many LevelUpPrograms.
    */
   data: Prisma.LevelUpProgramCreateManyInput | Prisma.LevelUpProgramCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1329,6 +1331,7 @@ export type LevelUpProgramCreateManyAndReturnArgs<ExtArgs extends runtime.Types.
    * The data used to create many LevelUpPrograms.
    */
   data: Prisma.LevelUpProgramCreateManyInput | Prisma.LevelUpProgramCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

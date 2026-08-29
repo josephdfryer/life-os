@@ -723,6 +723,7 @@ export type GmailConnectionCreateOrConnectWithoutWorkspaceInput = {
 
 export type GmailConnectionCreateManyWorkspaceInputEnvelope = {
   data: Prisma.GmailConnectionCreateManyWorkspaceInput | Prisma.GmailConnectionCreateManyWorkspaceInput[]
+  skipDuplicates?: boolean
 }
 
 export type GmailConnectionUpsertWithWhereUniqueWithoutWorkspaceInput = {
@@ -808,6 +809,7 @@ export type GmailConnectionCreateOrConnectWithoutUserInput = {
 
 export type GmailConnectionCreateManyUserInputEnvelope = {
   data: Prisma.GmailConnectionCreateManyUserInput | Prisma.GmailConnectionCreateManyUserInput[]
+  skipDuplicates?: boolean
 }
 
 export type GmailConnectionUpsertWithWhereUniqueWithoutUserInput = {
@@ -1897,6 +1899,7 @@ export type GmailConnectionCreateManyArgs<ExtArgs extends runtime.Types.Extensio
    * The data used to create many GmailConnections.
    */
   data: Prisma.GmailConnectionCreateManyInput | Prisma.GmailConnectionCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1915,6 +1918,7 @@ export type GmailConnectionCreateManyAndReturnArgs<ExtArgs extends runtime.Types
    * The data used to create many GmailConnections.
    */
   data: Prisma.GmailConnectionCreateManyInput | Prisma.GmailConnectionCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

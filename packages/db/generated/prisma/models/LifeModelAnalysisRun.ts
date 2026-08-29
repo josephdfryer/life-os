@@ -764,6 +764,7 @@ export type LifeModelAnalysisRunCreateOrConnectWithoutWorkspaceInput = {
 
 export type LifeModelAnalysisRunCreateManyWorkspaceInputEnvelope = {
   data: Prisma.LifeModelAnalysisRunCreateManyWorkspaceInput | Prisma.LifeModelAnalysisRunCreateManyWorkspaceInput[]
+  skipDuplicates?: boolean
 }
 
 export type LifeModelAnalysisRunUpsertWithWhereUniqueWithoutWorkspaceInput = {
@@ -844,6 +845,7 @@ export type LifeModelAnalysisRunCreateOrConnectWithoutCredentialInput = {
 
 export type LifeModelAnalysisRunCreateManyCredentialInputEnvelope = {
   data: Prisma.LifeModelAnalysisRunCreateManyCredentialInput | Prisma.LifeModelAnalysisRunCreateManyCredentialInput[]
+  skipDuplicates?: boolean
 }
 
 export type LifeModelAnalysisRunUpsertWithWhereUniqueWithoutCredentialInput = {
@@ -903,6 +905,7 @@ export type LifeModelAnalysisRunCreateOrConnectWithoutSnapshotInput = {
 
 export type LifeModelAnalysisRunCreateManySnapshotInputEnvelope = {
   data: Prisma.LifeModelAnalysisRunCreateManySnapshotInput | Prisma.LifeModelAnalysisRunCreateManySnapshotInput[]
+  skipDuplicates?: boolean
 }
 
 export type LifeModelAnalysisRunUpsertWithWhereUniqueWithoutSnapshotInput = {
@@ -1923,6 +1926,7 @@ export type LifeModelAnalysisRunCreateManyArgs<ExtArgs extends runtime.Types.Ext
    * The data used to create many LifeModelAnalysisRuns.
    */
   data: Prisma.LifeModelAnalysisRunCreateManyInput | Prisma.LifeModelAnalysisRunCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1941,6 +1945,7 @@ export type LifeModelAnalysisRunCreateManyAndReturnArgs<ExtArgs extends runtime.
    * The data used to create many LifeModelAnalysisRuns.
    */
   data: Prisma.LifeModelAnalysisRunCreateManyInput | Prisma.LifeModelAnalysisRunCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

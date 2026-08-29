@@ -596,6 +596,7 @@ export type LifeModelClaimCreateOrConnectWithoutSnapshotInput = {
 
 export type LifeModelClaimCreateManySnapshotInputEnvelope = {
   data: Prisma.LifeModelClaimCreateManySnapshotInput | Prisma.LifeModelClaimCreateManySnapshotInput[]
+  skipDuplicates?: boolean
 }
 
 export type LifeModelClaimUpsertWithWhereUniqueWithoutSnapshotInput = {
@@ -1550,6 +1551,7 @@ export type LifeModelClaimCreateManyArgs<ExtArgs extends runtime.Types.Extension
    * The data used to create many LifeModelClaims.
    */
   data: Prisma.LifeModelClaimCreateManyInput | Prisma.LifeModelClaimCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1568,6 +1570,7 @@ export type LifeModelClaimCreateManyAndReturnArgs<ExtArgs extends runtime.Types.
    * The data used to create many LifeModelClaims.
    */
   data: Prisma.LifeModelClaimCreateManyInput | Prisma.LifeModelClaimCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

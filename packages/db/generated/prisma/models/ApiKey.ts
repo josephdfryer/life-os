@@ -694,6 +694,7 @@ export type ApiKeyCreateOrConnectWithoutWorkspaceInput = {
 
 export type ApiKeyCreateManyWorkspaceInputEnvelope = {
   data: Prisma.ApiKeyCreateManyWorkspaceInput | Prisma.ApiKeyCreateManyWorkspaceInput[]
+  skipDuplicates?: boolean
 }
 
 export type ApiKeyUpsertWithWhereUniqueWithoutWorkspaceInput = {
@@ -769,6 +770,7 @@ export type ApiKeyCreateOrConnectWithoutOwnerPersonInput = {
 
 export type ApiKeyCreateManyOwnerPersonInputEnvelope = {
   data: Prisma.ApiKeyCreateManyOwnerPersonInput | Prisma.ApiKeyCreateManyOwnerPersonInput[]
+  skipDuplicates?: boolean
 }
 
 export type ApiKeyUpsertWithWhereUniqueWithoutOwnerPersonInput = {
@@ -826,6 +828,7 @@ export type ApiKeyCreateOrConnectWithoutCreatedByUserInput = {
 
 export type ApiKeyCreateManyCreatedByUserInputEnvelope = {
   data: Prisma.ApiKeyCreateManyCreatedByUserInput | Prisma.ApiKeyCreateManyCreatedByUserInput[]
+  skipDuplicates?: boolean
 }
 
 export type ApiKeyUpsertWithWhereUniqueWithoutCreatedByUserInput = {
@@ -2012,6 +2015,7 @@ export type ApiKeyCreateManyArgs<ExtArgs extends runtime.Types.Extensions.Intern
    * The data used to create many ApiKeys.
    */
   data: Prisma.ApiKeyCreateManyInput | Prisma.ApiKeyCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -2030,6 +2034,7 @@ export type ApiKeyCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensio
    * The data used to create many ApiKeys.
    */
   data: Prisma.ApiKeyCreateManyInput | Prisma.ApiKeyCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

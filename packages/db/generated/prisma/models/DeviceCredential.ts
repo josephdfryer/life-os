@@ -524,6 +524,7 @@ export type DeviceCredentialCreateOrConnectWithoutDeviceInput = {
 
 export type DeviceCredentialCreateManyDeviceInputEnvelope = {
   data: Prisma.DeviceCredentialCreateManyDeviceInput | Prisma.DeviceCredentialCreateManyDeviceInput[]
+  skipDuplicates?: boolean
 }
 
 export type DeviceCredentialUpsertWithWhereUniqueWithoutDeviceInput = {
@@ -1369,6 +1370,7 @@ export type DeviceCredentialCreateManyArgs<ExtArgs extends runtime.Types.Extensi
    * The data used to create many DeviceCredentials.
    */
   data: Prisma.DeviceCredentialCreateManyInput | Prisma.DeviceCredentialCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1387,6 +1389,7 @@ export type DeviceCredentialCreateManyAndReturnArgs<ExtArgs extends runtime.Type
    * The data used to create many DeviceCredentials.
    */
   data: Prisma.DeviceCredentialCreateManyInput | Prisma.DeviceCredentialCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

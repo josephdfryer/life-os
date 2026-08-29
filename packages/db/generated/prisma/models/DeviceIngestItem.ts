@@ -715,6 +715,7 @@ export type DeviceIngestItemCreateOrConnectWithoutWorkspaceInput = {
 
 export type DeviceIngestItemCreateManyWorkspaceInputEnvelope = {
   data: Prisma.DeviceIngestItemCreateManyWorkspaceInput | Prisma.DeviceIngestItemCreateManyWorkspaceInput[]
+  skipDuplicates?: boolean
 }
 
 export type DeviceIngestItemUpsertWithWhereUniqueWithoutWorkspaceInput = {
@@ -795,6 +796,7 @@ export type DeviceIngestItemCreateOrConnectWithoutDeviceInput = {
 
 export type DeviceIngestItemCreateManyDeviceInputEnvelope = {
   data: Prisma.DeviceIngestItemCreateManyDeviceInput | Prisma.DeviceIngestItemCreateManyDeviceInput[]
+  skipDuplicates?: boolean
 }
 
 export type DeviceIngestItemUpsertWithWhereUniqueWithoutDeviceInput = {
@@ -1739,6 +1741,7 @@ export type DeviceIngestItemCreateManyArgs<ExtArgs extends runtime.Types.Extensi
    * The data used to create many DeviceIngestItems.
    */
   data: Prisma.DeviceIngestItemCreateManyInput | Prisma.DeviceIngestItemCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1757,6 +1760,7 @@ export type DeviceIngestItemCreateManyAndReturnArgs<ExtArgs extends runtime.Type
    * The data used to create many DeviceIngestItems.
    */
   data: Prisma.DeviceIngestItemCreateManyInput | Prisma.DeviceIngestItemCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

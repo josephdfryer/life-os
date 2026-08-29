@@ -668,6 +668,7 @@ export type AdaptiveInterventionCreateOrConnectWithoutBriefInput = {
 
 export type AdaptiveInterventionCreateManyBriefInputEnvelope = {
   data: Prisma.AdaptiveInterventionCreateManyBriefInput | Prisma.AdaptiveInterventionCreateManyBriefInput[]
+  skipDuplicates?: boolean
 }
 
 export type AdaptiveInterventionUpsertWithWhereUniqueWithoutBriefInput = {
@@ -1667,6 +1668,7 @@ export type AdaptiveInterventionCreateManyArgs<ExtArgs extends runtime.Types.Ext
    * The data used to create many AdaptiveInterventions.
    */
   data: Prisma.AdaptiveInterventionCreateManyInput | Prisma.AdaptiveInterventionCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1685,6 +1687,7 @@ export type AdaptiveInterventionCreateManyAndReturnArgs<ExtArgs extends runtime.
    * The data used to create many AdaptiveInterventions.
    */
   data: Prisma.AdaptiveInterventionCreateManyInput | Prisma.AdaptiveInterventionCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

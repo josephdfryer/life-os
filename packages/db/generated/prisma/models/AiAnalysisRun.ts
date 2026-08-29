@@ -856,6 +856,7 @@ export type AiAnalysisRunCreateOrConnectWithoutWorkspaceInput = {
 
 export type AiAnalysisRunCreateManyWorkspaceInputEnvelope = {
   data: Prisma.AiAnalysisRunCreateManyWorkspaceInput | Prisma.AiAnalysisRunCreateManyWorkspaceInput[]
+  skipDuplicates?: boolean
 }
 
 export type AiAnalysisRunUpsertWithWhereUniqueWithoutWorkspaceInput = {
@@ -942,6 +943,7 @@ export type AiAnalysisRunCreateOrConnectWithoutSourceFileInput = {
 
 export type AiAnalysisRunCreateManySourceFileInputEnvelope = {
   data: Prisma.AiAnalysisRunCreateManySourceFileInput | Prisma.AiAnalysisRunCreateManySourceFileInput[]
+  skipDuplicates?: boolean
 }
 
 export type AiAnalysisRunUpsertWithWhereUniqueWithoutSourceFileInput = {
@@ -1005,6 +1007,7 @@ export type AiAnalysisRunCreateOrConnectWithoutProcessingRunInput = {
 
 export type AiAnalysisRunCreateManyProcessingRunInputEnvelope = {
   data: Prisma.AiAnalysisRunCreateManyProcessingRunInput | Prisma.AiAnalysisRunCreateManyProcessingRunInput[]
+  skipDuplicates?: boolean
 }
 
 export type AiAnalysisRunUpsertWithWhereUniqueWithoutProcessingRunInput = {
@@ -1068,6 +1071,7 @@ export type AiAnalysisRunCreateOrConnectWithoutCredentialInput = {
 
 export type AiAnalysisRunCreateManyCredentialInputEnvelope = {
   data: Prisma.AiAnalysisRunCreateManyCredentialInput | Prisma.AiAnalysisRunCreateManyCredentialInput[]
+  skipDuplicates?: boolean
 }
 
 export type AiAnalysisRunUpsertWithWhereUniqueWithoutCredentialInput = {
@@ -2208,6 +2212,7 @@ export type AiAnalysisRunCreateManyArgs<ExtArgs extends runtime.Types.Extensions
    * The data used to create many AiAnalysisRuns.
    */
   data: Prisma.AiAnalysisRunCreateManyInput | Prisma.AiAnalysisRunCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -2226,6 +2231,7 @@ export type AiAnalysisRunCreateManyAndReturnArgs<ExtArgs extends runtime.Types.E
    * The data used to create many AiAnalysisRuns.
    */
   data: Prisma.AiAnalysisRunCreateManyInput | Prisma.AiAnalysisRunCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */
