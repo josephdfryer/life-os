@@ -48,8 +48,8 @@ jobs:
 
       - name: Sync Era transactions
         env:
-          TURSO_DATABASE_URL: ${{ secrets.TURSO_DATABASE_URL }}
-          TURSO_AUTH_TOKEN: ${{ secrets.TURSO_AUTH_TOKEN }}
+          # Direct (unpooled) Neon connection — batch scripts, no pooler.
+          DATABASE_URL: ${{ secrets.DATABASE_URL_UNPOOLED }}
           ERA_API_KEY: ${{ secrets.ERA_API_KEY }}
         run: |
           npx tsx scripts/era/sync-from-era.ts --out /tmp/era-dump
