@@ -249,6 +249,8 @@ flowchart TD
 
 Important idea: iMessages are person-level Interactions, not Event nodes. Matched iMessages append into one daily message Interaction per Person; unmatched iMessages do not create random new people and instead go to the Inbox staging area where you can review them.
 
+The hourly Mac LaunchAgent runs this collector against the canonical PostgreSQL database. Configuration explicitly prefers an inherited PostgreSQL URL, then the Persons app environment, and refuses to run against a stale SQLite URL. A dry run performs the same source-ID deduplication as a real run and reports how many records would become canonical Interactions versus staged review items. The watermark advances only after the complete batch succeeds, so a failed batch can be retried safely.
+
 Group texts are intentionally ignored by default before matching or staging. The watcher identifies multi-person chats from the Messages chat participant table, with the chat identifier as a fallback, so noisy group threads do not fill the Persons inbox or get appended to one person's daily interaction log. A one-off backfill can opt in with `--include-group-chats` when that is explicitly useful.
 
 ### 2b. Staging from any external source
