@@ -1415,12 +1415,46 @@ a {
     display: none;
   }
 
+  .communication-row {
+    padding-left: 12px;
+  }
+
   .communication-summary {
-    grid-template-columns: 64px 1fr auto;
+    grid-template-columns: 1fr auto;
+    grid-template-rows: auto auto auto;
+    row-gap: 4px;
+    column-gap: 10px;
+    padding: 12px 14px 12px 10px;
+  }
+
+  .communication-source {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .communication-person {
+    grid-column: 1;
+    grid-row: 2;
   }
 
   .communication-preview {
-    grid-column: 2 / -1;
+    grid-column: 1;
+    grid-row: 3;
+  }
+
+  .communication-toggle {
+    grid-column: 2;
+    grid-row: 1 / span 3;
+    align-self: center;
+  }
+
+  .communication-detail {
+    padding: 14px 14px 14px 12px;
+  }
+
+  .communication-actions {
+    flex-wrap: wrap;
+    row-gap: 10px;
   }
 }
 
