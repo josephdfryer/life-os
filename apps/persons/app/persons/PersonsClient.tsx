@@ -1,12 +1,15 @@
 "use client"
 
-import { useEffect, useState, useCallback, useRef } from "react"
+import { useEffect, useState, useCallback, useRef, useMemo, memo } from "react"
+import { useVirtualizer } from "@tanstack/react-virtual"
 import PersonCard from "@/components/persons/PersonCard"
+import PersonCardSkeleton from "@/components/persons/PersonCardSkeleton"
 import AddPersonModal from "@/components/persons/AddPersonModal"
 import type { PersonListPerson } from "@/types"
 import type { PersonListView } from "@/lib/person-list-presentation"
 import { filtersToParam, type Filter } from "@/lib/filters"
 import { Toolbar } from "./Toolbar"
+import { fetchWithCache, prefetch, apiCache } from "@/lib/api-cache"
 
 type SortKey = "name" | "closeness" | "recent"
 
@@ -30,6 +33,7 @@ export default function PersonsClient({ initialData }: { initialData: PageData |
   const [page, setPage]               = useState(0)
   const searchTimer                   = useRef<ReturnType<typeof setTimeout> | null>(null)
   const sentinelRef                   = useRef<HTMLDivElement | null>(null)
+  const parentRef                     = useRef<HTMLDivElement | null>(null)
   const loadingMoreRef                = useRef(false)
   const skipFirstFetch                = useRef(!!initialData)
   const requestVersionRef             = useRef(0)
@@ -45,6 +49,14 @@ export default function PersonsClient({ initialData }: { initialData: PageData |
   const [deleteAllBusy, setDeleteAllBusy] = useState(false)
   const [deleteAllError, setDeleteAllError] = useState("")
   const [deleteAllBackedUp, setDeleteAllBackedUp] = useState(false)
+
+  // Virtual scrolling for performance with large lists
+  const rowVirtualizer = useVirtualizer({
+    count: data.persons.length,
+    getScrollElement: () => parentRef.current,
+    estimateSize: () => 90, // Estimated row height in pixels
+    overscan: 5, // Render 5 extra items above and below viewport
+  })
 
   const fetchPage = useCallback(async (p: number, q: string, s: SortKey, v: PersonListView, activeFilters: Filter[], reset: boolean) => {
     if (!reset && loadingMoreRef.current) return
@@ -68,15 +80,34 @@ export default function PersonsClient({ initialData }: { initialData: PageData |
         ...(q ? { search: q } : {}),
         ...(activeFilters.length > 0 ? { filters: filtersToParam(activeFilters) } : {}),
       })
-      const res = await fetch(`/api/persons?${params}`)
-      if (!res.ok) return
-      const json = await res.json()
+      const url = `/api/persons?${params}`
+      
+      // Use cached fetch with deduplication
+      type PersonsResponse = { persons: PersonListPerson[]; total: number; hasMore: boolean }
+      const json = await fetchWithCache<PersonsResponse>(url)
+      
       if (requestVersion !== requestVersionRef.current) return
       setData(prev => ({
         persons:  reset ? json.persons : [...prev.persons, ...json.persons],
         total:    json.total,
         hasMore:  json.hasMore,
       }))
+      
+      // Prefetch next page in background
+      if (json.hasMore) {
+        const nextParams = new URLSearchParams({
+          minimal: "true",
+          page:    String(p + 1),
+          limit:   String(LIMIT),
+          sort:    s,
+          view:    v,
+          ...(q ? { search: q } : {}),
+          ...(activeFilters.length > 0 ? { filters: filtersToParam(activeFilters) } : {}),
+        })
+        prefetch(`/api/persons?${nextParams}`)
+      }
+    } catch (error) {
+      console.error('Failed to fetch persons:', error)
     } finally {
       if (requestVersion === requestVersionRef.current) {
         if (reset) {
@@ -155,13 +186,14 @@ export default function PersonsClient({ initialData }: { initialData: PageData |
 
   useEffect(() => {
     const sentinel = sentinelRef.current
-    if (!sentinel || loading || !data.hasMore) return
+    const parent = parentRef.current
+    if (!sentinel || !parent || loading || !data.hasMore) return
 
     const observer = new IntersectionObserver(
       entries => {
         if (entries[0]?.isIntersecting) loadMore()
       },
-      { rootMargin: "640px 0px 320px" },
+      { root: parent, rootMargin: "640px 0px 320px" },
     )
 
     observer.observe(sentinel)
@@ -169,6 +201,8 @@ export default function PersonsClient({ initialData }: { initialData: PageData |
   }, [data.hasMore, loadMore, loading])
 
   function reload() {
+    // Invalidate cache when reloading
+    apiCache.invalidate(/\/api\/persons/)
     setPage(0)
     setSelected(new Set())
     fetchPage(0, search, sort, view, filters, true)
@@ -327,7 +361,11 @@ export default function PersonsClient({ initialData }: { initialData: PageData |
 
       {/* List */}
       {loading ? (
-        <div style={{ textAlign: "center", padding: "48px", color: "var(--ink-4)", fontSize: "12px" }}>Loading…</div>
+        <div style={{ display: "flex", flexDirection: "column", gap: "7px" }}>
+          {Array.from({ length: 8 }).map((_, i) => (
+            <PersonCardSkeleton key={i} />
+          ))}
+        </div>
       ) : persons.length === 0 ? (
         <div style={{ textAlign: "center", padding: "48px", color: "var(--ink-4)", fontSize: "12px" }}>
           {total === 0 && !filtersActive
@@ -344,19 +382,48 @@ export default function PersonsClient({ initialData }: { initialData: PageData |
         </div>
       ) : (
         <>
-          <div style={{ display: "flex", flexDirection: "column", gap: "7px" }}>
-            {persons.map(p => (
-              selectMode ? (
-                <SelectablePersonRow
-                  key={p.id}
-                  person={p}
-                  selected={selected.has(p.id)}
-                  onToggle={() => toggleSelectPerson(p.id)}
-                />
-              ) : (
-                <PersonCard key={p.id} person={p} />
-              )
-            ))}
+          <div 
+            ref={parentRef}
+            style={{ 
+              height: "calc(100vh - 280px)", 
+              overflow: "auto",
+              minHeight: "400px"
+            }}
+          >
+            <div
+              style={{
+                height: `${rowVirtualizer.getTotalSize()}px`,
+                width: "100%",
+                position: "relative",
+              }}
+            >
+              {rowVirtualizer.getVirtualItems().map((virtualRow) => {
+                const p = persons[virtualRow.index]
+                return (
+                  <div
+                    key={p.id}
+                    style={{
+                      position: "absolute",
+                      top: 0,
+                      left: 0,
+                      width: "100%",
+                      height: `${virtualRow.size}px`,
+                      transform: `translateY(${virtualRow.start}px)`,
+                    }}
+                  >
+                    {selectMode ? (
+                      <SelectablePersonRow
+                        person={p}
+                        selected={selected.has(p.id)}
+                        onToggle={() => toggleSelectPerson(p.id)}
+                      />
+                    ) : (
+                      <PersonCard person={p} />
+                    )}
+                  </div>
+                )
+              })}
+            </div>
           </div>
 
           {hasMore && (
@@ -468,7 +535,7 @@ export default function PersonsClient({ initialData }: { initialData: PageData |
   )
 }
 
-function SelectablePersonRow({
+const SelectablePersonRow = memo(function SelectablePersonRow({
   person,
   selected,
   onToggle,
@@ -526,4 +593,4 @@ function SelectablePersonRow({
       </div>
     </button>
   )
-}
+})

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useMemo } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import {
@@ -78,6 +78,11 @@ export default function PersonDetailClient({
   const [showLogInteraction, setShowLogInteraction] = useState(false)
   const [showAddPlan, setShowAddPlan] = useState(false)
   const [showHealthLog, setShowHealthLog] = useState(false)
+  const [communicationsPage, setCommunicationsPage] = useState(1)
+  const [relationshipPage, setRelationshipPage] = useState(1)
+  const [calendarPage, setCalendarPage] = useState(1)
+  
+  const INTERACTIONS_PER_PAGE = 20
 
   async function load() {
     setLoading(true)
@@ -124,9 +129,37 @@ export default function PersonDetailClient({
     ? person.tags as unknown as string[]
     : parseTags(person.tags as unknown as string)
   const activePlans = person.plans.filter(p => p.status === "active")
-  const communications = person.interactions.filter(ix => ix.type === "message" || ix.type === "email")
-  const calendarEvents = person.interactions.filter(ix => ix.type === "calendar")
-  const relationshipHistory = person.interactions.filter(ix => !["message", "email", "calendar"].includes(ix.type))
+  
+  // Memoize and paginate interaction lists
+  const communications = useMemo(
+    () => person.interactions.filter(ix => ix.type === "message" || ix.type === "email"),
+    [person.interactions]
+  )
+  const paginatedCommunications = useMemo(
+    () => communications.slice(0, communicationsPage * INTERACTIONS_PER_PAGE),
+    [communications, communicationsPage]
+  )
+  const hasMoreCommunications = communications.length > paginatedCommunications.length
+  
+  const calendarEvents = useMemo(
+    () => person.interactions.filter(ix => ix.type === "calendar"),
+    [person.interactions]
+  )
+  const paginatedCalendarEvents = useMemo(
+    () => calendarEvents.slice(0, calendarPage * INTERACTIONS_PER_PAGE),
+    [calendarEvents, calendarPage]
+  )
+  const hasMoreCalendar = calendarEvents.length > paginatedCalendarEvents.length
+  
+  const relationshipHistory = useMemo(
+    () => person.interactions.filter(ix => !["message", "email", "calendar"].includes(ix.type)),
+    [person.interactions]
+  )
+  const paginatedRelationshipHistory = useMemo(
+    () => relationshipHistory.slice(0, relationshipPage * INTERACTIONS_PER_PAGE),
+    [relationshipHistory, relationshipPage]
+  )
+  const hasMoreRelationship = relationshipHistory.length > paginatedRelationshipHistory.length
 
   return (
     <div style={{ maxWidth: "720px", margin: "0 auto", padding: "32px 24px" }}>
@@ -473,21 +506,61 @@ export default function PersonDetailClient({
             subtitle="Email, iMessage, and WhatsApp conversations will appear here."
           />
         ) : (
-          <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-            {[...communications]
-              .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
-              .map(ix => <InteractionCard key={ix.id} interaction={ix} onDelete={load} />)}
-          </div>
+          <>
+            <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+              {[...paginatedCommunications]
+                .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
+                .map(ix => <InteractionCard key={ix.id} interaction={ix} onDelete={load} />)}
+            </div>
+            {hasMoreCommunications && (
+              <button
+                onClick={() => setCommunicationsPage(p => p + 1)}
+                style={{
+                  width: "100%",
+                  marginTop: "12px",
+                  padding: "10px",
+                  background: "var(--surface)",
+                  border: "1px solid var(--border)",
+                  borderRadius: "8px",
+                  color: "var(--ink-3)",
+                  cursor: "pointer",
+                  fontFamily: "inherit",
+                  fontSize: "12px",
+                }}
+              >
+                Load {Math.min(INTERACTIONS_PER_PAGE, communications.length - paginatedCommunications.length)} more · {communications.length - paginatedCommunications.length} remaining
+              </button>
+            )}
+          </>
         )}
       </Card>
 
       {relationshipHistory.length > 0 && (
         <Card title={`Relationship history (${relationshipHistory.length})`} style={{ borderRadius: "14px", overflow: "hidden", marginTop: "20px" }}>
           <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-            {[...relationshipHistory].sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()).map(ix => (
+            {[...paginatedRelationshipHistory].sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()).map(ix => (
               <InteractionCard key={ix.id} interaction={ix} onDelete={load} />
             ))}
           </div>
+          {hasMoreRelationship && (
+            <button
+              onClick={() => setRelationshipPage(p => p + 1)}
+              style={{
+                width: "100%",
+                marginTop: "12px",
+                padding: "10px",
+                background: "var(--surface)",
+                border: "1px solid var(--border)",
+                borderRadius: "8px",
+                color: "var(--ink-3)",
+                cursor: "pointer",
+                fontFamily: "inherit",
+                fontSize: "12px",
+              }}
+            >
+              Load {Math.min(INTERACTIONS_PER_PAGE, relationshipHistory.length - paginatedRelationshipHistory.length)} more · {relationshipHistory.length - paginatedRelationshipHistory.length} remaining
+            </button>
+          )}
         </Card>
       )}
 
@@ -497,9 +570,28 @@ export default function PersonDetailClient({
             Calendar events ({calendarEvents.length})
           </summary>
           <div style={{ display: "flex", flexDirection: "column", gap: "8px", marginTop: "10px" }}>
-            {[...calendarEvents].sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()).map(ix => (
+            {[...paginatedCalendarEvents].sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()).map(ix => (
               <InteractionCard key={ix.id} interaction={ix} onDelete={load} />
             ))}
+            {hasMoreCalendar && (
+              <button
+                onClick={() => setCalendarPage(p => p + 1)}
+                style={{
+                  width: "100%",
+                  marginTop: "8px",
+                  padding: "10px",
+                  background: "var(--surface)",
+                  border: "1px solid var(--border)",
+                  borderRadius: "8px",
+                  color: "var(--ink-3)",
+                  cursor: "pointer",
+                  fontFamily: "inherit",
+                  fontSize: "12px",
+                }}
+              >
+                Load {Math.min(INTERACTIONS_PER_PAGE, calendarEvents.length - paginatedCalendarEvents.length)} more · {calendarEvents.length - paginatedCalendarEvents.length} remaining
+              </button>
+            )}
           </div>
         </details>
       )}

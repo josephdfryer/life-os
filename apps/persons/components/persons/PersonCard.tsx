@@ -1,3 +1,4 @@
+import { memo, useMemo } from "react"
 import Link from "next/link"
 import PersonAvatar from "./PersonAvatar"
 import { closenessLabel, relativeTime } from "@/lib/utils"
@@ -14,15 +15,18 @@ type Props = {
   person: PersonListPerson
 }
 
-export default function PersonCard({ person }: Props) {
-  const status = relationshipStatus(person)
-  const context = personContext(person)
+function PersonCard({ person }: Props) {
+  const status = useMemo(() => relationshipStatus(person), [person])
+  const context = useMemo(() => personContext(person), [person])
   const latest = person.latestInteraction
-  const interactionMeta = latest
-    ? `${interactionSourceLabel(latest.source, latest.type)} · ${relativeTime(latest.timestamp)}`
-    : "No interaction history"
+  const interactionMeta = useMemo(() => 
+    latest
+      ? `${interactionSourceLabel(latest.source, latest.type)} · ${relativeTime(latest.timestamp)}`
+      : "No interaction history",
+    [latest]
+  )
   const firstTag = person.tags[0]
-  const sourceBadge = personSourceBadge(person.source)
+  const sourceBadge = useMemo(() => personSourceBadge(person.source), [person.source])
 
   return (
     <Link
@@ -61,3 +65,12 @@ export default function PersonCard({ person }: Props) {
     </Link>
   )
 }
+
+// Memoize to prevent unnecessary re-renders in long lists
+export default memo(PersonCard, (prev, next) => {
+  // Only re-render if the person data actually changed
+  return prev.person.id === next.person.id &&
+    prev.person.updatedAt === next.person.updatedAt &&
+    prev.person.attentionScore === next.person.attentionScore &&
+    prev.person.daysSinceLast === next.person.daysSinceLast
+})
