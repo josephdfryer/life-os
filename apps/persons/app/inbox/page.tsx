@@ -330,6 +330,10 @@ export default function InboxPage() {
         .inbox-row:hover .row-hover-actions { opacity: 1; }
         .inbox-row:hover .row-date { opacity: 0; }
         .inbox-row:hover { background: var(--surface2) !important; }
+        @media (max-width: 680px) {
+          .expanded-detail-wrap { padding: 14px 16px 16px !important; }
+          .expanded-detail-grid { grid-template-columns: 1fr !important; gap: 16px !important; }
+        }
       `}</style>
       <div style={{ maxWidth: "1100px", margin: "0 auto", padding: "24px 24px 80px" }}>
 
@@ -792,8 +796,8 @@ function ExpandedDetail({
   const disabled = busy
 
   return (
-    <div style={{ borderTop: "1px solid var(--border)", background: "var(--bg)", padding: "16px 40px 18px" }}>
-      <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) 300px", gap: "20px" }}>
+    <div className="expanded-detail-wrap" style={{ borderTop: "1px solid var(--border)", background: "var(--bg)", padding: "16px 40px 18px" }}>
+      <div className="expanded-detail-grid" style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) 300px", gap: "20px" }}>
 
         {/* Left: message */}
         <div>
@@ -844,7 +848,7 @@ function ExpandedDetail({
             </div>
           )}
 
-          <div style={{ display: "flex", gap: "8px", marginTop: "14px" }}>
+          <div style={{ display: "flex", gap: "8px", marginTop: "14px", flexWrap: "wrap" }}>
             <button
               onClick={() => onAccept(selectedPerson?.id, summary)}
               disabled={disabled || !selectedPerson}
