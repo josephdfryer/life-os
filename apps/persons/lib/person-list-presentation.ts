@@ -112,6 +112,7 @@ const SOURCE_BADGES: Record<string, { icon: string; label: string }> = {
   spreadsheet:        { icon: "▤", label: "Spreadsheet import" },
   gmail_contacts:     { icon: "✉", label: "Gmail contacts" },
   interaction_import: { icon: "◔", label: "Found in an import" },
+  assistant:          { icon: "✦", label: "Added by LifeOS Assistant" },
   api:                { icon: "⌁", label: "Added via API" },
   automation:         { icon: "⚙", label: "Added by automation" },
   system:             { icon: "◌", label: "System-created" },

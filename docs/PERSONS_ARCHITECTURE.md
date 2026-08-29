@@ -36,6 +36,7 @@ export/deletion/restore, and App Store privacy/review gates.
 flowchart LR
   subgraph Inputs["Things that come in"]
     Human["You in the browser"]
+    AssistantChat["LifeOS Assistant chat"]
     IMessages["iMessage chat.db on your Mac"]
     GoogleCalendar["Google Calendar"]
     Gmail["Gmail"]
@@ -50,6 +51,7 @@ flowchart LR
     ImportUI["Import screens"]
     AdminUI["Admin screens"]
     PublicAPI["Headless API /api/v1"]
+    AssistantTools["Assistant tools"]
     Watcher["iMessage watcher script"]
     CalendarOAuth["Google Calendar OAuth + sync"]
     GmailOAuth["Gmail OAuth + sync"]
@@ -81,6 +83,7 @@ flowchart LR
   end
 
   Human --> UI
+  Human --> AssistantChat
   Human --> ImportUI
   Human --> AdminUI
   IMessages --> Watcher
@@ -94,12 +97,15 @@ flowchart LR
   ImportUI --> Access
   AdminUI --> Access
   PublicAPI --> Access
+  AssistantChat --> Access
   Watcher --> Commands
   CalendarOAuth --> Commands
   GmailOAuth --> Commands
   HealthSync --> Commands
 
   Access --> Commands
+  Access --> AssistantTools
+  AssistantTools --> Commands
   Commands --> Rules
   Rules --> Commands
   Commands --> Audit
@@ -167,6 +173,46 @@ a future appointment remains a `Plan` and cannot become the latest contact,
 suppress an overdue relationship, or produce a negative “days since” value.
 
 The Home app also provides a bounded communications-review surface. It reads pending iMessage, Gmail, and WhatsApp records from the same `StagedInteraction` inbox and mirrors the Persons Inbox selection model: the owner can select one item, shift-select a range, select all, clear the selection, dismiss the selection, or search for one Person and add the entire selection to that Person. Persons offers the same explicit-Person bulk action in its full Inbox. Every row in Home and Persons shows a human-readable source label (`iMessage`, `Email`, or `WhatsApp`) even when the current result set contains only one source. It also mirrors the Inbox keyboard loop (`j`/`k` move, `x` selects, `e` dismisses, Enter expands, and Escape closes). For presentation only, Home groups iMessages from the same normalized phone number when their timestamps fall inside one one-hour session; the original staged messages remain separate, auditable records underneath the grouped card. The owner can expand a single item or text session, accept a confidently matched communication, or dismiss it without navigating into Persons. Home's workspace-scoped `/api/communications/bulk` route accepts an explicit workspace-owned Person for the whole selection or dismisses still-pending communication records. Accepting preserves the existing source/day aggregation convention for `Interaction` records while keeping the raw provider body as the displayed message text. Home can conservatively infer a missing candidate when exactly one Person matches the communication's email, normalized phone number, or complete name; ambiguous results still require manual review. Items without a unique Person match can still open the canonical Persons Inbox with the staged item ID in the URL, and Persons loads and expands that exact record even when it is outside the first inbox page. Home reads the small, workspace-scoped Assistant history preview directly from the shared `AssistantMessage` table so opening the dashboard does not cold-start a second deployment; message writes and agent execution remain owned by the Assistant app and are forwarded there.
+
+### 1b. The assistant creates a Person
+
+```mermaid
+sequenceDiagram
+  participant You
+  participant Assistant
+  participant Matcher as Contact import matcher
+  participant Domain as Person domain command
+  participant DB as Database
+
+  You->>Assistant: Create this Person
+  Assistant->>Matcher: Compare with every Person in this workspace
+  alt No possible duplicate
+    Matcher-->>Assistant: No match
+    Assistant->>Domain: Create with assistant provenance
+    Domain->>DB: Person + GraphEvent + AuditLog
+    Assistant-->>You: Created; continue requested Note/Plan/etc.
+  else Possible duplicate
+    Matcher-->>Assistant: Candidate + reason
+    Assistant-->>You: Show candidate; use existing or create separate?
+    You->>Assistant: Explicit choice in a later turn
+    Assistant->>Matcher: Re-check current People
+    Assistant->>Domain: Use existing, or create separate as confirmed
+  end
+```
+
+Plain English: `create_person` uses the same canonical matcher as CSV/vCard
+and device-contact import (`packages/domain/contact-matching.ts`): normalized
+email and phone evidence first, then conservative name/company similarity. If
+there is no possible match, creation is automatically accepted and immediately
+returns a Person id for follow-up tools such as `capture_note`. A possible match
+never writes in that turn. The pending proposal is stored in that conversation's
+`AssistantMessage.metadata`, the candidate is shown to the user, and only a
+later explicit choice can either reuse that existing Person or create a separate
+one. The tool re-runs matching before a confirmed separate creation so an old
+confirmation cannot authorize a newly discovered candidate. New assistant-created
+People default to closeness 1 unless the user explicitly states another level,
+and the shared `createPerson` command records assistant provenance in both
+`GraphEvent` and `AuditLog`.
 
 On a Person profile, email, iMessage, and WhatsApp Interactions form the primary **Communications** stream. Non-communication relationship history remains in its own section, while Google Calendar Interactions are kept in a separate collapsed **Calendar events** stream so meeting volume cannot bury the conversation. Communication cards show the full stored text by default; unusually long text is shortened only in the UI and can be expanded inline. Newly accepted or directly matched provider messages store the raw body in the daily Interaction text. For previously accepted staged records, the profile reconstructs the full display text from their retained `StagedInteraction.body` values.
 

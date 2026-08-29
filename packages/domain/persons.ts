@@ -70,6 +70,7 @@ function defaultSource(actor?: GraphEventActor) {
   if (actor?.type === "api_key") return "api"
   if (actor?.type === "system") return "system"
   if (actor?.type === "rule") return "automation"
+  if (actor?.type === "assistant") return "assistant"
   return "manual"
 }
 

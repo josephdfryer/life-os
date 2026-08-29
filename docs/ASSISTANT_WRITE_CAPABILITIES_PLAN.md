@@ -1,6 +1,6 @@
 # Assistant Write Capabilities Plan
 
-**Status:** Partially landed · August 15, 2026
+**Status:** Partially landed · updated August 29, 2026
 
 The three safety prerequisites below are done (capability on every tool, writes
 through domain commands, assistant actor on GraphEvent). The tool surface is no
@@ -18,8 +18,8 @@ the next one.
 
 | | |
 | --- | --- |
-| Assistant tools | 33 |
-| …that write | **7** — `capture_note` (with subject edges), `log_interaction`, `create_item`, `create_plan`, `add_place_note`, `create_group`, `add_person_to_group` |
+| Assistant tools | 34 |
+| …that write | **8** — `capture_note` (with subject edges), `log_interaction`, `create_person`, `create_item`, `create_plan`, `add_place_note`, `create_group`, `add_person_to_group` |
 | Canonical note write | `POST /v1/notes` → `captureNote` — same command as Home, Persons, and the assistant |
 | Domain modules with write functions | persons, items, plans, groups, events, states, interactions, place-notes, review, capture |
 
@@ -27,6 +27,12 @@ Everything needed to write safely already exists — `publishGraphEvent` with id
 provenance and actor; `createReviewItem` for the human-in-the-loop path; and
 `promoteSafeFileClaim` / `undoSafeFileClaimPromotion` as a working reference implementation of
 a guarded write with Undo.
+
+`create_person` is now the first enforced conversational confirmation flow.
+It uses the canonical contact-import matcher. No possible match means immediate
+creation; a possible duplicate is stored in the current conversation and must
+be resolved in a later user turn as either `use_existing` or `create_separate`.
+The tool re-checks the workspace before a confirmed separate creation.
 
 ## Fix these three first
 
@@ -119,7 +125,7 @@ Mapped to what already exists — mostly wiring, not new backend:
 | `create_place` / `add_place_note` | Safe | `place-notes.ts`, places domain |
 | `create_event` | Safe | `events.ts`, `POST /v1/events` |
 | `create_plan` / `complete_plan` | Safe / Confirm | `plans.ts`, `POST /v1/plans` |
-| `create_person` | Confirm | `persons.ts`, `POST /v1/people` — dedupe risk |
+| `create_person` | **Landed: auto-create or Confirm** | `persons.ts` + canonical import matcher — no match creates immediately; a possible duplicate requires a later explicit choice |
 | `update_person` / `update_item` | Confirm | existing PATCH routes |
 | `record_state` | Safe | `states.ts` |
 | `add_to_group` | Safe | `groups.ts` |
@@ -138,7 +144,7 @@ correlation id, this is a query plus the existing compensation shape.
 1. **Guard inversion + `capability` field + test.** Nothing else lands first.
 2. **Route `log_interaction` through the domain layer**; add `"assistant"` to `GraphEventActor`.
 3. **Safe tier**, starting with `create_item` — it unblocks the receipt case immediately.
-4. **Two-phase confirmation harness**, then the Confirm tier.
+4. **Two-phase confirmation harness**, then the Confirm tier. Person creation now has a conversation-backed implementation; generalize it for the remaining Confirm tools.
 5. **Review tier** — proposals into the existing inbox.
 6. **Undo**, generalized from the file-claim implementation.
 

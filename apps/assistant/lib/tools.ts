@@ -20,6 +20,10 @@ import {
   getPersonFileEvidence,
   searchFileChunks as searchIndexedFileChunks,
 } from "@life-os/files";
+import {
+  createPersonFromAssistant,
+  type PendingPersonCreation,
+} from "@/lib/person-creation";
 
 const TZ = "America/Los_Angeles";
 
@@ -69,6 +73,58 @@ export const TOOLS: AssistantToolDefinition[] = [
       type: "object",
       properties: { personId: { type: "string" } },
       required: ["personId"],
+    },
+  },
+  {
+    name: "create_person",
+    capability: "write",
+    description:
+      "Create a Person in LifeOS. On a new request, pass the known identity/profile fields; the tool runs the canonical contact-import duplicate matcher first and creates immediately only when no possible match exists. If it returns confirmation_required, show the candidate and ask whether to use the existing Person or create a separate Person. Only in a later user turn, after their explicit choice, call again with that confirmationId and duplicateResolution. The returned personId can be used immediately for capture_note, log_interaction, create_plan, or add_person_to_group.",
+    input_schema: {
+      type: "object",
+      properties: {
+        first: { type: "string", description: "Required for a new request" },
+        last: { type: "string" },
+        nickname: { type: "string" },
+        title: { type: "string" },
+        headline: { type: "string" },
+        company: { type: "string" },
+        email: { type: "string" },
+        emails: { type: "array", items: { type: "string" } },
+        phone: { type: "string" },
+        phones: { type: "array", items: { type: "string" } },
+        birthday: {
+          type: "string",
+          description: "YYYY-MM-DD or MM-DD when the year is unknown",
+        },
+        closeness: {
+          type: "integer",
+          enum: [1, 2, 3, 4, 5],
+          description:
+            "Only pass when Joseph explicitly states the relationship level; otherwise the safe default is 1 (Acquaintance)",
+        },
+        tags: { type: "array", items: { type: "string" } },
+        values: { type: "array", items: { type: "string" } },
+        notes: { type: "string" },
+        location: { type: "string" },
+        linkedin: { type: "string" },
+        twitter: { type: "string" },
+        website: { type: "string" },
+        facebook: { type: "string" },
+        instagram: { type: "string" },
+        confirmationId: {
+          type: "string",
+          description:
+            "Only pass from a prior confirmation_required result in this conversation",
+        },
+        duplicateResolution: {
+          type: "string",
+          enum: ["use_existing", "create_separate"],
+          description:
+            "Only pass with confirmationId after the user explicitly chooses",
+        },
+      },
+      required: [],
     },
   },
   {
@@ -673,6 +729,7 @@ export async function executeTool(
   input: Record<string, unknown>,
   workspaceId: string,
   fileScope: string[] = [],
+  context: { pendingPersonCreations?: PendingPersonCreation[] } = {},
 ): Promise<string> {
   try {
     switch (name) {
@@ -680,6 +737,14 @@ export async function executeTool(
         return await searchPeople(String(input.query ?? ""), workspaceId);
       case "get_person":
         return await getPerson(String(input.personId ?? ""), workspaceId);
+      case "create_person":
+        return JSON.stringify(
+          await createPersonFromAssistant(
+            input,
+            workspaceId,
+            context.pendingPersonCreations ?? [],
+          ),
+        );
       case "get_schedule":
         return await getSchedule(
           workspaceId,
