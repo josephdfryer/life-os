@@ -11,6 +11,7 @@ import {
   createReviewItem,
 } from "@life-os/domain";
 import { assignColor } from "./lib/colors";
+import { loadPostgresCollectorEnv } from "./lib/env";
 
 type BetterSqliteDatabase = {
   pragma(sql: string): unknown;
@@ -70,10 +71,6 @@ const Database = require("better-sqlite3") as new (
   filename: string,
   options?: { readonly?: boolean; fileMustExist?: boolean },
 ) => BetterSqliteDatabase;
-const dotenv = require("dotenv") as {
-  config(options: { path: string; quiet?: boolean }): void;
-};
-
 loadEnv();
 
 let db: PrismaClient;
@@ -118,7 +115,7 @@ async function main() {
   do {
     const result = await syncOnce(options);
     console.log(
-      `iMessage sync: scanned=${result.scanned} createdPersons=${result.createdPersons} updatedPersons=${result.updatedPersons} createdInteractions=${result.createdInteractions} updatedInteractions=${result.updatedInteractions} stagedInteractions=${result.stagedInteractions} skippedExisting=${result.skippedExisting} skippedGroupMessages=${result.skippedGroupMessages} watermark=${result.watermark}`,
+      `iMessage sync: scanned=${result.scanned} createdPersons=${result.createdPersons} updatedPersons=${result.updatedPersons} createdInteractions=${result.createdInteractions} updatedInteractions=${result.updatedInteractions} stagedInteractions=${result.stagedInteractions} wouldImport=${result.wouldImport} wouldCreateInteraction=${result.wouldCreateInteraction} wouldStageInteraction=${result.wouldStageInteraction} skippedExisting=${result.skippedExisting} skippedGroupMessages=${result.skippedGroupMessages} watermark=${result.watermark}`,
     );
 
     if (!options.watch || shuttingDown) break;
@@ -142,6 +139,9 @@ async function syncOnce(options: Options) {
   let createdInteractions = 0;
   let updatedInteractions = 0;
   let stagedInteractions = 0;
+  let wouldImport = 0;
+  let wouldCreateInteraction = 0;
+  let wouldStageInteraction = 0;
   let skippedExisting = 0;
   let skippedGroupMessages = 0;
   let watermark = state.lastMessageRowId;
@@ -169,15 +169,18 @@ async function syncOnce(options: Options) {
     const existing = findPerson(people, contact);
     const sourceId = `${SOURCE_PREFIX}${message.messageId}`;
 
-    if (options.dryRun) {
-      console.log(
-        `[dry-run] ${sourceId} ${contact.displayName} ${contact.direction}: ${snippet(body)}`,
-      );
+    if (await hasImportedMessage(sourceId, String(message.messageId))) {
+      skippedExisting++;
       continue;
     }
 
-    if (await hasImportedMessage(sourceId, String(message.messageId))) {
-      skippedExisting++;
+    if (options.dryRun) {
+      wouldImport++;
+      if (existing) wouldCreateInteraction++;
+      else wouldStageInteraction++;
+      console.log(
+        `[dry-run] ${sourceId} ${contact.displayName} ${contact.direction}: ${snippet(body)}`,
+      );
       continue;
     }
 
@@ -228,6 +231,9 @@ async function syncOnce(options: Options) {
     createdInteractions,
     updatedInteractions,
     stagedInteractions,
+    wouldImport,
+    wouldCreateInteraction,
+    wouldStageInteraction,
     skippedExisting,
     skippedGroupMessages,
     watermark,
@@ -884,16 +890,7 @@ launchd ProgramArguments example:
 }
 
 function loadEnv() {
-  const candidates = [
-    path.join(process.cwd(), ".env"),
-    path.join(process.cwd(), "packages/db/.env"),
-    path.join(process.cwd(), "apps/persons/.env"),
-    path.join(process.cwd(), "apps/persons/.env.local"),
-  ];
-  for (const candidate of candidates) {
-    if (fs.existsSync(candidate))
-      dotenv.config({ path: candidate, quiet: true });
-  }
+  loadPostgresCollectorEnv(process.cwd());
 }
 
 function parseJsonArray(value: string): string[] {
