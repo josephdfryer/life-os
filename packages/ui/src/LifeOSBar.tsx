@@ -8,11 +8,9 @@ import { AppMark, LifeOSMarkSmall } from './marks';
 const HOME_URL = LIFE_OS_APPS[0].url;
 const SHELL_NAV = [
   { label: 'Today', path: '/' },
-  { label: 'Stream', path: '/stream' },
   { label: 'Inbox', path: '/inbox' },
   { label: 'Intelligence', path: '/intelligence' },
   { label: 'Automation', path: '/automation' },
-  { label: 'Connections', path: '/connections' },
   { label: 'Admin', path: '/admin' },
 ] as const;
 
