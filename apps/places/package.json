@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.92.0",
+    "@apple/mapkit-loader": "^1.0.0",
     "@life-os/access": "*",
     "@life-os/auth": "*",
     "@life-os/db": "*",

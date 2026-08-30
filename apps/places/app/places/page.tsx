@@ -8,11 +8,12 @@ import PlacesClient from "./PlacesClient"
 export const dynamic = "force-dynamic"
 
 export default async function PlacesPage() {
+  const mapKitToken = process.env.APPLE_MAPS_TOKEN
   try {
     const actor = await requireAccess("places.read")
     const places = await getPlacesForMap(actor.workspaceId)
     const layers = await getMapLayerData(actor.workspaceId, places.map(place => place.id))
-    return <PlacesClient places={places} layers={layers} />
+    return <PlacesClient places={places} layers={layers} mapKitToken={mapKitToken} />
   } catch (error) {
     if (error instanceof AppError && error.status === 401) {
       redirect("/login?callbackUrl=%2Fplaces")
@@ -21,6 +22,6 @@ export default async function PlacesPage() {
     const message = error instanceof AppError && error.status === 403
       ? "You do not have permission to view Places in this workspace."
       : "Places could not be loaded. Your data is unchanged; try again in a moment."
-    return <PlacesClient places={[]} layers={{ unresolvedVisits: [], interactions: [], finance: [], photos: [] }} errorMessage={message} />
+    return <PlacesClient places={[]} layers={{ unresolvedVisits: [], interactions: [], finance: [], photos: [] }} mapKitToken={mapKitToken} errorMessage={message} />
   }
 }

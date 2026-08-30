@@ -598,7 +598,126 @@ body {
 }
 
 .places-map-canvas {
+  position: relative;
+  overflow: hidden;
   min-height: 620px;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius);
+  background: linear-gradient(180deg, #f8f6f0 0%, #ede9df 100%);
+  box-shadow: var(--shadow-sm);
+}
+
+.apple-map-shell,
+.apple-map-container {
+  position: absolute;
+  inset: 0;
+}
+
+.apple-map-container {
+  background: var(--surface-2);
+}
+
+.apple-map-status {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 7px;
+  background: color-mix(in srgb, var(--surface) 92%, transparent);
+  color: var(--ink-3);
+  font-size: 13px;
+  text-align: center;
+}
+
+.apple-map-status-error strong {
+  color: var(--ink);
+  font: 400 22px/1.2 var(--font-display);
+}
+
+.apple-map-status-error span {
+  max-width: 42ch;
+}
+
+.apple-place-marker {
+  position: relative;
+  display: grid;
+  width: var(--marker-size);
+  height: var(--marker-size);
+  box-sizing: border-box;
+  place-items: center;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  background: var(--marker-color);
+  box-shadow: 0 6px 16px rgba(26, 24, 20, 0.24);
+  color: #fff;
+  font: 700 10px/1 var(--font-body);
+  transition: transform 160ms ease, box-shadow 160ms ease;
+}
+
+.apple-place-marker::before {
+  content: "";
+  position: absolute;
+  inset: -12px;
+  border-radius: 50%;
+}
+
+.apple-place-marker.is-selected {
+  border-color: var(--ink);
+  box-shadow: 0 0 0 7px color-mix(in srgb, var(--marker-color) 24%, transparent), 0 8px 22px rgba(26, 24, 20, 0.24);
+  transform: scale(1.12);
+}
+
+.apple-visit-marker {
+  font-size: 13px;
+}
+
+.apple-place-marker-badge {
+  position: absolute;
+  display: grid;
+  min-width: 16px;
+  height: 16px;
+  box-sizing: border-box;
+  place-items: center;
+  border: 1px solid #fff;
+  border-radius: 999px;
+  background: var(--badge-color);
+  padding: 0 3px;
+  color: #fff;
+  font: 700 8px/1 var(--font-body);
+}
+
+.apple-place-marker-badge.badge-people {
+  top: -7px;
+  right: -8px;
+}
+
+.apple-place-marker-badge.badge-spending {
+  bottom: -7px;
+  left: -8px;
+}
+
+.apple-place-marker-badge.badge-photos,
+.apple-place-marker-badge.badge-confidence {
+  right: -8px;
+  bottom: -7px;
+}
+
+.places-fit-map {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  z-index: 4;
+  min-height: 32px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  background: rgba(250, 248, 244, 0.94);
+  box-shadow: var(--shadow-sm);
+  padding: 0 12px;
+  color: var(--ink);
+  cursor: pointer;
+  font: 500 12px/1 var(--font-body);
 }
 
 .places-search-area {
@@ -620,48 +739,6 @@ body {
 .places-search-area:hover {
   border-color: var(--cognac);
   color: var(--cognac);
-}
-
-.place-marker-label {
-  position: absolute;
-  top: calc(100% + 5px);
-  left: 50%;
-  max-width: 140px;
-  transform: translateX(-50%);
-  overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.8);
-  border-radius: 5px;
-  background: rgba(250, 248, 244, 0.94);
-  box-shadow: 0 3px 10px rgba(26, 24, 20, 0.12);
-  padding: 3px 6px;
-  color: var(--ink-2);
-  font-size: 9px;
-  font-weight: 600;
-  line-height: 1.2;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.place-map-marker::before {
-  content: "";
-  position: absolute;
-  inset: -16px;
-  border-radius: 50%;
-}
-
-.places-tile-warning {
-  position: absolute;
-  right: 14px;
-  bottom: 48px;
-  left: 14px;
-  z-index: 3;
-  border: 1px solid var(--warning);
-  border-radius: var(--radius);
-  background: color-mix(in srgb, var(--warning-soft) 92%, transparent);
-  padding: 8px 10px;
-  color: var(--ink-2);
-  font-size: 11px;
-  text-align: center;
 }
 
 .places-route-state {
@@ -1531,6 +1608,7 @@ body {
   }
 
   .places-view-switcher {
+    order: -1;
     width: 100%;
     margin-left: 0;
   }
