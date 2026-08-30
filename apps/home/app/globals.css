@@ -1397,11 +1397,18 @@ a {
   }
 
   .communications-review {
-    padding: 22px 18px;
+    padding: 20px 16px;
   }
 
   .communications-heading {
     align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .communications-heading h2 {
+    font-size: 1.3rem;
+    line-height: 1.15;
   }
 
   .communications-heading-meta {
@@ -1415,12 +1422,97 @@ a {
     display: none;
   }
 
+  .communications-selection-toolbar {
+    gap: 10px;
+    min-height: 48px;
+    padding: 10px 12px;
+  }
+
+  .communications-selection-toolbar input,
+  .communication-row > input {
+    width: 18px;
+    height: 18px;
+  }
+
+  .communications-selection-toolbar button {
+    min-height: 34px;
+  }
+
+  .communications-selection-toolbar .communications-person-search,
+  .communications-selection-toolbar .communications-person-select {
+    flex: 1 1 100%;
+    width: 100%;
+    min-width: 0;
+    height: 38px;
+  }
+
+  .communications-list {
+    gap: 10px;
+  }
+
+  .communication-row {
+    align-items: start;
+    padding-left: 14px;
+  }
+
+  .communication-row > input {
+    margin-top: 17px;
+  }
+
   .communication-summary {
-    grid-template-columns: 64px 1fr auto;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-areas:
+      "source person toggle"
+      "preview preview preview";
+    gap: 8px 10px;
+    min-width: 0;
+    padding: 13px 12px 14px 10px;
+  }
+
+  .communication-source {
+    grid-area: source;
+    align-self: start;
+    padding: 3px 7px;
+    border-radius: var(--radius-pill);
+    background: rgba(196, 165, 116, 0.1);
+    line-height: 1.2;
+  }
+
+  .communication-person {
+    grid-area: person;
+    gap: 2px;
   }
 
   .communication-preview {
-    grid-column: 2 / -1;
+    display: -webkit-box;
+    grid-area: preview;
+    overflow: hidden;
+    line-height: 1.45;
+    white-space: normal;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+
+  .communication-summary > span:last-child {
+    display: inline-flex;
+    grid-area: toggle;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    margin-top: -3px;
+    border: 1px solid rgba(196, 165, 116, 0.18);
+    border-radius: 50%;
+    color: var(--camel);
+  }
+
+  .communication-detail {
+    padding: 16px 14px;
+  }
+
+  .communication-actions {
+    flex-wrap: wrap;
+    gap: 12px 16px;
   }
 }
 

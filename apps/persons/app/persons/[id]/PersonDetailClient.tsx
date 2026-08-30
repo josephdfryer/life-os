@@ -47,6 +47,7 @@ type FileEvidence = {
 }
 
 const closenessPercent: Record<number, number> = { 1: 25, 2: 50, 3: 75, 4: 100 }
+const EMPTY_INTERACTIONS: Interaction[] = []
 
 export type PersonTheorySummary = {
   version: number | null
@@ -109,6 +110,37 @@ export default function PersonDetailClient({
     load()
   }
 
+  const interactions = person?.interactions ?? EMPTY_INTERACTIONS
+  const communications = useMemo(
+    () => interactions.filter(ix => ix.type === "message" || ix.type === "email"),
+    [interactions]
+  )
+  const paginatedCommunications = useMemo(
+    () => communications.slice(0, communicationsPage * INTERACTIONS_PER_PAGE),
+    [communications, communicationsPage]
+  )
+  const hasMoreCommunications = communications.length > paginatedCommunications.length
+
+  const calendarEvents = useMemo(
+    () => interactions.filter(ix => ix.type === "calendar"),
+    [interactions]
+  )
+  const paginatedCalendarEvents = useMemo(
+    () => calendarEvents.slice(0, calendarPage * INTERACTIONS_PER_PAGE),
+    [calendarEvents, calendarPage]
+  )
+  const hasMoreCalendar = calendarEvents.length > paginatedCalendarEvents.length
+
+  const relationshipHistory = useMemo(
+    () => interactions.filter(ix => !["message", "email", "calendar"].includes(ix.type)),
+    [interactions]
+  )
+  const paginatedRelationshipHistory = useMemo(
+    () => relationshipHistory.slice(0, relationshipPage * INTERACTIONS_PER_PAGE),
+    [relationshipHistory, relationshipPage]
+  )
+  const hasMoreRelationship = relationshipHistory.length > paginatedRelationshipHistory.length
+
   if (loading) {
     return (
       <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "200px" }}>
@@ -129,37 +161,6 @@ export default function PersonDetailClient({
     ? person.tags as unknown as string[]
     : parseTags(person.tags as unknown as string)
   const activePlans = person.plans.filter(p => p.status === "active")
-  
-  // Memoize and paginate interaction lists
-  const communications = useMemo(
-    () => person.interactions.filter(ix => ix.type === "message" || ix.type === "email"),
-    [person.interactions]
-  )
-  const paginatedCommunications = useMemo(
-    () => communications.slice(0, communicationsPage * INTERACTIONS_PER_PAGE),
-    [communications, communicationsPage]
-  )
-  const hasMoreCommunications = communications.length > paginatedCommunications.length
-  
-  const calendarEvents = useMemo(
-    () => person.interactions.filter(ix => ix.type === "calendar"),
-    [person.interactions]
-  )
-  const paginatedCalendarEvents = useMemo(
-    () => calendarEvents.slice(0, calendarPage * INTERACTIONS_PER_PAGE),
-    [calendarEvents, calendarPage]
-  )
-  const hasMoreCalendar = calendarEvents.length > paginatedCalendarEvents.length
-  
-  const relationshipHistory = useMemo(
-    () => person.interactions.filter(ix => !["message", "email", "calendar"].includes(ix.type)),
-    [person.interactions]
-  )
-  const paginatedRelationshipHistory = useMemo(
-    () => relationshipHistory.slice(0, relationshipPage * INTERACTIONS_PER_PAGE),
-    [relationshipHistory, relationshipPage]
-  )
-  const hasMoreRelationship = relationshipHistory.length > paginatedRelationshipHistory.length
 
   return (
     <div style={{ maxWidth: "720px", margin: "0 auto", padding: "32px 24px" }}>
