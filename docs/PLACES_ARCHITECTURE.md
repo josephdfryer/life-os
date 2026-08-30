@@ -139,7 +139,7 @@ and total counts update after confirmed actions without guessing.
 ## Renderer and performance boundary
 
 The map uses Apple MapKit JS 6 through Apple's `@apple/mapkit-loader`, loading
-only the `full-map` library. MapKit owns basemap tiles, attribution, camera
+the `full-map` and `annotations` libraries. MapKit owns basemap tiles, attribution, camera
 gestures, controls, label collision, and clustering. LifeOS owns the
 renderer-neutral `lat`/`lng`/`z` URL contract, explicit map-area bounds,
 selection, Place/review annotations, and Still-styled enrichment badges. The
@@ -147,11 +147,14 @@ conversion between MapKit coordinate regions and the LifeOS camera contract is
 isolated in `components/map/apple-map-camera.ts`.
 
 The server reads `APPLE_MAPS_TOKEN` and passes it only to the Places client that
-initializes MapKit. The token is necessarily visible to MapKit in the browser
-and therefore must be restricted to the production Places domain (and any
-explicit local-review domains) in the Apple Developer portal. Missing or
-rejected tokens produce an actionable map state rather than silently falling
-back to a second tile provider.
+initializes MapKit. The client loads `mapkit.core.js` first, then calls
+`mapkit.init` and waits for a `configuration-change` of `Initialized` before
+constructing the map, so a rejected token cannot leave an empty grid on screen.
+The token is necessarily visible to MapKit in the browser and therefore must be
+restricted to the production Places domain (and any explicit local-review
+domains) in the Apple Developer portal. Missing or rejected tokens produce an
+actionable map state rather than silently falling back to a second tile
+provider.
 
 The initial map payload is summary-only. People enrichment contains a per-Place
 Interaction count, and finance contains transaction count plus aggregate amount.
