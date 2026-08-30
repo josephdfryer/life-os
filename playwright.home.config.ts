@@ -23,7 +23,7 @@ export default defineConfig({
   projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
   webServer: {
     command: 'node --import tsx scripts/e2e/prepare.ts && npm run dev -w home -- --port 3200',
-    url: 'http://localhost:3200/stream',
+    url: 'http://localhost:3200/admin',
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,
     env: {
