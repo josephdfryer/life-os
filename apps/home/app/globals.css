@@ -1396,6 +1396,7 @@ a {
     grid-row: 1;
   }
 
+  /* Keep review cards scannable and touch-friendly inside phone-width panes. */
   .communications-review {
     padding: 20px 16px;
   }
