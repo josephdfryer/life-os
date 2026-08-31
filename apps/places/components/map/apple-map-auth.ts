@@ -6,8 +6,16 @@ export type MapKitAuthTarget = {
 }
 
 export function sanitizeMapKitToken(token?: string | null): string | undefined {
-  const value = token?.trim()
+  const value = token?.replace(/\s+/g, "")
   return value || undefined
+}
+
+/** MapKit JS tokens are JWTs. Dashboard names, Maps IDs, and wrapped pastes are not. */
+export function isMapKitJsToken(token?: string | null): token is string {
+  const value = sanitizeMapKitToken(token)
+  if (!value) return false
+  const parts = value.split(".")
+  return parts.length === 3 && parts.every(part => part.length > 0)
 }
 
 export function mapKitLoadOptions(token: string) {

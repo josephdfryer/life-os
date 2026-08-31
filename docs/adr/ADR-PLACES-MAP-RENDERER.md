@@ -41,8 +41,10 @@ LifeOS continues to own:
 The server supplies `APPLE_MAPS_TOKEN` to the client component. Maps tokens are
 browser credentials by design, so the Apple Developer configuration must
 restrict the token to the Places production domain and any intentional local
-review domains. There is no OpenStreetMap fallback: configuration failure is
-shown explicitly so production cannot silently drift between renderers.
+review domains. The env value must be the MapKit JS JWT itself; a Maps ID or
+token name will not authorize tiles. There is no OpenStreetMap fallback:
+configuration failure is shown explicitly so production cannot silently drift
+between renderers.
 
 ## Consequences
 
