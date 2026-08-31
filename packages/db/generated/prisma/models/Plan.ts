@@ -54,6 +54,7 @@ export type PlanMinAggregateOutputType = {
   externalInstanceId: string | null
   reconciliationStatus: string | null
   reconciledAt: Date | null
+  ownerAttendance: string | null
   sourceNoteId: string | null
 }
 
@@ -77,6 +78,7 @@ export type PlanMaxAggregateOutputType = {
   externalInstanceId: string | null
   reconciliationStatus: string | null
   reconciledAt: Date | null
+  ownerAttendance: string | null
   sourceNoteId: string | null
 }
 
@@ -100,6 +102,7 @@ export type PlanCountAggregateOutputType = {
   externalInstanceId: number
   reconciliationStatus: number
   reconciledAt: number
+  ownerAttendance: number
   sourceNoteId: number
   _all: number
 }
@@ -133,6 +136,7 @@ export type PlanMinAggregateInputType = {
   externalInstanceId?: true
   reconciliationStatus?: true
   reconciledAt?: true
+  ownerAttendance?: true
   sourceNoteId?: true
 }
 
@@ -156,6 +160,7 @@ export type PlanMaxAggregateInputType = {
   externalInstanceId?: true
   reconciliationStatus?: true
   reconciledAt?: true
+  ownerAttendance?: true
   sourceNoteId?: true
 }
 
@@ -179,6 +184,7 @@ export type PlanCountAggregateInputType = {
   externalInstanceId?: true
   reconciliationStatus?: true
   reconciledAt?: true
+  ownerAttendance?: true
   sourceNoteId?: true
   _all?: true
 }
@@ -289,6 +295,7 @@ export type PlanGroupByOutputType = {
   externalInstanceId: string | null
   reconciliationStatus: string | null
   reconciledAt: Date | null
+  ownerAttendance: string | null
   sourceNoteId: string | null
   _count: PlanCountAggregateOutputType | null
   _avg: PlanAvgAggregateOutputType | null
@@ -335,6 +342,7 @@ export type PlanWhereInput = {
   externalInstanceId?: Prisma.StringNullableFilter<"Plan"> | string | null
   reconciliationStatus?: Prisma.StringNullableFilter<"Plan"> | string | null
   reconciledAt?: Prisma.DateTimeNullableFilter<"Plan"> | Date | string | null
+  ownerAttendance?: Prisma.StringNullableFilter<"Plan"> | string | null
   sourceNoteId?: Prisma.StringNullableFilter<"Plan"> | string | null
   workspace?: Prisma.XOR<Prisma.WorkspaceScalarRelationFilter, Prisma.WorkspaceWhereInput>
   person?: Prisma.XOR<Prisma.PersonNullableScalarRelationFilter, Prisma.PersonWhereInput> | null
@@ -369,6 +377,7 @@ export type PlanOrderByWithRelationInput = {
   externalInstanceId?: Prisma.SortOrderInput | Prisma.SortOrder
   reconciliationStatus?: Prisma.SortOrderInput | Prisma.SortOrder
   reconciledAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  ownerAttendance?: Prisma.SortOrderInput | Prisma.SortOrder
   sourceNoteId?: Prisma.SortOrderInput | Prisma.SortOrder
   workspace?: Prisma.WorkspaceOrderByWithRelationInput
   person?: Prisma.PersonOrderByWithRelationInput
@@ -406,6 +415,7 @@ export type PlanWhereUniqueInput = Prisma.AtLeast<{
   externalSource?: Prisma.StringNullableFilter<"Plan"> | string | null
   reconciliationStatus?: Prisma.StringNullableFilter<"Plan"> | string | null
   reconciledAt?: Prisma.DateTimeNullableFilter<"Plan"> | Date | string | null
+  ownerAttendance?: Prisma.StringNullableFilter<"Plan"> | string | null
   sourceNoteId?: Prisma.StringNullableFilter<"Plan"> | string | null
   workspace?: Prisma.XOR<Prisma.WorkspaceScalarRelationFilter, Prisma.WorkspaceWhereInput>
   person?: Prisma.XOR<Prisma.PersonNullableScalarRelationFilter, Prisma.PersonWhereInput> | null
@@ -440,6 +450,7 @@ export type PlanOrderByWithAggregationInput = {
   externalInstanceId?: Prisma.SortOrderInput | Prisma.SortOrder
   reconciliationStatus?: Prisma.SortOrderInput | Prisma.SortOrder
   reconciledAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  ownerAttendance?: Prisma.SortOrderInput | Prisma.SortOrder
   sourceNoteId?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.PlanCountOrderByAggregateInput
   _avg?: Prisma.PlanAvgOrderByAggregateInput
@@ -471,6 +482,7 @@ export type PlanScalarWhereWithAggregatesInput = {
   externalInstanceId?: Prisma.StringNullableWithAggregatesFilter<"Plan"> | string | null
   reconciliationStatus?: Prisma.StringNullableWithAggregatesFilter<"Plan"> | string | null
   reconciledAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Plan"> | Date | string | null
+  ownerAttendance?: Prisma.StringNullableWithAggregatesFilter<"Plan"> | string | null
   sourceNoteId?: Prisma.StringNullableWithAggregatesFilter<"Plan"> | string | null
 }
 
@@ -490,6 +502,7 @@ export type PlanCreateInput = {
   externalInstanceId?: string | null
   reconciliationStatus?: string | null
   reconciledAt?: Date | string | null
+  ownerAttendance?: string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutPlansInput
   person?: Prisma.PersonCreateNestedOneWithoutPlansInput
   children?: Prisma.PlanCreateNestedManyWithoutParentInput
@@ -523,6 +536,7 @@ export type PlanUncheckedCreateInput = {
   externalInstanceId?: string | null
   reconciliationStatus?: string | null
   reconciledAt?: Date | string | null
+  ownerAttendance?: string | null
   sourceNoteId?: string | null
   children?: Prisma.PlanUncheckedCreateNestedManyWithoutParentInput
   expectedPeople?: Prisma.PlanExpectedPersonUncheckedCreateNestedManyWithoutPlanInput
@@ -548,6 +562,7 @@ export type PlanUpdateInput = {
   externalInstanceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reconciliationStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reconciledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ownerAttendance?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutPlansNestedInput
   person?: Prisma.PersonUpdateOneWithoutPlansNestedInput
   children?: Prisma.PlanUpdateManyWithoutParentNestedInput
@@ -581,6 +596,7 @@ export type PlanUncheckedUpdateInput = {
   externalInstanceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reconciliationStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reconciledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ownerAttendance?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   children?: Prisma.PlanUncheckedUpdateManyWithoutParentNestedInput
   expectedPeople?: Prisma.PlanExpectedPersonUncheckedUpdateManyWithoutPlanNestedInput
@@ -610,6 +626,7 @@ export type PlanCreateManyInput = {
   externalInstanceId?: string | null
   reconciliationStatus?: string | null
   reconciledAt?: Date | string | null
+  ownerAttendance?: string | null
   sourceNoteId?: string | null
 }
 
@@ -629,6 +646,7 @@ export type PlanUpdateManyMutationInput = {
   externalInstanceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reconciliationStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reconciledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ownerAttendance?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type PlanUncheckedUpdateManyInput = {
@@ -651,6 +669,7 @@ export type PlanUncheckedUpdateManyInput = {
   externalInstanceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reconciliationStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reconciledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ownerAttendance?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
@@ -689,6 +708,7 @@ export type PlanCountOrderByAggregateInput = {
   externalInstanceId?: Prisma.SortOrder
   reconciliationStatus?: Prisma.SortOrder
   reconciledAt?: Prisma.SortOrder
+  ownerAttendance?: Prisma.SortOrder
   sourceNoteId?: Prisma.SortOrder
 }
 
@@ -716,6 +736,7 @@ export type PlanMaxOrderByAggregateInput = {
   externalInstanceId?: Prisma.SortOrder
   reconciliationStatus?: Prisma.SortOrder
   reconciledAt?: Prisma.SortOrder
+  ownerAttendance?: Prisma.SortOrder
   sourceNoteId?: Prisma.SortOrder
 }
 
@@ -739,6 +760,7 @@ export type PlanMinOrderByAggregateInput = {
   externalInstanceId?: Prisma.SortOrder
   reconciliationStatus?: Prisma.SortOrder
   reconciledAt?: Prisma.SortOrder
+  ownerAttendance?: Prisma.SortOrder
   sourceNoteId?: Prisma.SortOrder
 }
 
@@ -1073,6 +1095,7 @@ export type PlanCreateWithoutWorkspaceInput = {
   externalInstanceId?: string | null
   reconciliationStatus?: string | null
   reconciledAt?: Date | string | null
+  ownerAttendance?: string | null
   person?: Prisma.PersonCreateNestedOneWithoutPlansInput
   children?: Prisma.PlanCreateNestedManyWithoutParentInput
   parent?: Prisma.PlanCreateNestedOneWithoutChildrenInput
@@ -1104,6 +1127,7 @@ export type PlanUncheckedCreateWithoutWorkspaceInput = {
   externalInstanceId?: string | null
   reconciliationStatus?: string | null
   reconciledAt?: Date | string | null
+  ownerAttendance?: string | null
   sourceNoteId?: string | null
   children?: Prisma.PlanUncheckedCreateNestedManyWithoutParentInput
   expectedPeople?: Prisma.PlanExpectedPersonUncheckedCreateNestedManyWithoutPlanInput
@@ -1162,6 +1186,7 @@ export type PlanScalarWhereInput = {
   externalInstanceId?: Prisma.StringNullableFilter<"Plan"> | string | null
   reconciliationStatus?: Prisma.StringNullableFilter<"Plan"> | string | null
   reconciledAt?: Prisma.DateTimeNullableFilter<"Plan"> | Date | string | null
+  ownerAttendance?: Prisma.StringNullableFilter<"Plan"> | string | null
   sourceNoteId?: Prisma.StringNullableFilter<"Plan"> | string | null
 }
 
@@ -1181,6 +1206,7 @@ export type PlanCreateWithoutPersonInput = {
   externalInstanceId?: string | null
   reconciliationStatus?: string | null
   reconciledAt?: Date | string | null
+  ownerAttendance?: string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutPlansInput
   children?: Prisma.PlanCreateNestedManyWithoutParentInput
   parent?: Prisma.PlanCreateNestedOneWithoutChildrenInput
@@ -1212,6 +1238,7 @@ export type PlanUncheckedCreateWithoutPersonInput = {
   externalInstanceId?: string | null
   reconciliationStatus?: string | null
   reconciledAt?: Date | string | null
+  ownerAttendance?: string | null
   sourceNoteId?: string | null
   children?: Prisma.PlanUncheckedCreateNestedManyWithoutParentInput
   expectedPeople?: Prisma.PlanExpectedPersonUncheckedCreateNestedManyWithoutPlanInput
@@ -1263,6 +1290,7 @@ export type PlanCreateWithoutCalendarLinksInput = {
   externalInstanceId?: string | null
   reconciliationStatus?: string | null
   reconciledAt?: Date | string | null
+  ownerAttendance?: string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutPlansInput
   person?: Prisma.PersonCreateNestedOneWithoutPlansInput
   children?: Prisma.PlanCreateNestedManyWithoutParentInput
@@ -1295,6 +1323,7 @@ export type PlanUncheckedCreateWithoutCalendarLinksInput = {
   externalInstanceId?: string | null
   reconciliationStatus?: string | null
   reconciledAt?: Date | string | null
+  ownerAttendance?: string | null
   sourceNoteId?: string | null
   children?: Prisma.PlanUncheckedCreateNestedManyWithoutParentInput
   expectedPeople?: Prisma.PlanExpectedPersonUncheckedCreateNestedManyWithoutPlanInput
@@ -1335,6 +1364,7 @@ export type PlanUpdateWithoutCalendarLinksInput = {
   externalInstanceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reconciliationStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reconciledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ownerAttendance?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutPlansNestedInput
   person?: Prisma.PersonUpdateOneWithoutPlansNestedInput
   children?: Prisma.PlanUpdateManyWithoutParentNestedInput
@@ -1367,6 +1397,7 @@ export type PlanUncheckedUpdateWithoutCalendarLinksInput = {
   externalInstanceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reconciliationStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reconciledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ownerAttendance?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   children?: Prisma.PlanUncheckedUpdateManyWithoutParentNestedInput
   expectedPeople?: Prisma.PlanExpectedPersonUncheckedUpdateManyWithoutPlanNestedInput
@@ -1391,6 +1422,7 @@ export type PlanCreateWithoutFulfilledByInput = {
   externalInstanceId?: string | null
   reconciliationStatus?: string | null
   reconciledAt?: Date | string | null
+  ownerAttendance?: string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutPlansInput
   person?: Prisma.PersonCreateNestedOneWithoutPlansInput
   children?: Prisma.PlanCreateNestedManyWithoutParentInput
@@ -1423,6 +1455,7 @@ export type PlanUncheckedCreateWithoutFulfilledByInput = {
   externalInstanceId?: string | null
   reconciliationStatus?: string | null
   reconciledAt?: Date | string | null
+  ownerAttendance?: string | null
   sourceNoteId?: string | null
   children?: Prisma.PlanUncheckedCreateNestedManyWithoutParentInput
   expectedPeople?: Prisma.PlanExpectedPersonUncheckedCreateNestedManyWithoutPlanInput
@@ -1463,6 +1496,7 @@ export type PlanUpdateWithoutFulfilledByInput = {
   externalInstanceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reconciliationStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reconciledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ownerAttendance?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutPlansNestedInput
   person?: Prisma.PersonUpdateOneWithoutPlansNestedInput
   children?: Prisma.PlanUpdateManyWithoutParentNestedInput
@@ -1495,6 +1529,7 @@ export type PlanUncheckedUpdateWithoutFulfilledByInput = {
   externalInstanceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reconciliationStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reconciledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ownerAttendance?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   children?: Prisma.PlanUncheckedUpdateManyWithoutParentNestedInput
   expectedPeople?: Prisma.PlanExpectedPersonUncheckedUpdateManyWithoutPlanNestedInput
@@ -1519,6 +1554,7 @@ export type PlanCreateWithoutParentInput = {
   externalInstanceId?: string | null
   reconciliationStatus?: string | null
   reconciledAt?: Date | string | null
+  ownerAttendance?: string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutPlansInput
   person?: Prisma.PersonCreateNestedOneWithoutPlansInput
   children?: Prisma.PlanCreateNestedManyWithoutParentInput
@@ -1550,6 +1586,7 @@ export type PlanUncheckedCreateWithoutParentInput = {
   externalInstanceId?: string | null
   reconciliationStatus?: string | null
   reconciledAt?: Date | string | null
+  ownerAttendance?: string | null
   sourceNoteId?: string | null
   children?: Prisma.PlanUncheckedCreateNestedManyWithoutParentInput
   expectedPeople?: Prisma.PlanExpectedPersonUncheckedCreateNestedManyWithoutPlanInput
@@ -1585,6 +1622,7 @@ export type PlanCreateWithoutChildrenInput = {
   externalInstanceId?: string | null
   reconciliationStatus?: string | null
   reconciledAt?: Date | string | null
+  ownerAttendance?: string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutPlansInput
   person?: Prisma.PersonCreateNestedOneWithoutPlansInput
   parent?: Prisma.PlanCreateNestedOneWithoutChildrenInput
@@ -1617,6 +1655,7 @@ export type PlanUncheckedCreateWithoutChildrenInput = {
   externalInstanceId?: string | null
   reconciliationStatus?: string | null
   reconciledAt?: Date | string | null
+  ownerAttendance?: string | null
   sourceNoteId?: string | null
   expectedPeople?: Prisma.PlanExpectedPersonUncheckedCreateNestedManyWithoutPlanInput
   fulfilledBy?: Prisma.EventUncheckedCreateNestedOneWithoutSourcePlanInput
@@ -1673,6 +1712,7 @@ export type PlanUpdateWithoutChildrenInput = {
   externalInstanceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reconciliationStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reconciledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ownerAttendance?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutPlansNestedInput
   person?: Prisma.PersonUpdateOneWithoutPlansNestedInput
   parent?: Prisma.PlanUpdateOneWithoutChildrenNestedInput
@@ -1705,6 +1745,7 @@ export type PlanUncheckedUpdateWithoutChildrenInput = {
   externalInstanceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reconciliationStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reconciledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ownerAttendance?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expectedPeople?: Prisma.PlanExpectedPersonUncheckedUpdateManyWithoutPlanNestedInput
   fulfilledBy?: Prisma.EventUncheckedUpdateOneWithoutSourcePlanNestedInput
@@ -1729,6 +1770,7 @@ export type PlanCreateWithoutExpectedPeopleInput = {
   externalInstanceId?: string | null
   reconciliationStatus?: string | null
   reconciledAt?: Date | string | null
+  ownerAttendance?: string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutPlansInput
   person?: Prisma.PersonCreateNestedOneWithoutPlansInput
   children?: Prisma.PlanCreateNestedManyWithoutParentInput
@@ -1761,6 +1803,7 @@ export type PlanUncheckedCreateWithoutExpectedPeopleInput = {
   externalInstanceId?: string | null
   reconciliationStatus?: string | null
   reconciledAt?: Date | string | null
+  ownerAttendance?: string | null
   sourceNoteId?: string | null
   children?: Prisma.PlanUncheckedCreateNestedManyWithoutParentInput
   fulfilledBy?: Prisma.EventUncheckedCreateNestedOneWithoutSourcePlanInput
@@ -1801,6 +1844,7 @@ export type PlanUpdateWithoutExpectedPeopleInput = {
   externalInstanceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reconciliationStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reconciledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ownerAttendance?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutPlansNestedInput
   person?: Prisma.PersonUpdateOneWithoutPlansNestedInput
   children?: Prisma.PlanUpdateManyWithoutParentNestedInput
@@ -1833,6 +1877,7 @@ export type PlanUncheckedUpdateWithoutExpectedPeopleInput = {
   externalInstanceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reconciliationStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reconciledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ownerAttendance?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   children?: Prisma.PlanUncheckedUpdateManyWithoutParentNestedInput
   fulfilledBy?: Prisma.EventUncheckedUpdateOneWithoutSourcePlanNestedInput
@@ -1857,6 +1902,7 @@ export type PlanCreateWithoutPlaceInput = {
   externalInstanceId?: string | null
   reconciliationStatus?: string | null
   reconciledAt?: Date | string | null
+  ownerAttendance?: string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutPlansInput
   person?: Prisma.PersonCreateNestedOneWithoutPlansInput
   children?: Prisma.PlanCreateNestedManyWithoutParentInput
@@ -1888,6 +1934,7 @@ export type PlanUncheckedCreateWithoutPlaceInput = {
   externalInstanceId?: string | null
   reconciliationStatus?: string | null
   reconciledAt?: Date | string | null
+  ownerAttendance?: string | null
   sourceNoteId?: string | null
   children?: Prisma.PlanUncheckedCreateNestedManyWithoutParentInput
   expectedPeople?: Prisma.PlanExpectedPersonUncheckedCreateNestedManyWithoutPlanInput
@@ -1939,6 +1986,7 @@ export type PlanCreateWithoutPurchaseOrderInput = {
   externalInstanceId?: string | null
   reconciliationStatus?: string | null
   reconciledAt?: Date | string | null
+  ownerAttendance?: string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutPlansInput
   person?: Prisma.PersonCreateNestedOneWithoutPlansInput
   children?: Prisma.PlanCreateNestedManyWithoutParentInput
@@ -1971,6 +2019,7 @@ export type PlanUncheckedCreateWithoutPurchaseOrderInput = {
   externalInstanceId?: string | null
   reconciliationStatus?: string | null
   reconciledAt?: Date | string | null
+  ownerAttendance?: string | null
   sourceNoteId?: string | null
   children?: Prisma.PlanUncheckedCreateNestedManyWithoutParentInput
   expectedPeople?: Prisma.PlanExpectedPersonUncheckedCreateNestedManyWithoutPlanInput
@@ -2011,6 +2060,7 @@ export type PlanUpdateWithoutPurchaseOrderInput = {
   externalInstanceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reconciliationStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reconciledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ownerAttendance?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutPlansNestedInput
   person?: Prisma.PersonUpdateOneWithoutPlansNestedInput
   children?: Prisma.PlanUpdateManyWithoutParentNestedInput
@@ -2043,6 +2093,7 @@ export type PlanUncheckedUpdateWithoutPurchaseOrderInput = {
   externalInstanceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reconciliationStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reconciledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ownerAttendance?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   children?: Prisma.PlanUncheckedUpdateManyWithoutParentNestedInput
   expectedPeople?: Prisma.PlanExpectedPersonUncheckedUpdateManyWithoutPlanNestedInput
@@ -2067,6 +2118,7 @@ export type PlanCreateWithoutAboutNotesInput = {
   externalInstanceId?: string | null
   reconciliationStatus?: string | null
   reconciledAt?: Date | string | null
+  ownerAttendance?: string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutPlansInput
   person?: Prisma.PersonCreateNestedOneWithoutPlansInput
   children?: Prisma.PlanCreateNestedManyWithoutParentInput
@@ -2099,6 +2151,7 @@ export type PlanUncheckedCreateWithoutAboutNotesInput = {
   externalInstanceId?: string | null
   reconciliationStatus?: string | null
   reconciledAt?: Date | string | null
+  ownerAttendance?: string | null
   sourceNoteId?: string | null
   children?: Prisma.PlanUncheckedCreateNestedManyWithoutParentInput
   expectedPeople?: Prisma.PlanExpectedPersonUncheckedCreateNestedManyWithoutPlanInput
@@ -2128,6 +2181,7 @@ export type PlanCreateWithoutSourceNoteInput = {
   externalInstanceId?: string | null
   reconciliationStatus?: string | null
   reconciledAt?: Date | string | null
+  ownerAttendance?: string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutPlansInput
   person?: Prisma.PersonCreateNestedOneWithoutPlansInput
   children?: Prisma.PlanCreateNestedManyWithoutParentInput
@@ -2160,6 +2214,7 @@ export type PlanUncheckedCreateWithoutSourceNoteInput = {
   externalInstanceId?: string | null
   reconciliationStatus?: string | null
   reconciledAt?: Date | string | null
+  ownerAttendance?: string | null
   children?: Prisma.PlanUncheckedCreateNestedManyWithoutParentInput
   expectedPeople?: Prisma.PlanExpectedPersonUncheckedCreateNestedManyWithoutPlanInput
   fulfilledBy?: Prisma.EventUncheckedCreateNestedOneWithoutSourcePlanInput
@@ -2205,6 +2260,7 @@ export type PlanUpdateWithoutAboutNotesInput = {
   externalInstanceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reconciliationStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reconciledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ownerAttendance?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutPlansNestedInput
   person?: Prisma.PersonUpdateOneWithoutPlansNestedInput
   children?: Prisma.PlanUpdateManyWithoutParentNestedInput
@@ -2237,6 +2293,7 @@ export type PlanUncheckedUpdateWithoutAboutNotesInput = {
   externalInstanceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reconciliationStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reconciledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ownerAttendance?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   children?: Prisma.PlanUncheckedUpdateManyWithoutParentNestedInput
   expectedPeople?: Prisma.PlanExpectedPersonUncheckedUpdateManyWithoutPlanNestedInput
@@ -2280,6 +2337,7 @@ export type PlanCreateManyWorkspaceInput = {
   externalInstanceId?: string | null
   reconciliationStatus?: string | null
   reconciledAt?: Date | string | null
+  ownerAttendance?: string | null
   sourceNoteId?: string | null
 }
 
@@ -2299,6 +2357,7 @@ export type PlanUpdateWithoutWorkspaceInput = {
   externalInstanceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reconciliationStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reconciledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ownerAttendance?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   person?: Prisma.PersonUpdateOneWithoutPlansNestedInput
   children?: Prisma.PlanUpdateManyWithoutParentNestedInput
   parent?: Prisma.PlanUpdateOneWithoutChildrenNestedInput
@@ -2330,6 +2389,7 @@ export type PlanUncheckedUpdateWithoutWorkspaceInput = {
   externalInstanceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reconciliationStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reconciledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ownerAttendance?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   children?: Prisma.PlanUncheckedUpdateManyWithoutParentNestedInput
   expectedPeople?: Prisma.PlanExpectedPersonUncheckedUpdateManyWithoutPlanNestedInput
@@ -2358,6 +2418,7 @@ export type PlanUncheckedUpdateManyWithoutWorkspaceInput = {
   externalInstanceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reconciliationStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reconciledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ownerAttendance?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
@@ -2380,6 +2441,7 @@ export type PlanCreateManyPersonInput = {
   externalInstanceId?: string | null
   reconciliationStatus?: string | null
   reconciledAt?: Date | string | null
+  ownerAttendance?: string | null
   sourceNoteId?: string | null
 }
 
@@ -2399,6 +2461,7 @@ export type PlanUpdateWithoutPersonInput = {
   externalInstanceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reconciliationStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reconciledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ownerAttendance?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutPlansNestedInput
   children?: Prisma.PlanUpdateManyWithoutParentNestedInput
   parent?: Prisma.PlanUpdateOneWithoutChildrenNestedInput
@@ -2430,6 +2493,7 @@ export type PlanUncheckedUpdateWithoutPersonInput = {
   externalInstanceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reconciliationStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reconciledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ownerAttendance?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   children?: Prisma.PlanUncheckedUpdateManyWithoutParentNestedInput
   expectedPeople?: Prisma.PlanExpectedPersonUncheckedUpdateManyWithoutPlanNestedInput
@@ -2458,6 +2522,7 @@ export type PlanUncheckedUpdateManyWithoutPersonInput = {
   externalInstanceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reconciliationStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reconciledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ownerAttendance?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
@@ -2480,6 +2545,7 @@ export type PlanCreateManyParentInput = {
   externalInstanceId?: string | null
   reconciliationStatus?: string | null
   reconciledAt?: Date | string | null
+  ownerAttendance?: string | null
   sourceNoteId?: string | null
 }
 
@@ -2499,6 +2565,7 @@ export type PlanUpdateWithoutParentInput = {
   externalInstanceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reconciliationStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reconciledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ownerAttendance?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutPlansNestedInput
   person?: Prisma.PersonUpdateOneWithoutPlansNestedInput
   children?: Prisma.PlanUpdateManyWithoutParentNestedInput
@@ -2530,6 +2597,7 @@ export type PlanUncheckedUpdateWithoutParentInput = {
   externalInstanceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reconciliationStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reconciledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ownerAttendance?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   children?: Prisma.PlanUncheckedUpdateManyWithoutParentNestedInput
   expectedPeople?: Prisma.PlanExpectedPersonUncheckedUpdateManyWithoutPlanNestedInput
@@ -2558,6 +2626,7 @@ export type PlanUncheckedUpdateManyWithoutParentInput = {
   externalInstanceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reconciliationStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reconciledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ownerAttendance?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
@@ -2580,6 +2649,7 @@ export type PlanCreateManyPlaceInput = {
   externalInstanceId?: string | null
   reconciliationStatus?: string | null
   reconciledAt?: Date | string | null
+  ownerAttendance?: string | null
   sourceNoteId?: string | null
 }
 
@@ -2599,6 +2669,7 @@ export type PlanUpdateWithoutPlaceInput = {
   externalInstanceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reconciliationStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reconciledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ownerAttendance?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutPlansNestedInput
   person?: Prisma.PersonUpdateOneWithoutPlansNestedInput
   children?: Prisma.PlanUpdateManyWithoutParentNestedInput
@@ -2630,6 +2701,7 @@ export type PlanUncheckedUpdateWithoutPlaceInput = {
   externalInstanceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reconciliationStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reconciledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ownerAttendance?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   children?: Prisma.PlanUncheckedUpdateManyWithoutParentNestedInput
   expectedPeople?: Prisma.PlanExpectedPersonUncheckedUpdateManyWithoutPlanNestedInput
@@ -2658,6 +2730,7 @@ export type PlanUncheckedUpdateManyWithoutPlaceInput = {
   externalInstanceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reconciliationStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reconciledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ownerAttendance?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
@@ -2681,6 +2754,7 @@ export type PlanCreateManySourceNoteInput = {
   externalInstanceId?: string | null
   reconciliationStatus?: string | null
   reconciledAt?: Date | string | null
+  ownerAttendance?: string | null
 }
 
 export type PlanUpdateWithoutSourceNoteInput = {
@@ -2699,6 +2773,7 @@ export type PlanUpdateWithoutSourceNoteInput = {
   externalInstanceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reconciliationStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reconciledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ownerAttendance?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutPlansNestedInput
   person?: Prisma.PersonUpdateOneWithoutPlansNestedInput
   children?: Prisma.PlanUpdateManyWithoutParentNestedInput
@@ -2731,6 +2806,7 @@ export type PlanUncheckedUpdateWithoutSourceNoteInput = {
   externalInstanceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reconciliationStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reconciledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ownerAttendance?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   children?: Prisma.PlanUncheckedUpdateManyWithoutParentNestedInput
   expectedPeople?: Prisma.PlanExpectedPersonUncheckedUpdateManyWithoutPlanNestedInput
   fulfilledBy?: Prisma.EventUncheckedUpdateOneWithoutSourcePlanNestedInput
@@ -2759,6 +2835,7 @@ export type PlanUncheckedUpdateManyWithoutSourceNoteInput = {
   externalInstanceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reconciliationStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reconciledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ownerAttendance?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
@@ -2839,6 +2916,7 @@ export type PlanSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   externalInstanceId?: boolean
   reconciliationStatus?: boolean
   reconciledAt?: boolean
+  ownerAttendance?: boolean
   sourceNoteId?: boolean
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   person?: boolean | Prisma.Plan$personArgs<ExtArgs>
@@ -2874,6 +2952,7 @@ export type PlanSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   externalInstanceId?: boolean
   reconciliationStatus?: boolean
   reconciledAt?: boolean
+  ownerAttendance?: boolean
   sourceNoteId?: boolean
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   person?: boolean | Prisma.Plan$personArgs<ExtArgs>
@@ -2902,6 +2981,7 @@ export type PlanSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   externalInstanceId?: boolean
   reconciliationStatus?: boolean
   reconciledAt?: boolean
+  ownerAttendance?: boolean
   sourceNoteId?: boolean
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   person?: boolean | Prisma.Plan$personArgs<ExtArgs>
@@ -2930,10 +3010,11 @@ export type PlanSelectScalar = {
   externalInstanceId?: boolean
   reconciliationStatus?: boolean
   reconciledAt?: boolean
+  ownerAttendance?: boolean
   sourceNoteId?: boolean
 }
 
-export type PlanOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "workspaceId" | "createdAt" | "personId" | "text" | "timescale" | "successSignals" | "status" | "dueOn" | "deferCount" | "completedAt" | "parentId" | "scheduledStart" | "scheduledEnd" | "placeId" | "externalSource" | "externalInstanceId" | "reconciliationStatus" | "reconciledAt" | "sourceNoteId", ExtArgs["result"]["plan"]>
+export type PlanOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "workspaceId" | "createdAt" | "personId" | "text" | "timescale" | "successSignals" | "status" | "dueOn" | "deferCount" | "completedAt" | "parentId" | "scheduledStart" | "scheduledEnd" | "placeId" | "externalSource" | "externalInstanceId" | "reconciliationStatus" | "reconciledAt" | "ownerAttendance" | "sourceNoteId", ExtArgs["result"]["plan"]>
 export type PlanInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   person?: boolean | Prisma.Plan$personArgs<ExtArgs>
@@ -2998,6 +3079,7 @@ export type $PlanPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     externalInstanceId: string | null
     reconciliationStatus: string | null
     reconciledAt: Date | null
+    ownerAttendance: string | null
     sourceNoteId: string | null
   }, ExtArgs["result"]["plan"]>
   composites: {}
@@ -3452,6 +3534,7 @@ export interface PlanFieldRefs {
   readonly externalInstanceId: Prisma.FieldRef<"Plan", 'String'>
   readonly reconciliationStatus: Prisma.FieldRef<"Plan", 'String'>
   readonly reconciledAt: Prisma.FieldRef<"Plan", 'DateTime'>
+  readonly ownerAttendance: Prisma.FieldRef<"Plan", 'String'>
   readonly sourceNoteId: Prisma.FieldRef<"Plan", 'String'>
 }
     

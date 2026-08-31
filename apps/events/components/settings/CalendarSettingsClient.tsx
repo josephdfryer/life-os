@@ -18,6 +18,7 @@ type CalendarStatus = {
     lastSyncedAt: string | null
     lastError: string | null
     eventCount: number
+    ownerAttendanceDefault: "going" | "not_going"
   } | null
   connections: {
     id: string
@@ -28,6 +29,7 @@ type CalendarStatus = {
     lastSyncedAt: string | null
     lastError: string | null
     eventCount: number
+    ownerAttendanceDefault: "going" | "not_going"
   }[]
   availableCalendars: {
     id: string
@@ -72,6 +74,7 @@ export default function CalendarSettingsClient() {
   const [error, setError] = useState<string | null>(null)
   const [saving, setSaving] = useState(false)
   const [savingSelection, setSavingSelection] = useState(false)
+  const [savingDefaultId, setSavingDefaultId] = useState<string | null>(null)
   const [resetting, setResetting] = useState(false)
   const expectedAccountEmail = status?.expectedAccountEmail ?? "jdf247@gmail.com"
   const activeConnections = status?.connections.filter(connection => connection.status === "active") ?? []
@@ -126,6 +129,25 @@ export default function CalendarSettingsClient() {
       setError(e instanceof Error ? e.message : "Could not save calendar selection")
     } finally {
       setSavingSelection(false)
+    }
+  }
+
+  async function saveAttendanceDefault(connectionId: string, attendance: "going" | "not_going") {
+    setSavingDefaultId(connectionId)
+    setError(null)
+    try {
+      const res = await fetch("/api/calendar/google/attendance-default", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ connectionId, attendance }),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error?.message ?? data.error ?? "Could not save attendance default")
+      setStatus(data)
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Could not save attendance default")
+    } finally {
+      setSavingDefaultId(null)
     }
   }
 
@@ -310,19 +332,44 @@ export default function CalendarSettingsClient() {
 
       {activeConnections.length > 0 && (
         <section style={panelStyle}>
-          <div style={panelTitleStyle}>Import status</div>
-          <div style={{ display: "grid", gap: "8px" }}>
-            {activeConnections.map(connection => (
-              <div key={connection.id} style={statusRowStyle}>
-                <div style={{ minWidth: 0 }}>
-                  <div style={calendarNameStyle}>{connection.calendarSummary ?? connection.calendarId}</div>
-                  <div style={calendarMetaStyle}>
-                    {connection.eventCount} linked events · last sync {formatDate(connection.lastSyncedAt, tz)}
+          <div style={panelTitleStyle}>Default for me</div>
+          <p style={copyStyle}>
+            Presence is assumed unless a calendar says otherwise. Shared calendars — school, family, a partner's schedule — can default to not going. You can still mark a single event as going or did go from Today.
+          </p>
+          <div style={{ display: "grid", gap: "8px", marginTop: "12px" }}>
+            {activeConnections.map(connection => {
+              const attendance = connection.ownerAttendanceDefault === "not_going" ? "not_going" : "going"
+              const busy = savingDefaultId === connection.id
+              return (
+                <div key={connection.id} style={statusRowStyle}>
+                  <div style={{ minWidth: 0 }}>
+                    <div style={calendarNameStyle}>{connection.calendarSummary ?? connection.calendarId}</div>
+                    <div style={calendarMetaStyle}>
+                      {connection.eventCount} linked events · last sync {formatDate(connection.lastSyncedAt, tz)}
+                    </div>
+                    {connection.lastError && <div style={connectionErrorStyle}>{connection.lastError}</div>}
                   </div>
-                  {connection.lastError && <div style={connectionErrorStyle}>{connection.lastError}</div>}
+                  <div style={{ display: "flex", gap: "6px", flexShrink: 0 }}>
+                    <button
+                      type="button"
+                      disabled={busy}
+                      onClick={() => void saveAttendanceDefault(connection.id, "going")}
+                      style={{ ...smallButtonStyle, ...(attendance === "going" ? selectedAttendanceStyle : {}) }}
+                    >
+                      I'm going
+                    </button>
+                    <button
+                      type="button"
+                      disabled={busy}
+                      onClick={() => void saveAttendanceDefault(connection.id, "not_going")}
+                      style={{ ...smallButtonStyle, ...(attendance === "not_going" ? selectedAttendanceStyle : {}) }}
+                    >
+                      Not me
+                    </button>
+                  </div>
                 </div>
-              </div>
-            ))}
+              )
+            })}
           </div>
         </section>
       )}
@@ -463,6 +510,12 @@ const smallButtonStyle: React.CSSProperties = {
   fontFamily: "inherit",
 }
 
+const selectedAttendanceStyle: React.CSSProperties = {
+  border: "1px solid var(--cognac-soft)",
+  background: "var(--cognac-soft)",
+  color: "var(--cognac-deep)",
+}
+
 const preStyle: React.CSSProperties = {
   marginTop: "12px",
   background: "var(--surface-2)",
@@ -569,6 +622,10 @@ const statusRowStyle: React.CSSProperties = {
   borderRadius: "var(--radius)",
   background: "var(--surface-2)",
   border: "1px solid var(--border-subtle)",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "space-between",
+  gap: "12px",
 }
 
 const warningStyle: React.CSSProperties = {

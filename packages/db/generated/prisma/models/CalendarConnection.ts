@@ -43,6 +43,7 @@ export type CalendarConnectionMinAggregateOutputType = {
   fullSyncPageToken: string | null
   lastSyncedAt: Date | null
   lastError: string | null
+  ownerAttendanceDefault: string | null
 }
 
 export type CalendarConnectionMaxAggregateOutputType = {
@@ -64,6 +65,7 @@ export type CalendarConnectionMaxAggregateOutputType = {
   fullSyncPageToken: string | null
   lastSyncedAt: Date | null
   lastError: string | null
+  ownerAttendanceDefault: string | null
 }
 
 export type CalendarConnectionCountAggregateOutputType = {
@@ -85,6 +87,7 @@ export type CalendarConnectionCountAggregateOutputType = {
   fullSyncPageToken: number
   lastSyncedAt: number
   lastError: number
+  ownerAttendanceDefault: number
   _all: number
 }
 
@@ -108,6 +111,7 @@ export type CalendarConnectionMinAggregateInputType = {
   fullSyncPageToken?: true
   lastSyncedAt?: true
   lastError?: true
+  ownerAttendanceDefault?: true
 }
 
 export type CalendarConnectionMaxAggregateInputType = {
@@ -129,6 +133,7 @@ export type CalendarConnectionMaxAggregateInputType = {
   fullSyncPageToken?: true
   lastSyncedAt?: true
   lastError?: true
+  ownerAttendanceDefault?: true
 }
 
 export type CalendarConnectionCountAggregateInputType = {
@@ -150,6 +155,7 @@ export type CalendarConnectionCountAggregateInputType = {
   fullSyncPageToken?: true
   lastSyncedAt?: true
   lastError?: true
+  ownerAttendanceDefault?: true
   _all?: true
 }
 
@@ -244,6 +250,7 @@ export type CalendarConnectionGroupByOutputType = {
   fullSyncPageToken: string | null
   lastSyncedAt: Date | null
   lastError: string | null
+  ownerAttendanceDefault: string
   _count: CalendarConnectionCountAggregateOutputType | null
   _min: CalendarConnectionMinAggregateOutputType | null
   _max: CalendarConnectionMaxAggregateOutputType | null
@@ -286,6 +293,7 @@ export type CalendarConnectionWhereInput = {
   fullSyncPageToken?: Prisma.StringNullableFilter<"CalendarConnection"> | string | null
   lastSyncedAt?: Prisma.DateTimeNullableFilter<"CalendarConnection"> | Date | string | null
   lastError?: Prisma.StringNullableFilter<"CalendarConnection"> | string | null
+  ownerAttendanceDefault?: Prisma.StringFilter<"CalendarConnection"> | string
   workspace?: Prisma.XOR<Prisma.WorkspaceScalarRelationFilter, Prisma.WorkspaceWhereInput>
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   eventLinks?: Prisma.CalendarEventLinkListRelationFilter
@@ -310,6 +318,7 @@ export type CalendarConnectionOrderByWithRelationInput = {
   fullSyncPageToken?: Prisma.SortOrderInput | Prisma.SortOrder
   lastSyncedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   lastError?: Prisma.SortOrderInput | Prisma.SortOrder
+  ownerAttendanceDefault?: Prisma.SortOrder
   workspace?: Prisma.WorkspaceOrderByWithRelationInput
   user?: Prisma.UserOrderByWithRelationInput
   eventLinks?: Prisma.CalendarEventLinkOrderByRelationAggregateInput
@@ -338,6 +347,7 @@ export type CalendarConnectionWhereUniqueInput = Prisma.AtLeast<{
   fullSyncPageToken?: Prisma.StringNullableFilter<"CalendarConnection"> | string | null
   lastSyncedAt?: Prisma.DateTimeNullableFilter<"CalendarConnection"> | Date | string | null
   lastError?: Prisma.StringNullableFilter<"CalendarConnection"> | string | null
+  ownerAttendanceDefault?: Prisma.StringFilter<"CalendarConnection"> | string
   workspace?: Prisma.XOR<Prisma.WorkspaceScalarRelationFilter, Prisma.WorkspaceWhereInput>
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   eventLinks?: Prisma.CalendarEventLinkListRelationFilter
@@ -362,6 +372,7 @@ export type CalendarConnectionOrderByWithAggregationInput = {
   fullSyncPageToken?: Prisma.SortOrderInput | Prisma.SortOrder
   lastSyncedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   lastError?: Prisma.SortOrderInput | Prisma.SortOrder
+  ownerAttendanceDefault?: Prisma.SortOrder
   _count?: Prisma.CalendarConnectionCountOrderByAggregateInput
   _max?: Prisma.CalendarConnectionMaxOrderByAggregateInput
   _min?: Prisma.CalendarConnectionMinOrderByAggregateInput
@@ -389,6 +400,7 @@ export type CalendarConnectionScalarWhereWithAggregatesInput = {
   fullSyncPageToken?: Prisma.StringNullableWithAggregatesFilter<"CalendarConnection"> | string | null
   lastSyncedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"CalendarConnection"> | Date | string | null
   lastError?: Prisma.StringNullableWithAggregatesFilter<"CalendarConnection"> | string | null
+  ownerAttendanceDefault?: Prisma.StringWithAggregatesFilter<"CalendarConnection"> | string
 }
 
 export type CalendarConnectionCreateInput = {
@@ -408,6 +420,7 @@ export type CalendarConnectionCreateInput = {
   fullSyncPageToken?: string | null
   lastSyncedAt?: Date | string | null
   lastError?: string | null
+  ownerAttendanceDefault?: string
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutCalendarConnectionsInput
   user: Prisma.UserCreateNestedOneWithoutCalendarConnectionsInput
   eventLinks?: Prisma.CalendarEventLinkCreateNestedManyWithoutConnectionInput
@@ -432,6 +445,7 @@ export type CalendarConnectionUncheckedCreateInput = {
   fullSyncPageToken?: string | null
   lastSyncedAt?: Date | string | null
   lastError?: string | null
+  ownerAttendanceDefault?: string
   eventLinks?: Prisma.CalendarEventLinkUncheckedCreateNestedManyWithoutConnectionInput
 }
 
@@ -452,6 +466,7 @@ export type CalendarConnectionUpdateInput = {
   fullSyncPageToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastSyncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ownerAttendanceDefault?: Prisma.StringFieldUpdateOperationsInput | string
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutCalendarConnectionsNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutCalendarConnectionsNestedInput
   eventLinks?: Prisma.CalendarEventLinkUpdateManyWithoutConnectionNestedInput
@@ -476,6 +491,7 @@ export type CalendarConnectionUncheckedUpdateInput = {
   fullSyncPageToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastSyncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ownerAttendanceDefault?: Prisma.StringFieldUpdateOperationsInput | string
   eventLinks?: Prisma.CalendarEventLinkUncheckedUpdateManyWithoutConnectionNestedInput
 }
 
@@ -498,6 +514,7 @@ export type CalendarConnectionCreateManyInput = {
   fullSyncPageToken?: string | null
   lastSyncedAt?: Date | string | null
   lastError?: string | null
+  ownerAttendanceDefault?: string
 }
 
 export type CalendarConnectionUpdateManyMutationInput = {
@@ -517,6 +534,7 @@ export type CalendarConnectionUpdateManyMutationInput = {
   fullSyncPageToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastSyncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ownerAttendanceDefault?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type CalendarConnectionUncheckedUpdateManyInput = {
@@ -538,6 +556,7 @@ export type CalendarConnectionUncheckedUpdateManyInput = {
   fullSyncPageToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastSyncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ownerAttendanceDefault?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type CalendarConnectionListRelationFilter = {
@@ -575,6 +594,7 @@ export type CalendarConnectionCountOrderByAggregateInput = {
   fullSyncPageToken?: Prisma.SortOrder
   lastSyncedAt?: Prisma.SortOrder
   lastError?: Prisma.SortOrder
+  ownerAttendanceDefault?: Prisma.SortOrder
 }
 
 export type CalendarConnectionMaxOrderByAggregateInput = {
@@ -596,6 +616,7 @@ export type CalendarConnectionMaxOrderByAggregateInput = {
   fullSyncPageToken?: Prisma.SortOrder
   lastSyncedAt?: Prisma.SortOrder
   lastError?: Prisma.SortOrder
+  ownerAttendanceDefault?: Prisma.SortOrder
 }
 
 export type CalendarConnectionMinOrderByAggregateInput = {
@@ -617,6 +638,7 @@ export type CalendarConnectionMinOrderByAggregateInput = {
   fullSyncPageToken?: Prisma.SortOrder
   lastSyncedAt?: Prisma.SortOrder
   lastError?: Prisma.SortOrder
+  ownerAttendanceDefault?: Prisma.SortOrder
 }
 
 export type CalendarConnectionScalarRelationFilter = {
@@ -739,6 +761,7 @@ export type CalendarConnectionCreateWithoutWorkspaceInput = {
   fullSyncPageToken?: string | null
   lastSyncedAt?: Date | string | null
   lastError?: string | null
+  ownerAttendanceDefault?: string
   user: Prisma.UserCreateNestedOneWithoutCalendarConnectionsInput
   eventLinks?: Prisma.CalendarEventLinkCreateNestedManyWithoutConnectionInput
 }
@@ -761,6 +784,7 @@ export type CalendarConnectionUncheckedCreateWithoutWorkspaceInput = {
   fullSyncPageToken?: string | null
   lastSyncedAt?: Date | string | null
   lastError?: string | null
+  ownerAttendanceDefault?: string
   eventLinks?: Prisma.CalendarEventLinkUncheckedCreateNestedManyWithoutConnectionInput
 }
 
@@ -812,6 +836,7 @@ export type CalendarConnectionScalarWhereInput = {
   fullSyncPageToken?: Prisma.StringNullableFilter<"CalendarConnection"> | string | null
   lastSyncedAt?: Prisma.DateTimeNullableFilter<"CalendarConnection"> | Date | string | null
   lastError?: Prisma.StringNullableFilter<"CalendarConnection"> | string | null
+  ownerAttendanceDefault?: Prisma.StringFilter<"CalendarConnection"> | string
 }
 
 export type CalendarConnectionCreateWithoutUserInput = {
@@ -831,6 +856,7 @@ export type CalendarConnectionCreateWithoutUserInput = {
   fullSyncPageToken?: string | null
   lastSyncedAt?: Date | string | null
   lastError?: string | null
+  ownerAttendanceDefault?: string
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutCalendarConnectionsInput
   eventLinks?: Prisma.CalendarEventLinkCreateNestedManyWithoutConnectionInput
 }
@@ -853,6 +879,7 @@ export type CalendarConnectionUncheckedCreateWithoutUserInput = {
   fullSyncPageToken?: string | null
   lastSyncedAt?: Date | string | null
   lastError?: string | null
+  ownerAttendanceDefault?: string
   eventLinks?: Prisma.CalendarEventLinkUncheckedCreateNestedManyWithoutConnectionInput
 }
 
@@ -899,6 +926,7 @@ export type CalendarConnectionCreateWithoutEventLinksInput = {
   fullSyncPageToken?: string | null
   lastSyncedAt?: Date | string | null
   lastError?: string | null
+  ownerAttendanceDefault?: string
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutCalendarConnectionsInput
   user: Prisma.UserCreateNestedOneWithoutCalendarConnectionsInput
 }
@@ -922,6 +950,7 @@ export type CalendarConnectionUncheckedCreateWithoutEventLinksInput = {
   fullSyncPageToken?: string | null
   lastSyncedAt?: Date | string | null
   lastError?: string | null
+  ownerAttendanceDefault?: string
 }
 
 export type CalendarConnectionCreateOrConnectWithoutEventLinksInput = {
@@ -957,6 +986,7 @@ export type CalendarConnectionUpdateWithoutEventLinksInput = {
   fullSyncPageToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastSyncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ownerAttendanceDefault?: Prisma.StringFieldUpdateOperationsInput | string
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutCalendarConnectionsNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutCalendarConnectionsNestedInput
 }
@@ -980,6 +1010,7 @@ export type CalendarConnectionUncheckedUpdateWithoutEventLinksInput = {
   fullSyncPageToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastSyncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ownerAttendanceDefault?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type CalendarConnectionCreateManyWorkspaceInput = {
@@ -1000,6 +1031,7 @@ export type CalendarConnectionCreateManyWorkspaceInput = {
   fullSyncPageToken?: string | null
   lastSyncedAt?: Date | string | null
   lastError?: string | null
+  ownerAttendanceDefault?: string
 }
 
 export type CalendarConnectionUpdateWithoutWorkspaceInput = {
@@ -1019,6 +1051,7 @@ export type CalendarConnectionUpdateWithoutWorkspaceInput = {
   fullSyncPageToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastSyncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ownerAttendanceDefault?: Prisma.StringFieldUpdateOperationsInput | string
   user?: Prisma.UserUpdateOneRequiredWithoutCalendarConnectionsNestedInput
   eventLinks?: Prisma.CalendarEventLinkUpdateManyWithoutConnectionNestedInput
 }
@@ -1041,6 +1074,7 @@ export type CalendarConnectionUncheckedUpdateWithoutWorkspaceInput = {
   fullSyncPageToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastSyncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ownerAttendanceDefault?: Prisma.StringFieldUpdateOperationsInput | string
   eventLinks?: Prisma.CalendarEventLinkUncheckedUpdateManyWithoutConnectionNestedInput
 }
 
@@ -1062,6 +1096,7 @@ export type CalendarConnectionUncheckedUpdateManyWithoutWorkspaceInput = {
   fullSyncPageToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastSyncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ownerAttendanceDefault?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type CalendarConnectionCreateManyUserInput = {
@@ -1082,6 +1117,7 @@ export type CalendarConnectionCreateManyUserInput = {
   fullSyncPageToken?: string | null
   lastSyncedAt?: Date | string | null
   lastError?: string | null
+  ownerAttendanceDefault?: string
 }
 
 export type CalendarConnectionUpdateWithoutUserInput = {
@@ -1101,6 +1137,7 @@ export type CalendarConnectionUpdateWithoutUserInput = {
   fullSyncPageToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastSyncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ownerAttendanceDefault?: Prisma.StringFieldUpdateOperationsInput | string
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutCalendarConnectionsNestedInput
   eventLinks?: Prisma.CalendarEventLinkUpdateManyWithoutConnectionNestedInput
 }
@@ -1123,6 +1160,7 @@ export type CalendarConnectionUncheckedUpdateWithoutUserInput = {
   fullSyncPageToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastSyncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ownerAttendanceDefault?: Prisma.StringFieldUpdateOperationsInput | string
   eventLinks?: Prisma.CalendarEventLinkUncheckedUpdateManyWithoutConnectionNestedInput
 }
 
@@ -1144,6 +1182,7 @@ export type CalendarConnectionUncheckedUpdateManyWithoutUserInput = {
   fullSyncPageToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastSyncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ownerAttendanceDefault?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 
@@ -1196,6 +1235,7 @@ export type CalendarConnectionSelect<ExtArgs extends runtime.Types.Extensions.In
   fullSyncPageToken?: boolean
   lastSyncedAt?: boolean
   lastError?: boolean
+  ownerAttendanceDefault?: boolean
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   eventLinks?: boolean | Prisma.CalendarConnection$eventLinksArgs<ExtArgs>
@@ -1221,6 +1261,7 @@ export type CalendarConnectionSelectCreateManyAndReturn<ExtArgs extends runtime.
   fullSyncPageToken?: boolean
   lastSyncedAt?: boolean
   lastError?: boolean
+  ownerAttendanceDefault?: boolean
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["calendarConnection"]>
@@ -1244,6 +1285,7 @@ export type CalendarConnectionSelectUpdateManyAndReturn<ExtArgs extends runtime.
   fullSyncPageToken?: boolean
   lastSyncedAt?: boolean
   lastError?: boolean
+  ownerAttendanceDefault?: boolean
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["calendarConnection"]>
@@ -1267,9 +1309,10 @@ export type CalendarConnectionSelectScalar = {
   fullSyncPageToken?: boolean
   lastSyncedAt?: boolean
   lastError?: boolean
+  ownerAttendanceDefault?: boolean
 }
 
-export type CalendarConnectionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "workspaceId" | "userId" | "createdAt" | "updatedAt" | "provider" | "status" | "accountEmail" | "calendarId" | "calendarSummary" | "accessTokenEncrypted" | "refreshTokenEncrypted" | "expiresAt" | "scope" | "syncTokenEncrypted" | "fullSyncPageToken" | "lastSyncedAt" | "lastError", ExtArgs["result"]["calendarConnection"]>
+export type CalendarConnectionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "workspaceId" | "userId" | "createdAt" | "updatedAt" | "provider" | "status" | "accountEmail" | "calendarId" | "calendarSummary" | "accessTokenEncrypted" | "refreshTokenEncrypted" | "expiresAt" | "scope" | "syncTokenEncrypted" | "fullSyncPageToken" | "lastSyncedAt" | "lastError" | "ownerAttendanceDefault", ExtArgs["result"]["calendarConnection"]>
 export type CalendarConnectionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -1311,6 +1354,7 @@ export type $CalendarConnectionPayload<ExtArgs extends runtime.Types.Extensions.
     fullSyncPageToken: string | null
     lastSyncedAt: Date | null
     lastError: string | null
+    ownerAttendanceDefault: string
   }, ExtArgs["result"]["calendarConnection"]>
   composites: {}
 }
@@ -1755,6 +1799,7 @@ export interface CalendarConnectionFieldRefs {
   readonly fullSyncPageToken: Prisma.FieldRef<"CalendarConnection", 'String'>
   readonly lastSyncedAt: Prisma.FieldRef<"CalendarConnection", 'DateTime'>
   readonly lastError: Prisma.FieldRef<"CalendarConnection", 'String'>
+  readonly ownerAttendanceDefault: Prisma.FieldRef<"CalendarConnection", 'String'>
 }
     
 

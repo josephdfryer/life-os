@@ -505,6 +505,11 @@ model CalendarConnection {
   fullSyncPageToken     String?
   lastSyncedAt          DateTime?
   lastError             String?
+  // Inference for whether *I* am going to events on this calendar.
+  // Manifesto: presence is assumed unless stated otherwise, so the default
+  // is "going". Shared/family calendars can opt into "not_going"; a Plan
+  // override always wins. This is not an Interaction — nothing has happened yet.
+  ownerAttendanceDefault String             @default("going")
   eventLinks            CalendarEventLink[]
 
   @@unique([workspaceId, provider, calendarId])
@@ -1109,6 +1114,11 @@ model Plan {
   // Calendar occurrence review state. Null for non-calendar Plans.
   reconciliationStatus String?
   reconciledAt         DateTime?
+  // Owner's declared attendance for this occurrence ("going" | "not_going").
+  // Null inherits the source calendar's ownerAttendanceDefault. This is
+  // declared intent on the Plan — behavioral truth still lives on Event +
+  // Interaction after reconciliation.
+  ownerAttendance      String?
   expectedPeople       PlanExpectedPerson[]
   // Reverse of Event.sourcePlanId — a fulfilled Plan has exactly one Event here
   fulfilledBy          Event?               @relation("PlanFulfillment")

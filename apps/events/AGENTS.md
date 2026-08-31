@@ -17,14 +17,16 @@ Event data lives once on the Event node. Personal layers live on Interaction edg
 
 ## Routes
 
-- `/events` — timeline (today / upcoming / past / all)
+- `/events` — timeline (today / upcoming / past / all); includes unreconciled calendar Plans
 - `/events/[id]` — event detail + participant interactions
 - `/events/new` — manual event creation
 - `/connections` — provider-neutral Events connections hub
 - `/settings/granola` — encrypted Granola connection, manual sync, and backfill
-- `/settings/calendar` — Google Calendar account, source selection, and sync controls
+- `/settings/calendar` — Google Calendar account, source selection, attendance defaults, and sync controls
 - `/groups/[id]/meetings` — deterministic company/group meeting lens
 - `/api/events` — session-authenticated CRUD
+- `/api/calendar/plans/[id]/attendance` — owner going / not going / did go / didn't
+- `/api/calendar/google/attendance-default` — per-calendar default attendance
 - `/api/granola/{connect,status,sync,disconnect}` — workspace-scoped Granola operations
 - `/api/cron/granola-sync` — `CRON_SECRET`-authenticated daily reconciliation
 

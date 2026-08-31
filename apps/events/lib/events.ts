@@ -1,3 +1,5 @@
+import { dayKey, zonedDayBounds } from "@life-os/ui"
+
 // The Event table is a shared LifeOS graph: Places/Persons import Google Maps
 // location history ("visit"/"visited_place"), communications land as
 // "message"/"email", Stuff writes "stocktake"/"purchase_received", etc. Only
@@ -25,17 +27,15 @@ export function parseEventListView(value: string | undefined): EventListView {
   return "upcoming"
 }
 
-export function eventListWindow(view: EventListView, now = new Date()) {
-  const dayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0)
-  const dayEnd = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999)
-
+export function eventListWindow(view: EventListView, timeZone: string, now = new Date()) {
+  const { start, end } = zonedDayBounds(dayKey(now, timeZone), timeZone)
   switch (view) {
     case "today":
-      return { gte: dayStart, lte: dayEnd }
+      return { gte: start, lt: end }
     case "upcoming":
-      return { gte: dayStart }
+      return { gte: start }
     case "past":
-      return { lt: dayStart }
+      return { lt: start }
     case "all":
       return undefined
   }

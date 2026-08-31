@@ -90,6 +90,7 @@ export type { MarkProps, AppMarkProps } from './marks';
 export {
   TZ_COOKIE, LIFE_OS_DEFAULT_TZ, COMMON_TIME_ZONES,
   resolveTimeZone, isValidTimeZone, detectBrowserTimeZone, readTzCookie, writeTzCookie,
+  dayKey, shiftDay, zonedDayBounds,
 } from './timezone';
 export { TimezoneDetector, TimezonePicker, useTimeZone } from './TimezoneControls';
 export type { TimezonePickerProps } from './TimezoneControls';

@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "type-check": "tsc --noEmit",
-    "test": "tsx --test server/domain/*.test.ts"
+    "test": "tsx --test server/domain/*.test.ts lib/*.test.ts"
   },
   "dependencies": {
     "@life-os/access": "*",

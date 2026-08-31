@@ -1,17 +1,11 @@
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
-import { resolveTimeZone, TZ_COOKIE } from "@life-os/ui";
-import { BACKGROUND_EVENT_TYPES } from "@life-os/domain";
+import { dayKey, resolveTimeZone, TZ_COOKIE, zonedDayBounds } from "@life-os/ui";
+import { listScheduleItems } from "@life-os/domain";
 import { auth } from "@/auth";
-import { db } from "@/lib/db";
 import { getWorkspaceId } from "@/lib/workspace";
-import {
-  eventListWindow,
-  formatEventTime,
-  formatEventType,
-  parseEventListView,
-  type EventListView,
-} from "@/lib/events";
+import TimelineList from "@/components/TimelineList";
+import { parseEventListView, type EventListView } from "@/lib/events";
 
 export const dynamic = "force-dynamic";
 
@@ -34,40 +28,16 @@ export default async function EventsPage({
   const { view: viewParam, q } = await searchParams;
   const view = parseEventListView(viewParam);
   const search = q?.trim();
+  const bounds = zonedDayBounds(dayKey(new Date(), tz), tz);
 
-  const window = eventListWindow(view);
-  const orderBy =
-    view === "past" || view === "all"
-      ? { start: "desc" as const }
-      : { start: "asc" as const };
-
-  const events = await db.event.findMany({
-    where: {
-      workspaceId,
-      type: { notIn: [...BACKGROUND_EVENT_TYPES] },
-      ...(window ? { start: window } : {}),
-      ...(search
-        ? { name: { contains: search, mode: "insensitive" as const } }
-        : {}),
-    },
-    include: {
-      place: { select: { name: true } },
-      interactions: {
-        where: { personId: { not: null } },
-        include: { person: { select: { first: true, last: true } } },
-        take: 4,
-      },
-      _count: { select: { interactions: true } },
-      calendarLinks: {
-        where: { status: { not: "cancelled" } },
-        select: {
-          calendarId: true,
-          connection: { select: { calendarSummary: true } },
-        },
-      },
-    },
-    orderBy,
-    take: 100,
+  const events = await listScheduleItems({
+    workspaceId,
+    view,
+    dayStart: bounds.start,
+    dayEnd: bounds.end,
+    search,
+    take: 200,
+    eventHref: (eventId) => `/events/${eventId}`,
   });
 
   return (
@@ -242,138 +212,26 @@ export default async function EventsPage({
           >
             {events.length} event{events.length !== 1 ? "s" : ""}
           </div>
-          <div
-            style={{ display: "flex", flexDirection: "column", gap: "10px" }}
-          >
-            {events.map((event) => {
-              const { date, range } = formatEventTime(
-                new Date(event.start),
-                event.end ? new Date(event.end) : null,
-                tz,
-              );
-              const attendees = [
-                ...new Set(
-                  event.interactions
-                    .filter((i) => i.person)
-                    .map((i) =>
-                      `${i.person!.first} ${i.person!.last ?? ""}`.trim(),
-                    ),
-                ),
-              ].slice(0, 3);
-              const calendars = [
-                ...new Set(
-                  event.calendarLinks.map(
-                    (link) =>
-                      link.connection.calendarSummary ?? link.calendarId,
-                  ),
-                ),
-              ];
-
-              return (
-                <a
-                  key={event.id}
-                  href={`/events/${event.id}`}
-                  className="event-row"
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "120px 1fr auto",
-                    gap: "16px",
-                    alignItems: "start",
-                    background: "var(--surface)",
-                    border: "1px solid transparent",
-                    borderRadius: "var(--radius)",
-                    boxShadow: "var(--shadow-sm)",
-                    padding: "16px 18px",
-                    textDecoration: "none",
-                    color: "inherit",
-                    transition: "border-color 0.1s, box-shadow 0.1s",
-                  }}
-                >
-                  <div>
-                    <div
-                      style={{
-                        fontSize: "11px",
-                        color: "var(--ink-4)",
-                        marginBottom: "4px",
-                      }}
-                    >
-                      {date}
-                    </div>
-                    <div style={{ fontSize: "12px", color: "var(--cognac)" }}>
-                      {range}
-                    </div>
-                  </div>
-                  <div style={{ minWidth: 0 }}>
-                    <div
-                      style={{
-                        fontFamily: "var(--font-display)",
-                        fontSize: "17px",
-                        fontWeight: 400,
-                        marginBottom: "4px",
-                      }}
-                    >
-                      {event.name}
-                    </div>
-                    {calendars.length > 0 && (
-                      <div
-                        style={{
-                          fontSize: "11px",
-                          color: "var(--ink-4)",
-                          marginBottom: "4px",
-                        }}
-                      >
-                        {calendars.length === 1
-                          ? `Calendar: ${calendars[0]}`
-                          : `Calendars: ${calendars.join(" + ")}`}
-                      </div>
-                    )}
-                    {attendees.length > 0 && (
-                      <div
-                        style={{
-                          fontSize: "11px",
-                          color: "var(--ink-3)",
-                          marginBottom: "4px",
-                        }}
-                      >
-                        with {attendees.join(", ")}
-                      </div>
-                    )}
-                    {event.place && (
-                      <div style={{ fontSize: "11px", color: "var(--ink-4)" }}>
-                        📍 {event.place.name}
-                      </div>
-                    )}
-                  </div>
-                  <div style={{ textAlign: "right" }}>
-                    <span
-                      style={{
-                        fontSize: "10px",
-                        color: "var(--ink-4)",
-                        background: "var(--cognac-soft)",
-                        padding: "3px 8px",
-                        borderRadius: "var(--radius-pill)",
-                        whiteSpace: "nowrap",
-                      }}
-                    >
-                      {formatEventType(event.type)}
-                    </span>
-                    {event._count.interactions > 0 && (
-                      <div
-                        style={{
-                          fontSize: "10px",
-                          color: "var(--ink-4)",
-                          marginTop: "6px",
-                        }}
-                      >
-                        {event._count.interactions} interaction
-                        {event._count.interactions !== 1 ? "s" : ""}
-                      </div>
-                    )}
-                  </div>
-                </a>
-              );
-            })}
-          </div>
+          <TimelineList
+            timeZone={tz}
+            items={events.map((event) => ({
+              id: event.id,
+              name: event.name,
+              start: event.start.toISOString(),
+              end: event.end ? event.end.toISOString() : null,
+              href: event.href,
+              type: event.type,
+              place: event.place,
+              attendees: event.attendees,
+              calendars: event.calendars,
+              interactionCount: event.interactionCount,
+              planId: event.planId,
+              declaredAttendance: event.declaredAttendance,
+              reconciliationStatus: event.reconciliationStatus,
+              tension: event.tension,
+              phase: event.phase,
+            }))}
+          />
         </>
       )}
     </div>
