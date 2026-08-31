@@ -169,6 +169,7 @@ export async function googleCalendarStatus(actor: AccessActor) {
       accountEmail: true,
       calendarId: true,
       calendarSummary: true,
+      ownerAttendanceDefault: true,
       scope: true,
       lastSyncedAt: true,
       lastError: true,
@@ -222,6 +223,30 @@ export async function googleCalendarStatus(actor: AccessActor) {
     availableCalendars,
     discoveryError,
   };
+}
+
+export async function updateCalendarOwnerAttendanceDefault(
+  actor: AccessActor,
+  connectionId: string,
+  attendance: "going" | "not_going",
+) {
+  const connection = await db.calendarConnection.findFirst({
+    where: { id: connectionId, workspaceId: actor.workspaceId, provider: "google" },
+    select: { id: true, status: true },
+  });
+  if (!connection) throw notFound("Calendar not found");
+  await db.calendarConnection.update({
+    where: { id: connection.id },
+    data: { ownerAttendanceDefault: attendance },
+  });
+  await auditAction({
+    actor: actor.actor,
+    action: "calendar.attendance_default",
+    targetType: "calendarConnection",
+    targetId: connection.id,
+    metadata: { ownerAttendanceDefault: attendance },
+  });
+  return googleCalendarStatus(actor);
 }
 
 export async function googleCalendarTrace(

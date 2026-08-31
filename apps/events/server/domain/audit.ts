@@ -43,6 +43,7 @@ export type AuditAction =
   | "approvedEmail.update"
   | "calendar.connect"
   | "calendar.sync"
+  | "calendar.attendance_default"
   | "gmail.connect"
   | "gmail.sync"
   | "group.create"

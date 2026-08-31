@@ -7853,7 +7853,8 @@ export const CalendarConnectionScalarFieldEnum = {
   syncTokenEncrypted: 'syncTokenEncrypted',
   fullSyncPageToken: 'fullSyncPageToken',
   lastSyncedAt: 'lastSyncedAt',
-  lastError: 'lastError'
+  lastError: 'lastError',
+  ownerAttendanceDefault: 'ownerAttendanceDefault'
 } as const
 
 export type CalendarConnectionScalarFieldEnum = (typeof CalendarConnectionScalarFieldEnum)[keyof typeof CalendarConnectionScalarFieldEnum]
@@ -8194,6 +8195,7 @@ export const PlanScalarFieldEnum = {
   externalInstanceId: 'externalInstanceId',
   reconciliationStatus: 'reconciliationStatus',
   reconciledAt: 'reconciledAt',
+  ownerAttendance: 'ownerAttendance',
   sourceNoteId: 'sourceNoteId'
 } as const
 

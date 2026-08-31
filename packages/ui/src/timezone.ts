@@ -60,6 +60,42 @@ export function writeTzCookie(tz: string): void {
   document.cookie = `${TZ_COOKIE}=${encodeURIComponent(tz)}; path=/; max-age=${maxAge}; SameSite=Lax${domain}`
 }
 
+export function dayKey(date: Date, timeZone: string) {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(date)
+  const value = (type: string) => parts.find(part => part.type === type)?.value ?? ""
+  return `${value("year")}-${value("month")}-${value("day")}`
+}
+
+export function shiftDay(value: string, days: number) {
+  const date = new Date(`${value}T12:00:00Z`)
+  date.setUTCDate(date.getUTCDate() + days)
+  return date.toISOString().slice(0, 10)
+}
+
+export function zonedDayBounds(value: string, timeZone: string) {
+  return {
+    start: zonedMidnight(value, timeZone),
+    end: zonedMidnight(shiftDay(value, 1), timeZone),
+  }
+}
+
+function zonedMidnight(value: string, timeZone: string) {
+  const utcMidnight = new Date(`${value}T00:00:00Z`)
+  const offsetName = new Intl.DateTimeFormat("en-US", {
+    timeZone,
+    timeZoneName: "longOffset",
+  }).formatToParts(utcMidnight).find(part => part.type === "timeZoneName")?.value
+  const match = offsetName?.match(/^GMT([+-])(\d{2}):(\d{2})$/)
+  if (!match) return utcMidnight
+  const minutes = (Number(match[2]) * 60 + Number(match[3])) * (match[1] === "+" ? 1 : -1)
+  return new Date(utcMidnight.getTime() - minutes * 60_000)
+}
+
 // A curated shortlist for the picker; freeform entry is always allowed.
 export const COMMON_TIME_ZONES = [
   "America/Los_Angeles",
