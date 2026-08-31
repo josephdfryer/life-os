@@ -18,7 +18,6 @@
     "migrate:dev": "prisma migrate dev",
     "migrate:deploy": "prisma migrate deploy",
     "migrate:turso:wardrobe": "tsx turso-migrate-wardrobe.ts",
-    "diagnose:empty-places": "tsx diagnose-empty-places.ts",
     "repair:workspace-membership": "tsx repair-workspace-membership.ts"
   },
   "dependencies": {

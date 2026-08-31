@@ -26,8 +26,16 @@ import { db } from "./index"
 //
 //   ... then re-run the same command with --apply once the plan looks right.
 //
-// Run diagnose-empty-places.ts FIRST to learn which workspaceId actually holds
-// your data — that is the value to pass to --workspace.
+// To find the workspaceId that actually holds the data, before running this:
+//
+//   SELECT w.id, w.name, w.status,
+//          (SELECT COUNT(*) FROM "Place"  WHERE "workspaceId" = w.id) AS places,
+//          (SELECT COUNT(*) FROM "Person" WHERE "workspaceId" = w.id) AS persons
+//   FROM "Workspace" w ORDER BY places DESC;
+//
+// The workspace holding the rows is the one to pass to --workspace. This
+// script re-reports those same counts for whatever you pass, so a wrong id is
+// obvious in the dry run before anything is written.
 
 type Args = { email?: string; workspace?: string; role?: string; apply: boolean }
 
@@ -81,7 +89,7 @@ async function main() {
     where: { id: args.workspace },
     select: { id: true, name: true, status: true, ownerUserId: true },
   })
-  if (!workspace) die(`No Workspace with id "${args.workspace}". Run diagnose-empty-places.ts to list real ids.`)
+  if (!workspace) die(`No Workspace with id "${args.workspace}". Query the Workspace table for real ids (see the header comment).`)
   if (workspace.status !== "active") {
     die(`Workspace "${workspace.id}" has status "${workspace.status}". resolveWorkspace ignores non-active workspaces, so pointing at it would not help. Reactivate it first.`)
   }
@@ -97,7 +105,7 @@ async function main() {
   console.log(`  places=${places}  persons=${persons}  events=${events}`)
   if (places === 0 && persons === 0 && events === 0) {
     console.log("  ! This workspace is EMPTY. If you expected data here, you have the wrong id —")
-    console.log("    re-check diagnose-empty-places.ts section 2 before applying.")
+    console.log("    re-check which workspace holds your rows before applying.")
   }
   console.log()
 
@@ -137,7 +145,7 @@ async function main() {
   if (!plan.length) {
     console.log("  (nothing to change — this user already resolves to exactly this workspace)")
     console.log("\nIf surfaces are still blank, the cause is not workspace resolution. Stop here and")
-    console.log("re-read diagnose-empty-places.ts sections 1-3 before changing anything else.\n")
+    console.log("look at the data itself before changing anything else.\n")
     return
   }
   for (const line of plan) console.log(`  ${line}`)
