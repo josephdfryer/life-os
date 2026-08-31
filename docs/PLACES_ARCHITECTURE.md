@@ -7,6 +7,7 @@ Places is the standalone LifeOS app for the Place primitive. It lives in `apps/p
 ```mermaid
 flowchart TD
   Browser["Browser"] --> App["apps/places Next.js app"]
+  Browser --> MapKit["Apple MapKit JS 6"]
   App --> Auth["NextAuth Google OAuth"]
   App --> API["/api/places/*"]
   API --> Domain["apps/places/server/domain/places.ts"]
@@ -34,7 +35,9 @@ flowchart TD
 
 - Place stats are derived, never stored.
 - `stats.totalSpend` comes from `Interaction.amount` on Events at each Place.
-- Low map zoom rolls up affiliated Groups, mid zoom clusters nearby Places, and max zoom resolves individual Place pins.
+- Apple MapKit JS clusters nearby Places and unresolved observations as the
+  camera moves; individual LifeOS markers retain their semantic colors and
+  derived enrichment badges.
 - Places uses the same Google OAuth env vars as Persons and Stuff.
 - All reads and writes carry `workspaceId`.
 - Google Maps imports create `ImportJob` records, auto-create high-confidence Place + Event records, and stage ambiguous visits in `ImportStagedVisit`.
@@ -96,8 +99,8 @@ so the back link restores the result context.
 Map movement does not silently change result membership. “Search this area”
 captures the current viewport as the `bounds` filter, and the removable Map area
 chip clears it. Selected Places open in a map-overlay drawer on desktop and the
-same surface becomes a bottom sheet on small screens. The map canvas itself is
-focusable and supports arrow-key panning plus keyboard zoom.
+same surface becomes a bottom sheet on small screens. MapKit JS owns native
+pointer, touch, and keyboard map interaction.
 
 The Place profile is visit-led: it uses a compact identity/location header and
 groups the memory thread by month. Empty enrichments remain secondary, and all
@@ -135,21 +138,29 @@ and total counts update after confirmed actions without guessing.
 
 ## Renderer and performance boundary
 
-The current renderer remains provisionally custom pending the browser comparison
-recorded in `docs/adr/ADR-PLACES-MAP-RENDERER.md`. Camera input is scheduled at
-most once per animation frame; projection culls off-screen markers; cluster
-identity is deterministic regardless of input ordering; and collision-aware
-labels prioritize the selected Place, then higher-signal Places. Client
-instrumentation reports only operation name, item count, and rounded duration
-when viewport, clustering, or unresolved-coordinate work exceeds 16 ms. It never
-records coordinates or Place names.
+The map uses Apple MapKit JS 6 through Apple's `@apple/mapkit-loader`, loading
+the `full-map` and `annotations` libraries. MapKit owns basemap tiles, attribution, camera
+gestures, controls, label collision, and clustering. LifeOS owns the
+renderer-neutral `lat`/`lng`/`z` URL contract, explicit map-area bounds,
+selection, Place/review annotations, and Still-styled enrichment badges. The
+conversion between MapKit coordinate regions and the LifeOS camera contract is
+isolated in `components/map/apple-map-camera.ts`.
+
+The server reads `APPLE_MAPS_TOKEN` and passes it only to the Places client that
+initializes MapKit through `@apple/mapkit-loader`'s `load({ token })` API. The
+token is necessarily visible to MapKit in the browser and therefore must be
+restricted to the production Places domain (and any explicit local-review
+domains) in the Apple Developer portal. Missing or rejected tokens produce an
+actionable map state rather than silently falling back to a second tile
+provider.
 
 The initial map payload is summary-only. People enrichment contains a per-Place
 Interaction count, and finance contains transaction count plus aggregate amount.
 Individual people, Interaction summaries, merchants, and transaction dates are
 loaded only through the Place profile rather than serialized into every map
-visit. The deterministic 2,000-Place benchmark is owned by
-`apps/places/scripts/benchmark-map.ts`.
+visit. The historical deterministic 2,000-Place custom-renderer benchmark
+remains in `apps/places/scripts/benchmark-map.ts` for regression context; it is
+not a benchmark of MapKit's remotely loaded renderer.
 
 Map color is semantic and centralized in Places CSS variables. Cognac and warm
 food tones identify hospitality; green identifies retail/nature and spending;

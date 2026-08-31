@@ -1,18 +1,40 @@
 "use client"
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import { usePathname } from 'next/navigation';
 import { LIFE_OS_APPS, type LifeOSAppKey } from './app-registry';
 import { AppMark, LifeOSMarkSmall } from './marks';
 
+const COMPACT_CHROME_QUERY = '(max-width: 640px)';
+
+function subscribeCompactChrome(onStoreChange: () => void) {
+  const media = window.matchMedia(COMPACT_CHROME_QUERY);
+  media.addEventListener('change', onStoreChange);
+  return () => media.removeEventListener('change', onStoreChange);
+}
+
+function getCompactChromeSnapshot() {
+  return window.matchMedia(COMPACT_CHROME_QUERY).matches;
+}
+
+function getCompactChromeServerSnapshot() {
+  return false;
+}
+
+function useCompactChrome() {
+  return useSyncExternalStore(
+    subscribeCompactChrome,
+    getCompactChromeSnapshot,
+    getCompactChromeServerSnapshot,
+  );
+}
+
 const HOME_URL = LIFE_OS_APPS[0].url;
 const SHELL_NAV = [
   { label: 'Today', path: '/' },
-  { label: 'Stream', path: '/stream' },
   { label: 'Inbox', path: '/inbox' },
   { label: 'Intelligence', path: '/intelligence' },
   { label: 'Automation', path: '/automation' },
-  { label: 'Connections', path: '/connections' },
   { label: 'Admin', path: '/admin' },
 ] as const;
 
@@ -29,6 +51,8 @@ export interface LifeOSBarProps {
   };
   /** Satellite sign-out action. Supplied by the shared auth client wrapper. */
   onSignOut?: () => void | Promise<void>;
+  /** Home can defer compact-width shell links to a bottom tab bar instead. */
+  deferCompactShellNav?: boolean;
   style?: React.CSSProperties;
 }
 
@@ -39,21 +63,26 @@ export interface LifeOSBarProps {
  *
  *   <LifeOSBar current="persons" />
  */
-export function LifeOSBar({ current, rightSlot, account, onSignOut, style }: LifeOSBarProps) {
+export function LifeOSBar({ current, rightSlot, account, onSignOut, deferCompactShellNav = false, style }: LifeOSBarProps) {
   const pathname = usePathname();
+  const compact = useCompactChrome();
   const [open, setOpen] = useState(false);
+  const [sectionsOpen, setSectionsOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+  const sectionsRef = useRef<HTMLDivElement>(null);
   const accountRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     function onClick(e: MouseEvent) {
       if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+      if (sectionsRef.current && !sectionsRef.current.contains(e.target as Node)) setSectionsOpen(false);
       if (accountRef.current && !accountRef.current.contains(e.target as Node)) setAccountOpen(false);
     }
     function onKey(e: KeyboardEvent) {
       if (e.key === 'Escape') {
         setOpen(false);
+        setSectionsOpen(false);
         setAccountOpen(false);
       }
     }
@@ -71,8 +100,12 @@ export function LifeOSBar({ current, rightSlot, account, onSignOut, style }: Lif
 
   const currentApp = LIFE_OS_APPS.find(a => a.key === current) ?? LIFE_OS_APPS[0];
   const isHome = current === 'home';
-  const captureHref = current === 'home' ? '#quick-capture' : `${HOME_URL}/#quick-capture`;
+  const captureHref = current === 'home' ? '/#assistant' : `${HOME_URL}/#assistant`;
   const shellHref = (path: string) => current === 'home' ? path : `${HOME_URL}${path}`;
+  const collapseHomeNav = isHome && compact && !deferCompactShellNav;
+  const activeSection = SHELL_NAV.find(item =>
+    item.path === '/' ? pathname === '/' : pathname.startsWith(item.path),
+  );
 
   return (
     <div
@@ -80,13 +113,13 @@ export function LifeOSBar({ current, rightSlot, account, onSignOut, style }: Lif
         position: 'sticky',
         top: 0,
         zIndex: 60,
-        height: 40,
+        minHeight: 40,
         background: 'var(--surface)',
         borderBottom: '1px solid var(--border-subtle, var(--border, rgba(0,0,0,0.08)))',
         display: 'flex',
         alignItems: 'center',
-        padding: '0 16px',
-        gap: 10,
+        padding: compact ? '0 12px' : '0 16px',
+        gap: compact ? 8 : 10,
         fontFamily: 'var(--font-body, system-ui)',
         ...style,
       }}
@@ -105,12 +138,24 @@ export function LifeOSBar({ current, rightSlot, account, onSignOut, style }: Lif
         }}
       >
         <LifeOSMarkSmall size={15} style={{ color: 'var(--cognac, var(--accent, #8f6b4a))', display: 'block', flexShrink: 0 }} />
-        <span style={{ fontFamily: 'var(--font-display, serif)', fontSize: 14, fontWeight: 500, letterSpacing: '-0.01em' }}>
-          LifeOS
-        </span>
+        {!compact && (
+          <span style={{ fontFamily: 'var(--font-display, serif)', fontSize: 14, fontWeight: 500, letterSpacing: '-0.01em' }}>
+            LifeOS
+          </span>
+        )}
       </a>
 
-      <span aria-hidden style={{ color: 'var(--ink-4, #b8b2a8)', fontSize: 12 }}>/</span>
+      <span
+        aria-hidden
+        style={{
+          color: 'var(--ink-4, #b8b2a8)',
+          fontSize: 12,
+          flexShrink: 0,
+          display: compact ? 'none' : 'inline',
+        }}
+      >
+        /
+      </span>
 
       {/* App switcher */}
       <div ref={ref} style={{ position: 'relative', flexShrink: 0 }}>
@@ -198,11 +243,99 @@ export function LifeOSBar({ current, rightSlot, account, onSignOut, style }: Lif
         )}
       </div>
 
-      {isHome && (
+      {isHome && collapseHomeNav && (
+        <div ref={sectionsRef} style={{ position: 'relative', flexShrink: 0 }}>
+          <button
+            type="button"
+            aria-label="Open LifeOS sections"
+            aria-haspopup="menu"
+            aria-expanded={sectionsOpen}
+            onClick={() => setSectionsOpen(value => !value)}
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 6,
+              padding: '4px 10px',
+              borderRadius: 'var(--radius-pill, 999px)',
+              border: sectionsOpen
+                ? '1px solid var(--cognac-soft, rgba(181,131,90,0.35))'
+                : '1px solid var(--border-subtle, var(--border, rgba(0,0,0,0.08)))',
+              background: sectionsOpen ? 'var(--cognac-soft, rgba(181,131,90,0.12))' : 'transparent',
+              cursor: 'pointer',
+              fontFamily: 'inherit',
+              fontSize: 12,
+              color: 'var(--ink-2, #524a42)',
+              maxWidth: 132,
+            }}
+          >
+            <span aria-hidden style={{ fontSize: 14, lineHeight: 1 }}>☰</span>
+            <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+              {activeSection?.label ?? 'Sections'}
+            </span>
+          </button>
+
+          {sectionsOpen && (
+            <div
+              role="menu"
+              style={{
+                position: 'absolute',
+                top: 'calc(100% + 6px)',
+                left: 0,
+                minWidth: 220,
+                background: 'var(--surface, #fff)',
+                border: '1px solid var(--border-subtle, var(--border, rgba(0,0,0,0.08)))',
+                borderRadius: 12,
+                padding: 6,
+                boxShadow: '0 8px 28px rgba(26,24,20,0.14)',
+                zIndex: 100,
+              }}
+            >
+              {SHELL_NAV.map(item => {
+                const active = item.path === '/' ? pathname === '/' : pathname.startsWith(item.path);
+                return (
+                  <a
+                    key={item.path}
+                    href={shellHref(item.path)}
+                    role="menuitem"
+                    aria-current={active ? 'page' : undefined}
+                    onClick={() => setSectionsOpen(false)}
+                    style={{
+                      ...accountLinkStyle,
+                      borderRadius: 8,
+                      color: active ? 'var(--cognac-deep, #8a5a2f)' : accountLinkStyle.color,
+                      fontWeight: active ? 500 : 400,
+                    }}
+                  >
+                    {item.label}
+                  </a>
+                );
+              })}
+              <a
+                href={captureHref}
+                role="menuitem"
+                onClick={() => setSectionsOpen(false)}
+                style={{ ...accountLinkStyle, borderRadius: 8, marginTop: 4, borderTop: '1px solid var(--border-subtle, rgba(0,0,0,0.08))', paddingTop: 10 }}
+              >
+                Capture
+              </a>
+            </div>
+          )}
+        </div>
+      )}
+
+      {isHome && !collapseHomeNav && (
         <>
           <nav
             aria-label="LifeOS sections"
-            style={{ display: 'flex', alignItems: 'center', gap: 2, overflowX: 'auto', scrollbarWidth: 'none' }}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 2,
+              flex: 1,
+              minWidth: 0,
+              overflowX: 'auto',
+              scrollbarWidth: 'none',
+            }}
           >
             {SHELL_NAV.map(item => {
               const active = item.path === '/' ? pathname === '/' : pathname.startsWith(item.path);
@@ -236,6 +369,7 @@ export function LifeOSBar({ current, rightSlot, account, onSignOut, style }: Lif
               display: 'inline-flex',
               alignItems: 'center',
               gap: 5,
+              flexShrink: 0,
               padding: '4px 10px',
               border: '1px solid var(--border-subtle, var(--border, rgba(0,0,0,0.08)))',
               borderRadius: 'var(--radius-pill, 999px)',
@@ -251,7 +385,7 @@ export function LifeOSBar({ current, rightSlot, account, onSignOut, style }: Lif
         </>
       )}
 
-      <div ref={accountRef} style={{ marginLeft: 'auto', position: 'relative' }}>
+      <div ref={accountRef} style={{ marginLeft: 'auto', position: 'relative', flexShrink: 0 }}>
           <button
             type="button"
             aria-label="Open LifeOS account menu"

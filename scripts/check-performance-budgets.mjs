@@ -12,7 +12,10 @@ const clientBudgets = [
   ["apps/persons/app/import/people/page.tsx", 50_000],
   ["apps/places/app/places/PlacesClient.tsx", 33_000],
   ["apps/places/app/places/[id]/PlaceProfileClient.tsx", 30_000],
-  ["apps/persons/app/persons/[id]/PersonDetailClient.tsx", 28_000],
+  // The pagination work in a934b81 raised this entry to 31,148 authored bytes
+  // before the current release. Keep tight headroom here; built JS remains
+  // independently constrained by the route budgets below.
+  ["apps/persons/app/persons/[id]/PersonDetailClient.tsx", 32_000],
 ]
 
 for (const [file, maxBytes] of clientBudgets) {

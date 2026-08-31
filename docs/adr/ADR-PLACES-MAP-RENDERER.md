@@ -1,69 +1,64 @@
 # ADR: Places map renderer
 
-**Status:** Provisional — browser comparison required  
-**Date:** July 27, 2026
+**Status:** Accepted — live token-backed QA required
+
+**Date:** August 30, 2026
 
 ## Context
 
-Places currently renders OpenStreetMap raster tiles and HTML markers through a
-small custom renderer. The product now needs stable selection, clustering,
-keyboard controls, URL-restorable camera state, collision-aware labels, and
-smooth interaction with materially more than the current 205 Places.
+Places rendered OpenStreetMap raster tiles and HTML markers through a custom
+React renderer. The renderer preserved LifeOS semantics, but it also made the
+app responsible for map tiles, attribution, camera gestures, touch behavior,
+projection, collision handling, clustering, and viewport lifecycle.
 
-MapLibre GL JS is the leading replacement candidate. It would provide a mature
-GPU-backed camera, touch handling, vector styling, symbol collision, and
-clustering, but would also add a substantial rendering dependency and require a
-visual migration. Existing custom-renderer investment is not a deciding factor.
+The earlier ADR kept that renderer provisionally while comparing it with
+MapLibre. The product direction subsequently selected Apple Maps. MapKit JS 6
+now supplies Apple's web map renderer and a typed first-party loader.
 
-## Evidence available
+## Decision
 
-`npm run benchmark:map -w places` uses a deterministic 2,000-Place fixture and
-120 moving-camera frames. On July 27, 2026, custom viewport projection plus
-clustering measured:
+Use Apple MapKit JS 6 as the Places renderer through
+`@apple/mapkit-loader`, loading `full-map` and `annotations` with the official
+`load({ token })` path. Rejected tokens surface an error overlay instead of
+falling back to a second tile provider.
 
-| Metric | Result |
-| --- | ---: |
-| Median compute | 0.97 ms |
-| p95 compute | 1.69 ms |
-| Maximum compute | 10.80 ms |
-| Frame compute budget | 16 ms |
+MapKit owns:
 
-The initial `/places` route references 680,279 uncompressed JavaScript bytes,
-already below its 750,000-byte ceiling. Initial enrichment payloads now carry
-only map-summary counts; details remain on the Place profile.
+- basemap rendering and attribution;
+- pan, wheel, pinch, zoom, and keyboard interaction;
+- native map controls and camera lifecycle;
+- annotation collision and geographic clustering.
 
-These measurements show that custom map mathematics are currently within the
-frame compute budget. They do not measure DOM paint, tile loading, touch feel,
-accessibility-tree cost, or mobile interaction.
+LifeOS continues to own:
 
-## Provisional decision
+- the Place, visit, and enrichment payloads;
+- trusted Places versus unresolved-review modes;
+- semantic Still marker colors and derived badges;
+- selection, result rows, preview drawer, and memory profile navigation;
+- explicit “Search this area” filtering;
+- the renderer-neutral `lat`, `lng`, and `z` URL contract.
 
-Retain and harden the custom renderer until an instrumented browser comparison
-is available. Do not add MapLibre to production based only on theoretical
-advantages. Keep the domain payload and URL state renderer-neutral so MapLibre
-remains a rendering substitution if it wins the visual benchmark.
+The server supplies `APPLE_MAPS_TOKEN` to the client component. Maps tokens are
+browser credentials by design, so the Apple Developer configuration must
+restrict the token to the Places production domain and any intentional local
+review domains. There is no OpenStreetMap fallback: configuration failure is
+shown explicitly so production cannot silently drift between renderers.
 
-The custom renderer must retain:
+## Consequences
 
-- deterministic cluster identity independent of input ordering;
-- collision-aware labels with selected Places taking priority;
-- viewport culling and bounded unresolved observations;
-- one-frame camera scheduling;
-- keyboard navigation and complete tile attribution;
-- no detailed Interaction or financial records in the initial map payload.
+- High-frequency camera rendering no longer rerenders the React marker tree.
+- Apple owns tile availability, attribution, map-label collision, and gesture
+  behavior.
+- The existing data/query APIs and profile payload boundaries do not change.
+- MapKit's remotely loaded code is not represented by the historical local
+  bundle-size or projection benchmark; live performance must be measured in the
+  browser.
+- Running Places locally or in production now requires an Apple Maps token.
 
-## Required final comparison
+## Verification status
 
-At desktop, tablet, and mobile widths, compare the custom renderer and a
-MapLibre proof using current data and the deterministic stress fixture:
-
-- pan, wheel, pinch, and drag smoothness;
-- touch behavior and accidental selection;
-- clustering and label collision stability;
-- keyboard and screen-reader behavior;
-- tile failure and slow-network behavior;
-- compressed bundle delta and hydration cost;
-- ease of expressing Still styling;
-- maintenance burden.
-
-This ADR becomes Accepted only after those browser measurements are recorded.
+Type checking, lint, camera/region contract tests, the complete Places test
+suite, and a production build verify the local integration. Final desktop,
+tablet, mobile, slow-network, and assistive-technology checks remain open until
+a domain-restricted token is configured. Record those results under `PL-501` in
+`docs/PLACES_WORLD_CLASS_PLAN.md`.

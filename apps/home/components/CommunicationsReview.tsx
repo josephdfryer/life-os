@@ -363,7 +363,7 @@ export default function CommunicationsReview({
                         <small>{formatTimestamp(item.timestamp)}{item.direction ? ` · ${item.direction}` : ""}</small>
                       </span>
                       <span className="communication-preview">{item.summary}</span>
-                      <span className="communication-toggle" aria-hidden="true">{expanded ? "−" : "+"}</span>
+                      <span aria-hidden="true">{expanded ? "−" : "+"}</span>
                     </button>
                   </div>
                   {expanded && (

@@ -350,17 +350,16 @@ provenance-aware work.
 **Goal:** Choose and implement a map architecture that can remain world-class as
 data and interaction complexity grow.
 
-- [ ] `PL-500` Benchmark the improved custom renderer against a MapLibre proof of
-  concept using current and stress-test datasets.
-- [ ] `PL-501` Compare pan/zoom smoothness, touch behavior, clustering, marker
+- [x] `PL-500` Replace the custom OpenStreetMap renderer with the selected Apple
+  MapKit JS renderer while preserving the existing explorer contract.
+- [ ] `PL-501` Verify pan/zoom smoothness, touch behavior, clustering, marker
   collision, accessibility, bundle cost, tile handling, maintenance burden, and
-  visual integration with Still.
-- [ ] `PL-502` Record the decision in an ADR.
-- [ ] `PL-503` If retaining the custom renderer, move high-frequency camera
-  transforms out of full React rerenders and add a spatial index or viewport
-  culling.
-- [ ] `PL-504` If adopting MapLibre, preserve the domain API and URL state contract
-  so the change remains a rendering substitution rather than a product rewrite.
+  visual integration with Still on the token-backed production domain.
+- [x] `PL-502` Record the Apple MapKit JS decision in an ADR.
+- [x] `PL-503` Remove high-frequency camera transforms from React and delegate
+  them to MapKit's renderer.
+- [x] `PL-504` Preserve the domain API, selection behavior, explicit area search,
+  and URL camera contract so the change remains a rendering substitution.
 - [x] `PL-505` Implement marker collision/label strategy and stable clustering.
 - [x] `PL-506` Load or paginate expensive enrichment details on demand instead of
   sending every detail with the initial map.

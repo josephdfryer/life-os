@@ -7,6 +7,7 @@ import { TimezoneDetector } from "@life-os/ui"
 import { AuthenticatedLifeOSBar } from "@life-os/auth/client"
 import { isMarketingHost } from "@/lib/site"
 import Providers from "./providers"
+import HomeMobileTabBar from "../components/HomeMobileTabBar"
 
 const inter = Inter({
   subsets: ["latin"],
@@ -54,7 +55,8 @@ async function SiteChrome() {
   return (
     <Providers>
       <TimezoneDetector />
-      <AuthenticatedLifeOSBar current="home" />
+      <AuthenticatedLifeOSBar current="home" deferCompactShellNav />
+      <HomeMobileTabBar />
     </Providers>
   )
 }

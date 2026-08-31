@@ -15,6 +15,7 @@ export function personListInclude(now = new Date()) {
         source: true,
         timestamp: true,
         summary: true,
+        // Only select fields we actually use in the UI
       },
     },
     plans: {
@@ -25,8 +26,10 @@ export function personListInclude(now = new Date()) {
         id: true,
         text: true,
         dueOn: true,
+        // Only select fields we need
       },
     },
+    // Don't include groupMemberships unless specifically needed
   } as const satisfies Prisma.PersonInclude
 }
 
