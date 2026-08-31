@@ -26,6 +26,7 @@ Event data lives once on the Event node. Personal layers live on Interaction edg
 - `/groups/[id]/meetings` — deterministic company/group meeting lens
 - `/api/events` — session-authenticated CRUD
 - `/api/calendar/plans/[id]/attendance` — owner going / not going / did go / didn't
+- `/api/event-signals/[id]` — one-click event reinforcement (not event / went / didn't)
 - `/api/calendar/google/attendance-default` — per-calendar default attendance
 - `/api/granola/{connect,status,sync,disconnect}` — workspace-scoped Granola operations
 - `/api/cron/granola-sync` — `CRON_SECRET`-authenticated daily reconciliation
