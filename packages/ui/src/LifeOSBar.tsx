@@ -51,6 +51,8 @@ export interface LifeOSBarProps {
   };
   /** Satellite sign-out action. Supplied by the shared auth client wrapper. */
   onSignOut?: () => void | Promise<void>;
+  /** Home can defer compact-width shell links to a bottom tab bar instead. */
+  deferCompactShellNav?: boolean;
   style?: React.CSSProperties;
 }
 
@@ -61,7 +63,7 @@ export interface LifeOSBarProps {
  *
  *   <LifeOSBar current="persons" />
  */
-export function LifeOSBar({ current, rightSlot, account, onSignOut, style }: LifeOSBarProps) {
+export function LifeOSBar({ current, rightSlot, account, onSignOut, deferCompactShellNav = false, style }: LifeOSBarProps) {
   const pathname = usePathname();
   const compact = useCompactChrome();
   const [open, setOpen] = useState(false);
@@ -98,9 +100,9 @@ export function LifeOSBar({ current, rightSlot, account, onSignOut, style }: Lif
 
   const currentApp = LIFE_OS_APPS.find(a => a.key === current) ?? LIFE_OS_APPS[0];
   const isHome = current === 'home';
-  const captureHref = current === 'home' ? '#quick-capture' : `${HOME_URL}/#quick-capture`;
+  const captureHref = current === 'home' ? '/#assistant' : `${HOME_URL}/#assistant`;
   const shellHref = (path: string) => current === 'home' ? path : `${HOME_URL}${path}`;
-  const collapseHomeNav = isHome && compact;
+  const collapseHomeNav = isHome && compact && !deferCompactShellNav;
   const activeSection = SHELL_NAV.find(item =>
     item.path === '/' ? pathname === '/' : pathname.startsWith(item.path),
   );

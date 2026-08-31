@@ -101,13 +101,7 @@ async function HomePageContent() {
         </div>
 
         {/* App nav footer */}
-        <div
-          style={{
-            marginTop: '64px',
-            borderTop: '1px solid #2a424c',
-            paddingTop: '32px',
-          }}
-        >
+        <div className="dashboard-apps-footer">
           <div
             style={{
               fontSize: '11px',

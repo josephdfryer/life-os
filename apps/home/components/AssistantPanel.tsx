@@ -56,6 +56,16 @@ export default function AssistantPanel() {
   }, [loaded, messages, thinking])
 
   useEffect(() => {
+    if (window.location.hash !== "#assistant") return
+    const panel = document.getElementById("assistant")
+    if (!panel) return
+    window.setTimeout(() => {
+      panel.scrollIntoView({ behavior: "smooth", block: "start" })
+      inputRef.current?.focus()
+    }, 120)
+  }, [loaded])
+
+  useEffect(() => {
     const controller = new AbortController()
     fetch(`/api/assistant/chat?limit=${INITIAL_MESSAGE_COUNT}`, { signal: controller.signal })
       .then(res => (res.ok ? res.json() : { messages: [] }))
@@ -125,7 +135,7 @@ export default function AssistantPanel() {
   }
 
   return (
-    <div className="dashboard-assistant-card" style={card}>
+    <div id="assistant" className="dashboard-assistant-card" style={card}>
       <h2 style={{ ...heading, marginBottom: "16px" }}>Assistant</h2>
 
       <div
