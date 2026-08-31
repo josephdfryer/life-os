@@ -29,7 +29,7 @@ test("skips a stale SQLite URL and selects the available PostgreSQL URL", () => 
 test("fails closed when only SQLite configuration is available", () => {
   assert.throws(
     () => resolvePostgresDatabaseUrl(undefined, ["file:./dev.db"]),
-    /requires a PostgreSQL DATABASE_URL/,
+    /require a PostgreSQL DATABASE_URL/,
   )
 })
 

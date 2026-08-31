@@ -21,6 +21,7 @@ const PLIST_NAMES = [
   "com.lifeos.photossync",
   "com.lifeos.documentsync",
   "com.lifeos.notefacts",
+  "com.lifeos.imessage",
   "com.lifeos.whatsappsync",
 ]
 

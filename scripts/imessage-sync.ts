@@ -3,33 +3,20 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { createRequire } from "node:module";
 import type { PrismaClient } from "@life-os/db";
-import { runRulesForTarget } from "@life-os/automation";
-import {
-  appendDailySourceInteraction,
-  createReviewItem,
-} from "@life-os/domain";
 import { assignColor } from "./lib/colors";
 import { loadPostgresCollectorEnv } from "./lib/env";
-
-type BetterSqliteDatabase = {
-  pragma(sql: string): unknown;
-  prepare<TParams extends unknown[] = unknown[], TResult = unknown>(
-    sql: string,
-  ): {
-    all(...params: TParams): TResult[];
-    get(...params: TParams): TResult | undefined;
-  };
-  close(): void;
-};
+import {
+  openReadOnlySqlite,
+  type ReadOnlySqliteDatabase,
+} from "./lib/read-only-sqlite";
 
 type MessageRow = {
   messageId: number;
   guid: string | null;
   text: string | null;
   attributedBody: Buffer | null;
-  appleDate: number | bigint | null;
+  appleDate: number | bigint | string | null;
   isFromMe: number | null;
   handleId: string | null;
   uncanonicalizedId: string | null;
@@ -66,14 +53,12 @@ type ExistingPerson = {
   phones: string;
 };
 
-const require = createRequire(import.meta.url);
-const Database = require("better-sqlite3") as new (
-  filename: string,
-  options?: { readonly?: boolean; fileMustExist?: boolean },
-) => BetterSqliteDatabase;
 loadEnv();
 
 let db: PrismaClient;
+let appendDailySourceInteraction: typeof import("@life-os/domain").appendDailySourceInteraction;
+let createReviewItem: typeof import("@life-os/domain").createReviewItem;
+let runRulesForTarget: typeof import("@life-os/automation").runRulesForTarget;
 // Assigned in main() alongside `db` — a static top-level import of anything
 // from @life-os/db (even a pure string-utility function) would evaluate the
 // module's eager Prisma client creation before loadEnv() above runs.
@@ -86,10 +71,17 @@ const WORKSPACE_ID =
   process.env.IMESSAGE_SYNC_WORKSPACE_ID ?? "default-workspace";
 
 async function main() {
-  const dbModule = await import("@life-os/db");
+  const [dbModule, domainModule, automationModule] = await Promise.all([
+    import("@life-os/db"),
+    import("@life-os/domain"),
+    import("@life-os/automation"),
+  ]);
   db = dbModule.db;
   normalizePhone = dbModule.normalizePhoneDigits;
   phonesMatch = dbModule.phoneNumbersMatch;
+  appendDailySourceInteraction = domainModule.appendDailySourceInteraction;
+  createReviewItem = domainModule.createReviewItem;
+  runRulesForTarget = automationModule.runRulesForTarget;
   const options = parseArgs(process.argv.slice(2));
 
   if (options.initWatermark) {
@@ -248,20 +240,19 @@ function readMessages(
 ): MessageRow[] {
   const sqlite = openMessagesDb(chatDbPath);
   try {
-    sqlite.pragma("query_only = ON");
     const sinceClause = since ? "AND message.date >= ?" : "";
     const params = since
       ? [afterRowId, dateToAppleNanoseconds(since), limit]
       : [afterRowId, limit];
     return sqlite
-      .prepare<unknown[], MessageRow>(
+      .prepare<MessageRow>(
         `
       SELECT
         message.ROWID AS messageId,
         message.guid AS guid,
         message.text AS text,
         message.attributedBody AS attributedBody,
-        message.date AS appleDate,
+        CAST(message.date AS TEXT) AS appleDate,
         message.is_from_me AS isFromMe,
         handle.id AS handleId,
         handle.uncanonicalized_id AS uncanonicalizedId,
@@ -284,7 +275,13 @@ function readMessages(
       LIMIT ?
     `,
       )
-      .all(...params);
+      .all(...params)
+      .map((message) => ({
+        ...message,
+        attributedBody: message.attributedBody
+          ? Buffer.from(message.attributedBody)
+          : null,
+      }));
   } finally {
     sqlite.close();
   }
@@ -294,7 +291,7 @@ function readMaxMessageId(chatDbPath: string): number {
   const sqlite = openMessagesDb(chatDbPath);
   try {
     const row = sqlite
-      .prepare<[], { maxMessageId: number | null }>(
+      .prepare<{ maxMessageId: number | null }>(
         "SELECT MAX(ROWID) AS maxMessageId FROM message",
       )
       .get();
@@ -304,9 +301,9 @@ function readMaxMessageId(chatDbPath: string): number {
   }
 }
 
-function openMessagesDb(chatDbPath: string): BetterSqliteDatabase {
+function openMessagesDb(chatDbPath: string): ReadOnlySqliteDatabase {
   try {
-    return new Database(chatDbPath, { readonly: true, fileMustExist: true });
+    return openReadOnlySqlite(chatDbPath);
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
     throw new Error(
@@ -766,7 +763,10 @@ function findLast<T>(
 }
 
 function appleDateToDate(value: MessageRow["appleDate"]): Date {
-  const raw = typeof value === "bigint" ? Number(value) : (value ?? 0);
+  const raw =
+    typeof value === "bigint" || typeof value === "string"
+      ? Number(value)
+      : (value ?? 0);
   if (!raw) return new Date();
   if (raw > 100_000_000_000_000)
     return new Date(APPLE_EPOCH_MS + raw / 1_000_000);

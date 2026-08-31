@@ -249,7 +249,7 @@ flowchart TD
 
 Important idea: iMessages are person-level Interactions, not Event nodes. Matched iMessages append into one daily message Interaction per Person; unmatched iMessages do not create random new people and instead go to the Inbox staging area where you can review them.
 
-The hourly Mac LaunchAgent runs this collector against the canonical PostgreSQL database. Configuration explicitly prefers an inherited PostgreSQL URL, then the Persons app environment, and refuses to run against a stale SQLite URL. A dry run performs the same source-ID deduplication as a real run and reports how many records would become canonical Interactions versus staged review items. The watermark advances only after the complete batch succeeds, so a failed batch can be retried safely.
+The hourly `com.lifeos.imessage` Mac LaunchAgent runs this collector against the canonical PostgreSQL database. Configuration explicitly prefers an inherited PostgreSQL URL, then the Persons app environment, and refuses to run against a stale SQLite URL. The collector opens `chat.db` through Node's built-in SQLite runtime in read-only mode, so a Homebrew Node upgrade cannot strand it on an incompatible native addon. A dry run performs the same source-ID deduplication as a real run and reports how many records would become canonical Interactions versus staged review items. The watermark advances only after the complete batch succeeds, so a failed batch can be retried safely.
 
 Group texts are intentionally ignored by default before matching or staging. The watcher identifies multi-person chats from the Messages chat participant table, with the chat identifier as a fallback, so noisy group threads do not fill the Persons inbox or get appended to one person's daily interaction log. A one-off backfill can opt in with `--include-group-chats` when that is explicitly useful.
 
@@ -268,7 +268,9 @@ flowchart TD
 ```
 
 The WhatsApp watcher reads the desktop app's private SQLite database in
-read-only mode and never changes WhatsApp data. Its first-run
+read-only mode through Node's built-in SQLite runtime and never changes
+WhatsApp data. It uses the same canonical-PostgreSQL, fail-closed environment
+loader as iMessage. Its first-run
 `--init-watermark` command records the latest message ID, so enabling the
 watcher does not backfill conversation history. Subsequent runs use WhatsApp's
 stanza ID as the durable source identifier, falling back to the local message
