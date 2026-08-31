@@ -97,3 +97,6 @@ export type { TimezonePickerProps } from './TimezoneControls';
 
 export { BackLink }     from './BackLink';
 export type { BackLinkProps } from './BackLink';
+
+export { default as EventSignalsList } from './EventSignalsList';
+export type { EventSignalRow } from './EventSignalsList';

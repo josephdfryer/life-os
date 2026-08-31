@@ -5,6 +5,7 @@ import { listScheduleItems } from "@life-os/domain";
 import { auth } from "@/auth";
 import { getWorkspaceId } from "@/lib/workspace";
 import TimelineList from "@/components/TimelineList";
+import EventSignalsStrip from "@/components/EventSignalsStrip";
 import { parseEventListView, type EventListView } from "@/lib/events";
 
 export const dynamic = "force-dynamic";
@@ -109,6 +110,8 @@ export default async function EventsPage({
           </a>
         </div>
       </div>
+
+      <EventSignalsStrip workspaceId={workspaceId} tz={tz} />
 
       <div
         style={{

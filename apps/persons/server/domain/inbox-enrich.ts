@@ -40,6 +40,12 @@ type HaikuResponse = {
   summary: string | null;
   priority: number;
   isAutomatedOrAd: boolean;
+  suggestedOccurrence?: {
+    title: string;
+    occurredAt: string | null;
+    confidence: number;
+    reason: string;
+  } | null;
 };
 
 export async function enrichInboxItem(
@@ -90,8 +96,27 @@ export async function enrichInboxItem(
         priority: result.priority,
         enrichedAt: new Date(),
         ...(autoDismissed ? { status: "dismissed" } : {}),
+        ...(raw?.suggestedOccurrence ? {
+          metadata: JSON.stringify({
+            suggestedOccurrence: raw.suggestedOccurrence,
+          }),
+        } : {}),
       },
     });
+
+    if (!autoDismissed && raw?.suggestedOccurrence?.title && raw.suggestedOccurrence.confidence >= 0.55) {
+      const { stageCommunicationOccurrence } = await import("@life-os/domain");
+      await stageCommunicationOccurrence({
+        workspaceId,
+        stagedInteractionId: stagedId,
+        title: raw.suggestedOccurrence.title,
+        occurredAt: raw.suggestedOccurrence.occurredAt,
+        reason: raw.suggestedOccurrence.reason,
+        confidence: raw.suggestedOccurrence.confidence,
+        personId: result.candidatePersonId,
+        messageSource: input.source,
+      });
+    }
 
     if (autoDismissed) {
       await auditAction({
@@ -277,7 +302,8 @@ Required JSON:
   "reason": "<one sentence explaining the match or non-match>",
   "summary": "<1-2 sentence summary of the interaction content, or null if the body is trivial/empty>",
   "priority": <1-5, where 5=urgent question or commitment with deadline, 4=substantive exchange with known contact, 3=normal conversation, 2=fyi/informational, 1=automated or one-liner>,
-  "isAutomatedOrAd": <true ONLY if this is clearly a marketing message, advertisement, promotional blast, automated notification/receipt, appointment reminder, verification/2FA code, or similar non-personal automated content — not an actual message from a person. When in doubt, false.>
+  "isAutomatedOrAd": <true ONLY if this is clearly a marketing message, advertisement, promotional blast, automated notification/receipt, appointment reminder, verification/2FA code, or similar non-personal automated content — not an actual message from a person. When in doubt, false.>,
+  "suggestedOccurrence": <null unless the message clearly references a specific real-world gathering, meeting, dinner, party, show, trip, appointment, or other occurrence with a person — not a vague "let's hang sometime". When present: { "title": "<short event name>", "occurredAt": "<ISO8601 or null if only a date/window mentioned>", "confidence": <0-1>, "reason": "<one sentence why this looks like an event>" }>
 }`;
 
   const c = getClient();
