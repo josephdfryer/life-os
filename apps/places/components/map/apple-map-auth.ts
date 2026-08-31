@@ -1,10 +1,8 @@
 export const MAPKIT_LIBRARIES = ["full-map", "annotations"] as const
 
-type MapKitAuthEvent = { status?: string; detail?: { status?: string } }
-
 export type MapKitAuthTarget = {
-  addEventListener: (type: string, listener: (event: MapKitAuthEvent) => void) => void
-  removeEventListener: (type: string, listener: (event: MapKitAuthEvent) => void) => void
+  addEventListener(type: string, listener: (event: Event) => void): void
+  removeEventListener(type: string, listener: (event: Event) => void): void
 }
 
 export function sanitizeMapKitToken(token?: string | null): string | undefined {
@@ -20,8 +18,9 @@ export function mapKitLoadOptions(token: string) {
   }
 }
 
-export function configurationEventStatus(event: MapKitAuthEvent): string | undefined {
-  return event.status ?? event.detail?.status
+export function configurationEventStatus(event: Event): string | undefined {
+  const record = event as Event & { status?: string; detail?: { status?: string } }
+  return record.status ?? record.detail?.status
 }
 
 export function mapKitErrorMessage(status?: string): string {
@@ -39,7 +38,7 @@ export function mapKitErrorMessage(status?: string): string {
 }
 
 export function subscribeMapKitErrors(mapkit: MapKitAuthTarget, onError: (message: string) => void): () => void {
-  const listener = (event: MapKitAuthEvent) => {
+  const listener = (event: Event) => {
     onError(mapKitErrorMessage(configurationEventStatus(event)))
   }
   mapkit.addEventListener("error", listener)
