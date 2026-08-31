@@ -71,36 +71,19 @@ async function HomePageContent() {
 
   return (
     <div className="dashboard-page min-h-screen pb-12">
-      <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '48px 24px 0' }}>
+      <div className="dashboard-page-inner">
 
-        {/* Header */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '48px' }}>
-          <div>
-            <h1
-              style={{
-                fontFamily: 'var(--font-display)',
-                fontSize: 'clamp(2rem, 5vw, 3.5rem)',
-                fontWeight: 400,
-                letterSpacing: '-0.02em',
-                lineHeight: 1.1,
-                margin: 0,
-              }}
-            >
+        <div className="dashboard-header">
+          <div className="dashboard-header-greeting">
+            <h1 className="dashboard-greeting-title">
               {greeting}, {firstName}
             </h1>
-            <p
-              style={{
-                fontSize: '1rem',
-                color: 'var(--ink-3)',
-                marginTop: '8px',
-                marginBottom: 0,
-              }}
-            >
+            <p className="dashboard-greeting-date">
               {dateStr}
             </p>
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '6px' }}>
-            <div style={{ fontFamily: 'var(--font-display)', fontSize: '17px', color: 'var(--camel)' }}>LifeOS</div>
+          <div className="dashboard-header-meta">
+            <div className="dashboard-wordmark">LifeOS</div>
             <TimezonePicker current={tz} />
           </div>
         </div>
@@ -187,8 +170,8 @@ async function HomeDataPanels({
 function HomePageSkeleton() {
   return (
     <div className="dashboard-page min-h-screen pb-12">
-      <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '48px 24px 0' }}>
-        <div style={{ marginBottom: '48px' }}>
+      <div className="dashboard-page-inner">
+        <div className="dashboard-header dashboard-header-skeleton">
           <div style={{ width: '280px', height: '56px', borderRadius: '10px', background: 'rgba(247, 244, 238, 0.08)' }} />
           <div style={{ width: '180px', height: '18px', borderRadius: '8px', marginTop: '12px', background: 'rgba(247, 244, 238, 0.06)' }} />
         </div>

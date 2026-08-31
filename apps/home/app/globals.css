@@ -65,8 +65,68 @@ a {
   align-items: start;
 }
 
+.dashboard-page-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 48px 24px 0;
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 24px;
+  margin-bottom: 48px;
+}
+
+.dashboard-greeting-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.dashboard-greeting-date {
+  margin: 8px 0 0;
+  font-size: 1rem;
+  color: var(--ink-3);
+}
+
+.dashboard-header-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.dashboard-wordmark {
+  font-family: var(--font-display);
+  font-size: 17px;
+  color: var(--camel);
+}
+
+.assistant-message-list {
+  max-height: 360px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.assistant-composer-row {
+  display: flex;
+  gap: 10px;
+  align-items: flex-end;
+}
+
 .dashboard-assistant-card {
   grid-column: 1;
+  padding: 32px;
+}
+
+.assistant-send-button {
+  flex-shrink: 0;
 }
 
 .dashboard-schedule-card {
@@ -1410,6 +1470,55 @@ a {
 }
 
 @media (max-width: 640px) {
+  .dashboard-page-inner {
+    padding: 24px 16px 0;
+  }
+
+  .dashboard-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+
+  .dashboard-header-meta {
+    align-items: flex-start;
+    width: 100%;
+  }
+
+  .dashboard-wordmark {
+    display: none;
+  }
+
+  .dashboard-greeting-title {
+    font-size: clamp(1.7rem, 8vw, 2.2rem);
+    line-height: 1.15;
+  }
+
+  .dashboard-greeting-date {
+    font-size: 0.95rem;
+  }
+
+  .dashboard-assistant-card {
+    padding: 20px 16px;
+  }
+
+  .assistant-message-list {
+    max-height: min(52vh, 420px);
+    min-height: 220px;
+    padding-right: 2px;
+  }
+
+  .assistant-composer-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .assistant-send-button {
+    width: 100%;
+    min-height: 44px;
+  }
+
   .dashboard-content-grid {
     grid-template-columns: 1fr;
     gap: var(--space-lg);

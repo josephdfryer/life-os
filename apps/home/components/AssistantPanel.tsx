@@ -130,10 +130,11 @@ export default function AssistantPanel() {
 
       <div
         ref={messageListRef}
+        className="assistant-message-list"
         onScroll={event => {
           if (event.currentTarget.scrollTop <= 24) void loadEarlier()
         }}
-        style={{ maxHeight: "360px", overflowY: "auto", display: "flex", flexDirection: "column", gap: "12px", marginBottom: "16px", overscrollBehavior: "contain" }}
+        style={{ display: "flex", flexDirection: "column", gap: "12px", marginBottom: "16px", overscrollBehavior: "contain" }}
       >
         {nextCursor && (
           <button
@@ -174,7 +175,7 @@ export default function AssistantPanel() {
         )}
       </div>
 
-      <div style={{ display: "flex", gap: "10px", alignItems: "flex-end" }}>
+      <div className="assistant-composer-row">
         <textarea
           ref={inputRef}
           value={draft}
@@ -205,6 +206,7 @@ export default function AssistantPanel() {
         <button
           onClick={send}
           disabled={!draft.trim() || thinking}
+          className="assistant-send-button"
           style={{
             padding: "11px 20px",
             borderRadius: "12px",
@@ -228,7 +230,6 @@ const card: React.CSSProperties = {
   background: "rgba(247, 244, 238, 0.045)",
   border: "1px solid rgba(196, 165, 116, 0.18)",
   borderRadius: "var(--radius-lg)",
-  padding: "32px",
 }
 
 const heading: React.CSSProperties = {
