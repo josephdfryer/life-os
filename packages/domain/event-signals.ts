@@ -66,6 +66,7 @@ export async function listEventSignals(input: {
             id: { in: filtered.filter(row => row.source === "calendar_reconciliation").map(row => row.sourceId) },
           },
           select: { id: true, text: true, scheduledStart: true },
+          take: limit,
         })
       : [],
     filtered.some(row => row.source === "note_suggestion")
@@ -75,6 +76,7 @@ export async function listEventSignals(input: {
             id: { in: filtered.filter(row => row.source === "note_suggestion").map(row => row.sourceId) },
           },
           select: { id: true, title: true, payload: true },
+          take: limit,
         })
       : [],
   ])
