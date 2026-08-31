@@ -18,9 +18,9 @@ now supplies Apple's web map renderer and a typed first-party loader.
 ## Decision
 
 Use Apple MapKit JS 6 as the Places renderer through
-`@apple/mapkit-loader`, loading `full-map` and `annotations`. Map construction
-waits for MapKit's `Initialized` configuration event so a missing or rejected
-token cannot render as an empty grid.
+`@apple/mapkit-loader`, loading `full-map` and `annotations` with the official
+`load({ token })` path. Rejected tokens surface an error overlay instead of
+falling back to a second tile provider.
 
 MapKit owns:
 

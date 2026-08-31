@@ -147,10 +147,8 @@ conversion between MapKit coordinate regions and the LifeOS camera contract is
 isolated in `components/map/apple-map-camera.ts`.
 
 The server reads `APPLE_MAPS_TOKEN` and passes it only to the Places client that
-initializes MapKit. The client loads `mapkit.core.js` first, then calls
-`mapkit.init` and waits for a `configuration-change` of `Initialized` before
-constructing the map, so a rejected token cannot leave an empty grid on screen.
-The token is necessarily visible to MapKit in the browser and therefore must be
+initializes MapKit through `@apple/mapkit-loader`'s `load({ token })` API. The
+token is necessarily visible to MapKit in the browser and therefore must be
 restricted to the production Places domain (and any explicit local-review
 domains) in the Apple Developer portal. Missing or rejected tokens produce an
 actionable map state rather than silently falling back to a second tile

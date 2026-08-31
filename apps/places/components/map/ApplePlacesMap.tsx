@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react"
 import { load, type Annotation, type Map as MapKitMap, type MapKit } from "@apple/mapkit-loader"
-import { initializeMapKit, sanitizeMapKitToken, type MapKitInitializable } from "./apple-map-auth"
+import { mapKitLoadOptions, sanitizeMapKitToken, subscribeMapKitErrors } from "./apple-map-auth"
 import { boundsForRegion, cameraForRegion, regionForCamera } from "./apple-map-camera"
 import { markerSize, type Camera, type MapBounds } from "./map-computation"
 
@@ -99,18 +99,22 @@ export function ApplePlacesMap({
     if (!container || !mapKitToken) return
     let cancelled = false
     let map: MapKitMap | null = null
+    let unsubscribeErrors: (() => void) | undefined
     const observer = new ResizeObserver(entries => {
       const rect = entries[0]?.contentRect
       if (rect?.width && rect.height) sizeRef.current = { width: rect.width, height: rect.height }
     })
     observer.observe(container)
 
-    void load({ language: "en-US" })
-      .then(async mapkit => {
-        if (cancelled) return
-        await initializeMapKit(mapkit as MapKitInitializable, mapKitToken)
+    void load(mapKitLoadOptions(mapKitToken))
+      .then(mapkit => {
         if (cancelled) return
         mapKitRef.current = mapkit
+        unsubscribeErrors = subscribeMapKitErrors(mapkit, message => {
+          if (cancelled) return
+          setErrorMessage(message)
+          setStatus("error")
+        })
         const region = initialCamera
           ? regionForCamera(initialCamera, sizeRef.current.width, sizeRef.current.height)
           : undefined
@@ -184,6 +188,7 @@ export function ApplePlacesMap({
 
     return () => {
       cancelled = true
+      unsubscribeErrors?.()
       observer.disconnect()
       mapRef.current = null
       mapKitRef.current = null

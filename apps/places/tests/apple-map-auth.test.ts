@@ -1,18 +1,18 @@
 import assert from "node:assert/strict"
 import test from "node:test"
 import {
-  initializeMapKit,
+  configurationEventStatus,
   mapKitErrorMessage,
+  mapKitLoadOptions,
   sanitizeMapKitToken,
-  waitForMapKitConfiguration,
+  subscribeMapKitErrors,
   type MapKitAuthTarget,
-  type MapKitInitializable,
 } from "../components/map/apple-map-auth"
 
 function createAuthTarget(): MapKitAuthTarget & {
-  emit: (type: string, event: { status?: string }) => void
+  emit: (type: string, event: { status?: string; detail?: { status?: string } }) => void
 } {
-  const listeners = new Map<string, Set<(event: { status?: string }) => void>>()
+  const listeners = new Map<string, Set<(event: { status?: string; detail?: { status?: string } }) => void>>()
   return {
     addEventListener(type, listener) {
       const bucket = listeners.get(type) ?? new Set()
@@ -34,37 +34,32 @@ test("MapKit tokens drop surrounding whitespace from env pastes", () => {
   assert.equal(sanitizeMapKitToken(undefined), undefined)
 })
 
+test("loader options pass the token and MapKit JS 6 libraries", () => {
+  assert.deepEqual(mapKitLoadOptions("token"), {
+    token: "token",
+    language: "en-US",
+    libraries: ["full-map", "annotations"],
+  })
+})
+
 test("unauthorized MapKit status points at the domain-restricted token", () => {
   assert.match(mapKitErrorMessage("Unauthorized"), /places\.lacollecteur\.com/)
-  assert.match(mapKitErrorMessage("Timeout"), /apple-mapkit\.com/)
+  assert.match(mapKitErrorMessage("Network Error"), /apple-mapkit\.com/)
+  assert.match(mapKitErrorMessage(), /allowed domains/)
 })
 
-test("Map creation waits for MapKit authorization before resolving", async () => {
+test("configuration status is read from the event or its detail", () => {
+  assert.equal(configurationEventStatus({ status: "Initialized" }), "Initialized")
+  assert.equal(configurationEventStatus({ detail: { status: "Unauthorized" } }), "Unauthorized")
+})
+
+test("MapKit error events become actionable overlay copy", () => {
   const mapkit = createAuthTarget()
-  const pending = waitForMapKitConfiguration(mapkit, 200)
-  queueMicrotask(() => mapkit.emit("configuration-change", { status: "Initialized" }))
-  await pending
-})
-
-test("MapKit authorization failures become actionable errors", async () => {
-  const mapkit = createAuthTarget()
-  const pending = waitForMapKitConfiguration(mapkit, 200)
-  queueMicrotask(() => mapkit.emit("error", { status: "Unauthorized" }))
-  await assert.rejects(pending, /places\.lacollecteur\.com/)
-})
-
-test("MapKit init is registered before the authorization wait", async () => {
-  const events: string[] = []
-  const mapkit = Object.assign(createAuthTarget(), {
-    init() {
-      events.push("init")
-      queueMicrotask(() => {
-        events.push("initialized")
-        mapkit.emit("configuration-change", { status: "Initialized" })
-      })
-    },
-  }) satisfies MapKitInitializable & { emit: (type: string, event: { status?: string }) => void }
-
-  await initializeMapKit(mapkit, "token", 200)
-  assert.deepEqual(events, ["init", "initialized"])
+  const messages: string[] = []
+  const unsubscribe = subscribeMapKitErrors(mapkit, message => messages.push(message))
+  mapkit.emit("error", { status: "Unauthorized" })
+  unsubscribe()
+  mapkit.emit("error", { status: "Unauthorized" })
+  assert.equal(messages.length, 1)
+  assert.match(messages[0]!, /places\.lacollecteur\.com/)
 })

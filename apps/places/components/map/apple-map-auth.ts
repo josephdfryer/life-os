@@ -1,6 +1,6 @@
 export const MAPKIT_LIBRARIES = ["full-map", "annotations"] as const
 
-type MapKitAuthEvent = { status?: string }
+type MapKitAuthEvent = { status?: string; detail?: { status?: string } }
 
 export type MapKitAuthTarget = {
   addEventListener: (type: string, listener: (event: MapKitAuthEvent) => void) => void
@@ -12,6 +12,18 @@ export function sanitizeMapKitToken(token?: string | null): string | undefined {
   return value || undefined
 }
 
+export function mapKitLoadOptions(token: string) {
+  return {
+    token,
+    language: "en-US",
+    libraries: [...MAPKIT_LIBRARIES],
+  }
+}
+
+export function configurationEventStatus(event: MapKitAuthEvent): string | undefined {
+  return event.status ?? event.detail?.status
+}
+
 export function mapKitErrorMessage(status?: string): string {
   switch (status) {
     case "Unauthorized":
@@ -20,53 +32,16 @@ export function mapKitErrorMessage(status?: string): string {
     case "Too Many Requests":
       return "Apple Maps rate-limited this token. Wait a moment and reload."
     case "Network Error":
-    case "Timeout":
       return "Apple Maps could not reach Apple's servers. Check the connection and any blocker for *.apple-mapkit.com, then reload."
     default:
       return "Apple Maps could not load. Check the Maps token and its allowed domains, then reload."
   }
 }
 
-export type MapKitInitializable = MapKitAuthTarget & {
-  init: (options: {
-    authorizationCallback: (done: (token: string) => void) => void
-    language?: string
-    libraries?: string[]
-  }) => void
-}
-
-export function initializeMapKit(mapkit: MapKitInitializable, token: string, timeoutMs = 15_000): Promise<void> {
-  const configured = waitForMapKitConfiguration(mapkit, timeoutMs)
-  mapkit.init({
-    authorizationCallback: done => done(token),
-    language: "en-US",
-    libraries: [...MAPKIT_LIBRARIES],
-  })
-  return configured
-}
-
-export function waitForMapKitConfiguration(mapkit: MapKitAuthTarget, timeoutMs = 15_000): Promise<void> {
-  return new Promise((resolve, reject) => {
-    const onChange = (event: MapKitAuthEvent) => {
-      if (event.status === "Initialized" || event.status === "Refreshed") {
-        cleanup()
-        resolve()
-      }
-    }
-    const onError = (event: MapKitAuthEvent) => {
-      cleanup()
-      reject(new Error(mapKitErrorMessage(event.status)))
-    }
-    const timer = setTimeout(() => {
-      cleanup()
-      reject(new Error(mapKitErrorMessage("Timeout")))
-    }, timeoutMs)
-    const cleanup = () => {
-      clearTimeout(timer)
-      mapkit.removeEventListener("configuration-change", onChange)
-      mapkit.removeEventListener("error", onError)
-    }
-    mapkit.addEventListener("configuration-change", onChange)
-    mapkit.addEventListener("error", onError)
-  })
+export function subscribeMapKitErrors(mapkit: MapKitAuthTarget, onError: (message: string) => void): () => void {
+  const listener = (event: MapKitAuthEvent) => {
+    onError(mapKitErrorMessage(configurationEventStatus(event)))
+  }
+  mapkit.addEventListener("error", listener)
+  return () => mapkit.removeEventListener("error", listener)
 }
