@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react"
 import { load, type Annotation, type Map as MapKitMap, type MapKit } from "@apple/mapkit-loader"
+import { initializeMapKit, sanitizeMapKitToken, type MapKitInitializable } from "./apple-map-auth"
 import { boundsForRegion, cameraForRegion, regionForCamera } from "./apple-map-camera"
 import { markerSize, type Camera, type MapBounds } from "./map-computation"
 
@@ -85,7 +86,8 @@ export function ApplePlacesMap({
   const initialFitDoneRef = useRef(Boolean(initialCamera))
   const sizeRef = useRef({ width: 820, height: 620 })
   const callbacksRef = useRef({ onCameraChange, onSelectPlace, onSelectVisit, onClearSelection })
-  const [status, setStatus] = useState<"idle" | "loading" | "ready" | "error">(token ? "loading" : "idle")
+  const mapKitToken = sanitizeMapKitToken(token)
+  const [status, setStatus] = useState<"idle" | "loading" | "ready" | "error">(mapKitToken ? "loading" : "idle")
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
   useEffect(() => {
@@ -94,7 +96,7 @@ export function ApplePlacesMap({
 
   useEffect(() => {
     const container = containerRef.current
-    if (!container || !token) return
+    if (!container || !mapKitToken) return
     let cancelled = false
     let map: MapKitMap | null = null
     const observer = new ResizeObserver(entries => {
@@ -103,8 +105,10 @@ export function ApplePlacesMap({
     })
     observer.observe(container)
 
-    void load({ token, language: "en-US", libraries: ["full-map"] })
-      .then(mapkit => {
+    void load({ language: "en-US" })
+      .then(async mapkit => {
+        if (cancelled) return
+        await initializeMapKit(mapkit as MapKitInitializable, mapKitToken)
         if (cancelled) return
         mapKitRef.current = mapkit
         const region = initialCamera
@@ -174,7 +178,7 @@ export function ApplePlacesMap({
       .catch(error => {
         if (cancelled) return
         console.error("[places map] MapKit JS failed to initialize", error)
-        setErrorMessage("Apple Maps could not load. Check the Maps token and its allowed domains, then reload.")
+        setErrorMessage(error instanceof Error ? error.message : "Apple Maps could not load. Check the Maps token and its allowed domains, then reload.")
         setStatus("error")
       })
 
@@ -186,7 +190,7 @@ export function ApplePlacesMap({
       annotationsRef.current = []
       map?.destroy()
     }
-  }, [initialCamera, token])
+  }, [initialCamera, mapKitToken])
 
   useEffect(() => {
     const map = mapRef.current
@@ -244,7 +248,7 @@ export function ApplePlacesMap({
     <div className="apple-map-shell">
       <div ref={containerRef} className="apple-map-container" aria-label="Apple map of places" />
       {status === "loading" ? <div className="apple-map-status" role="status">Loading Apple Maps…</div> : null}
-      {!token ? (
+      {!mapKitToken ? (
         <div className="apple-map-status apple-map-status-error" role="status">
           <strong>Apple Maps needs a Maps token</strong>
           <span>Add a domain-restricted <code>APPLE_MAPS_TOKEN</code> to the Places environment.</span>

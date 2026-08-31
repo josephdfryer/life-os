@@ -8,7 +8,7 @@ import PlacesClient from "./PlacesClient"
 export const dynamic = "force-dynamic"
 
 export default async function PlacesPage() {
-  const mapKitToken = process.env.APPLE_MAPS_TOKEN
+  const mapKitToken = process.env.APPLE_MAPS_TOKEN?.trim() || undefined
   try {
     const actor = await requireAccess("places.read")
     const places = await getPlacesForMap(actor.workspaceId)
