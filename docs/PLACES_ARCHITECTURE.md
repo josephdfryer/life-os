@@ -150,9 +150,10 @@ The server reads `APPLE_MAPS_TOKEN` and passes it only to the Places client that
 initializes MapKit through `@apple/mapkit-loader`'s `load({ token })` API. The
 token is necessarily visible to MapKit in the browser and therefore must be
 restricted to the production Places domain (and any explicit local-review
-domains) in the Apple Developer portal. Missing or rejected tokens produce an
-actionable map state rather than silently falling back to a second tile
-provider.
+domains) in the Apple Developer portal. It must be the MapKit JS token string
+from Apple Developer (a JWT), not a Maps ID, token name, or wrapped paste.
+Missing, malformed, or rejected tokens produce an actionable map state rather
+than silently falling back to a second tile provider.
 
 The initial map payload is summary-only. People enrichment contains a per-Place
 Interaction count, and finance contains transaction count plus aggregate amount.

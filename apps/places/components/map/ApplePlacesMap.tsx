@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react"
 import { load, type Annotation, type Map as MapKitMap, type MapKit } from "@apple/mapkit-loader"
-import { mapKitLoadOptions, sanitizeMapKitToken, subscribeMapKitErrors } from "./apple-map-auth"
+import { isMapKitJsToken, mapKitLoadOptions, sanitizeMapKitToken, subscribeMapKitErrors } from "./apple-map-auth"
 import { boundsForRegion, cameraForRegion, regionForCamera } from "./apple-map-camera"
 import { markerSize, type Camera, type MapBounds } from "./map-computation"
 
@@ -87,7 +87,8 @@ export function ApplePlacesMap({
   const sizeRef = useRef({ width: 820, height: 620 })
   const callbacksRef = useRef({ onCameraChange, onSelectPlace, onSelectVisit, onClearSelection })
   const mapKitToken = sanitizeMapKitToken(token)
-  const [status, setStatus] = useState<"idle" | "loading" | "ready" | "error">(mapKitToken ? "loading" : "idle")
+  const tokenLooksValid = isMapKitJsToken(mapKitToken)
+  const [status, setStatus] = useState<"idle" | "loading" | "ready" | "error">(tokenLooksValid ? "loading" : "idle")
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
   useEffect(() => {
@@ -96,7 +97,7 @@ export function ApplePlacesMap({
 
   useEffect(() => {
     const container = containerRef.current
-    if (!container || !mapKitToken) return
+    if (!container || !mapKitToken || !tokenLooksValid) return
     let cancelled = false
     let map: MapKitMap | null = null
     let unsubscribeErrors: (() => void) | undefined
@@ -195,7 +196,7 @@ export function ApplePlacesMap({
       annotationsRef.current = []
       map?.destroy()
     }
-  }, [initialCamera, mapKitToken])
+  }, [initialCamera, mapKitToken, tokenLooksValid])
 
   useEffect(() => {
     const map = mapRef.current
@@ -257,6 +258,12 @@ export function ApplePlacesMap({
         <div className="apple-map-status apple-map-status-error" role="status">
           <strong>Apple Maps needs a Maps token</strong>
           <span>Add a domain-restricted <code>APPLE_MAPS_TOKEN</code> to the Places environment.</span>
+        </div>
+      ) : null}
+      {mapKitToken && !tokenLooksValid ? (
+        <div className="apple-map-status apple-map-status-error" role="status">
+          <strong>Apple Maps needs a MapKit JS token</strong>
+          <span>The Places environment value is not a MapKit JS token. In Apple Developer, open Maps → Tokens, copy the full token string (it starts with eyJ), and replace <code>APPLE_MAPS_TOKEN</code> in Vercel Production. Restrict it to places.lacollecteur.com.</span>
         </div>
       ) : null}
       {status === "error" ? (

@@ -2,6 +2,7 @@ import assert from "node:assert/strict"
 import test from "node:test"
 import {
   configurationEventStatus,
+  isMapKitJsToken,
   mapKitErrorMessage,
   mapKitLoadOptions,
   sanitizeMapKitToken,
@@ -36,10 +37,20 @@ function detailEvent(status: string): Event {
   return Object.assign(new Event("error"), { detail: { status } })
 }
 
-test("MapKit tokens drop surrounding whitespace from env pastes", () => {
+test("MapKit tokens drop surrounding and internal whitespace from env pastes", () => {
   assert.equal(sanitizeMapKitToken("  abc.def  \n"), "abc.def")
+  assert.equal(sanitizeMapKitToken("eyJhbGciOiJFUzI1NiJ9.\neyJpc3MiOiJ0ZWFtIn0.\nabc"), "eyJhbGciOiJFUzI1NiJ9.eyJpc3MiOiJ0ZWFtIn0.abc")
   assert.equal(sanitizeMapKitToken("   \n"), undefined)
   assert.equal(sanitizeMapKitToken(undefined), undefined)
+})
+
+test("only JWT-shaped values count as MapKit JS tokens", () => {
+  assert.equal(isMapKitJsToken("eyJhbGciOiJFUzI1NiJ9.eyJpc3MiOiJ0ZWFtIn0.abc"), true)
+  assert.equal(isMapKitJsToken("  eyJhbGciOiJFUzI1NiJ9.\neyJpc3MiOiJ0ZWFtIn0.\nabc  "), true)
+  assert.equal(isMapKitJsToken("maps.com.lacollecteur.places"), false)
+  assert.equal(isMapKitJsToken("A copied token name with spaces"), false)
+  assert.equal(isMapKitJsToken(""), false)
+  assert.equal(isMapKitJsToken(undefined), false)
 })
 
 test("loader options pass the token and MapKit JS 6 libraries", () => {
