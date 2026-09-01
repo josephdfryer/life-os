@@ -5,10 +5,10 @@
 // single-file equivalent, so each test run now gets its own freshly-created
 // database on a base Postgres server, migrated from the committed baseline SQL.
 //
-// Requires a reachable Postgres. Set `TEST_DATABASE_URL` (preferred) or
-// `DATABASE_URL` to a `postgresql://` URL for an account that can run
-// `CREATE DATABASE` / `DROP DATABASE` — locally that is the docker-compose
-// `postgres` service, in CI the `postgres` service container.
+// Requires a reachable Postgres. The local default is the docker-compose
+// service on port 5433; `TEST_DATABASE_URL` (preferred) or `DATABASE_URL` can
+// override it with any account that can run CREATE/DROP DATABASE. CI supplies
+// its own `TEST_DATABASE_URL` for the Postgres service container.
 //
 // Usage (before importing `@life-os/db`):
 //
@@ -53,12 +53,16 @@ export type TestDatabase = {
 }
 
 function baseUrl(): string {
-  const url = process.env.TEST_DATABASE_URL ?? process.env.DATABASE_URL
+  const localPort = process.env.LIFE_OS_POSTGRES_PORT ?? "5433"
+  const url =
+    process.env.TEST_DATABASE_URL ??
+    process.env.DATABASE_URL ??
+    `postgresql://lifeos:lifeos@localhost:${localPort}/lifeos`
   if (!url || !/^postgres(ql)?:\/\//.test(url)) {
     throw new Error(
       "createTestDatabase() needs a PostgreSQL base server. Set TEST_DATABASE_URL " +
-        "(or DATABASE_URL) to a postgresql:// URL — locally, start the docker-compose " +
-        "`postgres` service; in CI, use the `postgres` service container.",
+        "(or DATABASE_URL) to a postgresql:// URL, or start the local docker-compose " +
+        "`postgres` service on LIFE_OS_POSTGRES_PORT (default 5433).",
     )
   }
   return url

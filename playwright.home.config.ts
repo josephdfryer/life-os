@@ -6,7 +6,7 @@ import { defineConfig, devices } from '@playwright/test'
 const databaseUrl =
   process.env.E2E_DATABASE_URL ??
   process.env.DATABASE_URL ??
-  'postgresql://lifeos:lifeos@localhost:5432/lifeos_e2e_home'
+  `postgresql://lifeos:lifeos@localhost:${process.env.LIFE_OS_POSTGRES_PORT ?? '5433'}/lifeos_e2e_home`
 
 export default defineConfig({
   testDir: './tests/e2e',
