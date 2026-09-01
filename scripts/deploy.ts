@@ -26,7 +26,7 @@ import {
 } from "./lib/deploy-gates"
 import { appsToDeploy, formatAffected } from "./lib/deploy-affected"
 import { loadDotEnv } from "./lib/env"
-import { assertProdSchema } from "./lib/prod-schema"
+import { applyProdMigrations, assertProdSchema } from "./lib/prod-schema"
 import {
   allSmokeProbes,
   findProject,
@@ -315,6 +315,7 @@ async function main() {
   console.log(`Deploy ${options.apply ? "production" : "dry-run"}  HEAD ${sha.slice(0, 7)}  ${projects.map(p => p.filter).join(", ")}`)
 
   if (!options.skipMigrations) {
+    console.log(await applyProdMigrations(root))
     console.log(await assertProdSchema(root))
   } else {
     console.log("Skipping production schema check (--skip-migrations).")
