@@ -156,7 +156,9 @@ async function HomeDataPanels({
   return (
     <>
       <ScheduleWidget workspaceId={workspaceId} personsUrl={personsUrl} tz={tz} />
-      <EventSignalsWidget workspaceId={workspaceId} tz={tz} />
+      <Suspense fallback={null}>
+        <EventSignalsWidget workspaceId={workspaceId} tz={tz} />
+      </Suspense>
       <NudgesWidget workspaceId={workspaceId} personsUrl={personsUrl} />
       <CommunicationsReviewWidget workspaceId={workspaceId} personsUrl={personsUrl} />
     </>
