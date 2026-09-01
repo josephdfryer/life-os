@@ -1,4 +1,4 @@
-import { listEventSignals } from "@life-os/domain"
+import { listEventSignals } from "@life-os/domain/event-signals-list"
 import { EventSignalsList } from "@life-os/ui"
 
 export default async function EventSignalsStrip({
@@ -8,7 +8,14 @@ export default async function EventSignalsStrip({
   workspaceId: string
   tz: string
 }) {
-  const items = await listEventSignals({ workspaceId, limit: 6 })
+  let items: Awaited<ReturnType<typeof listEventSignals>> = []
+  try {
+    items = await listEventSignals({ workspaceId, limit: 6 })
+  } catch (error) {
+    console.error("[events] event signals strip failed", error)
+    return null
+  }
+
   if (!items.length) return null
 
   return (

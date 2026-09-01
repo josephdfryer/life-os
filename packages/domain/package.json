@@ -4,6 +4,11 @@
   "private": true,
   "main": "./index.ts",
   "types": "./index.ts",
+  "exports": {
+    ".": "./index.ts",
+    "./contact-matching": "./contact-matching.ts",
+    "./event-signals-list": "./event-signals-list.ts"
+  },
   "dependencies": {
     "@life-os/db": "*"
   },

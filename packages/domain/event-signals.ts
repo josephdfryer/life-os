@@ -1,29 +1,11 @@
 import type { GraphEventActor } from "./events"
 import type { AuditActor } from "./audit"
-import { recordOwnerAttendance } from "./calendar-schedule"
-import { promoteSafeFileClaim } from "./file-evidence"
 import { resolveReviewItem } from "./review"
+import type { EventSignal } from "./event-signals-list"
+import { listEventSignals } from "./event-signals-list"
 
-export type EventSignalAction = "not_event" | "went" | "didnt_go"
-
-export type EventSignal = {
-  id: string
-  source: string
-  sourceId: string
-  title: string
-  detail: string | null
-  when: string | null
-  confidence: number | null
-  priority: number
-  planId: string | null
-}
-
-export class EventSignalError extends Error {
-  constructor(message: string, readonly code: "not_found" | "validation" | "unsupported") {
-    super(message)
-    this.name = "EventSignalError"
-  }
-}
+export type { EventSignal } from "./event-signals-list"
+export { listEventSignals }
 
 const SIGNAL_SOURCES = new Set([
   "calendar_reconciliation",
@@ -32,63 +14,17 @@ const SIGNAL_SOURCES = new Set([
   "evidence_claim",
 ])
 
-export async function listEventSignals(input: {
-  workspaceId: string
-  limit?: number
-}): Promise<EventSignal[]> {
-  const { db } = await import("@life-os/db")
-  const limit = input.limit ?? 12
-  const rows = await db.reviewItem.findMany({
-    where: {
-      workspaceId: input.workspaceId,
-      status: "pending",
-      OR: [
-        { source: "calendar_reconciliation", itemType: "event" },
-        { source: "note_suggestion", itemType: "event" },
-        { source: "communication_occurrence", itemType: "event" },
-        { source: "evidence_claim", itemType: "file_claim" },
-      ],
-    },
-    orderBy: [{ priority: "asc" }, { createdAt: "desc" }],
-    take: limit * 2,
-  })
+export type EventSignalAction = "not_event" | "went" | "didnt_go"
 
-  const filtered = rows
-    .filter(row => SIGNAL_SOURCES.has(row.source))
-    .filter(row => row.source !== "evidence_claim" || evidenceClaimsEvent(row.evidence))
-    .slice(0, limit)
-
-  const [plans, suggestions] = await Promise.all([
-    filtered.some(row => row.source === "calendar_reconciliation")
-      ? db.plan.findMany({
-          where: {
-            workspaceId: input.workspaceId,
-            id: { in: filtered.filter(row => row.source === "calendar_reconciliation").map(row => row.sourceId) },
-          },
-          select: { id: true, text: true, scheduledStart: true },
-          take: limit,
-        })
-      : [],
-    filtered.some(row => row.source === "note_suggestion")
-      ? db.noteSuggestion.findMany({
-          where: {
-            workspaceId: input.workspaceId,
-            id: { in: filtered.filter(row => row.source === "note_suggestion").map(row => row.sourceId) },
-          },
-          select: { id: true, title: true, payload: true },
-          take: limit,
-        })
-      : [],
-  ])
-
-  const planById = new Map(plans.map(plan => [plan.id, plan]))
-  const suggestionById = new Map(suggestions.map(suggestion => [suggestion.id, suggestion]))
-
-  return filtered.map(row => toEventSignal(row, {
-    plan: planById.get(row.sourceId),
-    suggestion: suggestionById.get(row.sourceId),
-  }))
+export class EventSignalError extends Error {
+  constructor(message: string, readonly code: "not_found" | "validation" | "unsupported") {
+    super(message)
+    this.name = "EventSignalError"
+  }
 }
+
+// Register communication_occurrence review handlers for resolveEventSignal.
+import "./communication-occurrence"
 
 export async function resolveEventSignal(input: {
   workspaceId: string
@@ -125,6 +61,7 @@ export async function resolveEventSignal(input: {
       resultType = resolved.resultType
       resultId = resolved.resultId
     } else if (input.action === "didnt_go") {
+      const { recordOwnerAttendance } = await import("./calendar-schedule")
       await recordOwnerAttendance({ workspaceId: input.workspaceId, planId, action: "did_not_go" })
       await resolveReviewItem({
         id: item.id,
@@ -186,6 +123,7 @@ export async function resolveEventSignal(input: {
     const evidence = parseEvidence(item.evidence)
     const graphAction = parseEventGraphAction(evidence?.proposedGraphAction)
     if (input.action === "went" && graphAction) {
+      const { promoteSafeFileClaim } = await import("./file-evidence")
       const promoted = await promoteSafeFileClaim(
         item.sourceId,
         input.workspaceId,

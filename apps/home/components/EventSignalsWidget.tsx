@@ -1,6 +1,6 @@
-import { listEventSignals } from "@life-os/domain"
+import { listEventSignals } from "@life-os/domain/event-signals-list"
 import { EventSignalsList } from "@life-os/ui"
-import { unstable_cache } from "next/cache"
+import { cacheLife, unstable_cache } from "next/cache"
 
 export default async function EventSignalsWidget({
   workspaceId,
@@ -9,9 +9,24 @@ export default async function EventSignalsWidget({
   workspaceId: string
   tz: string
 }) {
-  const items = process.env.NODE_ENV === "production"
-    ? await getCachedEventSignals(workspaceId)
-    : await loadEventSignals(workspaceId)
+  "use cache"
+  cacheLife({ stale: 300, revalidate: 30, expire: 86400 })
+
+  let items: Array<{
+    id: string
+    source: string
+    title: string
+    detail: string | null
+    when: string | null
+  }> = []
+  try {
+    items = process.env.NODE_ENV === "production"
+      ? await getCachedEventSignals(workspaceId)
+      : await loadEventSignals(workspaceId)
+  } catch (error) {
+    console.error("[home] event signals widget failed", error)
+    return null
+  }
 
   if (!items.length) return null
 
@@ -43,11 +58,13 @@ async function loadEventSignals(workspaceId: string) {
   }))
 }
 
-const getCachedEventSignals = unstable_cache(
-  loadEventSignals,
-  ["home-event-signals-v1"],
-  { revalidate: 30, tags: ["home-event-signals"] },
-)
+function getCachedEventSignals(workspaceId: string) {
+  return unstable_cache(
+    async () => loadEventSignals(workspaceId),
+    ["home-event-signals-v2", workspaceId],
+    { revalidate: 30, tags: ["home-event-signals"] },
+  )()
+}
 
 const card: React.CSSProperties = {
   background: "rgba(247, 244, 238, 0.045)",
