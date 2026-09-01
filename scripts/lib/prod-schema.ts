@@ -7,7 +7,7 @@ import { join } from "node:path"
 // `prisma migrate deploy` tracks applied migrations properly, so the check is
 // now the standard one: does production have every committed migration applied?
 
-export async function assertProdSchema(root: string): Promise<string> {
+function requireProdDatabaseUrl(): string {
   const url = process.env.DATABASE_URL
   if (!url || !/^postgres(ql)?:\/\//.test(url)) {
     throw new Error(
@@ -15,6 +15,23 @@ export async function assertProdSchema(root: string): Promise<string> {
         "connection string, or pass --skip-migrations.",
     )
   }
+  return url
+}
+
+/** Apply any pending committed migrations before we ship code that depends on them. */
+export async function applyProdMigrations(root: string): Promise<string> {
+  requireProdDatabaseUrl()
+  const dbPackage = join(root, "packages/db")
+  execFileSync(
+    "npx",
+    ["prisma", "migrate", "deploy", "--schema", "prisma/schema.prisma"],
+    { cwd: dbPackage, encoding: "utf8", stdio: "inherit" },
+  )
+  return "Applied pending Prisma migrations to production."
+}
+
+export async function assertProdSchema(root: string): Promise<string> {
+  requireProdDatabaseUrl()
 
   const dbPackage = join(root, "packages/db")
   let output: string

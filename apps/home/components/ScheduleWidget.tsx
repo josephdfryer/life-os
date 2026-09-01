@@ -2,7 +2,7 @@ import { lifeOsAppUrl } from '@life-os/auth'
 import { listScheduleItems } from '@life-os/domain'
 import { dayKey, zonedDayBounds } from '@life-os/ui'
 import { unstable_cache } from 'next/cache'
-import ScheduleList from './ScheduleList'
+import ScheduleList, { type ScheduleRow } from './ScheduleList'
 
 interface Props {
   workspaceId: string
@@ -12,9 +12,16 @@ interface Props {
 
 export default async function ScheduleWidget({ workspaceId, personsUrl, tz }: Props) {
   const eventsUrl = lifeOsAppUrl('events', 'http://localhost:3006')
-  const events = process.env.NODE_ENV === 'production'
-    ? await getCachedScheduleEvents(workspaceId, tz, eventsUrl)
-    : await loadScheduleEvents(workspaceId, tz, eventsUrl)
+  let events: ScheduleRow[] = []
+  let failed = false
+  try {
+    events = process.env.NODE_ENV === 'production'
+      ? await getCachedScheduleEvents(workspaceId, tz, eventsUrl)
+      : await loadScheduleEvents(workspaceId, tz, eventsUrl)
+  } catch (error) {
+    console.error('[home] schedule widget failed', error)
+    failed = true
+  }
 
   return (
     <div className="dashboard-schedule-card" style={card}>
@@ -25,7 +32,14 @@ export default async function ScheduleWidget({ workspaceId, personsUrl, tz }: Pr
         </a>
       </div>
 
-      {events.length === 0 ? (
+      {failed ? (
+        <div style={{ padding: '32px 0', textAlign: 'center', color: 'var(--ink-3)', fontSize: '13px', lineHeight: 1.55 }}>
+          Today&apos;s schedule is temporarily unavailable.
+          <a href={`${eventsUrl}/events?view=today`} style={{ display: 'block', marginTop: '10px', color: 'var(--camel)' }}>
+            Open Events →
+          </a>
+        </div>
+      ) : events.length === 0 ? (
         <div style={{ padding: '48px 0', textAlign: 'center', color: 'var(--ink-3)' }}>
           Clear day
         </div>
@@ -65,11 +79,13 @@ async function loadScheduleEvents(workspaceId: string, tz: string, eventsUrl: st
   }))
 }
 
-const getCachedScheduleEvents = unstable_cache(
-  loadScheduleEvents,
-  ['home-schedule-read-model-v2'],
-  { revalidate: 30, tags: ['home-schedule'] },
-)
+function getCachedScheduleEvents(workspaceId: string, tz: string, eventsUrl: string) {
+  return unstable_cache(
+    async () => loadScheduleEvents(workspaceId, tz, eventsUrl),
+    ['home-schedule-read-model-v2', workspaceId, tz],
+    { revalidate: 30, tags: ['home-schedule'] },
+  )()
+}
 
 const card: React.CSSProperties = {
   background: 'rgba(247, 244, 238, 0.045)',

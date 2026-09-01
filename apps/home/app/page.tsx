@@ -155,12 +155,18 @@ async function HomeDataPanels({
 
   return (
     <>
-      <ScheduleWidget workspaceId={workspaceId} personsUrl={personsUrl} tz={tz} />
+      <Suspense fallback={<WidgetSkeleton className="dashboard-schedule-card" />}>
+        <ScheduleWidget workspaceId={workspaceId} personsUrl={personsUrl} tz={tz} />
+      </Suspense>
       <Suspense fallback={null}>
         <EventSignalsWidget workspaceId={workspaceId} tz={tz} />
       </Suspense>
-      <NudgesWidget workspaceId={workspaceId} personsUrl={personsUrl} />
-      <CommunicationsReviewWidget workspaceId={workspaceId} personsUrl={personsUrl} />
+      <Suspense fallback={<WidgetSkeleton className="dashboard-nudges-card" />}>
+        <NudgesWidget workspaceId={workspaceId} personsUrl={personsUrl} />
+      </Suspense>
+      <Suspense fallback={<WidgetSkeleton className="dashboard-communications-card" />}>
+        <CommunicationsReviewWidget workspaceId={workspaceId} personsUrl={personsUrl} />
+      </Suspense>
     </>
   )
 }
