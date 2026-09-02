@@ -1,6 +1,6 @@
 import { listEventSignals } from "@life-os/domain/event-signals-list"
 import { EventSignalsList } from "@life-os/ui"
-import { cacheLife, unstable_cache } from "next/cache"
+import { unstable_cache } from "next/cache"
 
 export default async function EventSignalsWidget({
   workspaceId,
@@ -9,9 +9,6 @@ export default async function EventSignalsWidget({
   workspaceId: string
   tz: string
 }) {
-  "use cache"
-  cacheLife({ stale: 300, revalidate: 30, expire: 86400 })
-
   let items: Array<{
     id: string
     source: string

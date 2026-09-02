@@ -145,11 +145,17 @@ async function HomeDataPanels({
   personsUrl: string
   tz: string
 }) {
-  const workspaceId = email
-    ? await getWorkspaceId(email)
-    : localReview
-      ? 'default-workspace'
-      : null
+  let workspaceId: string | null = null
+  try {
+    workspaceId = email
+      ? await getWorkspaceId(email)
+      : localReview
+        ? 'default-workspace'
+        : null
+  } catch (error) {
+    console.error('[home] workspace lookup failed', error)
+    workspaceId = localReview ? 'default-workspace' : null
+  }
 
   if (!workspaceId) return null
 
