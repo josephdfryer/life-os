@@ -13,6 +13,8 @@ import CommunicationsReviewWidget from '../components/CommunicationsReviewWidget
 import AssistantPanel from '../components/AssistantPanel'
 import { greetingForHour } from '@/lib/daily'
 
+export const dynamic = 'force-dynamic'
+
 async function getWorkspaceId(email: string): Promise<string> {
   const member = await db.workspaceMember.findFirst({
     where: { user: { email }, status: 'active' },

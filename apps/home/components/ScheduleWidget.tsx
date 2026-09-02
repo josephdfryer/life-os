@@ -1,7 +1,7 @@
+import { connection } from 'next/server'
 import { lifeOsAppUrl } from '@life-os/auth'
 import { listScheduleItems } from '@life-os/domain'
 import { dayKey, zonedDayBounds } from '@life-os/ui'
-import { unstable_cache } from 'next/cache'
 import ScheduleList, { type ScheduleRow } from './ScheduleList'
 
 interface Props {
@@ -11,13 +11,17 @@ interface Props {
 }
 
 export default async function ScheduleWidget({ workspaceId, personsUrl, tz }: Props) {
+  // Calendar sync lives in the Events app, a separate Vercel project, so it
+  // cannot revalidate Home's data cache. A 30s unstable_cache here kept
+  // serving the pre-sync "4 events" payload after Sightmachine's today
+  // window landed — production logs showed later Home loads skipping this
+  // widget entirely (cache hit, no "schedule" log). Today is live; read it live.
+  await connection()
   const eventsUrl = lifeOsAppUrl('events', 'http://localhost:3006')
   let events: ScheduleRow[] = []
   let failed = false
   try {
-    events = process.env.NODE_ENV === 'production'
-      ? await getCachedScheduleEvents(workspaceId, tz, eventsUrl)
-      : await loadScheduleEvents(workspaceId, tz, eventsUrl)
+    events = await loadScheduleEvents(workspaceId, tz, eventsUrl)
   } catch (error) {
     console.error('[home] schedule widget failed', error)
     failed = true
@@ -78,14 +82,6 @@ async function loadScheduleEvents(workspaceId: string, tz: string, eventsUrl: st
     tension: item.tension,
     phase: item.phase,
   }))
-}
-
-function getCachedScheduleEvents(workspaceId: string, tz: string, eventsUrl: string) {
-  return unstable_cache(
-    async () => loadScheduleEvents(workspaceId, tz, eventsUrl),
-    ['home-schedule-read-model-v2', workspaceId, tz],
-    { revalidate: 30, tags: ['home-schedule'] },
-  )()
 }
 
 const card: React.CSSProperties = {
