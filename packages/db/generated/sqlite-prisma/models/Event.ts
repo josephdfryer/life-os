@@ -37,6 +37,7 @@ export type EventMinAggregateOutputType = {
   notes: string | null
   transcript: string | null
   metadata: string | null
+  notEventAt: Date | null
   sourcePlanId: string | null
   parentEventId: string | null
   sourceNoteId: string | null
@@ -55,6 +56,7 @@ export type EventMaxAggregateOutputType = {
   notes: string | null
   transcript: string | null
   metadata: string | null
+  notEventAt: Date | null
   sourcePlanId: string | null
   parentEventId: string | null
   sourceNoteId: string | null
@@ -73,6 +75,7 @@ export type EventCountAggregateOutputType = {
   notes: number
   transcript: number
   metadata: number
+  notEventAt: number
   sourcePlanId: number
   parentEventId: number
   sourceNoteId: number
@@ -93,6 +96,7 @@ export type EventMinAggregateInputType = {
   notes?: true
   transcript?: true
   metadata?: true
+  notEventAt?: true
   sourcePlanId?: true
   parentEventId?: true
   sourceNoteId?: true
@@ -111,6 +115,7 @@ export type EventMaxAggregateInputType = {
   notes?: true
   transcript?: true
   metadata?: true
+  notEventAt?: true
   sourcePlanId?: true
   parentEventId?: true
   sourceNoteId?: true
@@ -129,6 +134,7 @@ export type EventCountAggregateInputType = {
   notes?: true
   transcript?: true
   metadata?: true
+  notEventAt?: true
   sourcePlanId?: true
   parentEventId?: true
   sourceNoteId?: true
@@ -220,6 +226,7 @@ export type EventGroupByOutputType = {
   notes: string | null
   transcript: string | null
   metadata: string | null
+  notEventAt: Date | null
   sourcePlanId: string | null
   parentEventId: string | null
   sourceNoteId: string | null
@@ -259,6 +266,7 @@ export type EventWhereInput = {
   notes?: Prisma.StringNullableFilter<"Event"> | string | null
   transcript?: Prisma.StringNullableFilter<"Event"> | string | null
   metadata?: Prisma.StringNullableFilter<"Event"> | string | null
+  notEventAt?: Prisma.DateTimeNullableFilter<"Event"> | Date | string | null
   sourcePlanId?: Prisma.StringNullableFilter<"Event"> | string | null
   parentEventId?: Prisma.StringNullableFilter<"Event"> | string | null
   sourceNoteId?: Prisma.StringNullableFilter<"Event"> | string | null
@@ -290,6 +298,7 @@ export type EventOrderByWithRelationInput = {
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
   transcript?: Prisma.SortOrderInput | Prisma.SortOrder
   metadata?: Prisma.SortOrderInput | Prisma.SortOrder
+  notEventAt?: Prisma.SortOrderInput | Prisma.SortOrder
   sourcePlanId?: Prisma.SortOrderInput | Prisma.SortOrder
   parentEventId?: Prisma.SortOrderInput | Prisma.SortOrder
   sourceNoteId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -325,6 +334,7 @@ export type EventWhereUniqueInput = Prisma.AtLeast<{
   notes?: Prisma.StringNullableFilter<"Event"> | string | null
   transcript?: Prisma.StringNullableFilter<"Event"> | string | null
   metadata?: Prisma.StringNullableFilter<"Event"> | string | null
+  notEventAt?: Prisma.DateTimeNullableFilter<"Event"> | Date | string | null
   parentEventId?: Prisma.StringNullableFilter<"Event"> | string | null
   sourceNoteId?: Prisma.StringNullableFilter<"Event"> | string | null
   workspace?: Prisma.XOR<Prisma.WorkspaceScalarRelationFilter, Prisma.WorkspaceWhereInput>
@@ -355,6 +365,7 @@ export type EventOrderByWithAggregationInput = {
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
   transcript?: Prisma.SortOrderInput | Prisma.SortOrder
   metadata?: Prisma.SortOrderInput | Prisma.SortOrder
+  notEventAt?: Prisma.SortOrderInput | Prisma.SortOrder
   sourcePlanId?: Prisma.SortOrderInput | Prisma.SortOrder
   parentEventId?: Prisma.SortOrderInput | Prisma.SortOrder
   sourceNoteId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -379,6 +390,7 @@ export type EventScalarWhereWithAggregatesInput = {
   notes?: Prisma.StringNullableWithAggregatesFilter<"Event"> | string | null
   transcript?: Prisma.StringNullableWithAggregatesFilter<"Event"> | string | null
   metadata?: Prisma.StringNullableWithAggregatesFilter<"Event"> | string | null
+  notEventAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Event"> | Date | string | null
   sourcePlanId?: Prisma.StringNullableWithAggregatesFilter<"Event"> | string | null
   parentEventId?: Prisma.StringNullableWithAggregatesFilter<"Event"> | string | null
   sourceNoteId?: Prisma.StringNullableWithAggregatesFilter<"Event"> | string | null
@@ -395,6 +407,7 @@ export type EventCreateInput = {
   notes?: string | null
   transcript?: string | null
   metadata?: string | null
+  notEventAt?: Date | string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutEventsInput
   place?: Prisma.PlaceCreateNestedOneWithoutEventsInput
   sourcePlan?: Prisma.PlanCreateNestedOneWithoutFulfilledByInput
@@ -423,6 +436,7 @@ export type EventUncheckedCreateInput = {
   notes?: string | null
   transcript?: string | null
   metadata?: string | null
+  notEventAt?: Date | string | null
   sourcePlanId?: string | null
   parentEventId?: string | null
   sourceNoteId?: string | null
@@ -447,6 +461,7 @@ export type EventUpdateInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transcript?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notEventAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutEventsNestedInput
   place?: Prisma.PlaceUpdateOneWithoutEventsNestedInput
   sourcePlan?: Prisma.PlanUpdateOneWithoutFulfilledByNestedInput
@@ -475,6 +490,7 @@ export type EventUncheckedUpdateInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transcript?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notEventAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sourcePlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -501,6 +517,7 @@ export type EventCreateManyInput = {
   notes?: string | null
   transcript?: string | null
   metadata?: string | null
+  notEventAt?: Date | string | null
   sourcePlanId?: string | null
   parentEventId?: string | null
   sourceNoteId?: string | null
@@ -517,6 +534,7 @@ export type EventUpdateManyMutationInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transcript?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notEventAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type EventUncheckedUpdateManyInput = {
@@ -532,6 +550,7 @@ export type EventUncheckedUpdateManyInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transcript?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notEventAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sourcePlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -570,6 +589,7 @@ export type EventCountOrderByAggregateInput = {
   notes?: Prisma.SortOrder
   transcript?: Prisma.SortOrder
   metadata?: Prisma.SortOrder
+  notEventAt?: Prisma.SortOrder
   sourcePlanId?: Prisma.SortOrder
   parentEventId?: Prisma.SortOrder
   sourceNoteId?: Prisma.SortOrder
@@ -588,6 +608,7 @@ export type EventMaxOrderByAggregateInput = {
   notes?: Prisma.SortOrder
   transcript?: Prisma.SortOrder
   metadata?: Prisma.SortOrder
+  notEventAt?: Prisma.SortOrder
   sourcePlanId?: Prisma.SortOrder
   parentEventId?: Prisma.SortOrder
   sourceNoteId?: Prisma.SortOrder
@@ -606,6 +627,7 @@ export type EventMinOrderByAggregateInput = {
   notes?: Prisma.SortOrder
   transcript?: Prisma.SortOrder
   metadata?: Prisma.SortOrder
+  notEventAt?: Prisma.SortOrder
   sourcePlanId?: Prisma.SortOrder
   parentEventId?: Prisma.SortOrder
   sourceNoteId?: Prisma.SortOrder
@@ -968,6 +990,7 @@ export type EventCreateWithoutWorkspaceInput = {
   notes?: string | null
   transcript?: string | null
   metadata?: string | null
+  notEventAt?: Date | string | null
   place?: Prisma.PlaceCreateNestedOneWithoutEventsInput
   sourcePlan?: Prisma.PlanCreateNestedOneWithoutFulfilledByInput
   parentEvent?: Prisma.EventCreateNestedOneWithoutChildEventsInput
@@ -994,6 +1017,7 @@ export type EventUncheckedCreateWithoutWorkspaceInput = {
   notes?: string | null
   transcript?: string | null
   metadata?: string | null
+  notEventAt?: Date | string | null
   sourcePlanId?: string | null
   parentEventId?: string | null
   sourceNoteId?: string | null
@@ -1048,6 +1072,7 @@ export type EventScalarWhereInput = {
   notes?: Prisma.StringNullableFilter<"Event"> | string | null
   transcript?: Prisma.StringNullableFilter<"Event"> | string | null
   metadata?: Prisma.StringNullableFilter<"Event"> | string | null
+  notEventAt?: Prisma.DateTimeNullableFilter<"Event"> | Date | string | null
   sourcePlanId?: Prisma.StringNullableFilter<"Event"> | string | null
   parentEventId?: Prisma.StringNullableFilter<"Event"> | string | null
   sourceNoteId?: Prisma.StringNullableFilter<"Event"> | string | null
@@ -1064,6 +1089,7 @@ export type EventCreateWithoutCalendarLinksInput = {
   notes?: string | null
   transcript?: string | null
   metadata?: string | null
+  notEventAt?: Date | string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutEventsInput
   place?: Prisma.PlaceCreateNestedOneWithoutEventsInput
   sourcePlan?: Prisma.PlanCreateNestedOneWithoutFulfilledByInput
@@ -1091,6 +1117,7 @@ export type EventUncheckedCreateWithoutCalendarLinksInput = {
   notes?: string | null
   transcript?: string | null
   metadata?: string | null
+  notEventAt?: Date | string | null
   sourcePlanId?: string | null
   parentEventId?: string | null
   sourceNoteId?: string | null
@@ -1130,6 +1157,7 @@ export type EventUpdateWithoutCalendarLinksInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transcript?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notEventAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutEventsNestedInput
   place?: Prisma.PlaceUpdateOneWithoutEventsNestedInput
   sourcePlan?: Prisma.PlanUpdateOneWithoutFulfilledByNestedInput
@@ -1157,6 +1185,7 @@ export type EventUncheckedUpdateWithoutCalendarLinksInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transcript?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notEventAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sourcePlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1180,6 +1209,7 @@ export type EventCreateWithoutGranolaNoteLinksInput = {
   notes?: string | null
   transcript?: string | null
   metadata?: string | null
+  notEventAt?: Date | string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutEventsInput
   place?: Prisma.PlaceCreateNestedOneWithoutEventsInput
   sourcePlan?: Prisma.PlanCreateNestedOneWithoutFulfilledByInput
@@ -1207,6 +1237,7 @@ export type EventUncheckedCreateWithoutGranolaNoteLinksInput = {
   notes?: string | null
   transcript?: string | null
   metadata?: string | null
+  notEventAt?: Date | string | null
   sourcePlanId?: string | null
   parentEventId?: string | null
   sourceNoteId?: string | null
@@ -1246,6 +1277,7 @@ export type EventUpdateWithoutGranolaNoteLinksInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transcript?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notEventAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutEventsNestedInput
   place?: Prisma.PlaceUpdateOneWithoutEventsNestedInput
   sourcePlan?: Prisma.PlanUpdateOneWithoutFulfilledByNestedInput
@@ -1273,6 +1305,7 @@ export type EventUncheckedUpdateWithoutGranolaNoteLinksInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transcript?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notEventAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sourcePlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1296,6 +1329,7 @@ export type EventCreateWithoutChildEventsInput = {
   notes?: string | null
   transcript?: string | null
   metadata?: string | null
+  notEventAt?: Date | string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutEventsInput
   place?: Prisma.PlaceCreateNestedOneWithoutEventsInput
   sourcePlan?: Prisma.PlanCreateNestedOneWithoutFulfilledByInput
@@ -1323,6 +1357,7 @@ export type EventUncheckedCreateWithoutChildEventsInput = {
   notes?: string | null
   transcript?: string | null
   metadata?: string | null
+  notEventAt?: Date | string | null
   sourcePlanId?: string | null
   parentEventId?: string | null
   sourceNoteId?: string | null
@@ -1351,6 +1386,7 @@ export type EventCreateWithoutParentEventInput = {
   notes?: string | null
   transcript?: string | null
   metadata?: string | null
+  notEventAt?: Date | string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutEventsInput
   place?: Prisma.PlaceCreateNestedOneWithoutEventsInput
   sourcePlan?: Prisma.PlanCreateNestedOneWithoutFulfilledByInput
@@ -1378,6 +1414,7 @@ export type EventUncheckedCreateWithoutParentEventInput = {
   notes?: string | null
   transcript?: string | null
   metadata?: string | null
+  notEventAt?: Date | string | null
   sourcePlanId?: string | null
   sourceNoteId?: string | null
   childEvents?: Prisma.EventUncheckedCreateNestedManyWithoutParentEventInput
@@ -1421,6 +1458,7 @@ export type EventUpdateWithoutChildEventsInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transcript?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notEventAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutEventsNestedInput
   place?: Prisma.PlaceUpdateOneWithoutEventsNestedInput
   sourcePlan?: Prisma.PlanUpdateOneWithoutFulfilledByNestedInput
@@ -1448,6 +1486,7 @@ export type EventUncheckedUpdateWithoutChildEventsInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transcript?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notEventAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sourcePlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1487,6 +1526,7 @@ export type EventCreateWithoutInteractionsInput = {
   notes?: string | null
   transcript?: string | null
   metadata?: string | null
+  notEventAt?: Date | string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutEventsInput
   place?: Prisma.PlaceCreateNestedOneWithoutEventsInput
   sourcePlan?: Prisma.PlanCreateNestedOneWithoutFulfilledByInput
@@ -1514,6 +1554,7 @@ export type EventUncheckedCreateWithoutInteractionsInput = {
   notes?: string | null
   transcript?: string | null
   metadata?: string | null
+  notEventAt?: Date | string | null
   sourcePlanId?: string | null
   parentEventId?: string | null
   sourceNoteId?: string | null
@@ -1553,6 +1594,7 @@ export type EventUpdateWithoutInteractionsInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transcript?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notEventAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutEventsNestedInput
   place?: Prisma.PlaceUpdateOneWithoutEventsNestedInput
   sourcePlan?: Prisma.PlanUpdateOneWithoutFulfilledByNestedInput
@@ -1580,6 +1622,7 @@ export type EventUncheckedUpdateWithoutInteractionsInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transcript?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notEventAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sourcePlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1603,6 +1646,7 @@ export type EventCreateWithoutSourcePlanInput = {
   notes?: string | null
   transcript?: string | null
   metadata?: string | null
+  notEventAt?: Date | string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutEventsInput
   place?: Prisma.PlaceCreateNestedOneWithoutEventsInput
   parentEvent?: Prisma.EventCreateNestedOneWithoutChildEventsInput
@@ -1630,6 +1674,7 @@ export type EventUncheckedCreateWithoutSourcePlanInput = {
   notes?: string | null
   transcript?: string | null
   metadata?: string | null
+  notEventAt?: Date | string | null
   parentEventId?: string | null
   sourceNoteId?: string | null
   childEvents?: Prisma.EventUncheckedCreateNestedManyWithoutParentEventInput
@@ -1669,6 +1714,7 @@ export type EventUpdateWithoutSourcePlanInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transcript?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notEventAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutEventsNestedInput
   place?: Prisma.PlaceUpdateOneWithoutEventsNestedInput
   parentEvent?: Prisma.EventUpdateOneWithoutChildEventsNestedInput
@@ -1696,6 +1742,7 @@ export type EventUncheckedUpdateWithoutSourcePlanInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transcript?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notEventAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   parentEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   childEvents?: Prisma.EventUncheckedUpdateManyWithoutParentEventNestedInput
@@ -1719,6 +1766,7 @@ export type EventCreateWithoutPlaceInput = {
   notes?: string | null
   transcript?: string | null
   metadata?: string | null
+  notEventAt?: Date | string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutEventsInput
   sourcePlan?: Prisma.PlanCreateNestedOneWithoutFulfilledByInput
   parentEvent?: Prisma.EventCreateNestedOneWithoutChildEventsInput
@@ -1745,6 +1793,7 @@ export type EventUncheckedCreateWithoutPlaceInput = {
   notes?: string | null
   transcript?: string | null
   metadata?: string | null
+  notEventAt?: Date | string | null
   sourcePlanId?: string | null
   parentEventId?: string | null
   sourceNoteId?: string | null
@@ -1794,6 +1843,7 @@ export type EventCreateWithoutPlaceNotesInput = {
   notes?: string | null
   transcript?: string | null
   metadata?: string | null
+  notEventAt?: Date | string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutEventsInput
   place?: Prisma.PlaceCreateNestedOneWithoutEventsInput
   sourcePlan?: Prisma.PlanCreateNestedOneWithoutFulfilledByInput
@@ -1821,6 +1871,7 @@ export type EventUncheckedCreateWithoutPlaceNotesInput = {
   notes?: string | null
   transcript?: string | null
   metadata?: string | null
+  notEventAt?: Date | string | null
   sourcePlanId?: string | null
   parentEventId?: string | null
   sourceNoteId?: string | null
@@ -1860,6 +1911,7 @@ export type EventUpdateWithoutPlaceNotesInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transcript?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notEventAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutEventsNestedInput
   place?: Prisma.PlaceUpdateOneWithoutEventsNestedInput
   sourcePlan?: Prisma.PlanUpdateOneWithoutFulfilledByNestedInput
@@ -1887,6 +1939,7 @@ export type EventUncheckedUpdateWithoutPlaceNotesInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transcript?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notEventAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sourcePlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1910,6 +1963,7 @@ export type EventCreateWithoutGroupTagsInput = {
   notes?: string | null
   transcript?: string | null
   metadata?: string | null
+  notEventAt?: Date | string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutEventsInput
   place?: Prisma.PlaceCreateNestedOneWithoutEventsInput
   sourcePlan?: Prisma.PlanCreateNestedOneWithoutFulfilledByInput
@@ -1937,6 +1991,7 @@ export type EventUncheckedCreateWithoutGroupTagsInput = {
   notes?: string | null
   transcript?: string | null
   metadata?: string | null
+  notEventAt?: Date | string | null
   sourcePlanId?: string | null
   parentEventId?: string | null
   sourceNoteId?: string | null
@@ -1981,6 +2036,7 @@ export type EventCreateWithoutPurchaseReceiptLinesInput = {
   notes?: string | null
   transcript?: string | null
   metadata?: string | null
+  notEventAt?: Date | string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutEventsInput
   place?: Prisma.PlaceCreateNestedOneWithoutEventsInput
   sourcePlan?: Prisma.PlanCreateNestedOneWithoutFulfilledByInput
@@ -2008,6 +2064,7 @@ export type EventUncheckedCreateWithoutPurchaseReceiptLinesInput = {
   notes?: string | null
   transcript?: string | null
   metadata?: string | null
+  notEventAt?: Date | string | null
   sourcePlanId?: string | null
   parentEventId?: string | null
   sourceNoteId?: string | null
@@ -2047,6 +2104,7 @@ export type EventUpdateWithoutPurchaseReceiptLinesInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transcript?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notEventAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutEventsNestedInput
   place?: Prisma.PlaceUpdateOneWithoutEventsNestedInput
   sourcePlan?: Prisma.PlanUpdateOneWithoutFulfilledByNestedInput
@@ -2074,6 +2132,7 @@ export type EventUncheckedUpdateWithoutPurchaseReceiptLinesInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transcript?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notEventAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sourcePlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2097,6 +2156,7 @@ export type EventCreateWithoutAboutNotesInput = {
   notes?: string | null
   transcript?: string | null
   metadata?: string | null
+  notEventAt?: Date | string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutEventsInput
   place?: Prisma.PlaceCreateNestedOneWithoutEventsInput
   sourcePlan?: Prisma.PlanCreateNestedOneWithoutFulfilledByInput
@@ -2124,6 +2184,7 @@ export type EventUncheckedCreateWithoutAboutNotesInput = {
   notes?: string | null
   transcript?: string | null
   metadata?: string | null
+  notEventAt?: Date | string | null
   sourcePlanId?: string | null
   parentEventId?: string | null
   sourceNoteId?: string | null
@@ -2152,6 +2213,7 @@ export type EventCreateWithoutSourceNoteInput = {
   notes?: string | null
   transcript?: string | null
   metadata?: string | null
+  notEventAt?: Date | string | null
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutEventsInput
   place?: Prisma.PlaceCreateNestedOneWithoutEventsInput
   sourcePlan?: Prisma.PlanCreateNestedOneWithoutFulfilledByInput
@@ -2179,6 +2241,7 @@ export type EventUncheckedCreateWithoutSourceNoteInput = {
   notes?: string | null
   transcript?: string | null
   metadata?: string | null
+  notEventAt?: Date | string | null
   sourcePlanId?: string | null
   parentEventId?: string | null
   childEvents?: Prisma.EventUncheckedCreateNestedManyWithoutParentEventInput
@@ -2222,6 +2285,7 @@ export type EventUpdateWithoutAboutNotesInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transcript?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notEventAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutEventsNestedInput
   place?: Prisma.PlaceUpdateOneWithoutEventsNestedInput
   sourcePlan?: Prisma.PlanUpdateOneWithoutFulfilledByNestedInput
@@ -2249,6 +2313,7 @@ export type EventUncheckedUpdateWithoutAboutNotesInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transcript?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notEventAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sourcePlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2289,6 +2354,7 @@ export type EventCreateManyWorkspaceInput = {
   notes?: string | null
   transcript?: string | null
   metadata?: string | null
+  notEventAt?: Date | string | null
   sourcePlanId?: string | null
   parentEventId?: string | null
   sourceNoteId?: string | null
@@ -2305,6 +2371,7 @@ export type EventUpdateWithoutWorkspaceInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transcript?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notEventAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   place?: Prisma.PlaceUpdateOneWithoutEventsNestedInput
   sourcePlan?: Prisma.PlanUpdateOneWithoutFulfilledByNestedInput
   parentEvent?: Prisma.EventUpdateOneWithoutChildEventsNestedInput
@@ -2331,6 +2398,7 @@ export type EventUncheckedUpdateWithoutWorkspaceInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transcript?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notEventAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sourcePlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2356,6 +2424,7 @@ export type EventUncheckedUpdateManyWithoutWorkspaceInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transcript?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notEventAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sourcePlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2374,6 +2443,7 @@ export type EventCreateManyParentEventInput = {
   notes?: string | null
   transcript?: string | null
   metadata?: string | null
+  notEventAt?: Date | string | null
   sourcePlanId?: string | null
   sourceNoteId?: string | null
 }
@@ -2389,6 +2459,7 @@ export type EventUpdateWithoutParentEventInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transcript?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notEventAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutEventsNestedInput
   place?: Prisma.PlaceUpdateOneWithoutEventsNestedInput
   sourcePlan?: Prisma.PlanUpdateOneWithoutFulfilledByNestedInput
@@ -2416,6 +2487,7 @@ export type EventUncheckedUpdateWithoutParentEventInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transcript?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notEventAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sourcePlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   childEvents?: Prisma.EventUncheckedUpdateManyWithoutParentEventNestedInput
@@ -2441,6 +2513,7 @@ export type EventUncheckedUpdateManyWithoutParentEventInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transcript?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notEventAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sourcePlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
@@ -2457,6 +2530,7 @@ export type EventCreateManyPlaceInput = {
   notes?: string | null
   transcript?: string | null
   metadata?: string | null
+  notEventAt?: Date | string | null
   sourcePlanId?: string | null
   parentEventId?: string | null
   sourceNoteId?: string | null
@@ -2473,6 +2547,7 @@ export type EventUpdateWithoutPlaceInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transcript?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notEventAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutEventsNestedInput
   sourcePlan?: Prisma.PlanUpdateOneWithoutFulfilledByNestedInput
   parentEvent?: Prisma.EventUpdateOneWithoutChildEventsNestedInput
@@ -2499,6 +2574,7 @@ export type EventUncheckedUpdateWithoutPlaceInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transcript?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notEventAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sourcePlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2524,6 +2600,7 @@ export type EventUncheckedUpdateManyWithoutPlaceInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transcript?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notEventAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sourcePlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2540,6 +2617,7 @@ export type EventUpdateWithoutGroupTagsInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transcript?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notEventAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutEventsNestedInput
   place?: Prisma.PlaceUpdateOneWithoutEventsNestedInput
   sourcePlan?: Prisma.PlanUpdateOneWithoutFulfilledByNestedInput
@@ -2567,6 +2645,7 @@ export type EventUncheckedUpdateWithoutGroupTagsInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transcript?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notEventAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sourcePlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2592,6 +2671,7 @@ export type EventUncheckedUpdateManyWithoutGroupTagsInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transcript?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notEventAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sourcePlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceNoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2610,6 +2690,7 @@ export type EventCreateManySourceNoteInput = {
   notes?: string | null
   transcript?: string | null
   metadata?: string | null
+  notEventAt?: Date | string | null
   sourcePlanId?: string | null
   parentEventId?: string | null
 }
@@ -2625,6 +2706,7 @@ export type EventUpdateWithoutSourceNoteInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transcript?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notEventAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutEventsNestedInput
   place?: Prisma.PlaceUpdateOneWithoutEventsNestedInput
   sourcePlan?: Prisma.PlanUpdateOneWithoutFulfilledByNestedInput
@@ -2652,6 +2734,7 @@ export type EventUncheckedUpdateWithoutSourceNoteInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transcript?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notEventAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sourcePlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   childEvents?: Prisma.EventUncheckedUpdateManyWithoutParentEventNestedInput
@@ -2677,6 +2760,7 @@ export type EventUncheckedUpdateManyWithoutSourceNoteInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transcript?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notEventAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sourcePlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
@@ -2788,6 +2872,7 @@ export type EventSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   notes?: boolean
   transcript?: boolean
   metadata?: boolean
+  notEventAt?: boolean
   sourcePlanId?: boolean
   parentEventId?: boolean
   sourceNoteId?: boolean
@@ -2820,6 +2905,7 @@ export type EventSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   notes?: boolean
   transcript?: boolean
   metadata?: boolean
+  notEventAt?: boolean
   sourcePlanId?: boolean
   parentEventId?: boolean
   sourceNoteId?: boolean
@@ -2843,6 +2929,7 @@ export type EventSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   notes?: boolean
   transcript?: boolean
   metadata?: boolean
+  notEventAt?: boolean
   sourcePlanId?: boolean
   parentEventId?: boolean
   sourceNoteId?: boolean
@@ -2866,12 +2953,13 @@ export type EventSelectScalar = {
   notes?: boolean
   transcript?: boolean
   metadata?: boolean
+  notEventAt?: boolean
   sourcePlanId?: boolean
   parentEventId?: boolean
   sourceNoteId?: boolean
 }
 
-export type EventOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "workspaceId" | "createdAt" | "name" | "type" | "start" | "end" | "timestamp" | "placeId" | "notes" | "transcript" | "metadata" | "sourcePlanId" | "parentEventId" | "sourceNoteId", ExtArgs["result"]["event"]>
+export type EventOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "workspaceId" | "createdAt" | "name" | "type" | "start" | "end" | "timestamp" | "placeId" | "notes" | "transcript" | "metadata" | "notEventAt" | "sourcePlanId" | "parentEventId" | "sourceNoteId", ExtArgs["result"]["event"]>
 export type EventInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   place?: boolean | Prisma.Event$placeArgs<ExtArgs>
@@ -2933,6 +3021,7 @@ export type $EventPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     notes: string | null
     transcript: string | null
     metadata: string | null
+    notEventAt: Date | null
     sourcePlanId: string | null
     parentEventId: string | null
     sourceNoteId: string | null
@@ -3384,6 +3473,7 @@ export interface EventFieldRefs {
   readonly notes: Prisma.FieldRef<"Event", 'String'>
   readonly transcript: Prisma.FieldRef<"Event", 'String'>
   readonly metadata: Prisma.FieldRef<"Event", 'String'>
+  readonly notEventAt: Prisma.FieldRef<"Event", 'DateTime'>
   readonly sourcePlanId: Prisma.FieldRef<"Event", 'String'>
   readonly parentEventId: Prisma.FieldRef<"Event", 'String'>
   readonly sourceNoteId: Prisma.FieldRef<"Event", 'String'>

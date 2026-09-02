@@ -16,7 +16,7 @@ export async function PATCH(request: Request, context: { params: Promise<{ id: s
     const body = await request.json() as Record<string, unknown>
     const action = parseOwnerAttendanceAction(body.action)
     if (!action) {
-      return NextResponse.json({ error: "action must be going, not_going, did_go, or did_not_go" }, { status: 400 })
+      return NextResponse.json({ error: "action must be going, not_going, did_go, did_not_go, or not_event" }, { status: 400 })
     }
     const result = await recordOwnerAttendance({ workspaceId, planId: id, action })
     revalidateTag("home-schedule", "max")

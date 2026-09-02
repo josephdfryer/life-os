@@ -15,6 +15,7 @@ export type TimelineRow = {
   calendars: string[]
   interactionCount: number
   planId: string | null
+  eventId: string | null
   declaredAttendance: "going" | "not_going"
   reconciliationStatus: string | null
   tension: "aligned" | "missed" | "showed_up" | "pending"
@@ -100,11 +101,13 @@ export default function TimelineList({ items, timeZone }: { items: TimelineRow[]
               </span>
               <AttendanceControls
                 planId={item.planId}
+                eventId={item.eventId}
                 phase={item.phase}
                 declared={item.declaredAttendance}
                 reconciliationStatus={item.reconciliationStatus}
                 tension={item.tension}
                 endpointFor={(planId) => `/api/calendar/plans/${planId}/attendance`}
+                notEventEndpointFor={(eventId) => `/api/events/${eventId}/not-event`}
               />
               {item.interactionCount > 0 && (
                 <div style={{ fontSize: "10px", color: "var(--ink-4)" }}>

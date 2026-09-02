@@ -1,7 +1,14 @@
 export const OWNER_ATTENDANCE = ["going", "not_going"] as const
 export type OwnerAttendance = (typeof OWNER_ATTENDANCE)[number]
 
-export const OWNER_ATTENDANCE_ACTIONS = ["going", "not_going", "did_go", "did_not_go"] as const
+// "not_event" is a classification, not an attendance answer, and it rides this
+// same list on purpose. A calendar row can be the wrong KIND of thing — a
+// standing 1:1 that is really an ongoing interaction with one person, not an
+// occasion anybody attended — and "did you go?" has no true answer for it. It
+// used to be answerable only from a separate Event signals panel; keeping it
+// beside the attendance verbs means the judgement is made where the item is
+// actually seen, in one control cluster and one round trip.
+export const OWNER_ATTENDANCE_ACTIONS = ["going", "not_going", "did_go", "did_not_go", "not_event"] as const
 export type OwnerAttendanceAction = (typeof OWNER_ATTENDANCE_ACTIONS)[number]
 
 export type AttendanceTension = "aligned" | "missed" | "showed_up" | "pending"

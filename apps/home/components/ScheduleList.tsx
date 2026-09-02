@@ -13,6 +13,7 @@ export type ScheduleRow = {
   attendees: { id: string; name: string }[]
   calendars: string[]
   planId: string | null
+  eventId: string | null
   declaredAttendance: "going" | "not_going"
   reconciliationStatus: string | null
   tension: "aligned" | "missed" | "showed_up" | "pending"
@@ -85,11 +86,13 @@ export default function ScheduleList({
             </div>
             <AttendanceControls
               planId={event.planId}
+              eventId={event.eventId}
               phase={event.phase}
               declared={event.declaredAttendance}
               reconciliationStatus={event.reconciliationStatus}
               tension={event.tension}
               endpointFor={(planId) => `/api/calendar/plans/${planId}/attendance`}
+              notEventEndpointFor={(eventId) => `/api/events/${eventId}/not-event`}
             />
           </div>
         )

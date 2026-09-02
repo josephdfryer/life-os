@@ -910,6 +910,9 @@ model Event {
   notes                String?
   transcript           String?
   metadata             String?
+  // Declassified: this row was never an occasion. Mirrors schema.prisma; every
+  // timeline filters these out.
+  notEventAt           DateTime?
   // Which prediction (if any) this occurrence fulfilled
   sourcePlanId         String?               @unique
   sourcePlan           Plan?                 @relation("PlanFulfillment", fields: [sourcePlanId], references: [id], onDelete: SetNull)

@@ -72,6 +72,7 @@ async function loadScheduleEvents(workspaceId: string, tz: string, eventsUrl: st
     attendees: item.attendees,
     calendars: item.calendars,
     planId: item.planId,
+    eventId: item.eventId,
     declaredAttendance: item.declaredAttendance,
     reconciliationStatus: item.reconciliationStatus,
     tension: item.tension,

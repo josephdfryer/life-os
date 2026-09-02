@@ -7,7 +7,7 @@ import { unitConfidence } from '../lib/confidence'
 export type InboxItem = {
   id: string
   source: string
-  sourceKey: 'staged_interaction' | 'note_suggestion' | 'import_staged_visit' | 'calendar_reconciliation' | 'file_evidence'
+  sourceKey: 'staged_interaction' | 'note_suggestion' | 'import_staged_visit' | 'calendar_reconciliation' | 'file_evidence' | 'communication_occurrence'
   primitive: string
   title: string
   detail: string
@@ -54,6 +54,7 @@ const SOURCE_FILTERS = [
   ['note_suggestion', 'Notes'],
   ['import_staged_visit', 'Places'],
   ['calendar_reconciliation', 'Calendar'],
+  ['communication_occurrence', 'Events'],
   ['file_evidence', 'File evidence'],
 ] as const
 
@@ -343,12 +344,23 @@ function InboxRow({ item, pending, onResolve }: { item: InboxItem; pending: bool
         <time className="stream-row-date" dateTime={item.timestamp}>{formatDate(item.timestamp)}</time>
         <span className="inbox-confidence">{item.confidence == null ? 'Needs judgment' : `${Math.round(item.confidence * 100)}% confidence`}</span>
         {item.canonical ? <div className="inbox-row-actions">
-          <button type="button" className="inbox-action inbox-action--accept" disabled={pending} onClick={() => onResolve(item, 'accept')}>{pending ? 'Working…' : 'Accept'}</button>
-          <button type="button" className="inbox-action" disabled={pending} onClick={() => onResolve(item, 'dismiss')}>Dismiss</button>
+          <button type="button" className="inbox-action inbox-action--accept" disabled={pending} onClick={() => onResolve(item, 'accept')}>{pending ? 'Working…' : acceptLabel(item)}</button>
+          <button type="button" className="inbox-action" disabled={pending} onClick={() => onResolve(item, 'dismiss')}>{dismissLabel(item)}</button>
         </div> : null}
       </div>
     </article>
   )
+}
+
+// "Accept"/"Dismiss" are the right words for a proposed command, and the wrong
+// ones for "is this an event?" — accepting here creates an Event, an
+// Interaction and its participants, so the button should say so.
+export function acceptLabel(item: InboxItem) {
+  return item.sourceKey === 'communication_occurrence' ? 'Confirm event' : 'Accept'
+}
+
+export function dismissLabel(item: InboxItem) {
+  return item.sourceKey === 'communication_occurrence' ? 'Not an event' : 'Dismiss'
 }
 
 function toInboxItem(item: ReviewItem): InboxItem {
@@ -357,9 +369,11 @@ function toInboxItem(item: ReviewItem): InboxItem {
   const title = firstString(input, ['title', 'text', 'summary', 'placeName', 'contactName'])
     || firstString(evidence, ['title', 'summary', 'placeName', 'assertion', 'sourceText'])
     || labelize(item.proposedCommand.command)
-  const detail = firstString(input, ['description', 'body', 'reason', 'placeAddress'])
-    || firstString(evidence, ['description', 'body', 'reason', 'exactQuote'])
-    || `Proposed command: ${labelize(item.proposedCommand.command)}`
+  const detail = item.source === 'communication_occurrence'
+    ? occurrenceDetail(evidence)
+    : firstString(input, ['description', 'body', 'reason', 'placeAddress'])
+      || firstString(evidence, ['description', 'body', 'reason', 'exactQuote'])
+      || `Proposed command: ${labelize(item.proposedCommand.command)}`
 
   return {
     id: item.id,
@@ -396,19 +410,45 @@ export function mergeQueues(legacy: InboxItem[], canonical: InboxItem[]): InboxI
     .sort((a, b) => b.timestamp.localeCompare(a.timestamp))
 }
 
-function normalizeSource(source: string): InboxItem['sourceKey'] {
+/**
+ * A message-suggested event needs to answer "from where, about when, and why
+ * does this look like an event" before it can be judged. The generic fallback
+ * printed "Proposed command: communication_occurrence.confirm", which answers
+ * none of them.
+ */
+export function occurrenceDetail(evidence: Record<string, unknown>): string {
+  const parts: string[] = []
+  const from = typeof evidence.messageSource === 'string' ? evidence.messageSource.trim() : ''
+  if (from) parts.push(`From ${labelize(from)}`)
+  const when = typeof evidence.occurredAt === 'string' ? evidence.occurredAt : ''
+  if (when) {
+    const parsed = new Date(when)
+    if (!Number.isNaN(parsed.getTime())) parts.push(formatDate(when))
+  }
+  const reason = typeof evidence.reason === 'string' ? evidence.reason.trim() : ''
+  const prefix = parts.join(' · ')
+  if (prefix && reason) return `${prefix} — ${reason}`
+  return prefix || reason || 'A message looks like it refers to a real event'
+}
+
+export function normalizeSource(source: string): InboxItem['sourceKey'] {
   if (source === 'note_suggestion') return source
   if (source === 'import_staged_visit') return source
   if (source === 'calendar_reconciliation') return source
+  // Without this it fell through to the staged_interaction default, filing an
+  // event proposal in the Communications queue as if it were an unmatched
+  // message — present, but not where anyone would look for it.
+  if (source === 'communication_occurrence') return source
   if (source === 'file_entity_mention' || source === 'evidence_claim') return 'file_evidence'
   return 'staged_interaction'
 }
 
-function sourceLabel(source: string) {
+export function sourceLabel(source: string) {
   if (source === 'staged_interaction') return 'Communications'
   if (source === 'note_suggestion') return 'Notes'
   if (source === 'import_staged_visit') return 'Places'
   if (source === 'calendar_reconciliation') return 'Calendar'
+  if (source === 'communication_occurrence') return 'Events'
   if (source === 'file_entity_mention' || source === 'evidence_claim') return 'File evidence'
   return labelize(source)
 }

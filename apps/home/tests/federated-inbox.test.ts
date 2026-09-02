@@ -1,7 +1,15 @@
 import test from "node:test"
 import assert from "node:assert/strict"
 
-import { mergeQueues, type InboxItem } from "../components/FederatedInbox"
+import {
+  acceptLabel,
+  dismissLabel,
+  mergeQueues,
+  normalizeSource,
+  occurrenceDetail,
+  sourceLabel,
+  type InboxItem,
+} from "../components/FederatedInbox"
 import { unitConfidence } from "../lib/confidence"
 
 // The inbox showed 231 items, then swapped them for the 43 in the canonical
@@ -73,4 +81,55 @@ test("no input can produce a confidence outside 0–100%", () => {
   }
   assert.equal(unitConfidence(null, "unit"), null, "absent stays absent — it must not read as 0% certainty")
   assert.equal(unitConfidence(Number.NaN, "unit"), null)
+})
+
+// Message-suggested events were reaching the inbox all along — listReviewItems
+// filters no sources and FederatedInbox merges the canonical feed in. They were
+// just unfindable: normalizeSource had no case for them, so they fell through to
+// the staged_interaction default and sat in Communications wearing a labelize()
+// string. These pin the queue they actually belong to.
+
+test("a message-suggested event gets its own queue, not the communications default", () => {
+  assert.equal(normalizeSource("communication_occurrence"), "communication_occurrence")
+  assert.equal(sourceLabel("communication_occurrence"), "Events")
+})
+
+test("the fallthrough default still catches genuinely unknown sources", () => {
+  assert.equal(normalizeSource("something_new"), "staged_interaction")
+})
+
+test("existing queues keep their mapping", () => {
+  assert.equal(normalizeSource("calendar_reconciliation"), "calendar_reconciliation")
+  assert.equal(normalizeSource("evidence_claim"), "file_evidence")
+  assert.equal(sourceLabel("calendar_reconciliation"), "Calendar")
+  assert.equal(sourceLabel("evidence_claim"), "File evidence")
+})
+
+test("the detail line says where it came from, when, and why", () => {
+  const detail = occurrenceDetail({
+    messageSource: "imessage",
+    occurredAt: "2026-09-04T19:00:00.000Z",
+    reason: "Mentions dinner on Thursday at 7",
+  })
+  assert.match(detail, /Imessage/i, "the source of the message has to be visible")
+  assert.match(detail, /Mentions dinner/, "the reason it looks like an event has to survive")
+})
+
+test("the detail line degrades rather than printing a proposed command", () => {
+  assert.equal(
+    occurrenceDetail({}),
+    "A message looks like it refers to a real event",
+  )
+  assert.equal(occurrenceDetail({ reason: "Just the reason" }), "Just the reason")
+  // An unparseable date must not reach the row as "Invalid Date".
+  assert.equal(occurrenceDetail({ occurredAt: "not-a-date", reason: "why" }), "why")
+})
+
+test("the verbs match the judgement being made", () => {
+  const occurrence = item("ri-1", "communication_occurrence", { canonical: true })
+  assert.equal(acceptLabel(occurrence), "Confirm event")
+  assert.equal(dismissLabel(occurrence), "Not an event")
+  const other = item("ri-2", "calendar_reconciliation", { canonical: true })
+  assert.equal(acceptLabel(other), "Accept")
+  assert.equal(dismissLabel(other), "Dismiss")
 })

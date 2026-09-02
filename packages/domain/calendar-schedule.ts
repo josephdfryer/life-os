@@ -76,6 +76,8 @@ export async function listScheduleItems(input: {
       where: {
         workspaceId: input.workspaceId,
         type: { notIn: [...BACKGROUND_EVENT_TYPES] },
+        // Declassified rows were never occasions — keep them off every timeline.
+        notEventAt: null,
         ...(window ? { start: window } : {}),
         ...(search ? { name: { contains: search, mode: "insensitive" as const } } : {}),
       },
@@ -262,6 +264,36 @@ export async function recordOwnerAttendance(input: {
     }
   }
 
+  // "not event" says the row should never have been an occasion at all, so it
+  // resolves as "cancelled" (plan abandoned, never promoted to an Event) rather
+  // than "skip" (a real occasion I did not attend). Both drop off the schedule;
+  // only one of them is a statement about attendance.
+  if (input.action === "not_event") {
+    const { db } = await import("@life-os/db")
+    const plan = await db.plan.findFirst({
+      where: { id: input.planId, workspaceId: input.workspaceId },
+      select: { text: true },
+    })
+    const result = await reconcileCalendarPlan({
+      workspaceId: input.workspaceId,
+      planId: input.planId,
+      action: "cancelled",
+    })
+    await recordNotEventFeedback({
+      workspaceId: input.workspaceId,
+      title: plan?.text ?? input.planId,
+      sourceId: input.planId,
+      source: "calendar_schedule_plan",
+    })
+    return {
+      kind: "classification" as const,
+      planId: input.planId,
+      attendance: null,
+      reconciliationStatus: result.status,
+      eventId: null,
+    }
+  }
+
   const result = await reconcileCalendarPlan({
     workspaceId: input.workspaceId,
     planId: input.planId,
@@ -274,6 +306,86 @@ export async function recordOwnerAttendance(input: {
     reconciliationStatus: result.status,
     eventId: result.eventId,
   }
+}
+
+/**
+ * Declassify an already-materialised Event: it was never an occasion.
+ *
+ * A Plan can be declined before it becomes anything, but by the time a standing
+ * 1:1 has been promoted to an Event, "did you go?" is the only question the
+ * schedule knows how to ask — and for a row that is really an ongoing
+ * interaction with one person, none of the answers are true. This is the third
+ * answer, and it is the only one available once the Event exists.
+ *
+ * Stamps notEventAt rather than deleting: the Interactions, attendees and
+ * provenance hanging off the Event are the real record and they survive
+ * untouched. Reversible by clearing the column.
+ */
+export async function declassifyEvent(input: {
+  workspaceId: string
+  eventId: string
+}) {
+  const { db } = await import("@life-os/db")
+  const event = await db.event.findFirst({
+    where: { id: input.eventId, workspaceId: input.workspaceId },
+    select: { id: true, name: true, type: true, notEventAt: true, sourcePlanId: true },
+  })
+  if (!event) throw new PlanError("Event not found", "not_found")
+
+  if (!event.notEventAt) {
+    await db.event.update({
+      where: { id: event.id },
+      data: { notEventAt: new Date() },
+    })
+  }
+
+  // A declassified Event whose Plan is still pending would otherwise be
+  // re-promoted by the next reconciliation pass and reappear tomorrow.
+  if (event.sourcePlanId) {
+    await reconcileCalendarPlan({
+      workspaceId: input.workspaceId,
+      planId: event.sourcePlanId,
+      action: "cancelled",
+    }).catch(() => undefined)
+  }
+
+  await recordNotEventFeedback({
+    workspaceId: input.workspaceId,
+    title: event.name,
+    sourceId: event.id,
+    source: "calendar_schedule_event",
+  })
+
+  return { kind: "classification" as const, eventId: event.id, notEvent: true }
+}
+
+/**
+ * The Event signals panel logged every verdict as an `event_signal_feedback`
+ * Note so the classifier had something to learn from. That ledger was the point
+ * of the panel; keep writing the same shape now the verdict is given inline, so
+ * the training history stays continuous across the move.
+ */
+async function recordNotEventFeedback(input: {
+  workspaceId: string
+  title: string
+  sourceId: string
+  source: string
+}) {
+  const { db } = await import("@life-os/db")
+  await db.note.create({
+    data: {
+      workspaceId: input.workspaceId,
+      timestamp: new Date(),
+      type: "event_signal_feedback",
+      content: `not_event: ${input.title}`,
+      metadata: JSON.stringify({
+        source: input.source,
+        sourceId: input.sourceId,
+        action: "not_event",
+        title: input.title,
+      }),
+    },
+  })
 }
 
 function personName(person: { first: string; last: string | null }) {
