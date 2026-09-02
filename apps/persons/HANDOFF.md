@@ -78,7 +78,7 @@ model Person {
   headline  String?
   emails    String  @default("[]")   // JSON array of strings
   phones    String  @default("[]")   // JSON array of strings
-  closeness Int     @default(2)      // 1=Acquaintance 2=Nurture 3=Friend 4=Inner Circle
+  closeness Int     @default(1)      // 1=Acquaintance 2=Nurture 3=Friend 4=Inner Circle
   tags      String  @default("[]")   // JSON array
   values    String  @default("[]")   // JSON array
   notes     String?

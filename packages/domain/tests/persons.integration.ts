@@ -18,6 +18,7 @@ async function main() {
   assert.equal(created.first, "Ada")
   assert.equal(created.last, "Lovelace")
   assert.equal(created.birthday, "--12-10")
+  assert.equal(created.closeness, 1, "new People default to the lowest closeness")
   assert.ok(created.color, "a color must be assigned")
   assert.deepEqual(JSON.parse(created.tags), ["mathematician"])
 

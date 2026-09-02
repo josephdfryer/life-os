@@ -1,5 +1,6 @@
 {
   "name": "@life-os/db",
+  "description": "Prisma client, generated types, and database crypto helpers.",
   "version": "0.0.1",
   "private": true,
   "main": "./index.ts",

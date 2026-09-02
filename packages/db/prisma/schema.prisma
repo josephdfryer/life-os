@@ -173,7 +173,7 @@ model Person {
   emailSearch          String?
   phones               String                     @default("[]")
   birthday             String?
-  closeness            Int                        @default(2)
+  closeness            Int                        @default(1)
   tags                 String                     @default("[]")
   values               String                     @default("[]")
   notes                String?

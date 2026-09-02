@@ -1,5 +1,6 @@
 {
   "name": "level-up",
+  "description": "Fitness and workout tracking app.",
   "version": "0.1.0",
   "private": true,
   "scripts": {

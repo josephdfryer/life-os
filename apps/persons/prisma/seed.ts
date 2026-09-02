@@ -43,7 +43,7 @@ async function main() {
       headline: "Partner at Meridian Ventures",
       emails: JSON.stringify(["sarah@meridianvc.com"]),
       birthday: "1984-07-22",
-      closeness: 2, // Friend
+      closeness: 2, // Nurture
       tags: JSON.stringify(["vc", "investor", "new york", "fintech"]),
       values: JSON.stringify(["rigor", "diversity"]),
       notes: "Lead investor in two of my portfolio companies. Brilliant networker. Tends to follow up fast — expects the same.",
@@ -58,7 +58,7 @@ async function main() {
       headline: "Head of Design at Vercel",
       emails: JSON.stringify(["lily@vercel.com"]),
       birthday: "1992-11-03",
-      closeness: 2, // Friend
+      closeness: 2, // Nurture
       tags: JSON.stringify(["design", "product", "remote"]),
       values: JSON.stringify(["beauty", "systems thinking"]),
       notes: "Went to RISD together. Followed her to SF. Best taste of anyone I know.",

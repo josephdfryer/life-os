@@ -96,7 +96,10 @@ export async function createPerson(input: PersonInput, workspaceId = "default-wo
         emailSearch: emailsJson.toLowerCase(),
         phones: jsonList(contactList(input.phones, input.phone)),
         birthday: validatedBirthday(input.birthday),
-        closeness: input.closeness === undefined ? 2 : Number(input.closeness) || 2,
+        // A new Person is an address-book fact, not a declared relationship
+        // cadence. Start at the lowest level until the owner deliberately
+        // promotes them; otherwise untouched imports immediately look overdue.
+        closeness: input.closeness === undefined ? 1 : Number(input.closeness) || 1,
         tags: jsonList(optionalStringArray(input.tags)),
         values: jsonList(optionalStringArray(input.values)),
         notes: optionalString(input.notes),

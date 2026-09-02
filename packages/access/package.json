@@ -1,5 +1,6 @@
 {
   "name": "@life-os/access",
+  "description": "Workspace access policy - permission checks shared across apps.",
   "version": "0.0.1",
   "private": true,
   "main": "./index.ts",

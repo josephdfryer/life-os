@@ -1,5 +1,6 @@
 {
   "name": "persons",
+  "description": "People CRM - contacts, inbox, rules, Gmail integration, and the v1 public API.",
   "version": "0.1.0",
   "private": true,
   "scripts": {

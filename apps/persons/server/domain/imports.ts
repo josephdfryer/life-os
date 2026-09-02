@@ -152,7 +152,7 @@ async function resolveImportedPerson(result: ImportedPerson, workspaceId: string
     last: last || "—",
     title: result.guessedHeadline,
     headline: result.guessedHeadline,
-    closeness: result.guessedCloseness ?? 2,
+    closeness: result.guessedCloseness ?? 1,
     tags: result.guessedTags ?? [],
     values: [],
     source: "interaction_import",

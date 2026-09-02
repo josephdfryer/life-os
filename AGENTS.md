@@ -1,5 +1,7 @@
 # LifeOS Agent Instructions
 
+This file is operating rules for AI agents (Claude Code, Codex) working in this repo. For human onboarding — what LifeOS is, quickstart, repo layout — see `README.md` and `CONTRIBUTING.md`; they cover the same ground for people and link back here for the rules below.
+
 ## Cross-Agent Sync
 
 Claude Code and Codex share this repository. At the start of any session, run this from the monorepo root:
@@ -83,6 +85,10 @@ Still is the approved visual language for all LifeOS apps (warm linen, cognac/ca
 ## App-Specific Notes
 
 Read the nearest app-level `AGENTS.md` or `CLAUDE.md` before editing app code. For the persons CRM, start with `apps/persons/AGENTS.md`.
+
+## Engineering Strategies
+
+Before writing data ingestion, import pipelines, LLM calls, or any frontend component, read `docs/ENGINEERING_STRATEGIES.md`. It contains filtered, stack-specific guidance on performance and scalability — what applies to this project and why, with concrete implementation notes. It is not a general reference; it reflects decisions already made about this stack.
 
 ## Production deploys
 

@@ -1,5 +1,6 @@
 {
   "name": "stuff",
+  "description": "Items and assemblies - physical possessions and their component trees.",
   "version": "0.1.0",
   "private": true,
   "scripts": {

@@ -724,7 +724,7 @@ function ExpandedDetail({
           company: newPerson.company,
           emails: newPerson.email.trim() ? [newPerson.email.trim()] : [],
           phones: newPerson.phone.trim() ? [newPerson.phone.trim()] : [],
-          closeness: 2,
+          closeness: 1,
           tags: [],
           values: [],
         }),

@@ -1,5 +1,6 @@
 {
   "name": "life-os",
+  "description": "LifeOS - a personal graph of Person, Place, Item, Event, Plan, Group, State, and Note primitives, connected by Interaction, that models a life instead of a task list.",
   "private": true,
   "workspaces": [
     "apps/*",

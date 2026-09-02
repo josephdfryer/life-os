@@ -1,5 +1,6 @@
 {
   "name": "home",
+  "description": "Cross-domain overview and admin control plane, composing read-only data from all other apps.",
   "version": "0.1.0",
   "private": true,
   "scripts": {

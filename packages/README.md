@@ -12,6 +12,10 @@ Packages expose reusable contracts and inward-facing infrastructure. They never 
 | `@life-os/types` | Cross-package TypeScript shapes | Types do not introduce runtime coupling |
 | `@life-os/alignment` | Derived relationship/plan signals | Signals are computed, not persisted primitives; `/pure` stays free of DB imports |
 | `@life-os/intelligence` | Derived theory and life-model synthesis | Interpretation remains traceable to graph facts |
-| `@life-os/theory` | Re-export of `@life-os/intelligence` | Compatibility alias only |
+| `@life-os/theory` | Re-export of `@life-os/intelligence` | Compatibility alias only — **import from `@life-os/intelligence` directly in new code** |
+| `@life-os/domain` | Shared domain command layer (writes, audit, business logic) | All mutations go through domain commands, never raw Prisma calls from app code |
+| `@life-os/automation` | Rules engine — triggers, conditions, actions | Rules run against domain commands; no direct DB writes from rule handlers |
+| `@life-os/files` | File storage and file-intelligence helpers | Raw files stay on disk/object storage; only derived signal enters the graph (see `docs/MANIFESTO.md`) |
+| `@life-os/level-up` | Shared Level Up (fitness) domain logic | Consumed by `apps/level-up`; workouts and readiness are graph-derived, not duplicated state |
 
 The default owner is defined in `.github/CODEOWNERS`. Add a package README when its public exports or invariants need more detail than this index.

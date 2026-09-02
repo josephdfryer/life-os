@@ -8,25 +8,7 @@
 // instead.
 
 import type { AlignmentSignal } from "./types";
-import { relationshipGapScore, daysSince } from "./scoring";
-
-// Person.source values that mean "arrived in a bulk contact sweep", not
-// "someone deliberately put this person in the graph". A record from one of
-// these that has never had a single recorded interaction and has no plan
-// naming it is an unreviewed address-book row — a business, a one-off, a
-// duplicate — and nudging about it is noise, not a relationship.
-// "manual" / "api" / "system" / "rule" are excluded on purpose: those were
-// created intentionally. So is null, which only means the row predates the
-// column — those are the oldest records in the graph and the most likely to
-// be real, so they are never suppressed on a guess.
-const BULK_IMPORT_SOURCES = new Set([
-  "vcard",
-  "csv",
-  "spreadsheet",
-  "gmail_contacts",
-  "ios_contacts",
-  "interaction_import",
-]);
+import { relationshipGapScore, daysSince, isUnreviewedBulkContact } from "./scoring";
 
 export async function getRelationshipGaps(
   workspaceId: string,
@@ -71,7 +53,7 @@ export async function getRelationshipGaps(
     // Curation, not scoring: an unreviewed bulk-imported row with no history
     // and no plan is noise. Anything with a real interaction behind it, an
     // active plan, or a deliberate origin still scores normally below.
-    if (!lastAt && !hasActivePlan && BULK_IMPORT_SOURCES.has(p.source ?? ""))
+    if (isUnreviewedBulkContact({ source: p.source, lastInteractionAt: lastAt, hasActivePlan }))
       continue;
     const score = relationshipGapScore({
       closeness: p.closeness,

@@ -3,6 +3,7 @@ import { db } from "@/lib/db"
 import { centsToDollars } from "@life-os/db"
 import { parseTags, isBirthdayToday, isBirthdayThisWeek, isTimestampToday, daysUntilBirthday } from "@/lib/utils"
 import { enrichWithAttention } from "@/lib/attention"
+import { isUnreviewedBulkContact } from "@life-os/alignment/pure"
 import AttentionCard from "@/components/today/AttentionCard"
 import BirthdayCard from "@/components/today/BirthdayCard"
 import { TimezonePicker, resolveTimeZone, TZ_COOKIE } from "@life-os/ui"
@@ -16,7 +17,7 @@ export default async function TodayPage() {
   const now = new Date()
   const tz = resolveTimeZone((await cookies()).get(TZ_COOKIE)?.value)
   // Only load persons who are relevant to today:
-  //   - closeness >= 2 (Friends / Inner Circle) for attention tracking
+  //   - closeness >= 2 (Nurture / Friend / Inner Circle) for attention tracking
   //   - OR have a birthday set
   // Only fetch the last 5 interaction timestamps per person — no event/sourceFile joins.
   const raw = await db.person.findMany({
@@ -31,7 +32,7 @@ export default async function TodayPage() {
       id: true, createdAt: true, updatedAt: true,
       first: true, last: true, title: true, headline: true,
       emails: true, phones: true, birthday: true,
-      closeness: true, tags: true, values: true,
+      closeness: true, tags: true, values: true, source: true,
       notes: true, company: true, location: true,
       linkedin: true, twitter: true, website: true,
       color: true, colorSoft: true,
@@ -44,9 +45,22 @@ export default async function TodayPage() {
         orderBy: { timestamp: "desc" },
         take: 5,
       },
+      plans: {
+        where: { status: "active" },
+        select: { id: true, status: true },
+        take: 1,
+      },
     },
     orderBy: { createdAt: "asc" },
   })
+
+  const suppressedImportedIds = new Set(raw
+    .filter(p => isUnreviewedBulkContact({
+      source: p.source,
+      lastInteractionAt: p.interactions[0]?.timestamp ?? null,
+      hasActivePlan: p.plans.length > 0,
+    }))
+    .map(p => p.id))
 
   const persons = raw.map((p: typeof raw[number]) =>
     enrichWithAttention({
@@ -62,7 +76,7 @@ export default async function TodayPage() {
         event: null,
         sourceFile: null,
       })) as never,
-      plans: [],
+      plans: p.plans as never,
     })
   )
 
@@ -76,7 +90,7 @@ export default async function TodayPage() {
   )
 
   const overdue = persons
-    .filter(p => p.attentionScore >= 1.0)
+    .filter(p => p.attentionScore >= 1.0 && !suppressedImportedIds.has(p.id))
     .sort((a, b) => b.attentionScore - a.attentionScore)
 
   // Today's birthdays count as "needs attention" too — a birthday is a
