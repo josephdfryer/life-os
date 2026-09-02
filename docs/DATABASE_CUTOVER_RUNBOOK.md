@@ -51,8 +51,10 @@ complete, current fallback until the soak passes.
 
 4. `[claude]` **Full test suite against Postgres**, to be certain nothing rotted:
    ```bash
-   docker compose up -d postgres    # or any local Postgres
-   TEST_DATABASE_URL=postgresql://lifeos:lifeos@localhost:5432/lifeos \
+   # LifeOS defaults to 5433 so it can coexist with another local Postgres.
+   export LIFE_OS_POSTGRES_PORT=${LIFE_OS_POSTGRES_PORT:-5433}
+   docker compose up -d postgres
+   TEST_DATABASE_URL=postgresql://lifeos:lifeos@localhost:${LIFE_OS_POSTGRES_PORT:-5433}/lifeos \
      npm run type-check && npm test && npm run lint
    ```
 

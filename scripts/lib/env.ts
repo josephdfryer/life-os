@@ -45,7 +45,7 @@ export function resolvePostgresDatabaseUrl(
   const selected = inherited ?? fileValuesInPriorityOrder.find(isPostgresUrl)
   if (!selected || !isPostgresUrl(selected)) {
     throw new Error(
-      "iMessage sync requires a PostgreSQL DATABASE_URL; refusing to use SQLite or run without a canonical database",
+      "Message collectors require a PostgreSQL DATABASE_URL; refusing to use SQLite or run without a canonical database",
     )
   }
   return selected

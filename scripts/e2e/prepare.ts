@@ -7,11 +7,16 @@ async function main() {
   // (falls back to `DATABASE_URL`). This drops and recreates every table it
   // finds, so it refuses anything that looks like a managed/production host —
   // the equivalent of the old "temp directory only" guard.
-  const databaseUrl = process.env.E2E_DATABASE_URL ?? process.env.DATABASE_URL
+  const localPort = process.env.LIFE_OS_POSTGRES_PORT ?? "5433"
+  const databaseUrl =
+    process.env.E2E_DATABASE_URL ??
+    process.env.DATABASE_URL ??
+    `postgresql://lifeos:lifeos@localhost:${localPort}/lifeos_e2e`
   if (!databaseUrl || !/^postgres(ql)?:\/\//.test(databaseUrl)) {
     throw new Error(
       "E2E_DATABASE_URL (or DATABASE_URL) must be a postgresql:// URL for a " +
-        "throwaway local/CI database. Start the docker-compose `postgres` service.",
+        "throwaway local/CI database. Start the docker-compose `postgres` service " +
+        "on LIFE_OS_POSTGRES_PORT (default 5433).",
     )
   }
   if (/\bneon\.tech\b|-pooler\b|amazonaws\.com/i.test(databaseUrl)) {

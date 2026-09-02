@@ -40,7 +40,7 @@ services:
       POSTGRES_PASSWORD: lifeos
       POSTGRES_DB: lifeos
     ports:
-      - "5432:5432"
+      - "${LIFE_OS_POSTGRES_PORT:-5433}:5432"
     volumes:
       - life-os-pg:/var/lib/postgresql/data
     healthcheck:

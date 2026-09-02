@@ -36,13 +36,16 @@ const migrationDirs = readdirSync(migrationsRoot)
   .filter((name) => name !== "migration_lock.toml")
   .sort()
 
-const baseUrl = process.env.DATABASE_URL ?? process.env.TEST_DATABASE_URL
+const localPort = process.env.LIFE_OS_POSTGRES_PORT ?? "5433"
+const baseUrl =
+  process.env.TEST_DATABASE_URL ??
+  process.env.DATABASE_URL ??
+  `postgresql://lifeos:lifeos@localhost:${localPort}/lifeos`
 if (!baseUrl || !/^postgres(ql)?:\/\//.test(baseUrl)) {
   console.error(
-    "check-migration-integrity needs a PostgreSQL server. Set DATABASE_URL " +
-      "(or TEST_DATABASE_URL) to a postgresql:// URL for an account that can " +
-      "CREATE/DROP DATABASE — locally the docker-compose `postgres` service, " +
-      "in CI the `postgres` service container.",
+    "check-migration-integrity needs a PostgreSQL server. Set TEST_DATABASE_URL " +
+      "(or DATABASE_URL) to a postgresql:// URL, or start the local docker-compose " +
+      "`postgres` service on LIFE_OS_POSTGRES_PORT (default 5433).",
   )
   process.exit(1)
 }

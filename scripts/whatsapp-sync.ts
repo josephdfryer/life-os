@@ -4,23 +4,12 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
-import { createRequire } from "node:module";
 import type { PrismaClient } from "@life-os/db";
+import { loadPostgresCollectorEnv } from "./lib/env";
 import {
-  appendDailySourceInteraction,
-  createReviewItem,
-} from "@life-os/domain";
-
-type BetterSqliteDatabase = {
-  pragma(sql: string): unknown;
-  prepare<TParams extends unknown[] = unknown[], TResult = unknown>(
-    sql: string,
-  ): {
-    all(...params: TParams): TResult[];
-    get(...params: TParams): TResult | undefined;
-  };
-  close(): void;
-};
+  openReadOnlySqlite,
+  type ReadOnlySqliteDatabase,
+} from "./lib/read-only-sqlite";
 
 export type WhatsAppMessageRow = {
   messageId: number;
@@ -61,19 +50,12 @@ type Options = {
   initWatermark: boolean;
 };
 
-const require = createRequire(import.meta.url);
-const Database = require("better-sqlite3") as new (
-  filename: string,
-  options?: { readonly?: boolean; fileMustExist?: boolean },
-) => BetterSqliteDatabase;
-const dotenv = require("dotenv") as {
-  config(options: { path: string; quiet?: boolean }): void;
-};
-
 loadEnv();
 
 let db: PrismaClient;
 let normalizePhone: (value: string) => string | null;
+let appendDailySourceInteraction: typeof import("@life-os/domain").appendDailySourceInteraction;
+let createReviewItem: typeof import("@life-os/domain").createReviewItem;
 const APPLE_EPOCH_MS = Date.UTC(2001, 0, 1);
 const SOURCE = "whatsapp";
 const SOURCE_PREFIX = `${SOURCE}:`;
@@ -85,9 +67,14 @@ const DEFAULT_DB_PATH = path.join(
 );
 
 async function main() {
-  const dbModule = await import("@life-os/db");
+  const [dbModule, domainModule] = await Promise.all([
+    import("@life-os/db"),
+    import("@life-os/domain"),
+  ]);
   db = dbModule.db;
   normalizePhone = dbModule.normalizePhoneDigits;
+  appendDailySourceInteraction = domainModule.appendDailySourceInteraction;
+  createReviewItem = domainModule.createReviewItem;
   const options = parseArgs(process.argv.slice(2));
 
   if (options.initWatermark) {
@@ -105,7 +92,9 @@ async function main() {
   const result = await syncOnce(options);
   console.log(
     `WhatsApp sync: scanned=${result.scanned} imported=${result.imported} staged=${result.staged} ` +
-      `skippedExisting=${result.skippedExisting} skippedUnsupported=${result.skippedUnsupported} watermark=${result.watermark}`,
+      `wouldImport=${result.wouldImport} wouldCreateInteraction=${result.wouldCreateInteraction} ` +
+      `wouldStageInteraction=${result.wouldStageInteraction} skippedExisting=${result.skippedExisting} ` +
+      `skippedUnsupported=${result.skippedUnsupported} watermark=${result.watermark}`,
   );
 }
 
@@ -121,6 +110,9 @@ async function syncOnce(options: Options) {
   let staged = 0;
   let skippedExisting = 0;
   let skippedUnsupported = 0;
+  let wouldImport = 0;
+  let wouldCreateInteraction = 0;
+  let wouldStageInteraction = 0;
   let watermark = state.lastMessageId;
 
   for (const message of messages) {
@@ -136,15 +128,18 @@ async function syncOnce(options: Options) {
     const timestamp = appleDateToDate(message.appleDate);
     const person = matchPersonForContact(contact, people);
 
-    if (options.dryRun) {
-      console.log(
-        `[dry-run] ${sourceId} ${contact.displayName} ${contact.direction}: ${snippet(body)}`,
-      );
+    if (await hasImportedMessage(sourceId)) {
+      skippedExisting++;
       continue;
     }
 
-    if (await hasImportedMessage(sourceId)) {
-      skippedExisting++;
+    if (options.dryRun) {
+      wouldImport++;
+      if (person) wouldCreateInteraction++;
+      else wouldStageInteraction++;
+      console.log(
+        `[dry-run] ${sourceId} ${contact.displayName} ${contact.direction}: ${snippet(body)}`,
+      );
       continue;
     }
 
@@ -184,6 +179,9 @@ async function syncOnce(options: Options) {
     staged,
     skippedExisting,
     skippedUnsupported,
+    wouldImport,
+    wouldCreateInteraction,
+    wouldStageInteraction,
     watermark,
   };
 }
@@ -195,9 +193,8 @@ function readMessages(
 ): WhatsAppMessageRow[] {
   const sqlite = openWhatsAppDb(chatDbPath);
   try {
-    sqlite.pragma("query_only = ON");
     return sqlite
-      .prepare<unknown[], WhatsAppMessageRow>(
+      .prepare<WhatsAppMessageRow>(
         `
       SELECT
         m.Z_PK AS messageId,
@@ -228,7 +225,7 @@ function readMaxMessageId(chatDbPath: string): number {
   const sqlite = openWhatsAppDb(chatDbPath);
   try {
     const row = sqlite
-      .prepare<[], { maxMessageId: number | null }>(
+      .prepare<{ maxMessageId: number | null }>(
         "SELECT MAX(Z_PK) AS maxMessageId FROM ZWAMESSAGE",
       )
       .get();
@@ -238,15 +235,12 @@ function readMaxMessageId(chatDbPath: string): number {
   }
 }
 
-function openWhatsAppDb(chatDbPath: string): BetterSqliteDatabase {
+function openWhatsAppDb(chatDbPath: string): ReadOnlySqliteDatabase {
   try {
-    const sqlite = new Database(chatDbPath, {
-      readonly: true,
-      fileMustExist: true,
-    });
+    const sqlite = openReadOnlySqlite(chatDbPath);
     const required = ["ZWAMESSAGE", "ZWACHATSESSION"];
     const rows = sqlite
-      .prepare<unknown[], { name: string }>(
+      .prepare<{ name: string }>(
         "SELECT name FROM sqlite_master WHERE type = 'table' AND name IN ('ZWAMESSAGE', 'ZWACHATSESSION')",
       )
       .all();
@@ -628,15 +622,7 @@ function expandHome(value: string) {
 }
 
 function loadEnv() {
-  for (const candidate of [
-    path.join(process.cwd(), ".env"),
-    path.join(process.cwd(), "packages/db/.env"),
-    path.join(process.cwd(), "apps/persons/.env"),
-    path.join(process.cwd(), "apps/persons/.env.local"),
-  ]) {
-    if (fs.existsSync(candidate))
-      dotenv.config({ path: candidate, quiet: true });
-  }
+  loadPostgresCollectorEnv(process.cwd());
 }
 
 async function disconnectDb() {
