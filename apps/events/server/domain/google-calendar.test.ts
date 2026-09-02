@@ -74,7 +74,7 @@ test("isCalendarBootstrapping treats a parked cursor or missing token as in-prog
   assert.equal(isCalendarBootstrapping({ fullSyncPageToken: "PAGE2", syncTokenEncrypted: null }), true)
   assert.equal(isCalendarBootstrapping({ fullSyncPageToken: null, syncTokenEncrypted: null }), true)
   assert.equal(isCalendarBootstrapping({ fullSyncPageToken: null, syncTokenEncrypted: "tok" }), false)
-  assert.equal(isCalendarBootstrapping({ lastError: null, lastSyncedAt: null, calendarSummary: "Qin" }), false)
+  assert.equal(isCalendarBootstrapping({}), false)
 })
 
 test("unique constraint detection covers Prisma P2002 and Event.sourcePlanId failures", () => {
