@@ -36,7 +36,7 @@ export default async function EventSignalsWidget({
       </div>
       <EventSignalsList
         initialItems={items}
-        endpointFor={(id) => `/api/event-signals/${encodeURIComponent(id)}`}
+        endpointPrefix="/api/event-signals"
         variant="light"
         tz={tz}
       />

@@ -13,14 +13,15 @@ export type EventSignalRow = {
 
 type Props = {
   initialItems: EventSignalRow[]
-  endpointFor: (id: string) => string
+  /** API path before the signal id, e.g. `/api/event-signals`. */
+  endpointPrefix?: string
   variant?: "light" | "dark"
   tz?: string
 }
 
 export default function EventSignalsList({
   initialItems,
-  endpointFor,
+  endpointPrefix = "/api/event-signals",
   variant = "light",
   tz = "America/Los_Angeles",
 }: Props) {
@@ -35,7 +36,7 @@ export default function EventSignalsList({
     setBusyId(id)
     setError(null)
     try {
-      const res = await fetch(endpointFor(id), {
+      const res = await fetch(`${endpointPrefix}/${encodeURIComponent(id)}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ action }),
