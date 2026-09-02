@@ -28,7 +28,7 @@ delete process.env.TURSO_SYNC_URL
 
 const WORKSPACE_ID = "default-workspace"
 const CHECK_ONLY = process.argv.includes("--check")
-// Turso is HTTP: every statement is a round trip, so fan out the per-row work.
+// Each attachContext() call is its own round trip, so fan out the per-row work.
 const CONCURRENCY = 15
 
 async function main() {
@@ -38,7 +38,7 @@ async function main() {
     SELECT COUNT(*) AS n
       FROM "Interaction" i
       JOIN "EraAccountLink" a ON a."id" = i."accountLinkId"
-     WHERE i."workspaceId" = ?
+     WHERE i."workspaceId" = $1
        AND a."ownerPersonId" IS NOT NULL
        AND (i."actorPersonId" IS NULL OR i."actorPersonId" <> a."ownerPersonId")`, WORKSPACE_ID)
   console.log(`Rows whose actor disagrees with their account owner: ${drift[0].n}`)
@@ -53,7 +53,7 @@ async function main() {
     UPDATE "Interaction"
        SET "actorPersonId" = (
              SELECT a."ownerPersonId" FROM "EraAccountLink" a WHERE a."id" = "Interaction"."accountLinkId")
-     WHERE "workspaceId" = ?
+     WHERE "workspaceId" = $1
        AND "accountLinkId" IS NOT NULL
        AND EXISTS (
              SELECT 1 FROM "EraAccountLink" a
@@ -105,7 +105,7 @@ async function main() {
     SELECT COUNT(*) AS n
       FROM "Interaction" i
       JOIN "EraAccountLink" a ON a."id" = i."accountLinkId"
-     WHERE i."workspaceId" = ?
+     WHERE i."workspaceId" = $1
        AND a."ownerPersonId" IS NOT NULL
        AND (i."actorPersonId" IS NULL OR i."actorPersonId" <> a."ownerPersonId")`, WORKSPACE_ID)
   console.log(`\nRemaining drift: ${after[0].n} (expected 0)`)
