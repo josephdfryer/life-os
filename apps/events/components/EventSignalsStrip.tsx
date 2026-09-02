@@ -33,7 +33,7 @@ export default async function EventSignalsStrip({
           detail: row.detail,
           when: row.when,
         }))}
-        endpointFor={(id) => `/api/event-signals/${encodeURIComponent(id)}`}
+        endpointPrefix="/api/event-signals"
         variant="dark"
         tz={tz}
       />
