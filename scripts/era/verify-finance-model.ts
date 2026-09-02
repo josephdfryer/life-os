@@ -33,7 +33,7 @@ async function main() {
 
   section("Canonical storage")
   const [{ total }] = await q<{ total: number }>(
-    `SELECT COUNT(*) AS total FROM "Interaction" WHERE "type" = 'financial' AND "workspaceId" = ?`, WORKSPACE_ID)
+    `SELECT COUNT(*) AS total FROM "Interaction" WHERE "type" = 'financial' AND "workspaceId" = $1`, WORKSPACE_ID)
   const [{ staged }] = await q<{ staged: number }>(
     `SELECT COUNT(*) AS staged FROM "StagedInteraction" WHERE source = 'era' AND status = 'pending'`)
   const [{ unlinked }] = await q<{ unlinked: number }>(
@@ -46,7 +46,7 @@ async function main() {
   const byCategory = await q(`
     SELECT "category", COUNT(*) AS n, SUM("amount") AS cents
       FROM "Interaction"
-     WHERE "workspaceId" = ? AND "type" = 'financial' AND "direction" = 'paid'
+     WHERE "workspaceId" = $1 AND "type" = 'financial' AND "direction" = 'paid'
      GROUP BY "category" ORDER BY cents DESC LIMIT 10`, WORKSPACE_ID)
   for (const row of byCategory) {
     console.log(`  ${String(row.category ?? "uncategorized").padEnd(32)} ${String(row.n).padStart(4)}  ${money(row.cents)}`)
@@ -58,14 +58,14 @@ async function main() {
   const byActor = await q(`
     SELECT CASE
              WHEN p."id" IS NOT NULL THEN p."first" || ' ' || p."last"
-             WHEN a."isShared" = 1 THEN '(joint — household)'
+             WHEN a."isShared" IS TRUE THEN '(joint — household)'
              ELSE '— unattributed —'
            END AS who,
            COUNT(*) AS n, SUM(i."amount") AS cents
       FROM "Interaction" i
       LEFT JOIN "Person" p ON p."id" = i."actorPersonId"
       LEFT JOIN "EraAccountLink" a ON a."id" = i."accountLinkId"
-     WHERE i."workspaceId" = ? AND i."type" = 'financial' AND i."direction" = 'paid'
+     WHERE i."workspaceId" = $1 AND i."type" = 'financial' AND i."direction" = 'paid'
      GROUP BY who ORDER BY cents DESC`, WORKSPACE_ID)
   for (const row of byActor) {
     console.log(`  ${String(row.who).padEnd(32)} ${String(row.n).padStart(4)}  ${money(row.cents)}`)
@@ -73,7 +73,7 @@ async function main() {
 
   section("Household view (personal by member + joint by household)")
   const household = await q<{ id: string; name: string }>(
-    `SELECT "id", "name" FROM "Group" WHERE "workspaceId" = ? AND "groupType" = 'family' LIMIT 1`, WORKSPACE_ID)
+    `SELECT "id", "name" FROM "Group" WHERE "workspaceId" = $1 AND "groupType" = 'family' LIMIT 1`, WORKSPACE_ID)
   if (household.length === 0) {
     console.log("  no family Group yet — run apps/persons/scripts/setup-household-finance.ts")
   } else {
@@ -81,10 +81,10 @@ async function main() {
     const [row] = await q(`
       SELECT COUNT(*) AS n, SUM(i."amount") AS cents
         FROM "Interaction" i
-        LEFT JOIN "PersonGroup" pg ON pg."personId" = i."actorPersonId" AND pg."groupId" = ?
+        LEFT JOIN "PersonGroup" pg ON pg."personId" = i."actorPersonId" AND pg."groupId" = $1
         LEFT JOIN "InteractionParticipant" ip
-               ON ip."interactionId" = i."id" AND ip."entityType" = 'Group' AND ip."entityId" = ?
-       WHERE i."workspaceId" = ? AND i."type" = 'financial' AND i."direction" = 'paid'
+               ON ip."interactionId" = i."id" AND ip."entityType" = 'Group' AND ip."entityId" = $2
+       WHERE i."workspaceId" = $3 AND i."type" = 'financial' AND i."direction" = 'paid'
          AND (pg."id" IS NOT NULL OR ip."id" IS NOT NULL)`, familyGroupId, familyGroupId, WORKSPACE_ID)
     console.log(`  ${household[0].name}: ${row.n} transactions, ${money(row.cents)}`)
   }
@@ -95,7 +95,7 @@ async function main() {
            COUNT(*) AS n, SUM(i."amount") AS cents
       FROM "Interaction" i
       JOIN "EraAccountLink" a ON a."id" = i."accountLinkId"
-     WHERE i."workspaceId" = ? AND i."type" = 'financial' AND i."direction" = 'paid'
+     WHERE i."workspaceId" = $1 AND i."type" = 'financial' AND i."direction" = 'paid'
      GROUP BY a."id" ORDER BY cents DESC LIMIT 8`, WORKSPACE_ID)
   for (const row of byAccount) {
     const tag = Number(row.isShared) === 1 ? " [shared]" : ""
@@ -106,13 +106,13 @@ async function main() {
   const participants = await q(`
     SELECT "entityType", "role", "band", COUNT(*) AS n
       FROM "InteractionParticipant"
-     WHERE "workspaceId" = ?
+     WHERE "workspaceId" = $1
      GROUP BY "entityType", "role", "band" ORDER BY n DESC`, WORKSPACE_ID)
   for (const row of participants) {
     console.log(`  ${String(row.entityType).padEnd(8)} role=${String(row.role ?? "—").padEnd(12)} band=${String(row.band ?? "—").padEnd(12)} ${row.n}`)
   }
   const [{ withPlace }] = await q<{ withPlace: number }>(
-    `SELECT COUNT(*) AS withPlace FROM "Interaction" WHERE "workspaceId" = ? AND "type" = 'financial' AND "placeId" IS NOT NULL`, WORKSPACE_ID)
+    `SELECT COUNT(*) AS "withPlace" FROM "Interaction" WHERE "workspaceId" = $1 AND "type" = 'financial' AND "placeId" IS NOT NULL`, WORKSPACE_ID)
   console.log(`  financial interactions linked to a Place: ${withPlace}`)
 
   section("Cross-domain query the old model could not answer")
@@ -120,7 +120,7 @@ async function main() {
     SELECT pl."name", COUNT(*) AS n, SUM(i."amount") AS cents
       FROM "Interaction" i
       JOIN "Place" pl ON pl."id" = i."placeId"
-     WHERE i."workspaceId" = ? AND i."type" = 'financial' AND i."direction" = 'paid'
+     WHERE i."workspaceId" = $1 AND i."type" = 'financial' AND i."direction" = 'paid'
      GROUP BY pl."id" ORDER BY cents DESC LIMIT 5`, WORKSPACE_ID)
   if (placeSpend.length === 0) console.log("  (no place-linked spend yet)")
   for (const row of placeSpend) {
@@ -128,19 +128,19 @@ async function main() {
   }
 
   section("Query plan (proves the index is used, not a table scan)")
-  const plan = await q<{ detail: string }>(`
-    EXPLAIN QUERY PLAN
+  const plan = await q<Record<"QUERY PLAN", string>>(`
+    EXPLAIN
     SELECT "id" FROM "Interaction"
-     WHERE "workspaceId" = ? AND "type" = 'financial'
+     WHERE "workspaceId" = $1 AND "type" = 'financial'
      ORDER BY "timestamp" DESC LIMIT 50`, WORKSPACE_ID)
-  for (const row of plan) console.log(`  ${row.detail}`)
+  for (const row of plan) console.log(`  ${row["QUERY PLAN"]}`)
 
   section("Data integrity")
   const [{ drift }] = await q<{ drift: number }>(`
     SELECT COUNT(*) AS drift
       FROM "Interaction" i
       JOIN "EraAccountLink" a ON a."id" = i."accountLinkId"
-     WHERE i."workspaceId" = ?
+     WHERE i."workspaceId" = $1
        AND a."ownerPersonId" IS NOT NULL
        AND (i."actorPersonId" IS NULL OR i."actorPersonId" <> a."ownerPersonId")`, WORKSPACE_ID)
   console.log(`  actorPersonId drift vs account owner: ${drift}   (0 = cache agrees with the authoritative source)`)
@@ -148,11 +148,11 @@ async function main() {
   const [{ dupes }] = await q<{ dupes: number }>(`
     SELECT COUNT(*) AS dupes FROM (
       SELECT "source", "sourceId" FROM "Interaction"
-       WHERE "source" IS NOT NULL GROUP BY "source", "sourceId" HAVING COUNT(*) > 1)`)
+       WHERE "source" IS NOT NULL GROUP BY "source", "sourceId" HAVING COUNT(*) > 1) d`)
   console.log(`  duplicate (source, sourceId) rows:    ${dupes}`)
 
   const [{ badAmount }] = await q<{ badAmount: number }>(
-    `SELECT COUNT(*) AS badAmount FROM "Interaction" WHERE "type" = 'financial' AND ("amount" IS NULL OR "amount" < 0)`)
+    `SELECT COUNT(*) AS "badAmount" FROM "Interaction" WHERE "type" = 'financial' AND ("amount" IS NULL OR "amount" < 0)`)
   console.log(`  financial rows with bad amount:       ${badAmount}`)
 }
 
