@@ -4,44 +4,62 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 
 type OwnerAttendance = "going" | "not_going"
-type OwnerAttendanceAction = "going" | "not_going" | "did_go" | "did_not_go"
+type OwnerAttendanceAction = "going" | "not_going" | "did_go" | "did_not_go" | "not_event"
 type AttendanceTension = "aligned" | "missed" | "showed_up" | "pending"
 
 type Props = {
   planId: string | null
+  // Set once the row has been promoted to an Event. Attendance is answered
+  // against the Plan, but "this was never an occasion" has to be answered
+  // against the Event, because by then the Plan may be gone.
+  eventId?: string | null
   phase: "future" | "past"
   declared: OwnerAttendance
   reconciliationStatus: string | null
   tension: AttendanceTension
   endpointFor: (planId: string) => string
+  notEventEndpointFor?: (eventId: string) => string
   variant?: "light" | "dark"
 }
 
 export default function AttendanceControls({
   planId,
+  eventId = null,
   phase,
   declared,
   reconciliationStatus,
   tension,
   endpointFor,
+  notEventEndpointFor,
   variant = "dark",
 }: Props) {
   const router = useRouter()
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const closed = reconciliationStatus === "happened" || reconciliationStatus === "skip" || reconciliationStatus === "cancelled"
+  // A materialised Event with no surviving Plan can still be declassified, so
+  // the row is not inert just because attendance is unanswerable.
+  const canDeclassify = Boolean(eventId && notEventEndpointFor)
 
-  if (!planId) return null
+  if (!planId && !canDeclassify) return null
 
   async function act(action: OwnerAttendanceAction) {
-    if (!planId) return
+    // "not event" is a classification, not an attendance answer, and once the
+    // row is an Event it is addressed by eventId — the Plan may not exist.
+    const declassifyingEvent = action === "not_event" && canDeclassify
+    const url = declassifyingEvent
+      ? notEventEndpointFor!(eventId!)
+      : planId
+        ? endpointFor(planId)
+        : null
+    if (!url) return
     setBusy(true)
     setError(null)
     try {
-      const res = await fetch(endpointFor(planId), {
+      const res = await fetch(url, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action }),
+        body: JSON.stringify(declassifyingEvent ? {} : { action }),
       })
       const data = await res.json().catch(() => ({}))
       if (!res.ok) throw new Error(data.error?.message ?? data.error ?? "Could not update attendance")
@@ -59,23 +77,42 @@ export default function AttendanceControls({
   return (
     <div onClick={(event) => event.preventDefault()} style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "6px" }}>
       {closed ? (
-        <span style={pill(dark, false, true)}>{label}</span>
-      ) : phase === "past" ? (
-        <div style={{ display: "flex", gap: "6px" }}>
-          <button type="button" disabled={busy} onClick={() => void act("did_go")} style={pill(dark, false, false)}>
-            Did go
-          </button>
-          <button type="button" disabled={busy} onClick={() => void act("did_not_go")} style={pill(dark, false, false)}>
-            Didn't
-          </button>
+        // A settled row still gets the classification escape hatch: "Went" is
+        // the wrong answer for something that was never an occasion, and this
+        // is the only place that judgement can now be made.
+        <div style={{ display: "flex", gap: "6px", alignItems: "center" }}>
+          <span style={pill(dark, false, true)}>{label}</span>
+          {canDeclassify && (
+            <button type="button" disabled={busy} onClick={() => void act("not_event")} style={pill(dark, false, false)}>
+              Not event
+            </button>
+          )}
         </div>
       ) : (
         <div style={{ display: "flex", gap: "6px" }}>
-          <button type="button" disabled={busy} onClick={() => void act("going")} style={pill(dark, declared === "going", false)}>
-            Going
-          </button>
-          <button type="button" disabled={busy} onClick={() => void act("not_going")} style={pill(dark, declared === "not_going", false)}>
-            Not going
+          {phase === "past" ? (
+            <>
+              <button type="button" disabled={busy} onClick={() => void act("did_go")} style={pill(dark, false, false)}>
+                Did go
+              </button>
+              <button type="button" disabled={busy} onClick={() => void act("did_not_go")} style={pill(dark, false, false)}>
+                Didn&apos;t
+              </button>
+            </>
+          ) : (
+            <>
+              <button type="button" disabled={busy} onClick={() => void act("going")} style={pill(dark, declared === "going", false)}>
+                Going
+              </button>
+              <button type="button" disabled={busy} onClick={() => void act("not_going")} style={pill(dark, declared === "not_going", false)}>
+                Not going
+              </button>
+            </>
+          )}
+          {/* Available in both phases: whether a row is an occasion at all is
+              independent of whether it has happened yet. */}
+          <button type="button" disabled={busy} onClick={() => void act("not_event")} style={pill(dark, false, false)}>
+            Not event
           </button>
         </div>
       )}

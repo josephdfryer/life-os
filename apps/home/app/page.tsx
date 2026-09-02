@@ -8,7 +8,6 @@ import { AppMark, LIFE_OS_APPS, resolveTimeZone, TZ_COOKIE, TimezonePicker } fro
 import { isMarketingHost } from '@/lib/site'
 import MarketingHome from '../components/MarketingHome'
 import ScheduleWidget from '../components/ScheduleWidget'
-import EventSignalsWidget from '../components/EventSignalsWidget'
 import NudgesWidget from '../components/NudgesWidget'
 import CommunicationsReviewWidget from '../components/CommunicationsReviewWidget'
 import AssistantPanel from '../components/AssistantPanel'
@@ -156,9 +155,6 @@ async function HomeDataPanels({
     <>
       <Suspense fallback={<WidgetSkeleton className="dashboard-schedule-card" />}>
         <ScheduleWidget workspaceId={workspaceId} personsUrl={personsUrl} tz={tz} />
-      </Suspense>
-      <Suspense fallback={null}>
-        <EventSignalsWidget workspaceId={workspaceId} tz={tz} />
       </Suspense>
       <Suspense fallback={<WidgetSkeleton className="dashboard-nudges-card" />}>
         <NudgesWidget workspaceId={workspaceId} personsUrl={personsUrl} tz={tz} />

@@ -54,6 +54,14 @@ test("parsers reject unknown values and default calendars to going", () => {
   assert.equal(parseOwnerAttendanceAction("rsvp"), null)
 })
 
+test("not_event is an accepted action but never an attendance value", () => {
+  // It rides the action list so one control cluster can express it, but it is a
+  // classification: it must not leak into anything that means "I am going".
+  assert.equal(parseOwnerAttendanceAction("not_event"), "not_event")
+  assert.equal(parseOwnerAttendance("not_event"), null)
+  assert.equal(parseOwnerAttendanceDefault("not_event"), "going")
+})
+
 test("attendance phase is past once the start time has arrived", () => {
   const now = new Date("2026-08-31T18:00:00Z")
   assert.equal(attendancePhase(new Date("2026-08-31T17:00:00Z"), now), "past")

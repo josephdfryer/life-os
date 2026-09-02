@@ -8115,6 +8115,7 @@ export const EventScalarFieldEnum = {
   notes: 'notes',
   transcript: 'transcript',
   metadata: 'metadata',
+  notEventAt: 'notEventAt',
   sourcePlanId: 'sourcePlanId',
   parentEventId: 'parentEventId',
   sourceNoteId: 'sourceNoteId'

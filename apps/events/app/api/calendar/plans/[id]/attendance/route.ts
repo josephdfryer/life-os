@@ -15,7 +15,7 @@ export async function PATCH(req: NextRequest, context: { params: Promise<{ id: s
     const { id } = await context.params
     const body = await req.json() as { action?: unknown }
     const action = parseOwnerAttendanceAction(body.action)
-    if (!action) throw badRequest("action must be going, not_going, did_go, or did_not_go")
+    if (!action) throw badRequest("action must be going, not_going, did_go, did_not_go, or not_event")
     try {
       return json(await recordOwnerAttendance({
         workspaceId: actor.workspaceId,

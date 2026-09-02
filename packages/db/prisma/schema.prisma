@@ -910,6 +910,13 @@ model Event {
   notes                String?
   transcript           String?
   metadata             String?
+  // Declassified: this row was never an occasion. A standing 1:1 that is really
+  // an ongoing interaction with one person, a calendar block that is just a
+  // reminder — things "did you go?" has no true answer for. Set rather than
+  // deleted on purpose: the Interactions, attendees and provenance hanging off
+  // it stay intact and the judgement stays reversible. Every timeline filters
+  // these out; nothing else changes.
+  notEventAt           DateTime?
   // Which prediction (if any) this occurrence fulfilled
   sourcePlanId         String?               @unique
   sourcePlan           Plan?                 @relation("PlanFulfillment", fields: [sourcePlanId], references: [id], onDelete: SetNull)
