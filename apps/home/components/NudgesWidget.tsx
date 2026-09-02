@@ -4,11 +4,12 @@ import { unstable_cache } from 'next/cache'
 interface Props {
   workspaceId: string
   personsUrl: string
+  tz: string
 }
 
 const MAX_NUDGES = 5
 
-export default async function NudgesWidget({ workspaceId, personsUrl }: Props) {
+export default async function NudgesWidget({ workspaceId, personsUrl, tz }: Props) {
   const startedAt = Date.now()
   let failed = false
   let nudges: Array<{ signal: Awaited<ReturnType<typeof getAlignmentSignals>>[number]; summary: string | null }> = []
@@ -17,8 +18,8 @@ export default async function NudgesWidget({ workspaceId, personsUrl }: Props) {
     // Shared with Persons (Today page) and the assistant — one definition of
     // "overdue" instead of three apps quietly disagreeing with each other.
     const combined = (await (process.env.NODE_ENV === 'production'
-      ? getCachedAlignmentSignals(workspaceId)
-      : getAlignmentSignals(workspaceId))).sort((a, b) => b.severity - a.severity)
+      ? getCachedAlignmentSignals(workspaceId, tz)
+      : getAlignmentSignals(workspaceId, tz))).sort((a, b) => b.severity - a.severity)
     const seen = new Set<string>()
     const top = combined.filter(signal => {
       if (!signal.personId || seen.has(signal.personId)) return !signal.personId
@@ -96,10 +97,10 @@ export default async function NudgesWidget({ workspaceId, personsUrl }: Props) {
   )
 }
 
-function getCachedAlignmentSignals(workspaceId: string) {
+function getCachedAlignmentSignals(workspaceId: string, tz: string) {
   return unstable_cache(
-    async () => getAlignmentSignals(workspaceId),
-    ['home-attention-read-model-v2', workspaceId],
+    async () => getAlignmentSignals(workspaceId, tz),
+    ['home-attention-read-model-v2', workspaceId, tz],
     { revalidate: 60 },
   )()
 }
