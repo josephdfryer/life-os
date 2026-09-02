@@ -94,5 +94,6 @@ test("persons and events declare the production crons", () => {
   ])
   assert.deepEqual(findProject("events")?.crons, [
     { path: "/api/cron/granola-sync", schedule: "0 14 * * *" },
+    { path: "/api/cron/calendar-sync", schedule: "*/15 * * * *" },
   ])
 })

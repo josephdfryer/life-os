@@ -63,7 +63,7 @@ Source of truth: `scripts/lib/vercel-projects.ts`.
 |---|---|---|---|---|
 | home | `life-os-home` | https://home.lacollecteur.com (apex https://lacollecteur.com) | `.` | |
 | persons | `persons` | https://persons.lacollecteur.com | `apps/persons` | `/api/cron/theory-refresh` `0 10 * * *` |
-| events | `life-os-events` | https://events.lacollecteur.com | `apps/events` | `/api/cron/granola-sync` `0 14 * * *` |
+| events | `life-os-events` | https://events.lacollecteur.com | `apps/events` | `/api/cron/granola-sync` `0 14 * * *`; `/api/cron/calendar-sync` `*/15 * * * *` |
 | places | `life-os-places` | https://places.lacollecteur.com | `apps/places` | |
 | stuff | `life-os-stuff` | https://stuff.lacollecteur.com | `.` | |
 | assistant | `life-os-assistant` | https://assistant.lacollecteur.com | `.` | |

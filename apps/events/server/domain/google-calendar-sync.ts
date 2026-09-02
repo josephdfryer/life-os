@@ -4,6 +4,12 @@ export function isCalendarDbContention(error: unknown) {
   return /SQLITE_BUSY|database is locked|Unable to start a transaction|P2034|P1008/i.test(`${code} ${message}`)
 }
 
+export function isPrismaUniqueConstraint(error: unknown) {
+  const code = error && typeof error === "object" && "code" in error ? String((error as { code?: unknown }).code) : ""
+  const message = error instanceof Error ? error.message : String(error ?? "")
+  return code === "P2002" || /Unique constraint failed/i.test(message)
+}
+
 export async function withCalendarDbRetry<T>(fn: () => Promise<T>, attempts = 8): Promise<T> {
   let last: unknown
   for (let attempt = 0; attempt < attempts; attempt++) {
@@ -18,11 +24,29 @@ export async function withCalendarDbRetry<T>(fn: () => Promise<T>, attempts = 8)
   throw last
 }
 
-export function prioritizeCalendarConnections<T extends { lastError: string | null; lastSyncedAt: Date | null; calendarSummary: string | null }>(connections: T[]): T[] {
+export function isCalendarBootstrapping(connection: {
+  fullSyncPageToken?: string | null
+  syncTokenEncrypted?: string | null
+}) {
+  if (connection.fullSyncPageToken) return true
+  if (connection.syncTokenEncrypted === undefined) return false
+  return connection.syncTokenEncrypted == null
+}
+
+export function prioritizeCalendarConnections<T extends {
+  lastError: string | null
+  lastSyncedAt: Date | null
+  calendarSummary: string | null
+  fullSyncPageToken?: string | null
+  syncTokenEncrypted?: string | null
+}>(connections: T[]): T[] {
   return [...connections].sort((a, b) => {
     const aFailed = Boolean(a.lastError)
     const bFailed = Boolean(b.lastError)
     if (aFailed !== bFailed) return aFailed ? -1 : 1
+    const aBoot = isCalendarBootstrapping(a)
+    const bBoot = isCalendarBootstrapping(b)
+    if (aBoot !== bBoot) return aBoot ? -1 : 1
     const at = a.lastSyncedAt?.getTime() ?? 0
     const bt = b.lastSyncedAt?.getTime() ?? 0
     if (at !== bt) return at - bt
@@ -191,4 +215,49 @@ export async function walkEventPages<T extends CalendarPageEvent>(input: {
   }
 
   return { nextSyncToken, usedSyncToken, pendingPageToken: undefined }
+}
+
+// Separate from the unwindowed bootstrap: this query IS allowed to use
+// timeMin/timeMax/orderBy because it does not try to earn a syncToken. Google
+// returns events in start-time order, so today's calendar lands on the first
+// page even while a large work calendar is still walking history for a token.
+export async function walkRecentEventPages<T extends CalendarPageEvent>(input: {
+  timeMin: Date
+  timeMax: Date
+  deadline: number
+  pageSize: number
+  batchSize: number
+  now?: () => number
+  fetchPage: (params: URLSearchParams) => Promise<PageFetchResult<T>>
+  onBatch: (items: T[]) => Promise<void>
+}): Promise<{ pages: number; truncated: boolean }> {
+  const now = input.now ?? Date.now
+  let pageToken: string | undefined
+  let pages = 0
+
+  for (;;) {
+    const params = new URLSearchParams({
+      maxResults: String(input.pageSize),
+      showDeleted: "true",
+      singleEvents: "true",
+      orderBy: "startTime",
+      timeMin: input.timeMin.toISOString(),
+      timeMax: input.timeMax.toISOString(),
+    })
+    if (pageToken) params.set("pageToken", pageToken)
+
+    const res = await input.fetchPage(params)
+    if (!res.ok) throw new Error(`Google Calendar events request failed (${res.status})`)
+
+    pages += 1
+    const items = res.page?.items ?? []
+    for (let i = 0; i < items.length; i += input.batchSize) {
+      await input.onBatch(items.slice(i, i + input.batchSize))
+      if (now() >= input.deadline) return { pages, truncated: true }
+    }
+
+    pageToken = res.page?.nextPageToken
+    if (!pageToken) return { pages, truncated: false }
+    if (now() >= input.deadline) return { pages, truncated: true }
+  }
 }

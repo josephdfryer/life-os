@@ -11,10 +11,12 @@ import { auditAction, type DomainActor } from "./audit";
 import type { AccessActor } from "./access";
 import {
   DUPLICATE_OCCURRENCE_WINDOW_MS,
+  isPrismaUniqueConstraint,
   mapPool,
   prioritizeCalendarConnections,
   sameCalendarOccurrence,
   walkEventPages,
+  walkRecentEventPages,
   withCalendarDbRetry,
 } from "./google-calendar-sync";
 
@@ -26,10 +28,10 @@ const CALENDAR_SCOPE = "https://www.googleapis.com/auth/calendar.readonly";
 const SOURCE = "google-calendar";
 const DEFAULT_BACKFILL_DAYS = 180;
 const MAX_BACKFILL_DAYS = 3650;
-// There is no forward window any more, and that is the point. Every sync is
-// either an unwindowed bootstrap walk (which earns a syncToken) or a true
-// incremental sync against that token — neither is bounded by a date range, so
-// an event five years out is as visible as one tomorrow.
+// There is no forward window on the syncToken walk, and that is the point.
+// Every token-earning sync is either an unwindowed bootstrap walk or a true
+// incremental sync — neither is bounded by a date range, so an event five
+// years out is as visible as one tomorrow.
 //
 // The previous design set timeMin/timeMax on every request, which suppresses
 // Google's nextSyncToken. The token was therefore never obtained, the promised
@@ -38,6 +40,10 @@ const MAX_BACKFILL_DAYS = 3650;
 //
 // backfillDays now bounds only how much HISTORY the bootstrap ingests, never
 // how far ahead it can see.
+//
+// A separate recent-horizon query (timeMin/timeMax/orderBy=startTime) runs
+// first during bootstrap only. That query does not earn a token; it exists so
+// Home Today is current while a large calendar is still walking history.
 const CRON_BACKFILL_DAYS = 180;
 // Per-connection work budget. On expiry a bootstrap walk parks its page
 // cursor and resumes next run, so a large calendar converges across runs
@@ -58,6 +64,13 @@ const OVERALL_SYNC_DEADLINE_MS = 240_000;
 // enough time left to make real progress, and a partial attempt still risks
 // running past the overall deadline itself.
 const MIN_CONNECTION_BUDGET_MS = 15_000;
+// Pull this slice first, in start-time order, so Home Today is current even
+// while a large calendar (Sightmachine) is still bootstrapping an unwindowed
+// syncToken walk that is not chronological. 36h back covers timezone skew;
+// 14 days forward is the near schedule people actually look at.
+const RECENT_LOOKBACK_MS = 36 * 60 * 60 * 1000;
+const RECENT_LOOKAHEAD_MS = 14 * 24 * 60 * 60 * 1000;
+const RECENT_WINDOW_BUDGET_MS = 60_000;
 // Every call to Google (event pages, token exchange, token refresh) used to
 // have no timeout at all: a single stalled request could hang for the whole
 // platform's 300s function ceiling, and the deadline checks above only run
@@ -694,6 +707,7 @@ type SyncStats = {
   // True when the bootstrap walk hit its budget and parked a cursor: this
   // calendar is mid-bootstrap and will continue on the next run.
   bootstrapping: boolean;
+  recentHorizonFetched: number;
   error: string | null;
 };
 
@@ -894,6 +908,7 @@ async function syncGoogleCalendarConnection(
     backfillDays,
     incremental: Boolean(syncToken),
     bootstrapping: false,
+    recentHorizonFetched: 0,
     error: null,
   };
 
@@ -904,6 +919,41 @@ async function syncGoogleCalendarConnection(
     const accessToken = await usableAccessToken(
       decryptedCredential(connection),
     );
+    // Bootstrap walks are unwindowed and not chronological, so a large
+    // calendar can take many runs to reach "today". Pull the near horizon
+    // first (start-time order) so Home Today is current while the token
+    // walk continues. Incremental runs already see every change; skip.
+    if (!syncToken) {
+      const recentDeadline = Math.min(
+        Date.now() + RECENT_WINDOW_BUDGET_MS,
+        overallDeadline,
+      );
+      if (recentDeadline - Date.now() > 5_000) {
+        const now = Date.now();
+        await ingestRecentEventPages(accessToken, {
+          calendarId: connection.calendarId,
+          timeMin: new Date(now - RECENT_LOOKBACK_MS),
+          timeMax: new Date(now + RECENT_LOOKAHEAD_MS),
+          deadline: recentDeadline,
+          onBatch: async (items) => {
+            stats.batches += 1;
+            const result = await processCalendarBatch({
+              actor: actor.actor,
+              workspaceId: actor.workspaceId,
+              connectionId: connection.id,
+              calendarId: connection.calendarId,
+              items,
+              peopleByEmail,
+            });
+            stats.createdPlans += result.createdPlans;
+            stats.updatedPlans += result.updatedPlans;
+            stats.cancelled += result.cancelled;
+            stats.fetched += result.fetched;
+            stats.recentHorizonFetched += result.fetched;
+          },
+        });
+      }
+    }
     const listed = await syncEventPages(accessToken, {
       calendarId: connection.calendarId,
       syncToken,
@@ -1137,14 +1187,21 @@ async function upsertCalendarEvent(input: {
   // Events. Preserve those records and link the new prediction to them rather
   // than presenting the occurrence for review or creating a duplicate Event.
   if (link?.eventId) {
-    await db.event.updateMany({
-      where: {
-        id: link.eventId,
-        workspaceId: input.workspaceId,
-        sourcePlanId: null,
-      },
-      data: { sourcePlanId: planId },
-    });
+    try {
+      await db.event.updateMany({
+        where: {
+          id: link.eventId,
+          workspaceId: input.workspaceId,
+          sourcePlanId: null,
+        },
+        data: { sourcePlanId: planId },
+      });
+    } catch (error) {
+      // Event.sourcePlanId is unique. A second occurrence claiming the same
+      // Plan used to abort the whole calendar (JDF247's full walk died on
+      // this and never earned a syncToken). Leave the existing fulfillment.
+      if (!isPrismaUniqueConstraint(error)) throw error;
+    }
   }
 
   await db.calendarEventLink.upsert({
@@ -1617,6 +1674,38 @@ async function syncCalendarConnectionMirror(connectionId: string) {
 // Thin wrapper over walkEventPages (google-calendar-sync.ts), which holds the
 // paging state machine so it can be tested without server imports. All this
 // adds is the Google URL and auth.
+async function ingestRecentEventPages(
+  accessToken: string,
+  input: {
+    calendarId: string;
+    timeMin: Date;
+    timeMax: Date;
+    deadline: number;
+    onBatch: (items: GoogleCalendarEvent[]) => Promise<void>;
+  },
+) {
+  return walkRecentEventPages<GoogleCalendarEvent>({
+    timeMin: input.timeMin,
+    timeMax: input.timeMax,
+    deadline: input.deadline,
+    pageSize: GOOGLE_PAGE_SIZE,
+    batchSize: DB_BATCH_SIZE,
+    onBatch: input.onBatch,
+    fetchPage: async (params) => {
+      const res = await googleFetch(
+        `${GOOGLE_CALENDAR_BASE}/calendars/${encodeURIComponent(input.calendarId)}/events?${params}`,
+        accessToken,
+      );
+      if (!res.ok) return { status: res.status, ok: false };
+      return {
+        status: res.status,
+        ok: true,
+        page: (await res.json()) as EventsListResponse,
+      };
+    },
+  });
+}
+
 async function syncEventPages(
   accessToken: string,
   input: {
@@ -1696,7 +1785,14 @@ async function refreshAccessToken(refreshToken: string) {
     }),
     signal: AbortSignal.timeout(GOOGLE_FETCH_TIMEOUT_MS),
   });
-  if (!res.ok) throw new Error(`Google token refresh failed (${res.status})`);
+  if (!res.ok) {
+    const body = await res.text().catch(() => "");
+    console.error("[google-calendar] token refresh failed", {
+      status: res.status,
+      body,
+    });
+    throw new Error(`Google token refresh failed (${res.status})`);
+  }
   return (await res.json()) as TokenResponse;
 }
 

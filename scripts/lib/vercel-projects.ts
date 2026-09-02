@@ -72,7 +72,10 @@ export const VERCEL_PROJECTS: readonly VercelProject[] = [
     shape: "app-root",
     buildCommand: "cd ../.. && npx turbo run build --filter=events",
     outputDirectory: ".next",
-    crons: [{ path: "/api/cron/granola-sync", schedule: "0 14 * * *" }],
+    crons: [
+      { path: "/api/cron/granola-sync", schedule: "0 14 * * *" },
+      { path: "/api/cron/calendar-sync", schedule: "*/15 * * * *" },
+    ],
     smoke: [{ url: "https://events.lacollecteur.com/login", label: "events login" }],
   },
   {
