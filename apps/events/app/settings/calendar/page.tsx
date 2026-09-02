@@ -1,10 +1,13 @@
 import { Suspense } from "react"
 import Link from "next/link"
 import { redirect } from "next/navigation"
+import { lifeOsAppUrl } from "@life-os/auth"
 import { auth } from "@/auth"
 import CalendarSettingsClient from "@/components/settings/CalendarSettingsClient"
 
 export const dynamic = "force-dynamic"
+
+const HOME_CONNECTIONS_URL = `${lifeOsAppUrl("home", "http://localhost:3003")}/admin/connections`
 
 export default async function CalendarSettingsPage() {
   const session = await auth()
@@ -13,7 +16,7 @@ export default async function CalendarSettingsPage() {
   return (
     <div style={{ maxWidth: "760px", margin: "0 auto", padding: "40px 24px" }}>
       <div style={{ marginBottom: "28px" }}>
-        <Link href="/connections" style={{ display: "inline-block", marginBottom: 12, color: "var(--ink-3)", fontSize: 12, textDecoration: "none" }}>← Connections</Link>
+        <a href={HOME_CONNECTIONS_URL} style={{ display: "inline-block", marginBottom: 12, color: "var(--ink-3)", fontSize: 12, textDecoration: "none" }}>← Connections</a>
         <h1
           style={{
             fontFamily: "var(--font-display)",

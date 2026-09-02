@@ -379,7 +379,7 @@ The Calendar settings screen also has a combined sync trace. It reads recent `ca
 Runtime configuration:
 
 - `GOOGLE_CALENDAR_CLIENT_ID` and `GOOGLE_CALENDAR_CLIENT_SECRET`, or the existing `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` if that OAuth client has Calendar API access.
-- The Google OAuth redirect URI must include `/api/calendar/google/callback` on the deployed app origin.
+- The Google OAuth redirect URI must be registered on Home: `/admin/connections/google/calendar/callback` (pin with `GOOGLE_CALENDAR_REDIRECT_URI`).
 - `GOOGLE_CALENDAR_REDIRECT_URI` can pin the callback to one exact production URL, avoiding mismatches when someone opens a preview deployment or alternate Vercel alias.
 - The first sync reads the selected bounded window around the present; later syncs use Google's sync token when available.
 
@@ -423,7 +423,7 @@ The same Gmail sync can also be launched from `/import/interactions` as "Import 
 Runtime configuration:
 
 - `GOOGLE_GMAIL_CLIENT_ID` and `GOOGLE_GMAIL_CLIENT_SECRET`, or the existing `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` if that OAuth client has Gmail API access.
-- The Google OAuth redirect URI must include `/api/gmail/google/callback` on the deployed app origin.
+- The Google OAuth redirect URI must be registered on Home: `/admin/connections/google/gmail/callback` (pin with `GOOGLE_GMAIL_REDIRECT_URI`).
 - `GOOGLE_GMAIL_REDIRECT_URI` can pin the callback to one exact production URL.
 - People import from Google Contacts uses the same Gmail connection but also needs the Google People API enabled and the `https://www.googleapis.com/auth/contacts.readonly` scope. Older Gmail connections that only granted Gmail read access must reconnect before `/import/people` can pull Google Contacts.
 
@@ -803,8 +803,7 @@ from `Connection`, `Device`/`DeviceSource`, and the latest graph arrival
 (`Interaction`, `StagedInteraction`, `DeviceIngestItem`, `State` `createdAt`)
 so a connected Gmail or Era account that is not landing records in this
 workspace is visible. It also labels the signed-in workspace and whether
-`DATABASE_URL` points at Neon. Older `/admin?tab=system` and
-`/admin?tab=streams` URLs redirect to `/admin/health`. Its
+`DATABASE_URL` points at Neon. Its
 server-only `/api/admin/*` proxy forwards a strict mutation allowlist to
 `apps/api`'s canonical `/v1/access/*` commands. Persons `/admin` is now only a
 redirect to Home, and the duplicate Persons `/api/admin/*` routes and tab
@@ -1113,8 +1112,7 @@ The architecture goal is:
 - APIs make everything programmable later.
 
 The old Persons Admin controller and its per-tab components no longer exist.
-Home is the human-facing control plane: `/admin` manages access and credentials,
-`/admin/health` is system health (streams and the event spine), `/automation`
+Home is the human-facing control plane: `/admin` is the overview, `/admin/health` is system health (streams and the event spine), `/admin/automation`
 manages rules, and `/admin/connections` is the account connect/disconnect surface
 without exposing encrypted tokens to the browser. Gmail's
 existing `GmailConnection` remains the row of truth for message-link foreign
@@ -1191,7 +1189,7 @@ flowchart LR
 - Health Auto Export sync: `scripts/health-sync.ts` attaches Apple Health data to a self Person as States (daily metrics) and Notes (daily digests), and workouts as Events — not Interactions, so the relationship-tracking Interaction log stays uncluttered. The Person detail page surfaces this via a Health card (`apps/persons/server/domain/health.ts`).
 - Oura daily scores: Home Connections starts Oura OAuth (`daily` scope only). Encrypted tokens live on `Connection` (`kind=oura`). A 35-day backfill and signed webhooks write one provenance Note plus `source=oura` States per day. HealthKit measurements stay on their own Notes. Level Up readiness assembly can read the scores; it does not yet change workout prescriptions.
 - Control-plane spine: `apps/api` (canonical `/v1`, no UI, API-key-only) and three new shared packages — `packages/domain` (shared write commands: `appendDailySourceInteraction`, `acceptStagedInteraction`, `createReviewItem`, `publishGraphEvent`), `packages/automation` (the rules engine, versioned + causation-capped + authority-tiered), `packages/intelligence` (renamed from `packages/theory`; adds workspace-scoped `LifeModelSnapshot` alongside the existing person-scoped Theory). `GraphEvent` is the new append-only event ledger every shared command publishes to. `ReviewItem` unifies all four review queues into one federated inbox `apps/home` reads. `scripts/imessage-sync.ts` and `scripts/whatsapp-sync.ts` moved off their own hand-rolled day-bucket-append/rules-fork logic onto the shared commands.
-- Home is now the control plane: the chronological Stream feed lives under Admin (`/admin/stream`, over `apps/api`'s `/v1/stream`), the federated Inbox, and Intelligence/Automation surfaces all live in `apps/home`, reading from the shared packages rather than each app maintaining its own copy. `/stream` redirects there.
+- Home is now the control plane: the chronological Stream feed lives under Admin (`/admin/stream`, over `apps/api`'s `/v1/stream`), the federated Inbox, and Intelligence/Automation surfaces all live in `apps/home`, reading from the shared packages rather than each app maintaining its own copy.
 - Theory of Person is AI-backed: `synthesizeTheoryOfPerson` (`packages/intelligence/src/synthesize.ts`) now makes a real model call via the same Vercel AI Gateway pattern `packages/domain/note-suggestions.ts` proved out — grounded in real evidence text (`src/evidence.ts`, bounded/recent, not just IDs), tracked per-run in `TheoryAnalysisRun` (status, tokens, cost — no unique-by-promptVersion caching, since a person's evidence changes and "regenerate" must always run fresh). Reuses whichever `AiProviderCredential` is already configured for `vercel-ai-gateway` in the workspace (credentials are workspace+provider scoped, not app-scoped) — if none exists yet, surfaces a clear configuration error rather than silently failing. Runs from an explicit click in Persons (`/persons/[id]/theory`) or the Persons nightly budgeted cron, never from a passive page load.
 - Theory of Person is folded into Persons. The person page has a Theory card; the full reading is `/persons/[id]/theory`; graph notes are `/persons/notes`. `apps/theory-of` was removed entirely — no redirect shell, no Vercel project — and Context is no longer a separate item in the app switcher.
 - Whole-life synthesis is AI-backed only behind an explicit Home confirmation and canonical `POST /v1/life-model/regenerate`; passive page loads retain the free deterministic preview. `GET /v1/life-model` and `/history` expose saved versions, while `POST /v1/life-model/claims/:claimId/feedback` records corrections or dismissals. Home keeps the control-plane API key server-side through its allowlisted proxy.

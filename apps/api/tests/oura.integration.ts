@@ -93,7 +93,7 @@ test("oura: sqlite busy errors are retried", () => {
 })
 
 test("oura: oauth state and webhook signatures reject tampering", () => {
-  const state = signOuraState({ workspaceId: "ws-1", nonce: "abc", returnTo: "/connections" })
+  const state = signOuraState({ workspaceId: "ws-1", nonce: "abc", returnTo: "/admin/connections" })
   assert.equal(verifyOuraState(state).workspaceId, "ws-1")
   assert.throws(() => verifyOuraState(state.replace(/.$/, "x")))
   assert.equal(grantedScopeIncludesDaily("daily"), true)

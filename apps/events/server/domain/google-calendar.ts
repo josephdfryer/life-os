@@ -1803,13 +1803,14 @@ function googleCalendarRedirectUri(origin: string | null) {
   const explicit = process.env.GOOGLE_CALENDAR_REDIRECT_URI;
   if (explicit) return explicit;
   const base =
+    process.env.HOME_URL?.trim() ||
     process.env.AUTH_URL ||
     process.env.NEXTAUTH_URL ||
     vercelProductionUrl() ||
     origin;
   if (!base)
     throw badRequest("Google Calendar redirect URI could not be resolved");
-  return `${base.replace(/\/$/, "")}/api/calendar/google/callback`;
+  return `${base.replace(/\/$/, "")}/admin/connections/google/calendar/callback`;
 }
 
 function signState(state: OAuthState) {

@@ -2,7 +2,11 @@
 
 import { useEffect, useState } from "react"
 import { useSearchParams } from "next/navigation"
+import { lifeOsAppUrl } from "@life-os/auth"
 import { useTimeZone } from "@life-os/ui"
+
+const HOME_URL = lifeOsAppUrl("home", "http://localhost:3003")
+const CALENDAR_CONNECT_URL = `${HOME_URL}/admin/connections/google/calendar/connect`
 
 type CalendarStatus = {
   configured: boolean
@@ -304,7 +308,7 @@ export default function CalendarSettingsClient() {
 
       <section style={panelStyle}>
         <div style={panelTitleStyle}>Actions</div>
-        <a href="/api/calendar/google/connect?returnTo=/settings/calendar" style={primaryLinkStyle}>
+        <a href={CALENDAR_CONNECT_URL} style={primaryLinkStyle}>
           {status?.connection ? `Reconnect ${expectedAccountEmail}` : `Connect ${expectedAccountEmail}`}
         </a>
         <label style={{ ...labelStyle, marginTop: "14px" }}>Backfill range</label>

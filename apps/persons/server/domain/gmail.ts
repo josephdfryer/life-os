@@ -418,7 +418,7 @@ export async function importGmailContactsPreview(actor: AccessActor) {
     throw badRequest("Reconnect Gmail to allow importing Google contacts", {
       reconnectRequired: true,
       missingScope: GOOGLE_CONTACTS_READONLY_SCOPE,
-      reconnectUrl: "/api/gmail/google/connect?returnTo=/import/persons",
+      reconnectUrl: `${homeConnectionsUrl()}/google/gmail/connect`,
     });
   }
 
@@ -1369,12 +1369,23 @@ function gmailRedirectUri(origin: string | null) {
     process.env.GOOGLE_GMAIL_REDIRECT_URI || process.env.GMAIL_REDIRECT_URI;
   if (explicit) return explicit;
   const base =
+    process.env.HOME_URL?.trim() ||
     process.env.AUTH_URL ||
     process.env.NEXTAUTH_URL ||
     vercelProductionUrl() ||
     origin;
   if (!base) throw badRequest("Gmail redirect URI could not be resolved");
-  return `${base.replace(/\/$/, "")}/api/gmail/google/callback`;
+  return `${base.replace(/\/$/, "")}/admin/connections/google/gmail/callback`;
+}
+
+function homeConnectionsUrl() {
+  const base =
+    process.env.HOME_URL?.trim() ||
+    process.env.AUTH_URL ||
+    process.env.NEXTAUTH_URL ||
+    vercelProductionUrl() ||
+    "http://localhost:3003";
+  return `${base.replace(/\/$/, "")}/admin/connections`;
 }
 
 function stateSecret() {

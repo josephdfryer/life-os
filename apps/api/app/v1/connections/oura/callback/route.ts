@@ -76,7 +76,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({
       connection: { id: connection.id, kind: "oura", status: "active" },
-      returnTo: parsed.returnTo || "/connections",
+      returnTo: parsed.returnTo || "/admin/connections",
       backfill,
       backfillError,
       webhooks,
