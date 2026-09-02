@@ -41,8 +41,19 @@ apps/*/uploads/
 
 # OS
 .DS_Store
+
+# Root-level package-lock is the single source of truth for the workspace;
+# apps/persons predates the monorepo lockfile and must not regenerate its own.
 apps/persons/package-lock.json
-.vercel
+
+# Vercel CLI link caches for individual apps (recreated by `vercel link`).
+# The repo-root .vercel/project.json is the exception: it is deliberately
+# committed so every developer's Vercel CLI links to the same project
+# without manual setup. Do not add it to this ignore rule — see
+# docs/DEPLOY_RUNBOOK.md.
+apps/*/.vercel
+.vercel/*
+!.vercel/project.json
 
 # Personal data / runtime outputs (not for version control)
 archive/

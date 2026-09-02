@@ -389,7 +389,7 @@ async function createPerson(
       last,
       emails: JSON.stringify(contact.email ? [contact.email] : []),
       phones: JSON.stringify(contact.phone ? [contact.phone] : []),
-      closeness: 2,
+      closeness: 1,
       tags: JSON.stringify(["imessage"]),
       values: JSON.stringify([]),
       notes: "Created by iMessage sync.",

@@ -1,5 +1,7 @@
 # Engineering onboarding
 
+The human front door is now **[`README.md`](../README.md)** and **[`CONTRIBUTING.md`](../CONTRIBUTING.md)**. This page is the short first-hour checklist those docs expand on.
+
 ## First hour
 
 1. Install the repository's Node/npm versions and run `npm ci`.

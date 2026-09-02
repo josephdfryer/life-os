@@ -1,5 +1,6 @@
 {
   "name": "events",
+  "description": "Events, calendar views, and Google Calendar settings.",
   "version": "0.1.0",
   "private": true,
   "scripts": {

@@ -2,7 +2,7 @@
 // import anywhere in this module's graph. Import this (not the package root)
 // from client components or anywhere else that must never bundle a DB driver.
 
-export { relationshipGapScore, daysSince } from "./src/scoring"
+export { relationshipGapScore, daysSince, isUnreviewedBulkContact } from "./src/scoring"
 export {
   normalizeBirthday,
   birthdayMonthDay,

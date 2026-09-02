@@ -1,5 +1,6 @@
 {
   "name": "assistant",
+  "description": "Conversational graph tools - chat interface for querying and acting on the LifeOS graph.",
   "version": "0.1.0",
   "private": true,
   "scripts": {

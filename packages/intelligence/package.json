@@ -1,5 +1,6 @@
 {
   "name": "@life-os/intelligence",
+  "description": "Derived theory and life-model synthesis.",
   "version": "0.0.1",
   "private": true,
   "main": "./index.ts",

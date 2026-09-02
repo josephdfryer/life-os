@@ -43,7 +43,7 @@ export async function POST(req: NextRequest) {
         emailSearch: emailsJson.toLowerCase(),
         phones: jsonList(phonesList),
         birthday,
-        closeness: contact.closeness !== undefined ? Number(contact.closeness) || 2 : 2,
+        closeness: contact.closeness !== undefined ? Number(contact.closeness) || 1 : 1,
         tags: jsonList(optionalStringArray(contact.tags)),
         values: jsonList(optionalStringArray(contact.values)),
         notes: optionalString(contact.notes),

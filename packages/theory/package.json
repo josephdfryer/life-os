@@ -1,5 +1,6 @@
 {
   "name": "@life-os/theory",
+  "description": "Compatibility re-export of @life-os/intelligence. Prefer importing from @life-os/intelligence directly.",
   "version": "0.0.1",
   "private": true,
   "main": "./index.ts",

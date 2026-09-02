@@ -1,5 +1,6 @@
 {
   "name": "@life-os/domain",
+  "description": "Shared domain command layer - writes, audit, and business logic behind the graph.",
   "version": "0.0.1",
   "private": true,
   "main": "./index.ts",

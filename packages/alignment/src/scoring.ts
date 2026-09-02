@@ -13,6 +13,29 @@ const CLOSENESS_THRESHOLD_DAYS: Record<number, number> = {
 }
 const ACQUAINTANCE_WITH_PLAN_THRESHOLD_DAYS = 30
 
+const BULK_IMPORT_SOURCES = new Set([
+  "vcard",
+  "csv",
+  "spreadsheet",
+  "gmail_contacts",
+  "ios_contacts",
+  "interaction_import",
+])
+
+// Curation shared by every server-rendered attention surface. An untouched
+// bulk-import row is an address-book fact, not evidence that the owner wants
+// a recurring relationship cadence. Deliberate origins, real history, and an
+// active Plan all opt the Person back into normal gap scoring.
+export function isUnreviewedBulkContact(input: {
+  source: string | null | undefined
+  lastInteractionAt: Date | null
+  hasActivePlan: boolean
+}): boolean {
+  return !input.lastInteractionAt
+    && !input.hasActivePlan
+    && BULK_IMPORT_SOURCES.has(input.source ?? "")
+}
+
 export function daysSince(date: Date | null, now = new Date()): number {
   if (!date) return 9999
   return Math.max(0, Math.floor((now.getTime() - date.getTime()) / 86400000))

@@ -1,5 +1,6 @@
 {
   "name": "places",
+  "description": "Place map, profiles, and location import/review.",
   "version": "0.1.0",
   "private": true,
   "scripts": {

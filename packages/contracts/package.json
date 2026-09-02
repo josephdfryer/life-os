@@ -1,5 +1,6 @@
 {
   "name": "@life-os/contracts",
+  "description": "Zod request and stored-JSON schemas shared across apps and packages.",
   "version": "0.0.1",
   "private": true,
   "main": "./index.ts",

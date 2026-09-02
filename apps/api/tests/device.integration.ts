@@ -93,6 +93,7 @@ test("contact.person ingest: auto-apply on exact match, review queue otherwise",
   const created = await db.person.findUniqueOrThrow({ where: { id: strangerResult.resultId! } })
   assert.equal(created.first, "Grace")
   assert.equal(created.source, "ios_contacts")
+  assert.equal(created.closeness, 1, "new device contacts start without an ambient follow-up cadence")
 
   // A fuzzy-but-not-confident match against that just-created person still
   // goes to review: auto-creating here risks a silent duplicate, and

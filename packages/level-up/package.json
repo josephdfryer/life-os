@@ -1,5 +1,6 @@
 {
   "name": "@life-os/level-up",
+  "description": "Shared Level Up (fitness) domain logic used by apps/level-up.",
   "version": "0.0.1",
   "private": true,
   "main": "./index.ts",

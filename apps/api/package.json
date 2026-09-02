@@ -1,5 +1,6 @@
 {
   "name": "api",
+  "description": "Integration and device API - external and device-facing endpoints for events, plans, people, files, health, and workouts.",
   "version": "0.1.0",
   "private": true,
   "scripts": {

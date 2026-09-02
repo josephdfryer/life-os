@@ -1,5 +1,6 @@
 {
   "name": "@life-os/ui",
+  "description": "Shared Still design-system components and tokens.",
   "version": "0.0.1",
   "private": true,
   "main": "./index.ts",

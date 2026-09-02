@@ -1,6 +1,7 @@
 import assert from "node:assert/strict"
 import test from "node:test"
 import { daysSince, lastInteractionDate } from "../lib/attention"
+import { isUnreviewedBulkContact } from "@life-os/alignment/pure"
 import { personListInclude } from "../server/queries/person-list"
 import type { Interaction } from "../types"
 
@@ -37,4 +38,25 @@ test("the compact People query asks the database only for completed contact", ()
   assert.deepEqual(personListInclude(now).interactions.where, {
     timestamp: { lte: now },
   })
+})
+
+test("an untouched imported contact does not become an overdue relationship", () => {
+  assert.equal(isUnreviewedBulkContact({
+    source: "ios_contacts",
+    lastInteractionAt: null,
+    hasActivePlan: false,
+  }), true)
+})
+
+test("history or a deliberate plan makes an imported contact actionable", () => {
+  assert.equal(isUnreviewedBulkContact({
+    source: "ios_contacts",
+    lastInteractionAt: new Date("2026-08-01T00:00:00.000Z"),
+    hasActivePlan: false,
+  }), false)
+  assert.equal(isUnreviewedBulkContact({
+    source: "ios_contacts",
+    lastInteractionAt: null,
+    hasActivePlan: true,
+  }), false)
 })

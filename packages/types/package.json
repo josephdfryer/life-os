@@ -1,5 +1,6 @@
 {
   "name": "@life-os/types",
+  "description": "Cross-package TypeScript shapes with no runtime coupling.",
   "version": "0.0.1",
   "private": true,
   "main": "./index.ts",

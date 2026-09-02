@@ -18,7 +18,7 @@ export default function AddPersonModal({ onClose, onSaved, totalPersons }: Props
     company: "",
     location: "",
     birthday: "",
-    closeness: 2,
+    closeness: 1,
     tags: "",
     notes: "",
   })

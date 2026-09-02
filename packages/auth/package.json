@@ -1,5 +1,6 @@
 {
   "name": "@life-os/auth",
+  "description": "Shared authentication configuration used by all apps.",
   "version": "0.0.1",
   "private": true,
   "main": "./index.ts",
