@@ -19,6 +19,10 @@ concurrency:
   group: calendar-auto-sync
   cancel-in-progress: false
 
+permissions:
+  contents: read
+  issues: write # cron-failure-issue.yml opens/closes the tracking issue
+
 jobs:
   sync:
     runs-on: ubuntu-latest
@@ -31,3 +35,11 @@ jobs:
           echo "HTTP $code"
           cat /tmp/body
           test "$code" = "200"
+
+  notify:
+    needs: [sync]
+    if: always()
+    uses: ./.github/workflows/cron-failure-issue.yml
+    with:
+      name: calendar-auto-sync
+      result: ${{ needs.sync.result }}

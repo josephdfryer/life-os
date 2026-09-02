@@ -1,0 +1,67 @@
+name: Cron failure issue
+
+# Reusable: a scheduled workflow calls this with its sync job's result. On
+# failure it opens (or bumps) a single tracking issue so a broken cron can't
+# sit red for days unnoticed — which is exactly what era-auto-sync did after
+# the Postgres migration. On the first green run afterwards it closes the issue.
+#
+# Uses only GITHUB_TOKEN. The caller must grant `issues: write`.
+
+on:
+  workflow_call:
+    inputs:
+      name:
+        description: Human name of the cron (used in the issue title)
+        required: true
+        type: string
+      result:
+        description: result of the caller's sync job (success / failure / cancelled)
+        required: true
+        type: string
+
+jobs:
+  file:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@v7
+        with:
+          script: |
+            const name = ${{ toJSON(inputs.name) }};
+            const result = ${{ toJSON(inputs.result) }};
+            const label = "cron-failure";
+            const title = `🔴 ${name} is failing`;
+            const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+
+            const { data: open } = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: "open",
+              labels: label,
+              per_page: 100,
+            });
+            const existing = open.find(i => i.title === title);
+
+            if (result === "failure") {
+              const body = `\`${name}\` failed on ${new Date().toUTCString()}.\n\n- Run: ${runUrl}\n- Branch: \`${context.ref.replace("refs/heads/", "")}\``;
+              if (existing) {
+                await github.rest.issues.createComment({
+                  owner: context.repo.owner, repo: context.repo.repo,
+                  issue_number: existing.number, body,
+                });
+              } else {
+                await github.rest.issues.create({
+                  owner: context.repo.owner, repo: context.repo.repo,
+                  title, body, labels: [label],
+                });
+              }
+            } else if (result === "success" && existing) {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner, repo: context.repo.repo,
+                issue_number: existing.number,
+                body: `✅ Recovered — green run: ${runUrl}. Closing.`,
+              });
+              await github.rest.issues.update({
+                owner: context.repo.owner, repo: context.repo.repo,
+                issue_number: existing.number, state: "closed",
+              });
+            }
