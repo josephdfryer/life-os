@@ -13,7 +13,7 @@ When at least two linked attendees share one uniquely strongest active Group mem
 1. In Granola, revoke any API key that has appeared in chat, logs, screenshots, or shell history.
 2. Generate a fresh Business/Enterprise API key with the intended personal/public note access.
 3. Ensure production has a valid 64-hex-character `ENCRYPTION_KEY`. It must match the key already used for other encrypted connections.
-4. Open `/settings/granola` in Events and enter the new key directly. The server validates the key and stores only AES-256-GCM ciphertext in `Connection.accessTokenEncrypted`; the browser never receives it again.
+4. Open Home **Admin → Connections** and enter the new Granola API key. The server validates the key via `POST /v1/connections/granola` and stores only AES-256-GCM ciphertext in `Connection.accessTokenEncrypted`; the browser never receives it again. Events `/settings/granola` remains available for manual sync and backfill.
 5. Choose **Import all history** for the first run. The importer follows every List Notes cursor and every transcript cursor; there is no fixed record cap.
 
 Do not put a Granola API key in a `NEXT_PUBLIC_` variable, a repository `.env.example`, a URL, or Vercel project configuration as plaintext. The encrypted credential is customer/workspace data in the database.
@@ -67,6 +67,6 @@ After the first production connection, use **Sync now** with the single expected
 5. a second sync updates the same Event/Interactions rather than duplicating them;
 6. any unambiguous Group link opens the company meeting lens.
 
-If the key is revoked, reconnect with a new key in `/settings/granola`. If a run partially fails, fix the provider/network issue and run an incremental sync; because the watermark did not advance, failed notes are retried. A full backfill is safe when broader reconciliation is needed.
+If the key is revoked, reconnect with a new key in Home **Admin → Connections**. If a run partially fails, fix the provider/network issue and run an incremental sync; because the watermark did not advance, failed notes are retried. A full backfill is safe when broader reconciliation is needed.
 
 Signed Granola webhooks are intentionally deferred until a stable production receiver is deployed and its one-time signing secret can be captured securely. The daily reconciliation is the current durable automation path.

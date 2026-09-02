@@ -1,15 +1,10 @@
 import { NextRequest, NextResponse } from "next/server"
-import { requireAccess } from "@/server/domain/access"
-import { gmailAuthUrl } from "@/server/domain/gmail"
-import { handleRouteError } from "@/server/api/respond"
+import { lifeOsAppUrl } from "@life-os/auth"
 
 export async function GET(req: NextRequest) {
-  try {
-    const actor = await requireAccess("interactions.write")
-    const url = new URL(req.url)
-    const returnTo = url.searchParams.get("returnTo") ?? "/admin"
-    return NextResponse.redirect(gmailAuthUrl(actor, url.origin, returnTo))
-  } catch (error) {
-    return handleRouteError(error)
-  }
+  const homeUrl = lifeOsAppUrl("home", "http://localhost:3003")
+  const returnTo = req.nextUrl.searchParams.get("returnTo") ?? "/admin/connections"
+  const target = new URL("/admin/connections/google/gmail/connect", homeUrl)
+  target.searchParams.set("returnTo", returnTo)
+  return NextResponse.redirect(target)
 }

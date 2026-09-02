@@ -8,7 +8,9 @@
   "exports": {
     ".": "./index.ts",
     "./contact-matching": "./contact-matching.ts",
-    "./event-signals-list": "./event-signals-list.ts"
+    "./event-signals-list": "./event-signals-list.ts",
+    "./granola": "./granola.ts",
+    "./granola-client": "./granola-client.ts"
   },
   "dependencies": {
     "@life-os/db": "*"

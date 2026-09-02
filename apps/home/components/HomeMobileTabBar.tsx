@@ -7,7 +7,6 @@ const COMPACT_QUERY = "(max-width: 640px)"
 
 const MORE_LINKS = [
   { label: "Intelligence", path: "/intelligence" },
-  { label: "Automation", path: "/automation" },
   { label: "Admin", path: "/admin" },
 ] as const
 
@@ -96,7 +95,6 @@ export default function HomeMobileTabBar() {
   const onInbox = pathname.startsWith("/inbox")
   const onMoreSection =
     pathname.startsWith("/intelligence") ||
-    pathname.startsWith("/automation") ||
     pathname.startsWith("/admin")
 
   return (

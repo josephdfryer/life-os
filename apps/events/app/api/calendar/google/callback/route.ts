@@ -1,19 +1,8 @@
 import { NextRequest, NextResponse } from "next/server"
-import { handleRouteError } from "@/server/api/respond"
-import { handleGoogleCalendarCallback } from "@/server/domain/google-calendar"
+import { lifeOsAppUrl } from "@life-os/auth"
 
-export async function GET(req: NextRequest) {
-  const url = new URL(req.url)
-  const code = url.searchParams.get("code")
-  const state = url.searchParams.get("state")
-  if (!code || !state) return NextResponse.redirect(new URL("/settings/calendar?calendar=error", url.origin))
-
-  try {
-    const result = await handleGoogleCalendarCallback({ code, state, origin: url.origin })
-    const redirect = new URL(result.returnTo || "/settings/calendar", url.origin)
-    redirect.searchParams.set("calendar", "connected")
-    return NextResponse.redirect(redirect)
-  } catch (error) {
-    return handleRouteError(error)
-  }
+export async function GET(request: NextRequest) {
+  const homeUrl = lifeOsAppUrl("home", "http://localhost:3003")
+  const query = request.nextUrl.search
+  return NextResponse.redirect(`${homeUrl}/admin/connections/google/calendar/callback${query}`)
 }

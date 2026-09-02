@@ -366,7 +366,7 @@ flowchart TD
   Trace --> Interaction
 ```
 
-Plain English: Google Calendar remains the source of truth, and the Events app exclusively owns connection, synchronization, and confirmation. The duplicate Persons Calendar routes have been removed; Home’s Connections hub leads to Events settings. The canonical Events sync creates calendar-backed Plans and expected Person references for people who have not declined; only Home confirmation creates Events and attendee Interactions, and declined invitees are excluded from both. This prevents two apps from interpreting the same provider occurrence differently.
+Plain English: Google Calendar OAuth now starts from Home (`/admin/connections`), while Events still owns calendar selection, synchronization, and confirmation at `/settings/calendar`. The canonical Events sync creates calendar-backed Plans and expected Person references for people who have not declined; only Home confirmation creates Events and attendee Interactions, and declined invitees are excluded from both. This prevents two apps from interpreting the same provider occurrence differently.
 
 Copies of one occurrence across selected calendars converge before confirmation. A matching Google `iCalUID` at the same occurrence time is definitive; otherwise the sync treats an exact normalized title within five minutes as the same occurrence. The shared `Plan` becomes one canonical `Event`, while every source remains separately auditable through its own `CalendarEventLink`. The Events timeline and detail view name each calendar that carried the occurrence. Home Today and Events Today/Upcoming read the same schedule: confirmed Events plus unreconciled Google Calendar Plans, using the owner's timezone day rather than the server's. Same-name items at materially different times remain separate, so recurring meetings are not collapsed into one historical Event. Cancelling one copy does not cancel the shared Plan while another calendar still carries it.
 
@@ -391,7 +391,7 @@ Attendees are linked to existing People only when one exact normalized email mat
 
 On a Person profile, a Granola meeting Interaction reads its recap from that linked canonical Event, hides connector bookkeeping markers, and links to the Events detail page for the complete summary and transcript. The Interaction still owns person-specific context such as emotional weight, outcome, and follow-up actions; the shared meeting evidence is not copied separately for every attendee.
 
-The Home Connections hub exposes the unified `Connection` row (`kind=meetings`, `provider=granola`) and routes management to Events `/settings/granola`. The encrypted API key never appears in the read-side Connections response. Daily sync is a reconciliation import: all cursors are followed, edited notes update provider-owned fields, and user-written Event notes are preserved.
+The Home Connections hub (`/admin/connections`) exposes the unified `Connection` row (`kind=meetings`, `provider=granola`) and connects inline via `POST /v1/connections/granola`. Events still owns sync/backfill routes and `/settings/granola` for manual operations. The encrypted API key never appears in the read-side Connections response. Daily sync is a reconciliation import: all cursors are followed, edited notes update provider-owned fields, and user-written Event notes are preserved.
 
 ### 3d. Gmail sync
 
@@ -446,7 +446,7 @@ Plain English: Apple Health never receives Oura Readiness, Sleep Score, Activity
 Runtime configuration:
 
 - `OURA_CLIENT_ID` and `OURA_CLIENT_SECRET` from the Oura API application at cloud.ouraring.com/oauth/applications.
-- Redirect URI on Home: `/connections/oura/callback` (pin with `OURA_REDIRECT_URI`).
+- Redirect URI on Home: `/admin/connections/oura/callback` (pin with `OURA_REDIRECT_URI`).
 - Webhook callback on the API: `/v1/webhooks/oura` (pin with `OURA_WEBHOOK_CALLBACK_URL` and `OURA_WEBHOOK_VERIFICATION_TOKEN`).
 
 ### 3d. Krisp transcript processing
@@ -1115,7 +1115,7 @@ The architecture goal is:
 The old Persons Admin controller and its per-tab components no longer exist.
 Home is the human-facing control plane: `/admin` manages access and credentials,
 `/admin/health` is system health (streams and the event spine), `/automation`
-manages rules, and `/connections` is the account connect/disconnect surface
+manages rules, and `/admin/connections` is the account connect/disconnect surface
 without exposing encrypted tokens to the browser. Gmail's
 existing `GmailConnection` remains the row of truth for message-link foreign
 keys, while every OAuth connect, token refresh, successful sync, and failed
@@ -1180,8 +1180,8 @@ flowchart LR
 - Data Cleaning: `/people/clean` highlights People records missing email, phone, names, or broader context, and supports editing or deleting those People from the cleanup view.
 - Inbox create-and-accept: an unmatched staged interaction can create a new Person and attach the interaction in one review action.
 - Workspace tenancy foundation: approved emails can sign in without inheriting Joseph's data, core browser/API paths carry `workspaceId`, existing data is preserved in `default-workspace`, and API keys are scoped to the workspace that created them.
-- Google Calendar foundation: the Connections hub leads to the canonical Events-owned Calendar flow, which syncs read-only events and creates Interactions for attendees matched to existing People by email.
-- Gmail foundation: the Connections hub exposes Gmail health and connect/reconnect entry points; sync remains read-only and stages unmatched mail only when explicitly requested.
+- Google Calendar foundation: OAuth starts from Home `/admin/connections`; calendar selection and sync remain in Events `/settings/calendar`.
+- Gmail foundation: OAuth starts from Home `/admin/connections`; sync remains read-only in Persons and stages unmatched mail only when explicitly requested.
 - Google Contacts import: `/import/persons` can pull People candidates from the connected Gmail account's Google Contacts and review them with the same create/update/skip flow as vCard and CSV imports.
 - Spreadsheet people import: `/api/import/contacts` accepts a bounded `.xlsx` upload, scans worksheets for a person table, maps standard contact fields, and preserves otherwise unmapped row values in the candidate's Notes. The same `/import/persons` review flow controls create/update/skip, supports people who use a single name without inventing a surname, and appends new imported notes to matched people rather than overwriting existing notes. Failed create or update requests stop on the review screen and show the API error; they never advance to a false completion state.
 - Import duplicate safety: before file or Google Contacts import is enabled, `/import/persons` loads every page of the workspace's lightweight Persons list in 200-record batches. Matching never runs against a partial list; a failed page disables import and presents a retry action.

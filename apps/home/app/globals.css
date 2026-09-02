@@ -376,7 +376,9 @@ a {
 .inbox-action--accept { border-color: var(--cognac); color: var(--linen); background: var(--cognac); }
 .inbox-action--accept:hover:not(:disabled) { color: var(--linen); filter: brightness(.94); }
 .inbox-action:disabled { cursor: wait; opacity: .55; }
-.admin-tabs { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 28px; border-bottom: 1px solid var(--border); }
+.admin-tabs { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px 16px; margin-top: 28px; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
+.admin-tab-group { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.admin-tab-group-label { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-4); margin-right: 2px; }
 .admin-tabs a { padding: 9px 12px; border-radius: var(--radius-sm) var(--radius-sm) 0 0; color: var(--ink-3); font-size: 13px; }
 .admin-tabs a:hover, .admin-tab-active { background: var(--surface); color: var(--cognac-deep) !important; }
 .admin-tab-legacy { margin-left: auto; }

@@ -123,7 +123,7 @@ export function StreamDetailPanel({ row, events }: { row: StreamRow; events: Str
         {row.collectorError ? <p className="data-stream-error-block">{row.collectorError}</p> : null}
         <div className="admin-section-tools" style={{ marginTop: 18 }}>
           <a className="still-button still-button-secondary" href={row.spec.repairHref}>{row.spec.repairLabel}</a>
-          <a className="still-button still-button-secondary" href="/connections">Manage accounts</a>
+          <a className="still-button still-button-secondary" href="/admin/connections">Manage connections</a>
         </div>
       </article>
       <div className="admin-section-heading">

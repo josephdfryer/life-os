@@ -29,7 +29,7 @@ export const STREAM_SPECS: readonly StreamSpec[] = [
     laptopBound: false,
     graphSources: ["calendar"],
     connectionKind: "calendar",
-    repairHref: "/connections",
+    repairHref: "/admin/connections",
     repairLabel: "Connections",
   },
   {
@@ -41,7 +41,7 @@ export const STREAM_SPECS: readonly StreamSpec[] = [
     laptopBound: true,
     graphSources: ["gmail"],
     connectionKind: "gmail",
-    repairHref: "/connections",
+    repairHref: "/admin/connections",
     repairLabel: "Connections",
   },
   {
@@ -53,7 +53,7 @@ export const STREAM_SPECS: readonly StreamSpec[] = [
     laptopBound: false,
     graphSources: ["granola"],
     connectionKind: "meetings",
-    repairHref: "/connections",
+    repairHref: "/admin/connections",
     repairLabel: "Connections",
   },
   {
@@ -65,7 +65,7 @@ export const STREAM_SPECS: readonly StreamSpec[] = [
     laptopBound: false,
     graphSources: ["era"],
     connectionKind: "era",
-    repairHref: "/connections",
+    repairHref: "/admin/connections",
     repairLabel: "Connections",
   },
   {
@@ -77,7 +77,7 @@ export const STREAM_SPECS: readonly StreamSpec[] = [
     laptopBound: false,
     graphSources: ["oura"],
     connectionKind: "oura",
-    repairHref: "/connections",
+    repairHref: "/admin/connections",
     repairLabel: "Connections",
   },
   {
