@@ -1,7 +1,6 @@
 import { Suspense } from 'react'
 import { redirect } from 'next/navigation'
 import { cookies, headers } from 'next/headers'
-import { unstable_cache } from 'next/cache'
 import { auth } from '../auth'
 import { db } from '@life-os/db'
 import { LIFE_OS_APP_URLS, lifeOsAppUrl } from '@life-os/auth'
@@ -16,18 +15,12 @@ import AssistantPanel from '../components/AssistantPanel'
 import { greetingForHour } from '@/lib/daily'
 
 async function getWorkspaceId(email: string): Promise<string> {
-  return unstable_cache(
-    async () => {
-      const member = await db.workspaceMember.findFirst({
-        where: { user: { email }, status: 'active' },
-        select: { workspaceId: true },
-        orderBy: { createdAt: 'asc' },
-      })
-      return member?.workspaceId ?? 'default-workspace'
-    },
-    [`home-workspace:${email.toLocaleLowerCase()}`],
-    { revalidate: 300 },
-  )()
+  const member = await db.workspaceMember.findFirst({
+    where: { user: { email }, status: 'active' },
+    select: { workspaceId: true },
+    orderBy: { createdAt: 'asc' },
+  })
+  return member?.workspaceId ?? 'default-workspace'
 }
 
 export default function HomePage() {
@@ -168,7 +161,7 @@ async function HomeDataPanels({
         <EventSignalsWidget workspaceId={workspaceId} tz={tz} />
       </Suspense>
       <Suspense fallback={<WidgetSkeleton className="dashboard-nudges-card" />}>
-        <NudgesWidget workspaceId={workspaceId} personsUrl={personsUrl} />
+        <NudgesWidget workspaceId={workspaceId} personsUrl={personsUrl} tz={tz} />
       </Suspense>
       <Suspense fallback={<WidgetSkeleton className="dashboard-communications-card" />}>
         <CommunicationsReviewWidget workspaceId={workspaceId} personsUrl={personsUrl} />
