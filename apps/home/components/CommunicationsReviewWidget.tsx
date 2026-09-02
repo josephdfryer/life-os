@@ -1,5 +1,5 @@
 import { db } from "@life-os/db"
-import { cacheLife, unstable_cache } from "next/cache"
+import { unstable_cache } from "next/cache"
 import { groupCommunications } from "@/lib/communication-groups"
 import CommunicationsReview from "./CommunicationsReview"
 
@@ -10,11 +10,36 @@ export default async function CommunicationsReviewWidget({
   workspaceId: string
   personsUrl: string
 }) {
-  "use cache"
-  cacheLife({ stale: 300, revalidate: 30, expire: 86400 })
-  const groups = process.env.NODE_ENV === "production"
-    ? await getCachedCommunicationGroups(workspaceId)
-    : await loadCommunicationGroups(workspaceId)
+  let groups: Awaited<ReturnType<typeof loadCommunicationGroups>> = []
+  let failed = false
+
+  try {
+    groups = process.env.NODE_ENV === "production"
+      ? await getCachedCommunicationGroups(workspaceId)
+      : await loadCommunicationGroups(workspaceId)
+  } catch (error) {
+    console.error("[home] communications widget failed", error)
+    failed = true
+  }
+
+  if (failed) {
+    return (
+      <section className="communications-review dashboard-communications-card" aria-labelledby="communications-heading">
+        <div className="communications-heading">
+          <div>
+            <div className="quick-capture-eyebrow">Messages & email</div>
+            <h2 id="communications-heading">Review communications</h2>
+          </div>
+        </div>
+        <div className="capture-analysis-status">
+          Communications review is temporarily unavailable.
+          <a href={`${personsUrl}/inbox`} style={{ display: "block", marginTop: "10px", color: "var(--camel)" }}>
+            Open inbox →
+          </a>
+        </div>
+      </section>
+    )
+  }
 
   return (
     <CommunicationsReview
@@ -67,11 +92,13 @@ async function loadCommunicationGroups(workspaceId: string) {
   return groups
 }
 
-const getCachedCommunicationGroups = unstable_cache(
-  loadCommunicationGroups,
-  ['home-communications-read-model-v1'],
-  { revalidate: 30 },
-)
+function getCachedCommunicationGroups(workspaceId: string) {
+  return unstable_cache(
+    async () => loadCommunicationGroups(workspaceId),
+    ["home-communications-read-model-v2", workspaceId],
+    { revalidate: 30 },
+  )()
+}
 
 function uniqueExactPersonMatch(
   row: { contactName: string | null; contactEmail: string | null; contactPhone: string | null },

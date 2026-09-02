@@ -7,7 +7,9 @@ import type { NextConfig } from "next";
 import path from "path";
 
 const nextConfig: NextConfig = {
-  cacheComponents: true,
+  // Partial prerender + per-widget unstable_cache is enough for the dashboard.
+  // cacheComponents interacted badly with authenticated, cookie-driven pages
+  // (opaque mobile "server error" when a cached widget threw during streaming).
   outputFileTracingRoot: path.resolve(__dirname, "../.."),
   serverExternalPackages: ["pg"],
   turbopack: {
