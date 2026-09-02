@@ -1,8 +1,10 @@
 name: Calendar auto-sync
 
 # Keeps Google Calendar events fresh by pinging the events app's cron endpoint.
-# Vercel Hobby caps native crons at once/day, so we drive it from GitHub Actions
-# instead.
+# Vercel Pro now also runs `/api/cron/calendar-sync` every 15 minutes via
+# `apps/events/vercel.json`. This GitHub workflow stays as a backup because
+# GitHub's schedule is often delayed by hours under load — which is what left
+# Sightmachine's Today view stale.
 #
 # The endpoint is idempotent. On a connection's first runs it walks the whole
 # calendar unwindowed to earn a Google syncToken, parking a page cursor if it

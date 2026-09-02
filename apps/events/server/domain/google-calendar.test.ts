@@ -2,11 +2,14 @@ import assert from "node:assert/strict"
 import test from "node:test"
 import {
   isCalendarDbContention,
+  isCalendarBootstrapping,
+  isPrismaUniqueConstraint,
   mapPool,
   normalizeCalendarOccurrenceName,
   prioritizeCalendarConnections,
   sameCalendarOccurrence,
   walkEventPages,
+  walkRecentEventPages,
   withCalendarDbRetry,
 } from "./google-calendar-sync"
 
@@ -37,6 +40,47 @@ test("failed calendars sync before healthy ones so Sightmachine is not always la
   ]).map(connection => connection.calendarSummary)
 
   assert.deepEqual(ordered, ["jfryer@sightmachine.com", "Qin", "Fryer den", "JDF247"])
+})
+
+test("a bootstrapping calendar stays ahead of incremental ones even after a partial run", () => {
+  const ordered = prioritizeCalendarConnections([
+    {
+      calendarSummary: "JDF247",
+      lastError: null,
+      lastSyncedAt: new Date("2026-09-01T12:00:00Z"),
+      syncTokenEncrypted: "tok",
+      fullSyncPageToken: null,
+    },
+    {
+      calendarSummary: "jfryer@sightmachine.com",
+      lastError: null,
+      lastSyncedAt: new Date("2026-09-02T18:57:00Z"),
+      syncTokenEncrypted: null,
+      fullSyncPageToken: "PAGE12",
+    },
+    {
+      calendarSummary: "Qin",
+      lastError: null,
+      lastSyncedAt: new Date("2026-09-01T12:00:00Z"),
+      syncTokenEncrypted: "tok",
+      fullSyncPageToken: null,
+    },
+  ]).map(connection => connection.calendarSummary)
+
+  assert.deepEqual(ordered, ["jfryer@sightmachine.com", "JDF247", "Qin"])
+})
+
+test("isCalendarBootstrapping treats a parked cursor or missing token as in-progress", () => {
+  assert.equal(isCalendarBootstrapping({ fullSyncPageToken: "PAGE2", syncTokenEncrypted: null }), true)
+  assert.equal(isCalendarBootstrapping({ fullSyncPageToken: null, syncTokenEncrypted: null }), true)
+  assert.equal(isCalendarBootstrapping({ fullSyncPageToken: null, syncTokenEncrypted: "tok" }), false)
+  assert.equal(isCalendarBootstrapping({ lastError: null, lastSyncedAt: null, calendarSummary: "Qin" }), false)
+})
+
+test("unique constraint detection covers Prisma P2002 and Event.sourcePlanId failures", () => {
+  assert.equal(isPrismaUniqueConstraint({ code: "P2002", message: "Unique constraint failed" }), true)
+  assert.equal(isPrismaUniqueConstraint(new Error("Invalid `prisma.event.updateMany()` invocation:\n\nUnique constraint failed on the constraint: `Event_sourcePlanId_key`")), true)
+  assert.equal(isPrismaUniqueConstraint(new Error("Google Calendar events request failed (403)")), false)
 })
 
 test("mapPool preserves order with limited concurrency", async () => {
@@ -214,6 +258,48 @@ test("ingestFrom bounds history without ever filtering future events", async () 
     ["deleted-no-start", "far-future", "recent"],
     "history is bounded, the future never is, and cancellations always pass",
   )
+})
+
+test("the recent horizon walk is ordered by start time and uses a date window", async () => {
+  const timeMin = new Date("2026-09-01T00:00:00Z")
+  const timeMax = new Date("2026-09-16T00:00:00Z")
+  const google = fakeGoogle([{
+    page: { items: [{ id: "today-standup" }, { id: "today-plant-tour" }] },
+  }])
+  const collected: FakeEvent[] = []
+  const result = await walkRecentEventPages<FakeEvent>({
+    timeMin, timeMax,
+    deadline: Date.now() + 60_000, pageSize: 100, batchSize: 25,
+    fetchPage: google.fetchPage,
+    onBatch: async items => { collected.push(...items) },
+  })
+  const params = google.seen[0]
+  assert.equal(params.get("timeMin"), timeMin.toISOString())
+  assert.equal(params.get("timeMax"), timeMax.toISOString())
+  assert.equal(params.get("orderBy"), "startTime")
+  assert.equal(params.get("syncToken"), null)
+  assert.equal(result.truncated, false)
+  assert.deepEqual(collected.map(e => e.id), ["today-standup", "today-plant-tour"])
+})
+
+test("a truncated recent horizon still returns today's already-fetched page", async () => {
+  const google = fakeGoogle([
+    { page: { items: [{ id: "today-1" }, { id: "today-2" }], nextPageToken: "PAGE2" } },
+    { page: { items: [{ id: "next-week" }] } },
+  ])
+  const seen: string[] = []
+  let clock = 1000
+  const result = await walkRecentEventPages<FakeEvent>({
+    timeMin: new Date("2026-09-02T00:00:00Z"),
+    timeMax: new Date("2026-09-16T00:00:00Z"),
+    deadline: 1500, pageSize: 100, batchSize: 1,
+    now: () => (clock += 1000),
+    fetchPage: google.fetchPage,
+    onBatch: async items => { seen.push(...items.map(item => item.id)) },
+  })
+  assert.deepEqual(seen, ["today-1"])
+  assert.equal(result.truncated, true)
+  assert.equal(google.seen.length, 1)
 })
 
 test("calendar occurrence names normalize case and incidental spacing", () => {

@@ -53,8 +53,8 @@ monorepo (`next-server.js.nft.json` is consumed by the adapter).
 npm run deploy -- --only events
 ```
 
-`apps/events/vercel.json` holds the granola-sync cron. Do not add a root
-`vercel.json` — it overrides this file and can drop the cron. See
+`apps/events/vercel.json` holds the granola-sync and calendar-sync crons. Do not add a root
+`vercel.json` — it overrides this file and can drop the crons. See
 `docs/DEPLOY_RUNBOOK.md`.
 
 Add Google OAuth callback: `https://events.lacollecteur.com/api/calendar/google/callback`

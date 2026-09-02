@@ -28,14 +28,19 @@ for (const relative of vestigial) {
 }
 
 const cronFiles = {
-  "apps/persons/vercel.json": { path: "/api/cron/theory-refresh", schedule: "0 10 * * *" },
-  "apps/events/vercel.json": { path: "/api/cron/granola-sync", schedule: "0 14 * * *" },
+  "apps/persons/vercel.json": [
+    { path: "/api/cron/theory-refresh", schedule: "0 10 * * *" },
+  ],
+  "apps/events/vercel.json": [
+    { path: "/api/cron/granola-sync", schedule: "0 14 * * *" },
+    { path: "/api/cron/calendar-sync", schedule: "*/15 * * * *" },
+  ],
 }
 
-for (const [relative, cron] of Object.entries(cronFiles)) {
+for (const [relative, required] of Object.entries(cronFiles)) {
   const absolute = join(root, relative)
   if (!existsSync(absolute)) {
-    problems.push(`${relative} is missing. It holds the production cron ${cron.path}.`)
+    problems.push(`${relative} is missing. It holds production crons.`)
     continue
   }
   let parsed
@@ -46,9 +51,11 @@ for (const [relative, cron] of Object.entries(cronFiles)) {
     continue
   }
   const crons = Array.isArray(parsed?.crons) ? parsed.crons : []
-  const found = crons.some(item => item.path === cron.path && item.schedule === cron.schedule)
-  if (!found) {
-    problems.push(`${relative} must define cron ${cron.path} (${cron.schedule}).`)
+  for (const cron of required) {
+    const found = crons.some(item => item.path === cron.path && item.schedule === cron.schedule)
+    if (!found) {
+      problems.push(`${relative} must define cron ${cron.path} (${cron.schedule}).`)
+    }
   }
 }
 
