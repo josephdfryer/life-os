@@ -72,6 +72,18 @@ test("parseDeployArgs defaults to apply and honors --only / --dry-run", () => {
   assert.equal(parseDeployArgs(["--before", "abc"]).before, "abc")
 })
 
+test("parseDeployArgs configures the guarded fast lane", () => {
+  const options = parseDeployArgs(["--fast", "home"])
+  assert.equal(options.fast, "home")
+  assert.equal(options.only, "home")
+  assert.equal(options.allowUnpushed, true)
+  assert.equal(options.skipCi, true)
+  assert.throws(() => parseDeployArgs(["--fast"]), /requires one app name/)
+  assert.throws(() => parseDeployArgs(["--fast", "home", "--skip-smoke"]), /cannot be combined/)
+  assert.throws(() => parseDeployArgs(["--fast", "home", "--allow-dirty"]), /cannot be combined/)
+  assert.throws(() => parseDeployArgs(["--fast", "home", "--before", "abc"]), /cannot be combined/)
+})
+
 test("selectProjects resolves filter, app, and vercel names", () => {
   assert.equal(selectProjects().length, VERCEL_PROJECTS.length)
   assert.equal(findProject("persons")?.vercelName, "persons")
