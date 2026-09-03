@@ -30,44 +30,44 @@ export default function ScheduleList({
   tz: string
 }) {
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: "32px" }}>
       {events.map((event) => {
         const uniqueAttendees = event.attendees.slice(0, 3)
         const quiet = event.declaredAttendance === "not_going" && event.phase === "future"
         const title = event.href ? (
-          <a href={event.href} style={{ fontWeight: 500, lineHeight: 1.4, color: "inherit", textDecoration: "none", opacity: quiet ? 0.72 : 1 }}>
+          <a href={event.href} style={{ fontWeight: 500, lineHeight: 1.5, color: "inherit", textDecoration: "none", opacity: quiet ? 0.72 : 1 }}>
             {event.name}
           </a>
         ) : (
-          <span style={{ fontWeight: 500, lineHeight: 1.4, opacity: quiet ? 0.72 : 1 }}>{event.name}</span>
+          <span style={{ fontWeight: 500, lineHeight: 1.5, opacity: quiet ? 0.72 : 1 }}>{event.name}</span>
         )
 
         return (
-          <div key={event.id} style={{ display: "flex", gap: "20px", alignItems: "flex-start" }}>
+          <div key={event.id} style={{ display: "flex", gap: "16px", alignItems: "flex-start" }}>
             <div
               style={{
                 fontFamily: "var(--font-body)",
                 fontSize: "12px",
                 color: "var(--ink-3)",
-                paddingTop: "3px",
-                minWidth: "68px",
+                paddingTop: "4px",
+                minWidth: "64px",
                 flexShrink: 0,
               }}
             >
               {formatScheduleTime(new Date(event.start), tz)}
             </div>
             <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap", marginBottom: "6px" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap", marginBottom: "8px" }}>
                 {title}
                 {event.scheduled && <span style={scheduledBadge}>Scheduled</span>}
               </div>
               {event.calendars.length > 0 && (
-                <div style={{ fontSize: "12px", color: "var(--ink-3)", marginTop: "6px", lineHeight: 1.5 }}>
+                <div style={{ fontSize: "12px", color: "var(--ink-3)", marginTop: "8px", lineHeight: 1.6 }}>
                   {event.calendars.join(" · ")}
                 </div>
               )}
               {uniqueAttendees.length > 0 && (
-                <div style={{ fontSize: "12px", color: "var(--ink-3)", marginTop: "6px", lineHeight: 1.5 }}>
+                <div style={{ fontSize: "12px", color: "var(--ink-3)", marginTop: "8px", lineHeight: 1.6 }}>
                   with {uniqueAttendees.map((person, i) => (
                     <span key={person.id}>
                       {i > 0 && ", "}
@@ -79,21 +79,23 @@ export default function ScheduleList({
                 </div>
               )}
               {event.place && (
-                <div style={{ fontSize: "12px", color: "var(--ink-3)", marginTop: "6px", lineHeight: 1.5 }}>
+                <div style={{ fontSize: "12px", color: "var(--ink-3)", marginTop: "8px", lineHeight: 1.6 }}>
                   {event.place.name}
                 </div>
               )}
             </div>
-            <AttendanceControls
-              planId={event.planId}
-              eventId={event.eventId}
-              phase={event.phase}
-              declared={event.declaredAttendance}
-              reconciliationStatus={event.reconciliationStatus}
-              tension={event.tension}
-              endpointFor={(planId) => `/api/calendar/plans/${planId}/attendance`}
-              notEventEndpointFor={(eventId) => `/api/events/${eventId}/not-event`}
-            />
+            <div style={{ marginLeft: "auto", flexShrink: 0 }}>
+              <AttendanceControls
+                planId={event.planId}
+                eventId={event.eventId}
+                phase={event.phase}
+                declared={event.declaredAttendance}
+                reconciliationStatus={event.reconciliationStatus}
+                tension={event.tension}
+                endpointFor={(planId) => `/api/calendar/plans/${planId}/attendance`}
+                notEventEndpointFor={(eventId) => `/api/events/${eventId}/not-event`}
+              />
+            </div>
           </div>
         )
       })}

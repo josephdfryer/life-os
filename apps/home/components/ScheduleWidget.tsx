@@ -88,7 +88,7 @@ const card: React.CSSProperties = {
   background: 'rgba(247, 244, 238, 0.045)',
   border: '1px solid rgba(196, 165, 116, 0.18)',
   borderRadius: 'var(--radius-lg)',
-  padding: '32px',
+  padding: '28px 24px',
 }
 
 const heading: React.CSSProperties = {
