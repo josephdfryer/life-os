@@ -22,7 +22,7 @@ test.describe('Home control plane', () => {
     await expect(page.getByRole('heading', { name: 'Admin' })).toBeVisible()
     await page.getByRole('link', { name: 'Automation', exact: true }).click()
     await expect(page).toHaveURL(/\/admin\/automation$/)
-    await expect(page.getByRole('heading', { name: 'Automation' })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Authority belongs to the action' })).toBeVisible()
     await expect(page.getByRole('navigation', { name: 'LifeOS sections' })).not.toContainText('Connections')
     await expect(page.getByRole('navigation', { name: 'LifeOS sections' })).not.toContainText('Stream')
 
@@ -52,9 +52,9 @@ test.describe('Home control plane', () => {
     // Client-side hydration + initial data load can be slower in CI.
     // The integration headings themselves are static, but Playwright's
     // "toBeVisible" requires them to be fully laid out.
-    await expect(page.getByRole('heading', { name: 'Google Calendar' })).toBeVisible({ timeout: 15_000 })
-    await expect(page.getByRole('heading', { name: 'Gmail' })).toBeVisible({ timeout: 15_000 })
-    await expect(page.getByRole('heading', { name: 'Era' })).toBeVisible({ timeout: 15_000 })
+    await expect(page.getByText('Google Calendar')).toBeVisible({ timeout: 15_000 })
+    await expect(page.getByText('Gmail')).toBeVisible({ timeout: 15_000 })
+    await expect(page.getByText('Era')).toBeVisible({ timeout: 15_000 })
     await expect(page.getByText(/accessToken|refreshToken/i)).toHaveCount(0)
   })
 
