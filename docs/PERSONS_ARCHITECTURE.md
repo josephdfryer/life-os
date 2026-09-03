@@ -366,7 +366,7 @@ flowchart TD
   Trace --> Interaction
 ```
 
-Plain English: Google Calendar remains the source of truth, and the Events app exclusively owns connection, synchronization, and confirmation. The duplicate Persons Calendar routes have been removed; Home’s Connections hub leads to Events settings. The canonical Events sync creates calendar-backed Plans and expected Person references for people who have not declined; only Home confirmation creates Events and attendee Interactions, and declined invitees are excluded from both. This prevents two apps from interpreting the same provider occurrence differently.
+Plain English: Google Calendar OAuth now starts from Home (`/admin/connections`), while Events still owns calendar selection, synchronization, and confirmation at `/settings/calendar`. The canonical Events sync creates calendar-backed Plans and expected Person references for people who have not declined; only Home confirmation creates Events and attendee Interactions, and declined invitees are excluded from both. This prevents two apps from interpreting the same provider occurrence differently.
 
 Copies of one occurrence across selected calendars converge before confirmation. A matching Google `iCalUID` at the same occurrence time is definitive; otherwise the sync treats an exact normalized title within five minutes as the same occurrence. The shared `Plan` becomes one canonical `Event`, while every source remains separately auditable through its own `CalendarEventLink`. The Events timeline and detail view name each calendar that carried the occurrence. Home Today and Events Today/Upcoming read the same schedule: confirmed Events plus unreconciled Google Calendar Plans, using the owner's timezone day rather than the server's. Same-name items at materially different times remain separate, so recurring meetings are not collapsed into one historical Event. Cancelling one copy does not cancel the shared Plan while another calendar still carries it.
 
@@ -379,7 +379,7 @@ The Calendar settings screen also has a combined sync trace. It reads recent `ca
 Runtime configuration:
 
 - `GOOGLE_CALENDAR_CLIENT_ID` and `GOOGLE_CALENDAR_CLIENT_SECRET`, or the existing `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` if that OAuth client has Calendar API access.
-- The Google OAuth redirect URI must include `/api/calendar/google/callback` on the deployed app origin.
+- The Google OAuth redirect URI must be registered on Home: `/admin/connections/google/calendar/callback` (pin with `GOOGLE_CALENDAR_REDIRECT_URI`).
 - `GOOGLE_CALENDAR_REDIRECT_URI` can pin the callback to one exact production URL, avoiding mismatches when someone opens a preview deployment or alternate Vercel alias.
 - The first sync reads the selected bounded window around the present; later syncs use Google's sync token when available.
 
@@ -391,7 +391,7 @@ Attendees are linked to existing People only when one exact normalized email mat
 
 On a Person profile, a Granola meeting Interaction reads its recap from that linked canonical Event, hides connector bookkeeping markers, and links to the Events detail page for the complete summary and transcript. The Interaction still owns person-specific context such as emotional weight, outcome, and follow-up actions; the shared meeting evidence is not copied separately for every attendee.
 
-The Home Connections hub exposes the unified `Connection` row (`kind=meetings`, `provider=granola`) and routes management to Events `/settings/granola`. The encrypted API key never appears in the read-side Connections response. Daily sync is a reconciliation import: all cursors are followed, edited notes update provider-owned fields, and user-written Event notes are preserved.
+The Home Connections hub (`/admin/connections`) exposes the unified `Connection` row (`kind=meetings`, `provider=granola`) and connects inline via `POST /v1/connections/granola`. Events still owns sync/backfill routes and `/settings/granola` for manual operations. The encrypted API key never appears in the read-side Connections response. Daily sync is a reconciliation import: all cursors are followed, edited notes update provider-owned fields, and user-written Event notes are preserved.
 
 ### 3d. Gmail sync
 
@@ -423,7 +423,7 @@ The same Gmail sync can also be launched from `/import/interactions` as "Import 
 Runtime configuration:
 
 - `GOOGLE_GMAIL_CLIENT_ID` and `GOOGLE_GMAIL_CLIENT_SECRET`, or the existing `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` if that OAuth client has Gmail API access.
-- The Google OAuth redirect URI must include `/api/gmail/google/callback` on the deployed app origin.
+- The Google OAuth redirect URI must be registered on Home: `/admin/connections/google/gmail/callback` (pin with `GOOGLE_GMAIL_REDIRECT_URI`).
 - `GOOGLE_GMAIL_REDIRECT_URI` can pin the callback to one exact production URL.
 - People import from Google Contacts uses the same Gmail connection but also needs the Google People API enabled and the `https://www.googleapis.com/auth/contacts.readonly` scope. Older Gmail connections that only granted Gmail read access must reconnect before `/import/people` can pull Google Contacts.
 
@@ -446,7 +446,7 @@ Plain English: Apple Health never receives Oura Readiness, Sleep Score, Activity
 Runtime configuration:
 
 - `OURA_CLIENT_ID` and `OURA_CLIENT_SECRET` from the Oura API application at cloud.ouraring.com/oauth/applications.
-- Redirect URI on Home: `/connections/oura/callback` (pin with `OURA_REDIRECT_URI`).
+- Redirect URI on Home: `/admin/connections/oura/callback` (pin with `OURA_REDIRECT_URI`).
 - Webhook callback on the API: `/v1/webhooks/oura` (pin with `OURA_WEBHOOK_CALLBACK_URL` and `OURA_WEBHOOK_VERIFICATION_TOKEN`).
 
 ### 3d. Krisp transcript processing
@@ -803,8 +803,7 @@ from `Connection`, `Device`/`DeviceSource`, and the latest graph arrival
 (`Interaction`, `StagedInteraction`, `DeviceIngestItem`, `State` `createdAt`)
 so a connected Gmail or Era account that is not landing records in this
 workspace is visible. It also labels the signed-in workspace and whether
-`DATABASE_URL` points at Neon. Older `/admin?tab=system` and
-`/admin?tab=streams` URLs redirect to `/admin/health`. Its
+`DATABASE_URL` points at Neon. Its
 server-only `/api/admin/*` proxy forwards a strict mutation allowlist to
 `apps/api`'s canonical `/v1/access/*` commands. Persons `/admin` is now only a
 redirect to Home, and the duplicate Persons `/api/admin/*` routes and tab
@@ -1113,9 +1112,8 @@ The architecture goal is:
 - APIs make everything programmable later.
 
 The old Persons Admin controller and its per-tab components no longer exist.
-Home is the human-facing control plane: `/admin` manages access and credentials,
-`/admin/health` is system health (streams and the event spine), `/automation`
-manages rules, and `/connections` is the account connect/disconnect surface
+Home is the human-facing control plane: `/admin` is the overview, `/admin/health` is system health (streams and the event spine), `/admin/automation`
+manages rules, and `/admin/connections` is the account connect/disconnect surface
 without exposing encrypted tokens to the browser. Gmail's
 existing `GmailConnection` remains the row of truth for message-link foreign
 keys, while every OAuth connect, token refresh, successful sync, and failed
@@ -1180,8 +1178,8 @@ flowchart LR
 - Data Cleaning: `/people/clean` highlights People records missing email, phone, names, or broader context, and supports editing or deleting those People from the cleanup view.
 - Inbox create-and-accept: an unmatched staged interaction can create a new Person and attach the interaction in one review action.
 - Workspace tenancy foundation: approved emails can sign in without inheriting Joseph's data, core browser/API paths carry `workspaceId`, existing data is preserved in `default-workspace`, and API keys are scoped to the workspace that created them.
-- Google Calendar foundation: the Connections hub leads to the canonical Events-owned Calendar flow, which syncs read-only events and creates Interactions for attendees matched to existing People by email.
-- Gmail foundation: the Connections hub exposes Gmail health and connect/reconnect entry points; sync remains read-only and stages unmatched mail only when explicitly requested.
+- Google Calendar foundation: OAuth starts from Home `/admin/connections`; calendar selection and sync remain in Events `/settings/calendar`.
+- Gmail foundation: OAuth starts from Home `/admin/connections`; sync remains read-only in Persons and stages unmatched mail only when explicitly requested.
 - Google Contacts import: `/import/persons` can pull People candidates from the connected Gmail account's Google Contacts and review them with the same create/update/skip flow as vCard and CSV imports.
 - Spreadsheet people import: `/api/import/contacts` accepts a bounded `.xlsx` upload, scans worksheets for a person table, maps standard contact fields, and preserves otherwise unmapped row values in the candidate's Notes. The same `/import/persons` review flow controls create/update/skip, supports people who use a single name without inventing a surname, and appends new imported notes to matched people rather than overwriting existing notes. Failed create or update requests stop on the review screen and show the API error; they never advance to a false completion state.
 - Import duplicate safety: before file or Google Contacts import is enabled, `/import/persons` loads every page of the workspace's lightweight Persons list in 200-record batches. Matching never runs against a partial list; a failed page disables import and presents a retry action.
@@ -1191,7 +1189,7 @@ flowchart LR
 - Health Auto Export sync: `scripts/health-sync.ts` attaches Apple Health data to a self Person as States (daily metrics) and Notes (daily digests), and workouts as Events — not Interactions, so the relationship-tracking Interaction log stays uncluttered. The Person detail page surfaces this via a Health card (`apps/persons/server/domain/health.ts`).
 - Oura daily scores: Home Connections starts Oura OAuth (`daily` scope only). Encrypted tokens live on `Connection` (`kind=oura`). A 35-day backfill and signed webhooks write one provenance Note plus `source=oura` States per day. HealthKit measurements stay on their own Notes. Level Up readiness assembly can read the scores; it does not yet change workout prescriptions.
 - Control-plane spine: `apps/api` (canonical `/v1`, no UI, API-key-only) and three new shared packages — `packages/domain` (shared write commands: `appendDailySourceInteraction`, `acceptStagedInteraction`, `createReviewItem`, `publishGraphEvent`), `packages/automation` (the rules engine, versioned + causation-capped + authority-tiered), `packages/intelligence` (renamed from `packages/theory`; adds workspace-scoped `LifeModelSnapshot` alongside the existing person-scoped Theory). `GraphEvent` is the new append-only event ledger every shared command publishes to. `ReviewItem` unifies all four review queues into one federated inbox `apps/home` reads. `scripts/imessage-sync.ts` and `scripts/whatsapp-sync.ts` moved off their own hand-rolled day-bucket-append/rules-fork logic onto the shared commands.
-- Home is now the control plane: the chronological Stream feed lives under Admin (`/admin/stream`, over `apps/api`'s `/v1/stream`), the federated Inbox, and Intelligence/Automation surfaces all live in `apps/home`, reading from the shared packages rather than each app maintaining its own copy. `/stream` redirects there.
+- Home is now the control plane: the chronological Stream feed lives under Admin (`/admin/stream`, over `apps/api`'s `/v1/stream`), the federated Inbox, and Intelligence/Automation surfaces all live in `apps/home`, reading from the shared packages rather than each app maintaining its own copy.
 - Theory of Person is AI-backed: `synthesizeTheoryOfPerson` (`packages/intelligence/src/synthesize.ts`) now makes a real model call via the same Vercel AI Gateway pattern `packages/domain/note-suggestions.ts` proved out — grounded in real evidence text (`src/evidence.ts`, bounded/recent, not just IDs), tracked per-run in `TheoryAnalysisRun` (status, tokens, cost — no unique-by-promptVersion caching, since a person's evidence changes and "regenerate" must always run fresh). Reuses whichever `AiProviderCredential` is already configured for `vercel-ai-gateway` in the workspace (credentials are workspace+provider scoped, not app-scoped) — if none exists yet, surfaces a clear configuration error rather than silently failing. Runs from an explicit click in Persons (`/persons/[id]/theory`) or the Persons nightly budgeted cron, never from a passive page load.
 - Theory of Person is folded into Persons. The person page has a Theory card; the full reading is `/persons/[id]/theory`; graph notes are `/persons/notes`. `apps/theory-of` was removed entirely — no redirect shell, no Vercel project — and Context is no longer a separate item in the app switcher.
 - Whole-life synthesis is AI-backed only behind an explicit Home confirmation and canonical `POST /v1/life-model/regenerate`; passive page loads retain the free deterministic preview. `GET /v1/life-model` and `/history` expose saved versions, while `POST /v1/life-model/claims/:claimId/feedback` records corrections or dismissals. Home keeps the control-plane API key server-side through its allowlisted proxy.

@@ -1,6 +1,9 @@
 "use client"
 
 import { useState } from "react"
+import { lifeOsAppUrl } from "@life-os/auth/urls"
+
+const HOME_CONNECTIONS_URL = `${lifeOsAppUrl("home", "http://localhost:3003")}/admin/connections`
 
 type GranolaStatus = {
   connected: boolean
@@ -17,8 +20,7 @@ type GranolaStatus = {
 
 export default function GranolaSettingsClient({ initialStatus }: { initialStatus: GranolaStatus }) {
   const [status, setStatus] = useState(initialStatus)
-  const [apiKey, setApiKey] = useState("")
-  const [busy, setBusy] = useState<"connect" | "sync" | "disconnect" | null>(null)
+  const [busy, setBusy] = useState<"sync" | "disconnect" | null>(null)
   const [message, setMessage] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
 
@@ -27,29 +29,6 @@ export default function GranolaSettingsClient({ initialStatus }: { initialStatus
     const data = await response.json()
     if (!response.ok) throw new Error(readError(data, "Could not load Granola status"))
     setStatus(data)
-  }
-
-  async function connect() {
-    if (!apiKey.trim()) return
-    setBusy("connect")
-    setError(null)
-    setMessage(null)
-    try {
-      const response = await fetch("/api/granola/connect", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ apiKey }),
-      })
-      const data = await response.json()
-      if (!response.ok) throw new Error(readError(data, "Could not connect Granola"))
-      setApiKey("")
-      setMessage("Connected. Run the initial backfill to import every accessible meeting.")
-      await refreshStatus()
-    } catch (caught) {
-      setError(caught instanceof Error ? caught.message : "Could not connect Granola")
-    } finally {
-      setBusy(null)
-    }
   }
 
   async function sync(fullBackfill: boolean) {
@@ -99,7 +78,7 @@ export default function GranolaSettingsClient({ initialStatus }: { initialStatus
         <div style={eyebrowStyle}>Connection</div>
         <h2 style={headingStyle}>{status.connected ? "Granola is connected" : "Connect Granola"}</h2>
         <p style={copyStyle}>
-          LifeOS reads meeting notes from your active Granola workspace. The API key is encrypted at rest and is never sent back to this page.
+          LifeOS reads meeting notes from your active Granola workspace. Connect and rotate API keys in Home Admin → Connections.
         </p>
 
         {status.connected ? (
@@ -111,21 +90,7 @@ export default function GranolaSettingsClient({ initialStatus }: { initialStatus
           </div>
         ) : (
           <div style={{ marginTop: "20px" }}>
-            <label htmlFor="granola-api-key" style={labelStyle}>Rotated Granola API key</label>
-            <input
-              id="granola-api-key"
-              type="password"
-              value={apiKey}
-              onChange={(event) => setApiKey(event.target.value)}
-              autoComplete="off"
-              spellCheck={false}
-              placeholder="grn_…"
-              style={inputStyle}
-            />
-            <p style={helpStyle}>Revoke the key previously pasted into chat, then enter a newly generated key here.</p>
-            <button type="button" onClick={connect} disabled={busy !== null || !apiKey.trim()} style={primaryButtonStyle}>
-              {busy === "connect" ? "Validating…" : "Connect securely"}
-            </button>
+            <a href={HOME_CONNECTIONS_URL} style={primaryButtonStyle}>Connect in Home Admin</a>
           </div>
         )}
       </section>
@@ -172,10 +137,7 @@ const panelStyle: React.CSSProperties = { background: "var(--surface)", border: 
 const eyebrowStyle: React.CSSProperties = { color: "var(--cognac)", fontSize: "11px", fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase" }
 const headingStyle: React.CSSProperties = { fontFamily: "var(--font-display)", fontSize: "22px", fontWeight: 500, margin: "5px 0 8px" }
 const copyStyle: React.CSSProperties = { color: "var(--ink-3)", fontSize: "13px", lineHeight: 1.65, margin: 0, maxWidth: "620px" }
-const labelStyle: React.CSSProperties = { display: "block", fontSize: "12px", color: "var(--ink-2)", marginBottom: "7px" }
-const inputStyle: React.CSSProperties = { width: "100%", padding: "11px 12px", borderRadius: "var(--radius-control)", border: "1px solid var(--border)", background: "var(--bg)", color: "var(--ink)", fontFamily: "var(--font-body)", fontSize: "14px", outline: "none" }
-const helpStyle: React.CSSProperties = { color: "var(--ink-4)", fontSize: "11px", margin: "7px 0 14px" }
-const primaryButtonStyle: React.CSSProperties = { border: 0, borderRadius: "var(--radius-pill)", background: "var(--cognac)", color: "white", padding: "9px 16px", font: "inherit", fontSize: "12px", cursor: "pointer" }
+const primaryButtonStyle: React.CSSProperties = { display: "inline-block", border: 0, borderRadius: "var(--radius-pill)", background: "var(--cognac)", color: "white", padding: "9px 16px", font: "inherit", fontSize: "12px", cursor: "pointer", textDecoration: "none" }
 const secondaryButtonStyle: React.CSSProperties = { ...primaryButtonStyle, background: "var(--surface)", color: "var(--cognac-deep)", border: "1px solid var(--cognac)" }
 const quietButtonStyle: React.CSSProperties = { ...primaryButtonStyle, background: "transparent", color: "var(--ink-4)", border: "1px solid var(--border)" }
 const errorStyle: React.CSSProperties = { border: "1px solid var(--danger)", background: "var(--danger-soft)", color: "var(--danger)", borderRadius: "var(--radius-control)", padding: "12px 14px", fontSize: "12px" }

@@ -164,9 +164,11 @@ export default function AssistantPanel() {
         {messages.map(message => (
           <div
             key={message.id}
+            className={`assistant-message assistant-message--${message.role}`}
             style={{
               alignSelf: message.role === "user" ? "flex-end" : "flex-start",
-              maxWidth: "85%",
+              maxWidth: "min(85%, 100%)",
+              minWidth: 0,
               padding: "10px 14px",
               borderRadius: message.role === "user" ? "14px 14px 4px 14px" : "14px 14px 14px 4px",
               background: message.role === "user" ? "var(--camel)" : "rgba(247, 244, 238, 0.06)",
@@ -175,6 +177,7 @@ export default function AssistantPanel() {
               lineHeight: 1.6,
               whiteSpace: "pre-wrap",
               overflowWrap: "anywhere",
+              wordBreak: "break-word",
             }}
           >
             {message.content}

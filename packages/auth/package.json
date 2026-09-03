@@ -7,7 +7,8 @@
   "types": "./index.ts",
   "exports": {
     ".": "./index.ts",
-    "./client": "./client.tsx"
+    "./client": "./client.tsx",
+    "./urls": "./urls.ts"
   },
   "dependencies": {
     "@life-os/db": "*",

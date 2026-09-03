@@ -43,7 +43,7 @@ async function main() {
   }
 
   const origin = "http://localhost:3100"
-  const authUrl = gmailAuthUrl(actor, origin, "/connections")
+  const authUrl = gmailAuthUrl(actor, origin, "/admin/connections")
   const state = new URL(authUrl).searchParams.get("state")
   assert.ok(state)
   const callback = await handleGmailCallback({ code: "fixture-code", state, origin })

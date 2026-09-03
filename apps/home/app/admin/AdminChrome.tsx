@@ -1,26 +1,58 @@
 import type { ReactNode } from "react"
+import type { AdminCapabilities } from "@/lib/admin-access"
 
-export type AdminTab = "overview" | "stream" | "health" | "api-keys" | "access" | "workspace" | "audit"
+export type AdminTab =
+  | "overview"
+  | "connections"
+  | "health"
+  | "stream"
+  | "automation"
+  | "access"
+  | "api-keys"
+  | "workspace"
+  | "audit"
 
-const ADMIN_TABS: Array<{ id: AdminTab; label: string; href: string }> = [
-  { id: "overview", label: "Overview", href: "/admin" },
-  { id: "stream", label: "Stream", href: "/admin/stream" },
-  { id: "health", label: "System health", href: "/admin/health" },
-  { id: "api-keys", label: "API keys", href: "/admin?tab=api-keys" },
-  { id: "access", label: "Access", href: "/admin?tab=access" },
-  { id: "workspace", label: "Workspace", href: "/admin?tab=workspace" },
-  { id: "audit", label: "Audit log", href: "/admin?tab=audit" },
+const ADMIN_TAB_GROUPS: Array<{
+  label: string
+  tabs: Array<{ id: AdminTab; label: string; href: string }>
+}> = [
+  {
+    label: "Data",
+    tabs: [
+      { id: "overview", label: "Overview", href: "/admin" },
+      { id: "connections", label: "Connections", href: "/admin/connections" },
+      { id: "health", label: "System health", href: "/admin/health" },
+      { id: "stream", label: "Stream", href: "/admin/stream" },
+    ],
+  },
+  {
+    label: "Control",
+    tabs: [
+      { id: "automation", label: "Automation", href: "/admin/automation" },
+      { id: "access", label: "Access", href: "/admin/access" },
+      { id: "api-keys", label: "API keys", href: "/admin/api-keys" },
+      { id: "workspace", label: "Workspace", href: "/admin/workspace" },
+      { id: "audit", label: "Audit log", href: "/admin/audit" },
+    ],
+  },
 ]
 
 export function AdminChrome({
   tab,
   children,
-  intro = "Access, credentials, audit, and system health — every stream, last data, and the event spine.",
+  intro = "Connections, credentials, automation, audit, and system health — every stream, last data, and the event spine.",
+  capabilities,
 }: {
   tab: AdminTab
   children: ReactNode
   intro?: string
+  capabilities?: AdminCapabilities | null
 }) {
+  const visibleTabs = ADMIN_TAB_GROUPS.map(group => ({
+    ...group,
+    tabs: group.tabs.filter(item => isTabVisible(item.id, capabilities)),
+  })).filter(group => group.tabs.length > 0)
+
   return (
     <main className="stream-page">
       <div className="stream-container">
@@ -28,10 +60,15 @@ export function AdminChrome({
         <h1 className="stream-heading-title">Admin</h1>
         <p className="stream-intro">{intro}</p>
         <nav className="admin-tabs" aria-label="Admin tabs">
-          {ADMIN_TABS.map(item => (
-            <a key={item.id} className={tab === item.id ? "admin-tab-active" : ""} href={item.href}>
-              {item.label}
-            </a>
+          {visibleTabs.map(group => (
+            <div className="admin-tab-group" key={group.label}>
+              <span className="admin-tab-group-label">{group.label}</span>
+              {group.tabs.map(item => (
+                <a key={item.id} className={tab === item.id ? "admin-tab-active" : ""} href={item.href}>
+                  {item.label}
+                </a>
+              ))}
+            </div>
           ))}
         </nav>
         {children}
@@ -50,6 +87,15 @@ export function AdminFallback() {
       </div>
     </main>
   )
+}
+
+function isTabVisible(tab: AdminTab, capabilities?: AdminCapabilities | null) {
+  if (!capabilities) return tab === "overview" || tab === "connections" || tab === "health" || tab === "stream"
+  if (tab === "automation") return capabilities.automation
+  if (tab === "access") return capabilities.access
+  if (tab === "api-keys") return capabilities.apiKeys
+  if (tab === "workspace" || tab === "audit") return capabilities.workspace || capabilities.audit
+  return true
 }
 
 export function AdminBreadcrumb({ items }: { items: Array<{ href?: string; label: string }> }) {

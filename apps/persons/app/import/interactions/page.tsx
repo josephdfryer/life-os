@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from "react"
 import { useRouter } from "next/navigation"
+import { lifeOsAppUrl } from "@life-os/auth/urls"
 import ProcessingState from "@/components/import/ProcessingState"
 import ResultCard from "@/components/import/ResultCard"
 import type { ImportedPerson } from "@/types"
@@ -29,6 +30,7 @@ const GMAIL_BACKFILL_OPTIONS = [
   { value: "3650", label: "Past 10 years" },
   { value: "36500", label: "All time" },
 ] as const
+const GMAIL_CONNECT_URL = `${lifeOsAppUrl("home", "http://localhost:3003")}/admin/connections/google/gmail/connect`
 
 export default function ImportInteractionsPage() {
   const router = useRouter()
@@ -259,7 +261,7 @@ export default function ImportInteractionsPage() {
                   </div>
                 </div>
                 <a
-                  href="/api/gmail/google/connect?returnTo=/import/interactions"
+                  href={GMAIL_CONNECT_URL}
                   style={{ padding: "8px 11px", border: "1px solid var(--border)", borderRadius: "7px", color: "var(--ink-2)", textDecoration: "none", fontSize: "12px", whiteSpace: "nowrap" }}
                 >
                   Connect Gmail

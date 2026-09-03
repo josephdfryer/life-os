@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
-import { workspaceForHomeRequest } from "@/lib/request-access"
+import { ADMIN_PROXY_CONFIG, proxyToLifeOsApi } from "@/lib/life-os-api-proxy"
 
 type Params = { params: Promise<{ path: string[] }> }
 type Method = "POST" | "PATCH"
@@ -13,33 +13,16 @@ export async function PATCH(request: NextRequest, context: Params) {
 }
 
 async function proxyAccess(request: NextRequest, { params }: Params, method: Method) {
-  const baseUrl = process.env.LIFE_OS_API_URL?.trim()
-  const apiKey = process.env.PERSONS_API_KEY?.trim()
-  if (!baseUrl || !apiKey) return error("admin_not_configured", "The shared access service is not configured yet.", 503)
-
-  // See connections proxy's identical comment: the shared key is
-  // workspace-fixed, so admin mutations (approve an email, create an API
-  // key, suspend a workspace) must be pinned to the current session's own
-  // workspace, not wherever the key itself belongs.
-  const workspaceId = await workspaceForHomeRequest()
-  if (!workspaceId) return error("unauthorized", "Sign in required.", 401)
-
   const pathname = (await params).path.join("/")
-  if (!isAllowed(method, pathname)) return error("not_found", "Admin endpoint not found.", 404)
-
-  const target = new URL(`/v1/access/${pathname}`, baseUrl)
-  try {
-    const response = await fetch(target, {
-      method,
-      body: await request.text(),
-      headers: { accept: "application/json", "content-type": "application/json", "x-api-key": apiKey, "x-workspace-override": workspaceId },
-      cache: "no-store",
-    })
-    if (response.status === 204) return new NextResponse(null, { status: 204 })
-    return NextResponse.json(await response.json(), { status: response.status })
-  } catch {
-    return error("admin_unavailable", "The shared access service is temporarily unavailable.", 502)
+  if (!isAllowed(method, pathname)) {
+    return NextResponse.json({ error: { code: "not_found", message: "Admin endpoint not found." } }, { status: 404 })
   }
+
+  return proxyToLifeOsApi(request, `/v1/access/${pathname}`, {
+    method,
+    config: ADMIN_PROXY_CONFIG,
+    body: await request.text(),
+  })
 }
 
 export function isAllowed(method: Method, pathname: string) {
@@ -49,8 +32,4 @@ export function isAllowed(method: Method, pathname: string) {
     || /^users\/[^/]+\/roles$/.test(pathname)
     || /^approved-emails\/[^/]+$/.test(pathname)
     || /^workspaces\/[^/]+$/.test(pathname)
-}
-
-function error(code: string, message: string, status: number) {
-  return NextResponse.json({ error: { code, message } }, { status })
 }

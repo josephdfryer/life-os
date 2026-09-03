@@ -58,7 +58,7 @@ export function ouraRedirectUri() {
   const explicit = process.env.OURA_REDIRECT_URI?.trim()
   if (explicit) return explicit
   const base = process.env.HOME_URL?.trim() || process.env.AUTH_URL?.trim() || "https://home.lacollecteur.com"
-  return `${base.replace(/\/$/, "")}/connections/oura/callback`
+  return `${base.replace(/\/$/, "")}/admin/connections/oura/callback`
 }
 
 export function ouraWebhookCallbackUrl() {
@@ -97,7 +97,7 @@ export function verifyOuraState(value: string): OuraOAuthState {
   return parsed
 }
 
-export function createOuraAuthorizeUrl(workspaceId: string, returnTo = "/connections") {
+export function createOuraAuthorizeUrl(workspaceId: string, returnTo = "/admin/connections") {
   const { clientId } = requireOuraApp()
   const state = signOuraState({ workspaceId, nonce: randomBytes(16).toString("hex"), returnTo })
   const url = new URL(OURA_AUTHORIZE_URL)

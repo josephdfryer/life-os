@@ -20,15 +20,14 @@ Event data lives once on the Event node. Personal layers live on Interaction edg
 - `/events` — timeline (today / upcoming / past / all); includes unreconciled calendar Plans
 - `/events/[id]` — event detail + participant interactions
 - `/events/new` — manual event creation
-- `/connections` — provider-neutral Events connections hub
-- `/settings/granola` — encrypted Granola connection, manual sync, and backfill
-- `/settings/calendar` — Google Calendar account, source selection, attendance defaults, and sync controls
+- `/settings/granola` — manual Granola sync and backfill (connect at Home `/admin/connections`)
+- `/settings/calendar` — Google Calendar source selection, attendance defaults, and sync controls (OAuth connect at Home `/admin/connections`)
 - `/groups/[id]/meetings` — deterministic company/group meeting lens
 - `/api/events` — session-authenticated CRUD
 - `/api/calendar/plans/[id]/attendance` — owner going / not going / did go / didn't
 - `/api/event-signals/[id]` — one-click event reinforcement (not event / went / didn't)
 - `/api/calendar/google/attendance-default` — per-calendar default attendance
-- `/api/granola/{connect,status,sync,disconnect}` — workspace-scoped Granola operations
+- `/api/granola/{status,sync,disconnect}` — workspace-scoped Granola operations (connect at Home `/admin/connections`)
 - `/api/cron/granola-sync` — `CRON_SECRET`-authenticated daily reconciliation
 
 ## Granola
@@ -57,7 +56,7 @@ npm run deploy -- --only events
 `vercel.json` — it overrides this file and can drop the crons. See
 `docs/DEPLOY_RUNBOOK.md`.
 
-Add Google OAuth callback: `https://events.lacollecteur.com/api/calendar/google/callback`
+Add Google OAuth callback: `https://home.lacollecteur.com/admin/connections/google/calendar/callback`
 
 Google OAuth is scoped to `jdf247@gmail.com` by default. After connecting, the
 Calendar settings screen lists the primary, shared, and subscribed calendars

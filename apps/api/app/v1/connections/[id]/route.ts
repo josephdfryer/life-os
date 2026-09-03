@@ -38,7 +38,15 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
           data: { status: "disabled" },
         })
       }
-      await tx.connection.update({ where: { id }, data: { status: "disabled" } })
+
+      if (connection.kind === "meetings" && connection.provider === "granola") {
+        await tx.connection.update({
+          where: { id },
+          data: { status: "disabled", accessTokenEncrypted: null, lastError: null },
+        })
+      } else {
+        await tx.connection.update({ where: { id }, data: { status: "disabled" } })
+      }
     })
 
     if (connection.kind === "oura") {

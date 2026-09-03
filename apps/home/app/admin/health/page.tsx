@@ -1,5 +1,6 @@
 import { Suspense } from "react"
 import { redirect } from "next/navigation"
+import { loadAdminCapabilities } from "@/lib/admin-access"
 import { workspaceForHomeRequest } from "@/lib/request-access"
 import { loadDataStreams } from "@/lib/load-data-streams"
 import { loadSystemHealth } from "@/lib/load-system-health"
@@ -8,9 +9,12 @@ import { ConnectionHealthPanel } from "../ConnectionHealthPanel"
 
 export const metadata = { title: "System health · Admin · LifeOS" }
 
-export default function ConnectionHealthPage() {
+export default async function ConnectionHealthPage() {
+  const capabilities = await loadAdminCapabilities()
+  if (!capabilities) redirect("/login")
+
   return (
-    <AdminChrome tab="health">
+    <AdminChrome tab="health" capabilities={capabilities}>
       <Suspense fallback={<div className="stream-message">Loading system health…</div>}>
         <HealthContent />
       </Suspense>

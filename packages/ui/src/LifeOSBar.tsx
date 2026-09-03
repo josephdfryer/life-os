@@ -34,7 +34,6 @@ const SHELL_NAV = [
   { label: 'Today', path: '/' },
   { label: 'Inbox', path: '/inbox' },
   { label: 'Intelligence', path: '/intelligence' },
-  { label: 'Automation', path: '/automation' },
   { label: 'Admin', path: '/admin' },
 ] as const;
 
@@ -102,7 +101,10 @@ export function LifeOSBar({ current, rightSlot, account, onSignOut, deferCompact
   const isHome = current === 'home';
   const captureHref = current === 'home' ? '/#assistant' : `${HOME_URL}/#assistant`;
   const shellHref = (path: string) => current === 'home' ? path : `${HOME_URL}${path}`;
-  const collapseHomeNav = isHome && compact && !deferCompactShellNav;
+  // When Home defers shell nav to the bottom tab bar, hide Today/Inbox/…
+  // entirely on compact widths — do not fall through to the inline pills.
+  const showInlineHomeNav = isHome && !compact;
+  const showCollapsedHomeNav = isHome && compact && !deferCompactShellNav;
   const activeSection = SHELL_NAV.find(item =>
     item.path === '/' ? pathname === '/' : pathname.startsWith(item.path),
   );
@@ -121,6 +123,8 @@ export function LifeOSBar({ current, rightSlot, account, onSignOut, deferCompact
         padding: compact ? '0 12px' : '0 16px',
         gap: compact ? 8 : 10,
         fontFamily: 'var(--font-body, system-ui)',
+        overflowX: 'hidden',
+        maxWidth: '100%',
         ...style,
       }}
     >
@@ -243,7 +247,7 @@ export function LifeOSBar({ current, rightSlot, account, onSignOut, deferCompact
         )}
       </div>
 
-      {isHome && collapseHomeNav && (
+      {showCollapsedHomeNav && (
         <div ref={sectionsRef} style={{ position: 'relative', flexShrink: 0 }}>
           <button
             type="button"
@@ -323,7 +327,7 @@ export function LifeOSBar({ current, rightSlot, account, onSignOut, deferCompact
         </div>
       )}
 
-      {isHome && !collapseHomeNav && (
+      {showInlineHomeNav && (
         <>
           <nav
             aria-label="LifeOS sections"

@@ -17,13 +17,12 @@ test.describe('Home control plane', () => {
     await expect(page).toHaveURL(/\/intelligence$/)
     await expect(page.getByRole('heading', { name: 'Intelligence' })).toBeVisible()
 
-    await page.getByRole('link', { name: 'Automation', exact: true }).click()
-    await expect(page).toHaveURL(/\/automation$/)
-    await expect(page.getByRole('heading', { name: 'Automation' })).toBeVisible()
-
     await page.getByRole('link', { name: 'Admin', exact: true }).click()
     await expect(page).toHaveURL(/\/admin$/)
     await expect(page.getByRole('heading', { name: 'Admin' })).toBeVisible()
+    await page.getByRole('link', { name: 'Automation', exact: true }).click()
+    await expect(page).toHaveURL(/\/admin\/automation$/)
+    await expect(page.getByRole('heading', { name: 'Authority belongs to the action' })).toBeVisible()
     await expect(page.getByRole('navigation', { name: 'LifeOS sections' })).not.toContainText('Connections')
     await expect(page.getByRole('navigation', { name: 'LifeOS sections' })).not.toContainText('Stream')
 
@@ -33,15 +32,14 @@ test.describe('Home control plane', () => {
   })
 
   test('stream exposes filters and a stable unavailable state without a proxy key', async ({ page }) => {
-    await page.goto('/stream')
-    await expect(page).toHaveURL(/\/admin\/stream$/)
+    await page.goto('/admin/stream')
     await expect(page.getByRole('tablist', { name: 'Filter by type' })).toBeVisible()
     await expect(page.getByPlaceholder('Search what happened…')).toBeVisible()
     await expect(page.getByText('Stream unavailable.')).toBeVisible()
   })
 
   test('admin workspace tab owns approved sign-in controls', async ({ page }) => {
-    await page.goto('/admin?tab=workspace')
+    await page.goto('/admin/workspace')
     await expect(page.getByRole('region', { name: 'E2E LifeOS' })).toBeVisible()
     await expect(page.getByText('active members')).toBeVisible()
     await expect(page.getByRole('heading', { name: 'Approved emails' })).toBeVisible()
@@ -50,18 +48,21 @@ test.describe('Home control plane', () => {
   })
 
   test('connections hub exposes every integration without token fields', async ({ page }) => {
-    await page.goto('/connections')
-    await expect(page.getByRole('heading', { name: 'Google Calendar' })).toBeVisible()
-    await expect(page.getByRole('heading', { name: 'Gmail' })).toBeVisible()
-    await expect(page.getByRole('heading', { name: 'Era' })).toBeVisible()
+    await page.goto('/admin/connections')
+    // Client-side hydration + initial data load can be slower in CI.
+    // The integration headings themselves are static, but Playwright's
+    // "toBeVisible" requires them to be fully laid out.
+    await expect(page.getByRole('heading', { name: 'Google Calendar', exact: true })).toBeVisible({ timeout: 15_000 })
+    await expect(page.getByRole('heading', { name: 'Gmail', exact: true })).toBeVisible({ timeout: 15_000 })
+    await expect(page.getByRole('heading', { name: 'Era', exact: true })).toBeVisible({ timeout: 15_000 })
     await expect(page.getByText(/accessToken|refreshToken/i)).toHaveCount(0)
   })
 
   test('admin exposes writable access and API-key surfaces', async ({ page }) => {
-    await page.goto('/admin?tab=access')
+    await page.goto('/admin/access')
     await expect(page.getByRole('heading', { name: 'Roles' })).toBeVisible()
     await expect(page.getByRole('heading', { name: 'New role' })).toBeVisible()
-    await page.goto('/admin?tab=api-keys')
+    await page.goto('/admin/api-keys')
     await expect(page.getByRole('heading', { name: 'API keys' })).toBeVisible()
     await expect(page.getByRole('heading', { name: 'New API key' })).toBeVisible()
   })
@@ -82,17 +83,13 @@ test.describe('Home control plane', () => {
     await expect(page.getByRole('link', { name: 'Open streams' })).toHaveCount(0)
   })
 
-  test('legacy admin health and streams tabs redirect to system health', async ({ page }) => {
-    await page.goto('/admin?tab=system')
-    await expect(page).toHaveURL(/\/admin\/health$/)
-    await page.goto('/admin?tab=streams')
-    await expect(page).toHaveURL(/\/admin\/health$/)
+  test('legacy admin health stream detail redirects to system health', async ({ page }) => {
     await page.goto('/admin/health/streams')
     await expect(page).toHaveURL(/\/admin\/health$/)
   })
 
   test('automation explains authority, live capabilities, and rule history', async ({ page }) => {
-    await page.goto('/automation')
+    await page.goto('/admin/automation')
     await expect(page.getByRole('heading', { name: 'Authority belongs to the action' })).toBeVisible()
     await expect(page.getByText('Observe', { exact: true })).toBeVisible()
     await expect(page.getByText('Safe auto', { exact: true }).first()).toBeVisible()

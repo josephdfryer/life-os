@@ -15,7 +15,7 @@ export async function GET(req: NextRequest) {
   if (!auth) return unauthorizedResponse()
 
   try {
-    const returnTo = req.nextUrl.searchParams.get("returnTo") || "/connections"
+    const returnTo = req.nextUrl.searchParams.get("returnTo") || "/admin/connections"
     const { url } = createOuraAuthorizeUrl(auth.workspaceId, returnTo)
     return NextResponse.json({ url })
   } catch (error) {
