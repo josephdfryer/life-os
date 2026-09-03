@@ -23,9 +23,11 @@ export default defineConfig({
   projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
   webServer: {
     command: 'node --import tsx scripts/e2e/prepare.ts && npm run dev -w home -- --port 3200',
-    url: 'http://localhost:3200/admin',
+    // Wait for the actual connections page so Next dev has to compile the
+    // route before tests assert on its content.
+    url: 'http://localhost:3200/admin/connections',
     reuseExistingServer: !process.env.CI,
-    timeout: 120_000,
+    timeout: 180_000,
     env: {
       NODE_ENV: 'development',
       AUTH_SECRET: 'life-os-home-e2e-only-secret',
