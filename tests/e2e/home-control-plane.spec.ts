@@ -49,9 +49,12 @@ test.describe('Home control plane', () => {
 
   test('connections hub exposes every integration without token fields', async ({ page }) => {
     await page.goto('/admin/connections')
-    await expect(page.getByRole('heading', { name: 'Google Calendar' })).toBeVisible()
-    await expect(page.getByRole('heading', { name: 'Gmail' })).toBeVisible()
-    await expect(page.getByRole('heading', { name: 'Era' })).toBeVisible()
+    // Client-side hydration + initial data load can be slower in CI.
+    // The integration headings themselves are static, but Playwright's
+    // "toBeVisible" requires them to be fully laid out.
+    await expect(page.getByRole('heading', { name: 'Google Calendar' })).toBeVisible({ timeout: 15_000 })
+    await expect(page.getByRole('heading', { name: 'Gmail' })).toBeVisible({ timeout: 15_000 })
+    await expect(page.getByRole('heading', { name: 'Era' })).toBeVisible({ timeout: 15_000 })
     await expect(page.getByText(/accessToken|refreshToken/i)).toHaveCount(0)
   })
 
