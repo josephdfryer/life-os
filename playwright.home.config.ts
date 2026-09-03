@@ -27,6 +27,7 @@ export default defineConfig({
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,
     env: {
+      NODE_ENV: 'development',
       AUTH_SECRET: 'life-os-home-e2e-only-secret',
       DATABASE_URL: databaseUrl,
       LIFE_OS_LOCAL_REVIEW: '1',
