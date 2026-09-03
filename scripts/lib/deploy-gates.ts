@@ -97,6 +97,7 @@ export function missingCrons(
 
 export type DeployOptions = {
   apply: boolean
+  fast?: string
   only?: string
   before?: string
   allowDirty: boolean
@@ -125,16 +126,39 @@ export function parseDeployArgs(argv: string[]): DeployOptions {
   }
   for (let index = 0; index < argv.length; index++) {
     const next = argv[index + 1]
+    if (argv[index] === "--fast" && next && !next.startsWith("--")) options.fast = next
     if (argv[index] === "--only" && next) options.only = next
     if (argv[index] === "--before" && next) options.before = next
   }
   if (options.ci) options.skipCi = true
+  if (argv.includes("--fast") && !options.fast) {
+    throw new Error("--fast requires one app name, for example: --fast home")
+  }
+  if (options.fast) {
+    const incompatible = [
+      options.only && "--only",
+      options.affected && "--affected",
+      options.before && "--before",
+      options.ci && "--ci",
+      options.allowDirty && "--allow-dirty",
+      options.allowBehind && "--allow-behind",
+      options.skipMigrations && "--skip-migrations",
+      options.skipSmoke && "--skip-smoke",
+    ].filter(Boolean)
+    if (incompatible.length) {
+      throw new Error(`--fast cannot be combined with ${incompatible.join(", ")}`)
+    }
+    options.only = options.fast
+    options.allowUnpushed = true
+    options.skipCi = true
+  }
   return options
 }
 
 export const DEPLOY_HELP = `Deploy LifeOS apps to Vercel production.
 
 Usage:
+  npm run ship:fast -- home             # guarded solo fast lane
   npm run deploy                         # laptop path (clean origin/master + green CI)
   npm run deploy -- --dry-run
   npm run deploy -- --only persons
@@ -144,11 +168,13 @@ Usage:
 Production CD is GitHub Actions on master (see .github/workflows/ci.yml).
 This script is what that job runs, and the laptop fallback.
 
-The script refuses a dirty tree, refuses a commit CI has not passed, and
-refuses to ship if production Turso is missing columns the Prisma client
-would select. It never writes a root vercel.json.
+The normal lane refuses a dirty tree, refuses a commit CI has not passed, and
+refuses to ship if production PostgreSQL has pending migrations. The fast lane
+accepts only guarded app-local commits and never applies migrations. Neither
+lane writes a root vercel.json.
 
 Flags:
+  --fast <app>         Guard, check, and directly deploy one low-risk app change
   --dry-run            Run gates and print commands; do not upload
   --only <name>        One app (filter, directory, or Vercel project name)
   --affected           Deploy only apps touched since --before (default HEAD^)
@@ -158,7 +184,7 @@ Flags:
   --allow-unpushed     Allow HEAD ahead of origin/master
   --allow-behind       Allow HEAD behind origin/master (rollback)
   --skip-ci            Do not require a green GitHub Actions run
-  --skip-migrations    Do not compare schema.prisma to production Turso
+  --skip-migrations    Do not compare committed migrations to production PostgreSQL
   --skip-smoke         Do not curl production URLs after deploy
   --list               Print the project map and exit
 `

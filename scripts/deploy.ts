@@ -26,6 +26,7 @@ import {
 } from "./lib/deploy-gates"
 import { appsToDeploy, formatAffected } from "./lib/deploy-affected"
 import { loadDotEnv } from "./lib/env"
+import { assessFastDeploy, formatFastDeployRejections } from "./lib/fast-deploy"
 import { applyProdMigrations, assertProdSchema } from "./lib/prod-schema"
 import {
   allSmokeProbes,
@@ -127,7 +128,7 @@ function requireCi(sha: string, options: DeployOptions) {
     console.log(options.allowDirty
       ? "Skipping CI gate: dirty working tree is not the commit CI tested."
       : "Skipping CI gate (--skip-ci).")
-    if (!options.apply) return
+    if (!options.apply || options.fast) return
     console.log("Running local lint as a consolation prize.")
     run("npm", ["run", "lint"])
     return
@@ -154,6 +155,29 @@ function requireCi(sha: string, options: DeployOptions) {
     return
   }
   throw new Error(verdict.detail)
+}
+
+function runFastLaneChecks(project: VercelProject) {
+  console.log(`\nFast lane checks for ${project.filter}`)
+  run("npx", ["eslint", `apps/${project.app}`, "--max-warnings=0"])
+  run("npm", ["run", "type-check", "--workspace", project.filter])
+  run("npm", ["run", "test", "--workspace", project.filter, "--if-present"])
+}
+
+function requireFastLane(project: VercelProject, options: DeployOptions) {
+  if (!options.fast) return
+  const paths = git(["diff", "--name-only", "origin/master...HEAD"]).split("\n").filter(Boolean)
+  const assessment = assessFastDeploy(paths, project.app)
+  if (!assessment.ok) {
+    throw new Error(
+      `Fast lane refused this change. Use the normal PR/CI lane:\n${formatFastDeployRejections(assessment.rejections)}`,
+    )
+  }
+  console.log(
+    `Fast lane accepted ${assessment.deployPaths.length} app-local path(s)` +
+    (assessment.ignoredPaths.length ? ` (${assessment.ignoredPaths.length} documentation path(s) ignored).` : "."),
+  )
+  runFastLaneChecks(project)
 }
 
 function changedPaths(before?: string): string[] {
@@ -305,17 +329,17 @@ async function main() {
   requireNoRootVercelJson()
   requireCleanTree(options)
   const sha = requireHeadAlignment(options)
-  requireCi(sha, options)
-
   const projects = projectsFor(options)
   if (!projects.length) {
     console.log("Nothing to deploy.")
     return
   }
+  if (options.fast) requireFastLane(projects[0], options)
+  requireCi(sha, options)
   console.log(`Deploy ${options.apply ? "production" : "dry-run"}  HEAD ${sha.slice(0, 7)}  ${projects.map(p => p.filter).join(", ")}`)
 
   if (!options.skipMigrations) {
-    console.log(await applyProdMigrations(root))
+    if (!options.fast) console.log(await applyProdMigrations(root))
     console.log(await assertProdSchema(root))
   } else {
     console.log("Skipping production schema check (--skip-migrations).")
@@ -344,6 +368,12 @@ async function main() {
   }
 
   console.log(options.apply ? "\nDeploy finished." : "\nDry run finished. Re-run without --dry-run to upload.")
+  if (options.fast && options.apply) {
+    console.log(
+      `Fast lane shipped commit ${sha.slice(0, 7)}. Push or merge this exact commit immediately so Git remains the source of truth.`,
+    )
+    console.log(`Rollback: vercel rollback --project ${projects[0].vercelName} --scope ${VERCEL_TEAM_ID}`)
+  }
 }
 
 main().catch(error => {

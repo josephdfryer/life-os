@@ -8,6 +8,41 @@ Deployment Checks, so a git-push deploy would race CI).
 Do not run `vercel --prod` from a working tree, and do not write a root
 `vercel.json`.
 
+## Solo fast lane
+
+For a small, app-local fix, deploy the committed change directly while the
+normal GitHub CI remains available as a later audit:
+
+```bash
+npm run ship:fast -- home
+```
+
+Replace `home` with one of the app names printed by `npm run deploy -- --list`.
+The backend-only `api` project always uses the full lane.
+The command:
+
+1. Requires a clean commit ahead of `origin/master`; it never uploads an
+   uncommitted working tree.
+2. Refuses changes outside the selected app, except documentation.
+3. Refuses database/Prisma, API route, server/domain, authentication/access,
+   middleware, cron/import/sync, dependency, environment, and deploy-config
+   changes. Use the full PR/CI lane for those.
+4. Runs ESLint, type-check, and tests for the selected app.
+5. Confirms production PostgreSQL has no pending migrations. It never applies
+   migrations from the fast lane.
+6. Uploads `git archive HEAD`, deploys only the selected Vercel project, runs
+   its production smoke probes, and verifies its crons when applicable.
+
+After a successful fast deploy, land that change on `master` immediately so Git
+remains the source of truth. GitHub CI then runs as an asynchronous audit.
+If that audit fails, roll production back and fix the failure through the full
+lane.
+
+The fast lane is appropriate for copy, CSS, layout, components, and contained
+read/display fixes. Use the full lane for migrations, data writes, identity
+matching, auth/permissions, collectors, scheduled work, shared packages,
+dependency updates, or changes spanning multiple apps.
+
 Laptop fallback (hotfix / first-time secret bootstrap):
 
 ```bash
@@ -30,8 +65,7 @@ needs these repository (or environment) secrets:
 | Secret | Why |
 |---|---|
 | `VERCEL_TOKEN` | Account token that can deploy the eight LifeOS projects |
-| `TURSO_DATABASE_URL` | Schema-vs-prod gate (read-only) |
-| `TURSO_AUTH_TOKEN` | Same |
+| `DATABASE_URL_UNPOOLED` | Direct Neon/PostgreSQL connection for migrations and schema status |
 
 Create the Vercel token at [vercel.com/account/tokens](https://vercel.com/account/tokens).
 Until `VERCEL_TOKEN` is set, the deploy job will fail closed — CI still
@@ -45,10 +79,10 @@ gates merges; production just will not update.
    this because the job only runs on `master` pushes.
 3. **Refuse a commit whose GitHub Actions `CI` workflow is not green**
    (laptop). `--ci` skips the poll: this job `needs: [lint, check]`.
-4. **Refuse if production Turso is missing a column or table** that
-   `schema.prisma` would select. All eight apps share one database and one
-   Prisma client; deploying code ahead of its migration makes every query on
-   that model 500.
+4. **Apply committed migrations and confirm production PostgreSQL is current.**
+   All eight apps share one database and one Prisma client; deploying code
+   ahead of its migration makes every query on that model 500. The fast lane
+   only checks migration status and refuses to apply anything.
 5. **Upload `git archive HEAD`** with `vercel deploy --prod --yes --project
    <name> --scope <team>`. It never swaps `.vercel/project.json` in the repo
    and never writes a root `vercel.json`.
@@ -102,11 +136,12 @@ Forbidden (`npm run lint` fails if they return):
 
 ## Migrations before code
 
-Apply the Turso migration, then merge to `master`. The deploy job will refuse
-if `schema.prisma` is ahead of production.
+Commit the PostgreSQL migration, then merge to `master`. The full deploy job
+applies pending committed migrations before shipping code; the fast lane
+refuses any migration change or pending production migration.
 
 ```bash
-npx tsx packages/db/turso-migrate-<name>.ts
+npm run migrate:deploy -w @life-os/db
 npm run deploy -- --dry-run    # laptop check; CI does this too
 ```
 
@@ -120,9 +155,9 @@ no team-level shared env, so this script is the fan-out.
 ## Branch / collaborator hygiene
 
 - Work on a branch or git worktree. Do not share a dirty `master`.
-- Local `.env` files today often point at **production Turso**. That is unsafe
+- Local `.env` files today often point at **production PostgreSQL**. That is unsafe
   the moment a second human or preview deploy exists. Stand up a staging
-  Turso database before connecting more Vercel projects for PR previews.
+  PostgreSQL database before connecting more Vercel projects for PR previews.
 
 Set this in GitHub when you are ready for a second collaborator (Settings →
 Rules → Rulesets → New):
@@ -142,7 +177,7 @@ still only runs after CI on `master` pushes.
 vercel rollback --project <vercel-name> --scope team_ftx6eq2s9NttYUc9WqQRwfa8
 ```
 
-That re-points aliases. It does not undo a Turso migration.
+That re-points aliases. It does not undo a PostgreSQL migration.
 
 ## What not to do
 
@@ -150,4 +185,4 @@ That re-points aliases. It does not undo a Turso migration.
 - Do not copy `apps/*/.vercel/project.json` onto the repo-root `.vercel/`.
 - Do not add a root `vercel.json` "just for this deploy".
 - Do not git-connect the remaining apps with production auto-deploy on.
-- Do not give PR previews the production `TURSO_AUTH_TOKEN`.
+- Do not give PR previews the production database credentials.
