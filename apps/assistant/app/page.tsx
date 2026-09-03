@@ -230,7 +230,8 @@ export default function AssistantChat() {
                 display: "flex",
                 flexDirection: "column",
                 alignSelf: message.role === "user" ? "flex-end" : "flex-start",
-                maxWidth: "85%",
+                maxWidth: "min(85%, 100%)",
+                minWidth: 0,
                 alignItems: message.role === "user" ? "flex-end" : "flex-start",
               }}
             >
@@ -245,6 +246,9 @@ export default function AssistantChat() {
                   lineHeight: 1.6,
                   whiteSpace: "pre-wrap",
                   overflowWrap: "anywhere",
+                  wordBreak: "break-word",
+                  minWidth: 0,
+                  maxWidth: "100%",
                 }}
               >
                 {message.content}

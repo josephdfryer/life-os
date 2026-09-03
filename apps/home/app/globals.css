@@ -14,6 +14,8 @@ body {
   min-height: 100%;
   margin: 0;
   padding: 0;
+  overflow-x: clip;
+  max-width: 100%;
 }
 
 body {
@@ -43,6 +45,8 @@ a {
   min-height: 100vh;
   background: var(--petrol);
   color: var(--ink);
+  overflow-x: clip;
+  max-width: 100%;
 }
 
 .page {
@@ -69,6 +73,8 @@ a {
   max-width: 1280px;
   margin: 0 auto;
   padding: 48px 24px 0;
+  min-width: 0;
+  width: 100%;
 }
 
 .dashboard-header {
@@ -77,6 +83,13 @@ a {
   align-items: flex-end;
   gap: 24px;
   margin-bottom: 48px;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.dashboard-header-greeting {
+  min-width: 0;
+  max-width: 100%;
 }
 
 .dashboard-greeting-title {
@@ -86,12 +99,14 @@ a {
   font-weight: 400;
   letter-spacing: -0.02em;
   line-height: 1.1;
+  overflow-wrap: anywhere;
 }
 
 .dashboard-greeting-date {
   margin: 8px 0 0;
   font-size: 1rem;
   color: var(--ink-3);
+  overflow-wrap: anywhere;
 }
 
 .dashboard-header-meta {
@@ -99,7 +114,9 @@ a {
   flex-direction: column;
   align-items: flex-end;
   gap: 6px;
-  flex-shrink: 0;
+  flex-shrink: 1;
+  min-width: 0;
+  max-width: 100%;
 }
 
 .dashboard-wordmark {
@@ -110,19 +127,27 @@ a {
 
 .assistant-message-list {
   max-height: 360px;
+  overflow-x: hidden;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
+  min-width: 0;
+  width: 100%;
 }
 
 .assistant-composer-row {
   display: flex;
   gap: 10px;
   align-items: flex-end;
+  min-width: 0;
+  width: 100%;
 }
 
 .dashboard-assistant-card {
   grid-column: 1;
   padding: 32px;
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 .assistant-send-button {
@@ -1487,6 +1512,21 @@ a {
     padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px));
   }
 
+  body.home-mobile-tabs-active {
+    overflow-x: clip;
+  }
+
+  .home-mobile-tab-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 54;
+    border: 0;
+    padding: 0;
+    margin: 0;
+    background: rgba(10, 21, 27, 0.42);
+    cursor: pointer;
+  }
+
   .home-mobile-tab-bar {
     position: fixed;
     z-index: 55;
@@ -1532,11 +1572,6 @@ a {
     color: var(--camel, #c4a576);
   }
 
-  .home-mobile-tab-bar--dashboard .home-mobile-tab-menu-capture {
-    border-top-color: #2a424c;
-    color: var(--camel, #c4a576);
-  }
-
   .home-mobile-tab,
   .home-mobile-tab--button {
     display: flex;
@@ -1544,6 +1579,7 @@ a {
     align-items: center;
     justify-content: center;
     gap: 3px;
+    width: 100%;
     min-height: 48px;
     padding: 6px 4px;
     border: 0;
@@ -1571,13 +1607,17 @@ a {
   .home-mobile-tab-more {
     position: relative;
     min-width: 0;
+    width: 100%;
   }
 
   .home-mobile-tab-menu {
-    position: absolute;
-    right: 0;
-    bottom: calc(100% + 8px);
-    min-width: 200px;
+    position: fixed;
+    left: 12px;
+    right: 12px;
+    bottom: calc(64px + env(safe-area-inset-bottom, 0px) + 8px);
+    z-index: 56;
+    min-width: 0;
+    max-width: none;
     padding: 6px;
     border: 1px solid var(--border-subtle, rgba(0, 0, 0, 0.08));
     border-radius: 12px;
@@ -1605,19 +1645,13 @@ a {
     font-weight: 500;
   }
 
-  .home-mobile-tab-menu-capture {
-    margin-top: 4px;
-    border-top: 1px solid var(--border-subtle, rgba(0, 0, 0, 0.08));
-    color: var(--cognac-deep, #8a5a2f);
-    font-weight: 500;
-  }
-
   .dashboard-apps-footer {
     display: none;
   }
 
   .dashboard-page-inner {
-    padding: 24px 16px 0;
+    padding: 24px max(16px, env(safe-area-inset-left, 0px)) 0 max(16px, env(safe-area-inset-right, 0px));
+    overflow-x: hidden;
   }
 
   .dashboard-header {
@@ -1625,6 +1659,7 @@ a {
     align-items: flex-start;
     gap: 12px;
     margin-bottom: 28px;
+    overflow-x: hidden;
   }
 
   .dashboard-header-meta {
@@ -1666,7 +1701,7 @@ a {
   }
 
   .dashboard-content-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: var(--space-lg);
   }
 

@@ -72,11 +72,21 @@ export function TimezonePicker({ current, label = "Timezone" }: TimezonePickerPr
     color: "var(--cognac, var(--accent))",
   }
 
+  const root: React.CSSProperties = {
+    display: "flex",
+    alignItems: "center",
+    gap: 8,
+    flexWrap: "wrap",
+    minWidth: 0,
+    maxWidth: "100%",
+  }
+
   if (!editing) {
     return (
-      <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
-        <span style={chip}>
-          {label}: <strong style={{ color: "var(--ink-2, var(--ink))", fontWeight: 500 }}>{current}</strong>
+      <div style={root}>
+        <span style={{ ...chip, minWidth: 0, overflowWrap: "anywhere" }}>
+          {label}:{" "}
+          <strong style={{ color: "var(--ink-2, var(--ink))", fontWeight: 500 }}>{current}</strong>
         </span>
         <button style={btn} onClick={() => { setValue(current); setEditing(true) }}>Change</button>
         {detected && detected !== current && (
@@ -89,7 +99,7 @@ export function TimezonePicker({ current, label = "Timezone" }: TimezonePickerPr
   }
 
   return (
-    <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+    <div style={root}>
       <input
         list="lifeos-tz-list"
         value={value}
@@ -104,7 +114,9 @@ export function TimezonePicker({ current, label = "Timezone" }: TimezonePickerPr
           borderRadius: 6,
           background: "var(--surface, #fff)",
           color: "var(--ink, #111)",
-          width: 220,
+          width: "min(220px, 100%)",
+          minWidth: 0,
+          maxWidth: "100%",
         }}
       />
       <datalist id="lifeos-tz-list">

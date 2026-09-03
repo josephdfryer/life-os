@@ -98,90 +98,86 @@ export default function HomeMobileTabBar() {
     pathname.startsWith("/admin")
 
   return (
-    <nav
-      className={`home-mobile-tab-bar${onHome ? " home-mobile-tab-bar--dashboard" : ""}`}
-      aria-label="Home primary navigation"
-    >
-      <a
-        href="/"
-        className={`home-mobile-tab${onHome ? " home-mobile-tab--active" : ""}`}
-        aria-current={onHome ? "page" : undefined}
-      >
-        <span className="home-mobile-tab-icon" aria-hidden>◉</span>
-        <span>Today</span>
-      </a>
-
-      <a
-        href="/inbox"
-        className={`home-mobile-tab${onInbox ? " home-mobile-tab--active" : ""}`}
-        aria-current={onInbox ? "page" : undefined}
-      >
-        <span className="home-mobile-tab-icon" aria-hidden>◎</span>
-        <span>Inbox</span>
-      </a>
-
-      <a
-        href="/#assistant"
-        className={`home-mobile-tab${onHome && hash === "#assistant" ? " home-mobile-tab--active" : ""}`}
-        onClick={event => {
-          if (onHome) {
-            event.preventDefault()
-            focusAssistant()
-          }
-        }}
-      >
-        <span className="home-mobile-tab-icon" aria-hidden>✦</span>
-        <span>Assistant</span>
-      </a>
-
-      <div ref={moreRef} className="home-mobile-tab-more">
+    <>
+      {moreOpen ? (
         <button
           type="button"
-          className={`home-mobile-tab home-mobile-tab--button${onMoreSection || moreOpen ? " home-mobile-tab--active" : ""}`}
-          aria-label="More LifeOS sections"
-          aria-haspopup="menu"
-          aria-expanded={moreOpen}
-          onClick={() => setMoreOpen(value => !value)}
-        >
-          <span className="home-mobile-tab-icon" aria-hidden>⋯</span>
-          <span>More</span>
-        </button>
+          className="home-mobile-tab-backdrop"
+          aria-label="Close more menu"
+          onClick={() => setMoreOpen(false)}
+        />
+      ) : null}
 
-        {moreOpen && (
-          <div className="home-mobile-tab-menu" role="menu">
-            {MORE_LINKS.map(item => {
-              const active = pathname.startsWith(item.path)
-              return (
-                <a
-                  key={item.path}
-                  href={item.path}
-                  role="menuitem"
-                  className={`home-mobile-tab-menu-item${active ? " home-mobile-tab-menu-item--active" : ""}`}
-                  aria-current={active ? "page" : undefined}
-                  onClick={() => setMoreOpen(false)}
-                >
-                  {item.label}
-                </a>
-              )
-            })}
-            <button
-              type="button"
-              role="menuitem"
-              className="home-mobile-tab-menu-item home-mobile-tab-menu-capture"
-              onClick={() => {
-                setMoreOpen(false)
-                if (onHome) {
-                  focusAssistant()
-                } else {
-                  window.location.href = "/#assistant"
-                }
-              }}
-            >
-              Capture
-            </button>
-          </div>
-        )}
-      </div>
-    </nav>
+      <nav
+        className={`home-mobile-tab-bar${onHome ? " home-mobile-tab-bar--dashboard" : ""}`}
+        aria-label="Home primary navigation"
+      >
+        <a
+          href="/"
+          className={`home-mobile-tab${onHome ? " home-mobile-tab--active" : ""}`}
+          aria-current={onHome ? "page" : undefined}
+        >
+          <span className="home-mobile-tab-icon" aria-hidden>◉</span>
+          <span>Today</span>
+        </a>
+
+        <a
+          href="/inbox"
+          className={`home-mobile-tab${onInbox ? " home-mobile-tab--active" : ""}`}
+          aria-current={onInbox ? "page" : undefined}
+        >
+          <span className="home-mobile-tab-icon" aria-hidden>◎</span>
+          <span>Inbox</span>
+        </a>
+
+        <a
+          href="/#assistant"
+          className={`home-mobile-tab${onHome && hash === "#assistant" ? " home-mobile-tab--active" : ""}`}
+          onClick={event => {
+            if (onHome) {
+              event.preventDefault()
+              focusAssistant()
+            }
+          }}
+        >
+          <span className="home-mobile-tab-icon" aria-hidden>✦</span>
+          <span>Assistant</span>
+        </a>
+
+        <div ref={moreRef} className="home-mobile-tab-more">
+          <button
+            type="button"
+            className={`home-mobile-tab home-mobile-tab--button${onMoreSection || moreOpen ? " home-mobile-tab--active" : ""}`}
+            aria-label="More LifeOS sections"
+            aria-haspopup="menu"
+            aria-expanded={moreOpen}
+            onClick={() => setMoreOpen(value => !value)}
+          >
+            <span className="home-mobile-tab-icon" aria-hidden>⋯</span>
+            <span>More</span>
+          </button>
+
+          {moreOpen && (
+            <div className="home-mobile-tab-menu" role="menu">
+              {MORE_LINKS.map(item => {
+                const active = pathname.startsWith(item.path)
+                return (
+                  <a
+                    key={item.path}
+                    href={item.path}
+                    role="menuitem"
+                    className={`home-mobile-tab-menu-item${active ? " home-mobile-tab-menu-item--active" : ""}`}
+                    aria-current={active ? "page" : undefined}
+                    onClick={() => setMoreOpen(false)}
+                  >
+                    {item.label}
+                  </a>
+                )
+              })}
+            </div>
+          )}
+        </div>
+      </nav>
+    </>
   )
 }
