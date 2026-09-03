@@ -52,9 +52,9 @@ test.describe('Home control plane', () => {
     // Client-side hydration + initial data load can be slower in CI.
     // The integration headings themselves are static, but Playwright's
     // "toBeVisible" requires them to be fully laid out.
-    await expect(page.getByText('Google Calendar')).toBeVisible({ timeout: 15_000 })
-    await expect(page.getByText('Gmail')).toBeVisible({ timeout: 15_000 })
-    await expect(page.getByText('Era')).toBeVisible({ timeout: 15_000 })
+    await expect(page.getByRole('heading', { name: 'Google Calendar', exact: true })).toBeVisible({ timeout: 15_000 })
+    await expect(page.getByRole('heading', { name: 'Gmail', exact: true })).toBeVisible({ timeout: 15_000 })
+    await expect(page.getByRole('heading', { name: 'Era', exact: true })).toBeVisible({ timeout: 15_000 })
     await expect(page.getByText(/accessToken|refreshToken/i)).toHaveCount(0)
   })
 
