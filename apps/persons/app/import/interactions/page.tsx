@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react"
 import { useRouter } from "next/navigation"
-import { lifeOsAppUrl } from "@life-os/auth"
+import { lifeOsAppUrl } from "@life-os/auth/urls"
 import ProcessingState from "@/components/import/ProcessingState"
 import ResultCard from "@/components/import/ResultCard"
 import type { ImportedPerson } from "@/types"
