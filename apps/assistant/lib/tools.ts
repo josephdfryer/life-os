@@ -10,6 +10,7 @@ import {
   createItem,
   createPlaceNote,
   createPlan,
+  updatePerson,
 } from "@life-os/domain";
 import {
   getSpendBreakdown,
@@ -125,6 +126,43 @@ export const TOOLS: AssistantToolDefinition[] = [
         },
       },
       required: [],
+    },
+  },
+  {
+    name: "update_person",
+    capability: "write",
+    description:
+      "Edit an existing Person's profile fields, e.g. fixing a misspelled or wrong name Joseph just noticed. Use the id from search_people or get_person. Only pass the fields that should change — omitted fields are left as-is.",
+    input_schema: {
+      type: "object",
+      properties: {
+        personId: { type: "string", description: "From search_people or get_person" },
+        first: { type: "string" },
+        last: { type: "string" },
+        nickname: { type: "string" },
+        title: { type: "string" },
+        headline: { type: "string" },
+        company: { type: "string" },
+        email: { type: "string" },
+        emails: { type: "array", items: { type: "string" } },
+        phone: { type: "string" },
+        phones: { type: "array", items: { type: "string" } },
+        birthday: {
+          type: "string",
+          description: "YYYY-MM-DD or MM-DD when the year is unknown",
+        },
+        closeness: { type: "integer", enum: [1, 2, 3, 4, 5] },
+        tags: { type: "array", items: { type: "string" } },
+        values: { type: "array", items: { type: "string" } },
+        notes: { type: "string" },
+        location: { type: "string" },
+        linkedin: { type: "string" },
+        twitter: { type: "string" },
+        website: { type: "string" },
+        facebook: { type: "string" },
+        instagram: { type: "string" },
+      },
+      required: ["personId"],
     },
   },
   {
@@ -745,6 +783,8 @@ export async function executeTool(
             context.pendingPersonCreations ?? [],
           ),
         );
+      case "update_person":
+        return await updatePersonTool(input, workspaceId);
       case "get_schedule":
         return await getSchedule(
           workspaceId,
@@ -1078,6 +1118,21 @@ async function searchPeople(query: string, workspaceId: string) {
       return `${p.first} ${p.last}${p.nickname ? ` "${p.nickname}"` : ""} · id=${p.id} · ${p.company ?? "no company"} · closeness ${p.closeness} · last contact ${last ? daysAgo(last) : "never"}`;
     })
     .join("\n");
+}
+
+async function updatePersonTool(
+  input: Record<string, unknown>,
+  workspaceId: string,
+) {
+  const personId = String(input.personId ?? "").trim();
+  if (!personId) return "personId is required — search_people first";
+  const { personId: _personId, ...patch } = input;
+  const updated = await updatePerson(personId, patch, workspaceId, {
+    type: "assistant",
+    label: "LifeOS Assistant",
+    workspaceId,
+  });
+  return `Updated ${updated.first} ${updated.last}.`.trim();
 }
 
 async function getPerson(personId: string, workspaceId: string) {
