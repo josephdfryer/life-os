@@ -30,44 +30,44 @@ export default function ScheduleList({
   tz: string
 }) {
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
       {events.map((event) => {
         const uniqueAttendees = event.attendees.slice(0, 3)
         const quiet = event.declaredAttendance === "not_going" && event.phase === "future"
         const title = event.href ? (
-          <a href={event.href} style={{ fontWeight: 500, lineHeight: 1.3, color: "inherit", textDecoration: "none", opacity: quiet ? 0.72 : 1 }}>
+          <a href={event.href} style={{ fontWeight: 500, lineHeight: 1.4, color: "inherit", textDecoration: "none", opacity: quiet ? 0.72 : 1 }}>
             {event.name}
           </a>
         ) : (
-          <span style={{ fontWeight: 500, lineHeight: 1.3, opacity: quiet ? 0.72 : 1 }}>{event.name}</span>
+          <span style={{ fontWeight: 500, lineHeight: 1.4, opacity: quiet ? 0.72 : 1 }}>{event.name}</span>
         )
 
         return (
-          <div key={event.id} style={{ display: "flex", gap: "24px" }}>
+          <div key={event.id} style={{ display: "flex", gap: "20px", alignItems: "flex-start" }}>
             <div
               style={{
                 fontFamily: "var(--font-body)",
                 fontSize: "12px",
                 color: "var(--ink-3)",
-                paddingTop: "2px",
-                minWidth: "72px",
+                paddingTop: "3px",
+                minWidth: "68px",
                 flexShrink: 0,
               }}
             >
               {formatScheduleTime(new Date(event.start), tz)}
             </div>
             <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap", marginBottom: "6px" }}>
                 {title}
                 {event.scheduled && <span style={scheduledBadge}>Scheduled</span>}
               </div>
               {event.calendars.length > 0 && (
-                <div style={{ fontSize: "12px", color: "var(--ink-3)", marginTop: "4px" }}>
+                <div style={{ fontSize: "12px", color: "var(--ink-3)", marginTop: "6px", lineHeight: 1.5 }}>
                   {event.calendars.join(" · ")}
                 </div>
               )}
               {uniqueAttendees.length > 0 && (
-                <div style={{ fontSize: "12px", color: "var(--ink-3)", marginTop: "4px" }}>
+                <div style={{ fontSize: "12px", color: "var(--ink-3)", marginTop: "6px", lineHeight: 1.5 }}>
                   with {uniqueAttendees.map((person, i) => (
                     <span key={person.id}>
                       {i > 0 && ", "}
@@ -79,7 +79,7 @@ export default function ScheduleList({
                 </div>
               )}
               {event.place && (
-                <div style={{ fontSize: "12px", color: "var(--ink-3)", marginTop: "2px" }}>
+                <div style={{ fontSize: "12px", color: "var(--ink-3)", marginTop: "6px", lineHeight: 1.5 }}>
                   {event.place.name}
                 </div>
               )}
