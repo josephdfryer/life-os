@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { lifeOsAppUrl } from "@life-os/auth"
+import { lifeOsAppUrl } from "@life-os/auth/urls"
 import { EventsMark } from "@life-os/ui"
 
 const HOME_CONNECTIONS_URL = `${lifeOsAppUrl("home", "http://localhost:3003")}/admin/connections`

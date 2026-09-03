@@ -1,6 +1,6 @@
 "use client"
 
-import { lifeOsAppUrl } from "@life-os/auth"
+import { lifeOsAppUrl } from "@life-os/auth/urls"
 import { FormEvent, useCallback, useEffect, useState } from "react"
 
 type Kind = "calendar" | "gmail" | "meetings" | "era" | "oura"

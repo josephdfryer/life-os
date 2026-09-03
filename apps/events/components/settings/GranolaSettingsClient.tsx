@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { lifeOsAppUrl } from "@life-os/auth"
+import { lifeOsAppUrl } from "@life-os/auth/urls"
 
 const HOME_CONNECTIONS_URL = `${lifeOsAppUrl("home", "http://localhost:3003")}/admin/connections`
 

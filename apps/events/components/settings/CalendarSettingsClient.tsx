@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { useSearchParams } from "next/navigation"
-import { lifeOsAppUrl } from "@life-os/auth"
+import { lifeOsAppUrl } from "@life-os/auth/urls"
 import { useTimeZone } from "@life-os/ui"
 
 const HOME_URL = lifeOsAppUrl("home", "http://localhost:3003")
