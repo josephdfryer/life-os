@@ -158,6 +158,7 @@ a {
   grid-column: 2;
 }
 
+.dashboard-commitments-card,
 .dashboard-nudges-card,
 .dashboard-communications-card,
 .dashboard-content-grid > .communications-review {
@@ -1707,6 +1708,7 @@ a {
 
   .dashboard-assistant-card,
   .dashboard-schedule-card,
+  .dashboard-commitments-card,
   .dashboard-nudges-card,
   .dashboard-communications-card,
   .dashboard-content-grid > .communications-review {

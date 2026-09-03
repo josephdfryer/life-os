@@ -10,6 +10,7 @@ import MarketingHome from '../components/MarketingHome'
 import ScheduleWidget from '../components/ScheduleWidget'
 import NudgesWidget from '../components/NudgesWidget'
 import CommunicationsReviewWidget from '../components/CommunicationsReviewWidget'
+import CommitmentsWidget from '../components/CommitmentsWidget'
 import AssistantPanel from '../components/AssistantPanel'
 import { greetingForHour } from '@/lib/daily'
 
@@ -155,6 +156,9 @@ async function HomeDataPanels({
 
   return (
     <>
+      <Suspense fallback={<WidgetSkeleton className="dashboard-commitments-card" />}>
+        <CommitmentsWidget workspaceId={workspaceId} personsUrl={personsUrl} />
+      </Suspense>
       <Suspense fallback={<WidgetSkeleton className="dashboard-schedule-card" />}>
         <ScheduleWidget workspaceId={workspaceId} personsUrl={personsUrl} tz={tz} />
       </Suspense>
@@ -185,6 +189,7 @@ function HomePageSkeleton() {
 function DashboardDataSkeleton() {
   return (
     <>
+      <WidgetSkeleton className="dashboard-commitments-card" />
       <WidgetSkeleton className="dashboard-schedule-card" />
       <WidgetSkeleton className="dashboard-nudges-card" />
       <WidgetSkeleton className="dashboard-communications-card" />

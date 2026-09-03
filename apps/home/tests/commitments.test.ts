@@ -1,14 +1,18 @@
 import assert from "node:assert/strict"
 import test from "node:test"
 import {
+  MAX_FOCUS,
   STALE_DEFER_COUNT,
+  canPullIntoFocus,
   compareDue,
+  compareFocus,
   dayToDate,
   daysBetween,
-  isDueToday,
   isStale,
   markActionItem,
+  rankSuggestions,
   snoozeTarget,
+  suggestionReason,
   type Commitment,
 } from "../lib/commitments"
 import { dayKey } from "../lib/daily"
@@ -27,16 +31,10 @@ function commitment(overrides: Partial<Commitment> = {}): Commitment {
     personName: null,
     ageDays: 0,
     stale: false,
+    focusedAt: null,
     ...overrides,
   }
 }
-
-test("a commitment is due when its day has arrived or passed", () => {
-  assert.equal(isDueToday("2026-07-28", "2026-07-28"), true)
-  assert.equal(isDueToday("2026-07-20", "2026-07-28"), true)
-  assert.equal(isDueToday("2026-07-29", "2026-07-28"), false)
-  assert.equal(isDueToday(null, "2026-07-28"), false)
-})
 
 test("staleness begins at the configured defer count", () => {
   assert.equal(isStale(STALE_DEFER_COUNT - 1), false)
@@ -56,7 +54,7 @@ test("a due date round-trips through the user's zone", () => {
   assert.equal(dayKey(stored, TZ), "2026-07-28")
 })
 
-test("today's list puts the most overdue first, then the longest wait", () => {
+test("the backlog sorts most overdue first, then the longest wait", () => {
   const rows = [
     commitment({ id: "undated-new", dueOn: null, ageDays: 2 }),
     commitment({ id: "due-today", dueOn: "2026-07-28" }),
@@ -92,4 +90,37 @@ test("an out-of-range action item index resolves to nothing rather than corrupti
   const items = [{ description: "Send the contract", completed: false }]
   assert.equal(markActionItem(items, 3, true), null)
   assert.equal(markActionItem(items, -1, true), null)
+})
+
+test("focus never admits more than MAX_FOCUS", () => {
+  for (let count = 0; count < MAX_FOCUS; count += 1) {
+    assert.equal(canPullIntoFocus(count), true)
+  }
+  assert.equal(canPullIntoFocus(MAX_FOCUS), false)
+  assert.equal(canPullIntoFocus(MAX_FOCUS + 1), false)
+})
+
+test("focus order is oldest pull first, independent of dueOn", () => {
+  const rows = [
+    commitment({ id: "newest", dueOn: "2026-07-01", focusedAt: "2026-07-28T00:00:00.000Z" }),
+    commitment({ id: "oldest", dueOn: null, focusedAt: "2026-07-20T00:00:00.000Z" }),
+    commitment({ id: "middle", dueOn: "2099-01-01", focusedAt: "2026-07-24T00:00:00.000Z" }),
+  ]
+  assert.deepEqual(
+    [...rows].sort(compareFocus).map(row => row.id),
+    ["oldest", "middle", "newest"],
+  )
+})
+
+test("suggestions rank by longest wait and explain why", () => {
+  const candidates = [
+    commitment({ id: "a", ageDays: 2, personName: "Connell" }),
+    commitment({ id: "b", ageDays: 9, personName: "Jilli" }),
+    commitment({ id: "c", ageDays: 0 }),
+  ]
+  const ranked = rankSuggestions(candidates)
+  assert.deepEqual(ranked.map(row => row.id), ["b", "a", "c"])
+  assert.equal(suggestionReason(ranked[0]), "Jilli has waited 9d")
+  assert.equal(suggestionReason(commitment({ ageDays: 3, personName: null })), "captured 3d ago")
+  assert.equal(suggestionReason(commitment({ ageDays: 0, personName: null })), "captured today")
 })
