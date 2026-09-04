@@ -4,12 +4,14 @@ import { resolveTimeZone, TZ_COOKIE } from '@life-os/ui'
 import { dayKey, parseActionItems, shiftDay } from '@/lib/daily'
 import {
   ACTION_INBOX_BATCH_SIZE,
+  MAX_FOCUS,
   UNCLAIMED_BATCH_SIZE,
   compareDue,
+  compareFocus,
   dayToDate,
   daysBetween,
-  isDueToday,
   isStale,
+  rankSuggestions,
   type Commitment,
   type UnclaimedItem,
 } from '@/lib/commitments'
@@ -25,28 +27,32 @@ const DATED_SCAN_LIMIT = 40
 const PARKED_SCAN_LIMIT = 40
 const INTERACTION_SCAN_LIMIT = 80
 
+const PLAN_SELECT = {
+  id: true,
+  text: true,
+  status: true,
+  dueOn: true,
+  deferCount: true,
+  createdAt: true,
+  focusedAt: true,
+  person: { select: { id: true, first: true, last: true } },
+} as const
+
 /**
- * Open commitments: unscheduled only, because once a Plan has a calendar slot it
- * belongs to Today rather than to the list of things still owed.
+ * Backlog commitments: unscheduled and not currently in Focus. Once a Plan has
+ * a calendar slot it belongs to the schedule rather than the backlog; once
+ * it's focused it belongs to the Focus queue, not here.
  */
-function openCommitments(
+function backlogCommitments(
   workspaceId: string,
   dueOn: Prisma.PlanWhereInput['dueOn'],
   orderBy: Prisma.PlanOrderByWithRelationInput,
   take: number,
 ) {
   return db.plan.findMany({
-    where: { workspaceId, status: { in: ['active', 'blocked'] }, scheduledStart: null, dueOn },
+    where: { workspaceId, status: { in: ['active', 'blocked'] }, scheduledStart: null, focusedAt: null, dueOn },
     orderBy,
-    select: {
-      id: true,
-      text: true,
-      status: true,
-      dueOn: true,
-      deferCount: true,
-      createdAt: true,
-      person: { select: { id: true, first: true, last: true } },
-    },
+    select: PLAN_SELECT,
     take,
   })
 }
@@ -56,23 +62,22 @@ export default async function CommitmentsWidget({ workspaceId, personsUrl }: Pro
   const now = new Date()
   const weekStart = dayToDate(shiftDay(dayKey(now, tz), -7), tz)
 
-  // Dated, undated, and draft candidates are fetched separately so neither a
-  // Later list nor the Action Inbox can crowd out what is actually due now.
-  const [dated, undated, actionInboxPlans, actionInboxTotal, interactions, clearedThisWeek] = await Promise.all([
-    openCommitments(workspaceId, { not: null }, { dueOn: 'asc' }, DATED_SCAN_LIMIT),
-    openCommitments(workspaceId, null, { createdAt: 'asc' }, PARKED_SCAN_LIMIT),
+  // Focus, backlog, and draft candidates are fetched separately so none of
+  // them can crowd out the others. Focus is a hand-picked, date-independent
+  // queue — it is never derived from dueOn.
+  const [focusedPlans, dated, undated, actionInboxPlans, actionInboxTotal, interactions, clearedThisWeek] = await Promise.all([
+    db.plan.findMany({
+      where: { workspaceId, status: { in: ['active', 'blocked'] }, focusedAt: { not: null } },
+      orderBy: { focusedAt: 'asc' },
+      select: PLAN_SELECT,
+      take: MAX_FOCUS,
+    }),
+    backlogCommitments(workspaceId, { not: null }, { dueOn: 'asc' }, DATED_SCAN_LIMIT),
+    backlogCommitments(workspaceId, null, { createdAt: 'asc' }, PARKED_SCAN_LIMIT),
     db.plan.findMany({
       where: { workspaceId, status: 'draft', scheduledStart: null, dueOn: null },
       orderBy: { createdAt: 'asc' },
-      select: {
-        id: true,
-        text: true,
-        status: true,
-        dueOn: true,
-        deferCount: true,
-        createdAt: true,
-        person: { select: { id: true, first: true, last: true } },
-      },
+      select: PLAN_SELECT,
       take: ACTION_INBOX_BATCH_SIZE,
     }),
     db.plan.count({
@@ -95,7 +100,7 @@ export default async function CommitmentsWidget({ workspaceId, personsUrl }: Pro
     }),
   ])
 
-  const commitments: Commitment[] = [...dated, ...undated].map(plan => ({
+  const toCommitment = (plan: (typeof focusedPlans)[number]): Commitment => ({
     id: plan.id,
     text: plan.text,
     status: plan.status,
@@ -106,23 +111,20 @@ export default async function CommitmentsWidget({ workspaceId, personsUrl }: Pro
     personName: personLabel(plan.person),
     ageDays: daysBetween(plan.createdAt, now),
     stale: isStale(plan.deferCount),
-  }))
+    focusedAt: plan.focusedAt ? plan.focusedAt.toISOString() : null,
+  })
 
   const todayKey = dayKey(now, tz)
-  const today = commitments.filter(item => isDueToday(item.dueOn, todayKey)).sort(compareDue)
-  const parked = commitments.filter(item => !isDueToday(item.dueOn, todayKey)).sort(compareDue)
-  const actionInbox: Commitment[] = actionInboxPlans.map(plan => ({
-    id: plan.id,
-    text: plan.text,
-    status: plan.status,
-    dueOn: null,
-    deferCount: plan.deferCount,
-    createdAt: plan.createdAt.toISOString(),
-    personId: plan.person?.id ?? null,
-    personName: personLabel(plan.person),
-    ageDays: daysBetween(plan.createdAt, now),
-    stale: false,
-  }))
+  const focused = focusedPlans.map(toCommitment).sort(compareFocus)
+  const backlog = [...dated, ...undated].map(toCommitment).sort(compareDue)
+  const actionInbox: Commitment[] = actionInboxPlans.map(toCommitment)
+
+  // One explainable suggestion for the next open Focus slot, pulled from
+  // whichever of the backlog or Action Inbox has waited longest. Never more
+  // than one at a time — Focus fills by a single deliberate pull, not a batch.
+  const suggestion = focused.length < MAX_FOCUS
+    ? rankSuggestions([...actionInbox, ...backlog])[0] ?? null
+    : null
 
   // Unclaimed action items: raw lines pulled out of conversations. They are not
   // commitments until Joseph says they are, so they are counted, not listed.
@@ -148,8 +150,9 @@ export default async function CommitmentsWidget({ workspaceId, personsUrl }: Pro
 
   return (
     <CommitmentsPanel
-      today={today}
-      parked={parked}
+      focused={focused}
+      suggestion={suggestion}
+      backlog={backlog}
       actionInbox={actionInbox}
       actionInboxTotal={actionInboxTotal}
       unclaimed={unclaimed.slice(0, UNCLAIMED_BATCH_SIZE)}

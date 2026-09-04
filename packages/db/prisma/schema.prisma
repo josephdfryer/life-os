@@ -1112,6 +1112,13 @@ model Plan {
   dueOn                DateTime?
   deferCount           Int                  @default(0)
   completedAt          DateTime?
+  // Focus queue: a small, date-independent "what I'm actually working on"
+  // selection, separate from dueOn/scheduledStart. Set when pulled into the
+  // 5-item Focus queue, cleared on Done/Drop/swap-out. At most 5 Plans per
+  // workspace may have this set at once — enforced at the write layer, not
+  // by the schema. Ordered by focusedAt ascending (oldest pull surfaces
+  // first, same instinct as the dueOn overdue-first sort).
+  focusedAt            DateTime?
   parentId             String?
   children             Plan[]               @relation("PlanHierarchy")
   parent               Plan?                @relation("PlanHierarchy", fields: [parentId], references: [id])
@@ -1144,6 +1151,7 @@ model Plan {
   @@index([workspaceId, personId])
   @@index([workspaceId, scheduledStart])
   @@index([workspaceId, status, dueOn])
+  @@index([workspaceId, status, focusedAt])
   @@index([externalInstanceId])
 }
 

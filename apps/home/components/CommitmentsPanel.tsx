@@ -2,11 +2,19 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { STALE_DEFER_COUNT, type Commitment, type CommitmentAction, type UnclaimedItem } from "@/lib/commitments"
+import {
+  MAX_FOCUS,
+  STALE_DEFER_COUNT,
+  suggestionReason,
+  type Commitment,
+  type CommitmentAction,
+  type UnclaimedItem,
+} from "@/lib/commitments"
 
 interface Props {
-  today: Commitment[]
-  parked: Commitment[]
+  focused: Commitment[]
+  suggestion: Commitment | null
+  backlog: Commitment[]
   actionInbox: Commitment[]
   actionInboxTotal: number
   unclaimed: UnclaimedItem[]
@@ -17,8 +25,9 @@ interface Props {
 }
 
 export default function CommitmentsPanel({
-  today: initialToday,
-  parked: initialParked,
+  focused: initialFocused,
+  suggestion: initialSuggestion,
+  backlog: initialBacklog,
   actionInbox: initialActionInbox,
   actionInboxTotal,
   unclaimed: initialUnclaimed,
@@ -28,24 +37,27 @@ export default function CommitmentsPanel({
   personsUrl,
 }: Props) {
   const router = useRouter()
-  const [today, setToday] = useState(initialToday)
-  const [parked, setParked] = useState(initialParked)
+  const [focused, setFocused] = useState(initialFocused)
+  const [suggestion, setSuggestion] = useState(initialSuggestion)
+  const [backlog, setBacklog] = useState(initialBacklog)
   const [actionInbox, setActionInbox] = useState(initialActionInbox)
   const [actionInboxRemaining, setActionInboxRemaining] = useState(actionInboxTotal)
   const [unclaimed, setUnclaimed] = useState(initialUnclaimed)
   const [remaining, setRemaining] = useState(unclaimedTotal)
   const [cleared, setCleared] = useState(clearedThisWeek)
-  const [showParked, setShowParked] = useState(false)
+  const [showBacklog, setShowBacklog] = useState(false)
+  const [showPicker, setShowPicker] = useState(false)
   const [schedulingId, setSchedulingId] = useState<string | null>(null)
   const [busyId, setBusyId] = useState<string | null>(null)
   const [error, setError] = useState("")
 
   // Rows update optimistically so a click feels instant, then `router.refresh()`
   // re-runs the server component. Without this the refreshed props would be
-  // ignored and the next batch of unclaimed items would never appear.
+  // ignored and the next batch would never appear.
   const serverState = [
-    initialToday.map(item => item.id).join(","),
-    initialParked.map(item => item.id).join(","),
+    initialFocused.map(item => item.id).join(","),
+    initialSuggestion?.id ?? "",
+    initialBacklog.map(item => item.id).join(","),
     initialActionInbox.map(item => item.id).join(","),
     actionInboxTotal,
     initialUnclaimed.map(item => item.id).join(","),
@@ -55,8 +67,9 @@ export default function CommitmentsPanel({
   const [lastServerState, setLastServerState] = useState(serverState)
   if (serverState !== lastServerState) {
     setLastServerState(serverState)
-    setToday(initialToday)
-    setParked(initialParked)
+    setFocused(initialFocused)
+    setSuggestion(initialSuggestion)
+    setBacklog(initialBacklog)
     setActionInbox(initialActionInbox)
     setActionInboxRemaining(actionInboxTotal)
     setUnclaimed(initialUnclaimed)
@@ -65,10 +78,13 @@ export default function CommitmentsPanel({
   }
 
   function drop(id: string) {
-    setToday(items => items.filter(item => item.id !== id))
-    setParked(items => items.filter(item => item.id !== id))
+    setFocused(items => items.filter(item => item.id !== id))
+    setBacklog(items => items.filter(item => item.id !== id))
     setActionInbox(items => items.filter(item => item.id !== id))
+    setSuggestion(current => (current?.id === id ? null : current))
   }
+
+  const openSlots = MAX_FOCUS - focused.length
 
   async function act(commitment: Commitment, action: CommitmentAction, scheduledStart?: string) {
     setBusyId(commitment.id)
@@ -87,13 +103,21 @@ export default function CommitmentsPanel({
       if (commitment.status === "draft") {
         setActionInboxRemaining(count => Math.max(0, count - 1))
       }
-      if (action === "today") {
-        // Pulling something in moves it between the two lists rather than
-        // leaving the widget — it is now this morning's problem.
-        const pulled = { ...commitment, dueOn: todayKey }
-        setParked(items => items.filter(item => item.id !== commitment.id))
+      if (action === "focus") {
+        // Pulling something in is always a deliberate, individual choice —
+        // it moves into Focus and out of wherever it was, nothing else moves.
+        const pulled = { ...commitment, status: "active", focusedAt: new Date().toISOString() }
+        setBacklog(items => items.filter(item => item.id !== commitment.id))
         setActionInbox(items => items.filter(item => item.id !== commitment.id))
-        setToday(items => [...items.filter(item => item.id !== commitment.id), pulled])
+        setFocused(items => [...items.filter(item => item.id !== commitment.id), pulled])
+        setSuggestion(current => (current?.id === commitment.id ? null : current))
+        setShowPicker(false)
+      } else if (action === "unfocus") {
+        // Swap-out: back to the backlog, not dropped — the commitment is
+        // still real, it's just not what Joseph is doing right now.
+        const parked = { ...commitment, focusedAt: null }
+        setFocused(items => items.filter(item => item.id !== commitment.id))
+        setBacklog(items => [...items.filter(item => item.id !== commitment.id), parked])
       } else {
         drop(commitment.id)
         if (action === "done") setCleared(count => count + 1)
@@ -122,7 +146,10 @@ export default function CommitmentsPanel({
       setUnclaimed(items => items.filter(entry => entry.id !== item.id))
       setRemaining(count => Math.max(0, count - 1))
       if (action === "commit" && body?.planId) {
-        setToday(items => [...items, {
+        // A committed action item lands in the backlog, not straight into
+        // Focus — capture stays free, committing to work it *now* is still a
+        // separate, deliberate pull.
+        setBacklog(items => [...items, {
           id: body.planId as string,
           text: item.text,
           status: "active",
@@ -133,6 +160,7 @@ export default function CommitmentsPanel({
           personName: item.personName,
           ageDays: item.ageDays,
           stale: false,
+          focusedAt: null,
         }])
       }
       router.refresh()
@@ -141,14 +169,15 @@ export default function CommitmentsPanel({
     }
   }
 
-  const nothingAtAll = today.length === 0 && parked.length === 0 && actionInboxRemaining === 0 && remaining === 0
+  const nothingAtAll = focused.length === 0 && backlog.length === 0 && actionInboxRemaining === 0 && remaining === 0
+  const pickable = [...actionInbox, ...backlog].filter(item => item.id !== suggestion?.id)
 
   return (
     <div style={card}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
         <div>
-          <h2 style={heading}>Commitments</h2>
-          <div style={eyebrow}>What you owe, and to whom</div>
+          <h2 style={heading}>Focus</h2>
+          <div style={eyebrow}>The {MAX_FOCUS} things you're actually working on</div>
         </div>
         <a href={`${personsUrl}/persons`} style={link}>Persons →</a>
       </div>
@@ -163,50 +192,97 @@ export default function CommitmentsPanel({
         <>
           <section>
             <div style={sectionLabel}>
-              <span>Today{today.length > 0 ? ` · ${today.length}` : ''}</span>
+              <span>Focus · {focused.length}/{MAX_FOCUS}</span>
               {cleared > 0 && <span style={{ color: 'var(--camel)' }}>{cleared} cleared this week</span>}
             </div>
 
-            {today.length === 0 ? (
-              <div style={emptyLine}>
-                {parked.length > 0 || actionInboxRemaining > 0
-                  ? 'Nothing chosen for today — pull in one honest commitment below.'
-                  : 'Nothing due today.'}
+            {focused.length === 0 && (
+              <div style={emptyLine}>Nothing in focus — pull in one thing below.</div>
+            )}
+
+            {focused.map(commitment => (
+              <Row
+                key={commitment.id}
+                title={commitment.text}
+                meta={commitmentMeta(commitment, todayKey)}
+                personId={commitment.personId}
+                personName={commitment.personName}
+                personsUrl={personsUrl}
+                busy={busyId === commitment.id}
+                accent={commitment.dueOn !== null && commitment.dueOn < todayKey}
+              >
+                {commitment.stale ? (
+                  <>
+                    <span style={staleNote}>Pushed {commitment.deferCount}× — decide</span>
+                    {schedulingId === commitment.id ? (
+                      <ScheduleInput
+                        onCancel={() => setSchedulingId(null)}
+                        onConfirm={value => void act(commitment, 'schedule', value)}
+                      />
+                    ) : (
+                      <button style={button} onClick={() => setSchedulingId(commitment.id)}>Schedule</button>
+                    )}
+                    <button style={button} onClick={() => void act(commitment, 'drop')}>Drop</button>
+                  </>
+                ) : (
+                  <>
+                    <button style={primaryButton} onClick={() => void act(commitment, 'done')}>Done</button>
+                    <button style={button} onClick={() => void act(commitment, 'unfocus')}>Swap out</button>
+                    <button style={button} onClick={() => void act(commitment, 'drop')}>Drop</button>
+                  </>
+                )}
+              </Row>
+            ))}
+
+            {openSlots > 0 && (suggestion || pickable.length > 0) && (
+              <div style={suggestionBox}>
+                {suggestion ? (
+                  <>
+                    <div style={{ fontSize: '11px', color: 'var(--ink-3)', marginBottom: '6px' }}>
+                      Open slot · suggested next
+                    </div>
+                    <Row
+                      title={suggestion.text}
+                      meta={suggestionReason(suggestion)}
+                      personId={suggestion.personId}
+                      personName={suggestion.personName}
+                      personsUrl={personsUrl}
+                      busy={busyId === suggestion.id}
+                    >
+                      <button style={primaryButton} onClick={() => void act(suggestion, 'focus')}>Add to Focus</button>
+                      <button style={button} onClick={() => setShowPicker(open => !open)}>
+                        {showPicker ? 'Hide options' : 'See other options'}
+                      </button>
+                    </Row>
+                  </>
+                ) : (
+                  <button style={button} onClick={() => setShowPicker(open => !open)}>
+                    {showPicker ? 'Hide options' : 'Pick something for the open slot'}
+                  </button>
+                )}
+
+                {showPicker && (
+                  <div style={{ marginTop: '10px' }}>
+                    {pickable.length === 0 ? (
+                      <div style={emptyLine}>Nothing else open right now.</div>
+                    ) : (
+                      pickable.slice(0, 5).map(candidate => (
+                        <Row
+                          key={candidate.id}
+                          title={candidate.text}
+                          meta={suggestionReason(candidate)}
+                          personId={candidate.personId}
+                          personName={candidate.personName}
+                          personsUrl={personsUrl}
+                          busy={busyId === candidate.id}
+                        >
+                          <button style={primaryButton} onClick={() => void act(candidate, 'focus')}>Add to Focus</button>
+                        </Row>
+                      ))
+                    )}
+                  </div>
+                )}
               </div>
-            ) : (
-              today.map(commitment => (
-                <Row
-                  key={commitment.id}
-                  title={commitment.text}
-                  meta={commitmentMeta(commitment, todayKey)}
-                  personId={commitment.personId}
-                  personName={commitment.personName}
-                  personsUrl={personsUrl}
-                  busy={busyId === commitment.id}
-                  accent={commitment.dueOn !== null && commitment.dueOn < todayKey}
-                >
-                  {commitment.stale ? (
-                    <>
-                      <span style={staleNote}>Pushed {commitment.deferCount}× — decide</span>
-                      {schedulingId === commitment.id ? (
-                        <ScheduleInput
-                          onCancel={() => setSchedulingId(null)}
-                          onConfirm={value => void act(commitment, 'schedule', value)}
-                        />
-                      ) : (
-                        <button style={button} onClick={() => setSchedulingId(commitment.id)}>Schedule</button>
-                      )}
-                      <button style={button} onClick={() => void act(commitment, 'drop')}>Drop</button>
-                    </>
-                  ) : (
-                    <>
-                      <button style={primaryButton} onClick={() => void act(commitment, 'done')}>Done</button>
-                      <button style={button} onClick={() => void act(commitment, 'snooze')}>Snooze</button>
-                      <button style={button} onClick={() => void act(commitment, 'drop')}>Drop</button>
-                    </>
-                  )}
-                </Row>
-              ))
             )}
           </section>
 
@@ -226,7 +302,13 @@ export default function CommitmentsPanel({
                   personsUrl={personsUrl}
                   busy={busyId === action.id}
                 >
-                  <button style={primaryButton} onClick={() => void act(action, 'today')}>Today</button>
+                  <button
+                    style={primaryButton}
+                    disabled={openSlots <= 0}
+                    onClick={() => void act(action, 'focus')}
+                  >
+                    Add to Focus
+                  </button>
                   {schedulingId === action.id ? (
                     <ScheduleInput
                       onCancel={() => setSchedulingId(null)}
@@ -246,12 +328,12 @@ export default function CommitmentsPanel({
             </section>
           )}
 
-          {parked.length > 0 && (
+          {backlog.length > 0 && (
             <section style={{ marginTop: '24px' }}>
-              <button style={toggle} onClick={() => setShowParked(open => !open)}>
-                {showParked ? '▾' : '▸'} Later · {parked.length}
+              <button style={toggle} onClick={() => setShowBacklog(open => !open)}>
+                {showBacklog ? '▾' : '▸'} Backlog · {backlog.length}
               </button>
-              {showParked && parked.map(commitment => (
+              {showBacklog && backlog.map(commitment => (
                 <Row
                   key={commitment.id}
                   title={commitment.text}
@@ -261,7 +343,13 @@ export default function CommitmentsPanel({
                   personsUrl={personsUrl}
                   busy={busyId === commitment.id}
                 >
-                  <button style={primaryButton} onClick={() => void act(commitment, 'today')}>Today</button>
+                  <button
+                    style={primaryButton}
+                    disabled={openSlots <= 0}
+                    onClick={() => void act(commitment, 'focus')}
+                  >
+                    Add to Focus
+                  </button>
                   <button style={button} onClick={() => void act(commitment, 'done')}>Done</button>
                   <button style={button} onClick={() => void act(commitment, 'drop')}>Drop</button>
                 </Row>
@@ -379,6 +467,13 @@ function unclaimedMeta(item: UnclaimedItem) {
   if (item.eventName) parts.push(item.eventName)
   if (item.ageDays > 0) parts.push(`said ${item.ageDays}d ago`)
   return parts.join(' · ')
+}
+
+const suggestionBox: React.CSSProperties = {
+  border: '1px dashed rgba(196, 165, 116, 0.4)',
+  borderRadius: 'var(--radius)',
+  marginTop: '8px',
+  padding: '12px',
 }
 
 const card: React.CSSProperties = {

@@ -1,6 +1,6 @@
 # LifeOS Action System Plan
 
-**Status:** Phase 1 and core Phase 2 inbox flow implemented  
+**Status:** Phase 1 and core Phase 2 inbox flow implemented; Phase 2's Today list redesigned as the 5-item Focus pull queue and wired live into Home  
 **Owner:** Joseph  
 **Purpose:** Reliably hold everything Joseph may need to do without turning LifeOS into another guilt-producing task manager.
 
@@ -61,28 +61,28 @@ The draft Plan should be created immediately and deterministically. It must not 
 
 Capture confirmation should say **“Added to action inbox”**, not “Task created” or “Due.”
 
-### 2. Choose a tiny Today list
+### 2. Choose a small Focus queue, not a Today list
 
-Home should show a single action surface near the top of the day:
+Home shows a single action surface near the top of the page:
 
 ```text
-TODAY
-1–3 chosen commitments
-
-UP NEXT
-one recommended action when useful
+FOCUS
+up to 5 chosen commitments, pulled in one at a time — not tied to a date
 
 ACTION INBOX
 bounded batch of uncommitted candidates
 ```
 
-Today is deliberately scarce. Default to three chosen actions; scheduled calendar items remain visible in the schedule but do not consume all three slots. Joseph can pull in more, but the product should not encourage filling the day with an aspirational list.
+**Focus replaces the original date-based "Today" list.** Real use surfaced a mismatch: Joseph doesn't think in terms of what's due today, he thinks in terms of "what am I actually working on right now" — a small, hand-picked set that stays stable across days until something finishes. So Focus is a **pull queue** (the Personal Kanban / Lean "pull, don't push" pattern: work moves because something finished and the next thing was deliberately pulled in, not because a clock advanced), tracked by `Plan.focusedAt` — a field independent of `dueOn`/`scheduledStart`. A Plan can be focused and also have a due date or calendar slot; those keep meaning what they always meant. Focus just answers a different question.
+
+At most 5 Plans may be focused at once — enforced at the write layer (`canPullIntoFocus` in `apps/home/lib/commitments.ts`), not the schema, since "at most 5" is a product rule, not a structural one. `MAX_FOCUS` is one constant; if real use shows 5 is wrong, it's one place to change.
+
+**When a Focus slot empties (Done or Drop), nothing gets pulled in automatically.** The slot shows one explainable suggestion instead — using the same signals Recommendation logic (below) already ranks by — with two controls: **Add to Focus** (accept the suggestion) and **See other options** (open a small picker over the Action Inbox and backlog instead). Joseph always chooses what fills a Focus slot; the suggestion only removes the friction of scanning the backlog himself. This is intentional: an earlier version of this plan considered auto-filling the slot, and Joseph rejected it — the point of Focus is that it is always his call, never the system silently reordering his day.
 
 For each draft action, offer only:
 
-- **Today** — activate with today's `dueOn`.
+- **Add to Focus** — pull it into an open Focus slot (up to 5 at once).
 - **Schedule** — activate with `scheduledStart`.
-- **Later** — keep as a draft without pretending it is due.
 - **Drop** — abandon it cleanly.
 
 Review at most five inbox items at a time. Never render the whole backlog by default.
@@ -147,6 +147,7 @@ Phase 1 should reuse the current schema. Avoid adding fields until real use prov
 |---|---|
 | Action inbox item | `Plan.status = draft`, no date |
 | Chosen for a day | `Plan.status = active` + `dueOn` |
+| In Focus (what I'm actually working on, date-independent) | `Plan.status = active` + `focusedAt` |
 | Protected time | `Plan.status = active` + `scheduledStart` |
 | Waiting | `Plan.status = blocked` |
 | Done | `Plan.status = completed` + `completedAt` |
@@ -155,6 +156,8 @@ Phase 1 should reuse the current schema. Avoid adding fields until real use prov
 | Person context | `Plan.personId` / `PlanExpectedPerson` |
 | Place context | `Plan.placeId` |
 | Provenance | `Plan.sourceNoteId` |
+
+One field was added ahead of "usage evidence" rather than after it: `Plan.focusedAt` (nullable `DateTime`, mirrors the existing `completedAt`/`reconciledAt` shape — a nullable timestamp doubling as boolean state, ordering, and provenance of *when*). It exists because Focus (above) genuinely isn't representable by `dueOn`/`scheduledStart`/`status` — "what I'm working on right now" and "when I promised to do it" turned out to be two different axes, and conflating them was the original design's mistake. Ordered by `focusedAt` ascending (oldest pull first, the same longest-waiting-first instinct as the due-date sort). At most 5 Plans per workspace may have it set at once, enforced in application code, not the schema.
 
 Likely later additions, only after usage evidence:
 
@@ -193,15 +196,15 @@ Never silently reorder work based on opaque AI judgment. The user should be able
 
 ### Phase 2 — One unified action surface
 
-- Evolve the Commitments widget into Today + Action Inbox.
+- Evolve the Commitments widget into Focus + Action Inbox.
 - Include draft Plans and Interaction-derived action items in one bounded inbox.
-- Keep Today capped visually at three chosen commitments.
-- Add Today, Schedule, Later, and Drop triage actions.
-- Keep existing Done, Snooze, Schedule, and Drop behavior for active commitments.
+- Focus is a hard-capped pull queue of 5, tracked by `focusedAt`, independent of `dueOn`.
+- Add Add-to-Focus, Schedule, and Drop triage actions.
+- Keep existing Done, Snooze, Schedule, Drop, and the new Swap-out behavior for active commitments.
 
-**Acceptance:** Home makes it obvious what is merely remembered versus actually promised.
+**Acceptance:** Home makes it obvious what is merely remembered versus actually promised, and what's in Focus versus what's parked in the backlog.
 
-**Implemented:** bounded draft Plan Action Inbox with Today, Schedule, and Drop promotion controls. Broader contextual surfacing remains in later phases.
+**Implemented:** bounded draft Plan Action Inbox with Add-to-Focus, Schedule, and Drop promotion controls; the Commitments widget renders as the live Focus panel on Home (it previously existed in code but was never wired into the page). Broader contextual surfacing remains in later phases.
 
 ### Phase 3 — Context everywhere
 
