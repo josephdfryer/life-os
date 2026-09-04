@@ -103,7 +103,7 @@ export default async function ExerciseDetailPage({
 
   return (
     <WarmConcrete>
-    <div className="wrap">
+      <div className="wrap">
       <div className="detail-shell">
         <div style={{ marginBottom: 18 }}>
           <Link href="/train" className="mono">← Train</Link>
@@ -216,7 +216,7 @@ export default async function ExerciseDetailPage({
           <a href={ART_CREDIT.licenseHref} target="_blank" rel="noreferrer noopener">{ART_CREDIT.license}</a>
         </div>
       </div>
-    </div>
+      </div>
     </WarmConcrete>
   )
 }
