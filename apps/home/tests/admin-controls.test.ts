@@ -1,6 +1,6 @@
 import assert from "node:assert/strict"
 import test from "node:test"
-import { isAllowed } from "../app/api/admin/[...path]/route"
+import { isAllowed, requiredAdminScope } from "../app/api/admin/[...path]/route"
 
 test("admin proxy allows only the documented access mutations", () => {
   assert.equal(isAllowed("POST", "api-keys"), true)
@@ -12,4 +12,13 @@ test("admin proxy allows only the documented access mutations", () => {
   assert.equal(isAllowed("PATCH", "approved-emails/email-1"), true)
   assert.equal(isAllowed("POST", "../../persons/delete"), false)
   assert.equal(isAllowed("PATCH", "roles/role-1/delete"), false)
+})
+
+test("admin proxy maps every mutation to its browser-session scope", () => {
+  assert.equal(requiredAdminScope("POST", "api-keys"), "apiKeys.manage")
+  assert.equal(requiredAdminScope("POST", "roles"), "roles.manage")
+  assert.equal(requiredAdminScope("PATCH", "users/user-1/roles"), "roles.manage")
+  assert.equal(requiredAdminScope("POST", "approved-emails"), "settings.manage")
+  assert.equal(requiredAdminScope("PATCH", "workspaces/workspace-1"), "settings.manage")
+  assert.equal(requiredAdminScope("PATCH", "unknown"), null)
 })

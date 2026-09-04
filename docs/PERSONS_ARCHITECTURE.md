@@ -805,7 +805,9 @@ so a connected Gmail or Era account that is not landing records in this
 workspace is visible. It also labels the signed-in workspace and whether
 `DATABASE_URL` points at Neon. Its
 server-only `/api/admin/*` proxy forwards a strict mutation allowlist to
-`apps/api`'s canonical `/v1/access/*` commands. Persons `/admin` is now only a
+`apps/api`'s canonical `/v1/access/*` commands. The proxy rechecks the signed-in
+browser member's admin scope before forwarding, so workspace membership alone
+cannot reach role, API-key, or settings mutations. Persons `/admin` is now only a
 redirect to Home, and the duplicate Persons `/api/admin/*` routes and tab
 components have been removed.
 
@@ -884,7 +886,22 @@ Examples:
 - `ingest.write`: can run import/ingest flows.
 - `rules.manage`: can create or edit rules.
 - `audit.read`: can view the audit log.
+- `assistant.use`: can open a private member Assistant stream and use only tools
+  whose domain scopes that member also has.
+- `assistant.history.read`: can review workspace member Assistant streams in the
+  read-only Home Admin viewer.
 - `*`: owner-level access.
+
+The seeded human roles are intentionally progressive. Viewer is read-only across
+the graph, Editor adds day-to-day writes, Admin adds control-plane permissions
+and Assistant conversation oversight, and Owner retains unrestricted access.
+Owner is reserved for the workspace's actual owner: it cannot be granted as an
+ordinary user role or removed from that owner through the role editor, and the
+built-in Owner role itself is immutable. Only the workspace owner can create an
+API key or custom role with the unrestricted `*` scope, or grant such a custom
+role. User-role
+administration is scoped to the acting admin's workspace, so an admin cannot
+change a user who belongs only to another workspace.
 
 ### Workspace tenancy
 
@@ -894,16 +911,18 @@ Persons is moving from "Joseph's private CRM" toward "approved people can each h
 flowchart TD
   Login["Google login"] --> Gate{"Email approved?"}
   Gate -->|Env owner/allowlist| DefaultWorkspace["Use Joseph's default workspace"]
-  Gate -->|ApprovedEmail row| UserWorkspace["Use or create that person's workspace"]
+  Gate -->|Shared invite| SharedWorkspace["Join selected workspace with invite role"]
+  Gate -->|Standalone invite| UserWorkspace["Create that person's workspace as Owner"]
   Gate -->|No| Reject["Reject sign-in"]
 
   DefaultWorkspace --> Member["WorkspaceMember"]
+  SharedWorkspace --> Member
   UserWorkspace --> Member
   Member --> Scope["Every read/write carries workspaceId"]
   Scope --> PeopleDB["People, Interactions, Inbox, Rules, API keys, Audit"]
 ```
 
-Plain English: a login is allowed only when the email is in `OWNER_EMAILS`, `ADMIN_EMAILS`, `ALLOWED_EMAILS`, is the first user in an empty database, or has an approved `ApprovedEmail` record. Once allowed, the user gets a `WorkspaceMember` record. All core People memory then belongs to that workspace through `workspaceId`.
+Plain English: a login is allowed only when the email is in `OWNER_EMAILS`, `ADMIN_EMAILS`, `ALLOWED_EMAILS`, is the first user in an empty database, or has an approved `ApprovedEmail` record. Once allowed, the user gets a `WorkspaceMember` record. A shared-workspace invitation carries its starting role and defaults legacy invitations to Viewer; it never makes the new member Owner. A standalone invitation creates a private workspace whose invitee is its Owner. All core People memory then belongs to that workspace through `workspaceId`.
 
 If a user belongs to more than one active workspace, the shared access policy
 refuses to guess: the caller must provide the intended workspace. Cache entries
@@ -911,7 +930,16 @@ are keyed by both email and requested workspace, disabled users are rejected
 without being silently reactivated, and explicit workspace requests must match
 an active membership.
 
-The current migration preserves existing data in `default-workspace`. Owner and env-allowlisted emails land there. Future approved emails can be attached to a specific workspace or can create their own clean workspace on first sign-in. API keys also carry `workspaceId`, so headless API calls read and write inside the same boundary as browser users.
+The current migration preserves existing data in `default-workspace`. Owner and env-allowlisted emails land there. Approved emails can be attached to a specific workspace with a selected non-owner role or can create their own clean workspace on first sign-in. API keys also carry `workspaceId`, so headless API calls read and write inside the same boundary as browser users.
+
+Assistant conversations are separate per member (`AssistantMessage.workspaceId`
+plus the web sender identity). Both the standalone Assistant and Home panel show
+the member that workspace administrators can review the conversation. An Admin
+or Owner with `assistant.history.read` can browse those streams in
+`/admin/assistant-chats`; the view is bounded, cursor-paginated, workspace-scoped,
+and read-only. At execution time, Assistant advertises and accepts only tools
+whose required domain scope the member holds, so Viewer can ask read questions
+but cannot create or modify graph records.
 
 ## Rules Engine
 
@@ -1018,6 +1046,7 @@ erDiagram
   Interaction ||--o{ GmailMessageLink : source
   StagedInteraction ||--o{ GmailMessageLink : reviews
   ApprovedEmail }o--|| Workspace : can_assign_to
+  ApprovedEmail }o--o| Role : grants_on_join
   User ||--o{ ApiKey : creates
   User ||--o{ WorkspaceMember : belongs_to
   User ||--o{ AuditLog : causes
@@ -1178,6 +1207,7 @@ flowchart LR
 - Data Cleaning: `/people/clean` highlights People records missing email, phone, names, or broader context, and supports editing or deleting those People from the cleanup view.
 - Inbox create-and-accept: an unmatched staged interaction can create a new Person and attach the interaction in one review action.
 - Workspace tenancy foundation: approved emails can sign in without inheriting Joseph's data, core browser/API paths carry `workspaceId`, existing data is preserved in `default-workspace`, and API keys are scoped to the workspace that created them.
+- Shared-workspace RBAC: invitations carry a safe non-owner starting role (Viewer by default), actual Owner status is protected, role edits are workspace-scoped, Assistant tools enforce the member's domain scopes, and Admin/Owner can review disclosed, separate, read-only member chat streams.
 - Google Calendar foundation: OAuth starts from Home `/admin/connections`; calendar selection and sync remain in Events `/settings/calendar`.
 - Gmail foundation: OAuth starts from Home `/admin/connections`; sync remains read-only in Persons and stages unmatched mail only when explicitly requested.
 - Google Contacts import: `/import/persons` can pull People candidates from the connected Gmail account's Google Contacts and review them with the same create/update/skip flow as vCard and CSV imports.

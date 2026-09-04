@@ -451,8 +451,8 @@ a {
 .admin-control-row .still-button, .admin-user-access .still-button { min-height: 31px; padding: 6px 12px; font-size: 11px; }
 .admin-control-field { display: grid; gap: 6px; margin-bottom: 12px; }
 .admin-control-field > span { color: var(--ink-3); font-size: 12px; }
-.admin-control-field input { padding: 10px 14px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); color: var(--ink); font: inherit; font-size: 14px; }
-.admin-control-field input:focus { border-color: var(--cognac); box-shadow: 0 0 0 3px var(--cognac-soft); outline: 0; }
+.admin-control-field input, .admin-control-field select { padding: 10px 14px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); color: var(--ink); font: inherit; font-size: 14px; }
+.admin-control-field input:focus, .admin-control-field select:focus { border-color: var(--cognac); box-shadow: 0 0 0 3px var(--cognac-soft); outline: 0; }
 .admin-control-checkbox { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; color: var(--ink-2); font-size: 13px; }
 .admin-scope-picker { display: grid; gap: 8px; max-height: 380px; margin-bottom: var(--space-md); overflow: auto; }
 .admin-scope-picker label { display: flex; align-items: flex-start; gap: 8px; color: var(--ink-3); font-size: 11px; }
@@ -471,6 +471,18 @@ a {
 .admin-user-access label { display: flex; align-items: center; gap: 5px; color: var(--ink-3); font-size: 11px; }
 .admin-user-access > button { grid-column: 3; grid-row: 1 / span 2; }
 .admin-control-empty { padding: 24px; color: var(--ink-3); text-align: center; }
+.admin-chat-grid { display: grid; grid-template-columns: 280px minmax(0, 1fr); gap: var(--space-lg); margin-top: 28px; align-items: start; }
+.admin-chat-streams, .admin-chat-messages { display: grid; gap: var(--space-sm); }
+.admin-chat-stream { display: grid; gap: 3px; padding: 11px 12px; border: 1px solid var(--border-subtle); border-radius: var(--radius); color: var(--ink-2); }
+.admin-chat-stream:hover, .admin-chat-stream-active { border-color: var(--cognac); background: var(--cognac-soft); color: var(--cognac-deep); }
+.admin-chat-stream span, .admin-chat-stream time { color: var(--ink-3); font-size: 11px; }
+.admin-chat-message { padding: 14px 16px; border-radius: var(--radius); background: var(--surface-2); }
+.admin-chat-message-assistant { margin-right: 12%; background: var(--cognac-soft); }
+.admin-chat-message-user { margin-left: 12%; }
+.admin-chat-message > div { display: flex; justify-content: space-between; gap: var(--space-md); color: var(--ink-3); font-size: 11px; }
+.admin-chat-message > div strong { color: var(--ink-2); font-weight: 500; }
+.admin-chat-message p { margin: 7px 0 0; color: var(--ink); font-size: 13px; line-height: 1.55; white-space: pre-wrap; }
+.admin-chat-older { margin-top: var(--space-md); }
 .connections-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-md); margin-top: 28px; }
 .connections-wide { grid-column: 1 / -1; display: flex; align-items: center; gap: var(--space-sm); }
 .connections-wide span { flex: 1; }
@@ -772,7 +784,7 @@ a {
   .admin-role-row, .admin-rule-row { flex-direction: column; gap: 10px; }
   .admin-scope-list { justify-content: flex-start; max-width: none; }
   .admin-rule-row > div:last-child { justify-items: start; }
-  .admin-controls-grid, .admin-access-grid { grid-template-columns: 1fr; }
+  .admin-controls-grid, .admin-access-grid, .admin-chat-grid { grid-template-columns: 1fr; }
   .admin-access-grid > :nth-child(4) { grid-column: auto; }
   .admin-user-access { grid-template-columns: 1fr; }
   .admin-user-access > span, .admin-user-access > div, .admin-user-access > button { grid-column: 1; grid-row: auto; }

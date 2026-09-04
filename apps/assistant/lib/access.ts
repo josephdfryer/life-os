@@ -1,5 +1,5 @@
 import { auth } from "@/auth"
-import { db } from "@/lib/db"
+import { createAccessService } from "@life-os/access"
 
 export class AccessError extends Error {
   status: number
@@ -10,45 +10,20 @@ export class AccessError extends Error {
   }
 }
 
-export type WorkspaceAccess = { userId: string; email: string; workspaceId: string }
+export type WorkspaceAccess = { userId: string; email: string; workspaceId: string; workspaceName: string; scopes: string[] }
 
-// Resolves the authenticated caller's own workspace from their session —
-// never a hardcoded/default workspace or env var. Mirrors the
-// membership-resolution rules in apps/persons/server/domain/access.ts:
-// disabled users and unrecognized emails are rejected, and an ambiguous
-// (multi-workspace) user must be handled explicitly rather than defaulting
-// to "first membership".
+const access = createAccessService({
+  getSession: auth,
+  errors: {
+    badRequest: message => new AccessError(400, message),
+    forbidden: message => new AccessError(403, message ?? "Forbidden"),
+    unauthorized: message => new AccessError(401, message ?? "Unauthorized"),
+  },
+  localReviewEnabled: () => process.env.NODE_ENV !== "production" && process.env.LIFE_OS_LOCAL_REVIEW === "1",
+})
+
 export async function requireWorkspaceAccess(): Promise<WorkspaceAccess> {
-  if (process.env.NODE_ENV !== "production" && process.env.LIFE_OS_LOCAL_REVIEW === "1") {
-    return localReviewAccess()
-  }
-
-  const session = await auth()
-  const email = session?.user?.email?.toLowerCase()
-  if (!email) throw new AccessError(401, "Unauthorized")
-
-  const user = await db.user.findUnique({ where: { email }, select: { id: true, status: true } })
-  if (!user || user.status !== "active") throw new AccessError(403, "Account is disabled or unknown")
-
-  const memberships = await db.workspaceMember.findMany({
-    where: { userId: user.id, status: "active", workspace: { status: "active" } },
-    select: { workspaceId: true },
-    orderBy: { createdAt: "asc" },
-  })
-  if (memberships.length === 0) throw new AccessError(403, "No active workspace membership")
-  if (memberships.length > 1) throw new AccessError(400, "Multiple workspace memberships; workspace must be specified explicitly")
-
-  return { userId: user.id, email, workspaceId: memberships[0].workspaceId }
-}
-
-async function localReviewAccess(): Promise<WorkspaceAccess> {
-  const membership = await db.workspaceMember.findFirst({
-    where: { status: "active", workspace: { status: "active" } },
-    orderBy: { createdAt: "asc" },
-    include: { user: true },
-  })
-  if (!membership) throw new AccessError(500, "Local review workspace is missing")
-  return { userId: membership.userId, email: membership.user.email, workspaceId: membership.workspaceId }
+  return access.requireAccess("assistant.use")
 }
 
 export function accessErrorResponse(error: unknown) {

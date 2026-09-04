@@ -32,6 +32,7 @@ export type ApprovedEmailMinAggregateOutputType = {
   status: string | null
   workspaceId: string | null
   invitedById: string | null
+  roleId: string | null
 }
 
 export type ApprovedEmailMaxAggregateOutputType = {
@@ -42,6 +43,7 @@ export type ApprovedEmailMaxAggregateOutputType = {
   status: string | null
   workspaceId: string | null
   invitedById: string | null
+  roleId: string | null
 }
 
 export type ApprovedEmailCountAggregateOutputType = {
@@ -52,6 +54,7 @@ export type ApprovedEmailCountAggregateOutputType = {
   status: number
   workspaceId: number
   invitedById: number
+  roleId: number
   _all: number
 }
 
@@ -64,6 +67,7 @@ export type ApprovedEmailMinAggregateInputType = {
   status?: true
   workspaceId?: true
   invitedById?: true
+  roleId?: true
 }
 
 export type ApprovedEmailMaxAggregateInputType = {
@@ -74,6 +78,7 @@ export type ApprovedEmailMaxAggregateInputType = {
   status?: true
   workspaceId?: true
   invitedById?: true
+  roleId?: true
 }
 
 export type ApprovedEmailCountAggregateInputType = {
@@ -84,6 +89,7 @@ export type ApprovedEmailCountAggregateInputType = {
   status?: true
   workspaceId?: true
   invitedById?: true
+  roleId?: true
   _all?: true
 }
 
@@ -167,6 +173,7 @@ export type ApprovedEmailGroupByOutputType = {
   status: string
   workspaceId: string | null
   invitedById: string | null
+  roleId: string | null
   _count: ApprovedEmailCountAggregateOutputType | null
   _min: ApprovedEmailMinAggregateOutputType | null
   _max: ApprovedEmailMaxAggregateOutputType | null
@@ -198,8 +205,10 @@ export type ApprovedEmailWhereInput = {
   status?: Prisma.StringFilter<"ApprovedEmail"> | string
   workspaceId?: Prisma.StringNullableFilter<"ApprovedEmail"> | string | null
   invitedById?: Prisma.StringNullableFilter<"ApprovedEmail"> | string | null
+  roleId?: Prisma.StringNullableFilter<"ApprovedEmail"> | string | null
   workspace?: Prisma.XOR<Prisma.WorkspaceNullableScalarRelationFilter, Prisma.WorkspaceWhereInput> | null
   invitedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
+  role?: Prisma.XOR<Prisma.RoleNullableScalarRelationFilter, Prisma.RoleWhereInput> | null
 }
 
 export type ApprovedEmailOrderByWithRelationInput = {
@@ -210,8 +219,10 @@ export type ApprovedEmailOrderByWithRelationInput = {
   status?: Prisma.SortOrder
   workspaceId?: Prisma.SortOrderInput | Prisma.SortOrder
   invitedById?: Prisma.SortOrderInput | Prisma.SortOrder
+  roleId?: Prisma.SortOrderInput | Prisma.SortOrder
   workspace?: Prisma.WorkspaceOrderByWithRelationInput
   invitedBy?: Prisma.UserOrderByWithRelationInput
+  role?: Prisma.RoleOrderByWithRelationInput
 }
 
 export type ApprovedEmailWhereUniqueInput = Prisma.AtLeast<{
@@ -225,8 +236,10 @@ export type ApprovedEmailWhereUniqueInput = Prisma.AtLeast<{
   status?: Prisma.StringFilter<"ApprovedEmail"> | string
   workspaceId?: Prisma.StringNullableFilter<"ApprovedEmail"> | string | null
   invitedById?: Prisma.StringNullableFilter<"ApprovedEmail"> | string | null
+  roleId?: Prisma.StringNullableFilter<"ApprovedEmail"> | string | null
   workspace?: Prisma.XOR<Prisma.WorkspaceNullableScalarRelationFilter, Prisma.WorkspaceWhereInput> | null
   invitedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
+  role?: Prisma.XOR<Prisma.RoleNullableScalarRelationFilter, Prisma.RoleWhereInput> | null
 }, "id" | "email">
 
 export type ApprovedEmailOrderByWithAggregationInput = {
@@ -237,6 +250,7 @@ export type ApprovedEmailOrderByWithAggregationInput = {
   status?: Prisma.SortOrder
   workspaceId?: Prisma.SortOrderInput | Prisma.SortOrder
   invitedById?: Prisma.SortOrderInput | Prisma.SortOrder
+  roleId?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.ApprovedEmailCountOrderByAggregateInput
   _max?: Prisma.ApprovedEmailMaxOrderByAggregateInput
   _min?: Prisma.ApprovedEmailMinOrderByAggregateInput
@@ -253,6 +267,7 @@ export type ApprovedEmailScalarWhereWithAggregatesInput = {
   status?: Prisma.StringWithAggregatesFilter<"ApprovedEmail"> | string
   workspaceId?: Prisma.StringNullableWithAggregatesFilter<"ApprovedEmail"> | string | null
   invitedById?: Prisma.StringNullableWithAggregatesFilter<"ApprovedEmail"> | string | null
+  roleId?: Prisma.StringNullableWithAggregatesFilter<"ApprovedEmail"> | string | null
 }
 
 export type ApprovedEmailCreateInput = {
@@ -263,6 +278,7 @@ export type ApprovedEmailCreateInput = {
   status?: string
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutApprovedEmailsInput
   invitedBy?: Prisma.UserCreateNestedOneWithoutApprovedEmailsSentInput
+  role?: Prisma.RoleCreateNestedOneWithoutApprovedEmailsInput
 }
 
 export type ApprovedEmailUncheckedCreateInput = {
@@ -273,6 +289,7 @@ export type ApprovedEmailUncheckedCreateInput = {
   status?: string
   workspaceId?: string | null
   invitedById?: string | null
+  roleId?: string | null
 }
 
 export type ApprovedEmailUpdateInput = {
@@ -283,6 +300,7 @@ export type ApprovedEmailUpdateInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   workspace?: Prisma.WorkspaceUpdateOneWithoutApprovedEmailsNestedInput
   invitedBy?: Prisma.UserUpdateOneWithoutApprovedEmailsSentNestedInput
+  role?: Prisma.RoleUpdateOneWithoutApprovedEmailsNestedInput
 }
 
 export type ApprovedEmailUncheckedUpdateInput = {
@@ -293,6 +311,7 @@ export type ApprovedEmailUncheckedUpdateInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   workspaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   invitedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  roleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type ApprovedEmailCreateManyInput = {
@@ -303,6 +322,7 @@ export type ApprovedEmailCreateManyInput = {
   status?: string
   workspaceId?: string | null
   invitedById?: string | null
+  roleId?: string | null
 }
 
 export type ApprovedEmailUpdateManyMutationInput = {
@@ -321,6 +341,7 @@ export type ApprovedEmailUncheckedUpdateManyInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   workspaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   invitedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  roleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type ApprovedEmailListRelationFilter = {
@@ -341,6 +362,7 @@ export type ApprovedEmailCountOrderByAggregateInput = {
   status?: Prisma.SortOrder
   workspaceId?: Prisma.SortOrder
   invitedById?: Prisma.SortOrder
+  roleId?: Prisma.SortOrder
 }
 
 export type ApprovedEmailMaxOrderByAggregateInput = {
@@ -351,6 +373,7 @@ export type ApprovedEmailMaxOrderByAggregateInput = {
   status?: Prisma.SortOrder
   workspaceId?: Prisma.SortOrder
   invitedById?: Prisma.SortOrder
+  roleId?: Prisma.SortOrder
 }
 
 export type ApprovedEmailMinOrderByAggregateInput = {
@@ -361,6 +384,7 @@ export type ApprovedEmailMinOrderByAggregateInput = {
   status?: Prisma.SortOrder
   workspaceId?: Prisma.SortOrder
   invitedById?: Prisma.SortOrder
+  roleId?: Prisma.SortOrder
 }
 
 export type ApprovedEmailCreateNestedManyWithoutWorkspaceInput = {
@@ -447,6 +471,48 @@ export type ApprovedEmailUncheckedUpdateManyWithoutInvitedByNestedInput = {
   deleteMany?: Prisma.ApprovedEmailScalarWhereInput | Prisma.ApprovedEmailScalarWhereInput[]
 }
 
+export type ApprovedEmailCreateNestedManyWithoutRoleInput = {
+  create?: Prisma.XOR<Prisma.ApprovedEmailCreateWithoutRoleInput, Prisma.ApprovedEmailUncheckedCreateWithoutRoleInput> | Prisma.ApprovedEmailCreateWithoutRoleInput[] | Prisma.ApprovedEmailUncheckedCreateWithoutRoleInput[]
+  connectOrCreate?: Prisma.ApprovedEmailCreateOrConnectWithoutRoleInput | Prisma.ApprovedEmailCreateOrConnectWithoutRoleInput[]
+  createMany?: Prisma.ApprovedEmailCreateManyRoleInputEnvelope
+  connect?: Prisma.ApprovedEmailWhereUniqueInput | Prisma.ApprovedEmailWhereUniqueInput[]
+}
+
+export type ApprovedEmailUncheckedCreateNestedManyWithoutRoleInput = {
+  create?: Prisma.XOR<Prisma.ApprovedEmailCreateWithoutRoleInput, Prisma.ApprovedEmailUncheckedCreateWithoutRoleInput> | Prisma.ApprovedEmailCreateWithoutRoleInput[] | Prisma.ApprovedEmailUncheckedCreateWithoutRoleInput[]
+  connectOrCreate?: Prisma.ApprovedEmailCreateOrConnectWithoutRoleInput | Prisma.ApprovedEmailCreateOrConnectWithoutRoleInput[]
+  createMany?: Prisma.ApprovedEmailCreateManyRoleInputEnvelope
+  connect?: Prisma.ApprovedEmailWhereUniqueInput | Prisma.ApprovedEmailWhereUniqueInput[]
+}
+
+export type ApprovedEmailUpdateManyWithoutRoleNestedInput = {
+  create?: Prisma.XOR<Prisma.ApprovedEmailCreateWithoutRoleInput, Prisma.ApprovedEmailUncheckedCreateWithoutRoleInput> | Prisma.ApprovedEmailCreateWithoutRoleInput[] | Prisma.ApprovedEmailUncheckedCreateWithoutRoleInput[]
+  connectOrCreate?: Prisma.ApprovedEmailCreateOrConnectWithoutRoleInput | Prisma.ApprovedEmailCreateOrConnectWithoutRoleInput[]
+  upsert?: Prisma.ApprovedEmailUpsertWithWhereUniqueWithoutRoleInput | Prisma.ApprovedEmailUpsertWithWhereUniqueWithoutRoleInput[]
+  createMany?: Prisma.ApprovedEmailCreateManyRoleInputEnvelope
+  set?: Prisma.ApprovedEmailWhereUniqueInput | Prisma.ApprovedEmailWhereUniqueInput[]
+  disconnect?: Prisma.ApprovedEmailWhereUniqueInput | Prisma.ApprovedEmailWhereUniqueInput[]
+  delete?: Prisma.ApprovedEmailWhereUniqueInput | Prisma.ApprovedEmailWhereUniqueInput[]
+  connect?: Prisma.ApprovedEmailWhereUniqueInput | Prisma.ApprovedEmailWhereUniqueInput[]
+  update?: Prisma.ApprovedEmailUpdateWithWhereUniqueWithoutRoleInput | Prisma.ApprovedEmailUpdateWithWhereUniqueWithoutRoleInput[]
+  updateMany?: Prisma.ApprovedEmailUpdateManyWithWhereWithoutRoleInput | Prisma.ApprovedEmailUpdateManyWithWhereWithoutRoleInput[]
+  deleteMany?: Prisma.ApprovedEmailScalarWhereInput | Prisma.ApprovedEmailScalarWhereInput[]
+}
+
+export type ApprovedEmailUncheckedUpdateManyWithoutRoleNestedInput = {
+  create?: Prisma.XOR<Prisma.ApprovedEmailCreateWithoutRoleInput, Prisma.ApprovedEmailUncheckedCreateWithoutRoleInput> | Prisma.ApprovedEmailCreateWithoutRoleInput[] | Prisma.ApprovedEmailUncheckedCreateWithoutRoleInput[]
+  connectOrCreate?: Prisma.ApprovedEmailCreateOrConnectWithoutRoleInput | Prisma.ApprovedEmailCreateOrConnectWithoutRoleInput[]
+  upsert?: Prisma.ApprovedEmailUpsertWithWhereUniqueWithoutRoleInput | Prisma.ApprovedEmailUpsertWithWhereUniqueWithoutRoleInput[]
+  createMany?: Prisma.ApprovedEmailCreateManyRoleInputEnvelope
+  set?: Prisma.ApprovedEmailWhereUniqueInput | Prisma.ApprovedEmailWhereUniqueInput[]
+  disconnect?: Prisma.ApprovedEmailWhereUniqueInput | Prisma.ApprovedEmailWhereUniqueInput[]
+  delete?: Prisma.ApprovedEmailWhereUniqueInput | Prisma.ApprovedEmailWhereUniqueInput[]
+  connect?: Prisma.ApprovedEmailWhereUniqueInput | Prisma.ApprovedEmailWhereUniqueInput[]
+  update?: Prisma.ApprovedEmailUpdateWithWhereUniqueWithoutRoleInput | Prisma.ApprovedEmailUpdateWithWhereUniqueWithoutRoleInput[]
+  updateMany?: Prisma.ApprovedEmailUpdateManyWithWhereWithoutRoleInput | Prisma.ApprovedEmailUpdateManyWithWhereWithoutRoleInput[]
+  deleteMany?: Prisma.ApprovedEmailScalarWhereInput | Prisma.ApprovedEmailScalarWhereInput[]
+}
+
 export type ApprovedEmailCreateWithoutWorkspaceInput = {
   id?: string
   createdAt?: Date | string
@@ -454,6 +520,7 @@ export type ApprovedEmailCreateWithoutWorkspaceInput = {
   email: string
   status?: string
   invitedBy?: Prisma.UserCreateNestedOneWithoutApprovedEmailsSentInput
+  role?: Prisma.RoleCreateNestedOneWithoutApprovedEmailsInput
 }
 
 export type ApprovedEmailUncheckedCreateWithoutWorkspaceInput = {
@@ -463,6 +530,7 @@ export type ApprovedEmailUncheckedCreateWithoutWorkspaceInput = {
   email: string
   status?: string
   invitedById?: string | null
+  roleId?: string | null
 }
 
 export type ApprovedEmailCreateOrConnectWithoutWorkspaceInput = {
@@ -501,6 +569,7 @@ export type ApprovedEmailScalarWhereInput = {
   status?: Prisma.StringFilter<"ApprovedEmail"> | string
   workspaceId?: Prisma.StringNullableFilter<"ApprovedEmail"> | string | null
   invitedById?: Prisma.StringNullableFilter<"ApprovedEmail"> | string | null
+  roleId?: Prisma.StringNullableFilter<"ApprovedEmail"> | string | null
 }
 
 export type ApprovedEmailCreateWithoutInvitedByInput = {
@@ -510,6 +579,7 @@ export type ApprovedEmailCreateWithoutInvitedByInput = {
   email: string
   status?: string
   workspace?: Prisma.WorkspaceCreateNestedOneWithoutApprovedEmailsInput
+  role?: Prisma.RoleCreateNestedOneWithoutApprovedEmailsInput
 }
 
 export type ApprovedEmailUncheckedCreateWithoutInvitedByInput = {
@@ -519,6 +589,7 @@ export type ApprovedEmailUncheckedCreateWithoutInvitedByInput = {
   email: string
   status?: string
   workspaceId?: string | null
+  roleId?: string | null
 }
 
 export type ApprovedEmailCreateOrConnectWithoutInvitedByInput = {
@@ -546,6 +617,51 @@ export type ApprovedEmailUpdateManyWithWhereWithoutInvitedByInput = {
   data: Prisma.XOR<Prisma.ApprovedEmailUpdateManyMutationInput, Prisma.ApprovedEmailUncheckedUpdateManyWithoutInvitedByInput>
 }
 
+export type ApprovedEmailCreateWithoutRoleInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  email: string
+  status?: string
+  workspace?: Prisma.WorkspaceCreateNestedOneWithoutApprovedEmailsInput
+  invitedBy?: Prisma.UserCreateNestedOneWithoutApprovedEmailsSentInput
+}
+
+export type ApprovedEmailUncheckedCreateWithoutRoleInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  email: string
+  status?: string
+  workspaceId?: string | null
+  invitedById?: string | null
+}
+
+export type ApprovedEmailCreateOrConnectWithoutRoleInput = {
+  where: Prisma.ApprovedEmailWhereUniqueInput
+  create: Prisma.XOR<Prisma.ApprovedEmailCreateWithoutRoleInput, Prisma.ApprovedEmailUncheckedCreateWithoutRoleInput>
+}
+
+export type ApprovedEmailCreateManyRoleInputEnvelope = {
+  data: Prisma.ApprovedEmailCreateManyRoleInput | Prisma.ApprovedEmailCreateManyRoleInput[]
+}
+
+export type ApprovedEmailUpsertWithWhereUniqueWithoutRoleInput = {
+  where: Prisma.ApprovedEmailWhereUniqueInput
+  update: Prisma.XOR<Prisma.ApprovedEmailUpdateWithoutRoleInput, Prisma.ApprovedEmailUncheckedUpdateWithoutRoleInput>
+  create: Prisma.XOR<Prisma.ApprovedEmailCreateWithoutRoleInput, Prisma.ApprovedEmailUncheckedCreateWithoutRoleInput>
+}
+
+export type ApprovedEmailUpdateWithWhereUniqueWithoutRoleInput = {
+  where: Prisma.ApprovedEmailWhereUniqueInput
+  data: Prisma.XOR<Prisma.ApprovedEmailUpdateWithoutRoleInput, Prisma.ApprovedEmailUncheckedUpdateWithoutRoleInput>
+}
+
+export type ApprovedEmailUpdateManyWithWhereWithoutRoleInput = {
+  where: Prisma.ApprovedEmailScalarWhereInput
+  data: Prisma.XOR<Prisma.ApprovedEmailUpdateManyMutationInput, Prisma.ApprovedEmailUncheckedUpdateManyWithoutRoleInput>
+}
+
 export type ApprovedEmailCreateManyWorkspaceInput = {
   id?: string
   createdAt?: Date | string
@@ -553,6 +669,7 @@ export type ApprovedEmailCreateManyWorkspaceInput = {
   email: string
   status?: string
   invitedById?: string | null
+  roleId?: string | null
 }
 
 export type ApprovedEmailUpdateWithoutWorkspaceInput = {
@@ -562,6 +679,7 @@ export type ApprovedEmailUpdateWithoutWorkspaceInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   invitedBy?: Prisma.UserUpdateOneWithoutApprovedEmailsSentNestedInput
+  role?: Prisma.RoleUpdateOneWithoutApprovedEmailsNestedInput
 }
 
 export type ApprovedEmailUncheckedUpdateWithoutWorkspaceInput = {
@@ -571,6 +689,7 @@ export type ApprovedEmailUncheckedUpdateWithoutWorkspaceInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   invitedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  roleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type ApprovedEmailUncheckedUpdateManyWithoutWorkspaceInput = {
@@ -580,6 +699,7 @@ export type ApprovedEmailUncheckedUpdateManyWithoutWorkspaceInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   invitedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  roleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type ApprovedEmailCreateManyInvitedByInput = {
@@ -589,6 +709,7 @@ export type ApprovedEmailCreateManyInvitedByInput = {
   email: string
   status?: string
   workspaceId?: string | null
+  roleId?: string | null
 }
 
 export type ApprovedEmailUpdateWithoutInvitedByInput = {
@@ -598,6 +719,7 @@ export type ApprovedEmailUpdateWithoutInvitedByInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   workspace?: Prisma.WorkspaceUpdateOneWithoutApprovedEmailsNestedInput
+  role?: Prisma.RoleUpdateOneWithoutApprovedEmailsNestedInput
 }
 
 export type ApprovedEmailUncheckedUpdateWithoutInvitedByInput = {
@@ -607,6 +729,7 @@ export type ApprovedEmailUncheckedUpdateWithoutInvitedByInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   workspaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  roleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type ApprovedEmailUncheckedUpdateManyWithoutInvitedByInput = {
@@ -616,6 +739,47 @@ export type ApprovedEmailUncheckedUpdateManyWithoutInvitedByInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   workspaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  roleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+}
+
+export type ApprovedEmailCreateManyRoleInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  email: string
+  status?: string
+  workspaceId?: string | null
+  invitedById?: string | null
+}
+
+export type ApprovedEmailUpdateWithoutRoleInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  workspace?: Prisma.WorkspaceUpdateOneWithoutApprovedEmailsNestedInput
+  invitedBy?: Prisma.UserUpdateOneWithoutApprovedEmailsSentNestedInput
+}
+
+export type ApprovedEmailUncheckedUpdateWithoutRoleInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  invitedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+}
+
+export type ApprovedEmailUncheckedUpdateManyWithoutRoleInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  invitedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
@@ -628,8 +792,10 @@ export type ApprovedEmailSelect<ExtArgs extends runtime.Types.Extensions.Interna
   status?: boolean
   workspaceId?: boolean
   invitedById?: boolean
+  roleId?: boolean
   workspace?: boolean | Prisma.ApprovedEmail$workspaceArgs<ExtArgs>
   invitedBy?: boolean | Prisma.ApprovedEmail$invitedByArgs<ExtArgs>
+  role?: boolean | Prisma.ApprovedEmail$roleArgs<ExtArgs>
 }, ExtArgs["result"]["approvedEmail"]>
 
 export type ApprovedEmailSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -640,8 +806,10 @@ export type ApprovedEmailSelectCreateManyAndReturn<ExtArgs extends runtime.Types
   status?: boolean
   workspaceId?: boolean
   invitedById?: boolean
+  roleId?: boolean
   workspace?: boolean | Prisma.ApprovedEmail$workspaceArgs<ExtArgs>
   invitedBy?: boolean | Prisma.ApprovedEmail$invitedByArgs<ExtArgs>
+  role?: boolean | Prisma.ApprovedEmail$roleArgs<ExtArgs>
 }, ExtArgs["result"]["approvedEmail"]>
 
 export type ApprovedEmailSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -652,8 +820,10 @@ export type ApprovedEmailSelectUpdateManyAndReturn<ExtArgs extends runtime.Types
   status?: boolean
   workspaceId?: boolean
   invitedById?: boolean
+  roleId?: boolean
   workspace?: boolean | Prisma.ApprovedEmail$workspaceArgs<ExtArgs>
   invitedBy?: boolean | Prisma.ApprovedEmail$invitedByArgs<ExtArgs>
+  role?: boolean | Prisma.ApprovedEmail$roleArgs<ExtArgs>
 }, ExtArgs["result"]["approvedEmail"]>
 
 export type ApprovedEmailSelectScalar = {
@@ -664,20 +834,24 @@ export type ApprovedEmailSelectScalar = {
   status?: boolean
   workspaceId?: boolean
   invitedById?: boolean
+  roleId?: boolean
 }
 
-export type ApprovedEmailOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "email" | "status" | "workspaceId" | "invitedById", ExtArgs["result"]["approvedEmail"]>
+export type ApprovedEmailOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "email" | "status" | "workspaceId" | "invitedById" | "roleId", ExtArgs["result"]["approvedEmail"]>
 export type ApprovedEmailInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   workspace?: boolean | Prisma.ApprovedEmail$workspaceArgs<ExtArgs>
   invitedBy?: boolean | Prisma.ApprovedEmail$invitedByArgs<ExtArgs>
+  role?: boolean | Prisma.ApprovedEmail$roleArgs<ExtArgs>
 }
 export type ApprovedEmailIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   workspace?: boolean | Prisma.ApprovedEmail$workspaceArgs<ExtArgs>
   invitedBy?: boolean | Prisma.ApprovedEmail$invitedByArgs<ExtArgs>
+  role?: boolean | Prisma.ApprovedEmail$roleArgs<ExtArgs>
 }
 export type ApprovedEmailIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   workspace?: boolean | Prisma.ApprovedEmail$workspaceArgs<ExtArgs>
   invitedBy?: boolean | Prisma.ApprovedEmail$invitedByArgs<ExtArgs>
+  role?: boolean | Prisma.ApprovedEmail$roleArgs<ExtArgs>
 }
 
 export type $ApprovedEmailPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -685,6 +859,7 @@ export type $ApprovedEmailPayload<ExtArgs extends runtime.Types.Extensions.Inter
   objects: {
     workspace: Prisma.$WorkspacePayload<ExtArgs> | null
     invitedBy: Prisma.$UserPayload<ExtArgs> | null
+    role: Prisma.$RolePayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -694,6 +869,7 @@ export type $ApprovedEmailPayload<ExtArgs extends runtime.Types.Extensions.Inter
     status: string
     workspaceId: string | null
     invitedById: string | null
+    roleId: string | null
   }, ExtArgs["result"]["approvedEmail"]>
   composites: {}
 }
@@ -1090,6 +1266,7 @@ export interface Prisma__ApprovedEmailClient<T, Null = never, ExtArgs extends ru
   readonly [Symbol.toStringTag]: "PrismaPromise"
   workspace<T extends Prisma.ApprovedEmail$workspaceArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ApprovedEmail$workspaceArgs<ExtArgs>>): Prisma.Prisma__WorkspaceClient<runtime.Types.Result.GetResult<Prisma.$WorkspacePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   invitedBy<T extends Prisma.ApprovedEmail$invitedByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ApprovedEmail$invitedByArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  role<T extends Prisma.ApprovedEmail$roleArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ApprovedEmail$roleArgs<ExtArgs>>): Prisma.Prisma__RoleClient<runtime.Types.Result.GetResult<Prisma.$RolePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1126,6 +1303,7 @@ export interface ApprovedEmailFieldRefs {
   readonly status: Prisma.FieldRef<"ApprovedEmail", 'String'>
   readonly workspaceId: Prisma.FieldRef<"ApprovedEmail", 'String'>
   readonly invitedById: Prisma.FieldRef<"ApprovedEmail", 'String'>
+  readonly roleId: Prisma.FieldRef<"ApprovedEmail", 'String'>
 }
     
 
@@ -1560,6 +1738,25 @@ export type ApprovedEmail$invitedByArgs<ExtArgs extends runtime.Types.Extensions
    */
   include?: Prisma.UserInclude<ExtArgs> | null
   where?: Prisma.UserWhereInput
+}
+
+/**
+ * ApprovedEmail.role
+ */
+export type ApprovedEmail$roleArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Role
+   */
+  select?: Prisma.RoleSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Role
+   */
+  omit?: Prisma.RoleOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RoleInclude<ExtArgs> | null
+  where?: Prisma.RoleWhereInput
 }
 
 /**

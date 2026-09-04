@@ -96,6 +96,8 @@ export const DEFAULT_PERMISSIONS = [
   { scope: "connections.manage", description: "Connect, reconnect, or disconnect third-party accounts" },
   { scope: "devices.read", description: "Read registered companion devices and connector health" },
   { scope: "devices.manage", description: "Revoke companion devices" },
+  { scope: "assistant.use", description: "Use the LifeOS Assistant with the permissions granted by this role" },
+  { scope: "assistant.history.read", description: "Read other workspace members' Assistant conversations" },
   // Never grant this to a Role — it's for one thing: a trusted server-side
   // proxy (Home's control-plane routes) that has already verified a session
   // belongs to a workspace, and needs its shared API key to act on that
@@ -122,6 +124,7 @@ export const DEFAULT_ROLES = [
       "life-events.read", "life-events.write",
       "connections.read", "connections.manage",
       "devices.read", "devices.manage",
+      "assistant.use", "assistant.history.read",
     ],
   },
   {
@@ -137,6 +140,7 @@ export const DEFAULT_ROLES = [
       "life-events.read", "life-events.write",
       "connections.read",
       "devices.read",
+      "assistant.use",
     ],
   },
   {
@@ -150,6 +154,7 @@ export const DEFAULT_ROLES = [
       "life-events.read",
       "connections.read",
       "devices.read",
+      "assistant.use",
     ],
   },
   {
@@ -238,7 +243,7 @@ export function createAccessService(dependencies: AccessDependencies) {
       db.user.findUnique({ where: { email } }),
       isOwner || isAllowed
         ? Promise.resolve(null)
-        : db.approvedEmail.findUnique({ where: { email }, select: { status: true, workspaceId: true } }),
+        : db.approvedEmail.findUnique({ where: { email }, select: { status: true, workspaceId: true, roleId: true } }),
     ])
 
     if (!isOwner && !isAllowed && approvedRow?.status !== "approved") {
@@ -266,7 +271,15 @@ export function createAccessService(dependencies: AccessDependencies) {
     // userScopes must not read UserRole until that write has landed —
     // running them concurrently raced the two and silently deprived a
     // newly provisioned user of any scopes.
-    const workspace = await resolveWorkspace(user.id, email, workspaceId, isFirstUser || isOwner, approvedRow?.workspaceId ?? null, dependencies)
+    const workspace = await resolveWorkspace(
+      user.id,
+      email,
+      workspaceId,
+      isFirstUser || isOwner,
+      approvedRow?.workspaceId ?? null,
+      approvedRow?.roleId ?? null,
+      dependencies,
+    )
     const scopes = await userScopes(user.id)
 
     if (!hasScope(scopes, requiredScope)) {
@@ -294,6 +307,7 @@ async function resolveWorkspace(
   workspaceId: string | undefined,
   useDefaultBootstrap: boolean,
   approvedWorkspaceId: string | null,
+  approvedRoleId: string | null,
   dependencies: AccessDependencies,
 ) {
   if (workspaceId) {
@@ -322,7 +336,7 @@ async function resolveWorkspace(
   if (allMemberships.length > 0) {
     throw dependencies.errors.forbidden("Your workspace has been suspended", { userId })
   }
-  return buildWorkspace(userId, email, useDefaultBootstrap, approvedWorkspaceId)
+  return buildWorkspace(userId, email, useDefaultBootstrap, approvedWorkspaceId, approvedRoleId)
 }
 
 async function localReviewActor(dependencies: AccessDependencies): Promise<AccessActor> {
@@ -345,7 +359,13 @@ async function localReviewActor(dependencies: AccessDependencies): Promise<Acces
   }
 }
 
-async function buildWorkspace(userId: string, email: string, useDefault: boolean, approvedWorkspaceId: string | null) {
+async function buildWorkspace(
+  userId: string,
+  email: string,
+  useDefault: boolean,
+  approvedWorkspaceId: string | null,
+  approvedRoleId: string | null,
+) {
   const workspaceId = useDefault ? "default-workspace" : approvedWorkspaceId
   const workspace = workspaceId
     ? await db.workspace.upsert({
@@ -365,19 +385,37 @@ async function buildWorkspace(userId: string, email: string, useDefault: boolean
         ownerUserId: userId,
       },
     })
-  await addWorkspaceMember(workspace.id, userId, "owner")
-  // WorkspaceMember.role above is a per-workspace label; it grants no
-  // scopes on its own — userScopes() reads UserRole, which is otherwise
-  // only populated for the env-configured owner or the very first user
-  // ever (see the isFirstUser || isOwner branch above). Without this, a
-  // standalone user would get a real workspace and then 403 on every
-  // single request inside it. Global UserRole is safe to grant here
-  // (rather than scoping it to just this workspace) because access is a
-  // capability check independent of tenant isolation — every domain
-  // command still scopes its data by the resolved workspaceId, and a user
-  // can only ever be an active member of one workspace at a time.
-  await grantRole(userId, "owner")
+  const sharedInvite = !useDefault && approvedWorkspaceId !== null
+  const invitedRole = sharedInvite
+    ? await invitedRoleOrViewer(approvedRoleId)
+    : await roleByKey("owner")
+  if (!invitedRole) throw new Error("Default access roles are missing")
+
+  await addWorkspaceMember(workspace.id, userId, workspaceRoleForRoleKey(invitedRole.key))
+  // A shared invitation receives its selected role before the first
+  // request completes, so there is never a temporary Owner window. A
+  // standalone invitation still owns the isolated workspace it creates.
+  await grantRoleById(userId, invitedRole.id)
   return workspace
+}
+
+async function invitedRoleOrViewer(roleId: string | null) {
+  if (roleId) {
+    const role = await db.role.findUnique({ where: { id: roleId }, select: { id: true, key: true } })
+    if (role && role.key !== "owner" && role.key !== "automation") return role
+  }
+  return roleByKey("viewer")
+}
+
+async function roleByKey(key: string) {
+  return db.role.findUnique({ where: { key }, select: { id: true, key: true } })
+}
+
+function workspaceRoleForRoleKey(roleKey: string): WorkspaceRole {
+  if (roleKey === "owner") return "owner"
+  if (roleKey === "admin") return "admin"
+  if (roleKey === "viewer") return "viewer"
+  return "member"
 }
 
 async function addWorkspaceMember(workspaceId: string, userId: string, role: WorkspaceRole) {
@@ -391,10 +429,14 @@ async function addWorkspaceMember(workspaceId: string, userId: string, role: Wor
 async function grantRole(userId: string, roleKey: string) {
   const role = await db.role.findUnique({ where: { key: roleKey }, select: { id: true } })
   if (!role) return
+  await grantRoleById(userId, role.id)
+}
+
+async function grantRoleById(userId: string, roleId: string) {
   await db.userRole.upsert({
-    where: { userId_roleId: { userId, roleId: role.id } },
+    where: { userId_roleId: { userId, roleId } },
     update: {},
-    create: { userId, roleId: role.id },
+    create: { userId, roleId },
   })
 }
 

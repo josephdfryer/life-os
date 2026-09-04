@@ -5,9 +5,10 @@ import { useRouter } from "next/navigation"
 
 export type Permission = { id: string; scope: string; description: string | null }
 export type Role = { id: string; key: string; name: string; description: string | null; permissions: Permission[]; userCount: number }
-export type AdminUser = { id: string; email: string; name: string | null; roles: { id: string; name: string }[] }
+export type AdminUser = { id: string; email: string; name: string | null; isWorkspaceOwner: boolean; roles: { id: string; name: string }[] }
 export type ApiKey = { id: string; name: string; keyPrefix: string; status: string; scopes: string[]; lastUsedAt: string | null }
-export type ApprovedEmail = { id: string; email: string; status: string; createdAt: string }
+export type InviteRole = { id: string; key: string; name: string; description: string | null }
+export type ApprovedEmail = { id: string; email: string; status: string; workspaceId: string | null; createdAt: string; role: InviteRole | null }
 export type WorkspaceRow = { id: string; name: string; slug: string; status: string; createdAt: string; ownerEmail: string | null; memberCount: number; approvedEmailCount: number; isDefault: boolean }
 
 export function ApiKeyControls({ apiKeys, permissions }: { apiKeys: ApiKey[]; permissions: Permission[] }) {
@@ -51,25 +52,27 @@ export function AccessControls({ roles, users, permissions }: { roles: Role[]; u
 
   return <div className="admin-access-grid">
     <AdminCard title="Roles" meta={`${roles.length} roles`}><div className="admin-role-picker">{roles.map(role => <button className={role.id === selected?.id ? "admin-role-choice admin-role-choice-active" : "admin-role-choice"} key={role.id} onClick={() => setSelectedId(role.id)}><strong>{role.name}</strong><span>{role.key} · {role.userCount} users</span></button>)}</div></AdminCard>
-    <AdminCard title={selected?.name ?? "Role permissions"} meta={selected?.key}>{selected && <><ScopePicker permissions={permissions} selected={selectedScopes} onToggle={scope => setScopeDrafts(current => ({ ...current, [selected.id]: toggle(selectedScopes, scope) }))} /><MutationButton mutation={mutation} onClick={() => mutation.run(`/api/admin/roles/${selected.id}`, "PATCH", { scopes: selectedScopes })}>Save role</MutationButton></>}</AdminCard>
+    <AdminCard title={selected?.name ?? "Role permissions"} meta={selected?.key}>{selected && (selected.key === "owner" ? <p className="admin-control-help">Owner is an immutable system role reserved for the workspace owner.</p> : <><ScopePicker permissions={permissions} selected={selectedScopes} onToggle={scope => setScopeDrafts(current => ({ ...current, [selected.id]: toggle(selectedScopes, scope) }))} /><MutationButton mutation={mutation} onClick={() => mutation.run(`/api/admin/roles/${selected.id}`, "PATCH", { scopes: selectedScopes })}>Save role</MutationButton></>)}</AdminCard>
     <AdminCard title="New role"><Field label="Key" value={newRole.key} onChange={key => setNewRole(value => ({ ...value, key }))} placeholder="partner" /><Field label="Name" value={newRole.name} onChange={name => setNewRole(value => ({ ...value, name }))} placeholder="Partner" /><Field label="Description" value={newRole.description} onChange={description => setNewRole(value => ({ ...value, description }))} placeholder="External collaborator" /><MutationButton disabled={!newRole.key.trim() || !newRole.name.trim()} mutation={mutation} onClick={() => mutation.run("/api/admin/roles", "POST", { ...newRole, scopes: [] })}>Create role</MutationButton></AdminCard>
-    <AdminCard title="User access" meta={`${users.length} users`}><div className="admin-control-list">{users.map(user => { const assigned = userDrafts[user.id] ?? user.roles.map(role => role.id); return <div className="admin-user-access" key={user.id}><strong>{user.name || user.email}</strong><span>{user.name ? user.email : "Workspace member"}</span><div>{roles.map(role => <label key={role.id}><input type="checkbox" checked={assigned.includes(role.id)} onChange={() => setUserDrafts(current => ({ ...current, [user.id]: toggle(assigned, role.id) }))} />{role.name}</label>)}</div><button className="still-button still-button-secondary" disabled={mutation.busy} onClick={() => mutation.run(`/api/admin/users/${user.id}/roles`, "PATCH", { roleIds: assigned })}>Save access</button></div> })}</div></AdminCard>
+    <AdminCard title="User access" meta={`${users.length} users`}><div className="admin-control-list">{users.map(user => { const assigned = userDrafts[user.id] ?? user.roles.map(role => role.id); return <div className="admin-user-access" key={user.id}><strong>{user.name || user.email}</strong><span>{user.name ? `${user.email}${user.isWorkspaceOwner ? " · Workspace owner" : ""}` : user.isWorkspaceOwner ? "Workspace owner" : "Workspace member"}</span><div>{roles.map(role => { const ownerRole = role.key === "owner"; const hasRole = assigned.includes(role.id); return <label key={role.id}><input type="checkbox" checked={hasRole} disabled={ownerRole && (user.isWorkspaceOwner || !hasRole)} onChange={() => setUserDrafts(current => ({ ...current, [user.id]: toggle(assigned, role.id) }))} />{role.name}</label> })}</div><button className="still-button still-button-secondary" disabled={mutation.busy} onClick={() => mutation.run(`/api/admin/users/${user.id}/roles`, "PATCH", { roleIds: assigned })}>Save access</button></div> })}</div></AdminCard>
     <MutationMessage mutation={mutation} />
   </div>
 }
 
-export function ApprovedEmailControls({ rows }: { rows: ApprovedEmail[] }) {
+export function ApprovedEmailControls({ rows, roles }: { rows: ApprovedEmail[]; roles: InviteRole[] }) {
   const router = useRouter()
   const [email, setEmail] = useState("")
   const [standalone, setStandalone] = useState(false)
+  const [roleId, setRoleId] = useState(roles.find(role => role.key === "viewer")?.id ?? roles[0]?.id ?? "")
   const mutation = useAdminMutation(router.refresh)
   return <AdminGrid aside={<AdminCard title="Approve an email">
     <Field label="Email" value={email} onChange={setEmail} placeholder="name@example.com" />
+    {!standalone && <label className="admin-control-field"><span>Starting role</span><select value={roleId} onChange={event => setRoleId(event.target.value)}>{roles.map(role => <option key={role.id} value={role.id}>{role.name}</option>)}</select></label>}
     <label className="admin-control-checkbox"><input type="checkbox" checked={standalone} onChange={event => setStandalone(event.target.checked)} /> Give this person their own standalone workspace</label>
-    <p className="admin-control-help">{standalone ? "They get a brand-new, fully isolated workspace on first sign-in — no access to your data." : "The person joins this workspace after signing in with this address."}</p>
-    <MutationButton disabled={!email.trim()} mutation={mutation} onClick={async () => { const result = await mutation.run("/api/admin/approved-emails", "POST", { email, ...(standalone ? { workspaceId: null } : {}) }); if (result) { setEmail(""); setStandalone(false) } }}>Approve email</MutationButton>
+    <p className="admin-control-help">{standalone ? "They get a brand-new, fully isolated workspace as its Owner on first sign-in — no access to your data." : `${roles.find(role => role.id === roleId)?.description ?? "The selected role applies from their first sign-in."} You can promote them later under Access. Workspace admins can review member Assistant chats.`}</p>
+    <MutationButton disabled={!email.trim() || (!standalone && !roleId)} mutation={mutation} onClick={async () => { const result = await mutation.run("/api/admin/approved-emails", "POST", { email, ...(standalone ? { workspaceId: null } : { roleId }) }); if (result) { setEmail(""); setStandalone(false) } }}>Approve email</MutationButton>
   </AdminCard>}>
-    <AdminCard title="Approved emails" meta={`${rows.length} addresses`}><div className="admin-control-list">{rows.map(row => <div className="admin-control-row" key={row.id}><div><strong>{row.email}</strong><span>Approved {formatDate(row.createdAt)}</span></div><div><span className="stream-type-badge">{row.status}</span><button className="still-button still-button-secondary" disabled={mutation.busy} onClick={() => mutation.run(`/api/admin/approved-emails/${row.id}`, "PATCH", { status: row.status === "approved" ? "revoked" : "approved" })}>{row.status === "approved" ? "Revoke" : "Re-approve"}</button></div></div>)}</div></AdminCard><MutationMessage mutation={mutation} />
+    <AdminCard title="Approved emails" meta={`${rows.length} addresses`}><div className="admin-control-list">{rows.map(row => <div className="admin-control-row" key={row.id}><div><strong>{row.email}</strong><span>{row.role?.name ?? (row.workspaceId ? "Viewer" : "Owner of standalone workspace")} · Approved {formatDate(row.createdAt)}</span></div><div><span className="stream-type-badge">{row.status}</span><button className="still-button still-button-secondary" disabled={mutation.busy} onClick={() => mutation.run(`/api/admin/approved-emails/${row.id}`, "PATCH", { status: row.status === "approved" ? "revoked" : "approved" })}>{row.status === "approved" ? "Revoke" : "Re-approve"}</button></div></div>)}</div></AdminCard><MutationMessage mutation={mutation} />
   </AdminGrid>
 }
 

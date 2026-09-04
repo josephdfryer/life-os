@@ -204,6 +204,135 @@ test("a brand-new standalone signup gets its own workspace, not default-workspac
   assert.ok(actor.scopes.includes("*"))
 })
 
+test("a shared-workspace invite receives Viewer from its first request without an Owner window", async () => {
+  const { access, db } = await setup()
+  const workspaceId = "access-shared-invite"
+  await createWorkspace(db, workspaceId)
+  const accessService = service(access, "shared-viewer@example.com")
+  await accessService.seedDefaultAccess()
+  const viewer = await db.role.findUniqueOrThrow({ where: { key: "viewer" } })
+  await db.approvedEmail.create({
+    data: { email: "shared-viewer@example.com", status: "approved", workspaceId, roleId: viewer.id },
+  })
+
+  const actor = await accessService.requireAccess("people.read")
+  assert.equal(actor.workspaceId, workspaceId)
+  assert.equal(actor.scopes.includes("*"), false)
+  await assert.rejects(() => service(access, actor.email).requireAccess("settings.manage"), /missing required permission/i)
+
+  const user = await db.user.findUniqueOrThrow({
+    where: { email: actor.email },
+    include: { roles: { include: { role: true } }, workspaceMemberships: true },
+  })
+  assert.deepEqual(user.roles.map(item => item.role.key), ["viewer"])
+  assert.equal(user.workspaceMemberships[0]?.role, "viewer")
+})
+
+test("shared invitations default to Viewer and reject Owner as an invite role", async () => {
+  const { access, admin, db } = await setup()
+  const workspaceId = "access-invite-policy"
+  const owner = await db.user.create({ data: { email: "invite-owner@example.com", status: "active" } })
+  await db.workspace.create({ data: { id: workspaceId, name: workspaceId, slug: workspaceId, ownerUserId: owner.id } })
+  const accessService = service(access, owner.email)
+  await accessService.seedDefaultAccess()
+  const actor = fakeActor({ userId: owner.id, workspaceId })
+
+  const created = await admin.addApprovedEmail({ email: "default-viewer-invite@example.com" }, actor)
+  assert.equal(created.approvedEmail.role?.key, "viewer")
+
+  const ownerRole = await db.role.findUniqueOrThrow({ where: { key: "owner" } })
+  await assert.rejects(
+    () => admin.addApprovedEmail({ email: "forbidden-owner-invite@example.com", roleId: ownerRole.id }, actor),
+    /other than Owner/i,
+  )
+})
+
+test("workspace admins can promote their member to Admin but cannot assign Owner", async () => {
+  const { access, admin, db } = await setup()
+  const workspaceId = "access-role-promotion"
+  const owner = await db.user.create({ data: { email: "promotion-owner@example.com", status: "active" } })
+  await db.workspace.create({ data: { id: workspaceId, name: workspaceId, slug: workspaceId, ownerUserId: owner.id } })
+  await db.workspaceMember.create({ data: { workspaceId, userId: owner.id, role: "owner" } })
+  const accessService = service(access, owner.email)
+  await accessService.seedDefaultAccess()
+  await grantRole(db, owner.id, "owner")
+  const member = await createMember(db, { email: "promoted-member@example.com", workspaceId })
+  await grantRole(db, member.id, "viewer")
+  const actor = fakeActor({ userId: owner.id, workspaceId })
+  const adminRole = await db.role.findUniqueOrThrow({ where: { key: "admin" } })
+
+  await admin.updateUserRoles(member.id, { roleIds: [adminRole.id] }, actor)
+  const promoted = await db.workspaceMember.findUniqueOrThrow({
+    where: { workspaceId_userId: { workspaceId, userId: member.id } },
+  })
+  assert.equal(promoted.role, "admin")
+
+  const ownerRole = await db.role.findUniqueOrThrow({ where: { key: "owner" } })
+  await assert.rejects(
+    () => admin.updateUserRoles(member.id, { roleIds: [ownerRole.id] }, actor),
+    /cannot be assigned/i,
+  )
+})
+
+test("non-owner admins cannot manufacture or grant unrestricted access", async () => {
+  const { access, admin, db } = await setup()
+  const workspaceId = "access-wildcard-policy"
+  const owner = await db.user.create({ data: { email: "wildcard-owner@example.com", status: "active" } })
+  const adminUser = await db.user.create({ data: { email: "wildcard-admin@example.com", status: "active" } })
+  await db.workspace.create({ data: { id: workspaceId, name: workspaceId, slug: workspaceId, ownerUserId: owner.id } })
+  await db.workspaceMember.createMany({
+    data: [
+      { workspaceId, userId: owner.id, role: "owner" },
+      { workspaceId, userId: adminUser.id, role: "admin" },
+    ],
+  })
+  await service(access, owner.email).seedDefaultAccess()
+  const adminActor = fakeActor({ userId: adminUser.id, workspaceId, scopes: ["roles.manage", "apiKeys.manage"] })
+
+  await assert.rejects(
+    () => admin.createRole({ key: "admin-escalation", name: "Escalation", scopes: ["*"] }, adminActor),
+    /workspace owner/i,
+  )
+  await assert.rejects(
+    () => admin.createApiKey({ name: "unrestricted", scopes: ["*"] }, adminActor),
+    /workspace owner/i,
+  )
+
+  const unrestricted = await admin.createRole(
+    { key: "owner-delegated-unrestricted", name: "Owner delegated unrestricted", scopes: ["*"] },
+    fakeActor({ userId: owner.id, workspaceId }),
+  )
+  await assert.rejects(
+    () => admin.updateUserRoles(adminUser.id, { roleIds: [unrestricted.id] }, adminActor),
+    /workspace owner/i,
+  )
+})
+
+test("the built-in Owner role is immutable", async () => {
+  const { admin, db } = await setup()
+  const ownerRole = await db.role.findUniqueOrThrow({ where: { key: "owner" } })
+  await assert.rejects(
+    () => admin.updateRole(ownerRole.id, { name: "Changed Owner" }, fakeActor({ userId: "any-owner", workspaceId: "any-workspace" })),
+    /cannot be edited/i,
+  )
+})
+
+test("role management cannot target a user outside the actor's workspace", async () => {
+  const { access, admin, db } = await setup()
+  await createWorkspace(db, "access-role-scope-a")
+  await createWorkspace(db, "access-role-scope-b")
+  const actorUser = await createMember(db, { email: "role-scope-admin@example.com", workspaceId: "access-role-scope-a" })
+  const foreignUser = await createMember(db, { email: "role-scope-foreign@example.com", workspaceId: "access-role-scope-b" })
+  const accessService = service(access, actorUser.email)
+  await accessService.seedDefaultAccess()
+  const viewer = await db.role.findUniqueOrThrow({ where: { key: "viewer" } })
+
+  await assert.rejects(
+    () => admin.updateUserRoles(foreignUser.id, { roleIds: [viewer.id] }, fakeActor({ userId: actorUser.id, workspaceId: "access-role-scope-a" })),
+    /workspace member not found/i,
+  )
+})
+
 test("only the instance owner (default-workspace) can suspend another workspace", async () => {
   const { admin, db } = await setup()
   await createWorkspace(db, "access-owner-target")

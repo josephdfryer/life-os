@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import { ADMIN_PROXY_CONFIG, proxyToLifeOsApi } from "@/lib/life-os-api-proxy"
+import { hasAdminScope } from "@/lib/admin-access"
 
 type Params = { params: Promise<{ path: string[] }> }
 type Method = "POST" | "PATCH"
@@ -17,12 +18,23 @@ async function proxyAccess(request: NextRequest, { params }: Params, method: Met
   if (!isAllowed(method, pathname)) {
     return NextResponse.json({ error: { code: "not_found", message: "Admin endpoint not found." } }, { status: 404 })
   }
+  const requiredScope = requiredAdminScope(method, pathname)
+  if (!requiredScope || !await hasAdminScope(requiredScope)) {
+    return NextResponse.json({ error: { code: "forbidden", message: "You do not have permission to perform this admin action." } }, { status: 403 })
+  }
 
   return proxyToLifeOsApi(request, `/v1/access/${pathname}`, {
     method,
     config: ADMIN_PROXY_CONFIG,
     body: await request.text(),
   })
+}
+
+export function requiredAdminScope(_method: Method, pathname: string) {
+  if (pathname === "api-keys" || /^api-keys\/[^/]+$/.test(pathname)) return "apiKeys.manage"
+  if (pathname === "roles" || /^roles\/[^/]+$/.test(pathname) || /^users\/[^/]+\/roles$/.test(pathname)) return "roles.manage"
+  if (pathname === "approved-emails" || /^approved-emails\/[^/]+$/.test(pathname) || /^workspaces\/[^/]+$/.test(pathname)) return "settings.manage"
+  return null
 }
 
 export function isAllowed(method: Method, pathname: string) {

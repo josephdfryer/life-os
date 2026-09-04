@@ -1,5 +1,5 @@
 import { db } from "@life-os/db"
-import { loadAdminCapabilities, requireAdminCapability } from "@/lib/admin-access"
+import { requireAdminCapability } from "@/lib/admin-access"
 import { workspaceForHomeRequest } from "@/lib/request-access"
 import { redirect } from "next/navigation"
 import { AccessControls } from "../AdminControls"
@@ -17,6 +17,7 @@ export default async function AdminAccessPage() {
     db.workspace.findUnique({
       where: { id: workspaceId },
       select: {
+        ownerUserId: true,
         members: {
           where: { status: "active" },
           orderBy: { createdAt: "asc" },
@@ -54,6 +55,7 @@ export default async function AdminAccessPage() {
     id: member.user.id,
     email: member.user.email,
     name: member.user.name,
+    isWorkspaceOwner: workspace?.ownerUserId === member.user.id,
     roles: member.user.roles.map(item => item.role),
   })) ?? []
 
