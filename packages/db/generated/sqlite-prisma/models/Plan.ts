@@ -46,6 +46,7 @@ export type PlanMinAggregateOutputType = {
   dueOn: Date | null
   deferCount: number | null
   completedAt: Date | null
+  focusedAt: Date | null
   parentId: string | null
   scheduledStart: Date | null
   scheduledEnd: Date | null
@@ -70,6 +71,7 @@ export type PlanMaxAggregateOutputType = {
   dueOn: Date | null
   deferCount: number | null
   completedAt: Date | null
+  focusedAt: Date | null
   parentId: string | null
   scheduledStart: Date | null
   scheduledEnd: Date | null
@@ -94,6 +96,7 @@ export type PlanCountAggregateOutputType = {
   dueOn: number
   deferCount: number
   completedAt: number
+  focusedAt: number
   parentId: number
   scheduledStart: number
   scheduledEnd: number
@@ -128,6 +131,7 @@ export type PlanMinAggregateInputType = {
   dueOn?: true
   deferCount?: true
   completedAt?: true
+  focusedAt?: true
   parentId?: true
   scheduledStart?: true
   scheduledEnd?: true
@@ -152,6 +156,7 @@ export type PlanMaxAggregateInputType = {
   dueOn?: true
   deferCount?: true
   completedAt?: true
+  focusedAt?: true
   parentId?: true
   scheduledStart?: true
   scheduledEnd?: true
@@ -176,6 +181,7 @@ export type PlanCountAggregateInputType = {
   dueOn?: true
   deferCount?: true
   completedAt?: true
+  focusedAt?: true
   parentId?: true
   scheduledStart?: true
   scheduledEnd?: true
@@ -287,6 +293,7 @@ export type PlanGroupByOutputType = {
   dueOn: Date | null
   deferCount: number
   completedAt: Date | null
+  focusedAt: Date | null
   parentId: string | null
   scheduledStart: Date | null
   scheduledEnd: Date | null
@@ -334,6 +341,7 @@ export type PlanWhereInput = {
   dueOn?: Prisma.DateTimeNullableFilter<"Plan"> | Date | string | null
   deferCount?: Prisma.IntFilter<"Plan"> | number
   completedAt?: Prisma.DateTimeNullableFilter<"Plan"> | Date | string | null
+  focusedAt?: Prisma.DateTimeNullableFilter<"Plan"> | Date | string | null
   parentId?: Prisma.StringNullableFilter<"Plan"> | string | null
   scheduledStart?: Prisma.DateTimeNullableFilter<"Plan"> | Date | string | null
   scheduledEnd?: Prisma.DateTimeNullableFilter<"Plan"> | Date | string | null
@@ -369,6 +377,7 @@ export type PlanOrderByWithRelationInput = {
   dueOn?: Prisma.SortOrderInput | Prisma.SortOrder
   deferCount?: Prisma.SortOrder
   completedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  focusedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   parentId?: Prisma.SortOrderInput | Prisma.SortOrder
   scheduledStart?: Prisma.SortOrderInput | Prisma.SortOrder
   scheduledEnd?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -408,6 +417,7 @@ export type PlanWhereUniqueInput = Prisma.AtLeast<{
   dueOn?: Prisma.DateTimeNullableFilter<"Plan"> | Date | string | null
   deferCount?: Prisma.IntFilter<"Plan"> | number
   completedAt?: Prisma.DateTimeNullableFilter<"Plan"> | Date | string | null
+  focusedAt?: Prisma.DateTimeNullableFilter<"Plan"> | Date | string | null
   parentId?: Prisma.StringNullableFilter<"Plan"> | string | null
   scheduledStart?: Prisma.DateTimeNullableFilter<"Plan"> | Date | string | null
   scheduledEnd?: Prisma.DateTimeNullableFilter<"Plan"> | Date | string | null
@@ -442,6 +452,7 @@ export type PlanOrderByWithAggregationInput = {
   dueOn?: Prisma.SortOrderInput | Prisma.SortOrder
   deferCount?: Prisma.SortOrder
   completedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  focusedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   parentId?: Prisma.SortOrderInput | Prisma.SortOrder
   scheduledStart?: Prisma.SortOrderInput | Prisma.SortOrder
   scheduledEnd?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -474,6 +485,7 @@ export type PlanScalarWhereWithAggregatesInput = {
   dueOn?: Prisma.DateTimeNullableWithAggregatesFilter<"Plan"> | Date | string | null
   deferCount?: Prisma.IntWithAggregatesFilter<"Plan"> | number
   completedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Plan"> | Date | string | null
+  focusedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Plan"> | Date | string | null
   parentId?: Prisma.StringNullableWithAggregatesFilter<"Plan"> | string | null
   scheduledStart?: Prisma.DateTimeNullableWithAggregatesFilter<"Plan"> | Date | string | null
   scheduledEnd?: Prisma.DateTimeNullableWithAggregatesFilter<"Plan"> | Date | string | null
@@ -496,6 +508,7 @@ export type PlanCreateInput = {
   dueOn?: Date | string | null
   deferCount?: number
   completedAt?: Date | string | null
+  focusedAt?: Date | string | null
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
   externalSource?: string | null
@@ -528,6 +541,7 @@ export type PlanUncheckedCreateInput = {
   dueOn?: Date | string | null
   deferCount?: number
   completedAt?: Date | string | null
+  focusedAt?: Date | string | null
   parentId?: string | null
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
@@ -556,6 +570,7 @@ export type PlanUpdateInput = {
   dueOn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deferCount?: Prisma.IntFieldUpdateOperationsInput | number
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  focusedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   externalSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -588,6 +603,7 @@ export type PlanUncheckedUpdateInput = {
   dueOn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deferCount?: Prisma.IntFieldUpdateOperationsInput | number
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  focusedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -618,6 +634,7 @@ export type PlanCreateManyInput = {
   dueOn?: Date | string | null
   deferCount?: number
   completedAt?: Date | string | null
+  focusedAt?: Date | string | null
   parentId?: string | null
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
@@ -640,6 +657,7 @@ export type PlanUpdateManyMutationInput = {
   dueOn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deferCount?: Prisma.IntFieldUpdateOperationsInput | number
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  focusedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   externalSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -661,6 +679,7 @@ export type PlanUncheckedUpdateManyInput = {
   dueOn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deferCount?: Prisma.IntFieldUpdateOperationsInput | number
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  focusedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -700,6 +719,7 @@ export type PlanCountOrderByAggregateInput = {
   dueOn?: Prisma.SortOrder
   deferCount?: Prisma.SortOrder
   completedAt?: Prisma.SortOrder
+  focusedAt?: Prisma.SortOrder
   parentId?: Prisma.SortOrder
   scheduledStart?: Prisma.SortOrder
   scheduledEnd?: Prisma.SortOrder
@@ -728,6 +748,7 @@ export type PlanMaxOrderByAggregateInput = {
   dueOn?: Prisma.SortOrder
   deferCount?: Prisma.SortOrder
   completedAt?: Prisma.SortOrder
+  focusedAt?: Prisma.SortOrder
   parentId?: Prisma.SortOrder
   scheduledStart?: Prisma.SortOrder
   scheduledEnd?: Prisma.SortOrder
@@ -752,6 +773,7 @@ export type PlanMinOrderByAggregateInput = {
   dueOn?: Prisma.SortOrder
   deferCount?: Prisma.SortOrder
   completedAt?: Prisma.SortOrder
+  focusedAt?: Prisma.SortOrder
   parentId?: Prisma.SortOrder
   scheduledStart?: Prisma.SortOrder
   scheduledEnd?: Prisma.SortOrder
@@ -1089,6 +1111,7 @@ export type PlanCreateWithoutWorkspaceInput = {
   dueOn?: Date | string | null
   deferCount?: number
   completedAt?: Date | string | null
+  focusedAt?: Date | string | null
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
   externalSource?: string | null
@@ -1119,6 +1142,7 @@ export type PlanUncheckedCreateWithoutWorkspaceInput = {
   dueOn?: Date | string | null
   deferCount?: number
   completedAt?: Date | string | null
+  focusedAt?: Date | string | null
   parentId?: string | null
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
@@ -1177,6 +1201,7 @@ export type PlanScalarWhereInput = {
   dueOn?: Prisma.DateTimeNullableFilter<"Plan"> | Date | string | null
   deferCount?: Prisma.IntFilter<"Plan"> | number
   completedAt?: Prisma.DateTimeNullableFilter<"Plan"> | Date | string | null
+  focusedAt?: Prisma.DateTimeNullableFilter<"Plan"> | Date | string | null
   parentId?: Prisma.StringNullableFilter<"Plan"> | string | null
   scheduledStart?: Prisma.DateTimeNullableFilter<"Plan"> | Date | string | null
   scheduledEnd?: Prisma.DateTimeNullableFilter<"Plan"> | Date | string | null
@@ -1199,6 +1224,7 @@ export type PlanCreateWithoutPersonInput = {
   dueOn?: Date | string | null
   deferCount?: number
   completedAt?: Date | string | null
+  focusedAt?: Date | string | null
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
   externalSource?: string | null
@@ -1229,6 +1255,7 @@ export type PlanUncheckedCreateWithoutPersonInput = {
   dueOn?: Date | string | null
   deferCount?: number
   completedAt?: Date | string | null
+  focusedAt?: Date | string | null
   parentId?: string | null
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
@@ -1282,6 +1309,7 @@ export type PlanCreateWithoutCalendarLinksInput = {
   dueOn?: Date | string | null
   deferCount?: number
   completedAt?: Date | string | null
+  focusedAt?: Date | string | null
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
   externalSource?: string | null
@@ -1313,6 +1341,7 @@ export type PlanUncheckedCreateWithoutCalendarLinksInput = {
   dueOn?: Date | string | null
   deferCount?: number
   completedAt?: Date | string | null
+  focusedAt?: Date | string | null
   parentId?: string | null
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
@@ -1356,6 +1385,7 @@ export type PlanUpdateWithoutCalendarLinksInput = {
   dueOn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deferCount?: Prisma.IntFieldUpdateOperationsInput | number
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  focusedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   externalSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1387,6 +1417,7 @@ export type PlanUncheckedUpdateWithoutCalendarLinksInput = {
   dueOn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deferCount?: Prisma.IntFieldUpdateOperationsInput | number
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  focusedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1414,6 +1445,7 @@ export type PlanCreateWithoutFulfilledByInput = {
   dueOn?: Date | string | null
   deferCount?: number
   completedAt?: Date | string | null
+  focusedAt?: Date | string | null
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
   externalSource?: string | null
@@ -1445,6 +1477,7 @@ export type PlanUncheckedCreateWithoutFulfilledByInput = {
   dueOn?: Date | string | null
   deferCount?: number
   completedAt?: Date | string | null
+  focusedAt?: Date | string | null
   parentId?: string | null
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
@@ -1488,6 +1521,7 @@ export type PlanUpdateWithoutFulfilledByInput = {
   dueOn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deferCount?: Prisma.IntFieldUpdateOperationsInput | number
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  focusedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   externalSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1519,6 +1553,7 @@ export type PlanUncheckedUpdateWithoutFulfilledByInput = {
   dueOn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deferCount?: Prisma.IntFieldUpdateOperationsInput | number
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  focusedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1546,6 +1581,7 @@ export type PlanCreateWithoutParentInput = {
   dueOn?: Date | string | null
   deferCount?: number
   completedAt?: Date | string | null
+  focusedAt?: Date | string | null
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
   externalSource?: string | null
@@ -1577,6 +1613,7 @@ export type PlanUncheckedCreateWithoutParentInput = {
   dueOn?: Date | string | null
   deferCount?: number
   completedAt?: Date | string | null
+  focusedAt?: Date | string | null
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
   placeId?: string | null
@@ -1613,6 +1650,7 @@ export type PlanCreateWithoutChildrenInput = {
   dueOn?: Date | string | null
   deferCount?: number
   completedAt?: Date | string | null
+  focusedAt?: Date | string | null
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
   externalSource?: string | null
@@ -1644,6 +1682,7 @@ export type PlanUncheckedCreateWithoutChildrenInput = {
   dueOn?: Date | string | null
   deferCount?: number
   completedAt?: Date | string | null
+  focusedAt?: Date | string | null
   parentId?: string | null
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
@@ -1703,6 +1742,7 @@ export type PlanUpdateWithoutChildrenInput = {
   dueOn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deferCount?: Prisma.IntFieldUpdateOperationsInput | number
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  focusedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   externalSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1734,6 +1774,7 @@ export type PlanUncheckedUpdateWithoutChildrenInput = {
   dueOn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deferCount?: Prisma.IntFieldUpdateOperationsInput | number
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  focusedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1761,6 +1802,7 @@ export type PlanCreateWithoutExpectedPeopleInput = {
   dueOn?: Date | string | null
   deferCount?: number
   completedAt?: Date | string | null
+  focusedAt?: Date | string | null
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
   externalSource?: string | null
@@ -1792,6 +1834,7 @@ export type PlanUncheckedCreateWithoutExpectedPeopleInput = {
   dueOn?: Date | string | null
   deferCount?: number
   completedAt?: Date | string | null
+  focusedAt?: Date | string | null
   parentId?: string | null
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
@@ -1835,6 +1878,7 @@ export type PlanUpdateWithoutExpectedPeopleInput = {
   dueOn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deferCount?: Prisma.IntFieldUpdateOperationsInput | number
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  focusedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   externalSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1866,6 +1910,7 @@ export type PlanUncheckedUpdateWithoutExpectedPeopleInput = {
   dueOn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deferCount?: Prisma.IntFieldUpdateOperationsInput | number
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  focusedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1893,6 +1938,7 @@ export type PlanCreateWithoutPlaceInput = {
   dueOn?: Date | string | null
   deferCount?: number
   completedAt?: Date | string | null
+  focusedAt?: Date | string | null
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
   externalSource?: string | null
@@ -1924,6 +1970,7 @@ export type PlanUncheckedCreateWithoutPlaceInput = {
   dueOn?: Date | string | null
   deferCount?: number
   completedAt?: Date | string | null
+  focusedAt?: Date | string | null
   parentId?: string | null
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
@@ -1976,6 +2023,7 @@ export type PlanCreateWithoutPurchaseOrderInput = {
   dueOn?: Date | string | null
   deferCount?: number
   completedAt?: Date | string | null
+  focusedAt?: Date | string | null
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
   externalSource?: string | null
@@ -2007,6 +2055,7 @@ export type PlanUncheckedCreateWithoutPurchaseOrderInput = {
   dueOn?: Date | string | null
   deferCount?: number
   completedAt?: Date | string | null
+  focusedAt?: Date | string | null
   parentId?: string | null
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
@@ -2050,6 +2099,7 @@ export type PlanUpdateWithoutPurchaseOrderInput = {
   dueOn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deferCount?: Prisma.IntFieldUpdateOperationsInput | number
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  focusedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   externalSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2081,6 +2131,7 @@ export type PlanUncheckedUpdateWithoutPurchaseOrderInput = {
   dueOn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deferCount?: Prisma.IntFieldUpdateOperationsInput | number
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  focusedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2108,6 +2159,7 @@ export type PlanCreateWithoutAboutNotesInput = {
   dueOn?: Date | string | null
   deferCount?: number
   completedAt?: Date | string | null
+  focusedAt?: Date | string | null
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
   externalSource?: string | null
@@ -2139,6 +2191,7 @@ export type PlanUncheckedCreateWithoutAboutNotesInput = {
   dueOn?: Date | string | null
   deferCount?: number
   completedAt?: Date | string | null
+  focusedAt?: Date | string | null
   parentId?: string | null
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
@@ -2171,6 +2224,7 @@ export type PlanCreateWithoutSourceNoteInput = {
   dueOn?: Date | string | null
   deferCount?: number
   completedAt?: Date | string | null
+  focusedAt?: Date | string | null
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
   externalSource?: string | null
@@ -2202,6 +2256,7 @@ export type PlanUncheckedCreateWithoutSourceNoteInput = {
   dueOn?: Date | string | null
   deferCount?: number
   completedAt?: Date | string | null
+  focusedAt?: Date | string | null
   parentId?: string | null
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
@@ -2249,6 +2304,7 @@ export type PlanUpdateWithoutAboutNotesInput = {
   dueOn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deferCount?: Prisma.IntFieldUpdateOperationsInput | number
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  focusedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   externalSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2280,6 +2336,7 @@ export type PlanUncheckedUpdateWithoutAboutNotesInput = {
   dueOn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deferCount?: Prisma.IntFieldUpdateOperationsInput | number
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  focusedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2324,6 +2381,7 @@ export type PlanCreateManyWorkspaceInput = {
   dueOn?: Date | string | null
   deferCount?: number
   completedAt?: Date | string | null
+  focusedAt?: Date | string | null
   parentId?: string | null
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
@@ -2346,6 +2404,7 @@ export type PlanUpdateWithoutWorkspaceInput = {
   dueOn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deferCount?: Prisma.IntFieldUpdateOperationsInput | number
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  focusedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   externalSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2376,6 +2435,7 @@ export type PlanUncheckedUpdateWithoutWorkspaceInput = {
   dueOn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deferCount?: Prisma.IntFieldUpdateOperationsInput | number
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  focusedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2405,6 +2465,7 @@ export type PlanUncheckedUpdateManyWithoutWorkspaceInput = {
   dueOn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deferCount?: Prisma.IntFieldUpdateOperationsInput | number
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  focusedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2428,6 +2489,7 @@ export type PlanCreateManyPersonInput = {
   dueOn?: Date | string | null
   deferCount?: number
   completedAt?: Date | string | null
+  focusedAt?: Date | string | null
   parentId?: string | null
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
@@ -2450,6 +2512,7 @@ export type PlanUpdateWithoutPersonInput = {
   dueOn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deferCount?: Prisma.IntFieldUpdateOperationsInput | number
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  focusedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   externalSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2480,6 +2543,7 @@ export type PlanUncheckedUpdateWithoutPersonInput = {
   dueOn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deferCount?: Prisma.IntFieldUpdateOperationsInput | number
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  focusedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2509,6 +2573,7 @@ export type PlanUncheckedUpdateManyWithoutPersonInput = {
   dueOn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deferCount?: Prisma.IntFieldUpdateOperationsInput | number
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  focusedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2533,6 +2598,7 @@ export type PlanCreateManyParentInput = {
   dueOn?: Date | string | null
   deferCount?: number
   completedAt?: Date | string | null
+  focusedAt?: Date | string | null
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
   placeId?: string | null
@@ -2554,6 +2620,7 @@ export type PlanUpdateWithoutParentInput = {
   dueOn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deferCount?: Prisma.IntFieldUpdateOperationsInput | number
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  focusedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   externalSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2585,6 +2652,7 @@ export type PlanUncheckedUpdateWithoutParentInput = {
   dueOn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deferCount?: Prisma.IntFieldUpdateOperationsInput | number
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  focusedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   placeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2614,6 +2682,7 @@ export type PlanUncheckedUpdateManyWithoutParentInput = {
   dueOn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deferCount?: Prisma.IntFieldUpdateOperationsInput | number
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  focusedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   placeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2637,6 +2706,7 @@ export type PlanCreateManyPlaceInput = {
   dueOn?: Date | string | null
   deferCount?: number
   completedAt?: Date | string | null
+  focusedAt?: Date | string | null
   parentId?: string | null
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
@@ -2658,6 +2728,7 @@ export type PlanUpdateWithoutPlaceInput = {
   dueOn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deferCount?: Prisma.IntFieldUpdateOperationsInput | number
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  focusedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   externalSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2689,6 +2760,7 @@ export type PlanUncheckedUpdateWithoutPlaceInput = {
   dueOn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deferCount?: Prisma.IntFieldUpdateOperationsInput | number
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  focusedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2718,6 +2790,7 @@ export type PlanUncheckedUpdateManyWithoutPlaceInput = {
   dueOn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deferCount?: Prisma.IntFieldUpdateOperationsInput | number
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  focusedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2741,6 +2814,7 @@ export type PlanCreateManySourceNoteInput = {
   dueOn?: Date | string | null
   deferCount?: number
   completedAt?: Date | string | null
+  focusedAt?: Date | string | null
   parentId?: string | null
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
@@ -2762,6 +2836,7 @@ export type PlanUpdateWithoutSourceNoteInput = {
   dueOn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deferCount?: Prisma.IntFieldUpdateOperationsInput | number
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  focusedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   externalSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2793,6 +2868,7 @@ export type PlanUncheckedUpdateWithoutSourceNoteInput = {
   dueOn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deferCount?: Prisma.IntFieldUpdateOperationsInput | number
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  focusedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2822,6 +2898,7 @@ export type PlanUncheckedUpdateManyWithoutSourceNoteInput = {
   dueOn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deferCount?: Prisma.IntFieldUpdateOperationsInput | number
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  focusedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2903,6 +2980,7 @@ export type PlanSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   dueOn?: boolean
   deferCount?: boolean
   completedAt?: boolean
+  focusedAt?: boolean
   parentId?: boolean
   scheduledStart?: boolean
   scheduledEnd?: boolean
@@ -2939,6 +3017,7 @@ export type PlanSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   dueOn?: boolean
   deferCount?: boolean
   completedAt?: boolean
+  focusedAt?: boolean
   parentId?: boolean
   scheduledStart?: boolean
   scheduledEnd?: boolean
@@ -2968,6 +3047,7 @@ export type PlanSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   dueOn?: boolean
   deferCount?: boolean
   completedAt?: boolean
+  focusedAt?: boolean
   parentId?: boolean
   scheduledStart?: boolean
   scheduledEnd?: boolean
@@ -2997,6 +3077,7 @@ export type PlanSelectScalar = {
   dueOn?: boolean
   deferCount?: boolean
   completedAt?: boolean
+  focusedAt?: boolean
   parentId?: boolean
   scheduledStart?: boolean
   scheduledEnd?: boolean
@@ -3009,7 +3090,7 @@ export type PlanSelectScalar = {
   sourceNoteId?: boolean
 }
 
-export type PlanOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "workspaceId" | "createdAt" | "personId" | "text" | "timescale" | "successSignals" | "status" | "dueOn" | "deferCount" | "completedAt" | "parentId" | "scheduledStart" | "scheduledEnd" | "placeId" | "externalSource" | "externalInstanceId" | "reconciliationStatus" | "reconciledAt" | "ownerAttendance" | "sourceNoteId", ExtArgs["result"]["plan"]>
+export type PlanOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "workspaceId" | "createdAt" | "personId" | "text" | "timescale" | "successSignals" | "status" | "dueOn" | "deferCount" | "completedAt" | "focusedAt" | "parentId" | "scheduledStart" | "scheduledEnd" | "placeId" | "externalSource" | "externalInstanceId" | "reconciliationStatus" | "reconciledAt" | "ownerAttendance" | "sourceNoteId", ExtArgs["result"]["plan"]>
 export type PlanInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   person?: boolean | Prisma.Plan$personArgs<ExtArgs>
@@ -3066,6 +3147,7 @@ export type $PlanPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     dueOn: Date | null
     deferCount: number
     completedAt: Date | null
+    focusedAt: Date | null
     parentId: string | null
     scheduledStart: Date | null
     scheduledEnd: Date | null
@@ -3521,6 +3603,7 @@ export interface PlanFieldRefs {
   readonly dueOn: Prisma.FieldRef<"Plan", 'DateTime'>
   readonly deferCount: Prisma.FieldRef<"Plan", 'Int'>
   readonly completedAt: Prisma.FieldRef<"Plan", 'DateTime'>
+  readonly focusedAt: Prisma.FieldRef<"Plan", 'DateTime'>
   readonly parentId: Prisma.FieldRef<"Plan", 'String'>
   readonly scheduledStart: Prisma.FieldRef<"Plan", 'DateTime'>
   readonly scheduledEnd: Prisma.FieldRef<"Plan", 'DateTime'>

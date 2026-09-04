@@ -772,6 +772,7 @@ export const PlanScalarFieldEnum = {
   dueOn: 'dueOn',
   deferCount: 'deferCount',
   completedAt: 'completedAt',
+  focusedAt: 'focusedAt',
   parentId: 'parentId',
   scheduledStart: 'scheduledStart',
   scheduledEnd: 'scheduledEnd',
