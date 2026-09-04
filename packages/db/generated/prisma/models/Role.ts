@@ -192,6 +192,7 @@ export type RoleWhereInput = {
   description?: Prisma.StringNullableFilter<"Role"> | string | null
   users?: Prisma.UserRoleListRelationFilter
   permissions?: Prisma.RolePermissionListRelationFilter
+  approvedEmails?: Prisma.ApprovedEmailListRelationFilter
 }
 
 export type RoleOrderByWithRelationInput = {
@@ -203,6 +204,7 @@ export type RoleOrderByWithRelationInput = {
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   users?: Prisma.UserRoleOrderByRelationAggregateInput
   permissions?: Prisma.RolePermissionOrderByRelationAggregateInput
+  approvedEmails?: Prisma.ApprovedEmailOrderByRelationAggregateInput
 }
 
 export type RoleWhereUniqueInput = Prisma.AtLeast<{
@@ -217,6 +219,7 @@ export type RoleWhereUniqueInput = Prisma.AtLeast<{
   description?: Prisma.StringNullableFilter<"Role"> | string | null
   users?: Prisma.UserRoleListRelationFilter
   permissions?: Prisma.RolePermissionListRelationFilter
+  approvedEmails?: Prisma.ApprovedEmailListRelationFilter
 }, "id" | "key">
 
 export type RoleOrderByWithAggregationInput = {
@@ -252,6 +255,7 @@ export type RoleCreateInput = {
   description?: string | null
   users?: Prisma.UserRoleCreateNestedManyWithoutRoleInput
   permissions?: Prisma.RolePermissionCreateNestedManyWithoutRoleInput
+  approvedEmails?: Prisma.ApprovedEmailCreateNestedManyWithoutRoleInput
 }
 
 export type RoleUncheckedCreateInput = {
@@ -263,6 +267,7 @@ export type RoleUncheckedCreateInput = {
   description?: string | null
   users?: Prisma.UserRoleUncheckedCreateNestedManyWithoutRoleInput
   permissions?: Prisma.RolePermissionUncheckedCreateNestedManyWithoutRoleInput
+  approvedEmails?: Prisma.ApprovedEmailUncheckedCreateNestedManyWithoutRoleInput
 }
 
 export type RoleUpdateInput = {
@@ -274,6 +279,7 @@ export type RoleUpdateInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   users?: Prisma.UserRoleUpdateManyWithoutRoleNestedInput
   permissions?: Prisma.RolePermissionUpdateManyWithoutRoleNestedInput
+  approvedEmails?: Prisma.ApprovedEmailUpdateManyWithoutRoleNestedInput
 }
 
 export type RoleUncheckedUpdateInput = {
@@ -285,6 +291,7 @@ export type RoleUncheckedUpdateInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   users?: Prisma.UserRoleUncheckedUpdateManyWithoutRoleNestedInput
   permissions?: Prisma.RolePermissionUncheckedUpdateManyWithoutRoleNestedInput
+  approvedEmails?: Prisma.ApprovedEmailUncheckedUpdateManyWithoutRoleNestedInput
 }
 
 export type RoleCreateManyInput = {
@@ -312,6 +319,11 @@ export type RoleUncheckedUpdateManyInput = {
   key?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+}
+
+export type RoleNullableScalarRelationFilter = {
+  is?: Prisma.RoleWhereInput | null
+  isNot?: Prisma.RoleWhereInput | null
 }
 
 export type RoleCountOrderByAggregateInput = {
@@ -346,6 +358,22 @@ export type RoleScalarRelationFilter = {
   isNot?: Prisma.RoleWhereInput
 }
 
+export type RoleCreateNestedOneWithoutApprovedEmailsInput = {
+  create?: Prisma.XOR<Prisma.RoleCreateWithoutApprovedEmailsInput, Prisma.RoleUncheckedCreateWithoutApprovedEmailsInput>
+  connectOrCreate?: Prisma.RoleCreateOrConnectWithoutApprovedEmailsInput
+  connect?: Prisma.RoleWhereUniqueInput
+}
+
+export type RoleUpdateOneWithoutApprovedEmailsNestedInput = {
+  create?: Prisma.XOR<Prisma.RoleCreateWithoutApprovedEmailsInput, Prisma.RoleUncheckedCreateWithoutApprovedEmailsInput>
+  connectOrCreate?: Prisma.RoleCreateOrConnectWithoutApprovedEmailsInput
+  upsert?: Prisma.RoleUpsertWithoutApprovedEmailsInput
+  disconnect?: Prisma.RoleWhereInput | boolean
+  delete?: Prisma.RoleWhereInput | boolean
+  connect?: Prisma.RoleWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.RoleUpdateToOneWithWhereWithoutApprovedEmailsInput, Prisma.RoleUpdateWithoutApprovedEmailsInput>, Prisma.RoleUncheckedUpdateWithoutApprovedEmailsInput>
+}
+
 export type RoleCreateNestedOneWithoutUsersInput = {
   create?: Prisma.XOR<Prisma.RoleCreateWithoutUsersInput, Prisma.RoleUncheckedCreateWithoutUsersInput>
   connectOrCreate?: Prisma.RoleCreateOrConnectWithoutUsersInput
@@ -374,6 +402,66 @@ export type RoleUpdateOneRequiredWithoutPermissionsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.RoleUpdateToOneWithWhereWithoutPermissionsInput, Prisma.RoleUpdateWithoutPermissionsInput>, Prisma.RoleUncheckedUpdateWithoutPermissionsInput>
 }
 
+export type RoleCreateWithoutApprovedEmailsInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  key: string
+  name: string
+  description?: string | null
+  users?: Prisma.UserRoleCreateNestedManyWithoutRoleInput
+  permissions?: Prisma.RolePermissionCreateNestedManyWithoutRoleInput
+}
+
+export type RoleUncheckedCreateWithoutApprovedEmailsInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  key: string
+  name: string
+  description?: string | null
+  users?: Prisma.UserRoleUncheckedCreateNestedManyWithoutRoleInput
+  permissions?: Prisma.RolePermissionUncheckedCreateNestedManyWithoutRoleInput
+}
+
+export type RoleCreateOrConnectWithoutApprovedEmailsInput = {
+  where: Prisma.RoleWhereUniqueInput
+  create: Prisma.XOR<Prisma.RoleCreateWithoutApprovedEmailsInput, Prisma.RoleUncheckedCreateWithoutApprovedEmailsInput>
+}
+
+export type RoleUpsertWithoutApprovedEmailsInput = {
+  update: Prisma.XOR<Prisma.RoleUpdateWithoutApprovedEmailsInput, Prisma.RoleUncheckedUpdateWithoutApprovedEmailsInput>
+  create: Prisma.XOR<Prisma.RoleCreateWithoutApprovedEmailsInput, Prisma.RoleUncheckedCreateWithoutApprovedEmailsInput>
+  where?: Prisma.RoleWhereInput
+}
+
+export type RoleUpdateToOneWithWhereWithoutApprovedEmailsInput = {
+  where?: Prisma.RoleWhereInput
+  data: Prisma.XOR<Prisma.RoleUpdateWithoutApprovedEmailsInput, Prisma.RoleUncheckedUpdateWithoutApprovedEmailsInput>
+}
+
+export type RoleUpdateWithoutApprovedEmailsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  key?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  users?: Prisma.UserRoleUpdateManyWithoutRoleNestedInput
+  permissions?: Prisma.RolePermissionUpdateManyWithoutRoleNestedInput
+}
+
+export type RoleUncheckedUpdateWithoutApprovedEmailsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  key?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  users?: Prisma.UserRoleUncheckedUpdateManyWithoutRoleNestedInput
+  permissions?: Prisma.RolePermissionUncheckedUpdateManyWithoutRoleNestedInput
+}
+
 export type RoleCreateWithoutUsersInput = {
   id?: string
   createdAt?: Date | string
@@ -382,6 +470,7 @@ export type RoleCreateWithoutUsersInput = {
   name: string
   description?: string | null
   permissions?: Prisma.RolePermissionCreateNestedManyWithoutRoleInput
+  approvedEmails?: Prisma.ApprovedEmailCreateNestedManyWithoutRoleInput
 }
 
 export type RoleUncheckedCreateWithoutUsersInput = {
@@ -392,6 +481,7 @@ export type RoleUncheckedCreateWithoutUsersInput = {
   name: string
   description?: string | null
   permissions?: Prisma.RolePermissionUncheckedCreateNestedManyWithoutRoleInput
+  approvedEmails?: Prisma.ApprovedEmailUncheckedCreateNestedManyWithoutRoleInput
 }
 
 export type RoleCreateOrConnectWithoutUsersInput = {
@@ -418,6 +508,7 @@ export type RoleUpdateWithoutUsersInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   permissions?: Prisma.RolePermissionUpdateManyWithoutRoleNestedInput
+  approvedEmails?: Prisma.ApprovedEmailUpdateManyWithoutRoleNestedInput
 }
 
 export type RoleUncheckedUpdateWithoutUsersInput = {
@@ -428,6 +519,7 @@ export type RoleUncheckedUpdateWithoutUsersInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   permissions?: Prisma.RolePermissionUncheckedUpdateManyWithoutRoleNestedInput
+  approvedEmails?: Prisma.ApprovedEmailUncheckedUpdateManyWithoutRoleNestedInput
 }
 
 export type RoleCreateWithoutPermissionsInput = {
@@ -438,6 +530,7 @@ export type RoleCreateWithoutPermissionsInput = {
   name: string
   description?: string | null
   users?: Prisma.UserRoleCreateNestedManyWithoutRoleInput
+  approvedEmails?: Prisma.ApprovedEmailCreateNestedManyWithoutRoleInput
 }
 
 export type RoleUncheckedCreateWithoutPermissionsInput = {
@@ -448,6 +541,7 @@ export type RoleUncheckedCreateWithoutPermissionsInput = {
   name: string
   description?: string | null
   users?: Prisma.UserRoleUncheckedCreateNestedManyWithoutRoleInput
+  approvedEmails?: Prisma.ApprovedEmailUncheckedCreateNestedManyWithoutRoleInput
 }
 
 export type RoleCreateOrConnectWithoutPermissionsInput = {
@@ -474,6 +568,7 @@ export type RoleUpdateWithoutPermissionsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   users?: Prisma.UserRoleUpdateManyWithoutRoleNestedInput
+  approvedEmails?: Prisma.ApprovedEmailUpdateManyWithoutRoleNestedInput
 }
 
 export type RoleUncheckedUpdateWithoutPermissionsInput = {
@@ -484,6 +579,7 @@ export type RoleUncheckedUpdateWithoutPermissionsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   users?: Prisma.UserRoleUncheckedUpdateManyWithoutRoleNestedInput
+  approvedEmails?: Prisma.ApprovedEmailUncheckedUpdateManyWithoutRoleNestedInput
 }
 
 
@@ -494,11 +590,13 @@ export type RoleUncheckedUpdateWithoutPermissionsInput = {
 export type RoleCountOutputType = {
   users: number
   permissions: number
+  approvedEmails: number
 }
 
 export type RoleCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   users?: boolean | RoleCountOutputTypeCountUsersArgs
   permissions?: boolean | RoleCountOutputTypeCountPermissionsArgs
+  approvedEmails?: boolean | RoleCountOutputTypeCountApprovedEmailsArgs
 }
 
 /**
@@ -525,6 +623,13 @@ export type RoleCountOutputTypeCountPermissionsArgs<ExtArgs extends runtime.Type
   where?: Prisma.RolePermissionWhereInput
 }
 
+/**
+ * RoleCountOutputType without action
+ */
+export type RoleCountOutputTypeCountApprovedEmailsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ApprovedEmailWhereInput
+}
+
 
 export type RoleSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -535,6 +640,7 @@ export type RoleSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   description?: boolean
   users?: boolean | Prisma.Role$usersArgs<ExtArgs>
   permissions?: boolean | Prisma.Role$permissionsArgs<ExtArgs>
+  approvedEmails?: boolean | Prisma.Role$approvedEmailsArgs<ExtArgs>
   _count?: boolean | Prisma.RoleCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["role"]>
 
@@ -569,6 +675,7 @@ export type RoleOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = run
 export type RoleInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   users?: boolean | Prisma.Role$usersArgs<ExtArgs>
   permissions?: boolean | Prisma.Role$permissionsArgs<ExtArgs>
+  approvedEmails?: boolean | Prisma.Role$approvedEmailsArgs<ExtArgs>
   _count?: boolean | Prisma.RoleCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type RoleIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -579,6 +686,7 @@ export type $RolePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   objects: {
     users: Prisma.$UserRolePayload<ExtArgs>[]
     permissions: Prisma.$RolePermissionPayload<ExtArgs>[]
+    approvedEmails: Prisma.$ApprovedEmailPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -983,6 +1091,7 @@ export interface Prisma__RoleClient<T, Null = never, ExtArgs extends runtime.Typ
   readonly [Symbol.toStringTag]: "PrismaPromise"
   users<T extends Prisma.Role$usersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Role$usersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserRolePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   permissions<T extends Prisma.Role$permissionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Role$permissionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RolePermissionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  approvedEmails<T extends Prisma.Role$approvedEmailsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Role$approvedEmailsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ApprovedEmailPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1456,6 +1565,30 @@ export type Role$permissionsArgs<ExtArgs extends runtime.Types.Extensions.Intern
   take?: number
   skip?: number
   distinct?: Prisma.RolePermissionScalarFieldEnum | Prisma.RolePermissionScalarFieldEnum[]
+}
+
+/**
+ * Role.approvedEmails
+ */
+export type Role$approvedEmailsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ApprovedEmail
+   */
+  select?: Prisma.ApprovedEmailSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ApprovedEmail
+   */
+  omit?: Prisma.ApprovedEmailOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ApprovedEmailInclude<ExtArgs> | null
+  where?: Prisma.ApprovedEmailWhereInput
+  orderBy?: Prisma.ApprovedEmailOrderByWithRelationInput | Prisma.ApprovedEmailOrderByWithRelationInput[]
+  cursor?: Prisma.ApprovedEmailWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ApprovedEmailScalarFieldEnum | Prisma.ApprovedEmailScalarFieldEnum[]
 }
 
 /**

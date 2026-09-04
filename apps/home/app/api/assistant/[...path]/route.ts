@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import { lifeOsAppUrl } from "@life-os/auth"
+import { createAccessService } from "@life-os/access"
 import { db } from "@life-os/db"
 import { auth } from "@/auth"
 import { unstable_cache } from "next/cache"
@@ -16,6 +17,22 @@ type Params = { params: Promise<{ path: string[] }> }
 // `from: "web:<email>"`.
 export const maxDuration = 300
 
+class AssistantAccessError extends Error {
+  constructor(readonly status: number, message: string) {
+    super(message)
+  }
+}
+
+const assistantAccess = createAccessService({
+  getSession: auth,
+  errors: {
+    badRequest: message => new AssistantAccessError(400, message),
+    forbidden: message => new AssistantAccessError(403, message ?? "Forbidden"),
+    unauthorized: message => new AssistantAccessError(401, message ?? "Unauthorized"),
+  },
+  localReviewEnabled: () => process.env.NODE_ENV !== "production" && process.env.LIFE_OS_LOCAL_REVIEW === "1",
+})
+
 // Scoped to the chat thread for now — file ingestion endpoints proxy through
 // this same shape later without any backend changes.
 function isAllowed(pathname: string) {
@@ -31,36 +48,14 @@ export async function GET(request: NextRequest, context: Params) {
   // network hop before four small rows can appear. Message writes and agent
   // execution still belong exclusively to the Assistant app below.
   const startedAt = Date.now()
-  const session = await auth()
-  let email = session?.user?.email?.toLowerCase()
-  let workspaceId: string | undefined
-  const localReview = process.env.NODE_ENV !== "production" && process.env.LIFE_OS_LOCAL_REVIEW === "1"
-
-  if (localReview && !email) {
-    const membership = await db.workspaceMember.findFirst({
-      where: { status: "active", workspace: { status: "active" }, user: { status: "active" } },
-      select: { workspaceId: true, user: { select: { email: true } } },
-      orderBy: { createdAt: "asc" },
-    })
-    email = membership?.user.email.toLowerCase()
-    workspaceId = membership?.workspaceId
-  } else {
-    if (!email) return error("unauthorized", "Unauthorized", 401)
-    const memberships = await db.workspaceMember.findMany({
-      where: {
-        user: { email, status: "active" },
-        status: "active",
-        workspace: { status: "active" },
-      },
-      select: { workspaceId: true },
-      orderBy: { createdAt: "asc" },
-      take: 2,
-    })
-    if (memberships.length > 1) return error("workspace_required", "Multiple workspaces; choose one explicitly", 400)
-    workspaceId = memberships[0]?.workspaceId
+  let actor
+  try {
+    actor = await assistantAccess.requireAccess("assistant.use")
+  } catch (caught) {
+    if (caught instanceof AssistantAccessError) return error("forbidden", caught.message, caught.status)
+    return error("forbidden", "Assistant access could not be verified", 403)
   }
-
-  if (!email || !workspaceId) return error("forbidden", "No active workspace", 403)
+  const { email, workspaceId } = actor
 
   const requestedLimit = Number(request.nextUrl.searchParams.get("limit") ?? 4)
   const limit = Number.isInteger(requestedLimit)

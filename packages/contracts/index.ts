@@ -204,7 +204,15 @@ export const bulkUpdatePeopleContract = z.object({
 export const approvedEmailContract = z.object({
   email: z.email().max(320),
   workspaceId: id.optional().nullable(),
+  roleId: id.optional().nullable(),
 }).strict()
+
+export const updateApprovedEmailContract = z.object({
+  status: z.enum(["approved", "revoked"]).optional(),
+  roleId: id.optional().nullable(),
+}).strict().refine(value => value.status !== undefined || value.roleId !== undefined, {
+  message: "At least one approved-email field is required.",
+})
 
 export const createRoleContract = z.object({
   key: z.string().trim().min(1).max(100),

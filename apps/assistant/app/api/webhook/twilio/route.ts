@@ -64,7 +64,7 @@ export async function POST(req: NextRequest) {
   // an empty TwiML response, then reply out-of-band via the REST API.
   after(async () => {
     try {
-      const { reply } = await runAgent({ channel: "whatsapp", from, userMessage: body, workspaceId: WORKSPACE_ID })
+      const { reply } = await runAgent({ channel: "whatsapp", from, userMessage: body, workspaceId: WORKSPACE_ID, workspaceName: "LifeOS", requester: from, scopes: ["*"] })
       await sendWhatsApp(from, to, reply)
     } catch (err) {
       console.error("Agent run failed:", err)

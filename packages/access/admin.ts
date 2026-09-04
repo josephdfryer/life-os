@@ -30,13 +30,14 @@ export async function addApprovedEmail(input: Record<string, unknown>, actor: Ac
   // workspace." Any other supplied value (someone else's real workspace id)
   // is still ignored.
   const workspaceId = input.workspaceId === null ? null : actor.workspaceId
+  const role = workspaceId ? await resolveInviteRole(input.roleId) : null
 
   const existing = await db.approvedEmail.findUnique({ where: { email } })
   if (existing) throw new AccessError("Email is already approved", "validation")
 
   const record = await db.approvedEmail.create({
-    data: { email, status: "approved", workspaceId, invitedById: actor.userId },
-    include: { workspace: true, invitedBy: true },
+    data: { email, status: "approved", workspaceId, roleId: role?.id ?? null, invitedById: actor.userId },
+    include: { workspace: true, invitedBy: true, role: true },
   })
 
   await writeAuditLog({
@@ -44,7 +45,7 @@ export async function addApprovedEmail(input: Record<string, unknown>, actor: Ac
     action: "approvedEmail.create",
     targetType: "approvedEmail",
     targetId: record.id,
-    metadata: { email, workspaceId },
+    metadata: { email, workspaceId, role: role?.key ?? "owner" },
   })
 
   return { approvedEmail: formatApprovedEmail(record) }
@@ -57,13 +58,17 @@ export async function updateApprovedEmail(id: string, input: Record<string, unkn
 
   const patch: Record<string, unknown> = {}
   if (input.status !== undefined) patch.status = requiredString(input.status, "status")
+  if (input.roleId !== undefined) {
+    if (!existing.workspaceId) throw new AccessError("Standalone workspace invitations are always Owner", "validation")
+    patch.roleId = (await resolveInviteRole(input.roleId)).id
+  }
   // workspaceId is intentionally not re-assignable via this endpoint — an
   // admin cannot move an approval into a different tenant.
 
   const updated = await db.approvedEmail.update({
     where: { id },
     data: patch,
-    include: { workspace: true, invitedBy: true },
+    include: { workspace: true, invitedBy: true, role: true },
   })
 
   await writeAuditLog({
@@ -144,6 +149,7 @@ export async function createApiKey(input: Record<string, unknown>, actor: Access
   const scopes = optionalStringArray(input.scopes)
   if (!scopes.length) throw new AccessError("Choose at least one scope", "validation")
   await assertKnownScopes(scopes)
+  await assertWildcardAllowed(scopes, actor)
 
   const secret = `pk_${randomBytes(24).toString("base64url")}`
   const apiKey = await db.apiKey.create({
@@ -182,7 +188,10 @@ export async function updateApiKey(id: string, input: Record<string, unknown>, a
   if (input.expiresAt !== undefined) patch.expiresAt = input.expiresAt ? new Date(String(input.expiresAt)) : null
 
   const scopes = input.scopes === undefined ? null : optionalStringArray(input.scopes)
-  if (scopes) await assertKnownScopes(scopes)
+  if (scopes) {
+    await assertKnownScopes(scopes)
+    await assertWildcardAllowed(scopes, actor)
+  }
 
   const updated = await db.$transaction(async tx => {
     if (Object.keys(patch).length) await tx.apiKey.update({ where: { id }, data: patch })
@@ -213,6 +222,7 @@ export async function createRole(input: Record<string, unknown>, actor: AccessAc
   const key = requiredString(input.key, "key").toLowerCase().replace(/[^a-z0-9_.-]/g, "-")
   const scopes = optionalStringArray(input.scopes)
   await assertKnownScopes(scopes)
+  await assertWildcardAllowed(scopes, actor)
   const role = await db.role.create({
     data: {
       key,
@@ -230,12 +240,16 @@ export async function updateRole(id: string, input: Record<string, unknown>, act
   const { db } = await import("@life-os/db")
   const existing = await db.role.findUnique({ where: { id } })
   if (!existing) throw new AccessError("Role not found", "not_found")
+  if (existing.key === "owner") throw new AccessError("The built-in Owner role cannot be edited", "validation")
   const patch: Record<string, unknown> = {}
   if (input.name !== undefined) patch.name = requiredString(input.name, "name")
   if (input.description !== undefined) patch.description = optionalString(input.description)
 
   const scopes = input.scopes === undefined ? null : optionalStringArray(input.scopes)
-  if (scopes) await assertKnownScopes(scopes)
+  if (scopes) {
+    await assertKnownScopes(scopes)
+    await assertWildcardAllowed(scopes, actor)
+  }
 
   const role = await db.$transaction(async tx => {
     if (Object.keys(patch).length) await tx.role.update({ where: { id }, data: patch })
@@ -256,17 +270,45 @@ export async function updateRole(id: string, input: Record<string, unknown>, act
 
 export async function updateUserRoles(userId: string, input: Record<string, unknown>, actor: AccessActor) {
   const { db } = await import("@life-os/db")
-  const user = await db.user.findUnique({ where: { id: userId }, select: { id: true, email: true } })
-  if (!user) throw new AccessError("User not found", "not_found")
+  const membership = await db.workspaceMember.findFirst({
+    where: { userId, workspaceId: actor.workspaceId, status: "active" },
+    select: {
+      id: true,
+      user: { select: { id: true, email: true } },
+      workspace: { select: { ownerUserId: true } },
+    },
+  })
+  if (!membership) throw new AccessError("Workspace member not found", "not_found")
+  const user = membership.user
   const roleIds = optionalStringArray(input.roleIds)
-  const roles = await db.role.findMany({ where: { id: { in: roleIds } }, select: { id: true, key: true } })
+  if (!roleIds.length) throw new AccessError("Choose at least one role", "validation")
+  const roles = await db.role.findMany({
+    where: { id: { in: roleIds } },
+    select: { id: true, key: true, permissions: { select: { permission: { select: { scope: true } } } } },
+  })
   if (roles.length !== roleIds.length) throw new AccessError("Unknown role IDs", "validation")
+  const includesOwner = roles.some(role => role.key === "owner")
+  const isWorkspaceOwner = membership.workspace.ownerUserId === userId
+  if (includesOwner && !isWorkspaceOwner) {
+    throw new AccessError("Owner cannot be assigned as an ordinary role", "validation")
+  }
+  if (isWorkspaceOwner && !includesOwner) {
+    throw new AccessError("The workspace owner must retain the Owner role", "validation")
+  }
+  const grantsWildcard = roles.some(role => role.permissions.some(item => item.permission.scope === "*"))
+  if (grantsWildcard && membership.workspace.ownerUserId !== actor.userId) {
+    throw new AccessError("Only the workspace owner can grant unrestricted access", "validation")
+  }
 
   await db.$transaction(async tx => {
     await tx.userRole.deleteMany({ where: { userId } })
     for (const role of roles) {
       await tx.userRole.create({ data: { userId, roleId: role.id } })
     }
+    await tx.workspaceMember.update({
+      where: { id: membership.id },
+      data: { role: workspaceRoleForRoles(roles.map(role => role.key)) },
+    })
   })
 
   await writeAuditLog({
@@ -290,6 +332,15 @@ async function assertKnownScopes(scopes: string[]) {
   const known = new Set(permissions.map(permission => permission.scope))
   const unknown = scopes.filter(scope => !known.has(scope))
   if (unknown.length) throw new AccessError(`Unknown permission scopes: ${unknown.join(", ")}`, "validation")
+}
+
+async function assertWildcardAllowed(scopes: string[], actor: AccessActor) {
+  if (!scopes.includes("*")) return
+  const { db } = await import("@life-os/db")
+  const workspace = await db.workspace.findUnique({ where: { id: actor.workspaceId }, select: { ownerUserId: true } })
+  if (workspace?.ownerUserId !== actor.userId) {
+    throw new AccessError("Only the workspace owner can grant unrestricted access", "validation")
+  }
 }
 
 async function permissionLinks(scopes: string[]) {
@@ -363,6 +414,7 @@ function formatApprovedEmail(record: {
   createdAt: Date
   workspace: { id: string; name: string; slug: string } | null
   invitedBy: { id: string; email: string; name: string | null } | null
+  role: { id: string; key: string; name: string } | null
 }) {
   return {
     id: record.id,
@@ -372,7 +424,28 @@ function formatApprovedEmail(record: {
     createdAt: record.createdAt,
     workspace: record.workspace ? { id: record.workspace.id, name: record.workspace.name, slug: record.workspace.slug } : null,
     invitedBy: record.invitedBy ? { id: record.invitedBy.id, email: record.invitedBy.email, name: record.invitedBy.name } : null,
+    role: record.role ? { id: record.role.id, key: record.role.key, name: record.role.name } : null,
   }
+}
+
+async function resolveInviteRole(value: unknown) {
+  const { db } = await import("@life-os/db")
+  const requestedId = typeof value === "string" && value.trim() ? value.trim() : null
+  const role = requestedId
+    ? await db.role.findUnique({ where: { id: requestedId }, select: { id: true, key: true, name: true } })
+    : await db.role.findUnique({ where: { key: "viewer" }, select: { id: true, key: true, name: true } })
+  if (!role) throw new AccessError("Invite role not found", "validation")
+  if (role.key === "owner" || role.key === "automation") {
+    throw new AccessError("Choose a human role other than Owner", "validation")
+  }
+  return role
+}
+
+function workspaceRoleForRoles(roleKeys: string[]) {
+  if (roleKeys.includes("owner")) return "owner" as const
+  if (roleKeys.includes("admin")) return "admin" as const
+  if (roleKeys.includes("viewer") && roleKeys.length === 1) return "viewer" as const
+  return "member" as const
 }
 
 function hashApiKey(value: string) {

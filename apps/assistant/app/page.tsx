@@ -345,6 +345,9 @@ export default function AssistantChat() {
             Send
           </button>
           </div>
+          <p style={{ margin: "8px 0 0", color: "var(--ink-4)", fontSize: "10px", textAlign: "center" }}>
+            Workspace administrators can review this conversation.
+          </p>
         </div>
       </footer>
     </div>
