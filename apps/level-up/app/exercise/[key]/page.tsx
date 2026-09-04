@@ -4,6 +4,7 @@ import { db } from "@/lib/db"
 import { requireLevelUpAccess } from "@/lib/access"
 import { Mono } from "@/components/display"
 import ExerciseFigure from "@/components/workout/ExerciseFigure"
+import WarmConcrete from "@/components/WarmConcrete"
 import { ART_CREDIT } from "@/lib/workout/art"
 import {
   loadWorkoutProfile,
@@ -37,7 +38,13 @@ export default async function ExerciseDetailPage({
   params: Promise<{ key: string }>
 }) {
   const access = await requireLevelUpAccess()
-  if (!access) return <div className="wrap" style={{ padding: 80 }}><Mono>No workspace.</Mono></div>
+  if (!access) {
+    return (
+      <WarmConcrete>
+        <div className="wrap" style={{ padding: 80 }}><Mono>No workspace.</Mono></div>
+      </WarmConcrete>
+    )
+  }
 
   const { key } = await params
   const exercise = await db.levelUpExercise.findFirst({
@@ -95,6 +102,7 @@ export default async function ExerciseDetailPage({
   const display = (kg: number) => `${formatLoad(Math.round(fromKg(kg, profile.unit) * 10) / 10)} ${profile.unit}`
 
   return (
+    <WarmConcrete>
     <div className="wrap">
       <div className="detail-shell">
         <div style={{ marginBottom: 18 }}>
@@ -209,5 +217,6 @@ export default async function ExerciseDetailPage({
         </div>
       </div>
     </div>
+    </WarmConcrete>
   )
 }

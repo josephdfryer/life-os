@@ -13,12 +13,19 @@ import {
 import { Mono } from "@/components/display"
 import BuildSelector from "@/components/BuildSelector"
 import TargetBuilds, { type TargetView } from "@/components/TargetBuilds"
+import WarmConcrete from "@/components/WarmConcrete"
 
 export const dynamic = "force-dynamic"
 
 export default async function BuildsPage() {
   const access = await requireLevelUpAccess()
-  if (!access) return <div className="wrap" style={{ padding: 80 }}><Mono>No workspace.</Mono></div>
+  if (!access) {
+    return (
+      <WarmConcrete>
+        <div className="wrap" style={{ padding: 80 }}><Mono>No workspace.</Mono></div>
+      </WarmConcrete>
+    )
+  }
 
   const [{ card }, tracked] = await Promise.all([
     loadBundle(access.workspaceId),
@@ -46,32 +53,34 @@ export default async function BuildsPage() {
   })
 
   return (
-    <div className="wrap" style={{ paddingBottom: 80 }}>
-      <div style={{ padding: "24px 0 0" }}>
-        <Link href="/" className="mono mono-faint">← Card</Link>
-      </div>
-
-      <div style={{ padding: "16px 0 8px" }}>
-        <h1 className="serif" style={{ fontSize: 40, margin: 0 }}>Builds</h1>
-        <Mono faint>One score can&apos;t describe a person. Pick the OVR that matters to you; every build keeps Mobility and Resilience mandatory.</Mono>
-      </div>
-
-      <div style={{ margin: "20px 0 8px" }}>
-        {BUILDS[card.primaryBuild] && (
-          <div style={{ marginBottom: 16 }}>
-            <Mono faint style={{ fontSize: 9 }}>{BUILDS[card.primaryBuild].blurb}</Mono>
-          </div>
-        )}
-        <BuildSelector builds={buildRows} current={card.primaryBuild} />
-      </div>
-
-      <div style={{ padding: "36px 0 16px", borderTop: "1px solid var(--line-strong)", marginTop: 28 }}>
-        <Mono>Target builds</Mono>
-        <div style={{ color: "var(--ink-dim)", fontSize: 13, marginTop: 6, maxWidth: 620 }}>
-          Turn a goal into a character sheet. Track one and the engine renders the whole climb as visible points instead of a binary can&apos;t / can.
+    <WarmConcrete>
+      <div className="wrap" style={{ paddingBottom: 80 }}>
+        <div style={{ padding: "24px 0 0" }}>
+          <Link href="/" className="mono mono-faint">← Card</Link>
         </div>
+
+        <div style={{ padding: "16px 0 8px" }}>
+          <h1 className="serif" style={{ fontSize: 40, margin: 0 }}>Builds</h1>
+          <Mono faint>One score can&apos;t describe a person. Pick the OVR that matters to you; every build keeps Mobility and Resilience mandatory.</Mono>
+        </div>
+
+        <div style={{ margin: "20px 0 8px" }}>
+          {BUILDS[card.primaryBuild] && (
+            <div style={{ marginBottom: 16 }}>
+              <Mono faint style={{ fontSize: 9 }}>{BUILDS[card.primaryBuild].blurb}</Mono>
+            </div>
+          )}
+          <BuildSelector builds={buildRows} current={card.primaryBuild} />
+        </div>
+
+        <div style={{ padding: "36px 0 16px", borderTop: "1px solid var(--line-strong)", marginTop: 28 }}>
+          <Mono>Target builds</Mono>
+          <div style={{ color: "var(--ink-dim)", fontSize: 13, marginTop: 6, maxWidth: 620 }}>
+            Turn a goal into a character sheet. Track one and the engine renders the whole climb as visible points instead of a binary can&apos;t / can.
+          </div>
+        </div>
+        <TargetBuilds targets={targets} />
       </div>
-      <TargetBuilds targets={targets} />
-    </div>
+    </WarmConcrete>
   )
 }
