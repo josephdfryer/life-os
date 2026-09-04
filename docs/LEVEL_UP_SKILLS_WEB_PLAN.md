@@ -1,269 +1,258 @@
-# Level Up — Skills Web + Workout iOS Split
+# Level Up — Skills Web + Character Window
 
-Status: draft for joint iteration (not yet approved)
+Status: **Phase 0 decisions locked** (2026-09-04) — ready for first implementation slice
 
 Date: 2026-09-04
 
 Related:
 
 - Supersedes the **“retire all authenticated Level Up web UI”** decision in
-  [`LEVEL_UP_MOBILE_TRANSITION_PLAN.md`](./LEVEL_UP_MOBILE_TRANSITION_PLAN.md)
-  §1 and §5 Phase 5. Fitness science, iOS workout loop, graph mapping, and
-  “no Skill primitive yet” rules from that plan remain in force unless this
-  document explicitly changes them.
-- Product flows for native fitness remain in
-  [`LEVEL_UP_NATIVE_PRODUCT_FLOWS.md`](./LEVEL_UP_NATIVE_PRODUCT_FLOWS.md).
+  [`LEVEL_UP_MOBILE_TRANSITION_PLAN.md`](./LEVEL_UP_MOBILE_TRANSITION_PLAN.md).
+  Native fitness work remains valid but is **deferred** relative to the web
+  character / skills profile (see §7).
 - Graph principles: [`MANIFESTO.md`](./MANIFESTO.md). New web UI: Still
   ([`STILL_DESIGN_SYSTEM.md`](./STILL_DESIGN_SYSTEM.md)), not Warm Concrete.
 
 ---
 
-## 1. Decision (proposed)
+## 1. Decision (locked)
 
-**Level Up is the LifeOS lens for deliberate growth across skills — not a
-workout website.**
+**Level Up is the LifeOS lens for deliberate growth across skills — an RPG-style
+character window over a real life, not a workout website.**
 
-Split the product surfaces by job:
-
-| Surface | Job | Owns |
+| Surface | Job | Priority now |
 |---|---|---|
-| **Level Up web** | Library, ranking honesty, and improvement Plans | Skill catalog, capability ranks / confidence, related Plans, journey over time, settings that are better as a desk surface |
-| **Level Up iOS** | Capture and practice in the real world | Workouts, set logging, readiness, HealthKit / Oura, combines when gym-side, offline session recovery |
-| **Hidden service** | Authority | `@life-os/level-up`, `apps/api`, `LevelUp*` tables, graph projections |
+| **Level Up web** | Character window, skills library, ranks, related Plans | **Primary** |
+| **Level Up iOS** | Workout capture into the graph | Later — do not block web |
+| **Hidden service** | Authority (`@life-os/level-up`, API, tables, graph) | Ongoing |
 
-Workouts leave the web app. The web app does **not** disappear — it stops
-being a gym logger in Warm Concrete and becomes the skills / ranks / Plans
-desk surface in Still.
+Workouts are not the product identity. The web app becomes a **character sheet**:
+who I am becoming, which skills I have, how honestly they are ranked, and which
+`Plan`s are attached to getting better.
 
-Standalone still means product experience, not a data silo. Every Level Up
-user resolves to a LifeOS workspace and graph. iOS writes evidence into that
-graph; the web reads the same truth.
-
----
-
-## 2. Why this split
-
-The current web app (`apps/level-up`) is mostly Card / Train / Combine / Body
-on the old Warm Concrete language. That matched an early “IRL Player” fitness
-MVP. It is the wrong primary home for:
-
-- browsing a **library of skills** across life domains
-- seeing **honest ranks** (capability vs momentum, confidence visible)
-- tying improvement to **Plans** (who I am trying to become) already in the graph
-
-Gym logging wants one-handed offline UI, timers, haptics, Live Activity — that
-belongs on iPhone. Desk work wants scanning a library, editing Plans, and
-reading a career/journey narrative — that belongs on the web.
+Same LifeOS workspace/graph. Same `Plan` primitive Home already uses. No second
+goals database. No ninth life primitive for “Skill.”
 
 ---
 
-## 3. Product promise (unchanged loop, wider domain)
+## 2. Locked Phase 0 answers
 
-Same honest loop as the mobile plan, now explicit that the web owns steps
-1–2 and 6, and iOS owns 3–5 for fitness:
+| # | Question | Decision |
+|---|---|---|
+| 1 | First non-athletic skill | **Communication** |
+| 2 | Plans ownership | **Same graph `Plan` rows** as Home / Persons — Level Up is a lens, not a fork |
+| 3 | iOS / combine urgency | **Web skill profiles first.** Worry about iOS workout ownership later |
+| 4 | Player card fate | **Evolves into an RPG-style character window** — all skills, attributes, builds energy — not a fitness-only OVR page |
 
-1. Choose who you are trying to become → **Plan** (web + Home)
-2. Select a skill / capability to develop → **Skills library** (web)
-3. Get a small next action → Today (iOS for fitness; later web/home for desk skills)
-4. Practice in the real world → domain capture (iOS workout first)
-5. Capture evidence with low friction → iOS / connectors
-6. See progress, uncertainty, consistency, what next → **web ranks + journey + related Plans**
+Remaining soft questions (do not block first slice):
 
-Rules that stay non-negotiable:
+- Keep “IRL Player” subtitle vs drop it as the shell becomes multi-skill.
+- Public install/marketing page vs authenticated-only.
 
-- Capability is domain-specific and evidence-based. No universal fake XP.
-- Momentum / career can be cross-domain; RANK cannot be contaminated by streaks.
-- Confidence is visible when evidence is sparse or self-reported.
-- Fitness keeps verified ceiling: training moves form inside range; combine
-  raises ceiling.
+---
+
+## 3. Product north star — character window
+
+Think classic RPG character screen, LifeOS-honest:
+
+- **Identity** — who I am trying to become (active / focused Plans), not a cartoon avatar.
+- **Skills** — domains on the sheet (Fitness, Communication, …). Each opens into
+  attributes / tracks when the domain has a real model.
+- **Attributes** — domain-specific ratings. Fitness already has the ten athletic
+  attributes + OVR/builds. Communication gets its own rubric (not Strength reused).
+- **Confidence / evidence** — sparse or self-rated skills look provisional; verified
+  assessments look solid. No fake XP from tapping buttons.
+- **Related Plans** — every skill surface shows the `Plan`s that declare intent to
+  improve that skill (and can create / focus / complete them).
+- **Journey** — career/timeline energy: milestones, assessments, consistency —
+  capability and momentum stay separate tracks.
+
+Fitness is one skill on the sheet. Communication is the first non-athletic skill
+that earns a second panel. More skills appear only when they have practice,
+evidence, and an honest progression story.
+
+### What “RPG style” means here
+
+Adopt:
+
+- One composition that reads as **my character**, not a dashboard of widgets.
+- Clear skill list + drill-in detail (attributes, rank honesty, Plans).
+- Builds / archetypes as *weights on what I am optimizing*, not loot.
+
+Reject:
+
+- Fake global XP, currencies, loot, leaderboards, emoji crests.
+- One universal OVR across Fitness + Communication.
+- Warm Concrete gym chrome as the long-term visual language (Still for new UI).
 
 ---
 
 ## 4. LifeOS model (no ninth primitive)
 
-A skill journey remains a **Level Up projection** over the eight primitives:
-
 | Meaning in Level Up | LifeOS representation |
 |---|---|
-| Who I am trying to become / outcome | `Plan` |
-| A practice, workout, lesson, test, performance | `Event` |
+| Who I am trying to become / skill improvement intent | `Plan` (same table as Home) |
+| A practice, workout, talk, writing session, performance | `Event` |
 | Observed capability or condition at a time | `State` |
-| Reflection, rubric, coach note | `Note` |
-| Coach, partner, class | `Person` / `Group` + truthful `Interaction` |
+| Reflection, rubric score note, coach feedback | `Note` |
+| Coach, partner, audience, team | `Person` / `Group` + truthful `Interaction` |
 | Where / with what | `Place` / `Item` |
 
-Level Up may keep **infrastructure** tables for skill definitions, rubrics,
-domain engines, and assessment protocols. Those support the lens; they are not
-life primitives.
-
-**Defer** a generalized skill schema until at least one non-fitness domain is
-designed from real use and pressure-tested against this mapping (same gate as
-the mobile plan §9). Fitness already has `LevelUp*` infrastructure; treat it
-as the first domain adapter, not the product ceiling.
+Level Up may keep **infrastructure** for skill definitions, rubrics, and domain
+engines. Fitness already has `LevelUp*`. Communication will need a small
+infrastructure shape only after the rubric is pressure-tested in UI with real
+Plans — not a premature schema dump.
 
 ---
 
 ## 5. Target web information architecture
 
-Replace Card / Train / Combine / Body as the primary nav with a skills-first
-shell (names open to debate):
+Primary nav evolves toward:
 
 | Area | Purpose |
 |---|---|
-| **Skills** | Library of domains and tracks. Fitness first as a real domain card; other skills appear only when they have practice + evidence + assessment. |
-| **Skill detail** | Rank / Balance / unranked honesty, confidence, related Plans, next evidence needed, links into domain history. |
-| **Plans** | Improvement Plans tied to skills (and the person I am becoming). Create / focus / complete against graph `Plan`s — not a second goals database. |
-| **Journey** | Chronological capability + consistency narrative (career / badges energy without gym chrome). |
-| **You** | Profile, builds/goals for fitness, connections health, install iOS deep link. |
+| **Character** (home) | RPG window: identity, skill summary ranks, primary build/intent, confidence |
+| **Skills** | Library — Fitness + Communication first; stubs only if explicitly useful |
+| **Skill detail** | Domain attributes, evidence honesty, related Plans, next practice/evidence |
+| **Plans** | Filtered view of graph `Plan`s tied to skills / becoming |
+| **Journey** | Timeline (ex-Career / Badges energy) |
 
-Explicitly **removed from web** (or reduced to read-only deep links into iOS):
+Gym logging routes (`/train`, session) are deprioritized on web. They may stay
+reachable briefly for rollback but are not the product. No requirement to finish
+iOS before shipping Character + Communication profile.
 
-- Active session / set logging (`/train`, `/train/session`)
-- Workout start / program day runner
-- One-handed gym chrome (wheel pickers, rest timers as primary UX)
+### Route triage (current → target)
 
-**Maybe keep on web temporarily** (decide in Phase 0 triage):
-
-- Combine entry (assessment desk vs gym) — prefer iOS long-term; web may stay
-  read-only history until native combine ships
-- Body metrics history — prefer HealthKit + iOS; web may show trends only
-- Player card / builds — fold into Fitness skill detail + You, Still-restyled
-
----
-
-## 6. What already exists (baseline)
-
-| Piece | State |
+| Current | Disposition |
 |---|---|
-| `apps/level-up` Next app | Live Warm Concrete; Card, Combine, Train, Body, Builds, Badges, Career |
-| `packages/level-up` | Pure engine + workout/readiness/profile domain commands |
-| `LevelUp*` Prisma models | Fitness infrastructure in shared Turso DB |
-| Device workout API | Today / session / set / body under `apps/api` |
-| `LevelUpFeature` + `LevelUpIOS` | Native shell + early Today / session slice; not full parity |
-| Home / Focus / Plans | Graph Plans and Focus queue exist outside Level Up |
-
-This plan does **not** delete workout tables or native work. It reassigns the
-browser’s job and freezes web workout feature work.
+| `/` Card | **Migrate** → Character window |
+| `/builds` | **Fold** into Character / Fitness skill (weights / archetype) |
+| `/career`, `/badges` | **Migrate** → Journey |
+| `/attributes/[key]`, `/exercise/[key]` | **Fold** into Fitness skill detail |
+| `/combine`, `/body` | **Keep readable for now**; not the first redesign focus |
+| `/train`, `/train/session` | **Deprioritize / soft-retire** when convenient; iOS later |
+| `/start` | Keep cold-start / profile until Character onboarding replaces it |
 
 ---
 
-## 7. Delivery sequence
+## 6. Communication skill — first cut
 
-### Phase 0 — Align and freeze (this doc)
+Communication is the pilot that proves the sheet is multi-domain.
 
-Work together until these are written answers, not vibes:
+### Intent
 
-1. Approve or amend the surface split in §1.
-2. Inventory every current web route/action: **migrate to skills web**,
-   **move to iOS only**, **keep temporarily**, or **retire**.
-3. Name the first **non-fitness skill pilot** (or explicitly “fitness-only
-   library shell first, second skill next”).
-4. Decide how Skills relate to existing Home Focus / Plans UX (one Plan
-   system, two lenses — or Level Up Plans tab is a filtered view of the same
-   rows).
-5. Mark `apps/level-up` workout writes as freeze: urgent fixes only; new
-   behavior goes to `packages/level-up` + `apps/api` + iOS.
+Joseph’s life already stresses interpersonal clarity, written follow-through,
+client-facing EQ, and live case-style thinking. The skill should model **that**,
+not a generic Toastmasters checklist copied from the internet.
 
-Exit gate: parity/retirement matrix checked in; this doc status → approved.
+### v1 shape (deliberately thin)
 
-### Phase 1 — Deprecate workout UI on web (reversible)
+1. **Skill appears on Character** — Communication card beside Fitness.
+2. **Skill detail page** — provisional attributes (draft list below), confidence
+   band (mostly self-declared / Note-backed at first), related Plans.
+3. **Plans** — create and link graph `Plan`s such as “improve written
+   follow-through” or “practice hard conversations” — same Focus/Plan system.
+4. **Evidence later** — Events/Notes/Interactions that support a rating; do not
+   invent a combine engine on day one.
 
-- Remove Train (and session) from primary nav; show an install / open-in-iOS
-  path instead of logging sets in the browser.
-- Stop deploying new Warm Concrete gym chrome; leave legacy routes behind a
-  soft “moved to iOS” banner if needed for rollback.
-- Keep engine, combines history, and card readable so fitness skill detail
-  still has evidence.
-- Do **not** delete `LevelUpSession` / set data. Web retirement of logging ≠
-  data reset.
+### Draft attribute axes (to pressure-test, not ship as science)
 
-Exit gate: no new sets can be written from the browser in production (or
-writes are explicitly blocked); iOS path documented.
+Working labels — rename freely in the next pass:
 
-### Phase 2 — Skills web shell (Still)
+| Axis | Rough meaning |
+|---|---|
+| Clarity | Can I make the point land simply? |
+| Listening | Do I understand before advocating? |
+| Written follow-through | Do commitments get closed in writing? |
+| Presence | Live rooms / meetings / hard conversations |
+| Persuasion | Moving someone without coercion or fog |
+| Relational care | Tone and trust with people who matter |
 
-- Restyle `apps/level-up` shell to Still (or replace route tree in place).
-- Ship Skills index with Fitness as the first real domain card.
-- Skill detail for Fitness: OVR / attributes / confidence folded from current
-  Card; link related Plans; “practice on iOS” CTA.
-- Plans view: workspace Plans filtered / tagged by skill or improvement
-  intent — same `Plan` rows Home uses.
-- Journey: migrate Career / Badges energy into one calm timeline.
+These are **not** fitness norms. Early ranks should show as provisional /
+self-assessed until a real rubric + evidence loop exists. Prefer honest
+“unranked / drafting” over fake 78s.
 
-Exit gate: desk user can browse Fitness as a skill, see ranks honestly, and
-see related Plans without opening Train.
+### What not to do in v1
 
-### Phase 3 — iOS workout ownership
-
-Continue [`LEVEL_UP_MOBILE_TRANSITION_PLAN.md`](./LEVEL_UP_MOBILE_TRANSITION_PLAN.md)
-Phases 1–3 for native fitness parity (session UI, offline queue, art,
-combines, library). Web no longer blocks native cutover of logging.
-
-Exit gate: three real gym sessions pass airplane / force-quit / no-duplicate
-tests; web is not required for a workout week.
-
-### Phase 4 — Second skill pilot
-
-- Pick one real non-fitness skill from Joseph’s life.
-- Pressure-test Plan / Event / State / Note mapping before any schema.
-- Define practice capture (may be Note + Event, not a second gym UI).
-- Add domain adapter boundary in `packages/level-up` (next action, evidence,
-  assessment, progress) without a universal capability score.
-
-Exit gate: second skill appears in the web library with honest unranked or
-rubric progress — no fake XP, no fitness formula reuse.
-
-### Phase 5 — Harden the split
-
-- Redirect leftover web gym deep links to iOS Universal Links where possible.
-- Drop dead workout components from `apps/level-up` once unused.
-- Update deploy/smoke docs: Level Up web = skills desk; Level Up iOS = capture.
-- Keep `packages/level-up` + API as shared authority forever.
-
-Exit gate: docs, nav, and deploys match the split; rollback window documented.
+- No Communication OVR blended into athletic OVR.
+- No copying Strength/Power math.
+- No large schema until one week of real Plan + reflection use says we need it.
 
 ---
 
-## 8. Open questions (decide together)
+## 7. Delivery sequence (reordered)
 
-These block Phase 0 exit. Prefer short written answers in this doc.
+### Phase 0 — Align — **done**
 
-1. **First non-fitness skill?** Candidates only after real life use — e.g.
-   language, music, cooking, public speaking, parenting craft — not a
-   hypothetical catalog of fifty.
-2. **Plans ownership:** Does Level Up web edit the same `Plan` records as
-   Home/Persons, with a skill-scoped view? (Recommended: yes.)
-3. **Combine on web:** Retire entry now, keep history, or keep full desk
-   combine until native ships?
-4. **Player card:** Die as a top-level page, or become the Fitness skill
-   hero?
-5. **Public install page:** Minimal LifeOS marketing page vs authenticated
-   skills app only?
-6. **Naming:** Keep “IRL Player” subtitle, or rebrand the web shell to
-   “Skills” under Level Up?
+Decisions in §2 locked. Soft questions can wait.
+
+### Phase 1 — Character window shell (Still) — **next**
+
+- Restyle Level Up web shell toward Still.
+- Replace Card-as-home with **Character**: skill roster (Fitness from existing
+  engine card; Communication as provisional).
+- Fold Builds into Character / Fitness.
+- Plans panel or tab: same `Plan` primitive, skill-scoped where tagged/linked.
+- Leave Train alone or demote in nav; do not spend the slice on iOS.
+
+Exit gate: authenticated web opens on a character sheet that shows Fitness +
+Communication; Fitness still shows real engine numbers; Communication is honest
+about being provisional; at least one related Plan can be created/linked.
+
+### Phase 2 — Communication skill profile depth
+
+- Skill detail for Communication with draft attributes + confidence copy.
+- Rubric / self-assessment capture as Note- or State-backed evidence (minimal).
+- Related Plans list and “add Plan for this skill” using existing Plan APIs.
+- Journey entries when assessments or Plans change meaningfully.
+
+Exit gate: Communication feels like a first-class skill on the sheet, not a
+placeholder tile, without pretending athletic-grade science.
+
+### Phase 3 — Fitness as a skill panel
+
+- Move athletic attributes / combine history / body under Fitness skill detail.
+- Character home shows Fitness summary only (OVR + primary build + link).
+- Soft-retire Train from primary nav when Character is stable.
+
+Exit gate: gym chrome is no longer the top-level IA; Fitness is one skill.
+
+### Phase 4 — iOS workout ownership (deferred)
+
+Resume [`LEVEL_UP_MOBILE_TRANSITION_PLAN.md`](./LEVEL_UP_MOBILE_TRANSITION_PLAN.md)
+when ready. Web Character does not wait on it.
+
+### Phase 5 — Harden
+
+- Drop dead workout-only UI once unused.
+- Domain-adapter boundary in `packages/level-up` for multiple skills.
+- Docs / deploy language: Level Up web = character / skills desk.
 
 ---
 
-## 9. Explicit non-goals (for now)
+## 8. Explicit non-goals (for now)
 
+- Blocking on iOS workout parity
 - Android
-- Social leaderboards / public skill profiles
+- Social leaderboards / public profiles
 - Universal Skill primitive or cross-domain OVR
-- AI skill prescriptions without deterministic evidence and provenance
-- Deleting workout history or `LevelUp*` tables when web logging goes away
-- Extending Warm Concrete for the new skills shell
+- Fake XP / loot / currencies
+- AI skill prescriptions without evidence + provenance
+- Deleting `LevelUp*` workout history
+- Extending Warm Concrete for the new shell
 
 ---
 
-## 10. Suggested first working session
+## 9. First implementation slice (after this doc)
 
-Agenda for the next joint pass (no code required until Phase 0 answers land):
+Narrow and reversible:
 
-1. Amend or approve §1 and §5 IA.
-2. Fill the route matrix (every link in current `Nav.tsx` + nested routes).
-3. Answer §8 questions 1–4.
-4. If approved: open Phase 1 PR — freeze/remove Train from web nav + iOS CTA
-   banner — before any Still redesign of the library.
+1. Character home route (Still) with Fitness summary + Communication provisional card.
+2. Communication skill detail stub + related Plans using existing `Plan` APIs.
+3. Nav: Character / Skills / Plans / Journey (Journey can wrap career for now).
+4. Demote Train in nav (optional in same PR).
+
+Do not: remove engine, delete workout data, or build iOS features in this slice.
 
 ---
 
@@ -271,4 +260,5 @@ Agenda for the next joint pass (no code required until Phase 0 answers land):
 
 | Date | Change |
 |---|---|
-| 2026-09-04 | Initial draft: keep Level Up web as skills/ranks/Plans; workouts iOS-only; revise full web retirement from mobile transition plan. |
+| 2026-09-04 | Initial draft: skills web + iOS workout split. |
+| 2026-09-04 | Locked: Communication first; same Plans; web profiles before iOS; Card → RPG character window. Reordered delivery. |
