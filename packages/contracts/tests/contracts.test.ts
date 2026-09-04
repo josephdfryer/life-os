@@ -2,6 +2,7 @@ import test from "node:test"
 import assert from "node:assert/strict"
 import {
   bulkDeletePeopleContract,
+  approvedEmailContract,
   chatMessageContract,
   confirmImportContract,
   mergePersonContract,
@@ -22,6 +23,7 @@ import {
   reviewItemActionContract,
   reviewItemBulkDismissContract,
   reviewItemContract,
+  updateApprovedEmailContract,
   z,
 } from "../index"
 
@@ -39,6 +41,14 @@ test("stored JSON codecs validate contacts and rule definitions predictably", ()
 test("bulk delete contract rejects empty and oversized batches", () => {
   assert.equal(bulkDeletePeopleContract.safeParse({ ids: [] }).success, false)
   assert.equal(bulkDeletePeopleContract.safeParse({ ids: Array.from({ length: 501 }, (_, i) => String(i)) }).success, false)
+})
+
+test("approved-email contracts accept invite roles and bounded updates", () => {
+  assert.equal(approvedEmailContract.safeParse({ email: "neal@example.com", roleId: "viewer-role" }).success, true)
+  assert.equal(updateApprovedEmailContract.safeParse({ status: "revoked" }).success, true)
+  assert.equal(updateApprovedEmailContract.safeParse({ roleId: "editor-role" }).success, true)
+  assert.equal(updateApprovedEmailContract.safeParse({}).success, false)
+  assert.equal(updateApprovedEmailContract.safeParse({ status: "disabled" }).success, false)
 })
 
 test("chat contract trims a valid message and rejects blank input", () => {

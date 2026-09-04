@@ -29,7 +29,7 @@ export default async function ScheduleWidget({ workspaceId, personsUrl, tz }: Pr
 
   return (
     <div className="dashboard-schedule-card" style={card}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '28px' }}>
         <h2 style={heading}>Today</h2>
         <a href={`${eventsUrl}/events?view=today`} style={{ ...badge, textDecoration: 'none' }}>
           {events.length} {events.length === 1 ? 'event' : 'events'} →
@@ -88,7 +88,7 @@ const card: React.CSSProperties = {
   background: 'rgba(247, 244, 238, 0.045)',
   border: '1px solid rgba(196, 165, 116, 0.18)',
   borderRadius: 'var(--radius-lg)',
-  padding: '32px',
+  padding: '28px 24px',
 }
 
 const heading: React.CSSProperties = {

@@ -1,5 +1,5 @@
 import { db } from "@life-os/db"
-import { loadAdminCapabilities, requireAdminCapability } from "@/lib/admin-access"
+import { requireAdminCapability } from "@/lib/admin-access"
 import { workspaceForHomeRequest } from "@/lib/request-access"
 import { redirect } from "next/navigation"
 import { ApprovedEmailControls, WorkspacesControls } from "../AdminControls"
@@ -14,7 +14,7 @@ export default async function AdminWorkspacePage() {
   const workspaceId = await workspaceForHomeRequest()
   if (!workspaceId) redirect("/login")
 
-  const [workspace, approvedEmails, allWorkspaces] = await Promise.all([
+  const [workspace, approvedEmails, inviteRoles, allWorkspaces] = await Promise.all([
     db.workspace.findUnique({
       where: { id: workspaceId },
       select: {
@@ -40,7 +40,13 @@ export default async function AdminWorkspacePage() {
       where: { workspaceId },
       orderBy: { createdAt: "desc" },
       take: 500,
-      select: { id: true, email: true, status: true, createdAt: true },
+      select: { id: true, email: true, status: true, workspaceId: true, createdAt: true, role: { select: { id: true, key: true, name: true, description: true } } },
+    }),
+    db.role.findMany({
+      where: { key: { notIn: ["owner", "automation"] } },
+      orderBy: { name: "asc" },
+      take: 100,
+      select: { id: true, key: true, name: true, description: true },
     }),
     workspaceId === "default-workspace" && capabilities.crossTenantWorkspaces
       ? db.workspace.findMany({
@@ -62,7 +68,7 @@ export default async function AdminWorkspacePage() {
   return (
     <AdminChrome tab="workspace" capabilities={capabilities}>
       <WorkspacePanel workspace={workspace} />
-      <ApprovedEmailControls rows={approvedEmails.map(row => ({ ...row, createdAt: row.createdAt.toISOString() }))} />
+      <ApprovedEmailControls rows={approvedEmails.map(row => ({ ...row, createdAt: row.createdAt.toISOString() }))} roles={inviteRoles} />
       {capabilities.crossTenantWorkspaces && (
         <WorkspacesControls rows={allWorkspaces.map(row => ({
           id: row.id,

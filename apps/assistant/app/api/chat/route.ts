@@ -59,7 +59,16 @@ export async function POST(req: NextRequest) {
 
   try {
     const fileIds = await assertWorkspaceFiles(parsed.data.fileIds, access.workspaceId)
-    const result = await runAgent({ channel: "web", from, userMessage: message, workspaceId: access.workspaceId, fileIds })
+    const result = await runAgent({
+      channel: "web",
+      from,
+      userMessage: message,
+      workspaceId: access.workspaceId,
+      workspaceName: access.workspaceName,
+      requester: access.email,
+      scopes: access.scopes,
+      fileIds,
+    })
     return NextResponse.json(result)
   } catch (error) {
     console.error("Chat agent failed:", error)

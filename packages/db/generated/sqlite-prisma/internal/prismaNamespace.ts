@@ -7611,7 +7611,8 @@ export const ApprovedEmailScalarFieldEnum = {
   email: 'email',
   status: 'status',
   workspaceId: 'workspaceId',
-  invitedById: 'invitedById'
+  invitedById: 'invitedById',
+  roleId: 'roleId'
 } as const
 
 export type ApprovedEmailScalarFieldEnum = (typeof ApprovedEmailScalarFieldEnum)[keyof typeof ApprovedEmailScalarFieldEnum]

@@ -46,14 +46,16 @@ export type AssistantToolDefinition = {
   description: string;
   input_schema: Record<string, unknown>;
   capability: ToolCapability;
+  requiredScope: string;
 };
 
 export const TOOLS: AssistantToolDefinition[] = [
   {
     name: "search_people",
     capability: "read",
+    requiredScope: "people.read",
     description:
-      "Search Joseph's people by name, company, or email fragment. Returns compact matches with ids for use in other tools.",
+      "Search this workspace's people by name, company, or email fragment. Returns compact matches with ids for use in other tools.",
     input_schema: {
       type: "object",
       properties: {
@@ -68,6 +70,7 @@ export const TOOLS: AssistantToolDefinition[] = [
   {
     name: "get_person",
     capability: "read",
+    requiredScope: "people.read",
     description:
       "Full detail for one person: profile, recent interactions, active plans. Use the id from search_people.",
     input_schema: {
@@ -79,6 +82,7 @@ export const TOOLS: AssistantToolDefinition[] = [
   {
     name: "create_person",
     capability: "write",
+    requiredScope: "people.write",
     description:
       "Create a Person in LifeOS. On a new request, pass the known identity/profile fields; the tool runs the canonical contact-import duplicate matcher first and creates immediately only when no possible match exists. If it returns confirmation_required, show the candidate and ask whether to use the existing Person or create a separate Person. Only in a later user turn, after their explicit choice, call again with that confirmationId and duplicateResolution. The returned personId can be used immediately for capture_note, log_interaction, create_plan, or add_person_to_group.",
     input_schema: {
@@ -102,7 +106,7 @@ export const TOOLS: AssistantToolDefinition[] = [
           type: "integer",
           enum: [1, 2, 3, 4, 5],
           description:
-            "Only pass when Joseph explicitly states the relationship level; otherwise the safe default is 1 (Acquaintance)",
+            "Only pass when the member explicitly states the relationship level; otherwise the safe default is 1 (Acquaintance)",
         },
         tags: { type: "array", items: { type: "string" } },
         values: { type: "array", items: { type: "string" } },
@@ -131,8 +135,9 @@ export const TOOLS: AssistantToolDefinition[] = [
   {
     name: "update_person",
     capability: "write",
+    requiredScope: "people.write",
     description:
-      "Edit an existing Person's profile fields, e.g. fixing a misspelled or wrong name Joseph just noticed. Use the id from search_people or get_person. Only pass the fields that should change — omitted fields are left as-is.",
+      "Edit an existing Person's profile fields, e.g. fixing a misspelled or wrong name the member just noticed. Use the id from search_people or get_person. Only pass the fields that should change — omitted fields are left as-is.",
     input_schema: {
       type: "object",
       properties: {
@@ -168,6 +173,7 @@ export const TOOLS: AssistantToolDefinition[] = [
   {
     name: "get_schedule",
     capability: "read",
+    requiredScope: "life-events.read",
     description:
       "Events for a specific date (defaults to today, Pacific time). Includes places when known.",
     input_schema: {
@@ -181,8 +187,9 @@ export const TOOLS: AssistantToolDefinition[] = [
   {
     name: "capture_note",
     capability: "write",
+    requiredScope: "notes.write",
     description:
-      "Capture a raw thought, observation, or declaration as a Note in LifeOS. Use when Joseph wants to remember, note, or declare something. If it is about a person, place, item, event, plan, group, or state, search first and pass that id so Theory and the rest of the graph can find it. Do not use add_place_note or append to a record's notes blob for this.",
+      "Capture a raw thought, observation, or declaration as a Note in LifeOS. Use when the member wants to remember, note, or declare something. If it is about a person, place, item, event, plan, group, or state, search first and pass that id so Theory and the rest of the graph can find it. Do not use add_place_note or append to a record's notes blob for this.",
     input_schema: {
       type: "object",
       properties: {
@@ -228,6 +235,7 @@ export const TOOLS: AssistantToolDefinition[] = [
   {
     name: "log_interaction",
     capability: "write",
+    requiredScope: "interactions.write",
     description:
       "Log an interaction with a person (call, meeting, message, meal...). Use after confirming which person via search_people.",
     input_schema: {
@@ -246,8 +254,9 @@ export const TOOLS: AssistantToolDefinition[] = [
   {
     name: "create_item",
     capability: "write",
+    requiredScope: "items.write",
     description:
-      "Create a new physical belonging in Stuff (a vehicle, appliance, instrument, piece of gear). Use when Joseph refers to something he owns that search_items cannot find, so receipts, warranties and interactions can be filed against it. Returns the new itemId.",
+      "Create a new physical belonging in Stuff (a vehicle, appliance, instrument, piece of gear). Use when the member refers to something the workspace owns that search_items cannot find, so receipts, warranties and interactions can be filed against it. Returns the new itemId.",
     input_schema: {
       type: "object",
       properties: {
@@ -277,14 +286,15 @@ export const TOOLS: AssistantToolDefinition[] = [
   {
     name: "create_plan",
     capability: "write",
+    requiredScope: "plans.write",
     description:
-      "Record a declared intention or commitment as a Plan. Use when Joseph says he intends to do something, optionally about a specific person.",
+      "Record a declared intention or commitment as a Plan. Use when the member states an intention, optionally about a specific person.",
     input_schema: {
       type: "object",
       properties: {
         text: {
           type: "string",
-          description: "The intention, in his own words where possible",
+          description: "The intention, in the member's own words where possible",
         },
         personId: {
           type: "string",
@@ -301,6 +311,7 @@ export const TOOLS: AssistantToolDefinition[] = [
   {
     name: "add_place_note",
     capability: "write",
+    requiredScope: "places.write",
     description:
       "Attach a Places-app sidebar note to an existing Place (a mutable PlaceNote row, not a graph Note). For something Theory, Stuff, or the assistant should later retrieve as a Note, use capture_note with placeId instead. Find the placeId with search_places first.",
     input_schema: {
@@ -315,8 +326,9 @@ export const TOOLS: AssistantToolDefinition[] = [
   {
     name: "search_organizations",
     capability: "read",
+    requiredScope: "groups.read",
     description:
-      "Find companies and organizations Joseph has a working relationship with. Returns ids for get_organization. Only lists organizations with people or real contact attached, not every merchant he has ever bought from.",
+      "Find companies and organizations represented in this workspace. Returns ids for get_organization. Only lists organizations with people or real contact attached, not every merchant in the transaction history.",
     input_schema: {
       type: "object",
       properties: {
@@ -331,8 +343,9 @@ export const TOOLS: AssistantToolDefinition[] = [
   {
     name: "get_organization",
     capability: "read",
+    requiredScope: "groups.read",
     description:
-      "The full dossier for one organization: every interaction with anyone there (including after they moved on), total spend with them, current and past people, their sites, recorded facts like headcount or market cap, and research notes. Use this whenever Joseph asks about a company as a whole.",
+      "The full dossier for one organization: every interaction with anyone there (including after they moved on), total spend with them, current and past people, their sites, recorded facts like headcount or market cap, and research notes. Use this whenever the member asks about a company as a whole.",
     input_schema: {
       type: "object",
       properties: {
@@ -344,8 +357,9 @@ export const TOOLS: AssistantToolDefinition[] = [
   {
     name: "create_group",
     capability: "write",
+    requiredScope: "groups.write",
     description:
-      "Create an organization or group — a company he works with, a family, a team. Search first so an existing one is extended rather than duplicated.",
+      "Create an organization or group — a company, family, or team. Search first so an existing one is extended rather than duplicated.",
     input_schema: {
       type: "object",
       properties: {
@@ -363,8 +377,9 @@ export const TOOLS: AssistantToolDefinition[] = [
   {
     name: "add_person_to_group",
     capability: "write",
+    requiredScope: "groups.write",
     description:
-      "Record that a person belongs to an organization, with their role. This is how the company's people list gets built, so do it whenever Joseph mentions where someone works.",
+      "Record that a person belongs to an organization, with their role. This is how the company's people list gets built, so do it whenever the member mentions where someone works.",
     input_schema: {
       type: "object",
       properties: {
@@ -378,6 +393,7 @@ export const TOOLS: AssistantToolDefinition[] = [
   {
     name: "query_finance",
     capability: "read",
+    requiredScope: "interactions.read",
     description:
       "Compatibility spending summary over the last N days. Prefer get_spend_breakdown for exact dates, named periods, and breakdown questions.",
     input_schema: {
@@ -403,6 +419,7 @@ export const TOOLS: AssistantToolDefinition[] = [
   {
     name: "get_spend_breakdown",
     capability: "read",
+    requiredScope: "interactions.read",
     description:
       "Read-only spend total and breakdown for a specific date or range. Use for questions like 'how much did I spend yesterday?', 'break it down by category', or 'what did I spend at restaurants last week?'.",
     input_schema: {
@@ -452,6 +469,7 @@ export const TOOLS: AssistantToolDefinition[] = [
   {
     name: "get_place_spend",
     capability: "read",
+    requiredScope: "interactions.read",
     description:
       "Spending grouped by physical place (from location-matched transactions). Optionally filter by place name.",
     input_schema: {
@@ -463,8 +481,9 @@ export const TOOLS: AssistantToolDefinition[] = [
   {
     name: "search_notes",
     capability: "read",
+    requiredScope: "notes.read",
     description:
-      "Search Joseph's captured Notes (thoughts, observations, declarations). Optionally filter to notes about a person, place, or item.",
+      "Search this workspace's captured Notes (thoughts, observations, declarations). Optionally filter to notes about a person, place, or item.",
     input_schema: {
       type: "object",
       properties: {
@@ -488,6 +507,7 @@ export const TOOLS: AssistantToolDefinition[] = [
   {
     name: "list_inbox",
     capability: "read",
+    requiredScope: "review.read",
     description:
       "Preview pending review-inbox items (unmatched communications awaiting triage). Read-only.",
     input_schema: {
@@ -499,8 +519,9 @@ export const TOOLS: AssistantToolDefinition[] = [
   {
     name: "search_places",
     capability: "read",
+    requiredScope: "places.read",
     description:
-      "Search Joseph's places by name, address, or type (city, home, room, shelf, etc). Returns compact matches with ids for use in get_place.",
+      "Search this workspace's places by name, address, or type (city, home, room, shelf, etc). Returns compact matches with ids for use in get_place.",
     input_schema: {
       type: "object",
       properties: {
@@ -515,6 +536,7 @@ export const TOOLS: AssistantToolDefinition[] = [
   {
     name: "get_place",
     capability: "read",
+    requiredScope: "places.read",
     description:
       "Full detail for one place: hierarchy, meaning, recent notes, items stored there, recent events there. Use the id from search_places.",
     input_schema: {
@@ -526,8 +548,9 @@ export const TOOLS: AssistantToolDefinition[] = [
   {
     name: "search_items",
     capability: "read",
+    requiredScope: "items.read",
     description:
-      "Search Joseph's physical belongings (Stuff app) by name, category, make/model, or asset id. Returns compact matches with ids for use in get_item.",
+      "Search this workspace's physical belongings (Stuff app) by name, category, make/model, or asset id. Returns compact matches with ids for use in get_item.",
     input_schema: {
       type: "object",
       properties: {
@@ -542,6 +565,7 @@ export const TOOLS: AssistantToolDefinition[] = [
   {
     name: "get_item",
     capability: "read",
+    requiredScope: "items.read",
     description:
       "Full detail for one physical item: location, owner, purchase/warranty info, and assembly (what it's inside, what's inside it). Use the id from search_items.",
     input_schema: {
@@ -553,8 +577,9 @@ export const TOOLS: AssistantToolDefinition[] = [
   {
     name: "search_events",
     capability: "read",
+    requiredScope: "life-events.read",
     description:
-      "Keyword search over Joseph's events/calendar within a lookback window — use for 'when did I last...' or finding a specific past/future event by name, unlike get_schedule which only covers one day.",
+      "Keyword search over this workspace's events/calendar within a lookback window — use for 'when did I last...' or finding a specific past/future event by name, unlike get_schedule which only covers one day.",
     input_schema: {
       type: "object",
       properties: {
@@ -570,8 +595,9 @@ export const TOOLS: AssistantToolDefinition[] = [
   {
     name: "get_theory",
     capability: "read",
+    requiredScope: "intelligence.read",
     description:
-      "Joseph's current 'theory of mind' synthesis for a person — a standing derived read on who they are, patterns, and context, built from their notes/interactions/events over time. Use the id from search_people.",
+      "This workspace's current 'theory of mind' synthesis for a person — a standing derived read on who they are, patterns, and context, built from their notes/interactions/events over time. Use the id from search_people.",
     input_schema: {
       type: "object",
       properties: { personId: { type: "string" } },
@@ -581,8 +607,9 @@ export const TOOLS: AssistantToolDefinition[] = [
   {
     name: "get_alignment_signals",
     capability: "read",
+    requiredScope: "intelligence.read",
     description:
-      "Compare Joseph's declared intentions against his actual behavior to surface where they've drifted apart — relationships going cold relative to how close he says they are, and person-linked goals with no follow-through since he declared them. Use when he asks what he's neglecting, what needs attention, or wants a check-in on his stated priorities.",
+      "Compare the workspace's declared intentions against recorded behavior to surface where they've drifted apart — relationships going cold relative to declared closeness, and person-linked goals with no follow-through since they were declared. Use when the member asks what's being neglected, what needs attention, or wants a check-in on stated priorities.",
     input_schema: {
       type: "object",
       properties: {},
@@ -593,8 +620,9 @@ export const TOOLS: AssistantToolDefinition[] = [
     // The reason the graph exists: one stream, not one page per person.
     name: "get_interactions",
     capability: "read",
+    requiredScope: "interactions.read",
     description:
-      "Joseph's unified interaction stream — every logged thing across his whole life in one continuous list, newest first: calls, meals, meetings, messages, emails, calendar events and financial transactions. Use for 'what have I been doing', 'what happened last week', or any question that spans more than one person. Filter by type, person, place, merchant or date. This is the general feed; use get_spend_breakdown for money totals.",
+      "The workspace's unified interaction stream — every logged thing in one continuous list, newest first: calls, meals, meetings, messages, emails, calendar events and financial transactions. Use for 'what have I been doing', 'what happened last week', or any question that spans more than one person. Filter by type, person, place, merchant or date. This is the general feed; use get_spend_breakdown for money totals.",
     input_schema: {
       type: "object",
       properties: {
@@ -626,8 +654,9 @@ export const TOOLS: AssistantToolDefinition[] = [
   {
     name: "get_plans",
     capability: "read",
+    requiredScope: "plans.read",
     description:
-      "Joseph's declared intentions — goals, commitments and plans, with status and due dates. This is what he SAID he would do, as opposed to what the interaction log shows he did. Use for 'what am I committed to', 'what's overdue', or to check a goal before advising.",
+      "The workspace's declared intentions — goals, commitments and plans, with status and due dates. These are stated intentions, as opposed to what the interaction log shows happened. Use for 'what am I committed to', 'what's overdue', or to check a goal before advising.",
     input_schema: {
       type: "object",
       properties: {
@@ -652,6 +681,7 @@ export const TOOLS: AssistantToolDefinition[] = [
   {
     name: "get_states",
     capability: "read",
+    requiredScope: "states.read",
     description:
       "Point-in-time conditions recorded on people, places or projects — health readings, relationship phases, project status. Each is a timestamped fact, never overwritten, so this shows how something has changed. Use for 'how has my sleep been', 'what's the state of X', or trend questions.",
     input_schema: {
@@ -678,8 +708,9 @@ export const TOOLS: AssistantToolDefinition[] = [
   {
     name: "search_groups",
     capability: "read",
+    requiredScope: "groups.read",
     description:
-      "Collectives in Joseph's graph: his household/family, employers, and every merchant he transacts with (merchants are modelled as companies). Use to find who a group's members are, or to get total spend with a company across all time.",
+      "Collectives in this workspace's graph: household/family, employers, and merchants represented as companies. Use to find who a group's members are, or to get total spend with a company across all time.",
     input_schema: {
       type: "object",
       properties: {
@@ -700,6 +731,7 @@ export const TOOLS: AssistantToolDefinition[] = [
   {
     name: "search_file_chunks",
     capability: "read",
+    requiredScope: "files.read",
     description:
       "Search faithful extracted file passages. Returns chunk IDs and exact locators that may be cited as [chunk:ID].",
     input_schema: {
@@ -711,6 +743,7 @@ export const TOOLS: AssistantToolDefinition[] = [
   {
     name: "get_file_context",
     capability: "read",
+    requiredScope: "files.read",
     description:
       "Get metadata and a keyset-paginated page of latest-version extracted chunks for one workspace-owned file. Follow nextCursor when more context is needed.",
     input_schema: {
@@ -726,6 +759,7 @@ export const TOOLS: AssistantToolDefinition[] = [
   {
     name: "list_file_claims",
     capability: "read",
+    requiredScope: "files.read",
     description:
       "List cited explicit and inferred evidence claims for one file.",
     input_schema: {
@@ -737,6 +771,7 @@ export const TOOLS: AssistantToolDefinition[] = [
   {
     name: "list_file_people",
     capability: "read",
+    requiredScope: "files.read",
     description:
       "List every Person mention and its role, confidence, and resolution status for one file.",
     input_schema: {
@@ -748,6 +783,7 @@ export const TOOLS: AssistantToolDefinition[] = [
   {
     name: "get_person_file_evidence",
     capability: "read",
+    requiredScope: "files.read",
     description: "Get cited file evidence connected to a resolved Person.",
     input_schema: {
       type: "object",
@@ -2336,3 +2372,14 @@ function localDate(date: Date) {
 // destructive.
 export const TOOL_CAPABILITIES: Record<string, ToolCapability> =
   Object.fromEntries(TOOLS.map((tool) => [tool.name, tool.capability]));
+
+export const TOOL_REQUIRED_SCOPES: Record<string, string> =
+  Object.fromEntries(TOOLS.map((tool) => [tool.name, tool.requiredScope]));
+
+export function toolsForScopes(scopes: string[]) {
+  return TOOLS.filter(tool => hasScope(scopes, tool.requiredScope))
+}
+
+export function hasScope(scopes: string[], requiredScope: string) {
+  return scopes.includes("*") || scopes.includes(requiredScope)
+}

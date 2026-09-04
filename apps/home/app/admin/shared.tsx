@@ -12,6 +12,7 @@ export function AdminOverview({ capabilities }: { capabilities: AdminCapabilitie
         {capabilities.automation && <a className="still-button still-button-secondary" href="/admin/automation">Open automation</a>}
         {capabilities.apiKeys && <a className="still-button still-button-secondary" href="/admin/api-keys">Manage API keys</a>}
         {capabilities.access && <a className="still-button still-button-secondary" href="/admin/access">Manage access</a>}
+        {capabilities.assistantHistory && <a className="still-button still-button-secondary" href="/admin/assistant-chats">View Assistant chats</a>}
       </div>
     </div>
   )

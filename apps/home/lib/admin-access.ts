@@ -19,6 +19,7 @@ export type AdminCapabilities = {
   apiKeys: boolean
   workspace: boolean
   audit: boolean
+  assistantHistory: boolean
   crossTenantWorkspaces: boolean
 }
 
@@ -41,6 +42,7 @@ export async function loadAdminCapabilities(): Promise<AdminCapabilities | null>
       apiKeys: settings || hasScope(scopes, "apiKeys.manage"),
       workspace: settings,
       audit: settings || hasScope(scopes, "audit.read"),
+      assistantHistory: hasScope(scopes, "assistant.history.read"),
       crossTenantWorkspaces: settings && workspaceId === "default-workspace",
     }
   } catch {
@@ -52,4 +54,15 @@ export async function requireAdminCapability(check: (capabilities: AdminCapabili
   const capabilities = await loadAdminCapabilities()
   if (!capabilities || !check(capabilities)) return null
   return capabilities
+}
+
+export async function hasAdminScope(requiredScope: string) {
+  const workspaceId = await workspaceForHomeRequest()
+  if (!workspaceId) return false
+  try {
+    await access.requireAccess(requiredScope, workspaceId)
+    return true
+  } catch {
+    return false
+  }
 }

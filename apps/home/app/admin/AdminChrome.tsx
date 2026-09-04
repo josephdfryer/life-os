@@ -11,6 +11,7 @@ export type AdminTab =
   | "api-keys"
   | "workspace"
   | "audit"
+  | "assistant-chats"
 
 const ADMIN_TAB_GROUPS: Array<{
   label: string
@@ -32,6 +33,7 @@ const ADMIN_TAB_GROUPS: Array<{
       { id: "access", label: "Access", href: "/admin/access" },
       { id: "api-keys", label: "API keys", href: "/admin/api-keys" },
       { id: "workspace", label: "Workspace", href: "/admin/workspace" },
+      { id: "assistant-chats", label: "Assistant chats", href: "/admin/assistant-chats" },
       { id: "audit", label: "Audit log", href: "/admin/audit" },
     ],
   },
@@ -95,6 +97,7 @@ function isTabVisible(tab: AdminTab, capabilities?: AdminCapabilities | null) {
   if (tab === "access") return capabilities.access
   if (tab === "api-keys") return capabilities.apiKeys
   if (tab === "workspace" || tab === "audit") return capabilities.workspace || capabilities.audit
+  if (tab === "assistant-chats") return capabilities.assistantHistory
   return true
 }
 
