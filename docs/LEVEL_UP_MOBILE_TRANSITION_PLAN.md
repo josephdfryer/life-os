@@ -9,11 +9,13 @@ Primary product: a dedicated native Level Up app, beginning with iPhone
 First complete domain: fitness and health
 
 > **2026-09-04 revision:** Full retirement of authenticated Level Up web UI is
-> no longer the plan. Workouts remain iOS-first (this document). The web app
-> stays as the skills library / ranks / related-Plans desk surface — see
-> [`LEVEL_UP_SKILLS_WEB_PLAN.md`](./LEVEL_UP_SKILLS_WEB_PLAN.md). Phase 5 below
-> still applies to **workout logging and gym chrome** on the web, not to
-> deleting the Level Up web product.
+> no longer the plan. Workouts remain iOS-first when that work resumes. The web
+> app becomes an RPG-style **character / skills** desk (Fitness + Communication
+> first) — see [`LEVEL_UP_SKILLS_WEB_PLAN.md`](./LEVEL_UP_SKILLS_WEB_PLAN.md).
+> **Web character/skills work is prioritized; native workout parity is deferred**
+> and must not block the skills profile. Phase 5 below still applies to
+> **workout logging and gym chrome** on the web when that cutover happens, not
+> to deleting the Level Up web product.
 
 This plan supersedes the product-surface decisions in
 `LEVEL_UP_ADAPTIVE_WORKOUT_PLAN.md` and `IOS_PLATFORM_PLAN.md` that keep a Level
