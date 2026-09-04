@@ -1,134 +1,118 @@
 import Link from "next/link"
 import { requireLevelUpAccess } from "@/lib/access"
-import { cookies } from "next/headers"
-import { resolveTimeZone, TZ_COOKIE } from "@life-os/ui"
-import { loadBundle, BUILDS, ATTRIBUTE_TAGLINE, type BuildKey } from "@life-os/level-up"
-import { AttributeLink, Delta, Mono, Panel, Stat } from "@/components/display"
-import BuildSelector from "@/components/BuildSelector"
+import { loadBundle, BUILDS } from "@life-os/level-up"
+import { COMMUNICATION_SKILL } from "@/lib/skills/communication"
+import { db } from "@/lib/db"
 
 export const dynamic = "force-dynamic"
 
-export default async function CardPage() {
+export default async function CharacterPage() {
   const access = await requireLevelUpAccess()
-  const tz = resolveTimeZone((await cookies()).get(TZ_COOKIE)?.value)
   if (!access) {
     return (
-      <div className="wrap" style={{ padding: "80px 24px", textAlign: "center" }}>
-        <Mono>No Level Up workspace. Sign in from Home.</Mono>
+      <div className="lu-page">
+        <p className="lu-kicker">Level Up</p>
+        <h1 className="lu-greeting">No workspace yet</h1>
+        <p className="lu-lede">Sign in from Home to open your character sheet.</p>
+        <a className="lu-btn" href="https://home.lacollecteur.com">
+          Open Home
+        </a>
       </div>
     )
   }
 
-  const { card, coldStartDone, profileExists, lastCombineAt, combineCount } = await loadBundle(access.workspaceId)
+  const [{ card, coldStartDone, profileExists }, relatedPlans] = await Promise.all([
+    loadBundle(access.workspaceId),
+    db.plan.findMany({
+      where: {
+        workspaceId: access.workspaceId,
+        status: "active",
+        OR: [
+          { text: { contains: "speak" } },
+          { text: { contains: "writing" } },
+          { text: { contains: "written" } },
+          { text: { contains: "communication" } },
+          { text: { contains: "present" } },
+          { focusedAt: { not: null } },
+        ],
+      },
+      orderBy: [{ focusedAt: "asc" }, { createdAt: "desc" }],
+      take: 6,
+      select: { id: true, text: true, focusedAt: true, timescale: true },
+    }),
+  ])
+
   const build = BUILDS[card.primaryBuild]
-  const ovrDelta = card.currentOvr - card.ovr
-  const buildRows = (Object.keys(BUILDS) as BuildKey[]).map((k) => ({ key: k, label: BUILDS[k].label, ovr: card.buildOvrs[k] }))
+  const name = access.user.name?.split(" ")[0] ?? "You"
 
   return (
-    <div className="wrap" style={{ paddingBottom: 80 }}>
+    <div className="lu-page">
+      <p className="lu-kicker">Character</p>
+      <h1 className="lu-greeting">{name}</h1>
+      <p className="lu-lede">
+        Skills you are leveling — ranks stay honest, Plans stay in the life graph.
+      </p>
+
       {(!coldStartDone || !profileExists) && (
-        <Link href="/start" style={{ display: "block", marginTop: 20 }}>
-          <div style={{ border: "1px solid var(--vermillion)", padding: "14px 18px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <div>
-              <Mono style={{ color: "var(--vermillion)" }}>Day one — your card is provisional</Mono>
-              <div style={{ color: "var(--ink-dim)", fontSize: 13, marginTop: 4 }}>
-                Every rating sits at the median with a wide band. Set up your profile and run a combine to make it real.
-              </div>
-            </div>
-            <span className="btn btn-primary">Start →</span>
-          </div>
-        </Link>
+        <div className="lu-empty" style={{ marginTop: 24 }}>
+          Fitness is still provisional until a profile and combine exist.{" "}
+          <Link href="/start" style={{ color: "var(--cognac)" }}>
+            Finish setup
+          </Link>
+        </div>
       )}
 
-      {/* ── OVR header ─────────────────────────────── */}
-      <section style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", padding: "40px 0 28px", flexWrap: "wrap", gap: 24 }}>
-        <div>
-          <Mono faint>{build.label} OVR</Mono>
-          <div style={{ display: "flex", alignItems: "baseline", gap: 16, marginTop: 6 }}>
-            <span className="display tabular" style={{ fontSize: 108 }}>{card.ovr}</span>
-            <div>
-              <div style={{ display: "flex", alignItems: "baseline", gap: 10 }}>
-                <Mono>Now</Mono>
-                <span className="display tabular" style={{ fontSize: 34, color: "var(--ink-dim)" }}>{card.currentOvr}</span>
-                {ovrDelta !== 0 && <Delta value={ovrDelta} />}
-              </div>
-              {card.form.reasons.length > 0 && (
-                <div style={{ marginTop: 4, maxWidth: 220 }}>
-                  <Mono faint style={{ fontSize: 9 }}>{card.form.reasons.join(" · ")}</Mono>
-                </div>
-              )}
-            </div>
+      <div className="lu-skill-grid">
+        <Link href="/skills/fitness" className="lu-skill-card">
+          <div className="lu-skill-card-top">
+            <h2 className="lu-skill-name">Fitness</h2>
+            <span className="lu-skill-meta">{build.label}</span>
           </div>
-          <div style={{ marginTop: 10 }}>
-            <Mono faint>Archetype — {card.archetype.label}</Mono>
-          </div>
-        </div>
-        <div style={{ textAlign: "right" }}>
-          <Mono faint>{combineCount === 0 ? "No combine yet" : `Last combine ${lastCombineAt ? new Date(lastCombineAt).toLocaleDateString("en-US", { timeZone: tz }) : "—"}`}</Mono>
-          <div style={{ marginTop: 10 }}>
-            <Link href="/combine" className="btn btn-primary">Run a Combine</Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Build re-weighting — four numbers displayed at equal weight is four
-          numbers nobody feels, so make the primary one a choice. */}
-      <BuildSelector builds={buildRows} current={card.primaryBuild} />
-
-      {/* ── The ten ratings ────────────────────────── */}
-      <div style={{ marginTop: 32, borderTop: "1px solid var(--line-strong)" }}>
-        {card.attributes.map((a) => (
-          <div key={a.key} style={{ borderBottom: "1px solid var(--line)" }}>
-            <AttributeLink href={`/attributes/${a.key}`} label={a.label} tagline={ATTRIBUTE_TAGLINE[a.key]}>
-              <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
-                {a.provisional > 0 && (
-                  <Mono faint style={{ fontSize: 9 }}>
-                    verified {a.verifiedCeiling} · +{a.provisional} training
-                  </Mono>
-                )}
-                {a.cap != null && <Mono style={{ color: "var(--vermillion)", fontSize: 9 }}>cap {a.cap}</Mono>}
-                <div style={{ minWidth: 150 }}>
-                  <Stat
-                    rating={a.rating}
-                    display={a.displayRating}
-                    lower={a.lower}
-                    upper={a.upper}
-                    letter={a.rank.letter}
-                    size={38}
-                    gated={a.cap != null}
-                  />
-                </div>
-              </div>
-            </AttributeLink>
-          </div>
-        ))}
-      </div>
-
-      {/* ── Two tracks: RANK vs CAREER ──────────────── */}
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20, marginTop: 32 }}>
-        <Panel>
-          <Mono>Rank — capability</Mono>
-          <p style={{ color: "var(--ink-dim)", fontSize: 13, marginTop: 8 }}>
-            What you can do. Moves slowly, and never because you showed up. Only a combine raises a verified ceiling; typed training data moves you within your proven range.
+          <div className="lu-skill-stat">{card.ovr}</div>
+          <p className="lu-skill-blurb">
+            Verified athletic OVR. Now {card.currentOvr}
+            {card.archetype?.label ? ` · ${card.archetype.label}` : ""}.
           </p>
-        </Panel>
-        <Panel style={{ borderColor: "var(--line-strong)" }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
-            <Mono style={{ color: "var(--gold)" }}>Career — consistency</Mono>
-            <span className="display" style={{ fontSize: 30 }}>{card.behavioral.streakWeeks}<span className="mono" style={{ fontSize: 10 }}> wk streak</span></span>
+        </Link>
+
+        <Link href="/skills/communication" className="lu-skill-card">
+          <div className="lu-skill-card-top">
+            <h2 className="lu-skill-name">{COMMUNICATION_SKILL.label}</h2>
+            <span className="lu-badge lu-badge-provisional">Provisional</span>
           </div>
-          <div style={{ display: "flex", gap: 28, marginTop: 14 }}>
-            <div>
-              <span className="display" style={{ fontSize: 26 }}>{card.behavioral.consistencyPct}%</span>
-              <div><Mono faint style={{ fontSize: 9 }}>consistency (12 wk)</Mono></div>
-            </div>
-            <div>
-              <span className="display" style={{ fontSize: 26, textTransform: "capitalize" }}>{card.behavioral.loadTolerance}</span>
-              <div><Mono faint style={{ fontSize: 9 }}>load tolerance</Mono></div>
-            </div>
-          </div>
-        </Panel>
+          <div className="lu-skill-stat lu-skill-stat-muted">—</div>
+          <p className="lu-skill-blurb">
+            {COMMUNICATION_SKILL.tracks.length} tracks · unranked until evidence lands.
+          </p>
+        </Link>
       </div>
+
+      <section className="lu-plans">
+        <h2>Related Plans</h2>
+        <p className="lu-lede" style={{ marginTop: 0, fontSize: 14 }}>
+          Same Plan primitive as Home — improvement intent for skills on this sheet.
+        </p>
+        {relatedPlans.length === 0 ? (
+          <div className="lu-empty">
+            No matching Plans yet. Create one in Home Focus, or open Communication to see the tracks.
+          </div>
+        ) : (
+          <ul className="lu-plan-list">
+            {relatedPlans.map((plan) => (
+              <li key={plan.id}>
+                {plan.text}
+                <span className="meta">
+                  {plan.focusedAt ? "In Focus" : "Active"}
+                  {plan.timescale ? ` · ${plan.timescale}` : ""}
+                </span>
+              </li>
+            ))}
+          </ul>
+        )}
+        <a className="lu-btn lu-btn-ghost" href="https://home.lacollecteur.com">
+          Manage Plans in Home
+        </a>
+      </section>
     </div>
   )
 }

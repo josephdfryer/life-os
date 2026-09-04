@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Level Up — Character (preview)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #e9e3d8;
+      --surface: #f7f4ee;
+      --surface-2: #efe9df;
+      --border: #d9d0c3;
+      --border-subtle: #e5dfd4;
+      --ink: #2c2620;
+      --ink-2: #524a42;
+      --ink-3: #7a7268;
+      --ink-4: #a69c90;
+      --cognac: #8f6b4a;
+      --cognac-deep: #6e5238;
+      --cognac-soft: #f0e6d8;
+      --camel: #c4a574;
+      --attention: #b07d4f;
+      --attention-soft: #f8ece0;
+      --radius: 10px;
+      --radius-pill: 100px;
+      --shadow-sm: 0 1px 3px rgba(44, 38, 32, 0.05);
+      --shadow: 0 2px 10px rgba(44, 38, 32, 0.07);
+      --font-display: "Newsreader", Georgia, serif;
+      --font-body: "Inter", system-ui, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background:
+        radial-gradient(ellipse 80% 50% at 10% -10%, rgba(196, 165, 116, 0.18), transparent 55%),
+        radial-gradient(ellipse 60% 40% at 100% 0%, rgba(143, 107, 74, 0.08), transparent 50%),
+        var(--bg);
+      color: var(--ink);
+      font-family: var(--font-body);
+      font-size: 14px;
+      line-height: 1.55;
+      min-height: 100vh;
+    }
+    a { color: inherit; text-decoration: none; }
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 52px;
+      padding: 0 24px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .brand { display: flex; align-items: baseline; gap: 8px; }
+    .brand-title { font-family: var(--font-display); font-size: 17px; }
+    .brand-sub { font-size: 11px; color: var(--ink-4); }
+    nav { display: flex; gap: 8px; }
+    nav a {
+      font-size: 13px;
+      color: var(--ink-3);
+      padding: 6px 12px;
+      border-radius: var(--radius-pill);
+    }
+    nav a.active { color: var(--cognac-deep); background: var(--cognac-soft); }
+    .page { max-width: 1100px; margin: 0 auto; padding: 36px 24px 80px; }
+    .kicker {
+      font-size: 11px; font-weight: 450; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--ink-4); margin: 0;
+    }
+    .greeting {
+      font-family: var(--font-display); font-size: 28px; font-weight: 400;
+      letter-spacing: -0.02em; margin: 8px 0 0;
+    }
+    .lede { margin: 10px 0 0; max-width: 36rem; color: var(--ink-2); font-size: 15px; }
+    .grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 36px;
+    }
+    @media (max-width: 720px) { .grid { grid-template-columns: 1fr; } }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-sm);
+      padding: 22px;
+    }
+    .card-top { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+    .skill-name { font-family: var(--font-display); font-size: 22px; margin: 0; }
+    .meta { font-size: 12px; color: var(--ink-3); }
+    .stat {
+      font-family: var(--font-display); font-size: 40px; color: var(--cognac);
+      line-height: 1; margin-top: 18px; font-variant-numeric: tabular-nums;
+    }
+    .stat.muted { color: var(--ink-4); font-size: 28px; }
+    .blurb { margin: 12px 0 0; color: var(--ink-2); }
+    .badge {
+      font-size: 12px; color: var(--attention); background: var(--attention-soft);
+      border-radius: var(--radius-pill); padding: 4px 10px;
+    }
+    .tracks { margin-top: 40px; }
+    .tracks h2 { font-family: var(--font-display); font-size: 22px; font-weight: 400; margin: 0 0 8px; }
+    .track {
+      display: flex; justify-content: space-between; gap: 16px;
+      padding: 18px 0; border-bottom: 1px solid var(--border-subtle);
+    }
+    .track:first-of-type { border-top: 1px solid var(--border-subtle); margin-top: 16px; }
+    .track h3 { margin: 0; font-size: 16px; font-weight: 500; }
+    .track p { margin: 4px 0 0; font-size: 13px; color: var(--ink-3); }
+    .panel-note {
+      margin-top: 28px; padding: 18px 20px; background: var(--surface);
+      border: 1px solid var(--border-subtle); border-radius: var(--radius); color: var(--ink-2);
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-title">Level Up</span>
+      <span class="brand-sub">Character</span>
+    </div>
+    <nav>
+      <a class="active" href="#">Character</a>
+      <a href="#">Communication</a>
+      <a href="#">Fitness</a>
+      <a href="#">Journey</a>
+    </nav>
+  </header>
+
+  <main class="page">
+    <p class="kicker">Character</p>
+    <h1 class="greeting">Joseph</h1>
+    <p class="lede">Skills you are leveling — ranks stay honest, Plans stay in the life graph.</p>
+
+    <div class="grid">
+      <article class="card">
+        <div class="card-top">
+          <h2 class="skill-name">Fitness</h2>
+          <span class="meta">Base Athletic</span>
+        </div>
+        <div class="stat">72</div>
+        <p class="blurb">Verified athletic OVR. Now 74 · Balanced.</p>
+      </article>
+      <article class="card">
+        <div class="card-top">
+          <h2 class="skill-name">Communication</h2>
+          <span class="badge">Provisional</span>
+        </div>
+        <div class="stat muted">—</div>
+        <p class="blurb">2 tracks · unranked until evidence lands.</p>
+      </article>
+    </div>
+
+    <section class="tracks">
+      <h2>Communication</h2>
+      <p class="lede" style="margin-top:0;font-size:14px">How clearly I speak and write when it matters.</p>
+      <div class="track">
+        <div>
+          <h3>Public speaking</h3>
+          <p>Live rooms, talks, presentations, hard conversations out loud.</p>
+        </div>
+        <span class="badge">Unranked</span>
+      </div>
+      <div class="track">
+        <div>
+          <h3>Written communication</h3>
+          <p>Email, docs, and follow-through in writing.</p>
+        </div>
+        <span class="badge">Unranked</span>
+      </div>
+      <div class="panel-note">
+        Related Plans use the same graph Plan primitive as Home. Deeper skill linking comes later — this pass is the look of the character sheet.
+      </div>
+    </section>
+  </main>
+</body>
+</html>

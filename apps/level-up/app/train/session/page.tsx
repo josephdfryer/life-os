@@ -2,6 +2,7 @@ import { redirect } from "next/navigation"
 import { requireLevelUpAccess } from "@/lib/access"
 import { Mono } from "@/components/display"
 import SessionScreen from "@/components/workout/SessionScreen"
+import WarmConcrete from "@/components/WarmConcrete"
 import { loadWorkoutProfile, prepareDay } from "@life-os/level-up"
 
 export const dynamic = "force-dynamic"
@@ -16,7 +17,13 @@ type Search = Promise<{
 
 export default async function SessionPage({ searchParams }: { searchParams: Search }) {
   const access = await requireLevelUpAccess()
-  if (!access) return <div className="wrap" style={{ padding: 80 }}><Mono>No workspace.</Mono></div>
+  if (!access) {
+    return (
+      <WarmConcrete>
+        <div className="wrap" style={{ padding: 80 }}><Mono>No workspace.</Mono></div>
+      </WarmConcrete>
+    )
+  }
 
   const { session, started, day, knee, lumbar } = await searchParams
   if (!session || !day) redirect("/train")
@@ -29,14 +36,16 @@ export default async function SessionPage({ searchParams }: { searchParams: Sear
   if (!prepared) redirect("/train")
 
   return (
-    <SessionScreen
-      sessionId={session}
-      startedAt={started ?? new Date().toISOString()}
-      dayName={prepared.dayName}
-      entries={prepared.entries}
-      unit={profile.unit}
-      microPlates={profile.microPlates}
-      bodyweightKg={profile.bodyweightKg}
-    />
+    <WarmConcrete>
+      <SessionScreen
+        sessionId={session}
+        startedAt={started ?? new Date().toISOString()}
+        dayName={prepared.dayName}
+        entries={prepared.entries}
+        unit={profile.unit}
+        microPlates={profile.microPlates}
+        bodyweightKg={profile.bodyweightKg}
+      />
+    </WarmConcrete>
   )
 }

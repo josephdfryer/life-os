@@ -5,28 +5,29 @@ import { usePathname } from "next/navigation"
 import { LevelUpMark } from "@life-os/ui"
 
 const LINKS = [
-  { href: "/", label: "Card" },
-  { href: "/combine", label: "Combine" },
+  { href: "/", label: "Character" },
+  { href: "/skills/communication", label: "Communication" },
+  { href: "/skills/fitness", label: "Fitness" },
+  { href: "/career", label: "Journey" },
   { href: "/train", label: "Train" },
-  { href: "/body", label: "Body" },
-  { href: "/builds", label: "Builds" },
-  { href: "/badges", label: "Badges" },
-  { href: "/career", label: "Career" },
 ]
 
 export default function Nav() {
   const pathname = usePathname()
-  const isActive = (href: string) => (href === "/" ? pathname === "/" : pathname.startsWith(href))
+  const isActive = (href: string) => {
+    if (href === "/") return pathname === "/"
+    return pathname === href || pathname.startsWith(`${href}/`)
+  }
+
   return (
     <header className="topbar">
-      <div style={{ display: "flex", alignItems: "center", gap: 28 }}>
-        <Link href="/" style={{ display: "flex", alignItems: "baseline", gap: 8 }}>
-          {/* Camel, not cognac — Level Up runs a dark shell, where cognac goes muddy. */}
-          <LevelUpMark size={18} style={{ color: "#c4a574", alignSelf: "center", flexShrink: 0 }} />
-          <span className="serif" style={{ fontSize: 20, letterSpacing: "-0.01em" }}>Level Up</span>
-          <span className="mono mono-faint" style={{ fontSize: 9 }}>IRL PLAYER</span>
+      <div style={{ display: "flex", alignItems: "center", gap: 28, minWidth: 0 }}>
+        <Link href="/" style={{ display: "flex", alignItems: "baseline", gap: 8, flexShrink: 0 }}>
+          <LevelUpMark size={18} className="brand-mark" style={{ alignSelf: "center", flexShrink: 0 }} />
+          <span className="brand-title">Level Up</span>
+          <span className="brand-sub">Character</span>
         </Link>
-        <nav className="mono">
+        <nav>
           {LINKS.map((l) => (
             <Link key={l.href} href={l.href} className={isActive(l.href) ? "active" : ""}>
               {l.label}
@@ -34,7 +35,9 @@ export default function Nav() {
           ))}
         </nav>
       </div>
-      <a href="https://home.lacollecteur.com" className="mono mono-faint">LifeOS ↗</a>
+      <a href="https://home.lacollecteur.com" className="home-link">
+        LifeOS ↗
+      </a>
     </header>
   )
 }

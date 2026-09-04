@@ -1,21 +1,19 @@
 /* ═══════════════════════════════════════════════════════════
-   WARM CONCRETE — the design language of Level Up (spec Part 11)
-
-   Steal 2K's information architecture; reject its visual language entirely.
-   Dark, gridded, no gradients, no rounded corners, one vermillion accent.
-   Cormorant Garamond for display numbers, IBM Plex Mono for labels.
-   A 78 in large Cormorant on #1E1C18 reads like a precision instrument, not a
-   video game — which is the exact credibility the measurement science buys.
-
-   Rules the whole app obeys:
-   • No progress bars, no radial gauges, no color-coded heat.
-   • Numbers and 1px rules only.
-   • Vermillion (#C4522A) is reserved for deltas and locked-cap warnings, so the
-     eye learns vermillion means "something changed or something is gated."
-   • Confidence bands render as a thin grey rule beneath the number.
+   Level Up shell — Still v2 for Character / skills.
+   Warm Concrete (dark gym chrome) lives under .warm-concrete / .session.
    ═══════════════════════════════════════════════════════════ */
 
+@import "@life-os/ui/still-tokens.css";
+
 :root {
+  --font-display: var(--font-newsreader), "Newsreader", Georgia, serif;
+  --font-body: var(--font-inter), "Inter", system-ui, sans-serif;
+  --font-mono: var(--font-body);
+}
+
+/* Legacy gym palette — scoped so Character can stay Still. */
+.warm-concrete,
+.session {
   --concrete:        #1E1C18;
   --concrete-raised: #26231F;
   --concrete-sunk:   #191713;
@@ -27,10 +25,23 @@
   --vermillion:      #C4522A;
   --vermillion-dim:  #8f3d20;
   --gold:            #B8925A;
+  --bg:              var(--concrete);
+  --surface:         var(--concrete-raised);
+  --border:          var(--line);
+  --ink-2:           var(--ink-dim);
+  --ink-3:           var(--ink-dim);
+  --ink-4:           var(--ink-faint);
+  --cognac:          var(--vermillion);
+  --camel:           var(--gold);
 
   --font-display: var(--font-cormorant), "Cormorant Garamond", Georgia, serif;
   --font-mono: var(--font-plex-mono), "IBM Plex Mono", ui-monospace, monospace;
   --font-body: var(--font-plex-sans), "IBM Plex Sans", system-ui, sans-serif;
+
+  background: var(--concrete);
+  color: var(--ink);
+  font-family: var(--font-body);
+  min-height: 100%;
 }
 
 * { box-sizing: border-box; }
@@ -39,7 +50,7 @@ html, body {
   margin: 0;
   padding: 0;
   min-height: 100%;
-  background: var(--concrete);
+  background: var(--bg);
   color: var(--ink);
 }
 
@@ -55,68 +66,94 @@ a { color: inherit; text-decoration: none; }
 
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--line-strong); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
 
-::selection { background: var(--vermillion); color: #fff; }
+::selection { background: var(--cognac-soft); color: var(--ink); }
 
-:focus-visible { outline: 1px solid var(--vermillion); outline-offset: 2px; }
+:focus-visible { outline: 2px solid var(--cognac); outline-offset: 2px; }
 
-/* ── Typographic primitives ─────────────────────────────── */
-.mono {
+/* ── Warm Concrete typographic primitives ───────────────── */
+.warm-concrete .mono,
+.session .mono {
   font-family: var(--font-mono);
   font-size: 10px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--ink-dim);
 }
-.mono-faint { color: var(--ink-faint); }
-.display {
+.warm-concrete .mono-faint,
+.session .mono-faint { color: var(--ink-faint); }
+.warm-concrete .display,
+.session .display {
   font-family: var(--font-display);
   font-weight: 500;
   line-height: 0.9;
   font-variant-numeric: lining-nums tabular-nums;
   letter-spacing: -0.01em;
 }
-.serif { font-family: var(--font-display); }
+.warm-concrete .serif,
+.session .serif { font-family: var(--font-display); }
 
-/* ── Delta + gate accents (the only place vermillion lives) ── */
-.delta-up   { color: var(--vermillion); }
-.delta-down { color: var(--vermillion); }
-.gated      { color: var(--vermillion); }
+.warm-concrete .delta-up,
+.warm-concrete .delta-down,
+.warm-concrete .gated,
+.session .delta-up,
+.session .delta-down,
+.session .gated { color: var(--vermillion); }
 
-/* ── Layout scaffold ────────────────────────────────────── */
 .wrap { max-width: 1000px; margin: 0 auto; padding: 0 24px; }
 .rule { border: 0; border-top: 1px solid var(--line); margin: 0; }
 .rule-strong { border-top-color: var(--line-strong); }
 
-/* The gridded panel — a spec sheet for a machine. */
-.panel {
+.warm-concrete .panel {
   border: 1px solid var(--line);
   background: var(--concrete-raised);
 }
-.panel + .panel { border-top: 0; }
+.warm-concrete .panel + .panel { border-top: 0; }
 
-/* ── App chrome ─────────────────────────────────────────── */
+/* ── Still app chrome ───────────────────────────────────── */
 .topbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 52px;
-  border-bottom: 1px solid var(--line);
+  height: var(--nav-height);
+  border-bottom: 1px solid var(--border-subtle);
   padding: 0 24px;
   position: sticky;
   top: 0;
-  background: color-mix(in srgb, var(--concrete) 92%, transparent);
-  backdrop-filter: blur(6px);
+  background: var(--surface);
   z-index: 20;
 }
-.topbar nav { display: flex; gap: 22px; }
-.topbar nav a { color: var(--ink-faint); transition: color 0.15s; }
-.topbar nav a:hover, .topbar nav a.active { color: var(--ink); }
-.topbar nav a.active { position: relative; }
-.topbar nav a.active::after {
-  content: ""; position: absolute; left: 0; right: 0; bottom: -18px; height: 1px; background: var(--vermillion);
+.topbar nav { display: flex; gap: 8px; flex-wrap: wrap; }
+.topbar nav a {
+  color: var(--ink-3);
+  font-size: 13px;
+  padding: 6px 12px;
+  border-radius: var(--radius-pill);
+  transition: background 0.15s, color 0.15s;
 }
+.topbar nav a:hover { color: var(--ink); background: var(--surface-2); }
+.topbar nav a.active {
+  color: var(--cognac-deep);
+  background: var(--cognac-soft);
+}
+.topbar .brand-mark { color: var(--camel); }
+.topbar .brand-title {
+  font-family: var(--font-display);
+  font-size: 17px;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+.topbar .brand-sub {
+  font-size: 11px;
+  color: var(--ink-4);
+  letter-spacing: 0.04em;
+}
+.topbar .home-link {
+  font-size: 12px;
+  color: var(--ink-4);
+}
+.topbar .home-link:hover { color: var(--cognac); }
 
 /* ── Confidence rule (thin grey rule under a number) ──────── */
 .confidence-rule {
@@ -742,3 +779,219 @@ body:has(.session) { overflow: hidden; }
   text-transform: uppercase;
 }
 .art-credit a { border-bottom: 1px solid var(--line); }
+
+/* ── Character / skills (Still) ─────────────────────────── */
+.lu-page {
+  max-width: var(--content-max);
+  margin: 0 auto;
+  padding: 36px 24px 80px;
+}
+
+.lu-kicker {
+  font-size: 11px;
+  font-weight: 450;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+}
+
+.lu-greeting {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin: 8px 0 0;
+}
+
+.lu-lede {
+  margin: 10px 0 0;
+  max-width: 36rem;
+  color: var(--ink-2);
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+.lu-skill-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 36px;
+}
+
+@media (max-width: 720px) {
+  .lu-page { padding: 24px 20px 64px; }
+  .lu-skill-grid { grid-template-columns: 1fr; }
+}
+
+.lu-skill-card {
+  display: block;
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  padding: 22px 22px 20px;
+  transition: box-shadow 0.15s, border-color 0.15s;
+}
+
+.lu-skill-card:hover {
+  border-color: var(--border);
+  box-shadow: var(--shadow);
+}
+
+.lu-skill-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.lu-skill-name {
+  font-family: var(--font-display);
+  font-size: 22px;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+
+.lu-skill-meta {
+  font-size: 12px;
+  color: var(--ink-3);
+}
+
+.lu-skill-stat {
+  font-family: var(--font-display);
+  font-size: 40px;
+  font-weight: 400;
+  color: var(--cognac);
+  line-height: 1;
+  margin-top: 18px;
+  font-variant-numeric: tabular-nums;
+}
+
+.lu-skill-stat-muted {
+  color: var(--ink-4);
+  font-size: 28px;
+}
+
+.lu-skill-blurb {
+  margin: 12px 0 0;
+  color: var(--ink-2);
+  font-size: 14px;
+}
+
+.lu-track-list {
+  margin-top: 28px;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.lu-track-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 18px 0;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.lu-track-label {
+  font-size: 16px;
+  color: var(--ink);
+  margin: 0;
+}
+
+.lu-track-blurb {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: var(--ink-3);
+}
+
+.lu-badge {
+  flex-shrink: 0;
+  font-size: 12px;
+  color: var(--ink-3);
+  background: var(--surface-2);
+  border-radius: var(--radius-pill);
+  padding: 4px 10px;
+}
+
+.lu-badge-provisional {
+  color: var(--attention);
+  background: var(--attention-soft);
+}
+
+.lu-plans {
+  margin-top: 40px;
+}
+
+.lu-plans h2 {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 400;
+  margin: 0 0 8px;
+}
+
+.lu-plan-list {
+  list-style: none;
+  margin: 16px 0 0;
+  padding: 0;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.lu-plan-list li {
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border-subtle);
+  color: var(--ink);
+  font-size: 14px;
+}
+
+.lu-plan-list .meta {
+  display: block;
+  margin-top: 4px;
+  font-size: 12px;
+  color: var(--ink-3);
+}
+
+.lu-empty {
+  margin-top: 16px;
+  padding: 18px 20px;
+  background: var(--surface);
+  border-radius: var(--radius);
+  border: 1px solid var(--border-subtle);
+  color: var(--ink-2);
+  font-size: 14px;
+}
+
+.lu-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 16px;
+  padding: 10px 18px;
+  border-radius: var(--radius-pill);
+  background: var(--cognac);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.lu-btn:hover { background: var(--cognac-deep); }
+
+.lu-btn-ghost {
+  background: transparent;
+  color: var(--ink-2);
+  border: 1px solid var(--border);
+}
+
+.lu-btn-ghost:hover {
+  background: var(--surface-2);
+  color: var(--ink);
+}
+
+.lu-back {
+  display: inline-block;
+  margin-bottom: 8px;
+  font-size: 13px;
+  color: var(--ink-3);
+}
+
+.lu-back:hover { color: var(--cognac); }
