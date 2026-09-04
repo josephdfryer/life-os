@@ -1,6 +1,6 @@
 # Level Up Mobile Transition Plan
 
-Status: implementation started; first native shell built; web retirement not started
+Status: implementation started; first native shell built; **web product role revised 2026-09-04**
 
 Date: 2026-08-20
 
@@ -8,11 +8,18 @@ Primary product: a dedicated native Level Up app, beginning with iPhone
 
 First complete domain: fitness and health
 
+> **2026-09-04 revision:** Full retirement of authenticated Level Up web UI is
+> no longer the plan. Workouts remain iOS-first (this document). The web app
+> stays as the skills library / ranks / related-Plans desk surface — see
+> [`LEVEL_UP_SKILLS_WEB_PLAN.md`](./LEVEL_UP_SKILLS_WEB_PLAN.md). Phase 5 below
+> still applies to **workout logging and gym chrome** on the web, not to
+> deleting the Level Up web product.
+
 This plan supersedes the product-surface decisions in
 `LEVEL_UP_ADAPTIVE_WORKOUT_PLAN.md` and `IOS_PLATFORM_PLAN.md` that keep a Level
-Up web control surface or place Workout primarily inside the LifeOS app. Their
-science, provenance, offline, HealthKit, Oura, FoodNoms, and acceptance rules
-remain in force unless this document explicitly changes them.
+Up web **workout** control surface or place Workout primarily inside the LifeOS
+app. Their science, provenance, offline, HealthKit, Oura, FoodNoms, and
+acceptance rules remain in force unless this document explicitly changes them.
 
 The complete standalone account, onboarding, AI program-design, daily workout,
 exercise-detail, and progress flows are specified in
@@ -35,12 +42,13 @@ Fitness and health ship first because they already have real evidence, a rating
 engine, workout commands, HealthKit capture, Oura readiness, programs, combines,
 and a clear daily loop. They are the first domain, not the product boundary.
 
-The authenticated Next.js Level Up interface will be retired after the native
-app reaches measured parity. The server, shared TypeScript domain package,
-database tables, migrations, and API remain as hidden infrastructure. “No web
-app” means no browser-based Level Up product surface; it does not mean putting
-authoritative science, synchronization, secrets, or shared graph writes on the
-phone.
+Authenticated **workout logging and gym chrome** on the Next.js Level Up app
+will be retired after the native app reaches measured parity. The skills /
+ranks / Plans desk surface remains on the web per
+`LEVEL_UP_SKILLS_WEB_PLAN.md`. The server, shared TypeScript domain package,
+database tables, migrations, and API remain authoritative infrastructure —
+whether the client is iOS or web. Do not put authoritative science,
+synchronization, secrets, or shared graph writes only on the phone.
 
 ## 2. Product promise
 
@@ -400,28 +408,25 @@ unique writes for an agreed observation window.
 Exit gate: the shell can host a second domain without fitness conditionals in
 shared navigation and without inventing a universal capability score.
 
-### Phase 5 — Web cutover and retirement
+### Phase 5 — Web workout cutover (skills desk remains)
 
-- Announce the cutover in the old web UI and deep-link supported routes into the
-  iOS app during a short rollback window.
-- Make the authenticated web UI read-only, then disable its write paths.
-- Remove Level Up from shared web app navigation and from deployment/smoke
-  configuration.
-- Remove `apps/level-up` only after verifying all reusable engine, assets,
-  contracts, and commands live outside it.
-- Retire the Vercel `level-up` project and authenticated domain last. A minimal
-  public install/information page may live on the main LifeOS site, but it must
-  not become a second Level Up application.
+- Announce workout cutover in the old web UI and deep-link supported gym
+  routes into the iOS app during a short rollback window.
+- Make authenticated web **workout write** paths read-only, then disable them.
+- Remove Train / session gym chrome from Level Up web navigation; keep or
+  rebuild the skills / ranks / Plans desk per `LEVEL_UP_SKILLS_WEB_PLAN.md`.
+- Do **not** remove `apps/level-up` solely because workouts moved — remove only
+  dead workout-only modules after the skills shell owns the product.
 - Preserve all `LevelUp*` tables, migrations, provenance, API behavior needed by
-  native, and backups. Web retirement is never a data reset.
+  native and by the skills web. Web workout retirement is never a data reset.
 
-Exit gate: production navigation has no web Level Up product, native deep links
-and API telemetry are healthy, backups have been verified, and documented
-rollback remains possible for the agreed window.
+Exit gate: production Level Up web has no required gym logger; native deep
+links and API telemetry are healthy; skills desk is the authenticated web
+product; backups verified; rollback remains possible for the agreed window.
 
-## 8. Retirement checklist
+## 8. Retirement checklist (workout web surface)
 
-Do not delete `apps/level-up` or decommission its deployment until all are true:
+Do not delete workout-only modules from `apps/level-up` until all are true:
 
 - Native onboarding works for a fresh install and an existing workspace.
 - All web-created historical data appears correctly in native views.
@@ -436,8 +441,8 @@ Do not delete `apps/level-up` or decommission its deployment until all are true:
 - The native app has completed real-device use and a rollback rehearsal.
 - A data backup is verified immediately before final deployment retirement.
 
-If any item fails, keep the web deployment available as a rollback surface but
-do not resume feature development there.
+If any item fails, keep web workout write paths available as a rollback surface
+but do not resume feature development there. The skills desk may continue.
 
 ## 9. What is deliberately deferred
 
