@@ -155,22 +155,17 @@ not a generic Toastmasters checklist copied from the internet.
 4. **Evidence later** — Events/Notes/Interactions that support a rating; do not
    invent a combine engine on day one.
 
-### Draft attribute axes (to pressure-test, not ship as science)
+### v1 tracks (visual spike — deepen later)
 
-Working labels — rename freely in the next pass:
+Only two for now:
 
-| Axis | Rough meaning |
+| Track | Rough meaning |
 |---|---|
-| Clarity | Can I make the point land simply? |
-| Listening | Do I understand before advocating? |
-| Written follow-through | Do commitments get closed in writing? |
-| Presence | Live rooms / meetings / hard conversations |
-| Persuasion | Moving someone without coercion or fog |
-| Relational care | Tone and trust with people who matter |
+| Public speaking | Live rooms, talks, presentations, hard conversations out loud |
+| Written communication | Email, docs, follow-through in writing |
 
-These are **not** fitness norms. Early ranks should show as provisional /
-self-assessed until a real rubric + evidence loop exists. Prefer honest
-“unranked / drafting” over fake 78s.
+More axes can land later. Early ranks stay **provisional / unranked** until a
+real rubric + evidence loop exists. Prefer honest “unranked” over fake 78s.
 
 ### What not to do in v1
 
@@ -262,3 +257,4 @@ Do not: remove engine, delete workout data, or build iOS features in this slice.
 |---|---|
 | 2026-09-04 | Initial draft: skills web + iOS workout split. |
 | 2026-09-04 | Locked: Communication first; same Plans; web profiles before iOS; Card → RPG character window. Reordered delivery. |
+| 2026-09-04 | Communication v1 tracks narrowed to **Public speaking** and **Written communication**. Character home + skill stub shipped for look. |
