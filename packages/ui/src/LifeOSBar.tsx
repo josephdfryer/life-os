@@ -112,9 +112,12 @@ export function LifeOSBar({ current, rightSlot, account, onSignOut, deferCompact
   return (
     <div
       style={{
+        // Keep overflow visible so app/account menus can escape the strip.
+        // overflow-x:hidden forces overflow-y to clip too, which buried the
+        // dropdowns behind the page content.
         position: 'sticky',
         top: 0,
-        zIndex: 60,
+        zIndex: 200,
         minHeight: 40,
         background: 'var(--surface)',
         borderBottom: '1px solid var(--border-subtle, var(--border, rgba(0,0,0,0.08)))',
@@ -123,7 +126,7 @@ export function LifeOSBar({ current, rightSlot, account, onSignOut, deferCompact
         padding: compact ? '0 12px' : '0 16px',
         gap: compact ? 8 : 10,
         fontFamily: 'var(--font-body, system-ui)',
-        overflowX: 'hidden',
+        overflow: 'visible',
         maxWidth: '100%',
         ...style,
       }}
