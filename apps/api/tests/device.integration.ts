@@ -112,6 +112,35 @@ test("contact.person ingest: auto-apply on exact match, review queue otherwise",
   const editedPerson = await db.person.findUniqueOrThrow({ where: { id: editResolved.resultId! } })
   assert.equal(editedPerson.first, "Grace")
   assert.equal(editedPerson.last, "Hopper")
+
+  // A non-curated source (a scraped Facebook friend list) with no match must
+  // NOT be auto-created, even with a perfectly good name: it carries no
+  // email or phone, and the user never chose to save this person. It goes to
+  // review with the source recorded in its evidence.
+  const peopleBefore = await db.person.count({ where: { workspaceId: contactsWorkspaceId } })
+  const fbFriend = deviceIngestItemContract.parse({
+    deviceId: contactsDeviceId, source: "facebook", sourceId: "fb-1001",
+    schemaVersion: 1, observedAt: new Date().toISOString(),
+    record: { type: "contact.person", givenName: "Linus", familyName: "Torvalds", organizationName: null, jobTitle: null, emails: [], phones: [], profileUrl: "https://www.facebook.com/linus.example" },
+  })
+  const fbResult = await ingestDeviceItem(fbFriend, contactsWorkspaceId)
+  assert.equal(fbResult.status, "accepted")
+  assert.equal(fbResult.resultType, "ReviewItem", "an unmatched Facebook friend must be reviewed, never auto-created")
+  assert.equal(await db.person.count({ where: { workspaceId: contactsWorkspaceId } }), peopleBefore, "no Person row may be created from a Facebook record")
+  const fbReview = await db.reviewItem.findFirstOrThrow({ where: { workspaceId: contactsWorkspaceId, source: "contact_import", sourceId: fbResult.resultId! } })
+  assert.equal(JSON.parse(fbReview.evidence ?? "{}").source, "facebook")
+
+  // A curated source other than the phone's address book still auto-creates,
+  // and records where it came from instead of the legacy "ios_contacts".
+  const gContact = deviceIngestItemContract.parse({
+    deviceId: contactsDeviceId, source: "google_contacts", sourceId: "gc-1",
+    schemaVersion: 1, observedAt: new Date().toISOString(),
+    record: { type: "contact.person", givenName: "Margaret", familyName: "Hamilton", organizationName: "MIT", jobTitle: null, emails: ["margaret@example.test"], phones: [] },
+  })
+  const gResult = await ingestDeviceItem(gContact, contactsWorkspaceId)
+  assert.equal(gResult.resultType, "Person")
+  const gPerson = await db.person.findUniqueOrThrow({ where: { id: gResult.resultId! } })
+  assert.equal(gPerson.source, "google_contacts")
 })
 
 test.after(async () => {
