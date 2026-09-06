@@ -3,7 +3,7 @@
 // Push one source-of-truth env file to every LifeOS Vercel project.
 //
 // Why this exists: the account is on Hobby, and Vercel's team-level Shared
-// Environment Variables are Pro-only. So the same TURSO_AUTH_TOKEN, AUTH_SECRET,
+// Environment Variables are Pro-only. So the same DATABASE_URL, AUTH_SECRET,
 // NEXTAUTH_SECRET and GOOGLE_CLIENT_SECRET are copy-pasted into eight separate
 // projects. Rotating any of them by hand is eight dashboard edits, and a
 // half-finished rotation leaves some apps talking to the old credential and some

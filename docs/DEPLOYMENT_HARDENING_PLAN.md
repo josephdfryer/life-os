@@ -92,15 +92,15 @@ Three of its claims were wrong on the day:
 
 - "write a root `vercel.json`" → actively breaks 3 of 8 apps
 - "level-up: project not yet created" → it exists and is live
-- "I can't run Turso migrations, creds are Sensitive" → the local `turso` CLI is
-  installed and authenticated; migrations are runnable directly
+- "I can't run production migrations, creds are Sensitive" → they were runnable
+  directly the whole time
 
 A runbook that only exists in agent memory is never linted, never reviewed, and
 drifts silently until it causes an outage.
 
 ### 6. Migration integrity is enforced only in CI — which deploys skip
 
-While writing the rename backfill I created a `turso-migrate-*.ts` with no
+While writing the rename backfill I created a hand-written migration script with no
 paired `prisma/migrations/` entry. `npm run lint` catches this:
 
 > `Production would get this schema while a clean replay never does.`
@@ -130,8 +130,8 @@ a few tactics. These are the changes that landed with the implementation.
    gate because that gate no longer describes the bytes.
 4. **The migration gate is "would Prisma 500?", not "was this script run?".**
    Production has no `_prisma_migrations` table, so there is no ledger of
-   applied `turso-migrate-*.ts` files. Comparing `schema.prisma` scalar columns
-   to `PRAGMA table_info` on Turso is the actual footgun. Read-only.
+   applied hand-written migration scripts. Comparing `schema.prisma` scalar columns
+   to the live table info was the actual footgun. Read-only.
 5. **Smoke accepts 2xx and 3xx, fails 4xx/5xx.** Hitting `/` on an authed app
    always 302s; that is not a health signal. Probes use `/login` (or the API
    root, or the apex marketing site).
@@ -195,8 +195,8 @@ Do not bundle this with a feature deploy.
 for `HEAD`. Migration-integrity and the new deploy-config check come free
 inside `lint`, which CI already runs.
 
-**3.2 Turso schema check.** Read-only column/table comparison against
-production. Fails the deploy when `schema.prisma` is ahead of Turso.
+**3.2 Production schema check.** Read-only column/table comparison against
+production. Fails the deploy when `schema.prisma` is ahead of production.
 
 **3.3 Post-deploy smoke check.** Curl the production URLs; fail on 4xx/5xx.
 Would have caught a bad deploy in seconds.
@@ -213,10 +213,10 @@ hotfix path.
 ## Remaining
 
 - **GitHub Actions secrets.** The deploy job fails closed until `VERCEL_TOKEN`,
-  `TURSO_DATABASE_URL`, and `TURSO_AUTH_TOKEN` exist as GitHub secrets.
+  `DATABASE_URL_UNPOOLED` exist as GitHub secrets.
 - **GitHub branch ruleset.** Block force-push to `master`; collaborators PR.
   Repo-admin bypass keeps a single operator unblocked.
-- **Staging Turso.** Required before PR previews or a second developer. Local
+- **Staging database.** Required before PR previews or a second developer. Local
   `.env` files today point at production. Do not git-connect the remaining
   seven apps until preview env cannot see prod.
 - **Git-connect the remaining seven for previews only**, using
@@ -234,4 +234,4 @@ hotfix path.
 
 Add the three GitHub secrets, merge this, and confirm the next `master` push
 runs `Deploy production` after CI. Then set the master ruleset (no force-push).
-Do not git-connect more Vercel projects until staging Turso exists.
+Do not git-connect more Vercel projects until a staging database exists.

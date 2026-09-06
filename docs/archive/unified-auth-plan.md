@@ -112,9 +112,9 @@ The `NEXT_PUBLIC_PERSONS_URL` / `NEXT_PUBLIC_PLACES_URL` / etc. env vars (read i
 
 ## Option C — Shared database session store
 
-**Mechanism:** switch NextAuth from JWT sessions to database sessions via the official Prisma adapter (`@auth/prisma-adapter`), pointed at the same Turso/libSQL database every app already uses. Add `Session`, `Account`, and `VerificationToken` models (the standard Auth.js schema) alongside the existing `User` model. NextAuth's session cookie then holds only an opaque session ID — verification means a database lookup, not JWT signature checking — so **any app reading from the same database session table sees the same session**, regardless of domain.
+**Mechanism:** switch NextAuth from JWT sessions to database sessions via the official Prisma adapter (`@auth/prisma-adapter`), pointed at the same shared database every app already uses. Add `Session`, `Account`, and `VerificationToken` models (the standard Auth.js schema) alongside the existing `User` model. NextAuth's session cookie then holds only an opaque session ID — verification means a database lookup, not JWT signature checking — so **any app reading from the same database session table sees the same session**, regardless of domain.
 
-**Why this fits this codebase specifically:** the Turso shared database is already the one piece of infrastructure all six apps unconditionally depend on (`@life-os/db` is a workspace package imported everywhere). There's no new infrastructure to provision — just new tables and an adapter wired into the existing `createLifeOsAuth()`. It also doesn't care what domain each app is on, so it works today on `*.vercel.app` with zero DNS/domain work, and continues to work unchanged if a custom domain is added later.
+**Why this fits this codebase specifically:** the shared database is already the one piece of infrastructure all six apps unconditionally depend on (`@life-os/db` is a workspace package imported everywhere). There's no new infrastructure to provision — just new tables and an adapter wired into the existing `createLifeOsAuth()`. It also doesn't care what domain each app is on, so it works today on `*.vercel.app` with zero DNS/domain work, and continues to work unchanged if a custom domain is added later.
 
 **What changes, concretely:**
 
@@ -213,7 +213,7 @@ export function createLifeOsAuth(options: CreateLifeOsAuthOptions = {}) {
 
 Reasoning, given what's actually true about this deployment:
 - All apps are confirmed to be on separate `*.vercel.app` root domains today, with no custom domain in the repo, env files, or Vercel config. Option A cannot work until someone buys and wires up a domain — that's an infrastructure/business decision, not something this plan can schedule.
-- All apps already share one database (`@life-os/db` → Turso). Option C uses infrastructure that exists right now.
+- All apps already share one database (`@life-os/db` → Postgres). Option C uses infrastructure that exists right now.
 - Option C's code footprint is smaller than Option B's: no new token-signing scheme, no per-app origin allowlist for token replay, and logout becomes a single `Session` row delete that every app sees immediately (a real win Option B doesn't have — Option B requires a separate logout-fan-out mechanism Option C gets for free, since deleting the DB row invalidates the session everywhere instantly).
 - Option C also happens to be forward-compatible with Option A: if a custom domain is set up later, you can layer `AUTH_COOKIE_DOMAIN` back on top (it's still wired into `sharedAuthCookies()`) and delete the `/api/session/adopt` redirect entirely, since the browser will start doing the cookie-sharing for free.
 
@@ -221,12 +221,12 @@ If a custom domain is already planned or trivial to set up (e.g. the team alread
 
 ## Implementation steps (Option C)
 
-1. **Schema migration** — add `Account`, `Session`, `VerificationToken` models and `User.emailVerified`/`accounts`/`sessions` relations to `packages/db/prisma/schema.prisma`. Run `npx prisma migrate dev` locally, then apply to the production Turso database using the existing manual-migration pattern (`@libsql/client` script — see `project_persons_deploy_setup` memory; this repo doesn't auto-migrate on deploy).
+1. **Schema migration** — add `Account`, `Session`, `VerificationToken` models and `User.emailVerified`/`accounts`/`sessions` relations to `packages/db/prisma/schema.prisma`. Run `npx prisma migrate dev` locally, then apply to production with `prisma migrate deploy`.
 2. **Add `@auth/prisma-adapter`** to `packages/auth/package.json`, run install.
 3. **Wire the adapter** into `createLifeOsAuth()` in `packages/auth/index.ts`: add `adapter: PrismaAdapter(db)` and `session: { strategy: "database" }`. Audit the `signIn`/`authorized` callbacks for any place that assumes a JWT `token` argument instead of the database-strategy `user` argument.
 4. **Add the session-adoption route** (`app/api/session/adopt/route.ts`) to each app — a small shared helper in `packages/auth` is worth extracting since the logic (look up `sid`, validate, set cookie) is identical across all six apps.
 5. **Update the home launcher** (`apps/home/app/page.tsx`) to append `?sid=<session.id>` to its outbound links to persons/places/stuff/assistant, so navigating from home (after already being logged in there) adopts the session in the destination app on first click.
-6. **New env vars:** none strictly required beyond what exists (`AUTH_SECRET`, `GOOGLE_CLIENT_ID/SECRET`, `DATABASE_URL`/`TURSO_*` — already shared). `AUTH_COOKIE_DOMAIN` stays unset unless/until a custom domain exists.
+6. **New env vars:** none strictly required beyond what exists (`AUTH_SECRET`, `GOOGLE_CLIENT_ID/SECRET`, `DATABASE_URL` — already shared). `AUTH_COOKIE_DOMAIN` stays unset unless/until a custom domain exists.
 7. **Test plan:**
    - Local: run two apps concurrently on different ports (e.g. persons on 3000, home on 3002, matching `.env.example`'s `NEXT_PUBLIC_*_URL` defaults), sign in on persons, click through to home via a manually-constructed `?sid=` link, confirm home renders as authenticated without hitting `/login`.
    - Verify sign-out: delete the session from one app, confirm a page load in another app now redirects to `/login` (proves the shared-row invalidation works).

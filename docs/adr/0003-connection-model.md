@@ -62,7 +62,7 @@ read side. So:
   mirror row purely for the unified hub. Migrating the CLI scripts onto `Connection` fully is a
   follow-up, not part of this phase.
 
-`packages/db/turso-migrate-connection-model.ts` creates the table and backfills one mirror row per
+The Connection migration creates the table and backfills one mirror row per
 existing `CalendarConnection`/`GmailConnection`/`EraConnection` row, matched idempotently by
 `sourceTable`+`sourceId` (not by the unique business key, since `accountEmail` can be null and
 SQLite treats distinct `NULL`s as non-colliding in a unique index — an `INSERT OR IGNORE` on the
@@ -98,8 +98,8 @@ it directly (writes still go through the owning app's or script's existing route
 
 ## Verification and rollback
 
-- `scripts/check-migration-integrity.mjs` (already in CI) verifies the migration pairs with
-  `turso-migrate-connection-model.ts` and that the full history replays into an empty database.
+- `scripts/check-migration-integrity.mjs` (already in CI) verified (at the time) the migration paired with its
+  hand-written script and that the full history replays into an empty database.
 - Backfill row-count parity check before considering the mirror trustworthy: count of `Connection`
   rows per `sourceTable` should equal the source table's row count.
 - Rollback: the table is additive and nothing writes to it as the sole source of truth for

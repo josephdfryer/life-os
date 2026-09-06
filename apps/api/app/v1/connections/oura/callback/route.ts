@@ -69,7 +69,7 @@ export async function POST(req: NextRequest) {
       await db.connection.update({ where: { id: connection.id }, data: { lastError: backfillError } }).catch(() => undefined)
     }
 
-    // Subscribe after the Turso write storm so Oura's handshake GETs do not
+    // Subscribe after the ingest write storm so Oura's handshake GETs do not
     // contend with the 35-day ingest. Tokens are already stored; Sync now can
     // retry the import if this request still fails.
     const webhooks = await ensureOuraWebhookSubscriptions().catch(() => ({ created: [], existing: [] }))

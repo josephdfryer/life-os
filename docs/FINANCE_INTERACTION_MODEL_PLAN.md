@@ -11,7 +11,7 @@ via SQL. Phase 3 (stream API) and Phase 5 (reconciler) pending.
 
 ## 0. Diagnosis — why the assistant can't see the money
 
-This is not a permissions or tooling problem. It's a storage problem. Measured against the live Turso DB on Aug 2, 2026:
+This is not a permissions or tooling problem. It's a storage problem. Measured against the live database on Aug 2, 2026:
 
 | Check | Result |
 |---|---|
@@ -72,7 +72,7 @@ This is consistent with the manifesto, not a departure from it. "Inference first
 
 ## 2. Schema changes
 
-Money already stores correctly as integer cents (`Interaction.amount Int?` — good, keep). Everything below is additive; no column is dropped or retyped, so the Turso migration is `ALTER TABLE ADD COLUMN` + `CREATE INDEX` only.
+Money already stores correctly as integer cents (`Interaction.amount Int?` — good, keep). Everything below is additive; no column is dropped or retyped, so the migration is `ALTER TABLE ADD COLUMN` + `CREATE INDEX` only.
 
 ### 2.1 `Interaction` — make a transaction self-sufficient
 
@@ -462,7 +462,7 @@ Current scale (2,400 interactions, 5,300 transactions inbound) is small; the goa
 1. **Keyset pagination** — page depth stops mattering. The single biggest structural win.
 2. **Aggregate in SQL, never in JS** — `GROUP BY` over an indexed `category`/`actorPersonId`/`timestamp`, not `JSON.parse` × N.
 3. **Composite indexes ordered for the actual access pattern** — `(workspaceId, timestamp DESC, id)` serves the unfiltered stream; `(workspaceId, type, timestamp DESC)` serves every finance query. SQLite will use the leading columns for the `WHERE` and the trailing `timestamp` for the `ORDER BY`, so no filesort.
-4. **Partial indexes for the hot slice.** Prisma can't express these; add them in the raw Turso migration:
+4. **Partial indexes for the hot slice.** Prisma can't express these; add them in the raw SQL migration:
    ```sql
    CREATE INDEX "Interaction_financial_stream_idx"
      ON "Interaction"("workspaceId", "timestamp" DESC, "id") WHERE "type" = 'financial';
@@ -471,28 +471,28 @@ Current scale (2,400 interactions, 5,300 transactions inbound) is small; the goa
    ```
    Roughly 1/3 the index size and the planner picks them automatically for finance queries.
 5. **`include=` is opt-in.** The default stream response does zero joins. The current route unconditionally `include`s `event` and `sourceFile` on every row (`route.ts:22`) — that's two joins nobody asked for, on every page.
-6. **Embedded Turso replica already configured** (`packages/db/index.ts:15-24`) — ~8ms local reads vs ~150ms HTTP. Make sure the scripts and the assistant runtime actually set `TURSO_SYNC_URL`; the probe script had to unset it to run.
+6. **(Historical, SQLite era)** An embedded read replica was configured for ~8ms local reads; superseded by Postgres on Neon.
 7. **Cheap materialization, only if measured.** Monthly rollups per (actor, category, month) as a *cache with a rebuild command*, never as the source of truth. Don't build it until an aggregate query is provably slow — the manifesto is right that stored aggregates start lying immediately, and at this data size they'd be premature.
 
 ---
 
 ## 9. Migration & rollout
 
-Turso needs the manual pattern (`packages/db/turso-migrate-*.ts`, per `docs/DATABASE_MIGRATION_AND_RECOVERY.md`). All changes are additive → no table rebuild, no downtime.
+At the time this shipped, migrations used the manual SQLite-era script pattern (since retired for `prisma migrate deploy`). All changes are additive → no table rebuild, no downtime.
 
 ### Phase 1 as built (Aug 3, 2026)
 
-Shipped to the live Turso database. Differences from the plan as written above:
+Shipped to the live database. Differences from the plan as written above:
 
 - **`Interaction.metadata` was added.** The mapping in §4.2 writes to a `metadata`
   column that did not exist — which is exactly why `finance.ts` was abusing
   `notes` for structured JSON. Added alongside the rest.
-- **Turso rejects non-constant defaults on `ADD COLUMN`.** The new
+- **SQLite rejected non-constant defaults on `ADD COLUMN`.** The new
   `InteractionParticipant.createdAt`/`updatedAt` land with an epoch sentinel and
   are backfilled from the parent Interaction in the same migration.
 - **Production has no `_prisma_migrations` table** — it has never been managed by
   `prisma migrate`, despite what `DATABASE_MIGRATION_AND_RECOVERY.md` prescribes.
-  The real path is the hand-written idempotent `turso-migrate-*.ts` scripts, and
+  The real path was the hand-written idempotent SQLite-era migration scripts, and
   this change follows it. That doc and reality need reconciling.
 - **`mergePersons` did not know about the new Person references.** Merging two
   people would have silently nulled `Interaction.actorPersonId` and
@@ -511,7 +511,7 @@ Shipped to the live Turso database. Differences from the plan as written above:
 Both produced plausible-looking wrong numbers rather than errors, which is the
 dangerous kind. Both are now pinned by tests.
 
-- **Date binding.** Turso stores DateTime as `…T07:00:00.000+00:00`;
+- **Date binding.** SQLite stored DateTime as `…T07:00:00.000+00:00`;
   `Date.toISOString()` ends in `Z`. Same instant, different string — and SQLite
   compares TEXT lexicographically, where `'+' < 'Z'`. A raw query binding an ISO
   *string* therefore dropped every row at exactly the range start and admitted
@@ -579,7 +579,7 @@ every number derived from it is honest for that window.
 
 **Phase 1 — Schema + backfill** *(the unblock; everything else depends on it)*
 1. Schema changes §2.1–2.4 → `prisma migrate dev` locally.
-2. `packages/db/turso-migrate-finance-interactions.ts` — idempotent `ADD COLUMN` + `CREATE INDEX` (incl. the partial indexes), guarded by a `PRAGMA table_info` check, mirroring the existing migration scripts.
+2. The finance-interactions migration (SQLite era; since folded into the Postgres baseline) — idempotent `ADD COLUMN` + `CREATE INDEX` (incl. the partial indexes).
 3. `scripts/era/backfill-staged-to-interactions.ts` — convert all 683 pending staged rows into canonical `Interaction`s: parse `metadata` once, write real columns, carry `placeMatch` results into `InteractionParticipant` with their existing bands, set `EraTransactionLink.status = "accepted"` + `interactionId`. Dry-run flag, resumable, idempotent.
 4. One-time: create the family `Group`, add `PersonGroup` rows, set `ownerPersonId` on all 11 accounts (a `scripts/era/set-account-owners.ts` prompt or a small admin UI — 11 decisions, once).
 
@@ -613,7 +613,7 @@ Phases 1–2 are the ones that fix the reported problem. 3–5 are what make it 
 | File | Change |
 |---|---|
 | `packages/db/prisma/schema.prisma` | §2 additive fields + indexes |
-| `packages/db/turso-migrate-finance-interactions.ts` | **new** — production migration |
+| finance-interactions migration (now in the Postgres baseline) | **new** — production migration |
 | `scripts/era/backfill-staged-to-interactions.ts` | **new** — 683-row promotion |
 | `scripts/era/set-account-owners.ts` | **new** — one-time ownership mapping |
 | `packages/sync/era/{client,sync-accounts,sync-transactions,reconcile-*}.ts` | **new** — live sync + reconciler |

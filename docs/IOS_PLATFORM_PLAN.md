@@ -19,7 +19,7 @@ Scope of that supersession, precisely:
   Persons and the Mesh competitive read. None of them are affected by the storage change.
 - **Still current:** §1's two-product-line split and the feature-package topology. The Life Vault
   changes what `LifeOSKit` talks to, not whether screens live in Swift packages.
-- **Unchanged:** Joseph's personal LifeOS stays on the cloud-backed Turso graph while the vault
+- **Unchanged:** Joseph's personal LifeOS stays on the cloud-backed Postgres graph while the vault
   is built and proven. Every section describing the personal line remains accurate.
 
 ---

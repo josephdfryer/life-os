@@ -130,7 +130,7 @@ export async function seedDefaultAccess(actor?: DomainActor) {
   await auditAction({ actor, action: "access.seed", targetType: "access" })
 }
 
-// Per-instance cache: avoids 6+ sequential Turso RTTs on every request.
+// Per-instance cache: avoids 6+ sequential database round-trips on every request.
 // Fluid Compute reuses instances across requests, so this is effective in production.
 // 60s TTL means role/scope changes propagate within a minute.
 const _accessCache = new Map<string, { value: AccessActor; expiresAt: number }>()

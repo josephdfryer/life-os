@@ -88,7 +88,7 @@ const DB_BATCH_SIZE = 10;
 // Each event upsert used to open an interactive Prisma transaction (default
 // maxWait 2s) and 25 of those ran at once. After the two small personal
 // calendars finished, Qin and Sightmachine consistently died with
-// "Unable to start a transaction in the given time." Keep overlap for Turso
+// "Unable to start a transaction in the given time." Keep overlap for database
 // latency, but never enough concurrent transactions to stall the rest.
 const UPSERT_CONCURRENCY = 4;
 const CALENDAR_TX = { maxWait: 10_000, timeout: 20_000 } as const;
@@ -1059,7 +1059,7 @@ async function processCalendarBatch(input: {
     toUpsert.push(item);
   }
 
-  // Each upsert is several sequential round-trips to a remote (Turso) DB, so
+  // Each upsert is several sequential round-trips to the remote database, so
   // processing a batch one event at a time is latency-bound and can blow past the
   // function timeout on a busy calendar. Overlap a few events, not the whole
   // batch — 25 concurrent interactive transactions is what starved Qin and

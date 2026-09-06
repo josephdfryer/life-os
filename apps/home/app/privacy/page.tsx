@@ -65,7 +65,7 @@ export default function PrivacyPolicyPage() {
 
         <h2>4. Data storage and security</h2>
         <p>
-          Data is stored in a private database (Turso) and served over encrypted connections
+          Data is stored in a private database (PostgreSQL on Neon) and served over encrypted connections
           (HTTPS/TLS) via Vercel. Access is restricted to approved account holders and is
           protected by Google sign-in; the operator does not share database credentials or raw
           data access with third parties.

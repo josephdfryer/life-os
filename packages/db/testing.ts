@@ -1,7 +1,7 @@
 // Test-database helper for the PostgreSQL era.
 //
-// Before the Turso → Postgres migration, tests provisioned a throwaway SQLite
-// file with `better-sqlite3` and pointed `DATABASE_URL` at it. Postgres has no
+// Before the move to Postgres, tests provisioned a throwaway SQLite
+// file and pointed `DATABASE_URL` at it. Postgres has no
 // single-file equivalent, so each test run now gets its own freshly-created
 // database on a base Postgres server, migrated from the committed baseline SQL.
 //
@@ -33,7 +33,7 @@ const MIGRATIONS_DIR = join(
 // The default workspace used to be seeded by an early SQLite migration
 // (20260505070000_add_workspaces). The squashed Postgres baseline only carries
 // it as a column default, so fresh databases need the row created explicitly.
-// The production cutover gets it for free by copying the real row from Turso,
+// The production cutover gets it for free by copying the real row from the previous database,
 // which is why this lives here and not in a migration — a seeded row would
 // break the ETL's "target must be empty" guard.
 const DEFAULT_WORKSPACE = {
@@ -113,8 +113,6 @@ export async function createTestDatabase(): Promise<TestDatabase> {
   }
 
   process.env.DATABASE_URL = url
-  process.env.TURSO_DATABASE_URL = ""
-  process.env.TURSO_AUTH_TOKEN = ""
 
   let dropped = false
   return {

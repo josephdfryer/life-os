@@ -37,8 +37,8 @@ life-os/                          ← monorepo root (npm workspaces)
 |---------|-----------|
 | Framework | Next.js 16 (App Router, Turbopack) |
 | Language | TypeScript |
-| Database | Turso (libSQL/SQLite) — production via Vercel env vars |
-| ORM | Prisma 7 (provider = "sqlite", pointed at Turso via `DATABASE_URL`) |
+| Database | PostgreSQL on Neon — production via Vercel env vars |
+| ORM | Prisma 7 (provider = "postgresql", `@prisma/adapter-pg`, `DATABASE_URL`) |
 | Auth | NextAuth v5 — Google OAuth, allowed emails list |
 | AI | Anthropic SDK direct (`claude-sonnet-4-20250514`) — used for import analysis |
 | Deploy | Vercel — monorepo, build command: `npx turbo run build --filter=persons` |
@@ -54,8 +54,7 @@ These live in `apps/persons/.env` and must also be set in Vercel (they already a
 | Variable | Purpose |
 |----------|---------|
 | `DATABASE_URL` | Local SQLite path (dev only) |
-| `TURSO_DATABASE_URL` | Production Turso DB URL |
-| `TURSO_AUTH_TOKEN` | Production Turso auth token |
+| `DATABASE_URL` | Production Postgres connection string |
 | `ANTHROPIC_API_KEY` | Claude API key for import analysis |
 | `API_KEY` | Internal API key for v1 endpoints |
 | `AUTH_SECRET` | NextAuth session secret |
@@ -145,7 +144,7 @@ Don't add explanatory comments. Only comment hidden constraints, workarounds, or
 `emails`, `phones`, `tags`, `values`, `actionItems` are stored as JSON strings in SQLite. Always use `parseTags()` from `lib/utils.ts` to parse them. Always `JSON.stringify(array)` when writing.
 
 ### Prisma schema location
-The schema lives in `packages/db/prisma/schema.prisma`, NOT in `apps/persons`. Run `prisma generate` from the `packages/db` directory. Turso handles migrations manually (no `prisma migrate` — use raw SQL or Prisma `updateMany` for data changes).
+The schema lives in `packages/db/prisma/schema.prisma`, NOT in `apps/persons`. Run `prisma generate` from the `packages/db` directory. Migrations live under `packages/db/prisma/migrations` and are applied with `prisma migrate deploy`; CI replays the history against a fresh Postgres before deploy.
 
 ### Search
 The minimal API (`/api/persons?minimal=true`) tokenizes the search query and requires each token to match across first/last/emails/company/headline/notes/location via `contains`. Used for the contacts list and the import resolve modal.
@@ -200,6 +199,6 @@ NextAuth v5 with Google OAuth. The `authorized` callback in `auth.ts` gates all 
 ## Things to be careful about
 
 - **Never commit `apps/persons/package-lock.json`** — it's in `.gitignore`. The workspace root `package-lock.json` is the one that matters. A nested lock file breaks Vercel's npm install.
-- **Prisma migrations on Turso**: There's no `prisma migrate` workflow. Schema changes that add columns need to be applied via raw SQL or a Prisma `updateMany`. For new columns, add them to the schema and redeploy (Turso's libSQL will add nullable columns automatically in some cases, but not always).
+- **Prisma migrations**: `npx prisma migrate dev` in `packages/db` creates a migration; CI replays the history against a fresh Postgres and applies it to production before deploy.
 - **`parseTags` for all array fields**: Never read `person.emails` as a string. Always run through `parseTags()`.
 - **Vercel deploy from root**: Always `cd /path/to/life-os && vercel --prod`. Never from `apps/persons`.

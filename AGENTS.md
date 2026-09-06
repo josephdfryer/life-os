@@ -38,7 +38,7 @@ Rules for agents:
 
 - **Do not** set up local Google OAuth credentials, fix redirect URIs, or debug `GOOGLE_CLIENT_SECRET` for localhost — set `LIFE_OS_LOCAL_REVIEW=1` and restart the dev server instead. OAuth config only matters for production (Vercel).
 - The bypass is implemented in `apps/persons`, `apps/events`, and `apps/places` (`lib/local-review.ts` + `proxy.ts` + `server/domain/access.ts`) and in `apps/home`'s middleware. When creating a new app, replicate this pattern.
-- Remember local `.env` files typically point at the **production Turso database** — auth is bypassed, but the data is real. The DATA SAFETY rules below still apply fully.
+- Remember local `.env` files typically point at the **production Neon Postgres database** — auth is bypassed, but the data is real. The DATA SAFETY rules below still apply fully.
 
 ## DATA SAFETY — Non-Negotiable Rules
 
@@ -80,8 +80,7 @@ Still is the approved visual language for all LifeOS apps (warm linen, cognac/ca
 | Resource | Purpose |
 |----------|---------|
 | `docs/STILL_DESIGN_SYSTEM.md` | Canonical spec for agents |
-| `docs/STILL_MIGRATION_PLAN.md` | Detailed phased migration plan (execute this) |
-| `docs/STILL_UI_MIGRATION_PLAN.md` | Short status + pointer to full plan |
+| `docs/archive/STILL_MIGRATION_PLAN.md` | Completed migration plan (historical) |
 | `packages/ui/still-tokens.css` | CSS custom properties |
 | `docs/ui-preview/still-direction-v2.html` | Visual reference (open in browser) |
 | `packages/ui/AGENTS.md` | Package-level UI notes |

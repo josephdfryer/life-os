@@ -27,11 +27,14 @@ dotenv.config({ path: path.join(LIFE_OS_ROOT, "apps/persons/.env.local"), quiet:
 dotenv.config({ path: path.join(LIFE_OS_ROOT, "apps/persons/.env"), quiet: true })
 dotenv.config({ path: path.join(LIFE_OS_ROOT, ".env"), quiet: true })
 
-// Calendar OAuth state is local to this Mac. Production Turso is a separate
-// rebuilt dataset, so this worker intentionally uses the local SQLite database.
-delete process.env.TURSO_DATABASE_URL
-delete process.env.TURSO_AUTH_TOKEN
-process.env.DATABASE_URL = `file:${path.join(LIFE_OS_ROOT, "apps/persons/persons.db")}`
+// This worker historically wrote to a local SQLite file, never the shared
+// production workspace. Postgres has no file mode, so it now requires an
+// explicit KRISP_DATABASE_URL and refuses to fall back to DATABASE_URL.
+if (!process.env.KRISP_DATABASE_URL) {
+  console.error("KRISP_DATABASE_URL is required (a dedicated Postgres database for Team OS records).")
+  process.exit(1)
+}
+process.env.DATABASE_URL = process.env.KRISP_DATABASE_URL
 
 type JsonRecord = Record<string, unknown>
 type KrispMeeting = {

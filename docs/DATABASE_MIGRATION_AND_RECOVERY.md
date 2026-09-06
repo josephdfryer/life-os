@@ -22,10 +22,9 @@ the clean replay and synthetic upgrade/restore gates in CI.
 8. Verify `_prisma_migrations`, `PRAGMA foreign_key_check`, expected row counts,
    and one read-only application smoke test before enabling new writes.
 
-The repository contains older `turso-migrate-*.ts` and
-`scripts/apply-migration.ts` utilities. They are historical drift-repair tools,
-not the canonical path for new changes. Do not rerun them unless a reviewed
-incident plan names the exact script, database, backup, and expected effects.
+The SQLite-era hand-written migration scripts were removed on 2026-09-06 (JF-202).
+The committed `packages/db/prisma/migrations` history is the only path for
+schema changes.
 
 ## Local proof commands
 

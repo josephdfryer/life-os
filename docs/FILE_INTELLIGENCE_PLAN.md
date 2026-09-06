@@ -40,7 +40,7 @@ After upload finalization, start a Vercel Workflow DevKit workflow. Each step is
 1. Verify object, checksum, size, and MIME type.
 2. Extract faithful source content and locators.
 3. Create or reuse the immutable source-linked `Note`.
-4. Create versioned chunks and update workspace-filtered SQLite/Turso FTS5.
+4. Create versioned chunks and update workspace-filtered full-text search.
 5. Extract entity mentions, roles, claims, and proposed graph actions.
 6. Reject any quotation that cannot be found in stored source text.
 7. Resolve entity mentions conservatively.
@@ -111,6 +111,6 @@ Existing files receive a read-only backfill preview only. No backfill runs witho
 
 Tests must cover multi-person/multi-role files, shared claims, repeated mentions, same-name ambiguity, unresolved/incidental exclusion from Theory, explicit versus inferred Theory placement, identity correction, archive behavior, dismissal/correction, derived staleness, keyset nightly batching and budget exhaustion, exact citation validation, workspace isolation, prompt-injection containment, and safe-auto idempotency/Undo.
 
-Database tests explicitly set `TURSO_DATABASE_URL=""` and `TURSO_AUTH_TOKEN=""` and use a scratch `DATABASE_URL`.
+Database tests use a scratch `DATABASE_URL` (see `packages/db/testing.ts`).
 
 The initiative is complete when one private multi-person upload can be faithfully extracted, connect distinct cited evidence to every correctly resolved Person, keep ambiguous/incidental references out of Theory, surface evidence immediately, regenerate versioned theories overnight, promote only safe or reviewed graph writes, and trace every Theory statement through claim, chunk, Note, and original file.

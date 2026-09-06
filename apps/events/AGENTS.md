@@ -64,5 +64,5 @@ that account can read and stores one active `CalendarConnection` per selection.
 Override `GOOGLE_CALENDAR_ACCOUNT_EMAIL` only when the authenticating Google
 account changes; source calendars are selected in the UI.
 
-Set the same shared auth env vars as other apps (`AUTH_SECRET`, `AUTH_COOKIE_DOMAIN`, Turso vars).
+Set the same shared auth env vars as other apps (`AUTH_SECRET`, `AUTH_COOKIE_DOMAIN`, `DATABASE_URL`).
 Granola also requires `ENCRYPTION_KEY` and the daily cron requires `CRON_SECRET`.

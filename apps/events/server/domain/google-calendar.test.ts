@@ -13,7 +13,7 @@ import {
   withCalendarDbRetry,
 } from "./google-calendar-sync"
 
-test("calendar sync retries Turso transaction-start failures", () => {
+test("calendar sync retries transaction-start failures", () => {
   assert.equal(isCalendarDbContention(new Error("Transaction API error: Unable to start a transaction in the given time.")), true)
   assert.equal(isCalendarDbContention(new Error("prisma:error SQLITE_BUSY: database is locked")), true)
   assert.equal(isCalendarDbContention({ code: "P2034", message: "Transaction failed due to a write conflict" }), true)

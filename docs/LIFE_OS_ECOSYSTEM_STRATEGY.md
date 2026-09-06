@@ -344,7 +344,7 @@ defensible.
 
 ## Architectural consequences — what this actually costs
 
-This direction changes the commercial architecture far more deeply than database-per-user Turso
+This direction changes the commercial architecture far more deeply than database-per-user hosting
 would. The first draft of this document listed the consequences as bullets without sizing any of
 them, which made an expensive rewrite read like a configuration change. Stated honestly:
 
@@ -451,7 +451,7 @@ until its gate passes.
 3. **Widen the vault to the eight primitives** with provenance, migrations, local queries, and
    encrypted export, still on synthetic data.
 4. **Run Joseph's real graph in shadow mode.** Replay into a local vault and compare canonical rows
-   and derived reads against the Turso system, which stays canonical throughout. Nothing existing
+   and derived reads against the cloud system, which stays canonical throughout. Nothing existing
    is disabled. This is where the true cost becomes visible, and it is deliberately before the
    expensive AI and sync work rather than after it.
 5. **Add encrypted Apple-device sync, then break it on purpose.** New-device restore, lost device,

@@ -42,7 +42,7 @@ export type PairResult = {
 }
 
 const AUTO_THRESHOLD = 0.93
-// Each merge is its own transaction: Turso over HTTP makes every statement a
+// Each merge is its own transaction: a remote database makes every statement a
 // network round-trip, so batching all merges into one interactive transaction
 // blows past Prisma's 5s default and aborts the whole run.
 const TX_OPTS = { timeout: 20_000, maxWait: 10_000 }
@@ -265,7 +265,7 @@ export async function autoDedupePersons(workspaceId: string, actor?: DomainActor
 }
 
 // One bulk lookup per referencing table so each merge can skip reassignment
-// statements that would touch zero rows — with Turso every statement is a
+// statements that would touch zero rows — every statement is a
 // network round-trip, and most losers have no staged items, api keys, or
 // audit entries.
 async function loserRefSets(ids: string[], workspaceId: string) {

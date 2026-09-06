@@ -70,4 +70,4 @@ Store secrets in Vercel env for Home/API. Do not commit them.
 
 ## Data safety
 
-Additive only. No deletes, truncates, or `db push --force-reset`. Local `.env` can point at production Turso.
+Additive only. No deletes, truncates, or `db push --force-reset`. Local `.env` can point at the production database.

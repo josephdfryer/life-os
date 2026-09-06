@@ -24,7 +24,6 @@ for (const candidate of [path.join(REPO_ROOT, ".env"), path.join(REPO_ROOT, "app
     if (m && process.env[m[1]] === undefined) process.env[m[1]] = m[2]
   }
 }
-delete process.env.TURSO_SYNC_URL
 
 const WORKSPACE_ID = "default-workspace"
 const CHECK_ONLY = process.argv.includes("--check")

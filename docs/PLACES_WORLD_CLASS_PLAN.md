@@ -203,7 +203,7 @@ and verification gates pass.
   selection, and camera.
 - [ ] `PL-005` Define disposable test fixtures covering dense Places, sparse
   enrichments, unresolved visits, empty data, and server failures. Never use
-  destructive cleanup against the configured production Turso database.
+  destructive cleanup against the configured production database.
 
 **Acceptance criteria**
 

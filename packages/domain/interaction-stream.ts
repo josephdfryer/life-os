@@ -382,8 +382,8 @@ export async function aggregateInteractions(
   );
 
   const inDollars = metric !== "count";
-  // SQLite's SUM() over an integer column comes back as a BigInt on the
-  // better-sqlite3 adapter (though not libSQL/Turso) — normalize to Number
+  // Postgres returns SUM() over an integer column as a bigint string, and
+  // SQLite returned a BigInt — normalize to Number
   // before centsToDollars, which does not accept BigInt.
   const totalCents = Number(totals?.total ?? 0);
   return {
