@@ -1,19 +1,44 @@
 // Relationship gap detection — compares declared closeness against actual
 // contact cadence. This is the single definition of "overdue" shared by
-// Persons (Today page, Person detail), Home (nudges), and the assistant, so
-// none of them can quietly disagree with each other.
+// Persons (Today page, Person detail), Home (nudges), the assistant, and the
+// canonical API (`GET /v1/people/attention`), so none of them can quietly
+// disagree with each other.
 //
 // DB-touching — do not import from a client component. Client-side callers
 // (e.g. Persons' attention.ts) should import the pure formula from ./scoring
 // instead.
 
 import type { AlignmentSignal } from "./types";
-import { relationshipGapScore, daysSince, isUnreviewedBulkContact } from "./scoring";
+import { relationshipGapScore, daysSince, isUnreviewedBulkContact, cadenceDaysFor } from "./scoring";
 
-export async function getRelationshipGaps(
+// One overdue relationship, with everything a surface needs to render and act
+// on it without another per-person query. Computed, never stored.
+export type AttentionQueueItem = {
+  personId: string;
+  first: string;
+  last: string;
+  closeness: number;
+  // >= 1.0 is overdue; the queue only holds items at or past 1.0.
+  score: number;
+  cadenceDays: number | null;
+  lastInteractionAt: Date | null;
+  lastInteractionSummary: string | null;
+  daysSinceLast: number | null;
+  // Whole days past the cadence; 0 when there is no recorded contact at all.
+  daysOverdue: number;
+  hasActivePlan: boolean;
+  suggestedAction: "first_touch" | "reach_out" | "follow_up_plan";
+};
+
+// Every person whose declared cadence has lapsed, most overdue first. Bounded
+// at the query (close or plan-linked people only, capped) and at the result.
+export async function getAttentionQueue(
   workspaceId: string,
-): Promise<AlignmentSignal[]> {
+  options: { limit?: number; now?: Date } = {},
+): Promise<AttentionQueueItem[]> {
   const { db } = await import("@life-os/db");
+  const now = options.now ?? new Date();
+  const limit = Math.min(500, Math.max(1, Math.round(options.limit ?? 50)));
   const persons = await db.person.findMany({
     where: {
       workspaceId,
@@ -32,6 +57,7 @@ export async function getRelationshipGaps(
       closeness: true,
       source: true,
       interactions: {
+        where: { timestamp: { lte: now } },
         orderBy: { timestamp: "desc" },
         take: 1,
         select: { timestamp: true, summary: true },
@@ -40,13 +66,13 @@ export async function getRelationshipGaps(
     },
     // The WHERE clause already restricts this to close/plan-linked people —
     // a small, bounded set for any real workspace — but Home's Intelligence
-    // page now calls this on every request, not just from a background job,
-    // so an explicit cap protects against that changing quietly as the
-    // graph grows.
+    // page calls this on every request, not just from a background job, so
+    // an explicit cap protects against that changing quietly as the graph
+    // grows.
     take: 1_000,
   });
 
-  const signals: AlignmentSignal[] = [];
+  const items: AttentionQueueItem[] = [];
   for (const p of persons) {
     const lastAt = p.interactions[0]?.timestamp ?? null;
     const hasActivePlan = p.plans.length > 0;
@@ -61,16 +87,41 @@ export async function getRelationshipGaps(
       hasActivePlan,
     });
     if (score < 1.0) continue;
-    signals.push({
-      kind: "relationship_gap",
-      severity: score,
-      subject: `${p.first} ${p.last}`,
-      detail: lastAt
-        ? `No recorded contact in ${daysSince(lastAt)} days`
-        : "No recorded contact yet",
-      evidenceSummary: p.interactions[0]?.summary ?? null,
+    const cadenceDays = cadenceDaysFor(p.closeness, hasActivePlan);
+    const daysSinceLast = lastAt ? daysSince(lastAt, now) : null;
+    items.push({
       personId: p.id,
+      first: p.first,
+      last: p.last,
+      closeness: p.closeness,
+      score,
+      cadenceDays,
+      lastInteractionAt: lastAt,
+      lastInteractionSummary: p.interactions[0]?.summary ?? null,
+      daysSinceLast,
+      daysOverdue:
+        daysSinceLast !== null && cadenceDays !== null
+          ? Math.max(0, daysSinceLast - cadenceDays)
+          : 0,
+      hasActivePlan,
+      suggestedAction: !lastAt ? "first_touch" : hasActivePlan ? "follow_up_plan" : "reach_out",
     });
   }
-  return signals.sort((a, b) => b.severity - a.severity);
+  return items.sort((a, b) => b.score - a.score).slice(0, limit);
+}
+
+export async function getRelationshipGaps(
+  workspaceId: string,
+): Promise<AlignmentSignal[]> {
+  const queue = await getAttentionQueue(workspaceId, { limit: 500 });
+  return queue.map((item) => ({
+    kind: "relationship_gap" as const,
+    severity: item.score,
+    subject: `${item.first} ${item.last}`,
+    detail: item.lastInteractionAt
+      ? `No recorded contact in ${item.daysSinceLast} days`
+      : "No recorded contact yet",
+    evidenceSummary: item.lastInteractionSummary,
+    personId: item.personId,
+  }));
 }
