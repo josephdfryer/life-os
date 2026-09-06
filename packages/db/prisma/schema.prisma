@@ -500,15 +500,21 @@ model CalendarConnection {
   expiresAt              DateTime?
   scope                  String?
   syncTokenEncrypted     String?
-  // Resume cursor for the one-time unwindowed bootstrap sync. Google only
-  // issues a syncToken for a query with no timeMin/timeMax/orderBy, and such a
-  // query walks the whole calendar — more than one cron run can finish. When a
-  // run hits its time budget mid-walk it parks Google's nextPageToken here and
-  // the next run resumes from it, so the bootstrap makes forward progress
-  // instead of restarting. Cleared the moment a syncToken is obtained.
+  // Resume cursor for a walk that ran out of budget. Google only issues a
+  // syncToken for a query with no timeMin/timeMax/orderBy, and such a query
+  // walks the whole calendar — more than one cron run can finish. When a run
+  // hits its time budget mid-walk it parks Google's nextPageToken here and the
+  // next run resumes from it. Used by the bootstrap walk and, since 2026-09-06,
+  // by an incremental delta too large for one run (the token stays put until
+  // the delta finishes). Cleared the moment a new syncToken is obtained.
   fullSyncPageToken      String?
   lastSyncedAt           DateTime?
   lastError              String?
+  // Sync lease. Two invocations (Vercel cron + the GitHub backup schedule)
+  // used to walk the same calendar concurrently and contend on the same rows;
+  // a run takes the lease for longer than the function can live and any
+  // overlapping run skips the connection instead of racing it.
+  syncLeaseUntil         DateTime?
   // Inference for whether *I* am going to events on this calendar.
   // Manifesto: presence is assumed unless stated otherwise, so the default
   // is "going". Shared/family calendars can opt into "not_going"; a Plan

@@ -319,3 +319,90 @@ test("recurring same-name items at different times stay separate", () => {
     { name: "Workout", start: new Date("2026-08-23T18:00:00Z") },
   ), false)
 })
+
+// ── Incremental walks are budgeted (2026-09-06 outage) ─────────────────────
+// Sightmachine's delta outgrew one run; incremental walks never checked their
+// deadline, so Vercel killed the function before the new token was saved and
+// the same, larger delta replayed every 15 minutes for two days.
+
+test("an incremental walk that exceeds its budget parks the next page cursor and keeps the token in use", async () => {
+  const google = fakeGoogle([
+    { page: { items: [{ id: "d1" }], nextPageToken: "DELTA2" } },
+    { page: { items: [{ id: "d2" }], nextSyncToken: "TOK2" } },
+  ])
+  let clock = 1000
+  const result = await walkEventPages<FakeEvent>({
+    syncToken: "TOK1", resumePageToken: null, ingestFrom: null,
+    deadline: 2500, pageSize: 100, batchSize: 25,
+    now: () => (clock += 1000), // 2000 after the batch (fine), 3000 at the page boundary (over)
+    fetchPage: google.fetchPage,
+    onBatch: async () => {},
+  })
+  assert.equal(google.seen.length, 1, "must stop before fetching the second delta page")
+  assert.equal(result.usedSyncToken, true)
+  assert.equal(result.truncated, true)
+  assert.equal(result.pendingPageToken, "DELTA2")
+  assert.equal(result.nextSyncToken, undefined, "no new token until the delta finishes")
+})
+
+test("a parked incremental cursor resumes with pageToken alone and finishes with the new token", async () => {
+  const google = fakeGoogle([{ page: { items: [{ id: "d2" }], nextSyncToken: "TOK2" } }])
+  const result = await walkEventPages<FakeEvent>({
+    syncToken: "TOK1", resumePageToken: "DELTA2", ingestFrom: null,
+    deadline: Date.now() + 60_000, pageSize: 100, batchSize: 25,
+    fetchPage: google.fetchPage,
+    onBatch: async () => {},
+  })
+  assert.equal(google.seen[0].get("pageToken"), "DELTA2")
+  assert.equal(google.seen[0].get("syncToken"), null, "a page cursor must travel alone")
+  assert.equal(result.usedSyncToken, true)
+  assert.equal(result.nextSyncToken, "TOK2")
+  assert.equal(result.truncated, false)
+})
+
+test("a stale parked incremental cursor (400) falls back to re-listing from the old token, not a full bootstrap", async () => {
+  const google = fakeGoogle([
+    { status: 400, ok: false },
+    { page: { items: [{ id: "d" }], nextSyncToken: "TOK2" } },
+  ])
+  const result = await walkEventPages<FakeEvent>({
+    syncToken: "TOK1", resumePageToken: "DEAD", ingestFrom: null,
+    deadline: Date.now() + 60_000, pageSize: 100, batchSize: 25,
+    fetchPage: google.fetchPage,
+    onBatch: async () => {},
+  })
+  assert.equal(google.seen[1].get("pageToken"), null)
+  assert.equal(google.seen[1].get("syncToken"), "TOK1", "must re-list the delta, not walk the whole calendar")
+  assert.equal(result.usedSyncToken, true)
+  assert.equal(result.nextSyncToken, "TOK2")
+})
+
+test("onProgress reports the cursor that fetches each page, so a hard stop can park it", async () => {
+  const google = fakeGoogle([
+    { page: { items: [{ id: "a" }], nextPageToken: "P2" } },
+    { page: { items: [{ id: "b" }], nextSyncToken: "TOK" } },
+  ])
+  const cursors: Array<string | undefined> = []
+  await walkEventPages<FakeEvent>({
+    syncToken: null, resumePageToken: null, ingestFrom: null,
+    deadline: Date.now() + 60_000, pageSize: 100, batchSize: 25,
+    fetchPage: google.fetchPage,
+    onBatch: async () => {},
+    onProgress: p => cursors.push(p.currentPageToken),
+  })
+  assert.deepEqual(cursors, [undefined, "P2"])
+})
+
+test("mapPool stops starting items once shouldStop is true and leaves their slots empty", async () => {
+  let started = 0
+  const results = await mapPool(
+    [1, 2, 3, 4, 5, 6],
+    2,
+    async n => { started += 1; await new Promise(r => setTimeout(r, 5)); return n * 10 },
+    { shouldStop: () => started >= 3 },
+  )
+  assert.equal(results.length, 6)
+  const done = results.filter(r => r !== undefined)
+  assert.ok(done.length >= 3 && done.length <= 4, `expected 3-4 completed, got ${done.length}`)
+  assert.equal(results[5], undefined, "the last item must never have started")
+})

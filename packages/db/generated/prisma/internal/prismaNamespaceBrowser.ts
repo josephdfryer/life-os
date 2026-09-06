@@ -442,6 +442,7 @@ export const CalendarConnectionScalarFieldEnum = {
   fullSyncPageToken: 'fullSyncPageToken',
   lastSyncedAt: 'lastSyncedAt',
   lastError: 'lastError',
+  syncLeaseUntil: 'syncLeaseUntil',
   ownerAttendanceDefault: 'ownerAttendanceDefault'
 } as const
 
