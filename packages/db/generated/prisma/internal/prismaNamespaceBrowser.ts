@@ -55,6 +55,7 @@ export const ModelName = {
   WorkspaceMember: 'WorkspaceMember',
   ApprovedEmail: 'ApprovedEmail',
   Person: 'Person',
+  PersonContact: 'PersonContact',
   User: 'User',
   Device: 'Device',
   DeviceSource: 'DeviceSource',
@@ -238,6 +239,17 @@ export const PersonScalarFieldEnum = {
 } as const
 
 export type PersonScalarFieldEnum = (typeof PersonScalarFieldEnum)[keyof typeof PersonScalarFieldEnum]
+
+
+export const PersonContactScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  personId: 'personId',
+  kind: 'kind',
+  normalized: 'normalized'
+} as const
+
+export type PersonContactScalarFieldEnum = (typeof PersonContactScalarFieldEnum)[keyof typeof PersonContactScalarFieldEnum]
 
 
 export const UserScalarFieldEnum = {

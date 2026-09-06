@@ -225,6 +225,7 @@ model Person {
   fileResolutionsFrom  FileEntityResolution[]     @relation("FileResolutionFromPerson")
   fileResolutionsTo    FileEntityResolution[]     @relation("FileResolutionToPerson")
   externalIdentifiers  PersonExternalIdentifier[]
+  contactKeys          PersonContact[]
 
   @@index([workspaceId, last, first])
   @@index([workspaceId, createdAt, id])
@@ -236,6 +237,23 @@ model Person {
   @@index([workspaceId, company])
   @@index([workspaceId, headline])
   @@index([workspaceId, emailSearch])
+}
+
+// Normalized email/phone keys per Person, maintained by the Postgres trigger
+// `person_contacts_sync` (see migration 20260906080000_person_contact_keys),
+// never written from application code. The contact matcher reads it to find
+// candidates by index instead of scanning every Person. Rows carry no
+// business meaning of their own; they are a query index over Person.
+model PersonContact {
+  id          String @id @default(cuid())
+  workspaceId String
+  personId    String
+  person      Person @relation(fields: [personId], references: [id], onDelete: Cascade)
+  kind        String // "email" | "phone"
+  normalized  String
+
+  @@index([workspaceId, kind, normalized])
+  @@index([personId])
 }
 
 // ─────────────────────────────────────────────

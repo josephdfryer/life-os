@@ -401,6 +401,7 @@ export const ModelName = {
   WorkspaceMember: 'WorkspaceMember',
   ApprovedEmail: 'ApprovedEmail',
   Person: 'Person',
+  PersonContact: 'PersonContact',
   User: 'User',
   Device: 'Device',
   DeviceSource: 'DeviceSource',
@@ -507,7 +508,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "workspace" | "workspaceMember" | "approvedEmail" | "person" | "user" | "device" | "deviceSource" | "deviceCredential" | "deviceAuthorization" | "deviceIngestItem" | "role" | "permission" | "userRole" | "rolePermission" | "apiKey" | "apiKeyScope" | "auditLog" | "calendarConnection" | "calendarEventLink" | "gmailConnection" | "gmailMessageLink" | "eraConnection" | "eraAccountLink" | "eraTransactionLink" | "connection" | "granolaNoteLink" | "rule" | "ruleRun" | "stagedInteraction" | "event" | "interaction" | "interactionParticipant" | "plan" | "planExpectedPerson" | "place" | "importJob" | "importStagedVisit" | "placeNote" | "item" | "itemDefinition" | "inventoryLot" | "assembly" | "itemInteraction" | "importedFile" | "fileUploadIntent" | "fileProcessingRun" | "fileChunk" | "fileEntityMention" | "personExternalIdentifier" | "fileEntityResolution" | "evidenceClaim" | "evidenceClaimSubject" | "aiProviderCredential" | "aiAnalysisRun" | "noteAnalysisRun" | "theoryAnalysisRun" | "lifeModelAnalysisRun" | "noteSuggestion" | "group" | "supplierProfile" | "purchaseOrder" | "purchaseOrderLine" | "purchaseReceiptLine" | "personGroup" | "groupGroup" | "placeGroup" | "note" | "theorySnapshot" | "theorySnapshotSource" | "lifeModelSnapshot" | "lifeModelClaim" | "lifeModelClaimFeedback" | "adaptiveDayBrief" | "adaptiveIntervention" | "adaptiveInterventionOutcome" | "stateDefinition" | "state" | "assistantMessage" | "levelUpProfile" | "levelUpTestResult" | "levelUpCombine" | "levelUpRatingSnapshot" | "levelUpTrainingSet" | "levelUpExercise" | "levelUpProgram" | "levelUpProgramDay" | "levelUpProgramEntry" | "levelUpSession" | "levelUpBodyMetric" | "levelUpReadinessSnapshot" | "levelUpBadgeUnlock" | "levelUpTargetBuild" | "graphEvent" | "graphEventReceipt" | "reviewItem"
+    modelProps: "workspace" | "workspaceMember" | "approvedEmail" | "person" | "personContact" | "user" | "device" | "deviceSource" | "deviceCredential" | "deviceAuthorization" | "deviceIngestItem" | "role" | "permission" | "userRole" | "rolePermission" | "apiKey" | "apiKeyScope" | "auditLog" | "calendarConnection" | "calendarEventLink" | "gmailConnection" | "gmailMessageLink" | "eraConnection" | "eraAccountLink" | "eraTransactionLink" | "connection" | "granolaNoteLink" | "rule" | "ruleRun" | "stagedInteraction" | "event" | "interaction" | "interactionParticipant" | "plan" | "planExpectedPerson" | "place" | "importJob" | "importStagedVisit" | "placeNote" | "item" | "itemDefinition" | "inventoryLot" | "assembly" | "itemInteraction" | "importedFile" | "fileUploadIntent" | "fileProcessingRun" | "fileChunk" | "fileEntityMention" | "personExternalIdentifier" | "fileEntityResolution" | "evidenceClaim" | "evidenceClaimSubject" | "aiProviderCredential" | "aiAnalysisRun" | "noteAnalysisRun" | "theoryAnalysisRun" | "lifeModelAnalysisRun" | "noteSuggestion" | "group" | "supplierProfile" | "purchaseOrder" | "purchaseOrderLine" | "purchaseReceiptLine" | "personGroup" | "groupGroup" | "placeGroup" | "note" | "theorySnapshot" | "theorySnapshotSource" | "lifeModelSnapshot" | "lifeModelClaim" | "lifeModelClaimFeedback" | "adaptiveDayBrief" | "adaptiveIntervention" | "adaptiveInterventionOutcome" | "stateDefinition" | "state" | "assistantMessage" | "levelUpProfile" | "levelUpTestResult" | "levelUpCombine" | "levelUpRatingSnapshot" | "levelUpTrainingSet" | "levelUpExercise" | "levelUpProgram" | "levelUpProgramDay" | "levelUpProgramEntry" | "levelUpSession" | "levelUpBodyMetric" | "levelUpReadinessSnapshot" | "levelUpBadgeUnlock" | "levelUpTargetBuild" | "graphEvent" | "graphEventReceipt" | "reviewItem"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -804,6 +805,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.PersonCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.PersonCountAggregateOutputType> | number
+        }
+      }
+    }
+    PersonContact: {
+      payload: Prisma.$PersonContactPayload<ExtArgs>
+      fields: Prisma.PersonContactFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.PersonContactFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PersonContactPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.PersonContactFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PersonContactPayload>
+        }
+        findFirst: {
+          args: Prisma.PersonContactFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PersonContactPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.PersonContactFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PersonContactPayload>
+        }
+        findMany: {
+          args: Prisma.PersonContactFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PersonContactPayload>[]
+        }
+        create: {
+          args: Prisma.PersonContactCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PersonContactPayload>
+        }
+        createMany: {
+          args: Prisma.PersonContactCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.PersonContactCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PersonContactPayload>[]
+        }
+        delete: {
+          args: Prisma.PersonContactDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PersonContactPayload>
+        }
+        update: {
+          args: Prisma.PersonContactUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PersonContactPayload>
+        }
+        deleteMany: {
+          args: Prisma.PersonContactDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.PersonContactUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.PersonContactUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PersonContactPayload>[]
+        }
+        upsert: {
+          args: Prisma.PersonContactUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PersonContactPayload>
+        }
+        aggregate: {
+          args: Prisma.PersonContactAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePersonContact>
+        }
+        groupBy: {
+          args: Prisma.PersonContactGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PersonContactGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.PersonContactCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PersonContactCountAggregateOutputType> | number
         }
       }
     }
@@ -7656,6 +7731,17 @@ export const PersonScalarFieldEnum = {
 export type PersonScalarFieldEnum = (typeof PersonScalarFieldEnum)[keyof typeof PersonScalarFieldEnum]
 
 
+export const PersonContactScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  personId: 'personId',
+  kind: 'kind',
+  normalized: 'normalized'
+} as const
+
+export type PersonContactScalarFieldEnum = (typeof PersonContactScalarFieldEnum)[keyof typeof PersonContactScalarFieldEnum]
+
+
 export const UserScalarFieldEnum = {
   id: 'id',
   createdAt: 'createdAt',
@@ -9699,6 +9785,7 @@ export type GlobalOmitConfig = {
   workspaceMember?: Prisma.WorkspaceMemberOmit
   approvedEmail?: Prisma.ApprovedEmailOmit
   person?: Prisma.PersonOmit
+  personContact?: Prisma.PersonContactOmit
   user?: Prisma.UserOmit
   device?: Prisma.DeviceOmit
   deviceSource?: Prisma.DeviceSourceOmit

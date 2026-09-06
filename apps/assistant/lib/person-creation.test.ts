@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { findMatch, type MatchableContact } from "@life-os/domain";
 import {
   collectPendingPersonCreations,
   createPersonFromAssistant,
@@ -171,9 +172,21 @@ function dependencies(
   people: ReturnType<typeof storedPerson>[],
   createdDrafts: AssistantPersonDraft[],
 ) {
+  // Same scorer production uses, over the in-memory fixture list, so these
+  // tests pin the confirmation flow rather than the index plumbing (which has
+  // its own integration test in apps/api).
+  const matchable = people.map((person) => ({
+    ...person,
+    emails: JSON.parse(person.emails) as string[],
+    phones: JSON.parse(person.phones) as string[],
+  }));
   return {
-    async listPeople() {
-      return people;
+    async match(contact: MatchableContact) {
+      return findMatch(contact, matchable);
+    },
+    async findPerson(id: string) {
+      const person = people.find((candidate) => candidate.id === id);
+      return person ? { id: person.id, first: person.first, last: person.last } : null;
     },
     async create(draft: AssistantPersonDraft) {
       createdDrafts.push(draft);

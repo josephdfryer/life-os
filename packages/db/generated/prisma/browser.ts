@@ -38,6 +38,11 @@ export type ApprovedEmail = Prisma.ApprovedEmailModel
  */
 export type Person = Prisma.PersonModel
 /**
+ * Model PersonContact
+ * 
+ */
+export type PersonContact = Prisma.PersonContactModel
+/**
  * Model User
  * 
  */
