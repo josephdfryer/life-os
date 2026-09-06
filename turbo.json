@@ -3,10 +3,14 @@
   "ui": "tui",
   "tasks": {
     "generate": {
-      "outputs": ["generated/**"]
+      "outputs": [
+        "generated/**"
+      ]
     },
     "build": {
-      "dependsOn": ["^build"],
+      "dependsOn": [
+        "^build"
+      ],
       "env": [
         "ALLOWED_EMAILS",
         "ADMIN_EMAILS",
@@ -36,9 +40,6 @@
         "LIFE_OS_COOKIE_DOMAIN",
         "OWNER_EMAILS",
         "THEORY_WORKSPACE_ID",
-        "TURSO_AUTH_TOKEN",
-        "TURSO_DATABASE_URL",
-        "TURSO_SYNC_URL",
         "TWILIO_ACCOUNT_SID",
         "TWILIO_AUTH_TOKEN",
         "TWILIO_WHATSAPP_NUMBER",
@@ -51,30 +52,41 @@
         "OURA_CLIENT_SECRET",
         "OURA_REDIRECT_URI",
         "OURA_WEBHOOK_CALLBACK_URL",
-        "OURA_WEBHOOK_VERIFICATION_TOKEN"
-        ,"FILE_STORAGE_PROVIDER"
-        ,"AWS_REGION"
-        ,"AWS_ROLE_ARN"
-        ,"S3_BUCKET_NAME"
-        ,"LIFE_OS_FILE_DIR"
-        ,"FILE_INTELLIGENCE_INGESTION"
-        ,"FILE_INTELLIGENCE_REVIEW_PROPOSALS"
-        ,"FILE_INTELLIGENCE_SAFE_AUTO"
-        ,"FILE_INTELLIGENCE_NIGHTLY_THEORY"
-        ,"FILE_INTELLIGENCE_NIGHTLY_MAX_PEOPLE"
+        "OURA_WEBHOOK_VERIFICATION_TOKEN",
+        "FILE_STORAGE_PROVIDER",
+        "AWS_REGION",
+        "AWS_ROLE_ARN",
+        "S3_BUCKET_NAME",
+        "LIFE_OS_FILE_DIR",
+        "FILE_INTELLIGENCE_INGESTION",
+        "FILE_INTELLIGENCE_REVIEW_PROPOSALS",
+        "FILE_INTELLIGENCE_SAFE_AUTO",
+        "FILE_INTELLIGENCE_NIGHTLY_THEORY",
+        "FILE_INTELLIGENCE_NIGHTLY_MAX_PEOPLE"
       ],
-      "inputs": ["$TURBO_DEFAULT$", ".env*"],
-      "outputs": [".next/**", "!.next/cache/**", "dist/**"]
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        ".env*"
+      ],
+      "outputs": [
+        ".next/**",
+        "!.next/cache/**",
+        "dist/**"
+      ]
     },
     "dev": {
       "cache": false,
       "persistent": true
     },
     "lint": {
-      "dependsOn": ["^lint"]
+      "dependsOn": [
+        "^lint"
+      ]
     },
     "type-check": {
-      "dependsOn": ["^type-check"]
+      "dependsOn": [
+        "^type-check"
+      ]
     }
   }
 }

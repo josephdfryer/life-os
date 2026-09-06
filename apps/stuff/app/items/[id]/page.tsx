@@ -87,7 +87,7 @@ export default async function ItemDetailPage({
   if (!item) notFound()
   const effectiveLocation = await getEffectiveLocation(db, workspaceId, item.id)
 
-  // Sort in JS — safe for libSQL
+  // Sort in JS — keeps the query simple
   const interactions = item.itemInteractions
     .map(ii => ii.interaction)
     .filter(Boolean)

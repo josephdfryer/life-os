@@ -24,12 +24,12 @@ Apply the additive migration before deploying the Events code:
 
 ```bash
 cd packages/db
-TURSO_DATABASE_URL=... TURSO_AUTH_TOKEN=... npx tsx turso-migrate-granola-event-sync.ts
+DATABASE_URL=<production> npx prisma migrate deploy
 ```
 
 Required Events production variables:
 
-- existing Turso and auth variables;
+- existing `DATABASE_URL` and auth variables;
 - `ENCRYPTION_KEY` for the connection credential;
 - `CRON_SECRET` for Vercel Cron authentication.
 

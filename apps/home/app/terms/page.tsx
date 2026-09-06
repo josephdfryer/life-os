@@ -50,7 +50,7 @@ export default function TermsOfServicePage() {
         <h2>5. Third-party services</h2>
         <p>
           The Service integrates with third-party providers &mdash; including Google (Sign-In,
-          Gmail, Calendar), Turso, Vercel, and AI providers such as Anthropic &mdash; to deliver
+          Gmail, Calendar), Neon, Vercel, and AI providers such as Anthropic &mdash; to deliver
           its features. Your use of those integrations is also subject to each provider&rsquo;s
           own terms.
         </p>

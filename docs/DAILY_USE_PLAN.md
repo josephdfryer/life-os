@@ -487,7 +487,7 @@ Each implementation phase should include:
 - checks that production local-review bypass remains inert;
 - updates to `docs/PERSONS_ARCHITECTURE.md` and other affected living architecture docs.
 
-No implementation phase should write test data to the production Turso database.
+No implementation phase should write test data to the production database.
 
 ## Explicit non-goals
 

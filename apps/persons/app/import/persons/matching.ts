@@ -9,8 +9,8 @@ import type { ParsedContact } from "@/lib/vcard"
 //
 // Imported from the contact-matching submodule directly, not the `@life-os/domain`
 // barrel — this file is pulled into a "use client" page (page.tsx), and the
-// barrel also re-exports plans.ts, which drags packages/db (libsql,
-// better-sqlite3 native bindings) into the client bundle and breaks the build.
+// barrel also re-exports plans.ts, which drags packages/db (the Prisma
+// client and pg driver) into the client bundle and breaks the build.
 import {
   DUPLICATE_THRESHOLD,
   POSSIBLE_THRESHOLD,

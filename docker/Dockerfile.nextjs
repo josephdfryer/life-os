@@ -25,7 +25,7 @@ RUN turbo prune ${APP_NAME} --docker
 #   Layer 2: copy source + build (rebuilds only when source changes)
 FROM base AS installer
 WORKDIR /repo
-# native module build tools (better-sqlite3, etc.)
+# native module build tools (pg native bindings, sharp, etc.)
 RUN apk add --no-cache python3 make g++
 
 # layer 1 — deps

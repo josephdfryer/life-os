@@ -1,13 +1,12 @@
-// Provisions an ApiKey row directly against production Turso — for cases
+// Provisions an ApiKey row directly against the production database — for cases
 // like apps/api's first Home consumer, where no browser session exists yet
 // to go through the Admin UI's own createApiKey flow. Matches that flow's
 // exact format (apps/persons/server/domain/access.ts's createApiKey): a
 // `pk_`-prefixed secret, sha256-hashed, keyPrefix = first 12 chars.
 //
-// Usage (same TURSO env pattern as turso-migrate-*.ts — run by the user,
-// never by the agent, since Turso creds are Sensitive and not readable via
-// `vercel env pull`):
-//   TURSO_DATABASE_URL=... TURSO_AUTH_TOKEN=... npx tsx scripts/create-api-key.ts \
+// Usage (run by the user with the production DATABASE_URL; the credential is
+// Sensitive and not readable via `vercel env pull`):
+//   DATABASE_URL=... npx tsx scripts/create-api-key.ts \
 //     --name "Home control plane" --scopes interactions.read,stream.read,review.read,review.write
 //
 // Prints the raw secret exactly once. It is never stored anywhere — only

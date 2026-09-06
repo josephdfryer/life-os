@@ -8,7 +8,7 @@ The human front door is now **[`README.md`](../README.md)** and **[`CONTRIBUTING
 2. Read `MANIFESTO.md`, `LIFE_OS_VISION.md`, and the nearest `AGENTS.md`.
 3. Run `npm run agent:start -- --agent <name>` and read the catch-up brief.
 4. Use `LIFE_OS_LOCAL_REVIEW=1` for local UI review; never create localhost OAuth credentials.
-5. Confirm which database an `.env` targets before running an app. Local auth bypass may still point at real Turso data.
+5. Confirm which database an `.env` targets before running an app. Local auth bypass may still point at the real production database.
 
 ## Safe verification loop
 

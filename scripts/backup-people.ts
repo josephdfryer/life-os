@@ -19,7 +19,7 @@ async function main() {
   db = (await import("@life-os/db")).db
 
   // Paginated fetch — a single unbounded query against 7000+ people, each
-  // pulling their full interaction history, blows past Turso/libSQL's query
+  // pulling their full interaction history, blows past the driver's query
   // parameter limit. Batching keeps each query's parameter count bounded.
   const BATCH_SIZE = 500
   async function fetchBatch(skip: number, take: number) {

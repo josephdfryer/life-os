@@ -45,11 +45,11 @@ Rules:
 | `GRANOLA_EVENTS_INTEGRATION_PLAN.md` | Built; runbook exists; cron on Events. Production key rotation was the last open item. | **Verify then archive** | Ops & Platform (same verify issue) |
 | `PHOTOS_PLACE_INTEGRATION_PLAN.md` | No `PhotoAsset` model. Nothing built. | **Parked** | — |
 | `ADAPTIVE_DAY_PLAN.md` | Nothing built. | **Parked** | — |
-| `TECHNICAL_DEBT_BACKLOG.md` | All 16 items done. | **Closed** | — |
-| `DATABASE_MIGRATION_PLAN.md`, `DATABASE_CUTOVER_RUNBOOK.md` | P0–P7 done, Neon is prod. | **Archive (keep runbook)** | — |
-| `STILL_MIGRATION_PLAN.md`, `STILL_UI_MIGRATION_PLAN.md` | Complete 2026-07-22. | **Archive** | — |
-| `CODEX_TASK_*.md`, `CLAUDE_HANDOFF_INBOX_2026-08-15.md`, `CURSOR_HANDOFF_2026-08-15.md` | One-off task briefs, all executed. | **Archive** | — |
-| `PRIME_TIME_READINESS_AUDIT_2026-07-12.md` | Historical audit. | **Archive** | — |
+| `archive/TECHNICAL_DEBT_BACKLOG.md` | All 16 items done. | **Closed, archived 2026-09-06** | — |
+| `archive/DATABASE_MIGRATION_PLAN.md`, `archive/DATABASE_CUTOVER_RUNBOOK.md` | P0–P10 done, Neon is prod, Turso residue removed 2026-09-06 (JF-202). | **Archived** | — |
+| `archive/STILL_MIGRATION_PLAN.md`, `archive/STILL_UI_MIGRATION_PLAN.md` | Complete 2026-07-22. | **Archived** | — |
+| `archive/CODEX_TASK_*.md`, `archive/CLAUDE_HANDOFF_INBOX_2026-08-15.md`, `archive/CURSOR_HANDOFF_2026-08-15.md` | One-off task briefs, all executed. | **Archived** | — |
+| `archive/PRIME_TIME_READINESS_AUDIT_2026-07-12.md`, `archive/unified-auth-plan.md` | Historical audit; superseded auth plan. | **Archived** | — |
 
 Architecture references (not plans, stay authoritative): `MANIFESTO.md`,
 `PERSONS_ARCHITECTURE.md`, `PLACES_ARCHITECTURE.md`, `LIFE_OS_APP_ARCHITECTURE.md`,

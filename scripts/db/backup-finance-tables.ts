@@ -21,8 +21,6 @@ for (const candidate of [path.join(REPO_ROOT, ".env"), path.join(REPO_ROOT, "app
     if (m && process.env[m[1]] === undefined) process.env[m[1]] = m[2]
   }
 }
-// Always read through to the primary, never a stale local replica.
-delete process.env.TURSO_SYNC_URL
 
 const TABLES = [
   "Interaction",
@@ -70,8 +68,8 @@ async function main() {
 
 // Hostname only — the auth token must never reach a file on disk.
 function redactedTarget() {
-  const url = process.env.TURSO_DATABASE_URL
-  if (!url) return process.env.DATABASE_URL ?? "file:./life-os.db"
+  const url = process.env.DATABASE_URL
+  if (!url) return "unknown"
   try {
     return new URL(url).hostname
   } catch {

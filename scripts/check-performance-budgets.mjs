@@ -54,7 +54,7 @@ for (const area of ["apps", "packages", "scripts"]) {
 // Raised from 109 to 195: the count was already 187 at the last commit before
 // this budget was touched (pre-existing backlog, not new growth), and stands at
 // 189 now. This still catches future growth; it does not excuse the backlog,
-// which is real technical debt — see docs/TECHNICAL_DEBT_BACKLOG.md.
+// which is real technical debt — see docs/archive/TECHNICAL_DEBT_BACKLOG.md.
 const unboundedQueryBudget = 195
 if (unboundedFindMany > unboundedQueryBudget) failures.push(`unbounded findMany count is ${unboundedFindMany} (budget ${unboundedQueryBudget})`)
 

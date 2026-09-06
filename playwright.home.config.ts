@@ -34,8 +34,6 @@ export default defineConfig({
       DATABASE_URL: databaseUrl,
       LIFE_OS_LOCAL_REVIEW: '1',
       NEXTAUTH_SECRET: 'life-os-home-e2e-only-secret',
-      TURSO_AUTH_TOKEN: '',
-      TURSO_DATABASE_URL: '',
     },
   },
 })

@@ -38,7 +38,7 @@ flowchart LR
 
 ## Local media storage
 
-The file bytes do not live in SQLite/Turso or the Git repository. The default
+The file bytes do not live in the database or the Git repository. The default
 directory is:
 
 ```text
@@ -101,11 +101,11 @@ Migration `20260724010000_add_wardrobe_support` adds:
 These are support records around existing primitives. They do not change the
 eight-primitive ontology.
 
-For the hosted Turso database, run the idempotent additive migration only after
-confirming the target:
+For the hosted database, apply the committed migration only after confirming
+the target:
 
 ```bash
-npm run migrate:turso:wardrobe -w @life-os/db
+DATABASE_URL=<production> npm run migrate:deploy -w @life-os/db
 ```
 
 ## Deliberately deferred

@@ -189,7 +189,7 @@ async function main() {
   let skip = 0
 
   // Batched: a single unbounded query against thousands of people exceeds
-  // Turso/libSQL's query parameter limit.
+  // the driver's query parameter limit.
   for (;;) {
     const batch = await db.person.findMany({
       where: workspaceId ? { workspaceId } : undefined,

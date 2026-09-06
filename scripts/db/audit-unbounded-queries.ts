@@ -28,7 +28,6 @@ for (const candidate of [path.join(REPO_ROOT, ".env"), path.join(REPO_ROOT, "app
     if (m && process.env[m[1]] === undefined) process.env[m[1]] = m[2]
   }
 }
-delete process.env.TURSO_SYNC_URL
 
 const SKIP_DIRS = new Set(["node_modules", ".next", ".turbo", "dist", "coverage", "generated", "archive"])
 const SERVING_ONLY = process.argv.includes("--serving")

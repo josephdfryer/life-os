@@ -3,17 +3,17 @@
 // One invariant about how schema reaches production: the committed migration
 // history replays into an empty Postgres database without error.
 //
-// History (SQLite / Turso era): production had no _prisma_migrations table and
-// schema changes shipped through hand-written packages/db/turso-migrate-*.ts
+// History (SQLite era): production had no _prisma_migrations table and
+// schema changes shipped through hand-written per-change migration
 // scripts. Nothing kept those in step with the committed migration directory,
-// and on 2026-08-03 that cost a day — a turso-migrate script created tables
+// and on 2026-08-03 that cost a day — one of those scripts created tables
 // under a migration name that was never committed, a later migration ALTERed
 // them, and a clean replay failed with "no such table". Six unrelated tests
 // failed with a bare SQL error because the persons test harness replays every
 // migration to build its fixture.
 //
 // Post-Postgres: `prisma migrate deploy` tracks applied migrations properly and
-// the turso-migrate scripts are retired, so the script-pairing check is gone.
+// those scripts are retired, so the script-pairing check is gone.
 // What stays worth guarding is the clean replay — now against a throwaway
 // Postgres database instead of an in-memory SQLite file. Drift (schema.prisma
 // edited without a matching migration) is caught by the `check` CI job, which

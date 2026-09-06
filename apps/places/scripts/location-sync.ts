@@ -72,10 +72,10 @@ async function main() {
 
   const buffer = Buffer.from(JSON.stringify(visits))
   const filename = `location-sync-${new Date().toISOString().slice(0, 10)}.json`
-  // Dynamic import, evaluated after loadEnv() above sets TURSO_DATABASE_URL —
+  // Dynamic import, evaluated after loadEnv() above sets DATABASE_URL —
   // a static top-level import here would create the @life-os/db singleton
   // (transitively, via @/server/domain/import → @/lib/db) before env vars
-  // are loaded, silently falling back to a local sqlite file instead of Turso.
+  // are loaded, before the production connection string is available.
   const { createImportJob } = await import("@/server/domain/import")
   const job = await createImportJob({
     workspaceId: WORKSPACE_ID,

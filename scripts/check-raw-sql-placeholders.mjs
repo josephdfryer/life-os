@@ -6,7 +6,7 @@
 // … — it does not understand `?`, and parses `= ?` as an operator token, so the
 // next keyword blows up with `42601 syntax error`. This is exactly how
 // `scripts/era/rederive-actor-attribution.ts` failed every `era-auto-sync` run
-// for days after the Turso → Postgres migration: the scripts were never ported.
+// for days after the SQLite → Postgres migration: the scripts were never ported.
 // A grep is cheap and a typecheck can never catch it, so gate it here.
 
 import { readdirSync, readFileSync } from "node:fs"

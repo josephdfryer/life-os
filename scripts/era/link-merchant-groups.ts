@@ -28,7 +28,6 @@ for (const candidate of [path.join(REPO_ROOT, ".env"), path.join(REPO_ROOT, "app
     if (m && process.env[m[1]] === undefined) process.env[m[1]] = m[2]
   }
 }
-delete process.env.TURSO_SYNC_URL
 
 const WORKSPACE_ID = "default-workspace"
 const DRY_RUN = process.argv.includes("--dry-run")
@@ -156,7 +155,7 @@ async function main() {
 
   // ── Edges ─────────────────────────────────────────────────────────────
   // Bulk insert rather than attachContext per row: 4,000+ sequential round
-  // trips to Turso takes ~30 minutes. Existing edges are read first and
+  // trips to the database takes ~30 minutes. Existing edges are read first and
   // skipped, which preserves the manual-band guarantee exactly as
   // attachContext would — a hand-corrected edge is never touched.
   const alreadyLinked = new Set<string>()

@@ -29,8 +29,6 @@ for (const candidate of [path.join(REPO_ROOT, ".env"), path.join(REPO_ROOT, "app
     if (m && process.env[m[1]] === undefined) process.env[m[1]] = m[2]
   }
 }
-// Write through to the primary, never a local replica.
-delete process.env.TURSO_SYNC_URL
 
 const WORKSPACE_ID = "default-workspace"
 const TZ = "America/Los_Angeles"

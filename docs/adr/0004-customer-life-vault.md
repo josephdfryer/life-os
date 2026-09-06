@@ -32,7 +32,7 @@ Three facts constrain the choice.
 `docs/MANIFESTO.md:117` — "Local-first and Mac-native. This runs on my machine… The most intimate
 model of my life should not live on someone else's server." `:119` — "Zero recurring service cost.
 I will not rent the right to access my own life." `:122` names the reason: sovereignty. The system
-as built runs on Turso and Vercel. The vault direction is not a new idea imported for commercial
+as built runs on a hosted Postgres and Vercel. The vault direction is not a new idea imported for commercial
 reasons; it is the founding constraint, unmet.
 
 **The domain layer is deeply database-coupled, and that is the real cost.**
@@ -55,7 +55,7 @@ Adopt the customer-owned local Life Vault as the **target** commercial storage b
 behind proof gates, with the following boundaries fixed now.
 
 **1. Two storage lines, one semantic contract.** The personal LifeOS keeps the cloud-backed
-Turso graph as canonical during the entire build-out. Customer vaults are local-first. What must
+Postgres graph as canonical during the entire build-out. Customer vaults are local-first. What must
 not fork is meaning: the eight primitives, the `Interaction` edge, provenance and authority bands,
 `GraphEvent` semantics, and command names/effects are one specification with one conformance suite,
 regardless of which store executes them.
@@ -124,7 +124,7 @@ LifeOS training on customer data, ever, under any tier.
   language would have to say so. §7's own risk note (a tenancy bug has blast radius across both
   audiences) is real and grows with every customer. Retained as the interim state for Joseph's
   personal system, which is not a tenancy problem because there is one tenant.
-- **Database-per-customer (Turso).** Removes cross-tenant blast radius and keeps server-side
+- **Database-per-customer (hosted Postgres).** Removes cross-tenant blast radius and keeps server-side
   querying and the web surface. Rejected as the target: LifeOS still holds and can read every
   customer's data, so it buys isolation but not sovereignty. Worth reconsidering only if the vault
   fails a gate below — it is the natural fallback, and this ADR deliberately does not burn it.
@@ -173,7 +173,7 @@ Gates, in order. Each must pass before the next begins.
 2. **Parity gate.** `LifeVaultStore` passes the identical fixture set. First vertical slice:
    `captureNote` → `Note` + `GraphEvent`, identical canonical output from both stores.
 3. **Shadow gate.** Joseph's real graph replays into a local vault; canonical rows and derived
-   reads are compared against the Turso system, which stays canonical throughout. No existing
+   reads are compared against the cloud system, which stays canonical throughout. No existing
    system is disabled.
 4. **Recovery gate.** New-device restore, lost-device recovery, Keychain reset, iCloud disabled and
    iCloud full, offline migration across several schema versions, conflict resolution, and account
@@ -187,7 +187,7 @@ Gates, in order. Each must pass before the next begins.
 
 **Rollback.** Gates 1–2 produce only additive code and cost nothing to abandon — the contract suite
 is worth keeping either way as a regression net over `packages/domain`. Gate 3 failing means the
-vault cannot represent the real graph; fall back to database-per-customer Turso, which this ADR
+vault cannot represent the real graph; fall back to database-per-customer hosted Postgres, which this ADR
 preserves as a live option. Gate 4 failing is the serious one: if recovery cannot be made safe,
 local-only canonical storage must not ship, and the fallback is again per-customer cloud with
 honest language about what LifeOS can see.

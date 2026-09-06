@@ -12,7 +12,7 @@
 //
 // Idempotent: dedupes on Interaction(workspaceId, source, sourceId). Re-running
 // over the same dump imports nothing. Bulk-inserts in batches, because every
-// statement against Turso is an HTTP round trip.
+// statement against a remote database is a round trip.
 
 import fs from "node:fs"
 import path from "node:path"
@@ -26,7 +26,6 @@ for (const candidate of [path.join(REPO_ROOT, ".env"), path.join(REPO_ROOT, "app
     if (m && process.env[m[1]] === undefined) process.env[m[1]] = m[2]
   }
 }
-delete process.env.TURSO_SYNC_URL
 
 const WORKSPACE_ID = "default-workspace"
 const DRY_RUN = process.argv.includes("--dry-run")

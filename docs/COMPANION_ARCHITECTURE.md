@@ -62,7 +62,7 @@ Sleep Score, Activity Score, and Stress do not enter HealthKit; those come
 from the Oura API through Home Connections, not this collector.
 
 The legacy `POST /v1/health/samples` route and native `health.daily` ingestion
-share the same State/Note write helper and the same 30-second Turso transaction
+share the same State/Note write helper and the same 30-second database transaction
 budget. A full daily digest writes many States sequentially; the default 5-second
 interactive transaction times out mid-write (`P2028`). Native metric keys are
 intentionally extensible because the set of HealthKit types varies by OS and

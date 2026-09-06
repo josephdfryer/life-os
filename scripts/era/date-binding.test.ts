@@ -3,7 +3,7 @@ import { test } from "node:test"
 
 // Regression guard for a bug that silently lost money.
 //
-// Turso stores DateTime as "2026-08-01T07:00:00.000+00:00". Date.toISOString()
+// SQLite stored DateTime as "2026-08-01T07:00:00.000+00:00". Date.toISOString()
 // produces "2026-08-01T07:00:00.000Z". The two are the same instant but NOT the
 // same string, and SQLite compares TEXT lexicographically. They agree on every
 // character up to the offset, where '+' (0x2B) sorts before 'Z' (0x5A).

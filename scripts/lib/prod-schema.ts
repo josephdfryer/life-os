@@ -1,7 +1,7 @@
 import { execFileSync } from "node:child_process"
 import { join } from "node:path"
 
-// Before the migration to PostgreSQL, production Turso had no `_prisma_migrations`
+// Before the migration to PostgreSQL, production SQLite had no `_prisma_migrations`
 // table, so this gate reflected the live column set back against the Prisma
 // models to catch "prod is missing schema the client will select". Postgres +
 // `prisma migrate deploy` tracks applied migrations properly, so the check is

@@ -4,7 +4,7 @@
 
 1. `npm ci`, then read `docs/MANIFESTO.md`, `docs/LIFE_OS_VISION.md`, and the nearest `AGENTS.md` (root, then the app/package you're touching).
 2. Confirm which database your `.env` targets — local dev auth is bypassed, but the data behind it is often the real production database. See "Local development" below.
-3. Skim `docs/TECHNICAL_DEBT_BACKLOG.md` and the relevant `docs/*_ARCHITECTURE.md` for known constraints before making structural changes.
+3. Skim `docs/ROADMAP.md` and the relevant `docs/*_ARCHITECTURE.md` for known constraints before making structural changes.
 
 ## Branches and commits
 

@@ -46,8 +46,8 @@ vercel env pull apps/persons/.env.production.local --environment=production --ye
 ```
 
 Calendar OAuth connection state is read from the local LifeOS SQLite database;
-the worker pins this to `apps/persons/persons.db` and deliberately does not use
-the production Turso dataset.
+the worker requires a dedicated `KRISP_DATABASE_URL` and deliberately does not
+use the production dataset.
 
 Set `TEAM_OS_ROOT` if the Team OS clone moves from
 `/Users/josephfryer/team-os`.

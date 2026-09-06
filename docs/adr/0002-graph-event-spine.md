@@ -24,7 +24,7 @@ does not fire any rule trigger. Two implementations of one command already disag
 
 Add an immutable `GraphEvent` ledger, `GraphEventReceipt` for idempotent at-least-once consumption,
 and `ReviewItem` as universal review workflow state. All three are additive tables in the existing
-Turso database — no service extraction, no new datastore.
+database — no service extraction, no new datastore.
 
 Every canonical domain command (living in `packages/domain`) writes its record changes and its
 `GraphEvent` in one `db.$transaction`. If a command cannot do both atomically, it is not a command
@@ -82,8 +82,8 @@ individually proven, then `ReviewItem` takes over.
   effect.
 - Loop-prevention test: a rule whose action produces an event matching its own trigger halts at
   `causationDepth` 5.
-- `scripts/check-migration-integrity.mjs` (already in CI) verifies the migration pairs with
-  `turso-migrate-graph-event-spine.ts` and that the full history replays into an empty database.
+- `scripts/check-migration-integrity.mjs` (already in CI) verified (at the time) the migration paired with its
+  hand-written script and that the full history replays into an empty database.
 - Rollback: every consumer sits behind an independent flag. The tables are additive, so reverting
   application code leaves them present but unread — no data-shape rollback is required. Legacy
   review queues remain the source of truth until their `ReviewItem` adapter is individually
