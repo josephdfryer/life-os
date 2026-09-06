@@ -1,7 +1,7 @@
 "use client"
 
-import { useEffect, useState, useCallback, useRef, useMemo, memo } from "react"
-import { useVirtualizer } from "@tanstack/react-virtual"
+import { useEffect, useLayoutEffect, useState, useCallback, useRef, useMemo, memo } from "react"
+import { useWindowVirtualizer } from "@tanstack/react-virtual"
 import PersonCard from "@/components/persons/PersonCard"
 import PersonCardSkeleton from "@/components/persons/PersonCardSkeleton"
 import AddPersonModal from "@/components/persons/AddPersonModal"
@@ -34,6 +34,7 @@ export default function PersonsClient({ initialData }: { initialData: PageData |
   const searchTimer                   = useRef<ReturnType<typeof setTimeout> | null>(null)
   const sentinelRef                   = useRef<HTMLDivElement | null>(null)
   const parentRef                     = useRef<HTMLDivElement | null>(null)
+  const parentOffsetRef               = useRef(0)
   const loadingMoreRef                = useRef(false)
   const skipFirstFetch                = useRef(!!initialData)
   const requestVersionRef             = useRef(0)
@@ -50,12 +51,17 @@ export default function PersonsClient({ initialData }: { initialData: PageData |
   const [deleteAllError, setDeleteAllError] = useState("")
   const [deleteAllBackedUp, setDeleteAllBackedUp] = useState(false)
 
-  // Virtual scrolling for performance with large lists
-  const rowVirtualizer = useVirtualizer({
+  // Virtual scrolling against the page/window so the list flows the full
+  // height of the screen instead of a nested, cut-off scroll area.
+  useLayoutEffect(() => {
+    parentOffsetRef.current = parentRef.current?.offsetTop ?? 0
+  })
+
+  const rowVirtualizer = useWindowVirtualizer({
     count: data.persons.length,
-    getScrollElement: () => parentRef.current,
     estimateSize: () => 90, // Estimated row height in pixels
-    overscan: 5, // Render 5 extra items above and below viewport
+    overscan: 8,
+    scrollMargin: parentOffsetRef.current,
   })
 
   const fetchPage = useCallback(async (p: number, q: string, s: SortKey, v: PersonListView, activeFilters: Filter[], reset: boolean) => {
@@ -186,14 +192,13 @@ export default function PersonsClient({ initialData }: { initialData: PageData |
 
   useEffect(() => {
     const sentinel = sentinelRef.current
-    const parent = parentRef.current
-    if (!sentinel || !parent || loading || !data.hasMore) return
+    if (!sentinel || loading || !data.hasMore) return
 
     const observer = new IntersectionObserver(
       entries => {
         if (entries[0]?.isIntersecting) loadMore()
       },
-      { root: parent, rootMargin: "640px 0px 320px" },
+      { rootMargin: "1200px 0px" },
     )
 
     observer.observe(sentinel)
@@ -382,59 +387,45 @@ export default function PersonsClient({ initialData }: { initialData: PageData |
         </div>
       ) : (
         <>
-          <div 
+          <div
             ref={parentRef}
-            style={{ 
-              height: "calc(100vh - 280px)", 
-              overflow: "auto",
-              minHeight: "400px"
+            style={{
+              height: `${rowVirtualizer.getTotalSize()}px`,
+              width: "100%",
+              position: "relative",
             }}
           >
-            <div
-              style={{
-                height: `${rowVirtualizer.getTotalSize()}px`,
-                width: "100%",
-                position: "relative",
-              }}
-            >
-              {rowVirtualizer.getVirtualItems().map((virtualRow) => {
-                const p = persons[virtualRow.index]
-                return (
-                  <div
-                    key={p.id}
-                    style={{
-                      position: "absolute",
-                      top: 0,
-                      left: 0,
-                      width: "100%",
-                      height: `${virtualRow.size}px`,
-                      transform: `translateY(${virtualRow.start}px)`,
-                    }}
-                  >
-                    {selectMode ? (
-                      <SelectablePersonRow
-                        person={p}
-                        selected={selected.has(p.id)}
-                        onToggle={() => toggleSelectPerson(p.id)}
-                      />
-                    ) : (
-                      <PersonCard person={p} />
-                    )}
-                  </div>
-                )
-              })}
-            </div>
+            {rowVirtualizer.getVirtualItems().map((virtualRow) => {
+              const p = persons[virtualRow.index]
+              return (
+                <div
+                  key={p.id}
+                  style={{
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    width: "100%",
+                    height: `${virtualRow.size}px`,
+                    transform: `translateY(${virtualRow.start - rowVirtualizer.options.scrollMargin}px)`,
+                  }}
+                >
+                  {selectMode ? (
+                    <SelectablePersonRow
+                      person={p}
+                      selected={selected.has(p.id)}
+                      onToggle={() => toggleSelectPerson(p.id)}
+                    />
+                  ) : (
+                    <PersonCard person={p} />
+                  )}
+                </div>
+              )
+            })}
           </div>
 
           {hasMore && (
-            <div ref={sentinelRef} style={{ textAlign: "center", marginTop: "20px", minHeight: "44px" }}>
-              <button
-                onClick={loadMore}
-                disabled={loadingMore}
-                style={{ padding: "10px 28px", background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "var(--radius-pill)", color: "var(--ink-3)", cursor: loadingMore ? "wait" : "pointer", fontFamily: "inherit", fontSize: "13px" }}
-              >
-                {loadingMore ? "Loading more…" : `Load more now · ${total - persons.length} remaining`}
-              </button>
+            <div ref={sentinelRef} style={{ textAlign: "center", padding: "20px 0", minHeight: "44px", fontSize: "12px", color: "var(--ink-4)" }}>
+              {loadingMore ? "Loading more…" : ""}
             </div>
           )}
 
