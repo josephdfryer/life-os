@@ -1016,3 +1016,30 @@ export const graphEventContract = z.object({
 export type GraphEventDTO = z.infer<typeof graphEventContract>
 
 export { z }
+
+// GET /v1/people/:id?include=stats,interactions,plans,notes — the person plus
+// whatever a detail screen needs, in one request. Without `include` the route
+// returns the flat resource exactly as before.
+export const personDetailIncludeContract = z.enum(["stats", "interactions", "plans", "notes"])
+export type PersonDetailInclude = z.infer<typeof personDetailIncludeContract>
+
+export const personStatsContract = z.object({
+  interactionCount: z.number().int().nonnegative(),
+  lastInteractionAt: z.string().datetime({ offset: true }).nullable(),
+  daysSinceLast: z.number().int().nonnegative().nullable(),
+  activePlanCount: z.number().int().nonnegative(),
+  noteCount: z.number().int().nonnegative(),
+  // Same formula as GET /v1/people/attention; >= 1 means overdue.
+  attentionScore: z.number().nonnegative(),
+  cadenceDays: z.number().int().positive().nullable(),
+}).strict()
+export type PersonStats = z.infer<typeof personStatsContract>
+
+export const personDetailContract = personResourceContract.extend({
+  stats: personStatsContract.optional(),
+  interactions: z.array(interactionResourceContract).optional(),
+  plans: z.array(planResourceContract).optional(),
+  // Named to avoid the flat resource's `notes` (the profile notes text).
+  recentNotes: z.array(noteResourceContract).optional(),
+}).strict()
+export type PersonDetail = z.infer<typeof personDetailContract>
