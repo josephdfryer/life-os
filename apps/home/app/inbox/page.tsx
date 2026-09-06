@@ -2,7 +2,8 @@ import { Suspense } from 'react'
 import { redirect } from 'next/navigation'
 import { db } from '@life-os/db'
 import { workspaceForHomeRequest } from '@/lib/request-access'
-import FederatedInbox, { type InboxItem } from '../../components/FederatedInbox'
+import FederatedInbox from '../../components/FederatedInbox'
+import { type InboxItem } from '@/lib/inbox-model'
 import { unitConfidence } from '@/lib/confidence'
 
 export const metadata = { title: 'Inbox · LifeOS' }
@@ -20,7 +21,14 @@ async function InboxContent() {
       where: { workspaceId, status: { in: ['pending', 'blocked'] }, type: { not: 'financial' } },
       orderBy: [{ priority: 'asc' }, { timestamp: 'desc' }],
       take: 500,
-      select: { id: true, source: true, itemType: true, summary: true, body: true, contactName: true, timestamp: true, confidence: true, priority: true },
+      // candidatePerson travels with the row so accepting is one keystroke.
+      // Without it the inbox cannot tell an acceptable communication from one
+      // that first needs a Person picked, and offered neither.
+      select: {
+        id: true, source: true, itemType: true, summary: true, body: true, contactName: true,
+        timestamp: true, confidence: true, priority: true, candidatePersonId: true,
+        candidatePerson: { select: { first: true, last: true, nickname: true } },
+      },
     })),
     safeQueue('notes', () => db.noteSuggestion.findMany({
       where: { workspaceId, status: 'pending' },
@@ -67,6 +75,8 @@ async function InboxContent() {
       timestamp: item.timestamp.toISOString(),
       confidence: unitConfidence(item.confidence, 'unit'),
       priority: item.priority,
+      candidatePersonId: item.candidatePersonId,
+      candidatePersonName: personName(item.candidatePerson),
     })),
     ...suggestions.map(item => ({
       id: item.id,
@@ -141,7 +151,7 @@ async function InboxContent() {
           <div>
             <p className="still-eyebrow">The control plane</p>
             <h1>Inbox</h1>
-            <p className="stream-intro">One quiet place to see what needs your judgment.</p>
+            <p className="stream-intro">One quiet place to see what needs your judgment. Press <kbd>?</kbd> for the keyboard.</p>
           </div>
           <span className="inbox-count">{items.length} to review</span>
         </div>
@@ -169,6 +179,12 @@ function sourceLabel(source: string) {
   if (source === 'gmail') return 'Email'
   if (source === 'whatsapp') return 'WhatsApp'
   return source.charAt(0).toUpperCase() + source.slice(1)
+}
+
+function personName(person: { first: string | null; last: string | null; nickname: string | null } | null) {
+  if (!person) return null
+  const name = person.nickname || [person.first, person.last].filter(Boolean).join(' ')
+  return name.trim() || null
 }
 
 function suggestionDetail(payload: string) {
