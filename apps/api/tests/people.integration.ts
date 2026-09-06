@@ -3,7 +3,7 @@ import { createHash } from "node:crypto"
 import test from "node:test"
 import { NextRequest } from "next/server"
 import { createDeviceAuthorization, exchangeDeviceAuthorization, pkceChallenge } from "@life-os/access/device"
-import { peoplePageContract, personResourceContract } from "@life-os/contracts"
+import { peoplePageContract, personDetailContract, personResourceContract } from "@life-os/contracts"
 import { db } from "@life-os/db"
 import { GET as listPeople, POST as createPerson } from "../app/v1/people/route"
 import { GET as getPerson, PATCH as updatePerson } from "../app/v1/people/[id]/route"
@@ -81,6 +81,38 @@ test("people API: contracts, cursor pagination, and workspace isolation", async 
   const ownPerson = personResourceContract.parse(await ownRead.json())
   assert.equal(ownPerson.first, "Ada")
   assert.deepEqual(ownPerson.emails, ["ada@example.test"])
+
+  // Detail bundle: one request carries stats, the timeline, active plans, and
+  // notes; the flat read above stays exactly as it was (strict parse passed).
+  const day = 86_400_000
+  await db.interaction.createMany({ data: [
+    { workspaceId: workspaceA, personId: personAId, type: "call", timestamp: new Date(Date.now() - 3 * day), summary: "caught up" },
+    { workspaceId: workspaceA, personId: personAId, type: "message", timestamp: new Date(Date.now() - 40 * day) },
+  ] })
+  await db.plan.create({ data: { workspaceId: workspaceA, personId: personAId, text: "Send the intro", status: "active" } })
+  await db.plan.create({ data: { workspaceId: workspaceA, personId: personAId, text: "Old plan", status: "abandoned" } })
+  await db.note.create({ data: { workspaceId: workspaceA, aboutPersonId: personAId, type: "note", timestamp: new Date(), content: "Likes climbing" } })
+  await db.person.update({ where: { id: personAId }, data: { closeness: 4 } })
+  const detailRead = await getPerson(request(`http://localhost/v1/people/${personAId}?include=stats,interactions,plans,notes`, keyA), params(personAId))
+  assert.equal(detailRead.status, 200)
+  const detail = personDetailContract.parse(await detailRead.json())
+  assert.equal(detail.stats?.interactionCount, 2)
+  assert.equal(detail.stats?.daysSinceLast, 3)
+  assert.equal(detail.stats?.activePlanCount, 1)
+  assert.equal(detail.stats?.noteCount, 1)
+  assert.equal(detail.stats?.cadenceDays, 10)
+  assert.ok((detail.stats?.attentionScore ?? 1) < 1, "touched 3 days ago on a 10-day cadence is not overdue")
+  assert.equal(detail.interactions?.length, 2)
+  assert.equal(detail.interactions?.[0].summary, "caught up", "timeline is newest first")
+  assert.deepEqual(detail.plans?.map(plan => plan.text), ["Send the intro"], "only active plans")
+  assert.deepEqual(detail.recentNotes?.map(note => note.content), ["Likes climbing"])
+  const statsOnly = personDetailContract.parse(await (await getPerson(request(`http://localhost/v1/people/${personAId}?include=stats`, keyA), params(personAId))).json())
+  assert.equal(statsOnly.interactions, undefined)
+  assert.ok(statsOnly.stats)
+  const badInclude = await getPerson(request(`http://localhost/v1/people/${personAId}?include=secrets`, keyA), params(personAId))
+  assert.equal(badInclude.status, 400)
+  const crossDetail = await getPerson(request(`http://localhost/v1/people/${personBId}?include=stats`, keyA), params(personBId))
+  assert.equal(crossDetail.status, 404)
 
   const otherWorkspaceList = peoplePageContract.parse(await (await listPeople(request("http://localhost/v1/people", keyB))).json())
   assert.deepEqual(otherWorkspaceList.data.map(person => person.id), [personBId])

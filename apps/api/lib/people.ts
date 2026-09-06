@@ -1,3 +1,8 @@
+import { cadenceDaysFor, daysSince, relationshipGapScore } from "@life-os/alignment/pure";
+import { personDetailContract, personStatsContract, type PersonDetail, type PersonDetailInclude } from "@life-os/contracts";
+import { formatInteractionResource } from "./interactions";
+import { listNotes } from "./notes";
+import { listPlans } from "./plans";
 import {
   peoplePageContract,
   personResourceContract,
@@ -74,6 +79,73 @@ export async function listPeople(
     limit,
   });
 }
+
+// One request for a detail screen. Each include is one bounded query; stats
+// are three counts plus the alignment score the attention endpoint uses, so
+// the number a phone shows next to a name is the same number Home nudges on.
+export async function getPersonDetail(
+  id: string,
+  workspaceId: string,
+  include: ReadonlySet<PersonDetailInclude>,
+  now = new Date(),
+): Promise<PersonDetail> {
+  const person = await db.person.findFirst({ where: { id, workspaceId } });
+  if (!person) throw new PeopleApiError("Person not found", "not_found");
+  const base = formatPersonResource(person);
+  const wantStats = include.has("stats");
+  const [latest, interactionCount, activePlanCount, noteCount, interactions, plans, notes] =
+    await Promise.all([
+      wantStats
+        ? db.interaction.findFirst({
+            where: { workspaceId, personId: id, timestamp: { lte: now } },
+            orderBy: { timestamp: "desc" },
+            select: { timestamp: true },
+          })
+        : null,
+      wantStats ? db.interaction.count({ where: { workspaceId, personId: id } }) : 0,
+      wantStats ? db.plan.count({ where: { workspaceId, personId: id, status: "active" } }) : 0,
+      wantStats ? db.note.count({ where: { workspaceId, aboutPersonId: id } }) : 0,
+      include.has("interactions")
+        ? db.interaction.findMany({
+            where: { workspaceId, personId: id },
+            orderBy: [{ timestamp: "desc" }, { id: "desc" }],
+            take: DETAIL_INTERACTIONS,
+            include: {
+              event: { select: { id: true, name: true, type: true } },
+              sourceFile: { select: { id: true, filename: true } },
+            },
+          })
+        : null,
+      include.has("plans")
+        ? listPlans({ personId: id, status: "active", limit: DETAIL_PLANS }, workspaceId)
+        : null,
+      include.has("notes")
+        ? listNotes({ aboutPersonId: id, limit: DETAIL_NOTES }, workspaceId)
+        : null,
+    ]);
+  const detail: PersonDetail = { ...base };
+  if (wantStats) {
+    const lastInteractionAt = latest?.timestamp ?? null;
+    const hasActivePlan = activePlanCount > 0;
+    detail.stats = personStatsContract.parse({
+      interactionCount,
+      lastInteractionAt: lastInteractionAt?.toISOString() ?? null,
+      daysSinceLast: lastInteractionAt ? daysSince(lastInteractionAt, now) : null,
+      activePlanCount,
+      noteCount,
+      attentionScore: relationshipGapScore({ closeness: person.closeness, lastInteractionAt, hasActivePlan }),
+      cadenceDays: cadenceDaysFor(person.closeness, hasActivePlan),
+    });
+  }
+  if (interactions) detail.interactions = interactions.map(formatInteractionResource);
+  if (plans) detail.plans = plans.data;
+  if (notes) detail.recentNotes = notes.data;
+  return personDetailContract.parse(detail);
+}
+
+const DETAIL_INTERACTIONS = 50;
+const DETAIL_PLANS = 20;
+const DETAIL_NOTES = 20;
 
 export async function getPersonResource(id: string, workspaceId: string) {
   const person = await db.person.findFirst({ where: { id, workspaceId } });

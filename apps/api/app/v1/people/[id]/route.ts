@@ -3,7 +3,8 @@ import { contractIssues, personUpdateContract } from "@life-os/contracts"
 import { deletePerson, updatePerson } from "@life-os/domain"
 import { runRulesForTarget } from "@life-os/automation"
 import { authorizeRequest } from "@/lib/auth"
-import { formatPersonResource, getPersonResource } from "@/lib/people"
+import { formatPersonResource, getPersonDetail, getPersonResource } from "@/lib/people"
+import { personDetailIncludeContract, type PersonDetailInclude } from "@life-os/contracts"
 import { errorResponse, handleRouteError, unauthorizedResponse } from "@/lib/respond"
 
 type Params = { params: Promise<{ id: string }> }
@@ -14,7 +15,17 @@ export async function GET(req: NextRequest, { params }: Params) {
 
   try {
     const { id } = await params
-    return NextResponse.json(await getPersonResource(id, auth.workspaceId))
+    const raw = new URL(req.url).searchParams.get("include")
+    if (raw === null || raw.trim() === "") {
+      return NextResponse.json(await getPersonResource(id, auth.workspaceId))
+    }
+    const include = new Set<PersonDetailInclude>()
+    for (const part of raw.split(",")) {
+      const parsed = personDetailIncludeContract.safeParse(part.trim())
+      if (!parsed.success) return errorResponse(400, "validation", `Unknown include "${part.trim()}"`)
+      include.add(parsed.data)
+    }
+    return NextResponse.json(await getPersonDetail(id, auth.workspaceId, include))
   } catch (error) {
     return handleRouteError(error)
   }
