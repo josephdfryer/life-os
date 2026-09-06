@@ -42,7 +42,8 @@
     "check:migrations": "node scripts/check-migration-integrity.mjs",
     "check:deploy": "node scripts/check-deploy-config.mjs",
     "files:backfill-preview": "tsx scripts/file-intelligence-backfill-preview.ts",
-    "inbox:reconcile-calendar": "tsx scripts/reconcile-calendar-backlog.ts"
+    "inbox:reconcile-calendar": "tsx scripts/reconcile-calendar-backlog.ts",
+    "postinstall": "npm run generate -w @life-os/db"
   },
   "packageManager": "npm@11.12.1",
   "overrides": {

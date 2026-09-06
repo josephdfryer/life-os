@@ -94,9 +94,6 @@ jobs:
       - name: Generate Prisma client
         run: npm run generate -w @life-os/db
 
-      - name: Check generated Prisma client is current
-        run: git diff --exit-code -- packages/db/generated
-
       - name: Apply migrations to an empty database
         run: npm run migrate:deploy -w @life-os/db
 

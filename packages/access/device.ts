@@ -4,14 +4,53 @@ import { db, Prisma } from "@life-os/db"
 const ACCESS_TTL_MS = 15 * 60 * 1000
 const REFRESH_TTL_MS = 90 * 24 * 60 * 60 * 1000
 const AUTHORIZATION_TTL_MS = 10 * 60 * 1000
-export const DEVICE_SCOPES = [
-  "device.ingest",
-  "device.heartbeat",
-  "device.self",
-  "workout.read",
-  "workout.write",
-  "people.read",
-] as const
+// Every native app shares the device plumbing scopes; beyond that each app
+// gets only what its surfaces need. The requesting app is identified by the
+// redirect URI it registered (see isAllowedDeviceRedirectUri), which the
+// authorization row already stores — so nothing new travels over the wire and
+// existing installs keep working. Rotation copies the credential's own scopes,
+// never re-derives them, so a grant means the same thing for its whole life.
+const DEVICE_BASE_SCOPES = ["device.ingest", "device.heartbeat", "device.self"] as const
+
+export const DEVICE_SCOPE_SETS = {
+  // The personal collector: HealthKit, location, messages, workouts, and a
+  // read-only People tab.
+  lifeos: [...DEVICE_BASE_SCOPES, "workout.read", "workout.write", "people.read"],
+  // The Persons product shell: full relationship CRUD, capture, and triage.
+  persons: [
+    ...DEVICE_BASE_SCOPES,
+    "people.read", "people.write",
+    "interactions.read", "interactions.write",
+    "notes.read", "notes.write",
+    "plans.read", "plans.write",
+    "review.read", "review.write",
+  ],
+  // Level Up native: workout logging only.
+  levelup: [...DEVICE_BASE_SCOPES, "workout.read", "workout.write"],
+} as const satisfies Record<string, readonly string[]>
+
+export type DeviceApp = keyof typeof DEVICE_SCOPE_SETS
+
+// Kept for callers that predate per-app sets; equals the collector's set.
+export const DEVICE_SCOPES = DEVICE_SCOPE_SETS.lifeos
+
+const APP_BY_REDIRECT_SCHEME: Record<string, DeviceApp> = {
+  "lifeos-companion:": "lifeos",
+  "persons:": "persons",
+  "levelup:": "levelup",
+}
+
+export function deviceAppForRedirectUri(redirectUri: string): DeviceApp {
+  try {
+    return APP_BY_REDIRECT_SCHEME[new URL(redirectUri).protocol] ?? "lifeos"
+  } catch {
+    return "lifeos"
+  }
+}
+
+export function deviceScopesForRedirectUri(redirectUri: string): string[] {
+  return [...DEVICE_SCOPE_SETS[deviceAppForRedirectUri(redirectUri)]]
+}
 
 export type DeviceAuthResult = {
   deviceId: string
@@ -89,7 +128,11 @@ export async function exchangeDeviceAuthorization(input: { code: string; codeVer
     throw new DeviceAuthError("invalid_grant", "PKCE verification failed")
   }
 
-  const tokens = createTokenPair(authorization.deviceId, authorization.workspaceId)
+  const tokens = createTokenPair(
+    authorization.deviceId,
+    authorization.workspaceId,
+    deviceScopesForRedirectUri(authorization.redirectUri),
+  )
   const consumed = await db.$transaction(async tx => {
     const result = await tx.deviceAuthorization.updateMany({
       where: { id: authorization.id, consumedAt: null },
@@ -132,14 +175,14 @@ export async function refreshDeviceCredential(refreshToken: string): Promise<Dev
       throw new DeviceAuthError("unauthorized", "Refresh credential is invalid or expired")
     }
     console.warn("[device/auth/refresh] recovering unused rotation", { deviceId: credential.deviceId })
-    return rotateDeviceCredential(successor.id, successor.refreshTokenHash, successor.deviceId, credential.device.workspaceId)
+    return rotateDeviceCredential(successor.id, successor.refreshTokenHash, successor.deviceId, credential.device.workspaceId, parseScopes(successor.scopes))
   }
 
-  return rotateDeviceCredential(credential.id, credential.refreshTokenHash, credential.deviceId, credential.device.workspaceId)
+  return rotateDeviceCredential(credential.id, credential.refreshTokenHash, credential.deviceId, credential.device.workspaceId, parseScopes(credential.scopes))
 }
 
-async function rotateDeviceCredential(credentialId: string, refreshTokenHash: string, deviceId: string, workspaceId: string) {
-  const tokens = createTokenPair(deviceId, workspaceId)
+async function rotateDeviceCredential(credentialId: string, refreshTokenHash: string, deviceId: string, workspaceId: string, scopes: string[]) {
+  const tokens = createTokenPair(deviceId, workspaceId, scopes)
   const rotated = await db.$transaction(async tx => {
     const result = await tx.deviceCredential.updateMany({
       where: { id: credentialId, refreshTokenHash, revokedAt: null },
@@ -192,12 +235,11 @@ export function hashToken(token: string) {
   return createHash("sha256").update(token).digest("hex")
 }
 
-function createTokenPair(deviceId: string, workspaceId: string) {
+function createTokenPair(deviceId: string, workspaceId: string, scopes: string[]) {
   const accessToken = opaqueToken("dc_at")
   const refreshToken = opaqueToken("dc_rt")
   const accessExpiresAt = new Date(Date.now() + ACCESS_TTL_MS)
   const refreshExpiresAt = new Date(Date.now() + REFRESH_TTL_MS)
-  const scopes = [...DEVICE_SCOPES]
   return {
     credential: {
       deviceId,

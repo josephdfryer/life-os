@@ -48,6 +48,26 @@ test("device authorization, replay receipt, rotation, and revocation", async () 
 
   await revokeDevice(deviceId, workspaceId)
   assert.equal(await authorizeDeviceToken(rotated.accessToken, "device.ingest"), null)
+
+  // Scopes follow the app that registered the redirect: the Persons shell may
+  // write people, notes, plans, and review items; the collector above could
+  // not. Rotation carries the same set forward rather than re-deriving it.
+  const personsVerifier = "p".repeat(64)
+  const personsGrant = await createDeviceAuthorization({ workspaceId, userId, platform: "ios", displayName: "Persons on iPhone", appVersion: "1.0", redirectUri: "persons://auth/callback", codeChallenge: pkceChallenge(personsVerifier) })
+  const personsPair = await exchangeDeviceAuthorization({ code: personsGrant.code, codeVerifier: personsVerifier, deviceId: personsGrant.deviceId })
+  for (const scope of ["people.read", "people.write", "interactions.write", "notes.write", "plans.write", "review.write"]) {
+    assert.equal((await authorizeDeviceToken(personsPair.accessToken, scope))?.workspaceId, workspaceId, `persons device must hold ${scope}`)
+  }
+  assert.equal(await authorizeDeviceToken(personsPair.accessToken, "workout.write"), null)
+  const personsRotated = await refreshDeviceCredential(personsPair.refreshToken)
+  assert.equal((await authorizeDeviceToken(personsRotated.accessToken, "people.write"))?.workspaceId, workspaceId, "rotation must preserve the app's scopes")
+  assert.deepEqual([...personsRotated.scopes].sort(), [...personsPair.scopes].sort())
+
+  const levelupVerifier = "l".repeat(64)
+  const levelupGrant = await createDeviceAuthorization({ workspaceId, userId, platform: "ios", displayName: "Level Up on iPhone", appVersion: "1.0", redirectUri: "levelup://auth/callback", codeChallenge: pkceChallenge(levelupVerifier) })
+  const levelupPair = await exchangeDeviceAuthorization({ code: levelupGrant.code, codeVerifier: levelupVerifier, deviceId: levelupGrant.deviceId })
+  assert.ok(await authorizeDeviceToken(levelupPair.accessToken, "workout.write"))
+  assert.equal(await authorizeDeviceToken(levelupPair.accessToken, "people.read"), null, "Level Up never reads people")
 })
 
 const contactsWorkspaceId = `device-contacts-test-${suffix}`

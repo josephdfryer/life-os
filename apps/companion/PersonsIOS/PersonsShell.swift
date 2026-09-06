@@ -5,6 +5,11 @@ import UIKit
 struct PersonsShell: View {
     @EnvironmentObject var model: PersonsAppModel
     @State private var showingAccount = false
+    // People is the product; syncing the address book is an offer, not a
+    // toll gate. A user who declines Contacts (or just wants to look first)
+    // still gets the whole app, and the offer stays one tap away under
+    // Account → Connections after being dismissed.
+    @AppStorage("persons.contactsPromptDismissed") private var contactsPromptDismissed = false
 
     private let linen = Color(red: 0.914, green: 0.89, blue: 0.847)
     private let surface = Color(red: 0.969, green: 0.957, blue: 0.933)
@@ -16,12 +21,11 @@ struct PersonsShell: View {
         Group {
             if model.signedIn, let api = model.api {
                 VStack(spacing: 0) {
-                    if model.contactsStatus.enabled {
-                        syncStatusBar
-                        PersonsRootView(api: api)
-                    } else {
-                        contactsWalkthrough
+                    headerBar
+                    if !model.contactsStatus.enabled && !contactsPromptDismissed {
+                        contactsUpsellCard
                     }
+                    PersonsRootView(api: api)
                 }
                 .sheet(isPresented: $showingAccount) {
                     AccountView().environmentObject(model)
@@ -72,29 +76,43 @@ struct PersonsShell: View {
         .preferredColorScheme(.light)
     }
 
+    private var anyConnectorEnabled: Bool {
+        model.contactsStatus.enabled || model.calendarStatus.enabled
+    }
+
     @ViewBuilder
-    private var syncStatusBar: some View {
+    private var headerBar: some View {
         VStack(spacing: 6) {
             HStack(spacing: 12) {
                 Button { showingAccount = true } label: {
                     Image(systemName: "person.crop.circle")
                         .foregroundStyle(mutedInk)
                 }
-                VStack(alignment: .leading, spacing: 2) {
-                    Text(model.syncMessage).font(.caption).foregroundStyle(mutedInk)
-                    HStack(spacing: 4) {
-                        Text("\(model.totalContacts) contacts")
-                        if let lastSync = model.lastSync {
-                            Text("· Last synced \(lastSync.formatted(.relative(presentation: .named)))")
+                .accessibilityLabel("Account")
+                if anyConnectorEnabled {
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(model.syncMessage).font(.caption).foregroundStyle(mutedInk)
+                        HStack(spacing: 4) {
+                            if model.contactsStatus.enabled {
+                                Text("\(model.totalContacts) contacts")
+                            }
+                            if let lastSync = model.lastSync {
+                                Text("· Last synced \(lastSync.formatted(.relative(presentation: .named)))")
+                            }
                         }
+                        .font(.caption2)
+                        .foregroundStyle(mutedInk.opacity(0.7))
                     }
-                    .font(.caption2)
-                    .foregroundStyle(mutedInk.opacity(0.7))
+                    Spacer()
+                    Button(model.isSyncing ? "Syncing…" : "Sync Now") { Task { await model.syncNow() } }
+                        .font(.caption)
+                        .disabled(model.isSyncing)
+                } else {
+                    Text("No sources connected")
+                        .font(.caption)
+                        .foregroundStyle(mutedInk)
+                    Spacer()
                 }
-                Spacer()
-                Button(model.isSyncing ? "Syncing…" : "Sync Now") { Task { await model.syncNow() } }
-                    .font(.caption)
-                    .disabled(model.isSyncing)
             }
             if let progress = model.syncProgress {
                 ProgressView(value: progress)
@@ -106,124 +124,59 @@ struct PersonsShell: View {
         .background(surface)
     }
 
+    // The former full-screen walkthrough, reduced to an offer that sits above
+    // the list. Same copy, same action; the difference is the list is
+    // already there underneath it.
     @ViewBuilder
-    private var contactsWalkthrough: some View {
-        ZStack {
-            linen.ignoresSafeArea()
-            VStack(spacing: 0) {
-                HStack {
-                    Spacer()
-                    Button { showingAccount = true } label: {
-                        Image(systemName: "person.crop.circle")
-                            .foregroundStyle(mutedInk)
-                    }
+    private var contactsUpsellCard: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack(alignment: .top, spacing: 12) {
+                Image(systemName: "person.2.fill")
+                    .font(.system(size: 20))
+                    .foregroundStyle(cognac)
+                    .padding(.top, 2)
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("Bring in your people")
+                        .font(.system(size: 17, design: .serif))
+                        .foregroundStyle(ink)
+                    Text("Sync your phone contacts to Persons. Names, emails, and phone numbers only — nothing else is touched.")
+                        .font(.footnote)
+                        .foregroundStyle(mutedInk)
                 }
-                .padding(.horizontal, 16)
-                .padding(.top, 8)
-
-                Spacer()
-
-                VStack(spacing: 32) {
-                    // Overlapping logo circles
-                    ZStack {
-                        Circle()
-                            .fill(Color(red: 0.91, green: 0.88, blue: 0.84))
-                            .frame(width: 72, height: 72)
-                            .overlay(
-                                Image(systemName: "person.2.fill")
-                                    .font(.system(size: 28))
-                                    .foregroundStyle(mutedInk)
-                            )
-                            .offset(x: -20)
-                        Circle()
-                            .fill(cognac)
-                            .frame(width: 72, height: 72)
-                            .overlay(
-                                Text("P")
-                                    .font(.system(size: 32, weight: .semibold, design: .serif))
-                                    .foregroundStyle(.white)
-                            )
-                            .offset(x: 20)
-                    }
-                    .frame(height: 80)
-
-                    VStack(spacing: 10) {
-                        Text("Bring in your people")
-                            .font(.system(size: 26, design: .serif))
-                            .foregroundStyle(ink)
-                        Text("We will seamlessly sync your phone contacts to Persons in one easy step.")
-                            .font(.subheadline)
-                            .foregroundStyle(mutedInk)
-                            .multilineTextAlignment(.center)
-                    }
-
-                    VStack(alignment: .leading, spacing: 18) {
-                        syncBenefit(
-                            title: "Reads from your phone",
-                            detail: "Persons reads names, emails, and phone numbers directly from iOS Contacts. Nothing else is touched."
-                        )
-                        syncBenefit(
-                            title: "Uploads to your workspace",
-                            detail: "Contacts sync to your personal Life OS workspace over HTTPS. Only you have access."
-                        )
-                    }
-                    .padding(20)
-                    .background(surface)
-                    .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
-
-                    VStack(spacing: 14) {
-                        Button {
-                            Task { await model.enableContacts() }
-                        } label: {
-                            if model.isSyncing || model.syncMessage == "Requesting Contacts access…" {
-                                HStack { ProgressView().tint(.white); Text("Requesting Access…") }
-                                    .frame(maxWidth: .infinity)
-                            } else {
-                                Text("Sync Contacts")
-                                    .frame(maxWidth: .infinity)
-                            }
-                        }
-                        .buttonStyle(.borderedProminent)
-                        .tint(cognac)
-                        .controlSize(.large)
-
-                        if model.contactsStatus.permissionStatus == .denied {
-                            Button("Open Settings to Allow Contacts Access") {
-                                if let url = URL(string: UIApplication.openSettingsURLString) {
-                                    UIApplication.shared.open(url)
-                                }
-                            }
-                            .font(.caption)
-                            .foregroundStyle(mutedInk)
-                        } else {
-                            Text("By syncing you agree to our privacy policy.")
-                                .font(.caption)
-                                .foregroundStyle(mutedInk.opacity(0.7))
-                        }
-                    }
-                }
-                .padding(.horizontal, 28)
-
-                Spacer()
-                Spacer()
             }
-        }
-    }
-
-    private func syncBenefit(title: String, detail: String) -> some View {
-        HStack(alignment: .top, spacing: 14) {
-            Image(systemName: "checkmark")
-                .font(.system(size: 13, weight: .bold))
-                .foregroundStyle(cognac)
-                .padding(.top, 2)
-            VStack(alignment: .leading, spacing: 3) {
-                Text(title)
-                    .font(.subheadline.bold())
-                    .foregroundStyle(ink)
-                Text(detail)
-                    .font(.subheadline)
+            HStack(spacing: 12) {
+                Button {
+                    Task { await model.enableContacts() }
+                } label: {
+                    if model.syncMessage == "Requesting Contacts access…" {
+                        HStack { ProgressView().tint(.white); Text("Requesting…") }
+                    } else {
+                        Text("Sync Contacts")
+                    }
+                }
+                .buttonStyle(.borderedProminent)
+                .tint(cognac)
+                .controlSize(.small)
+                if model.contactsStatus.permissionStatus == .denied {
+                    Button("Open Settings") {
+                        if let url = URL(string: UIApplication.openSettingsURLString) {
+                            UIApplication.shared.open(url)
+                        }
+                    }
+                    .font(.footnote)
+                    .foregroundStyle(mutedInk)
+                }
+                Spacer()
+                Button("Not now") { contactsPromptDismissed = true }
+                    .font(.footnote)
                     .foregroundStyle(mutedInk)
             }
         }
+        .padding(14)
+        .background(surface)
+        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+        .padding(.horizontal, 16)
+        .padding(.top, 10)
+        .background(linen)
     }
 }
