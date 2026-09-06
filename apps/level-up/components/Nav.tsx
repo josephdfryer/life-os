@@ -35,9 +35,6 @@ export default function Nav() {
           ))}
         </nav>
       </div>
-      <a href="https://home.lacollecteur.com" className="home-link">
-        LifeOS ↗
-      </a>
     </header>
   )
 }

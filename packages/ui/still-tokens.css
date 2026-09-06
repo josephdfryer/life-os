@@ -10,6 +10,11 @@
    ══════════════════════════════════════════════════════════════════ */
 
 :root {
+  /* ── Shared chrome ── */
+  /* Height of the cross-app LifeOSBar. App headers that stick to the top
+     must offset by this so they land under the bar instead of behind it. */
+  --lifeos-bar-height: 40px;
+
   /* ── Surfaces (linen & oatmeal) ── */
   --bg:              #e9e3d8;
   --surface:         #f7f4ee;

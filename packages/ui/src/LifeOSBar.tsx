@@ -30,6 +30,39 @@ function useCompactChrome() {
 }
 
 const HOME_URL = LIFE_OS_APPS[0].url;
+
+const MENU_ITEM_SELECTOR = '[role="menuitem"]';
+
+/** Arrow/Home/End navigation inside a `role="menu"` container. */
+function onMenuKeyDown(e: React.KeyboardEvent<HTMLDivElement>) {
+  const keys = ['ArrowDown', 'ArrowUp', 'Home', 'End'];
+  if (!keys.includes(e.key)) return;
+  const items = Array.from(e.currentTarget.querySelectorAll<HTMLElement>(MENU_ITEM_SELECTOR));
+  if (items.length === 0) return;
+  e.preventDefault();
+  const index = items.indexOf(document.activeElement as HTMLElement);
+  let next = 0;
+  if (e.key === 'ArrowDown') next = index < 0 ? 0 : (index + 1) % items.length;
+  else if (e.key === 'ArrowUp') next = index <= 0 ? items.length - 1 : index - 1;
+  else if (e.key === 'End') next = items.length - 1;
+  items[next].focus();
+}
+
+/** Focus the first item of a menu once it opens, and restore focus to the
+ *  trigger when it closes via keyboard. */
+function useMenuFocus(open: boolean, container: React.RefObject<HTMLDivElement | null>) {
+  const wasOpen = useRef(false);
+  useEffect(() => {
+    const root = container.current;
+    if (!root) return;
+    if (open) {
+      root.querySelector<HTMLElement>(`[role="menu"] ${MENU_ITEM_SELECTOR}`)?.focus();
+    } else if (wasOpen.current && root.contains(document.activeElement)) {
+      root.querySelector<HTMLElement>('button')?.focus();
+    }
+    wasOpen.current = open;
+  }, [open, container]);
+}
 const SHELL_NAV = [
   { label: 'Today', path: '/' },
   { label: 'Inbox', path: '/inbox' },
@@ -71,6 +104,9 @@ export function LifeOSBar({ current, rightSlot, account, onSignOut, deferCompact
   const ref = useRef<HTMLDivElement>(null);
   const sectionsRef = useRef<HTMLDivElement>(null);
   const accountRef = useRef<HTMLDivElement>(null);
+  useMenuFocus(open, ref);
+  useMenuFocus(sectionsOpen, sectionsRef);
+  useMenuFocus(accountOpen, accountRef);
 
   useEffect(() => {
     function onClick(e: MouseEvent) {
@@ -99,6 +135,7 @@ export function LifeOSBar({ current, rightSlot, account, onSignOut, deferCompact
 
   const currentApp = LIFE_OS_APPS.find(a => a.key === current) ?? LIFE_OS_APPS[0];
   const isHome = current === 'home';
+  const hasAccountHeader = Boolean(account?.name || account?.email);
   const captureHref = current === 'home' ? '/#assistant' : `${HOME_URL}/#assistant`;
   const shellHref = (path: string) => current === 'home' ? path : `${HOME_URL}${path}`;
   // When Home defers shell nav to the bottom tab bar, hide Today/Inbox/…
@@ -115,7 +152,8 @@ export function LifeOSBar({ current, rightSlot, account, onSignOut, deferCompact
         position: 'sticky',
         top: 0,
         zIndex: 60,
-        minHeight: 40,
+        // Height is a shared token so app headers can stick just below the bar.
+        height: 'var(--lifeos-bar-height, 40px)',
         background: 'var(--surface)',
         borderBottom: '1px solid var(--border-subtle, var(--border, rgba(0,0,0,0.08)))',
         display: 'flex',
@@ -123,7 +161,10 @@ export function LifeOSBar({ current, rightSlot, account, onSignOut, deferCompact
         padding: compact ? '0 12px' : '0 16px',
         gap: compact ? 8 : 10,
         fontFamily: 'var(--font-body, system-ui)',
-        overflowX: 'hidden',
+        // Never clip this strip: every menu below is absolutely positioned
+        // inside it, and any overflow other than `visible` crops them to the
+        // bar's 40px. Phone-width overflow is handled by hiding the inline
+        // nav (showInlineHomeNav), not by clipping.
         maxWidth: '100%',
         ...style,
       }}
@@ -192,6 +233,7 @@ export function LifeOSBar({ current, rightSlot, account, onSignOut, deferCompact
         {open && (
           <div
             role="menu"
+            onKeyDown={onMenuKeyDown}
             style={{
               position: 'absolute',
               top: 'calc(100% + 6px)',
@@ -281,6 +323,7 @@ export function LifeOSBar({ current, rightSlot, account, onSignOut, deferCompact
           {sectionsOpen && (
             <div
               role="menu"
+              onKeyDown={onMenuKeyDown}
               style={{
                 position: 'absolute',
                 top: 'calc(100% + 6px)',
@@ -424,6 +467,7 @@ export function LifeOSBar({ current, rightSlot, account, onSignOut, deferCompact
           {accountOpen && (
             <div
               role="menu"
+              onKeyDown={onMenuKeyDown}
               style={{
                 position: 'absolute',
                 top: 'calc(100% + 7px)',
@@ -437,7 +481,7 @@ export function LifeOSBar({ current, rightSlot, account, onSignOut, deferCompact
                 zIndex: 100,
               }}
             >
-              {(account?.name || account?.email) && (
+              {hasAccountHeader && (
                 <div style={{ padding: '7px 9px 8px', borderBottom: '1px solid var(--border-subtle, rgba(0,0,0,0.08))', marginBottom: 5 }}>
                   {account?.name && <div style={{ fontSize: 12, fontWeight: 500, color: 'var(--ink, #2c2620)' }}>{account.name}</div>}
                   {account?.email && <div style={{ fontSize: 10, color: 'var(--ink-4, #a69c90)', overflow: 'hidden', textOverflow: 'ellipsis' }}>{account.email}</div>}
@@ -462,7 +506,19 @@ export function LifeOSBar({ current, rightSlot, account, onSignOut, deferCompact
                   type="button"
                   role="menuitem"
                   onClick={() => onSignOut()}
-                  style={{ ...accountLinkStyle, width: '100%', border: 'none', borderTop: '1px solid var(--border-subtle, rgba(0,0,0,0.08))', borderRadius: 0, marginTop: 5, paddingTop: 10, cursor: 'pointer', fontFamily: 'inherit' }}
+                  style={{
+                    ...accountLinkStyle,
+                    width: '100%',
+                    border: 'none',
+                    borderRadius: 7,
+                    cursor: 'pointer',
+                    fontFamily: 'inherit',
+                    // Only draw a divider when something sits above it — on Home
+                    // with no identity to show, Sign out is the whole menu.
+                    ...(hasAccountHeader || !isHome
+                      ? { borderTop: '1px solid var(--border-subtle, rgba(0,0,0,0.08))', borderRadius: 0, marginTop: 5, paddingTop: 10 }
+                      : {}),
+                  }}
                 >
                   Sign out
                 </button>

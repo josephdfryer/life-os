@@ -16,10 +16,12 @@ export default function Header() {
       padding: "0 24px",
       display: "flex",
       alignItems: "center",
-      height: "52px",
-      gap: "24px",
+      minHeight: "var(--nav-height, 52px)",
+      gap: "12px 24px",
+      flexWrap: "wrap",
       position: "sticky",
-      top: 0,
+      // Sit under the shared LifeOSBar rather than behind it.
+      top: "var(--lifeos-bar-height, 40px)",
       zIndex: 50,
     }}>
       <Link href="/items" style={{
@@ -36,7 +38,7 @@ export default function Header() {
         Stuff
       </Link>
 
-      <nav style={{ display: "flex", gap: "4px", alignItems: "center" }}>
+      <nav style={{ display: "flex", gap: "4px", alignItems: "center", flexWrap: "wrap", minWidth: 0 }}>
         <NavLink href="/items"   label="Items"   active={pathname === "/items" || pathname.startsWith("/items/")} />
         <NavLink href="/inventory" label="Inventory" active={pathname === "/inventory" || pathname.startsWith("/inventory/")} />
         <NavLink href="/wardrobe" label="Wardrobe" active={pathname === "/wardrobe" || pathname.startsWith("/wardrobe/")} />
