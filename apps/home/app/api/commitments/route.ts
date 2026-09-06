@@ -9,9 +9,11 @@ import { dayToDate, markActionItem } from "@/lib/commitments"
 /**
  * Triage for unclaimed action items — the raw lines extracted from
  * Interactions. `commit` promotes one into a Plan (declared intent, with
- * provenance back to the Interaction's Note and Person); `dismiss` marks it
- * complete in place so it stops surfacing. Either way it leaves the inbox,
- * which is the only reason the inbox ever drains.
+ * provenance back to the Interaction's Note and Person); `done` does the same
+ * but records the Plan as already completed, for the common case where the
+ * thing was handled before it was ever triaged; `dismiss` marks it complete in
+ * place so it stops surfacing. Either way it leaves the inbox, which is the
+ * only reason the inbox ever drains.
  */
 export async function POST(request: Request) {
   const workspaceId = await workspaceForHomeRequest()
@@ -29,8 +31,8 @@ export async function POST(request: Request) {
   if (!interactionId || index === null) {
     return NextResponse.json({ error: "interactionId and index are required" }, { status: 400 })
   }
-  if (action !== "commit" && action !== "dismiss") {
-    return NextResponse.json({ error: "Action must be commit or dismiss" }, { status: 400 })
+  if (action !== "commit" && action !== "dismiss" && action !== "done") {
+    return NextResponse.json({ error: "Action must be commit, done, or dismiss" }, { status: 400 })
   }
 
   const interaction = await db.interaction.findFirst({
@@ -68,15 +70,21 @@ export async function POST(request: Request) {
   }
 
   const tz = resolveTimeZone((await cookies()).get(TZ_COOKIE)?.value)
+  const now = new Date()
+  // `done` skips the commit → focus → done dance for things already handled:
+  // the Plan is written straight to completed, with the same provenance a
+  // committed one would carry.
+  const completedNow = action === "done"
   const [plan] = await db.$transaction([
     db.plan.create({
       data: {
         workspaceId,
         text: item.description,
-        status: "active",
+        status: completedNow ? "completed" : "active",
         // Claiming something means claiming it for today. Snooze is how it
         // moves — deliberately, and at a cost.
-        dueOn: dayToDate(dayKey(new Date(), tz), tz),
+        dueOn: completedNow ? null : dayToDate(dayKey(now, tz), tz),
+        completedAt: completedNow ? now : null,
         personId: interaction.personId,
         sourceNoteId: interaction.sourceNoteId,
       },
@@ -87,7 +95,7 @@ export async function POST(request: Request) {
   await db.auditLog.create({
     data: {
       workspaceId,
-      action: "commitment.create",
+      action: completedNow ? "commitment.done" : "commitment.create",
       targetType: "plan",
       targetId: plan.id,
       actorType: "user",
@@ -95,5 +103,8 @@ export async function POST(request: Request) {
     },
   })
 
-  return NextResponse.json({ status: "committed", planId: plan.id })
+  return NextResponse.json({
+    status: completedNow ? "done" : "committed",
+    planId: plan.id,
+  })
 }

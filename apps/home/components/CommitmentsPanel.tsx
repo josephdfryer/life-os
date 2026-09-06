@@ -129,7 +129,7 @@ export default function CommitmentsPanel({
     }
   }
 
-  async function triage(item: UnclaimedItem, action: "commit" | "dismiss") {
+  async function triage(item: UnclaimedItem, action: "commit" | "done" | "dismiss") {
     setBusyId(item.id)
     setError("")
     try {
@@ -145,6 +145,7 @@ export default function CommitmentsPanel({
       }
       setUnclaimed(items => items.filter(entry => entry.id !== item.id))
       setRemaining(count => Math.max(0, count - 1))
+      if (action === "done") setCleared(count => count + 1)
       if (action === "commit" && body?.planId) {
         // A committed action item lands in the backlog, not straight into
         // Focus — capture stays free, committing to work it *now* is still a
@@ -374,6 +375,7 @@ export default function CommitmentsPanel({
                   busy={busyId === item.id}
                 >
                   <button style={primaryButton} onClick={() => void triage(item, 'commit')}>Commit</button>
+                  <button style={button} onClick={() => void triage(item, 'done')}>Done</button>
                   <button style={button} onClick={() => void triage(item, 'dismiss')}>Not mine</button>
                 </Row>
               ))}
