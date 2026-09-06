@@ -144,6 +144,26 @@ async function ingestNote(item: DeviceIngestItemInput, workspaceId: string, payl
 // matches, even strong ones, always go to review instead.
 const AUTO_APPLY_THRESHOLD = 0.95
 
+// Sources whose records the person already curated by hand — their own
+// address book, the Google contacts they saved, people they actually met in
+// a calendar event. A brand-new record from one of these is low-touch and may
+// be created without review. Anything else (a scraped Facebook friend list,
+// later an Instagram following list) is a bulk list of people the user never
+// chose to save, usually with no email or phone to match on, so an unmatched
+// record must go to review — never straight to a Person. Before this gate a
+// working Facebook scan would have auto-created one identifier-less Person
+// per friend.
+const CURATED_CONTACT_SOURCES: ReadonlySet<string> = new Set(["contacts", "google_contacts", "calendar"])
+
+// Person.source provenance per device source. "ios_contacts" predates the
+// other sources and is kept for compatibility with existing rows and filters.
+const PERSON_SOURCE_BY_DEVICE_SOURCE: Record<string, string> = {
+  contacts: "ios_contacts",
+  google_contacts: "google_contacts",
+  calendar: "calendar_attendees",
+  facebook: "facebook",
+}
+
 async function ingestContact(item: ItemFor<"contact.person">, workspaceId: string, payloadHash: string): Promise<DeviceIngestResult> {
   const actor = { type: "system" as const, id: item.deviceId, label: "life-os-companion-persons" }
   const persons = await db.person.findMany({
@@ -181,20 +201,23 @@ async function ingestContact(item: ItemFor<"contact.person">, workspaceId: strin
     return accepted(item.sourceId, "Person", match.personId)
   }
 
-  // No match at all (not merely a weak one): the device's address book is a
-  // list the person already curated by saving these contacts on their own
-  // phone, not an arbitrary bulk file from an unknown source — so a brand
-  // new contact is low-touch, create it immediately rather than parking it
-  // in a review queue for something nobody has to approve. An *ambiguous*
-  // match (some similarity but below AUTO_APPLY_THRESHOLD) still goes to
-  // review below: guessing wrong there means silently attaching this
-  // contact's data to the WRONG existing person, a worse failure mode than
-  // a duplicate the merge tool can clean up later.
+  // No match at all (not merely a weak one) from a curated source: the
+  // device's address book is a list the person already curated by saving
+  // these contacts on their own phone, not an arbitrary bulk file from an
+  // unknown source — so a brand new contact is low-touch, create it
+  // immediately rather than parking it in a review queue for something
+  // nobody has to approve. An *ambiguous* match (some similarity but below
+  // AUTO_APPLY_THRESHOLD) still goes to review below: guessing wrong there
+  // means silently attaching this contact's data to the WRONG existing
+  // person, a worse failure mode than a duplicate the merge tool can clean
+  // up later. Non-curated sources (see CURATED_CONTACT_SOURCES) skip this
+  // branch entirely and always land in review.
   const first = firstNameFor(item.record)
-  if (!match && first) {
+  if (!match && first && CURATED_CONTACT_SOURCES.has(item.source)) {
     const person = await createPerson({
       first, last: item.record.familyName, company: item.record.organizationName, title: item.record.jobTitle,
-      emails: item.record.emails, phones: item.record.phones, source: "ios_contacts",
+      emails: item.record.emails, phones: item.record.phones,
+      source: PERSON_SOURCE_BY_DEVICE_SOURCE[item.source] ?? "ios_contacts",
       ...(item.record.birthday ? { birthday: item.record.birthday } : {}),
       ...(item.record.location ? { location: item.record.location } : {}),
       ...(item.record.profileUrl ? { facebook: item.source === "facebook" ? item.record.profileUrl : undefined, website: item.source !== "facebook" ? item.record.profileUrl : undefined } : {}),

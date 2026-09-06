@@ -22,6 +22,15 @@ server search, cursor pagination, pull-to-refresh, and a phone-native detail
 view. The reusable `PersonsFeature` package owns the UI and People wire models;
 the app target remains a thin shell that supplies the signed-in API client.
 
+Device contact records are gated by source before anything is written
+(`apps/api/lib/device-ingest.ts`, `CURATED_CONTACT_SOURCES`): a record from
+the phone's own address book, Google Contacts, or calendar attendees may be
+auto-created when it matches nothing, because the person curated that list
+themselves. A record from a non-curated source such as the Facebook friend
+scan always lands in the review queue when unmatched, since it carries no
+email or phone and the user never chose to save it. Exact-identifier matches
+auto-apply regardless of source; ambiguous matches always go to review.
+
 Device credentials include `people.read`, and `apps/api/lib/auth.ts` accepts
 those bearer tokens for routes whose required scopes are present. Devices do
 not receive `people.write`, so this first native surface cannot create, update,
