@@ -2,6 +2,10 @@
 
 This file is operating rules for AI agents (Claude Code, Codex) working in this repo. For human onboarding — what LifeOS is, quickstart, repo layout — see `README.md` and `CONTRIBUTING.md`; they cover the same ground for people and link back here for the rules below.
 
+## Work Tracking: Linear
+
+All work is tracked in Linear (workspace `josephfryer`, team `JF`). The consolidated plan is `docs/ROADMAP.md`; the protocol is `docs/LINEAR_WORKFLOW.md`. In short: no issue, no work; pick only issues carrying your `Agent/*` label; branch and commit with the issue key (`JF-123`); close with evidence. Claude mirrors Codex/Cursor status into Linear at session start.
+
 ## Cross-Agent Sync
 
 Claude Code and Codex share this repository. At the start of any session, run this from the monorepo root:
