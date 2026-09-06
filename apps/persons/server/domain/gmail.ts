@@ -1,4 +1,5 @@
 import { createHmac, randomBytes } from "crypto";
+import { normalizeEmailForMatch, workspaceEmailIndex } from "@life-os/domain";
 import type { GmailConnection, Prisma } from "@life-os/db";
 import { decryptNullable, encryptNullable } from "@life-os/db/crypto";
 import { db } from "@/lib/db";
@@ -974,20 +975,11 @@ async function importMessage(input: {
   return { createdInteractions, updatedInteractions, staged, skipped };
 }
 
+// Reads the trigger-maintained PersonContact key index (no Person rows, no
+// JSON parsing) instead of every Person in the workspace. Keys are the
+// matcher's normalized form; parties are normalized the same way at lookup.
 async function peopleEmailIndex(workspaceId: string) {
-  const rows = await db.person.findMany({
-    where: { workspaceId },
-    select: { id: true, first: true, last: true, emails: true },
-  });
-  const byEmail = new Map<
-    string,
-    { id: string; first: string; last: string }
-  >();
-  for (const row of rows) {
-    for (const email of parseJsonList(row.emails))
-      byEmail.set(normalizeEmail(email), row);
-  }
-  return byEmail;
+  return workspaceEmailIndex(workspaceId);
 }
 
 function matchedPeopleForMessage(
@@ -1486,8 +1478,12 @@ function parseGmailMetadata(
   ) as GmailMessageMetadata;
 }
 
+// Same normalization the PersonContact index stores (lowercase, +tag
+// stripped, Gmail dots collapsed), so a party email finds its Person even
+// when the saved address was written differently. Falls back to a plain
+// lowercase for strings that are not well-formed addresses.
 function normalizeEmail(value: string) {
-  return value.trim().toLowerCase();
+  return normalizeEmailForMatch(value) ?? value.trim().toLowerCase();
 }
 
 function normalizeTraceLimit(value: number | null | undefined) {

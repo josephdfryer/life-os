@@ -2,8 +2,8 @@ import { randomUUID } from "node:crypto";
 import { db } from "@/lib/db";
 import {
   createPerson,
-  findMatch,
-  type MatchableExistingPerson,
+  matchContact,
+  type MatchableContact,
   type MatchResult,
   type PersonInput,
 } from "@life-os/domain";
@@ -66,39 +66,20 @@ export type PersonCreationToolResult =
     }
   | { status: "error"; message: string };
 
-type StoredPerson = Omit<MatchableExistingPerson, "emails" | "phones"> & {
-  emails: string;
-  phones: string;
-};
-
 type PersonCreationDependencies = {
-  listPeople(workspaceId: string): Promise<StoredPerson[]>;
+  // The canonical import matcher, index-backed in production (see
+  // packages/domain/contact-lookup.ts); tests substitute an in-memory list.
+  match(contact: MatchableContact, workspaceId: string): Promise<MatchResult | null>;
+  findPerson(id: string, workspaceId: string): Promise<{ id: string; first: string; last: string } | null>;
   create(draft: AssistantPersonDraft, workspaceId: string): Promise<{ id: string; first: string; last: string }>;
 };
 
 const DEFAULT_DEPENDENCIES: PersonCreationDependencies = {
-  listPeople(workspaceId) {
-    return db.person.findMany({
-      where: { workspaceId },
-      select: {
-        id: true,
-        first: true,
-        last: true,
-        company: true,
-        title: true,
-        headline: true,
-        birthday: true,
-        location: true,
-        linkedin: true,
-        twitter: true,
-        website: true,
-        facebook: true,
-        instagram: true,
-        notes: true,
-        emails: true,
-        phones: true,
-      },
-    });
+  match(contact, workspaceId) {
+    return matchContact(contact, workspaceId);
+  },
+  findPerson(id, workspaceId) {
+    return db.person.findFirst({ where: { id, workspaceId }, select: { id: true, first: true, last: true } });
   },
   create(draft, workspaceId) {
     return createPerson(
@@ -137,10 +118,7 @@ export async function createPersonFromAssistant(
       };
     }
 
-    const people = await loadMatchablePeople(workspaceId, dependencies);
-    const originalCandidate = people.find(
-      (person) => person.id === pending.duplicate.personId,
-    );
+    const originalCandidate = await dependencies.findPerson(pending.duplicate.personId, workspaceId);
     if (resolution === "use_existing") {
       if (!originalCandidate) {
         return {
@@ -160,7 +138,7 @@ export async function createPersonFromAssistant(
     // Re-run the canonical import matcher at confirmation time. If the best
     // candidate changed, the old confirmation cannot authorize a different
     // possible duplicate; show the new candidate and ask again.
-    const currentMatch = findMatch(pending.draft, people);
+    const currentMatch = await dependencies.match(pending.draft, workspaceId);
     if (
       currentMatch &&
       currentMatch.personId !== pending.duplicate.personId
@@ -175,8 +153,7 @@ export async function createPersonFromAssistant(
 
   const normalized = normalizeDraft(input);
   if ("status" in normalized) return normalized;
-  const people = await loadMatchablePeople(workspaceId, dependencies);
-  const match = findMatch(normalized, people);
+  const match = await dependencies.match(normalized, workspaceId);
   if (match) return confirmationRequired(normalized, match);
   return created(await dependencies.create(normalized, workspaceId));
 }
@@ -256,17 +233,6 @@ function normalizeDraft(
   };
 }
 
-async function loadMatchablePeople(
-  workspaceId: string,
-  dependencies: PersonCreationDependencies,
-): Promise<MatchableExistingPerson[]> {
-  return (await dependencies.listPeople(workspaceId)).map((person) => ({
-    ...person,
-    emails: storedStringList(person.emails),
-    phones: storedStringList(person.phones),
-  }));
-}
-
 function confirmationRequired(
   draft: AssistantPersonDraft,
   match: MatchResult,
@@ -327,17 +293,6 @@ function validPendingConfirmation(value: unknown): value is PendingPersonCreatio
       candidate.duplicate?.personId &&
       candidate.duplicate?.personName,
   );
-}
-
-function storedStringList(value: string): string[] {
-  try {
-    const parsed = JSON.parse(value);
-    return Array.isArray(parsed)
-      ? parsed.filter((item): item is string => typeof item === "string")
-      : [];
-  } catch {
-    return [];
-  }
 }
 
 function stringList(arrayValue: unknown, singleValue?: unknown): string[] {

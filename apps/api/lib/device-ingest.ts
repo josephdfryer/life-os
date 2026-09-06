@@ -1,9 +1,8 @@
 import { createHash } from "node:crypto"
 import type { DeviceIngestItemInput } from "@life-os/contracts"
 import { db } from "@life-os/db"
-import { createReviewItem, publishGraphEvent, findMatch, createPerson, updatePerson, type MatchableExistingPerson } from "@life-os/domain"
+import { createReviewItem, publishGraphEvent, matchContact, createPerson, updatePerson } from "@life-os/domain"
 import { HEALTH_DAILY_TRANSACTION, ensureHealthMetricDefinitions, recordHealthDailyDigestInTransaction, fireHealthDailyRules } from "./health-daily"
-import { storedStringList } from "./people"
 
 export type DeviceIngestResult = {
   sourceId: string
@@ -166,19 +165,6 @@ const PERSON_SOURCE_BY_DEVICE_SOURCE: Record<string, string> = {
 
 async function ingestContact(item: ItemFor<"contact.person">, workspaceId: string, payloadHash: string): Promise<DeviceIngestResult> {
   const actor = { type: "system" as const, id: item.deviceId, label: "life-os-companion-persons" }
-  const persons = await db.person.findMany({
-    where: { workspaceId },
-    select: {
-      id: true, first: true, last: true, company: true, title: true, headline: true,
-      birthday: true, location: true, linkedin: true, twitter: true, website: true,
-      facebook: true, instagram: true, notes: true, emails: true, phones: true,
-    },
-  })
-  const candidates: MatchableExistingPerson[] = persons.map(person => ({
-    ...person,
-    emails: storedStringList(person.emails),
-    phones: storedStringList(person.phones),
-  }))
   const candidate = {
     first: item.record.givenName, last: item.record.familyName,
     company: item.record.organizationName, title: item.record.jobTitle,
@@ -188,7 +174,9 @@ async function ingestContact(item: ItemFor<"contact.person">, workspaceId: strin
     ...(item.record.profileUrl && item.source === "facebook" ? { facebook: item.record.profileUrl } : {}),
     ...(item.record.notes ? { notes: item.record.notes } : {}),
   }
-  const match = findMatch(candidate, candidates)
+  // Index-backed: exact keys via PersonContact plus fuzzy names via pg_trgm,
+  // scored by the same matcher as before. See packages/domain/contact-lookup.ts.
+  const match = await matchContact(candidate, workspaceId)
 
   // Confident identifier match: apply only the fields the matched Person is
   // currently missing (findMatch already computed this against the winning
