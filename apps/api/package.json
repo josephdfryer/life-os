@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@life-os/access": "*",
+    "@life-os/alignment": "*",
     "@life-os/automation": "*",
     "@life-os/contracts": "*",
     "@life-os/db": "*",

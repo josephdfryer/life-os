@@ -41,6 +41,15 @@ export function daysSince(date: Date | null, now = new Date()): number {
   return Math.max(0, Math.floor((now.getTime() - date.getTime()) / 86400000))
 }
 
+// The cadence a relationship is measured against, in days, or null when it
+// has none (an acquaintance with no active Plan is never "overdue"). Exposed
+// so read surfaces can say "12d past usual" from the same numbers the score
+// uses instead of re-declaring the table.
+export function cadenceDaysFor(closeness: number, hasActivePlan: boolean): number | null {
+  if (closeness === 1) return hasActivePlan ? ACQUAINTANCE_WITH_PLAN_THRESHOLD_DAYS : null
+  return CLOSENESS_THRESHOLD_DAYS[closeness] ?? 21
+}
+
 // >= 1.0 means overdue relative to threshold.
 export function relationshipGapScore(input: {
   closeness: number
