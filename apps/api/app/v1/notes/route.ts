@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
+import { runRulesForTarget } from "@life-os/automation"
 import { contractIssues, noteCreateContract } from "@life-os/contracts"
 import { captureNote } from "@life-os/domain"
 import { authorizeRequest } from "@/lib/auth"
@@ -53,6 +54,21 @@ export async function POST(req: NextRequest) {
       aboutGroupId: parsed.data.aboutGroupId,
       aboutStateId: parsed.data.aboutStateId,
     })
+    // Only a genuinely new note is an event worth automating on; an
+    // idempotent replay returns the existing row and fires nothing.
+    if (created) {
+      await runRulesForTarget({
+        trigger: "note.create",
+        targetType: "note",
+        targetId: note.id,
+        payload: {
+          noteId: note.id, type: note.type, source: parsed.data.source ?? "api",
+          aboutPersonId: note.aboutPersonId, aboutPlaceId: note.aboutPlaceId, aboutItemId: note.aboutItemId,
+          aboutEventId: note.aboutEventId, aboutPlanId: note.aboutPlanId, aboutGroupId: note.aboutGroupId,
+        },
+        actor: auth.actor,
+      })
+    }
     return NextResponse.json(formatNoteResource(note), { status: created ? 201 : 200 })
   } catch (error) {
     return handleRouteError(error)

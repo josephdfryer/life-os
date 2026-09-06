@@ -134,6 +134,30 @@ registerTrigger("item.update", z.object({
   fields: z.array(z.string()),
 }).passthrough())
 
+// Track C C5 integration pass (2026-09-06): Note and Place both publish
+// GraphEvents (`note.create` from captureNote, `place.create` from staged-visit
+// resolution) but had no automation trigger, so a rule could never react to a
+// captured note or a newly created place. Registered here; fired from the
+// app-layer callers (apps/api's POST /v1/notes; Home capture and apps/places
+// are the remaining call sites).
+registerTrigger("note.create", z.object({
+  noteId: z.string(),
+  type: z.string(),
+  source: z.string().nullable().optional(),
+  aboutPersonId: z.string().nullable().optional(),
+  aboutPlaceId: z.string().nullable().optional(),
+  aboutItemId: z.string().nullable().optional(),
+  aboutEventId: z.string().nullable().optional(),
+  aboutPlanId: z.string().nullable().optional(),
+  aboutGroupId: z.string().nullable().optional(),
+}).passthrough())
+
+registerTrigger("place.create", z.object({
+  placeId: z.string(),
+  name: z.string(),
+  source: z.string().nullable().optional(),
+}).passthrough())
+
 registerTrigger("state.record", z.object({
   stateId: z.string(),
   entityType: z.string(),
