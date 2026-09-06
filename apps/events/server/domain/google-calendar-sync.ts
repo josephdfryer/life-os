@@ -71,12 +71,21 @@ export function sameCalendarOccurrence(
     && Math.abs(left.start.getTime() - right.start.getTime()) <= DUPLICATE_OCCURRENCE_WINDOW_MS
 }
 
-export async function mapPool<T, R>(items: T[], concurrency: number, fn: (item: T) => Promise<R>): Promise<R[]> {
+// `shouldStop` is consulted before each item starts: once it returns true no
+// further item is begun (in-flight ones finish) and the corresponding result
+// slots stay undefined. Callers that pass it must treat the array as sparse.
+export async function mapPool<T, R>(
+  items: T[],
+  concurrency: number,
+  fn: (item: T) => Promise<R>,
+  options: { shouldStop?: () => boolean } = {},
+): Promise<R[]> {
   if (!items.length) return []
   const results: R[] = new Array(items.length)
   let next = 0
   async function worker() {
     while (next < items.length) {
+      if (options.shouldStop?.()) return
       const index = next++
       results[index] = await fn(items[index]!)
     }
@@ -138,9 +147,18 @@ export async function walkEventPages<T extends CalendarPageEvent>(input: {
   now?: () => number
   fetchPage: (params: URLSearchParams) => Promise<PageFetchResult<T>>
   onBatch: (items: T[]) => Promise<void>
-}): Promise<{ nextSyncToken?: string; usedSyncToken: boolean; pendingPageToken?: string }> {
+  // Fired before each page fetch with the cursor that fetches it (undefined
+  // for the first page of a fresh walk). A caller with a hard wall-clock guard
+  // can park this cursor even if the walk itself never gets to return.
+  onProgress?: (progress: { currentPageToken?: string }) => void
+}): Promise<{ nextSyncToken?: string; usedSyncToken: boolean; pendingPageToken?: string; truncated: boolean }> {
   const now = input.now ?? Date.now
-  let pageToken: string | undefined = input.syncToken ? undefined : (input.resumePageToken ?? undefined)
+  // A parked cursor resumes whichever walk parked it. Google's pageToken
+  // encodes the original query, so it continues an incremental (syncToken)
+  // delta exactly as readily as a bootstrap walk — which is what lets a large
+  // delta converge across runs instead of replaying from the same token every
+  // time until the function is killed.
+  let pageToken: string | undefined = input.resumePageToken ?? undefined
   let nextSyncToken: string | undefined
   let useSyncToken = Boolean(input.syncToken)
   let usedSyncToken = useSyncToken
@@ -154,6 +172,7 @@ export async function walkEventPages<T extends CalendarPageEvent>(input: {
     // (upsert-keyed), so redoing already-done batches costs time, not
     // correctness.
     const currentPageToken = pageToken
+    input.onProgress?.({ currentPageToken })
     const params = new URLSearchParams({
       maxResults: String(input.pageSize),
       showDeleted: "true",
@@ -199,8 +218,15 @@ export async function walkEventPages<T extends CalendarPageEvent>(input: {
       // page ever finishes — the previous per-page-only check never got a
       // chance to run, and Vercel killed the function outright instead of
       // this returning gracefully.
-      if (!useSyncToken && now() >= input.deadline) {
-        return { nextSyncToken, usedSyncToken, pendingPageToken: currentPageToken }
+      //
+      // Incremental walks are budgeted too. They used to be exempt, on the
+      // theory that a delta is small — but a delta only stays small while
+      // the token keeps advancing, and a token only advances when a walk
+      // finishes. One delta too big for the budget meant the function was
+      // killed before the new token was saved, the same delta (now larger)
+      // replayed next run, and the calendar never synced again.
+      if (now() >= input.deadline) {
+        return { nextSyncToken, usedSyncToken, pendingPageToken: currentPageToken, truncated: true }
       }
     }
 
@@ -209,12 +235,12 @@ export async function walkEventPages<T extends CalendarPageEvent>(input: {
     resuming = false
     if (!pageToken) break
     // Out of budget mid-walk: park the cursor so the next run continues.
-    if (!useSyncToken && now() >= input.deadline) {
-      return { nextSyncToken, usedSyncToken, pendingPageToken: pageToken }
+    if (now() >= input.deadline) {
+      return { nextSyncToken, usedSyncToken, pendingPageToken: pageToken, truncated: true }
     }
   }
 
-  return { nextSyncToken, usedSyncToken, pendingPageToken: undefined }
+  return { nextSyncToken, usedSyncToken, pendingPageToken: undefined, truncated: false }
 }
 
 // Separate from the unwindowed bootstrap: this query IS allowed to use

@@ -92,6 +92,17 @@ const DB_BATCH_SIZE = 10;
 // latency, but never enough concurrent transactions to stall the rest.
 const UPSERT_CONCURRENCY = 4;
 const CALENDAR_TX = { maxWait: 10_000, timeout: 20_000 } as const;
+// Belt and braces for the deadline checks above, which can only run between
+// awaits. If a batch stalls on DB contention (interactive transactions that
+// wait up to CALENDAR_TX.maxWait, times UPSERT_CONCURRENCY, times retries),
+// this wall-clock guard parks the walk's last known cursor and returns before
+// Vercel's 300s kill — a parked cursor is progress, a killed function is not.
+const HARD_STOP_GRACE_MS = 20_000;
+// Longer than any single invocation can live (300s), so a lease can only be
+// found "held" by a run that is genuinely still going. Both the Vercel cron
+// and the GitHub backup schedule hit the same endpoint; without this they
+// walked the same calendar at the same time and contended on the same rows.
+const SYNC_LEASE_MS = 6 * 60_000;
 
 type OAuthState = {
   workspaceId: string;
@@ -707,6 +718,15 @@ type SyncStats = {
   // True when the bootstrap walk hit its budget and parked a cursor: this
   // calendar is mid-bootstrap and will continue on the next run.
   bootstrapping: boolean;
+  // True when any walk (bootstrap or incremental) parked a cursor for the
+  // next run — the calendar made progress but is not caught up yet.
+  parked: boolean;
+  // True when the wall-clock guard cut the walk off rather than the walk
+  // observing its own deadline. Worth watching: it means a batch stalled.
+  hardStopped: boolean;
+  // True when another invocation held this connection's sync lease, so this
+  // one skipped it rather than racing.
+  leaseHeld: boolean;
   recentHorizonFetched: number;
   error: string | null;
 };
@@ -908,9 +928,32 @@ async function syncGoogleCalendarConnection(
     backfillDays,
     incremental: Boolean(syncToken),
     bootstrapping: false,
+    parked: false,
+    hardStopped: false,
+    leaseHeld: false,
     recentHorizonFetched: 0,
     error: null,
   };
+
+  const leased = await withCalendarDbRetry(() =>
+    db.calendarConnection.updateMany({
+      where: {
+        id: connection.id,
+        OR: [{ syncLeaseUntil: null }, { syncLeaseUntil: { lt: new Date() } }],
+      },
+      data: { syncLeaseUntil: new Date(Date.now() + SYNC_LEASE_MS) },
+    }),
+  );
+  if (leased.count === 0) {
+    return { ...stats, leaseHeld: true };
+  }
+  // Whichever runs out first: this connection's own slice, or what's left
+  // of the whole invocation's budget. Shared by every walk below and by the
+  // batch processor, so no stage can spend past it.
+  const connectionDeadline = Math.min(
+    Date.now() + SYNC_TIME_BUDGET_MS,
+    overallDeadline,
+  );
 
   try {
     if (!connection.refreshTokenEncrypted && !connection.accessTokenEncrypted) {
@@ -944,6 +987,7 @@ async function syncGoogleCalendarConnection(
               calendarId: connection.calendarId,
               items,
               peopleByEmail,
+              deadline: recentDeadline,
             });
             stats.createdPlans += result.createdPlans;
             stats.updatedPlans += result.updatedPlans;
@@ -954,44 +998,61 @@ async function syncGoogleCalendarConnection(
         });
       }
     }
-    const listed = await syncEventPages(accessToken, {
-      calendarId: connection.calendarId,
-      syncToken,
-      resumePageToken: connection.fullSyncPageToken ?? null,
+    let progress: { currentPageToken?: string } = {};
+    const listed = await withHardStop(
+      syncEventPages(accessToken, {
+        calendarId: connection.calendarId,
+        syncToken,
+        resumePageToken: connection.fullSyncPageToken ?? null,
+        onProgress: (next) => {
+          progress = next;
+        },
       // Bound what the bootstrap writes, not what it reads: the walk still
       // pages to the end to earn the token, but history older than the
       // caller's backfill window is skipped instead of upserted. Incremental
       // runs pass null — a change is worth applying whenever it happened.
-      ingestFrom: syncToken
-        ? null
-        : new Date(Date.now() - backfillDays * 24 * 60 * 60 * 1000),
-      // Whichever runs out first: this connection's own slice, or what's left
-      // of the whole invocation's budget.
-      deadline: Math.min(Date.now() + SYNC_TIME_BUDGET_MS, overallDeadline),
-      onBatch: async (items) => {
-        stats.batches += 1;
-        const result = await processCalendarBatch({
-          actor: actor.actor,
-          workspaceId: actor.workspaceId,
-          connectionId: connection.id,
-          calendarId: connection.calendarId,
-          items,
-          peopleByEmail,
-        });
-        stats.createdPlans += result.createdPlans;
-        stats.updatedPlans += result.updatedPlans;
-        stats.cancelled += result.cancelled;
-        stats.fetched += result.fetched;
+        ingestFrom: syncToken
+          ? null
+          : new Date(Date.now() - backfillDays * 24 * 60 * 60 * 1000),
+        deadline: connectionDeadline,
+        onBatch: async (items) => {
+          stats.batches += 1;
+          const result = await processCalendarBatch({
+            actor: actor.actor,
+            workspaceId: actor.workspaceId,
+            connectionId: connection.id,
+            calendarId: connection.calendarId,
+            items,
+            peopleByEmail,
+            deadline: connectionDeadline,
+          });
+          stats.createdPlans += result.createdPlans;
+          stats.updatedPlans += result.updatedPlans;
+          stats.cancelled += result.cancelled;
+          stats.fetched += result.fetched;
+        },
+      }),
+      connectionDeadline + HARD_STOP_GRACE_MS,
+      () => {
+        stats.hardStopped = true;
+        return {
+          nextSyncToken: undefined,
+          usedSyncToken: Boolean(syncToken),
+          pendingPageToken: progress.currentPageToken,
+          truncated: true,
+        };
       },
-    });
+    );
     stats.incremental = listed.usedSyncToken;
-    stats.bootstrapping = Boolean(listed.pendingPageToken);
+    stats.parked = Boolean(listed.pendingPageToken);
+    stats.bootstrapping = stats.parked && !listed.usedSyncToken;
 
-    // Once a token is in hand the bootstrap is over, so the cursor is cleared.
-    // While the walk is still in flight we keep the cursor and must NOT record
-    // a token we do not have — writing one would strand the unwalked remainder.
-    const nextToken =
-      listed.nextSyncToken ?? (listed.pendingPageToken ? null : syncToken);
+    // A finished walk hands back the next token and the cursor is cleared. A
+    // parked walk keeps whatever token it started with: a bootstrap has none
+    // yet (and must not invent one — that would strand the unwalked remainder),
+    // and an incremental delta keeps its old token so a stale cursor can fall
+    // back to re-listing from that token instead of a full re-bootstrap.
+    const nextToken = listed.nextSyncToken ?? syncToken;
     await withCalendarDbRetry(() =>
       db.calendarConnection.update({
         where: { id: connection.id },
@@ -1002,6 +1063,7 @@ async function syncGoogleCalendarConnection(
             : (listed.pendingPageToken ?? null),
           lastSyncedAt: new Date(),
           lastError: null,
+          syncLeaseUntil: null,
         },
       }),
     );
@@ -1021,10 +1083,33 @@ async function syncGoogleCalendarConnection(
       error instanceof Error ? error.message : "Google Calendar sync failed";
     await db.calendarConnection.update({
       where: { id: connection.id },
-      data: { lastError: message },
+      data: { lastError: message, syncLeaseUntil: null },
     });
     await syncCalendarConnectionMirror(connection.id);
     return { ...stats, error: message };
+  }
+}
+
+// Race `work` against a wall clock. If the clock wins, `onStop` supplies the
+// result and the still-running work is left to finish or die with the
+// function — its writes are idempotent upserts, so that costs nothing but
+// time. The timer is cleared when work wins so it never fires later.
+async function withHardStop<T>(
+  work: Promise<T>,
+  at: number,
+  onStop: () => T,
+): Promise<T> {
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  const stop = new Promise<T>((resolve) => {
+    timer = setTimeout(() => resolve(onStop()), Math.max(0, at - Date.now()));
+  });
+  try {
+    return await Promise.race([work, stop]);
+  } finally {
+    if (timer) clearTimeout(timer);
+    // If the clock won, a later rejection from the abandoned walk must not
+    // surface as an unhandled rejection.
+    work.catch(() => undefined);
   }
 }
 
@@ -1035,15 +1120,20 @@ async function processCalendarBatch(input: {
   calendarId: string;
   items: GoogleCalendarEvent[];
   peopleByEmail: Map<string, { id: string; first: string; last: string }>;
+  // Past this instant no further event is started. The walker then parks the
+  // page that held the unfinished items, so they are refetched next run.
+  deadline: number;
 }) {
   let createdPlans = 0;
   let updatedPlans = 0;
   let cancelled = 0;
   let fetched = 0;
+  const pastDeadline = () => Date.now() >= input.deadline;
 
   const toUpsert: GoogleCalendarEvent[] = [];
   for (const item of input.items) {
     if (!item.id) continue;
+    if (pastDeadline()) break;
     fetched += 1;
     if (item.status === "cancelled") {
       cancelled += await withCalendarDbRetry(() =>
@@ -1064,19 +1154,24 @@ async function processCalendarBatch(input: {
   // function timeout on a busy calendar. Overlap a few events, not the whole
   // batch — 25 concurrent interactive transactions is what starved Qin and
   // Sightmachine after the personal calendars finished.
-  const results = await mapPool(toUpsert, UPSERT_CONCURRENCY, (item) =>
-    withCalendarDbRetry(() =>
-      upsertCalendarEvent({
-        actor: input.actor,
-        workspaceId: input.workspaceId,
-        connectionId: input.connectionId,
-        calendarId: input.calendarId,
-        item,
-        peopleByEmail: input.peopleByEmail,
-      }),
-    ),
+  const results = await mapPool(
+    toUpsert,
+    UPSERT_CONCURRENCY,
+    (item) =>
+      withCalendarDbRetry(() =>
+        upsertCalendarEvent({
+          actor: input.actor,
+          workspaceId: input.workspaceId,
+          connectionId: input.connectionId,
+          calendarId: input.calendarId,
+          item,
+          peopleByEmail: input.peopleByEmail,
+        }),
+      ),
+    { shouldStop: pastDeadline },
   );
   for (const result of results) {
+    if (!result) continue; // not started: the deadline passed first
     if (result.createdPlan) createdPlans += 1;
     else updatedPlans += 1;
   }
@@ -1715,6 +1810,7 @@ async function syncEventPages(
     ingestFrom: Date | null;
     deadline: number;
     onBatch: (items: GoogleCalendarEvent[]) => Promise<void>;
+    onProgress?: (progress: { currentPageToken?: string }) => void;
   },
 ) {
   return walkEventPages<GoogleCalendarEvent>({
@@ -1725,6 +1821,7 @@ async function syncEventPages(
     pageSize: GOOGLE_PAGE_SIZE,
     batchSize: DB_BATCH_SIZE,
     onBatch: input.onBatch,
+    onProgress: input.onProgress,
     fetchPage: async (params) => {
       const res = await googleFetch(
         `${GOOGLE_CALENDAR_BASE}/calendars/${encodeURIComponent(input.calendarId)}/events?${params}`,
