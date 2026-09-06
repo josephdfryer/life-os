@@ -68,3 +68,6 @@ ds-bundle/
 .design-sync/.cache/
 .design-sync/learnings/
 .design-sync/node_modules
+
+# Prisma client is generated on install (root postinstall), never committed.
+packages/db/generated/
