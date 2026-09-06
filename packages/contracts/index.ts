@@ -411,6 +411,32 @@ export type PersonResource = z.infer<typeof personResourceContract>
 export const peoplePageContract = cursorPageContract(personResourceContract)
 export type PeoplePage = z.infer<typeof peoplePageContract>
 
+// GET /v1/people/attention — people whose declared cadence has lapsed, most
+// overdue first. Computed from @life-os/alignment on every call, never stored;
+// the same numbers Persons' "needs attention" filter and Home's nudges use.
+export const attentionItemContract = z.object({
+  personId: z.string(),
+  first: z.string(),
+  last: z.string(),
+  closeness: z.number().int(),
+  score: z.number().nonnegative(),
+  cadenceDays: z.number().int().positive().nullable(),
+  lastInteractionAt: z.string().datetime({ offset: true }).nullable(),
+  lastInteractionSummary: z.string().nullable(),
+  daysSinceLast: z.number().int().nonnegative().nullable(),
+  daysOverdue: z.number().int().nonnegative(),
+  hasActivePlan: z.boolean(),
+  suggestedAction: z.enum(["first_touch", "reach_out", "follow_up_plan"]),
+}).strict()
+export type AttentionItem = z.infer<typeof attentionItemContract>
+
+export const attentionQueueContract = z.object({
+  data: z.array(attentionItemContract),
+  limit: z.number().int().positive(),
+  generatedAt: z.string().datetime({ offset: true }),
+}).strict()
+export type AttentionQueue = z.infer<typeof attentionQueueContract>
+
 const interactionMutableFieldsContract = z.object({
   duration: z.number().int().nonnegative().optional().nullable(),
   summary: nullableText.optional(),

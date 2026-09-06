@@ -2,8 +2,9 @@
 // active Plans) and what's actually happened (Interactions). App-layer
 // synthesis, never a life primitive; nothing here is ever persisted.
 
-export { relationshipGapScore, daysSince, isUnreviewedBulkContact } from "./src/scoring"
-export { getRelationshipGaps } from "./src/relationships"
+export { relationshipGapScore, daysSince, isUnreviewedBulkContact, cadenceDaysFor } from "./src/scoring"
+export { getRelationshipGaps, getAttentionQueue } from "./src/relationships"
+export type { AttentionQueueItem } from "./src/relationships"
 export { getStalledPlanSignals } from "./src/plans"
 export { getBirthdaySignals } from "./src/birthday-signals"
 export { getAlignmentSignals } from "./src/signals"
