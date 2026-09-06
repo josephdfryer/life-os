@@ -159,11 +159,11 @@ async function HomeDataPanels({
       <Suspense fallback={<WidgetSkeleton className="dashboard-commitments-card" />}>
         <CommitmentsWidget workspaceId={workspaceId} personsUrl={personsUrl} />
       </Suspense>
-      <Suspense fallback={<WidgetSkeleton className="dashboard-schedule-card" />}>
-        <ScheduleWidget workspaceId={workspaceId} personsUrl={personsUrl} tz={tz} />
-      </Suspense>
       <Suspense fallback={<WidgetSkeleton className="dashboard-nudges-card" />}>
         <NudgesWidget workspaceId={workspaceId} personsUrl={personsUrl} tz={tz} />
+      </Suspense>
+      <Suspense fallback={<WidgetSkeleton className="dashboard-schedule-card" />}>
+        <ScheduleWidget workspaceId={workspaceId} personsUrl={personsUrl} tz={tz} />
       </Suspense>
       <Suspense fallback={<WidgetSkeleton className="dashboard-communications-card" />}>
         <CommunicationsReviewWidget workspaceId={workspaceId} personsUrl={personsUrl} />
@@ -190,8 +190,8 @@ function DashboardDataSkeleton() {
   return (
     <>
       <WidgetSkeleton className="dashboard-commitments-card" />
-      <WidgetSkeleton className="dashboard-schedule-card" />
       <WidgetSkeleton className="dashboard-nudges-card" />
+      <WidgetSkeleton className="dashboard-schedule-card" />
       <WidgetSkeleton className="dashboard-communications-card" />
     </>
   )

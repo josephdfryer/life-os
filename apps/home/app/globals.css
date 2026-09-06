@@ -154,12 +154,15 @@ a {
   flex-shrink: 0;
 }
 
+.dashboard-nudges-card {
+  grid-column: 1;
+}
+
 .dashboard-schedule-card {
   grid-column: 2;
 }
 
 .dashboard-commitments-card,
-.dashboard-nudges-card,
 .dashboard-communications-card,
 .dashboard-content-grid > .communications-review {
   grid-column: 1 / -1;
