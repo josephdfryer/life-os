@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useLayoutEffect, useState, useCallback, useRef, useMemo, memo } from "react"
-import { useWindowVirtualizer } from "@tanstack/react-virtual"
+import { useVirtualizer } from "@tanstack/react-virtual"
 import PersonCard from "@/components/persons/PersonCard"
 import PersonCardSkeleton from "@/components/persons/PersonCardSkeleton"
 import AddPersonModal from "@/components/persons/AddPersonModal"
@@ -34,7 +34,8 @@ export default function PersonsClient({ initialData }: { initialData: PageData |
   const searchTimer                   = useRef<ReturnType<typeof setTimeout> | null>(null)
   const sentinelRef                   = useRef<HTMLDivElement | null>(null)
   const parentRef                     = useRef<HTMLDivElement | null>(null)
-  const parentOffsetRef               = useRef(0)
+  const [scrollEl, setScrollEl]       = useState<HTMLElement | null>(null)
+  const [scrollMargin, setScrollMargin] = useState(0)
   const loadingMoreRef                = useRef(false)
   const skipFirstFetch                = useRef(!!initialData)
   const requestVersionRef             = useRef(0)
@@ -51,17 +52,26 @@ export default function PersonsClient({ initialData }: { initialData: PageData |
   const [deleteAllError, setDeleteAllError] = useState("")
   const [deleteAllBackedUp, setDeleteAllBackedUp] = useState(false)
 
-  // Virtual scrolling against the page/window so the list flows the full
-  // height of the screen instead of a nested, cut-off scroll area.
+  // Virtualize against the app's real scroll container (<main>) so the list
+  // uses the page's natural scroll and flows the full height of the screen —
+  // no nested, cut-off scroll area.
   useLayoutEffect(() => {
-    parentOffsetRef.current = parentRef.current?.offsetTop ?? 0
+    const el = parentRef.current
+    const main = el?.closest("main") as HTMLElement | null
+    setScrollEl(main)
+    if (el && main) {
+      setScrollMargin(
+        el.getBoundingClientRect().top - main.getBoundingClientRect().top + main.scrollTop,
+      )
+    }
   })
 
-  const rowVirtualizer = useWindowVirtualizer({
+  const rowVirtualizer = useVirtualizer({
     count: data.persons.length,
+    getScrollElement: () => scrollEl,
     estimateSize: () => 90, // Estimated row height in pixels
     overscan: 8,
-    scrollMargin: parentOffsetRef.current,
+    scrollMargin,
   })
 
   const fetchPage = useCallback(async (p: number, q: string, s: SortKey, v: PersonListView, activeFilters: Filter[], reset: boolean) => {
@@ -198,12 +208,12 @@ export default function PersonsClient({ initialData }: { initialData: PageData |
       entries => {
         if (entries[0]?.isIntersecting) loadMore()
       },
-      { rootMargin: "1200px 0px" },
+      { root: scrollEl, rootMargin: "1200px 0px" },
     )
 
     observer.observe(sentinel)
     return () => observer.disconnect()
-  }, [data.hasMore, loadMore, loading])
+  }, [data.hasMore, loadMore, loading, scrollEl])
 
   function reload() {
     // Invalidate cache when reloading
