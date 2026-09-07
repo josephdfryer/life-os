@@ -2,6 +2,12 @@
 
 Status: **active** · Consolidated 2026-09-06 · Tracker: [Linear, team "Joseph Fryer"](https://linear.app/josephfryer)
 
+**Ordering principle (2026-09-07).** LifeOS serves three goals: (1) Joseph lives
+deliberately, with a system honest enough to tell him when he isn't; (2) he owns the
+context foundation any AI can reason against; (3) some of it eventually sells. Goal 1
+is the one that has to be true first — it is the only one with a user. Where a
+workstream serves 2 or 3 ahead of 1, that is a deliberate detour and §5 says so.
+
 This document replaces "which plan doc is current?" as a question. Every plan
 in `docs/` is listed in §1 with a disposition. Everything that is actually
 being worked is a Linear issue in one of the six `LifeOS ·` projects in §2.
@@ -32,7 +38,8 @@ Rules:
 | `PERSONS_MESH_PARITY_PLAN.md` | Planning only. Gap table and build order are still correct. | **Active — feeds Persons Web** | Persons Web & Daily Use |
 | `SOCIAL_NEWS_MONITORING_PLAN.md` | Planning only. Depends on Persons having reliable social handles first. | **Parked until Social Scans P2 ships** | Social Scans (later phases) |
 | `ASSISTANT_WRITE_CAPABILITIES_PLAN.md` | Steps 1–3 landed, `create_person` has the two-phase confirm. Steps 4–6 (generalize confirm, review tier, undo) open. | **Active** | Persons Web & Daily Use |
-| `ACTION_SYSTEM_PLAN.md` | Phase 1 + core Phase 2 done (Focus queue live in Home). Phases 3–5 open. | **Active, low priority** | Persons Web & Daily Use |
+| `ASSISTANT_EXECUTION_LAYER_PLAN.md` | Planning complete. Durable runs, proactive monitors, external messaging/browser/voice adapters, credential brokering, and bounded transactions are intentionally unimplemented. | **Backlog - unassigned** | Assistant Execution Layer |
+| `ACTION_SYSTEM_PLAN.md` | Phase 1 + core Phase 2 done (Focus queue live in Home). Phase 4 (honest completion) queued as JF-233 under the Declared layer milestone; Phases 3 and 5 open. | **Active** | Persons Web & Daily Use |
 | `DAILY_USE_PLAN.md` | Engineering complete through Phase 6. Open: retire old Persons Google sync path; real-use gates only Joseph can pass. | **Active — gates only** | Persons Web & Daily Use |
 | `DEPLOYMENT_HARDENING_PLAN.md` | Phases 1, 3, 4 done. Remaining: staging DB, git-connect seven projects for previews, branch ruleset, env drift detector. | **Active** | Ops & Platform |
 | `~/.claude/plans/please-plan-it-out-ancient-lecun.md` (Vercel Pro portability) | Not started: no `LEAVING_VERCEL.md`, `standalone` still off, Workflow DevKit still present, three crons still split across Actions + Vercel. Codex lane. | **Active — Codex** | Ops & Platform |
@@ -62,13 +69,12 @@ Architecture references (not plans, stay authoritative): `MANIFESTO.md`,
 
 ### 2.1 Ops & Platform — unblock first
 
-The three things that have to happen before feature work gets full attention:
+What remains before feature work gets full attention:
 
-1. **Calendar auto-sync has failed every run since 2026-09-05** (GitHub issue #38,
-   504 `FUNCTION_INVOCATION_TIMEOUT` at the 300s cap). Home's Today depends on
-   it. Fix from the Vercel runtime logs for the events project and DB write
-   counts, not from theory. Expected shape: per-run time budget + per-calendar
-   cursor so one invocation is bounded and the next run resumes.
+1. ~~**Calendar auto-sync 504s since 2026-09-05.**~~ **Shipped** — JF-140 (`50e0237`)
+   budgets the incremental walks, parks a per-calendar cursor, leases connections,
+   and hard-stops before Vercel kills the invocation. Watch a few runs before
+   calling it closed.
 2. **Housekeeping.** PR 39 duplicates commit 7026718 → close. Untracked Level Up
    Replit design package → commit under `docs/design/` or delete. Revert the
    generated `apps/home/next-env.d.ts` churn.
@@ -93,24 +99,34 @@ Spec: `LEVEL_UP_SKILLS_WEB_PLAN.md` §7.
 
 ### 2.5 Persons Web & Daily Use
 
-Ordered by leverage, per `PERSONS_MESH_PARITY_PLAN.md` §5:
+Reordered 2026-09-07: the real-use gates moved from last to first, and the
+Declared layer milestone is new. Items 3 onward stay in `PERSONS_MESH_PARITY_PLAN.md`
+§5 leverage order.
 
-1. **Push the cadence data.** The needs-attention computation exists in
-   `apps/persons/lib/person-list-presentation.ts` but is pull-only. Move the
-   computation into `packages/domain`, expose `GET /v1/people/attention`, render
-   it as a Home card and (later) a notification. This one endpoint also feeds
-   the iOS Today deck in §3.
-2. **Exact-match auto-merge tier** (shared normalized email or E.164 phone)
+1. **Real-use gates (JF-197, Joseph).** One week at 80% Home use, four evening
+   closeouts in seven days, five-item inbox timing. Blocks the Declared layer
+   deliberately — the gates are what say whether the loop is worth extending.
+2. **Declared layer** (new milestone). The declared side of the tension layer does
+   not exist as a queryable object: `Plan` is mostly calendar-derived prediction and
+   `Person.values` is an unqueried JSON string, so `packages/alignment` can only ever
+   compute relationship cadence. JF-232 representation and `declareValue` command →
+   JF-234 the surface that puts real values in the graph → JF-235 the `value_drift`
+   signal in the intelligence tab, with evidence both ways and no stored score.
+   JF-233 (Event on Plan completion) sits here too: it is what makes a completed
+   evidence-to-action loop countable rather than a status field.
+3. **Push the cadence data.** ✅ `GET /v1/people/attention` shipped (JF-165, `f1ae8f2`),
+   cadence logic now in `packages/domain`. Open: JF-190, the push-style Home card with
+   one-tap log-a-touch, and later a notification. The endpoint also feeds the iOS
+   Today deck in §3.
+4. **Exact-match auto-merge tier** (shared normalized email or E.164 phone)
    above the manual queue. Designed in `IOS_PLATFORM_PLAN.md` §6.2, not built.
-3. **Split Google consent** into contacts-only and Gmail so contact sync never
+5. **Split Google consent** into contacts-only and Gmail so contact sync never
    pulls a customer into the restricted-scope CASA tier.
-4. **Retire the old Persons-owned Google sync path** (Daily Use Phase 3's last
-   open box). Pairs with the calendar-sync fix.
-5. **Assistant writes**: generalize the two-phase confirmation harness beyond
+6. **Retire the old Persons-owned Google sync path** (Daily Use Phase 3's last
+   open box). Now unblocked — the calendar-sync fix shipped.
+7. **Assistant writes**: generalize the two-phase confirmation harness beyond
    `create_person`, then the review tier, then undo.
-6. **Daily Brief as a served surface** (currently `scripts/brief` writes a file).
-7. Real-use gates (Joseph): one week at 80% Home use; four evening closeouts in
-   seven days; five-item inbox timing.
+8. **Daily Brief as a served surface** (currently `scripts/brief` writes a file).
 
 ### 2.6 iOS Platform (shared foundation, Level Up native)
 
@@ -317,17 +333,38 @@ customers get the export-file paths only).
 
 ## 5. Suggested order for the next two weeks
 
-1. Calendar sync fix (Claude, from logs). Housekeeping (Cursor closes PR 39;
-   Joseph decides the Replit package). `ingestContact` source gate (Claude,
-   same day).
-2. Track C C5 close-out (Claude → Codex).
-3. Level Up Phase 1 close: Plans nav + Plan create/link (Codex). Then Phase 2.
-4. Persons iOS P0 API/scopes (Claude) in parallel with Level Up Phase 2 (Codex).
-5. Social Scans S1 (Claude) once P0 lands, since both touch `device-ingest.ts`.
-6. Persons Web items 1–3 (attention endpoint, auto-merge tier, OAuth split) —
-   the attention endpoint is shared with iOS P0-c, so it goes first.
-7. Persons iOS P1 → P2 → P3, with S2 Instagram slotted after P2.
-8. iOS Platform items resume after Level Up Skills Web Phase 2 exits.
+Reordered 2026-09-07 against the ordering principle at the top of this file. The
+previous list led with Level Up Skills Web, Persons iOS P0, and Social Scans S1 —
+all of which serve goal 3. The two items that gated goal 1 have both shipped
+(JF-140 calendar budget, JF-165 attention endpoint), so what is left in front of
+goal 1 is a week of real use and one missing layer.
+
+1. **JF-197, real-use gates — Joseph, and nothing else runs behind it.** One week
+   at 80% Home use, four evening closeouts in seven days, five-item inbox under
+   two minutes. This is the whole test of whether the daily loop works, and no
+   commit substitutes for it. Anything that blocks a gate becomes an issue; that
+   is the point of running it. Note `DAILY_USE_PLAN.md`'s own rule: a closeout is
+   done when there are no urgent reconciliations, not when the inbox is empty.
+2. **Declared layer** (new milestone, Persons Web & Daily Use). JF-232 representation
+   and command → JF-234 the declaring surface → JF-235 the `value_drift` signal.
+   Today the system can only compute relationship cadence, because the declared
+   side of the tension layer does not exist as a queryable object. This is the
+   gap between what the manifesto promises and what the graph can answer.
+3. **JF-233 honest completion** — Event on Plan completion, so intended-vs-happened
+   comes from facts and a completed loop becomes countable.
+4. **JF-190 Home attention card** (Codex) — the endpoint exists, the push-style
+   surface does not. Cheap, and it is goal-1 work.
+5. Housekeeping and Track C C5 close-out, whenever they fit.
+
+Everything below here is goal 3 — the commercial line — and picking it up before
+the gates pass is a deliberate detour, not a default:
+
+6. Level Up Phase 1 close: Plans nav + Plan create/link (Codex). Then Phase 2.
+7. Persons iOS P0 remainder (Claude) in parallel with Level Up Phase 2 (Codex).
+8. Social Scans S1 (Claude), since it and P0 both touch `device-ingest.ts`.
+9. Persons Web items 2–3 (auto-merge tier, OAuth split).
+10. Persons iOS P1 → P2 → P3, with S2 Instagram slotted after P2; iOS Platform
+    resumes after Level Up Skills Web Phase 2 exits.
 
 Decisions only Joseph can make, tracked as `Agent/Joseph` issues: Apple
 Developer enrollment status; the Replit design package; GitHub secrets and
