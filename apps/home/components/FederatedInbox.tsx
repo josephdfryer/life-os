@@ -924,10 +924,14 @@ function Filter({ label, value, options, onChange }: {
   options: readonly (readonly [string, string])[]
   onChange: (value: string) => void
 }) {
+  // aria-label rather than leaning on the wrapping <label>: the label element
+  // contains the option text too, so the computed accessible name came out as
+  // "AgeAny ageOlder than 1 day…" — unusable to a screen reader, and ambiguous
+  // to anything matching on it.
   return (
     <label className="inbox-filter">
       <span>{label}</span>
-      <select value={value} onChange={event => onChange(event.target.value)}>
+      <select aria-label={label} value={value} onChange={event => onChange(event.target.value)}>
         {options.map(([key, text]) => <option key={key} value={key}>{text}</option>)}
       </select>
     </label>

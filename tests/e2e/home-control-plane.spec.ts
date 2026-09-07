@@ -11,7 +11,13 @@ test.describe('Home control plane', () => {
     await page.getByRole('link', { name: 'Inbox', exact: true }).click()
     await expect(page).toHaveURL(/\/inbox$/)
     await expect(page.getByRole('heading', { name: 'Inbox' })).toBeVisible()
-    await expect(page.getByText('Legacy queues · read only')).toBeVisible()
+    // Without the shared review service the canonical proposals are missing,
+    // but the legacy queues are no longer read only — every one of them has a
+    // resolver, so the inbox must offer a verb rather than just listing work.
+    await expect(page.getByText('Legacy queues', { exact: true })).toBeVisible()
+    const bulk = page.getByRole('region', { name: 'Bulk actions' })
+    await expect(bulk).toBeVisible()
+    await expect(bulk).toContainText('Dismiss')
 
     await page.getByRole('link', { name: 'Intelligence', exact: true }).click()
     await expect(page).toHaveURL(/\/intelligence$/)
@@ -140,12 +146,29 @@ test.describe('Home control plane', () => {
     await expect(page.getByRole('heading', { name: 'Useful, never unquestionable' })).toBeVisible()
   })
 
+  // Exact matches throughout: row checkboxes are labelled "Select <title>", and
+  // any title containing "age" (message, staged) collides with a substring
+  // match on the Age filter.
   test('inbox exposes source, primitive, confidence, and age filters', async ({ page }) => {
     await page.goto('/inbox')
-    await expect(page.getByLabel('Source')).toBeVisible()
-    await expect(page.getByLabel('Primitive')).toBeVisible()
-    await expect(page.getByLabel('Confidence')).toBeVisible()
-    await expect(page.getByLabel('Age')).toBeVisible()
+    await expect(page.getByLabel('Source', { exact: true })).toBeVisible()
+    await expect(page.getByLabel('Primitive', { exact: true })).toBeVisible()
+    await expect(page.getByLabel('Confidence', { exact: true })).toBeVisible()
+    await expect(page.getByLabel('Age', { exact: true })).toBeVisible()
+  })
+
+  test('inbox search narrows the queue and the bulk bar counts what it will touch', async ({ page }) => {
+    await page.goto('/inbox')
+    const bulk = page.getByRole('region', { name: 'Bulk actions' })
+    await expect(bulk).toBeVisible()
+
+    await page.getByLabel('Search review items').fill('WhatsApp')
+    await expect(page.getByText(/Showing \d+ of \d+/)).toBeVisible()
+
+    // Selecting a row moves the bar off the focused-row default and onto the
+    // selection, which is the whole contract of the bulk actions.
+    await page.getByLabel('Select A staged WhatsApp message for Qin').click()
+    await expect(bulk).toContainText('1 selected')
   })
 
   test('communications selection can be added to one searched Person', async ({ page }) => {
