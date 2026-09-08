@@ -122,7 +122,9 @@ export default function AssistantPanel() {
         body: JSON.stringify({ message: text }),
       })
       const data = await res.json()
-      const reply = res.ok ? data.reply : (data.error?.message ?? data.error ?? "Something went wrong")
+      const rawReply = res.ok ? data.reply : (data.error?.message ?? data.error ?? "Something went wrong")
+      // API error envelopes can be objects; React cannot render those as children.
+      const reply = typeof rawReply === "string" ? rawReply : "Something went wrong"
       scrollToLatestRef.current = true
       setMessages(prev => [...prev, { id: `local-${Date.now()}-r`, role: "assistant", content: reply }])
     } catch {
