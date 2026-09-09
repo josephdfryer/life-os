@@ -22,7 +22,7 @@ At the end of a session, leave a handoff:
 npm run agent:finish -- --agent claude --summary "What changed and why" --next "Best next step"
 ```
 
-The local state lives in `.agent-sync/` and is intentionally ignored by git. See `docs/AGENT_SYNC.md` for the full protocol.
+This also posts the summary/next-step as a comment on the Linear issue in the current branch name (pass `--issue JF-123` if the branch doesn't carry one) — that comment, not `.agent-sync/`, is the durable handoff. `.agent-sync/` is gitignored, local to one machine, and does not survive a fresh clone; treat it as a fast local cache of git state only. See `docs/AGENT_SYNC.md` for the full protocol and `docs/LINEAR_WORKFLOW.md` for how Linear coordination works end to end.
 
 ## Local Development: Always Bypass Auth
 
