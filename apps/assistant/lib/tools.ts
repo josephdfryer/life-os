@@ -25,6 +25,13 @@ import {
   createPersonFromAssistant,
   type PendingPersonCreation,
 } from "@/lib/person-creation";
+import {
+  addLinearComment,
+  createLinearIssue,
+  getLinearIssue,
+  searchLinearIssues,
+  updateLinearIssue,
+} from "@/lib/linear";
 
 const TZ = "America/Los_Angeles";
 
@@ -791,6 +798,93 @@ export const TOOLS: AssistantToolDefinition[] = [
       required: ["personId"],
     },
   },
+  {
+    name: "search_linear_issues",
+    capability: "read",
+    requiredScope: "linear.read",
+    description:
+      "Search this Linear workspace's issues (the work queue for LifeOS itself — docs/LINEAR_WORKFLOW.md). Filter by keyword, status, team, or 'assigned to me'. Returns issue keys (e.g. JF-157) for use in get_linear_issue.",
+    input_schema: {
+      type: "object",
+      properties: {
+        query: { type: "string", description: "Keyword to match in title/description" },
+        assignedToMe: { type: "boolean", description: "Only issues assigned to the Linear account this assistant is connected as" },
+        status: { type: "string", description: "Workflow status name or fragment, e.g. Todo, In Progress, Done, Backlog" },
+        teamKey: { type: "string", description: "Team key, e.g. JF. Defaults to the primary team." },
+        limit: { type: "number", description: "Default 10, max 25" },
+      },
+      required: [],
+    },
+  },
+  {
+    name: "get_linear_issue",
+    capability: "read",
+    requiredScope: "linear.read",
+    description:
+      "Full detail for one Linear issue by its key (e.g. JF-157): title, description, status, assignee, priority, and recent comments.",
+    input_schema: {
+      type: "object",
+      properties: {
+        identifier: { type: "string", description: "Issue key, e.g. JF-157" },
+      },
+      required: ["identifier"],
+    },
+  },
+  {
+    name: "create_linear_issue",
+    capability: "write",
+    requiredScope: "linear.write",
+    description:
+      "Create a new Linear issue. Use when the member asks to file, track, or create a ticket/task/bug in Linear. Defaults to the JF team unless another is given. Returns the new issue's key and URL.",
+    input_schema: {
+      type: "object",
+      properties: {
+        title: { type: "string" },
+        description: { type: "string", description: "Markdown body, e.g. a 'Done when' section" },
+        teamKey: { type: "string", description: "Team key, e.g. JF. Defaults to the primary team." },
+        priority: {
+          type: "integer",
+          enum: [0, 1, 2, 3, 4],
+          description: "0 none, 1 urgent, 2 high, 3 medium, 4 low",
+        },
+        assignee: { type: "string", description: "Name or email to assign to, if known" },
+        status: { type: "string", description: "Initial workflow status, e.g. Todo. Defaults to the team's default status." },
+      },
+      required: ["title"],
+    },
+  },
+  {
+    name: "update_linear_issue",
+    capability: "write",
+    requiredScope: "linear.write",
+    description:
+      "Change an existing Linear issue's status, assignee, and/or priority. Use get_linear_issue or search_linear_issues first to confirm the issue key.",
+    input_schema: {
+      type: "object",
+      properties: {
+        identifier: { type: "string", description: "Issue key, e.g. JF-157" },
+        status: { type: "string", description: "New workflow status name, e.g. In Progress, Done" },
+        assignee: { type: "string", description: "Name or email to reassign to" },
+        priority: { type: "integer", enum: [0, 1, 2, 3, 4] },
+      },
+      required: ["identifier"],
+    },
+  },
+  {
+    name: "add_linear_comment",
+    capability: "write",
+    requiredScope: "linear.write",
+    description:
+      "Add a comment to an existing Linear issue — use for status updates, hand-offs, or closing evidence per docs/LINEAR_WORKFLOW.md.",
+    input_schema: {
+      type: "object",
+      properties: {
+        identifier: { type: "string", description: "Issue key, e.g. JF-157" },
+        body: { type: "string" },
+      },
+      required: ["identifier", "body"],
+    },
+  },
 ];
 
 // ── Executors ────────────────────────────────────────────────────
@@ -915,6 +1009,16 @@ export async function executeTool(
           workspaceId,
           fileScope,
         );
+      case "search_linear_issues":
+        return await searchLinearIssuesTool(input);
+      case "get_linear_issue":
+        return await getLinearIssueTool(String(input.identifier ?? ""));
+      case "create_linear_issue":
+        return await createLinearIssueTool(input);
+      case "update_linear_issue":
+        return await updateLinearIssueTool(input);
+      case "add_linear_comment":
+        return await addLinearCommentTool(input);
       default:
         return `Unknown tool: ${name}`;
     }
@@ -2365,6 +2469,85 @@ function localDate(date: Date) {
     month: "2-digit",
     day: "2-digit",
   }).format(date);
+}
+
+// ── Linear ───────────────────────────────────────────────────────
+//
+// Linear is external to the graph — no workspaceId scoping, since the
+// assistant talks to one Linear account (LINEAR_API_KEY) shared across
+// however this instance is deployed, same as Twilio/Anthropic credentials.
+
+function summarizeLinearIssue(issue: {
+  identifier: string;
+  title: string;
+  state: string;
+  assignee: string | null;
+  priority: number;
+  url: string;
+}) {
+  const priorityLabel = ["No priority", "Urgent", "High", "Medium", "Low"][issue.priority] ?? "";
+  return `${issue.identifier} [${issue.state}] ${issue.title}${issue.assignee ? ` · ${issue.assignee}` : " · unassigned"}${priorityLabel ? ` · ${priorityLabel}` : ""} · ${issue.url}`;
+}
+
+async function searchLinearIssuesTool(input: Record<string, unknown>) {
+  const issues = await searchLinearIssues({
+    query: optionalString(input.query),
+    assignedToMe: input.assignedToMe === true,
+    status: optionalString(input.status),
+    teamKey: optionalString(input.teamKey),
+    limit: typeof input.limit === "number" ? input.limit : undefined,
+  });
+  if (!issues.length) return "No matching Linear issues.";
+  return issues.map(summarizeLinearIssue).join("\n");
+}
+
+async function getLinearIssueTool(identifier: string) {
+  if (!identifier.trim()) return "An issue key is required, e.g. JF-157";
+  const issue = await getLinearIssue(identifier);
+  if (!issue) return `No Linear issue ${identifier}`;
+  const lines = [
+    summarizeLinearIssue(issue),
+    issue.description ? `\n${issue.description.slice(0, 1500)}` : "",
+    issue.comments.length ? "\nComments:" : "",
+    ...issue.comments.map(
+      (c) => `  - ${c.author ?? "unknown"}: ${c.body.slice(0, 300)}`,
+    ),
+  ];
+  return lines.filter(Boolean).join("\n");
+}
+
+async function createLinearIssueTool(input: Record<string, unknown>) {
+  const title = String(input.title ?? "").trim();
+  if (!title) return "A Linear issue needs a title";
+  const issue = await createLinearIssue({
+    title,
+    description: optionalString(input.description),
+    teamKey: optionalString(input.teamKey),
+    priority: typeof input.priority === "number" ? input.priority : undefined,
+    assignee: optionalString(input.assignee),
+    status: optionalString(input.status),
+  });
+  return `Created ${summarizeLinearIssue(issue)}`;
+}
+
+async function updateLinearIssueTool(input: Record<string, unknown>) {
+  const identifier = String(input.identifier ?? "").trim();
+  if (!identifier) return "An issue key is required, e.g. JF-157";
+  const issue = await updateLinearIssue({
+    identifier,
+    status: optionalString(input.status),
+    assignee: optionalString(input.assignee),
+    priority: typeof input.priority === "number" ? input.priority : undefined,
+  });
+  return `Updated ${summarizeLinearIssue(issue)}`;
+}
+
+async function addLinearCommentTool(input: Record<string, unknown>) {
+  const identifier = String(input.identifier ?? "").trim();
+  const body = String(input.body ?? "").trim();
+  if (!identifier || !body) return "Both identifier and body are required";
+  const { url } = await addLinearComment({ identifier, body });
+  return `Commented on ${identifier}: ${url}`;
 }
 
 // Name → capability, derived from the definitions above so the two can never
