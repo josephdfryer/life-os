@@ -40,7 +40,7 @@ npm run agent:start -- --agent codex --fetch
 
 `agent:start` (when given `--summary`/`--next`) and `agent:finish` call the Linear API directly — no MCP dependency, so Codex and Cursor get the same durable handoff as Claude:
 
-1. Set `LINEAR_API_KEY` (a personal API key from Linear → Settings → API) in the repo-root `.env` or the environment. Without it, the script prints a reason and continues — nothing fails.
+1. Set `LINEAR_API_KEY` (a personal API key from Linear → Settings → API) in the repo-root `.env.local`, `.env`, or the environment (checked in that order). Without it, the script prints a reason and continues — nothing fails.
 2. The comment goes on whichever issue key it finds in the current branch name (`JF-157` out of `codex/jf-157-add-nav`), or the one passed via `--issue JF-157`. Without either, it skips and says so.
 3. The comment body is exactly the `--summary`/`--next` you passed — same content that used to go only into `.agent-sync/activity.md`.
 

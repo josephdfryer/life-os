@@ -66,22 +66,24 @@ function loadDotEnvValue(key) {
     return process.env[key];
   }
 
-  const envPath = join(repoRoot, ".env");
-  if (!existsSync(envPath)) {
-    return undefined;
+  for (const filename of [".env.local", ".env"]) {
+    const envPath = join(repoRoot, filename);
+    if (!existsSync(envPath)) {
+      continue;
+    }
+
+    const line = readFileSync(envPath, "utf8")
+      .split("\n")
+      .find((row) => row.trim().startsWith(`${key}=`));
+    if (line) {
+      return line
+        .slice(line.indexOf("=") + 1)
+        .trim()
+        .replace(/^["']|["']$/g, "");
+    }
   }
 
-  const line = readFileSync(envPath, "utf8")
-    .split("\n")
-    .find((row) => row.trim().startsWith(`${key}=`));
-  if (!line) {
-    return undefined;
-  }
-
-  return line
-    .slice(line.indexOf("=") + 1)
-    .trim()
-    .replace(/^["']|["']$/g, "");
+  return undefined;
 }
 
 function findIssueKey(...sources) {
@@ -115,7 +117,7 @@ async function postLinearHandoff({ agent, command, summary, next, issue }) {
   const issueKey = issue || findIssueKey(getBranch());
 
   if (!apiKey) {
-    return { posted: false, reason: "LINEAR_API_KEY not set (checked env and .env) — skipping Linear comment." };
+    return { posted: false, reason: "LINEAR_API_KEY not set (checked env, .env.local, .env) — skipping Linear comment." };
   }
   if (!issueKey) {
     return { posted: false, reason: "No issue key found in branch name and no --issue given — skipping Linear comment." };
