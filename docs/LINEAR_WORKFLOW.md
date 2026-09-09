@@ -39,24 +39,33 @@ consolidated plan is `docs/ROADMAP.md`; this file is the operating protocol.
    link), how it was verified, and any deviation from the issue's "Done when".
    Then `Done`. If the "Done when" was not fully met, leave it open and say
    what is missing.
-7. **Hand-offs are comments, not chat.** When Claude finishes step 1 of a
-   two-step issue pair (e.g. JF-143 → JF-148), the hand-off goes as a comment
-   on the next issue, so the record survives sessions and crashes.
-8. **`agent:finish` references issue keys.** The existing
+7. **Hand-offs are comments, not chat.** Every `agent:finish` posts its
+   `--summary`/`--next` as a comment on the current issue automatically (see
+   `docs/AGENT_SYNC.md`) — this is not just for two-step issue pairs anymore,
+   it is every session end, for every agent. When step 1 of a two-step pair
+   (e.g. JF-143 → JF-148) finishes, also leave a comment on the *next* issue
+   pointing at it, since the automatic comment only lands on the current one.
+8. **`agent:finish` references issue keys and posts to Linear directly.** Run
    `npm run agent:finish -- --agent <name> --summary "JF-157 done: …" --next "JF-158"`
-   protocol stays; Linear is the durable ledger, `.agent-sync/` is the local
-   catch-up brief.
+   at the end of every session, not just when switching tools. This calls the
+   Linear API itself (requires `LINEAR_API_KEY`; see `docs/AGENT_SYNC.md`), so
+   Codex and Cursor land the same durable comment Claude would via MCP — none
+   of them should rely on `.agent-sync/` alone, since it is gitignored and
+   local to one machine/container and does not survive a fresh clone.
 
 ## Claude's extra duty: scribe
 
-Claude is the only agent with Linear MCP access, so at the start of each
-session Claude:
+Claude has Linear MCP access, so at the start of each session Claude:
 
 - runs `npm run agent:start -- --agent claude`,
 - reads the last Codex/Cursor handoffs and recent commits,
-- mirrors any "Starting JF-…" / "Done JF-…" statements into Linear statuses
-  and comments,
+- mirrors any "Starting JF-…" / "Done JF-…" statements into Linear statuses,
 - files new issues for bugs or follow-ups those handoffs mention.
+
+`agent:start`/`agent:finish` now post handoff comments to Linear directly for
+every agent (see `docs/AGENT_SYNC.md`), so this is a backstop, not the only
+path — check for it if a Codex/Cursor session didn't have `LINEAR_API_KEY`
+set and its handoff never made it out of `.agent-sync/`.
 
 ## Plan docs vs Linear
 

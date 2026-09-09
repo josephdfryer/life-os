@@ -59,6 +59,101 @@ function ensureSyncDir() {
   mkdirSync(syncDir, { recursive: true });
 }
 
+// Minimal .env reader so this script can pick up LINEAR_API_KEY without
+// pulling in a dependency — root scripts must run in bare-node environments.
+function loadDotEnvValue(key) {
+  if (process.env[key]) {
+    return process.env[key];
+  }
+
+  for (const filename of [".env.local", ".env"]) {
+    const envPath = join(repoRoot, filename);
+    if (!existsSync(envPath)) {
+      continue;
+    }
+
+    const line = readFileSync(envPath, "utf8")
+      .split("\n")
+      .find((row) => row.trim().startsWith(`${key}=`));
+    if (line) {
+      return line
+        .slice(line.indexOf("=") + 1)
+        .trim()
+        .replace(/^["']|["']$/g, "");
+    }
+  }
+
+  return undefined;
+}
+
+function findIssueKey(...sources) {
+  for (const source of sources) {
+    const match = String(source || "").match(/\b([A-Za-z]{2,10}-\d+)\b/);
+    if (match) {
+      return match[1].toUpperCase();
+    }
+  }
+  return undefined;
+}
+
+async function linearGraphQL(apiKey, query, variables) {
+  const res = await fetch("https://api.linear.app/graphql", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Authorization: apiKey },
+    body: JSON.stringify({ query, variables }),
+  });
+  const json = await res.json();
+  if (!res.ok || json.errors) {
+    throw new Error(json.errors ? JSON.stringify(json.errors) : `HTTP ${res.status}`);
+  }
+  return json.data;
+}
+
+// Posts the handoff as a durable Linear comment so it survives past this
+// machine's gitignored .agent-sync/ cache — every agent gets one code path,
+// not just the one with native Linear MCP access.
+async function postLinearHandoff({ agent, command, summary, next, issue }) {
+  const apiKey = loadDotEnvValue("LINEAR_API_KEY");
+  const issueKey = issue || findIssueKey(getBranch());
+
+  if (!apiKey) {
+    return { posted: false, reason: "LINEAR_API_KEY not set (checked env, .env.local, .env) — skipping Linear comment." };
+  }
+  if (!issueKey) {
+    return { posted: false, reason: "No issue key found in branch name and no --issue given — skipping Linear comment." };
+  }
+
+  const body = [
+    `**${command === "started" ? "Starting" : "Handoff"} — ${agent}**`,
+    "",
+    summary ? summary : "_No summary provided._",
+    next ? `\nNext: ${next}` : "",
+  ]
+    .filter((line) => line !== "")
+    .join("\n");
+
+  try {
+    const data = await linearGraphQL(
+      apiKey,
+      `query($id: String!) { issue(id: $id) { id } }`,
+      { id: issueKey },
+    );
+    const issueId = data?.issue?.id;
+    if (!issueId) {
+      return { posted: false, reason: `Linear issue ${issueKey} not found.` };
+    }
+
+    await linearGraphQL(
+      apiKey,
+      `mutation($issueId: String!, $body: String!) { commentCreate(input: { issueId: $issueId, body: $body }) { success } }`,
+      { issueId, body },
+    );
+    return { posted: true, issueKey };
+  } catch (error) {
+    return { posted: false, reason: `Linear comment failed: ${error.message}` };
+  }
+}
+
 function statePath(agent) {
   return join(syncDir, `${agent}.json`);
 }
@@ -247,7 +342,7 @@ function saveState(agent, state, brief) {
   });
 }
 
-function main() {
+async function main() {
   const args = parseArgs(process.argv.slice(2));
   const command = args._[0] || "status";
   const agent = String(args.agent || process.env.AGENT || process.env.USER || "agent").toLowerCase();
@@ -265,6 +360,10 @@ function main() {
   if (command === "start") {
     saveState(agent, state, brief);
     recordActivity({ agent, command: "started", summary: args.summary, next: args.next });
+    if (args.summary || args.next) {
+      const result = await postLinearHandoff({ agent, command: "started", summary: args.summary, next: args.next, issue: args.issue });
+      console.log(result.posted ? `Posted start note to Linear ${result.issueKey}.` : result.reason);
+    }
     console.log(brief.text);
     return;
   }
@@ -273,6 +372,8 @@ function main() {
     recordActivity({ agent, command: "finished", summary: args.summary, next: args.next });
     saveState(agent, state, brief);
     console.log(`Recorded ${agent} handoff in .agent-sync/activity.md`);
+    const result = await postLinearHandoff({ agent, command: "finished", summary: args.summary, next: args.next, issue: args.issue });
+    console.log(result.posted ? `Posted handoff to Linear ${result.issueKey}.` : result.reason);
     console.log("");
     console.log(brief.text);
     return;

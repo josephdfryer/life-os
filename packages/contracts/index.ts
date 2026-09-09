@@ -179,8 +179,12 @@ export const mergePersonClustersContract = z.object({
   pairs: z.array(z.object({ aId: id, bId: id }).strict()).min(1).max(500),
 }).strict()
 
+// Deletes above this count require confirm: "DELETE" (DATA SAFETY rule in AGENTS.md).
+export const BULK_DELETE_CONFIRM_THRESHOLD = 5
+
 export const bulkDeletePeopleContract = z.object({
   ids: z.array(id).min(1).max(500),
+  confirm: z.literal("DELETE").optional(),
 }).strict()
 
 export const bulkCreatePeopleContract = z.object({

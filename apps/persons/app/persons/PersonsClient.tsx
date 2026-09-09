@@ -8,6 +8,7 @@ import AddPersonModal from "@/components/persons/AddPersonModal"
 import type { PersonListPerson } from "@/types"
 import type { PersonListView } from "@/lib/person-list-presentation"
 import { filtersToParam, type Filter } from "@/lib/filters"
+import { BULK_DELETE_CONFIRM_THRESHOLD } from "@life-os/contracts"
 import { Toolbar } from "./Toolbar"
 import { fetchWithCache, prefetch, apiCache } from "@/lib/api-cache"
 
@@ -258,12 +259,19 @@ export default function PersonsClient({ initialData }: { initialData: PageData |
 
   async function handleBulkDelete() {
     if (selected.size === 0) return
+    if (selected.size > BULK_DELETE_CONFIRM_THRESHOLD) {
+      const ok = window.confirm(`Delete ${selected.size} people? This can't be undone.`)
+      if (!ok) return
+    }
     setBulkDeleting(true)
     try {
       const res = await fetch("/api/persons/bulk", {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ids: Array.from(selected) }),
+        body: JSON.stringify({
+          ids: Array.from(selected),
+          ...(selected.size > BULK_DELETE_CONFIRM_THRESHOLD ? { confirm: "DELETE" as const } : {}),
+        }),
       })
       if (!res.ok) {
         const json = await res.json().catch(() => ({}))

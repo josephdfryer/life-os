@@ -2,6 +2,7 @@ import test from "node:test"
 import assert from "node:assert/strict"
 import {
   bulkDeletePeopleContract,
+  BULK_DELETE_CONFIRM_THRESHOLD,
   approvedEmailContract,
   chatMessageContract,
   confirmImportContract,
@@ -41,6 +42,20 @@ test("stored JSON codecs validate contacts and rule definitions predictably", ()
 test("bulk delete contract rejects empty and oversized batches", () => {
   assert.equal(bulkDeletePeopleContract.safeParse({ ids: [] }).success, false)
   assert.equal(bulkDeletePeopleContract.safeParse({ ids: Array.from({ length: 501 }, (_, i) => String(i)) }).success, false)
+})
+
+test("bulk delete contract only accepts the literal DELETE confirmation string", () => {
+  assert.equal(bulkDeletePeopleContract.safeParse({ ids: ["a"] }).success, true, "confirm is optional for small batches")
+  assert.equal(bulkDeletePeopleContract.safeParse({ ids: ["a"], confirm: "DELETE" }).success, true)
+  assert.equal(bulkDeletePeopleContract.safeParse({ ids: ["a"], confirm: "yes" }).success, false)
+  assert.equal(bulkDeletePeopleContract.safeParse({ ids: ["a"], confirm: true }).success, false)
+})
+
+test("bulk delete confirm threshold is small enough to catch mass deletes", () => {
+  // DATA SAFETY (AGENTS.md) forbids bulk-deleting "more than a handful" of
+  // people without explicit confirmation — this locks the threshold in place
+  // so it can't silently drift upward.
+  assert.ok(BULK_DELETE_CONFIRM_THRESHOLD <= 10)
 })
 
 test("approved-email contracts accept invite roles and bounded updates", () => {

@@ -4,13 +4,17 @@ import { handleRouteError, noContent } from "@/server/api/respond"
 import { requireAccess } from "@/server/domain/access"
 import { auditAction } from "@/server/domain/audit"
 import { revalidatePersonsCache } from "@/server/domain/persons"
-import { bulkDeletePeopleContract } from "@life-os/contracts"
+import { bulkDeletePeopleContract, BULK_DELETE_CONFIRM_THRESHOLD } from "@life-os/contracts"
 import { parseJsonBody } from "@/server/api/contracts"
+import { badRequest } from "@/server/api/errors"
 
 export async function DELETE(req: NextRequest) {
   try {
     const actor = await requireAccess("people.write")
-    const { ids: stringIds } = await parseJsonBody(req, bulkDeletePeopleContract)
+    const { ids: stringIds, confirm } = await parseJsonBody(req, bulkDeletePeopleContract)
+    if (stringIds.length > BULK_DELETE_CONFIRM_THRESHOLD && confirm !== "DELETE") {
+      throw badRequest(`deleting more than ${BULK_DELETE_CONFIRM_THRESHOLD} people requires confirm: "DELETE"`)
+    }
 
     await db.person.deleteMany({
       where: { id: { in: stringIds }, workspaceId: actor.workspaceId },
