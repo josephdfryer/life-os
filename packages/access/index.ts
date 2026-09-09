@@ -98,6 +98,8 @@ export const DEFAULT_PERMISSIONS = [
   { scope: "devices.manage", description: "Revoke companion devices" },
   { scope: "assistant.use", description: "Use the LifeOS Assistant with the permissions granted by this role" },
   { scope: "assistant.history.read", description: "Read other workspace members' Assistant conversations" },
+  { scope: "linear.read", description: "Read Linear issues, comments, and status" },
+  { scope: "linear.write", description: "Create and update Linear issues and comments" },
   // Never grant this to a Role — it's for one thing: a trusted server-side
   // proxy (Home's control-plane routes) that has already verified a session
   // belongs to a workspace, and needs its shared API key to act on that
@@ -125,6 +127,7 @@ export const DEFAULT_ROLES = [
       "connections.read", "connections.manage",
       "devices.read", "devices.manage",
       "assistant.use", "assistant.history.read",
+      "linear.read", "linear.write",
     ],
   },
   {
@@ -141,6 +144,7 @@ export const DEFAULT_ROLES = [
       "connections.read",
       "devices.read",
       "assistant.use",
+      "linear.read", "linear.write",
     ],
   },
   {
@@ -155,6 +159,7 @@ export const DEFAULT_ROLES = [
       "connections.read",
       "devices.read",
       "assistant.use",
+      "linear.read",
     ],
   },
   {
