@@ -174,7 +174,7 @@ export default function CommitmentsPanel({
   const pickable = [...actionInbox, ...backlog].filter(item => item.id !== suggestion?.id)
 
   return (
-    <div style={card}>
+    <div className="dashboard-commitments-card" style={card}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
         <div>
           <h2 style={heading}>Focus</h2>
@@ -483,6 +483,8 @@ const card: React.CSSProperties = {
   border: '1px solid rgba(196, 165, 116, 0.18)',
   borderRadius: 'var(--radius-lg)',
   padding: '32px',
+  minWidth: 0,
+  maxWidth: '100%',
 }
 
 const heading: React.CSSProperties = {

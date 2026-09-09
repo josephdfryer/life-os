@@ -152,7 +152,42 @@ async function HomeDataPanels({
     workspaceId = localReview ? 'default-workspace' : null
   }
 
-  if (!workspaceId) return null
+  if (!workspaceId) {
+    return (
+      <div
+        className="dashboard-commitments-card"
+        style={{
+          background: 'rgba(247, 244, 238, 0.045)',
+          border: '1px solid rgba(196, 165, 116, 0.18)',
+          borderRadius: 'var(--radius-lg)',
+          padding: '32px',
+          minWidth: 0,
+          maxWidth: '100%',
+        }}
+      >
+        <h2
+          style={{
+            fontFamily: 'var(--font-display)',
+            fontSize: '1.4rem',
+            fontWeight: 400,
+            margin: '0 0 12px',
+          }}
+        >
+          Dashboard data unavailable
+        </h2>
+        <p style={{ margin: 0, color: 'var(--ink-3)', fontSize: '13px', lineHeight: 1.55 }}>
+          Your workspace couldn&apos;t be loaded, so Focus, Today, and the other cards are paused.
+          Reload, or open Inbox from the menu.
+        </p>
+        <a
+          href="/inbox"
+          style={{ display: 'inline-block', marginTop: '16px', color: 'var(--camel)', fontSize: '13px' }}
+        >
+          Open Inbox →
+        </a>
+      </div>
+    )
+  }
 
   return (
     <>
